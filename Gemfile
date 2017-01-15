@@ -41,6 +41,8 @@ group :development, :test do
   gem 'byebug'
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
+  gem 'machinist'
+  gem 'forgery'
 end
 
 group :development do
