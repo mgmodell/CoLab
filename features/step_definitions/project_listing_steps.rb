@@ -34,12 +34,6 @@ Given /^the project has been activated$/ do
   @project.save
 end
 
-Given /^the user "(.*?)" had demographics requested$/ do |with_demographics|
-  demographics_requested = with_demographics == "has"
-  @user.demographics_requested = demographics_requested
-  @user.save!
-end
-
 When /^the user logs in$/ do
   visit "/"
   fill_in 'user[email]', :with => @user.email
