@@ -43,6 +43,7 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'machinist'
   gem 'forgery'
+  gem 'chronic'
 end
 
 group :development do

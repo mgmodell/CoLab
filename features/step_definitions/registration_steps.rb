@@ -1,10 +1,10 @@
-Then /^the user will see the assessment listing page$/ do
-  page.should have_content "Your Assessments"
+Then /^the user will see the project listing page$/ do
+  page.should have_content "Your Projects"
 end
 
 Then /^the user will see a consent request$/ do
 
-  page.should have_content "May we user your data for research?"
+  page.should have_content "May we use your data for research?"
 end
 
 When /^the user "(.*?)" provide consent$/ do |does_or_does_not|
@@ -22,7 +22,7 @@ end
 
 Given /^a user has signed up$/ do
   @user = User.make
-  @user.confirm!
+  @user.confirm
   @user.save
 end
 
