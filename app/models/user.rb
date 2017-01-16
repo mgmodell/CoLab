@@ -49,11 +49,11 @@ class User < ActiveRecord::Base
     self.groups.each do |group|
       if( !group.project.nil? &&
         !group.project.nil? &&
-      !group.project.weeklies.nil? )
-      weeklies = group.project.weeklies.
+      !group.project.assessments.nil? )
+      assessments = group.project.assessments.
       where( "end_date >= ?", Date.today)
-      if !weeklies.blank?
-        ows << [ group, weeklies[ 0 ] ]
+      if !assessments.blank?
+        ows << [ group, assessments[ 0 ] ]
       end
     end
   end
