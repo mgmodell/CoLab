@@ -43,7 +43,6 @@ class User < ActiveRecord::Base
       else
          return false
       end
-
    end
 
    def open_group_reports
