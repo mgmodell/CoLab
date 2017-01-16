@@ -43,21 +43,21 @@ When /^the user logs in$/ do
 end
 
 Then /^the user should see a successful login message$/ do
-  page.should have_content( "Signed in successfully.")
+  page.has_content?( "Signed in successfully." )
 
 end
 
 Then /^user should see (\d+) open project$/ do |open_project_count|
   case open_project_count.to_i
   when 0
-    page.should have_content ( "You do not currently have any projects." )
+    page.has_content? ( "You do not currently have any projects." )
   when 1
-    page.should have_content ( "one project at the moment" )
+    page.has_content? ( "one project at the moment" )
   else
-    page.should have_content ( open_project_count + " projects today" )
+    page.has_content? ( open_project_count + " projects today" )
   end
 end
 
 Then /^the user will see the main index page$/ do
-  page.should have_content( "Your Projects" )
+  page.has_content?( "Your Projects" )
 end
