@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  inst_date: 2017-01-15
+  assessment_id: 
+  user_id: 
+  comments: MyText
+  group_id: 
+
+two:
+  inst_date: 2017-01-15
+  assessment_id: 
+  user_id: 
+  comments: MyText
+  group_id: 

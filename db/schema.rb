@@ -11,13 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170115094815) do
+ActiveRecord::Schema.define(version: 20170115111609) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
+
+  create_table "assessments", force: :cascade do |t|
+    t.date     "end_date"
+    t.string   "start_date", limit: 255
+    t.integer  "project_id", limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "assessments", ["project_id"], name: "index_assessments_on_project_id", using: :btree
 
   create_table "behaviours", force: :cascade do |t|
     t.string   "description", limit: 255
@@ -76,6 +86,20 @@ ActiveRecord::Schema.define(version: 20170115094815) do
 
   add_index "groups_users", ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id", unique: true, using: :btree
 
+  create_table "installments", force: :cascade do |t|
+    t.date     "inst_date"
+    t.integer  "assessment_id", limit: 4
+    t.integer  "user_id",       limit: 4
+    t.text     "comments",      limit: 65535
+    t.integer  "group_id",      limit: 4
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "installments", ["assessment_id"], name: "index_installments_on_assessment_id", using: :btree
+  add_index "installments", ["group_id"], name: "index_installments_on_group_id", using: :btree
+  add_index "installments", ["user_id"], name: "index_installments_on_user_id", using: :btree
+
   create_table "projects", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.string   "description", limit: 255
@@ -97,6 +121,18 @@ ActiveRecord::Schema.define(version: 20170115094815) do
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
   end
+
+  create_table "rosters", force: :cascade do |t|
+    t.integer  "role_id",    limit: 4
+    t.integer  "course_id",  limit: 4
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "rosters", ["course_id"], name: "index_rosters_on_course_id", using: :btree
+  add_index "rosters", ["role_id"], name: "index_rosters_on_role_id", using: :btree
+  add_index "rosters", ["user_id"], name: "index_rosters_on_user_id", using: :btree
 
   create_table "schools", force: :cascade do |t|
     t.string   "description", limit: 255
@@ -147,10 +183,30 @@ ActiveRecord::Schema.define(version: 20170115094815) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
+  create_table "values", force: :cascade do |t|
+    t.integer  "value",          limit: 4
+    t.integer  "user_id",        limit: 4
+    t.integer  "installment_id", limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "values", ["installment_id"], name: "index_values_on_installment_id", using: :btree
+  add_index "values", ["user_id"], name: "index_values_on_user_id", using: :btree
+
+  add_foreign_key "assessments", "projects"
   add_foreign_key "consent_forms", "users"
   add_foreign_key "courses", "schools"
   add_foreign_key "groups", "projects"
+  add_foreign_key "installments", "assessments"
+  add_foreign_key "installments", "groups"
+  add_foreign_key "installments", "users"
   add_foreign_key "projects", "courses"
+  add_foreign_key "rosters", "courses"
+  add_foreign_key "rosters", "roles"
+  add_foreign_key "rosters", "users"
   add_foreign_key "users", "age_ranges"
   add_foreign_key "users", "genders"
+  add_foreign_key "values", "installments"
+  add_foreign_key "values", "users"
 end
