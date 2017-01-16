@@ -44,6 +44,7 @@ group :development, :test do
   gem 'machinist'
   gem 'forgery'
   gem 'chronic'
+  gem 'delorean'
 end
 
 group :development do
