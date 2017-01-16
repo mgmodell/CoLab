@@ -20,9 +20,9 @@ Role.create( :name => "Assistant",
 Role.create( :name => "Enrolled Student",
     :description => "This user is a student in this class." )
 Role.create( :name => "Invited Student",
-    :description => "This user is a student in this class." )
+    :description => "This user is a student that has been invited to participatein this class." )
 Role.create( :name => "Declined Student",
-    :description => "This user is a student in this class." )
+    :description => "This user is a student that has declined to participate in this class." )
 
 AgeRange.create( :name => "<18" )
 AgeRange.create( :name => "18-20" )

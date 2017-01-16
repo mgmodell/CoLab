@@ -8,7 +8,7 @@ class HomeController < ApplicationController
          redirect_to( :controller => "consent_logs",
          :action => 'edit',
          :consent_form_id => waiting_consent_logs[0].consent_form_id )
-      elsif current_user.consent_forms.count > 0 
+      elsif not current_user.welcomed?
          redirect_to edit_user_registration_path(@current_user)
       end
       @first_name = current_user.first_name
