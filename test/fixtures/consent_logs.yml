@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  accepted: false
+  consent_form_id: 
+  user_id: 
+
+two:
+  accepted: false
+  consent_form_id: 
+  user_id: 

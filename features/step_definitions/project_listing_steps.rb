@@ -39,7 +39,7 @@ When /^the user logs in$/ do
   fill_in 'user[email]', :with => @user.email
   fill_in 'user[password]', :with => 'password'
 
-  click_link_or_button 'Sign in'
+  click_link_or_button 'Log in'
 end
 
 Then /^the user should see a successful login message$/ do

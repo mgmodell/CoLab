@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170115111609) do
+ActiveRecord::Schema.define(version: 20170116064643) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -44,6 +44,17 @@ ActiveRecord::Schema.define(version: 20170115111609) do
   end
 
   add_index "consent_forms", ["user_id"], name: "index_consent_forms_on_user_id", using: :btree
+
+  create_table "consent_logs", force: :cascade do |t|
+    t.boolean  "accepted"
+    t.integer  "consent_form_id", limit: 4
+    t.integer  "user_id",         limit: 4
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "consent_logs", ["consent_form_id"], name: "index_consent_logs_on_consent_form_id", using: :btree
+  add_index "consent_logs", ["user_id"], name: "index_consent_logs_on_user_id", using: :btree
 
   create_table "courses", force: :cascade do |t|
     t.string   "name",        limit: 255
@@ -101,18 +112,20 @@ ActiveRecord::Schema.define(version: 20170115111609) do
   add_index "installments", ["user_id"], name: "index_installments_on_user_id", using: :btree
 
   create_table "projects", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.string   "description", limit: 255
-    t.integer  "course_id",   limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.integer  "start_dow",   limit: 4
-    t.integer  "end_dow",     limit: 4
+    t.string   "name",            limit: 255
+    t.string   "description",     limit: 255
+    t.integer  "course_id",       limit: 4
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "start_dow",       limit: 4
+    t.integer  "end_dow",         limit: 4
     t.boolean  "active"
     t.date     "start_date"
     t.date     "end_date"
+    t.integer  "consent_form_id", limit: 4
   end
 
+  add_index "projects", ["consent_form_id"], name: "index_projects_on_consent_form_id", using: :btree
   add_index "projects", ["course_id"], name: "index_projects_on_course_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
@@ -196,11 +209,14 @@ ActiveRecord::Schema.define(version: 20170115111609) do
 
   add_foreign_key "assessments", "projects"
   add_foreign_key "consent_forms", "users"
+  add_foreign_key "consent_logs", "consent_forms"
+  add_foreign_key "consent_logs", "users"
   add_foreign_key "courses", "schools"
   add_foreign_key "groups", "projects"
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
   add_foreign_key "installments", "users"
+  add_foreign_key "projects", "consent_forms"
   add_foreign_key "projects", "courses"
   add_foreign_key "rosters", "courses"
   add_foreign_key "rosters", "roles"

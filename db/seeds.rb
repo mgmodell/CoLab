@@ -15,9 +15,13 @@ Behaviour.create( :name => 'Performing tasks', :description => 'Performing tasks
 
 Role.create( :name => "Instructor",
     :description => "This user teaches the course." )
-Role.create( :name => "Graduate Assistant",
+Role.create( :name => "Assistant",
     :description => "This user assists the course instructor." )
-Role.create( :name => "Student",
+Role.create( :name => "Enrolled Student",
+    :description => "This user is a student in this class." )
+Role.create( :name => "Invited Student",
+    :description => "This user is a student in this class." )
+Role.create( :name => "Declined Student",
     :description => "This user is a student in this class." )
 
 AgeRange.create( :name => "<18" )
