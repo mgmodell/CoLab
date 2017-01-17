@@ -5,7 +5,7 @@ Given /^today is "(.*?)"$/ do |destination_time|
 end
 
 
-Then /^the assessment should have (\d+) weekly attached to it$/ do |assessment_count|
+Then /^the project should have (\d+) assessments attached to it$/ do |assessment_count|
   @assessment.count.should eql assessment_count.to_i
 end
 
