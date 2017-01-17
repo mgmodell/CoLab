@@ -1,8 +1,8 @@
 Given /^the project has a consent form$/ do
   consent_form = ConsentForm.make
   consent_form.save
-  @assessment.consent_form = consent_form
-  @assessment.save
+  @project.consent_form = consent_form
+  @project.save
 end
 
 Then /^user should see a consent form listed for the open assessment$/ do

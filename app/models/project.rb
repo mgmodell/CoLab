@@ -3,6 +3,7 @@ class Project < ActiveRecord::Base
   has_many :groups
   has_many :assessments
   belongs_to :course
+  belongs_to :consent_form
 
   has_many :users, :through => :groups
 

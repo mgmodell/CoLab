@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170116103703) do
+ActiveRecord::Schema.define(version: 20170117104127) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -112,18 +112,20 @@ ActiveRecord::Schema.define(version: 20170116103703) do
   add_index "installments", ["user_id"], name: "index_installments_on_user_id", using: :btree
 
   create_table "projects", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.string   "description", limit: 255
-    t.integer  "course_id",   limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.integer  "start_dow",   limit: 4
-    t.integer  "end_dow",     limit: 4
+    t.string   "name",            limit: 255
+    t.string   "description",     limit: 255
+    t.integer  "course_id",       limit: 4
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "start_dow",       limit: 4
+    t.integer  "end_dow",         limit: 4
     t.boolean  "active"
     t.date     "start_date"
     t.date     "end_date"
+    t.integer  "consent_form_id", limit: 4
   end
 
+  add_index "projects", ["consent_form_id"], name: "index_projects_on_consent_form_id", using: :btree
   add_index "projects", ["course_id"], name: "index_projects_on_course_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
@@ -215,6 +217,7 @@ ActiveRecord::Schema.define(version: 20170116103703) do
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
   add_foreign_key "installments", "users"
+  add_foreign_key "projects", "consent_forms"
   add_foreign_key "projects", "courses"
   add_foreign_key "rosters", "courses"
   add_foreign_key "rosters", "roles"
