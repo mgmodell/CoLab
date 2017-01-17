@@ -29,17 +29,10 @@ Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
   @project.save
 end
 
+
 Given /^the project has been activated$/ do
   @project.active = true
   @project.save
-end
-
-When /^the user logs in$/ do
-  visit "/"
-  fill_in 'user[email]', :with => @user.email
-  fill_in 'user[password]', :with => 'password'
-
-  click_link_or_button 'Log in'
 end
 
 Then /^the user should see a successful login message$/ do
@@ -61,3 +54,18 @@ end
 Then /^the user will see the main index page$/ do
   page.has_content?( "Your Projects" )
 end
+
+Given /^the user "(.*?)" had demographics requested$/ do |with_demographics|
+  demographics_requested = with_demographics == "has"
+  @user.welcomed = demographics_requested
+  @user.save!
+end
+
+When /^the user logs in$/ do
+  visit "/"
+  fill_in 'user[email]', :with => @user.email
+  fill_in 'user[password]', :with => 'password'
+
+  click_link_or_button 'Log in'
+end
+
