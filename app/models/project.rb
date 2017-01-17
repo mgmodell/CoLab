@@ -17,12 +17,20 @@ class Project < ActiveRecord::Base
   validate :validate_date_sanity
   validate :validate_activation_status
 
+   def is_for_research?
+      ! self.consent_form.nil?
+   end
+
+   def number_of_weeks
+      ( self.end_date - self.start_date ).divmod( 7 )[0]
+   end
+
    def get_user_appearance_counts
-      Project.get_occurence_count_hash user
+      Project.get_occurence_count_hash users
    end
 
    def get_group_appearance_counts
-      Project.get_occurence_count_hash group
+      Project.get_occurence_count_hash groups
    end
    
    def self.get_occurence_count_hash input_array
@@ -30,6 +38,42 @@ class Project < ActiveRecord::Base
       input_array.each{ |v| dup_hash.store( v, dup_hash[v]+1 ) }
       dup_hash
    end
+
+   # If the date range wraps from Saturday to Sunday, it's not inside.
+   def has_inside_date_range?
+      has_inside_date_range = false
+      if( self.start_dow <= self.end_dow )
+         has_inside_date_range = true
+      end
+      has_inside_date_range
+   end
+
+
+   # Check if the assessment is active, if we're in the date range and
+   # within the day range.
+   def is_available?
+      is_available = false
+      init_time = Time.now
+      init_day = init_time.wday
+      init_date = init_time.to_date
+
+      if( self.active &&
+         self.start_date < init_date && self.end_date > init_date )
+         if( self.has_inside_date_range? )
+            if( self.start_dow <= init_day && self.end_dow >= init_day )
+               is_available = true
+            end
+         else
+
+            if( !( init_day < self.start_dow && self.end_dow < init_day ) )
+               is_available = true
+            end
+         end
+      end
+      logger.debug is_available
+      is_available
+   end
+
 
   #Validation check code
   def validate_date_sanity
@@ -58,12 +102,7 @@ class Project < ActiveRecord::Base
             end
          end
          #If this is an activation, we need to set up any necessary weeklies
-         if errors.count < 1
-            if self.is_available?
-               Weekly.build_new_weekly self
-
-            end
-         end
+         #TODO: Make sure we build any necessary new assessments on activations
       end
       errors
 
