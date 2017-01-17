@@ -1,0 +1,16 @@
+<h1>May we user your data for research?</h1>
+<h2>Consent Form</h2>
+<P>Please review the document below. You may need to scroll down to view
+the entire document. If you agree to allow your information
+to be used for research, please check the box marked "I agree" below. You
+can return to this page at any time during the study to change your
+response.</P>
+<iframe src="<%= @consent_log.consent_form.pdf.url%>" width="400" height="516"></iframe>
+<P><%= @consent_log.consent_form.form_text %></p>
+<%= form_for @consent_log do |f| %>
+  <%= f.hidden_field :user_id %>
+  <%= f.hidden_field :presented, :value => true %>
+  <%= f.hidden_field :consent_form_id %>
+  <%= f.check_box :accepted %>
+  <%= f.submit "Respond to Consent Form" %>
+<% end %>

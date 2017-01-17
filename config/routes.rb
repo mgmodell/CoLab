@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   # root 'welcome#index'
   root to: "home#index"
 
+  get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', :as => 'edit_consent_log'
+  put 'consent_logs/:id' => 'consent_logs#update', :as => 'consent_log'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
