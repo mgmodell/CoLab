@@ -6,7 +6,7 @@ end
 
 
 Then /^the project should have (\d+) assessments attached to it$/ do |assessment_count|
-  @assessment.count.should eql assessment_count.to_i
+  @project.assessment.count.should eql assessment_count.to_i
 end
 
 Given /^that the system's set_up_assessments process runs$/ do
