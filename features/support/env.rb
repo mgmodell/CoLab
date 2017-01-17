@@ -56,3 +56,10 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
+#Before do
+#  $dunit ||= false
+#  return $dunit if $dunit
+#  seed_file = File.join( Rails.root, "db", "seeds.rb" )
+#  load( seed_file )
+#  $dunit = true
+#end

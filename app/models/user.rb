@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
 
   has_and_belongs_to_many :groups
   has_many :consent_logs
+  belongs_to :gender
+  belongs_to :age_range
 
   #Give us a standard form of the name
   def name
@@ -17,7 +19,7 @@ class User < ActiveRecord::Base
 
   def waiting_consent_logs
     #Find those consent forms to which the user has not yet responded
-    consent_forms = ConsentForm.all
+    consent_forms = ConsentForm.all.to_a
     self.consent_logs.each do |consent_log|
       consent_forms.delete( consent_log.consent_form )
     end

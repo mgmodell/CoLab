@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170117104127) do
+ActiveRecord::Schema.define(version: 20170117120755) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -37,10 +37,15 @@ ActiveRecord::Schema.define(version: 20170117104127) do
   end
 
   create_table "consent_forms", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",             limit: 255
+    t.integer  "user_id",          limit: 4
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "pdf_file_name",    limit: 255
+    t.string   "pdf_content_type", limit: 255
+    t.integer  "pdf_file_size",    limit: 4
+    t.datetime "pdf_updated_at"
+    t.text     "form_text",        limit: 65535
   end
 
   add_index "consent_forms", ["user_id"], name: "index_consent_forms_on_user_id", using: :btree
@@ -72,13 +77,6 @@ ActiveRecord::Schema.define(version: 20170117104127) do
     t.string   "name",       limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
-  end
-
-  create_table "group_project_counts", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.string   "description", limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
   end
 
   create_table "groups", force: :cascade do |t|

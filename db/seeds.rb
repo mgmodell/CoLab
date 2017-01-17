@@ -31,15 +31,6 @@ AgeRange.create( :name => "25-30" )
 AgeRange.create( :name => "31+" )
 AgeRange.create( :name => "I'd prefer not to answer" )
 
-GroupProjectCount.create( :name => "none",
-  :description => "I don't remember having been a part of a long-term group project." )
-GroupProjectCount.create( :name => "few",
-  :description => "I have been a part of one to five long-term group projects." )
-GroupProjectCount.create( :name => "some",
-  :description => "I have been a part of five to ten long-term group projects." )
-GroupProjectCount.create( :name => "many",
-  :description => "I have been a part of more than 10 long-term group projects." )
-
 Gender.create( :name => "Male" )
 Gender.create( :name => "Female" )
 Gender.create( :name => "I'd prefer not to answer" )

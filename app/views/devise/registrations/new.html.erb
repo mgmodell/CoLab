@@ -21,8 +21,34 @@
     <%= f.password_field :password_confirmation, autocomplete: "off" %>
   </div>
 
+  <div class="field">
+    <%= f.label :first_name %>First name:<br />
+    <%= f.text_field :first_name, autofocus: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :last_name %>Last name:<br />
+    <%= f.text_field :last_name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :gender_id %>Gender:<br />
+    <%= f.collection_select( :gender_id, Gender.all, :id, :name ) %>
+  </div>
+
+  <div class="field">
+    <%= f.label :age_range_id %>Age:<br />
+    <%= f.collection_select( :age_range_id, AgeRange.all, :id, :name ) %>
+  </div>
+
+  <div class="field">
+    <%= f.label :country %>Home country:<br />
+    <%= f.country_select :country %>
+  </div>
+
+
   <div class="actions">
-    <%= f.submit "Sign up" %>
+    <%= f.submit "Create my profile" %>
   </div>
 <% end %>
 
