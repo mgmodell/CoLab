@@ -34,6 +34,11 @@ Behaviour.blueprint do
   description { Forgery::Basic.text }
 end
 
+BehaviourPack.blueprint do
+  name { Forgery::Name.industry + " Behaviour Pack" }
+  description { Forgery::Basic.text }
+end
+
 ConsentForm.blueprint do
   name {Forgery::Name.location }
 end

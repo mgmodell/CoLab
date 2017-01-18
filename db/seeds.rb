@@ -7,11 +7,17 @@
 #   Mayor.create(:name => 'Emanuel', :city => cities.first)
 
 #Foundational data
-Behaviour.create( :name => 'Organizing', :description => 'Helped to organize the group''s members and activities.' )
-Behaviour.create( :name => 'Understanding requirements', :description => 'Understanding what was required of the group and of the individual group members.')
-Behaviour.create( :name => 'Suggesting ideas', :description => 'Suggesting ideas upon which the group could act or continue to build productively.')
-Behaviour.create( :name => 'Producing', :description => 'Coming up with something useful to contribute to the group''s efforts.' )
-Behaviour.create( :name => 'Performing tasks', :description => 'Performing tasks allocated by the group within the specified timeframe.' )
+bp = BehaviourPack.create( :name => 'Simple', :description => 'Borrowed from Goldfinch' )
+Behaviour.create( :name => 'Organizing', :description => 'Helped to organize the group''s members and activities.', :behaviour_pack = bp )
+Behaviour.create( :name => 'Understanding requirements', :description => 'Understanding what was required of the group and of the individual group members.', :behaviour_pack = bp)
+Behaviour.create( :name => 'Suggesting ideas', :description => 'Suggesting ideas upon which the group could act or continue to build productively.', :behaviour_pack = bp)
+Behaviour.create( :name => 'Producing', :description => 'Coming up with something useful to contribute to the group''s efforts.', :behaviour_pack = bp )
+Behaviour.create( :name => 'Performing tasks', :description => 'Performing tasks allocated by the group within the specified timeframe.', :behaviour_pack = bp )
+#Create a new BP
+bp = BehaviourPack.create( :name => 'Original', :description => 'My earliest formulation' )
+Behaviour.create( :name => 'Work', :description => 'Performing tasks allocated by the group within the specified timeframe.', :behaviour_pack = bp )
+Behaviour.create( :name => 'Creativity', :description => 'Performing tasks allocated by the group within the specified timeframe.', :behaviour_pack = bp )
+Behaviour.create( :name => 'Group Dynamics', :description => 'Performing tasks allocated by the group within the specified timeframe.', :behaviour_pack = bp )
 
 Role.create( :name => "Instructor",
     :description => "This user teaches the course." )

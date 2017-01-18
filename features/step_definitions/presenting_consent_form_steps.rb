@@ -34,8 +34,8 @@ Given /^the consent form "(.*?)" been presented to the user$/ do |has_or_has_not
 
 end
 
-Then /^user will be presented with the report form$/ do
-  page.should have_content "Your weekly report"
+Then /^user will be presented with the installment form$/ do
+  page.should have_content "Your weekly installment"
   page.should have_content @assessment.name
 end
 
