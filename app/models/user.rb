@@ -8,8 +8,11 @@ class User < ActiveRecord::Base
 
   has_and_belongs_to_many :groups
   has_many :consent_logs
+  has_many :projects, :through => :groups
   belongs_to :gender
   belongs_to :age_range
+
+  has_many :assessments, :through => :projects
 
   #Give us a standard form of the name
   def name
@@ -46,18 +49,10 @@ class User < ActiveRecord::Base
     end
   end
 
-  def open_group_reports
+  def waiting_installments
     ows = []
-    self.groups.each do |group|
-      if( !group.project.nil? &&
-        !group.project.nil? &&
-        !group.project.assessments.nil? )
-        assessments = group.project.assessments.
-        where( "end_date >= ?", Date.today)
-        if !assessments.blank?
-          ows << [ group, assessments[ 0 ] ]
-        end
-      end
+    self.assessments.still_open.each do |assessment|
+      ows << [ group, assessments[ 0 ] ]
     end
 
     return ows

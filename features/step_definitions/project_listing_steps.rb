@@ -36,23 +36,25 @@ Given /^the project has been activated$/ do
 end
 
 Then /^the user should see a successful login message$/ do
-  page.has_content?( "Signed in successfully." )
+  page.should have_content "Signed in successfully."
 
 end
 
 Then /^user should see (\d+) open project$/ do |open_project_count|
+  puts open_project_count.to_i
   case open_project_count.to_i
   when 0
-    page.has_content? ( "You do not currently have any projects." )
+    page.should have_content ( "You do not currently have any projects." )
   when 1
-    page.has_content? ( "one project at the moment" )
+    page.should have_content ( "one project at the moment" )
   else
-    page.has_content? ( open_project_count + " projects today" )
+    page.should have_content ( open_project_count + " projects today" )
   end
 end
 
 Then /^the user will see the main index page$/ do
-  page.has_content?( "Your Projects" )
+  puts page.body
+  page.should have_content "Your Projects" 
 end
 
 Given /^the user "(.*?)" had demographics requested$/ do |with_demographics|

@@ -4,7 +4,7 @@ class Project < ActiveRecord::Base
   has_many :assessments
   belongs_to :course
   belongs_to :consent_form
-  has_one :behaviour_pack
+  belongs_to :behaviour_pack
 
   has_many :users, :through => :groups
   has_many :behaviours, :through => :behaviour_pack
@@ -38,7 +38,7 @@ class Project < ActiveRecord::Base
    
    def self.get_occurence_count_hash input_array
       dup_hash = Hash.new( 0 )
-      input_array.each{ |v| dup_hash.store( v, dup_hash[v]+1 ) }
+      input_array.each{ |v| dup_hash.store( v.id, dup_hash[v]+1 ) }
       dup_hash
    end
 

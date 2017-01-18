@@ -48,6 +48,7 @@ group :development, :test do
   gem 'chronic'
   gem 'delorean'
   gem 'railroady'
+  gem 'rspec'
 end
 
 group :development do

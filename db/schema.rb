@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170118045614) do
+ActiveRecord::Schema.define(version: 20170118070916) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20170118045614) do
     t.integer  "user_id",         limit: 4
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+    t.boolean  "presented"
   end
 
   add_index "consent_logs", ["consent_form_id"], name: "index_consent_logs_on_consent_form_id", using: :btree

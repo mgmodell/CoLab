@@ -34,8 +34,9 @@ Then /^the user should see an error indicating that the installment request expi
    page.should have_content( "assessment has expired" )
 end
 
-When /^user clicks the link to the assessment$/ do
-   click_link_or_button @assessment.name
+When /^user clicks the link to the project$/ do
+   puts page.body
+   click_link_or_button @project.name
 end
 
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points,distribution|

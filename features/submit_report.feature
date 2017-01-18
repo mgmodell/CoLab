@@ -16,8 +16,8 @@ Feature: Submitting Reports
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
-    Then user should see a consent form listed for the open assessment
-    When user clicks the link to the assessment
+    Then user should see a consent form listed for the open project
+    When user clicks the link to the project
     Then user will be presented with the installment form
     Then the installment form should request behaviour x user values
     Then the user should enter values summing to 600, "evenly" across each column
@@ -45,8 +45,8 @@ Feature: Submitting Reports
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
-    Then user should see a consent form listed for the open assessment
-    When user clicks the link to the assessment
+    Then user should see a consent form listed for the open project
+    When user clicks the link to the project
     Then user will be presented with the installment form
     Then the installment form should request behaviour x user values
     Then the user should enter values summing to 0, "randomly" across each column
@@ -63,8 +63,8 @@ Feature: Submitting Reports
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
-    Then user should see a consent form listed for the open assessment
-    When user clicks the link to the assessment
+    Then user should see a consent form listed for the open project
+    When user clicks the link to the project
     Then user will be presented with the installment form
     Then the installment form should request behaviour x user values
     Then the user should enter values summing to 0, "randomly" across each column
@@ -81,8 +81,8 @@ Feature: Submitting Reports
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
-    Then user should see a consent form listed for the open assessment
-    When user clicks the link to the assessment
+    Then user should see a consent form listed for the open project
+    When user clicks the link to the project
     Then user will be presented with the installment form
     Then the installment form should request behaviour x user values
     Then the user should enter values summing to 1200, "evenly" across each column
@@ -100,8 +100,8 @@ Feature: Submitting Reports
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
-    Then user should see a consent form listed for the open assessment
-    When user clicks the link to the assessment
+    Then user should see a consent form listed for the open project
+    When user clicks the link to the project
     Then user will be presented with the installment form
     Then the installment form should request behaviour x user values
     Then the user should enter values summing to 600, "evenly" across each column

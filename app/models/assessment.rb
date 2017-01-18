@@ -2,6 +2,9 @@ class Assessment < ActiveRecord::Base
   belongs_to :project
   validates :end_date, :start_date, :assessment_id, :presence => true
 
+  #Helpful scope
+  scope :still_open, -> { where( "assessments.end_date >= ?", Date.today ) }
+
   def self.build_new_assessment( project )
     init_date = Date.today.beginning_of_day
     init_day = init_date.wday

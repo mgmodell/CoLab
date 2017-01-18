@@ -1,10 +1,10 @@
 Then /^the user will see the assessment listing page$/ do
-  page.has_content? "Your Projects"
+  page.should have_content "Your Projects"
 end
 
 Then /^the user will see a consent request$/ do
 
-  page.has_content? "May we user your data for research?"
+  page.should have_content "May we user your data for research?"
 end
 
 When /^the user "(.*?)" provide consent$/ do |does_or_does_not|
@@ -16,7 +16,7 @@ When /^the user "(.*?)" provide consent$/ do |does_or_does_not|
 end
 
 Then /^the user will see a request for demographics$/ do
-  page.has_content?( "Edit your profile.")
+  page.should have_content "Edit your profile."
 end
 
 

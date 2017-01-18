@@ -1,16 +1,16 @@
 <h1>Your Projects</h1>
 <p>Hello <%= @first_name %>,
-<% if @open_group_reports.any? %>
-  <% if @open_group_reports.count == 1 %>
+<% if @waiting_installments.any? %>
+  <% if @waiting_installments.count == 1 %>
     You've got one assessment at the moment.
   <% else %>
-    You've got <%= @open_group_reports.count %> asseessments today.
+    You've got <%= @waiting_installments.count %> asseessments today.
   <% end %>
 <% else %>
   You do not currently have any assessments. Check back later or contact your instructor.
 <% end %></p>
 
-<% if @open_group_reports.any? %>
+<% if @waiting_installments.any? %>
    <table>
      <tr>
      <th>Project Name</th>
@@ -20,7 +20,7 @@
      <th>Close Date</th>
      <th>Consent Form</th>
      </tr>
-     <% @open_group_reports.each do |cai| %>
+     <% @waiting_installments.each do |cai| %>
         <% group = cai[ 0 ] %>
         <% weekly = cai[ 1 ] %>
         <tr>
