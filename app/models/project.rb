@@ -38,7 +38,7 @@ class Project < ActiveRecord::Base
    
    def self.get_occurence_count_hash input_array
       dup_hash = Hash.new( 0 )
-      input_array.each{ |v| dup_hash.store( v.id, dup_hash[v]+1 ) }
+      input_array.each{ |v| dup_hash.store( v.id, dup_hash[v.id]+1 ) }
       dup_hash
    end
 

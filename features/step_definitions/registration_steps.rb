@@ -16,7 +16,7 @@ When /^the user "(.*?)" provide consent$/ do |does_or_does_not|
 end
 
 Then /^the user will see a request for demographics$/ do
-  page.should have_content "Edit your profile."
+  page.should have_content "Edit your profile"
 end
 
 
