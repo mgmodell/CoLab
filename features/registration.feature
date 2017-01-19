@@ -20,11 +20,6 @@ Feature: User registration
     When the user visits the index
     Then the user will see the assessment listing page
 
-  Scenario: Registered user is not assigned to a research project and therefore is not asked for demographics
-    Given the user "has not" had demographics requested
-    When the user logs in
-    Then the user will see the assessment listing page
-
   Scenario: Registered user does not provide consent
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users

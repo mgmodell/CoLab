@@ -18,8 +18,6 @@ Given /^an additional user is in each group of the project$/ do
 end
 
 Then /^there should be one error$/ do
-  puts "I'm here!"
-  puts @project.nil?
   expect( @project.errors.count).to eq( 1 )
 end
 
