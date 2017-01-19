@@ -1,7 +1,7 @@
 class Roster < ActiveRecord::Base
-  belongs_to :role
-  belongs_to :course
-  belongs_to :user
+  belongs_to :role, :inverse_of => :roster
+  belongs_to :course, :inverse_of => :rosters
+  belongs_to :user, :inverse_of => :rosters
 
   validates_uniqueness_of :user_id, :scope => :course_id
 

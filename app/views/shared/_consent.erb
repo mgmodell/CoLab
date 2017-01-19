@@ -1,7 +1,7 @@
-<% if( assessment.is_for_research? ) %>
+<% if( project.is_for_research? ) %>
   <%= link_to "Research Consent Form",
     :controller => "consent_logs", :action => "edit",
-    :consent_form_id => assessment.consent_form.id %>
+    :consent_form_id => project.consent_form.id %>
 <% else %>
   Not for Research
 <% end %>

@@ -1,10 +1,13 @@
 class Project < ActiveRecord::Base
-  belongs_to :course
-  has_many :groups
-  has_many :assessments
-  belongs_to :course
-  belongs_to :consent_form
-  belongs_to :factor_pack
+  after_save :build_assessment
+
+  belongs_to :course, :inverse_of => :projects
+  belongs_to :style, :inverse_of => :projects
+  has_many :groups, :inverse_of => :project
+  has_many :assessments, :inverse_of => :project
+  belongs_to :course, :inverse_of => :projects
+  belongs_to :consent_form, :inverse_of => :projects
+  belongs_to :factor_pack, :inverse_of => :projects
 
   has_many :users, :through => :groups
   has_many :factors, :through => :factor_pack
@@ -105,9 +108,16 @@ class Project < ActiveRecord::Base
             end
          end
          #If this is an activation, we need to set up any necessary weeklies
-         #TODO: Make sure we build any necessary new assessments on activations
       end
       errors
 
+  end
+
+  #Handler for building an assessment, if necessary
+  def build_assessment
+    #Nothing needs to be done unless we're active
+    if self.active? && self.is_available?
+      Assessment.build_new_assessment self
+    end
   end
 end

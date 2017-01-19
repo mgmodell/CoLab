@@ -1,5 +1,6 @@
 class Installment < ActiveRecord::Base
-  belongs_to :assessment
-  belongs_to :user
-  belongs_to :group
+  belongs_to :assessment, :inverse_of => :installments
+  belongs_to :user, :inverse_of => :installments
+  belongs_to :group, :inverse_of => :installments
+
 end

@@ -3,7 +3,7 @@ class CreateAssessments < ActiveRecord::Migration
     create_table :assessments do |t|
       t.date :end_date
       t.string :start_date
-      t.references :project, index: true, foreign_key: true
+      t.belongs_to :project, index: true, foreign_key: true
 
       t.timestamps null: false
     end

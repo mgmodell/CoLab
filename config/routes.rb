@@ -7,8 +7,12 @@ Rails.application.routes.draw do
   # root 'welcome#index'
   root to: "home#index"
 
+  #Consent log paths
   get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', :as => 'edit_consent_log'
   patch 'consent_logs/:id' => 'consent_logs#update', :as => 'consent_log'
+
+  get "reports/new/:installment_id/:group_id" => 'reports#new', :as => 'new_report'
+  get "reports/edit/:installment_id/:group_id" => 'reports#edit', :as => 'edit_report'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

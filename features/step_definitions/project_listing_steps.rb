@@ -41,7 +41,6 @@ Then /^the user should see a successful login message$/ do
 end
 
 Then /^user should see (\d+) open project$/ do |open_project_count|
-  puts open_project_count.to_i
   case open_project_count.to_i
   when 0
     page.should have_content ( "You do not currently have any projects." )
@@ -53,7 +52,6 @@ Then /^user should see (\d+) open project$/ do |open_project_count|
 end
 
 Then /^the user will see the main index page$/ do
-  puts page.body
   page.should have_content "Your Projects" 
 end
 

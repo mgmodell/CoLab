@@ -7,6 +7,7 @@ Feature: Assessment Listing
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
     Given the user is the "last" user
+    Given the user "has" had demographics requested
 
   Scenario: Checking for open projects
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"

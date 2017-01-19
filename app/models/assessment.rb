@@ -1,9 +1,13 @@
 class Assessment < ActiveRecord::Base
-  belongs_to :project
-  validates :end_date, :start_date, :assessment_id, :presence => true
+  belongs_to :project, :inverse_of => :assessments
+  validates :end_date, :start_date, :presence => true
 
   #Helpful scope
   scope :still_open, -> { where( "assessments.end_date >= ?", Date.today ) }
+
+  def is_completed_by_user( user )
+    0 != user.installments.where( assessment: self ).count
+  end
 
   def self.build_new_assessment( project )
     init_date = Date.today.beginning_of_day
@@ -26,12 +30,12 @@ class Assessment < ActiveRecord::Base
 
     existing_assessment_count = project.assessments.where(
       "start_date = ? AND end_date = ?",
-      assessment.start_date.to_date,
-    assessment.end_date.to_date ).count
+      assessment.start_date.to_date, assessment.end_date.to_date ).count
+
+
     if( existing_assessment_count == 0 )
       assessment.project = project
-      #project.assessments << assessment
-      project.save
+      assessment.save
     end
   end
 

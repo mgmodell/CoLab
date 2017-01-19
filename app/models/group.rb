@@ -1,7 +1,7 @@
 class Group < ActiveRecord::Base
 
   belongs_to :project, :inverse_of => :groups
-  has_and_belongs_to_many :users
+  has_and_belongs_to_many :users, :inverse_of => :groups
 
   has_many :reports, :inverse_of => :group
 

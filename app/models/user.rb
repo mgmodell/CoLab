@@ -7,10 +7,11 @@ class User < ActiveRecord::Base
   :omniauthable, :omniauth_providers => [:google_oauth2]
 
   has_and_belongs_to_many :groups
-  has_many :consent_logs
+  has_many :consent_logs, :inverse_of => :user
   has_many :projects, :through => :groups
-  belongs_to :gender
-  belongs_to :age_range
+  belongs_to :gender, :inverse_of => :users
+  belongs_to :age_range, :inverse_of => :users
+  has_many :installments, :inverse_of => :user
 
   has_many :assessments, :through => :projects
 
@@ -52,7 +53,12 @@ class User < ActiveRecord::Base
   def waiting_installments
     ows = []
     self.assessments.still_open.each do |assessment|
-      ows << [ group, assessments[ 0 ] ]
+      group = self.groups.joins( project: :assessments )
+      if group.count == 1
+        ows << [ group, assessments[ 0 ] ]
+      else
+        logger.debug "We have a problem!"
+      end
     end
 
     return ows
