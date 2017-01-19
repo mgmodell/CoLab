@@ -2,6 +2,7 @@
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
   <%= devise_error_messages! %>
+  <%= f.hidden_field :welcomed, true %>
 
   <div class="field">
     <%= f.label :first_name %>First name:<br />
