@@ -35,7 +35,6 @@ Then /^the user should see an error indicating that the installment request expi
 end
 
 When /^user clicks the link to the project$/ do
-   puts page.body
    click_link_or_button @project.name
 end
 

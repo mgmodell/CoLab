@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170118070916) do
+ActiveRecord::Schema.define(version: 20170119133102) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -135,11 +135,13 @@ ActiveRecord::Schema.define(version: 20170118070916) do
     t.date     "end_date"
     t.integer  "consent_form_id", limit: 4
     t.integer  "factor_pack_id",  limit: 4
+    t.integer  "style_id",        limit: 4
   end
 
   add_index "projects", ["consent_form_id"], name: "index_projects_on_consent_form_id", using: :btree
   add_index "projects", ["course_id"], name: "index_projects_on_course_id", using: :btree
   add_index "projects", ["factor_pack_id"], name: "index_projects_on_factor_pack_id", using: :btree
+  add_index "projects", ["style_id"], name: "index_projects_on_style_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name",        limit: 255
@@ -216,8 +218,10 @@ ActiveRecord::Schema.define(version: 20170118070916) do
     t.integer  "installment_id", limit: 4
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.integer  "factor_id",      limit: 4
   end
 
+  add_index "values", ["factor_id"], name: "index_values_on_factor_id", using: :btree
   add_index "values", ["installment_id"], name: "index_values_on_installment_id", using: :btree
   add_index "values", ["user_id"], name: "index_values_on_user_id", using: :btree
 
@@ -233,11 +237,13 @@ ActiveRecord::Schema.define(version: 20170118070916) do
   add_foreign_key "projects", "consent_forms"
   add_foreign_key "projects", "courses"
   add_foreign_key "projects", "factor_packs"
+  add_foreign_key "projects", "styles"
   add_foreign_key "rosters", "courses"
   add_foreign_key "rosters", "roles"
   add_foreign_key "rosters", "users"
   add_foreign_key "users", "age_ranges"
   add_foreign_key "users", "genders"
+  add_foreign_key "values", "factors"
   add_foreign_key "values", "installments"
   add_foreign_key "values", "users"
 end

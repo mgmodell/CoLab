@@ -11,8 +11,8 @@ Rails.application.routes.draw do
   get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', :as => 'edit_consent_log'
   patch 'consent_logs/:id' => 'consent_logs#update', :as => 'consent_log'
 
-  get "reports/new/:installment_id/:group_id" => 'reports#new', :as => 'new_report'
-  get "reports/edit/:installment_id/:group_id" => 'reports#edit', :as => 'edit_report'
+  get "installments/new/:assessment_id/:group_id" => 'installments#new', :as => 'new_installment'
+  get "installments/edit/:assessment_id/:group_id" => 'installments#edit', :as => 'edit_installment'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

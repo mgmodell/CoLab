@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
     self.assessments.still_open.each do |assessment|
       group = self.groups.joins( project: :assessments )
       if group.count == 1
-        ows << [ group, assessments[ 0 ] ]
+        ows << [ group[ 0 ], assessments[ 0 ] ]
       else
         logger.debug "We have a problem!"
       end

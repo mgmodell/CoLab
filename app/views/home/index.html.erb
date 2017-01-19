@@ -22,22 +22,22 @@
      </tr>
      <% @waiting_installments.each do |cai| %>
         <% group = cai[ 0 ] %>
-        <% installment = cai[ 1 ] %>
+        <% assessment = cai[ 1 ] %>
         <tr>
         <td>
-          <% if(installment.is_completed_by_user @current_user) %>
-            <%= link_to installment.project.name, edit_report_path( :installment_id => installment, :group_id => group ) %>
+          <% if(assessment.is_completed_by_user @current_user) %>
+            <%= link_to assessment.project.name, edit_installment_path( :assessment_id => assessment.id, :group_id => group.id ) %>
             <br>(<em>completed</em>)
           <% else %>
-            <%= link_to installment.project.name, new_report_path( :installment_id => installment, :group_id => group ) %>
+            <%= link_to assessment.project.name, new_installment_path( :assessment_id => assessment.id, :group_id => group.id ) %>
           <% end %>
         </td>
         <td> <%= group.name %></td>
-        <td> <%= installment.project.course.name %></td>
-        <td> <%= installment.start_date %> </td>
-        <td> <%= installment.end_date %> </td>
+        <td> <%= assessment.project.course.name %></td>
+        <td> <%= assessment.start_date %> </td>
+        <td> <%= assessment.end_date %> </td>
         <td>
-          <%= render :partial => "shared/consent", :locals => { :project => installment.project } %>
+          <%= render :partial => "shared/consent", :locals => { :project => assessment.project } %>
         </td>
       </tr>
     <% end %>
