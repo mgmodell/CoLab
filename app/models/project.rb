@@ -4,10 +4,10 @@ class Project < ActiveRecord::Base
   has_many :assessments
   belongs_to :course
   belongs_to :consent_form
-  belongs_to :behaviour_pack
+  belongs_to :factor_pack
 
   has_many :users, :through => :groups
-  has_many :behaviours, :through => :behaviour_pack
+  has_many :factors, :through => :factor_pack
 
   validates :name, :end_dow, :start_dow, :presence => true
   validates :end_date, :start_date, :presence => true

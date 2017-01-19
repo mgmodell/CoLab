@@ -7,17 +7,17 @@
 #   Mayor.create(:name => 'Emanuel', :city => cities.first)
 
 #Foundational data
-bp = BehaviourPack.create( :name => 'Simple', :description => 'Borrowed from Goldfinch' )
-Behaviour.create( :name => 'Organizing', :description => 'Helped to organize the group''s members and activities.', :behaviour_packs => [ bp ] )
-Behaviour.create( :name => 'Understanding requirements', :description => 'Understanding what was required of the group and of the individual group members.', :behaviour_packs => [ bp ])
-Behaviour.create( :name => 'Suggesting ideas', :description => 'Suggesting ideas upon which the group could act or continue to build productively.', :behaviour_packs => [ bp ])
-Behaviour.create( :name => 'Producing', :description => 'Coming up with something useful to contribute to the group''s efforts.', :behaviour_packs => [ bp ] )
-Behaviour.create( :name => 'Performing tasks', :description => 'Performing tasks allocated by the group within the specified timeframe.', :behaviour_packs => [ bp ] )
+bp = FactorPack.create( :name => 'Simple', :description => 'Borrowed from Goldfinch' )
+Factor.create( :name => 'Organizing', :description => 'Helped to organize the group''s members and activities.', :factor_packs => [ bp ] )
+Factor.create( :name => 'Understanding requirements', :description => 'Understanding what was required of the group and of the individual group members.', :factor_packs => [ bp ])
+Factor.create( :name => 'Suggesting ideas', :description => 'Suggesting ideas upon which the group could act or continue to build productively.', :factor_packs => [ bp ])
+Factor.create( :name => 'Producing', :description => 'Coming up with something useful to contribute to the group''s efforts.', :factor_packs => [ bp ] )
+Factor.create( :name => 'Performing tasks', :description => 'Performing tasks allocated by the group within the specified timeframe.', :factor_packs => [ bp ] )
 #Create a new BP
-bp = BehaviourPack.create( :name => 'Original', :description => 'My earliest formulation' )
-Behaviour.create( :name => 'Work', :description => 'Performing tasks allocated by the group within the specified timeframe.', :behaviour_packs => [ bp ] )
-Behaviour.create( :name => 'Creativity', :description => 'Performing tasks allocated by the group within the specified timeframe.', :behaviour_packs => [ bp ] )
-Behaviour.create( :name => 'Group Dynamics', :description => 'Performing tasks allocated by the group within the specified timeframe.', :behaviour_packs => [ bp ] )
+bp = FactorPack.create( :name => 'Original', :description => 'My earliest formulation' )
+Factor.create( :name => 'Work', :description => 'Performing tasks allocated by the group within the specified timeframe.', :factor_packs => [ bp ] )
+Factor.create( :name => 'Creativity', :description => 'Performing tasks allocated by the group within the specified timeframe.', :factor_packs => [ bp ] )
+Factor.create( :name => 'Group Dynamics', :description => 'Performing tasks allocated by the group within the specified timeframe.', :factor_packs => [ bp ] )
 
 Role.create( :name => "Instructor",
     :description => "This user teaches the course." )

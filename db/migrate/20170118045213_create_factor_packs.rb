@@ -1,6 +1,6 @@
-class CreateBehaviourPacks < ActiveRecord::Migration
+class CreateFactorPacks < ActiveRecord::Migration
   def change
-    create_table :behaviour_packs do |t|
+    create_table :factor_packs do |t|
       t.string :name
       t.text :description
 

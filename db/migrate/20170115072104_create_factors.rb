@@ -1,6 +1,6 @@
-class CreateBehaviours < ActiveRecord::Migration
+class CreateFactors < ActiveRecord::Migration
   def change
-    create_table :behaviours do |t|
+    create_table :factors do |t|
       t.string :description
       t.string :name
 
