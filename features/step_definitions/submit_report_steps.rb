@@ -1,12 +1,12 @@
 require "forgery"
 
-Given /^the project measures (\d+) behaviours$/ do |num_behaviours|
-   bp = BehaviourPack.make
-   num_behaviours.to_i.times do
-      bp.behaviours << Behaviour.make
+Given /^the project measures (\d+) factors$/ do |num_factors|
+   bp = FactorPack.make
+   num_factors.to_i.times do
+      bp.factors << Factor.make
    end
    bp.save
-   @project.behaviour_pack = bp
+   @project.factor_pack = bp
    @project.save
 end
 
@@ -57,8 +57,8 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
          end
       end
    else
-      @assessment.behaviours.each do |behaviour|
-         elements = page.all( :xpath, "//input[contains(@class,\"#{behaviour.name.delete( ' ' )}\")]" )
+      @assessment.factors.each do |factor|
+         elements = page.all( :xpath, "//input[contains(@class,\"#{factor.name.delete( ' ' )}\")]" )
          index = 0
          total = 0
          while( index < ( elements.length - 1) ) do
@@ -73,13 +73,13 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
    end
 end
 
-Then /^the installment form should request behaviour x user values$/ do
+Then /^the installment form should request factor x user values$/ do
    group_reports = @user.open_group_reports
    assert group_reports.count == 1
    group = group_reports[ 0 ][ 0 ]
-   behaviours = group_reports[ 0 ][ 1 ].assessment.behaviours
+   factors = group_reports[ 0 ][ 1 ].assessment.factors
 
-   expected_count = group.users.count * behaviours.count
+   expected_count = group.users.count * factors.count
 
    actual_count = 0
    page.all( :xpath, "//input[starts-with(@id,\"report_values_attributes_\")]" ).each do |element|
@@ -106,7 +106,7 @@ Then /^the user logs in and submits an installment$/ do
    step "user should see a consent form listed for the open project"
    step "user clicks the link to the assessment"
    step "user will be presented with the installment form"
-   step "the installment form should request behaviour x user values"
+   step "the installment form should request factor x user values"
    step "the user should enter values summing to 600, \"evenly\" across each column"
    step "the user submits the installment"
    step "there should be no error"
@@ -118,6 +118,6 @@ Then /^the user logs out$/ do
 end
 
 Then /^there should be an error$/ do
-   page.should have_content( "The behaviours in each category must equal 600." )
+   page.should have_content( "The factors in each category must equal 600." )
 end
 

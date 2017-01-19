@@ -29,13 +29,13 @@ Group.blueprint do
   name { Forgery::Basic.text + " Group" }
 end
 
-Behaviour.blueprint do
-  name { Forgery::Name.industry + " Behaviour" }
+Factor.blueprint do
+  name { Forgery::Name.industry + " Factor" }
   description { Forgery::Basic.text }
 end
 
-BehaviourPack.blueprint do
-  name { Forgery::Name.industry + " Behaviour Pack" }
+FactorPack.blueprint do
+  name { Forgery::Name.industry + " Factor Pack" }
   description { Forgery::Basic.text }
 end
 
