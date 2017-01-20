@@ -79,7 +79,7 @@ class InstallmentsController < ApplicationController
       @members = @group.users
       #removed proactive build of value objects.
 
-      cell_value = 600 / @members.size
+      cell_value = 6000 / @members.size
       @members.each do |u|
         @factors.each do |b|
           @installment.values.build( :factor => b, :user => u, :value => cell_value )

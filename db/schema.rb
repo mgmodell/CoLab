@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170119134145) do
+ActiveRecord::Schema.define(version: 20170120014709) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -28,6 +28,20 @@ ActiveRecord::Schema.define(version: 20170119134145) do
   end
 
   add_index "assessments", ["project_id"], name: "index_assessments_on_project_id", using: :btree
+
+  create_table "behaviors", force: :cascade do |t|
+    t.string   "name",        limit: 255
+    t.text     "description", limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  create_table "cips", id: false, force: :cascade do |t|
+    t.integer  "id",          limit: 4
+    t.string   "description", limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
 
   create_table "consent_forms", force: :cascade do |t|
     t.string   "name",             limit: 255
@@ -127,6 +141,15 @@ ActiveRecord::Schema.define(version: 20170119134145) do
   add_index "installments", ["group_id"], name: "index_installments_on_group_id", using: :btree
   add_index "installments", ["user_id"], name: "index_installments_on_user_id", using: :btree
 
+  create_table "narratives", force: :cascade do |t|
+    t.string   "member",      limit: 255
+    t.integer  "scenario_id", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "narratives", ["scenario_id"], name: "index_narratives_on_scenario_id", using: :btree
+
   create_table "projects", force: :cascade do |t|
     t.string   "name",            limit: 255
     t.string   "description",     limit: 255
@@ -166,6 +189,15 @@ ActiveRecord::Schema.define(version: 20170119134145) do
   add_index "rosters", ["course_id"], name: "index_rosters_on_course_id", using: :btree
   add_index "rosters", ["role_id"], name: "index_rosters_on_role_id", using: :btree
   add_index "rosters", ["user_id"], name: "index_rosters_on_user_id", using: :btree
+
+  create_table "scenarios", force: :cascade do |t|
+    t.string   "name",        limit: 255
+    t.integer  "behavior_id", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "scenarios", ["behavior_id"], name: "index_scenarios_on_behavior_id", using: :btree
 
   create_table "schools", force: :cascade do |t|
     t.string   "description", limit: 255
@@ -230,6 +262,16 @@ ActiveRecord::Schema.define(version: 20170119134145) do
   add_index "values", ["installment_id"], name: "index_values_on_installment_id", using: :btree
   add_index "values", ["user_id"], name: "index_values_on_user_id", using: :btree
 
+  create_table "weeks", force: :cascade do |t|
+    t.integer  "narrative_id", limit: 4
+    t.integer  "week_num",     limit: 4
+    t.text     "text",         limit: 65535
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "weeks", ["narrative_id"], name: "index_weeks_on_narrative_id", using: :btree
+
   add_foreign_key "assessments", "projects"
   add_foreign_key "consent_forms", "users"
   add_foreign_key "consent_logs", "consent_forms"
@@ -239,6 +281,7 @@ ActiveRecord::Schema.define(version: 20170119134145) do
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
   add_foreign_key "installments", "users"
+  add_foreign_key "narratives", "scenarios"
   add_foreign_key "projects", "consent_forms"
   add_foreign_key "projects", "courses"
   add_foreign_key "projects", "factor_packs"
@@ -246,9 +289,11 @@ ActiveRecord::Schema.define(version: 20170119134145) do
   add_foreign_key "rosters", "courses"
   add_foreign_key "rosters", "roles"
   add_foreign_key "rosters", "users"
+  add_foreign_key "scenarios", "behaviors"
   add_foreign_key "users", "age_ranges"
   add_foreign_key "users", "genders"
   add_foreign_key "values", "factors"
   add_foreign_key "values", "installments"
   add_foreign_key "values", "users"
+  add_foreign_key "weeks", "narratives"
 end

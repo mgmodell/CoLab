@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  narrative_id: 
+  week_num: 1
+  text: MyText
+
+two:
+  narrative_id: 
+  week_num: 1
+  text: MyText
