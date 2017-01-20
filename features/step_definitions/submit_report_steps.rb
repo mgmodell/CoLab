@@ -73,10 +73,10 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
 end
 
 Then /^the installment form should request factor x user values$/ do
-   group_reports = @user.open_group_reports
-   assert group_reports.count == 1
-   group = group_reports[ 0 ][ 0 ]
-   factors = group_reports[ 0 ][ 1 ].assessment.factors
+   group_installments = @user.waiting_installments
+   group_installments.count.should eq 1
+   group = group_installments[ 0 ][ 0 ]
+   factors = group_installments[ 0 ][ 1 ].factors
 
    expected_count = group.users.count * factors.count
 
@@ -86,7 +86,7 @@ Then /^the installment form should request factor x user values$/ do
          actual_count = actual_count + 1
       end
    end
-   assert actual_count == expected_count
+   actual_count.should eq expected_count
 end
 
 Then /^the assessment should show up as completed$/ do

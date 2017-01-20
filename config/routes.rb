@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   get "installments/new/:assessment_id/:group_id" => 'installments#new', :as => 'new_installment'
   get "installments/edit/:assessment_id/:group_id" => 'installments#edit', :as => 'edit_installment'
 
+  resources :installments, :only => [ :create, :update ]
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

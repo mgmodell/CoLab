@@ -11,8 +11,6 @@ class InstallmentsController < ApplicationController
     else
 
       group_id = params[ :group_id ]
-      puts "Group  ID: "
-      p group_id
       @group = Group.find( group_id )
       #validate that current_user is in the
       user_id = current_user.id
@@ -60,8 +58,6 @@ class InstallmentsController < ApplicationController
     else
 
       group_id = params[ :group_id ]
-      puts "new Group  ID: "
-      p group_id
       @group = Group.find( group_id )
       #validate that current_user is in the
       user_id = current_user.id

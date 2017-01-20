@@ -1,4 +1,4 @@
-<h2>Your weekly report</h2>
+<h2>Your weekly installment</h2>
 <% if flash[:notice] %>
   <p class="notice"><%= flash[:notice] %></p>
 <% end %>
@@ -7,33 +7,33 @@
 <% end %>
 
 <div class="instructions">
-<p>Please complete this weeks' <%= @assessment_name %> assessment for 
-group `<%= @group_name %>' by indicating how much effort each of the
+<p>Please complete this weeks' <%= @project_name %> assessment for 
+group `<%= @group.name %>' by indicating how much effort each of the
 <%= @members.count %> members of your group contributed towards each of
-the <%= @behaviours.count %> behaviours. Please keep in mind that <em>this
+the <%= @factors.count %> factors. Please keep in mind that <em>this
 report <u>should only cover this past week</u> and none of the period 
 before</em>.</p>
 <P>Each column below must total 600 and the row at bottom will indicate
 the current total. Additionally, the submit button will only be available
 when the totals equal 600.</p>
 </div>
-<% if @report.id.nil?
+<% if @installment.id.nil?
      url_params = { :action => "create" }
    else
-     url_params = { :action => "update", :id => @report.id }
+     url_params = { :action => "update", :id => @installment.id }
    end %>
 
-<%= form_for @report, :url => url_params do |f| %>
-  <%= f.hidden_field :report_date %>
-  <%= f.hidden_field :weekly_id %>
+<%= form_for @installment, :url => url_params do |f| %>
+  <%= f.hidden_field :inst_date %>
+  <%= f.hidden_field :id %>
   <%= f.hidden_field :user_id %>
   <%= f.hidden_field :group_id %>
   <table>
     <tr>
       <th>User</th>
-    <% @behaviours.each do |behaviour| %>
-      <th><%= behaviour.name %><br>
-        <%= behaviour.description %></th>
+    <% @factors.each do |factor| %>
+      <th><%= factor.name %><br>
+        <%= factor.description %></th>
     <% end %>
     </tr>
     <% index = 0 %>
@@ -41,14 +41,14 @@ when the totals equal 600.</p>
     <% @members.each do |member| %>
       <tr>
         <td><%= member.first_name %> <%= member.last_name %></td>
-        <% @behaviours.each do |behaviour| %>
+        <% @factors.each do |factor| %>
           <td>
-            <%= fields_for "report[values_attributes][#{index}]",
-              @report.value_for_user_behaviour( member, behaviour ) do |value_form| %>
-              <%= value_form.hidden_field :behaviour_id %>
+            <%= fields_for "installment[values_attributes][#{index}]",
+              @installment.value_for_user_factor( member, factor ) do |value_form| %>
+              <%= value_form.hidden_field :factor_id %>
               <%= value_form.hidden_field :user_id %>
-              <%= value_form.number_field :value, :class => behaviour.name.delete(' ' ),
-                :behaviour => behaviour.name.delete( ' ' ),
+              <%= value_form.number_field :value, :class => factor.name.delete(' ' ),
+                :factor => factor.name.delete( ' ' ),
                 :autocomplete => "off" %>
             <% end %>
             <% index = index + 1 %>
@@ -58,9 +58,9 @@ when the totals equal 600.</p>
     <% end %>
     <tr>
       <td>Totals:<br>(must equal 600)</td>
-      <% @behaviours.each do |behaviour| %>
+      <% @factors.each do |factor| %>
         <td>
-          <%= text_field_tag ( behaviour.name.delete( ' ' ) + "_calc" ), 600,
+          <%= text_field_tag ( factor.name.delete( ' ' ) + "_calc" ), 600,
             :onchange => "alert( 'changed' );", :class => "total", :disabled => true %>
         </td>
       <% end %>
@@ -68,7 +68,7 @@ when the totals equal 600.</p>
 
 
   </table>
-  <%= render :partial => "reports/shared/comments", :object => f %>
+  <%= render :partial => "installments/shared/comments", :object => f %>
 
-  <%= f.submit "Submit Weekly Report" %>
+  <%= f.submit "Submit Weekly Installment" %>
 <% end %>

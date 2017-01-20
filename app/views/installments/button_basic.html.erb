@@ -1,4 +1,4 @@
-<h2>Your weekly report</h2>
+<h2>Your weekly installment</h2>
 <% if flash[:notice] %>
   <p class="notice"><%= flash[:notice] %></p>
 <% end %>
@@ -7,7 +7,7 @@
 <% end %>
 
 <div class="instructions">
-<p>Please complete this weeks' <%= @assessment_name %> assessment for 
+<p>Please complete this weeks' <%= @project_name %> assessment for 
 group `<%= @group_name %>' by indicating how much effort each of the
 <%= @members.count %> members of your group contributed towards each of
 the <%= @behaviours.count %> behaviours. Please keep in mind that <em>this
@@ -18,13 +18,13 @@ towards each behaviour. When you indicate effort, it should reflect their
 contribution relative to the other members of the group.</P>
 </div>
 
-<% if @report.id.nil?
+<% if @installment.id.nil?
      url_params = { :action => "create" }
    else
-     url_params = { :action => "update", :id => @report.id }
+     url_params = { :action => "update", :id => @installment.id }
    end %>
-<%= form_for @report, :url => url_params do |f| %>
-  <%= f.hidden_field :report_date %>
+<%= form_for @installment, :url => url_params do |f| %>
+  <%= f.hidden_field :inst_date %>
   <%= f.hidden_field :weekly_id %>
   <%= f.hidden_field :user_id %>
   <%= f.hidden_field :group_id %>
@@ -45,14 +45,14 @@ contribution relative to the other members of the group.</P>
               <% @members.each do |member| %>
                 <tr>
                     <td width="150">
-                      <%= fields_for "report[values_attributes][#{index}]",
-                        @report.value_for_user_behaviour( member, behaviour ) do |value_form| %>
+                      <%= fields_for "installment[values_attributes][#{index}]",
+                        @installment.value_for_user_behaviour( member, behaviour ) do |value_form| %>
                         <%= value_form.hidden_field :behaviour_id %>
                         <%= value_form.hidden_field :user_id %>
                         <%= label_tag 'value', member.name %>
                     </td>
                     <td>
-                      <% val = ( @report.value_for_user_behaviour( member, behaviour ).value / 150 ).round %>
+                      <% val = ( @installment.value_for_user_behaviour( member, behaviour ).value / 150 ).round %>
                       <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
                         <%= value_form.radio_button :value, "0", :checked => ( val == 0 ) %>
                         <%= value_form.label :value_0, "nothing" %>
@@ -75,7 +75,7 @@ contribution relative to the other members of the group.</P>
     <% end %>
   </div>
 
-  <%= render :partial => "reports/shared/comments", :object => f %>
+  <%= render :partial => "installments/shared/comments", :object => f %>
 
   <%= f.submit "Submit Weekly Report" %>
 <% end %>

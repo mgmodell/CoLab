@@ -1,4 +1,4 @@
-<h2>Your weekly report</h2>
+<h2>Your weekly installment</h2>
 <% if flash[:notice] %>
   <p class="notice"><%= flash[:notice] %></p>
 <% end %>
@@ -7,41 +7,41 @@
 <% end %>
 
 <div class="instructions">
-<p>Please complete this weeks' <%= @assessment_name %> assessment for 
+<p>Please complete this weeks' <%= @installment_name %> assessment for 
 group `<%= @group_name %>' by indicating how much effort each of the
 <%= @members.count %> members of your group contributed towards each of
-the <%= @behaviours.count %> behaviours. Please keep in mind that <em>this
+the <%= @factors.count %> factors. Please keep in mind that <em>this
 report <u>should only cover this past week</u> and none of the period 
 before</em>.</p>
 <P>Use the sliders to increase or decrease the effort each member put in
-towards each behaviour. Notice that when you increase one slider, all other
+towards each factor. Notice that when you increase one slider, all other
 sliders will automatically drop proportionally and vice versa. Please do
-visit each set of behaviours prior to submitting your report.</p>
+visit each set of factors prior to submitting your report.</p>
 </div>
 
-<% if @report.id.nil?
+<% if @installment.id.nil?
      url_params = { :action => "create" }
    else
-     url_params = { :action => "update", :id => @report.id }
+     url_params = { :action => "update", :id => @installment.id }
    end %>
-<%= form_for @report, :url => url_params do |f| %>
-  <%= f.hidden_field :report_date %>
+<%= form_for @installment, :url => url_params do |f| %>
+  <%= f.hidden_field :inst_date %>
   <%= f.hidden_field :weekly_id %>
   <%= f.hidden_field :user_id %>
   <%= f.hidden_field :group_id %>
   <% index = 0 %>
   <div data-role="collapsible-set" data-content-theme="a">
-    <% @behaviours.each do |behaviour| %>
+    <% @factors.each do |factor| %>
       <div data-role="collapsible" data-collapsed="true" >
-        <h3><%= behaviour.name %></h3>
-        <p>Description: <%= behaviour.description %></p>
+        <h3><%= factor.name %></h3>
+        <p>Description: <%= factor.description %></p>
           <table width="90%">
               <% @members.each do |member| %>
                 <tr>
                     <td width="150">
                       <%= fields_for "report[values_attributes][#{index}]",
-                        @report.value_for_user_behaviour( member, behaviour ) do |value_form| %>
-                        <%= value_form.hidden_field :behaviour_id %>
+                        @report.value_for_user_factor( member, factor ) do |value_form| %>
+                        <%= value_form.hidden_field :factor_id %>
                         <%= value_form.hidden_field :user_id %>
                         <%= label_tag 'value', member.name %>
                     </td>
@@ -50,7 +50,7 @@ visit each set of behaviours prior to submitting your report.</p>
                       <%= value_form.range_field :value, 
                         :min => 0, :max => 600, 
                         :data => {:highlight => true }, :class => "slider",
-                  			:behaviour => behaviour.name,
+                  			:factor => factor.name,
                   			:oldValue => (600 / @members.length ) %>
                       <br>
                       <% end %><br>
@@ -65,5 +65,5 @@ visit each set of behaviours prior to submitting your report.</p>
 
   <%= render :partial => "reports/shared/comments", :object => f %>
 
-  <%= f.submit "Submit Weekly Report" %>
+  <%= f.submit "Submit Weekly Installment" %>
 <% end %>

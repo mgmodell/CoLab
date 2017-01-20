@@ -36,7 +36,7 @@ end
 
 Then /^user will be presented with the installment form$/ do
   page.should have_content "Your weekly installment"
-  page.should have_content @assessment.name
+  page.should have_content @project.name
 end
 
 Then /^user should not see a consent form listed for the open assessment$/ do
