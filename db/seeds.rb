@@ -224,7 +224,7 @@ class Cip_
 end
 
 cip_data = YAML::load( File.open( "db/cip_constants.yml" ) )
-cip_data.each{ |cip| Cip.create(
-  :id => cip.id,
-  :description => cip.description ) }
+cip_data.each{ |cip_code| CipCode.create(
+  :gov_code => cip_code.id,
+  :description => cip_code.description ) }
 
