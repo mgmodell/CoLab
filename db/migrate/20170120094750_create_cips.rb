@@ -1,7 +1,7 @@
 class CreateCips < ActiveRecord::Migration
   def change
-    create_table :cips, :id => false do |t|
-      t.integer :id, :options => 'PRIMARY KEY'
+    create_table :cips do |t|
+      t.integer :code
       t.string :description
 
       t.timestamps null: false
