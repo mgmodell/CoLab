@@ -3,7 +3,7 @@ class Group < ActiveRecord::Base
   belongs_to :project, :inverse_of => :groups
   has_and_belongs_to_many :users, :inverse_of => :groups
 
-  has_many :reports, :inverse_of => :group
+  has_many :installments, :inverse_of => :group
 
   validates :name, :project_id, :presence => true
   validate :validate_activation_status, :on => :update

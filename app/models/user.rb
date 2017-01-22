@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   belongs_to :age_range, :inverse_of => :users
   belongs_to :cip_code, :inverse_of => :users
   has_many :installments, :inverse_of => :user
+  has_many :rosters, :inverse_of => :user
 
   has_many :assessments, :through => :projects
 
