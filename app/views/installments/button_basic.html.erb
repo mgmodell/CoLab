@@ -25,7 +25,7 @@ contribution relative to the other members of the group.</P>
    end %>
 <%= form_for @installment, :url => url_params do |f| %>
   <%= f.hidden_field :inst_date %>
-  <%= f.hidden_field :weekly_id %>
+  <%= f.hidden_field :assessment_id %>
   <%= f.hidden_field :user_id %>
   <%= f.hidden_field :group_id %>
   <tr>
@@ -77,5 +77,5 @@ contribution relative to the other members of the group.</P>
 
   <%= render :partial => "installments/shared/comments", :object => f %>
 
-  <%= f.submit "Submit Weekly Report" %>
+  <%= f.submit "Submit Weekly Installment" %>
 <% end %>

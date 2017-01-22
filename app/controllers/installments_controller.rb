@@ -88,7 +88,7 @@ class InstallmentsController < ApplicationController
   end
 
   def create
-    @installment = Installment.new( params[:installment] )
+    @installment = Installment.new( i_params ) #OLD code: params[:installment] )
     redirected = false
 
     #I need to figure out these redirects properly
@@ -152,4 +152,9 @@ class InstallmentsController < ApplicationController
 
     end
   end
+
+   private
+   def i_params
+      params. require( :installment ).permit( :inst_date, :comments, :group_id, :user_id, :assessment_id, :group_id, values: [:value, :factor_id ] )
+   end
 end

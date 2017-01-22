@@ -26,7 +26,7 @@ visit each set of factors prior to submitting your report.</p>
    end %>
 <%= form_for @installment, :url => url_params do |f| %>
   <%= f.hidden_field :inst_date %>
-  <%= f.hidden_field :weekly_id %>
+  <%= f.hidden_field :assessment_id %>
   <%= f.hidden_field :user_id %>
   <%= f.hidden_field :group_id %>
   <% index = 0 %>

@@ -18,7 +18,7 @@ Given /^the project started last month and lasts (\d+) weeks, opened yesterday a
 end
 
 When /^the user submits the installment$/ do
-   click_link_or_button( "Submit Weekly Report" )
+   click_link_or_button( "Submit Weekly Installment" )
 end
 
 When /^the user returns home$/ do
@@ -39,18 +39,18 @@ When /^user clicks the link to the project$/ do
 end
 
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points,distribution|
-   group_report = @user.open_group_reports[ 0 ]
+   group_installment = @user.waiting_installments[ 0 ]
 
    if column_points.to_i <= 0
-      page.all( :xpath, "//input[starts-with(@id,\"report_values_attributes_\")]" ).each do |element|
+      page.all( :xpath, "//input[starts-with(@id,\"installment_values_attributes_\")]" ).each do |element|
          if element[:id].end_with? "value"
             element.set Random::rand( 3200 ).abs
          end
       end
    elsif distribution == "evenly"
-      cell_value = column_points.to_i / group_report[ 0 ].users.count
+      cell_value = column_points.to_i / group_installment[ 0 ].users.count
 
-      page.all( :xpath, "//input[starts-with(@id,\"report_values_attributes_\")]" ).each do |element|
+      page.all( :xpath, "//input[starts-with(@id,\"installment_values_attributes_\")]" ).each do |element|
          if element[:id].end_with? "value"
             element.set cell_value
          end
@@ -81,7 +81,7 @@ Then /^the installment form should request factor x user values$/ do
    expected_count = group.users.count * factors.count
 
    actual_count = 0
-   page.all( :xpath, "//input[starts-with(@id,\"report_values_attributes_\")]" ).each do |element|
+   page.all( :xpath, "//input[starts-with(@id,\"installment_values_attributes_\")]" ).each do |element|
       if element[:id].end_with? "value"
          actual_count = actual_count + 1
       end
@@ -106,7 +106,7 @@ Then /^the user logs in and submits an installment$/ do
    step "user clicks the link to the assessment"
    step "user will be presented with the installment form"
    step "the installment form should request factor x user values"
-   step "the user should enter values summing to 600, \"evenly\" across each column"
+   step "the user should enter values summing to 6000, \"evenly\" across each column"
    step "the user submits the installment"
    step "there should be no error"
 end
@@ -117,6 +117,6 @@ Then /^the user logs out$/ do
 end
 
 Then /^there should be an error$/ do
-   page.should have_content( "The factors in each category must equal 600." )
+   page.should have_content( "The factors in each category must equal 6000." )
 end
 

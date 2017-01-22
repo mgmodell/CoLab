@@ -48,7 +48,7 @@ class Installment < ActiveRecord::Base
   end
 
   def check_dates
-    if installment.end_date.end_of_day < Time.now
+    if self.assessment.end_date.end_of_day < Time.now
       errors[ :base ] << "This assessment has expired and can no longer be " +
       "submit for this installment [expired: #{installment.end_date.end_of_day}, now: #{Time.now}.]"
     end
@@ -59,11 +59,11 @@ class Installment < ActiveRecord::Base
       total = au_hash.values.inject(0){ |sum,v| sum + v.value}
 
       au_hash.values.each do |v|
-        v.value = ( (600.0 * v.value ) / total ).round
+        v.value = ( (6000.0 * v.value ) / total ).round
       end
 
       total = au_hash.values.inject(0){ |sum,v| sum + v.value}
-      difference = 600 - total
+      difference = 6000 - total
       if difference != 0
         delta = difference <=> 0
         index = 0
