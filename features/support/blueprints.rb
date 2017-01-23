@@ -23,6 +23,7 @@ Course.blueprint do
   school_id { 1 }
   name { Forgery::Name.industry + " Course" }
   number { Forgery::Basic.number }
+  timezone { "Hawaii" }
 end
 
 Group.blueprint do

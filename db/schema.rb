@@ -20,11 +20,11 @@ ActiveRecord::Schema.define(version: 20170120094750) do
   end
 
   create_table "assessments", force: :cascade do |t|
-    t.date     "end_date"
-    t.string   "start_date", limit: 255
+    t.datetime "end_date"
+    t.datetime "start_date"
     t.integer  "project_id", limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
   add_index "assessments", ["project_id"], name: "index_assessments_on_project_id", using: :btree
@@ -81,6 +81,8 @@ ActiveRecord::Schema.define(version: 20170120094750) do
     t.string   "description", limit: 255
     t.string   "timezone",    limit: 255
     t.integer  "school_id",   limit: 4
+    t.date     "start_date"
+    t.date     "end_date"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.string   "number",      limit: 255
@@ -135,14 +137,13 @@ ActiveRecord::Schema.define(version: 20170120094750) do
   add_index "groups_users", ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id", unique: true, using: :btree
 
   create_table "installments", force: :cascade do |t|
-    t.date     "inst_date"
+    t.datetime "inst_date"
     t.integer  "assessment_id", limit: 4
     t.integer  "user_id",       limit: 4
     t.text     "comments",      limit: 65535
     t.integer  "group_id",      limit: 4
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
-    t.datetime "report_date"
   end
 
   add_index "installments", ["assessment_id"], name: "index_installments_on_assessment_id", using: :btree
@@ -167,8 +168,8 @@ ActiveRecord::Schema.define(version: 20170120094750) do
     t.integer  "start_dow",       limit: 4
     t.integer  "end_dow",         limit: 4
     t.boolean  "active"
-    t.date     "start_date"
-    t.date     "end_date"
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.integer  "consent_form_id", limit: 4
     t.integer  "factor_pack_id",  limit: 4
     t.integer  "style_id",        limit: 4

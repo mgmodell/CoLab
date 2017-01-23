@@ -1,7 +1,7 @@
 class CreateInstallments < ActiveRecord::Migration
   def change
     create_table :installments do |t|
-      t.date :inst_date
+      t.datetime :inst_date
       t.references :assessment, index: true, foreign_key: true
       t.references :user, index: true, foreign_key: true
       t.text :comments
