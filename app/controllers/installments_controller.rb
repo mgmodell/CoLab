@@ -104,34 +104,6 @@ class InstallmentsController < ApplicationController
       "therefore are not permitted to submit this installment."
     elsif @installment.save
       project = @installment.assessment.project
-      if project.is_for_research?
-        #gfus = group_follow_up_schedule
-        gfus = GroupFollowUpSchedule.where(
-          :assessment_id => @installment.assessment.id,
-        :group_id => @installment.group.id )
-        if gfus.count < 1
-          follow_up_week = false
-          follow_up_count = GroupFollowUpSchedule.joins( :project ).where(
-          :group_id => @installment.id ).count
-          if follow_up_count < project.max_follow_ups &&
-            Random.rand( 101 ) < project.follow_up_likelihood
-            follow_up_week = true
-          end
-          gfus = GroupFollowUpSchedule.create( :follow_up_week => follow_up_week,
-            :assessment_id => @installment.assessment.id,
-          :group_id => @installment.group.id )
-        else
-          gfus = gfus[ 0 ]
-        end
-        if gfus.follow_up_week
-          redirect_to :controller => "individual_follow_ups",
-          :action => "new",
-          :user_id => @installment.user.id,
-          :group_follow_up_id => gfus.id,
-          :project_id => project.id
-          redirected = true
-        end
-      end
       flash[:notice] = "Successfully saved your assessment installment."
       if !redirected
         redirect_to root_url
