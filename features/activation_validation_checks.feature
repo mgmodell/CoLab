@@ -9,14 +9,14 @@ Feature: Activation Validation Checks
   Scenario: It should be possible to activate assesments where no participants appear more than once
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     When the project is activated
-    Then there should be no errors
+    Then there should be 0 project save errors
 
   Scenario: It should not be possible to activate an project with a repeated user
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the project has a group with 4 confirmed users
     Given an additional user is in each group of the project
     When the project is activated
-    Then there should be one error
+    Then there should be 1 project save errors
 
   Scenario: It should not be possible to modify an active project
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
@@ -29,14 +29,14 @@ Feature: Activation Validation Checks
   Scenario: It should be possible to activate assesments where no participants appear more than once
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     When the project is activated
-    Then there should be no errors
+    Then there should be 0 project save errors
 
   Scenario: It should not be possible to activate an project with a repeated user
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the project has a group with 4 confirmed users
     Given an additional user is in each group of the project
     When the project is activated
-    Then there should be one error
+    Then there should be 1 project save errors
 
   Scenario: It should not be possible to modify an active project
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"

@@ -3,8 +3,12 @@ When /^the project is activated$/ do
   @project.save
 end
 
-Then /^there should be no errors$/ do
-  @project.errors.count.should eq 0 
+Then /^there should be (\d+) project save errors$/ do |expected_error_count|
+  if @project.errors.count > expected_error_count.to_i
+    puts @project.errors.count
+    puts @project.errors.full_messages
+  end
+  @project.errors.count.should eq expected_error_count.to_i 
 end
 
 Given /^an additional user is in each group of the project$/ do
@@ -15,10 +19,6 @@ Given /^an additional user is in each group of the project$/ do
     group.users << user
   end
   @project.save
-end
-
-Then /^there should be one error$/ do
-  expect( @project.errors.count).to eq( 1 )
 end
 
 Then /^there should be an error if I try to modify an project field$/ do

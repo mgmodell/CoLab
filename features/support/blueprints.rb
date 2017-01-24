@@ -8,7 +8,7 @@ User.blueprint do
   password { "password" }
   password_confirmation { "password"  }
   email { Forgery::Basic.text +  "@mailinator.com"  }
-  timezone { "Hawaii" }
+  timezone { "UTC" }
 end
 
 Project.blueprint do
@@ -24,7 +24,9 @@ Course.blueprint do
   school_id { 1 }
   name { Forgery::Name.industry + " Course" }
   number { Forgery::Basic.number }
-  timezone { "Hawaii" }
+  timezone { "UTC" }
+  start_date { 4.months.ago }
+  end_date { 2.months.from_now }
 end
 
 Group.blueprint do

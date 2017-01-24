@@ -22,7 +22,7 @@ Feature: Submitting Reports
     Then the installment form should request factor x user values
     Then the user should enter values summing to 600, "evenly" across each column
     When the user submits the installment
-    Then there should be no error
+    Then there should be 0 project save errors
 
   Scenario: User should not be able to edit a completed weekly installment
     Given the project measures 4 factors
@@ -51,7 +51,7 @@ Feature: Submitting Reports
     Then the installment form should request factor x user values
     Then the user should enter values summing to 0, "randomly" across each column
     When the user submits the installment
-    Then there should be no error
+    Then there should be 0 project save errors
 
   Scenario: A installment's factor column need not sum to 600 or be distributed evenly
     Given the project measures 3 factors
@@ -69,7 +69,7 @@ Feature: Submitting Reports
     Then the installment form should request factor x user values
     Then the user should enter values summing to 0, "randomly" across each column
     When the user submits the installment
-    Then there should be no error
+    Then there should be 0 project save errors
 
   Scenario: A installment's factor column need not sum to 600
     Given the project measures 3 factors
@@ -87,7 +87,7 @@ Feature: Submitting Reports
     Then the installment form should request factor x user values
     Then the user should enter values summing to 1200, "evenly" across each column
     When the user submits the installment
-    Then there should be no error
+    Then there should be 0 project save errors
 
   Scenario: User should not be able to submit a installment after the weekly has closed
     Given the project measures 3 factors

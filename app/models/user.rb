@@ -56,6 +56,7 @@ class User < ActiveRecord::Base
 
   def waiting_installments
     ows = []
+    puts self.assessments.still_open.count
     self.assessments.still_open.each do |assessment|
       group = self.groups.joins( project: :assessments )
       if group.count == 1

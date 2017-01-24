@@ -15,13 +15,16 @@ class Project < ActiveRecord::Base
   validates :name, :end_dow, :start_dow, :presence => true
   validates :end_date, :start_date, :presence => true
 
+  before_save :timezone_adjust
+
   validates :start_dow, :end_dow, :numericality => {
     :greater_than_or_equal_to => 0,
     :less_than_or_equal_to => 6 }
 
   #Let's be sure the dates are valid
-  validate :validate_date_sanity
-  validate :validate_activation_status
+  validate :date_sanity
+  validate :dates_within_course
+  validate :activation_status
 
    def is_for_research?
       ! self.consent_form.nil?
@@ -82,14 +85,25 @@ class Project < ActiveRecord::Base
 
 
   #Validation check code
-  def validate_date_sanity
+  def date_sanity
     if self.start_date > self.end_date
       errors.add( :start_dow, "The start date must come before the end date" )
     end
     errors
   end
 
-  def validate_activation_status
+  def dates_within_course
+    if start_date < course.start_date
+      errors.add( :start_date, "The project cannot begin before the course has begun" )
+    end
+    if end_date > course.end_date
+      errors.add( :end_date, "The project cannot continue after the course has ended" )
+    end
+    errors
+
+  end
+
+  def activation_status
       if self.active_was && self.active
          errors.add( :active, "You cannot make changes to an active project. Please deactivate it first." )
       elsif !self.active_was && self.active
@@ -119,5 +133,13 @@ class Project < ActiveRecord::Base
     if self.active? && self.is_available?
       Assessment.build_new_assessment self
     end
+  end
+
+  def timezone_adjust
+    if start_date.zone != course.timezone
+      start_date = ActiveSupport::TimeZone.new( course.timezone ).local_to_utc(start_date)
+      end_date = ActiveSupport::TimeZone.new( course.timezone ).local_to_utc(end_date)
+    end
+
   end
 end
