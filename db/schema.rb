@@ -81,8 +81,8 @@ ActiveRecord::Schema.define(version: 20170120094750) do
     t.string   "description", limit: 255
     t.string   "timezone",    limit: 255
     t.integer  "school_id",   limit: 4
-    t.date     "start_date"
-    t.date     "end_date"
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.string   "number",      limit: 255
@@ -247,6 +247,7 @@ ActiveRecord::Schema.define(version: 20170120094750) do
     t.integer  "gender_id",              limit: 4
     t.integer  "age_range_id",           limit: 4
     t.string   "country",                limit: 255
+    t.string   "timezone",               limit: 255
     t.boolean  "admin"
     t.boolean  "welcomed"
   end

@@ -5,8 +5,8 @@ class CreateCourses < ActiveRecord::Migration
       t.string :description
       t.string :timezone
       t.references :school, index: true, foreign_key: true
-      t.date :start_date
-      t.date :end_date
+      t.datetime :start_date
+      t.datetime :end_date
 
       t.timestamps null: false
     end
