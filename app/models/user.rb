@@ -15,6 +15,8 @@ class User < ActiveRecord::Base
   has_many :installments, :inverse_of => :user
   has_many :rosters, :inverse_of => :user
 
+  validates :timezone, :presence => true
+
   has_many :assessments, :through => :projects
 
   #Give us a standard form of the name

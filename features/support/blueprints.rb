@@ -8,6 +8,7 @@ User.blueprint do
   password { "password" }
   password_confirmation { "password"  }
   email { Forgery::Basic.text +  "@mailinator.com"  }
+  timezone { "Hawaii" }
 end
 
 Project.blueprint do

@@ -114,7 +114,8 @@ u = User.new( :first_name => 'Micah',
   :admin => true,
   :password => "testest",
   :password_confirmation => "testest",
-  :email => 'micah.modell@gmail.com' )
+  :email => 'micah.modell@gmail.com',
+  :timezone => "Seoul" )
 u.skip_confirmation!
 u.save
 

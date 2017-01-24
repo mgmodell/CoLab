@@ -3,4 +3,6 @@ class Course < ActiveRecord::Base
   has_many :projects, :inverse_of => :course
   has_many :rosters, :inverse_of => :course
 
+  validates :timezone, :presence => true
+
 end
