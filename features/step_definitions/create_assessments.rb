@@ -1,7 +1,6 @@
-require 'delorean'
 
 Given /^today is "(.*?)"$/ do |destination_time|
-  Delorean.time_travel_to( destination_time )
+  travel_to Chronic.parse( destination_time ).utc
 end
 
 
@@ -14,5 +13,5 @@ Given /^that the system's set_up_assessments process runs$/ do
 end
 
 Then /^return to the present$/ do
-  Delorean.back_to_the_present
+  travel_back
 end

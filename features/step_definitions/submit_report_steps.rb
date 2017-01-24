@@ -92,7 +92,7 @@ end
 Then /^the assessment should show up as completed$/ do
 
    #Using some cool xpath stuff to check for proper content
-   page.should have_xpath( "//a[contains(., '#{@assessment.name}')]/.." ), "No link to assessment"
+   page.should have_xpath( "//a[contains(., '#{@project.name}')]/.." ), "No link to assessment"
    page.should have_xpath( "//td[contains(., 'completed')]" ), "No 'completed' message"
 
 end
@@ -101,9 +101,9 @@ Then /^the user logs in and submits an installment$/ do
    step "the user \"has\" had demographics requested"
    step "the user logs in"
    step "the user should see a successful login message"
-   step "user should see 1 open assessment"
+   step "user should see 1 open project"
    step "user should see a consent form listed for the open project"
-   step "user clicks the link to the assessment"
+   step "user clicks the link to the project"
    step "user will be presented with the installment form"
    step "the installment form should request factor x user values"
    step "the user should enter values summing to 6000, \"evenly\" across each column"

@@ -89,7 +89,7 @@ Feature: Submitting Reports
     When the user submits the installment
     Then there should be 0 project save errors
 
-  Scenario: User should not be able to submit a installment after the weekly has closed
+  Scenario: User should not be able to submit an installment after the assessment has closed
     Given the project measures 3 factors
     Given the project has a consent form
     Given the user is the "last" user

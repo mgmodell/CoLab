@@ -13,7 +13,6 @@ class HomeController < ApplicationController
       end
       @first_name = current_user.first_name
       @waiting_installments = current_user.waiting_installments
-      puts @waiting_installments.count
    end
 
 end

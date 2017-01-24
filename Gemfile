@@ -47,7 +47,6 @@ group :development, :test do
   gem 'machinist'
   gem 'forgery'
   gem 'chronic'
-  gem 'delorean'
   gem 'railroady'
   gem 'rspec'
 end
