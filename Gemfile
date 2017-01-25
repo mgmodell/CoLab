@@ -29,6 +29,8 @@ gem 'devise-multi_email'
 gem 'paperclip', '~> 5.0.0'
 gem 'country_select'
 gem 'simple_form'
+gem 'highcharts-rails'
+gem 'jquery_mobile_rails'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

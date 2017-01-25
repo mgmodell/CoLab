@@ -1,6 +1,7 @@
 
 Given /^today is "(.*?)"$/ do |destination_time|
-  travel_to Chronic.parse( destination_time ).utc
+  Chronic.time_class = Time.zone
+  travel_to Chronic.parse( destination_time )
 end
 
 

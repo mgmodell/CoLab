@@ -1,5 +1,5 @@
 class Roster < ActiveRecord::Base
-  belongs_to :role, :inverse_of => :roster
+  belongs_to :role, :inverse_of => :rosters
   belongs_to :course, :inverse_of => :rosters
   belongs_to :user, :inverse_of => :rosters
 

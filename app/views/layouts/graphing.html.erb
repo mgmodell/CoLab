@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>SAPA</title>
+  <title>SAPA Reporting</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
-  <! --%= stylesheet_link_tag    "application", :media => "all" %-->
+  <%= stylesheet_link_tag    "application", :media => "all" %>
   <script language="text/javascript">
     $(document).bind("mobileinit", function(){
       $.mobile.ajaxLinksEnabled = false;
@@ -13,7 +13,7 @@
       $.mobile.ajaxEnabled = false;
     });
   </script>
-  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag 'graphing_manifest' %>
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -22,7 +22,7 @@
       <% if !@current_user.nil? %>
         <%= link_to "Home", root_path, :'data-icon' => "home", :"data-theme" => "d" %>
       <% end %>
-      <h1>Self- and Peer-Assessment</h1>
+      <h1>Self- and Peer-Assessment Reporting</h1>
     </div>
 
     <div data-role="content">
@@ -71,14 +71,8 @@
               data-tolerance="15,15" class="ui-content">
               <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete"
                 data-iconpos="notext" class="ui-btn-right">Close</a>
-              <% if current_user.nil? %>
-                <iframe src="https://www.PeerAssess.info/reg_demo" width="655" height="495" seamless></iframe>
-                <p align="center">Tutorial: Registration</p>
-              <% else %>
-                <iframe src="https://www.PeerAssess.info/reporting_demo" width="655" height="495" seamless></iframe>
-                <p align="center">Tutorial: Submitting a Report</p>
-              <% end %>
-
+              <iframe src="https://www.PeerAssess.info/graphing_demo" width="655" height="495" seamless></iframe>
+              <p align="center">Tutorial: Viewing the reported data</p>
             </div>
             <%= mail_to "support@peerAssess.info", "Contact Support",
               :subject => "SAPA Support Request", :'data-role' => "button", :"data-theme" => "d"%>
