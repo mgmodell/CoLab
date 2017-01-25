@@ -137,8 +137,8 @@ class Project < ActiveRecord::Base
 
   def timezone_adjust
     if start_date.zone != course.timezone
-      start_date = ActiveSupport::TimeZone.new( course.timezone ).local_to_utc(start_date)
-      end_date = ActiveSupport::TimeZone.new( course.timezone ).local_to_utc(end_date)
+      start_date = ActiveSupport::TimeZone.new( course.timezone ).local_to_utc( start_date.beginning_of_day )
+      end_date = ActiveSupport::TimeZone.new( course.timezone ).local_to_utc( end_date.end_of_day )
     end
 
   end
