@@ -27,7 +27,7 @@ class Assessment < ActiveRecord::Base
 
     day_delta = project.end_dow - init_day
     if day_delta == 0
-      assessment.end_date = init_date.beginning_of_day
+      assessment.end_date = init_date.end_of_day
     else
       assessment.end_date = Chronic.parse('this ' + Date::DAYNAMES[project.end_dow])
     end

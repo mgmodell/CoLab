@@ -55,10 +55,11 @@ class User < ActiveRecord::Base
 
   def waiting_installments
     ows = []
-    assessments.still_open.each do |_assessment|
+
+    assessments.still_open.each do |assessment|
       group = groups.joins(project: :assessments)
       if group.count == 1
-        ows << [group[0], assessments[0]]
+        ows << [group[0], assessment]
       else
         logger.debug 'We have a problem!'
       end
