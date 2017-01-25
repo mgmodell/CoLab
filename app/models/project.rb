@@ -60,7 +60,7 @@ class Project < ActiveRecord::Base
   # within the day range.
   def is_available?
     is_available = false
-    init_time = Time.now
+    init_time = Time.now.in_time_zone
     init_day = init_time.wday
     init_date = init_time.to_date
 

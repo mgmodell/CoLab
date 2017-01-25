@@ -7,7 +7,7 @@ class Assessment < ActiveRecord::Base
   before_save :timezone_adjust
 
   # Helpful scope
-  scope :still_open, -> { where('assessments.end_date >= ?', DateTime.now.utc) }
+  scope :still_open, -> { where('assessments.end_date >= ?', DateTime.now.in_time_zone) }
 
   def is_completed_by_user(user)
     0 != user.installments.where(assessment: self).count

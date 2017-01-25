@@ -44,9 +44,9 @@ class Installment < ActiveRecord::Base
   end
 
   def check_dates
-    if assessment.end_date.utc.end_of_day < Time.current.utc
+    if assessment.end_date.in_time_zone.end_of_day < Time.current.in_time_zone
       errors[:base] << 'This assessment has expired and can no longer be ' \
-                         "submit for this installment [expired: #{assessment.end_date.end_of_day}, now: #{Time.now}.]"
+                         "submit for this installment [expired: #{assessment.end_date.end_of_day}, now: #{Time.current}.]"
     end
     errors
   end
