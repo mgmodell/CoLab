@@ -1,20 +1,20 @@
 Rails.application.routes.draw do
-  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
-  root to: "home#index"
+  root to: 'home#index'
 
-  #Consent log paths
+  # Consent log paths
   get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', :as => 'edit_consent_log'
   patch 'consent_logs/:id' => 'consent_logs#update', :as => 'consent_log'
 
-  get "installments/new/:assessment_id/:group_id" => 'installments#new', :as => 'new_installment'
-  get "installments/edit/:assessment_id/:group_id" => 'installments#edit', :as => 'edit_installment'
+  get 'installments/new/:assessment_id/:group_id' => 'installments#new', :as => 'new_installment'
+  get 'installments/edit/:assessment_id/:group_id' => 'installments#edit', :as => 'edit_installment'
 
-  resources :installments, :only => [ :create, :update ]
+  resources :installments, only: [:create, :update]
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

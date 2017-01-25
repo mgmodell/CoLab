@@ -1,9 +1,8 @@
 
 Given /^today is "(.*?)"$/ do |destination_time|
   Chronic.time_class = Time.zone
-  travel_to Chronic.parse( destination_time )
+  travel_to Chronic.parse(destination_time)
 end
-
 
 Then /^the project should have (\d+) assessments attached to it$/ do |assessment_count|
   @project.assessments.count == assessment_count.to_i

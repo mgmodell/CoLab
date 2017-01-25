@@ -33,7 +33,7 @@ ActionController::Base.allow_rescue = false
 begin
   DatabaseCleaner.strategy = :transaction
 rescue NameError
-  raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
+  raise 'You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it.'
 end
 
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
@@ -56,10 +56,10 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
-#Before do
+# Before do
 #  $dunit ||= false
 #  return $dunit if $dunit
 #  seed_file = File.join( Rails.root, "db", "seeds.rb" )
 #  load( seed_file )
 #  $dunit = true
-#end
+# end

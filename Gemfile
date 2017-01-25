@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5'
 # Use mysql as the database for Active Record
@@ -23,14 +22,14 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem 'devise'
-gem 'omniauth-google-oauth2'
-gem 'devise-multi_email'
-gem 'paperclip', '~> 5.0.0'
 gem 'country_select'
-gem 'simple_form'
+gem 'devise'
+gem 'devise-multi_email'
 gem 'highcharts-rails'
 gem 'jquery_mobile_rails'
+gem 'omniauth-google-oauth2'
+gem 'paperclip', '~> 5.0.0'
+gem 'simple_form'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -44,11 +43,11 @@ gem 'jquery_mobile_rails'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
-  gem 'cucumber-rails', :require => false
-  gem 'database_cleaner'
-  gem 'machinist'
-  gem 'forgery'
   gem 'chronic'
+  gem 'cucumber-rails', require: false
+  gem 'database_cleaner'
+  gem 'forgery'
+  gem 'machinist'
   gem 'railroady'
   gem 'rspec'
 end
@@ -60,4 +59,3 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-

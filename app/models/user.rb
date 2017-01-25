@@ -2,84 +2,82 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-  :recoverable, :rememberable, :trackable, :validatable,
-  :confirmable, :lockable, 
-  :omniauthable, :omniauth_providers => [:google_oauth2]
+         :recoverable, :rememberable, :trackable, :validatable,
+         :confirmable, :lockable,
+         :omniauthable, omniauth_providers: [:google_oauth2]
 
   has_and_belongs_to_many :groups
-  has_many :consent_logs, :inverse_of => :user
-  has_many :projects, :through => :groups
-  belongs_to :gender, :inverse_of => :users
-  belongs_to :age_range, :inverse_of => :users
-  belongs_to :cip_code, :inverse_of => :users
-  has_many :installments, :inverse_of => :user
-  has_many :rosters, :inverse_of => :user
+  has_many :consent_logs, inverse_of: :user
+  has_many :projects, through: :groups
+  belongs_to :gender, inverse_of: :users
+  belongs_to :age_range, inverse_of: :users
+  belongs_to :cip_code, inverse_of: :users
+  has_many :installments, inverse_of: :user
+  has_many :rosters, inverse_of: :user
 
-  validates :timezone, :presence => true
+  validates :timezone, presence: true
 
-  has_many :assessments, :through => :projects
+  has_many :assessments, through: :projects
 
-  #Give us a standard form of the name
+  # Give us a standard form of the name
   def name
-    name = (self.last_name != nil ? self.last_name : "[No Last Name Given]") + ", "
-    name += (self.first_name != nil ? self.first_name : "[No First Name Given]")
+    name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
+    name += (!first_name.nil? ? first_name : '[No First Name Given]')
   end
 
   def waiting_consent_logs
-    #Find those consent forms to which the user has not yet responded
+    # Find those consent forms to which the user has not yet responded
     consent_forms = ConsentForm.all.to_a
-    self.consent_logs.each do |consent_log|
-      consent_forms.delete( consent_log.consent_form )
+    consent_logs.each do |consent_log|
+      consent_forms.delete(consent_log.consent_form)
     end
 
-    #Create consent logs for waiting consent forms
-    waiting_consent_logs = Array.new
+    # Create consent logs for waiting consent forms
+    waiting_consent_logs = []
     consent_forms.each do |w_consent_form|
-      consent_log = ConsentLog.new( user: self, consent_form: w_consent_form )
+      consent_log = ConsentLog.new(user: self, consent_form: w_consent_form)
       waiting_consent_logs << consent_log
     end
     waiting_consent_logs
-      
   end
 
   def is_admin?
-    self.admin
+    admin
   end
 
   def is_instructor?
-    if self.admin || Roster.instructorships.where( "user_id = ?", self.id ).count > 0
-      return true
+    if admin || Roster.instructorships.where('user_id = ?', id).count > 0
+      true
     else
-      return false
+      false
     end
   end
 
   def waiting_installments
     ows = []
-    self.assessments.still_open.each do |assessment|
-      group = self.groups.joins( project: :assessments )
+    assessments.still_open.each do |_assessment|
+      group = groups.joins(project: :assessments)
       if group.count == 1
-        ows << [ group[ 0 ], assessments[ 0 ] ]
+        ows << [group[0], assessments[0]]
       else
-        logger.debug "We have a problem!"
+        logger.debug 'We have a problem!'
       end
     end
 
-    return ows
+    ows
   end
 
   def self.from_omniauth(access_token)
     data = access_token.info
-    user = User.where(:email => data["email"]).first
+    user = User.where(email: data['email']).first
 
     # Uncomment the section below if you want users to be created if they don't exist
     unless user
       user = User.create(
-        email: data["email"],
-        password: Devise.friendly_token[0,20]
+        email: data['email'],
+        password: Devise.friendly_token[0, 20]
       )
     end
     user
   end
-
 end
