@@ -28,10 +28,24 @@ class User < ActiveRecord::Base
   def waiting_consent_logs
     # Find those consent forms to which the user has not yet responded
     consent_forms = ConsentForm.all.to_a
+
+    #Have we completed it already?
     consent_logs.each do |consent_log|
       consent_forms.delete(consent_log.consent_form)
     end
 
+    #Is it from a project that we're not in?
+    projects_array = projects.to_a
+    consent_forms.each do |consent_form|
+      consent_form.projects.each do |cf_project|
+        if !consent_form.global? && !projects_array.include?( cf_project )
+          consent_forms.delete(consent_form)
+          break
+        end
+      end
+    end
+
+    puts "Found: " + consent_forms.count.to_s
     # Create consent logs for waiting consent forms
     waiting_consent_logs = []
     consent_forms.each do |w_consent_form|

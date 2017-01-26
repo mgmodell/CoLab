@@ -8,4 +8,8 @@ class ConsentForm < ActiveRecord::Base
 
   has_many :consent_logs, inverse_of: :consent_form
   has_many :projects, inverse_of: :consent_form
+  
+  def global?
+    projects.count == 0
+  end
 end
