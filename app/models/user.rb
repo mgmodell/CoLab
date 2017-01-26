@@ -29,9 +29,6 @@ class User < ActiveRecord::Base
     # Find those consent forms to which the user has not yet responded
     consent_forms = ConsentForm.all.to_a
 
-    puts "CFs: " + consent_forms.count.to_s
-    puts "CLs: " + consent_logs.where( :presented => true ).count.to_s
-
     #Have we completed it already?
     consent_logs.where( :presented => true ).each do |consent_log|
       consent_forms.delete(consent_log.consent_form)
@@ -48,7 +45,6 @@ class User < ActiveRecord::Base
       end
     end
 
-    puts "Found: " + consent_forms.count.to_s
     # Create consent logs for waiting consent forms
     waiting_consent_logs = []
     consent_forms.each do |w_consent_form|

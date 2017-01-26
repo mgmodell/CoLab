@@ -2,7 +2,7 @@ class ConsentLogsController < ApplicationController
   def update
     @consent_log = ConsentLog.find(params[:id])
     if @consent_log.update!(cl_params)
-      redirect_to root_url
+      redirect_to :controller => 'home', :action => 'index'
     else
       render action: 'edit'
     end
@@ -23,6 +23,6 @@ class ConsentLogsController < ApplicationController
   private
 
   def cl_params
-    params.require(:consent_log).permit(:accepted)
+    params.require(:consent_log).permit(:accepted, :presented)
   end
 end
