@@ -1,7 +1,12 @@
+Given /^there is a global consent form$/ do
+  @consent_form = ConsentForm.make
+  @consent_form.save
+end
+
 Given /^the project has a consent form$/ do
-  consent_form = ConsentForm.make
-  consent_form.save
-  @project.consent_form = consent_form
+  @consent_form = ConsentForm.make
+  @consent_form.save
+  @project.consent_form = @consent_form
   @project.save
 end
 
@@ -27,10 +32,9 @@ end
 
 Given /^the consent form "(.*?)" been presented to the user$/ do |has_or_has_not|
   presented = has_or_has_not == 'has'
-  consent_form = @project.consent_form
   consent_log = ConsentLog.create(presented: presented,
                                   user_id: @user.id,
-                                  consent_form_id: consent_form.id)
+                                  consent_form_id: @consent_form.id)
 end
 
 Then /^user will be presented with the installment form$/ do

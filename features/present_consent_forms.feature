@@ -7,11 +7,35 @@ Feature: Presenting Consent Forms
     Given the project has a group with 4 confirmed users
     Given the user is the "last" user
 
-  Scenario: User should be presented with an unpresented consent form if one exists
+  Scenario: User should be presented with an unpresented project consent form if one exists
     When the user logs in
     Then the user should see a successful login message
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the project has a consent form
+    Given the consent form "has not" been presented to the user
+    Given the project has been activated
+    Given the user "has" had demographics requested
+    When the user visits the index
+    Then the user will see a consent request
+
+  Scenario: User should be presented with an unpresented global consent form if one exists
+    When the user logs in
+    Then the user should see a successful login message
+    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given there is a global consent form
+    Given the consent form "has not" been presented to the user
+    Given the project has been activated
+    Given the user "has" had demographics requested
+    When the user visits the index
+    Then the user will see a consent request
+
+  Scenario: User should be presented with an unpresented global and project consent form if one exists
+    When the user logs in
+    Then the user should see a successful login message
+    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given the project has a consent form
+    Given the consent form "has not" been presented to the user
+    Given there is a global consent form
     Given the consent form "has not" been presented to the user
     Given the project has been activated
     Given the user "has" had demographics requested
