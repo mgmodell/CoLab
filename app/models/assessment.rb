@@ -32,12 +32,14 @@ class Assessment < ActiveRecord::Base
     logger.debug "Sending reminder emails"
     finished_users = User.joins( :installments => :assessment ).
       where( "assessments.start_date < ? AND assessments.end_date > ?",
-      Date.today, Date.today)
+      DateTime.current, DateTime.current).to_a
+
  
     current_users = User.joins( :groups => { :project => :assessments } ).
-      where( "assessments.start_date <= ? AND assessments.end_date >= ?", Datetime.current, Datetime.current ).
+      where( "assessments.start_date <= ? AND assessments.end_date >= ?", DateTime.current, DateTime.current ).
       joins( "LEFT OUTER JOIN installments ON assessments.id = installments.assessment_id " +
              "AND installments.user_id = users.id" ).to_a
+
 
     finished_users.each do |user|
       current_users.delete user
@@ -49,10 +51,11 @@ class Assessment < ActiveRecord::Base
       uniqued[ u ] = 1
     end
 
-    uniqued.keys.each.do |u|
-      if !u.last_emailed.today?
-        ReminderMailer.remind( u ).deliver
+    uniqued.keys.each do |u|
+      if !( !u.last_emailed.nil? && u.last_emailed.today? )
+        ReminderMailer.remind( u ).deliver_later
         u.last_emailed = DateTime.current
+        u.save
       end
     end
   end

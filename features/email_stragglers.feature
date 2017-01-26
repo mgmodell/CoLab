@@ -24,3 +24,13 @@ Feature: Email stragglers
     Then the user logs in and submits an installment
     When the system emails stragglers
     Then an email will be sent to each member of the group but one
+
+  Scenario: Four students have been mailed about their assessments waiting when we email the stragglers - no emails are sent
+    Given the email queue is empty
+    Given the user is the "last" user
+    Given the project has been activated
+    When the system emails stragglers
+    Then an email will be sent to each member of the group
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent

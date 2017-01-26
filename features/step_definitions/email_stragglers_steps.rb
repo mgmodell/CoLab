@@ -1,5 +1,6 @@
 Given /^the email queue is empty$/ do
   ActionMailer::Base.deliveries = []
+  ActionMailer::Base.deliveries.count.should eq 0
 end
 
 When /^the system emails stragglers$/ do
@@ -7,15 +8,19 @@ When /^the system emails stragglers$/ do
 end
 
 Then /^an email will be sent to each member of the group$/ do
-  ows = @user.open_group_reports
+  ows = @user.waiting_installments
   g = ows[ 0 ][ 0 ]
   group_count = g.users.count
-  assert ActionMailer::Base.deliveries.count == group_count
+  ActionMailer::Base.deliveries.count.should eq group_count
 end
 
 Then /^an email will be sent to each member of the group but one$/ do
-  ows = @user.open_group_reports
+  ows = @user.waiting_installments
   g = ows[ 0 ][ 0 ]
   group_count_minus_one = g.users.count - 1
-  assert ActionMailer::Base.deliveries.count == group_count_minus_one
+  ActionMailer::Base.deliveries.count.should eq group_count_minus_one
+end
+
+Then /^no emails will be sent$/ do
+  ActionMailer::Base.deliveries.count.should eq 0
 end
