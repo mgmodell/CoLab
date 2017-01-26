@@ -29,8 +29,11 @@ class User < ActiveRecord::Base
     # Find those consent forms to which the user has not yet responded
     consent_forms = ConsentForm.all.to_a
 
+    puts "CFs: " + consent_forms.count.to_s
+    puts "CLs: " + consent_logs.where( :presented => true ).count.to_s
+
     #Have we completed it already?
-    consent_logs.each do |consent_log|
+    consent_logs.where( :presented => true ).each do |consent_log|
       consent_forms.delete(consent_log.consent_form)
     end
 

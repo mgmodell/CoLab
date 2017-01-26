@@ -16,7 +16,7 @@ class ConsentLogsController < ApplicationController
     @consent_log = ConsentLog.where('user_id = ? AND consent_form_id = ?', u_id, cf_id).first
     if @consent_log.nil?
       @consent_log = ConsentLog.create(accepted: false,
-                                       user_id: u_id, consent_form_id: cf_id)
+                                       user_id: u_id, consent_form_id: cf_id )
     end
   end
 
