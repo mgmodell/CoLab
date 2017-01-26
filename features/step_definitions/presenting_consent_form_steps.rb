@@ -38,7 +38,7 @@ Then /^user will be presented with the installment form$/ do
   page.should have_content @project.name
 end
 
-Then /^user should not see a consent form listed for the open assessment$/ do
+Then /^user should not see a consent form listed for the open project$/ do
   page.should have_content 'Not for Research'
 end
 
