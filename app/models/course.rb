@@ -3,6 +3,8 @@ class Course < ActiveRecord::Base
   has_many :projects, inverse_of: :course
   has_many :rosters, inverse_of: :course
 
+  has_many :experiences, inverse_of: :course
+
   validates :timezone, :start_date, :end_date, presence: true
   validate :date_sanity
 

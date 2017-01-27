@@ -15,6 +15,8 @@ class User < ActiveRecord::Base
   has_many :installments, inverse_of: :user
   has_many :rosters, inverse_of: :user
 
+  has_many :reactions, inverse_of: :user
+
   validates :timezone, presence: true
 
   has_many :assessments, through: :projects
@@ -29,16 +31,16 @@ class User < ActiveRecord::Base
     # Find those consent forms to which the user has not yet responded
     consent_forms = ConsentForm.all.to_a
 
-    #Have we completed it already?
-    consent_logs.where( :presented => true ).each do |consent_log|
+    # Have we completed it already?
+    consent_logs.where(presented: true).each do |consent_log|
       consent_forms.delete(consent_log.consent_form)
     end
 
-    #Is it from a project that we're not in?
+    # Is it from a project that we're not in?
     projects_array = projects.to_a
     consent_forms.each do |consent_form|
       consent_form.projects.each do |cf_project|
-        if !consent_form.global? && !projects_array.include?( cf_project )
+        if !consent_form.global? && !projects_array.include?(cf_project)
           consent_forms.delete(consent_form)
           break
         end

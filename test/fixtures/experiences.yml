@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  course_id: 
+  name: MyString
+  open_date: 2017-01-27 12:02:17
+  close_date: 2017-01-27 12:02:17
+
+two:
+  course_id: 
+  name: MyString
+  open_date: 2017-01-27 12:02:17
+  close_date: 2017-01-27 12:02:17

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  behavior_id: 
+  narrative_id: 
+  user_id: 
+  improvements: MyText
+
+two:
+  behavior_id: 
+  narrative_id: 
+  user_id: 
+  improvements: MyText

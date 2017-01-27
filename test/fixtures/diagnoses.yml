@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  behavior_id: 
+  reaction_id: 
+  week_id: 
+  comment: MyText
+
+two:
+  behavior_id: 
+  reaction_id: 
+  week_id: 
+  comment: MyText

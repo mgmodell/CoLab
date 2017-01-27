@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126073154) do
+ActiveRecord::Schema.define(version: 20170127030610) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -89,6 +89,30 @@ ActiveRecord::Schema.define(version: 20170126073154) do
   end
 
   add_index "courses", ["school_id"], name: "index_courses_on_school_id", using: :btree
+
+  create_table "diagnoses", force: :cascade do |t|
+    t.integer  "behavior_id", limit: 4
+    t.integer  "reaction_id", limit: 4
+    t.integer  "week_id",     limit: 4
+    t.text     "comment",     limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "diagnoses", ["behavior_id"], name: "index_diagnoses_on_behavior_id", using: :btree
+  add_index "diagnoses", ["reaction_id"], name: "index_diagnoses_on_reaction_id", using: :btree
+  add_index "diagnoses", ["week_id"], name: "index_diagnoses_on_week_id", using: :btree
+
+  create_table "experiences", force: :cascade do |t|
+    t.integer  "course_id",  limit: 4
+    t.string   "name",       limit: 255
+    t.datetime "open_date"
+    t.datetime "close_date"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "experiences", ["course_id"], name: "index_experiences_on_course_id", using: :btree
 
   create_table "factor_packs", force: :cascade do |t|
     t.string   "name",        limit: 255
@@ -179,6 +203,19 @@ ActiveRecord::Schema.define(version: 20170126073154) do
   add_index "projects", ["course_id"], name: "index_projects_on_course_id", using: :btree
   add_index "projects", ["factor_pack_id"], name: "index_projects_on_factor_pack_id", using: :btree
   add_index "projects", ["style_id"], name: "index_projects_on_style_id", using: :btree
+
+  create_table "reactions", force: :cascade do |t|
+    t.integer  "behavior_id",  limit: 4
+    t.integer  "narrative_id", limit: 4
+    t.integer  "user_id",      limit: 4
+    t.text     "improvements", limit: 65535
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "reactions", ["behavior_id"], name: "index_reactions_on_behavior_id", using: :btree
+  add_index "reactions", ["narrative_id"], name: "index_reactions_on_narrative_id", using: :btree
+  add_index "reactions", ["user_id"], name: "index_reactions_on_user_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name",        limit: 255
@@ -288,6 +325,10 @@ ActiveRecord::Schema.define(version: 20170126073154) do
   add_foreign_key "consent_logs", "consent_forms"
   add_foreign_key "consent_logs", "users"
   add_foreign_key "courses", "schools"
+  add_foreign_key "diagnoses", "behaviors"
+  add_foreign_key "diagnoses", "reactions"
+  add_foreign_key "diagnoses", "weeks"
+  add_foreign_key "experiences", "courses"
   add_foreign_key "groups", "projects"
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
@@ -297,6 +338,9 @@ ActiveRecord::Schema.define(version: 20170126073154) do
   add_foreign_key "projects", "courses"
   add_foreign_key "projects", "factor_packs"
   add_foreign_key "projects", "styles"
+  add_foreign_key "reactions", "behaviors"
+  add_foreign_key "reactions", "narratives"
+  add_foreign_key "reactions", "users"
   add_foreign_key "rosters", "courses"
   add_foreign_key "rosters", "roles"
   add_foreign_key "rosters", "users"
