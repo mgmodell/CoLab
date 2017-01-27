@@ -35,6 +35,7 @@ Given /^the project has been activated$/ do
 end
 
 Then /^the user should see a successful login message$/ do
+  puts DateTime.current.to_formatted_s(:rfc822)
   page.should have_content 'Signed in successfully.'
 end
 
