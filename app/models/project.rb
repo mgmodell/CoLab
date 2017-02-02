@@ -125,9 +125,15 @@ class Project < ActiveRecord::Base
   end
 
   def timezone_adjust
+    puts start_date.class.name
+    puts "Initial Start Date: " + start_date.to_formatted_s(:rfc822)
+    puts "Initial end Date: " + end_date.to_formatted_s(:rfc822)
     if start_date.zone != course.timezone
+      puts "Processing"
       start_date = ActiveSupport::TimeZone.new(course.timezone).local_to_utc(start_date.beginning_of_day)
       end_date = ActiveSupport::TimeZone.new(course.timezone).local_to_utc(end_date.end_of_day)
     end
+    puts "Processed Start Date: " + start_date.to_formatted_s(:rfc822)
+    puts "Processed end Date: " + end_date.to_formatted_s(:rfc822)
   end
 end
