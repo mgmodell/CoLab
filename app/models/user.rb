@@ -68,6 +68,7 @@ class User < ActiveRecord::Base
     end
   end
 
+  #TODO: Must add in support for experiences and other activities here
   def waiting_installments
     ows = []
 
