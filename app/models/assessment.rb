@@ -15,7 +15,7 @@ class Assessment < ActiveRecord::Base
 
   # Utility method for populating Assessments when they are needed
   def self.set_up_assessments
-    init_date = DateTime.now.beginning_of_day
+    init_date = DateTime.current.beginning_of_day
     init_day = init_date.wday
     logger.debug "\n\t**Populating Assessments**"
     Project.where('active = true AND start_date <= ? AND end_date >= ?',
@@ -65,19 +65,23 @@ class Assessment < ActiveRecord::Base
     if day_delta == 0
       assessment.start_date = init_date
     else
-      assessment.start_date = Chronic.parse('last ' + Date::DAYNAMES[project.start_dow])
+      assessment.start_date = Chronic.parse('last ' + Date::DAYNAMES[project.start_dow]).beginning_of_day
     end
 
     day_delta = project.end_dow - init_day
     if day_delta == 0
       assessment.end_date = init_date.end_of_day
     else
-      assessment.end_date = Chronic.parse('this ' + Date::DAYNAMES[project.end_dow])
+      assessment.end_date = Chronic.parse('this ' + Date::DAYNAMES[project.end_dow]).end_of_day
     end
 
+    byebug
+    # TimeZone + beginning_of_day is putting me behind by a day
+    tz = ActiveSupport::TimeZone.new( project.course.timezone )
     existing_assessment_count = project.assessments.where(
       'start_date = ? AND end_date = ?',
-      assessment.start_date.to_date, assessment.end_date.to_date
+      tz.local_to_utc( assessment.start_date ), 
+      tz.local_to_utc( assessment.end_date )
     ).count
 
     if existing_assessment_count == 0

@@ -57,11 +57,12 @@ Feature: Assessment Listing
     When the system emails stragglers
     Then no emails will be sent
     
-  Scenario: Projects times should accurately reflect course timezones
-    Given today is "March 6, 1980 at 1:01am"
+  Scenario: Projects times should open at exactly the correct time
+    Given today is "March 9, 1980 at 12:01am"
     Given the course timezone is "Seoul"
     Given the project started "February 15, 1980" and ends "April 15, 1980", opened "Friday" and closes "Sunday"
     Given the project has been activated
+    Given that the system's set_up_assessments process runs
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
@@ -77,6 +78,7 @@ Feature: Assessment Listing
     Given the course timezone is "Seoul"
     Given the project started "February 15, 1980" and ends "April 15, 1980", opened "Friday" and closes "Sunday"
     Given the project has been activated
+    Given that the system's set_up_assessments process runs
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
@@ -88,5 +90,6 @@ Feature: Assessment Listing
     Then an email will be sent to each member of the group
     Given the email queue is empty
     Given today is "24 hours from now"
+    Given that the system's set_up_assessments process runs
     When the system emails stragglers
     Then an email will be sent to each member of the group

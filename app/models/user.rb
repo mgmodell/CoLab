@@ -72,6 +72,8 @@ class User < ActiveRecord::Base
   def waiting_installments
     ows = []
 
+    #byebug
+
     assessments.still_open.each do |assessment|
       group = groups.joins(project: :assessments)
       if group.count == 1
