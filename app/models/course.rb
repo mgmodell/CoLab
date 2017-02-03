@@ -8,7 +8,7 @@ class Course < ActiveRecord::Base
   validates :timezone, :start_date, :end_date, presence: true
   validate :date_sanity
 
-  before_save :timezone_adjust
+  after_validation :timezone_adjust
 
   # Validation check code
   def date_sanity
@@ -19,9 +19,14 @@ class Course < ActiveRecord::Base
   end
 
   def timezone_adjust
-    if start_date.zone != timezone
-      start_date = ActiveSupport::TimeZone.new(timezone).local_to_utc(start_date.beginning_of_day)
-      end_date = ActiveSupport::TimeZone.new(timezone).local_to_utc(end_date.end_of_day)
-    end
+    #unless start_date.nil? || end_date.nil?
+            if self.start_date.zone != timezone
+              tz = ActiveSupport::TimeZone.new(timezone)
+              sd_bod = tz.local_to_utc( self.start_date.beginning_of_day )
+              ed_eod = tz.local_to_utc( self.end_date.end_of_day )
+              self.start_date = sd_bod
+              self.end_date = ed_eod
+            end
+    #end
   end
 end

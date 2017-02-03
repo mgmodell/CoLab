@@ -15,7 +15,7 @@ class Project < ActiveRecord::Base
   validates :name, :end_dow, :start_dow, presence: true
   validates :end_date, :start_date, presence: true
 
-  before_save :timezone_adjust
+  after_validation :timezone_adjust
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
@@ -79,18 +79,22 @@ class Project < ActiveRecord::Base
 
   # Validation check code
   def date_sanity
-    if start_date > end_date
-      errors.add(:start_dow, 'The start date must come before the end date')
+    if !( start_date.nil? || end_date.nil? )
+            if start_date > end_date
+              errors.add(:start_dow, 'The start date must come before the end date')
+            end
+            errors
     end
-    errors
   end
 
   def dates_within_course
-    if start_date < course.start_date
-      errors.add(:start_date, 'The project cannot begin before the course has begun')
-    end
-    if end_date > course.end_date
-      errors.add(:end_date, 'The project cannot continue after the course has ended')
+    if !( start_date.nil? || end_date.nil? )
+            if start_date < course.start_date
+              errors.add(:start_date, 'The project cannot begin before the course has begun')
+            end
+            if end_date > course.end_date
+              errors.add(:end_date, 'The project cannot continue after the course has ended')
+            end
     end
     errors
   end
@@ -124,16 +128,21 @@ class Project < ActiveRecord::Base
     Assessment.build_new_assessment self if active? && is_available?
   end
 
+  after_find do |user|
+    user.timezone_adjust
+  end
+
   def timezone_adjust
-    puts start_date.class.name
-    puts "Initial Start Date: " + start_date.to_formatted_s(:rfc822)
-    puts "Initial end Date: " + end_date.to_formatted_s(:rfc822)
-    if start_date.zone != course.timezone
-      puts "Processing"
-      start_date = ActiveSupport::TimeZone.new(course.timezone).local_to_utc(start_date.beginning_of_day)
-      end_date = ActiveSupport::TimeZone.new(course.timezone).local_to_utc(end_date.end_of_day)
-    end
-    puts "Processed Start Date: " + start_date.to_formatted_s(:rfc822)
-    puts "Processed end Date: " + end_date.to_formatted_s(:rfc822)
+    #if !( start_date.nil? || end_date.nil? )
+      course_zone = ActiveSupport::TimeZone.new( course.timezone )
+      sd_bod = self.start_date.beginning_of_day
+      ed_eod = self.end_date.end_of_day
+      #puts "Initial Start Date: " + start_date.to_formatted_s(:rfc822)
+      #puts "Initial end Date: " + end_date.to_formatted_s(:rfc822)
+      self.start_date = course_zone.local_to_utc( sd_bod )
+      self.end_date = course_zone.local_to_utc( ed_eod )
+      #puts "Processed Start Date: " + start_date.to_formatted_s(:rfc822)
+      #puts "Processed end Date: " + end_date.to_formatted_s(:rfc822)
+    #end
   end
 end

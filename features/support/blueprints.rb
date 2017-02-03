@@ -16,8 +16,8 @@ Project.blueprint do
   start_dow { 1 }
   end_dow { 2 }
   active { false }
-  start_date { Date.yesterday }
-  end_date { Date.tomorrow }
+  start_date { DateTime.yesterday }
+  end_date { DateTime.tomorrow }
 end
 
 Course.blueprint do
