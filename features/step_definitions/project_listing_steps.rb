@@ -1,11 +1,11 @@
 require 'chronic'
 
 Given /^there is a course with an assessed project$/ do
-  course = Course.make
-  course.save
+  @course = Course.make
+  @course.save
   @project = Project.make
   @project.style = Style.find(1)
-  @project.course = course
+  @project.course = @course
   @project.save
 end
 
