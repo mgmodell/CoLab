@@ -133,16 +133,10 @@ class Project < ActiveRecord::Base
   end
 
   def timezone_adjust
-    #if !( start_date.nil? || end_date.nil? )
       course_zone = ActiveSupport::TimeZone.new( course.timezone )
       sd_bod = self.start_date.beginning_of_day
       ed_eod = self.end_date.end_of_day
-      #puts "Initial Start Date: " + start_date.to_formatted_s(:rfc822)
-      #puts "Initial end Date: " + end_date.to_formatted_s(:rfc822)
       self.start_date = course_zone.local_to_utc( sd_bod )
       self.end_date = course_zone.local_to_utc( ed_eod )
-      #puts "Processed Start Date: " + start_date.to_formatted_s(:rfc822)
-      #puts "Processed end Date: " + end_date.to_formatted_s(:rfc822)
-    #end
   end
 end

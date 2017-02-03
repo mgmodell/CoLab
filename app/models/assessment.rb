@@ -4,10 +4,10 @@ class Assessment < ActiveRecord::Base
   has_many :installments, inverse_of: :assessment
   has_many :factors, through: :project
 
-  before_save :timezone_adjust
+  after_validation :timezone_adjust
 
   # Helpful scope
-  scope :still_open, -> { where('assessments.end_date >= ?', DateTime.now.in_time_zone) }
+  scope :still_open, -> { where('assessments.end_date >= ?', DateTime.current.in_time_zone) }
 
   def is_completed_by_user(user)
     0 != user.installments.where(assessment: self).count
@@ -99,10 +99,17 @@ class Assessment < ActiveRecord::Base
     end
   end
 
+  after_find do |assessment|
+    assessment.timezone_adjust
+  end
+
   def timezone_adjust
-    if start_date.zone != project.course.timezone
-      start_date = ActiveSupport::TimeZone.new(project.course.timezone).local_to_utc(start_date)
-      end_date = ActiveSupport::TimeZone.new(project.course.timezone).local_to_utc(end_date)
-    end
+    course_zone = ActiveSupport::TimeZone.new( project.course.timezone )
+    sd_bod = self.start_date.beginning_of_day
+    ed_eod = self.end_date.end_of_day
+
+    
+    self.start_date = course_zone.local_to_utc( sd_bod )
+    self.end_date = course_zone.local_to_utc( ed_eod )
   end
 end
