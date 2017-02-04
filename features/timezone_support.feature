@@ -29,7 +29,7 @@ Feature: Assessment Listing
     Then the user should see a successful login message
     Then user should see 1 open project
     Then the user should see "Fri, Mar 7 at 9:00am KST"
-    Then the user should see "Tue, Mar 11 at 8:59am KST"
+    Then the user should see "Mon, Mar 10 at 8:59am KST"
     
   Scenario: Projects times should reflect course timezones
     Given the course timezone is "Seoul"
@@ -38,15 +38,15 @@ Feature: Assessment Listing
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
-    Then the user should see "Wed, Mar 5 at 3:00pm UTC"
-    Then the user should see "Sun, Mar 9 at 2:59pm UTC"
+    Then the user should see "Fri, Mar 7 at 9:00am UTC"
+    Then the user should see "Mon, Mar 10 at 8:59am UTC"
     When the system emails stragglers
     When the system emails stragglers
     When the system emails stragglers
     Then an email will be sent to each member of the group
     
   Scenario: Projects shouldn't open too soon
-    Given today is "March 5, 1980 at 1pm"
+    Given today is "March 5, 1980 at 8:59am"
     Given the course timezone is "Seoul"
     Given the project started "February 15, 1980" and ends "April 15, 1980", opened "Friday" and closes "Sunday"
     Given the project has been activated
@@ -58,7 +58,7 @@ Feature: Assessment Listing
     Then no emails will be sent
     
   Scenario: Projects times should open at exactly the correct time
-    Given today is "March 9, 1980 at 12:01am"
+    Given today is "March 7, 1980 at 9:01am"
     Given the course timezone is "Seoul"
     Given the project started "February 15, 1980" and ends "April 15, 1980", opened "Friday" and closes "Sunday"
     Given the project has been activated
@@ -66,8 +66,8 @@ Feature: Assessment Listing
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
-    Then the user should see "Wed, Mar 5 at 3:00pm UTC"
-    Then the user should see "Sun, Mar 9 at 2:59pm UTC"
+    Then the user should see "Fri, Mar 7 at 9:00am UTC"
+    Then the user should see "Mon, Mar 10 at 8:59am UTC"
     When the system emails stragglers
     When the system emails stragglers
     When the system emails stragglers

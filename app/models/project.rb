@@ -128,15 +128,19 @@ class Project < ActiveRecord::Base
     Assessment.build_new_assessment self if active? && is_available?
   end
 
-  after_find do |user|
-    user.timezone_adjust
-  end
+  #after_find do |user|
+  #  user.timezone_adjust
+  #end
 
   def timezone_adjust
-      course_zone = ActiveSupport::TimeZone.new( course.timezone )
-      sd_bod = self.start_date.beginning_of_day
-      ed_eod = self.end_date.end_of_day
-      self.start_date = course_zone.local_to_utc( sd_bod )
-      self.end_date = course_zone.local_to_utc( ed_eod )
+      course_tz = ActiveSupport::TimeZone.new( course.timezone )
+    if self.start_date_changed?
+      self.start_date += course_tz.utc_offset
+    end
+
+    if end_date_changed?
+      self.end_date += course_tz.utc_offset
+
+    end
   end
 end

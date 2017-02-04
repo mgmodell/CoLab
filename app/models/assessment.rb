@@ -57,7 +57,9 @@ class Assessment < ActiveRecord::Base
 
   # Create an assessment for a project if warranted
   def self.build_new_assessment(project)
-    init_date = Date.today.beginning_of_day
+    #tz = ActiveSupport::TimeZone.new( project.course.timezone )
+
+    init_date = Date.today
     init_day = init_date.wday
     assessment = Assessment.new
 
@@ -65,23 +67,23 @@ class Assessment < ActiveRecord::Base
     if day_delta == 0
       assessment.start_date = init_date
     else
-      assessment.start_date = Chronic.parse('last ' + Date::DAYNAMES[project.start_dow]).beginning_of_day
+      assessment.start_date = Chronic.parse('last ' + Date::DAYNAMES[project.start_dow])
     end
+    assessment.start_date = assessment.start_date.beginning_of_day
 
     day_delta = project.end_dow - init_day
     if day_delta == 0
       assessment.end_date = init_date.end_of_day
     else
-      assessment.end_date = Chronic.parse('this ' + Date::DAYNAMES[project.end_dow]).end_of_day
+      assessment.end_date = Chronic.parse('this ' + Date::DAYNAMES[project.end_dow])
     end
+    assessment.end_date = assessment.end_date.end_of_day
 
-    byebug
-    # TimeZone + beginning_of_day is putting me behind by a day
-    tz = ActiveSupport::TimeZone.new( project.course.timezone )
+    #byebug
     existing_assessment_count = project.assessments.where(
       'start_date = ? AND end_date = ?',
-      tz.local_to_utc( assessment.start_date ), 
-      tz.local_to_utc( assessment.end_date )
+      assessment.start_date, 
+      assessment.end_date
     ).count
 
     if existing_assessment_count == 0
@@ -103,17 +105,15 @@ class Assessment < ActiveRecord::Base
     end
   end
 
-  after_find do |assessment|
-    assessment.timezone_adjust
-  end
-
   def timezone_adjust
-    course_zone = ActiveSupport::TimeZone.new( project.course.timezone )
-    sd_bod = self.start_date.beginning_of_day
-    ed_eod = self.end_date.end_of_day
+    course_tz = ActiveSupport::TimeZone.new( project.course.timezone )
+    if self.start_date_changed?
+      self.start_date += course_tz.utc_offset
+    end
 
-    
-    self.start_date = course_zone.local_to_utc( sd_bod )
-    self.end_date = course_zone.local_to_utc( ed_eod )
+    if end_date_changed?
+      self.end_date += course_tz.utc_offset
+
+    end
   end
 end
