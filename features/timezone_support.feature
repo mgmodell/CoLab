@@ -82,8 +82,8 @@ Feature: Timezone Support
     Then an email will be sent to each member of the group
     Then return to the present
     
-  Scenario: Projects times should accurately reflect course timezones
-    Given today is "March 5, 1980 at 3:01pm"
+  Scenario: Only one email should be sent out per person per day.
+    Given today is "March 7, 1980 at 9:01am"
     Given the course timezone is "Seoul"
     Given the user timezone is "UTC"
     Given the project started "February 15, 1980" and ends "April 15, 1980", opened "Friday" and closes "Sunday"
@@ -92,12 +92,16 @@ Feature: Timezone Support
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
-    Then the user should see "Wed, Mar 5 at 3:00pm UTC"
-    Then the user should see "Sun, Mar 9 at 2:59pm UTC"
+    Then the user should see "Fri, Mar 7 at 9:00am UTC"
+    Then the user should see "Mon, Mar 10 at 8:59am UTC"
     When the system emails stragglers
     When the system emails stragglers
     When the system emails stragglers
     Then an email will be sent to each member of the group
+    Given today is "6 hours from now"
+    When the system emails stragglers
+    Then an email will be sent to each member of the group
+    Given today is "6 hours from now"
     Given the email queue is empty
     Given today is "24 hours from now"
     Given that the system's set_up_assessments process runs

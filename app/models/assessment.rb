@@ -79,7 +79,6 @@ class Assessment < ActiveRecord::Base
     end
     assessment.end_date = assessment.end_date.end_of_day
 
-    #byebug
     existing_assessment_count = project.assessments.where(
       'start_date = ? AND end_date = ?',
       ( assessment.start_date + tz.utc_offset ).change(:usec => 0), 
