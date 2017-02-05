@@ -19,14 +19,14 @@ class Course < ActiveRecord::Base
   end
 
   def timezone_adjust
-    #unless start_date.nil? || end_date.nil?
-            if self.start_date.zone != timezone
-              tz = ActiveSupport::TimeZone.new(timezone)
-              sd_bod = tz.local_to_utc( self.start_date.beginning_of_day )
-              ed_eod = tz.local_to_utc( self.end_date.end_of_day )
-              self.start_date = sd_bod
-              self.end_date = ed_eod
-            end
-    #end
+    tz = ActiveSupport::TimeZone.new(timezone)
+    if self.start_date_changed?
+      revDate = self.start_date.beginning_of_day + tz.utc_offset
+      self.start_date = revDate
+    end
+    if self.end_date_changed?
+      revDate = self.end_date.end_of_day + tz.utc_offset
+      self.end_date = revDate
+    end
   end
 end
