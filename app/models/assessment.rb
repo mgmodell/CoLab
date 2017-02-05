@@ -57,7 +57,7 @@ class Assessment < ActiveRecord::Base
 
   # Create an assessment for a project if warranted
   def self.build_new_assessment(project)
-    #tz = ActiveSupport::TimeZone.new( project.course.timezone )
+    tz = ActiveSupport::TimeZone.new( project.course.timezone )
 
     init_date = Date.today
     init_day = init_date.wday
@@ -82,8 +82,8 @@ class Assessment < ActiveRecord::Base
     #byebug
     existing_assessment_count = project.assessments.where(
       'start_date = ? AND end_date = ?',
-      assessment.start_date, 
-      assessment.end_date
+      ( assessment.start_date + tz.utc_offset ).change(:usec => 0), 
+      ( assessment.end_date + tz.utc_offset ).change(:usec => 0)
     ).count
 
     if existing_assessment_count == 0
