@@ -9,6 +9,30 @@ class Experience < ActiveRecord::Base
 
   scope :still_open, -> { where( 'experiences.end_date >= ? AND experiences.start_date <= ?', DateTime.current, DateTime.current ) }
 
+  def get_user_reaction( user ) 
+    reaction = reactions.where( user: user )
+    if reaction.count == 0
+      return reaction[ 0 ]
+    elsif
+      return Reaction.new( user: user, experience: self )
+    else
+      logger.debug "We've got too many reactions recorded for this user"
+    end
+  end
+
+  def get_scenario_proportions
+    proportions = { }
+    reactions.each do |reaction|
+      current_value = proportions{ reaction.narrative.scenario }
+      if current_value.nil?
+        proportions{ reaction.narrative.scenario } = 1
+      else
+        proportions{ reaction.narrative.scenario } = current_value + 1
+      end
+    end
+    return proportions
+  end
+
   def date_sanity
     unless start_date.nil? || end_date.nil?
       if start_date > end_date

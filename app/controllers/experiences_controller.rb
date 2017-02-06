@@ -1,7 +1,32 @@
 class ExperiencesController < ApplicationController
-  def next; end
+  def next
+    experience_id = params[ :experience_id ]
+    @experience = user.experiences.still_open.where( id: experience_id ).take
+    if experience.nil?
+      #redirect_to not active
+    else
+      @reaction = experience.get_user_reaction( @current_user )
+      if reaction.new_record?
+        #redirect_to_instructions
+        reaction.save
+      else
+        @week = reaction.next_week
+        if @week.nil?
+          #we just finished the last week
+          #render reaction
+        else
+          #render new - pretty sure I don't need this
+        end
+      end
+    end
+  end
 
-  def diagnose; end
+  def diagnose
+    #record a reaction
+    
+  end
 
-  def reaction; end
+  def reaction
+    #record a reaction
+  end
 end
