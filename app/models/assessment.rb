@@ -3,6 +3,7 @@ class Assessment < ActiveRecord::Base
   validates :end_date, :start_date, presence: true
   has_many :installments, inverse_of: :assessment
   has_many :factors, through: :project
+  has_many :users, through: :project
 
   after_validation :timezone_adjust
 
