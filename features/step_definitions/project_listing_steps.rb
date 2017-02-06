@@ -38,14 +38,14 @@ Then /^the user should see a successful login message$/ do
   page.should have_content 'Signed in successfully.'
 end
 
-Then /^user should see (\d+) open project$/ do |open_project_count|
+Then /^user should see (\d+) open task$/ do |open_project_count|
   case open_project_count.to_i
   when 0
-    page.should have_content  'You do not currently have any projects.'
+    page.should have_content  'You do not currently have any tasks due.'
   when 1
-    page.should have_content  'one project at the moment'
+    page.should have_content  'one task at the moment'
   else
-    page.should have_content ( open_project_count + ' projects today')
+    page.should have_content ( open_project_count + ' tasks today')
   end
 end
 

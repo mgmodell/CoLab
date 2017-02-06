@@ -15,7 +15,7 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open project
+    Then user should see 1 open task
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
@@ -44,7 +44,7 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open project
+    Then user should see 1 open task
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
@@ -62,7 +62,7 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open project
+    Then user should see 1 open task
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
@@ -80,7 +80,7 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open project
+    Then user should see 1 open task
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
@@ -99,7 +99,7 @@ Feature: Submitting Reports
     Given today is "tomorrow 23:57"
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open project
+    Then user should see 1 open task
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form

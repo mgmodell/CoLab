@@ -39,7 +39,7 @@ When /^user clicks the link to the project$/ do
 end
 
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points, distribution|
-  group_installment = @user.waiting_installments[0]
+  group_installment = @user.waiting_tasks[0]
 
   if column_points.to_i <= 0
     page.all(:xpath, '//input[starts-with(@id,"installment_values_attributes_")]').each do |element|
@@ -69,7 +69,7 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
 end
 
 Then /^the installment form should request factor x user values$/ do
-  group_installments = @user.waiting_installments
+  group_installments = @user.waiting_tasks
   group_installments.count.should eq 1
   group = group_installments[0][0]
   factors = group_installments[0][1].factors
@@ -93,7 +93,7 @@ Then /^the user logs in and submits an installment$/ do
   step 'the user "has" had demographics requested'
   step 'the user logs in'
   step 'the user should see a successful login message'
-  step 'user should see 1 open project'
+  step 'user should see 1 open task'
   step 'user should see a consent form listed for the open project'
   step 'user clicks the link to the project'
   step 'user will be presented with the installment form'

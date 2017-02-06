@@ -12,6 +12,6 @@ class HomeController < ApplicationController
       redirect_to edit_user_registration_path(@current_user)
     end
     @first_name = current_user.first_name
-    @waiting_installments = current_user.waiting_installments
+    @waiting_tasks = current_user.waiting_tasks
   end
 end

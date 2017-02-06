@@ -1,16 +1,16 @@
-<h1>Your Projects</h1>
+<h1>Your Tasks</h1>
 <p>Hello <%= @first_name %>,
-<% if @waiting_installments.any? %>
-  <% if @waiting_installments.count == 1 %>
-    You've got one project at the moment.
+<% if @waiting_tasks.any? %>
+  <% if @waiting_tasks.count == 1 %>
+    You've got one task at the moment.
   <% else %>
-    You've got <%= @waiting_installments.count %> projects today.
+    You've got <%= @waiting_tasks.count %> tasks today.
   <% end %>
 <% else %>
-  You do not currently have any projects. Check back later or contact your instructor.
+  You do not currently have any tasks due. Check back later or contact your instructor.
 <% end %></p>
 
-<% if @waiting_installments.any? %>
+<% if @waiting_tasks.any? %>
    <table>
      <tr>
      <th>Project Name</th>
@@ -20,7 +20,7 @@
      <th>Close Date</th>
      <th>Consent Form</th>
      </tr>
-     <% @waiting_installments.each do |cai| %>
+     <% @waiting_tasks.each do |cai| %>
         <% group = cai[ 0 ] %>
         <% assessment = cai[ 1 ] %>
         <tr>

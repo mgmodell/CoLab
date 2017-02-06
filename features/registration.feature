@@ -18,7 +18,7 @@ Feature: User registration
     Then the user will see a request for demographics
     When the user "does" fill in demographics data
     When the user visits the index
-    Then the user will see the assessment listing page
+    Then the user will see the task listing page
 
   Scenario: Registered user does not provide consent
     Given there is a course with an assessed project
@@ -32,4 +32,4 @@ Feature: User registration
     Then the user will see a request for demographics
     When the user "does" fill in demographics data
     When the user visits the index
-    Then the user will see the assessment listing page
+    Then the user will see the task listing page

@@ -1,5 +1,5 @@
-Then /^the user will see the assessment listing page$/ do
-  page.should have_content 'Your Projects'
+Then /^the user will see the task listing page$/ do
+  page.should have_content 'Your Tasks'
 end
 
 Then /^the user will see a consent request$/ do

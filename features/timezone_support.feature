@@ -17,7 +17,7 @@ Feature: Timezone Support
     Given the project has been activated
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open project
+    Then user should see 1 open task
     Then the user should see "Fri, Mar 7 at 12:00am UTC"
     Then the user should see "Sun, Mar 9 at 11:59pm UTC"
     Then return to the present
@@ -29,7 +29,7 @@ Feature: Timezone Support
     Given the project has been activated
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open project
+    Then user should see 1 open task
     Then the user should see "Fri, Mar 7 at 9:00am KST"
     Then the user should see "Mon, Mar 10 at 8:59am KST"
     Then return to the present
@@ -42,7 +42,7 @@ Feature: Timezone Support
     Given the project has been activated
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 0 open project
+    Then user should see 0 open task
     When the system emails stragglers
     When the system emails stragglers
     Then no emails will be sent
@@ -56,7 +56,7 @@ Feature: Timezone Support
     Given that the system's set_up_assessments process runs
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open project
+    Then user should see 1 open task
     Then the user should see "Fri, Mar 7 at 5:00am UTC"
     Then the user should see "Mon, Mar 10 at 4:59am UTC"
     When the system emails stragglers
@@ -73,7 +73,7 @@ Feature: Timezone Support
     Given that the system's set_up_assessments process runs
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open project
+    Then user should see 1 open task
     Then the user should see "Thu, Mar 6 at 3:00pm UTC"
     Then the user should see "Sun, Mar 9 at 2:59pm UTC"
     When the system emails stragglers
@@ -91,7 +91,7 @@ Feature: Timezone Support
     Given that the system's set_up_assessments process runs
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open project
+    Then user should see 1 open task
     Then the user should see "Thu, Mar 6 at 3:00pm UTC"
     Then the user should see "Sun, Mar 9 at 2:59pm UTC"
     When the system emails stragglers
@@ -109,7 +109,7 @@ Feature: Timezone Support
     Given that the system's set_up_assessments process runs
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open project
+    Then user should see 1 open task
     Then the user should see "Thu, Mar 6 at 3:00pm UTC"
     Then the user should see "Sun, Mar 9 at 2:59pm UTC"
     When the system emails stragglers
