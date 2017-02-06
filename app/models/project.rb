@@ -135,11 +135,11 @@ class Project < ActiveRecord::Base
   def timezone_adjust
       course_tz = ActiveSupport::TimeZone.new( course.timezone )
     if self.start_date_changed?
-      self.start_date += course_tz.utc_offset
+      self.start_date -= course_tz.utc_offset
     end
 
     if end_date_changed?
-      self.end_date += course_tz.utc_offset
+      self.end_date -= course_tz.utc_offset
 
     end
   end

@@ -42,8 +42,8 @@ Feature: Timezone Support
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
-    Then the user should see "Fri, Mar 7 at 9:00am UTC"
-    Then the user should see "Mon, Mar 10 at 8:59am UTC"
+    Then the user should see "Thu, Mar 6 at 3:00pm UTC"
+    Then the user should see "Sun, Mar 9 at 2:59pm UTC"
     When the system emails stragglers
     When the system emails stragglers
     When the system emails stragglers
@@ -74,8 +74,8 @@ Feature: Timezone Support
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
-    Then the user should see "Fri, Mar 7 at 9:00am UTC"
-    Then the user should see "Mon, Mar 10 at 8:59am UTC"
+    Then the user should see "Thu, Mar 6 at 3:00pm UTC"
+    Then the user should see "Sun, Mar 9 at 2:59pm UTC"
     When the system emails stragglers
     When the system emails stragglers
     When the system emails stragglers
@@ -92,8 +92,8 @@ Feature: Timezone Support
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open project
-    Then the user should see "Fri, Mar 7 at 9:00am UTC"
-    Then the user should see "Mon, Mar 10 at 8:59am UTC"
+    Then the user should see "Thu, Mar 6 at 3:00pm UTC"
+    Then the user should see "Sun, Mar 9 at 2:59pm UTC"
     When the system emails stragglers
     When the system emails stragglers
     When the system emails stragglers
