@@ -3,8 +3,8 @@ class CreateExperiences < ActiveRecord::Migration
     create_table :experiences do |t|
       t.references :course, index: true, foreign_key: true
       t.string :name
-      t.datetime :open_date
-      t.datetime :close_date
+      t.datetime :start_date
+      t.datetime :end_date
 
       t.timestamps null: false
     end
