@@ -15,6 +15,8 @@ class User < ActiveRecord::Base
   has_many :installments, inverse_of: :user
   has_many :rosters, inverse_of: :user
 
+  has_many :users, through: :groups
+
   has_many :reactions, inverse_of: :user
 
   validates :timezone, presence: true

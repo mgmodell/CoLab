@@ -4,6 +4,7 @@ class Assessment < ActiveRecord::Base
   has_many :installments, inverse_of: :assessment
   has_many :factors, through: :project
   has_many :users, through: :project
+  has_many :groups, through: :project
 
   after_validation :timezone_adjust
 
@@ -12,6 +13,17 @@ class Assessment < ActiveRecord::Base
 
   def is_completed_by_user(user)
     0 != user.installments.where(assessment: self).count
+  end
+
+  def group_for_user( user )
+    groups = self.groups.joins( :users ).where( users: { id: user } )
+    if groups.nil? || groups.count == 0
+      groups = nil
+    else
+      logger.debug "Too many groups for this assessment" if groups.count > 1
+      groups = groups[ 0 ]
+    end
+    groups
   end
 
   # Utility method for populating Assessments when they are needed

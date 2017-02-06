@@ -20,9 +20,9 @@
      <th>Close Date</th>
      <th>Consent Form</th>
      </tr>
-     <% @waiting_tasks.each do |cai| %>
-        <% group = cai[ 0 ] %>
-        <% assessment = cai[ 1 ] %>
+     <% @waiting_tasks.each do |task| %>
+        <% assessment = task[ 1 ] %>
+        <% group = assessment.group_for_user( @current_user )%>
         <tr>
         <td>
           <% if(assessment.is_completed_by_user @current_user) %>
