@@ -1,10 +1,7 @@
 class ExperiencesController < ApplicationController
-  def next
-  end
+  def next; end
 
-  def diagnose
-  end
+  def diagnose; end
 
-  def reaction
-  end
+  def reaction; end
 end

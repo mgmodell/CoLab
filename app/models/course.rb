@@ -20,11 +20,7 @@ class Course < ActiveRecord::Base
 
   def timezone_adjust
     tz = ActiveSupport::TimeZone.new(timezone)
-    if self.start_date_changed?
-      self.start_date -= tz.utc_offset
-    end
-    if self.end_date_changed?
-      self.end_date -= tz.utc_offset
-    end
+    self.start_date -= tz.utc_offset if start_date_changed?
+    self.end_date -= tz.utc_offset if end_date_changed?
   end
 end

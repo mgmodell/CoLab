@@ -2,7 +2,7 @@ class ConsentLogsController < ApplicationController
   def update
     @consent_log = ConsentLog.find(params[:id])
     if @consent_log.update!(cl_params)
-      redirect_to :controller => 'home', :action => 'index'
+      redirect_to controller: 'home', action: 'index'
     else
       render action: 'edit'
     end
@@ -16,7 +16,7 @@ class ConsentLogsController < ApplicationController
     @consent_log = ConsentLog.where('user_id = ? AND consent_form_id = ?', u_id, cf_id).first
     if @consent_log.nil?
       @consent_log = ConsentLog.create(accepted: false,
-                                       user_id: u_id, consent_form_id: cf_id )
+                                       user_id: u_id, consent_form_id: cf_id)
     end
   end
 

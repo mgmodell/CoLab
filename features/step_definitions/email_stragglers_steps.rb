@@ -9,14 +9,14 @@ end
 
 Then /^an email will be sent to each member of the group$/ do
   ows = @user.waiting_installments
-  g = ows[ 0 ][ 0 ]
+  g = ows[0][0]
   group_count = g.users.count
   ActionMailer::Base.deliveries.count.should eq group_count
 end
 
 Then /^an email will be sent to each member of the group but one$/ do
   ows = @user.waiting_installments
-  g = ows[ 0 ][ 0 ]
+  g = ows[0][0]
   group_count_minus_one = g.users.count - 1
   ActionMailer::Base.deliveries.count.should eq group_count_minus_one
 end

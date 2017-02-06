@@ -68,11 +68,11 @@ class User < ActiveRecord::Base
     end
   end
 
-  #TODO: Must add in support for experiences and other activities here
+  # TODO: Must add in support for experiences and other activities here
   def waiting_installments
     ows = []
 
-    #byebug
+    # byebug
 
     assessments.still_open.each do |assessment|
       group = groups.joins(project: :assessments)

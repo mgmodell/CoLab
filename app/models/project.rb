@@ -79,22 +79,22 @@ class Project < ActiveRecord::Base
 
   # Validation check code
   def date_sanity
-    if !( start_date.nil? || end_date.nil? )
-            if start_date > end_date
-              errors.add(:start_dow, 'The start date must come before the end date')
-            end
-            errors
+    unless start_date.nil? || end_date.nil?
+      if start_date > end_date
+        errors.add(:start_dow, 'The start date must come before the end date')
+      end
+      errors
     end
   end
 
   def dates_within_course
-    if !( start_date.nil? || end_date.nil? )
-            if start_date < course.start_date
-              errors.add(:start_date, 'The project cannot begin before the course has begun')
-            end
-            if end_date > course.end_date
-              errors.add(:end_date, 'The project cannot continue after the course has ended')
-            end
+    unless start_date.nil? || end_date.nil?
+      if start_date < course.start_date
+        errors.add(:start_date, 'The project cannot begin before the course has begun')
+      end
+      if end_date > course.end_date
+        errors.add(:end_date, 'The project cannot continue after the course has ended')
+      end
     end
     errors
   end
@@ -128,19 +128,14 @@ class Project < ActiveRecord::Base
     Assessment.build_new_assessment self if active? && is_available?
   end
 
-  #after_find do |user|
+  # after_find do |user|
   #  user.timezone_adjust
-  #end
+  # end
 
   def timezone_adjust
-      course_tz = ActiveSupport::TimeZone.new( course.timezone )
-    if self.start_date_changed?
-      self.start_date -= course_tz.utc_offset
-    end
+    course_tz = ActiveSupport::TimeZone.new(course.timezone)
+    self.start_date -= course_tz.utc_offset if start_date_changed?
 
-    if end_date_changed?
-      self.end_date -= course_tz.utc_offset
-
-    end
+    self.end_date -= course_tz.utc_offset if end_date_changed?
   end
 end

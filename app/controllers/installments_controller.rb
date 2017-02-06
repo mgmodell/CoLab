@@ -62,7 +62,7 @@ class InstallmentsController < ApplicationController
 
       @installment = Installment.new(assessment_id: assessment_id,
                                      user_id: user_id,
-                                     inst_date: DateTime.current.in_time_zone( project.course.timezone ),
+                                     inst_date: DateTime.current.in_time_zone(project.course.timezone),
                                      group_id: group_id)
       # @installment.user = current_user
 

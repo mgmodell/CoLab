@@ -138,7 +138,7 @@ class Week_
   attr_accessor :week_num, :text
 end
 
-week_data = YAML.safe_load(File.open('db/narratives/ec_alex.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/ec_alex.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 1,
@@ -147,7 +147,7 @@ week_data.each do |week|
   )
 end
 
-week_data = YAML.safe_load(File.open('db/narratives/ec_natasha.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/ec_natasha.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 2,
@@ -156,7 +156,7 @@ week_data.each do |week|
   )
 end
 
-week_data = YAML.safe_load(File.open('db/narratives/ec_anika.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/ec_anika.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 3,
@@ -165,7 +165,7 @@ week_data.each do |week|
   )
 end
 
-week_data = YAML.safe_load(File.open('db/narratives/ec_lionel.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/ec_lionel.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 4,
@@ -180,7 +180,7 @@ Narrative.create(member: 'Jose', scenario_id: 2)
 Narrative.create(member: 'Sam', scenario_id: 2)
 Narrative.create(member: 'Kim', scenario_id: 2)
 
-week_data = YAML.safe_load(File.open('db/narratives/gd_anna.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/gd_anna.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 5,
@@ -189,7 +189,7 @@ week_data.each do |week|
   )
 end
 
-week_data = YAML.safe_load(File.open('db/narratives/gd_jose.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/gd_jose.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 6,
@@ -198,7 +198,7 @@ week_data.each do |week|
   )
 end
 
-week_data = YAML.safe_load(File.open('db/narratives/gd_sam.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/gd_sam.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 7,
@@ -207,7 +207,7 @@ week_data.each do |week|
   )
 end
 
-week_data = YAML.safe_load(File.open('db/narratives/gd_kim.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/gd_kim.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 8,
@@ -223,7 +223,7 @@ Narrative.create(member: 'Marie', scenario_id: 3)
 Narrative.create(member: 'Hannah', scenario_id: 3)
 Narrative.create(member: 'Iain', scenario_id: 3)
 
-week_data = YAML.safe_load(File.open('db/narratives/sl_john.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/sl_john.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 9,
@@ -232,7 +232,7 @@ week_data.each do |week|
   )
 end
 
-week_data = YAML.safe_load(File.open('db/narratives/sl_marie.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/sl_marie.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 10,
@@ -241,7 +241,7 @@ week_data.each do |week|
   )
 end
 
-week_data = YAML.safe_load(File.open('db/narratives/sl_hannah.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/sl_hannah.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 11,
@@ -250,7 +250,7 @@ week_data.each do |week|
   )
 end
 
-week_data = YAML.safe_load(File.open('db/narratives/sl_iain.yml'), [ Week_] )
+week_data = YAML.safe_load(File.open('db/narratives/sl_iain.yml'), [Week_])
 week_data.each do |week|
   Week.create(
     narrative_id: 12,
@@ -263,7 +263,7 @@ class Cip_
   attr_accessor :id, :description
 end
 
-cip_data = YAML.safe_load(File.open('db/cip_constants.yml'), [ Cip_] )
+cip_data = YAML.safe_load(File.open('db/cip_constants.yml'), [Cip_])
 cip_data.each do |cip_code|
   CipCode.create(
     gov_code: cip_code.id,
