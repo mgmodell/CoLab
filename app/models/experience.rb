@@ -1,5 +1,6 @@
 class Experience < ActiveRecord::Base
   belongs_to :course, inverse_of: :experiences
+  has_many :reactions, inverse_of: :experience
 
   validates :name, :end_date, :start_date, presence: true
 
