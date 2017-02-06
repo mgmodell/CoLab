@@ -7,7 +7,7 @@ class Assessment < ActiveRecord::Base
   after_validation :timezone_adjust
 
   # Helpful scope
-  scope :still_open, -> { where('assessments.end_date >= ?', DateTime.current.in_time_zone) }
+  scope :still_open, -> { where('assessments.end_date >= ?', DateTime.current ) }
 
   def is_completed_by_user(user)
     0 != user.installments.where(assessment: self).count
@@ -79,10 +79,11 @@ class Assessment < ActiveRecord::Base
     end
     assessment.end_date = assessment.end_date.end_of_day
 
+    #byebug
     existing_assessment_count = project.assessments.where(
       'start_date = ? AND end_date = ?',
-      ( assessment.start_date + tz.utc_offset ).change(:usec => 0), 
-      ( assessment.end_date + tz.utc_offset ).change(:usec => 0)
+      ( assessment.start_date - tz.utc_offset ).change(:usec => 0), 
+      ( assessment.end_date - tz.utc_offset ).change(:usec => 0)
     ).count
 
     if existing_assessment_count == 0
