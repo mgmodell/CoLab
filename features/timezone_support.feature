@@ -34,22 +34,6 @@ Feature: Timezone Support
     Then the user should see "Mon, Mar 10 at 8:59am KST"
     Then return to the present
     
-  Scenario: Projects times should reflect course timezones
-    Given the user timezone is "UTC"
-    Given the course timezone is "Seoul"
-    Given the project started "February 15, 1980" and ends "April 15, 1980", opened "Friday" and closes "Sunday"
-    Given the project has been activated
-    When the user logs in
-    Then the user should see a successful login message
-    Then user should see 1 open project
-    Then the user should see "Thu, Mar 6 at 3:00pm UTC"
-    Then the user should see "Sun, Mar 9 at 2:59pm UTC"
-    When the system emails stragglers
-    When the system emails stragglers
-    When the system emails stragglers
-    Then an email will be sent to each member of the group
-    Then return to the present
-    
   Scenario: Projects shouldn't open too soon
     Given today is "March 5, 1980 at 8:59am"
     Given the course timezone is "Seoul"
@@ -62,6 +46,40 @@ Feature: Timezone Support
     When the system emails stragglers
     When the system emails stragglers
     Then no emails will be sent
+    Then return to the present
+    
+  Scenario: Projects times should reflect course timezones - New York
+    Given the course timezone is "America/New_York"
+    Given the user timezone is "UTC"
+    Given the project started "February 15, 1980" and ends "April 15, 1980", opened "Friday" and closes "Sunday"
+    Given the project has been activated
+    Given that the system's set_up_assessments process runs
+    When the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open project
+    Then the user should see "Fri, Mar 7 at 5:00am UTC"
+    Then the user should see "Mon, Mar 10 at 4:59am UTC"
+    When the system emails stragglers
+    When the system emails stragglers
+    When the system emails stragglers
+    Then an email will be sent to each member of the group
+    Then return to the present
+    
+  Scenario: Projects times should reflect course timezones - Seoul
+    Given the course timezone is "Seoul"
+    Given the user timezone is "UTC"
+    Given the project started "February 15, 1980" and ends "April 15, 1980", opened "Friday" and closes "Sunday"
+    Given the project has been activated
+    Given that the system's set_up_assessments process runs
+    When the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open project
+    Then the user should see "Thu, Mar 6 at 3:00pm UTC"
+    Then the user should see "Sun, Mar 9 at 2:59pm UTC"
+    When the system emails stragglers
+    When the system emails stragglers
+    When the system emails stragglers
+    Then an email will be sent to each member of the group
     Then return to the present
     
   Scenario: Projects times should open at exactly the correct time
