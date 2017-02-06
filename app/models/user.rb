@@ -14,6 +14,8 @@ class User < ActiveRecord::Base
   belongs_to :cip_code, inverse_of: :users
   has_many :installments, inverse_of: :user
   has_many :rosters, inverse_of: :user
+  has_many :courses, through: :projects
+  has_many :experiences, through: :courses
 
   has_many :users, through: :groups
 
@@ -72,18 +74,10 @@ class User < ActiveRecord::Base
 
   # TODO: Must add in support for experiences and other activities here
   def waiting_tasks
-    ows = []
+    waiting_tasks = assessments.still_open.to_a
+    waiting_tasks.concat experiences.still_open.to_a
 
-    assessments.still_open.each do |assessment|
-      group = groups.joins(project: :assessments)
-      if group.count == 1
-        ows << [group[0], assessment]
-      else
-        logger.debug 'We have a problem!'
-      end
-    end
-
-    ows
+    return waiting_tasks.sort{ |a,b| a.end_date <=> b.end_date }
   end
 
   def self.from_omniauth(access_token)

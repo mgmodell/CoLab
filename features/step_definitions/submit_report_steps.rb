@@ -39,14 +39,14 @@ When /^user clicks the link to the project$/ do
 end
 
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points, distribution|
-  group_installment = @user.waiting_tasks[0]
+  task = @user.waiting_tasks[0]
 
   if column_points.to_i <= 0
     page.all(:xpath, '//input[starts-with(@id,"installment_values_attributes_")]').each do |element|
       element.set Random.rand(3200).abs if element[:id].end_with? 'value'
     end
   elsif distribution == 'evenly'
-    cell_value = column_points.to_i / group_installment[0].users.count
+    cell_value = column_points.to_i / task.group_for_user( @user ).users.count
 
     page.all(:xpath, '//input[starts-with(@id,"installment_values_attributes_")]').each do |element|
       element.set cell_value if element[:id].end_with? 'value'
@@ -69,10 +69,10 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
 end
 
 Then /^the installment form should request factor x user values$/ do
-  group_installments = @user.waiting_tasks
-  group_installments.count.should eq 1
-  group = group_installments[0][0]
-  factors = group_installments[0][1].factors
+  tasks = @user.waiting_tasks
+  tasks.count.should eq 1
+  group = tasks[0].group_for_user( @user )
+  factors = tasks[0].factors
 
   expected_count = group.users.count * factors.count
 

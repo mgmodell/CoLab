@@ -21,25 +21,39 @@
      <th>Consent Form</th>
      </tr>
      <% @waiting_tasks.each do |task| %>
-        <% assessment = task[ 1 ] %>
-        <% group = assessment.group_for_user( @current_user )%>
-        <tr>
-        <td>
-          <% if(assessment.is_completed_by_user @current_user) %>
-            <%= link_to assessment.project.name, edit_installment_path( :assessment_id => assessment.id, :group_id => group.id ) %>
-            <br>(<em>completed</em>)
-          <% else %>
-            <%= link_to assessment.project.name, new_installment_path( :assessment_id => assessment.id, :group_id => group.id ) %>
-          <% end %>
-        </td>
-        <td> <%= group.name %></td>
-        <td> <%= assessment.project.course.name %></td>
-        <td> <%= assessment.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-        <td> <%= assessment.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-        <td>
-          <%= render :partial => "shared/consent", :locals => { :project => assessment.project } %>
-        </td>
-      </tr>
+        <% if task.class.name == "Assessment" %>
+                <% group = task.group_for_user( @current_user )%>
+                <tr>
+                <td>
+                  <% if(task.is_completed_by_user @current_user) %>
+                    <%= link_to task.project.name, edit_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
+                    <br>(<em>completed</em>)
+                  <% else %>
+                    <%= link_to task.project.name, new_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
+                  <% end %>
+                </td>
+                <td> <%= group.name %></td>
+                <td> <%= task.project.course.name %></td>
+                <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+                <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+                <td>
+                  <%= render :partial => "shared/consent", :locals => { :project => task.project } %>
+                </td>
+              </tr>
+        <% else %>
+                <tr>
+                <td>
+                  task.name
+                </td>
+                <td> n/a </td>
+                <td> <%= task.project.course.name %></td>
+                <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+                <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+                <td>
+                  <%= render :partial => "shared/consent", :locals => { :project => task.project } %>
+                </td>
+              </tr>
+         <% end %>
     <% end %>
   </table>
 <% end %>

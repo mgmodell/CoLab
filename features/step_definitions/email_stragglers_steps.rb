@@ -8,15 +8,15 @@ When /^the system emails stragglers$/ do
 end
 
 Then /^an email will be sent to each member of the group$/ do
-  ows = @user.waiting_tasks
-  g = ows[0][0]
+  wt = @user.waiting_tasks
+  g = wt[0].group_for_user( @user )
   group_count = g.users.count
   ActionMailer::Base.deliveries.count.should eq group_count
 end
 
 Then /^an email will be sent to each member of the group but one$/ do
   ows = @user.waiting_tasks
-  g = ows[0][0]
+  g = ows[0].group_for_user( @user )
   group_count_minus_one = g.users.count - 1
   ActionMailer::Base.deliveries.count.should eq group_count_minus_one
 end

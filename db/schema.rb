@@ -106,8 +106,8 @@ ActiveRecord::Schema.define(version: 20170206071120) do
   create_table "experiences", force: :cascade do |t|
     t.integer  "course_id",  limit: 4
     t.string   "name",       limit: 255
-    t.datetime "open_date"
-    t.datetime "close_date"
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.boolean  "active"

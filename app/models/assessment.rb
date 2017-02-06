@@ -15,13 +15,13 @@ class Assessment < ActiveRecord::Base
     0 != user.installments.where(assessment: self).count
   end
 
-  def group_for_user( user )
-    groups = self.groups.joins( :users ).where( users: { id: user } )
+  def group_for_user(user)
+    groups = self.groups.joins(:users).where(users: { id: user })
     if groups.nil? || groups.count == 0
       groups = nil
     else
-      logger.debug "Too many groups for this assessment" if groups.count > 1
-      groups = groups[ 0 ]
+      logger.debug 'Too many groups for this assessment' if groups.count > 1
+      groups = groups[0]
     end
     groups
   end
