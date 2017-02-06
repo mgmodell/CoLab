@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_170_127_030_610) do
+ActiveRecord::Schema.define(version: 20_170_206_053_808) do
   create_table 'age_ranges', force: :cascade do |t|
     t.string   'name',       limit: 255
     t.datetime 'created_at',             null: false
@@ -109,6 +109,7 @@ ActiveRecord::Schema.define(version: 20_170_127_030_610) do
     t.datetime 'close_date'
     t.datetime 'created_at',             null: false
     t.datetime 'updated_at',             null: false
+    t.boolean  'active'
   end
 
   add_index 'experiences', ['course_id'], name: 'index_experiences_on_course_id', using: :btree
