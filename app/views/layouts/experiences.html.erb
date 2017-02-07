@@ -29,8 +29,6 @@
         <% if ! @participant.nil? && ! @participant.numGroupProjects.nil? %>
           <fieldset data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
             <a href="#instructions" id="instr_btn" class="ui-btn ui-mini ui-icon-info ui-btn-inline ui-btn-icon-right" >Instructions</a>
-            <%= link_to "Pause", pause_path, 
-              { :class=> "ui-btn ui-mini ui-icon-check ui-btn-inline ui-btn-icon-right" } %>
           </fieldset>
         <% else %>
           &nbsp;
