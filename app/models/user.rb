@@ -15,7 +15,6 @@ class User < ActiveRecord::Base
   has_many :installments, inverse_of: :user
   has_many :rosters, inverse_of: :user
   has_many :courses, through: :projects
-  has_many :experiences, through: :courses
 
   has_many :users, through: :groups
 
@@ -75,7 +74,10 @@ class User < ActiveRecord::Base
   # TODO: Must add in support for experiences and other activities here
   def waiting_tasks
     waiting_tasks = assessments.still_open.to_a
-    waiting_tasks.concat experiences.still_open.to_a
+    x = rosters.joins( :role, course: :experiences ).
+      where( "( roles.name = 'Enrolled Student' OR roles.name = 'Invited Student' ) AND " +
+        "experiences.end_date >= ? AND experiences.start_date <= ?", DateTime.current, DateTime.current )
+    waiting_tasks.concat x.to_a
 
     return waiting_tasks.sort{ |a,b| a.end_date <=> b.end_date }
   end

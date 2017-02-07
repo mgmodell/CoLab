@@ -46,3 +46,10 @@ end
 ConsentForm.blueprint do
   name { Forgery::Name.location }
 end
+
+Experience.blueprint do
+  name { Forgery::Name.industry +  ' Experience' }
+  start_date { DateTime.yesterday }
+  end_date { DateTime.tomorrow }
+  active { false }
+end
