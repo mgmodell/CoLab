@@ -71,7 +71,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # TODO: Must add in support for experiences and other activities here
   def waiting_tasks
     waiting_tasks = assessments.still_open.to_a
     available_rosters = self.rosters.joins( :role, course: :experiences ).

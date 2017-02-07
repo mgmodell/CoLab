@@ -28,7 +28,7 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
   end
 end
 
-Given(/^the experience started "([^"]*)" and ends "([^"]*)"$/) do |start_date, end_date|
+Given /^the experience started "([^"]*)" and ends "([^"]*)"$/  do |start_date, end_date|
   @experience.start_date = Chronic.parse( start_date )
   @experience.end_date = Chronic.parse( end_date )
   @experience.save
@@ -49,3 +49,29 @@ Given /^the user is "(.*?)" user$/ do |which|
     when "the last" then @user = @users.last
   end
 end
+
+Given /^the course has an assessed project$/  do
+  @project = Project.make
+  @project.style = Style.find( 1 )
+  @project.course = @course
+  @project.save
+end
+
+Given /^the user is in a group on the project$/  do
+  @group = Group.make
+  @project.active = false
+
+  @project.groups << @group
+  3.times do
+    u = User.make
+    u.skip_confirmation!
+    @group.users << u
+  end
+  @group.users << @user
+  @group.save
+  @group.save
+  @project.active = false
+  @project.save
+
+end
+
