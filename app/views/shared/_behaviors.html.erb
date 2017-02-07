@@ -1,0 +1,6 @@
+<dl>
+  <% Behavior.all.each do |b| %>
+  <dt><%= b.name %><dt>
+    <dd><%= b.description.html_safe %><dd>
+  <% end %>
+</dl>

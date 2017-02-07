@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @title.nil? ? "Experience Installment" : @title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+    <div data-role="header" data-position="fixed" data-theme="a">
+      <fieldset data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+        <% if @participant.nil? %>
+          &nbsp;
+        <% else 
+            steps = 1
+            if ! @week.nil?
+              steps += @week.week_num
+            end
+            percent_complete = ( 100 * ( steps.to_f / 16 ) ).to_i
+        %>
+        <div id="progressbar">
+          <div style="width: <%= percent_complete %>%"><%= percent_complete %>%&nbsp;complete</div>
+        </div>
+        <% end %>
+      </fieldset>
+          <h3><%= @title %></h3>
+
+        <% if ! @participant.nil? && ! @participant.numGroupProjects.nil? %>
+          <fieldset data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+            <a href="#instructions" id="instr_btn" class="ui-btn ui-mini ui-icon-info ui-btn-inline ui-btn-icon-right" >Instructions</a>
+            <%= link_to "Pause", pause_path, 
+              { :class=> "ui-btn ui-mini ui-icon-check ui-btn-inline ui-btn-icon-right" } %>
+          </fieldset>
+        <% else %>
+          &nbsp;
+        <% end %>
+    </div>
+  <div data-role="page" data-theme="a">
+    <% if ! @participant.nil? && ! @participant.numGroupProjects.nil? %>
+      <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay"
+        id="instructions">
+        <a href="#instr_btn" class="ui-btn ui-icon-delete" data-rel="close"> Close panel</a>
+        <div data-role="collapsible">
+          <h4>Instructions</h4>
+          <%= render "shared/instructions" %>
+        </div>
+        <div data-role="collapsible">
+          <h4>Behaviors</h4>
+          <%= render "shared/behaviors" %>
+        </div>
+        <div data-role="collapsible">
+          <h4>Scenario</h4>
+          <%= render "shared/scenario" %>
+        </div>
+      </div>
+    <% end %>
+    <div data-role="content">
+
+      <% if flash[:error] && flash[:error].size > 0 -%>
+        <p style="margin-left: auto; margin-right: auto" class='error'>
+          <% if flash[:error][:base] && flash[:error][:base].size > 0 -%>
+            <%= flash[:error][:base][0] %>
+          <% end -%>
+          <% if flash[:error][:base].nil? || flash[:error].size > flash[:error][:base].size -%>
+            Please resolve the highlighted errors.</p>
+          <% end -%>
+        </p>
+      <% end -%>
+      <% if flash[:notice] && flash[:notice].size > 0 -%>
+        <p class='notice'><%=h flash[:notice] %></p>
+      <% end -%>
+<%= yield %>
+    </div>
+  </div>
+</body>
+</html>
+
+</body>
+</html>

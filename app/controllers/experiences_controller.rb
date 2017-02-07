@@ -3,12 +3,12 @@ class ExperiencesController < ApplicationController
     experience_id = params[ :experience_id ]
     @experience = user.experiences.still_open.where( id: experience_id ).take
     if experience.nil?
-      #redirect_to not active
+      redirect_to "/", notice: "This Experience is a part of another course"
     else
       @reaction = experience.get_user_reaction( @current_user )
       if reaction.new_record?
-        #redirect_to_instructions
         reaction.save
+        render :studyInstructions
       else
         @week = reaction.next_week
         if @week.nil?

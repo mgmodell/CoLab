@@ -43,7 +43,7 @@
         <% else %>
                 <tr>
                 <td>
-                  task.name
+                  <%= link_to task.name, next_experience_path( :experience_id => task.id ) %>
                 </td>
                 <td> n/a </td>
                 <td> <%= task.course.name + "(" + task.course.get_roster_for_user( @current_user ).role.name + ")"%></td>

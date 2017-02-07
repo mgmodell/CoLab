@@ -8,6 +8,10 @@ class Reaction < ActiveRecord::Base
 
   def next_week
     if narrative.nil?
+      user_reactions = user.reactions
+      if user_reactions.count > 0
+        if user_reactions.count < Scenarios.all.count
+          #todo: I'm here
             #interrogate the user for their existing reactions
             #check the extant proportions of the experience
             #select a scenario/narrative

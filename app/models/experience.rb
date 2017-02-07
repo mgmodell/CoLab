@@ -23,6 +23,19 @@ class Experience < ActiveRecord::Base
     end
   end
 
+  def get_narrative_proportions
+    proportions = { }
+    reactions.each do |reaction|
+      current_value = proportions{ reaction.narrative }
+      if current_value.nil?
+        proportions[ reaction.narrative ] = 1
+      else
+        proportions[ reaction.narrative ] = current_value + 1
+      end
+    end
+    return proportions
+  end
+
   def get_scenario_proportions
     proportions = { }
     reactions.each do |reaction|

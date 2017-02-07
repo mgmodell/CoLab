@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'experiences/next'
+  get 'experiences/next/:experience_id:' => 'experiences#new', :as => 'next_experience'
 
   get 'experiences/diagnose'
 
