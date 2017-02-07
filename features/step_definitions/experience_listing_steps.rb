@@ -18,6 +18,7 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
   @users = [ ]
   user_count.to_i.times do
     user = User.make
+    user.skip_confirmation!
     @users << user
     r = Roster.new
     r.user = user
@@ -44,7 +45,7 @@ end
 Given /^the user is "(.*?)" user$/ do |which|
   case which
     when "a random" then @user = @users.sample
-    when "the first" then @user = @users.sample
-    when "the last" then @user = @users.sample
+    when "the first" then @user = @users.first
+    when "the last" then @user = @users.last
   end
 end

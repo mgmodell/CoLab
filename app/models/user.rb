@@ -74,10 +74,12 @@ class User < ActiveRecord::Base
   # TODO: Must add in support for experiences and other activities here
   def waiting_tasks
     waiting_tasks = assessments.still_open.to_a
-    x = rosters.joins( :role, course: :experiences ).
+    available_rosters = self.rosters.joins( :role, course: :experiences ).
       where( "( roles.name = 'Enrolled Student' OR roles.name = 'Invited Student' ) AND " +
         "experiences.end_date >= ? AND experiences.start_date <= ?", DateTime.current, DateTime.current )
-    waiting_tasks.concat x.to_a
+    available_rosters.each do |roster|
+      waiting_tasks.concat roster.course.experiences.to_a
+    end
 
     return waiting_tasks.sort{ |a,b| a.end_date <=> b.end_date }
   end
