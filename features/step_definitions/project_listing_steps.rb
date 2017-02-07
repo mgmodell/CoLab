@@ -20,10 +20,16 @@ end
 
 Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
   @group = Group.make
+  role = Role.where( name: "Enrolled Student" ).take
   user_count.to_i.times do
     user = User.make
     user.skip_confirmation!
     @group.users << user
+    r = Roster.new
+    r.user = user
+    r.course = @course
+    r.role = role
+    r.save
   end
   @project.groups << @group
   @project.save

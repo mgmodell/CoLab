@@ -23,4 +23,9 @@ class Course < ActiveRecord::Base
     self.start_date -= tz.utc_offset if start_date_changed?
     self.end_date -= tz.utc_offset if end_date_changed?
   end
+
+  def get_roster_for_user( user )
+    rosters.where( user: user ).take
+  end
+
 end

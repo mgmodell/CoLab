@@ -44,6 +44,10 @@ Feature: Experience Listing
     Given the experience started "last month" and ends "next month"
     Given the experience has been activated
     Given the user is "a random" user
+    Given the course has an assessed project
+    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given the user is in a group on the project
+    Given the project has been activated
     When the user logs in
     Then the user should see a successful login message
-    Then user should see 1 open task
+    Then user should see 2 open task
