@@ -23,30 +23,13 @@ class Experience < ActiveRecord::Base
     end
   end
 
-  def get_narrative_proportions
-    proportions = { }
-    reactions.each do |reaction|
-      current_value = proportions{ reaction.narrative }
-      if current_value.nil?
-        proportions[ reaction.narrative ] = 1
-      else
-        proportions[ reaction.narrative ] = current_value + 1
-      end
-    end
-    return proportions
+  def get_narrative_counts
+    reactions.group( :narrative ).count.to_a.sort!{ |x,y| x[1] <=> y[1] }
+
   end
 
-  def get_scenario_proportions
-    proportions = { }
-    reactions.each do |reaction|
-      current_value = proportions{ reaction.narrative.scenario }
-      if current_value.nil?
-        proportions[ reaction.narrative.scenario ] = 1
-      else
-        proportions[ reaction.narrative.scenario ] = current_value + 1
-      end
-    end
-    return proportions
+  def get_scenario_counts
+    reactions.joins( narrative: :scenario ).group( :scenario_id ).count.to_a.sort!{ |x,y| x[1] <=> y[1] }
   end
 
   def date_sanity

@@ -7,18 +7,34 @@ class Reaction < ActiveRecord::Base
   has_many :diagnoses, inverse_of: :reaction
 
   def next_week
+    week = nil
+    #If we haven't yet decided on a narrative....
     if narrative.nil?
-      user_reactions = user.reactions
-      if user_reactions.count > 0
+
+      #If we've already been assigned at least one reaction
+      if user.reactions.count > 0
         if user_reactions.count < Scenarios.all.count
+          #If they haven't yet been assigned all possible scenarios
+        elsif user.reactions.narratives.count < Narratives.all.count
+          #If they've been assigned all scenarios, but not all narratives
+        else
+          #Choose the least hit scenario in this Experience
+          #TODO: Review this.
+          experience.get_scenario_counts.first[0]
+
+        end
           #todo: I'm here
             #interrogate the user for their existing reactions
             #check the extant proportions of the experience
             #select a scenario/narrative
-            #hand back week 1
+      else
+        narrative_counts = experience.get_narrative_counts.last[0]
+        self.narrative = narrative_counts[0][0]
+      end
+      week = self.narrative.weeks.order( :week_num, :asc ).take
     else
-      previous_week = diagnoses.joins( :week ).order( week_num: :desc ).take.week
-      #render previous_week.get_next
+      previous_week = diagnoses.joins( :week ).order( week_num: :desc ).take
+      week = Week.where( :narrative previous_week.narrative, :week_num previous_week.week_num + 1 ).to_a
     end
   end
 end
