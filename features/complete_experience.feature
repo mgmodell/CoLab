@@ -12,12 +12,12 @@ Feature: Users can complete 'experiences'
     When the user logs in
     Then the user should see a successful login message
 
-  Scenario: The participant should not be able to proceed without selecting a behavior
+  Scenario: The student should not be able to proceed without selecting a behavior
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
     Then the user will see "Week 1"
-     And the participant presses "Save and continue"
+     And the user presses "Save and continue"
     Then the user will see "Week 1"
     Then the user will see "You must select a behavior"
 
