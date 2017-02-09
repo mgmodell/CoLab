@@ -33,3 +33,64 @@ Feature: User registration
     When the user "does" fill in demographics data
     When the user visits the index
     Then the user will see the task listing page
+
+  Scenario: 5 new users are added to a course
+    Given 5 users
+    Given a course
+    Then the users are added to the course by email address
+    Then the course has 5 "Invited Student" users
+    Then 5 emails will have been sent
+
+  Scenario: 4 existing users are added to a course
+    Given 4 users
+    Given the users are confirmed
+    Given a course
+    Then the users are added to the course by email address
+    Then the course has 4 "Invited Student" users
+
+  Scenario: 4 existing users and 2 new users are added to a course
+    Given 4 users
+    Given the users are confirmed
+    Given a course
+    Then the users are added to the course by email address
+    Given 2 users
+    Then the users are added to the course by email address
+    Then the course has 6 "Invited Student" users
+    Then 2 emails will have been sent
+
+  Scenario: 2 students are added to a course twice
+    Given 2 users
+    Given a course
+    Then the users are added to the course by email address
+    Then the users are added to the course by email address
+    Then the course has 2 "Invited Student" users
+    Then 2 emails will have been sent
+
+  Scenario: A student accepts enrollment in a course
+    Given 5 users
+    Given the users are confirmed
+    Given a course
+    Then the users are added to the course by email address
+    Then the course has 5 "Invited Student" users
+    Then the user is "a random" user
+    Then the course has 5 "Invited Student" users
+    Then the user logs in
+    Then the user "accepts" enrollment in the course
+    Then user should see 1 open task
+    Then the course has 3 "Invited Student" users
+    Then the course has 1 "Enrolled Student" users
+
+  Scenario: A student declines enrollment in a course
+    Given 5 users
+    Given the users are confirmed
+    Given a course
+    Then the users are added to the course by email address
+    Then the course has 5 "Invited Student" users
+    Then the user is "a random" user
+    Then the course has 5 "Invited Student" users
+    Then the user logs in
+    Then the user "declines" enrollment in the course
+    Then user should see 1 open task
+    Then the course has 3 "Invited Student" users
+    Then the course has 1 "Declined Student" users
+

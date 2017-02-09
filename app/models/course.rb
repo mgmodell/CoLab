@@ -30,14 +30,17 @@ class Course < ActiveRecord::Base
   end
 
   def add_student_by_email student_email
-    #TODO: Finish this up by:
+    role = Role.where( name: "Invited Student" ).take
     #Searching for the student and:
-      # creating a roster for them if they exist
-      # Send them an invitation email
+    #TODO: Fix the problem here.
+    user = User.joins( :emails ).where( emails: { email: student_email } ).take
+    
+    user = User.create( email: student_email, admin: false, timezone: "UTC" ) if user.nil?
 
-      # creating a user if they don't exist
-      # making sure an invitation email is sent to them
-      # create a roster for them
+    if Roster.where( course: self, user: user ).take.nil?
+      Roster.create( user: user, course: self, role: role )
+    end
+    # Do we want to send an invitation email?
 
   end
 
