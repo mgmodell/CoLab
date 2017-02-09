@@ -1,6 +1,8 @@
 class ExperiencesController < ApplicationController
   def next
     experience_id = params[ :experience_id ]
+    puts experience_id
+    puts params
     @experience = @current_user.experiences.still_open.where( id: experience_id ).take
     if @experience.nil?
       redirect_to "/", notice: "This Experience is a part of another course"
