@@ -10,17 +10,13 @@ class Experience < ActiveRecord::Base
   scope :still_open, -> { where( 'experiences.start_date <= ? AND experiences.end_date >= ?', DateTime.current, DateTime.current ) }
 
   def get_user_reaction( user ) 
-    reaction = reactions.where( user: user )
-    if reaction.count == 0
-      return reaction[ 0 ]
-    elsif
-      r = Reaction.new
-      r.user = user
-      r.experience = self
-      return r
-    else
-      logger.debug "We've got too many reactions recorded for this user"
+    reaction = reactions.where( user: user ).take
+    if reaction.nil?
+      reaction = Reaction.new
+      reaction.user = user
+      reaction.experience = self
     end
+    reaction
   end
 
   def get_narrative_counts
