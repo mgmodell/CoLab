@@ -34,7 +34,7 @@ class Reaction < ActiveRecord::Base
       week = self.narrative.weeks.order( :week_num, :asc ).take
     else
       previous_week = diagnoses.joins( :week ).order( week_num: :desc ).take
-      week = Week.where( :narrative previous_week.narrative, :week_num previous_week.week_num + 1 ).to_a
+      week = Week.where( narrative: previous_week.narrative, week_num: previous_week.week_num + 1 ).to_a
     end
   end
 end

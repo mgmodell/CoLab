@@ -41,6 +41,6 @@ Then /^the latest Diagnosis will show "([^"]*)" in the field "([^"]*)"$/  do |va
 end
 
 Then /^the user sees the experience instructions page$/ do
-  step_text 'the user will see "Instructions for completing"'
+  step 'the user will see "Instructions for completing"'
 end
 

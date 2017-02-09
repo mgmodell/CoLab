@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   has_many :users, through: :groups
 
   has_many :reactions, inverse_of: :user
+  has_many :experiences, through: :reactions
 
   validates :timezone, presence: true
 
