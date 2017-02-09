@@ -7,7 +7,7 @@ class Experience < ActiveRecord::Base
   validate :date_sanity
   after_validation :timezone_adjust
 
-  scope :still_open, -> { where( 'experiences.end_date >= ? AND experiences.start_date <= ?', DateTime.current, DateTime.current ) }
+  scope :still_open, -> { where( 'experiences.start_date <= ? AND experiences.end_date >= ?', DateTime.current, DateTime.current ) }
 
   def get_user_reaction( user ) 
     reaction = reactions.where( user: user )

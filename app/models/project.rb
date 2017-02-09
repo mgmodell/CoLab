@@ -103,10 +103,13 @@ class Project < ActiveRecord::Base
     if active_was && active
       errors.add(:active, 'You cannot make changes to an active project. Please deactivate it first.')
     elsif !active_was && active
+      
       get_user_appearance_counts.each do |user_id, count|
         # Check the users
-        if count > 1
-          user = User.find(user_id)
+        user = User.find(user_id)
+        if Roster.enrolled.where( user: user, course: self.course ).count < 1
+          errors.add(:active, "#{user.name} is does not appear to be enrolled in this course." )
+        elsif count > 1
           errors.add(:active, "#{user.name} appears #{count} times in your project.")
         end
       end

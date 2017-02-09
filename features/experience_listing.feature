@@ -40,7 +40,7 @@ Feature: Experience Listing
     Then the user should see a successful login message
     Then user should see 0 open task
     
-  Scenario: Checking for assessments with one starting today and ending yesterday
+  Scenario: Checking for assessments with one starting yesterday and ending tomorrow
     Given the experience started "last month" and ends "next month"
     Given the experience has been activated
     Given the user is "a random" user

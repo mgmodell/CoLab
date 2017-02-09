@@ -16,10 +16,10 @@ class User < ActiveRecord::Base
   has_many :rosters, inverse_of: :user
   has_many :courses, through: :projects
 
-  has_many :users, through: :groups
+  #has_many :users, through: :groups
 
   has_many :reactions, inverse_of: :user
-  has_many :experiences, through: :reactions
+  has_many :experiences, through: :courses
 
   validates :timezone, presence: true
 

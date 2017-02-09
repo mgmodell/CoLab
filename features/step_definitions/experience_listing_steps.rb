@@ -61,10 +61,16 @@ Given /^the user is in a group on the project$/  do
   @group = Group.make
   @project.active = false
 
+  role = Role.where( name: "Enrolled Student" ).take
   @project.groups << @group
   3.times do
     u = User.make
     u.skip_confirmation!
+    r = Roster.new
+    r.user = u
+    r.course = @project.course
+    r.role = role
+    r.save
     @group.users << u
   end
   @group.users << @user
