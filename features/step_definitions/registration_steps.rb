@@ -58,7 +58,7 @@ Then /^the course has (\d+) "([^"]*)" users$/  do |user_count, user_status|
 end
 
 Then /^(\d+) emails will have been sent$/  do |email_count|
-  ActionMailer::Base.deliveries.count.should eq email_count
+  ActionMailer::Base.deliveries.count.should eq email_count.to_i
 end
 
 Given /^the users are confirmed$/  do

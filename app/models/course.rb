@@ -34,8 +34,13 @@ class Course < ActiveRecord::Base
     #Searching for the student and:
     #TODO: Fix the problem here.
     user = User.joins( :emails ).where( emails: { email: student_email } ).take
+
+    passwd = (0...8).map { (65 + rand(26)).chr }.join
     
-    user = User.create( email: student_email, admin: false, timezone: "UTC" ) if user.nil?
+    if user.nil?
+      user = User.create( email: student_email, admin: false, timezone: "UTC", password: passwd ) if user.nil?
+      user.send_reset_password_instructions
+    end
 
     if Roster.where( course: self, user: user ).take.nil?
       Roster.create( user: user, course: self, role: role )

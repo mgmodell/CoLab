@@ -5,6 +5,7 @@ Feature: User registration
 
   Background:
     Given a user has signed up
+    Given the email queue is empty
 
   Scenario: Registered user provides consent and demographics.
     Given there is a course with an assessed project
