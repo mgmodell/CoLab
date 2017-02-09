@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  email: MyString
+  primary: false
+  confirmation_token: MyString
+  confirmed_ad: 2017-02-09 13:52:42
+  confirmation_sent_at: 2017-02-09 13:52:42
+
+two:
+  user_id: 
+  email: MyString
+  primary: false
+  confirmation_token: MyString
+  confirmed_ad: 2017-02-09 13:52:42
+  confirmation_sent_at: 2017-02-09 13:52:42
