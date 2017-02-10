@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
-  <! --%= stylesheet_link_tag    "application", :media => "all" %-->
+  <%= stylesheet_link_tag    "application", :media => "all" %>
   <script language="text/javascript">
     $(document).bind("mobileinit", function(){
       $.mobile.ajaxLinksEnabled = false;
@@ -48,15 +48,13 @@
                 <div data-role="popup" id="instructor_menu">
                   <ul data-role="listview" data-inset="true" data-theme="d" data-mini="true">
                     <li data-role="divider" data-theme="a">Instructor Functions</li>
-                    <li><%= link_to "Control Panel", cpanel_root_path, 
-                      :"data-theme" => "d", :"data-mini" => true %></li>
                     <li><%= link_to "Reports", graphing_path, 
                       :"data-theme" => "d", :"data-mini" => true %></li>
                   </ul>
                 </div>
                 <a href="#instructor_menu" data-rel="popup" data-role="button" data-theme="d">Instructor</a>
                 <% if @current_user.is_admin? %>
-                  <%= link_to "Admin", admin_root_path, :'data-role' => "button", :"data-theme" => "d" %>
+                  <%= link_to "Admin", admin_path, :'data-role' => "button", :"data-theme" => "d" %>
                 <% end %>
               <% end %>
               <%= link_to 'Logout', destroy_user_session_path, :method => :delete, :'data-role' => "button",

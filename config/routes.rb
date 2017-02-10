@@ -1,8 +1,12 @@
 Rails.application.routes.draw do
+
+  get 'admin' => 'admin#index', :as => 'admin'
+  namespace :admin do
+    resources :courses, :groups, :projects, :experiences
+  end
+  
   get 'experiences/next/:experience_id:' => 'experiences#next', :as => 'next_experience'
-
   get 'experiences/diagnose'
-
   get 'experiences/reaction'
 
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
@@ -19,8 +23,13 @@ Rails.application.routes.draw do
 
   get 'installments/new/:assessment_id/:group_id' => 'installments#new', :as => 'new_installment'
   get 'installments/edit/:assessment_id/:group_id' => 'installments#edit', :as => 'edit_installment'
-
   resources :installments, only: [:create, :update]
+
+  get "graphing/index" => "graphing#index", :as => "graphing"
+  get "graphing/data/:unit_of_analysis/:subject/:assessment/:data_processing/:for_research" => "graphing#data", 
+    :as => "graphing_data"
+  get "graphing/subjects/:unit_of_analysis/:assessment_id/:for_research" => "graphing#subjects",
+    :as => "graphing_support"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

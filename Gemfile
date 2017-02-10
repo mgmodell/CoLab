@@ -30,7 +30,7 @@ gem 'jquery_mobile_rails'
 gem 'omniauth-google-oauth2'
 gem 'paperclip', '~> 5.0.0'
 gem 'simple_form'
-gem 'rails_admin', '~>1.0'
+gem 'bourbon'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
