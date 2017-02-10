@@ -33,39 +33,38 @@ When /^the user "(.*?)" fill in demographics data$/ do |does_or_does_not|
   click_button 'my profile'
 end
 
-Given /^(\d+) users$/  do |user_count|
-  @users = [ ]
+Given /^(\d+) users$/ do |user_count|
+  @users = []
   user_count.to_i.times do
     u = User.make
     @users << u
   end
 end
 
-Given /^a course$/  do
+Given /^a course$/ do
   @course = Course.make
 end
 
-Then /^the users are added to the course by email address$/  do
-  email_list = ""
+Then /^the users are added to the course by email address$/ do
+  email_list = ''
   @users.each do |user|
-    email_list += user.email + ", "
+    email_list += user.email + ', '
   end
   @course.add_students_by_email email_list
 end
 
-Then /^the course has (\d+) "([^"]*)" users$/  do |user_count, user_status|
-  @course.rosters.joins( :role ).where( roles: { name: user_status } ).count.should eq user_count.to_i
+Then /^the course has (\d+) "([^"]*)" users$/ do |user_count, user_status|
+  @course.rosters.joins(:role).where(roles: { name: user_status }).count.should eq user_count.to_i
 end
 
 Then /^(\d+) emails will have been sent$/  do |email_count|
   ActionMailer::Base.deliveries.count.should eq email_count.to_i
 end
 
-Given /^the users are confirmed$/  do
-  @users.each {|user|  user.confirm }
+Given /^the users are confirmed$/ do
+  @users.each(&:confirm)
 end
 
-Then /^the user "([^"]*)" enrollment in the course$/  do |arg1|
+Then /^the user "([^"]*)" enrollment in the course$/ do |_arg1|
   pending # Write code here that turns the phrase above into concrete actions
 end
-

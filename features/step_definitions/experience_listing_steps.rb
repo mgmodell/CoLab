@@ -14,8 +14,8 @@ Given(/^the experience has been activated$/) do
 end
 
 Given(/^the course has (\d+) confirmed users$/) do |user_count|
-  role = Role.where( name: "Enrolled Student" ).take
-  @users = [ ]
+  role = Role.where(name: 'Enrolled Student').take
+  @users = []
   user_count.to_i.times do
     user = User.make
     user.skip_confirmation!
@@ -28,9 +28,9 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
   end
 end
 
-Given /^the experience started "([^"]*)" and ends "([^"]*)"$/  do |start_date, end_date|
-  @experience.start_date = Chronic.parse( start_date )
-  @experience.end_date = Chronic.parse( end_date )
+Given /^the experience started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_date|
+  @experience.start_date = Chronic.parse(start_date)
+  @experience.end_date = Chronic.parse(end_date)
   @experience.save
 end
 
@@ -44,24 +44,24 @@ end
 
 Given /^the user is "(.*?)" user$/ do |which|
   case which
-    when "a random" then @user = @users.sample
-    when "the first" then @user = @users.first
-    when "the last" then @user = @users.last
+  when 'a random' then @user = @users.sample
+  when 'the first' then @user = @users.first
+  when 'the last' then @user = @users.last
   end
 end
 
-Given /^the course has an assessed project$/  do
+Given /^the course has an assessed project$/ do
   @project = Project.make
-  @project.style = Style.find( 1 )
+  @project.style = Style.find(1)
   @project.course = @course
   @project.save
 end
 
-Given /^the user is in a group on the project$/  do
+Given /^the user is in a group on the project$/ do
   @group = Group.make
   @project.active = false
 
-  role = Role.where( name: "Enrolled Student" ).take
+  role = Role.where(name: 'Enrolled Student').take
   @project.groups << @group
   3.times do
     u = User.make
@@ -78,6 +78,4 @@ Given /^the user is in a group on the project$/  do
   @group.save
   @project.active = false
   @project.save
-
 end
-

@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   has_many :emails, inverse_of: :user
 
   devise :multi_email_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, 
+         :recoverable, :rememberable, :trackable,
          :multi_email_validatable, :multi_email_confirmable,
          :lockable,
          :omniauthable, omniauth_providers: [:google_oauth2]
@@ -74,14 +74,14 @@ class User < ActiveRecord::Base
 
   def waiting_tasks
     waiting_tasks = assessments.still_open.to_a
-    available_rosters = self.rosters.joins( :role, course: :experiences ).
-      where( "( roles.name = 'Enrolled Student' OR roles.name = 'Invited Student' ) AND " +
-        "experiences.end_date >= ? AND experiences.start_date <= ?", DateTime.current, DateTime.current )
+    available_rosters = rosters.joins(:role, course: :experiences)
+                               .where("( roles.name = 'Enrolled Student' OR roles.name = 'Invited Student' ) AND " \
+        'experiences.end_date >= ? AND experiences.start_date <= ?', DateTime.current, DateTime.current)
     available_rosters.each do |roster|
       waiting_tasks.concat roster.course.experiences.to_a
     end
 
-    return waiting_tasks.sort{ |a,b| a.end_date <=> b.end_date }
+    waiting_tasks.sort_by(&:end_date)
   end
 
   def self.from_omniauth(access_token)

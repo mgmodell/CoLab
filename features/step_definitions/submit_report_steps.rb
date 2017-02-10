@@ -46,7 +46,7 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
       element.set Random.rand(3200).abs if element[:id].end_with? 'value'
     end
   elsif distribution == 'evenly'
-    cell_value = column_points.to_i / task.group_for_user( @user ).users.count
+    cell_value = column_points.to_i / task.group_for_user(@user).users.count
 
     page.all(:xpath, '//input[starts-with(@id,"installment_values_attributes_")]').each do |element|
       element.set cell_value if element[:id].end_with? 'value'
@@ -71,7 +71,7 @@ end
 Then /^the installment form should request factor x user values$/ do
   tasks = @user.waiting_tasks
   tasks.count.should eq 1
-  group = tasks[0].group_for_user( @user )
+  group = tasks[0].group_for_user(@user)
   factors = tasks[0].factors
 
   expected_count = group.users.count * factors.count

@@ -7,10 +7,10 @@ class Experience < ActiveRecord::Base
   validate :date_sanity
   after_validation :timezone_adjust
 
-  scope :still_open, -> { where( 'experiences.start_date <= ? AND experiences.end_date >= ?', DateTime.current, DateTime.current ) }
+  scope :still_open, -> { where('experiences.start_date <= ? AND experiences.end_date >= ?', DateTime.current, DateTime.current) }
 
-  def get_user_reaction( user ) 
-    reaction = reactions.where( user: user ).take
+  def get_user_reaction(user)
+    reaction = reactions.where(user: user).take
     if reaction.nil?
       reaction = Reaction.new
       reaction.user = user
@@ -20,12 +20,11 @@ class Experience < ActiveRecord::Base
   end
 
   def get_narrative_counts
-    reactions.group( :narrative ).count.to_a.sort!{ |x,y| x[1] <=> y[1] }
-
+    reactions.group(:narrative).count.to_a.sort! { |x, y| x[1] <=> y[1] }
   end
 
   def get_scenario_counts
-    reactions.joins( narrative: :scenario ).group( :scenario_id ).count.to_a.sort!{ |x,y| x[1] <=> y[1] }
+    reactions.joins(narrative: :scenario).group(:scenario_id).count.to_a.sort! { |x, y| x[1] <=> y[1] }
   end
 
   def date_sanity
@@ -39,7 +38,7 @@ class Experience < ActiveRecord::Base
 
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
-    self.start_date = self.start_date.beginning_of_day - course_tz.utc_offset if start_date_changed?
-    self.end_date = self.end_date.end_of_day - course_tz.utc_offset if end_date_changed?
+    self.start_date = start_date.beginning_of_day - course_tz.utc_offset if start_date_changed?
+    self.end_date = end_date.end_of_day - course_tz.utc_offset if end_date_changed?
   end
 end

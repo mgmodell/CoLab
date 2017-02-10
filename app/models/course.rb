@@ -25,31 +25,30 @@ class Course < ActiveRecord::Base
     self.end_date -= tz.utc_offset if end_date_changed?
   end
 
-  def get_roster_for_user( user )
-    rosters.where( user: user ).take
+  def get_roster_for_user(user)
+    rosters.where(user: user).take
   end
 
-  def add_student_by_email student_email
-    role = Role.where( name: "Invited Student" ).take
-    #Searching for the student and:
-    #TODO: Fix the problem here.
-    user = User.joins( :emails ).where( emails: { email: student_email } ).take
+  def add_student_by_email(student_email)
+    role = Role.where(name: 'Invited Student').take
+    # Searching for the student and:
+    # TODO: Fix the problem here.
+    user = User.joins(:emails).where(emails: { email: student_email }).take
 
     passwd = (0...8).map { (65 + rand(26)).chr }.join
-    
+
     if user.nil?
-      user = User.create( email: student_email, admin: false, timezone: "UTC", password: passwd ) if user.nil?
+      user = User.create(email: student_email, admin: false, timezone: 'UTC', password: passwd) if user.nil?
       user.send_reset_password_instructions
     end
 
-    if Roster.where( course: self, user: user ).take.nil?
-      Roster.create( user: user, course: self, role: role )
+    if Roster.where(course: self, user: user).take.nil?
+      Roster.create(user: user, course: self, role: role)
     end
     # Do we want to send an invitation email?
-
   end
 
-  def add_students_by_email student_emails
+  def add_students_by_email(student_emails)
     student_emails.split(/\s*,\s*/).each do |email|
       add_student_by_email email
     end
