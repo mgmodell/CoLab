@@ -1,5 +1,5 @@
 class GraphingController < ApplicationController
-   Unit_To_Processing = [ [ "Individual", [ "Summary", "Summary By Behaviour", "All Data" ] ],
+   Unit_To_Processing = [ [ "Individual", [ "Summary", "Summary By Behavior", "All Data" ] ],
       [ "Group",  [ "Summary" ] ],
       [ "Raw Data", [ "Comments" ] ]
    ]
@@ -7,21 +7,21 @@ class GraphingController < ApplicationController
    #Support the app by providing the subject instances
    def subjects
       unit_of_analysis = params[ :unit_of_analysis ]
-      assessment_id = params[ :assessment_id ]
+      project_id = params[ :project_id ]
       for_research = params[ :for_research ] == "true" ? true : false
 
       @subjects = []
       case unit_of_analysis
-      when "Individual" or "Raw Data"
+      when "Individual", "Raw Data"
          if for_research
-            @subjects = User.joins( :consent_logs, :assessments ).
-              where( :consent_logs => { :accepted => true }, :assessments => { :id => assessment_id } ).
+            @subjects = User.joins( :consent_logs, :projects ).
+              where( :consent_logs => { :accepted => true }, :projects => { :id => project_id } ).
               collect{ |user| [user.name, user.id] }
          else
-            @subjects = Assessment.find( assessment_id ).users.collect{ |user| [user.name, user.id] }
+            @subjects = Project.find( project_id ).users.collect{ |user| [user.name, user.id] }
          end
       when "Group"
-         @subjects = Assessment.find( assessment_id ).groups.collect{ |group| [group.name, group.id] }
+         @subjects = Project.find( project_id ).groups.collect{ |group| [group.name, group.id] }
 
       end
       # Return the retrieved data
@@ -31,41 +31,41 @@ class GraphingController < ApplicationController
    end
 
    # Retrieve all the reported values relating to the
-   # specified user and hash them up by Weekly.
-   def pull_and_organise_user_data( user_id, assessment_id, for_research = false )
+   # specified user and hash them up by Installment.
+   def pull_and_organise_user_data( user_id, project_id, for_research = false )
       values = [ ]
       if for_research
-         values = Value.includes( :user, :behaviour, :report => [ :weekly, :user ] ).
-         joins( :user => { :consent_logs => { :consent_form => :assessments } },
-                :report => { :weekly => :assessment } ).
+         values = Value.includes( :user, :behavior, :installment => [ :assessment, :user ] ).
+         joins( :user => { :consent_logs => { :consent_form => :project } },
+                installment:  :assessment ).
          where( :consent_logs => { :accepted => true },
                                    :user_id => user_id,
-                                   :reports => { :user_id => User.consented_to_assessment( assessment_id ) },
-                                   :assessments => {:id => assessment_id } )
+                                   :installments => { :user_id => User.consented_to_project( project_id ) },
+                                   :projects => {:id => project_id } )
       else
-         values = Value.includes( :user, :behaviour, :report => [ :weekly, :user ] ).
-         joins( :report => { :weekly => :assessment } ).
-         where( :user_id => user_id, :assessments => { :id => assessment_id } )
+         values = Value.includes( :user, :behavior, :installment => [ :assessment, :user ] ).
+         joins( installment: :assessment ).
+         where( :user_id => user_id, :projects => { :id => project_id } )
       end
 
-      weekly_to_values = Hash.new
+      assessment_to_values = Hash.new
       values.each do |value|
-         if weekly_to_values[ value.report.weekly ].nil?
-            weekly_to_values[ value.report.weekly ] = [ value ]
+         if assessment_to_values[ value.installment.assessment ].nil?
+            assessment_to_values[ value.installment.assessment ] = [ value ]
          else
-            weekly_to_values[ value.report.weekly ] << value
+            assessment_to_values[ value.installment.assessment ] << value
          end
       end
-      return weekly_to_values
+      return assessment_to_values
 
    end
 
-   def individual_summary_data( user, assessment_id, for_research = false )
-      weekly_to_values = pull_and_organise_user_data( user.id, assessment_id, for_research )
+   def individual_summary_data( user, project_id, for_research = false )
+      assessment_to_values = pull_and_organise_user_data( user.id, project_id, for_research )
       data = [ ]
-      sequential = weekly_to_values.keys.sort{|a,b| a.start_date <=> b.start_date}
-      sequential.each do |weekly|
-         values = weekly_to_values[ weekly ]
+      sequential = assessment_to_values.keys.sort{|a,b| a.start_date <=> b.start_date}
+      sequential.each do |assessment|
+         values = assessment_to_values[ assessment ]
          data << [ values[ 0 ].created_at.to_i * 1000,
          values.inject( 0 ){ |sum, value| sum + value.value }.to_f / values.size ]
       end
@@ -75,6 +75,7 @@ class GraphingController < ApplicationController
       return series
    end
 
+   #
    # The graphing data is provided as a JSON object containing:
    # data_series
    #   data - an array of [date, value] arrays.
@@ -84,15 +85,17 @@ class GraphingController < ApplicationController
    def data
       unit_of_analysis = params[ :unit_of_analysis ]
       data_processing = params[ :data_processing ]
-      assessment = params[ :assessment ]
+      project = Project.find( params[ :project ] )
       subject = params[ :subject ]
       for_research = params[ :for_research ] == "true" ? true : false
 
       #TODO - validate that the user has access to the requested data
       @data_series = [ ]
       @detail_hash = Hash.new
-      if current_user.is_admin? ||
-         Roster.instructorships.where( :user_id => current_user.id, :assessment_id => assessment.to_i )
+      
+      # Do we have any business getting this data?
+      if current_user.is_admin? || @current_user.rosters.instructorships.count > 0
+
          # Retrieve the requested data
          case unit_of_analysis
          when "Individual"
@@ -101,19 +104,19 @@ class GraphingController < ApplicationController
 
             case data_processing
             when "Summary"
-               series = individual_summary_data( user, assessment.to_i )
+               series = individual_summary_data( user, project.id )
                @data_series << series
             when "All Data"
-               weekly_to_values = pull_and_organise_user_data( user.id, assessment.to_i, for_research )
+               assessment_to_values = pull_and_organise_user_data( user.id, assessment.to_i, for_research )
                data_hash = Hash.new
-               sequential = weekly_to_values.keys.sort{|a,b| a.start_date <=> b.start_date}
-               sequential.each do |weekly|
-                  values = weekly_to_values[ weekly ]
+               sequential = assessment_to_values.keys.sort{|a,b| a.start_date <=> b.start_date}
+               sequential.each do |assessment|
+                  values = assessment_to_values[ assessment ]
                   values.each do |value|
-                     series = data_hash[ value.behaviour.id.to_s + "_" + value.report.user_id.to_s ]
+                     series = data_hash[ value.behavior.id.to_s + "_" + value.installment.user_id.to_s ]
                      if series.nil?
                         series = Hash.new
-                        series.store( "label", value.behaviour.name + " by " + value.report.user.name )
+                        series.store( "label", value.behavior.name + " by " + value.installment.user.name )
                      end
                      series_data = series[ "data" ]
                      if series_data.nil?
@@ -121,32 +124,32 @@ class GraphingController < ApplicationController
                      end
                      series_data << [ value.created_at.to_i * 1000, value.value ]
                      series.store( "data", series_data )
-                     data_hash.store( value.behaviour.id.to_s + "_" + value.report.user_id.to_s, series )
+                     data_hash.store( value.behavior.id.to_s + "_" + value.installment.user_id.to_s, series )
                   end
                end
                @data_series = data_hash.values
-            when "Summary By Behaviour"
-               weekly_to_values = pull_and_organise_user_data( user.id, assessment.to_i, for_research )
+            when "Summary By Behavior"
+               assessment_to_values = pull_and_organise_user_data( user.id, assessment.to_i, for_research )
                data_hash = Hash.new
                # Begin by sorting by date to group all the categories properly
-               sequential = weekly_to_values.keys.sort{|a,b| a.start_date <=> b.start_date}
-               sequential.each do |weekly|
-                  values = weekly_to_values[ weekly ]
+               sequential = assessment_to_values.keys.sort{|a,b| a.start_date <=> b.start_date}
+               sequential.each do |assessment|
+                  values = assessment_to_values[ assessment ]
                   values.each do |value|
-                     series = data_hash[ value.behaviour.id.to_s ]
+                     series = data_hash[ value.behavior.id.to_s ]
                      if series.nil?
                         series = Hash.new
-                        series.store( "label", value.behaviour.name )
+                        series.store( "label", value.behavior.name )
                      end
                      series_data = series[ "data" ]
                      if series_data.nil?
                         series_data = [ ]
                      end
-                     series_data << [ value.report.weekly.start_date.to_time.to_i * 1000, value.value ]
+                     series_data << [ value.installment.assessment.start_date.to_time.to_i * 1000, value.value ]
 
                      #collapsed_series_data << [ date, tmp.inject{|sum,el| sum + el[1] }.to_f / tmp.size ]
                      series.store( "data", series_data )
-                     data_hash.store( value.behaviour.id.to_s, series )
+                     data_hash.store( value.behavior.id.to_s, series )
                   end
                end
                data_hash.each_pair do |key,value|
@@ -182,9 +185,9 @@ class GraphingController < ApplicationController
 
             case data_processing
             when "Comments"
-              reports = Report.joins( :weekly ).
-                where( :user_id => subject.to_i, weekly: { assessment_id: assessment.to_i } )
-              @data = reports
+              installments = Installment.joins( :assessment ).
+                where( :user_id => subject.to_i, assessment:  assessment )
+              @data = installments
               respond_to do |format|
                 format.csv do
                   headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
@@ -213,33 +216,28 @@ class GraphingController < ApplicationController
       #Get the assessments administered by the current user
       if @user.is_instructor?
          if @user.is_admin?
-            @current_users_assessments = Assessment.all
+            @current_users_projects = Project.all
          elsif @user.is_instructor?
             Roster.instructorships.where( :user_id => @user.id ).each do |roster|
-               roster.course.projects.each do |project|
-                  if !project.assessment.nil?
-                     @current_users_assessments << project.assessment
-                  end
-               end
+               @current_users_projects.concat roster.course.projects.to_a
             end
          end
-         @current_users_assessments.each do |assessment|
-         end
+         return @current_users_projects
       else
          redirect_to root_url
       end
    end
 
-   /*
-    Sometimes you want the raw data to play with yourself.
-    */
+   #
+   # Sometimes you want the raw data to play with yourself.
+   #
    def raw_data
 
       user = User.find( subject.to_i )
 
-      reports = Report.joins( :weekly ).
-        where( :user_id => subject.to_i, weekly: { assessment_id: assessment.to_i } )
-      @data = reports
+      installments = Installment.joins( :assessment ).
+        where( :user_id => subject.to_i, assessment: { project_id: assessment.to_i } )
+      @data = installments
       respond_to do |format|
         format.csv do
           headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""

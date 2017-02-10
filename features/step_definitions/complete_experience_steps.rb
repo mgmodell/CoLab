@@ -7,8 +7,7 @@ Then /^the user will see "([^"]*)"$/ do |checkText|
 end
 
 Then /^the user presses "([^"]*)"$/ do |linkOrButtonName|
-  puts page.body
-  click_link_or_button linkOrButtonName
+  click linkOrButtonName
 end
 
 Then /^they enter "([^"]*)" in the field "([^"]*)"$/ do |txt, fld|
