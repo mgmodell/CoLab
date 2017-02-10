@@ -16,6 +16,7 @@ Feature: Users can complete 'experiences'
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
+     And the user presses "Next"
     Then the user will see "Week 1"
      And the user presses "Save and continue"
     Then the user will see "Week 1"
@@ -32,6 +33,7 @@ Feature: Users can complete 'experiences'
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
+     And the user presses "Next"
     Then the user logs out
     When the user logs in
     Then the user should see a successful login message
@@ -43,6 +45,7 @@ Feature: Users can complete 'experiences'
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
+     And the user presses "Next"
     Then the user will see "Week 1"
     Then the user chooses the "Group domination" radio button
     Then the user presses "Save and continue"
@@ -52,6 +55,7 @@ Feature: Users can complete 'experiences'
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
+     And the user presses "Next"
     Then the user will see "Week 1"
     Then the user chooses the "Equal participation" radio button
     Then the user presses "Save and continue"
@@ -61,6 +65,7 @@ Feature: Users can complete 'experiences'
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
+     And the user presses "Next"
     Then the user will see "Week 1"
     Then the user chooses the "Social loafing" radio button
     Then the user presses "Save and continue"
@@ -70,6 +75,7 @@ Feature: Users can complete 'experiences'
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
+     And the user presses "Next"
     Then the user will see "Week 1"
     Then the user chooses the "Ganging up on the task" radio button
     Then the user presses "Save and continue"
@@ -79,6 +85,7 @@ Feature: Users can complete 'experiences'
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
+     And the user presses "Next"
     Then the user will see "Week 1"
     Then the user chooses the "I don't know" radio button
     Then the user presses "Save and continue"
@@ -88,6 +95,7 @@ Feature: Users can complete 'experiences'
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
+     And the user presses "Next"
     Then the user will see "Week 1"
     Then the user chooses the "Other" radio button
     Then they enter "super behavior" in the field "What behavior did you see?"

@@ -6,6 +6,8 @@ class Reaction < ActiveRecord::Base
 
   has_many :diagnoses, inverse_of: :reaction
 
+  validates :narrative, presence: true
+
   def next_week
     week = nil
     #If we haven't yet decided on a narrative....
@@ -13,9 +15,9 @@ class Reaction < ActiveRecord::Base
 
       #If we've already been assigned at least one reaction
       if user.reactions.count > 0
-        if user_reactions.count < Scenarios.all.count
+        if user.reactions.count < Scenario.all.count
           #If they haven't yet been assigned all possible scenarios
-        elsif user.reactions.narratives.count < Narratives.all.count
+        elsif user.reactions.narratives.count < Narrative.all.count
           #If they've been assigned all scenarios, but not all narratives
         else
           #Choose the least hit scenario in this Experience

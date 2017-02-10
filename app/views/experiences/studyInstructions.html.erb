@@ -34,6 +34,7 @@
 </div>
 <br>
 
-<%= form_tag :nextInstallment, method: "get" do %>
+<%= form_tag :next_experience, method: "get" do %>
+  <% hidden_field_tag( :experience_id, @experience.id ) %>
   <%= submit_tag( "Next" ) %>
 <% end %>

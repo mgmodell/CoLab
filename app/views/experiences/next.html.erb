@@ -1,17 +1,17 @@
-<div style="display: none" id="s_id"><%= @week.narrative.scenario_id %></div>
-<div style="display: none" id="w_num"><%= @week.week_num %></div>
+<div style="display: none" id="s_id"><%= @diagnosis.week.narrative.scenario_id %></div>
+<div style="display: none" id="w_num"><%= @diagnosis.week.week_num %></div>
 <div class="ui-corner-all custom-corners">
   <div class="ui-bar ui-bar-a">
     <h3>Journal entry</h3>
   </div>
   <div class="ui-body ui-body-a">
-<%= @week.text.html_safe %>
+<%= @diagnosis.week.text.html_safe %>
   </div>
 </div>
 
 <br>
 <hr>
-<%= form_for @instructor_response, :url => { :controller => "survey", :action => "showPrompt" }, :method => :get do |f| %>
+<%= form_for @diagnosis, :url => { :controller => "experience", :action => "diagnose" }, :method => :get do |f| %>
 
   <%= f.hidden_field( :week_id ) %>
 

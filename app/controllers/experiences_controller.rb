@@ -13,13 +13,12 @@ class ExperiencesController < ApplicationController
         @reaction.save
         render :studyInstructions
       else
-        @week = @reaction.next_week
-        if @week.nil?
+        week = @reaction.next_week
+        if week.nil?
           #we just finished the last week
-          #render reaction
-        else
-          #render new - pretty sure I don't need this
+          render :reaction
         end
+        @diagnosis = Diagnosis.new( reaction: @reaction, week: week )
       end
     end
   end
