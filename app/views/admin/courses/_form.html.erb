@@ -1,0 +1,37 @@
+<%= simple_form_for(@course) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.association :user %>
+    <%= f.input :name %>
+    <%= f.input :number %>
+    <%= f.association :school %>
+    <%= f.time_zone_select :timezone %>
+    <%= f.input :start_date, as: :date, html5: true %>
+    <%= f.input :end_date, as: :date, html5: true %>
+    <%= f.text :description %>
+  </div>
+  <h2>Course instructors</h2>
+  <% @course.rosters.students.each do |roster| %>
+    <%= roster.user.name %> (<%= roster.role.name %><br>
+  <% end %>
+  <h2>Student roster</h2>
+  <% @course.rosters.instructorships.each do |roster| %>
+    <%= roster.user.name %><br>
+  <% end %>
+
+  <h2>Projects</h2>
+  <% @course.projects.each do |project| %>
+    <%= project.name %></br>
+  <% end %>
+
+  <h2>Experiences</h2>
+  <% @course.experiences.each do |experience| %>
+    <%= experience.name %></br>
+  <% end %>
+    
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

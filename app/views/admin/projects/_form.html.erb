@@ -1,0 +1,46 @@
+<%= simple_form_for(@project) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.association :user %>
+    <%= f.input :name %>
+    <%= f.input :number %>
+    <%= f.association :school %>
+    <%= f.time_zone_select :timezone %>
+    <%= f.input :start_date, as: :date, html5: true %>
+    <%= f.input :end_date, as: :date, html5: true %>
+    <%= f.collection_select :start_dow, collection: Date:DAYNAMES.each_with_index.to_a, prompt: true )
+    <%= f.collection_select :end_dow, collection: Date:DAYNAMES.each_with_index.to_a, prompt: true )
+    <%= f.text :description %>
+  </div>
+  <h2>Group memberships</h2>
+  <% unless @project.groups.count < 1 %>
+    <table>
+      <tr>
+        <th>Student</th>
+      <% @project.groups.each do |group| %>
+        <th>
+          <%= group.name %>
+        </th>
+      <% end %>
+      </tr>
+      <tr>
+      <% @project.course.users do |user| %>
+        <td>
+          <%= user.name %>
+        </td>
+        <% @project.groups.each do |group| %>
+          <td>
+            Must figure out membership radio button
+          </td>
+        <% end %>
+      <% end %>
+      </tr>
+    </table>
+  <% end %>
+    
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

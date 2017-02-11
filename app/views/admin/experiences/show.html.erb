@@ -1,2 +1,22 @@
-<h1>Admin::Experiences#show</h1>
-<p>Find me in app/views/admin/experiences/show.html.erb</p>
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @experience.name %> (<%= @experience.active ? "Active" : "Inactive" %>)
+</p>
+
+<p>
+  <strong>Course:</strong>
+  <%= @experience.course.name %>
+</p>
+
+<p>
+  <strong>Dates:</strong>
+  <%= @experience.start_date %> to
+  <%= @experience.start_date %>
+</p>
+
+
+
+<%= link_to 'Edit', edit_admin_experience_path(@experience) %> |
+<%= link_to 'Back', admin_experiences_path %>

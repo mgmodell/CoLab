@@ -1,2 +1,35 @@
-<h1>Admin::Experiences#index</h1>
-<p>Find me in app/views/admin/experiences/index.html.erb</p>
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Experiences</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Course</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Active</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @experiences.each do |experience| %>
+      <tr>
+        <td><%= experience.name %></td>
+        <td><%= experience.course.name %></td>
+        <td><%= experience.start_date %></td>
+        <td><%= experience.end_date %></td>
+        <td><%= experience.active %></td>
+        <td><%= link_to 'Show', experience %></td>
+        <td><%= link_to 'Edit', edit_admin_experience_path(experience) %></td>
+        <td><%= link_to 'Destroy', experience, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Experience', new_admin_experience_path %>

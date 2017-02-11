@@ -1,2 +1,48 @@
-<h1>Admin::Projects#show</h1>
-<p>Find me in app/views/admin/projects/show.html.erb</p>
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @project.name %>
+</p>
+
+<p>
+  <strong>Dates:</strong>
+  <%= @project.start_date %> to
+  <%= @project.end_date %><br>
+  <%= Date::DAYNAMES.at @project.start_dow %> to
+  <%= Date::DAYNAMES.at @project.end_dow %><br>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @project.description %>
+</p>
+
+<p>
+  <strong>Factor Pack:</strong>
+  <%= @project.factor_pack.name %></br>
+  <ul>
+  <% @project.factor_pack.factors.each do |factor| %>
+    <li><%= factor.name %><br></li>
+  <% end %>
+  </ul>
+</p>
+
+<p>
+  <strong>Groups:</strong>
+  <ol>
+  <% @project.groups.each do |group| %>
+    <li><%= group.name %><br></li>
+    <ul>
+    <% group.users.each do |user| %>
+      <li><%= user.name %></li>
+    <% end %>
+    </ul>
+  <% end %>
+  </ol>
+</p>
+
+
+
+<%= link_to 'Edit', edit_admin_project_path(@project) %> |
+<%= link_to 'Back', admin_projects_path %>

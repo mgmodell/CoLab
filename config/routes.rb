@@ -1,136 +1,14 @@
 Rails.application.routes.draw do
-
-  namespace :admin do
-  get 'experiences/index'
-  end
-
-  namespace :admin do
-  get 'experiences/new'
-  end
-
-  namespace :admin do
-  get 'experiences/create'
-  end
-
-  namespace :admin do
-  get 'experiences/show'
-  end
-
-  namespace :admin do
-  get 'experiences/edit'
-  end
-
-  namespace :admin do
-  get 'experiences/update'
-  end
-
-  namespace :admin do
-  get 'experiences/destroy'
-  end
-
-  namespace :admin do
-  get 'projects/index'
-  end
-
-  namespace :admin do
-  get 'projects/new'
-  end
-
-  namespace :admin do
-  get 'projects/create'
-  end
-
-  namespace :admin do
-  get 'projects/show'
-  end
-
-  namespace :admin do
-  get 'projects/edit'
-  end
-
-  namespace :admin do
-  get 'projects/update'
-  end
-
-  namespace :admin do
-  get 'projects/destroy'
-  end
-
-  namespace :admin do
-  get 'courses/index'
-  end
-
-  namespace :admin do
-  get 'courses/new'
-  end
-
-  namespace :admin do
-  get 'courses/create'
-  end
-
-  namespace :admin do
-  get 'courses/show'
-  end
-
-  namespace :admin do
-  get 'courses/edit'
-  end
-
-  namespace :admin do
-  get 'courses/update'
-  end
-
-  namespace :admin do
-  get 'courses/destroy'
-  end
-
-  namespace :admin do
-  get 'groups/index'
-  end
-
-  namespace :admin do
-  get 'groups/new'
-  end
-
-  namespace :admin do
-  get 'groups/create'
-  end
-
-  namespace :admin do
-  get 'groups/show'
-  end
-
-  namespace :admin do
-  get 'groups/edit'
-  end
-
-  namespace :admin do
-  get 'groups/update'
-  end
-
-  namespace :admin do
-  get 'groups/destroy'
-  end
-
-  get 'courses/index'
-
-  get 'courses/new'
-
-  get 'courses/create'
-
-  get 'courses/show'
-
-  get 'courses/edit'
-
-  get 'courses/update'
-
-  get 'courses/destroy'
-
-  get 'admin' => 'admin#index', :as => 'admin'
-  namespace :admin do
-    resources :courses, :groups, :projects, :experiences
-  end
   
+  get 'admin' => 'admin/courses#index'
+
+  namespace :admin do
+    resources :courses, :as => "courses"
+    resources :projects, :experiences, :rosters, :groups
+    get 'courses/add_students', :as => 'add_students'
+    get 'projects/add_group', :as => 'add_group'
+  end
+
   get 'experiences/next/:experience_id:' => 'experiences#next', :as => 'next_experience'
   get 'experiences/diagnose'
   get 'experiences/reaction'
