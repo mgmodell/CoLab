@@ -1,4 +1,4 @@
-class Admin::ProjectsController < ApplicationController
+class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :destroy, :add_group ]
 
   def show
@@ -53,7 +53,7 @@ class Admin::ProjectsController < ApplicationController
 
   def destroy
     @project.destroy
-    respond_do do |format|
+    respond_to do |format|
       format.html { redirect_to projects_url, notice: "Project was successfully destroyed." }
       format.json { head :no_content }
     end

@@ -1,17 +1,15 @@
 Rails.application.routes.draw do
   
-  get 'admin' => 'admin/courses#index'
-
-  namespace :admin do
-    resources :courses, :as => "courses"
-    resources :projects, :experiences, :rosters, :groups
+  get 'admin' => 'courses#index'
+  scope 'admin', as: 'admin' do
+    resources :courses, :projects, :experiences
     get 'courses/add_students', :as => 'add_students'
     get 'projects/add_group', :as => 'add_group'
   end
 
-  get 'experiences/next/:experience_id:' => 'experiences#next', :as => 'next_experience'
-  get 'experiences/diagnose'
-  get 'experiences/reaction'
+  get 'experiences/next/:experience_id:' => 'exp#next', :as => 'next_experience'
+  get 'experiences/diagnose' => 'exp#diagnose', :as => 'diagnose'
+  get 'experiences/reaction' => 'exp#react', :as => 'react'
 
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   # The priority is based upon order of creation: first created -> highest priority.
