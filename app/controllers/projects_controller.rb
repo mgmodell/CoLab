@@ -26,7 +26,7 @@ class ProjectsController < ApplicationController
 
   def create
     @project = Project.new( project_params )
-    @project.course_id = params[ :course_id ]
+    @project.course = Course.find( params[ :course_id ] )
     respond_to do |format|
       if @project.save
         format.html { redirect_to @project, notice: 'Project was successfully created.' }

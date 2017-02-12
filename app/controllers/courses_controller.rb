@@ -2,10 +2,6 @@ class CoursesController < ApplicationController
   before_action :set_course, only: [:show, :edit, :update, :destroy, :add_students]
 
   def show
-    puts "************Here they are***********"
-      puts @course.name
-    puts params
-    puts @course
   end
 
   def edit
