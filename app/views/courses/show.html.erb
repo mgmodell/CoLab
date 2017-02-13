@@ -34,17 +34,52 @@
     <%= hidden_field_tag :id, @course.id %>
     <%= submit_tag "Add!" %>
   <% end %>
-  <% @course.rosters.students.each do |roster| %>
-    <%= roster.user.name %> (<%= roster.role.name %>)<br>
+  <% if @course.rosters.students.count > 0 %>
+  <table>
+    <tr>
+      <th>Student</th>
+      <th>Email</th>
+      <th>Status</th>
+      <th colspan="3">Actions</th>
+    </tr>
+      <% @course.rosters.students.each do |roster| %>
+      <tr>
+        <td>
+          <%= roster.user.name %> (<%= roster.role.name %>)
+        </td>
+        <td>
+          <%= roster.user.email %>
+        </td>
+        <td>
+          <%= roster.role.name %>
+        </td>
+        <td>Show</td>
+        <td>Edit</td>
+        <td>Remove</td>
+      </tr>
+    <% end %>
+  </table>
   <% end %>
 </p>
 <p>
   <strong>Projects</strong>
   <%= link_to "Add Project", new_project_path( :course_id => @course.id )%>
-  <% @course.projects.each do |project| %>
-    <%= project.name %></br>
+  <% if @course.projects.count > 0 %>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th colspan="3">Actions</th>
+      </tr>
+          <% @course.projects.each do |project| %>
+            <tr>
+                <td><%= project.name %></td>
+                <td><%= link_to 'Show', project %></td>
+                <td><%= link_to 'Edit', edit_project_path(project) %></td>
+                <td><%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            </tr>
+          <% end %>
+    </table>
   <% end %>
-
 </p>
 <p>
   <strong>Experiences</strong>

@@ -21,11 +21,13 @@ class ExperiencesController < ApplicationController
 
   def new
     @experience = Experience.new
+    @experience.course_id = params[ :course_id ]
+    @experience.course = Course.find( params[ :course_id ] )
   end
 
   def create
     @experience = Experience.new( experience_params )
-    @experience.course_id = params[ :course_id ]
+    @experience.course = Course.find( @experience.course_id )
     respond_to do |format|
       if @experience.save
         format.html { redirect_to @experience, notice: 'Experience was successfully created.' }
@@ -64,7 +66,7 @@ class ExperiencesController < ApplicationController
     def set_experience
       e_test = Experience.find( params[ :id ] )
       if @current_user.is_admin?
-        @experience = p_test
+        @experience = e_test
       else
         if e_test.course.rosters.instructorships.where( user: @current_user ).nil?
           redirect_to :show if @experience.nil?
@@ -75,6 +77,6 @@ class ExperiencesController < ApplicationController
     end
 
     def experience_params
-      params.require( :name, :active, :start_date, :end_date )
+      params.permit( experience: [:course_id, :name, :active, :start_date, :end_date ] )[:experience]
     end
 end

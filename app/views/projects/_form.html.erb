@@ -1,18 +1,16 @@
-<%= simple_form_for @project,
-    url: admin_project_path( @project ) do |f| %>
+<%= simple_form_for @project do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.association :user %>
+    <%= f.association :course %>
     <%= f.input :name %>
-    <%= f.input :number %>
-    <%= f.association :school %>
-    <%= f.time_zone_select :timezone %>
     <%= f.input :start_date, as: :date, html5: true %>
     <%= f.input :end_date, as: :date, html5: true %>
-    <%= f.collection_select :start_dow, collection: Date:DAYNAMES.each_with_index.to_a, prompt: true )
-    <%= f.collection_select :end_dow, collection: Date:DAYNAMES.each_with_index.to_a, prompt: true )
-    <%= f.text :description %>
+    <%= f.select :start_dow, Date::DAYNAMES.each_with_index.to_a, prompt: true  %>
+    <%= f.select :end_dow, Date::DAYNAMES.each_with_index.to_a, prompt: true  %>
+    <%= f.association :factor_pack %>
+    <%= f.association :style %>
+    <%= f.input :description, as: :text %>
   </div>
   <h2>Group memberships</h2>
   <% unless @project.groups.count < 1 %>

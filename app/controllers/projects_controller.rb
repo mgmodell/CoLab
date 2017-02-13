@@ -22,11 +22,12 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
+    @project.course = Course.find params[ :course_id ]
   end
 
   def create
     @project = Project.new( project_params )
-    @project.course = Course.find( params[ :course_id ] )
+    @project.course = Course.find( @project.course_id )
     respond_to do |format|
       if @project.save
         format.html { redirect_to @project, notice: 'Project was successfully created.' }
@@ -80,7 +81,7 @@ class ProjectsController < ApplicationController
     end
 
     def project_params
-      params.require( :name, :description, :start_date, :end_date, :start_dow, :end_dow,
-        :active, groups: [ :name ], :factor_pack, :style_id )
+      params.permit( project: [:course_id, :name, :description, :start_date, :end_date, :start_dow, :end_dow,
+        :active, :factor_pack_id, :style_id, groups: [ :name ] ] )[:project]
     end
 end

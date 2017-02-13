@@ -92,9 +92,11 @@ class User < ActiveRecord::Base
     unless user
       user = User.create(
         email: data['email'],
-        password: Devise.friendly_token[0, 20]
+        password: Devise.friendly_token[0, 20],
+        timezone: "UTC"
       )
     end
+    user.confirm
     user
   end
 end

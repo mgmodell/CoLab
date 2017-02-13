@@ -16,7 +16,7 @@
   <% end %>
   <h2>Student roster</h2>
   <% @course.rosters.students.each do |roster| %>
-    <%= roster.user.name %><br>
+    <%= roster.user.name %> <i><%= roster.user.email %></i> (<%= roster.role.name %> )<br>
   <% end %>
 
   <h2>Projects</h2>

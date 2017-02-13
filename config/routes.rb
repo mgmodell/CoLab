@@ -12,7 +12,9 @@ Rails.application.routes.draw do
   get 'exp/diagnose' => 'exps#diagnose', :as => 'diagnose'
   get 'exp/reaction' => 'exps#react', :as => 'react'
 
-  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+  devise_for :users, controllers: 
+    { omniauth_callbacks: 'users/omniauth_callbacks', 
+      registrations: 'registrations' }
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
