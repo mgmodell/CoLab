@@ -1,5 +1,4 @@
-<%= simple_form_for @course,  
-    url: admin_course_path( @course ) do |f| %>
+<%= simple_form_for @course do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
@@ -12,11 +11,11 @@
     <%= f.input :description, as: :text %>
   </div>
   <h2>Course instructors</h2>
-  <% @course.rosters.students.each do |roster| %>
+  <% @course.rosters.instructorships.each do |roster| %>
     <%= roster.user.name %> (<%= roster.role.name %><br>
   <% end %>
   <h2>Student roster</h2>
-  <% @course.rosters.instructorships.each do |roster| %>
+  <% @course.rosters.students.each do |roster| %>
     <%= roster.user.name %><br>
   <% end %>
 

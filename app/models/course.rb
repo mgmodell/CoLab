@@ -29,10 +29,10 @@ class Course < ActiveRecord::Base
     rosters.where(user: user).take
   end
 
-  def add_student_by_email(student_email)
-    role = Role.where(name: 'Invited Student').take
+  def add_student_by_email(student_email, instructor: false)
+    role_name = instructor ? "Instructor" : "Invited Student"
+    role = Role.where(name: role_name ).take
     # Searching for the student and:
-    # TODO: Fix the problem here.
     user = User.joins(:emails).where(emails: { email: student_email }).take
 
     passwd = (0...8).map { (65 + rand(26)).chr }.join
@@ -42,8 +42,12 @@ class Course < ActiveRecord::Base
       user.send_reset_password_instructions
     end
 
-    if Roster.where(course: self, user: user).take.nil?
+    existing_roster = Roster.where(course: self, user: user).take
+    if existing_roster.nil?
       Roster.create(user: user, course: self, role: role)
+    else
+      existing_roster.role = role
+      existing_roster.save
     end
     # Do we want to send an invitation email?
   end

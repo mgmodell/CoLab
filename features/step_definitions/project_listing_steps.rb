@@ -20,7 +20,7 @@ end
 
 Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
   @group = Group.make
-  role = Role.where(name: 'Enrolled Student').take
+  role = Role.enrolled.take
   user_count.to_i.times do
     user = User.make
     user.skip_confirmation!

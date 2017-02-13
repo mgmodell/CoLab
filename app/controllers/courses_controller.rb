@@ -22,20 +22,18 @@ class CoursesController < ApplicationController
 
   def new
     @course = Course.new
+    role = Role.instructor.take
+    @course.rosters << Roster.new( role: role, user: @current_user )
   end
 
   def create
-    puts course_params
     @course = Course.new( course_params )
-    puts "Params: "
-    puts params
-    puts @course.name
-    puts @course.start_date
-    puts @course.end_date
+    role = Role.instructor.take
+    @course.rosters << Roster.new( role: role, user: @current_user )
 
     respond_to do |format|
       if @course.save
-        format.html { redirect_to url: admin_course_url(@course), notice: 'Course was successfully created.' }
+        format.html { redirect_to url: course_url(@course), notice: 'Course was successfully created.' }
         format.json { render :show, status: :created, location: @course }
       else
         format.html { render :new }
@@ -47,7 +45,7 @@ class CoursesController < ApplicationController
   def update
     respond_to do |format|
       if @course.update( course_params )
-        format.html { redirect_to admin_course_path( @course ), notice: 'Course was successfully updated.' }
+        format.html { redirect_to course_path( @course ), notice: 'Course was successfully updated.' }
         format.json { render :show, status: :ok, location: @course }
       else
         format.html { render :edit }
@@ -60,7 +58,7 @@ class CoursesController < ApplicationController
   def destroy
     @course.destroy
     respond_to do |format|
-      format.html { redirect_to admin_courses_url, notice: "Course was successfully destroyed." }
+      format.html { redirect_to courses_url, notice: "Course was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -73,6 +71,13 @@ class CoursesController < ApplicationController
     end
   end
     
+  def add_instructors
+    @course.add_students_by_email params[ :addresses ]
+    respond_to do |format|
+      format.html { redirect_to @course, notice: 'Students have been invited.' }
+      format.json { render :show, status: :ok, location: @course }
+    end
+  end
 
   private
     #Use callbacks to share common setup or constraints between actions.
@@ -91,6 +96,6 @@ class CoursesController < ApplicationController
     end
 
     def course_params
-      params.permit( :name, :number, :school_id, :start_date, :end_date, :description, :timezone, rosters: [ :role_id ] )
+      params.permit( course: [:name, :number, :school_id, :start_date, :end_date, :description, :timezone, rosters: [ :role_id ] ] )[ :course]
     end
 end

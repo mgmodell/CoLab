@@ -14,7 +14,7 @@ Given(/^the experience has been activated$/) do
 end
 
 Given(/^the course has (\d+) confirmed users$/) do |user_count|
-  role = Role.where(name: 'Enrolled Student').take
+  role = Role.enrolled.take
   @users = []
   user_count.to_i.times do
     user = User.make
@@ -61,7 +61,7 @@ Given /^the user is in a group on the project$/ do
   @group = Group.make
   @project.active = false
 
-  role = Role.where(name: 'Enrolled Student').take
+  role = Role.enrolled.take
   @project.groups << @group
   3.times do
     u = User.make

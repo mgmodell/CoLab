@@ -20,27 +20,27 @@
   <%= @course.start_date %>
 </p>
 <p>
-  <strong>Student roster</strong>
+  <strong>Course instructors</strong>
   <% @course.rosters.instructorships.each do |roster| %>
     <%= roster.user.name %><br>
   <% end %>
 
 </p>
 <p>
-  <strong>Course instructors</strong>
-  <%= form_tag admin_add_students_path, method: :get do %>
+  <strong>Student roster</strong>
+  <%= form_tag add_students_path, method: :get do %>
     <%= label_tag :addresses, "Add users by email:" %>
     <%= text_field_tag :addresses %>
-    <%= hidden_field :id, @course.id %>
+    <%= hidden_field_tag :id, @course.id %>
     <%= submit_tag "Add!" %>
   <% end %>
   <% @course.rosters.students.each do |roster| %>
-    <%= roster.user.name %> (<%= roster.role.name %><br>
+    <%= roster.user.name %> (<%= roster.role.name %>)<br>
   <% end %>
 </p>
 <p>
   <strong>Projects</strong>
-  <%= link_to "Add Project", new_admin_project_path( :course_id => @course.id )%>
+  <%= link_to "Add Project", new_project_path( :course_id => @course.id )%>
   <% @course.projects.each do |project| %>
     <%= project.name %></br>
   <% end %>
@@ -48,7 +48,7 @@
 </p>
 <p>
   <strong>Experiences</strong>
-  <%= link_to "Add Experience", new_admin_experience_path( :course_id => @course.id )%>
+  <%= link_to "Add Experience", new_experience_path( :course_id => @course.id )%>
   <% if @course.experiences.count > 0 %>
     <table>
       <tr>
@@ -59,7 +59,7 @@
             <tr>
                 <td><%= experience.name %></td>
                 <td><%= link_to 'Show', experience %></td>
-                <td><%= link_to 'Edit', edit_admin_experience_path(experience) %></td>
+                <td><%= link_to 'Edit', edit_experience_path(experience) %></td>
                 <td><%= link_to 'Destroy', experience, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             </tr>
           <% end %>
@@ -68,5 +68,5 @@
 </p>
 
 
-<%= link_to 'Edit', edit_admin_course_path(@course) %> |
-<%= link_to 'Back', admin_courses_path %>
+<%= link_to 'Edit', edit_course_path(@course) %> |
+<%= link_to 'Back', courses_path %>

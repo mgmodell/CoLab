@@ -30,9 +30,9 @@
         <td><%= course.rosters.students.count %></td>
         <td><%= course.projects.count %></td>
         <td><%= course.experiences.count %></td>
-        <td><%= link_to 'Show', admin_course_path( course ) %></td>
-        <td><%= link_to 'Edit', edit_admin_course_path(course) %></td>
-        <td><%= link_to 'Destroy', admin_course_path( course ), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show', course_path( course ) %></td>
+        <td><%= link_to 'Edit', edit_course_path(course) %></td>
+        <td><%= link_to 'Destroy', course_path( course ), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -40,4 +40,4 @@
 
 <br>
 
-<%= link_to 'New Course', new_admin_course_path %>
+<%= link_to 'New Course', new_course_path %>

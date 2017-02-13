@@ -2,10 +2,10 @@ Rails.application.routes.draw do
   
   get 'admin' => 'courses#index'
 
-  scope 'admin', as: 'admin' do
-    resources :courses, :projects, :experiences
+  scope 'admin' do
     get 'courses/add_students' => 'courses#add_students', :as => 'add_students'
     get 'projects/add_group' => 'projects#add_group', :as => 'add_group'
+    resources :courses, :projects, :experiences
   end
 
   get 'exp/next/:experience_id:' => 'exps#next', :as => 'next_experience'
