@@ -25,12 +25,13 @@ class Reaction < ActiveRecord::Base
           experience.get_scenario_counts.first[0]
 
         end
-      # TODO: I'm here
       # interrogate the user for their existing reactions
       # check the extant proportions of the experience
       # select a scenario/narrative
       else
-        narrative_counts = experience.get_narrative_counts.last[0]
+        #TODO: Fix this logic
+        narrative_counts = experience.get_narrative_counts
+        if narrative_counts.last[0]
         self.narrative = narrative_counts[0][0]
       end
       week = narrative.weeks.order(:week_num, :asc).take

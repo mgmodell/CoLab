@@ -66,11 +66,12 @@ class ExperiencesController < ApplicationController
     @experience = Experience.still_open.joins(course: { rosters: :user })
                             .where(users: { id: @current_user }).take
 
+
     if @experience.nil?
       redirect_to '/', notice: 'That Experience is a part of another course'
     else
       @reaction = @experience.get_user_reaction(@current_user)
-      if @reaction.id.nil?
+      if @reaction.persisted?
         @reaction.save
         render :studyInstructions
       else
@@ -85,11 +86,11 @@ class ExperiencesController < ApplicationController
   end
 
   def diagnose
-    # record a diagnosis
+    # TODO:record a diagnosis
   end
 
   def react
-    # record a reaction
+    # TODO:record a reaction
   end
 
   private
