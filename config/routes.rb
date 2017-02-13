@@ -8,9 +8,9 @@ Rails.application.routes.draw do
     resources :courses, :projects, :experiences
   end
 
-  get 'exp/next/:experience_id:' => 'exps#next', :as => 'next_experience'
-  get 'exp/diagnose' => 'exps#diagnose', :as => 'diagnose'
-  get 'exp/reaction' => 'exps#react', :as => 'react'
+  get 'experiences/next/:experience_id:' => 'experiences#next', :as => 'next_experience'
+  get 'exeriencesp/diagnose' => 'experiences#diagnose', :as => 'diagnose'
+  get 'exeriencesp/reaction' => 'experiences#react', :as => 'react'
 
   devise_for :users, controllers: 
     { omniauth_callbacks: 'users/omniauth_callbacks', 
