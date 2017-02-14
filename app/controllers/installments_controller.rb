@@ -1,4 +1,6 @@
 class InstallmentsController < ApplicationController
+  skip_before_action :authenticate_user!, only: [ :demo ]
+
   def edit
     assessment_id = params[:assessment_id]
 
@@ -116,6 +118,10 @@ class InstallmentsController < ApplicationController
       end
 
     end
+  end
+
+  def demo
+
   end
 
   private
