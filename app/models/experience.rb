@@ -7,7 +7,9 @@ class Experience < ActiveRecord::Base
   validate :date_sanity
   after_validation :timezone_adjust
 
-  scope :still_open, -> { where('experiences.start_date <= ? AND experiences.end_date >= ?', DateTime.current, DateTime.current) }
+  scope :still_open, -> { 
+    where('experiences.start_date <= ? AND experiences.end_date >= ?', 
+    DateTime.current, DateTime.current) }
 
   def get_user_reaction(user)
     reaction = reactions.where(user: user).take
@@ -17,6 +19,24 @@ class Experience < ActiveRecord::Base
       reaction.experience = self
     end
     reaction
+  end
+
+  def get_least_reviewed_narrative (include_ids = [] )
+    #TODO: make this work
+    if include_ids.empty?
+      narrative_counts = reactions.group( :narrative_id ).count
+    else
+      narrative_counts = reactions.
+        where( "narrative_id IN (?)", include_ids).
+        group( :narrative_id ).count
+    end
+    if narrative_counts.empty?
+      narrative = Narrative.where( "id IN (?)", include_ids ).take
+    else
+      narrative = Narrative.find( narrative_counts.sort{ |x,y| x[1]<=>y[1] }[0][0] )
+    end
+    narrative
+
   end
 
   def get_narrative_counts
