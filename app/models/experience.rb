@@ -30,8 +30,14 @@ class Experience < ActiveRecord::Base
         where( "narrative_id IN (?)", include_ids).
         group( :narrative_id ).count
     end
+    
+    narrative = NilClass
     if narrative_counts.empty?
-      narrative = Narrative.where( "id IN (?)", include_ids ).take
+      if include_ids.empty?
+        narrative = Narrative.take
+      else
+        narrative = Narrative.where( "id IN (?)", include_ids ).take
+      end
     else
       narrative = Narrative.find( narrative_counts.sort{ |x,y| x[1]<=>y[1] }[0][0] )
     end
