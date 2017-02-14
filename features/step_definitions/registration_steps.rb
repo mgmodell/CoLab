@@ -28,7 +28,8 @@ When /^the user "(.*?)" fill in demographics data$/ do |does_or_does_not|
     page.select('Male', from: 'user_gender_id')
     page.select('18-20', from: 'user_age_range_id')
     page.select('Belize', from: 'user_country')
-    page.fill_in('user_current_password', with: 'password')
+    #Current password has been removed from this page.
+    #page.fill_in('user_current_password', with: 'password')
   end
   click_button 'my profile'
 end
