@@ -13,7 +13,8 @@
 <hr>
 <%= form_for @diagnosis, :url => { :controller => "experiences", :action => "diagnose" }, :method => :get do |f| %>
 
-  <%= f.hidden_field( :week_id ) %>
+  <%= f.hidden_field :week_id, value: @diagnosis.week_id  %>
+  <%= f.hidden_field :reaction_id, value: @reaction.id  %>
 
   <% if flash[:error] && flash[:error].size > 0 && flash[:error][ :behavior_id ] %>
     <p class='error'><%= flash[:error][ :behavior_id ][ 0 ] %></p>

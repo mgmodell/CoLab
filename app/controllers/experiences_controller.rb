@@ -71,7 +71,8 @@ class ExperiencesController < ApplicationController
       redirect_to '/', notice: 'That Experience is a part of another course'
     else
       @reaction = @experience.get_user_reaction(@current_user)
-      if @reaction.persisted?
+      if !@reaction.persisted?
+        @reaction.next_week
         @reaction.save
         render :studyInstructions
       else
@@ -86,7 +87,10 @@ class ExperiencesController < ApplicationController
   end
 
   def diagnose
-    # TODO:record a diagnosis
+    diagnosis = Diagnosis.new( diagnosis_params )
+    exp_id = Reaction.find( diagnosis.reaction_id ).experience_id
+    diagnosis.save
+    redirect_to next_experience_path( experience_id: exp_id )
   end
 
   def react
@@ -110,5 +114,9 @@ class ExperiencesController < ApplicationController
 
     def experience_params
       params.permit( experience: [:course_id, :name, :active, :start_date, :end_date ] )[:experience]
+    end
+
+    def diagnosis_params
+      params.permit( diagnosis: [:behavior_id, :reaction_id, :week_id, :other_name, :comment_text, :reaction_id ] )[:diagnosis]
     end
 end

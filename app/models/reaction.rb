@@ -38,10 +38,15 @@ class Reaction < ActiveRecord::Base
         found_narrative = experience.get_least_reviewed_narrative
       end
       self.narrative = found_narrative
-      week = narrative.weeks.order(:week_num).first
+      week = narrative.weeks.order( weeks: :week_num).first
     else
-      previous_week = diagnoses.joins(:week).order(week_num: :desc).take
-      week = Week.where(narrative: previous_week.narrative, week_num: previous_week.week_num + 1).to_a
+      previous_diagnosis = diagnoses.joins(:week).order( "weeks.week_num DESC" ).first
+      if previous_diagnosis.nil?
+        week = narrative.weeks.where( weeks: { week_num: 1 } ).first
+      else
+        week = Week.where(narrative: previous_diagnosis.reaction.narrative, week_num: previous_diagnosis.week.week_num + 1).first
+      end
     end
+    week
   end
 end
