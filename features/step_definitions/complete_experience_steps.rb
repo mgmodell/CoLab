@@ -7,7 +7,7 @@ Then /^the user will see "([^"]*)"$/ do |checkText|
 end
 
 Then /^the user presses "([^"]*)"$/ do |linkOrButtonName|
-  click linkOrButtonName
+  click_link_or_button linkOrButtonName
 end
 
 Then /^they enter "([^"]*)" in the field "([^"]*)"$/ do |txt, fld|
@@ -25,7 +25,7 @@ end
 
 Then /^the database will show a new week (\d+) "([^"]*)" diagnosis from the user$/ do |week_num, behavior|
   diagnosis = Diagnosis.last
-  diagnosis.week.week_num.should eq week_num.to_s
+  diagnosis.week.week_num.should eq week_num.to_i
   diagnosis.behavior.name.should eq behavior
 end
 

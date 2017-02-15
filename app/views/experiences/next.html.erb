@@ -2,7 +2,7 @@
 <div style="display: none" id="w_num"><%= @diagnosis.week.week_num %></div>
 <div class="ui-corner-all custom-corners">
   <div class="ui-bar ui-bar-a">
-    <h3>Journal entry</h3>
+    <h3>Journal entry: Week <%= @diagnosis.week.week_num %></h3>
   </div>
   <div class="ui-body ui-body-a">
 <%= @diagnosis.week.text.html_safe %>
