@@ -1,11 +1,9 @@
 class ExperiencesController < ApplicationController
-  before_action :set_experience, only: [:show, :edit, :update, :destroy ]
+  before_action :set_experience, only: [:show, :edit, :update, :destroy]
 
-  def show
-  end
+  def show; end
 
-  def edit
-  end
+  def edit; end
 
   def index
     @experiences = []
@@ -21,13 +19,13 @@ class ExperiencesController < ApplicationController
 
   def new
     @experience = Experience.new
-    @experience.course_id = params[ :course_id ]
-    @experience.course = Course.find( params[ :course_id ] )
+    @experience.course_id = params[:course_id]
+    @experience.course = Course.find(params[:course_id])
   end
 
   def create
-    @experience = Experience.new( experience_params )
-    @experience.course = Course.find( @experience.course_id )
+    @experience = Experience.new(experience_params)
+    @experience.course = Course.find(@experience.course_id)
     respond_to do |format|
       if @experience.save
         format.html { redirect_to @experience, notice: 'Experience was successfully created.' }
@@ -41,7 +39,7 @@ class ExperiencesController < ApplicationController
 
   def update
     respond_to do |format|
-      if @experience.update( experience_params )
+      if @experience.update(experience_params)
         format.html { redirect_to @experience, notice: 'Experience was successfully updated.' }
         format.json { render :show, status: :ok, location: @experience }
       else
@@ -49,13 +47,12 @@ class ExperiencesController < ApplicationController
         format.json { render json: @experience.errors, status: :unprocessable_entity }
       end
     end
-
   end
 
   def destroy
     @experience.destroy
     respond_to do |format|
-      format.html { redirect_to experiences_url, notice: "Experience was successfully destroyed." }
+      format.html { redirect_to experiences_url, notice: 'Experience was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -65,7 +62,6 @@ class ExperiencesController < ApplicationController
 
     @experience = Experience.still_open.joins(course: { rosters: :user })
                             .where(users: { id: @current_user }).take
-
 
     if @experience.nil?
       redirect_to '/', notice: 'That Experience is a part of another course'
@@ -87,36 +83,37 @@ class ExperiencesController < ApplicationController
   end
 
   def diagnose
-    diagnosis = Diagnosis.new( diagnosis_params )
-    exp_id = Reaction.find( diagnosis.reaction_id ).experience_id
+    diagnosis = Diagnosis.new(diagnosis_params)
+    exp_id = Reaction.find(diagnosis.reaction_id).experience_id
     diagnosis.save
-    redirect_to next_experience_path( experience_id: exp_id )
+    redirect_to next_experience_path(experience_id: exp_id)
   end
 
   def react
-    # TODO:record a reaction
+    # TODO: record a reaction
   end
 
   private
-    #Use callbacks to share common setup or constraints between actions.
-    def set_experience
-      e_test = Experience.find( params[ :id ] )
-      if @current_user.is_admin?
-        @experience = e_test
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_experience
+    e_test = Experience.find(params[:id])
+    if @current_user.is_admin?
+      @experience = e_test
+    else
+      if e_test.course.rosters.instructorships.where(user: @current_user).nil?
+        redirect_to :show if @experience.nil?
       else
-        if e_test.course.rosters.instructorships.where( user: @current_user ).nil?
-          redirect_to :show if @experience.nil?
-        else
-          @experience = e_test
-        end
+        @experience = e_test
       end
     end
+  end
 
-    def experience_params
-      params.permit( experience: [:course_id, :name, :active, :start_date, :end_date ] )[:experience]
-    end
+  def experience_params
+    params.permit(experience: [:course_id, :name, :active, :start_date, :end_date])[:experience]
+  end
 
-    def diagnosis_params
-      params.permit( diagnosis: [:behavior_id, :reaction_id, :week_id, :other_name, :comment_text, :reaction_id ] )[:diagnosis]
-    end
+  def diagnosis_params
+    params.permit(diagnosis: [:behavior_id, :reaction_id, :week_id, :other_name, :comment_text, :reaction_id])[:diagnosis]
+  end
 end

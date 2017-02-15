@@ -30,8 +30,8 @@ class Course < ActiveRecord::Base
   end
 
   def add_student_by_email(student_email, instructor: false)
-    role_name = instructor ? "Instructor" : "Invited Student"
-    role = Role.where(name: role_name ).take
+    role_name = instructor ? 'Instructor' : 'Invited Student'
+    role = Role.where(name: role_name).take
     # Searching for the student and:
     user = User.joins(:emails).where(emails: { email: student_email }).take
 

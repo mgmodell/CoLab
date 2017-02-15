@@ -1,250 +1,240 @@
 class GraphingController < ApplicationController
-   Unit_To_Processing = [ [ "Individual", [ "Summary", "Summary By Behavior", "All Data" ] ],
-      [ "Group",  [ "Summary" ] ],
-      [ "Raw Data", [ "Comments" ] ]
-   ]
+  Unit_To_Processing = [['Individual', ['Summary', 'Summary By Behavior', 'All Data']],
+                        ['Group', ['Summary']],
+                        ['Raw Data', ['Comments']]].freeze
 
-   #Support the app by providing the subject instances
-   def subjects
-      unit_of_analysis = params[ :unit_of_analysis ]
-      project_id = params[ :project_id ]
-      for_research = params[ :for_research ] == "true" ? true : false
+  # Support the app by providing the subject instances
+  def subjects
+    unit_of_analysis = params[:unit_of_analysis]
+    project_id = params[:project_id]
+    for_research = params[:for_research] == 'true' ? true : false
 
-      @subjects = []
-      case unit_of_analysis
-      when "Individual", "Raw Data"
-         if for_research
-            @subjects = User.joins( :consent_logs, :projects ).
-              where( :consent_logs => { :accepted => true }, :projects => { :id => project_id } ).
-              collect{ |user| [user.name, user.id] }
-         else
-            @subjects = Project.find( project_id ).users.collect{ |user| [user.name, user.id] }
-         end
-      when "Group"
-         @subjects = Project.find( project_id ).groups.collect{ |group| [group.name, group.id] }
-
-      end
-      # Return the retrieved data
-      respond_to do |format|
-         format.json
-      end
-   end
-
-   # Retrieve all the reported values relating to the
-   # specified user and hash them up by Installment.
-   def pull_and_organise_user_data( user_id, project_id, for_research = false )
-      values = [ ]
+    @subjects = []
+    case unit_of_analysis
+    when 'Individual', 'Raw Data'
       if for_research
-         values = Value.includes( :user, :behavior, :installment => [ :assessment, :user ] ).
-         joins( :user => { :consent_logs => { :consent_form => :project } },
-                installment:  :assessment ).
-         where( :consent_logs => { :accepted => true },
-                                   :user_id => user_id,
-                                   :installments => { :user_id => User.consented_to_project( project_id ) },
-                                   :projects => {:id => project_id } )
+        @subjects = User.joins(:consent_logs, :projects)
+                        .where(consent_logs: { accepted: true }, projects: { id: project_id })
+                        .collect { |user| [user.name, user.id] }
       else
-         values = Value.includes( :user, :behavior, :installment => [ :assessment, :user ] ).
-         joins( installment: :assessment ).
-         where( :user_id => user_id, :projects => { :id => project_id } )
+        @subjects = Project.find(project_id).users.collect { |user| [user.name, user.id] }
       end
+    when 'Group'
+      @subjects = Project.find(project_id).groups.collect { |group| [group.name, group.id] }
 
-      assessment_to_values = Hash.new
-      values.each do |value|
-         if assessment_to_values[ value.installment.assessment ].nil?
-            assessment_to_values[ value.installment.assessment ] = [ value ]
-         else
-            assessment_to_values[ value.installment.assessment ] << value
-         end
+    end
+    # Return the retrieved data
+    respond_to do |format|
+      format.json
+    end
+  end
+
+  # Retrieve all the reported values relating to the
+  # specified user and hash them up by Installment.
+  def pull_and_organise_user_data(user_id, project_id, for_research = false)
+    values = []
+    if for_research
+      values = Value.includes(:user, :behavior, installment: [:assessment, :user])
+                    .joins(user: { consent_logs: { consent_form: :project } },
+                           installment:  :assessment)
+                    .where(consent_logs: { accepted: true },
+                           user_id: user_id,
+                           installments: { user_id: User.consented_to_project(project_id) },
+                           projects: { id: project_id })
+    else
+      values = Value.includes(:user, :behavior, installment: [:assessment, :user])
+                    .joins(installment: :assessment)
+                    .where(user_id: user_id, projects: { id: project_id })
+    end
+
+    assessment_to_values = {}
+    values.each do |value|
+      if assessment_to_values[value.installment.assessment].nil?
+        assessment_to_values[value.installment.assessment] = [value]
+      else
+        assessment_to_values[value.installment.assessment] << value
       end
-      return assessment_to_values
+    end
+    assessment_to_values
+  end
 
-   end
+  def individual_summary_data(user, project_id, for_research = false)
+    assessment_to_values = pull_and_organise_user_data(user.id, project_id, for_research)
+    data = []
+    sequential = assessment_to_values.keys.sort_by(&:start_date)
+    sequential.each do |assessment|
+      values = assessment_to_values[assessment]
+      data << [values[0].created_at.to_i * 1000,
+               values.inject(0) { |sum, value| sum + value.value }.to_f / values.size]
+    end
+    series = {}
+    series.store('data', data)
+    series.store('label', user.name)
+    series
+  end
 
-   def individual_summary_data( user, project_id, for_research = false )
-      assessment_to_values = pull_and_organise_user_data( user.id, project_id, for_research )
-      data = [ ]
-      sequential = assessment_to_values.keys.sort{|a,b| a.start_date <=> b.start_date}
-      sequential.each do |assessment|
-         values = assessment_to_values[ assessment ]
-         data << [ values[ 0 ].created_at.to_i * 1000,
-         values.inject( 0 ){ |sum, value| sum + value.value }.to_f / values.size ]
-      end
-      series = Hash.new
-      series.store( "data", data )
-      series.store( "label", user.name )
-      return series
-   end
+  #
+  # The graphing data is provided as a JSON object containing:
+  # data_series
+  #   data - an array of [date, value] arrays.
+  #   label - name for the series represented by 'data'
+  # detail_hash - any relevant data to be dispayed with the set
+  # of series.
+  def data
+    unit_of_analysis = params[:unit_of_analysis]
+    data_processing = params[:data_processing]
+    project = Project.find(params[:project])
+    subject = params[:subject]
+    for_research = params[:for_research] == 'true' ? true : false
 
-   #
-   # The graphing data is provided as a JSON object containing:
-   # data_series
-   #   data - an array of [date, value] arrays.
-   #   label - name for the series represented by 'data'
-   # detail_hash - any relevant data to be dispayed with the set
-   # of series.
-   def data
-      unit_of_analysis = params[ :unit_of_analysis ]
-      data_processing = params[ :data_processing ]
-      project = Project.find( params[ :project ] )
-      subject = params[ :subject ]
-      for_research = params[ :for_research ] == "true" ? true : false
+    # TODO: - validate that the user has access to the requested data
+    @data_series = []
+    @detail_hash = {}
 
-      #TODO - validate that the user has access to the requested data
-      @data_series = [ ]
-      @detail_hash = Hash.new
-      
-      # Do we have any business getting this data?
-      if current_user.is_admin? || @current_user.rosters.instructorships.count > 0
+    # Do we have any business getting this data?
+    if current_user.is_admin? || @current_user.rosters.instructorships.count > 0
 
-         # Retrieve the requested data
-         case unit_of_analysis
-         when "Individual"
-            user = User.confirmed.find( subject.to_i )
-            @detail_hash.store( "name", user.name )
+      # Retrieve the requested data
+      case unit_of_analysis
+      when 'Individual'
+        user = User.confirmed.find(subject.to_i)
+        @detail_hash.store('name', user.name)
 
-            case data_processing
-            when "Summary"
-               series = individual_summary_data( user, project.id )
-               @data_series << series
-            when "All Data"
-               assessment_to_values = pull_and_organise_user_data( user.id, assessment.to_i, for_research )
-               data_hash = Hash.new
-               sequential = assessment_to_values.keys.sort{|a,b| a.start_date <=> b.start_date}
-               sequential.each do |assessment|
-                  values = assessment_to_values[ assessment ]
-                  values.each do |value|
-                     series = data_hash[ value.behavior.id.to_s + "_" + value.installment.user_id.to_s ]
-                     if series.nil?
-                        series = Hash.new
-                        series.store( "label", value.behavior.name + " by " + value.installment.user.name )
-                     end
-                     series_data = series[ "data" ]
-                     if series_data.nil?
-                        series_data = [ ]
-                     end
-                     series_data << [ value.created_at.to_i * 1000, value.value ]
-                     series.store( "data", series_data )
-                     data_hash.store( value.behavior.id.to_s + "_" + value.installment.user_id.to_s, series )
-                  end
-               end
-               @data_series = data_hash.values
-            when "Summary By Behavior"
-               assessment_to_values = pull_and_organise_user_data( user.id, assessment.to_i, for_research )
-               data_hash = Hash.new
-               # Begin by sorting by date to group all the categories properly
-               sequential = assessment_to_values.keys.sort{|a,b| a.start_date <=> b.start_date}
-               sequential.each do |assessment|
-                  values = assessment_to_values[ assessment ]
-                  values.each do |value|
-                     series = data_hash[ value.behavior.id.to_s ]
-                     if series.nil?
-                        series = Hash.new
-                        series.store( "label", value.behavior.name )
-                     end
-                     series_data = series[ "data" ]
-                     if series_data.nil?
-                        series_data = [ ]
-                     end
-                     series_data << [ value.installment.assessment.start_date.to_time.to_i * 1000, value.value ]
-
-                     #collapsed_series_data << [ date, tmp.inject{|sum,el| sum + el[1] }.to_f / tmp.size ]
-                     series.store( "data", series_data )
-                     data_hash.store( value.behavior.id.to_s, series )
-                  end
-               end
-               data_hash.each_pair do |key,value|
-                  tmp = [ ]
-                  date = value[ "data" ][ 0 ][ 0 ]
-                  new_collapsed_data = [ ]
-                  value["data"].each do |v|
-                     if v[ 0 ] != date
-                        new_collapsed_data << [ date, tmp.inject{|sum,el| sum + el}.to_f / tmp.size ]
-                        date = v[ 0 ]
-                        tmp = [ ]
-                     end
-                     tmp << v[ 1 ]
-                  end
-                  value[ "data" ] = new_collapsed_data
-
-               end
-               @data_series = data_hash.values
-            end
-         when "Group"
-            group = Group.find( subject.to_i )
-            @detail_hash.store( "name", group.name )
-
-            case data_processing
-            when "Summary"
-               group.users.each do |user|
-                  @data_series << individual_summary_data( user, assessment.to_i )
-               end
-            end
-         when "Raw Data"
-            user = User.confirmed.find( subject.to_i )
-            @detail_hash.store( "name", user.name )
-
-            case data_processing
-            when "Comments"
-              installments = Installment.joins( :assessment ).
-                where( :user_id => subject.to_i, assessment:  assessment )
-              @data = installments
-              respond_to do |format|
-                format.csv do
-                  headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
-                  headers['Content-Type'] ||= 'text/csv'
-                end
+        case data_processing
+        when 'Summary'
+          series = individual_summary_data(user, project.id)
+          @data_series << series
+        when 'All Data'
+          assessment_to_values = pull_and_organise_user_data(user.id, assessment.to_i, for_research)
+          data_hash = {}
+          sequential = assessment_to_values.keys.sort_by(&:start_date)
+          sequential.each do |assessment|
+            values = assessment_to_values[assessment]
+            values.each do |value|
+              series = data_hash[value.behavior.id.to_s + '_' + value.installment.user_id.to_s]
+              if series.nil?
+                series = {}
+                series.store('label', value.behavior.name + ' by ' + value.installment.user.name)
               end
+              series_data = series['data']
+              series_data = [] if series_data.nil?
+              series_data << [value.created_at.to_i * 1000, value.value]
+              series.store('data', series_data)
+              data_hash.store(value.behavior.id.to_s + '_' + value.installment.user_id.to_s, series)
             end
-         end
-      else
-         @data_series = { "label" => "Restricted", "data" => [] }
-         @detail_hash.store( "name", "Restricted: You do not have permission to access this data" )
-      end
+          end
+          @data_series = data_hash.values
+        when 'Summary By Behavior'
+          assessment_to_values = pull_and_organise_user_data(user.id, assessment.to_i, for_research)
+          data_hash = {}
+          # Begin by sorting by date to group all the categories properly
+          sequential = assessment_to_values.keys.sort_by(&:start_date)
+          sequential.each do |assessment|
+            values = assessment_to_values[assessment]
+            values.each do |value|
+              series = data_hash[value.behavior.id.to_s]
+              if series.nil?
+                series = {}
+                series.store('label', value.behavior.name)
+              end
+              series_data = series['data']
+              series_data = [] if series_data.nil?
+              series_data << [value.installment.assessment.start_date.to_time.to_i * 1000, value.value]
 
-      # Other stuff here
-
-      # Return the retrieved data
-      respond_to do |format|
-         format.json
-      end
-   end
-
-   def index
-      @user = current_user
-      @current_users_assessments = [ ]
-
-      #Get the assessments administered by the current user
-      if @user.is_instructor?
-         if @user.is_admin?
-            @current_users_projects = Project.all
-         elsif @user.is_instructor?
-            Roster.instructorships.where( :user_id => @user.id ).each do |roster|
-               @current_users_projects.concat roster.course.projects.to_a
+              # collapsed_series_data << [ date, tmp.inject{|sum,el| sum + el[1] }.to_f / tmp.size ]
+              series.store('data', series_data)
+              data_hash.store(value.behavior.id.to_s, series)
             end
-         end
-         return @current_users_projects
-      else
-         redirect_to root_url
-      end
-   end
+          end
+          data_hash.each_pair do |_key, value|
+            tmp = []
+            date = value['data'][0][0]
+            new_collapsed_data = []
+            value['data'].each do |v|
+              if v[0] != date
+                new_collapsed_data << [date, tmp.inject { |sum, el| sum + el }.to_f / tmp.size]
+                date = v[0]
+                tmp = []
+               end
+              tmp << v[1]
+            end
+            value['data'] = new_collapsed_data
+          end
+          @data_series = data_hash.values
+        end
+      when 'Group'
+        group = Group.find(subject.to_i)
+        @detail_hash.store('name', group.name)
 
-   #
-   # Sometimes you want the raw data to play with yourself.
-   #
-   def raw_data
+        case data_processing
+        when 'Summary'
+          group.users.each do |user|
+            @data_series << individual_summary_data(user, assessment.to_i)
+          end
+        end
+      when 'Raw Data'
+        user = User.confirmed.find(subject.to_i)
+        @detail_hash.store('name', user.name)
 
-      user = User.find( subject.to_i )
-
-      installments = Installment.joins( :assessment ).
-        where( :user_id => subject.to_i, assessment: { project_id: assessment.to_i } )
-      @data = installments
-      respond_to do |format|
-        format.csv do
-          headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
-          headers['Content-Type'] ||= 'text/csv'
+        case data_processing
+        when 'Comments'
+          installments = Installment.joins(:assessment)
+                                    .where(user_id: subject.to_i, assessment: assessment)
+          @data = installments
+          respond_to do |format|
+            format.csv do
+              headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
+              headers['Content-Type'] ||= 'text/csv'
+            end
+          end
         end
       end
-    
+    else
+      @data_series = { 'label' => 'Restricted', 'data' => [] }
+      @detail_hash.store('name', 'Restricted: You do not have permission to access this data')
+    end
 
-   end
+    # Other stuff here
+
+    # Return the retrieved data
+    respond_to do |format|
+      format.json
+    end
+  end
+
+  def index
+    @user = current_user
+    @current_users_assessments = []
+
+    # Get the assessments administered by the current user
+    if @user.is_instructor?
+      if @user.is_admin?
+        @current_users_projects = Project.all
+      elsif @user.is_instructor?
+        Roster.instructorships.where(user_id: @user.id).each do |roster|
+          @current_users_projects.concat roster.course.projects.to_a
+        end
+      end
+      return @current_users_projects
+    else
+      redirect_to root_url
+    end
+  end
+
+  #
+  # Sometimes you want the raw data to play with yourself.
+  #
+  def raw_data
+    user = User.find(subject.to_i)
+
+    installments = Installment.joins(:assessment)
+                              .where(user_id: subject.to_i, assessment: { project_id: assessment.to_i })
+    @data = installments
+    respond_to do |format|
+      format.csv do
+        headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
+        headers['Content-Type'] ||= 'text/csv'
+      end
+    end
+  end
 end

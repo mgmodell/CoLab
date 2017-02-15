@@ -7,41 +7,39 @@ class Experience < ActiveRecord::Base
   validate :date_sanity
   after_validation :timezone_adjust
 
-  scope :still_open, -> { 
-    where('experiences.start_date <= ? AND experiences.end_date >= ?', 
-    DateTime.current, DateTime.current) }
+  scope :still_open, -> {
+    where('experiences.start_date <= ? AND experiences.end_date >= ?',
+          DateTime.current, DateTime.current)
+  }
 
   def get_user_reaction(user)
     reaction = reactions.where(user: user).take
 
-    if reaction.nil?
-      reaction = Reaction.new( user: user, experience: self )
-    end
+    reaction = Reaction.new(user: user, experience: self) if reaction.nil?
     reaction
   end
 
-  def get_least_reviewed_narrative (include_ids = [] )
-    #TODO: make this work
-    if include_ids.empty?
-      narrative_counts = reactions.group( :narrative_id ).count
-    else
-      narrative_counts = reactions.
-        where( "narrative_id IN (?)", include_ids).
-        group( :narrative_id ).count
-    end
-    
+  def get_least_reviewed_narrative(include_ids = [])
+    # TODO: make this work
+    narrative_counts = if include_ids.empty?
+                         reactions.group(:narrative_id).count
+                       else
+                         reactions
+                           .where('narrative_id IN (?)', include_ids)
+                           .group(:narrative_id).count
+                       end
+
     narrative = NilClass
     if narrative_counts.empty?
-      if include_ids.empty?
-        narrative = Narrative.take
-      else
-        narrative = Narrative.where( "id IN (?)", include_ids ).take
-      end
+      narrative = if include_ids.empty?
+                    Narrative.take
+                  else
+                    Narrative.where('id IN (?)', include_ids).take
+                  end
     else
-      narrative = Narrative.find( narrative_counts.sort{ |x,y| x[1]<=>y[1] }[0][0] )
+      narrative = Narrative.find(narrative_counts.sort { |x, y| x[1] <=> y[1] }[0][0])
     end
     narrative
-
   end
 
   def get_narrative_counts

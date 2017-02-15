@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  
   get 'admin' => 'courses#index'
 
   scope 'admin' do
@@ -12,8 +11,8 @@ Rails.application.routes.draw do
   get 'exeriencesp/diagnose' => 'experiences#diagnose', :as => 'diagnose'
   get 'exeriencesp/reaction' => 'experiences#react', :as => 'react'
 
-  devise_for :users, controllers: 
-    { omniauth_callbacks: 'users/omniauth_callbacks', 
+  devise_for :users, controllers:
+    { omniauth_callbacks: 'users/omniauth_callbacks',
       registrations: 'registrations' }
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -30,11 +29,11 @@ Rails.application.routes.draw do
   get 'installments/edit/:assessment_id/:group_id' => 'installments#edit', :as => 'edit_installment'
   resources :installments, only: [:create, :update]
 
-  get "graphing/index" => "graphing#index", :as => "graphing"
-  get "graphing/data/:unit_of_analysis/:subject/:assessment/:data_processing/:for_research" => "graphing#data", 
-    :as => "graphing_data"
-  get "graphing/subjects/:unit_of_analysis/:assessment_id/:for_research" => "graphing#subjects",
-    :as => "graphing_support"
+  get 'graphing/index' => 'graphing#index', :as => 'graphing'
+  get 'graphing/data/:unit_of_analysis/:subject/:assessment/:data_processing/:for_research' => 'graphing#data',
+      :as => 'graphing_data'
+  get 'graphing/subjects/:unit_of_analysis/:assessment_id/:for_research' => 'graphing#subjects',
+      :as => 'graphing_support'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
