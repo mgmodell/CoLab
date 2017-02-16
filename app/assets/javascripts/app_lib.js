@@ -1,38 +1,71 @@
 $(document).bind("mobileinit", function(){
-   $.mobile.ajaxEnabled = false;
+  $.mobile.ajaxLinksEnabled = false;
+  $.mobile.ajaxFormsEnabled = false;
+  $.mobile.ajaxEnabled = false;
 });
 
-$(document).on("pageinit", function( ){
-   $("#pupupTutorial iframe")
-   .attr( "width", 0 )
-   .attr( "height", 0 );
+//Add some code to the page.
+$(document).ready(function(){
 
-   $("#pupupTutorial").on({
-      pupupbeforeposition: function( ){
-         var size = scale( 655, 495, 15, 1 ),
-         w = size.width,
-         h = size.height;
+  /*
+    This code (next two functions) enacts the 
+    JavaScript-based reveal.
+    It is game-able in case anyone truly cares, but 
+    hopefully the text does not entice participants 
+    to do so.
+  */
+  $("input:radio[name='instructor_conclusion[behavior_id]']").change(function(){
+    $("#reveal").removeClass( 'ui-state-disabled' );
+  });
 
-         $( "#pupupTutorial iframe" )
-         .attr( "width", w )
-         .attr( "height", h );
-      },
-      popupafterclose: function( ){
-         $("#pupupTutorial iframe")
-         .attr("width", 0)
-         .attr("height", 0);
-      }
-   });
+  $("#reveal").click(function(){
+    if( $("input:radio[name='instructor_conclusion[behavior_id]']").is(":checked") )
+    {
+      var behavior = null;
+      $("input:radio[name='instructor_conclusion[behavior_id]']").attr('disabled',true );
+      behavior = $("input:radio[name='instructor_conclusion[behavior_id]']").val( );
+      $("<input type='hidden' name='instructor_conclusion[behavior_id]' value='" + behavior + "'/>" )
+        .appendTo("#new_instructor_conclusion");
+      $("#reveal_panel").show( );
+      $("#reveal").attr('disabled', true );
+      $("#interested").hide( );
+      $("#final_submit_panel").show( );
+    }
+  });
+
+
+  /*
+    Show/hide the alternative behavior text panel
+  */
+  $("input:radio[name='diagnosis[behavior_id]']").change(function(){
+    if ($("input:radio[name='diagnosis[behavior_id]']:checked").val() == '6')
+    {
+      $("#other_name_panel").show();
+    }
+    else
+    {
+      $("#other_name_panel").hide();
+    }
+  });
+
+  /*
+    Show/hide the alternative behavior text panel
+  */
+  $("input:radio[name='reaction[behavior_id]']").change(function(){
+    if ($("input:radio[name='reaction[behavior_id]']:checked").val() == '6')
+    {
+      $("#other_name_panel").show();
+    }
+    else
+    {
+      $("#other_name_panel").hide();
+    }
+  });
+
+
+
+  $( "[data-role='header'], [data-role='footer']" ).toolbar();
+
 });
 
-
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-18765067-4']);
-_gaq.push(['_trackPageview']);
-
-(function() {
-   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
 
