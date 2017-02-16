@@ -1,28 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>CoLab</title>
+  <title>CoLab <%= " : " + @title unless @title.nil? %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
   <%= stylesheet_link_tag    "application", :media => "all" %>
-  <script language="text/javascript">
-    $(document).bind("mobileinit", function(){
-      $.mobile.ajaxLinksEnabled = false;
-      $.mobile.ajaxFormsEnabled = false;
-      $.mobile.ajaxEnabled = false;
-    });
-  </script>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
   <div data-role="page" data-theme="a">
-    <div data-role="header" data-position="fixed">
-      <% if !@current_user.nil? %>
-        <%= link_to "Home", root_path, :'data-icon' => "home", :"data-theme" => "d" %>
-      <% end %>
+    <div data-role="header" style="overflow:hidden;" >
+      <%= link_to "Home", root_path, :'data-icon' => "home"%>
       <h1>Self- and Peer-Assessment</h1>
+      <% if !@week.nil? %>
+        <fieldset data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
+          <% if !@reaction.week.nil? %>
+          <div id="progressbar">
+            <div style="width: <%= @week.percent_complete %>">
+              <%= @reaction.percent_complete %>%&nbsp;complete
+            </div>
+          </div>
+          <% end %>
+          <a href="#instructions" id="instr_btn" 
+            class="ui-btn ui-mini ui-icon-info ui-btn-inline ui-btn-icon-right" >Instructions</a>
+        </fieldset
+      <% end %>
     </div>
 
     <div data-role="content">
@@ -34,6 +38,24 @@
       <% end -%>
 
 <%= yield %>
+    </div>
+    <div data-role="page">
+      <% if !@reaction.nil? %>
+      <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="instructions">
+      <a href="#instr_btn" class="ui-btn ui-icon-delete" data-rel="close"> Close panel</a>
+      <div data-role="collapsible">
+        <h4>Instructions</h4>
+        <%= render "shared/instructions" %>
+      </div>
+      <div data-role="collapsible">
+        <h4>Behaviors</h4>
+        <%= render "shared/behaviors" %>
+      </div>
+      <div data-role="collapsible">
+        <h4>Scenario</h4>
+        <%= render "shared/scenario" %>
+      </div>
+      <% end %>
     </div>
     <div data-role="footer" data-position="fixed">
       <div class="ui-grid-a">
