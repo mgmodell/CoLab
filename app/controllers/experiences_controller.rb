@@ -86,6 +86,8 @@ class ExperiencesController < ApplicationController
     diagnosis = Diagnosis.new(diagnosis_params)
     exp_id = Reaction.find(diagnosis.reaction_id).experience_id
     diagnosis.save
+    flash[ :error ] = diagnosis.errors
+    flash.keep
     redirect_to next_experience_path(experience_id: exp_id)
   end
 
@@ -110,10 +112,11 @@ class ExperiencesController < ApplicationController
   end
 
   def experience_params
-    params.permit(experience: [:course_id, :name, :active, :start_date, :end_date])[:experience]
+    params.require( :experience ).permit( :course_id, :name, :active, :start_date, :end_date)
   end
 
   def diagnosis_params
-    params.permit(diagnosis: [:behavior_id, :reaction_id, :week_id, :other_name, :comment_text, :reaction_id])[:diagnosis]
+    params.require( :diagnosis ).permit( :behavior_id, :reaction_id, :week_id, :other_name, 
+                                        :comment_text, :reaction_id)
   end
 end

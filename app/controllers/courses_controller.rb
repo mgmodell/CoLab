@@ -82,18 +82,14 @@ class CoursesController < ApplicationController
   def set_course
     if @current_user.is_admin?
       @course = Course.find(params[:id])
-      puts @course
-      puts @course.name
-      puts @course.number
     else
       @course = @current_user.rosters.instructorships.where(course_id: params[:id]).take.course
       redirect_to :show if @course.nil?
     end
-    puts @course
-    puts @course.name
   end
 
   def course_params
-    params.permit(course: [:name, :number, :school_id, :start_date, :end_date, :description, :timezone, rosters: [:role_id]])[:course]
+    params.require( :course ).permit(:name, :number, :school_id, :start_date, :end_date, 
+                                      :description, :timezone, rosters: [:role_id])
   end
 end

@@ -79,7 +79,8 @@ class ProjectsController < ApplicationController
   end
 
   def project_params
-    params.permit(project: [:course_id, :name, :description, :start_date, :end_date, :start_dow, :end_dow,
-                            :active, :factor_pack_id, :style_id, groups: [:name]])[:project]
+    params.require(:project).permit(:course_id, :name, :description, :start_date, 
+                            :end_date, :start_dow, :end_dow, :active, :factor_pack_id, 
+                            :style_id, groups: [:name]])
   end
 end
