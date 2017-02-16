@@ -83,12 +83,19 @@ class ExperiencesController < ApplicationController
   end
 
   def diagnose
-    diagnosis = Diagnosis.new(diagnosis_params)
-    exp_id = Reaction.find(diagnosis.reaction_id).experience_id
-    diagnosis.save
-    flash[ :error ] = diagnosis.errors
-    flash.keep
-    redirect_to next_experience_path(experience_id: exp_id)
+    @diagnosis = Diagnosis.new(diagnosis_params)
+    @diagnosis.reaction =  Reaction.find(@diagnosis.reaction_id)
+    @diagnosis.save
+    @reaction = @diagnosis.reaction
+    @experience = @reaction.experience
+    week = @reaction.next_week
+    if week.nil?
+      # we just finished the last week
+      render :reaction
+    else
+      render :next
+    end
+
   end
 
   def react
