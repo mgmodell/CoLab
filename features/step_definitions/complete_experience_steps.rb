@@ -14,8 +14,8 @@ Then /^they enter "([^"]*)" in the field "([^"]*)"$/ do |txt, fld|
   page.fill_in(fld, with: txt)
 end
 
-Then /^in the field "([^"]*)" they will see "([^"]*)"$/ do |field, value|
-  field_value = find_field(field).value
+Then /^in the field "([^"]*)" they will see "([^"]*)"$/ do |fld, value|
+  field_value = find_field(fld).value
   expect(field_value).to include value
 end
 

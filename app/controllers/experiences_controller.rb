@@ -91,9 +91,9 @@ class ExperiencesController < ApplicationController
     week = @reaction.next_week
     if week.nil?
       # we just finished the last week
-      render :reaction
+      render :reaction, :flash => { :error => @diagnosis.errors.messages.join( ", ") }
     else
-      render :next
+      render :next, :flash => { :error => @diagnosis.errors.messages.first }
     end
 
   end
@@ -124,6 +124,6 @@ class ExperiencesController < ApplicationController
 
   def diagnosis_params
     params.require( :diagnosis ).permit( :behavior_id, :reaction_id, :week_id, :other_name, 
-                                        :comment_text, :reaction_id)
+                                        :comment, :reaction_id)
   end
 end

@@ -16,8 +16,8 @@
   <%= f.hidden_field :week_id, value: @diagnosis.week_id  %>
   <%= f.hidden_field :reaction_id, value: @reaction.id  %>
 
-  <% if flash[:error] && flash[:error].size > 0 && flash[:error][ :behavior_id ] %>
-    <p class='error'><%= flash[:error][ :behavior_id ][ 0 ] %></p>
+  <% if @diagnosis.errors.any? && @diagnosis.errors[:behavior ].count > 0 %>
+    <p class='error'><%= @diagnosis.errors[ :behavior ].first %></p>
   <% end %>
   <div class="ui-corner-all custom-corners">
     <div class="ui-bar ui-bar-a">
@@ -30,9 +30,9 @@
         <p><%= b.description.html_safe %></p>
       <% end %>
 
-      <% if flash[:error] && flash[:error].size > 0 && flash[:error][ :other_name] %>
+      <% if @diagnosis.errors.any? && @diagnosis.errors[ :other_name ].count > 0 %>
         <div id="other_name_panel">
-        <p class='error'><%= flash[:error][ :other_name ][ 0 ] %></p>
+        <p class='error'><%= @diagnosis.errors[ :other_name ].first %></p>
       <% else %>
         <div style="display: none" id="other_name_panel">
       <% end %>

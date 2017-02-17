@@ -20,6 +20,7 @@ class CoursesController < ApplicationController
 
   def new
     @course = Course.new
+    @course.timezone = @current_user.timezone
     role = Role.instructor.take
     @course.rosters << Roster.new(role: role, user: @current_user)
   end

@@ -18,7 +18,7 @@
         <fieldset data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
           <% if !@reaction.week.nil? %>
           <div id="progressbar">
-            <div style="width: <%= @week.percent_complete %>">
+            <div style="width: <%= @reaction.week.percent_complete %>">
               <%= @reaction.percent_complete %>%&nbsp;complete
             </div>
           </div>
