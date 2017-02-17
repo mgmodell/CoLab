@@ -10,7 +10,7 @@
  *
  *= require_self
  *= require_tree .
- *= require jquery.mobile.structure
+ *= require jquery.mobile
  *= require colab-theme
  *= require app_style
  */

@@ -11,7 +11,9 @@ Then /^the user presses "([^"]*)"$/ do |linkOrButtonName|
 end
 
 Then /^they enter "([^"]*)" in the field "([^"]*)"$/ do |txt, fld|
-  page.fill_in(fld, with: txt)
+  page.fill_in( fld, with: txt, :disabled => :all )
+  #field = find_field( fld, :disabled => :all )
+  #field.value = txt
 end
 
 Then /^in the field "([^"]*)" they will see "([^"]*)"$/ do |fld, value|

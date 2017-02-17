@@ -25,7 +25,7 @@
           <% end %>
           <a href="#instructions" id="instr_btn" 
             class="ui-btn ui-mini ui-icon-info ui-btn-inline ui-btn-icon-right" >Instructions</a>
-        </fieldset
+        </fieldset>
       <% end %>
     </div>
 
@@ -86,20 +86,6 @@
         </div>
         <div class="ui-block-b">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true" align="right">
-            <a href="#popupTutorial" data-position-to="window" data-rel="popup" data-role="button" data-theme="d">Tutorial</a>
-            <div data-role="popup" id="popupTutorial" data-overlay-theme="a" data-theme="d"
-              data-tolerance="15,15" class="ui-content">
-              <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete"
-                data-iconpos="notext" class="ui-btn-right">Close</a>
-              <% if current_user.nil? %>
-                <iframe src="https://www.PeerAssess.info/reg_demo" width="655" height="495" seamless></iframe>
-                <p align="center">Tutorial: Registration</p>
-              <% else %>
-                <iframe src="https://www.PeerAssess.info/reporting_demo" width="655" height="495" seamless></iframe>
-                <p align="center">Tutorial: Submitting a Report</p>
-              <% end %>
-
-            </div>
             <%= mail_to "support@peerAssess.info", "Contact Support",
               :subject => "SAPA Support Request", :'data-role' => "button", :"data-theme" => "d"%>
             <%= link_to "About", "https://www.PeerAssess.info", :'data-role' => "button", :"data-theme" => "d" %>
