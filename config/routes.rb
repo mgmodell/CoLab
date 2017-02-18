@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   get 'exeriencesp/diagnose' => 'experiences#diagnose', :as => 'diagnose'
   get 'exeriencesp/reaction' => 'experiences#react', :as => 'react'
 
+  get 'course/accept/:roster_id' => 'courses#accept_roster', :as => 'accept_roster'
+  get 'course/decline/:roster_id' => 'courses#decline_roster', :as => 'decline_roster'
+
   devise_for :users, controllers:
     { omniauth_callbacks: 'users/omniauth_callbacks',
       registrations: 'registrations' }

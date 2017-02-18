@@ -77,6 +77,30 @@ class CoursesController < ApplicationController
     end
   end
 
+  def accept_roster
+    r = Roster.student.where( id: params[ :roster_id ], user: @current_user ).take
+    unless r.nil?
+      r.role = Role.enrolled.take
+      r.save
+    else
+      flash[ :notice ] = "You can only accept your own enrollments"
+    end
+    flash.keep
+    redirect_to :root
+  end
+
+  def decline_roster
+    r = Roster.student.where( id: params[ :roster_id ], user: @current_user ).take
+    unless r.nil?
+      r.role = Role.declined.take
+      r.save
+    else
+      flash[ :notice ] = "You can only decline your own enrollments"
+    end
+    flash.keep
+    redirect_to :root
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

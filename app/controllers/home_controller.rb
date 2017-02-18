@@ -13,5 +13,6 @@ class HomeController < ApplicationController
     end
     @first_name = current_user.first_name
     @waiting_tasks = current_user.waiting_tasks
+    @waiting_rosters = current_user.rosters.awaiting
   end
 end
