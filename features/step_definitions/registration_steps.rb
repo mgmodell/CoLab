@@ -66,6 +66,11 @@ Given /^the users are confirmed$/ do
   @users.each(&:confirm)
 end
 
-Then /^the user "([^"]*)" enrollment in the course$/ do |_arg1|
-  pending # Write code here that turns the phrase above into concrete actions
+Then /^the user "([^"]*)" enrollment in the course$/ do |accept|
+  if accept == "accepts" then
+    click_link_or_button "Accept"
+  else
+    click_link_or_button "Decline"
+  end
 end
+

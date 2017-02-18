@@ -5,13 +5,12 @@ Feature: Experience Listing
 
   Background:
     Given there is a course with an experience
-    Given the experience has been activated
     Given the course has 4 confirmed users
     Given the users "have" had demographics requested
 
   Scenario: Checking for open experiences
     Given the experience started "last month" and ends "next month"
-    Given the experience has been activated
+    Given the experience "has" been activated
     Given the user is "a random" user
     When the user logs in
     Then the user should see a successful login message
@@ -23,10 +22,19 @@ Feature: Experience Listing
     Then user should see 1 open task
     Then the user logs out
 
+  Scenario: We shouldn't see an experience that's not active
+    Given the experience "has not" been activated
+    Given the experience started "last month" and ends "next month"
+    Given the experience "has not" been activated
+    Given the user is "a random" user
+    When the user logs in
+    Then the user should see a successful login message
+    Then user should see 0 open task
+
 
   Scenario: Checking for experiences with opening and closing today
     Given the experience started "last month" and ends "next month"
-    Given the experience has been activated
+    Given the experience "has" been activated
     Given the user is "a random" user
     When the user logs in
     Then the user should see a successful login message
@@ -34,7 +42,7 @@ Feature: Experience Listing
     
   Scenario: Checking for experiences with one outside the date range
     Given the experience started "2 months ago" and ends "last month"
-    Given the experience has been activated
+    Given the experience "has" been activated
     Given the user is "a random" user
     When the user logs in
     Then the user should see a successful login message
@@ -42,7 +50,7 @@ Feature: Experience Listing
     
   Scenario: Checking for assessments with one starting yesterday and ending tomorrow
     Given the experience started "last month" and ends "next month"
-    Given the experience has been activated
+    Given the experience "has" been activated
     Given the user is "a random" user
     Given the course has an assessed project
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"

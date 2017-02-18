@@ -70,28 +70,32 @@ Feature: User registration
   Scenario: A student accepts enrollment in a course
     Given 5 users
     Given the users are confirmed
-    Given a course
+    Given there is a course with an experience
+    Given the experience "has" been activated
     Then the users are added to the course by email address
     Then the course has 5 "Invited Student" users
     Then the user is "a random" user
+    Given the user "has" had demographics requested
     Then the course has 5 "Invited Student" users
     Then the user logs in
     Then the user "accepts" enrollment in the course
     Then user should see 1 open task
-    Then the course has 3 "Invited Student" users
+    Then the course has 4 "Invited Student" users
     Then the course has 1 "Enrolled Student" users
 
   Scenario: A student declines enrollment in a course
     Given 5 users
     Given the users are confirmed
-    Given a course
+    Given there is a course with an experience
+    Given the experience "has" been activated
     Then the users are added to the course by email address
     Then the course has 5 "Invited Student" users
     Then the user is "a random" user
+    Given the user "has" had demographics requested
     Then the course has 5 "Invited Student" users
     Then the user logs in
     Then the user "declines" enrollment in the course
-    Then user should see 1 open task
-    Then the course has 3 "Invited Student" users
+    Then user should see 0 open task
+    Then the course has 4 "Invited Student" users
     Then the course has 1 "Declined Student" users
 

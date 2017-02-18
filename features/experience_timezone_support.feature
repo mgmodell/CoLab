@@ -14,7 +14,7 @@ Feature: Timezone Support for Experiences
 
   Scenario: Checking for open experiences bears correct time
     Given the experience started "February 15, 1980" and ends "April 15, 1980"
-    Given the experience has been activated
+    Given the experience "has" been activated
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
@@ -26,7 +26,7 @@ Feature: Timezone Support for Experiences
     Given the user timezone is "Seoul"
     Given the course timezone is "UTC"
     Given the experience started "February 15, 1980" and ends "April 15, 1980"
-    Given the experience has been activated
+    Given the experience "has" been activated
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
@@ -39,7 +39,7 @@ Feature: Timezone Support for Experiences
     Given the course timezone is "Seoul"
     Given the user timezone is "UTC"
     Given the experience started "February 15, 1980" and ends "April 15, 1980"
-    Given the experience has been activated
+    Given the experience "has" been activated
     When the user logs in
     Then the user should see a successful login message
     Then user should see 0 open task
@@ -49,7 +49,7 @@ Feature: Timezone Support for Experiences
     Given the course timezone is "America/New_York"
     Given the user timezone is "UTC"
     Given the experience started "February 15, 1980" and ends "April 15, 1980"
-    Given the experience has been activated
+    Given the experience "has" been activated
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
