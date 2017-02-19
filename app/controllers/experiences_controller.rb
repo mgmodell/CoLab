@@ -69,6 +69,7 @@ class ExperiencesController < ApplicationController
       @reaction = @experience.get_user_reaction(@current_user)
       if !@reaction.instructed?
         @reaction.instructed = true
+        @reaction.next_week
         @reaction.save
         render :studyInstructions
       else

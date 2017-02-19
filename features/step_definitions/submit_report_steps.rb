@@ -85,7 +85,9 @@ end
 
 Then /^the assessment should show up as completed$/ do
   # Using some cool xpath stuff to check for proper content
-  page.should have_xpath("//a[contains(., '#{@project.name}')]/.."), 'No link to assessment'
+  link_text = "Assess Group: " + @project.group_for_user( @user ).name
+
+  page.should have_xpath("//a[contains(., '#{link_text}')]/.."), 'No link to assessment'
   page.should have_xpath("//td[contains(., 'completed')]"), "No 'completed' message"
 end
 
