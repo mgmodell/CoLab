@@ -3,11 +3,11 @@ Feature: Users can complete 'experiences'
 
   Background:
     Given there is a course with an experience
-    Given the experience has been activated
+    Given the experience "has" been activated
     Given the course has 4 confirmed users
     Given the user is "a random" user
     Given the experience started "last month" and ends "next month"
-    Given the experience has been activated
+    Given the experience "has" been activated
     Given the users "have" had demographics requested
     When the user logs in
     Then the user should see a successful login message
@@ -103,3 +103,22 @@ Feature: Users can complete 'experiences'
      And the database will show a new week 1 "Other" diagnosis from the user
      And the latest Diagnosis will show "super behavior" in the field "other_name"
 
+  Scenario: Participant completes fourteen weeks
+    Then user should see 1 open task
+    Then the user clicks the link to the experience
+    Then the user sees the experience instructions page
+     And the user presses "Next"
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week

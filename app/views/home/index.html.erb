@@ -13,8 +13,8 @@
 <% if @waiting_tasks.any? || @waiting_rosters.any? %>
    <table>
      <tr>
-     <th>Project Name</th>
-     <th>Group Name</th>
+     <th>Task Name</th>
+     <th>Status</th>
      <th>Course Name</th>
      <th>Open Date</th>
      <th>Close Date</th>
@@ -26,10 +26,18 @@
                 <tr>
                 <td>
                   <% if(task.is_completed_by_user @current_user) %>
-                    <%= link_to task.project.name, edit_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
-                    <br>(<em>completed</em>)
+                    <%= link_to "Assess Group: " + group.name, edit_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
+                    <br>(Project: <%= task.project.name %>)
                   <% else %>
-                    <%= link_to task.project.name, new_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
+                    <%= link_to "Assess Group: " + group.name, new_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
+                    <br>(Project: <%= task.project.name %>)
+                  <% end %>
+                </td>
+                <td>
+                  <% if(task.is_completed_by_user @current_user) %>
+                    <em>completed</em>
+                  <% else %>
+                    <em>Not Started</em>
                   <% end %>
                 </td>
                 <td> <%= group.name %></td>
@@ -43,9 +51,14 @@
         <% else %>
                 <tr>
                 <td>
-                  <%= link_to task.name, next_experience_path( :experience_id => task.id ) %>
+                  <%= link_to task.name + "experience", next_experience_path( :experience_id => task.id ) %>
                 </td>
-                <td> n/a </td>
+                <td>
+                  <em>
+                  <% week = task.get_user_reaction( @current_user ).next_week %>
+                  <%= week.nil? ? "Not Started" : week.percent_complete.to_s + "%" %>
+                  </em>
+                </td>
                 <td> <%= task.course.name + "(" + task.course.get_roster_for_user( @current_user ).role.name + ")"%></td>
                 <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
                 <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
@@ -59,9 +72,9 @@
       <tr>
       <td>
         <%= link_to "Accept", accept_roster_path( :roster_id => roster.id ) %> / 
-        <%= link_to "Decline", decline_roster_path( :roster_id => roster.id ) %> / 
+        <%= link_to "Decline", decline_roster_path( :roster_id => roster.id ) %> enrollment
       </td>
-      <td>N/A</td>
+      <td><em>Waiting</em></td>
       <td><%= roster.course.name %></td>
       <td><%= roster.course.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
       <td><%= roster.course.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>

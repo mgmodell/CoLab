@@ -15,7 +15,7 @@ class Experience < ActiveRecord::Base
   def get_user_reaction(user)
     reaction = reactions.where(user: user).take
 
-    reaction = Reaction.new(user: user, experience: self) if reaction.nil?
+    reaction = Reaction.create(user: user, experience: self, instructed: false) if reaction.nil?
     reaction
   end
 

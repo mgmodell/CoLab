@@ -44,3 +44,14 @@ end
 Then /^the user sees the experience instructions page$/ do
   step 'the user will see "Instructions for completing"'
 end
+
+Then /^the user completes a week$/ do
+  reaction = @experience.get_user_reaction @user
+  week = reaction.next_week
+  #get the current week number
+
+  step 'the user will see "Week ' + week.week_num.to_s + '"'
+  step 'the user chooses the "Ganging up on the task" radio button'
+  step 'the user presses "Save and continue"'
+  step 'the database will show a new week ' + week.week_num.to_s + ' "Ganging up on the task" diagnosis from the user'
+end

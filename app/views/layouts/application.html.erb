@@ -19,7 +19,7 @@
           <% if !@reaction.week.nil? %>
           <div id="progressbar">
             <div style="width: <%= @reaction.week.percent_complete %>">
-              <%= @reaction.percent_complete %>%&nbsp;complete
+              <%= @reaction.week.percent_complete %>%&nbsp;complete
             </div>
           </div>
           <% end %>
@@ -85,7 +85,7 @@
           </div>
         </div>
         <div class="ui-block-b">
-          <div data-role="controlgroup" data-type="horizontal" data-mini="true" align="right">
+          <div data-role="controlgroup" data-type="horizontal" data-mini="true">
             <%= mail_to "support@peerAssess.info", "Contact Support",
               :subject => "SAPA Support Request", :'data-role' => "button", :"data-theme" => "d"%>
             <%= link_to "About", "https://www.PeerAssess.info", :'data-role' => "button", :"data-theme" => "d" %>

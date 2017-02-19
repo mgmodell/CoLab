@@ -35,7 +35,7 @@ Then /^the user should see an error indicating that the installment request expi
 end
 
 When /^user clicks the link to the project$/ do
-  click_link_or_button @project.name
+  click_link_or_button "Assess Group: " + @project.group_for_user( @user ).name
 end
 
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points, distribution|

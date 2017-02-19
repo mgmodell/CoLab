@@ -27,6 +27,10 @@ class Project < ActiveRecord::Base
   validate :dates_within_course
   validate :activation_status
 
+  def group_for_user user
+    self.groups.joins( :users ).where( users: { id: user.id } ).take
+  end
+
   def is_for_research?
     !consent_form.nil?
   end

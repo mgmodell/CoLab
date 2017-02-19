@@ -67,8 +67,8 @@ class ExperiencesController < ApplicationController
       redirect_to '/', notice: 'That Experience is a part of another course'
     else
       @reaction = @experience.get_user_reaction(@current_user)
-      if !@reaction.persisted?
-        @reaction.next_week
+      if !@reaction.instructed?
+        @reaction.instructed = true
         @reaction.save
         render :studyInstructions
       else
