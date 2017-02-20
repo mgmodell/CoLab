@@ -51,12 +51,12 @@
         <% else %>
                 <tr>
                 <td>
-                  <%= link_to task.name + "experience", next_experience_path( :experience_id => task.id ) %>
+                  <%= link_to task.name + " experience", next_experience_path( :experience_id => task.id ) %>
                 </td>
                 <td>
                   <em>
                   <% week = task.get_user_reaction( @current_user ).next_week %>
-                  <%= week.nil? ? "Not Started" : week.percent_complete.to_s + "%" %>
+                  <%= week.nil? ? "Completed" : week.percent_complete.to_s + "%" %>
                   </em>
                 </td>
                 <td><%= task.course.name %> (<%task.course.get_roster_for_user( @current_user ).role.name %></td>

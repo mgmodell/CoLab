@@ -147,3 +147,36 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user completes a week
     Then the user will see "Overall Group Behavior"
+    Then the user chooses the "Social loafing" radio button
+    Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment " in extant field "Your suggestions:"
+    Then the user presses hidden "Submit"
+     And the database will show a reaction with "Social loafing" as the behavior
+     And the database will show a reaction with improvements of "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment "
+    Then the user will see "Your reaction to the experience was recorded"
+    Then user should see 1 open task
+    Then the user will see "Completed"
+
+  Scenario: Participant cannot complete an experience without improvements
+    Then user should see 1 open task
+    Then the user clicks the link to the experience
+    Then the user sees the experience instructions page
+     And the user presses "Next"
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user will see "Overall Group Behavior"
+    Then the user chooses the "Social loafing" radio button
+    Then the user presses hidden "Submit"
+    Then the user will see "Reflection on possible improvements is required"
+

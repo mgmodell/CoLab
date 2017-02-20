@@ -6,6 +6,10 @@ Then /^the user will see "([^"]*)"$/ do |checkText|
   page.should have_content(checkText)
 end
 
+Then /^the user presses hidden "([^"]*)"$/ do |linkOrButtonName|
+  click_link_or_button linkOrButtonName, visible: :all, disabled: :all
+end
+
 Then /^the user presses "([^"]*)"$/ do |linkOrButtonName|
   click_link_or_button linkOrButtonName
 end
@@ -60,4 +64,14 @@ Then /^the user completes a week$/ do
   step step_text
   step_text = 'the database will show a new week ' + week.week_num.to_s + ' "' + behavior.name + '" diagnosis from the user'
   step step_text
+end
+
+Then(/^the database will show a reaction with "([^"]*)" as the behavior$/) do |behavior|
+  reaction = Reaction.last
+  reaction.behavior.name.should eq behavior
+end
+
+Then(/^the database will show a reaction with improvements of "([^"]*)"$/) do |improvements|
+  reaction = Reaction.last
+  reaction.improvements.should eq improvements
 end

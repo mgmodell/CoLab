@@ -106,7 +106,16 @@ class ExperiencesController < ApplicationController
   end
 
   def react
-    # TODO: record a reaction
+    @reaction = Reaction.new( params[ reaction: :id ] )
+    respond_to do |format|
+      if @reaction.update(reaction_params)
+        format.html { redirect_to root_path, notice: 'Your reaction to the experience was recorded' }
+        format.json { render :show, status: :ok, location: @reaction }
+      else
+        format.html { render :reaction, notice: "There was a problem with your reaction, try again." }
+        format.json { render json: @reaction.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   private
@@ -132,5 +141,9 @@ class ExperiencesController < ApplicationController
   def diagnosis_params
     params.require(:diagnosis).permit(:behavior_id, :reaction_id, :week_id, :other_name,
                                       :comment, :reaction_id)
+  end
+
+  def reaction_params
+    params.require(:reaction).permit( :behavior_id, :improvements, :narrative_id, :other_name )
   end
 end

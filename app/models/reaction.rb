@@ -7,6 +7,7 @@ class Reaction < ActiveRecord::Base
   has_many :diagnoses, inverse_of: :reaction
 
   validates :narrative, presence: true
+  validate :thorough_completion
 
   def next_week
     week = nil
@@ -49,4 +50,12 @@ class Reaction < ActiveRecord::Base
     end
     week
   end
+
+  def thorough_completion
+    if !self.behavior.nil? && self.improvements.blank?
+        errors.add(:improvements, 'Reflection on possible improvements is required' )
+    end
+    errors
+  end
+
 end
