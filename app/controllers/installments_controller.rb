@@ -121,6 +121,35 @@ class InstallmentsController < ApplicationController
   end
 
   def demo
+    #TODO: Clean this up.
+    assessment_id = params[:assessment_id]
+
+    project = Assessment.find(assessment_id).project
+    if !project.nil? && !project.consent_form.nil? &&
+       ConsentLog.where('user_id = ? AND consent_form_id = ? AND presented = ?',
+                        current_user.id, project.consent_form.id, true).empty?
+      redirect_to controller: 'consent_log', action: 'edit',
+                  consent_form_id: project.consent_form.id
+    else
+
+      group_id = params[:group_id]
+      @group = Group.find(group_id)
+      # validate that current_user is in the
+      user_id = current_user.id
+
+      @installment = Installment.includes(values: [:behaviour, :user], assessment: :project)
+                                .where(assessment_id: assessment_id,
+                                       user_id: user_id,
+                                       group_id: group_id).first
+
+      # generate the values
+      @project = @installment.assessment.project
+      @factors = @installment.assessment.project.factors
+      @project_name = @installment.assessment.project.name
+      @members = @group.users
+
+      render @project.style.filename
+    end
 
   end
 
