@@ -126,3 +126,24 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user completes a week
     Then the user completes a week
+
+  Scenario: Participant completes a full experience
+    Then user should see 1 open task
+    Then the user clicks the link to the experience
+    Then the user sees the experience instructions page
+     And the user presses "Next"
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user will see "Overall Group Behavior"

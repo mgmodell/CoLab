@@ -98,6 +98,7 @@ class ExperiencesController < ApplicationController
     end
       if week.nil?
         # we just finished the last week
+        @reaction = received_diagnosis.reaction
         render :reaction
       else
         render :next
