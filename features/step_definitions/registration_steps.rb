@@ -67,10 +67,9 @@ Given /^the users are confirmed$/ do
 end
 
 Then /^the user "([^"]*)" enrollment in the course$/ do |accept|
-  if accept == "accepts" then
-    click_link_or_button "Accept"
+  if accept == 'accepts'
+    click_link_or_button 'Accept'
   else
-    click_link_or_button "Decline"
+    click_link_or_button 'Decline'
   end
 end
-

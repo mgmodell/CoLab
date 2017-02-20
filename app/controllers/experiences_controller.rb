@@ -61,7 +61,7 @@ class ExperiencesController < ApplicationController
     experience_id = params[:experience_id]
 
     experience = Experience.still_open.joins(course: { rosters: :user })
-                            .where(users: { id: @current_user }).take
+                           .where(users: { id: @current_user }).take
 
     if experience.nil?
       redirect_to '/', notice: 'That Experience is a part of another course'
@@ -86,24 +86,23 @@ class ExperiencesController < ApplicationController
 
   def diagnose
     received_diagnosis = Diagnosis.new(diagnosis_params)
-    received_diagnosis.reaction =  Reaction.find(received_diagnosis.reaction_id)
+    received_diagnosis.reaction = Reaction.find(received_diagnosis.reaction_id)
     received_diagnosis.save
-    
+
     week = received_diagnosis.reaction.next_week
     if received_diagnosis.errors.any?
       @diagnosis = received_diagnosis
     else
       reaction = received_diagnosis.reaction
-      @diagnosis = Diagnosis.new( reaction: reaction, week: week )
+      @diagnosis = Diagnosis.new(reaction: reaction, week: week)
     end
-      if week.nil?
-        # we just finished the last week
-        @reaction = received_diagnosis.reaction
-        render :reaction
-      else
-        render :next
-      end
-
+    if week.nil?
+      # we just finished the last week
+      @reaction = received_diagnosis.reaction
+      render :reaction
+    else
+      render :next
+    end
   end
 
   def react
@@ -127,11 +126,11 @@ class ExperiencesController < ApplicationController
   end
 
   def experience_params
-    params.require( :experience ).permit( :course_id, :name, :active, :start_date, :end_date)
+    params.require(:experience).permit(:course_id, :name, :active, :start_date, :end_date)
   end
 
   def diagnosis_params
-    params.require( :diagnosis ).permit( :behavior_id, :reaction_id, :week_id, :other_name, 
-                                        :comment, :reaction_id)
+    params.require(:diagnosis).permit(:behavior_id, :reaction_id, :week_id, :other_name,
+                                      :comment, :reaction_id)
   end
 end

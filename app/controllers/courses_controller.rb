@@ -78,24 +78,24 @@ class CoursesController < ApplicationController
   end
 
   def accept_roster
-    r = Roster.student.where( id: params[ :roster_id ], user: @current_user ).take
-    unless r.nil?
+    r = Roster.student.where(id: params[:roster_id], user: @current_user).take
+    if r.nil?
+      flash[:notice] = 'You can only accept your own enrollments'
+    else
       r.role = Role.enrolled.take
       r.save
-    else
-      flash[ :notice ] = "You can only accept your own enrollments"
     end
     flash.keep
     redirect_to :root
   end
 
   def decline_roster
-    r = Roster.student.where( id: params[ :roster_id ], user: @current_user ).take
-    unless r.nil?
+    r = Roster.student.where(id: params[:roster_id], user: @current_user).take
+    if r.nil?
+      flash[:notice] = 'You can only decline your own enrollments'
+    else
       r.role = Role.declined.take
       r.save
-    else
-      flash[ :notice ] = "You can only decline your own enrollments"
     end
     flash.keep
     redirect_to :root
@@ -114,7 +114,7 @@ class CoursesController < ApplicationController
   end
 
   def course_params
-    params.require( :course ).permit(:name, :number, :school_id, :start_date, :end_date, 
-                                      :description, :timezone, rosters: [:role_id])
+    params.require(:course).permit(:name, :number, :school_id, :start_date, :end_date,
+                                   :description, :timezone, rosters: [:role_id])
   end
 end

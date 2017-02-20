@@ -5,24 +5,24 @@ class Diagnosis < ActiveRecord::Base
 
   has_one :user, through: :reaction
 
-  validates :behavior, presence: { message: "You must select a behavior." }
+  validates :behavior, presence: { message: 'You must select a behavior.' }
 
   validate :validate_other_name
   validate :validate_unique
 
   def validate_other_name
-    if !self.behavior_id.nil? &&
-      Behavior.find( self.behavior_id ).name == "Other" &&
-      ( self.other_name.nil? || self.other_name.empty? )
-      
-      errors.add( :other_name, "Please indicate the name of the behavior you identify in this narrative." )
+    if !behavior_id.nil? &&
+       Behavior.find(behavior_id).name == 'Other' &&
+       (other_name.nil? || other_name.empty?)
+
+      errors.add(:other_name, 'Please indicate the name of the behavior you identify in this narrative.')
     end
   end
 
   def validate_unique
-    if Diagnosis.where( reaction: self.reaction, week_id: self.week_id ).exists?
-      errors[ :base] << "Please do not use either the 'back' or 'reload' buttons." +
-        "You are being returned to correct week."
+    if Diagnosis.where(reaction: reaction, week_id: week_id).exists?
+      errors[:base] << "Please do not use either the 'back' or 'reload' buttons." \
+                        'You are being returned to correct week.'
     end
   end
 end

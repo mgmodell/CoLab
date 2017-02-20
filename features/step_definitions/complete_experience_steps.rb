@@ -11,7 +11,7 @@ Then /^the user presses "([^"]*)"$/ do |linkOrButtonName|
 end
 
 Then /^they enter "([^"]*)" in extant field "([^"]*)"$/ do |txt, fld|
-  page.fill_in( fld, with: txt, :visible => :all, :disabled => :all )
+  page.fill_in(fld, with: txt, visible: :all, disabled: :all)
 end
 
 Then /^in the field "([^"]*)" they will see "([^"]*)"$/ do |fld, value|
@@ -46,7 +46,7 @@ end
 Then /^the user completes a week$/ do
   reaction = @experience.get_user_reaction @user
   week = reaction.next_week
-  #get the current week number
+  # get the current week number
 
   behavior = Behavior.all.to_a.sample
   step_text = 'the user will see "Week ' + week.week_num.to_s + '"'
@@ -54,8 +54,8 @@ Then /^the user completes a week$/ do
   step_text = 'the user chooses the "' + behavior.name + '" radio button'
   step step_text
   step_text = 'they enter "FUBAR" in extant field "What behavior did you see?"'
-  #Only enter behavior name if 'Other' is selected
-  step step_text if behavior.name == "Other"
+  # Only enter behavior name if 'Other' is selected
+  step step_text if behavior.name == 'Other'
   step_text = 'the user presses "Save and continue"'
   step step_text
   step_text = 'the database will show a new week ' + week.week_num.to_s + ' "' + behavior.name + '" diagnosis from the user'

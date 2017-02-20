@@ -80,7 +80,6 @@ class User < ActiveRecord::Base
     available_rosters.each do |roster|
       roster.course.experiences.each do |exp|
       end
-
     end
     available_rosters.each do |roster|
       waiting_tasks.concat roster.course.experiences.to_a

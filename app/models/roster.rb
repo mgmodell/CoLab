@@ -11,10 +11,11 @@ class Roster < ActiveRecord::Base
                        'Enrolled Student', 'Invited Student', 'Declined Student')
   }
   scope :enrolled, -> { joins(:role).where('name = ? OR name = ?', 'Enrolled Student', 'Invited Student') }
-  scope :student, -> { joins(:role).where('name = ? OR name = ? OR name = ?', 
-    'Enrolled Student', 'Invited Student', "Declined Student" ) }
+  scope :student, -> {
+    joins(:role).where('name = ? OR name = ? OR name = ?',
+                       'Enrolled Student', 'Invited Student', 'Declined Student')
+  }
   scope :accepted, -> { joins(:role).where('name = ?', 'Enrolled Student') }
   scope :awaiting, -> { joins(:role).where('name = ?', 'Invited Student') }
   scope :declined, -> { joins(:role).where('name = ?', 'Declined Student') }
-
 end

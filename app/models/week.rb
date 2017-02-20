@@ -5,6 +5,6 @@ class Week < ActiveRecord::Base
   has_many :diagnoses, inverse_of: :week
 
   def percent_complete
-    percent_complete = (100 * ( ( self.week_num - 1 ).to_f / narrative.weeks.count ) ).to_i
+    percent_complete = (100 * ((week_num - 1).to_f / narrative.weeks.count)).to_i
   end
 end
