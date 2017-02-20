@@ -3,30 +3,38 @@
 <head>
   <title>CoLab <%= " : " + @title unless @title.nil? %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <p class="notice"><%= notice %></p>
-  <p class="alert"><%= alert %></p>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
   <div data-role="page" data-theme="a">
-    <div data-role="header" style="overflow:hidden;" >
-      <%= link_to "Home", root_path, :'data-icon' => "home"%>
-      <h1>Self- and Peer-Assessment</h1>
-      <% if !@week.nil? %>
-        <fieldset data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-left">
-          <% if !@reaction.week.nil? %>
-          <div id="progressbar">
-            <div style="width: <%= @reaction.week.percent_complete %>">
-              <%= @reaction.week.percent_complete %>%&nbsp;complete
+    <div data-role="header" data-position="fixed" style="overflow:hidden;" >
+      <h1>CoLab</h1>
+      <div data-role="navbar">
+      <ul>
+        <li>
+      <%= link_to "Home", root_path, :class=>"ui-btn ui-mini ui-icon-home ui-btn-inline ui-btn-icon-left" %>
+        </li>
+        <li>
+      <% if !@diagnosis.nil? %>
+          <% if !@diagnosis.week.nil? %>
+          <div id="progressbar" style="width: 50%; margin: auto">
+            <div style="width: <%= @diagnosis.week.percent_complete %>%">
+              <%= @diagnosis.week.percent_complete %>%&nbsp;complete
             </div>
           </div>
           <% end %>
+      <% end %>
+        </li>
+        <li>
+      <% if !@diagnosis.nil? %>
           <a href="#instructions" id="instr_btn" 
             class="ui-btn ui-mini ui-icon-info ui-btn-inline ui-btn-icon-right" >Instructions</a>
-        </fieldset>
       <% end %>
+        </li>
+      </ul>
+      </div>
     </div>
 
     <div data-role="content">
@@ -39,8 +47,7 @@
 
 <%= yield %>
     </div>
-    <div data-role="page">
-      <% if !@reaction.nil? %>
+      <% if !@diagnosis.nil? %>
       <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="instructions">
       <a href="#instr_btn" class="ui-btn ui-icon-delete" data-rel="close"> Close panel</a>
       <div data-role="collapsible">
@@ -56,8 +63,7 @@
         <%= render "shared/scenario" %>
       </div>
       <% end %>
-    </div>
-    <div data-role="footer" data-position="fixed">
+    <div data-role="footer" data-position="fixed" style="overflow:hidden;" >
       <div class="ui-grid-a">
         <div class="ui-block-a">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true">
@@ -85,7 +91,7 @@
           </div>
         </div>
         <div class="ui-block-b">
-          <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+          <div data-role="controlgroup" data-type="horizontal" data-mini="true class="ui-btn-right"">
             <%= mail_to "support@peerAssess.info", "Contact Support",
               :subject => "SAPA Support Request", :'data-role' => "button", :"data-theme" => "d"%>
             <%= link_to "About", "https://www.PeerAssess.info", :'data-role' => "button", :"data-theme" => "d" %>
