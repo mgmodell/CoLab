@@ -60,25 +60,26 @@ class ExperiencesController < ApplicationController
   def next
     experience_id = params[:experience_id]
 
-    @experience = Experience.still_open.joins(course: { rosters: :user })
+    experience = Experience.still_open.joins(course: { rosters: :user })
                             .where(users: { id: @current_user }).take
 
-    if @experience.nil?
+    if experience.nil?
       redirect_to '/', notice: 'That Experience is a part of another course'
     else
-      @reaction = @experience.get_user_reaction(@current_user)
-      if !@reaction.instructed?
-        @reaction.instructed = true
-        @reaction.next_week
-        @reaction.save
+      reaction = experience.get_user_reaction(@current_user)
+      week = reaction.next_week
+      if !reaction.instructed?
+        reaction.instructed = true
+        reaction.save
+        @experience = experience
         render :studyInstructions
       else
-        week = @reaction.next_week
         if week.nil?
           # we just finished the last week
           render :reaction
+        else
+          @diagnosis = Diagnosis.new(reaction: reaction, week: week)
         end
-        @diagnosis = Diagnosis.new(reaction: @reaction, week: week)
       end
     end
   end
@@ -87,12 +88,12 @@ class ExperiencesController < ApplicationController
     @diagnosis = Diagnosis.new(diagnosis_params)
     @diagnosis.reaction =  Reaction.find(@diagnosis.reaction_id)
     @diagnosis.save
-    @reaction = @diagnosis.reaction
-    @experience = @reaction.experience
-    week = @reaction.next_week
+    week = @diagnosis.reaction.next_week
+    reaction = @diagnosis.reaction
+    @diagnosis = Diagnosis.new( reaction: reaction, week: week )
     if week.nil?
       # we just finished the last week
-      render :reaction, :flash => { :error => @diagnosis.errors.messages.join( ", ") }
+      render :reaction
     else
       render :next, :flash => { :error => @diagnosis.errors.messages.first }
     end
