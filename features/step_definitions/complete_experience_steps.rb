@@ -10,10 +10,8 @@ Then /^the user presses "([^"]*)"$/ do |linkOrButtonName|
   click_link_or_button linkOrButtonName
 end
 
-Then /^they enter "([^"]*)" in the field "([^"]*)"$/ do |txt, fld|
-  page.fill_in( fld, with: txt, :disabled => :all )
-  #field = find_field( fld, :disabled => :all )
-  #field.value = txt
+Then /^they enter "([^"]*)" in extant field "([^"]*)"$/ do |txt, fld|
+  page.fill_in( fld, with: txt, :visible => :all, :disabled => :all )
 end
 
 Then /^in the field "([^"]*)" they will see "([^"]*)"$/ do |fld, value|
@@ -50,8 +48,16 @@ Then /^the user completes a week$/ do
   week = reaction.next_week
   #get the current week number
 
-  step 'the user will see "Week ' + week.week_num.to_s + '"'
-  step 'the user chooses the "Ganging up on the task" radio button'
-  step 'the user presses "Save and continue"'
-  step 'the database will show a new week ' + week.week_num.to_s + ' "Ganging up on the task" diagnosis from the user'
+  behavior = Behavior.all.to_a.sample
+  step_text = 'the user will see "Week ' + week.week_num.to_s + '"'
+  step step_text
+  step_text = 'the user chooses the "' + behavior.name + '" radio button'
+  step step_text
+  step_text = 'they enter "FUBAR" in extant field "What behavior did you see?"'
+  #Only enter behavior name if 'Other' is selected
+  step step_text if behavior.name == "Other"
+  step_text = 'the user presses "Save and continue"'
+  step step_text
+  step_text = 'the database will show a new week ' + week.week_num.to_s + ' "' + behavior.name + '" diagnosis from the user'
+  step step_text
 end

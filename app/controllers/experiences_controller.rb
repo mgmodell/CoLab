@@ -85,18 +85,23 @@ class ExperiencesController < ApplicationController
   end
 
   def diagnose
-    @diagnosis = Diagnosis.new(diagnosis_params)
-    @diagnosis.reaction =  Reaction.find(@diagnosis.reaction_id)
-    @diagnosis.save
-    week = @diagnosis.reaction.next_week
-    reaction = @diagnosis.reaction
-    @diagnosis = Diagnosis.new( reaction: reaction, week: week )
-    if week.nil?
-      # we just finished the last week
-      render :reaction
+    received_diagnosis = Diagnosis.new(diagnosis_params)
+    received_diagnosis.reaction =  Reaction.find(received_diagnosis.reaction_id)
+    received_diagnosis.save
+    
+    week = received_diagnosis.reaction.next_week
+    if received_diagnosis.errors.any?
+      @diagnosis = received_diagnosis
     else
-      render :next, :flash => { :error => @diagnosis.errors.messages.first }
+      reaction = received_diagnosis.reaction
+      @diagnosis = Diagnosis.new( reaction: reaction, week: week )
     end
+      if week.nil?
+        # we just finished the last week
+        render :reaction
+      else
+        render :next
+      end
 
   end
 
