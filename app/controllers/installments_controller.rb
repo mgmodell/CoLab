@@ -1,5 +1,5 @@
 class InstallmentsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [ :demo_start, :demo_complete ]
+  skip_before_action :authenticate_user!, only: [:demo_start, :demo_complete]
 
   def edit
     assessment_id = params[:assessment_id]
@@ -120,12 +120,10 @@ class InstallmentsController < ApplicationController
     end
   end
 
-  def demo_start
-
-  end
+  def demo_start; end
 
   def demo_complete
-    #TODO: Clean this up.
+    # TODO: Clean this up.
     assessment_id = params[:assessment_id]
 
     project = Assessment.find(assessment_id).project
@@ -154,7 +152,6 @@ class InstallmentsController < ApplicationController
 
       render @project.style.filename
     end
-
   end
 
   private

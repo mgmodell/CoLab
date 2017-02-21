@@ -52,10 +52,9 @@ class Reaction < ActiveRecord::Base
   end
 
   def thorough_completion
-    if !self.behavior.nil? && self.improvements.blank?
-        errors.add(:improvements, 'Reflection on possible improvements is required' )
+    if !behavior.nil? && improvements.blank?
+      errors.add(:improvements, 'Reflection on possible improvements is required')
     end
     errors
   end
-
 end
