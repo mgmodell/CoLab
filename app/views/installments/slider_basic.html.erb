@@ -40,7 +40,7 @@ visit each set of factors prior to submitting your report.</p>
                 <tr>
                     <td width="150">
                       <%= fields_for "report[values_attributes][#{index}]",
-                        @report.value_for_user_factor( member, factor ) do |value_form| %>
+                        @installment.value_for_user_factor( member, factor ) do |value_form| %>
                         <%= value_form.hidden_field :factor_id %>
                         <%= value_form.hidden_field :user_id %>
                         <%= label_tag 'value', member.name %>
@@ -63,7 +63,7 @@ visit each set of factors prior to submitting your report.</p>
     <% end %>
   </div>
 
-  <%= render :partial => "reports/shared/comments", :object => f %>
+  <%= render :partial => "installments/shared/comments", :object => f %>
 
   <%= f.submit "Submit Weekly Installment" %>
 <% end %>

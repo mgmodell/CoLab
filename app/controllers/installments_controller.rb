@@ -122,36 +122,39 @@ class InstallmentsController < ApplicationController
 
   def demo_start; end
 
+  class UserStub
+    attr_accessor :name
+  end
+  class ProjStub
+    attr_accessor :style
+  end
+  class GroupStub
+    attr_accessor :name
+    attr_accessor :users 
+  end
+
   def demo_complete
-    # TODO: Clean this up.
-    assessment_id = params[:assessment_id]
 
-    project = Assessment.find(assessment_id).project
-    if !project.nil? && !project.consent_form.nil? &&
-       ConsentLog.where('user_id = ? AND consent_form_id = ? AND presented = ?',
-                        current_user.id, project.consent_form.id, true).empty?
-      redirect_to controller: 'consent_log', action: 'edit',
-                  consent_form_id: project.consent_form.id
-    else
+    @project = ProjStub.new
+    @project.style = Style.find( 2 )
 
-      group_id = params[:group_id]
-      @group = Group.find(group_id)
-      # validate that current_user is in the
-      user_id = current_user.id
-
-      @installment = Installment.includes(values: [:behaviour, :user], assessment: :project)
-                                .where(assessment_id: assessment_id,
-                                       user_id: user_id,
-                                       group_id: group_id).first
-
-      # generate the values
-      @project = @installment.assessment.project
-      @factors = @installment.assessment.project.factors
-      @project_name = @installment.assessment.project.name
-      @members = @group.users
-
-      render @project.style.filename
+    @group = GroupStub.new
+    user_names =[ "Smith, John" , "Doe, Robert" ,
+                  "Jones, Roberta" , "Kim, Janice"  ]
+    @group.users = [ ]
+    user_names.each do |name|
+      u = UserStub.new
+      u.name = name
+      @group.users << u
     end
+
+    @installment = Installment.new( id: -1, user_id: -1, assessment_id: -1, group_id: -1 )
+
+    @factors = FactorPack.find( 3 ).factors
+
+    @members = @group.users
+
+    render @project.style.filename
   end
 
   private
