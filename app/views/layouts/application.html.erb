@@ -11,30 +11,32 @@
   <div data-role="page" data-theme="a">
     <div data-role="header" data-position="fixed" style="overflow:hidden;" >
       <h1>CoLab</h1>
-      <div data-role="navbar">
-      <ul>
-        <li>
-      <%= link_to "Home", root_path, :class=>"ui-btn ui-mini ui-icon-home ui-btn-inline ui-btn-icon-left" %>
-        </li>
-        <li>
-      <% if !@diagnosis.nil? %>
-          <% if !@diagnosis.week.nil? %>
-          <div id="progressbar" style="width: 50%; margin: auto">
-            <div style="width: <%= @diagnosis.week.percent_complete %>%">
-              <%= @diagnosis.week.percent_complete %>%&nbsp;complete
-            </div>
-          </div>
-          <% end %>
+      <% unless @current_user.nil? %>
+        <div data-role="navbar">
+        <ul>
+          <li>
+            <%= link_to "Home", root_path, :class=>"ui-btn ui-mini ui-icon-home ui-btn-inline ui-btn-icon-left" %>
+          </li>
+          <li>
+            <% if !@diagnosis.nil? %>
+              <% if !@diagnosis.week.nil? %>
+                <div id="progressbar" style="width: 50%; margin: auto">
+                  <div style="width: <%= @diagnosis.week.percent_complete %>%">
+                    <%= @diagnosis.week.percent_complete %>%&nbsp;complete
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </li>
+          <li>
+            <% if !@diagnosis.nil? %>
+              <a href="#instructions" id="instr_btn" 
+                class="ui-btn ui-mini ui-icon-info ui-btn-inline ui-btn-icon-right" >Instructions</a>
+            <% end %>
+          </li>
+        </ul>
+        </div>
       <% end %>
-        </li>
-        <li>
-      <% if !@diagnosis.nil? %>
-          <a href="#instructions" id="instr_btn" 
-            class="ui-btn ui-mini ui-icon-info ui-btn-inline ui-btn-icon-right" >Instructions</a>
-      <% end %>
-        </li>
-      </ul>
-      </div>
     </div>
 
     <div data-role="content">
@@ -92,21 +94,8 @@
         </div>
         <div class="ui-block-b">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true" align="right">
-            <a href="#popupTutorial" data-position-to="window" data-rel="popup" data-role="button" data-theme="d">Tutorial</a>
-            <div data-role="popup" id="popupTutorial" data-overlay-theme="a" data-theme="d"
-              data-tolerance="15,15" class="ui-content">
-              <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete"
-                data-iconpos="notext" class="ui-btn-right">Close</a>
-              <% if current_user.nil? %>
-                <iframe src="https://www.PeerAssess.info/reg_demo" width="655" height="495" seamless></iframe>
-                <p align="center">Tutorial: Registration</p>
-              <% else %>
-                <iframe src="https://www.PeerAssess.info/reporting_demo" width="655" height="495" seamless></iframe>
-                <p align="center">Tutorial: Submitting a Report</p>
-              <% end %>
 
-            </div>
-            <%= link_to "Demonstration", demo_assessment_path %>
+            <%= link_to "Demonstration", demo_start_path, :'data-role' => "button", :"data-theme" => "d" %>
             <%= mail_to "support@peerAssess.info", "Contact Support",
               :subject => "SAPA Support Request", :'data-role' => "button", :"data-theme" => "d"%>
             <%= link_to "About", "https://www.PeerAssess.info", :'data-role' => "button", :"data-theme" => "d" %>

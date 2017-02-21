@@ -1,5 +1,5 @@
 class InstallmentsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [ :demo ]
+  skip_before_action :authenticate_user!, only: [ :demo_start, :demo_complete ]
 
   def edit
     assessment_id = params[:assessment_id]
