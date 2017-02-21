@@ -120,7 +120,11 @@ class InstallmentsController < ApplicationController
     end
   end
 
-  def demo
+  def demo_start
+
+  end
+
+  def demo_complete
     #TODO: Clean this up.
     assessment_id = params[:assessment_id]
 
