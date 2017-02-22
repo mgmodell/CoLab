@@ -19,6 +19,6 @@ class Group < ActiveRecord::Base
   end
 
   def has_user user
-    false unless  users.where( "users.id = ?", user.id ).any?
+    users.where( "users.id = ?", user.id ).any?
   end
 end
