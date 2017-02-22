@@ -38,20 +38,21 @@ visit each set of factors prior to submitting your report.</p>
           <table width="90%">
               <% @members.each do |member| %>
                 <tr>
-                    <td width="150">
+                    <td width="150" class="full-width-slider" >
                       <%= fields_for "report[values_attributes][#{index}]",
-                        @installment.value_for_user_factor( member, factor ) do |value_form| %>
+                        @installment.value_for_user_factor( member, factor )do |value_form| %>
                         <%= value_form.hidden_field :factor_id %>
                         <%= value_form.hidden_field :user_id %>
-                        <%= label_tag 'value', member.name %>
+                        <%= label_tag :value, member.name %>
                     </td>
                     <td>
                       <br>
                       <%= value_form.range_field :value, 
-                        :min => 0, :max => 600, 
-                        :data => {:highlight => true }, :class => "slider",
+                        :min => 0, :max => 6000, 
+                        :data => {:highlight => true }, :class => "slider ui-hidden-accessible",
                   			:factor => factor.name,
-                  			:oldValue => (600 / @members.length ) %>
+                  			:oldValue => (6000 / @members.length ),
+                        :value => (6000/ @members.length) %>
                       <br>
                       <% end %><br>
                       <% index += 1 %>
