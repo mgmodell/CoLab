@@ -4,6 +4,7 @@
   <div class="form-inputs">
     <%= f.association :course %>
     <%= f.input :name %>
+    <%= f.input :active %>
     <%= f.input :start_date, as: :date, html5: true %>
     <%= f.input :end_date, as: :date, html5: true %>
     <%= f.select :start_dow, Date::DAYNAMES.each_with_index.to_a, prompt: true  %>

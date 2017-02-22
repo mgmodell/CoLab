@@ -1,5 +1,5 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy, :add_group]
+  before_action :set_project, only: [:show, :edit, :update, :destroy ]
 
   def show; end
 
@@ -57,9 +57,16 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def add_group
-    group = Group.create(name: params[:group_name], project: @project)
+  def remove_group
+    group = Group.find( params[:group_id] )
+    group.delete unless group.nil?
     redirect_to edit
+  end
+
+  def add_group
+    @project = Project.find( params[ :project_id ] )
+    group = Group.create(name: params[:group_name], project: @project )
+    render :edit
   end
 
   private

@@ -142,6 +142,7 @@ class InstallmentsController < ApplicationController
     @project.style = Style.find(2)
 
     @group = GroupStub.new
+    @group.name = "SuperStars"
     user_names = ['Smith, John', 'Doe, Robert',
                   'Jones, Roberta', 'Kim, Janice']
     @group.users = []

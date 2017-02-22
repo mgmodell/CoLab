@@ -14,4 +14,4 @@
 //= require jquery_ujs
 //= require app_lib
 //= require jquery.mobile
-//= require reports
+//= require installments

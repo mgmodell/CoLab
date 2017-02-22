@@ -30,6 +30,12 @@
 
 <p>
   <strong>Groups:</strong>
+  <%= form_tag add_group_path, method: :get do %>
+    <%= label_tag :group_name, "New group name: " %>
+    <%= text_field_tag :group_name %>
+    <%= hidden_field_tag :project_id, @project.id %>
+    <%= submit_tag "Add!" %>
+  <% end %>
   <ol>
   <% @project.groups.each do |group| %>
     <li><%= group.name %><br></li>
