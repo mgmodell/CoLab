@@ -18,14 +18,15 @@
   <table>
     <tr>
       <th>&nbsp;</th>
-      <% @project.groups.each do |group| %>
+      <% groups = @project.groups %>
+      <% groups.each do |group| %>
       <th><%= group.name %></th>
       <% end %>
     </tr>
       <% @project.course.enrolled_students.each do |user| %>
       <tr>
         <td><%= user.name %></td>
-        <% @project.groups.each do |group| %>
+        <% groups.each do |group| %>
         <td><%= "X" if group.has_user user %></td>
         <% end %>
       </tr>
