@@ -36,16 +36,25 @@
     <%= hidden_field_tag :project_id, @project.id %>
     <%= submit_tag "Add!" %>
   <% end %>
-  <ol>
-  <% @project.groups.each do |group| %>
-    <li><%= group.name %><br></li>
-    <ul>
-    <% group.users.each do |user| %>
-      <li><%= user.name %></li>
-    <% end %>
-    </ul>
+  <% if @project.groups.any? || @project.users.enrolled.any? %>
+  <table>
+    <tr>
+      <th>&nbsp;</th>
+      <% @project.groups.each do |group| %>
+      <th><%= group.name %></th>
+      <% end %>
+    </tr>
+      <% @project.course.enrolled_students.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <% @project.groups.each do |group| %>
+        <td><%= "X" if group.has_user user %></td>
+        <% end %>
+      </tr>
+      <% end %>
+  <table>
   <% end %>
-  </ol>
+
 </p>
 
 

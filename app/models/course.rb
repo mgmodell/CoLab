@@ -57,4 +57,8 @@ class Course < ActiveRecord::Base
       add_student_by_email email
     end
   end
+
+  def enrolled_students
+    rosters.joins( :role ).where( 'roles.name = ? OR roles.name = ?', 'Enrolled Student', 'Invited Student').collect{ |roster| roster.user }
+  end
 end
