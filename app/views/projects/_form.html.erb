@@ -27,7 +27,7 @@
       <tr>
         <td><%= user.name %></td>
         <% groups.each do |group| %>
-        <td><%= "X" if group.has_user user %></td>
+        <td><%= radio_button_tag "user_group_#{user.id}", group.id, group.has_user( user ) %></td>
         <% end %>
       </tr>
       <% end %>

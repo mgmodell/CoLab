@@ -40,6 +40,29 @@ class ProjectsController < ApplicationController
   def update
     respond_to do |format|
       if @project.update(project_params)
+        puts "***************"
+        puts params
+        #TODO: Test this - looks broke
+        groups_users = Hash.new
+        @project.groups.each do |group|
+          groups_users[group] = Array.new
+        end
+        
+        @project.course.enrolled_students.each do |user|
+          puts "user_group_" + user.id.to_s
+          gid = params[ "user_group_" + user.id.to_s ]
+          puts gid
+          unless gid.blank?
+            group = Group.find( gid )
+            puts "Group found? "
+            puts group.name
+            groups_users[group] << user
+          end
+        end
+        groups_users.each do |group,users_array|
+          group.users = users_array
+          group.save
+        end
         format.html { redirect_to @project, notice: 'Project was successfully updated.' }
         format.json { render :show, status: :ok, location: @project }
       else
