@@ -36,7 +36,7 @@
     <%= hidden_field_tag :project_id, @project.id %>
     <%= submit_tag "Add!" %>
   <% end %>
-  <% if @project.groups.any? || @project.users.enrolled.any? %>
+  <% if @project.groups.any? || @project.course.enrolled_students.any? %>
   <table>
     <tr>
       <th>&nbsp;</th>
