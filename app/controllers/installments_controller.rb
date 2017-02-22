@@ -48,41 +48,45 @@ class InstallmentsController < ApplicationController
 
   def new
     assessment_id = params[:assessment_id]
-
-    project = Assessment.find(assessment_id).project
-    if !project.nil? && !project.consent_form.nil? &&
-       ConsentLog.where('user_id = ? AND consent_form_id = ? AND presented = ?',
-                        current_user.id, project.consent_form.id, true).empty?
-      redirect_to controller: 'consent_log', action: 'edit',
-                  consent_form_id: project.consent_form.id
+    if assessment_id == -1
+      redirect_to root_path
     else
 
-      group_id = params[:group_id]
-      @group = Group.find(group_id)
-      # validate that current_user is in the
-      user_id = current_user.id
+      project = Assessment.find(assessment_id).project
+      if !project.nil? && !project.consent_form.nil? &&
+         ConsentLog.where('user_id = ? AND consent_form_id = ? AND presented = ?',
+                          current_user.id, project.consent_form.id, true).empty?
+        redirect_to controller: 'consent_log', action: 'edit',
+                    consent_form_id: project.consent_form.id
+      else
 
-      @installment = Installment.new(assessment_id: assessment_id,
-                                     user_id: user_id,
-                                     inst_date: DateTime.current.in_time_zone(project.course.timezone),
-                                     group_id: group_id)
-      # @installment.user = current_user
+        group_id = params[:group_id]
+        @group = Group.find(group_id)
+        # validate that current_user is in the
+        user_id = current_user.id
 
-      # generate the values
-      @project = @installment.assessment.project
-      @factors = @installment.assessment.project.factors
-      @project_name = @installment.assessment.project.name
-      @members = @group.users
-      # removed proactive build of value objects.
+        @installment = Installment.new(assessment_id: assessment_id,
+                                       user_id: user_id,
+                                       inst_date: DateTime.current.in_time_zone(project.course.timezone),
+                                       group_id: group_id)
+        # @installment.user = current_user
 
-      cell_value = 6000 / @members.size
-      @members.each do |u|
-        @factors.each do |b|
-          @installment.values.build(factor: b, user: u, value: cell_value)
+        # generate the values
+        @project = @installment.assessment.project
+        @factors = @installment.assessment.project.factors
+        @project_name = @installment.assessment.project.name
+        @members = @group.users
+        # removed proactive build of value objects.
+
+        cell_value = 6000 / @members.size
+        @members.each do |u|
+          @factors.each do |b|
+            @installment.values.build(factor: b, user: u, value: cell_value)
+          end
         end
-      end
 
-      render @project.style.filename
+        render @project.style.filename
+      end
     end
   end
 
@@ -130,29 +134,34 @@ class InstallmentsController < ApplicationController
   end
   class GroupStub
     attr_accessor :name
-    attr_accessor :users 
+    attr_accessor :users
   end
 
   def demo_complete
-
     @project = ProjStub.new
-    @project.style = Style.find( 2 )
+    @project.style = Style.find(2)
 
     @group = GroupStub.new
-    user_names =[ "Smith, John" , "Doe, Robert" ,
-                  "Jones, Roberta" , "Kim, Janice"  ]
-    @group.users = [ ]
+    user_names = ['Smith, John', 'Doe, Robert',
+                  'Jones, Roberta', 'Kim, Janice']
+    @group.users = []
     user_names.each do |name|
       u = UserStub.new
       u.name = name
       @group.users << u
     end
 
-    @installment = Installment.new( id: -1, user_id: -1, assessment_id: -1, group_id: -1 )
+    @installment = Installment.new(user_id: -1, assessment_id: -1, group_id: -1)
 
-    @factors = FactorPack.find( 3 ).factors
+    @factors = FactorPack.find(3).factors
 
     @members = @group.users
+    cell_value = 6000 / @members.size
+    @members.each do |_u|
+      @factors.each do |b|
+        @installment.values.build(factor: b, user_id: -1, value: cell_value)
+      end
+    end
 
     render @project.style.filename
   end
