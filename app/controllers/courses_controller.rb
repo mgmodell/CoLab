@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   before_action :set_course, only: [:show, :edit, :update, :destroy, :add_students]
-  before_action :check_admin, except: [:next, :diagnose, :react ]
+  before_action :check_admin, except: [:next, :diagnose, :react, :accept_roster, :decline_roster ]
 
   def show; end
 

@@ -1,0 +1,40 @@
+    <div data-role="footer" data-position="fixed" data-fullscreen="true">
+      <div class="ui-grid-a">
+        <div class="ui-block-a">
+          <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+            <% if !@current_user.nil? %>
+              <%= link_to "Home", root_path,
+                  :data => { :icon => "home", :role => "button" } %>
+              <%= link_to 'Profile', edit_user_registration_path(@current_user),
+                  :data => { :icon => "user", :role => "button" } %>
+            <% end %>
+            <% if !@current_user.nil? %>
+              <% if @current_user.is_instructor? %>
+                <%= link_to "Reports", graphing_path,
+                  :data => { :icon => "bullets", :role => "button" } %>
+                <% if @current_user.is_admin? %>
+                  <%= link_to "Admin", admin_path,
+                  :data => { :icon => "gear", :role => "button" } %>
+                <% end %>
+              <% end %>
+              <%= link_to 'Logout', destroy_user_session_path, :method => :delete,
+                  :data => { :icon => "power", :role => "button" } %>
+            <% end %>
+          </div>
+        </div>
+        <div class="ui-block-b">
+          <div data-role="controlgroup" data-type="horizontal" data-mini="true" align="right">
+
+            <% unless working %>
+            <%= link_to "Demonstration", demo_start_path,
+                  :data => { :icon => "action", :role => "button" } %>
+            <% end %>
+            <%= mail_to "support@peerAssess.info", "Contact Support",
+                  :subject => "SAPA Support Request",
+                  :data => { :icon => "mail", :role => "button" } %>
+            <%= link_to "About", "https://www.PeerAssess.info",
+                  :data => { :icon => "info", :role => "button" } %>
+          </div>
+        </div>
+      </div>
+    </div>
