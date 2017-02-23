@@ -1,5 +1,6 @@
 class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :destroy ]
+  before_action :check_admin, except: [:next, :diagnose, :react ]
 
   def show; end
 
@@ -99,6 +100,10 @@ class ProjectsController < ApplicationController
         @project = p_test
       end
     end
+  end
+
+  def check_admin
+    redirect_to root_path unless @current_user.is_admin? || @current_user.is_instructor?
   end
 
   def project_params

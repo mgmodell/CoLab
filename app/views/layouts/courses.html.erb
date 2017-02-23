@@ -1,29 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>CoLab Reporting</title>
+  <title>CoLab <%= " : " + @title unless @title.nil? %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <p class="notice"><%= notice %></p>
-  <p class="alert"><%= alert %></p>
   <%= stylesheet_link_tag    "application", :media => "all" %>
-  <script language="text/javascript">
-    $(document).bind("mobileinit", function(){
-      $.mobile.ajaxLinksEnabled = false;
-      $.mobile.ajaxFormsEnabled = false;
-      $.mobile.ajaxEnabled = false;
-    });
-
-  </script>
-  <%= javascript_include_tag 'reports_manifest' %>
+  <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
   <div data-role="page" data-theme="a">
-    <div data-role="header" data-position="fixed">
-      <% if !@current_user.nil? %>
-        <%= link_to "Home", root_path, :'data-icon' => "home", :"data-theme" => "d" %>
+    <div data-role="header" data-position="fixed" style="overflow:hidden;" >
+      <h1>CoLab</h1>
+      <% unless @current_user.nil? %>
+        <div data-role="navbar">
+        <ul>
+          <li>
+            <%= link_to "Home", root_path, :class=>"ui-btn ui-mini ui-icon-home ui-btn-inline ui-btn-icon-left" %>
+          </li>
+          <li>
+            <% if !@diagnosis.nil? %>
+              <% if !@diagnosis.week.nil? %>
+                <div id="progressbar" style="width: 50%; margin: auto">
+                  <div style="width: <%= @diagnosis.week.percent_complete %>%">
+                    <%= @diagnosis.week.percent_complete %>%&nbsp;complete
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </li>
+          <li>
+            <% if !@diagnosis.nil? %>
+              <a href="#instructions" id="instr_btn" 
+                class="ui-btn ui-mini ui-icon-info ui-btn-inline ui-btn-icon-right" >Instructions</a>
+            <% end %>
+          </li>
+        </ul>
+        </div>
       <% end %>
-      <h1>Self- and Peer-Assessment Reporting</h1>
     </div>
 
     <div data-role="content">
@@ -36,7 +49,23 @@
 
 <%= yield %>
     </div>
-    <div data-role="footer" data-position="fixed">
+      <% if !@diagnosis.nil? %>
+      <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="instructions">
+      <a href="#instr_btn" class="ui-btn ui-icon-delete" data-rel="close"> Close panel</a>
+      <div data-role="collapsible">
+        <h4>Instructions</h4>
+        <%= render "shared/instructions" %>
+      </div>
+      <div data-role="collapsible">
+        <h4>Behaviors</h4>
+        <%= render "shared/behaviors" %>
+      </div>
+      <div data-role="collapsible">
+        <h4>Scenario</h4>
+        <%= render "shared/scenario" %>
+      </div>
+      <% end %>
+    <div data-role="footer" data-position="fixed" style="overflow:hidden;" >
       <div class="ui-grid-a">
         <div class="ui-block-a">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true">
@@ -49,15 +78,13 @@
                 <div data-role="popup" id="instructor_menu">
                   <ul data-role="listview" data-inset="true" data-theme="d" data-mini="true">
                     <li data-role="divider" data-theme="a">Instructor Functions</li>
-                    <li><%= link_to "Control Panel", cpanel_root_path, 
-                      :"data-theme" => "d", :"data-mini" => true %></li>
                     <li><%= link_to "Reports", graphing_path, 
                       :"data-theme" => "d", :"data-mini" => true %></li>
                   </ul>
                 </div>
                 <a href="#instructor_menu" data-rel="popup" data-role="button" data-theme="d">Instructor</a>
                 <% if @current_user.is_admin? %>
-                  <%= link_to "Admin", admin_root_path, :'data-role' => "button", :"data-theme" => "d" %>
+                  <%= link_to "Admin", admin_path, :'data-role' => "button", :"data-theme" => "d" %>
                 <% end %>
               <% end %>
               <%= link_to 'Logout', destroy_user_session_path, :method => :delete, :'data-role' => "button",
@@ -67,14 +94,8 @@
         </div>
         <div class="ui-block-b">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true" align="right">
-            <a href="#popupTutorial" data-position-to="window" data-rel="popup" data-role="button" data-theme="d">Tutorial</a>
-            <div data-role="popup" id="popupTutorial" data-overlay-theme="a" data-theme="d"
-              data-tolerance="15,15" class="ui-content">
-              <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete"
-                data-iconpos="notext" class="ui-btn-right">Close</a>
-              <iframe src="https://www.PeerAssess.info/reporting_demo" width="655" height="495" seamless></iframe>
-              <p align="center">Tutorial: Submitting a Report</p>
-            </div>
+
+            <%= link_to "Demonstration", demo_start_path, :'data-role' => "button", :"data-theme" => "d" %>
             <%= mail_to "support@peerAssess.info", "Contact Support",
               :subject => "SAPA Support Request", :'data-role' => "button", :"data-theme" => "d"%>
             <%= link_to "About", "https://www.PeerAssess.info", :'data-role' => "button", :"data-theme" => "d" %>

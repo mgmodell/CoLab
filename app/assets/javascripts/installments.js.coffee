@@ -6,6 +6,8 @@
 window.isChanging = false
 window.transactions = []
 $(".slider").live "change", (evt) ->
+  console.log ( "Here!" )
+  console.log ( evt )
   unless window.isChanging
     window.isChanging = true
     

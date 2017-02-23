@@ -1,5 +1,6 @@
 class CoursesController < ApplicationController
   before_action :set_course, only: [:show, :edit, :update, :destroy, :add_students]
+  before_action :check_admin, except: [:next, :diagnose, :react ]
 
   def show; end
 
@@ -111,6 +112,10 @@ class CoursesController < ApplicationController
       @course = @current_user.rosters.instructorships.where(course_id: params[:id]).take.course
       redirect_to :show if @course.nil?
     end
+  end
+
+  def check_admin
+    redirect_to root_path unless @current_user.is_admin? || @current_user.is_instructor?
   end
 
   def course_params
