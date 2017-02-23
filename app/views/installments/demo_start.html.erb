@@ -1,5 +1,5 @@
 <h1>Your Tasks</h1>
-<p>Hello John,
+<p>Hello <%= @current_user.nil? ? "John" : @current_user.first_name %>,
     You've got one task at the moment.
 
    <table>
