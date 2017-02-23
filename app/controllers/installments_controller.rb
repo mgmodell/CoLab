@@ -127,7 +127,12 @@ class InstallmentsController < ApplicationController
   def demo_start; end
 
   class UserStub
-    attr_accessor :name
+    attr_accessor :id
+    attr_accessor :first_name
+    attr_accessor :last_name
+    def name
+      self.last_name + ", " + self.first_name
+    end
   end
   class ProjStub
     attr_accessor :style
@@ -143,24 +148,31 @@ class InstallmentsController < ApplicationController
 
     @group = GroupStub.new
     @group.name = "SuperStars"
-    user_names = ['Smith, John', 'Doe, Robert',
-                  'Jones, Roberta', 'Kim, Janice']
+    user_names = [ ['Doe', 'Robert'],
+                  ['Jones', 'Roberta'], ['Kim', 'Janice']]
     @group.users = []
-    user_names.each do |name|
-      u = UserStub.new
-      u.name = name
+
+    unless @current_user.nil?
+      @group.users << @current_user
+    else
+      @groups.users << User.new( first_name: "John",
+        last_name: "Smith" )
+    end
+
+    user_names.each_with_index do |name|
+      u = User.new( last_name: name[ 0 ], first_name: name[ 1 ] )
       @group.users << u
     end
 
     @installment = Installment.new(user_id: -1, assessment_id: -1, group_id: -1)
 
-    @factors = FactorPack.find(3).factors
+    @factors = FactorPack.find(1).factors
 
     @members = @group.users
     cell_value = 6000 / @members.size
     @members.each do |_u|
       @factors.each do |b|
-        @installment.values.build(factor: b, user_id: -1, value: cell_value)
+        @installment.values.build(factor: b, user: _u, value: cell_value)
       end
     end
 

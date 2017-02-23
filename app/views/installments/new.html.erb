@@ -13,7 +13,7 @@ group `<%= @group.name %>' by indicating how much effort each of the
 the <%= @factors.count %> factors. Please keep in mind that <em>this
 report <u>should only cover this past week</u> and none of the period 
 before</em>.</p>
-<P>Each column below must total 600 and the row at bottom will indicate
+<P>Each column below must total 6000 and the row at bottom will indicate
 the current total. Additionally, the submit button will only be available
 when the totals equal 600.</p>
 </div>
@@ -43,13 +43,14 @@ when the totals equal 600.</p>
         <td><%= member.first_name %> <%= member.last_name %></td>
         <% @factors.each do |factor| %>
           <td>
+            <%= @installment.value_for_user_factor( member, factor ).value %>
             <%= fields_for "installment[values_attributes][#{index}]",
               @installment.value_for_user_factor( member, factor ) do |value_form| %>
               <%= value_form.hidden_field :factor_id %>
               <%= value_form.hidden_field :user_id %>
               <%= value_form.number_field :value, :class => factor.name.delete(' ' ),
                 :factor => factor.name.delete( ' ' ),
-                :autocomplete => "off" %>
+                :autocomplete => "off"  %>
             <% end %>
             <% index = index + 1 %>
           </td>
@@ -57,10 +58,10 @@ when the totals equal 600.</p>
       </tr>
     <% end %>
     <tr>
-      <td>Totals:<br>(must equal 600)</td>
+      <td>Totals:<br>(must equal 6000)</td>
       <% @factors.each do |factor| %>
         <td>
-          <%= text_field_tag ( factor.name.delete( ' ' ) + "_calc" ), 600,
+          <%= text_field_tag ( factor.name.delete( ' ' ) + "_calc" ), 6000,
             :onchange => "alert( 'changed' );", :class => "total", :disabled => true %>
         </td>
       <% end %>
