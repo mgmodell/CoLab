@@ -155,8 +155,7 @@ class InstallmentsController < ApplicationController
     unless @current_user.nil?
       @group.users << @current_user
     else
-      @groups.users << User.new( first_name: "John",
-        last_name: "Smith" )
+      @group.users << User.new( first_name: "John", last_name: "Smith" )
     end
 
     user_names.each_with_index do |name|
