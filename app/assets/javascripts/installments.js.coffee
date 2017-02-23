@@ -5,7 +5,7 @@
 #Code for the basic slider-based page
 window.isChanging = false
 window.transactions = []
-$(".slider").live "change", (evt) ->
+$(".slider").change ->
   console.log ( "Here!" )
   console.log ( evt )
   unless window.isChanging
@@ -73,7 +73,7 @@ updateTotals = ->
   else
     $("input:submit").button "enable"
   $("input:submit").button "refresh"
-$(':input[type="number"]').live "change", (evt) ->
+$(':input[type="number"]').change ->
   behaviour = $(this).attr("behaviour")
   fieldsToUpdate = $("." + behaviour)
   i = 0
@@ -84,6 +84,6 @@ $(':input[type="number"]').live "change", (evt) ->
   $("#" + behaviour + "_calc").val total
   updateTotals()
 
-$(document).live "pageinit", (evt) ->
+$(document).on "pagecreate", ->
   updateTotals( )
   $(".ui-slider-input").hide( )
