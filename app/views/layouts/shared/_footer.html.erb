@@ -2,9 +2,11 @@
       <div class="ui-grid-a">
         <div class="ui-block-a">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true">
-            <% if !@current_user.nil? %>
+            <% if working %>
               <%= link_to "Home", root_path,
                   :data => { :icon => "home", :role => "button" } %>
+            <% end %>
+            <% if !@current_user.nil? %>
               <%= link_to 'Profile', edit_user_registration_path(@current_user),
                   :data => { :icon => "user", :role => "button" } %>
             <% end %>
