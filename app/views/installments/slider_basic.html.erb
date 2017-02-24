@@ -49,7 +49,10 @@ visit each set of factors prior to submitting your report.</p>
                       <br>
                       <%= value_form.range_field :value, 
                         :min => 0, :max => 6000, 
-                        :data => {:highlight => true }, :class => "slider ui-hidden-accessible",
+                        :data => {:highlight => true },
+                        :class => "slider ui-hidden-accessible val_container",
+                        :step => ( @members.length - 1 ) ** 2,
+                        :member => member.hash,
                   			:factor => factor.name,
                   			:oldValue => (6000 / @members.length ) %>
                       <br>
