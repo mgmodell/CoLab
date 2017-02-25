@@ -29,21 +29,32 @@ $ ->
         while index < sliders_array.length
           item = sliders_array[ index++ ]
           if positive && item[ 1 ] > 0
-            newVal = parseInt( item[ 1 ] ) - 1
+            adjusted = parseInt( item[ 1 ] ) - 1
           else if item[ 1 ] < max
-            newVal = parseInt( item[ 1 ] ) + 1
-          item[ 1 ] = newVal
+            adjusted = parseInt( item[ 1 ] ) + 1
+          item[ 1 ] = adjusted
           delta--
 
       index = 0
       while index < sliders_array.length
         item = sliders_array[ index++ ]
-        $(item[0]).attr 'oldvalue', item[1]
         $(item[0]).val(item[1])
-        $(item[0]).slider 'refresh'
 
       $(this).attr 'oldvalue', $(this).val()
-      $(this).slider 'refresh'
+
+      total = 0
+      $('input[factor=\'' + factor + '\']').each (index, item) ->
+        member_alloc = parseInt $(item).val()
+        total += member_alloc
+
+      proportion = max / total 
+
+      #Now, let's update the UI
+      $('input[factor=\'' + factor + '\']').each (index, item) ->
+        adjusted = proportion * $(item).val()
+        $(item).val( adjusted )
+        $(item).attr 'oldvalue', adjusted
+        $(item).slider 'refresh'
             
 
       window.isChanging = false
