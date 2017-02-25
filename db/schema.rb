@@ -324,7 +324,7 @@ ActiveRecord::Schema.define(version: 20170225093259) do
     t.boolean  "admin"
     t.boolean  "welcomed"
     t.datetime "last_emailed"
-    t.integer  "theme_id",               limit: 4
+    t.integer  "theme_id",               limit: 4,   default: 1
   end
 
   add_index "users", ["age_range_id"], name: "index_users_on_age_range_id", using: :btree

@@ -1,5 +1,4 @@
 class User < ActiveRecord::Base
-  before_save :default_values
 
   has_many :emails, inverse_of: :user
 
@@ -24,7 +23,7 @@ class User < ActiveRecord::Base
   has_many :experiences, through: :reactions
   has_many :narratives, through: :experiences
 
-  validates :timezone, presence: true
+  validates :timezone, :theme, presence: true
 
   has_many :assessments, through: :projects
 
@@ -32,11 +31,6 @@ class User < ActiveRecord::Base
   def name
     name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
     name += (!first_name.nil? ? first_name : '[No First Name Given]')
-  end
-
-  # Make sure defaults are set properly
-  def default_values
-    self.theme ||= Theme.find( 1 )
   end
 
   def waiting_consent_logs
