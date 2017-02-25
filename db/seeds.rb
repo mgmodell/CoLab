@@ -109,6 +109,12 @@ GroupProjectCount.create(name: 'some',
 School.create(name: 'Indiana University', description: 'A large, Midwestern university')
 School.create(name: 'SUNY Korea', description: 'The State University of New York, Korea')
 
+Theme.create(name: "MJ", code: "a" )
+Theme.create(name: "Maverick", code: "b" )
+Theme.create(name: "Peppermint", code: "c" )
+Theme.create(name: "Manhattan", code: "d" )
+Theme.create(name: "Carrot", code: "e" )
+
 Style.create(name: 'Default', filename: 'new')
 Style.create(name: 'Sliders (simple)', filename: 'slider_basic')
 Style.create(name: 'buttons (simple)', filename: 'button_basic')

@@ -8,7 +8,7 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <div data-role="page" data-theme="a">
+  <div data-role="page" data-theme="<%= @current_user.nil? ? "a" : @current_user.theme.code %>">
     <div data-role="header" data-position="fixed" style="overflow:hidden;" >
       <h1>CoLab : Edit Projects</h1>
     </div>

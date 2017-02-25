@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  before_save :default_values
+
   has_many :emails, inverse_of: :user
 
   devise :multi_email_authenticatable, :registerable,
@@ -11,6 +13,7 @@ class User < ActiveRecord::Base
   has_many :consent_logs, inverse_of: :user
   has_many :projects, through: :groups
   belongs_to :gender, inverse_of: :users
+  belongs_to :theme
   belongs_to :age_range, inverse_of: :users
   belongs_to :cip_code, inverse_of: :users
   has_many :installments, inverse_of: :user
@@ -29,6 +32,11 @@ class User < ActiveRecord::Base
   def name
     name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
     name += (!first_name.nil? ? first_name : '[No First Name Given]')
+  end
+
+  # Make sure defaults are set properly
+  def default_values
+    self.theme ||= Theme.find( 1 )
   end
 
   def waiting_consent_logs

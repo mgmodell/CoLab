@@ -8,6 +8,12 @@
 *
 */
 
+.footer-ui {
+  filter: Alpha(opacity=95); /* IE8 and earlier */
+  opacity: .95
+
+}
+
 
 /* Swatches */
 

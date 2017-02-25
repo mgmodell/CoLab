@@ -1,4 +1,4 @@
-    <div data-role="footer" data-position="fixed" data-fullscreen="true">
+    <div data-role="footer" data-position="fixed" data-fullscreen="true" data-theme="<%= @current_user.nil? ? "a" : @current_user.theme.code %>">
       <div class="ui-grid-a">
         <div class="ui-block-a">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true">
@@ -28,10 +28,10 @@
           <div data-role="controlgroup" data-type="horizontal" data-mini="true" align="right">
 
             <% unless working %>
-            <%= link_to "Demonstration", demo_start_path,
+            <%= link_to "Demo", demo_start_path,
                   :data => { :icon => "action", :role => "button" } %>
             <% end %>
-            <%= mail_to "support@peerAssess.info", "Contact Support",
+            <%= mail_to "support@peerAssess.info", "Support",
                   :subject => "SAPA Support Request",
                   :data => { :icon => "mail", :role => "button" } %>
             <%= link_to "About", "https://www.PeerAssess.info",
