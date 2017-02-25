@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy ]
-  before_action :check_admin, except: [:next, :diagnose, :react ]
+  before_action :set_project, only: [:show, :edit, :update, :destroy]
+  before_action :check_admin, except: [:next, :diagnose, :react]
 
   def show; end
 
@@ -41,19 +41,19 @@ class ProjectsController < ApplicationController
   def update
     respond_to do |format|
       if @project.update(project_params)
-        groups_users = Hash.new
+        groups_users = {}
         @project.groups.each do |group|
-          groups_users[group] = Array.new
+          groups_users[group] = []
         end
-        
+
         @project.course.enrolled_students.each do |user|
-          gid = params[ "user_group_" + user.id.to_s ]
+          gid = params['user_group_' + user.id.to_s]
           unless gid.blank?
-            group = Group.find( gid )
+            group = Group.find(gid)
             groups_users[group] << user
           end
         end
-        groups_users.each do |group,users_array|
+        groups_users.each do |group, users_array|
           group.users = users_array
           group.save
         end
@@ -75,14 +75,14 @@ class ProjectsController < ApplicationController
   end
 
   def remove_group
-    group = Group.find( params[:group_id] )
+    group = Group.find(params[:group_id])
     group.delete unless group.nil?
     redirect_to edit
   end
 
   def add_group
-    @project = Project.find( params[ :project_id ] )
-    group = Group.create(name: params[:group_name], project: @project )
+    @project = Project.find(params[:project_id])
+    group = Group.create(name: params[:group_name], project: @project)
     render :edit
   end
 

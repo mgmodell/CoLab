@@ -18,7 +18,7 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def has_user user
-    users.where( "users.id = ?", user.id ).any?
+  def has_user(user)
+    users.where('users.id = ?', user.id).any?
   end
 end

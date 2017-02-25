@@ -1,5 +1,4 @@
 class User < ActiveRecord::Base
-
   has_many :emails, inverse_of: :user
 
   devise :multi_email_authenticatable, :registerable,

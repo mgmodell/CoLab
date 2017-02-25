@@ -59,6 +59,6 @@ class Course < ActiveRecord::Base
   end
 
   def enrolled_students
-    rosters.joins( :role ).where( 'roles.name = ? OR roles.name = ?', 'Enrolled Student', 'Invited Student').collect{ |roster| roster.user }
+    rosters.joins(:role).where('roles.name = ? OR roles.name = ?', 'Enrolled Student', 'Invited Student').collect(&:user)
   end
 end

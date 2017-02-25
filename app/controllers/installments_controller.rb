@@ -131,7 +131,7 @@ class InstallmentsController < ApplicationController
     attr_accessor :first_name
     attr_accessor :last_name
     def name
-      self.last_name + ", " + self.first_name
+      last_name + ', ' + first_name
     end
   end
   class ProjStub
@@ -147,19 +147,19 @@ class InstallmentsController < ApplicationController
     @project.style = Style.find(2)
 
     @group = GroupStub.new
-    @group.name = "SuperStars"
-    user_names = [ ['Doe', 'Robert'],
-                  ['Jones', 'Roberta'], ['Kim', 'Janice']]
+    @group.name = 'SuperStars'
+    user_names = [%w(Doe Robert),
+                  %w(Jones Roberta), %w(Kim Janice)]
     @group.users = []
 
-    unless @current_user.nil?
-      @group.users << @current_user
+    if @current_user.nil?
+      @group.users << User.new(first_name: 'John', last_name: 'Smith')
     else
-      @group.users << User.new( first_name: "John", last_name: "Smith" )
+      @group.users << @current_user
     end
 
     user_names.each_with_index do |name|
-      u = User.new( last_name: name[ 0 ], first_name: name[ 1 ] )
+      u = User.new(last_name: name[0], first_name: name[1])
       @group.users << u
     end
 
