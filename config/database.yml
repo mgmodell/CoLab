@@ -49,8 +49,8 @@ test: &test
 #
 production:
   <<: *default
-  database: colab_prod
-  username: colab
+  database: peerasse_colab_prod
+  username: peerasse_colab_p
   password: <%= ENV['COLAB_DATABASE_PASSWORD'] %>
 
 cucumber:
