@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   has_many :projects, through: :groups
   belongs_to :gender, inverse_of: :users
   belongs_to :theme
+  belongs_to :school
   belongs_to :age_range, inverse_of: :users
   belongs_to :cip_code, inverse_of: :users
   has_many :installments, inverse_of: :user

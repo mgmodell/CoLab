@@ -38,7 +38,7 @@ class Course < ActiveRecord::Base
     passwd = (0...8).map { (65 + rand(26)).chr }.join
 
     if user.nil?
-      user = User.create(email: student_email, admin: false, timezone: timezone, password: passwd) if user.nil?
+      user = User.create(email: student_email, admin: false, timezone: timezone, password: passwd, school: self.school) if user.nil?
       user.send_reset_password_instructions
     end
 
