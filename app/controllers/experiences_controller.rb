@@ -73,7 +73,7 @@ class ExperiencesController < ApplicationController
         reaction.instructed = true
         reaction.save
         @experience = experience
-        render :studyInstructions
+        render :instructions
       else
         if week.nil?
           # we just finished the last week
