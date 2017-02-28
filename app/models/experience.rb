@@ -28,7 +28,6 @@ class Experience < ActiveRecord::Base
                            .group(:narrative_id).count
                        end
 
-
     narrative = NilClass
     if narrative_counts.empty?
       narrative = if include_ids.empty?
@@ -37,9 +36,9 @@ class Experience < ActiveRecord::Base
                     Narrative.where('id IN (?)', include_ids).take
                   end
     elsif narrative_counts.count < Narrative.all.count
-      scenario_counts = reactions.joins( :narrative ).group( :scenario_id ).count
-      scenario_counts.to_a.sort!{ |x,y| x[1] <=> y[1]}
-      narrative = Narrative.where( 'scenario_id NOT IN (?)', scenario_counts.collect{ |x| x[0] } ).take
+      scenario_counts = reactions.joins(:narrative).group(:scenario_id).count
+      scenario_counts.to_a.sort! { |x, y| x[1] <=> y[1] }
+      narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.collect { |x| x[0] }).take
     else
       narrative = Narrative.find(narrative_counts.sort { |x, y| x[1] <=> y[1] }[0][0])
     end

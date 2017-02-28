@@ -63,11 +63,11 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { :host => "colab-online.herokuapp.com",
-						:domain => "herokuapp.com" }
+  config.action_mailer.default_url_options = { host: 'colab-online.herokuapp.com',
+                                               domain: 'herokuapp.com' }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :postmark
-  config.action_mailer.sendmail_settings = { :api_token => Rails.application.secrets.postmark_api_token }
+  config.action_mailer.sendmail_settings = { api_token: Rails.application.secrets.postmark_api_token }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

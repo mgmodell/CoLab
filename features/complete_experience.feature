@@ -274,6 +274,7 @@ Feature: Users can complete 'experiences'
     Then there will be 2 reactions from 2 different scenarios recorded
 
   Scenario: 12 students should be able to complete 14 different scenarios
+     Then the user logs out
     Given the course has 8 confirmed users
      Then all users complete the course successfully
 
@@ -281,7 +282,11 @@ Feature: Users can complete 'experiences'
     Then there will be 12 reactions from 3 different scenarios recorded
 
   Scenario: 1 student completes experiences for 2 courses
+     Then the user logs out
     Given the experience started "last month" and ends "tomorrow"
+    Then the user logs in
+    Then user should see 1 open task
+    Then the user should see a successful login message
     Then the user successfully completes an experience
     Given today is "3 days later"
     Given the user enrolls in a new course
@@ -292,8 +297,16 @@ Feature: Users can complete 'experiences'
     Then return to the present
 
   Scenario: 1 student completes 2 experiences for 1 course
+     Then the user logs out
     Given the experience started "last month" and ends "tomorrow"
+    Then the user logs in
+    Then user should see 1 open task
+    Then the user should see a successful login message
     Then the user successfully completes an experience
+    Then the user logs out
+    Then the user logs in
+    Then user should see 1 open task
+    Then the user should see a successful login message
     Given today is "3 days later"
     Given the course has an experience
     Then the user successfully completes an experience

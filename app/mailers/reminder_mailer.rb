@@ -5,7 +5,7 @@ class ReminderMailer < ActionMailer::Base
     @user = user
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
          subject: 'CoLab Assessment reminder email',
-         :tag => 'reminder',
-         :track_opens => 'true' )
+         tag: 'reminder',
+         track_opens: 'true')
   end
 end
