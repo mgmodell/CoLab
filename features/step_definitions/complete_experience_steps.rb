@@ -84,14 +84,14 @@ Then(/^the database will show a reaction for the user with improvements of "([^"
   Reaction.where( user: @user, improvements: improvements ).count.should eq 1
 end
 
-Then(/^there will be (\d+) reactions from (\d+) different scenarios recorded$/) do |reaction_count, scenario_diversity|
-  Reaction.all.count.should eq reaction_count.to_i
-  Reaction.group( :narrative_id ).count.count.should eq scenario_diversity.to_i
-end
-
 Then(/^there will be (\d+) reactions from (\d+) different narratives recorded$/) do |reaction_count, narrative_diversity|
   Reaction.all.count.should eq reaction_count.to_i
-  Reaction.joins( :narrative ).group( :scenario_id ).count.count.should eq narrative_diversity.to_i
+  Reaction.group( :narrative_id ).count.count.should eq narrative_diversity.to_i
+end
+
+Then(/^there will be (\d+) reactions from (\d+) different scenarios recorded$/) do |reaction_count, scenario_diversity|
+  Reaction.all.count.should eq reaction_count.to_i
+  Reaction.joins( :narrative ).group( :scenario_id ).count.count.should eq scenario_diversity.to_i
 end
 
 Then /^the user successfully completes an experience$/ do
@@ -119,3 +119,17 @@ Then /^all users complete the course successfully$/ do
     step 'the user successfully completes an experience'
   end
 end
+
+Given /^the user enrolls in a new course$/  do
+  @course = Course.make
+  @course.save
+  role = Role.enrolled.take
+  r = Roster.create( user: @user, course: @course, role: role )
+end
+
+Given /^the course has an experience$/  do
+  @experience = Experience.make
+  @experience.course = @course
+  @experience.save
+end
+

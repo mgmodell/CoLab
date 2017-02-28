@@ -279,3 +279,24 @@ Feature: Users can complete 'experiences'
 
     Then there will be 12 reactions from 12 different narratives recorded
     Then there will be 12 reactions from 3 different scenarios recorded
+
+  Scenario: 1 student completes experiences for 2 courses
+    Given the experience started "last month" and ends "tomorrow"
+    Then the user successfully completes an experience
+    Given today is "3 days later"
+    Given the user enrolls in a new course
+    Given the course has an experience
+    Then the user successfully completes an experience
+    Then there will be 2 reactions from 2 different narratives recorded
+    Then there will be 2 reactions from 2 different scenarios recorded
+    Then return to the present
+
+  Scenario: 1 student completes 2 experiences for 1 course
+    Given the experience started "last month" and ends "tomorrow"
+    Then the user successfully completes an experience
+    Given today is "3 days later"
+    Given the course has an experience
+    Then the user successfully completes an experience
+    Then there will be 2 reactions from 2 different narratives recorded
+    Then there will be 2 reactions from 2 different scenarios recorded
+    Then return to the present

@@ -20,7 +20,6 @@ class Experience < ActiveRecord::Base
   end
 
   def get_least_reviewed_narrative(include_ids = [])
-    # TODO: make this work
     narrative_counts = if include_ids.empty?
                          reactions.group(:narrative_id).count
                        else
@@ -29,21 +28,18 @@ class Experience < ActiveRecord::Base
                            .group(:narrative_id).count
                        end
 
-    puts "***************"
 
     narrative = NilClass
     if narrative_counts.empty?
-      puts "No narrative counts yet"
       narrative = if include_ids.empty?
                     Narrative.take
                   else
                     Narrative.where('id IN (?)', include_ids).take
                   end
-      puts narrative.member
     elsif narrative_counts.count < Narrative.all.count
-      puts "Some but not all narratives are accounted for"
-      narrative = Narrative.where( 'id NOT IN (?)', narrative_counts.collect{ |x| x[0] } ).take
-      puts narrative.member
+      scenario_counts = reactions.joins( :narrative ).group( :scenario_id ).count
+      scenario_counts.to_a.sort!{ |x,y| x[1] <=> y[1]}
+      narrative = Narrative.where( 'scenario_id NOT IN (?)', scenario_counts.collect{ |x| x[0] } ).take
     else
       narrative = Narrative.find(narrative_counts.sort { |x, y| x[1] <=> y[1] }[0][0])
     end
