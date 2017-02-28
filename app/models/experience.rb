@@ -29,13 +29,21 @@ class Experience < ActiveRecord::Base
                            .group(:narrative_id).count
                        end
 
+    puts "***************"
+
     narrative = NilClass
     if narrative_counts.empty?
+      puts "No narrative counts yet"
       narrative = if include_ids.empty?
                     Narrative.take
                   else
                     Narrative.where('id IN (?)', include_ids).take
                   end
+      puts narrative.member
+    elsif narrative_counts.count < Narrative.all.count
+      puts "Some but not all narratives are accounted for"
+      narrative = Narrative.where( 'id NOT IN (?)', narrative_counts.collect{ |x| x[0] } ).take
+      puts narrative.member
     else
       narrative = Narrative.find(narrative_counts.sort { |x, y| x[1] <=> y[1] }[0][0])
     end

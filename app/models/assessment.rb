@@ -68,6 +68,17 @@ class Assessment < ActiveRecord::Base
     end
   end
 
+  #Here we'll give instructors a little status update at the close of each assessment period
+  def self.inform_instructors
+    Assessment.where( "instructor_updated = false AND end_date < ?", DateTime.current ).each do |assessment|
+      # Retrieve the course instructors
+      # Retrieve names of those who did not complete their assessments
+      # InstructorNewsLetterMailer.inform( instructor ).deliver_later
+      assessment.instructor_updated = true
+      assessment.save
+    end
+  end
+
   # Create an assessment for a project if warranted
   def self.build_new_assessment(project)
     tz = ActiveSupport::TimeZone.new(project.course.timezone)

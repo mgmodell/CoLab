@@ -107,7 +107,12 @@ class ExperiencesController < ApplicationController
   end
 
   def react
-    @reaction = Reaction.new(params[reaction: :id])
+    reaction_id = params[ :reaction ][:id]
+    if reaction_id.blank?
+      @reaction = Reaction.new
+    else
+      @reaction = Reaction.find( reaction_id )
+    end
     respond_to do |format|
       if @reaction.update(reaction_params)
         format.html { redirect_to root_path, notice: 'Your reaction to the experience was recorded' }

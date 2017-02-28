@@ -44,6 +44,8 @@ Feature: Users can complete 'experiences'
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user will see "Week 1"
+    Then there will be 1 reactions from 1 different scenarios recorded
+    Then there will be 1 reactions from 1 different narratives recorded
 
   Scenario: Participant should be able to record Group domination
     Then user should see 1 open task
@@ -155,6 +157,8 @@ Feature: Users can complete 'experiences'
     Then the user will see "Your reaction to the experience was recorded"
     Then user should see 1 open task
     Then the user will see "Completed"
+    Then there will be 1 reactions from 1 different scenarios recorded
+    Then there will be 1 reactions from 1 different narratives recorded
 
   Scenario: Participant cannot complete an experience without improvements
     Then user should see 1 open task
@@ -180,7 +184,7 @@ Feature: Users can complete 'experiences'
     Then the user presses hidden "Submit"
     Then the user will see "Reflection on possible improvements is required"
 
-  Scenario: Participant cannot complete an experience without improvements
+  Scenario: Interleaved users
     Then the user logs out
     Given the user is "the first" user
     When the user logs in
@@ -213,6 +217,7 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user logs out
 
+    #switch back to the original user
     Given the user is "the first" user
     When the user logs in
     Then the user should see a successful login message
@@ -234,12 +239,14 @@ Feature: Users can complete 'experiences'
     Then the user chooses the "Ganging up on the task" radio button
     Then they enter "first comment" in extant field "Your suggestions:"
     Then the user presses hidden "Submit"
-     And the database will show a reaction with "Ganging up on the task" as the behavior
-     And the database will show a reaction with improvements of "first comment"
+     And the database will show a reaction for the user with "Ganging up on the task" as the behavior
+     And the database will show a reaction for the user with improvements of "first comment"
     Then the user will see "Your reaction to the experience was recorded"
     Then user should see 1 open task
     Then the user will see "Completed"
+    Then the user logs out
 
+    #switch to the other user
     Given the user is "the last" user
     When the user logs in
     Then the user should see a successful login message
@@ -257,11 +264,18 @@ Feature: Users can complete 'experiences'
     Then the user chooses the "Group domination" radio button
     Then they enter "second comment" in extant field "Your suggestions:"
     Then the user presses hidden "Submit"
-     And the database will show a reaction with "Group domination on the task" as the behavior
+     And the database will show a reaction with "Group domination" as the behavior
      And the database will show a reaction with improvements of "second comment"
     Then the user will see "Your reaction to the experience was recorded"
     Then user should see 1 open task
     Then the user will see "Completed"
     
-    Then there will be 2 reactions from 2 different scenarios recorded
     Then there will be 2 reactions from 2 different narratives recorded
+    Then there will be 2 reactions from 2 different scenarios recorded
+
+  Scenario: 12 students should be able to complete 14 different scenarios
+    Given the course has 8 confirmed users
+     Then all users complete the course successfully
+
+    Then there will be 12 reactions from 12 different narratives recorded
+    Then there will be 12 reactions from 3 different scenarios recorded

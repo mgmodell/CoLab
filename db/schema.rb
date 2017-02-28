@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170227124407) do
+ActiveRecord::Schema.define(version: 20170228021027) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -22,9 +22,10 @@ ActiveRecord::Schema.define(version: 20170227124407) do
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
     t.datetime "start_date"
-    t.integer  "project_id", limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.integer  "project_id",         limit: 4
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.boolean  "instructor_updated"
   end
 
   add_index "assessments", ["project_id"], name: "index_assessments_on_project_id", using: :btree

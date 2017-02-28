@@ -28,7 +28,7 @@ Then /^the user chooses the "([^"]*)" radio button$/ do |choice|
 end
 
 Then /^the database will show a new week (\d+) "([^"]*)" diagnosis from the user$/ do |week_num, behavior|
-  diagnosis = Diagnosis.last
+  diagnosis = Diagnosis.joins( :reaction ).where( reactions: { user_id: @user.id } ).last
   diagnosis.week.week_num.should eq week_num.to_i
   diagnosis.behavior.name.should eq behavior
 end
@@ -71,18 +71,51 @@ Then(/^the database will show a reaction with "([^"]*)" as the behavior$/) do |b
   reaction.behavior.name.should eq behavior
 end
 
+Then(/^the database will show a reaction for the user with "([^"]*)" as the behavior$/) do |behavior|
+  Reaction.where( user: @user, behavior: Behavior.where( name: behavior ).take ).count.should eq 1
+end
+
 Then(/^the database will show a reaction with improvements of "([^"]*)"$/) do |improvements|
   reaction = Reaction.last
   reaction.improvements.should eq improvements
 end
 
+Then(/^the database will show a reaction for the user with improvements of "([^"]*)"$/) do |improvements|
+  Reaction.where( user: @user, improvements: improvements ).count.should eq 1
+end
+
 Then(/^there will be (\d+) reactions from (\d+) different scenarios recorded$/) do |reaction_count, scenario_diversity|
   Reaction.all.count.should eq reaction_count.to_i
-  Reaction.group( :narrative_id ).count.should eq narrative_diversity.to_i
+  Reaction.group( :narrative_id ).count.count.should eq scenario_diversity.to_i
 end
 
 Then(/^there will be (\d+) reactions from (\d+) different narratives recorded$/) do |reaction_count, narrative_diversity|
   Reaction.all.count.should eq reaction_count.to_i
-  Reaction.joins( narrative: :scenario ).group( scenario: :id ).count.should eq narrative_diversity.to_i
+  Reaction.joins( :narrative ).group( :scenario_id ).count.count.should eq narrative_diversity.to_i
 end
 
+Then /^the user successfully completes an experience$/ do
+  step 'user should see 1 open task'
+  step 'the user clicks the link to the experience'
+  step 'the user sees the experience instructions page'
+  step 'the user presses "Next"'
+  14.times do
+    step 'the user completes a week'
+  end
+  step 'the user will see "Overall Group Behavior"'
+  step 'the user chooses the "Social loafing" radio button'
+  step 'they enter "super comment super" in extant field "Your suggestions:"'
+  step 'the user presses hidden "Submit"'
+  step 'the database will show a reaction for the user with "Social loafing" as the behavior'
+  step 'the database will show a reaction for the user with improvements of "super comment super"'
+  step 'the user will see "Your reaction to the experience was recorded"'
+  step 'user should see 1 open task'
+  step 'the user will see "Completed"'
+end
+
+Then /^all users complete the course successfully$/ do
+  @course.enrolled_students.each do |user|
+    @user = user
+    step 'the user successfully completes an experience'
+  end
+end
