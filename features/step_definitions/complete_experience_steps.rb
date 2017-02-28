@@ -75,3 +75,14 @@ Then(/^the database will show a reaction with improvements of "([^"]*)"$/) do |i
   reaction = Reaction.last
   reaction.improvements.should eq improvements
 end
+
+Then(/^there will be (\d+) reactions from (\d+) different scenarios recorded$/) do |reaction_count, scenario_diversity|
+  Reaction.all.count.should eq reaction_count.to_i
+  Reaction.group( :narrative_id ).count.should eq narrative_diversity.to_i
+end
+
+Then(/^there will be (\d+) reactions from (\d+) different narratives recorded$/) do |reaction_count, narrative_diversity|
+  Reaction.all.count.should eq reaction_count.to_i
+  Reaction.joins( narrative: :scenario ).group( scenario: :id ).count.should eq narrative_diversity.to_i
+end
+

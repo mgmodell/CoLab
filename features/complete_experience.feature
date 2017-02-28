@@ -27,11 +27,11 @@ Feature: Users can complete 'experiences'
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
      And the user presses "Next"
-    Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment " in extant field "Your comments:"
+    Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment" in extant field "Your comments:"
      And the user presses "Save and continue"
     Then the user will see "Week 1"
     Then the user will see "You must select a behavior"
-    Then in the field "Your comments:" they will see "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment "
+    Then in the field "Your comments:" they will see "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
 
   Scenario: instructions are only presented when users first begin an experience
     Then user should see 1 open task
@@ -148,10 +148,10 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
-    Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment " in extant field "Your suggestions:"
+    Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment" in extant field "Your suggestions:"
     Then the user presses hidden "Submit"
      And the database will show a reaction with "Social loafing" as the behavior
-     And the database will show a reaction with improvements of "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment "
+     And the database will show a reaction with improvements of "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
     Then the user will see "Your reaction to the experience was recorded"
     Then user should see 1 open task
     Then the user will see "Completed"
@@ -180,3 +180,88 @@ Feature: Users can complete 'experiences'
     Then the user presses hidden "Submit"
     Then the user will see "Reflection on possible improvements is required"
 
+  Scenario: Participant cannot complete an experience without improvements
+    Then the user logs out
+    Given the user is "the first" user
+    When the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user clicks the link to the experience
+    Then the user sees the experience instructions page
+     And the user presses "Next"
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user logs out
+
+    #switch to another user
+    Given the user is "the last" user
+    When the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user clicks the link to the experience
+    Then the user sees the experience instructions page
+     And the user presses "Next"
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user logs out
+
+    Given the user is "the first" user
+    When the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user clicks the link to the experience
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user will see "Overall Group Behavior"
+    Then the user chooses the "Social loafing" radio button
+    Then the user presses hidden "Submit"
+    Then the user will see "Reflection on possible improvements is required"
+    Then the user will see "Overall Group Behavior"
+    Then the user chooses the "Ganging up on the task" radio button
+    Then they enter "first comment" in extant field "Your suggestions:"
+    Then the user presses hidden "Submit"
+     And the database will show a reaction with "Ganging up on the task" as the behavior
+     And the database will show a reaction with improvements of "first comment"
+    Then the user will see "Your reaction to the experience was recorded"
+    Then user should see 1 open task
+    Then the user will see "Completed"
+
+    Given the user is "the last" user
+    When the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user clicks the link to the experience
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user completes a week
+    Then the user will see "Overall Group Behavior"
+    Then the user chooses the "Group domination" radio button
+    Then they enter "second comment" in extant field "Your suggestions:"
+    Then the user presses hidden "Submit"
+     And the database will show a reaction with "Group domination on the task" as the behavior
+     And the database will show a reaction with improvements of "second comment"
+    Then the user will see "Your reaction to the experience was recorded"
+    Then user should see 1 open task
+    Then the user will see "Completed"
+    
+    Then there will be 2 reactions from 2 different scenarios recorded
+    Then there will be 2 reactions from 2 different narratives recorded
