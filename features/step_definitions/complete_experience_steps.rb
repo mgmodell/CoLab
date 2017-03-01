@@ -72,7 +72,7 @@ Then(/^the database will show a reaction with "([^"]*)" as the behavior$/) do |b
 end
 
 Then(/^the database will show a reaction for the user with "([^"]*)" as the behavior$/) do |behavior|
-  Reaction.where(user: @user, behavior: Behavior.where(name: behavior).take).count.should eq 1
+  Reaction.where(user: @user, behavior: Behavior.where(name: behavior).take).count.should be >= 1
 end
 
 Then(/^the database will show a reaction with improvements of "([^"]*)"$/) do |improvements|
@@ -81,7 +81,7 @@ Then(/^the database will show a reaction with improvements of "([^"]*)"$/) do |i
 end
 
 Then(/^the database will show a reaction for the user with improvements of "([^"]*)"$/) do |improvements|
-  Reaction.where(user: @user, improvements: improvements).count.should eq 1
+  Reaction.where(user: @user, improvements: improvements).count.should be >= 1
 end
 
 Then(/^there will be (\d+) reactions from (\d+) different narratives recorded$/) do |reaction_count, narrative_diversity|
