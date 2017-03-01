@@ -19,15 +19,17 @@ class Reaction < ActiveRecord::Base
       # If we've already been assigned at least one reaction
       if user.reactions.count > 0 && user.reactions.count < Narrative.all.count
         if user.reactions.count < Scenario.all.count
+          puts "some but not all scenarios"
           # If they haven't yet been assigned all possible scenarios
-          available_scenarios = user.reactions.joins( :narrative ).group( :scenario_id ).count
-          possible_narratives = Narrative.where('scenario_id in (?)', available_scenarios.to_a.collect{ |x| x[0] } )
+          assigned_scenarios = user.reactions.joins( :narrative ).group( :scenario_id ).count
+          possible_narratives = Narrative.where('scenario_id NOT IN (?)', assigned_scenarios.to_a.collect{ |x| x[0] } )
           found_narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
 
         else
+          puts "all scenarios but not all narratives"
           # If they've been assigned all scenarios, but not all narratives
           available_scenarios = user.reactions.narratives.group(narratives: :id)
-          possible_narratives = Narrative.where('id in (?)', available_scenarios.to_a)
+          possible_narratives = Narrative.where('id IN (?)', available_scenarios.to_a)
           found_narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
 
         end
@@ -48,6 +50,8 @@ class Reaction < ActiveRecord::Base
         week = Week.where(narrative: previous_diagnosis.reaction.narrative, week_num: previous_diagnosis.week.week_num + 1).first
       end
     end
+    # puts "&&&&&******((((((((((" unless week.nil?
+    # puts week.narrative.id unless week.nil?
     week
   end
 
