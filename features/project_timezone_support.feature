@@ -20,7 +20,6 @@ Feature: Timezone Support
     Then user should see 1 open task
     Then the user should see "Fri, Mar 7 at 12:00am UTC"
     Then the user should see "Sun, Mar 9 at 11:59pm UTC"
-    Then return to the present
     
   Scenario: Checking that open projects reflect my timezone
     Given the user timezone is "Seoul"
@@ -32,7 +31,6 @@ Feature: Timezone Support
     Then user should see 1 open task
     Then the user should see "Fri, Mar 7 at 9:00am KST"
     Then the user should see "Mon, Mar 10 at 8:59am KST"
-    Then return to the present
     
   Scenario: Projects shouldn't open too soon
     Given today is "March 5, 1980 at 8:59am"
@@ -46,7 +44,6 @@ Feature: Timezone Support
     When the system emails stragglers
     When the system emails stragglers
     Then no emails will be sent
-    Then return to the present
     
   Scenario: Projects times should reflect course timezones - New York
     Given the course timezone is "America/New_York"
@@ -63,7 +60,6 @@ Feature: Timezone Support
     When the system emails stragglers
     When the system emails stragglers
     Then an email will be sent to each member of the group
-    Then return to the present
     
   Scenario: Projects times should reflect course timezones - Seoul
     Given the course timezone is "Seoul"
@@ -80,7 +76,6 @@ Feature: Timezone Support
     When the system emails stragglers
     When the system emails stragglers
     Then an email will be sent to each member of the group
-    Then return to the present
     
   Scenario: Projects times should open at exactly the correct time
     Given today is "March 7, 1980 at 9:01am"
@@ -98,7 +93,6 @@ Feature: Timezone Support
     When the system emails stragglers
     When the system emails stragglers
     Then an email will be sent to each member of the group
-    Then return to the present
     
   Scenario: Only one email should be sent out per person per day.
     Given today is "March 7, 1980 at 9:01am"
@@ -125,4 +119,3 @@ Feature: Timezone Support
     Given that the system's set_up_assessments process runs
     When the system emails stragglers
     Then an email will be sent to each member of the group
-    Then return to the present

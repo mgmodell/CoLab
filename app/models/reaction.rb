@@ -29,7 +29,7 @@ class Reaction < ActiveRecord::Base
           puts "all scenarios but not all narratives"
           # If they've been assigned all scenarios, but not all narratives
           available_scenarios = user.reactions.narratives.group(narratives: :id)
-          possible_narratives = Narrative.where('id IN (?)', available_scenarios.to_a)
+          possible_narratives = Narrative.where('id NOT IN (?)', available_scenarios.to_a)
           found_narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
 
         end

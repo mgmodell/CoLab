@@ -303,7 +303,6 @@ Feature: Users can complete 'experiences'
     Then the user successfully completes an experience
     Then there will be 2 reactions from 2 different narratives recorded
     Then there will be 2 reactions from 2 different scenarios recorded
-    Then return to the present
 
   Scenario: 1 student completes 2 experiences for 1 course
      Then the user logs out
@@ -318,7 +317,8 @@ Feature: Users can complete 'experiences'
 
     #Let's start another
     Given the course has an experience
-    Given today is "3 days from now"
+    Given today is "3 days hence"
+    Given the experience "has" been activated
     Given the experience started "yesterday" and ends "tomorrow"
     Then the user logs in
     Then the user should see a successful login message
@@ -326,7 +326,6 @@ Feature: Users can complete 'experiences'
     Then the user successfully completes an experience
     Then there will be 2 reactions from 2 different narratives recorded
     Then there will be 2 reactions from 2 different scenarios recorded
-    Then return to the present
 
   Scenario: 1 student completes 13 experiences
      Then the user logs out
@@ -359,7 +358,6 @@ Feature: Users can complete 'experiences'
     Then the user successfully completes an experience
     Then there will be 2 reactions from 2 different narratives recorded
     Then there will be 2 reactions from 2 different scenarios recorded
-    Then return to the present
 
     #Now for class 4
     Given today is "3 days from now"
@@ -381,6 +379,5 @@ Feature: Users can complete 'experiences'
     Then the user successfully completes an experience
     Then there will be 2 reactions from 2 different narratives recorded
     Then there will be 2 reactions from 2 different scenarios recorded
-    Then return to the present
 
   Scenario: 3 students complete 13 experiences between them

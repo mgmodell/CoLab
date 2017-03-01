@@ -63,3 +63,6 @@ Cucumber::Rails::Database.javascript_strategy = :truncation
 #  load( seed_file )
 #  $dunit = true
 # end
+After do |scenario|
+  travel_back
+end
