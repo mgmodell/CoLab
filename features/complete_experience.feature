@@ -306,7 +306,9 @@ Feature: Users can complete 'experiences'
 
   Scenario: 1 student completes 2 experiences for 1 course
      Then the user logs out
-    Given the experience started "last month" and ends "tomorrow"
+    Given the course started "January 1, 2015" and ends "January 1, 2018"
+    Given today is "March 2, 2017"
+    Given the experience started "March 1, 2017" and ends "March 3, 2017"
     Given the experience "has" been activated
     Given the users "have" had demographics requested
     Then the user logs in
@@ -317,9 +319,9 @@ Feature: Users can complete 'experiences'
 
     #Let's start another
     Given the course has an experience
-    Given today is "3 days hence"
+    Given today is "March 8, 2017"
     Given the experience "has" been activated
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "March 7, 2017" and ends "March 9, 2017"
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
@@ -329,7 +331,9 @@ Feature: Users can complete 'experiences'
 
   Scenario: 1 student completes 13 experiences
      Then the user logs out
-    Given the experience started "last month" and ends "tomorrow"
+    Given the course started "January 1, 2015" and ends "January 1, 2018"
+    Given the experience started "February 1, 2017" and ends "February 4, 2017"
+    Given today is "February 2, 2017"
     Given the experience "has" been activated
     Given the users "have" had demographics requested
     Then the user logs in
@@ -339,27 +343,50 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Now for class 2
-    Given today is "3 days from now"
+    Given today is "February 7, 2017"
     Given the user enrolls in a new course
     Given the course has an experience
     Given the experience "has" been activated
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "February 6, 2017" and ends "February 8, 2017"
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
     #Let's start another experience (3) for this class
+    Given today is "February 10, 2017"
+    Given the course has an experience
+    Given the experience started "February 9, 2017" and ends "February 10, 2017"
+    Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Now for class 4
+    Given today is "February 12, 2017"
+    Given the user enrolls in a new course
+    Given the course has an experience
+    Given the experience "has" been activated
+    Given the experience started "February 12, 2017" and ends "February 15, 2017"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Let's start another experience (5) for this class
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
     Given today is "3 days from now"
     Given the course has an experience
     Then the user successfully completes an experience
-    Then there will be 2 reactions from 2 different narratives recorded
-    Then there will be 2 reactions from 2 different scenarios recorded
+    Then the user logs out
 
-    #Now for class 4
+    #Now for class 6
     Given today is "3 days from now"
     Given the user enrolls in a new course
     Given the course has an experience
@@ -369,15 +396,60 @@ Feature: Users can complete 'experiences'
     Then the user should see a successful login message
     Then user should see 1 open task
     Then the user successfully completes an experience
+    Then the user logs out
 
-    #Let's start another experience for this class
+    #Let's start another experience (7) for this class
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
     Given today is "3 days from now"
     Given the course has an experience
     Then the user successfully completes an experience
-    Then there will be 2 reactions from 2 different narratives recorded
-    Then there will be 2 reactions from 2 different scenarios recorded
+    Then the user logs out
+
+    #Now for class 8
+    Given today is "3 days from now"
+    Given the user enrolls in a new course
+    Given the course has an experience
+    Given the experience "has" been activated
+    Given the experience started "yesterday" and ends "tomorrow"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Let's start another experience (9) for this class
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Given today is "3 days from now"
+    Given the course has an experience
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Now for class 10
+    Given today is "3 days from now"
+    Given the user enrolls in a new course
+    Given the course has an experience
+    Given the experience "has" been activated
+    Given the experience started "yesterday" and ends "tomorrow"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Let's start another experience (11) for this class
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Given today is "3 days from now"
+    Given the course has an experience
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    Then there will be 13 reactions from 12 different narratives recorded
+    Then there will be 13 reactions from 3 different scenarios recorded
 
   Scenario: 3 students complete 13 experiences between them
