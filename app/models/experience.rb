@@ -36,7 +36,7 @@ class Experience < ActiveRecord::Base
                     Narrative.where('id IN (?)', include_ids).take
                   end
     elsif narrative_counts.count < Narrative.all.count
-      
+
       scenario_counts = reactions.joins(:narrative).group(:scenario_id).count
       if scenario_counts.count < Scenario.all.count
         narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.collect { |x| x[0] }).take
