@@ -378,11 +378,13 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Let's start another experience (5) for this class
+    Given today is "February 16, 2017"
+    Given the course has an experience
+    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
-    Given today is "3 days from now"
-    Given the course has an experience
     Then the user successfully completes an experience
     Then the user logs out
 
@@ -399,11 +401,13 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Let's start another experience (7) for this class
+    Given today is "3 days hence"
+    Given the course has an experience
+    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
-    Given today is "3 days from now"
-    Given the course has an experience
     Then the user successfully completes an experience
     Then the user logs out
 
@@ -420,11 +424,13 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Let's start another experience (9) for this class
+    Given today is "3 days hence"
+    Given the course has an experience
+    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
-    Given today is "3 days from now"
-    Given the course has an experience
     Then the user successfully completes an experience
     Then the user logs out
 
@@ -441,11 +447,36 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Let's start another experience (11) for this class
+    Given today is "3 days hence"
+    Given the course has an experience
+    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Now for class 12
     Given today is "3 days from now"
+    Given the user enrolls in a new course
     Given the course has an experience
+    Given the experience "has" been activated
+    Given the experience started "yesterday" and ends "tomorrow"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Let's start another experience (13) for this class
+    Given today is "3 days hence"
+    Given the course has an experience
+    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
     Then the user successfully completes an experience
     Then the user logs out
 

@@ -26,8 +26,9 @@ class Reaction < ActiveRecord::Base
 
         else
           # If they've been assigned all scenarios, but not all narratives
-          available_scenarios = user.reactions.narratives.group(narratives: :id)
-          possible_narratives = Narrative.where('id NOT IN (?)', available_scenarios.to_a)
+          available_scenarios = user.reactions.group( :narrative_id).count
+          #byebug
+          possible_narratives = Narrative.where('id NOT IN (?)', available_scenarios.keys)
           found_narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
 
         end
