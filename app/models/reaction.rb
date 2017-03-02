@@ -27,7 +27,6 @@ class Reaction < ActiveRecord::Base
         else
           # If they've been assigned all scenarios, but not all narratives
           available_scenarios = user.reactions.group( :narrative_id).count
-          #byebug
           possible_narratives = Narrative.where('id NOT IN (?)', available_scenarios.keys)
           found_narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
 
@@ -49,8 +48,6 @@ class Reaction < ActiveRecord::Base
         week = Week.where(narrative: previous_diagnosis.reaction.narrative, week_num: previous_diagnosis.week.week_num + 1).first
       end
     end
-    # puts "&&&&&******((((((((((" unless week.nil?
-    # puts week.narrative.id unless week.nil?
     week
   end
 

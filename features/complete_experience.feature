@@ -483,4 +483,171 @@ Feature: Users can complete 'experiences'
     Then there will be 13 reactions from 12 different narratives recorded
     Then there will be 13 reactions from 3 different scenarios recorded
 
-  Scenario: 3 students complete 13 experiences between them
+  Scenario: More than 2 students complete 13 experiences between them
+     Then the user logs out
+    Given the user is "the first" user
+    Given the course started "January 1, 2015" and ends "January 1, 2018"
+    Given the experience started "February 1, 2017" and ends "February 4, 2017"
+    Given today is "February 2, 2017"
+    Given the experience "has" been activated
+    Given the users "have" had demographics requested
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Now for class 2
+    Given the user is "the last" user
+    Given today is "February 7, 2017"
+    Given the user enrolls in a new course
+    Given the course has an experience
+    Given the experience "has" been activated
+    Given the experience started "February 6, 2017" and ends "February 8, 2017"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Let's start another experience (3) for this class
+    Given the user is "the first" user
+    Given the user enrolls in the course
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Now for class 4
+    Given the user is "the last" user
+    Given today is "February 12, 2017"
+    Given the user enrolls in a new course
+    Given the course has an experience
+    Given the experience "has" been activated
+    Given the experience started "February 12, 2017" and ends "February 15, 2017"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Let's start another experience (5) for this class
+    Given the user is "the first" user
+    Given the user enrolls in the course
+    Given today is "February 16, 2017"
+    Given the course has an experience
+    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Now for class 6
+    Given the user is "a random" user
+    Given today is "3 days from now"
+    Given the user enrolls in a new course
+    Given the course has an experience
+    Given the experience "has" been activated
+    Given the experience started "yesterday" and ends "tomorrow"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Let's start another experience (7) for this class
+    Given the user is "the last" user
+    Given the user enrolls in the course
+    Given today is "3 days hence"
+    Given the course has an experience
+    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Now for class 8
+    Given the user is "the first" user
+    Given today is "3 days from now"
+    Given the user enrolls in a new course
+    Given the course has an experience
+    Given the experience "has" been activated
+    Given the experience started "yesterday" and ends "tomorrow"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Let's start another experience (9) for this class
+    Given the user is "a random" user
+    Given the user enrolls in the course
+    Given today is "3 days hence"
+    Given the course has an experience
+    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Now for class 10
+    Given the user is "the last" user
+    Given today is "3 days from now"
+    Given the user enrolls in a new course
+    Given the course has an experience
+    Given the experience "has" been activated
+    Given the experience started "yesterday" and ends "tomorrow"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Let's start another experience (11) for this class
+    Given the user is "the first" user
+    Given the user enrolls in the course
+    Given today is "3 days hence"
+    Given the course has an experience
+    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Now for class 12
+    Given the user is "the last" user
+    Given today is "3 days from now"
+    Given the user enrolls in a new course
+    Given the course has an experience
+    Given the experience "has" been activated
+    Given the experience started "yesterday" and ends "tomorrow"
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    #Let's start another experience (13) for this class
+    Given the user is "a random" user
+    Given the user enrolls in the course
+    Given today is "3 days hence"
+    Given the course has an experience
+    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience "has" been activated
+    Then the user logs in
+    Then the user should see a successful login message
+    Then user should see 1 open task
+    Then the user successfully completes an experience
+    Then the user logs out
+
+    Then there will be 13 reactions from 3 different scenarios recorded
+    Then no user will have reacted to the same narrative more than once
