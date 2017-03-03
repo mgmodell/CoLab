@@ -34,6 +34,7 @@ gem 'paperclip', '~> 5.0.0'
 gem 'postmark-rails', '>= 0.15.0'
 gem 'rails_12factor', group: :production
 gem 'simple_form'
+gem 'chronic'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -47,7 +48,6 @@ gem 'simple_form'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
-  gem 'chronic'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'forgery'

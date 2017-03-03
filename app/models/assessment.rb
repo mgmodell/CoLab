@@ -1,3 +1,5 @@
+require 'chronic'
+
 class Assessment < ActiveRecord::Base
   belongs_to :project, inverse_of: :assessments
   validates :end_date, :start_date, presence: true
