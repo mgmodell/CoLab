@@ -36,7 +36,7 @@ class Project < ActiveRecord::Base
   end
 
   def enrolled_user_rosters
-    rosters.enrolled
+    course.rosters.enrolled
   end
 
   def number_of_weeks
