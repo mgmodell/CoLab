@@ -96,12 +96,11 @@ end
 
 Then /^no user will have reacted to the same narrative more than once$/ do
   User.all.each do |user|
-    reaction_counts = user.reactions.group( "narrative_id" ).count
+    reaction_counts = user.reactions.group('narrative_id').count
     reaction_counts.values.each do |val|
       val.should <= 1
     end
   end
-
 end
 
 Then /^the user successfully completes an experience$/ do
@@ -146,8 +145,7 @@ Given /^the course has an experience$/ do
   @experience.save
 end
 
-Given /^the user enrolls in the course$/  do
+Given /^the user enrolls in the course$/ do
   role = Role.enrolled.take
   r = Roster.create(user: @user, course: @course, role: role)
 end
-
