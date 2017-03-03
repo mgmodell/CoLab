@@ -24,7 +24,7 @@ visit each set of factors prior to submitting your report.</p>
    else
      url_params = { :action => "update", :id => @installment.id }
    end %>
-<%= form_for @installment, :url => url_params do |f| %>
+<%= form_for @installment, :url => url_params, html: {novalidate: true} do |f| %>
   <%= f.hidden_field :inst_date %>
   <%= f.hidden_field :assessment_id %>
   <%= f.hidden_field :user_id %>
