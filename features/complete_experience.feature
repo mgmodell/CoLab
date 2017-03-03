@@ -651,3 +651,4 @@ Feature: Users can complete 'experiences'
 
     Then there will be 13 reactions from 3 different scenarios recorded
     Then no user will have reacted to the same narrative more than once
+    Then there will be 13 reactions from 12 different narratives recorded
