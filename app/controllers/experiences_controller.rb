@@ -22,6 +22,8 @@ class ExperiencesController < ApplicationController
     @experience = Experience.new
     @experience.course_id = params[:course_id]
     @experience.course = Course.find(params[:course_id])
+    @experience.start_date = @experience.course.start_date
+    @experience.end_date = @experience.course.end_date
   end
 
   def create

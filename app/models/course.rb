@@ -1,12 +1,12 @@
 class Course < ActiveRecord::Base
   belongs_to :school, inverse_of: :courses
-  has_many :projects, inverse_of: :course
-  has_many :rosters, inverse_of: :course
+  has_many :projects, inverse_of: :course, :dependent => :delete_all
+  has_many :rosters, inverse_of: :course, :dependent => :delete_all
   has_many :users, through: :rosters
 
-  has_many :experiences, inverse_of: :course
+  has_many :experiences, inverse_of: :course, :dependent => :destroy
 
-  validates :timezone, :start_date, :end_date, presence: true
+  validates :timezone, :school, :start_date, :end_date, presence: true
   validate :date_sanity
 
   after_validation :timezone_adjust

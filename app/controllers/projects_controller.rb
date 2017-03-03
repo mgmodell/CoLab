@@ -22,6 +22,8 @@ class ProjectsController < ApplicationController
   def new
     @project = Project.new
     @project.course = Course.find params[:course_id]
+    @project.start_date = @project.course.start_date
+    @project.end_date = @project.course.end_date
   end
 
   def create
