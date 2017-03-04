@@ -39,7 +39,6 @@ class Course < ActiveRecord::Base
 
     if user.nil?
       user = User.create(email: student_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
-      user.send_reset_password_instructions
     end
 
     existing_roster = Roster.where(course: self, user: user).take

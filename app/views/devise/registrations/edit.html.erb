@@ -20,8 +20,6 @@
       <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
     <% end %>
 
-    <%= f.input :password, autocomplete: "off", hint: "leave it blank if you don't want to change it", required: false %>
-    <%= f.input :password_confirmation, required: false %>
     <%= f.association :gender, prompt: "Select a gender" %>
     <%= f.association :age_range, label: "How old are you?", prompt: "Select an age range" %>
     <%= f.input :country, as: :country, label: "Where are you from?", prompt: "Select a country",

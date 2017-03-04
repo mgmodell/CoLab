@@ -15,8 +15,6 @@
     <%= f.input :last_name, required: true, autofocus: true %>
     <%= f.association :school, label: "Which school are you currently at?", prompt: "Select a School" %>
     </br>
-    <%= f.input :password, required: true, hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length) %>
-    <%= f.input :password_confirmation, required: true %>
 
     <%= f.association :gender, prompt: "Select a gender" %>
     <%= f.association :age_range, label: "How old are you?", prompt: "Select an age range" %>
