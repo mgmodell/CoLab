@@ -1,5 +1,5 @@
 class ReminderMailer < ActionMailer::Base
-  default from: 'support@peerassess.info'
+  default from: 'support@CoLab.online'
 
   def remind(user)
     @user = user
