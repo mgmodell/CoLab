@@ -275,6 +275,7 @@ Feature: Users can complete 'experiences'
 
   Scenario: 12 students should be able to complete 14 different scenarios
      Then the user logs out
+    #With 8 new students, we will have 12
     Given the course has 8 confirmed users
     Given the users "have" had demographics requested
      Then all users complete the course successfully
@@ -651,4 +652,35 @@ Feature: Users can complete 'experiences'
 
     Then there will be 13 reactions from 3 different scenarios recorded
     Then no user will have reacted to the same narrative more than once
-    Then there will be 13 reactions from 12 different narratives recorded
+
+  Scenario: More than 2 students complete 48 experiences between them
+     Then the user logs out
+    #With 44 new students, we will have 48
+    Given the course has 44 confirmed users
+    Given the users "have" had demographics requested
+     Then all users complete the course successfully
+
+    Then there will be 48 reactions from 12 different narratives recorded
+    Then there will be 48 reactions from 3 different scenarios recorded
+
+  Scenario: More than 2 students complete 96 experiences between 3 classes
+     Then the user logs out
+    #With 8 new students, we will have 12
+    Given the course has 28 confirmed users
+    Given the users "have" had demographics requested
+     Then all users complete the course successfully
+
+    Given there is a course with an experience
+    Given the experience "has" been activated
+    Given the course has 32 confirmed users
+    Given the users "have" had demographics requested
+     Then all users complete the course successfully
+
+    Given there is a course with an experience
+    Given the experience "has" been activated
+    Given the course has 32 confirmed users
+    Given the users "have" had demographics requested
+     Then all users complete the course successfully
+
+    Then there will be 96 reactions from 12 different narratives recorded
+    Then there will be 96 reactions from 3 different scenarios recorded

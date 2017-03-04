@@ -77,13 +77,13 @@ class User < ActiveRecord::Base
 
   def waiting_tasks
     waiting_tasks = assessments.still_open.to_a
-    available_rosters = rosters.joins(:role )
+    available_rosters = rosters.joins(:role)
                                .where("( roles.name = 'Enrolled Student' OR roles.name = 'Invited Student' )")
 
     available_rosters.each do |roster|
-      waiting_tasks.concat roster.course.experiences.
-        where('experiences.end_date >= ? AND experiences.start_date <= ? AND experiences.active = ?', 
-              DateTime.current, DateTime.current, true).to_a
+      waiting_tasks.concat roster.course.experiences
+        .where('experiences.end_date >= ? AND experiences.start_date <= ? AND experiences.active = ?',
+               DateTime.current, DateTime.current, true).to_a
     end
 
     waiting_tasks.sort_by(&:end_date)

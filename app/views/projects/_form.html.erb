@@ -14,7 +14,7 @@
     <%= f.input :description, as: :text %>
   </div>
   <h2>Group memberships</h2>
-  <% if @project.groups.any? || @project.users.enrolled.any? %>
+  <% if @project.groups.any? || @project.enrolled_user_rosters.any? %>
   <table>
     <tr>
       <th>&nbsp;</th>

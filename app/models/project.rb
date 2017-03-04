@@ -35,6 +35,10 @@ class Project < ActiveRecord::Base
     !consent_form.nil?
   end
 
+  def enrolled_user_rosters
+    course.rosters.enrolled
+  end
+
   def number_of_weeks
     (end_date - start_date).divmod(7)[0]
   end

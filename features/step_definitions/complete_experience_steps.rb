@@ -87,21 +87,22 @@ end
 Then(/^there will be (\d+) reactions from (\d+) different narratives recorded$/) do |reaction_count, narrative_diversity|
   Reaction.all.count.should eq reaction_count.to_i
   Reaction.group(:narrative_id).count.count.should eq narrative_diversity.to_i
+  # puts Reaction.group( :narrative_id ).count
 end
 
 Then(/^there will be (\d+) reactions from (\d+) different scenarios recorded$/) do |reaction_count, scenario_diversity|
   Reaction.all.count.should eq reaction_count.to_i
   Reaction.joins(:narrative).group(:scenario_id).count.count.should eq scenario_diversity.to_i
+  # puts Reaction.joins( :narrative ).group( :scenario_id ).count
 end
 
 Then /^no user will have reacted to the same narrative more than once$/ do
   User.all.each do |user|
-    reaction_counts = user.reactions.group( "narrative_id" ).count
+    reaction_counts = user.reactions.group('narrative_id').count
     reaction_counts.values.each do |val|
       val.should <= 1
     end
   end
-
 end
 
 Then /^the user successfully completes an experience$/ do
@@ -146,8 +147,7 @@ Given /^the course has an experience$/ do
   @experience.save
 end
 
-Given /^the user enrolls in the course$/  do
+Given /^the user enrolls in the course$/ do
   role = Role.enrolled.take
   r = Roster.create(user: @user, course: @course, role: role)
 end
-

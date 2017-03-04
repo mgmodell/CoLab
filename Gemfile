@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+ruby '2.3.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5'
@@ -22,7 +23,7 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
+gem 'activerecord-session_store'
 gem 'bourbon'
 gem 'country_select'
 gem 'devise'
@@ -34,6 +35,7 @@ gem 'paperclip', '~> 5.0.0'
 gem 'postmark-rails', '>= 0.15.0'
 gem 'rails_12factor', group: :production
 gem 'simple_form'
+gem 'chronic'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -47,7 +49,6 @@ gem 'simple_form'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
-  gem 'chronic'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'forgery'
