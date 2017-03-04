@@ -30,15 +30,17 @@ class Assessment < ActiveRecord::Base
 
   # Utility method for populating Assessments when they are needed
   def self.set_up_assessments
-    init_date = DateTime.current.beginning_of_day
+    # TODO: Add timezone support here
+    init_date = Date.today.beginning_of_day
     init_day = init_date.wday
     logger.debug "\n\t**Populating Assessments**"
-    Project.where('active = true AND start_date <= ? AND end_date >= ?',
-                  init_date, init_date.end_of_day).each do |assessment|
+    Project.where( 'active = true AND start_date <= ? AND end_date >= ?',
+                  init_date, init_date.end_of_day).each do |project|
 
-      build_new_assessment assessment.project if assessment.is_available?
+      build_new_assessment project if project.is_available?
     end
   end
+
 
   # Send out email reminders to those who have yet to complete their waiting assessments
   def self.send_reminder_emails
@@ -74,17 +76,17 @@ class Assessment < ActiveRecord::Base
   def self.inform_instructors
     Assessment.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |assessment|
       completion_hash = {}
-      self.installments.each do |inst|
+      assessment.installments.each do |inst|
         completion_hash[ inst.user ] = inst.inst_date.to_s
       end
 
-      self.project.course.enrolled_students.each do |student|
+      assessment.project.course.enrolled_students.each do |student|
         completion_hash[ student ] = "Incomplete" unless completion_hash[ student ].present?
       end
       # Retrieve the course instructors
       # Retrieve names of those who did not complete their assessments
       # InstructorNewsLetterMailer.inform( instructor ).deliver_later
-      self.project.course.instructors.each do |instructor|
+      assessment.project.course.instructors.each do |instructor|
         AdministrativeMailer.summary_report( instructor, completion_hash ).deliver_later
 
       end
@@ -118,7 +120,6 @@ class Assessment < ActiveRecord::Base
     end
     assessment.end_date = assessment.end_date.end_of_day
 
-    # byebug
     existing_assessment_count = project.assessments.where(
       'start_date = ? AND end_date = ?',
       (assessment.start_date - tz.utc_offset).change(usec: 0),
@@ -128,19 +129,6 @@ class Assessment < ActiveRecord::Base
     if existing_assessment_count == 0
       assessment.project = project
       assessment.save
-    end
-  end
-
-  def self.set_up_assessments
-    # TODO: Add timezone support here
-    init_date = Date.today.beginning_of_day
-    init_day = init_date.wday
-    Project.where(
-      'active = true AND start_date <= ? AND end_date >= ?',
-      init_date, init_date.end_of_day
-    ).each do |project|
-
-      build_new_assessment project if project.is_available?
     end
   end
 
