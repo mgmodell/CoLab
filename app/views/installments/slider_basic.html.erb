@@ -39,7 +39,7 @@ visit each set of factors prior to submitting your report.</p>
               <% @members.each do |member| %>
                 <tr>
                     <td width="150" class="full-width-slider" >
-                      <%= fields_for "installment[values][#{index}]",
+                      <%= fields_for "installment[values_attributes][]",
                         @installment.value_for_user_factor( member, factor )do |value_form| %>
                         <%= value_form.hidden_field :factor_id %>
                         <%= value_form.hidden_field :user_id %>

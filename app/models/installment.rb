@@ -4,6 +4,7 @@ class Installment < ActiveRecord::Base
   belongs_to :group, inverse_of: :installments
 
   has_many :values, inverse_of: :installment, dependent: :delete_all
+  accepts_nested_attributes_for :values
 
   validates :inst_date, :assessment_id, :user_id, presence: true
   validate :check_dates

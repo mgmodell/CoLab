@@ -34,7 +34,7 @@ class InstallmentsController < ApplicationController
 
   def update
     @installment = Installment.find(params[:id])
-    if @installment.update_attributes(params[:installment])
+    if @installment.update_attributes(i_params)
       redirect_to root_url, notice: 'Installment successfully updated'
     else
       @group = Group.find(@installment.group)
@@ -91,11 +91,7 @@ class InstallmentsController < ApplicationController
   end
 
   def create
-    puts "********************"
-    byebug
-    @installment = Installment.new(i_params) # OLD code: params[:installment] )
-    puts "====================="
-    puts @installment.values.count
+    @installment = Installment.new(i_params)
     redirected = false
 
     # I need to figure out these redirects properly
@@ -185,6 +181,8 @@ class InstallmentsController < ApplicationController
   private
 
   def i_params
-    params. require(:installment).permit(:inst_date, :comments, :group_id, :user_id, :assessment_id, :group_id, values: [:value, :user_id, :factor_id])
+    params.require(:installment).permit(:inst_date, :comments, :group_id, :user_id, :assessment_id, :group_id, 
+        values_attributes: [ :factor_id, :user_id, :value ] )
   end
+
 end
