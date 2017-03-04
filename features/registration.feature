@@ -40,7 +40,7 @@ Feature: User registration
     Given a course
     Then the users are added to the course by email address
     Then the course has 5 "Invited Student" users
-    Then 5 emails will have been sent
+    Then 0 emails will have been sent
 
   Scenario: 4 existing users are added to a course
     Given 4 users
@@ -57,7 +57,7 @@ Feature: User registration
     Given 2 users
     Then the users are added to the course by email address
     Then the course has 6 "Invited Student" users
-    Then 2 emails will have been sent
+    Then 0 emails will have been sent
 
   Scenario: 2 students are added to a course twice
     Given 2 users
@@ -65,7 +65,7 @@ Feature: User registration
     Then the users are added to the course by email address
     Then the users are added to the course by email address
     Then the course has 2 "Invited Student" users
-    Then 2 emails will have been sent
+    Then 0 emails will have been sent
 
   Scenario: A student accepts enrollment in a course
     Given 5 users
