@@ -17,7 +17,7 @@ class InstallmentsController < ApplicationController
       # validate that current_user is in the
       user_id = current_user.id
 
-      @installment = Installment.includes(values: [:behaviour, :user], assessment: :project)
+      @installment = Installment.includes(values: [:factor, :user], assessment: :project)
                                 .where(assessment_id: assessment_id,
                                        user_id: user_id,
                                        group_id: group_id).first
@@ -91,7 +91,11 @@ class InstallmentsController < ApplicationController
   end
 
   def create
+    puts "********************"
+    byebug
     @installment = Installment.new(i_params) # OLD code: params[:installment] )
+    puts "====================="
+    puts @installment.values.count
     redirected = false
 
     # I need to figure out these redirects properly
@@ -181,6 +185,6 @@ class InstallmentsController < ApplicationController
   private
 
   def i_params
-    params. require(:installment).permit(:inst_date, :comments, :group_id, :user_id, :assessment_id, :group_id, values: [:value, :factor_id])
+    params. require(:installment).permit(:inst_date, :comments, :group_id, :user_id, :assessment_id, :group_id, values: [:value, :user_id, :factor_id])
   end
 end
