@@ -64,7 +64,7 @@ class Assessment < ActiveRecord::Base
 
     uniqued.keys.each do |u|
       next if !u.last_emailed.nil? && u.last_emailed.today?
-      ReminderMailer.remind(u).deliver_later
+      AdministrativeMailer.remind(u).deliver_later
       u.last_emailed = DateTime.current
       u.save
     end
@@ -73,9 +73,22 @@ class Assessment < ActiveRecord::Base
   # Here we'll give instructors a little status update at the close of each assessment period
   def self.inform_instructors
     Assessment.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |assessment|
+      completion_hash = {}
+      self.installments.each do |inst|
+        completion_hash[ inst.user ] = inst.inst_date.to_s
+      end
+
+      self.project.course.enrolled_students.each do |student|
+        completion_hash[ student ] = "Incomplete" unless completion_hash[ student ].present?
+      end
       # Retrieve the course instructors
       # Retrieve names of those who did not complete their assessments
       # InstructorNewsLetterMailer.inform( instructor ).deliver_later
+      self.project.course.instructors.each do |instructor|
+        AdministrativeMailer.summary_report( instructor, completion_hash ).deliver_later
+
+      end
+
       assessment.instructor_updated = true
       assessment.save
     end
