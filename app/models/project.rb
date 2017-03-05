@@ -108,8 +108,8 @@ class Project < ActiveRecord::Base
   end
 
   def activation_status
-    if active_was && active
-      errors.add(:active, 'You cannot make changes to an active project. Please deactivate it first.')
+    if active_was && active && self.changed?
+      self.active = false
     elsif !active_was && active
 
       get_user_appearance_counts.each do |user_id, count|

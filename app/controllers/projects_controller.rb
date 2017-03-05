@@ -31,7 +31,9 @@ class ProjectsController < ApplicationController
     @project.course = Course.find(@project.course_id)
     respond_to do |format|
       if @project.save
-        format.html { redirect_to @project, notice: 'Project was successfully created.' }
+        notice = "Project was successfully created."
+        notice += "Don't forget to activate it!" if !@project.active
+        format.html { redirect_to @project, notice: notice }
         format.json { render :show, status: :created, location: @project }
       else
         format.html { render :new }
@@ -59,7 +61,9 @@ class ProjectsController < ApplicationController
           group.users = users_array
           group.save
         end
-        format.html { redirect_to @project, notice: 'Project was successfully updated.' }
+        notice = "Project was successfully updated."
+        notice += "Don't forget to activate it when you're done editing it." if !@project.active
+        format.html { redirect_to @project, notice: notice }
         format.json { render :show, status: :ok, location: @project }
       else
         format.html { render :edit }
@@ -69,9 +73,10 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
+    @course = @project.course
     @project.destroy
     respond_to do |format|
-      format.html { redirect_to projects_url, notice: 'Project was successfully destroyed.' }
+      format.html { redirect_to @course, notice: 'Project was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -97,7 +102,8 @@ class ProjectsController < ApplicationController
       @project = p_test
     else
       if p_test.course.rosters.instructorships.where(user: @current_user).nil?
-        redirect_to :show if @project.nil?
+        @course = @project.course
+        redirect_to @course if @project.nil?
       else
         @project = p_test
       end

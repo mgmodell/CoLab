@@ -53,9 +53,10 @@ class ExperiencesController < ApplicationController
   end
 
   def destroy
+    @course = @experience.course
     @experience.destroy
     respond_to do |format|
-      format.html { redirect_to experiences_url, notice: 'Experience was successfully destroyed.' }
+      format.html { redirect_to @course, notice: 'Experience was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -134,8 +135,9 @@ class ExperiencesController < ApplicationController
     if @current_user.is_admin?
       @experience = e_test
     else
+      @course = @experience.course
       if e_test.course.rosters.instructorships.where(user: @current_user).nil?
-        redirect_to :show if @experience.nil?
+        redirect_to @course if @experience.nil?
       else
         @experience = e_test
       end
