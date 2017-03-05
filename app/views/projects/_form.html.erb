@@ -5,8 +5,8 @@
     <%= f.association :course %>
     <%= f.input :name %>
     <%= f.input :active %>
-    <%= f.input :start_date %>
-    <%= f.input :end_date, as: :datetime %>
+    <%= f.input :start_date, as: :date_time_local %>
+    <%= f.input :end_date, as: :date_time_local %>
     <%= f.select :start_dow, Date::DAYNAMES.each_with_index.to_a, prompt: true  %>
     <%= f.select :end_dow, Date::DAYNAMES.each_with_index.to_a, prompt: true  %>
     <%= f.association :factor_pack %>

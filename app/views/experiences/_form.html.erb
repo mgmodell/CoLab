@@ -5,8 +5,8 @@
     <%= f.association :course %>
     <%= f.input :name %>
     <%= f.input :active %>
-    <%= f.input :start_date %>
-    <%= f.input :end_date, as: :datetime %>
+    <%= f.input :start_date, as: :date_time_local %>
+    <%= f.input :end_date, as: :date_time_local %>
   </div>
 
   <div class="form-actions">

@@ -6,8 +6,8 @@
     <%= f.input :number %>
     <%= f.association :school %>
     <%= f.time_zone_select :timezone %>
-    <%= f.input :start_date, as: :datetime %>
-    <%= f.input :end_date, as: :datetime %>
+    <%= f.input :start_date, as: :date_time_local %>
+    <%= f.input :end_date, as: :date_time_local %>
     <%= f.input :description, as: :text %>
   </div>
   <h2>Course instructors</h2>
