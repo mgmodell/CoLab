@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 class Course < ActiveRecord::Base
   belongs_to :school, inverse_of: :courses
-  has_many :projects, inverse_of: :course, dependent: :delete_all
-  has_many :rosters, inverse_of: :course, dependent: :delete_all
+  has_many :projects, inverse_of: :course, dependent: :destroy
+  has_many :rosters, inverse_of: :course, dependent: :destroy
   has_many :users, through: :rosters
 
   has_many :experiences, inverse_of: :course, dependent: :destroy

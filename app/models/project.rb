@@ -4,8 +4,8 @@ class Project < ActiveRecord::Base
 
   belongs_to :course, inverse_of: :projects
   belongs_to :style, inverse_of: :projects
-  has_many :groups, inverse_of: :project
-  has_many :assessments, inverse_of: :project
+  has_many :groups, inverse_of: :project, dependent: :destroy
+  has_many :assessments, inverse_of: :project, dependent: :destroy
   belongs_to :course, inverse_of: :projects
   belongs_to :consent_form, inverse_of: :projects
   belongs_to :factor_pack, inverse_of: :projects
