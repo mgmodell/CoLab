@@ -2,7 +2,12 @@
 
 <p>
   <strong>Name:</strong>
-  <%= @experience.name %> (<%= @experience.active ? "Active" : "Inactive" %>)
+  <%= @experience.name %> 
+  (<% if @experience.active %>
+  Active
+  <% else %>
+  <span class="error">Inactive</span>
+  <% end %>)
 </p>
 
 <p>

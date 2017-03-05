@@ -68,11 +68,18 @@
     <table>
       <tr>
         <th>Name</th>
+        <th>Status</th>
         <th colspan="3">Actions</th>
       </tr>
           <% @course.projects.each do |project| %>
             <tr>
                 <td><%= project.name %></td>
+                <td>
+                <% if project.active %>
+                Active
+                <% else %>
+                <span class="error">Inactive</span>
+                <% end %></td>
                 <td><%= link_to 'Show', project %></td>
                 <td><%= link_to 'Edit', edit_project_path(project) %></td>
                 <td><%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -88,11 +95,18 @@
     <table>
       <tr>
         <th>Name</th>
+        <th>Status</th>
         <th colspan="3">Actions</th>
       </tr>
           <% @course.experiences.each do |experience| %>
             <tr>
                 <td><%= experience.name %></td>
+                <td>
+                <% if experience.active %>
+                Active
+                <% else %>
+                <span class="error">Inactive</span>
+                <% end %></td>
                 <td><%= link_to 'Show', experience %></td>
                 <td><%= link_to 'Edit', edit_experience_path(experience) %></td>
                 <td><%= link_to 'Destroy', experience, method: :delete, data: { confirm: 'Are you sure?' } %></td>
