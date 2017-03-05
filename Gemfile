@@ -37,6 +37,7 @@ gem 'paperclip', '~> 5.0.0'
 gem 'postmark-rails', '>= 0.15.0'
 gem 'rails_12factor', group: :production
 gem 'simple_form'
+gem 'puma'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

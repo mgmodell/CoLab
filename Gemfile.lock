@@ -183,6 +183,7 @@ GEM
       actionmailer (>= 3.0.0)
       postmark (~> 1.10.0)
     public_suffix (2.0.5)
+    puma (3.7.1)
     rack (1.6.5)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -303,6 +304,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   paperclip (~> 5.0.0)
   postmark-rails (>= 0.15.0)
+  puma
   railroady
   rails (= 4.2.5)
   rails_12factor
