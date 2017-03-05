@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Project < ActiveRecord::Base
   after_save :build_assessment
 
@@ -108,7 +109,7 @@ class Project < ActiveRecord::Base
   end
 
   def activation_status
-    if active_was && active && self.changed?
+    if active_was && active && changed?
       self.active = false
     elsif !active_was && active
 

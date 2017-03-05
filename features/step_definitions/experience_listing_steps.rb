@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'chronic'
 
 Given(/^there is a course with an experience$/) do

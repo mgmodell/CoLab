@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 namespace :admin do
   desc 'Set up the infrastructure for currently open assessments'
   task populate_assessments: :environment do

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateFactorPacks < ActiveRecord::Migration
   def change
     create_table :factor_packs do |t|

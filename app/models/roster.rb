@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Roster < ActiveRecord::Base
   belongs_to :role, inverse_of: :rosters
   belongs_to :course, inverse_of: :rosters

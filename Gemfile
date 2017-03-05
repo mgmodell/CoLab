@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 source 'https://rubygems.org'
 ruby '2.3.3'
 
@@ -25,6 +26,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'activerecord-session_store'
 gem 'bourbon'
+gem 'chronic'
 gem 'country_select'
 gem 'devise'
 gem 'devise-multi_email'
@@ -35,7 +37,6 @@ gem 'paperclip', '~> 5.0.0'
 gem 'postmark-rails', '>= 0.15.0'
 gem 'rails_12factor', group: :production
 gem 'simple_form'
-gem 'chronic'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

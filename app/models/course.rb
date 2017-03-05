@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Course < ActiveRecord::Base
   belongs_to :school, inverse_of: :courses
   has_many :projects, inverse_of: :course, dependent: :delete_all
@@ -60,6 +61,7 @@ class Course < ActiveRecord::Base
   def enrolled_students
     rosters.joins(:role).where('roles.name = ? OR roles.name = ?', 'Enrolled Student', 'Invited Student').collect(&:user)
   end
+
   def instructors
     rosters.joins(:role).where('roles.name = ?', 'Instructor').collect(&:user)
   end

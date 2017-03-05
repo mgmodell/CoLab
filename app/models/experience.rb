@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Experience < ActiveRecord::Base
   belongs_to :course, inverse_of: :experiences
   has_many :reactions, inverse_of: :experience

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AdministrativeMailer < ActionMailer::Base
   default from: 'support@CoLab.online'
 
@@ -17,5 +18,4 @@ class AdministrativeMailer < ActionMailer::Base
          tag: 'reminder',
          track_opens: 'true')
   end
-
 end

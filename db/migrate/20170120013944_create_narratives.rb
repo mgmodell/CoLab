@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateNarratives < ActiveRecord::Migration
   def change
     create_table :narratives do |t|

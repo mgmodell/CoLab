@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Given /^there is a global consent form$/ do
   @consent_form = ConsentForm.make
   @consent_form.save

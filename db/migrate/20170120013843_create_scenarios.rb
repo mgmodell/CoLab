@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateScenarios < ActiveRecord::Migration
   def change
     create_table :scenarios do |t|

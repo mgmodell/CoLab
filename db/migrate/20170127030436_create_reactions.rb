@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateReactions < ActiveRecord::Migration
   def change
     create_table :reactions do |t|

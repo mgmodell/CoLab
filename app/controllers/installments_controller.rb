@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InstallmentsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:demo_start, :demo_complete]
 
@@ -181,8 +182,7 @@ class InstallmentsController < ApplicationController
   private
 
   def i_params
-    params.require(:installment).permit(:inst_date, :comments, :group_id, :user_id, :assessment_id, :group_id, 
-        values_attributes: [ :factor_id, :user_id, :value ] )
+    params.require(:installment).permit(:inst_date, :comments, :group_id, :user_id, :assessment_id, :group_id,
+                                        values_attributes: [:factor_id, :user_id, :value])
   end
-
 end

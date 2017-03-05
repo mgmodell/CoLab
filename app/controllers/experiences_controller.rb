@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ExperiencesController < ApplicationController
   before_action :set_experience, only: [:show, :edit, :update, :destroy]
   before_action :check_admin, except: [:next, :diagnose, :react]

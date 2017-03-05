@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateWeeks < ActiveRecord::Migration
   def change
     create_table :weeks do |t|

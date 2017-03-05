@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ConsentLogsController < ApplicationController
   def update
     @consent_log = ConsentLog.find(params[:id])

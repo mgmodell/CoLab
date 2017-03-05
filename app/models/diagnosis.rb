@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Diagnosis < ActiveRecord::Base
   belongs_to :behavior, inverse_of: :diagnoses
   belongs_to :reaction, inverse_of: :diagnoses

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddAttachmentPdfToConsentForms < ActiveRecord::Migration
   def self.up
     change_table :consent_forms do |t|

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Reaction < ActiveRecord::Base
   belongs_to :behavior, inverse_of: :reactions
   belongs_to :narrative

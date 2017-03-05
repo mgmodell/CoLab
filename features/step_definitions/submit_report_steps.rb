@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'forgery'
 
 Given /^the project measures (\d+) factors$/ do |num_factors|

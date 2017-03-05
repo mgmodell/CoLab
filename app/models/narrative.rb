@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Narrative < ActiveRecord::Base
   belongs_to :scenario, inverse_of: :narratives
   has_many :weeks, inverse_of: :narrative

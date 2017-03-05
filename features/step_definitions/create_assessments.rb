@@ -1,4 +1,5 @@
 
+# frozen_string_literal: true
 Given /^today is "(.*?)"$/ do |destination_time|
   Chronic.time_class = Time.zone
   travel_to Chronic.parse(destination_time).utc

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateInstallments < ActiveRecord::Migration
   def change
     create_table :installments do |t|

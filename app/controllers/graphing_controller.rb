@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class GraphingController < ApplicationController
   Unit_To_Processing = [['Individual', ['Summary', 'Summary By Behavior', 'All Data']],
                         ['Group', ['Summary']],

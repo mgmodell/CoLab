@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Then /^the user clicks the link to the experience$/ do
   click_link_or_button @experience.name
 end

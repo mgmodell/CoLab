@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'chronic'
 
 class Assessment < ActiveRecord::Base
@@ -34,13 +35,12 @@ class Assessment < ActiveRecord::Base
     init_date = Date.today.beginning_of_day
     init_day = init_date.wday
     logger.debug "\n\t**Populating Assessments**"
-    Project.where( 'active = true AND start_date <= ? AND end_date >= ?',
+    Project.where('active = true AND start_date <= ? AND end_date >= ?',
                   init_date, init_date.end_of_day).each do |project|
 
       build_new_assessment project if project.is_available?
     end
   end
-
 
   # Send out email reminders to those who have yet to complete their waiting assessments
   def self.send_reminder_emails
@@ -77,18 +77,17 @@ class Assessment < ActiveRecord::Base
     Assessment.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |assessment|
       completion_hash = {}
       assessment.installments.each do |inst|
-        completion_hash[ inst.user ] = inst.inst_date.to_s
+        completion_hash[inst.user] = inst.inst_date.to_s
       end
 
       assessment.project.course.enrolled_students.each do |student|
-        completion_hash[ student ] = "Incomplete" unless completion_hash[ student ].present?
+        completion_hash[student] = 'Incomplete' unless completion_hash[student].present?
       end
       # Retrieve the course instructors
       # Retrieve names of those who did not complete their assessments
       # InstructorNewsLetterMailer.inform( instructor ).deliver_later
       assessment.project.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report( instructor, completion_hash ).deliver_later
-
+        AdministrativeMailer.summary_report(instructor, completion_hash).deliver_later
       end
 
       assessment.instructor_updated = true

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateConsentLogs < ActiveRecord::Migration
   def change
     create_table :consent_logs do |t|

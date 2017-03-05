@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :destroy]
   before_action :check_admin, except: [:next, :diagnose, :react]
@@ -31,8 +32,8 @@ class ProjectsController < ApplicationController
     @project.course = Course.find(@project.course_id)
     respond_to do |format|
       if @project.save
-        notice = "Project was successfully created."
-        notice += "Don't forget to activate it!" if !@project.active
+        notice = 'Project was successfully created.'
+        notice += "Don't forget to activate it!" unless @project.active
         format.html { redirect_to @project, notice: notice }
         format.json { render :show, status: :created, location: @project }
       else
@@ -61,8 +62,8 @@ class ProjectsController < ApplicationController
           group.users = users_array
           group.save
         end
-        notice = "Project was successfully updated."
-        notice += "Don't forget to activate it when you're done editing it." if !@project.active
+        notice = 'Project was successfully updated.'
+        notice += "Don't forget to activate it when you're done editing it." unless @project.active
         format.html { redirect_to @project, notice: notice }
         format.json { render :show, status: :ok, location: @project }
       else
@@ -83,7 +84,7 @@ class ProjectsController < ApplicationController
 
   def remove_group
     group = Group.find(params[:group_id])
-    group.delete unless group.nil?
+    group&.delete
     redirect_to edit
   end
 
