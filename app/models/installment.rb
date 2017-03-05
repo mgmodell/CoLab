@@ -3,7 +3,7 @@ class Installment < ActiveRecord::Base
   belongs_to :user, inverse_of: :installments
   belongs_to :group, inverse_of: :installments
 
-  has_many :values, inverse_of: :installment, dependent: :delete_all
+  has_many :values, inverse_of: :installment, dependent: :destroy
   accepts_nested_attributes_for :values
 
   validates :inst_date, :assessment_id, :user_id, presence: true
