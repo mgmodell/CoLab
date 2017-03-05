@@ -3,7 +3,7 @@ require 'chronic'
 class Assessment < ActiveRecord::Base
   belongs_to :project, inverse_of: :assessments
   validates :end_date, :start_date, presence: true
-  has_many :installments, inverse_of: :assessment
+  has_many :installments, inverse_of: :assessment, dependent: :destroy
   has_many :factors, through: :project
   has_many :users, through: :project
   has_many :groups, through: :project
