@@ -69,7 +69,15 @@
         <td><%= reaction.experience.name %></td>
         <td>Experience</td>
         <td><%= reaction.updated_at.to_s %></td>
-        <td><%= reaction.behavior.present? ? "Completed" : reaction.next_week.percent_complete.to_s + "%" %></td>
+        <td>
+        <% if reaction.behavior.present? %>
+          Completed
+        <% elsif reaction.next_week.nil? %>
+          97%
+        <% else %>
+          <%= reaction.next_week.percent_complete.to_s + "%" %>
+        <% end %>
+        </td>
         <td>
         <% if reaction.next_week.nil? %>
           Completed

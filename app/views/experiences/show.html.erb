@@ -63,6 +63,13 @@
           <% end %>
         </td>
 
+      <% elsif reaction.next_week.nil? #all but the conclusions %>
+        <td>97%</td>
+        <td><%= reaction.narrative.scenario.behavior.name %></td>
+        <td><%= reaction.narrative.member %></td>
+        <td>Not Completed</td>
+        <td>Not Completed</td>
+
       <% elsif reaction.next_week.percent_complete == 0 #not started %>
         <td>0%</td>
         <td>Not Started</td>
