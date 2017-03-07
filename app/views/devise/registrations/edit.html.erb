@@ -69,12 +69,16 @@
         <td><%= reaction.experience.name %></td>
         <td>Experience</td>
         <td><%= reaction.updated_at.to_s %></td>
-        <td><%= reaction.next_week.nil? ? "Completed" : reaction.next_week.percent_complete.to_s + "%" %></td>
-        <% if reaction.next_week.nil? || reaction.next_week.percent_complete > 0 %>
-        <td>Scenario ID: <%= reaction.narrative.id + ( 100 * reaction.narrative.scenario.id ) %></td>
+        <td><%= reaction.behavior.present? ? "Completed" : reaction.next_week.percent_complete.to_s + "%" %></td>
+        <td>
+        <% if reaction.next_week.nil? %>
+          Completed
+        <% elsif reaction.next_week.percent_complete > 0 %>
+          Scenario ID: <%= 100 * reaction.narrative.scenario.id %>
         <% else %>
-        <td>You must begin the experience first</td>
+          You must begin the experience first
         <% end %>
+        </td>
       </tr>
       <% end %>
 

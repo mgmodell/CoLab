@@ -50,7 +50,7 @@
       <% @experience.course.enrolled_students.each do |student| %>
       <tr><% reaction = @experience.get_user_reaction( student ) %>
         <td><%= student.name %></td>
-      <% if reaction.next_week.nil? #completed %>
+      <% if reaction.behavior.present? #completed %>
         <td>Completed</td>
         <td><%= reaction.narrative.scenario.behavior.name %></td>
         <td><%= reaction.narrative.member %></td>

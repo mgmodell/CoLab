@@ -51,12 +51,20 @@
         <% else %>
                 <tr>
                 <td>
-                  <%= link_to task.name + " experience", next_experience_path( :experience_id => task.id ) %>
+                  <% reaction = task.get_user_reaction( @current_user ) %>
+                  <% if reaction.behavior.present? %>
+                    <%= task.name + " experience" %>
+                  <% else %>
+                    <%= link_to task.name + " experience", next_experience_path( :experience_id => task.id ) %>
+                  <% end %>
                 </td>
                 <td>
                   <em>
-                  <% week = task.get_user_reaction( @current_user ).next_week %>
-                  <%= week.nil? ? "Completed" : week.percent_complete.to_s + "%" %>
+                  <% if reaction.behavior.present? %>
+                    Completed
+                  <% else %>
+                    <%= reaction.next_week.percent_complete.to_s + "%" %>
+                  <% end %>
                   </em>
                 </td>
                 <td><%= task.course.name %> (<%= task.course.get_roster_for_user( @current_user ).role.name %>)</td>
