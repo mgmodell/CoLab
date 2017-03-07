@@ -11,52 +11,51 @@
     </ul>
   </div>
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Project Details</h2>
+    <h2>Project Details</h2>
+    <p>
+      <h3>Name:</h3>
+      <%= @project.name %>
+      (<% if @project.active %>
+        Active
+      <% else %>
+        <span class="error">Inactive</span>
+      <% end %>)
+    </p>
 
-        <p>
-          <strong>Name:</strong>
-          <%= @project.name %>
-          (<% if @project.active %>
-          Active
-          <% else %>
-          <span class="error">Inactive</span>
-          <% end %>)
-        </p>
+    <p>
+      <h3>Dates:</h3>
+      <%= @project.start_date %> to
+      <%= @project.end_date %><br>
+      <%= Date::DAYNAMES.at @project.start_dow %> to
+      <%= Date::DAYNAMES.at @project.end_dow %><br>
+    </p>
 
-        <p>
-          <strong>Dates:</strong>
-          <%= @project.start_date %> to
-          <%= @project.end_date %><br>
-          <%= Date::DAYNAMES.at @project.start_dow %> to
-          <%= Date::DAYNAMES.at @project.end_dow %><br>
-        </p>
+    <p>
+      <h3>Description:</h3>
+      <%= @project.description %>
+    </p>
 
-        <p>
-          <strong>Description:</strong>
-          <%= @project.description %>
-        </p>
-
-        <p>
-          <strong>Factor Pack:</strong>
-          <%= @project.factor_pack.name %></br>
-          <ul>
-          <% @project.factor_pack.factors.each do |factor| %>
-            <li><%= factor.name %><br></li>
-          <% end %>
-          </ul>
-        </p>
-          </div>
-          <div id="groups" class="ui-body-<%= theme_code %> ui-content">
-
-        <p>
-          <h2>Groups:</h2>
-          <%= form_tag add_group_path, method: :get do %>
-            <%= label_tag :group_name, "New group name: " %>
-            <%= text_field_tag :group_name %>
-            <%= hidden_field_tag :project_id, @project.id %>
-            <%= submit_tag "Add!" %>
-          <% end %>
-          <% if @project.groups.any? || @project.course.enrolled_students.any? %>
+    <p>
+      <h3>Factor Pack:</h3>
+      <%= @project.factor_pack.name %></br>
+      <ul>
+        <% @project.factor_pack.factors.each do |factor| %>
+        <li><%= factor.name %></li>
+        <% end %>
+      </ul>
+    </p>
+    <%= link_to 'Edit Project Details', edit_project_path(@project) %>
+  </div>
+  <div id="groups" class="ui-body-<%= theme_code %> ui-content">
+    <h2>Groups</h2>
+      <p>
+        <%= form_tag add_group_path, method: :get do %>
+          <%= label_tag :group_name, "New group name: " %>
+          <%= text_field_tag :group_name %>
+          <%= hidden_field_tag :project_id, @project.id %>
+          <%= submit_tag "Add!" %>
+        <% end %>
+        <% if @project.groups.any? || @project.course.enrolled_students.any? %>
           <table>
             <tr>
               <th>&nbsp;</th>
@@ -64,29 +63,28 @@
               <th><%= group.name %></th>
               <% end %>
             </tr>
-              <% @project.course.enrolled_students.each do |user| %>
-              <tr>
-                <td><%= user.name %></td>
-                <% @project.groups.each do |group| %>
-                <td><%= "X" if group.has_user user %></td>
-                <% end %>
-              </tr>
+            <% @project.course.enrolled_students.each do |user| %>
+            <tr>
+              <td><%= user.name %></td>
+              <% @project.groups.each do |group| %>
+                <td>
+                  <center><%= raw( "&#10004;" ) if group.has_user user %></center>
+                </td>
               <% end %>
-          <table>
-          <% end %>
-        </p>
+            </tr>
+            <% end %>
+          </table>
+        <% end %>
+      </p>
   </div>
   <div id="summary" class="ui-body-<%= theme_code %> ui-content">
-    <h2>Student Response Summary</h2>
-    <p>Coming soon!</p>
+    <h2>Response Summary</h2>
   </div>
   <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-    <h2>Student Response Data</h2>
-    <p>Coming soon!</p>
+    <h2>Responses</h2>
   </div>
 </div>
 
 
 
-<%= link_to 'Edit', edit_project_path(@project) %> |
 <%= link_to 'Back to course', @project.course %>
