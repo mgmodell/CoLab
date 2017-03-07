@@ -79,10 +79,8 @@
         <% end %>
         </td>
         <td>
-        <% if reaction.next_week.nil? %>
-          Completed
-        <% elsif reaction.next_week.percent_complete > 0 %>
-          Scenario ID: <%= 100 * reaction.narrative.scenario.id %>
+        <% if reaction.next_week.nil? || reaction.next_week.percent_complete > 0 %>
+          Scenario ID: <%= reaction.narrative.id + (100 * reaction.narrative.scenario.id) %>
         <% else %>
           You must begin the experience first
         <% end %>
