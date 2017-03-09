@@ -15,6 +15,6 @@ class HomeController < ApplicationController
     @first_name = current_user.first_name
     @waiting_tasks = current_user.waiting_tasks
     @waiting_rosters = current_user.rosters.awaiting
-    @current_location = "home"
+    @current_location = 'home'
   end
 end
