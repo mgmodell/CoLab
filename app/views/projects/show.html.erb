@@ -1,68 +1,90 @@
 <p id="notice"><%= notice %></p>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 
-<p>
-  <strong>Name:</strong>
-  <%= @project.name %>
-  (<% if @project.active %>
-  Active
-  <% else %>
-  <span class="error">Inactive</span>
-  <% end %>)
-</p>
+<div data-role="tabs" id="tabs">
+  <div data-role="navbar">
+    <ul>
+      <li><a href="#details" data-ajax="false">Details</a></li>
+      <li><a href="#groups" data-ajax="false">Group Assignments</a></li>
+      <li><a href="#summary" data-ajax="false">Response Summary</a></li>
+      <li><a href="#responses" data-ajax="false">Response Data</a></li>
+    </ul>
+  </div>
+  <div id="details" class="ui-body-<%= theme_code %> ui-content">
+    <h2>Project Details</h2>
+    <p>
+      <h3>Name:</h3>
+      <%= @project.name %>
+      (<% if @project.active %>
+        Active
+      <% else %>
+        <span class="error">Inactive</span>
+      <% end %>)
+    </p>
 
-<p>
-  <strong>Dates:</strong>
-  <%= @project.start_date %> to
-  <%= @project.end_date %><br>
-  <%= Date::DAYNAMES.at @project.start_dow %> to
-  <%= Date::DAYNAMES.at @project.end_dow %><br>
-</p>
+    <p>
+      <h3>Dates:</h3>
+      <%= @project.start_date %> to
+      <%= @project.end_date %><br>
+      <%= Date::DAYNAMES.at @project.start_dow %> to
+      <%= Date::DAYNAMES.at @project.end_dow %><br>
+    </p>
 
-<p>
-  <strong>Description:</strong>
-  <%= @project.description %>
-</p>
+    <p>
+      <h3>Description:</h3>
+      <%= @project.description %>
+    </p>
 
-<p>
-  <strong>Factor Pack:</strong>
-  <%= @project.factor_pack.name %></br>
-  <ul>
-  <% @project.factor_pack.factors.each do |factor| %>
-    <li><%= factor.name %><br></li>
-  <% end %>
-  </ul>
-</p>
-
-<p>
-  <strong>Groups:</strong>
-  <%= form_tag add_group_path, method: :get do %>
-    <%= label_tag :group_name, "New group name: " %>
-    <%= text_field_tag :group_name %>
-    <%= hidden_field_tag :project_id, @project.id %>
-    <%= submit_tag "Add!" %>
-  <% end %>
-  <% if @project.groups.any? || @project.course.enrolled_students.any? %>
-  <table>
-    <tr>
-      <th>&nbsp;</th>
-      <% @project.groups.each do |group| %>
-      <th><%= group.name %></th>
-      <% end %>
-    </tr>
-      <% @project.course.enrolled_students.each do |user| %>
-      <tr>
-        <td><%= user.name %></td>
-        <% @project.groups.each do |group| %>
-        <td><%= "X" if group.has_user user %></td>
+    <p>
+      <h3>Factor Pack:</h3>
+      <%= @project.factor_pack.name %></br>
+      <ul>
+        <% @project.factor_pack.factors.each do |factor| %>
+        <li><%= factor.name %></li>
         <% end %>
-      </tr>
-      <% end %>
-  <table>
-  <% end %>
+      </ul>
+    </p>
+    <%= link_to 'Edit Project Details', edit_project_path(@project) %>
+  </div>
+  <div id="groups" class="ui-body-<%= theme_code %> ui-content">
+    <h2>Groups</h2>
+      <p>
+        <%= form_tag add_group_path, method: :get do %>
+          <%= label_tag :group_name, "New group name: " %>
+          <%= text_field_tag :group_name %>
+          <%= hidden_field_tag :project_id, @project.id %>
+          <%= submit_tag "Add!" %>
+        <% end %>
+        <% if @project.groups.any? || @project.course.enrolled_students.any? %>
+          <table>
+            <tr>
+              <th>&nbsp;</th>
+              <% @project.groups.each do |group| %>
+              <th><%= group.name %></th>
+              <% end %>
+            </tr>
+            <% @project.course.enrolled_students.each do |user| %>
+            <tr>
+              <td><%= user.name %></td>
+              <% @project.groups.each do |group| %>
+                <td>
+                  <center><%= raw( "&#10004;" ) if group.has_user user %></center>
+                </td>
+              <% end %>
+            </tr>
+            <% end %>
+          </table>
+        <% end %>
+      </p>
+  </div>
+  <div id="summary" class="ui-body-<%= theme_code %> ui-content">
+    <h2>Response Summary</h2>
+  </div>
+  <div id="responses" class="ui-body-<%= theme_code %> ui-content">
+    <h2>Responses</h2>
+  </div>
+</div>
 
-</p>
 
 
-
-<%= link_to 'Edit', edit_project_path(@project) %> |
 <%= link_to 'Back to course', @project.course %>

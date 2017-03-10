@@ -80,6 +80,7 @@ class ExperiencesController < ApplicationController
         render :instructions
       else
         if week.nil?
+          @reaction = reaction
           # we just finished the last week
           render :reaction
         else

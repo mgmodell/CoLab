@@ -1,5 +1,16 @@
 <p id="notice"><%= notice %></p>
 
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<div data-role="tabs" id="tabs">
+  <div data-role="navbar">
+    <ul>
+      <li><a href="#details" data-ajax="false">Details</a></li>
+      <li><a href="#students" data-ajax="false">Students</a></li>
+      <li><a href="#activities" data-ajax="false">Activities</a></li>
+    </ul>
+  </div>
+  <div id="details" class="ui-body-<%= theme_code %> ui-content">
+  <h2>Course Details</h2>
 <p>
   <strong>Name:</strong>
   <%= @course.name %>
@@ -17,7 +28,7 @@
 <p>
   <strong>Dates:</strong>
   <%= @course.start_date %> to
-  <%= @course.start_date %>
+  <%= @course.end_date %>
 </p>
 <p>
   <strong>Course instructors</strong>
@@ -26,8 +37,11 @@
   <% end %>
 
 </p>
+<%= link_to 'Edit course details', edit_course_path(@course) %>
+  </div>
+  <div id="students" class="ui-body-<%= theme_code %> ui-content">
 <p>
-  <strong>Student roster</strong>
+  <h2>Student roster</h2>
   <%= form_tag add_students_path, method: :get do %>
     <%= label_tag :addresses, "Add users by email:" %>
     <%= text_field_tag :addresses %>
@@ -61,6 +75,9 @@
   </table>
   <% end %>
 </p>
+  </div>
+  <div id="activities" class="ui-body-<%= theme_code %> ui-content">
+
 <p>
   <strong>Projects</strong>
   <%= link_to "Add Project", new_project_path( :course_id => @course.id )%>
@@ -115,7 +132,8 @@
     </table>
   <% end %>
 </p>
+  </div>
+</div>
 
 
-<%= link_to 'Edit', edit_course_path(@course) %> |
-<%= link_to 'Back', courses_path %>
+<%= link_to 'Back to the list of courses', courses_path %>

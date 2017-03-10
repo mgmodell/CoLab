@@ -1,34 +1,55 @@
-<h2>Sign up</h2>
-
 <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= f.error_notification %>
   <%= f.input :welcomed, as: :hidden, input_html: { value: true } %>
+<div data-role="tabs" id="tabs">
+  <div data-role="navbar">
+    <ul>
+      <li class="ui-state-active ui-tabs-active"><a href="#profile" data-ajax="false">About You</a></li>
+      <li><a href="#history" data-ajax="false">History</a></li>
+    </ul>
+  </div>
+  <div id="profile" class="ui-body-a ui-content">
 
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<h2>Sign up</h2>
+
+
   <div class="form-inputs ui-corner-all custom-corners">
-    <div class="ui-bar ui-bar-<%= theme_code %>">
-      <h3>Edit Your Profile</h3>
+    <div class="ui-bar ui-bar-a">
+      <h3>Enter your account information</h3>
     </div>
-    <div class="ui-body ui-body-<%= theme_code %>">
-    <%= f.input :email, required: true, autofocus: true %>
-    <%= f.input :first_name, required: true, autofocus: true %>
-    <%= f.input :last_name, required: true, autofocus: true %>
-    <%= f.association :school, label: "Which school are you currently at?", prompt: "Select a School" %>
-    </br>
+    <div class="ui-body ui-body-a">
+      <%= f.input :email, required: true, autofocus: true %>
+      <%= f.input :first_name, required: true, autofocus: true %>
+      <%= f.input :last_name, required: true, autofocus: true %>
+      <%= f.input :password, required: true, autofocus: true %>
+    </div>
+    <div class="ui-bar ui-bar-a">
+      <h3>Tell us about yourself</h3>
+    </div>
 
-    <%= f.association :gender, prompt: "Select a gender" %>
-    <%= f.association :age_range, label: "How old are you?", prompt: "Select an age range" %>
-    <%= f.input :country, as: :country, label: "Where are you from?", prompt: "Select a country",
+
+    <div class="ui-body ui-body-a">
+      <%= f.association :school, label: "Which school are you currently at?", prompt: "Select a School" %>
+
+      <%= f.association :gender, prompt: "Select a gender" %>
+      <%= f.association :age_range, label: "How old are you?", prompt: "Select an age range" %>
+      <%= f.input :country, as: :country, label: "Where are you from?", prompt: "Select a country",
             priority: ["United States", "Korea, Republic of" ] %>
-    <%= f.input :timezone, as: :time_zone, label: "What time zone are you in?", prompt: "Select a timezone",
-      priority: /US|Seo/ %>
-    <%= f.association :theme, prompt: "Please choose a UI theme", label: "What UI theme would you like to use?" %>
+      <%= f.input :timezone, as: :time_zone, label: "What time zone are you in?", prompt: "Select a timezone",
+        priority: /US|Seo/ %>
+      <%= f.association :theme, prompt: "Please choose a UI theme", label: "What UI theme would you like to use?" %>
+    </div>
   </div>
   </div>
+  <div id="history" class="ui-body-a ui-content">
+    <h2>History of Activities in Which You've Taken Part</h2>
+    <p>No activities yet</p>
+  </div>
+</div>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Create my profile!" %>
-  </div>
+<div class="form-actions">
+<%= f.button :submit, "Create my profile!" %>
+</div>
 <% end %>
 
 <%= render "devise/shared/links" %>

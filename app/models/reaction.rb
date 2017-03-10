@@ -5,7 +5,7 @@ class Reaction < ActiveRecord::Base
   belongs_to :user
   belongs_to :experience, inverse_of: :reactions
 
-  has_many :diagnoses, inverse_of: :reaction
+  has_many :diagnoses, inverse_of: :reaction, dependent: :destroy
 
   validates :narrative, presence: true
   validate :thorough_completion

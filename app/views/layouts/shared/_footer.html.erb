@@ -2,11 +2,11 @@
       <div class="ui-grid-a">
         <div class="ui-block-a">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true">
-            <% if working %>
+            <% unless @current_location == "home" %>
               <%= link_to "Home", root_path,
                   :data => { :icon => "home", :role => "button" } %>
             <% end %>
-            <% if !@current_user.nil? %>
+            <% unless @current_user.nil? || @current_location == "profile"  %>
               <%= link_to 'Profile', edit_user_registration_path(@current_user),
                   :data => { :icon => "user", :role => "button" } %>
             <% end %>
@@ -27,7 +27,7 @@
         <div class="ui-block-b">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true" align="right">
 
-            <% unless working %>
+            <% if @current_user.nil? || @current_location == "home" %>
             <%= link_to "Demo", demo_start_path,
                   :data => { :icon => "action", :role => "button" } %>
             <% end %>

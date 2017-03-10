@@ -1,39 +1,107 @@
-<h2>Edit your profile, <%= resource_name.to_s.humanize %></h2>
-
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= f.error_notification %>
-  <%= f.input :welcomed, as: :hidden, input_html: { value: true } %>
-
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-  <div class="form-inputs ui-corner-all custom-corners">
-    <div class="ui-bar ui-bar-<%= theme_code %>">
-      <h3>Edit Your Profile</h3>
-    </div>
-    <div class="ui-body ui-body-<%= theme_code %>">
-    <%= f.input :email, required: true, autofocus: true %>
-    <%= f.input :first_name, required: true, autofocus: true %>
-    <%= f.input :last_name, required: true, autofocus: true %>
-    <%= f.input :email, required: true, autofocus: true %>
-    <%= f.association :school, label: "Which school are you currently at?", prompt: "Select a School" %>
-
-    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-      <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
-    <% end %>
-
-    <%= f.association :gender, prompt: "Select a gender" %>
-    <%= f.association :age_range, label: "How old are you?", prompt: "Select an age range" %>
-    <%= f.input :country, as: :country, label: "Where are you from?", prompt: "Select a country",
-            priority: ["United States", "Korea, Republic of" ] %>
-    <%= f.input :timezone, as: :time_zone, label: "What time zone are you in?", prompt: "Select a timezone",
-      priority: /US|Seo/ %>
-    <%= f.association :theme, prompt: "Please choose a UI theme", label: "What UI theme would you like to use?" %>
-    </div>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<div data-role="tabs" id="tabs">
+  <div data-role="navbar">
+    <ul>
+      <li class="ui-state-active ui-tabs-active"><a href="#profile" data-ajax="false">About You</a></li>
+      <li><a href="#history" data-ajax="false">History</a></li>
+    </ul>
   </div>
+  <div id="profile" class="ui-body-<%= theme_code %> ui-content">
+<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+        <h2>Your account information</h2>
+          <%= f.error_notification %>
+          <%= f.input :welcomed, as: :hidden, input_html: { value: true } %>
 
+          <div class="form-inputs ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-<%= theme_code %>">
+              <h3>Edit your profile</h3>
+            </div>
+            <div class="ui-body ui-body-<%= theme_code %>">
+              <%= f.input :email, required: true, autofocus: true %>
+              <%= f.input :first_name, required: true, autofocus: true %>
+              <%= f.input :last_name, required: true, autofocus: true %>
+              <%= f.input :email, required: true, autofocus: true %>
+              <%= link_to "Want to change your password?", new_password_path(resource_name) %><br />
+            </div>
+
+
+              <div class="ui-corner-all custom-corners">
+                <div class="ui-bar ui-bar-<%=theme_code %>">
+                  <h3>Tell us about yourself<%= ", " + @current_user.first_name unless @current_user.first_name.nil? %></h3>
+                </div>
+                <div class="ui-body ui-body-<%=theme_code %>">
+              <%= f.association :school, label: "Which school are you currently at?", prompt: "Select a School" %>
+
+              <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+              <% end %>
+
+              <%= f.association :gender, prompt: "Select a gender" %>
+              <%= f.association :age_range, label: "How old are you?", prompt: "Select an age range" %>
+              <%= f.input :country, as: :country, label: "Where are you from?", prompt: "Select a country",
+                    priority: ["United States", "Korea, Republic of" ] %>
+              <%= f.input :timezone, as: :time_zone, label: "What time zone are you in?", prompt: "Select a timezone",
+                    priority: /US|Seo/ %>
+              <%= f.association :theme, prompt: "Please choose a UI theme", label: "What UI theme would you like to use?" %>
+            </div>
+            </div>
+          </div>
   <div class="form-actions">
     <%= f.button :submit, "Update my profile!" %>
   </div>
 <% end %>
+  </div>
+  <div id="history" class="ui-body-<%= theme_code %> ui-content">
+    <h2>History of Activities in Which You've Taken Part</h2>
+    <table>
+      <tr>
+        <th>Activity</th>
+        <th>Type</th>
+        <th>Completion Date</th>
+        <th>Status</th>
+        <th>Other information</th>
+      </tr>
+      <% @current_user.courses.each do |course| %>
+      <tr>
+        <td><%= course.name %></td>
+        <td>Course</td>
+        <td><%= course.end_date.to_s %></td>
+        <td><%= DateTime.current < course.end_date ? "In Progress" : "Finished" %></td>
+        <td>
+          Project Count: <%= course.projects.count %></br>
+          SAPA completion rate: N/A</br>
+          Experience Count: <%= course.experiences.count %></br>
+        </td>
+      </tr>
+      <% end %>
+      <% @current_user.reactions.each do |reaction| %>
+      <tr>
+        <td><%= reaction.experience.name %></td>
+        <td>Experience</td>
+        <td><%= reaction.updated_at.to_s %></td>
+        <td>
+        <% if reaction.behavior.present? %>
+          Completed
+        <% elsif reaction.next_week.nil? %>
+          97%
+        <% else %>
+          <%= reaction.next_week.percent_complete.to_s + "%" %>
+        <% end %>
+        </td>
+        <td>
+        <% if reaction.next_week.nil? || reaction.next_week.percent_complete > 0 %>
+          Scenario ID: <%= reaction.narrative.id + (100 * reaction.narrative.scenario.id) %>
+        <% else %>
+          You must begin the experience first
+        <% end %>
+        </td>
+      </tr>
+      <% end %>
+
+    </table>
+  </div>
+</div>
+
 
 <h3>Cancel my account</h3>
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class User < ActiveRecord::Base
-  has_many :emails, inverse_of: :user
+  has_many :emails, inverse_of: :user, dependent: :destroy
 
   devise :multi_email_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable,
@@ -9,18 +9,18 @@ class User < ActiveRecord::Base
          :omniauthable, omniauth_providers: [:google_oauth2]
 
   has_and_belongs_to_many :groups
-  has_many :consent_logs, inverse_of: :user
+  has_many :consent_logs, inverse_of: :user, dependent: :destroy
   has_many :projects, through: :groups
   belongs_to :gender, inverse_of: :users
   belongs_to :theme
   belongs_to :school
   belongs_to :age_range, inverse_of: :users
   belongs_to :cip_code, inverse_of: :users
-  has_many :installments, inverse_of: :user
-  has_many :rosters, inverse_of: :user
+  has_many :installments, inverse_of: :user, dependent: :destroy
+  has_many :rosters, inverse_of: :user, dependent: :destroy
   has_many :courses, through: :projects
 
-  has_many :reactions, inverse_of: :user
+  has_many :reactions, inverse_of: :user, dependent: :destroy
   has_many :experiences, through: :reactions
   has_many :narratives, through: :experiences
 

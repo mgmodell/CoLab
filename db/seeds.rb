@@ -132,8 +132,8 @@ u.save
 
 # Scenario content here
 Scenario.create(name: 'Equal Participation', behavior_id: 1)
-Scenario.create(name: 'Group Domination', behavior_id: 2)
-Scenario.create(name: 'Social Loafing', behavior_id: 3)
+Scenario.create(name: 'Group Domination', behavior_id: 3)
+Scenario.create(name: 'Social Loafing', behavior_id: 4)
 
 # Scenario 1 (EC)
 Narrative.create(member: 'Alex', scenario_id: 1)
