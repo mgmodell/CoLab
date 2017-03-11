@@ -55,6 +55,14 @@ Then /^the users are added to the course by email address$/ do
   @course.add_students_by_email email_list
 end
 
+Then /^the users are added to the course as instructors by email address$/ do
+  email_list = ''
+  @users.each do |user|
+    email_list += user.email + ', '
+  end
+  @course.add_instructors_by_email email_list
+end
+
 Then /^the course has (\d+) "([^"]*)" users$/ do |user_count, user_status|
   @course.rosters.joins(:role).where(roles: { name: user_status }).count.should eq user_count.to_i
 end

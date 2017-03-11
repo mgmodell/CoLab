@@ -62,6 +62,7 @@ class ProjectsController < ApplicationController
           group.users = users_array
           group.save
         end
+        #TODO: Add code to update group names
         notice = 'Project was successfully updated.'
         notice += "Don't forget to activate it when you're done editing it." unless @project.active
         format.html { redirect_to @project, notice: notice }

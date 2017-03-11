@@ -76,9 +76,9 @@ class CoursesController < ApplicationController
   end
 
   def add_instructors
-    @course.add_students_by_email params[:addresses]
+    @course.add_instructors_by_email params[:addresses]
     respond_to do |format|
-      format.html { redirect_to @course, notice: 'Students have been invited.' }
+      format.html { redirect_to @course, notice: 'Instructor(s) have been invited.' }
       format.json { render :show, status: :ok, location: @course }
     end
   end

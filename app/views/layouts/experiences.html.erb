@@ -13,8 +13,13 @@
     <div data-role="header" data-position="fixed" style="overflow:hidden;" >
       <h1>CoLab</h1>
             <% if working %>
+            <div data-role="controlgroup" data-type="horizontal" data-mini="true"
+                                        class="ui-btn-right">
               <a data-role="button" href="#instructions" id="instr_btn" data-icon="info"
-                class="ui-btn-right ui-mini ui-btn-inline" >Instructions</a>
+                class="ui-btn ui-btn-corner-all ui-icon-info ui-btn-icon-left" >Instructions</a>
+              <a data-role="button" href="#glossary" id="instr_btn" data-icon="help"
+                class="ui-btn ui-btn-corner-all ui-icon-tag ui-btn-icon-right" >Glossary</a>
+            </div>
             <% end %>
     </div>
       <% if working %>
@@ -50,12 +55,14 @@
         <%= render "shared/instructions" %>
       </div>
       <div data-role="collapsible">
-        <h4>Behaviors</h4>
-        <%= render "shared/behaviors" %>
-      </div>
-      <div data-role="collapsible">
         <h4>Scenario</h4>
         <%= render "shared/scenario" %>
+      </div>
+      </div>
+      <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="glossary">
+      <a href="#instr_btn" class="ui-btn ui-icon-delete" data-rel="close"> Close panel</a>
+        <h4>Behaviors</h4>
+        <%= render "shared/behaviors" %>
       </div>
       <% end %>
       <%= render "layouts/shared/footer", working: working %>

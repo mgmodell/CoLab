@@ -32,6 +32,12 @@
 </p>
 <p>
   <strong>Course instructors</strong>
+  <%= form_tag add_instructors_path, method: :get do %>
+    <%= label_tag :addresses, "Add instructor by email:" %>
+    <%= text_field_tag :addresses %>
+    <%= hidden_field_tag :id, @course.id %>
+    <%= submit_tag "Add!" %>
+  <% end %>
   <% @course.rosters.instructorships.each do |roster| %>
     <%= roster.user.name %><br>
   <% end %>

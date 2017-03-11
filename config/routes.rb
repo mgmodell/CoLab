@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   scope 'admin' do
     get 'courses/add_students' => 'courses#add_students', :as => 'add_students'
+    get 'courses/add_instructors' => 'courses#add_instructors', :as => 'add_instructors'
     get 'projects/add_group' => 'projects#add_group', :as => 'add_group'
     get 'projects/remove_group' => 'projects#remove_group', :as => 'remove_group'
     resources :courses, :projects, :experiences

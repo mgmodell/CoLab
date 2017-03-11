@@ -32,7 +32,7 @@
   <div id="groups" class="ui-body-<%= theme_code %> ui-content">
   <h2>Group memberships</h2>
   <% if @project.groups.any? || @project.enrolled_user_rosters.any? %>
-  <table>
+  <table width="90%">
     <tr>
       <th>&nbsp;</th>
       <% groups = @project.groups %>
@@ -42,7 +42,8 @@
     </tr>
       <% @project.course.enrolled_students.each do |user| %>
       <tr>
-        <td><%= user.name %></td>
+        <td><%= user.name %></br>
+            <em>[<%= user.email %>]</em></td>
         <% groups.each do |group| %>
         <td><%= radio_button_tag "user_group_#{user.id}", group.id, group.has_user( user ) %></td>
         <% end %>

@@ -30,16 +30,16 @@ class Course < ActiveRecord::Base
     rosters.where(user: user).take
   end
 
-  def add_student_by_email(student_email, instructor: false)
+  def add_user_by_email(user_email, instructor = false)
     role_name = instructor ? 'Instructor' : 'Invited Student'
     role = Role.where(name: role_name).take
     # Searching for the student and:
-    user = User.joins(:emails).where(emails: { email: student_email }).take
+    user = User.joins(:emails).where(emails: { email: user_email }).take
 
     passwd = (0...8).map { (65 + rand(26)).chr }.join
 
     if user.nil?
-      user = User.create(email: student_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
+      user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
     end
 
     existing_roster = Roster.where(course: self, user: user).take
@@ -54,7 +54,13 @@ class Course < ActiveRecord::Base
 
   def add_students_by_email(student_emails)
     student_emails.split(/\s*,\s*/).each do |email|
-      add_student_by_email email
+      add_user_by_email email
+    end
+  end
+
+  def add_instructors_by_email(instructor_emails)
+    instructor_emails.split(/\s*,\s*/).each do |email|
+      add_user_by_email( email, true )
     end
   end
 

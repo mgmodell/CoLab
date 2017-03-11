@@ -56,7 +56,7 @@
           <%= submit_tag "Add!" %>
         <% end %>
         <% if @project.groups.any? || @project.course.enrolled_students.any? %>
-          <table>
+          <table width="90%">
             <tr>
               <th>&nbsp;</th>
               <% @project.groups.each do |group| %>
@@ -65,7 +65,8 @@
             </tr>
             <% @project.course.enrolled_students.each do |user| %>
             <tr>
-              <td><%= user.name %></td>
+              <td><%= user.name %></br>
+                <em>[<%= user.email %>]</em></td>
               <% @project.groups.each do |group| %>
                 <td>
                   <center><%= raw( "&#10004;" ) if group.has_user user %></center>

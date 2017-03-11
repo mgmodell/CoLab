@@ -38,9 +38,10 @@
   </div>
   <div id="summary" class="ui-body-<%= theme_code %> ui-content">
     <h2>Student Response Summary</h2>
-    <table>
+    <table width="90%">
       <tr>
         <th>Name</th>
+        <th>Email</th>
         <th>Status</th>
         <th>Scenario</th>
         <th>Narrative</th>
@@ -50,6 +51,7 @@
       <% @experience.course.enrolled_students.each do |student| %>
       <tr><% reaction = @experience.get_user_reaction( student ) %>
         <td><%= student.name %></td>
+        <td><%= student.email %></td>
       <% if reaction.behavior.present? #completed %>
         <td>Completed</td>
         <td><%= reaction.narrative.scenario.behavior.name %></td>

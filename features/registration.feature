@@ -35,6 +35,16 @@ Feature: User registration
     When the user visits the index
     Then the user will see the task listing page
 
+  Scenario: 2 new instructors are added to a course
+    Given 2 users
+    Given a course
+    Then the users are added to the course as instructors by email address
+    Then the course has 2 "Instructor" users
+    Then 0 emails will have been sent
+    Then the users are added to the course as instructors by email address
+    Then the course has 2 "Instructor" users
+    Then 0 emails will have been sent
+
   Scenario: 5 new users are added to a course
     Given 5 users
     Given a course
