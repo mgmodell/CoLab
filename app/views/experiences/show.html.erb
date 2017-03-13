@@ -56,7 +56,7 @@
         <td>Completed</td>
         <td><%= reaction.narrative.scenario.behavior.name %></td>
         <td><%= reaction.narrative.member %></td>
-        <td><%= reaction.behavior.name %></td>
+        <td><span class="<%= reaction.behavior == reaction.narrative.scenario.behavior ? "connected" : "disconnect" %><%= reaction.behavior.name %></span></td>
         <td>
           <% if reaction.improvements.blank? %>
           N/A
@@ -83,16 +83,7 @@
         <td><%= reaction.next_week.percent_complete.to_s + "%" %></td>
         <td><%= reaction.narrative.scenario.behavior.name %></td>
         <td><%= reaction.narrative.member %></td>
-        <td>
-        <% if reaction.behavior == reaction.narrative.scenario.behavior %>
-          <span class="connected">
-        <% else %>
-          <span class="disconnect">
-        <% end %>
-        <%= reaction.behavior.name %></span></td>
-        <td>
-          N/A
-        </td>
+        <td>N/A</td>
 
       <% end %>
       <tr>
