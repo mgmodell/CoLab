@@ -83,7 +83,13 @@
         <td><%= reaction.next_week.percent_complete.to_s + "%" %></td>
         <td><%= reaction.narrative.scenario.behavior.name %></td>
         <td><%= reaction.narrative.member %></td>
-        <td><%= reaction.narrative.scenario.behavior.name %></td>
+        <td>
+        <% if reaction.behavior == reaction.narrative.scenario.behavior %>
+          <span class="connected">
+        <% else %>
+          <span class="disconnect">
+        <% end %>
+        <%= reaction.behavior.name %></span></td>
         <td>
           N/A
         </td>

@@ -14,6 +14,28 @@
  *= require app_style
  */
 
+.connected
+{
+  width: 400px;
+  border: 1px solid #D8D8D8;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #BAFFBA;
+  color: #00D80C;
+  text-align: center;
+}
+
+.disconnect
+{
+  width: 400px;
+  border: 1px solid #D8D8D8;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #FFBABA;
+  color: #D8000C;
+  text-align: center;
+}
+
 .error
 {
   width: 400px;
