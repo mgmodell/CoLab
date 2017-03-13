@@ -56,7 +56,7 @@
         <td>Completed</td>
         <td><%= reaction.narrative.scenario.behavior.name %></td>
         <td><%= reaction.narrative.member %></td>
-        <td><span class="<%= reaction.behavior == reaction.narrative.scenario.behavior ? "connected" : "disconnect" %><%= reaction.behavior.name %></span></td>
+        <td><span class="<%= reaction.behavior == reaction.narrative.scenario.behavior ? "connected" : "disconnect" %>"%><%= reaction.behavior.name %></span></td>
         <td>
           <% if reaction.improvements.blank? %>
           N/A
