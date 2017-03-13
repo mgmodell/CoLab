@@ -9,13 +9,13 @@ class Group < ActiveRecord::Base
   validate :validate_activation_status, on: :update
 
   def validate_activation_status
-    if (!project.nil? && project.active) ||
-       (project.changed? && !project_id_was.nil? &&
-       Project.find(project_id_was).active)
+    if( project_id_was != project_id )
       errors.add(:project,
-                 'This group is part of a project with an active assessment. ' \
-                 'Please deactivate the project before making changes.')
-
+                 'It is not possible to move a group from one project to another.' )
+    end
+    if self.changed?
+      project.active = false
+      project.save
     end
   end
 

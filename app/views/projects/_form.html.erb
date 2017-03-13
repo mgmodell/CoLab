@@ -37,7 +37,7 @@
       <th>&nbsp;</th>
       <% groups = @project.groups %>
       <% groups.each do |group| %>
-      <th><%= group.name %></th>
+      <th><%= text_field_tag "group_" + group.id.to_s, group.name %></th>
       <% end %>
     </tr>
       <% @project.course.enrolled_students.each do |user| %>
