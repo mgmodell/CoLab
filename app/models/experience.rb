@@ -50,6 +50,14 @@ class Experience < ActiveRecord::Base
     narrative
   end
 
+  def is_open
+     if self.start_date <= DateTime.current && self.end_date >= DateTime.current 
+      true
+     else
+      false
+     end
+  end
+
   def get_narrative_counts
     reactions.group(:narrative).count.to_a.sort! { |x, y| x[1] <=> y[1] }
   end

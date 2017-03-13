@@ -32,14 +32,8 @@
 </p>
 <p>
   <strong>Course instructors</strong>
-  <%= form_tag add_instructors_path, method: :get do %>
-    <%= label_tag :addresses, "Add instructor by email:" %>
-    <%= text_field_tag :addresses %>
-    <%= hidden_field_tag :id, @course.id %>
-    <%= submit_tag "Add!" %>
-  <% end %>
   <% @course.rosters.instructorships.each do |roster| %>
-    <%= roster.user.name %><br>
+    <%= roster.user.name %></br>
   <% end %>
 
 </p>
@@ -47,6 +41,17 @@
   </div>
   <div id="students" class="ui-body-<%= theme_code %> ui-content">
 <p>
+  <strong>Course instructors</strong>
+  <%= form_tag add_instructors_path, method: :get do %>
+    <%= label_tag :addresses, "Add instructor by email:" %>
+    <%= text_field_tag :addresses %>
+    <%= hidden_field_tag :id, @course.id %>
+    <%= submit_tag "Add!" %>
+  <% end %>
+  <% @course.rosters.instructorships.each do |roster| %>
+    <%= roster.user.name %></br>
+  <% end %>
+
   <h2>Student roster</h2>
   <%= form_tag add_students_path, method: :get do %>
     <%= label_tag :addresses, "Add users by email:" %>
@@ -55,6 +60,13 @@
     <%= submit_tag "Add!" %>
   <% end %>
   <% if @course.rosters.students.count > 0 %>
+    <p>
+    <% if @course.rosters.students.count == 1 %>
+      There is one student enrolled.
+    <% else %>
+      There are <%= @course.rosters.students.count %> students enrolled.
+    <% end %>
+    </p>
   <table>
     <tr>
       <th>Student</th>

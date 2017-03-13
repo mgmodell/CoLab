@@ -65,11 +65,11 @@ class ExperiencesController < ApplicationController
   def next
     experience_id = params[:experience_id]
 
-    experience = Experience.still_open.joins(course: { rosters: :user })
-                           .where(users: { id: @current_user }).take
+    experience = Experience.joins(course: { rosters: :user })
+                           .where( id: experience_id, users: { id: @current_user }).take
 
-    if experience.nil?
-      redirect_to '/', notice: 'That Experience is a part of another course'
+    if experience.nil? && ! experience.is_open
+      redirect_to '/', notice: 'That experience is a part of another course'
     else
       reaction = experience.get_user_reaction(@current_user)
       week = reaction.next_week
