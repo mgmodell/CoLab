@@ -10,7 +10,8 @@ class AdministrativeMailer < ActionMailer::Base
          track_opens: 'true')
   end
 
-  def summary_report(user, completion_hash)
+  def summary_report( name, user, completion_hash)
+    @name = name
     @user = user
     @completion_report = completion_hash
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",

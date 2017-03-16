@@ -97,7 +97,9 @@ class Assessment < ActiveRecord::Base
       # Retrieve names of those who did not complete their assessments
       # InstructorNewsLetterMailer.inform( instructor ).deliver_later
       assessment.project.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(instructor, completion_hash).deliver_later
+        AdministrativeMailer.summary_report(assessment.project.name + " (assessment)",
+                                            instructor,
+                                            completion_hash).deliver_later
       end
 
       assessment.instructor_updated = true

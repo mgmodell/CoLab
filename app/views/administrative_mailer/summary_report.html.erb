@@ -6,8 +6,8 @@
     <body>
           <h1>Hello, <%= @user.first_name %>.</h1>
           <p>
-          Below is your students' completion report from this past
-          week's assessment administered by <%= link_to "CoLab.online", root_url %>.
+          Below is your students' completion report from <%= @name %> at 
+          <%= link_to "CoLab.online", root_url %> which just wrapped up:
           </P>
           <table>
             <tr>
