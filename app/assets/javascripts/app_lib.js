@@ -62,7 +62,7 @@ $(document).ready(function(){
     }
   });
 
-  //$("#basicTable").tablesorter( {sortList: [[0,0],[1,0]]} );
+  $("#basicTable").tablesorter( {sortList: [[0,0],[1,0]]} );
 
   $( "[data-role='header'], [data-role='footer']" ).toolbar();
 

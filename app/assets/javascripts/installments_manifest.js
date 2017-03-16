@@ -15,3 +15,4 @@
 //= require app_lib
 //= require jquery.mobile
 //= require installments
+//= require jquery-tablesorter
