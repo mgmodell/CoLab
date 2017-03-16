@@ -25,7 +25,7 @@
   <div id="participants" class="ui-body-<%= theme_code %> ui-content">
   <h2>Rosters</h2>
   <% @course.rosters.students.each do |roster| %>
-    <%= roster.user.name %> <i><%= roster.user.email %></i> (<%= roster.role.name %> )<br>
+    <%= roster.user.name %> <i><%= mail_to roster.user.email %></i> (<%= roster.role.name %> )<br>
   <% end %>
   </div>
   <div id="activities" class="ui-body-<%= theme_code %> ui-content">

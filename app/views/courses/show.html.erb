@@ -67,28 +67,35 @@
       There are <%= @course.rosters.students.count %> students enrolled.
     <% end %>
     </p>
-  <table data-role="table" 
-      id="studentTable"
-      data-column-btn-theme="<%= theme_code %>" 
-      data-column-popup-theme="<%= theme_code %>" 
-      data-mode="columntoggle"
-      class="table-stroke ui-shadow table-stripe table-ui-responsive">
+        <table data-role="table"
+          id="basicTable"
+          data-column-btn-theme"<%= theme_code %>" 
+          data-column-popup-theme="<%= theme_code %>" 
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="Select columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+
     <thead>
     <tr>
-      <th >Student</th>
-      <th >Email</th>
-      <th data-priority="1">Status</th>
-      <th data-priority="2">Actions</th>
+      <th >Family Name</th>
+      <th data-priority="0">Given Name</th>
+      <th data-priority="1">Email</th>
+      <th >Status</th>
+      <th data-priority="1">Actions</th>
     </tr>
     </thead>
     <tbody>
       <% @course.rosters.students.each do |roster| %>
       <tr>
         <td>
-          <%= roster.user.name %>
+          <%= roster.user.last_name.blank? ? "<not given>" : roster.user.last_name %>
         </td>
         <td>
-          <%= roster.user.email %>
+          <%= roster.user.first_name.blank? ? "<not given>" : roster.user.first_name %>
+        </td>
+        <td>
+          <%= mail_to roster.user.email %>
         </td>
         <td>
           <%= roster.role.name %>

@@ -1,20 +1,28 @@
 <p id="notice"><%= notice %></p>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 
 <h1>Listing Courses</h1>
 
-<table>
+<table data-role="table"
+  id="basicTable"
+  data-column-btn-theme"<%= theme_code %>" 
+  data-column-popup-theme="<%= theme_code %>" 
+  data-mode="columntoggle"
+  data-column-btn-theme="<%= theme_code %>"
+  data-column-btn-text="Select columns&hellip;"
+  class="table-stroke ui-shadow table-stripe table-ui-responsive ">
   <thead>
     <tr>
       <th>Number</th>
       <th>Name</th>
-      <th>School</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Instructors</th>
-      <th>Students</th>
-      <th>Projects</th>
-      <th>Experiences</th>
-      <th colspan="3"></th>
+      <th data-priority="0">School</th>
+      <th data-priority="1">Start Date</th>
+      <th data-priority="1">End Date</th>
+      <th data-priority="1">Instructors</th>
+      <th >Students</th>
+      <th data-priority="1">Projects</th>
+      <th data-priority="1">Experiences</th>
+      <th>Actions</th>
     </tr>
   </thead>
 
@@ -30,9 +38,9 @@
         <td><%= course.rosters.students.count %></td>
         <td><%= course.projects.count %></td>
         <td><%= course.experiences.count %></td>
-        <td><%= link_to 'Show', course_path( course ) %></td>
-        <td><%= link_to 'Edit', edit_course_path(course) %></td>
-        <td><%= link_to 'Destroy', course_path( course ), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show', course_path( course ) %>&nbsp;|&nbsp;
+        <%= link_to 'Edit', edit_course_path(course) %>&nbsp;|&nbsp;
+        <%= link_to 'Destroy', course_path( course ), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

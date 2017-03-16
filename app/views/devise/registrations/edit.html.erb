@@ -53,14 +53,25 @@
   </div>
   <div id="history" class="ui-body-<%= theme_code %> ui-content">
     <h2>History of Activities in Which You've Taken Part</h2>
-    <table>
+<table data-role="table"
+          id="basicTable"
+          data-column-btn-theme"<%= theme_code %>" 
+          data-column-popup-theme="<%= theme_code %>" 
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="Select columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+
+      <thead>
       <tr>
         <th>Activity</th>
-        <th>Type</th>
-        <th>Completion Date</th>
-        <th>Status</th>
-        <th>Other information</th>
+        <th data-priority="0">Type</th>
+        <th data-priority="0">Completion Date</th>
+        <th data-priority="0">Status</th>
+        <th data-priority="1">Other information</th>
       </tr>
+      </thead>
+      <tbody>
       <% @current_user.courses.each do |course| %>
       <tr>
         <td><%= course.name %></td>
@@ -97,7 +108,7 @@
         </td>
       </tr>
       <% end %>
-
+      </tbody>
     </table>
   </div>
 </div>

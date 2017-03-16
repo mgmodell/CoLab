@@ -1,4 +1,5 @@
 <h1>Your Tasks</h1>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 <p>Hello <%= @first_name %>,
 <% if @waiting_tasks.any? %>
   <% if @waiting_tasks.count == 1 %>
@@ -11,15 +12,25 @@
 <% end %></p>
 
 <% if @waiting_tasks.any? || @waiting_rosters.any? %>
-   <table>
+<table data-role="table"
+          id="basicTable"
+          data-column-btn-theme"<%= theme_code %>" 
+          data-column-popup-theme="<%= theme_code %>" 
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="Select columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+  <thead>
      <tr>
      <th>Task Name</th>
      <th>Status</th>
-     <th>Course Name</th>
-     <th>Open Date</th>
-     <th>Close Date</th>
-     <th>Consent Form</th>
+     <th data-priority="0">Course Name</th>
+     <th data-priority="1">Open Date</th>
+     <th data-priority="0">Close Date</th>
+     <th data-priority="1">Consent Form</th>
      </tr>
+  </thead>
+  <tbody>
      <% @waiting_tasks.each do |task| %>
         <% if task.class.name == "Assessment" %>
                 <% group = task.group_for_user( @current_user )%>
@@ -91,5 +102,6 @@
       <td>N/A</td>
       </tr>
     <% end %>
+    </tbody>
   </table>
 <% end %>

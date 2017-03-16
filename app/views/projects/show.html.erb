@@ -56,24 +56,38 @@
           <%= submit_tag "Add!" %>
         <% end %>
         <% if @project.groups.any? || @project.course.enrolled_students.any? %>
-          <table width="90%">
-            <tr>
-              <th>&nbsp;</th>
-              <% @project.groups.each do |group| %>
-              <th><%= group.name %></th>
-              <% end %>
-            </tr>
+  <table width="90%" data-role="table"
+          id="basicTable"
+          data-column-btn-theme"<%= theme_code %>" 
+          data-column-popup-theme="<%= theme_code %>" 
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="Select columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+    <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <% groups = @project.groups %>
+      <% groups.each do |group| %>
+      <th data-priority="0"><%= group.name %></th>
+      <% end %>
+      <th data-priority="0">[no group]</th>
+    </tr>
+    </thead>
+    <tbody>
             <% @project.course.enrolled_students.each do |user| %>
             <tr>
               <td><%= user.name %></br>
-                <em>[<%= user.email %>]</em></td>
+                <em>[<%= mail_to user.email %>]</em></td>
               <% @project.groups.each do |group| %>
-                <td>
-                  <center><%= raw( "&#10004;" ) if group.has_user user %></center>
+                <td align="center">
+                  <%= raw( "&#10004;" ) if group.has_user user %>
                 </td>
               <% end %>
+        <td align="center"><%= raw( "&#10004;" ) if true %></td>
             </tr>
             <% end %>
+            </tbody>
           </table>
         <% end %>
       </p>

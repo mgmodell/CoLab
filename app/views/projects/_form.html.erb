@@ -32,23 +32,36 @@
   <div id="groups" class="ui-body-<%= theme_code %> ui-content">
   <h2>Group memberships</h2>
   <% if @project.groups.any? || @project.enrolled_user_rosters.any? %>
-  <table width="90%">
+  <table width="90%" data-role="table"
+          id="basicTable"
+          data-column-btn-theme"<%= theme_code %>" 
+          data-column-popup-theme="<%= theme_code %>" 
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="Select columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+    <thead>
     <tr>
       <th>&nbsp;</th>
       <% groups = @project.groups %>
       <% groups.each do |group| %>
-      <th><%= text_field_tag "group_" + group.id.to_s, group.name %></th>
+      <th data-priority="0"><%= text_field_tag "group_" + group.id.to_s, group.name %></th>
       <% end %>
+      <th data-priority="0">[no group]</th>
     </tr>
+    </thead>
+    <tbody>
       <% @project.course.enrolled_students.each do |user| %>
       <tr>
         <td><%= user.name %></br>
-            <em>[<%= user.email %>]</em></td>
+            <em>[<%= mail_to user.email %>]</em></td>
         <% groups.each do |group| %>
         <td><%= radio_button_tag "user_group_#{user.id}", group.id, group.has_user( user ) %></td>
         <% end %>
+        <td><%= radio_button_tag "user_group_#{user.id}", "-1" %></td>
       </tr>
       <% end %>
+    </tbody>
   </table>
   <% end %>
   </div>

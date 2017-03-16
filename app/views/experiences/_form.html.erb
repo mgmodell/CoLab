@@ -23,20 +23,34 @@
   </div>
   <div id="summary" class="ui-body-<%= theme_code %> ui-content">
     <h2>Student Response Summary</h2>
-    <table width="90%">
+      <table width="90%" data-role="table"
+          id="basicTable"
+          data-column-btn-theme"<%= theme_code %>" 
+          data-column-popup-theme="<%= theme_code %>" 
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="Select columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+
+    <thead>
+
       <tr>
-        <th>Name</th>
-        <th>Email</th>
+        <th>Family Name</th>
+        <th>Given Name</th>
+        <th data-priority="1">Email</th>
         <th>Status</th>
-        <th>Scenario</th>
-        <th>Narrative</th>
+        <th data-priority="1">Scenario</th>
+        <th data-priority="1">Narrative</th>
         <th>Overall Diagnosis</th>
-        <th>Reaction Suggestions</th>
+        <th data-priority="0">Reaction Suggestions</th>
       <tr>
+    </thead>
+    <tbody>
       <% @experience.course.enrolled_students.each do |student| %>
       <tr><% reaction = @experience.get_user_reaction( student ) %>
-        <td><%= student.name %></td>
-        <td><%= student.email %></td>
+        <td><%= student.last_name %></td>
+        <td><%= student.first_name %></td>
+        <td><%= mail_to student.email %></td>
       <% if reaction.behavior.present? #completed %>
         <td>Completed</td>
         <td><%= reaction.narrative.scenario.behavior.name %></td>
@@ -76,6 +90,7 @@
       <% end %>
       <tr>
       <% end %>
+      </tbody>
     </table>
       <% @experience.course.enrolled_students.each do |student| %>
         <% reaction = @experience.get_user_reaction( student ) %>
