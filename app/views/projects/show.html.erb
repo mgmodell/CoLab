@@ -1,6 +1,5 @@
 <p id="notice"><%= notice %></p>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -21,7 +20,6 @@
         <span class="error">Inactive</span>
       <% end %>)
     </p>
-
     <p>
       <h3>Dates:</h3>
       <%= @project.start_date %> to
@@ -29,34 +27,32 @@
       <%= Date::DAYNAMES.at @project.start_dow %> to
       <%= Date::DAYNAMES.at @project.end_dow %><br>
     </p>
-
     <p>
       <h3>Description:</h3>
       <%= @project.description %>
     </p>
-
     <p>
       <h3>Factor Pack:</h3>
       <%= @project.factor_pack.name %></br>
-      <ul>
-        <% @project.factor_pack.factors.each do |factor| %>
+    <ul>
+      <% @project.factor_pack.factors.each do |factor| %>
         <li><%= factor.name %></li>
-        <% end %>
-      </ul>
-    </p>
-    <%= link_to 'Edit Project Details', edit_project_path(@project) %>
-  </div>
-  <div id="groups" class="ui-body-<%= theme_code %> ui-content">
-    <h2>Groups</h2>
-      <p>
-        <%= form_tag add_group_path, method: :get do %>
-          <%= label_tag :group_name, "New group name: " %>
-          <%= text_field_tag :group_name %>
-          <%= hidden_field_tag :project_id, @project.id %>
-          <%= submit_tag "Add!" %>
-        <% end %>
-        <% if @project.groups.any? || @project.course.enrolled_students.any? %>
-  <table width="90%" data-role="table"
+      <% end %>
+    </ul>
+  </p>
+  <%= link_to 'Edit Project Details', edit_project_path(@project) %>
+</div>
+<div id="groups" class="ui-body-<%= theme_code %> ui-content">
+  <h2>Groups</h2>
+  <p>
+    <%= form_tag add_group_path, method: :get do %>
+      <%= label_tag :group_name, "New group name: " %>
+      <%= text_field_tag :group_name %>
+      <%= hidden_field_tag :project_id, @project.id %>
+      <%= submit_tag "Add!" %>
+    <% end %>
+    <% if @project.groups.any? || @project.course.enrolled_students.any? %>
+      <table width="90%" data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
           data-column-popup-theme="<%= theme_code %>" 
@@ -64,43 +60,40 @@
           data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="Select columns&hellip;"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-    <thead>
-    <tr>
-      <th>&nbsp;</th>
-      <% groups = @project.groups %>
-      <% groups.each do |group| %>
-      <th data-priority="0"><%= group.name %></th>
-      <% end %>
-      <th data-priority="0">[no group]</th>
-    </tr>
-    </thead>
-    <tbody>
-            <% @project.course.enrolled_students.each do |user| %>
+        <thead>
+          <tr>
+            <th>&nbsp;</th>
+            <% groups = @project.groups %>
+            <% groups.each do |group| %>
+              <th data-priority="0"><%= group.name %></th>
+            <% end %>
+            <th data-priority="0">[no group]</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @project.course.enrolled_students.each do |user| %>
             <tr>
               <td><%= user.name %></br>
-                <em>[<%= mail_to user.email %>]</em></td>
-              <% @project.groups.each do |group| %>
-                <td align="center">
-                  <%= raw( "&#10004;" ) if group.has_user user %>
-                </td>
-              <% end %>
-        <td align="center"><%= raw( "&#10004;" ) if true %></td>
-            </tr>
+              <em>[<%= mail_to user.email %>]</em></td>
+            <% @project.groups.each do |group| %>
+              <td align="center">
+                <%= raw( "&#10004;" ) if group.has_user user %>
+              </td>
             <% end %>
-            </tbody>
-          </table>
+            <td align="center"><%= raw( "&#10004;" ) if true %></td>
+          </tr>
         <% end %>
-      </p>
-    <%= link_to 'Edit Project', edit_project_path(@project) %>
-  </div>
-  <div id="summary" class="ui-body-<%= theme_code %> ui-content">
-    <h2>Response Summary</h2>
-  </div>
-  <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-    <h2>Responses</h2>
-  </div>
+      </tbody>
+    </table>
+  <% end %>
+</p>
+<%= link_to 'Edit Project', edit_project_path(@project) %>
 </div>
-
-
-
+<div id="summary" class="ui-body-<%= theme_code %> ui-content">
+  <h2>Response Summary</h2>
+</div>
+<div id="responses" class="ui-body-<%= theme_code %> ui-content">
+  <h2>Responses</h2>
+</div>
+</div>
 <%= link_to 'Back to course', @project.course %>

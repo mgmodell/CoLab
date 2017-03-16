@@ -2,29 +2,31 @@
 <p>Hello <%= @current_user.nil? ? "John" : @current_user.first_name %>,
     You've got one task at the moment.
 
-   <table>
-     <tr>
-     <th>Task Name</th>
-     <th>Status</th>
-     <th>Course Name</th>
-     <th>Open Date</th>
-     <th>Close Date</th>
-     <th>Consent Form</th>
-     </tr>
-                <tr>
-                <td>
-                    <%= link_to "Assess Group: SuperStars", demo_complete_path %>
-                    <br>(Project: Research Paper)
+   
+  <table>
+    <tr>
+      <th>Task Name</th>
+      <th>Status</th>
+      <th>Course Name</th>
+      <th>Open Date</th>
+      <th>Close Date</th>
+      <th>Consent Form</th>
+    </tr>
+    <tr>
+      <td>
+        <%= link_to "Assess Group: SuperStars", demo_complete_path %>
+        <br>
+        (Project: Research Paper)
                 </td>
-                <td>
-                    <em>Not Started</em>
+      <td>
+        <em>Not Started</em>
+      </td>
+      <td>SuperStars</td>
+      <td>Advanced Collaborative Research</td>
+      <td> <%= 1.day.ago.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+      <td> <%= 1.day.from_now.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+      <td>
+        N/A
                 </td>
-                <td>SuperStars</td>
-                <td>Advanced Collaborative Research</td>
-                <td> <%= 1.day.ago.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-                <td> <%= 1.day.from_now.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-                <td>
-                  N/A
-                </td>
-              </tr>
+    </tr>
   </table>

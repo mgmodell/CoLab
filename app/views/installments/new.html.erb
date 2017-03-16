@@ -5,15 +5,14 @@
 <% if flash[:error] %>
   <p class="error"><%= flash[:error] %> </p>
 <% end %>
-
 <div class="instructions">
-<p>Please complete this weeks' <%= @project_name %> assessment for 
+  <p>Please complete this weeks' <%= @project_name %> assessment for 
 group `<%= @group.name %>' by indicating how much effort each of the
-<%= @members.count %> members of your group contributed towards each of
+    <%= @members.count %> members of your group contributed towards each of
 the <%= @factors.count %> factors. Please keep in mind that <em>this
 report <u>should only cover this past week</u> and none of the period 
 before</em>.</p>
-<P>Each column below must total 6000 and the row at bottom will indicate
+  <P>Each column below must total 6000 and the row at bottom will indicate
 the current total. Additionally, the submit button will only be available
 when the totals equal 600.</p>
 </div>
@@ -22,7 +21,6 @@ when the totals equal 600.</p>
    else
      url_params = { :action => "update", :id => @installment.id }
    end %>
-
 <%= form_for @installment, :url => url_params do |f| %>
   <%= f.hidden_field :inst_date %>
   <%= f.hidden_field :assessment_id %>
@@ -31,10 +29,10 @@ when the totals equal 600.</p>
   <table>
     <tr>
       <th>User</th>
-    <% @factors.each do |factor| %>
-      <th><%= factor.name %><br>
-        <%= factor.description %></th>
-    <% end %>
+      <% @factors.each do |factor| %>
+        <th><%= factor.name %><br>
+          <%= factor.description %></th>
+      <% end %>
     </tr>
     <% index = 0 %>
     <% value = Value.new %>
@@ -58,7 +56,8 @@ when the totals equal 600.</p>
       </tr>
     <% end %>
     <tr>
-      <td>Totals:<br>(must equal 6000)</td>
+      <td>Totals:<br>
+        (must equal 6000)</td>
       <% @factors.each do |factor| %>
         <td>
           <%= text_field_tag ( factor.name.delete( ' ' ) + "_calc" ), 6000,
@@ -66,10 +65,7 @@ when the totals equal 600.</p>
         </td>
       <% end %>
     </tr>
-
-
   </table>
   <%= render :partial => "installments/shared/comments", :object => f %>
-
   <%= f.submit "Submit Weekly Installment" %>
 <% end %>

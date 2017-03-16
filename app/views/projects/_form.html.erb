@@ -1,38 +1,36 @@
 <%= simple_form_for @project do |f| %>
   <%= f.error_notification %>
-
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-
-<div data-role="tabs" id="tabs">
-  <div data-role="navbar">
-    <ul>
-      <li><a href="#details" data-ajax="false">Details</a></li>
-      <li><a href="#groups" data-ajax="false">Group Assignments</a></li>
-      <li><a href="#summary" data-ajax="false">Response Summary</a></li>
-      <li><a href="#responses" data-ajax="false">Response Data</a></li>
-    </ul>
-  </div>
-  <div id="details" class="ui-body-<%= theme_code %> ui-content">
-    <h2>Project Details</h2>
-    <div class="form-inputs">
-      <%= f.association :course %>
-      <%= f.input :name %>
-      <%= f.input :active %>
-      <%= f.input :start_date, as: :date_time_local %>
-      <%= f.input :end_date, as: :date_time_local %>
-      <%= f.select :start_dow, Date::DAYNAMES.each_with_index.to_a, prompt: true  %>
-      <%= f.select :end_dow, Date::DAYNAMES.each_with_index.to_a, prompt: true  %>
-      <%= f.association :factor_pack %>
-      <%= f.association :style %>
-      <%= f.input :description, as: :text %>
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+  <div data-role="tabs" id="tabs">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#details" data-ajax="false">Details</a></li>
+        <li><a href="#groups" data-ajax="false">Group Assignments</a></li>
+        <li><a href="#summary" data-ajax="false">Response Summary</a></li>
+        <li><a href="#responses" data-ajax="false">Response Data</a></li>
+      </ul>
     </div>
-  </div>
-  <div id="details" class="ui-body-<%= theme_code %> ui-content">
-  </div>
-  <div id="groups" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Group memberships</h2>
-  <% if @project.groups.any? || @project.enrolled_user_rosters.any? %>
-  <table width="90%" data-role="table"
+    <div id="details" class="ui-body-<%= theme_code %> ui-content">
+      <h2>Project Details</h2>
+      <div class="form-inputs">
+        <%= f.association :course %>
+        <%= f.input :name %>
+        <%= f.input :active %>
+        <%= f.input :start_date, as: :date_time_local %>
+        <%= f.input :end_date, as: :date_time_local %>
+        <%= f.select :start_dow, Date::DAYNAMES.each_with_index.to_a, prompt: true  %>
+        <%= f.select :end_dow, Date::DAYNAMES.each_with_index.to_a, prompt: true  %>
+        <%= f.association :factor_pack %>
+        <%= f.association :style %>
+        <%= f.input :description, as: :text %>
+      </div>
+    </div>
+    <div id="details" class="ui-body-<%= theme_code %> ui-content">
+    </div>
+    <div id="groups" class="ui-body-<%= theme_code %> ui-content">
+      <h2>Group memberships</h2>
+      <% if @project.groups.any? || @project.enrolled_user_rosters.any? %>
+        <table width="90%" data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
           data-column-popup-theme="<%= theme_code %>" 
@@ -40,30 +38,30 @@
           data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="Select columns&hellip;"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-    <thead>
-    <tr>
-      <th>&nbsp;</th>
-      <% groups = @project.groups %>
-      <% groups.each do |group| %>
-      <th data-priority="0"><%= text_field_tag "group_" + group.id.to_s, group.name %></th>
-      <% end %>
-      <th data-priority="0">[no group]</th>
-    </tr>
-    </thead>
-    <tbody>
-      <% @project.course.enrolled_students.each do |user| %>
-      <tr>
-        <td><%= user.name %></br>
-            <em>[<%= mail_to user.email %>]</em></td>
-        <% groups.each do |group| %>
-        <td><%= radio_button_tag "user_group_#{user.id}", group.id, group.has_user( user ) %></td>
-        <% end %>
-        <td><%= radio_button_tag "user_group_#{user.id}", "-1" %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <% end %>
+          <thead>
+            <tr>
+              <th>&nbsp;</th>
+              <% groups = @project.groups %>
+              <% groups.each do |group| %>
+                <th data-priority="0"><%= text_field_tag "group_" + group.id.to_s, group.name %></th>
+              <% end %>
+              <th data-priority="0">[no group]</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @project.course.enrolled_students.each do |user| %>
+              <tr>
+                <td><%= user.name %></br>
+                <em>[<%= mail_to user.email %>]</em></td>
+              <% groups.each do |group| %>
+                <td><%= radio_button_tag "user_group_#{user.id}", group.id, group.has_user( user ) %></td>
+              <% end %>
+              <td><%= radio_button_tag "user_group_#{user.id}", "-1" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
   </div>
   <div id="summary" class="ui-body-<%= theme_code %> ui-content">
     <h2>Response Summary</h2>
@@ -72,9 +70,7 @@
     <h2>Responses</h2>
   </div>
 </div>
-    
-
-  <div class="form-actions">
-    <%= f.button :submit %>
-  </div>
+<div class="form-actions">
+  <%= f.button :submit %>
+</div>
 <% end %>

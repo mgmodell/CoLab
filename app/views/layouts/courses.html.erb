@@ -1,29 +1,27 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>CoLab : Edit Courses</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-  <div data-role="page" data-theme="<%= @current_user.nil? ? "a" : @current_user.theme.code %>">
-    <div data-role="header" data-position="fixed" style="overflow:hidden;" >
-      <h1>CoLab : Edit Courses</h1>
+  <head>
+    <title>CoLab : Edit Courses</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= stylesheet_link_tag    "application", :media => "all" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <div data-role="page" data-theme="<%= @current_user.nil? ? "a" : @current_user.theme.code %>">
+      <div data-role="header" data-position="fixed" style="overflow:hidden;" >
+        <h1>CoLab : Edit Courses</h1>
+      </div>
+      <div data-role="content">
+        <% if flash[:error] -%>
+          <p class='error'><%=h flash[:error] %></p>
+        <% end -%>
+        <% if flash[:notice] -%>
+          <p class='notice'><%=h flash[:notice] %></p>
+        <% end -%>
+        <%= yield %>
+      </div>
     </div>
-
-    <div data-role="content">
-      <% if flash[:error] -%>
-        <p class='error'><%=h flash[:error] %></p>
-      <% end -%>
-      <% if flash[:notice] -%>
-        <p class='notice'><%=h flash[:notice] %></p>
-      <% end -%>
-
-<%= yield %>
-    </div>
-  </div>
-  <%= render 'layouts/shared/footer', working: true %>
-</body>
+    <%= render 'layouts/shared/footer', working: true %>
+  </body>
 </html>

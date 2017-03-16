@@ -5,17 +5,14 @@
     <h3>Journal entry: Week <%= @diagnosis.week.week_num %></h3>
   </div>
   <div class="ui-body ui-body-a">
-<%= @diagnosis.week.text.html_safe %>
+    <%= @diagnosis.week.text.html_safe %>
   </div>
 </div>
-
 <br>
 <hr>
 <%= simple_form_for @diagnosis, :url => { :controller => "experiences", :action => "diagnose" }, :method => :get do |f| %>
-
   <%= f.hidden_field :week_id, value: @diagnosis.week_id  %>
   <%= f.hidden_field :reaction_id, value: @diagnosis.reaction.id  %>
-
   <% if @diagnosis.errors.any? && @diagnosis.errors[:behavior ].count > 0 %>
     <p class='error'><%= @diagnosis.errors[ :behavior ].first %></p>
   <% end %>
@@ -25,24 +22,21 @@
     </div>
     <div class="ui-body ui-body-a">
       <%= f.association :behavior, :collection => Behavior.all, :as => :radio_buttons, label: false, :error => false %>
-
       <% if @diagnosis.errors.any? && @diagnosis.errors[ :other_name ].count > 0 %>
         <div id="other_name_panel">
-        <p class='error'><%= @diagnosis.errors[ :other_name ].first %></p>
-      <% else %>
-        <div style="display: none" id="other_name_panel">
-      <% end %>
+          <p class='error'><%= @diagnosis.errors[ :other_name ].first %></p>
+        <% else %>
+          <div style="display: none" id="other_name_panel">
+          <% end %>
           <%= f.input :other_name, label: "What behavior did you see?" %><br>
         </div>
+      </div>
     </div>
-  </div>
-
-  <div data-role="collapsible">
-    <h3>Click here if you have additional comments for us regarding this narrative.</h3>
-    <%= f.input :comment, as: :text, size: "24x6", label: "Your comments:" %>
-  </div>
-  <br><br>
-
-  <%= f.submit "Save and continue" %>
-  
-<% end %>
+    <div data-role="collapsible">
+      <h3>Click here if you have additional comments for us regarding this narrative.</h3>
+      <%= f.input :comment, as: :text, size: "24x6", label: "Your comments:" %>
+    </div>
+    <br>
+    <br>
+    <%= f.submit "Save and continue" %>
+  <% end %>

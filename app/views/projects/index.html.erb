@@ -1,9 +1,7 @@
 <p id="notice"><%= notice %></p>
-
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 <h1>Listing Projects</h1>
-
-        <table data-role="table"
+<table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
           data-column-popup-theme="<%= theme_code %>" 
@@ -11,8 +9,7 @@
           data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="Select columns&hellip;"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-
-    <thead>
+  <thead>
     <tr>
       <th>Name</th>
       <th data-priority="0">Start Date</th>
@@ -23,7 +20,6 @@
       <th data-priority="0">Actions</th>
     </tr>
   </thead>
-
   <tbody>
     <% @projects.each do |project| %>
       <tr>
@@ -40,7 +36,5 @@
     <% end %>
   </tbody>
 </table>
-
 <br>
-
 <%= link_to 'New Project', new_project_path %>

@@ -5,20 +5,18 @@
 <% if flash[:error] %>
   <p class="error"><%= flash[:error] %></p>
 <% end %>
-
 <div class="instructions">
-<p>Please complete this weeks' assessment for 
+  <p>Please complete this weeks' assessment for 
 group <em><%= @group.name %></em> by indicating how much effort each of the
-<%= @members.count %> members of your group contributed towards each of
+    <%= @members.count %> members of your group contributed towards each of
 the <%= @factors.count %> factors. Please keep in mind that <em>this
 report <u>should only cover this past week</u> and none of the period 
 before</em>.</p>
-<P>Use the sliders to increase or decrease the effort each member put in
+  <P>Use the sliders to increase or decrease the effort each member put in
 towards each factor. Notice that when you increase one slider, all other
 sliders will automatically drop proportionally and vice versa. Please do
 visit each set of factors prior to submitting your report.</p>
 </div>
-
 <% if @installment.id.nil?
      url_params = { :action => "create" }
    else
@@ -35,19 +33,19 @@ visit each set of factors prior to submitting your report.</p>
       <div data-role="collapsible" data-collapsed="true" >
         <h3><%= factor.name %></h3>
         <p>Description: <%= factor.description %></p>
-          <table width="90%">
-              <% @members.each do |member| %>
-                <tr>
-                    <td width="150" class="full-width-slider" >
-                      <%= fields_for "installment[values_attributes][]",
+        <table width="90%">
+          <% @members.each do |member| %>
+            <tr>
+              <td width="150" class="full-width-slider" >
+                <%= fields_for "installment[values_attributes][]",
                         @installment.value_for_user_factor( member, factor )do |value_form| %>
-                        <%= value_form.hidden_field :factor_id %>
-                        <%= value_form.hidden_field :user_id %>
-                        <%= label_tag :value, member.name %>
-                    </td>
-                    <td>
-                      <br>
-                      <%= value_form.range_field :value, 
+                  <%= value_form.hidden_field :factor_id %>
+                  <%= value_form.hidden_field :user_id %>
+                  <%= label_tag :value, member.name %>
+                </td>
+                <td>
+                  <br>
+                  <%= value_form.range_field :value, 
                         :min => 0, :max => 6000, 
                         :data => {:highlight => true },
                         :class => "slider ui-hidden-accessible val_container",
@@ -55,18 +53,16 @@ visit each set of factors prior to submitting your report.</p>
                         :member => member.hash,
                   			:factor => factor.name,
                   			:oldValue => (6000 / @members.length ) %>
-                      <br>
-                      <% end %><br>
-                      <% index += 1 %>
-                    </td>
-                </tr>
-              <% end %>
-          </table>
-        </div>
+                  <br>
+                <% end %><br>
+                <% index += 1 %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
     <% end %>
   </div>
-
   <%= render :partial => "installments/shared/comments", :object => f %>
-
   <%= f.submit "Submit Weekly Installment" %>
 <% end %>
