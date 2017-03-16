@@ -31,6 +31,7 @@ gem 'country_select'
 gem 'devise'
 gem 'devise-multi_email'
 gem 'highcharts-rails'
+gem 'jquery-tablesorter'
 gem 'jquery_mobile_rails'
 gem 'omniauth-google-oauth2'
 gem 'paperclip', '~> 5.0.0'
@@ -38,7 +39,6 @@ gem 'postmark-rails', '>= 0.15.0'
 gem 'puma'
 gem 'rails_12factor', group: :production
 gem 'simple_form'
-gem 'jquery-tablesorter'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -58,6 +58,8 @@ group :development, :test do
   gem 'machinist'
   gem 'railroady'
   gem 'rspec'
+  gem 'htmlbeautifier'
+  gem 'rubocop'
 end
 
 group :development do
