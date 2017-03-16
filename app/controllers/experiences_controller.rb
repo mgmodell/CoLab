@@ -66,9 +66,9 @@ class ExperiencesController < ApplicationController
     experience_id = params[:experience_id]
 
     experience = Experience.joins(course: { rosters: :user })
-                           .where( id: experience_id, users: { id: @current_user }).take
+                           .where(id: experience_id, users: { id: @current_user }).take
 
-    if experience.nil? && ! experience.is_open
+    if experience.nil? && !experience.is_open
       redirect_to '/', notice: 'That experience is a part of another course'
     else
       reaction = experience.get_user_reaction(@current_user)

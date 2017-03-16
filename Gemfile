@@ -55,10 +55,10 @@ group :development, :test do
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'forgery'
+  gem 'htmlbeautifier'
   gem 'machinist'
   gem 'railroady'
   gem 'rspec'
-  gem 'htmlbeautifier'
   gem 'rubocop'
 end
 

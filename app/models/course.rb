@@ -60,7 +60,7 @@ class Course < ActiveRecord::Base
 
   def add_instructors_by_email(instructor_emails)
     instructor_emails.split(/\s*,\s*/).each do |email|
-      add_user_by_email( email, true )
+      add_user_by_email(email, true)
     end
   end
 

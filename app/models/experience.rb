@@ -51,11 +51,11 @@ class Experience < ActiveRecord::Base
   end
 
   def is_open
-     if self.start_date <= DateTime.current && self.end_date >= DateTime.current 
+    if start_date <= DateTime.current && end_date >= DateTime.current
       true
-     else
+    else
       false
-     end
+    end
   end
 
   def get_narrative_counts

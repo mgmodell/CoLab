@@ -9,11 +9,11 @@ class Group < ActiveRecord::Base
   validate :validate_activation_status, on: :update
 
   def validate_activation_status
-    if( project_id_was != project_id )
+    if project_id_was != project_id
       errors.add(:project,
-                 'It is not possible to move a group from one project to another.' )
+                 'It is not possible to move a group from one project to another.')
     end
-    if self.changed?
+    if changed?
       project.active = false
       project.save
     end
