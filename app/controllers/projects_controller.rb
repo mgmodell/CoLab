@@ -57,7 +57,7 @@ class ProjectsController < ApplicationController
 
         @project.course.enrolled_students.each do |user|
           gid = params['user_group_' + user.id.to_s]
-          unless gid.blank?
+          unless gid.blank? || gid.to_i == -1
             group = Group.find(gid)
             groups_users[group] << user
           end

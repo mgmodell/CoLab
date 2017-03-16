@@ -40,7 +40,7 @@
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
           <thead>
             <tr>
-              <th>&nbsp;</th>
+              <th>Student</th>
               <% groups = @project.groups %>
               <% groups.each do |group| %>
                 <th data-priority="0"><%= text_field_tag "group_" + group.id.to_s, group.name %></th>
@@ -51,12 +51,11 @@
           <tbody>
             <% @project.course.enrolled_students.each do |user| %>
               <tr>
-                <td><%= user.name %></br>
-                <em>[<%= mail_to user.email %>]</em></td>
+                <td><%= mail_to user.name, user.name %></td>
               <% groups.each do |group| %>
-                <td><%= radio_button_tag "user_group_#{user.id}", group.id, group.has_user( user ) %></td>
+                <td align="center"><%= radio_button_tag "user_group_#{user.id}", group.id, group.has_user( user ) %></td>
               <% end %>
-              <td><%= radio_button_tag "user_group_#{user.id}", "-1" %></td>
+              <td align="center"><%= radio_button_tag("user_group_#{user.id}", "-1", @project.group_for_user( user ).nil? ) %></td>
             </tr>
           <% end %>
         </tbody>

@@ -62,7 +62,7 @@
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
         <thead>
           <tr>
-            <th>&nbsp;</th>
+            <th>Student</th>
             <% groups = @project.groups %>
             <% groups.each do |group| %>
               <th data-priority="0"><%= group.name %></th>
@@ -73,14 +73,15 @@
         <tbody>
           <% @project.course.enrolled_students.each do |user| %>
             <tr>
-              <td><%= user.name %></br>
-              <em>[<%= mail_to user.email %>]</em></td>
+                <td><%= mail_to user.name, user.name %></td>
             <% @project.groups.each do |group| %>
-              <td align="center">
-                <%= raw( "&#10004;" ) if group.has_user user %>
+              <td>
+                <center><%= raw( "&#10004;" ) if group.has_user user %></center>
               </td>
             <% end %>
-            <td align="center"><%= raw( "&#10004;" ) if true %></td>
+            <td>
+              <center><%= raw( "&#10004;" ) if @project.group_for_user( user ).nil? %></center>
+            </td>
           </tr>
         <% end %>
       </tbody>
