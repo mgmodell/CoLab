@@ -15,3 +15,5 @@
 //= require app_lib
 //= require jquery.mobile
 //= require highcharts
+//= require highcharts
+//= require jquery-tablesorter

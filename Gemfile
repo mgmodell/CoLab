@@ -38,6 +38,7 @@ gem 'postmark-rails', '>= 0.15.0'
 gem 'puma'
 gem 'rails_12factor', group: :production
 gem 'simple_form'
+gem 'jquery-tablesorter'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

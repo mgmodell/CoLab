@@ -62,7 +62,7 @@ $(document).ready(function(){
     }
   });
 
-
+  $("#studentTable").tablesorter( );
 
   $( "[data-role='header'], [data-role='footer']" ).toolbar();
 

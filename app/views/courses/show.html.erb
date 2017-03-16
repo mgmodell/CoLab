@@ -67,17 +67,25 @@
       There are <%= @course.rosters.students.count %> students enrolled.
     <% end %>
     </p>
-  <table>
+  <table data-role="table" 
+      id="studentTable"
+      data-column-btn-theme="<%= theme_code %>" 
+      data-column-popup-theme="<%= theme_code %>" 
+      data-mode="columntoggle"
+      class="table-stroke ui-shadow table-stripe table-ui-responsive">
+    <thead>
     <tr>
-      <th>Student</th>
-      <th>Email</th>
-      <th>Status</th>
-      <th colspan="3">Actions</th>
+      <th >Student</th>
+      <th >Email</th>
+      <th data-priority="1">Status</th>
+      <th data-priority="2">Actions</th>
     </tr>
+    </thead>
+    <tbody>
       <% @course.rosters.students.each do |roster| %>
       <tr>
         <td>
-          <%= roster.user.name %> (<%= roster.role.name %>)
+          <%= roster.user.name %>
         </td>
         <td>
           <%= roster.user.email %>
@@ -85,11 +93,10 @@
         <td>
           <%= roster.role.name %>
         </td>
-        <td>Show</td>
-        <td>Edit</td>
-        <td>Remove</td>
+        <td>Show&nbsp;|&nbsp;Edit&nbsp;|&nbsp;Remove</td>
       </tr>
     <% end %>
+    </tbody>
   </table>
   <% end %>
 </p>
