@@ -58,6 +58,16 @@ class Assessment < ActiveRecord::Base
       current_users.delete user
     end
 
+    Experience.still_open.each do |experience|
+      experience.course.users do |user|
+        reaction = experience.get_user_reaction user
+        if reaction.persisted? && reaction.behavior.present?
+          current_users.push user
+        end
+      end
+    end
+
+
     # Make sure all the users are unique
     uniqued = {}
     current_users.each do |u|
