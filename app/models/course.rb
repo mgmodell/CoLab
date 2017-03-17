@@ -64,6 +64,13 @@ class Course < ActiveRecord::Base
     end
   end
 
+  def drop_student( user )
+    roster = Roster.where( user: user, course: self ).take
+    roster.Role = roster.Role.dropped.take
+    roster.save
+
+  end
+
   def enrolled_students
     rosters.joins(:role).where('roles.name = ? OR roles.name = ?', 'Enrolled Student', 'Invited Student').collect(&:user)
   end

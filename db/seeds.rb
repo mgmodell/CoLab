@@ -88,6 +88,8 @@ Role.create(name: 'Invited Student',
             description: 'This user is a student that has been invited to participatein this class.')
 Role.create(name: 'Declined Student',
             description: 'This user is a student that has declined to participate in this class.')
+Role.create(name: 'Dropped Student',
+            description: 'This user is a student that was enrolled but is not any longer.' )
 
 AgeRange.create(name: '<18')
 AgeRange.create(name: '18-20')

@@ -72,13 +72,7 @@
             </td>
             <td>
               <em>
-                <% if reaction.behavior.present? %>
-                  Completed
-                  <% elsif reaction.next_week.nil? %>
-                  97%
-                  <% else %>
-                  <%= reaction.next_week.percent_complete.to_s + "%" %>
-                <% end %>
+                <%= reaction.status %>
               </em>
             </td>
             <td><%= task.course.name %> (<%= task.course.get_roster_for_user( @current_user ).role.name %>)</td>

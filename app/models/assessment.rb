@@ -43,6 +43,7 @@ class Assessment < ActiveRecord::Base
   end
 
   # Send out email reminders to those who have yet to complete their waiting assessments
+  #TODO move this to the AdministrativeMailer Controller
   def self.send_reminder_emails
     logger.debug 'Sending reminder emails'
     finished_users = User.joins(installments: :assessment)
@@ -59,9 +60,9 @@ class Assessment < ActiveRecord::Base
     end
 
     Experience.still_open.each do |experience|
-      experience.course.users do |user|
+      experience.course.enrolled_students.each do |user|
         reaction = experience.get_user_reaction user
-        if reaction.persisted? && reaction.behavior.present?
+        unless reaction.persisted? && reaction.behavior.present?
           current_users.push user
         end
       end

@@ -25,3 +25,31 @@ end
 Then /^no emails will be sent$/ do
   ActionMailer::Base.deliveries.count.should eq 0
 end
+
+Then /^(\d+) emails will be sent$/ do |email_count|
+  ActionMailer::Base.deliveries.count.should eq email_count.to_i
+end
+
+Given /^the user is in a group on the project with (\d+) other users$/ do |user_count|
+  @group = Group.make
+  role = Role.enrolled.take
+  r = Roster.new
+  r.user = @user
+  r.course = @course
+  r.role = role
+  r.save
+  @group.users << @user
+  user_count.to_i.times do
+    user = User.make
+    user.skip_confirmation!
+    @group.users << user
+    r = Roster.new
+    r.user = user
+    r.course = @course
+    r.role = role
+    r.save
+  end
+  @project.groups << @group
+  @project.save
+end
+

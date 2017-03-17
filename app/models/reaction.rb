@@ -58,4 +58,16 @@ class Reaction < ActiveRecord::Base
     end
     errors
   end
+
+  def status
+    if diagnoses.count == 0
+      "Not started"
+    elsif behavior.present?
+      "Completed"
+    elsif next_week.nil?
+      "99%"
+    else
+      next_week.percent_complete.to_s + "%"
+    end
+  end
 end

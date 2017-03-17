@@ -10,5 +10,6 @@ namespace :admin do
     Assessment.set_up_assessments
     Assessment.send_reminder_emails
     Assessment.inform_instructors
+    Experience.inform_instructors
   end
 end

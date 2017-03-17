@@ -7,4 +7,5 @@ class Role < ActiveRecord::Base
   scope :invited, -> { where(name: 'Invited Student') }
   scope :enrolled, -> { where(name: 'Enrolled Student') }
   scope :declined, -> { where(name: 'Declined Student') }
+  scope :dropped, -> { where(name: 'Dropped Student') }
 end

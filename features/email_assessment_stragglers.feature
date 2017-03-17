@@ -1,4 +1,4 @@
-Feature: Email stragglers
+Feature: Email assessment stragglers
   In order to make sure we get complete information,
   Students must be reminded to complete their assessments.
 

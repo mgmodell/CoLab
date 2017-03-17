@@ -107,7 +107,6 @@ Then /^no user will have reacted to the same narrative more than once$/ do
 end
 
 Then /^the user successfully completes an experience$/ do
-  step 'user should see 1 open task'
   step 'the user clicks the link to the experience'
   step 'the user sees the experience instructions page'
   step 'the user presses "Next"'
@@ -121,7 +120,6 @@ Then /^the user successfully completes an experience$/ do
   step 'the database will show a reaction for the user with "Social loafing" as the behavior'
   step 'the database will show a reaction for the user with improvements of "super comment super"'
   step 'the user will see "Your reaction to the experience was recorded"'
-  step 'user should see 1 open task'
   step 'the user will see "Completed"'
 end
 

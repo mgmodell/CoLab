@@ -8,6 +8,8 @@ class Group < ActiveRecord::Base
   validates :name, :project_id, presence: true
   validate :validate_activation_status, on: :update
 
+  #TODO add default scope for users
+
   def validate_activation_status
     if project_id_was != project_id
       errors.add(:project,

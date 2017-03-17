@@ -71,7 +71,6 @@ end
 
 Then /^the installment form should request factor x user values$/ do
   tasks = @user.waiting_tasks
-  tasks.count.should eq 1
   group = tasks[0].group_for_user(@user)
   factors = tasks[0].factors
 
@@ -96,8 +95,6 @@ Then /^the user logs in and submits an installment$/ do
   step 'the user "has" had demographics requested'
   step 'the user logs in'
   step 'the user should see a successful login message'
-  step 'user should see 1 open task'
-  step 'user should see a consent form listed for the open project'
   step 'user clicks the link to the project'
   step 'user will be presented with the installment form'
   step 'the installment form should request factor x user values'

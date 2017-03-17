@@ -80,4 +80,24 @@ class Experience < ActiveRecord::Base
     self.start_date = start_date.beginning_of_day - course_tz.utc_offset if start_date_changed?
     self.end_date = end_date.end_of_day - course_tz.utc_offset if end_date_changed?
   end
+
+  def self.inform_instructors
+    Experience.where( 'instructor_updated = false AND end_date < ?', DateTime.current ).each do |experience|
+      completion_hash = {}
+      experience.course.enrolled_students.each do |student|
+        reaction = get_user_reaction student
+        completion_hash[ student ] = reaction.status
+
+        experience.course.instructors.each do |instructor|
+          AdministrativeMailer.summary_report( experience.name + " (experience)",
+                                              instructor,
+                                              completion_hash ).deliver_later
+        end
+        experience.instructor_updated = true
+        experience.save
+
+      end
+    end
+
+  end
 end

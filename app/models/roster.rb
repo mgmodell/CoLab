@@ -19,4 +19,5 @@ class Roster < ActiveRecord::Base
   scope :accepted, -> { joins(:role).where('name = ?', 'Enrolled Student') }
   scope :awaiting, -> { joins(:role).where('name = ?', 'Invited Student') }
   scope :declined, -> { joins(:role).where('name = ?', 'Declined Student') }
+  scope :dropped, -> { joins(:role).where('name = ?', 'Dropped Student') }
 end
