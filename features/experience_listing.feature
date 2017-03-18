@@ -22,6 +22,15 @@ Feature: Experience Listing
     Then user should see 1 open task
     Then the user logs out
 
+  Scenario: A student that drops the course won't see the experience
+    Given the experience started "last month" and ends "next month"
+    Given the experience "has" been activated
+    Given the user is "a random" user
+    Then the user is dropped from the course
+    When the user logs in
+    Then the user should see a successful login message
+    Then user should see 0 open task
+
   Scenario: We shouldn't see an experience that's not active
     Given the experience "has not" been activated
     Given the experience started "last month" and ends "next month"

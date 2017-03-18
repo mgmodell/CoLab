@@ -16,6 +16,14 @@ Feature: Assessment Listing
     Then the user should see a successful login message
     Then user should see 1 open task
 
+  Scenario: If the student drops the course, they shouldn't see the project
+    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Then the user is dropped from the course
+    Given the project has been activated
+    When the user logs in
+    Then the user should see a successful login message
+    Then user should see 0 open task
+
   Scenario: Checking for projects with opening and closing today
     Given the project started "last month" and ends "next month", opened "today" and closes "today"
     Given the project has been activated

@@ -14,6 +14,13 @@ Feature: Email experience stragglers
     When the system emails stragglers
     Then 4 emails will be sent
 
+  Scenario: 4 students are invited and one student drops - 3 emails are sent
+    Given the email queue is empty
+    Given the user is "a random" user
+    Then the user is dropped from the course
+    When the system emails stragglers
+    Then 3 emails will be sent
+
   Scenario: Four students have incomplete experiences that ended yesterday - no emails are sent
     Given the experience started "last month" and ends "yesterday"
     Given the experience "has" been activated
