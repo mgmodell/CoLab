@@ -100,7 +100,7 @@
         <td>
           <%= roster.role.name %>
         </td>
-        <td>Show&nbsp;|&nbsp;Edit&nbsp;|&nbsp;Remove</td>
+        <td><%= link_to "Drop", drop_student_path( roster.id ) %></td>
       </tr>
     <% end %>
     </tbody>

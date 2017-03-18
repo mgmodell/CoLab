@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
   get 'course/accept/:roster_id' => 'courses#accept_roster', :as => 'accept_roster'
   get 'course/decline/:roster_id' => 'courses#decline_roster', :as => 'decline_roster'
+  get 'courses/drop_student/:roster_id' => 'courses#drop_student', :as => 'drop_student'
 
   devise_for :users, controllers:
     { omniauth_callbacks: 'users/omniauth_callbacks',
