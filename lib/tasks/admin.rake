@@ -8,7 +8,7 @@ namespace :admin do
   desc 'Set up infrastructure and send reminders and summaries'
   task remind: :environment do
     Assessment.set_up_assessments
-    Assessment.send_reminder_emails
+    AdministrativeMailer.send_reminder_emails
     Assessment.inform_instructors
     Experience.inform_instructors
   end

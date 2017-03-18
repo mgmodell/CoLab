@@ -42,46 +42,6 @@ class Assessment < ActiveRecord::Base
     end
   end
 
-  # Send out email reminders to those who have yet to complete their waiting assessments
-  #TODO move this to the AdministrativeMailer Controller
-  def self.send_reminder_emails
-    logger.debug 'Sending reminder emails'
-    finished_users = User.joins(installments: :assessment)
-                         .where('assessments.start_date < ? AND assessments.end_date > ?',
-                                DateTime.current, DateTime.current).to_a
-
-    current_users = User.joins(groups: { project: :assessments })
-                        .where('assessments.start_date <= ? AND assessments.end_date >= ?', DateTime.current, DateTime.current)
-                        .joins('LEFT OUTER JOIN installments ON assessments.id = installments.assessment_id ' \
-             'AND installments.user_id = users.id').to_a
-
-    finished_users.each do |user|
-      current_users.delete user
-    end
-
-    Experience.still_open.each do |experience|
-      experience.course.enrolled_students.each do |user|
-        reaction = experience.get_user_reaction user
-        unless reaction.persisted? && reaction.behavior.present?
-          current_users.push user
-        end
-      end
-    end
-
-
-    # Make sure all the users are unique
-    uniqued = {}
-    current_users.each do |u|
-      uniqued[u] = 1
-    end
-
-    uniqued.keys.each do |u|
-      next if !u.last_emailed.nil? && u.last_emailed.today?
-      AdministrativeMailer.remind(u).deliver_later
-      u.last_emailed = DateTime.current
-      u.save
-    end
-  end
 
   # Here we'll give instructors a little status update at the close of each assessment period
   def self.inform_instructors

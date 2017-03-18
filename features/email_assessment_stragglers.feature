@@ -12,7 +12,15 @@ Feature: Email assessment stragglers
     Given the user is the "last" user
     Given the project has been activated
     When the system emails stragglers
-    Then an email will be sent to each member of the group
+    Then 4 emails will be sent
+
+  Scenario: 4 students have assessments waiting. 1 drops the course. Email the stragglers - 3 emails are sent
+    Given the email queue is empty
+    Given the user is the "last" user
+    Given the project has been activated
+    Then the user is dropped from the course
+    When the system emails stragglers
+    Then 3 emails will be sent
 
   Scenario: Three students have open assessments waiting when we email the stragglers, but one does not - three emails are sent
     Given the email queue is empty

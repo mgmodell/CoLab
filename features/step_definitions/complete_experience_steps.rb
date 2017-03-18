@@ -150,3 +150,7 @@ Given /^the user enrolls in the course$/ do
   role = Role.enrolled.take
   r = Roster.create(user: @user, course: @course, role: role)
 end
+
+Then /^the user is dropped from the course$/ do
+  @course.drop_student @user
+end

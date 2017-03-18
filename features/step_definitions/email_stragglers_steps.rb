@@ -5,7 +5,7 @@ Given /^the email queue is empty$/ do
 end
 
 When /^the system emails stragglers$/ do
-  Assessment.send_reminder_emails
+  AdministrativeMailer.send_reminder_emails
 end
 
 Then /^an email will be sent to each member of the group$/ do

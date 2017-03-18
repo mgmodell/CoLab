@@ -22,6 +22,13 @@ Feature: Users can complete 'experiences'
     Then the user will see "Week 1"
     Then the user will see "You must select a behavior"
 
+  Scenario: The dropped student should not see an experience
+    Then the user logs out
+    Then the user is dropped from the course
+    When the user logs in
+    Then the user should see a successful login message
+    Then user should see 0 open task
+
   Scenario: The participant should not be able to proceed without selecting a behavior and comments should remain
     Then user should see 1 open task
     Then the user clicks the link to the experience
