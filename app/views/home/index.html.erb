@@ -10,7 +10,7 @@
   <% else %>
     You do not currently have any tasks due. Check back later or contact your instructor.
   <% end %></p>
-<% if @waiting_tasks.any? || @waiting_rosters.any? %>
+<% if @waiting_tasks.any? %>
   <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -83,19 +83,6 @@
                 </td>
           </tr>
         <% end %>
-      <% end %>
-      <% @waiting_rosters.each do |roster| %>
-        <tr>
-          <td>
-            <%= link_to "Accept", accept_roster_path( :roster_id => roster.id ) %> / 
-        <%= link_to "Decline", decline_roster_path( :roster_id => roster.id ) %> enrollment
-      </td>
-          <td><em>Waiting</em></td>
-          <td><%= roster.course.name %></td>
-          <td><%= roster.course.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
-          <td><%= roster.course.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
-          <td>N/A</td>
-        </tr>
       <% end %>
     </tbody>
   </table>

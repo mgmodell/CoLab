@@ -2,13 +2,12 @@
 class Group < ActiveRecord::Base
   belongs_to :project, inverse_of: :groups
   has_and_belongs_to_many :users, inverse_of: :groups
+  has_many :group_revisions, inverse_of: :group, dependent: :destroy
 
   has_many :installments, inverse_of: :group, dependent: :destroy
 
   validates :name, :project_id, presence: true
   validate :validate_activation_status, on: :update
-
-  #TODO add default scope for users
 
   def validate_activation_status
     if project_id_was != project_id
@@ -23,5 +22,19 @@ class Group < ActiveRecord::Base
 
   def has_user(user)
     users.where('users.id = ?', user.id).any?
+  end
+
+  # Maintain a history of what has changed
+  def around_save
+    if self.changed?
+      gr = GroupRevision.new( group: self, name: self.name )
+      users.each do |user|
+        gr.members += user.id.to_s + " "
+      end
+    end
+    yield
+    if self.persisted?
+      gr.save
+    end
   end
 end
