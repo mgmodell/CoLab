@@ -50,8 +50,6 @@ class ProjectsController < ApplicationController
         @project.groups.each do |group|
           groups_users[group] = []
           new_name = params['group_' + group.id.to_s]
-          puts '***************'
-          puts new_name
           group.name = new_name unless new_name.blank?
         end
 
@@ -64,8 +62,6 @@ class ProjectsController < ApplicationController
         end
         groups_users.each do |group, users_array|
           group.users = users_array
-          puts '------------'
-          puts group.name
           group.save
           puts group.errors.full_messages unless group.errors.nil?
         end
