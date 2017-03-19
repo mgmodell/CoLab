@@ -1,8 +1,8 @@
 <h1>You've been invited!</h1>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
   <p>Hello <%= @first_name %>,
-    <% pluralize = "s" if @waiting_rosters.count > 1 %>
-    Please respond to your invitation<%= pluralize %> to the following <%= @waiting_rosters.count if pluralize == "s" %> course<%= pluralize %>:
+    <% pluralize = true if @waiting_rosters.count > 1 %>
+    You've been added to <%= pluralize ? "courses" : "a course" %>, but sometimes instructors make mistakes, so please do confirm that you are actually enrolled in the <%= @waiting_rosters.count if pluralize %> course<%= "s" if pluralize %> listed below:
   </p>
   <table data-role="table"
           id="basicTable"
