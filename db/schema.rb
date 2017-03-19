@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170318120735) do
+ActiveRecord::Schema.define(version: 20170318141645) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -216,6 +216,16 @@ ActiveRecord::Schema.define(version: 20170318120735) do
     t.string "name",        limit: 255
     t.string "description", limit: 255
   end
+
+  create_table "group_revisions", force: :cascade do |t|
+    t.integer  "group_id",   limit: 4
+    t.string   "name",       limit: 255
+    t.string   "members",    limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "group_revisions", ["group_id"], name: "index_group_revisions_on_group_id", using: :btree
 
   create_table "groups", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -434,6 +444,7 @@ ActiveRecord::Schema.define(version: 20170318120735) do
   add_foreign_key "diagnoses", "weeks"
   add_foreign_key "emails", "users"
   add_foreign_key "experiences", "courses"
+  add_foreign_key "group_revisions", "groups"
   add_foreign_key "groups", "projects"
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"

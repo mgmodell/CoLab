@@ -82,3 +82,18 @@ Then /^the user "([^"]*)" enrollment in the course$/ do |accept|
     click_link_or_button 'Decline'
   end
 end
+
+Then /^the user sees (\d+) invitation$/ do |invitation_count|
+  page.should have_content "confirm that you are actually enrolled in"
+  if invitation_count.to_i == 1
+    page.should have_content 'the course listed below'
+  else
+    page.should have_content invitation_count + " courses listed below"
+  end
+  
+end
+
+Then /^the user does not see a task listing$/ do
+  page.should have_no_content 'Your Tasks'
+  
+end

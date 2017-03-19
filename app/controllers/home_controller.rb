@@ -9,12 +9,14 @@ class HomeController < ApplicationController
       redirect_to(controller: 'consent_logs',
                   action: 'edit',
                   consent_form_id: waiting_consent_logs[0].consent_form_id)
+    elsif @current_user.rosters.awaiting.count > 0
+      @waiting_rosters = current_user.rosters.awaiting
+      render :rsvp
     elsif !current_user.welcomed?
       redirect_to edit_user_registration_path(@current_user)
     end
     @first_name = current_user.first_name
     @waiting_tasks = current_user.waiting_tasks
-    @waiting_rosters = current_user.rosters.awaiting
     @current_location = 'home'
   end
 end
