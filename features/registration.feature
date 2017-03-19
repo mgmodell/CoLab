@@ -88,6 +88,8 @@ Feature: User registration
     Given the user "has" had demographics requested
     Then the course has 5 "Invited Student" users
     Then the user logs in
+    Then the user sees 1 invitation
+    Then the user does not see a task listing
     Then the user "accepts" enrollment in the course
     Then user should see 1 open task
     Then the course has 4 "Invited Student" users
@@ -104,8 +106,27 @@ Feature: User registration
     Given the user "has" had demographics requested
     Then the course has 5 "Invited Student" users
     Then the user logs in
+    Then the user sees 1 invitation
+    Then the user does not see a task listing
     Then the user "declines" enrollment in the course
     Then user should see 0 open task
     Then the course has 4 "Invited Student" users
     Then the course has 1 "Declined Student" users
 
+  Scenario: A student is invited to 2 courses
+    Given 5 users
+    Given the users are confirmed
+    Given there is a course with an experience
+    Given the experience "has" been activated
+    Then the users are added to the course by email address
+    Then the course has 5 "Invited Student" users
+    Given there is a course with an experience
+    Given the experience "has" been activated
+    Then the users are added to the course by email address
+    Then the course has 5 "Invited Student" users
+    Then the user is "a random" user
+    Given the user "has" had demographics requested
+    Then the course has 5 "Invited Student" users
+    Then the user logs in
+    Then the user sees 2 invitation
+    Then the user does not see a task listing

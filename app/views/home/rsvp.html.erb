@@ -1,11 +1,9 @@
 <h1>You've been invited!</h1>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-<p>Hello <%= @first_name %>,
-  <% if @waiting_rosters.count > 1 %>
-    Please respond to your invitations to the following courses:
-  <% else %>
-    Please respond to your invitation to the following course:
-  <% end %>
+  <p>Hello <%= @first_name %>,
+    <% pluralize = "s" if @waiting_rosters.count > 1 %>
+    Please respond to your invitation<%= pluralize %> to the following <%= @waiting_rosters.count if pluralize == "s" %> course<%= pluralize %>:
+  </p>
   <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
