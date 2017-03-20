@@ -106,9 +106,9 @@ class CoursesController < ApplicationController
     flash.keep
     redirect_to :root
   end
-  
+
   def drop_student
-    r = Roster.find( params[:roster_id] )
+    r = Roster.find(params[:roster_id])
     if r.nil?
       flash[:notice] = 'That is not a valid user-course relationship'
       flash.keep
@@ -118,7 +118,7 @@ class CoursesController < ApplicationController
       r.role = Role.dropped.take
       r.save
       if r.user != @current_user
-        redirect_to course_path( r.course )
+        redirect_to course_path(r.course)
       else
         redirect_to :root
       end

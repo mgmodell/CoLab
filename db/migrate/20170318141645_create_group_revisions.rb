@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateGroupRevisions < ActiveRecord::Migration
   def change
     create_table :group_revisions do |t|
