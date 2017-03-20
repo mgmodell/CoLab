@@ -62,7 +62,7 @@ class AdministrativeMailer < ActionMailer::Base
       AdministrativeMailer.remind(u).deliver_later
       u.last_emailed = DateTime.current
       u.save
-      puts "Email sent to: #{u.name} <#{u.email}>"
+      logger.debug "Email sent to: #{u.name} <#{u.email}>"
       email_count += 1
     end
 
