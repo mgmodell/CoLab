@@ -73,7 +73,7 @@
         <tbody>
           <% @project.course.enrolled_students.each do |user| %>
             <tr>
-                <td><%= mail_to user.name, user.name %></td>
+                <td><%= mail_to user.email, user.name %></td>
             <% @project.groups.each do |group| %>
               <td>
                 <center><%= raw( "&#10004;" ) if group.has_user user %></center>
