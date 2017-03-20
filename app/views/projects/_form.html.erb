@@ -18,10 +18,10 @@
         <%= f.input :active %>
         <%= f.input :start_date, as: :date_time_local %>
         <%= f.input :end_date, as: :date_time_local %>
-        <%= f.select :start_dow, Date::DAYNAMES.each_with_index.to_a, prompt: true  %>
-        <%= f.select :end_dow, Date::DAYNAMES.each_with_index.to_a, prompt: true  %>
-        <%= f.association :factor_pack %>
-        <%= f.association :style %>
+        <%= f.input :start_dow, collection: Date::DAYNAMES.each_with_index.to_a, prompt: true, label: "Starting day of the week"  %>
+        <%= f.input :end_dow, collection: Date::DAYNAMES.each_with_index.to_a, prompt: true, label: "Ending day of the week"  %>
+        <%= f.association :factor_pack, prompt: true %>
+        <%= f.association :style, prompt: true %>
         <%= f.input :description, as: :text %>
       </div>
     </div>
