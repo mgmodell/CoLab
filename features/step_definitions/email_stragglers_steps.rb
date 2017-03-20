@@ -52,4 +52,3 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
   @project.groups << @group
   @project.save
 end
-

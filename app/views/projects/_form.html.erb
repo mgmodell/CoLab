@@ -51,7 +51,7 @@
           <tbody>
             <% @project.course.enrolled_students.each do |user| %>
               <tr>
-                <td><%= mail_to user.name, user.name %></td>
+                <td><%= mail_to user.email, user.name %></td>
               <% groups.each do |group| %>
                 <td align="center"><%= radio_button_tag "user_group_#{user.id}", group.id, group.has_user( user ) %></td>
               <% end %>
