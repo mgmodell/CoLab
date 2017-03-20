@@ -52,9 +52,9 @@ class AdministrativeMailer < ActionMailer::Base
       uniqued[u] = 1
     end
 
-    puts "***********************************"
-    puts "            Mailing"
-    puts "***********************************"
+    logger.debug "***********************************"
+    logger.debug "            Mailing"
+    logger.debug "***********************************"
     email_count = 0
 
     uniqued.keys.each do |u|
@@ -66,10 +66,10 @@ class AdministrativeMailer < ActionMailer::Base
       email_count += 1
     end
 
-    puts "***********************************"
-    puts "             Report"
-    puts "***********************************"
-    puts "Initiated #{email_count} emails"
+    logger.debug "***********************************"
+    logger.debug "             Report"
+    logger.debug "***********************************"
+    logger.debug "Initiated #{email_count} emails"
 
   end
 end
