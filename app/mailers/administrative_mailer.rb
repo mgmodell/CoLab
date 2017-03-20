@@ -55,17 +55,21 @@ class AdministrativeMailer < ActionMailer::Base
     puts "***********************************"
     puts "            Mailing"
     puts "***********************************"
+    email_count = 0
+
     uniqued.keys.each do |u|
       next if !u.last_emailed.nil? && u.last_emailed.today?
       AdministrativeMailer.remind(u).deliver_later
       u.last_emailed = DateTime.current
       u.save
       puts "Email sent to: #{u.name} <#{u.email}>"
+      email_count += 1
     end
+
     puts "***********************************"
     puts "             Report"
     puts "***********************************"
-    puts "Initiated #{uniqued.keys.count} emails"
+    puts "Initiated #{email_count} emails"
 
   end
 end
