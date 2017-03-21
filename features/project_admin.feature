@@ -6,6 +6,7 @@ Feature: Project Administration
     Given a user has signed up
     Given the user "has" had demographics requested
     Given there is a course with an assessed project
+    Given the course started "5/10/1976" and ended "11/01/2012"
     Given the project has a group with 4 confirmed users
     Given the project has a group with 4 confirmed users
     Given the user timezone is "Seoul"
@@ -37,21 +38,25 @@ Feature: Project Administration
     Then the user opens the course
     Then the user clicks "Add Project"
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the "Start" date to "5/10/1976"
-    Then the user sets the "End" date to "2/29/1980"
-    Then the user sets the "Starting day of the week" to "Monday"
-    Then the user sets the "Ending day of the week" to "Tuesday"
-    Then the user sets the "Factor pack" to "Simple"
-    Then the user sets the "Style" to "Sliders (simple)"
-    Then the user sets the "Description" to "this is the coolest"
+    Then the user sets the "Project start" date to "02/29/1980"
+    Then the user sets the "Project end" date to "07/10/2008"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
+    Then the user will see "Success"
+    #Let's check the values stored
     Then retrieve the latest project from the db
-    Then the project name is "Cool-yo!"
-    Then the project "Start" date is "5/10/1976"
-    Then the project "End" date is "2/29/1980"
-    Then the project "Factor pack" is "Simple"
-    Then the project "Style" is "Sliders (simple)"
+    Then the project "Name" is "Cool-yo!"
     Then the project "Description" is "this is the coolest"
+    #check the dates
+    Then the project "Start" date is "05/10/1976"
+    Then the project "End" date is "02/29/1980"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
 
   Scenario: Instructor edits an existing project
     Given the user is the instructor for the course
@@ -62,21 +67,26 @@ Feature: Project Administration
     Then the user opens the course
     Then the user clicks "Edit" on the existing project
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the "Start" date to "5/10/1976"
-    Then the user sets the "End" date to "2/29/1980"
-    Then the user sets the "Starting day of the week" to "Monday"
-    Then the user sets the "Ending day of the week" to "Tuesday"
-    Then the user sets the "Factor pack" to "Simple"
-    Then the user sets the "Style" to "Sliders (simple)"
-    Then the user sets the "Description" to "this is the coolest"
-    Then the user clicks "Create Project"
+    Then the user sets the "Project start" date to "05/10/1976"
+    Then the user sets the "Project end" date to "02/29/1980"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
+    Then the user clicks "Update Project"
+    Then the user will see "Success"
     Then retrieve the latest project from the db
-    Then the project name is "Cool-yo!"
+    #Let's check the values stored
+    Then retrieve the latest project from the db
+    Then the project "Name" is "Cool-yo!"
+    Then the project "Description" is "this is the coolest"
+    #check the dates
     Then the project "Start" date is "5/10/1976"
     Then the project "End" date is "2/29/1980"
-    Then the project "Factor pack" is "Simple"
-    Then the project "Style" is "Sliders (simple)"
-    Then the project "Description" is "this is the coolest"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
 
   Scenario: Instructor assigns a course's students to groups
     Given the user is the instructor for the course

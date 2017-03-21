@@ -52,7 +52,7 @@
       <%= submit_tag "Add!" %>
     <% end %>
     <% if @project.groups.any? || @project.course.enrolled_students.any? %>
-      <table width="90%" data-role="table"
+      <table id="project_table" width="90%" data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
           data-column-popup-theme="<%= theme_code %>" 
