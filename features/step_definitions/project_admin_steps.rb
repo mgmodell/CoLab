@@ -38,13 +38,9 @@ Then /^the user sets the "([^"]*)" field to "([^"]*)"$/  do |field, value|
 end
 
 Then /^the user sets the "([^"]*)" date to "([^"]*)"$/  do |date_field_prefix, date_value|
-  puts "**************"
-  puts page.find('#project_start_date' ).value
-  puts page.find('#project_start_date' ).text
-  page.find('#project_start_date' ).set( "2016-01-21T00:00:00" )
-  page.find('#project_end_date' ).set( "2016-04-21T00:00:00" )
-  #page.find( "#project_#{date_field_prefix.downcase}_date").set( date_value )
-  #page.fill_in( date_field_prefix + " date", with: date_value.remove( "/" ) + "\t0000a" )
+  
+  new_date = Chronic.parse( date_value ).strftime( "%Y-%m-%dT%T" )
+  page.find('#project_' + date_field_prefix + '_date' ).set( new_date )
 end
 
 Then /^the user selects "([^"]*)" as "([^"]*)"$/  do |value, field|
@@ -56,13 +52,13 @@ Then /^retrieve the latest project from the db$/  do
 end
 
 Then /^the project "([^"]*)" date is "([^"]*)"$/  do |date_field_prefix, date_value|
-  case field
-  when "Start"
-    @project.start_date.should eq Chronic.parse( value )
-  when "End"
-    @project.end_date.should eq Chronic.parse( value )
+  case date_field_prefix
+  when "start"
+    @project.start_date.should eq Chronic.parse( date_value )
+  when "end"
+    @project.end_date.should eq Chronic.parse( date_value )
   else
-    puts "We didn't test anything there: " + field + " not found"
+    puts "We didn't test anything there: " + date_field_prefix + " not found"
   end
   
 end
@@ -87,10 +83,11 @@ Then /^the project Factor pack is "([^"]*)"$/  do |selected_factor_pack|
 end
 
 Then /^the project Style is "([^"]*)"$/  do |selected_style|
-  @project.factor_pack.style.should eq selected_style
+  @project.style.name.should eq selected_style
 end
 
 Given /^the course started "([^"]*)" and ended "([^"]*)"$/ do |start_date,end_date|
   @course.start_date = Chronic.parse( start_date )
   @course.end_date = Chronic.parse( end_date )
+  @course.save
 end

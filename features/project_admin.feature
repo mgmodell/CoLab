@@ -38,22 +38,22 @@ Feature: Project Administration
     Then the user opens the course
     Then the user clicks "Add Project"
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the "Project start" date to "02/29/1980"
-    Then the user sets the "Project end" date to "07/10/2008"
+    Then the user sets the "start" date to "02/29/1980"
+    Then the user sets the "end" date to "07/10/2008"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
-    Then the user will see "Success"
+    Then the user will see "success"
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
     Then the project "Description" is "this is the coolest"
     #check the dates
-    Then the project "Start" date is "05/10/1976"
-    Then the project "End" date is "02/29/1980"
+    Then the project "start" date is "02/29/1980"
+    Then the project "end" date is "07/10/2008"
     #check the selects
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
@@ -67,23 +67,23 @@ Feature: Project Administration
     Then the user opens the course
     Then the user clicks "Edit" on the existing project
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the "Project start" date to "05/10/1976"
-    Then the user sets the "Project end" date to "02/29/1980"
+    Then the user sets the "start" date to "05/10/1976"
+    Then the user sets the "end" date to "02/29/1980"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Update Project"
-    Then the user will see "Success"
+    Then the user will see "success"
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
     Then the project "Description" is "this is the coolest"
     #check the dates
-    Then the project "Start" date is "5/10/1976"
-    Then the project "End" date is "2/29/1980"
+    Then the project "start" date is "5/10/1976"
+    Then the project "end" date is "2/29/1980"
     #check the selects
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
