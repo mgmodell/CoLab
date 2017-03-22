@@ -1,4 +1,5 @@
-    <div data-role="footer" data-position="fixed" data-theme="<%= @current_user.nil? ? "a" : @current_user.theme.code %>">
+    <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code  %>
+    <div data-role="footer" data-position="fixed" data-theme="<%= theme_code %>">
       <div class="ui-grid-a">
         <div class="ui-block-a">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true">
@@ -12,10 +13,20 @@
             <% end %>
             <% if !@current_user.nil? %>
               <% if @current_user.is_instructor? %>
-                <%= link_to "Reports", graphing_path,
-                  :data => { :icon => "bullets", :role => "button" } %>
-                <%= link_to "Admin", admin_path,
-                  :data => { :icon => "gear", :role => "button" } %>
+                <a href="#adminMenu" data-rel="popup" data-transition="fade"
+                       class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-<%= theme_code %>">Admin&hellip;</a>
+                  <div data-role="popup" id="adminMenu" data-theme="<%= theme_code %>">
+                    <ul data-role="listview" data-inset="true" style="min-width:210px;">
+                    <li>
+                      <%= link_to "Reports", graphing_path,
+                        :data => { :icon => "bullets", :role => "button" } %>
+                    </li>
+                    <li>
+                      <%= link_to "Admin", admin_path,
+                        :data => { :icon => "gear", :role => "button" } %>
+                    </li>
+                    </ul>
+                  </div>
               <% end %>
               <%= link_to 'Logout', destroy_user_session_path, :method => :delete,
                   :data => { :icon => "power", :role => "button" } %>
