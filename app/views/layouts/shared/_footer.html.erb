@@ -16,14 +16,14 @@
                 <a href="#adminMenu" data-rel="popup" data-transition="fade"
                        class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-<%= theme_code %>">Admin&hellip;</a>
                   <div data-role="popup" id="adminMenu" data-theme="<%= theme_code %>">
-                    <ul data-role="listview" data-inset="true" style="min-width:210px;">
+                    <ul data-role="listview" data-inset="true" >
                     <li>
                       <%= link_to "Reports", graphing_path,
-                        :data => { :icon => "bullets", :role => "button" } %>
+                        :data => { :icon => "bullets" } %>
                     </li>
                     <li>
                       <%= link_to "Admin", admin_path,
-                        :data => { :icon => "gear", :role => "button" } %>
+                        :data => { :icon => "gear" } %>
                     </li>
                     </ul>
                   </div>
