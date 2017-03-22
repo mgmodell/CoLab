@@ -42,7 +42,6 @@ class Assessment < ActiveRecord::Base
     end
   end
 
-
   # Here we'll give instructors a little status update at the close of each assessment period
   def self.inform_instructors
     Assessment.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |assessment|
@@ -58,7 +57,7 @@ class Assessment < ActiveRecord::Base
       # Retrieve names of those who did not complete their assessments
       # InstructorNewsLetterMailer.inform( instructor ).deliver_later
       assessment.project.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(assessment.project.name + " (assessment)",
+        AdministrativeMailer.summary_report(assessment.project.name + ' (assessment)',
                                             instructor,
                                             completion_hash).deliver_later
       end

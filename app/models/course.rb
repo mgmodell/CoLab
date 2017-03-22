@@ -65,8 +65,8 @@ class Course < ActiveRecord::Base
     end
   end
 
-  def drop_student( user )
-    roster = Roster.where( user: user, course: self ).take
+  def drop_student(user)
+    roster = Roster.where(user: user, course: self).take
     roster.role = Role.dropped.take
     roster.save
   end

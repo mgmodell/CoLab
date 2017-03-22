@@ -14,10 +14,8 @@
               <% if @current_user.is_instructor? %>
                 <%= link_to "Reports", graphing_path,
                   :data => { :icon => "bullets", :role => "button" } %>
-                <% if @current_user.is_admin? %>
-                  <%= link_to "Admin", admin_path,
+                <%= link_to "Admin", admin_path,
                   :data => { :icon => "gear", :role => "button" } %>
-                <% end %>
               <% end %>
               <%= link_to 'Logout', destroy_user_session_path, :method => :delete,
                   :data => { :icon => "power", :role => "button" } %>

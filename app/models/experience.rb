@@ -82,22 +82,20 @@ class Experience < ActiveRecord::Base
   end
 
   def self.inform_instructors
-    Experience.where( 'instructor_updated = false AND end_date < ?', DateTime.current ).each do |experience|
+    Experience.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |experience|
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
         reaction = get_user_reaction student
-        completion_hash[ student ] = reaction.status
+        completion_hash[student] = reaction.status
 
         experience.course.instructors.each do |instructor|
-          AdministrativeMailer.summary_report( experience.name + " (experience)",
+          AdministrativeMailer.summary_report(experience.name + ' (experience)',
                                               instructor,
-                                              completion_hash ).deliver_later
+                                              completion_hash).deliver_later
         end
         experience.instructor_updated = true
         experience.save
-
       end
     end
-
   end
 end

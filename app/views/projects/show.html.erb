@@ -52,7 +52,7 @@
       <%= submit_tag "Add!" %>
     <% end %>
     <% if @project.groups.any? || @project.course.enrolled_students.any? %>
-      <table width="90%" data-role="table"
+      <table id="project_table" width="90%" data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
           data-column-popup-theme="<%= theme_code %>" 
@@ -73,7 +73,7 @@
         <tbody>
           <% @project.course.enrolled_students.each do |user| %>
             <tr>
-                <td><%= mail_to user.name, user.name %></td>
+                <td><%= mail_to user.email, user.name %></td>
             <% @project.groups.each do |group| %>
               <td>
                 <center><%= raw( "&#10004;" ) if group.has_user user %></center>

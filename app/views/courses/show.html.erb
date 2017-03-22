@@ -114,7 +114,7 @@
   <strong>Projects</strong>
   <%= link_to "Add Project", new_project_path( :course_id => @course.id )%>
   <% if @course.projects.count > 0 %>
-    <table>
+    <table id="projects_table">
       <tr>
         <th>Name</th>
         <th>Status</th>
@@ -141,7 +141,7 @@
   <strong>Experiences</strong>
   <%= link_to "Add Experience", new_experience_path( :course_id => @course.id )%>
   <% if @course.experiences.count > 0 %>
-    <table>
+    <table id="experiences_table">
       <tr>
         <th>Name</th>
         <th>Status</th>

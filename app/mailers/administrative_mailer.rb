@@ -10,7 +10,7 @@ class AdministrativeMailer < ActionMailer::Base
          track_opens: 'true')
   end
 
-  def summary_report( name, user, completion_hash)
+  def summary_report(name, user, completion_hash)
     @name = name
     @user = user
     @completion_report = completion_hash
@@ -27,10 +27,10 @@ class AdministrativeMailer < ActionMailer::Base
                          .where('assessments.start_date < ? AND assessments.end_date > ?',
                                 DateTime.current, DateTime.current).to_a
 
-    current_users = User.joins( groups: { project: :assessments }, rosters: :role )
-                        .where('assessments.start_date <= ? AND assessments.end_date >= ? AND ( ' +
+    current_users = User.joins(groups: { project: :assessments }, rosters: :role)
+                        .where('assessments.start_date <= ? AND assessments.end_date >= ? AND ( ' \
                               'roles.name = "Invited Student" OR roles.name = "Enrolled Student" ) ',
-                              DateTime.current, DateTime.current).to_a
+                               DateTime.current, DateTime.current).to_a
 
     finished_users.each do |user|
       current_users.delete user
@@ -45,18 +45,29 @@ class AdministrativeMailer < ActionMailer::Base
       end
     end
 
-
     # Make sure all the users are unique
     uniqued = {}
     current_users.each do |u|
       uniqued[u] = 1
     end
 
+    logger.debug '***********************************'
+    logger.debug '            Mailing'
+    logger.debug '***********************************'
+    email_count = 0
+
     uniqued.keys.each do |u|
       next if !u.last_emailed.nil? && u.last_emailed.today?
       AdministrativeMailer.remind(u).deliver_later
       u.last_emailed = DateTime.current
       u.save
+      logger.debug "Email sent to: #{u.name} <#{u.email}>"
+      email_count += 1
     end
+
+    logger.debug '***********************************'
+    logger.debug '             Report'
+    logger.debug '***********************************'
+    logger.debug "Initiated #{email_count} emails"
   end
 end

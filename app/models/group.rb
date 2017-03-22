@@ -28,32 +28,29 @@ class Group < ActiveRecord::Base
   end
 
   def users_changed?
-    users.select{ |u| u.new_record? || u.marked_for_destruction? }.any?
+    users.select { |u| u.new_record? || u.marked_for_destruction? }.any?
   end
 
   private
 
   def store_load_state
-    @initial_member_state = ""
-    self.user_ids.each do |user_id|
-      @initial_member_state += user_id.to_s + " "
+    @initial_member_state = ''
+    user_ids.each do |user_id|
+      @initial_member_state += user_id.to_s + ' '
     end
   end
-    
 
   # Maintain a history of what has changed
   def track_history
-    gr = GroupRevision.new( group: self, members: "" )
-    gr.name = self.name_was
-    self.user_ids.each do |user_id|
-      gr.members += user_id.to_s + " "
+    gr = GroupRevision.new(group: self, members: '')
+    gr.name = name_was
+    user_ids.each do |user_id|
+      gr.members += user_id.to_s + ' '
     end
-    i_changed = ( self.changed? || @initial_member_state != gr.members )
+    i_changed = (changed? || @initial_member_state != gr.members)
 
-    yield #Do that save thing
+    yield # Do that save thing
 
-    if self.persisted? && i_changed
-      gr.save
-    end
+    gr.save if persisted? && i_changed
   end
 end
