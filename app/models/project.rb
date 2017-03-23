@@ -129,7 +129,11 @@ class Project < ActiveRecord::Base
           errors.add(:active, "#{group.name} (group) appears #{count} times in your project.")
         end
       end
+      if factor_pack.nil?
+        errors.add(:factor_pack, "Factor Pack must be set before a project can be activated" )
+      end
       # If this is an activation, we need to set up any necessary weeklies
+      Assessment.set_up_assessments
     end
     errors
   end

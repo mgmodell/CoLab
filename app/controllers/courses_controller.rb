@@ -107,6 +107,26 @@ class CoursesController < ApplicationController
     redirect_to :root
   end
 
+  def remove_instructor
+    r = Roster.find(params[:roster_id])
+    if !@current_user.is_instructor? && !current_user.is_admin?
+      flash[:notice] = "You are not permitted to make that sort of change."
+      flash.keep
+      redirect_to :root
+    elsif r.course.roster.instructorships < 2
+      flash[:notice] = "Courses must always have at least one instructor."
+      flash.keep
+      redirect_to :root
+    elsif r.nil? 
+      flash[:notice] = 'This is not an instructor in this course'
+      flash.keep
+      redirect_to :root
+    else
+      r.destroy
+      redirect_to course_path(r.course)
+    end
+  end
+
   def drop_student
     r = Roster.find(params[:roster_id])
     if r.nil?
@@ -115,12 +135,18 @@ class CoursesController < ApplicationController
       redirect_to :root
     else
       instructor_action = r.user != @current_user
-      r.role = Role.dropped.take
-      r.save
-      if r.user != @current_user
-        redirect_to course_path(r.course)
-      else
+      if !instructor_action && r.user != @current_user
+        flash[:notice] = "You are not permitted to make that sort of change."
+        flash.keep
         redirect_to :root
+      else
+        r.role = Role.dropped.take
+        r.save
+        if instructor_action
+          redirect_to course_path(r.course)
+        else
+          redirect_to :root
+        end
       end
     end
   end

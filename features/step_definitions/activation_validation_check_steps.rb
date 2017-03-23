@@ -35,3 +35,9 @@ Then /^there should be an error if I try to modify a group that is part of an ac
   group.save
   group.errors.count.should be > 0
 end
+
+Given /^the factor pack is set to "([^"]*)"$/ do |pack_name|
+  @project.factor_pack = FactorPack.where( name: pack_name ).take
+  @project.save
+
+end

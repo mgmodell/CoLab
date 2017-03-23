@@ -64,6 +64,11 @@ Cucumber::Rails::Database.javascript_strategy = :truncation
 #  load( seed_file )
 #  $dunit = true
 # end
+Before do
+  Chronic.time_class = Time.zone
+
+end
+
 After do |_scenario|
   travel_back
 end
