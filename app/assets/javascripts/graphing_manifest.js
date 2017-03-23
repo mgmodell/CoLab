@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require app_lib
 //= require jquery.mobile
 //= require highcharts
 //= require graphing

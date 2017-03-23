@@ -26,11 +26,11 @@
       </fieldset>
       <fieldset class="ui-grid-b">
         <div class="ui-block-a">
-	<% assessments = @current_users_assessments.collect{ |user| [user.name, user.id] }
+	<% assessments = @current_users_projects.collect{ |user| [user.name, user.id] }
 	assessments.insert( 0, ["None selected", -1] ) %>
-          <%= select_tag :assessment, 
+          <%= select_tag :project, 
             options_for_select( assessments ) ,
-            :class => "assessment_select",
+            :class => "project_select",
             :data => {:mini => true} %>
         </div>
         <div class="ui-block-b">

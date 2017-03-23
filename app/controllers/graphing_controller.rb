@@ -205,7 +205,7 @@ class GraphingController < ApplicationController
 
   def index
     @user = current_user
-    @current_users_assessments = []
+    @current_users_projects = []
 
     # Get the assessments administered by the current user
     if @user.is_instructor?
