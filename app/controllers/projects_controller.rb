@@ -88,13 +88,26 @@ class ProjectsController < ApplicationController
   def remove_group
     group = Group.find(params[:group_id])
     group&.delete
-    redirect_to edit
+    redirect_to show
   end
 
   def add_group
     @project = Project.find(params[:project_id])
     group = Group.create(name: params[:group_name], project: @project)
-    render :edit
+
+    flash.now[:notice] = "Group successfully created"
+    render :show
+  end
+
+  def activate
+    project = Project.find( params[ :project_id ] )
+    if @current_user.is_admin? ||
+      project.course.get_roster_for_user( @current_user ).role.name == "Instructor"
+      project.active = true
+      project.save
+    end
+    @project = project
+    render :show
   end
 
   private

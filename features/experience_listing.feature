@@ -64,6 +64,7 @@ Feature: Experience Listing
     Given the course has an assessed project
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the user is in a group on the project
+    Given the factor pack is set to "Original"
     Given the project has been activated
     When the user logs in
     Then the user should see a successful login message

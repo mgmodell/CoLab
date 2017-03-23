@@ -1,10 +1,8 @@
 
 # frozen_string_literal: true
 Given /^today is "(.*?)"$/ do |destination_time|
-  Chronic.time_class = Time.zone
+  #Chronic.time_class = Time.zone
   travel_to Chronic.parse(destination_time).utc
-  # puts "Traveling to: " + Chronic.parse( destination_time ).utc.to_s
-  # puts "The current time is: " + DateTime.current.to_s
 end
 
 Then /^the project should have (\d+) assessments attached to it$/ do |assessment_count|

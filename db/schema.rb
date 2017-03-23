@@ -37,11 +37,66 @@ ActiveRecord::Schema.define(version: 20170320150239) do
     t.datetime "updated_at",                null: false
   end
 
+  create_table "bingo_games", force: :cascade do |t|
+    t.string   "topic",            limit: 255
+    t.text     "description",      limit: 65535
+    t.string   "link",             limit: 255
+    t.string   "source",           limit: 255
+    t.boolean  "group_option"
+    t.integer  "individual_count", limit: 4
+    t.integer  "group_count",      limit: 4
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  create_table "candidate_feedbacks", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "candidate_lists", force: :cascade do |t|
+    t.integer  "user_id",       limit: 4
+    t.integer  "group_id",      limit: 4
+    t.boolean  "is_group"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "bingo_game_id", limit: 4
+    t.integer  "project_id",    limit: 4
+  end
+
+  add_index "candidate_lists", ["bingo_game_id"], name: "index_candidate_lists_on_bingo_game_id", using: :btree
+  add_index "candidate_lists", ["group_id"], name: "index_candidate_lists_on_group_id", using: :btree
+  add_index "candidate_lists", ["project_id"], name: "index_candidate_lists_on_project_id", using: :btree
+  add_index "candidate_lists", ["user_id"], name: "index_candidate_lists_on_user_id", using: :btree
+
+  create_table "candidates", force: :cascade do |t|
+    t.string   "name",                  limit: 255
+    t.text     "definition",            limit: 65535
+    t.integer  "candidate_list_id",     limit: 4
+    t.integer  "candidate_feedback_id", limit: 4
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.integer  "concept_id",            limit: 4
+  end
+
+  add_index "candidates", ["candidate_feedback_id"], name: "index_candidates_on_candidate_feedback_id", using: :btree
+  add_index "candidates", ["candidate_list_id"], name: "index_candidates_on_candidate_list_id", using: :btree
+  add_index "candidates", ["concept_id"], name: "index_candidates_on_concept_id", using: :btree
+
   create_table "cip_codes", force: :cascade do |t|
     t.integer  "gov_code",    limit: 4
     t.string   "description", limit: 255
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+  end
+
+  create_table "concepts", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "consent_forms", force: :cascade do |t|
@@ -366,6 +421,13 @@ ActiveRecord::Schema.define(version: 20170320150239) do
   add_index "weeks", ["narrative_id"], name: "index_weeks_on_narrative_id", using: :btree
 
   add_foreign_key "assessments", "projects"
+  add_foreign_key "candidate_lists", "bingo_games"
+  add_foreign_key "candidate_lists", "groups"
+  add_foreign_key "candidate_lists", "projects"
+  add_foreign_key "candidate_lists", "users"
+  add_foreign_key "candidates", "candidate_feedbacks"
+  add_foreign_key "candidates", "candidate_lists"
+  add_foreign_key "candidates", "concepts"
   add_foreign_key "consent_forms", "users"
   add_foreign_key "consent_logs", "consent_forms"
   add_foreign_key "consent_logs", "users"

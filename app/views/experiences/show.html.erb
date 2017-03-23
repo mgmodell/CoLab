@@ -16,7 +16,8 @@
       (<% if @experience.active %>
         Active
   <% else %>
-        <span class="error">Inactive</span>
+        <span class="error">Inactive</span> &mdash;
+        <%= link_to "Activate?", activate_experience_path( @experience ) %>
       <% end %>)
     </p>
     <p>

@@ -38,7 +38,7 @@ $(document).ready ->
   true
 
 
-$(".assessment_select").live "change", (evt) ->
+$(".project_select").change ->
   subject_select = $(this).parents("form").find("#subject")
   unit_of_analysis = $(this).parents("form").find("#unit_of_analysis").val()
   assessment_id = $(this).val()
@@ -57,7 +57,7 @@ $(".assessment_select").live "change", (evt) ->
       i++
     $(subject_select).selectmenu 'refresh', true
 
-$("#for_research").live "change", (evt) ->
+$("#for_research").change ->
   for_research = $("#for_research").val( )
   $("[id$='_panel']").each ->
     subject_select = $(this).parents("form").find("#subject")
@@ -111,7 +111,7 @@ $("#for_research").live "change", (evt) ->
           $(detail_container).html text
           chart.hideLoading()
 
-$(".submitting_select").live "change", (evt) ->
+$(".submitting_select").change ->
   chart_num = parseInt($(this).parents("form").find(".chart").attr("chart_num"))
   detail_container = $(this).parents("form").find("#detail_container")
   unit_of_analysis = $(this).parents("form").find("#unit_of_analysis").val()

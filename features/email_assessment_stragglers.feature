@@ -10,6 +10,7 @@ Feature: Email assessment stragglers
   Scenario: Four students have assessments waiting when we email the stragglers - four emails are sent
     Given the email queue is empty
     Given the user is the "last" user
+    Given the factor pack is set to "Original"
     Given the project has been activated
     When the system emails stragglers
     Then 4 emails will be sent
@@ -17,6 +18,7 @@ Feature: Email assessment stragglers
   Scenario: 4 students have assessments waiting. 1 drops the course. Email the stragglers - 3 emails are sent
     Given the email queue is empty
     Given the user is the "last" user
+    Given the factor pack is set to "Original"
     Given the project has been activated
     Then the user is dropped from the course
     When the system emails stragglers
@@ -28,6 +30,7 @@ Feature: Email assessment stragglers
     Given the project has a consent form
     Given the user is the "last" user
     Given the consent form "has" been presented to the user
+    Given the factor pack is set to "Original"
     Given the project has been activated
     Then the user logs in and submits an installment
     When the system emails stragglers
@@ -36,6 +39,7 @@ Feature: Email assessment stragglers
   Scenario: Four students have been mailed about their assessments waiting when we email the stragglers - no emails are sent
     Given the email queue is empty
     Given the user is the "last" user
+    Given the factor pack is set to "Original"
     Given the project has been activated
     When the system emails stragglers
     Then an email will be sent to each member of the group

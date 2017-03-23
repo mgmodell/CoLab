@@ -41,6 +41,7 @@ Feature: Email experience stragglers
     Given there is a course with an assessed project
     Given the user is in a group on the project with 3 other users
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given the factor pack is set to "Original"
     Given the project has been activated
     Given the email queue is empty
     When the system emails stragglers
@@ -51,6 +52,7 @@ Feature: Email experience stragglers
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given the factor pack is set to "Original"
     Given the project has been activated
     Given the email queue is empty
     When the system emails stragglers
@@ -61,6 +63,7 @@ Feature: Email experience stragglers
     Given there is a course with an assessed project
     Given the user is in a group on the project with 3 other users
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given the factor pack is set to "Original"
     Given the project has been activated
     When the user logs in
     Then the user successfully completes an experience
@@ -74,6 +77,7 @@ Feature: Email experience stragglers
     Given there is a course with an assessed project
     Given the user is in a group on the project with 3 other users
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given the factor pack is set to "Original"
     Given the project has been activated
     When the user logs in
     Then the user successfully completes an experience

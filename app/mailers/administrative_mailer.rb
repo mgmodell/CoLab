@@ -20,6 +20,15 @@ class AdministrativeMailer < ActionMailer::Base
          track_opens: 'true')
   end
 
+  def re_invite( user )
+    @user = user
+    mail(to: "#{user.email}",
+         subject: 'Invitation to CoLab',
+         tag: 're-invite',
+         track_opens: 'true')
+
+  end
+
   # Send out email reminders to those who have yet to complete their waiting assessments
   def self.send_reminder_emails
     logger.debug 'Sending reminder emails'

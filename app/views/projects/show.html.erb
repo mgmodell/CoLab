@@ -17,7 +17,8 @@
       (<% if @project.active %>
         Active
       <% else %>
-        <span class="error">Inactive</span>
+        <span class="error">Inactive</span> &mdash;
+        <%= link_to "Activate?", activate_project_path( @project ) %>
       <% end %>)
     </p>
     <p>
@@ -33,12 +34,16 @@
     </p>
     <p>
       <h3>Factor Pack:</h3>
+      <% if @project.factor_pack.present? %>
       <%= @project.factor_pack.name %></br>
-    <ul>
-      <% @project.factor_pack.factors.each do |factor| %>
-        <li><%= factor.name %></li>
+        <ul>
+          <% @project.factor_pack.factors.each do |factor| %>
+            <li><%= factor.name %></li>
+          <% end %>
+        </ul>
+      <% else %>
+        [Not set]
       <% end %>
-    </ul>
   </p>
   <%= link_to 'Edit Project Details', edit_project_path(@project) %>
 </div>
@@ -46,7 +51,7 @@
   <h2>Groups</h2>
   <p>
     <%= form_tag add_group_path, method: :get do %>
-      <%= label_tag :group_name, "New group name: " %>
+      <%= label_tag :group_name, "New group name:" %>
       <%= text_field_tag :group_name %>
       <%= hidden_field_tag :project_id, @project.id %>
       <%= submit_tag "Add!" %>

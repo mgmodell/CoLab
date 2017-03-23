@@ -33,7 +33,7 @@
 <p>
   <strong>Course instructors</strong>
   <% @course.rosters.instructorships.each do |roster| %>
-    <%= roster.user.name %></br>
+    <%= roster.user.name %> | <%= link_to "Remove", remove_instructor_path( roster ) %></br>
   <% end %>
 
 </p>
@@ -100,7 +100,8 @@
         <td>
           <%= roster.role.name %>
         </td>
-        <td><%= link_to "Drop", drop_student_path( roster.id ) %></td>
+        <td><%= link_to( "Re-Invite", re_invite_student_path( roster.user ) ) unless roster.role.name == "Enrolled Student" %>&nbsp;|&nbsp;
+        <%= link_to "Drop", drop_student_path( roster.id ) %></td>
       </tr>
     <% end %>
     </tbody>
@@ -118,7 +119,7 @@
       <tr>
         <th>Name</th>
         <th>Status</th>
-        <th colspan="3">Actions</th>
+        <th>Actions</th>
       </tr>
           <% @course.projects.each do |project| %>
             <tr>
@@ -129,9 +130,10 @@
                 <% else %>
                 <span class="error">Inactive</span>
                 <% end %></td>
-                <td><%= link_to 'Show', project %></td>
-                <td><%= link_to 'Edit', edit_project_path(project) %></td>
-                <td><%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <td><%= link_to 'Show', project %>&nbsp;|&nbsp;
+                <%= link_to( "Activate", activate_project_path( project ) ) + raw("&nbsp;|&nbsp;" ) unless project.active %>
+                <%= link_to 'Edit', edit_project_path(project) %>&nbsp;|&nbsp;
+                <%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             </tr>
           <% end %>
     </table>
@@ -145,7 +147,7 @@
       <tr>
         <th>Name</th>
         <th>Status</th>
-        <th colspan="3">Actions</th>
+        <th>Actions</th>
       </tr>
           <% @course.experiences.each do |experience| %>
             <tr>
@@ -156,9 +158,10 @@
                 <% else %>
                 <span class="error">Inactive</span>
                 <% end %></td>
-                <td><%= link_to 'Show', experience %></td>
-                <td><%= link_to 'Edit', edit_experience_path(experience) %></td>
-                <td><%= link_to 'Destroy', experience, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <td><%= link_to 'Show', experience %>&nbsp;|&nbsp;
+                <%= link_to( "Activate", activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>
+                <%= link_to 'Edit', edit_experience_path(experience) %>&nbsp;|&nbsp;
+                <%= link_to 'Destroy', experience, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             </tr>
           <% end %>
     </table>

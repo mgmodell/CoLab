@@ -5,8 +5,11 @@ Rails.application.routes.draw do
   scope 'admin' do
     get 'courses/add_students' => 'courses#add_students', :as => 'add_students'
     get 'courses/add_instructors' => 'courses#add_instructors', :as => 'add_instructors'
+    get 'courses/re_invite_student/:user_id' => 'courses#re_invite_student', :as => 're_invite_student'
     get 'projects/add_group' => 'projects#add_group', :as => 'add_group'
     get 'projects/remove_group' => 'projects#remove_group', :as => 'remove_group'
+    get 'projects/activate/:project_id' => 'projects#activate', :as => 'activate_project'
+    get 'experiences/activate/:experience_id' => 'experiences#activate', :as => 'activate_experience'
     resources :courses, :projects, :experiences
   end
 
@@ -17,6 +20,7 @@ Rails.application.routes.draw do
   get 'course/accept/:roster_id' => 'courses#accept_roster', :as => 'accept_roster'
   get 'course/decline/:roster_id' => 'courses#decline_roster', :as => 'decline_roster'
   get 'courses/drop_student/:roster_id' => 'courses#drop_student', :as => 'drop_student'
+  get 'courses/remove_instructor/:roster_id' => 'courses#remove_instructor', :as => 'remove_instructor'
 
   devise_for :users, controllers:
     { omniauth_callbacks: 'users/omniauth_callbacks',

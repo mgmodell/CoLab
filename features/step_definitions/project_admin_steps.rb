@@ -33,6 +33,12 @@ Then /^the user clicks "([^"]*)"$/  do |link_or_button|
   click_link_or_button link_or_button
 end
 
+Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/  do |field, value|
+  puts page.body
+  find( :xpath, "//input[@id='" + field + "']" ).set value
+  #page.fill_in( field, with: value )
+end
+
 Then /^the user sets the "([^"]*)" field to "([^"]*)"$/  do |field, value|
   page.fill_in( field, with: value )
 end
@@ -90,4 +96,25 @@ Given /^the course started "([^"]*)" and ended "([^"]*)"$/ do |start_date,end_da
   @course.start_date = Chronic.parse( start_date )
   @course.end_date = Chronic.parse( end_date )
   @course.save
+end
+
+Then /^set user (\d+) to group "([^"]*)"$/  do |user_number, group_name|
+  user = User.all[ 1 + user_number.to_i ]
+  group = Group.where( name: group_name ).take
+  button_id = "user_group_" + user.id.to_s + "_" + group.id.to_s
+
+  page.choose( button_id )
+
+end
+
+Then /^group "([^"]*)" has (\d+) user$/  do |group_name, user_count|
+  Group.where( name: group_name ).take.users.count.should eq user_count.to_i
+end
+
+Then /^group "([^"]*)" has (\d+) revision$/  do |group_name, revision_count|
+  Group.where( name: group_name ).take.group_revisions.count.should eq revision_count.to_i
+end
+
+Then /^show me the page$/  do
+  puts page.body
 end
