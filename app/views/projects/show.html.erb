@@ -17,7 +17,8 @@
       (<% if @project.active %>
         Active
       <% else %>
-        <span class="error">Inactive</span>
+        <span class="error">Inactive</span> &mdash;
+        <%= link_to "Activate?", activate_project_path( @project ) %>
       <% end %>)
     </p>
     <p>

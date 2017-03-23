@@ -99,6 +99,17 @@ class ProjectsController < ApplicationController
     render :show
   end
 
+  def activate
+    project = Project.find( params[ :project_id ] )
+    if @current_user.is_admin? ||
+      project.course.get_roster_for_user( @current_user ).role.name == "Instructor"
+      project.active = true
+      project.save
+    end
+    @project = project
+    render :show
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

@@ -7,6 +7,8 @@ Rails.application.routes.draw do
     get 'courses/add_instructors' => 'courses#add_instructors', :as => 'add_instructors'
     get 'projects/add_group' => 'projects#add_group', :as => 'add_group'
     get 'projects/remove_group' => 'projects#remove_group', :as => 'remove_group'
+    get 'projects/activate/:project_id' => 'projects#activate', :as => 'activate_project'
+    get 'experiences/activate/:experience_id' => 'experiences#activate', :as => 'activate_experience'
     resources :courses, :projects, :experiences
   end
 

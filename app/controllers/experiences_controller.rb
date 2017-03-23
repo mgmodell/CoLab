@@ -129,6 +129,18 @@ class ExperiencesController < ApplicationController
     end
   end
 
+  def activate
+    experience = Experience.find( params[ :experience_id ] )
+    if @current_user.is_admin? ||
+      experience.course.get_roster_for_user( @current_user ).role.name == "Instructor"
+      experience.active = true
+      experience.save
+    end
+    @experience = experience
+    render :show
+  end
+
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

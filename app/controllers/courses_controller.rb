@@ -113,7 +113,7 @@ class CoursesController < ApplicationController
       flash[:notice] = "You are not permitted to make that sort of change."
       flash.keep
       redirect_to :root
-    elsif r.course.roster.instructorships < 2
+    elsif r.course.rosters.instructorships.count < 2
       flash[:notice] = "Courses must always have at least one instructor."
       flash.keep
       redirect_to :root
