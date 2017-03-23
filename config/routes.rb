@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   scope 'admin' do
     get 'courses/add_students' => 'courses#add_students', :as => 'add_students'
     get 'courses/add_instructors' => 'courses#add_instructors', :as => 'add_instructors'
+    get 'courses/re_invite_student/:user_id' => 'courses#re_invite_student', :as => 're_invite_student'
     get 'projects/add_group' => 'projects#add_group', :as => 'add_group'
     get 'projects/remove_group' => 'projects#remove_group', :as => 'remove_group'
     get 'projects/activate/:project_id' => 'projects#activate', :as => 'activate_project'

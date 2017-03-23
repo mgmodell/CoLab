@@ -100,7 +100,8 @@
         <td>
           <%= roster.role.name %>
         </td>
-        <td><%= link_to "Drop", drop_student_path( roster.id ) %></td>
+        <td><%= link_to( "Re-Invite", re_invite_student_path( roster.user ) ) unless roster.role.name == "Enrolled Student" %>&nbsp;|&nbsp;
+        <%= link_to "Drop", drop_student_path( roster.id ) %></td>
       </tr>
     <% end %>
     </tbody>

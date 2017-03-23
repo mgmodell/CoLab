@@ -126,6 +126,12 @@ class CoursesController < ApplicationController
       redirect_to course_path(r.course)
     end
   end
+  
+  def re_invite_student
+    user = User.find( params[ :user_id ] )
+    AdministrativeMailer.re_invite( user ).deliver_later
+    redirect_to :admin
+  end
 
   def drop_student
     r = Roster.find(params[:roster_id])
