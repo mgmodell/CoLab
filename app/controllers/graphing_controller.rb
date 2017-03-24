@@ -35,7 +35,7 @@ class GraphingController < ApplicationController
   def pull_and_organise_user_data(user_id, project_id, for_research = false)
     values = []
     if for_research
-      values = Value.includes(:user, :behavior, installment: [:assessment, :user])
+      values = Value.includes(:user, :factor, installment: [:assessment, :user])
                     .joins(user: { consent_logs: { consent_form: :project } },
                            installment:  :assessment)
                     .where(consent_logs: { accepted: true },
@@ -43,9 +43,9 @@ class GraphingController < ApplicationController
                            installments: { user_id: User.consented_to_project(project_id) },
                            projects: { id: project_id })
     else
-      values = Value.includes(:user, :behavior, installment: [:assessment, :user])
+      values = Value.includes(:user, :factor, installment: [:assessment, :user])
                     .joins(installment: :assessment)
-                    .where(user_id: user_id, projects: { id: project_id })
+                    .where(user_id: user_id, assessments: { project_id: project_id } )
     end
 
     assessment_to_values = {}
@@ -98,7 +98,7 @@ class GraphingController < ApplicationController
       # Retrieve the requested data
       case unit_of_analysis
       when 'Individual'
-        user = User.confirmed.find(subject.to_i)
+        user = User.find(subject.to_i)
         @detail_hash.store('name', user.name)
 
         case data_processing
@@ -106,7 +106,7 @@ class GraphingController < ApplicationController
           series = individual_summary_data(user, project.id)
           @data_series << series
         when 'All Data'
-          assessment_to_values = pull_and_organise_user_data(user.id, assessment.to_i, for_research)
+          assessment_to_values = pull_and_organise_user_data(user.id, project.id, for_research)
           data_hash = {}
           sequential = assessment_to_values.keys.sort_by(&:start_date)
           sequential.each do |assessment|
@@ -126,7 +126,7 @@ class GraphingController < ApplicationController
           end
           @data_series = data_hash.values
         when 'Summary By Behavior'
-          assessment_to_values = pull_and_organise_user_data(user.id, assessment.to_i, for_research)
+          assessment_to_values = pull_and_organise_user_data(user.id, project.id, for_research)
           data_hash = {}
           # Begin by sorting by date to group all the categories properly
           sequential = assessment_to_values.keys.sort_by(&:start_date)
@@ -170,7 +170,7 @@ class GraphingController < ApplicationController
         case data_processing
         when 'Summary'
           group.users.each do |user|
-            @data_series << individual_summary_data(user, assessment.to_i)
+            @data_series << individual_summary_data(user, project.id)
           end
         end
       when 'Raw Data'

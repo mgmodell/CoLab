@@ -45,12 +45,11 @@ $(document).ready ->
 
 $ ->
   $(".project_select").change ->
-    console.log 'Here I am!'
     subject_select = $(this).parents("form").find("#subject")
     unit_of_analysis = $(this).parents("form").find("#unit_of_analysis").val()
-    assessment_id = $(this).val()
+    project_id = $(this).val()
     for_research = $("#for_research").val()
-    url = "subjects/" + unit_of_analysis + "/" + assessment_id + "/" + for_research
+    url = "subjects/" + unit_of_analysis + "/" + project_id + "/" + for_research
     $.getJSON url, (data) ->
       i = undefined
       newOption = undefined
@@ -122,12 +121,12 @@ $ ->
     chart_num = parseInt($(this).parents("form").find(".chart").attr("chart_num"))
     detail_container = $(this).parents("form").find("#detail_container")
     unit_of_analysis = $(this).parents("form").find("#unit_of_analysis").val()
-    assessment = $(this).parents("form").find("#assessment").val()
+    project = $(this).parents("form").find("#project").val()
     subject = $(this).parents("form").find("#subject").val()
     data_processing = $(this).parents("form").find("#data_processing").val()
     for_research = $("#for_research").val()
     if subject isnt "-1"
-      url = "data/" + unit_of_analysis + "/" + subject + "/" + assessment + "/" + data_processing + "/" + for_research
+      url = "data/" + unit_of_analysis + "/" + subject + "/" + project + "/" + data_processing + "/" + for_research
       window.charts[chart_num].showLoading()
       $.getJSON url, (data) ->
         chart = window.charts[chart_num]
