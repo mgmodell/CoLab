@@ -24,8 +24,8 @@ class CoursesController < ApplicationController
     @course = Course.new
     @course.timezone = @current_user.timezone
     @course.school = @current_user.school unless @current_user.school.nil?
-    @course.start_date = Date.yesterday
-    @course.end_date = Date.tomorrow.end_of_day
+    @course.start_date = Date.tomorrow.beginning_of_day
+    @course.end_date = 1.month.from_now.end_of_day
     role = Role.instructor.take
     @course.rosters << Roster.new(role: role, user: @current_user)
   end

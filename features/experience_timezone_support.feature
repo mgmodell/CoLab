@@ -19,6 +19,7 @@ Feature: Timezone Support for Experiences
     Then the user should see a successful login message
     Then user should see 1 open task
     Then the user should see "Fri, Feb 15 at 12:00am UTC"
+    #Rounding goes on here
     Then the user should see "Tue, Apr 15 at 11:59pm UTC"
     
   Scenario: Checking that open projects reflect my timezone

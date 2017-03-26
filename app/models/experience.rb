@@ -6,7 +6,9 @@ class Experience < ActiveRecord::Base
   validates :name, :end_date, :start_date, presence: true
 
   validate :date_sanity
-  after_validation :timezone_adjust
+  before_validation :timezone_adjust
+
+  validate :dates_within_course
 
   scope :still_open, -> {
     where('experiences.start_date <= ? AND experiences.end_date >= ?',
@@ -77,8 +79,23 @@ class Experience < ActiveRecord::Base
 
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
-    self.start_date = start_date.beginning_of_day - course_tz.utc_offset if start_date_changed?
-    self.end_date = end_date.end_of_day - course_tz.utc_offset if end_date_changed?
+    unless self.start_date == course.start_date && self.new_record?
+      self.start_date = self.start_date.beginning_of_day - course_tz.utc_offset if self.start_date_changed?
+
+      self.end_date = self.end_date.end_of_day - course_tz.utc_offset if self.end_date_changed?
+    end
+  end
+
+  def dates_within_course
+    unless start_date.nil? || end_date.nil?
+      if start_date < course.start_date
+        errors.add(:start_date, 'The experience cannot begin before the course has begun')
+      end
+      if end_date > course.end_date
+        errors.add(:end_date, 'The experience cannot continue after the course has ended')
+      end
+    end
+    errors
   end
 
   def self.inform_instructors
