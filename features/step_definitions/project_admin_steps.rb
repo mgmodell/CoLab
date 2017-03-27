@@ -58,6 +58,7 @@ Then /^retrieve the latest project from the db$/  do
 end
 
 Then /^the project "([^"]*)" date is "([^"]*)"$/  do |date_field_prefix, date_value|
+  puts "*************testing"
   tz = ActiveSupport::TimeZone.new( @course.timezone )
   puts tz
   puts tz.utc_offset
@@ -66,7 +67,11 @@ Then /^the project "([^"]*)" date is "([^"]*)"$/  do |date_field_prefix, date_va
   when "start"
     date = Chronic.parse( date_value ).beginning_of_day - tz.utc_offset
     puts date
-    test_date = @project.start_date.utc + tz.utc_offset
+    puts @project.start_date
+    puts @project.start_date.utc
+    puts @project.start_date.zone
+    puts "-----------"
+    test_date = @project.start_date + tz.utc_offset
     puts @project.start_date
     puts test_date
     test_date.should eq date
