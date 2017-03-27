@@ -20,19 +20,27 @@
           <tr>
             <td width="45%">
               <%= f.input :start_date, as: :date_time_local, label: "Project start date" %>
-              </br>
             </td>
-            <td rowspan="2" width="10%" align="center" valign="center">&mdash;</td>
+            <td width="10%" align="center" valign="center">&nbsp;</td>
             <td width="45%">
               <%= f.input :end_date, as: :date_time_local, label: "Project end date" %>
             </td>
           </tr>
+          <tr>
+            <td colspan="3">
+              <em>Note: This project occurs in the <%= @project.course.timezone %> timezone and all dates reflect this.</em>
+              </br>
+              </br>
+            </td>
+          </tr>
+          <tr>
             <td>
               <%= f.input :start_dow,
                           collection: Date::DAYNAMES.each_with_index.to_a,
                           prompt: true,
                           label: "Opens every"  %>
             </td>
+            <td width="10%" align="center" valign="center">&nbsp;</td>
             <td>
               <%= f.input :end_dow,
                           collection: Date::DAYNAMES.each_with_index.to_a,

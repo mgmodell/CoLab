@@ -15,8 +15,24 @@
         <%= f.association :course %>
         <%= f.input :name %>
         <%= f.input :active %>
-        <%= f.input :start_date, as: :date_time_local %>
-        <%= f.input :end_date, as: :date_time_local %>
+        <table width="100%">
+          <tr>
+            <td width="45%">
+              <%= f.input :start_date, as: :date_time_local, label: "Experience start date" %>
+            </td>
+            <td width="10%" align="center" valign="center">&nbsp;</td>
+            <td width="45%">
+              <%= f.input :end_date, as: :date_time_local, label: "Experience end date" %>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <em>Note: This experience occurs in the <%= @experience.course.timezone %> timezone and all dates reflect this.</em>
+              </br>
+              </br>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
     <div id="summary" class="ui-body-<%= theme_code %> ui-content">

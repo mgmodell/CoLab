@@ -25,8 +25,9 @@
       <h3>Dates:</h3>
       <%= @project.start_date %> to
       <%= @project.end_date %><br>
-      <%= Date::DAYNAMES.at @project.start_dow %> to
-      <%= Date::DAYNAMES.at @project.end_dow %><br>
+      The assessments run weekly from <strong><%= Date::DAYNAMES.at @project.start_dow %></strong> to
+      <strong><%= Date::DAYNAMES.at @project.end_dow %></strong><br>
+      <em>Note: This project occurs in the <%= @project.course.timezone %> timezone and all dates reflect this.</em></br>
     </p>
     <p>
       <h3>Description:</h3>
