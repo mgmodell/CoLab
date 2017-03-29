@@ -65,20 +65,18 @@ Then /^the project "([^"]*)" date is "([^"]*)"$/  do |date_field_prefix, date_va
 
   case date_field_prefix
   when "start"
-    date = Chronic.parse( date_value ).beginning_of_day - tz.utc_offset
-    puts date
-    puts @project.start_date
-    puts @project.start_date.utc
-    puts @project.start_date.zone
+    date = Chronic.parse( date_value ).beginning_of_day #- tz.utc_offset
     puts "-----------"
-    test_date = @project.start_date # + tz.utc_offset
-    puts @project.start_date
+    puts date.zone
+    test_date = @project.start_date.utc
+
+    puts date
     puts test_date
     test_date.should eq date
   when "end"
     date = Chronic.parse( date_value ).end_of_day - tz.utc_offset
     puts date
-    test_date = @project.end_date
+    test_date = @project.end_date.utc
     puts test_date
     test_date.should eq date
   else

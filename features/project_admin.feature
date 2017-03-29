@@ -9,7 +9,7 @@ Feature: Project Administration
     Given the course has 8 confirmed users
     Given the course started "5/10/1976" and ended "11/01/2012"
     Given the course timezone is "Mexico City"
-    Given the user timezone is "America/New_York"
+    Given the user timezone is "Nairobi"
 
   Scenario: Regular users do not see the Admin button
     Given the user logs in
