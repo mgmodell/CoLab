@@ -16,7 +16,7 @@ class AdministrativeMailer < ActionMailer::Base
     @completion_report = completion_hash
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
          subject: 'CoLab Assessment status email',
-         tag: 'reminder',
+         tag: 'reporting',
          track_opens: 'true')
   end
 
@@ -27,6 +27,11 @@ class AdministrativeMailer < ActionMailer::Base
          tag: 're-invite',
          track_opens: 'true')
 
+  end
+
+  def self.inform_instructors
+    Assessment.inform_instructors
+    Experience.inform_instructors
   end
 
   # Send out email reminders to those who have yet to complete their waiting assessments

@@ -9,7 +9,6 @@ namespace :admin do
   task remind: :environment do
     Assessment.set_up_assessments
     AdministrativeMailer.send_reminder_emails
-    Assessment.inform_instructors
-    Experience.inform_instructors
+    AdministrativeMailer.inform_instructors
   end
 end
