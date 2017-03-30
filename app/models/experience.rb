@@ -79,10 +79,14 @@ class Experience < ActiveRecord::Base
 
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
-    unless self.start_date == course.start_date && self.new_record?
-      self.start_date = self.start_date.beginning_of_day - course_tz.utc_offset if self.start_date_changed?
+    user_tz = Time.zone
 
-      self.end_date = self.end_date.end_of_day - course_tz.utc_offset if self.end_date_changed?
+    unless self.start_date == course.start_date && self.new_record?
+      #TZ corrections
+      new_date = self.start_date - user_tz.utc_offset + course_tz.utc_offset
+      self.start_date = new_date.getlocal( course_tz.utc_offset).beginning_of_day if self.start_date_changed?
+      new_date = self.end_date - user_tz.utc_offset + course_tz.utc_offset
+      self.end_date = new_date.getlocal( course_tz.utc_offset).end_of_day if self.end_date_changed?
     end
   end
 

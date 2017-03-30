@@ -10,6 +10,7 @@ class Course < ActiveRecord::Base
 
   validates :timezone, :school, :start_date, :end_date, presence: true
   validate :date_sanity
+  validate :activity_date_check
 
   before_validation :timezone_adjust
 
@@ -21,19 +22,35 @@ class Course < ActiveRecord::Base
     errors
   end
 
+  #TODO - check for date sanity of experiences and projects
+  def activity_date_check
+    experiences.each do |experience|
+      if experience.start_date < self.start_date
+        errors.add( :start_date, 'Experience "' + experience.name + '" currently starts before this course does.' )
+      end
+      if project.end_date > self.end_date
+        errors.add( :start_date, 'Experience "' + experience.name + '" currently ends after this course does.' )
+      end
+    end
+    projects.each do |project|
+      if project.start_date < self.start_date
+        errors.add( :start_date, 'Project "' + project.name + '" currently starts before this course does.' )
+      end
+      if project.end_date > self.end_date
+        errors.add( :start_date, 'Project "' + project.name + '" currently ends after this course does.' )
+      end
+    end
+  end
+
   def timezone_adjust
-    course_tz = ActiveSupport::TimeZone.new(timezone)
-    puts "in course"
-    puts course_tz.utc_offset
-      puts course_tz.utc_offset
-      self.start_date = self.start_date.beginning_of_day - course_tz.utc_offset if self.start_date_changed?
-      self.start_date = self.start_date.change( offset: course_tz.utc_offset )
-      puts self.start_date
-      puts self.end_date.end_of_day
-      puts course_tz.utc_offset
-      self.end_date = self.end_date.end_of_day - course_tz.utc_offset if self.end_date_changed?
-      self.end_date = self.end_date.change( offset: course_tz.utc_offset )
-      puts self.end_date
+    course_tz = ActiveSupport::TimeZone.new(self.timezone)
+    user_tz = Time.zone
+
+    #TZ corrections
+    new_date = self.start_date - user_tz.utc_offset + course_tz.utc_offset
+    self.start_date = new_date.getlocal( course_tz.utc_offset).beginning_of_day if self.start_date_changed?
+    new_date = self.end_date - user_tz.utc_offset + course_tz.utc_offset
+    self.end_date = new_date.getlocal( course_tz.utc_offset).end_of_day if self.end_date_changed?
   end
 
   def get_roster_for_user(user)
