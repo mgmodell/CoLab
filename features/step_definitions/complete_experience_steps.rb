@@ -88,13 +88,11 @@ end
 Then(/^there will be (\d+) reactions from (\d+) different narratives recorded$/) do |reaction_count, narrative_diversity|
   Reaction.all.count.should eq reaction_count.to_i
   Reaction.group(:narrative_id).count.count.should eq narrative_diversity.to_i
-  # puts Reaction.group( :narrative_id ).count
 end
 
 Then(/^there will be (\d+) reactions from (\d+) different scenarios recorded$/) do |reaction_count, scenario_diversity|
   Reaction.all.count.should eq reaction_count.to_i
   Reaction.joins(:narrative).group(:scenario_id).count.count.should eq scenario_diversity.to_i
-  # puts Reaction.joins( :narrative ).group( :scenario_id ).count
 end
 
 Then /^no user will have reacted to the same narrative more than once$/ do
