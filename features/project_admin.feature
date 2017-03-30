@@ -255,7 +255,6 @@ Feature: Project Administration
     Then the user will see "success"
     Then retrieve the latest project from the db
     #Let's check the values stored
-    Then retrieve the latest project from the db
     Then the project "Name" is "Cool beans"
     Then the project "Description" is "this is the coolest"
     #check the dates
@@ -266,13 +265,13 @@ Feature: Project Administration
     Then the project Style is "Sliders (simple)"
 
   Scenario: Instructor assigns a course's students to groups
+    Given the course started "last month" and ended "next month"
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-
 
     Then the user clicks "Show" on the existing project
     Then the user sets the "New group name:" field to "my group"
@@ -287,9 +286,10 @@ Feature: Project Administration
 
     Then set user 1 to group "my group"
     Then the user clicks "Update Project"
+    Then the user will see "success"
+    Then retrieve the latest project from the db
     Then the project "start" date is "yesterday"
     Then the project "end" date is "tomorrow"
-    Then the user will see "success"
     Then retrieve the latest project from the db
     Then group "my group" has 1 user
     Then group "my group" has 1 revision
@@ -304,6 +304,6 @@ Feature: Project Administration
     Then retrieve the latest project from the db
     Then group "my group" has 2 user
     Then group "my group" has 2 revision
-    Then group "my group" has 2 user
-    Then group "my group" has 1 revision
+    Then group "your group" has 2 user
+    Then group "your group" has 1 revision
 
