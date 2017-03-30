@@ -110,14 +110,14 @@ class CoursesController < ApplicationController
   def remove_instructor
     r = Roster.find(params[:roster_id])
     if !@current_user.is_instructor? && !current_user.is_admin?
-      flash[:notice] = "You are not permitted to make that sort of change."
+      flash[:notice] = 'You are not permitted to make that sort of change.'
       flash.keep
       redirect_to :root
     elsif r.course.rosters.instructorships.count < 2
-      flash[:notice] = "Courses must always have at least one instructor."
+      flash[:notice] = 'Courses must always have at least one instructor.'
       flash.keep
       redirect_to :root
-    elsif r.nil? 
+    elsif r.nil?
       flash[:notice] = 'This is not an instructor in this course'
       flash.keep
       redirect_to :root
@@ -126,10 +126,10 @@ class CoursesController < ApplicationController
       redirect_to course_path(r.course)
     end
   end
-  
+
   def re_invite_student
-    user = User.find( params[ :user_id ] )
-    AdministrativeMailer.re_invite( user ).deliver_later
+    user = User.find(params[:user_id])
+    AdministrativeMailer.re_invite(user).deliver_later
     redirect_to :admin
   end
 
@@ -142,7 +142,7 @@ class CoursesController < ApplicationController
     else
       instructor_action = r.user != @current_user
       if !instructor_action && r.user != @current_user
-        flash[:notice] = "You are not permitted to make that sort of change."
+        flash[:notice] = 'You are not permitted to make that sort of change.'
         flash.keep
         redirect_to :root
       else

@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html>
-    <head>
-          <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-    </head>
-    <body>
-          <h1>Hello, <%= @user.first_name %>.</h1>
-          <p>
-          Below is your students' completion report from <%= @name %> at 
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>Hello, <%= @user.first_name %>.</h1>
+    <p>
+      Below is your students' completion report from <%= @name %> at 
           <%= link_to "CoLab.online", root_url %> which just wrapped up:
           </P>
-          <table>
-            <tr>
-              <th>Student</th>
-              <th>Completed at:</th>
-            </tr>
-            <% @completion_report.keys do |user| %>
-            <tr>
-              <td><%= user.name %></td>
-              <td><%= @completion_report[ user ] %></td>
-            </tr>
-            <% end %>
-          </table>
-          <P>
-          Thank you!
+    <table>
+      <tr>
+        <th>Student</th>
+        <th>Completed at:</th>
+      </tr>
+      <% @completion_report.keys do |user| %>
+        <tr>
+          <td><%= user.name %></td>
+          <td><%= @completion_report[ user ] %></td>
+        </tr>
+      <% end %>
+    </table>
+    <P>
+      Thank you!
           </P>
-          <P>
-          CoLab Support
+    <P>
+      CoLab Support
           </p>
-     </body>
+  </body>
 </html>

@@ -66,7 +66,6 @@ Cucumber::Rails::Database.javascript_strategy = :truncation
 # end
 Before do
   Chronic.time_class = Time.zone
-
 end
 
 After do |_scenario|

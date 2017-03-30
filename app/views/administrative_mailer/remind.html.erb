@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html>
-    <head>
-          <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-    </head>
-    <body>
-          <h1>Hello, <%= @user.first_name %>.</h1>
-          <p>
-          This email is to serve as a friendly reminder
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>Hello, <%= @user.first_name %>.</h1>
+    <p>
+      This email is to serve as a friendly reminder
           that you have an open task waiting for you at
           this time. Please <%= link_to 'login', root_url %>
-          at your earliest convenience to complete what is
+      at your earliest convenience to complete what is
           available.
           </P>
-          <P>
-          <%= link_to root_url, root_url %>
+    <P>
+      <%= link_to root_url, root_url %>
+    </P>
+    <P>
+      Thank you!
           </P>
-          <P>
-          Thank you!
-          </P>
-          <P>
-          CoLab Support
+    <P>
+      CoLab Support
           </p>
-     </body>
+  </body>
 </html>

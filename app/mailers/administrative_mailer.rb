@@ -20,13 +20,12 @@ class AdministrativeMailer < ActionMailer::Base
          track_opens: 'true')
   end
 
-  def re_invite( user )
+  def re_invite(user)
     @user = user
-    mail(to: "#{user.email}",
+    mail(to: user.email.to_s,
          subject: 'Invitation to CoLab',
          tag: 're-invite',
          track_opens: 'true')
-
   end
 
   def self.inform_instructors

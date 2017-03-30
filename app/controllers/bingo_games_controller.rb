@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class ExperiencesController < ApplicationController
+class BingoGamesController < ApplicationController
   before_action :set_experience, only: [:show, :edit, :update, :destroy]
   before_action :check_admin, except: [:next, :diagnose, :react]
 
@@ -8,7 +8,7 @@ class ExperiencesController < ApplicationController
   def edit; end
 
   def index
-    @experiences = []
+    @bingo_games = []
     if @current_user.is_admin?
       @experiences = Experience.all
     else
@@ -143,16 +143,16 @@ class ExperiencesController < ApplicationController
   private
 
   # Use callbacks to share common setup or constraints between actions.
-  def set_experience
-    e_test = Experience.find(params[:id])
+  def set_game
+    g_test = BingoGame.find(params[:id])
     if @current_user.is_admin?
-      @experience = e_test
+      @bingo_game = b_test
     else
-      @course = @experience.course
-      if e_test.course.rosters.instructorships.where(user: @current_user).nil?
-        redirect_to @course if @experience.nil?
+      @course = @bingo_game.course
+      if b_test.course.rosters.instructorships.where(user: @current_user).nil?
+        redirect_to @course if @bingo_game.nil?
       else
-        @experience = e_test
+        @bingo_game = b_test
       end
     end
   end
@@ -162,15 +162,8 @@ class ExperiencesController < ApplicationController
   end
 
   def experience_params
-    params.require(:experience).permit(:course_id, :name, :active, :start_date, :end_date)
-  end
-
-  def diagnosis_params
-    params.require(:diagnosis).permit(:behavior_id, :reaction_id, :week_id, :other_name,
-                                      :comment, :reaction_id)
-  end
-
-  def reaction_params
-    params.require(:reaction).permit(:behavior_id, :improvements, :narrative_id, :other_name)
+    params.require(:bingo_game).permit(:course_id, :topic, :description, :link, :source,
+                                       :group_option, :individual_count, :group_count,
+                                       :start_date, :end_date)
   end
 end

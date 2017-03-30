@@ -29,37 +29,37 @@
           <tr>
             <td colspan="3">
               <em>Note: This project occurs in the <%= @project.course.timezone %> timezone and all dates reflect this.</em>
-              </br>
-              </br>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <%= f.input :start_dow,
+            </br>
+          </br>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= f.input :start_dow,
                           collection: Date::DAYNAMES.each_with_index.to_a,
                           prompt: true,
                           label: "Opens every"  %>
-            </td>
-            <td width="10%" align="center" valign="center">&nbsp;</td>
-            <td>
-              <%= f.input :end_dow,
+        </td>
+        <td width="10%" align="center" valign="center">&nbsp;</td>
+        <td>
+          <%= f.input :end_dow,
                           collection: Date::DAYNAMES.each_with_index.to_a,
                           prompt: true,
                           label: "Closes every"  %>
-            </td>
-          </tr>
-        </table>
-        <%= f.association :factor_pack, prompt: true %>
-        <%= f.association :style, prompt: true %>
-        <%= f.input :description, as: :text %>
-      </div>
-    </div>
-    <div id="details" class="ui-body-<%= theme_code %> ui-content">
-    </div>
-    <div id="groups" class="ui-body-<%= theme_code %> ui-content">
-      <h2>Group memberships</h2>
-      <% if @project.groups.any? || @project.enrolled_user_rosters.any? %>
-        <table id="project_table" width="90%" data-role="table"
+        </td>
+      </tr>
+    </table>
+    <%= f.association :factor_pack, prompt: true %>
+    <%= f.association :style, prompt: true %>
+    <%= f.input :description, as: :text %>
+  </div>
+</div>
+<div id="details" class="ui-body-<%= theme_code %> ui-content">
+</div>
+<div id="groups" class="ui-body-<%= theme_code %> ui-content">
+  <h2>Group memberships</h2>
+  <% if @project.groups.any? || @project.enrolled_user_rosters.any? %>
+    <table id="project_table" width="90%" data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
           data-column-popup-theme="<%= theme_code %>" 
@@ -67,36 +67,36 @@
           data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="Select columns&hellip;"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-          <thead>
-            <tr>
-              <th>Student</th>
-              <% groups = @project.groups %>
-              <% groups.each do |group| %>
-                <th data-priority="0"><%= text_field_tag "group_" + group.id.to_s, group.name %></th>
-              <% end %>
-              <th data-priority="0">[no group]</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @project.course.enrolled_students.each do |user| %>
-              <tr>
-                <td><%= mail_to user.email, user.name %></td>
-              <% groups.each do |group| %>
-                <td align="center"><%= radio_button_tag "user_group_#{user.id}", group.id, group.has_user( user ) %></td>
-              <% end %>
-              <td align="center"><%= radio_button_tag("user_group_#{user.id}", "-1", @project.group_for_user( user ).nil? ) %></td>
-            </tr>
+      <thead>
+        <tr>
+          <th>Student</th>
+          <% groups = @project.groups %>
+          <% groups.each do |group| %>
+            <th data-priority="0"><%= text_field_tag "group_" + group.id.to_s, group.name %></th>
           <% end %>
-        </tbody>
-      </table>
-    <% end %>
-  </div>
-  <div id="summary" class="ui-body-<%= theme_code %> ui-content">
-    <h2>Response Summary</h2>
-  </div>
-  <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-    <h2>Responses</h2>
-  </div>
+          <th data-priority="0">[no group]</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @project.course.enrolled_students.each do |user| %>
+          <tr>
+            <td><%= mail_to user.email, user.name %></td>
+            <% groups.each do |group| %>
+              <td align="center"><%= radio_button_tag "user_group_#{user.id}", group.id, group.has_user( user ) %></td>
+            <% end %>
+            <td align="center"><%= radio_button_tag("user_group_#{user.id}", "-1", @project.group_for_user( user ).nil? ) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+<div id="summary" class="ui-body-<%= theme_code %> ui-content">
+  <h2>Response Summary</h2>
+</div>
+<div id="responses" class="ui-body-<%= theme_code %> ui-content">
+  <h2>Responses</h2>
+</div>
 </div>
 <div class="form-actions">
   <%= f.button :submit %>

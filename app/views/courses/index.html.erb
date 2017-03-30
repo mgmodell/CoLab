@@ -1,8 +1,6 @@
 <p id="notice"><%= notice %></p>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-
 <h1>Listing Courses</h1>
-
 <table data-role="table"
   id="basicTable"
   data-column-btn-theme"<%= theme_code %>" 
@@ -25,7 +23,6 @@
       <th>Actions</th>
     </tr>
   </thead>
-
   <tbody>
     <% @courses.each do |course| %>
       <tr>
@@ -45,7 +42,5 @@
     <% end %>
   </tbody>
 </table>
-
 <br>
-
 <%= link_to 'New Course', new_course_path %>

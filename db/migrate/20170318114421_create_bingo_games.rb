@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateBingoGames < ActiveRecord::Migration
   def change
     create_table :bingo_games do |t|

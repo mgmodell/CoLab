@@ -1,54 +1,49 @@
 <%= simple_form_for @course do |f| %>
   <%= f.error_notification %>
-
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-<div data-role="tabs" id="tabs">
-  <div data-role="navbar">
-    <ul>
-      <li><a href="#details" data-ajax="false">Details</a></li>
-      <li><a href="#participants" data-ajax="false">Participants</a></li>
-      <li><a href="#activities" data-ajax="false">Activities</a></li>
-    </ul>
-  </div>
-  <div id="details" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Course Details</h2>
-  <div class="form-inputs">
-    <%= f.input :name %>
-    <%= f.input :number %>
-    <%= f.association :school %>
-    <%= f.time_zone_select :timezone %>
-    <%= f.input :start_date, as: :date_time_local %>
-    <%= f.input :end_date, as: :date_time_local %>
-    <%= f.input :description, as: :text %>
-  </div>
-  </div>
-  <div id="participants" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Rosters</h2>
-  <% @course.rosters.students.each do |roster| %>
-    <%= roster.user.name %> <i><%= mail_to roster.user.email %></i> (<%= roster.role.name %> )<br>
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+  <div data-role="tabs" id="tabs">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#details" data-ajax="false">Details</a></li>
+        <li><a href="#participants" data-ajax="false">Participants</a></li>
+        <li><a href="#activities" data-ajax="false">Activities</a></li>
+      </ul>
+    </div>
+    <div id="details" class="ui-body-<%= theme_code %> ui-content">
+      <h2>Course Details</h2>
+      <div class="form-inputs">
+        <%= f.input :name %>
+        <%= f.input :number %>
+        <%= f.association :school %>
+        <%= f.time_zone_select :timezone %>
+        <%= f.input :start_date, as: :date_time_local %>
+        <%= f.input :end_date, as: :date_time_local %>
+        <%= f.input :description, as: :text %>
+      </div>
+    </div>
+    <div id="participants" class="ui-body-<%= theme_code %> ui-content">
+      <h2>Rosters</h2>
+      <% @course.rosters.students.each do |roster| %>
+        <%= roster.user.name %> <i><%= mail_to roster.user.email %></i> (<%= roster.role.name %> )<br>
+      <% end %>
+    </div>
+    <div id="activities" class="ui-body-<%= theme_code %> ui-content">
+      <h2>Course Activities</h2>
+      <h3>Course instructors</h3>
+      <% @course.rosters.instructorships.each do |roster| %>
+        <%= roster.user.name %> (<%= roster.role.name %>)<br>
+      <% end %>
+      <h3>Projects</h3>
+      <% @course.projects.each do |project| %>
+        <%= project.name %></br>
+    <% end %>
+    <h3>Experiences</h3>
+    <% @course.experiences.each do |experience| %>
+      <%= experience.name %></br>
   <% end %>
-  </div>
-  <div id="activities" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Course Activities</h2>
-
-  <h3>Course instructors</h3>
-  <% @course.rosters.instructorships.each do |roster| %>
-    <%= roster.user.name %> (<%= roster.role.name %>)<br>
-  <% end %>
-  <h3>Projects</h3>
-  <% @course.projects.each do |project| %>
-    <%= project.name %></br>
-  <% end %>
-
-  <h3>Experiences</h3>
-  <% @course.experiences.each do |experience| %>
-    <%= experience.name %></br>
-  <% end %>
-  </div>
 </div>
-  <div class="form-actions">
-    <%= f.button :submit %>
-  </div>
-    
-
+</div>
+<div class="form-actions">
+  <%= f.button :submit %>
+</div>
 <% end %>

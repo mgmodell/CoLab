@@ -28,25 +28,25 @@
       The assessments run weekly from <strong><%= Date::DAYNAMES.at @project.start_dow %></strong> to
       <strong><%= Date::DAYNAMES.at @project.end_dow %></strong><br>
       <em>Note: This project occurs in the <%= @project.course.timezone %> timezone and all dates reflect this.</em></br>
-    </p>
-    <p>
-      <h3>Description:</h3>
-      <%= @project.description %>
-    </p>
-    <p>
-      <h3>Factor Pack:</h3>
-      <% if @project.factor_pack.present? %>
-      <%= @project.factor_pack.name %></br>
-        <ul>
-          <% @project.factor_pack.factors.each do |factor| %>
-            <li><%= factor.name %></li>
-          <% end %>
-        </ul>
-      <% else %>
-        [Not set]
-      <% end %>
   </p>
-  <%= link_to 'Edit Project Details', edit_project_path(@project) %>
+  <p>
+    <h3>Description:</h3>
+    <%= @project.description %>
+  </p>
+  <p>
+    <h3>Factor Pack:</h3>
+    <% if @project.factor_pack.present? %>
+      <%= @project.factor_pack.name %></br>
+    <ul>
+      <% @project.factor_pack.factors.each do |factor| %>
+        <li><%= factor.name %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    [Not set]
+      <% end %>
+</p>
+<%= link_to 'Edit Project Details', edit_project_path(@project) %>
 </div>
 <div id="groups" class="ui-body-<%= theme_code %> ui-content">
   <h2>Groups</h2>
@@ -79,22 +79,22 @@
         <tbody>
           <% @project.course.enrolled_students.each do |user| %>
             <tr>
-                <td><%= mail_to user.email, user.name %></td>
-            <% @project.groups.each do |group| %>
+              <td><%= mail_to user.email, user.name %></td>
+              <% @project.groups.each do |group| %>
+                <td>
+                  <center><%= raw( "&#10004;" ) if group.has_user user %></center>
+                </td>
+              <% end %>
               <td>
-                <center><%= raw( "&#10004;" ) if group.has_user user %></center>
+                <center><%= raw( "&#10004;" ) if @project.group_for_user( user ).nil? %></center>
               </td>
-            <% end %>
-            <td>
-              <center><%= raw( "&#10004;" ) if @project.group_for_user( user ).nil? %></center>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% end %>
-</p>
-<%= link_to 'Edit Project', edit_project_path(@project) %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </p>
+  <%= link_to 'Edit Project', edit_project_path(@project) %>
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
   <h2>Response Summary</h2>

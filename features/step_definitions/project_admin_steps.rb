@@ -1,4 +1,4 @@
-require "chronic"
+require 'chronic'
 # frozen_string_literal: true
 Then /^the user "([^"]*)" see an Admin button$/ do |admin|
   if admin == 'does'
@@ -25,106 +25,103 @@ Given /^the user is the instructor for the course$/ do
   Roster.create(user: @user, course: @course, role: Role.instructor.take)
 end
 
-Then /^the user opens the course$/  do
-  click_link_or_button "Show"
+Then /^the user opens the course$/ do
+  click_link_or_button 'Show'
 end
 
-Then /^the user clicks "([^"]*)"$/  do |link_or_button|
+Then /^the user clicks "([^"]*)"$/ do |link_or_button|
   click_link_or_button link_or_button
 end
 
-Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/  do |field, value|
+Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/ do |field, value|
   puts page.body
-  find( :xpath, "//input[@id='" + field + "']" ).set value
-  #page.fill_in( field, with: value )
+  find(:xpath, "//input[@id='" + field + "']").set value
+  # page.fill_in( field, with: value )
 end
 
-Then /^the user sets the "([^"]*)" field to "([^"]*)"$/  do |field, value|
-  page.fill_in( field, with: value )
+Then /^the user sets the "([^"]*)" field to "([^"]*)"$/ do |field, value|
+  page.fill_in(field, with: value)
 end
 
-Then /^the user sets the "([^"]*)" date to "([^"]*)"$/  do |date_field_prefix, date_value|
-  
-  new_date = Chronic.parse( date_value ).strftime( "%Y-%m-%dT%T" )
-  page.find('#project_' + date_field_prefix + '_date' ).set( new_date )
+Then /^the user sets the "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
+  new_date = Chronic.parse(date_value).strftime('%Y-%m-%dT%T')
+  page.find('#project_' + date_field_prefix + '_date').set(new_date)
 end
 
-Then /^the user selects "([^"]*)" as "([^"]*)"$/  do |value, field|
-  page.select( value, from: field )
+Then /^the user selects "([^"]*)" as "([^"]*)"$/ do |value, field|
+  page.select(value, from: field)
 end
 
-Then /^retrieve the latest project from the db$/  do
+Then /^retrieve the latest project from the db$/ do
   @project = Project.last
 end
 
-Then /^the project "([^"]*)" date is "([^"]*)"$/  do |date_field_prefix, date_value|
-  tz = ActiveSupport::TimeZone.new( @course.timezone )
+Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value|
+  tz = ActiveSupport::TimeZone.new(@course.timezone)
 
   case date_field_prefix
-  when "start"
-    date = Chronic.parse( date_value )
-    date = date - date.utc_offset
-    date = date + tz.utc_offset
-    date = date.getlocal( tz.utc_offset ).beginning_of_day
+  when 'start'
+    date = Chronic.parse(date_value)
+    date -= date.utc_offset
+    date += tz.utc_offset
+    date = date.getlocal(tz.utc_offset).beginning_of_day
     @project.start_date.should eq date
 
-  when "end"
-    date = Chronic.parse( date_value )
-    date = date + tz.utc_offset
-    date = date.getlocal( tz.utc_offset ).end_of_day
-    @project.end_date.change( :sec => 0 ).should eq date.change( :sec => 0 )
+  when 'end'
+    date = Chronic.parse(date_value)
+    date += tz.utc_offset
+    date = date.getlocal(tz.utc_offset).end_of_day
+    @project.end_date.change(sec: 0).should eq date.change(sec: 0)
   else
-    puts "We didn't test anything there: " + date_field_prefix + " not found"
+    puts "We didn't test anything there: " + date_field_prefix + ' not found'
   end
-  
 end
 
-Then /^the project "([^"]*)" is "([^"]*)"$/  do |field, value|
+Then /^the project "([^"]*)" is "([^"]*)"$/ do |field, value|
   case field
-  when "Name"
+  when 'Name'
     @project.name.should eq value
-  when "Description"
+  when 'Description'
     @project.description.should eq value
   else
-    puts "We didn't test anything there: " + field + " not found"
+    puts "We didn't test anything there: " + field + ' not found'
   end
 end
 
-Then /^the user clicks "([^"]*)" on the existing project$/  do |action|
-  find( :xpath, "//tr[td[contains(.,'#{@project.name}')]]/td/a", :text=> action ).click
+Then /^the user clicks "([^"]*)" on the existing project$/ do |action|
+  find(:xpath, "//tr[td[contains(.,'#{@project.name}')]]/td/a", text: action).click
 end
 
-Then /^the project Factor pack is "([^"]*)"$/  do |selected_factor_pack|
+Then /^the project Factor pack is "([^"]*)"$/ do |selected_factor_pack|
   @project.factor_pack.name.should eq selected_factor_pack
 end
 
-Then /^the project Style is "([^"]*)"$/  do |selected_style|
+Then /^the project Style is "([^"]*)"$/ do |selected_style|
   @project.style.name.should eq selected_style
 end
 
-Given /^the course started "([^"]*)" and ended "([^"]*)"$/ do |start_date,end_date|
-  @course.start_date = Chronic.parse( start_date )
-  @course.end_date = Chronic.parse( end_date )
+Given /^the course started "([^"]*)" and ended "([^"]*)"$/ do |start_date, end_date|
+  @course.start_date = Chronic.parse(start_date)
+  @course.end_date = Chronic.parse(end_date)
   @course.save
 end
 
-Then /^set user (\d+) to group "([^"]*)"$/  do |user_number, group_name|
-  user = User.all[ 1 + user_number.to_i ]
-  group = Group.where( name: group_name ).take
-  button_id = "user_group_" + user.id.to_s + "_" + group.id.to_s
+Then /^set user (\d+) to group "([^"]*)"$/ do |user_number, group_name|
+  user = User.all[1 + user_number.to_i]
+  group = Group.where(name: group_name).take
+  button_id = 'user_group_' + user.id.to_s + '_' + group.id.to_s
 
-  page.choose( button_id )
-
+  page.choose(button_id)
 end
 
-Then /^group "([^"]*)" has (\d+) user$/  do |group_name, user_count|
-  Group.where( name: group_name ).take.users.count.should eq user_count.to_i
+Then /^group "([^"]*)" has (\d+) user$/ do |group_name, user_count|
+  Group.where(name: group_name).take.users.count.should eq user_count.to_i
 end
 
-Then /^group "([^"]*)" has (\d+) revision$/  do |group_name, revision_count|
-  Group.where( name: group_name ).take.group_revisions.count.should eq revision_count.to_i
+Then /^group "([^"]*)" has (\d+) revision$/ do |group_name, revision_count|
+  Group.where(name: group_name).take.group_revisions.count.should eq revision_count.to_i
 end
 
-Then /^show me the page$/  do
+Then /^show me the page$/ do
   puts page.body
 end

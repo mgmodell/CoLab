@@ -95,14 +95,14 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:project_id])
     group = Group.create(name: params[:group_name], project: @project)
 
-    flash.now[:notice] = "Group successfully created"
+    flash.now[:notice] = 'Group successfully created'
     render :show
   end
 
   def activate
-    project = Project.find( params[ :project_id ] )
+    project = Project.find(params[:project_id])
     if @current_user.is_admin? ||
-      project.course.get_roster_for_user( @current_user ).role.name == "Instructor"
+       project.course.get_roster_for_user(@current_user).role.name == 'Instructor'
       project.active = true
       project.save
     end

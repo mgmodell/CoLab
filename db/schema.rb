@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170320150239) do
+ActiveRecord::Schema.define(version: 20170330153632) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20170320150239) do
     t.datetime "end_date"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.boolean  "active"
   end
 
   create_table "candidate_feedbacks", force: :cascade do |t|

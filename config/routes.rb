@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     get 'projects/remove_group' => 'projects#remove_group', :as => 'remove_group'
     get 'projects/activate/:project_id' => 'projects#activate', :as => 'activate_project'
     get 'experiences/activate/:experience_id' => 'experiences#activate', :as => 'activate_experience'
-    resources :courses, :projects, :experiences
+    resources :courses, :projects, :experiences, :bingo_games
   end
 
   get 'experiences/next/:experience_id:' => 'experiences#next', :as => 'next_experience'

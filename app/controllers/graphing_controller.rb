@@ -45,7 +45,7 @@ class GraphingController < ApplicationController
     else
       values = Value.includes(:user, :factor, installment: [:assessment, :user])
                     .joins(installment: :assessment)
-                    .where(user_id: user_id, assessments: { project_id: project_id } )
+                    .where(user_id: user_id, assessments: { project_id: project_id })
     end
 
     assessment_to_values = {}

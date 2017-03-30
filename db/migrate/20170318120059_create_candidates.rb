@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateCandidates < ActiveRecord::Migration
   def change
     create_table :candidates do |t|
