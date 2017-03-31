@@ -10,28 +10,28 @@
     </ul>
   </div>
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Course Details</h2>
+  <h3>Course Details</h3>
 <p>
-  <h2>Name:</h2>
+  <h3>Name:</h3>
   <%= @course.name %>
 </p>
 
 <p>
-  <h2>Number:</h2>
+  <h3>Number:</h3>
   <%= @course.number %>
 </p>
 
 <p>
-  <h2>Description:</h2>
+  <h3>Description:</h3>
   <%= @course.description %>
 </p>
 <p>
-  <h2>Dates:</h2>
+  <h3>Dates:</h3>
   <%= @course.start_date %> to
   <%= @course.end_date %>
 </p>
 <p>
-  <h2>Course instructors</h2>
+  <h3>Course instructors</h3>
   <% @course.rosters.instructorships.each do |roster| %>
     <%= roster.user.name %> | <%= link_to "Remove", remove_instructor_path( roster ) %></br>
   <% end %>
@@ -41,7 +41,7 @@
   </div>
   <div id="students" class="ui-body-<%= theme_code %> ui-content">
 <p>
-  <h2>Course instructors</h2>
+  <h3>Course instructors</h3>
   <%= form_tag add_instructors_path, method: :get do %>
     <%= label_tag :addresses, "Add instructor by email:" %>
     <%= text_field_tag :addresses %>
@@ -52,7 +52,7 @@
     <%= roster.user.name %></br>
   <% end %>
 
-  <h2>Student roster</h2>
+  <h3>Student roster</h3>
   <%= form_tag add_students_path, method: :get do %>
     <%= label_tag :addresses, "Add users by email:" %>
     <%= text_field_tag :addresses %>
@@ -112,8 +112,10 @@
   <div id="activities" class="ui-body-<%= theme_code %> ui-content">
 
 <p>
-  <h2>Bingo Games</h2>
-  <% if @course.bingo_games.count > 0 %>
+  <h3>Bingo! Games</h3>
+  <% if @course.bingo_games.count < 1 %>
+    No Bingo! games.</br>
+  <% else %>
     <table data-role="table"
           id="experiences_table"
           data-column-btn-theme"<%= theme_code %>" 
@@ -141,7 +143,7 @@
                 <% end %></td>
                 <td><%= link_to 'Show', game %>&nbsp;|&nbsp;
                 <%= link_to( "Activate", activate_game_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
-                <%= link_to 'Edit', edit_game_path(game) %>&nbsp;|&nbsp;
+                <%= link_to 'Edit', edit_bingo_game_path(game) %>&nbsp;|&nbsp;
                 <%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             </tr>
           <% end %>
@@ -153,8 +155,10 @@
 </p>
 <p>
   </br></br>
-  <h2>Projects</h2>
-  <% if @course.projects.count > 0 %>
+  <h3>Projects</h3>
+  <% if @course.projects.count < 1 %>
+    No projects.</br>
+  <% else %>
     <table data-role="table"
       id="projects_table"          data-column-btn-theme"<%= theme_code %>" 
           data-column-popup-theme="<%= theme_code %>" 
@@ -193,8 +197,10 @@
 </p>
 <p>
   </br></br>
-  <h2>Experiences</h2>
-  <% if @course.experiences.count > 0 %>
+  <h3>Experiences</h3>
+  <% if @course.experiences.count < 1 %>
+    No Experiences.</br>
+  <% else %>
     <table data-role="table"
           id="experiences_table"
           data-column-btn-theme"<%= theme_code %>" 

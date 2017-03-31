@@ -27,7 +27,7 @@
     <p>
       <strong>Dates:</strong>
       <%= @experience.start_date %> to
-  <%= @experience.start_date %></br>
+  <%= @experience.end_date %></br>
     <em>Note: This experience occurs in the <%= @experience.course.timezone %> timezone and all dates reflect this.</em>
   </p>
   <%= link_to 'Edit experience details', edit_experience_path(@experience) %>

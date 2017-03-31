@@ -88,6 +88,14 @@ class User < ActiveRecord::Base
                DateTime.current, DateTime.current, true).to_a
     end
 
+    available_rosters.each do |roster|
+      waiting_games = roster.course.bingo_games
+        .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ? AND bingo_games.active = ?',
+               DateTime.current, DateTime.current, true).to_a
+      waiting_games.delete_if{ |game| !game.is_open }
+      waiting_tasks.concat waiting_games
+    end
+
     waiting_tasks.sort_by(&:end_date)
   end
 

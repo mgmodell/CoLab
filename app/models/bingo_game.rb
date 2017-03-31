@@ -10,12 +10,27 @@ class BingoGame < ActiveRecord::Base
   before_validation :timezone_adjust
   validate :dates_within_course
 
+  def name
+    self.topic
+  end
+
   def is_open
-    if start_date <= DateTime.current && end_date >= DateTime.current
+    if start_date <= DateTime.current && end_date >= ( DateTime.current - lead_time.day )
       true
     else
       false
     end
+  end
+
+  def candidate_list_for_user( user )
+    cl = candidate_lists.where( user_id: user.id ).take
+    if cl.nil?
+      cl = CandidateList.create( user_id: user.id,
+                                bingo_game_id: self.id )
+    elsif  cl.is_group
+      cl = candidate_lists.where( group_id: project.group_for_user( user ).id ).take
+    end
+    cl
   end
 
   #validation methods

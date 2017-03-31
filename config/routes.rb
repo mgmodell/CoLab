@@ -10,12 +10,15 @@ Rails.application.routes.draw do
     get 'projects/remove_group' => 'projects#remove_group', :as => 'remove_group'
     get 'projects/activate/:project_id' => 'projects#activate', :as => 'activate_project'
     get 'experiences/activate/:experience_id' => 'experiences#activate', :as => 'activate_experience'
+    get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate', :as => 'activate_bingo_game'
     resources :courses, :projects, :experiences, :bingo_games
   end
 
   get 'experiences/next/:experience_id:' => 'experiences#next', :as => 'next_experience'
-  get 'exeriencesp/diagnose' => 'experiences#diagnose', :as => 'diagnose'
-  get 'exeriencesp/reaction' => 'experiences#react', :as => 'react'
+  get 'exeriences/diagnose' => 'experiences#diagnose', :as => 'diagnose'
+  get 'exeriences/reaction' => 'experiences#react', :as => 'react'
+
+  get 'bingo/enter_terms/:candidate_list_id' => 'candidate_lists#enter_terms', :as => 'enter_terms'
 
   get 'course/accept/:roster_id' => 'courses#accept_roster', :as => 'accept_roster'
   get 'course/decline/:roster_id' => 'courses#decline_roster', :as => 'decline_roster'
