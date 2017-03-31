@@ -115,12 +115,21 @@
   <strong>Projects</strong>
   <%= link_to "Add Project", new_project_path( :course_id => @course.id )%>
   <% if @course.projects.count > 0 %>
-    <table id="projects_table">
-      <tr>
-        <th>Name</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
+    <table data-role="table"
+      id="projects_table"          data-column-btn-theme"<%= theme_code %>" 
+          data-column-popup-theme="<%= theme_code %>" 
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="Select columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th data-priority="0">Status</th>
+          <th data-priority="1">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
           <% @course.projects.each do |project| %>
             <tr>
                 <td><%= project.name %></td>
@@ -136,6 +145,7 @@
                 <%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             </tr>
           <% end %>
+      </tbody>
     </table>
   <% end %>
 </p>
@@ -143,12 +153,22 @@
   <strong>Experiences</strong>
   <%= link_to "Add Experience", new_experience_path( :course_id => @course.id )%>
   <% if @course.experiences.count > 0 %>
-    <table id="experiences_table">
+    <table data-role="table"
+          id="experiences_table"
+          data-column-btn-theme"<%= theme_code %>" 
+          data-column-popup-theme="<%= theme_code %>" 
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="Select columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+      <thead>
       <tr>
         <th>Name</th>
-        <th>Status</th>
-        <th>Actions</th>
+        <th data-priority="0">Status</th>
+        <th data-priority="1">Actions</th>
       </tr>
+      </thead>
+      <tbody>
           <% @course.experiences.each do |experience| %>
             <tr>
                 <td><%= experience.name %></td>
@@ -164,6 +184,7 @@
                 <%= link_to 'Destroy', experience, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             </tr>
           <% end %>
+      </tbody>
     </table>
   <% end %>
 </p>

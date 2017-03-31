@@ -1,0 +1,45 @@
+<div class="ui-corner-all custom-corners">
+  <div class="ui-bar ui-bar-a">
+    <h3>Overall Group Behavior</h3>
+  </div>
+  <div class="ui-body ui-body-a">
+    <p>
+      Please reflect on the entire narrative that you have just finished reading and
+    tell us which of the following behaviors best characterizes the group over the course
+    of the entire semester.
+    </p>
+  </div>
+</div>
+<br>
+<%= simple_form_for @reaction, :url => { :controller => "experiences", :action => "react" }, :method => :get do |f| %>
+  <%= f.hidden_field( :id ) %>
+  <%= f.hidden_field( :narrative_id ) %>
+  <% if @reaction.errors.any? && @reaction.errors[:behavior ].count > 0 %>
+    <p class='error'><%= @reaction.errors[ :behavior ].first %></p>
+  <% end %>
+  <div class="ui-corner-all custom-corners">
+    <div class="ui-bar ui-bar-a">
+      <h3>What behavior dominated the narrative?</h3>
+    </div>
+    <div class="ui-body ui-body-a">
+      <%= f.association :behavior, :collection => Behavior.all, :as => :radio_buttons, label: false, :error => false %>
+      <% if @reaction.errors.any? && @reaction.errors[ :other_name ].count > 0 %>
+        <div id="other_name_panel">
+          <p class='error'><%= @reaction.errors[ :other_name ].first %></p>
+        <% else %>
+          <div id="other_name_panel">
+          <% end %>
+          <%= f.input :other_name, label: "What behavior did you see?" %><br>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="ui-bar ui-bar-a" >
+        <h3>How could I improve upon the narrative? </h3>
+      </div>
+      <%= f.input :improvements, as: :text, size: "24x6", label: "Your suggestions:" %>
+    </div>
+    <div id="final_submit_panel" >
+      <%= f.submit "Submit" %>
+    </div>
+  <% end %>
