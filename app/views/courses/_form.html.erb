@@ -33,6 +33,10 @@
       <% @course.rosters.instructorships.each do |roster| %>
         <%= roster.user.name %> (<%= roster.role.name %>)<br>
       <% end %>
+      <h3>Bingo Games</h3>
+      <% @course.bingo_games.each do |game| %>
+        <%= game.name %></br>
+    <% end %>
       <h3>Projects</h3>
       <% @course.projects.each do |project| %>
         <%= project.name %></br>

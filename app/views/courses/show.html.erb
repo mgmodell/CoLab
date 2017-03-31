@@ -12,26 +12,26 @@
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
   <h2>Course Details</h2>
 <p>
-  <strong>Name:</strong>
+  <h2>Name:</h2>
   <%= @course.name %>
 </p>
 
 <p>
-  <strong>Number:</strong>
+  <h2>Number:</h2>
   <%= @course.number %>
 </p>
 
 <p>
-  <strong>Description:</strong>
+  <h2>Description:</h2>
   <%= @course.description %>
 </p>
 <p>
-  <strong>Dates:</strong>
+  <h2>Dates:</h2>
   <%= @course.start_date %> to
   <%= @course.end_date %>
 </p>
 <p>
-  <strong>Course instructors</strong>
+  <h2>Course instructors</h2>
   <% @course.rosters.instructorships.each do |roster| %>
     <%= roster.user.name %> | <%= link_to "Remove", remove_instructor_path( roster ) %></br>
   <% end %>
@@ -41,7 +41,7 @@
   </div>
   <div id="students" class="ui-body-<%= theme_code %> ui-content">
 <p>
-  <strong>Course instructors</strong>
+  <h2>Course instructors</h2>
   <%= form_tag add_instructors_path, method: :get do %>
     <%= label_tag :addresses, "Add instructor by email:" %>
     <%= text_field_tag :addresses %>
@@ -148,7 +148,7 @@
       </tbody>
     </table>
   <% end %>
-  <%= link_to "Add Bingo Game", new_experience_path( :course_id => @course.id ),
+  <%= link_to "Add Bingo Game", new_bingo_game_path( :course_id => @course.id ),
       :data => { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" }%>
 </p>
 <p>

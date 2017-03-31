@@ -1,4 +1,4 @@
-<%= simple_form_for @experience do |f| %>
+<%= simple_form_for @bingo_game do |f| %>
   <%= f.error_notification %>
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
   <div data-role="tabs" id="tabs">
@@ -13,21 +13,48 @@
       <h2>Experience Details</h2>
       <div class="form-inputs">
         <%= f.association :course %>
-        <%= f.input :name %>
-        <%= f.input :active %>
+        <%= f.input :topic %>
+        <%= f.input :description %>
         <table width="100%">
           <tr>
             <td width="45%">
-              <%= f.input :start_date, as: :date_time_local, label: "Experience start date" %>
+              <%= f.input :active %>
             </td>
-            <td width="10%" align="center" valign="center">&nbsp;</td>
-            <td width="45%">
-              <%= f.input :end_date, as: :date_time_local, label: "Experience end date" %>
+            <td rowspan="4" width="10%" align="center" valign="center">&nbsp;</td>
+            <td>
+              <%= f.input :lead_time, label: "Days for instructor prep" %>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <%= f.input :individual_count, label: "Terms per individual" %>
+            </td>
+            <td>
+              <%= f.input :group_option, label: "Group submissions allowed?" %>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <%= f.input :group_count, label: "Terms per group" %>
+            </td>
+            <td>
+              <%= f.input :project,
+                collection: @bingo_game.course.projects.each.to_a,
+                prompt: true,
+                label: "Source of project groups" %>
+            </td>
+          </tr>
+          <tr>
+            <td >
+              <%= f.input :start_date, as: :date_time_local, label: "Bingo Game start date" %>
+            </td>
+            <td >
+              <%= f.input :end_date, as: :date_time_local, label: "Bingo Game end date" %>
             </td>
           </tr>
           <tr>
             <td colspan="3">
-              <em>Note: This experience occurs in the <%= @experience.course.timezone %> timezone and all dates reflect this.</em>
+              <em>Note: This game occurs in the <%= @bingo_game.course.timezone %> timezone and all dates reflect this.</em>
             </br>
           </br>
         </td>
@@ -37,81 +64,14 @@
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
   <h2>Student Response Summary</h2>
-  <table width="90%" data-role="table"
-          id="basicTable"
-          data-column-btn-theme"<%= theme_code %>" 
-          data-column-popup-theme="<%= theme_code %>" 
-          data-mode="columntoggle"
-          data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="Select columns&hellip;"
-          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-    <thead>
-      <tr>
-        <th>Family Name</th>
-        <th>Given Name</th>
-        <th data-priority="1">Email</th>
-        <th>Status</th>
-        <th data-priority="1">Scenario</th>
-        <th data-priority="1">Narrative</th>
-        <th>Overall Diagnosis</th>
-        <th data-priority="0">Reaction Suggestions</th>
-        <tr>
-        </thead>
-        <tbody>
-          <% @experience.course.enrolled_students.each do |student| %>
-            <tr><% reaction = @experience.get_user_reaction( student ) %>
-              <td><%= student.last_name.nil? ? "[not given]" : student.last_name %></td>
-              <td><%= student.first_name.nil? ? "[not given]" : student.first_name %></td>
-              <td><%= mail_to student.email %></td>
-              <% if reaction.behavior.present? #completed %>
-                <td>Completed</td>
-                <td><%= reaction.narrative.scenario.behavior.name %></td>
-                <td><%= reaction.narrative.member %></td>
-                <td><%= reaction.behavior.name %></td>
-                <td>
-                  <% if reaction.improvements.blank? %>
-                    N/A
-          <% else %>
-                    <a href="#imp_<%= reaction.id %>" class="ui-btn ui-corner-all ui-shadow ui-btn-inline" data-rel="popup" data-position-to="origin">Improvements</a>
-                  <% end %>
-                </td>
-              <% elsif reaction.next_week.nil? #all but the conclusions %>
-                <td>97%</td>
-                <td><%= reaction.narrative.scenario.behavior.name %></td>
-                <td><%= reaction.narrative.member %></td>
-                <td>Not Completed</td>
-                <td>Not Completed</td>
-              <% elsif reaction.status == "Not started" %>
-                <td>0%</td>
-                <td>Not Started</td>
-                <td>Not Started</td>
-                <td>Not Started</td>
-                <td>Not Started</td>
-              <% else #in progress %>
-                <td><%= reaction.status %></td>
-                <td><%= reaction.narrative.scenario.behavior.name %></td>
-                <td><%= reaction.narrative.member %></td>
-                <td><%= reaction.narrative.scenario.behavior.name %></td>
-                <td>
-                  N/A
-        </td>
-              <% end %>
-              <tr>
-              <% end %>
-            </tbody>
-          </table>
-          <% @experience.course.enrolled_students.each do |student| %>
-            <% reaction = @experience.get_user_reaction( student ) %>
-            <div data-role="popup" id="imp_<%= reaction.id %>" class="ui-content" data-theme="<%= theme_code %>">
-              <p><%= simple_format(reaction.improvements) %></p>
-            </div>
-          <% end %>
-        </div>
-        <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-          <h2>Student Response Data</h2>
-          <p>Coming soon!</p>
-        </div>
-        <div class="form-actions">
-          <%= f.button :submit %>
-        </div>
-      <% end %>
+  <p>Coming soon!</p>
+</div>
+<div id="responses" class="ui-body-<%= theme_code %> ui-content">
+  <h2>Student Response Data</h2>
+  <p>Coming soon!</p>
+</div>
+</div>
+<div class="form-actions">
+  <%= f.button :submit %>
+</div>
+<% end %>

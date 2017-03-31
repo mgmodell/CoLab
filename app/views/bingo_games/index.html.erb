@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-<h1>Listing Experiences</h1>
+<h1>Listing Bingo Games</h1>
 <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -20,19 +20,19 @@
     </tr>
   </thead>
   <tbody>
-    <% @experiences.each do |experience| %>
+    <% @bingo_games.each do |bingo_game| %>
       <tr>
-        <td><%= experience.name %></td>
-        <td><%= experience.course.name %></td>
-        <td><%= experience.start_date %></td>
-        <td><%= experience.end_date %></td>
-        <td><%= experience.active %></td>
-        <td><%= link_to 'Show', experience %>&nbsp;|&nbsp;
-        <%= link_to 'Edit', edit_experience_path(experience) %>&nbsp;|&nbsp;
-        <%= link_to 'Destroy', experience, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= bingo_game.name %></td>
+        <td><%= bingo_game.course.name %></td>
+        <td><%= bingo_game.start_date %></td>
+        <td><%= bingo_game.end_date %></td>
+        <td><%= bingo_game.active %></td>
+        <td><%= link_to 'Show', bingo_game %>&nbsp;|&nbsp;
+        <%= link_to 'Edit', edit_bingo_game_path(bingo_game) %>&nbsp;|&nbsp;
+        <%= link_to 'Destroy', bingo_game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 <br>
-<%= link_to 'New Experience', new_experience_path %>
+<%= link_to 'New Bingo Game', new_bingo_game_path %>
