@@ -112,8 +112,48 @@
   <div id="activities" class="ui-body-<%= theme_code %> ui-content">
 
 <p>
-  <strong>Projects</strong>
-  <%= link_to "Add Project", new_project_path( :course_id => @course.id )%>
+  <h2>Bingo Games</h2>
+  <% if @course.bingo_games.count > 0 %>
+    <table data-role="table"
+          id="experiences_table"
+          data-column-btn-theme"<%= theme_code %>" 
+          data-column-popup-theme="<%= theme_code %>" 
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="Select Bingo Game columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th data-priority="0">Status</th>
+        <th data-priority="1">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+          <% @course.bingo_games.each do |game| %>
+            <tr>
+                <td><%= game.name %></td>
+                <td>
+                <% if game.active %>
+                Active
+                <% else %>
+                <span class="error">Inactive</span>
+                <% end %></td>
+                <td><%= link_to 'Show', game %>&nbsp;|&nbsp;
+                <%= link_to( "Activate", activate_game_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
+                <%= link_to 'Edit', edit_game_path(game) %>&nbsp;|&nbsp;
+                <%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            </tr>
+          <% end %>
+      </tbody>
+    </table>
+  <% end %>
+  <%= link_to "Add Bingo Game", new_experience_path( :course_id => @course.id ),
+      :data => { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" }%>
+</p>
+<p>
+  </br></br>
+  <h2>Projects</h2>
   <% if @course.projects.count > 0 %>
     <table data-role="table"
       id="projects_table"          data-column-btn-theme"<%= theme_code %>" 
@@ -148,10 +188,12 @@
       </tbody>
     </table>
   <% end %>
+  <%= link_to "New Project", new_project_path( :course_id => @course.id ),
+      :data => { :icon => "plus", :mini => "true", :inline => "true", :role => "button" }%>
 </p>
 <p>
-  <strong>Experiences</strong>
-  <%= link_to "Add Experience", new_experience_path( :course_id => @course.id )%>
+  </br></br>
+  <h2>Experiences</h2>
   <% if @course.experiences.count > 0 %>
     <table data-role="table"
           id="experiences_table"
@@ -187,6 +229,8 @@
       </tbody>
     </table>
   <% end %>
+  <%= link_to "Add Experience", new_experience_path( :course_id => @course.id ),
+      :data => { :icon => "plus", :inline => "true", :mini => "true", :role => "button" }%>
 </p>
   </div>
 </div>

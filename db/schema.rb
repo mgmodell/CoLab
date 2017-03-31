@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170330153632) do
+ActiveRecord::Schema.define(version: 20170331025301) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -50,7 +50,10 @@ ActiveRecord::Schema.define(version: 20170330153632) do
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
     t.boolean  "active"
+    t.integer  "course_id",        limit: 4
   end
+
+  add_index "bingo_games", ["course_id"], name: "index_bingo_games_on_course_id", using: :btree
 
   create_table "candidate_feedbacks", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -422,6 +425,7 @@ ActiveRecord::Schema.define(version: 20170330153632) do
   add_index "weeks", ["narrative_id"], name: "index_weeks_on_narrative_id", using: :btree
 
   add_foreign_key "assessments", "projects"
+  add_foreign_key "bingo_games", "courses"
   add_foreign_key "candidate_lists", "bingo_games"
   add_foreign_key "candidate_lists", "groups"
   add_foreign_key "candidate_lists", "projects"
