@@ -60,6 +60,19 @@
               <%= render :partial => "shared/consent", :locals => { :project => task.project } %>
             </td>
           </tr>
+        <% elsif task.class.name == "BingoGame" %>
+          <tr><% candidate_list = task.candidate_list_for_user( @current_user ) %>
+            <td>
+              <%= link_to "Bingo! terms: #{task.name}", enter_terms_path( candidate_list_id: candidate_list.id ) %>
+            </td>
+            <td>
+              <%= candidate_list.percent_complete %>%
+            </td>
+            <td> <%= task.course.name + "(" + task.course.get_roster_for_user( @current_user ).role.name + ")"%></td>
+            <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+            <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+            <td>N/A</td>
+          </tr>
         <% else %>
           <tr>
             <td>
