@@ -69,7 +69,9 @@
      rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
        rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><g
      id="g6087"
-     transform="translate(3.1695648,3.169577)"><ellipse
+     transform="translate(3.1695648,3.169577)"
+     inkscape:export-xdpi="2.8878863"
+     inkscape:export-ydpi="2.8878863"><ellipse
        ry="498.63461"
        rx="498.63458"
        cy="500"
@@ -83,7 +85,9 @@
        id="path4167"
        style="fill:url(#linearGradient6061);fill-opacity:1;stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none" /></g><g
      id="g6016"
-     transform="matrix(0.85009076,0,0,0.86373651,118.49323,84.12656)"><g
+     transform="matrix(0.85009076,0,0,0.86373651,118.49323,84.12656)"
+     inkscape:export-xdpi="2.8878863"
+     inkscape:export-ydpi="2.8878863"><g
        transform="matrix(0.9492997,0,0,0.9492997,57.781154,16.175621)"
        id="g4463"><g
          id="g4465"
