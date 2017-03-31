@@ -11,7 +11,7 @@
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
     <h2>Experience Details</h2>
     <p>
-      <strong>Name:</strong>
+      <h3>Name:</h3>
       <%= @experience.name %>
       (<% if @experience.active %>
         Active
@@ -21,11 +21,11 @@
       <% end %>)
     </p>
     <p>
-      <strong>Course:</strong>
+      <h3>Course:</h3>
       <%= @experience.course.name %>
     </p>
     <p>
-      <strong>Dates:</strong>
+      <h3>Dates:</h3>
       <%= @experience.start_date %> to
   <%= @experience.end_date %></br>
     <em>Note: This experience occurs in the <%= @experience.course.timezone %> timezone and all dates reflect this.</em>

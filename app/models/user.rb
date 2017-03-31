@@ -31,8 +31,12 @@ class User < ActiveRecord::Base
 
   # Give us a standard form of the name
   def name
-    name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
-    name += (!first_name.nil? ? first_name : '[No First Name Given]')
+    if( last_name.nil? && first_name.nil? )
+      name = email
+    else
+      name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
+      name += (!first_name.nil? ? first_name : '[No First Name Given]')
+    end
   end
 
   def waiting_consent_logs
