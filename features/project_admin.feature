@@ -36,7 +36,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Add Project"
+    Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the "start" date to "02/29/1980"
     Then the user sets the "end" date to "07/10/2008"
@@ -65,7 +65,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Add Project"
+    Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
@@ -122,7 +122,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Add Project"
+    Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
@@ -170,7 +170,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Add Project"
+    Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the "start" date to "02/29/1980"
     Then the user sets the "end" date to "07/10/2008"
@@ -222,7 +222,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Add Project"
+    Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the "start" date to "02/29/1980"
     Then the user sets the "end" date to "07/10/2008"
