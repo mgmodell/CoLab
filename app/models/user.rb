@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
 
   # Give us a standard form of the name
   def name
-    if( last_name.nil? && first_name.nil? )
+    if last_name.nil? && first_name.nil?
       name = email
     else
       name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
@@ -94,9 +94,9 @@ class User < ActiveRecord::Base
 
     available_rosters.each do |roster|
       waiting_games = roster.course.bingo_games
-        .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ? AND bingo_games.active = ?',
-               DateTime.current, DateTime.current, true).to_a
-      waiting_games.delete_if{ |game| !game.is_open }
+                            .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ? AND bingo_games.active = ?',
+                                   DateTime.current, DateTime.current, true).to_a
+      waiting_games.delete_if { |game| !game.is_open }
       waiting_tasks.concat waiting_games
     end
 

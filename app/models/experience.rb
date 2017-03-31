@@ -3,7 +3,7 @@ class Experience < ActiveRecord::Base
   belongs_to :course, inverse_of: :experiences
   has_many :reactions, inverse_of: :experience
 
-  #validations
+  # validations
   validates :name, :end_date, :start_date, presence: true
   validate :date_sanity
   before_validation :timezone_adjust

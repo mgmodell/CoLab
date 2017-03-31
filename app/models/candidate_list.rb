@@ -7,10 +7,10 @@ class CandidateList < ActiveRecord::Base
 
   def percent_complete
     percent = 0
-    if self.is_group
-      percent = 100 * candidates.completed.count / self.bingo_game.group_count
+    if is_group
+      percent = 100 * candidates.completed.count / bingo_game.group_count
     else
-      percent = 100 * candidates.completed.count / self.bingo_game.individual_count
+      percent = 100 * candidates.completed.count / bingo_game.individual_count
     end
     percent
   end
