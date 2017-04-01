@@ -73,7 +73,7 @@
           data-column-popup-theme="<%= theme_code %>" 
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="Select columns&hellip;"
+          data-column-btn-text="Show/hide columns&hellip;"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
 
     <thead>
@@ -122,13 +122,13 @@
           data-column-popup-theme="<%= theme_code %>" 
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="Select Bingo Game columns&hellip;"
+          data-column-btn-text="Show/hide columns&hellip;"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
       <thead>
       <tr>
         <th>Name</th>
-        <th data-priority="0">Status</th>
-        <th data-priority="1">Actions</th>
+        <th data-priority="1">Status</th>
+        <th data-priority="0">Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -150,7 +150,7 @@
       </tbody>
     </table>
   <% end %>
-  <%= link_to "Add Bingo Game", new_bingo_game_path( :course_id => @course.id ),
+  <%= link_to "New Bingo Game", new_bingo_game_path( :course_id => @course.id ),
       :data => { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" }%>
 </p>
 <p>
@@ -160,17 +160,18 @@
     No projects.</br>
   <% else %>
     <table data-role="table"
-      id="projects_table"          data-column-btn-theme"<%= theme_code %>" 
+          id="projects_table"
+          data-column-btn-theme"<%= theme_code %>" 
           data-column-popup-theme="<%= theme_code %>" 
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="Select columns&hellip;"
+          data-column-btn-text="Show/hide columns&hellip;"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
       <thead>
         <tr>
           <th>Name</th>
-          <th data-priority="0">Status</th>
-          <th data-priority="1">Actions</th>
+          <th data-priority="1">Status</th>
+          <th data-priority="0">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -207,14 +208,14 @@
           data-column-popup-theme="<%= theme_code %>" 
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="Select columns&hellip;"
+          data-column-btn-text="Show/hide columns&hellip;"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
       <thead>
-      <tr>
-        <th>Name</th>
-        <th data-priority="0">Status</th>
-        <th data-priority="1">Actions</th>
-      </tr>
+        <tr>
+          <th>Name</th>
+          <th data-priority="0">Status</th>
+          <th data-priority="0">Actions</th>
+        </tr>
       </thead>
       <tbody>
           <% @course.experiences.each do |experience| %>
@@ -227,15 +228,16 @@
                 <span class="error">Inactive</span>
                 <% end %></td>
                 <td><%= link_to 'Show', experience %>&nbsp;|&nbsp;
-                <%= link_to( "Activate", activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>
-                <%= link_to 'Edit', edit_experience_path(experience) %>&nbsp;|&nbsp;
-                <%= link_to 'Destroy', experience, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                  <%= link_to( "Activate", activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>
+                  <%= link_to 'Edit', edit_experience_path(experience) %>&nbsp;|&nbsp;
+                  <%= link_to 'Destroy', experience, method: :delete, data: { confirm: 'Are you sure?' } %>
+                </td>
             </tr>
           <% end %>
       </tbody>
     </table>
   <% end %>
-  <%= link_to "Add Experience", new_experience_path( :course_id => @course.id ),
+  <%= link_to "New Experience", new_experience_path( :course_id => @course.id ),
       :data => { :icon => "plus", :inline => "true", :mini => "true", :role => "button" }%>
 </p>
   </div>

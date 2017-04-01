@@ -1,0 +1,57 @@
+<%= simple_form_for save_bingo_terms_path( candidate_list_id: @candidate_list ) do |f| %>
+  <%= f.error_notification %>
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+  <h1>Bingo! Word List</h1>
+  <table>
+    <tr>
+      <th align="right">Topic:</th>
+      <td><%= @candidate_list.bingo_game.topic %>
+    </tr>
+    <tr>
+      <th align="right">For:</th>
+      <td>
+        <% if !@candidate_list.bingo_game.group_option? # Is group play allowed? %>
+          <%= @current_user.name %>
+        <% elsif @candidate_list.user.present? # Is this already group play? %>
+          <%= @current_user.name %>
+          <% if @candidate_list.group_requested # Have you already requested collaboration? %>
+            [Still waiting for a response to your help request]
+          <% elsif @candidate_list.others_requested_help? # Is your team waiting to hear from you? %>
+            Your team wants to collaborate: 
+            <%= link_to "Accept?", request_bingo_collaboration_path( 
+                        candidate_list_id: @candidate_list.id, desired: true ) %> or 
+            <%= link_to "Decline?", request_bingo_collaboration_path( 
+                        candidate_list_id: @candidate_list.id, desired: false ) %> 
+          <% else %>
+            <%= link_to "Invite your group to help?", request_bingo_collaboration_path( 
+                        candidate_list_id: @candidate_list.id, desired: true ) %> 
+          <% end %>
+        <% end %>
+    </tr>
+    <tr>
+      <th align="right">Game date:</th>
+      <td><%= @candidate_list.bingo_game.end_date %>
+    </tr>
+  </table>
+  <h2>Terms</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= f.simple_fields_for :candidates do |cf| %>
+      <tr>
+        <td><%= cf.input :name, label: false %></td>
+        <td><%= cf.input :definition, label: false %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<div class="form-actions">
+  <%= f.button :submit, "Save" %>
+</div>
+<% end %>

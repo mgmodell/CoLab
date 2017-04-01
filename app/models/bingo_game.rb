@@ -5,7 +5,7 @@ class BingoGame < ActiveRecord::Base
   belongs_to :project, inverse_of: :bingo_games
 
   # validations
-  validates :topic, :end_date, :start_date, presence: true
+  validates :topic, :end_date, :start_date, :project_id, presence: true
   validate :date_sanity
   before_validation :timezone_adjust
   validate :dates_within_course
@@ -25,11 +25,17 @@ class BingoGame < ActiveRecord::Base
   def candidate_list_for_user(user)
     cl = candidate_lists.where(user_id: user.id).take
     if cl.nil?
-      cl = CandidateList.create(user_id: user.id,
-                                bingo_game_id: id,
-                                group_id: project.group_for_user( user ),
-                                is_group: false,
-                                group_requested: false )
+      cl = CandidateList.new
+      cl.user_id = user.id
+      cl.bingo_game_id = id
+      cl.group_id = project.group_for_user( user )
+      cl.is_group = false
+      cl.group_requested = false
+
+      self.individual_count.times do
+        cl.candidates << Candidate.new( name: "", definition: "" )
+      end
+      cl.save
     elsif  cl.is_group
       cl = candidate_lists.where(group_id: project.group_for_user(user).id).take
     end

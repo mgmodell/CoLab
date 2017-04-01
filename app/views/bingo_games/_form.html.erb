@@ -12,7 +12,7 @@
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
       <h2>Experience Details</h2>
       <div class="form-inputs">
-        <%= f.association :course %>
+        <strong>Course:</strong> <%= @bingo_game.course.name %></br></br>
         <%= f.input :topic %>
         <%= f.input :description %>
         <table width="100%">

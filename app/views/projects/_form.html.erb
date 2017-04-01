@@ -13,7 +13,7 @@
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
       <h2>Project Details</h2>
       <div class="form-inputs">
-        <%= f.association :course %>
+        <strong>Course: </strong> <%= @project.course.name %></br></br>
         <%= f.input :name %>
         <%= f.input :active %>
         <table width="100%">

@@ -18,9 +18,9 @@ Rails.application.routes.draw do
   get 'exeriences/diagnose' => 'experiences#diagnose', :as => 'diagnose'
   get 'exeriences/reaction' => 'experiences#react', :as => 'react'
 
-  get 'bingo/enter_terms/:candidate_list_id' => 'candidate_lists#enter_terms', :as => 'enter_terms'
-  get 'bingo/request_collaboration/:candidate_list_id' => 'candidate_lists#request_collaboration', :as => 'request_bingo_collaboration'
-  get 'bingo/save_terms/:candidate_list_id' => 'candidate_lists#save_terms', :as => 'save_bingo_terms'
+  patch 'bingo/save_terms/:candidate_list_id' => 'candidate_lists#save_terms', :as => 'save_bingo_terms'
+  get 'bingo/enter_terms/:candidate_list_id' => 'candidate_lists#enter_terms', :as => 'enter_bingo_terms'
+  get 'bingo/request_collaboration/:candidate_list_id/:desired' => 'candidate_lists#request_collaboration', :as => 'request_bingo_collaboration'
 
   get 'course/accept/:roster_id' => 'courses#accept_roster', :as => 'accept_roster'
   get 'course/decline/:roster_id' => 'courses#decline_roster', :as => 'decline_roster'

@@ -6,6 +6,7 @@ class Group < ActiveRecord::Base
   belongs_to :project, inverse_of: :groups
   has_and_belongs_to_many :users, inverse_of: :groups
   has_many :group_revisions, inverse_of: :group, dependent: :destroy
+  has_many :candidate_lists, inverse_of: :group
 
   has_many :installments, inverse_of: :group, dependent: :destroy
 
