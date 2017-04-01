@@ -34,10 +34,11 @@
     </tr>
   </table>
   <h2>Terms</h2>
-  <table>
+  <table width="100%"
+        class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
     <thead>
       <tr>
-        <th>Term</th>
+        <th width="33%">Term</th>
         <th>Definition</th>
       </tr>
     </thead>
@@ -45,7 +46,7 @@
       <%= f.simple_fields_for :candidates do |cf| %>
       <tr>
         <td><%= cf.input :name, label: false %></td>
-        <td><%= cf.input :definition, label: false %></td>
+        <td><%= cf.input :definition, as: :text, label: false %></td>
       </tr>
       <% end %>
     </tbody>
