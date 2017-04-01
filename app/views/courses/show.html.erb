@@ -69,10 +69,7 @@
     </p>
         <table data-role="table"
           id="basicTable"
-          data-column-btn-theme"<%= theme_code %>" 
-          data-column-popup-theme="<%= theme_code %>" 
           data-mode="columntoggle"
-          data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="Show/hide columns&hellip;"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
 
@@ -118,10 +115,7 @@
   <% else %>
     <table data-role="table"
           id="experiences_table"
-          data-column-btn-theme"<%= theme_code %>" 
-          data-column-popup-theme="<%= theme_code %>" 
           data-mode="columntoggle"
-          data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="Show/hide columns&hellip;"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
       <thead>
@@ -161,10 +155,7 @@
   <% else %>
     <table data-role="table"
           id="projects_table"
-          data-column-btn-theme"<%= theme_code %>" 
-          data-column-popup-theme="<%= theme_code %>" 
           data-mode="columntoggle"
-          data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="Show/hide columns&hellip;"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
       <thead>
@@ -204,16 +195,13 @@
   <% else %>
     <table data-role="table"
           id="experiences_table"
-          data-column-btn-theme"<%= theme_code %>" 
-          data-column-popup-theme="<%= theme_code %>" 
           data-mode="columntoggle"
-          data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="Show/hide columns&hellip;"
-          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+          class="table-stroke ui-shadow table-stripe table-ui-responsive " >
       <thead>
         <tr>
           <th>Name</th>
-          <th data-priority="0">Status</th>
+          <th data-priority="1">Status</th>
           <th data-priority="0">Actions</th>
         </tr>
       </thead>
@@ -223,10 +211,11 @@
                 <td><%= experience.name %></td>
                 <td>
                 <% if experience.active %>
-                Active
+                  Active
                 <% else %>
-                <span class="error">Inactive</span>
-                <% end %></td>
+                  <span class="error">Inactive</span>
+                <% end %>
+                </td>
                 <td><%= link_to 'Show', experience %>&nbsp;|&nbsp;
                   <%= link_to( "Activate", activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>
                   <%= link_to 'Edit', edit_experience_path(experience) %>&nbsp;|&nbsp;
