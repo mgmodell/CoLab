@@ -26,7 +26,10 @@ class BingoGame < ActiveRecord::Base
     cl = candidate_lists.where(user_id: user.id).take
     if cl.nil?
       cl = CandidateList.create(user_id: user.id,
-                                bingo_game_id: id)
+                                bingo_game_id: id,
+                                group_id: project.group_for_user( user ),
+                                is_group: false,
+                                group_requested: false )
     elsif  cl.is_group
       cl = candidate_lists.where(group_id: project.group_for_user(user).id).take
     end

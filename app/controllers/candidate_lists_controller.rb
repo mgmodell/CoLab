@@ -2,7 +2,25 @@
 class CandidateListsController < ApplicationController
   before_action :set_candidate_list
 
+  def enter_terms
+    candidate_list_id = params[ :candidate_list_id ]
+
+  end
+
+  def request_collaboration
+    candidate_list_id = params[ :candidate_list_id ]
+    @candidate_list = CandidateList.find candidate_list_id
+
+  end
+
+  def save_terms
+
+  end
+
   private
+  def merge_individuals_to_group
+
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_candidate_list
