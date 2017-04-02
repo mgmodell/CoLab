@@ -1,4 +1,4 @@
-<%= simple_form_for save_bingo_terms_path( candidate_list_id: @candidate_list ) do |f| %>
+<%= simple_form_for @candidate_list do |f| %>
   <%= f.error_notification %>
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
   <h1>Bingo! Word List</h1>
@@ -38,13 +38,16 @@
         class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
     <thead>
       <tr>
-        <th width="33%">Term</th>
+        <th width-"5%">#</th>
+        <th width="30%">Term</th>
         <th>Definition</th>
       </tr>
     </thead>
     <tbody>
+      <% count = 0 %>
       <%= f.simple_fields_for :candidates do |cf| %>
       <tr>
+        <td><%= count += 1 %><%= cf.input :id, as: :hidden %></td>
         <td><%= cf.input :name, label: false %></td>
         <td><%= cf.input :definition, as: :text, label: false %></td>
       </tr>

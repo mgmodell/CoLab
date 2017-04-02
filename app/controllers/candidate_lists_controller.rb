@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 class CandidateListsController < ApplicationController
-  before_action :set_candidate_list, only: [ :enter_terms, :request_collaboration ]
+  before_action :set_candidate_list, only: [ :edit, :update, :request_collaboration ]
 
-  def enter_terms
+  def edit
 
   end
 
@@ -19,12 +19,12 @@ class CandidateListsController < ApplicationController
     group_requested = true
   end
 
-  def save_terms
+  def update
     respond_to do |format|
-      if @candidate_list.update(course_params)
-        format.html { redirect_to enter_terms_path(@candidate_list), notice: 'Your list was successfully saved.' }
+      if @candidate_list.update(candidate_list_params)
+        format.html { redirect_to edit_candidate_list_path( @candidate_list ), notice: 'Your list was successfully saved.' }
       else
-        format.html { render :enter_terms }
+        format.html { render :edit }
       end
     end
   end
@@ -36,10 +36,10 @@ class CandidateListsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_candidate_list
-    @candidate_list = CandidateList.find(params[:candidate_list_id])
+    @candidate_list = CandidateList.find(params[:id])
   end
 
   def candidate_list_params
-    params.require(:candidate_list).permit(:is_group, candidates: [:name, :definition])
+    params.require(:candidate_list).permit(:is_group, candidates_attributes: [:id, :name, :definition])
   end
 end

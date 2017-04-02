@@ -63,7 +63,7 @@
         <% elsif task.class.name == "BingoGame" %>
           <tr><% candidate_list = task.candidate_list_for_user( @current_user ) %>
             <td>
-              <%= link_to "Bingo! terms: #{task.name}", enter_bingo_terms_path( candidate_list_id: candidate_list ) %>
+              <%= link_to "Bingo! terms: #{task.name}", edit_candidate_list_path( candidate_list ) %>
             </td>
             <td>
               <%= candidate_list.percent_complete %>%

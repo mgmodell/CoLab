@@ -14,13 +14,14 @@ Rails.application.routes.draw do
     resources :courses, :projects, :experiences, :bingo_games
   end
 
+  scope 'bingo' do
+    resources :candidate_lists, only: [ :edit, :update ]
+    get 'request_collaboration/:candidate_list_id/:desired' => 'candidate_lists#request_collaboration', :as => 'request_bingo_collaboration'
+  end
+
   get 'experiences/next/:experience_id:' => 'experiences#next', :as => 'next_experience'
   get 'exeriences/diagnose' => 'experiences#diagnose', :as => 'diagnose'
   get 'exeriences/reaction' => 'experiences#react', :as => 'react'
-
-  patch 'bingo/save_terms/:candidate_list_id' => 'candidate_lists#save_terms', :as => 'save_bingo_terms'
-  get 'bingo/enter_terms/:candidate_list_id' => 'candidate_lists#enter_terms', :as => 'enter_bingo_terms'
-  get 'bingo/request_collaboration/:candidate_list_id/:desired' => 'candidate_lists#request_collaboration', :as => 'request_bingo_collaboration'
 
   get 'course/accept/:roster_id' => 'courses#accept_roster', :as => 'accept_roster'
   get 'course/decline/:roster_id' => 'courses#decline_roster', :as => 'decline_roster'
