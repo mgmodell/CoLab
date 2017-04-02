@@ -96,7 +96,7 @@ class BingoGamesController < ApplicationController
 
   def bingo_game_params
     params.require(:bingo_game).permit(:course_id, :topic, :description, :link, :source,
-                                       :group_option, :individual_count, :group_count,
+                                       :group_option, :individual_count, :group_discount,
                                        :lead_time, :project_id, :start_date, :end_date)
   end
 end

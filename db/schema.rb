@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170401065733) do
+ActiveRecord::Schema.define(version: 20170402134023) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -44,7 +44,6 @@ ActiveRecord::Schema.define(version: 20170401065733) do
     t.string   "source",           limit: 255
     t.boolean  "group_option"
     t.integer  "individual_count", limit: 4
-    t.integer  "group_count",      limit: 4
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "created_at",                     null: false
@@ -53,6 +52,7 @@ ActiveRecord::Schema.define(version: 20170401065733) do
     t.integer  "course_id",        limit: 4
     t.integer  "project_id",       limit: 4
     t.integer  "lead_time",        limit: 4
+    t.integer  "group_discount",   limit: 4
   end
 
   add_index "bingo_games", ["course_id"], name: "index_bingo_games_on_course_id", using: :btree

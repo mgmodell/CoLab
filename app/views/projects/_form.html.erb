@@ -14,6 +14,7 @@
       <h2>Project Details</h2>
       <div class="form-inputs">
         <strong>Course: </strong> <%= @project.course.name %></br></br>
+        <%= f.input :course_id, as: :hidden %>
         <%= f.input :name %>
         <%= f.input :active %>
         <table width="100%">

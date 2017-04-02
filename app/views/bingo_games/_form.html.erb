@@ -13,6 +13,7 @@
       <h2>Experience Details</h2>
       <div class="form-inputs">
         <strong>Course:</strong> <%= @bingo_game.course.name %></br></br>
+        <%= f.input :course_id, as: :hidden %>
         <%= f.input :topic %>
         <%= f.input :description %>
         <table width="100%">
@@ -35,7 +36,7 @@
           </tr>
           <tr>
             <td>
-              <%= f.input :group_count, label: "Terms per group" %>
+              <%= f.input :group_discount, label: "Percent fewer terms if working in a group" %>
             </td>
             <td>
               <%= f.input :project,
