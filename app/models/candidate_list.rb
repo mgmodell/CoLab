@@ -20,10 +20,10 @@ class CandidateList < ActiveRecord::Base
   def others_requested_help?
     if bingo_game.group_option? && group.present?
       group.users.each do |user|
-        return true if bingo_game.candidate_list_for_user( user ).group_requested
+        return true if bingo_game.candidate_list_for_user(user).group_requested
       end
     end
 
-    return false
+    false
   end
 end
