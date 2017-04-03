@@ -19,8 +19,7 @@ Feature: Bingo Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then show me the page
-    Then the user clicks "New Bingo game"
+    Then the user clicks "New Bingo Game"
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor prep" field to "2"
     Then the user sets the "Terms per individual" field to "15"
@@ -29,6 +28,7 @@ Feature: Bingo Administration
     Then the user sets the "start" date to "02/29/1980"
     Then the user sets the "end" date to "07/10/2008"
     Then the user sets the "Description" field to "this is the coolest"
+    Then show me the page
     Then the user clicks "Create Bingo game"
     Then the user will see "success"
     #Let's check the values stored
@@ -50,14 +50,14 @@ Feature: Bingo Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then show me the page
-    Then the user clicks "New Bingo game"
+    Then the user clicks "New Bingo Game"
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor prep" field to "2"
     Then the user sets the "Terms per individual" field to "15"
     Then the user sets the "Percent fewer terms if working in a group" field to "30"
     Then the user sets the project to the course's project
     Then the user sets the "Description" field to "this is the coolest"
+    Then show me the page
     Then the user clicks "Create Bingo game"
     Then the user will see "success"
     #Let's check the values stored
@@ -87,7 +87,7 @@ Feature: Bingo Administration
     Then the user selects "Simple" as "Factor pack"
     Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
+    Then the user clicks "Update Bingo game"
     Then the user will see "success"
     Then retrieve the latest project from the db
     #Let's check the values stored
