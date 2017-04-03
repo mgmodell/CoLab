@@ -54,3 +54,14 @@ Experience.blueprint do
   end_date { DateTime.tomorrow }
   active { false }
 end
+
+BingoGame.blueprint do
+  topic { Forgery::Name.industry + ' Topic' }
+  description { Forgery::Basic.text }
+  start_date { DateTime.yesterday }
+  end_date { DateTime.tomorrow }
+  lead_time { 2 }
+  individual_count { 20 }
+  group_option { false }
+  active { false }
+end

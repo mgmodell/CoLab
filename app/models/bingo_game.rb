@@ -5,8 +5,15 @@ class BingoGame < ActiveRecord::Base
   belongs_to :project, inverse_of: :bingo_games
 
   # validations
-  validates :topic, :end_date, :start_date, :project_id, presence: true
+  validates :topic, :end_date, :start_date, presence: true
+  validates :group_discount, numericality:
+    { only_integer: true,
+      greater_than_or_equal_to: 0,
+      less_than_or_equal_to: 100 }
+  validates :individual_count, numericality: { only_integer: true }
   validate :date_sanity
+  #TODO: must validate group components {project, group, discount}
+
   before_validation :timezone_adjust
   validate :dates_within_course
 

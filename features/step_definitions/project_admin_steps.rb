@@ -34,7 +34,6 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
 end
 
 Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/ do |field, value|
-  puts page.body
   find(:xpath, "//input[@id='" + field + "']").set value
   # page.fill_in( field, with: value )
 end
@@ -78,10 +77,10 @@ Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_val
 end
 
 Then /^the project "([^"]*)" is "([^"]*)"$/ do |field, value|
-  case field
-  when 'Name'
+  case field.downcase
+  when 'name'
     @project.name.should eq value
-  when 'Description'
+  when 'description'
     @project.description.should eq value
   else
     puts "We didn't test anything there: " + field + ' not found'
