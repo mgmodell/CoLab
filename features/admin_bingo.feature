@@ -28,7 +28,6 @@ Feature: Bingo Administration
     Then the user sets the "start" date to "02/29/1980"
     Then the user sets the "end" date to "07/10/2008"
     Then the user sets the "Description" field to "this is the coolest"
-    Then show me the page
     Then the user clicks "Create Bingo game"
     Then the user will see "success"
     #Let's check the values stored
@@ -57,19 +56,16 @@ Feature: Bingo Administration
     Then the user sets the "Percent fewer terms if working in a group" field to "30"
     Then the user sets the project to the course's project
     Then the user sets the "Description" field to "this is the coolest"
-    Then show me the page
     Then the user clicks "Create Bingo game"
     Then the user will see "success"
     #Let's check the values stored
-    Then retrieve the latest project from the db
+    Then retrieve the latest Bingo! game from the db
     Then the bingo "topic" is "Privacy"
-    Then the project "Description" is "this is the coolest"
+    Then the bingo "Description" is "this is the coolest"
     #check the dates
-    Then the project "start" date is "05/10/1976"
-    Then the project "end" date is "11/01/2012"
+    Then the bingo "start" date is "05/10/1976"
+    Then the bingo "end" date is "11/01/2012"
     #check the selects
-    Then the project Factor pack is "Simple"
-    Then the project Style is "Sliders (simple)"
 
   Scenario: Instructor edits an existing Bingo!
     Given the user is the instructor for the course
@@ -78,26 +74,22 @@ Feature: Bingo Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Edit" on the existing project
-    Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the "start" date to "05/10/1976"
-    Then the user sets the "end" date to "02/29/1980"
-    Then the user selects "Monday" as "Opens every"
-    Then the user selects "Tuesday" as "Closes every"
-    Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    Then the user clicks "Edit" on the existing bingo game
+    Then the user sets the "Topic" field to "Privacy"
+    Then the user sets the "Days for instructor prep" field to "2"
+    Then the user sets the "Terms per individual" field to "15"
+    Then the user sets the "Percent fewer terms if working in a group" field to "30"
+    Then the user sets the project to the course's project
     Then the user sets the "Description" field to "this is the coolest"
+    Then show me the page
     Then the user clicks "Update Bingo game"
     Then the user will see "success"
-    Then retrieve the latest project from the db
     #Let's check the values stored
-    Then retrieve the latest project from the db
-    Then the project "Name" is "Cool-yo!"
-    Then the project "Description" is "this is the coolest"
+    Then retrieve the latest Bingo! game from the db
+    Then the bingo "Name" is "Cool-yo!"
+    Then the bingo "Description" is "this is the coolest"
     #check the dates
-    Then the project "start" date is "5/10/1976"
-    Then the project "end" date is "2/29/1980"
+    Then the bingo "start" date is "5/10/1976"
+    Then the bingo "end" date is "2/29/1980"
     #check the selects
-    Then the project Factor pack is "Simple"
-    Then the project Style is "Sliders (simple)"
 

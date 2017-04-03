@@ -16,7 +16,7 @@ Then /^retrieve the latest Bingo! game from the db$/  do
   @bingo = BingoGame.last
 end
 
-Then /^the bingo "([^"]*)" is "([^"]*)"$/ do |arg1, arg2|
+Then /^the bingo "([^"]*)" is "([^"]*)"$/ do |field, value|
   case field.downcase
   when 'topic'
     @bingo.topic.should eq value
@@ -35,7 +35,7 @@ Then /^the bingo project is the course's project$/  do
   @bingo.project.should eq @project
 end
 
-Then /^the bingo "([^"]*)" date is "([^"]*)"$/  do |arg1, arg2|
+Then /^the bingo "([^"]*)" date is "([^"]*)"$/  do |date_field_prefix, date|
   tz = ActiveSupport::TimeZone.new(@course.timezone)
 
   case date_field_prefix
