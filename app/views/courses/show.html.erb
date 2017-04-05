@@ -136,7 +136,7 @@
                 <span class="error">Inactive</span>
                 <% end %></td>
                 <td><%= link_to 'Show', game %>&nbsp;|&nbsp;
-                <%= link_to( "Activate", activate_game_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
+                <%= link_to( "Activate", activate_bingo_game_path( game ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
                 <%= link_to 'Edit', edit_bingo_game_path(game) %>&nbsp;|&nbsp;
                 <%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             </tr>

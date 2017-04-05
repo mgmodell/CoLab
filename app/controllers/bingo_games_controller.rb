@@ -29,7 +29,6 @@ class BingoGamesController < ApplicationController
 
   def create
     @bingo_game = BingoGame.new(bingo_game_params)
-    @bingo_game.course = Course.find(@bingo_game.course_id)
     respond_to do |format|
       if @bingo_game.save
         format.html { redirect_to @bingo_game, notice: 'Bingo Game was successfully created.' }

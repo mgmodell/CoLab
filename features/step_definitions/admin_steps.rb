@@ -21,21 +21,22 @@ Then /^the bingo "([^"]*)" is "([^"]*)"$/ do |field, value|
   when 'topic'
     @bingo.topic.should eq value
   when 'individual_count'
-    @bingo.individual_count.should eq value
+    @bingo.individual_count.should eq value.to_i
   when 'group_discount'
-    @bingo.group_discount.should eq value
+    @bingo.group_discount.should eq value.to_i
   when 'lead_time'
-    @bingo.lead_time.should eq value
+    @bingo.lead_time.should eq value.to_i
   else
     puts "We didn't test anything there: " + field + ' not found'
   end
 end
 
 Then /^the bingo project is the course's project$/  do
+  @bingo.project_id.should eq @project.id
   @bingo.project.should eq @project
 end
 
-Then /^the bingo "([^"]*)" date is "([^"]*)"$/  do |date_field_prefix, date|
+Then /^the bingo "([^"]*)" date is "([^"]*)"$/  do |date_field_prefix, date_value|
   tz = ActiveSupport::TimeZone.new(@course.timezone)
 
   case date_field_prefix

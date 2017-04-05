@@ -39,7 +39,7 @@
               <%= f.input :group_discount, label: "Percent fewer terms if working in a group" %>
             </td>
             <td>
-              <%= f.input :project,
+              <%= f.input :project_id,
                 collection: @bingo_game.course.projects.each.to_a,
                 prompt: true,
                 label: "Source of project groups" %>

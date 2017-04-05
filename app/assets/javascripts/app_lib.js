@@ -63,6 +63,7 @@ $(document).ready(function(){
   });
 
   $("#basicTable").tablesorter( {sortList: [[0,0],[1,0]]} );
+  $("#groups_table").tablesorter( {sortList: [[0,0],[1,0]]} );
   $("#bingo_table").tablesorter( {sortList: [[0,0]]} );
   $("#projects_table").tablesorter( {sortList: [[0,0]]} );
   $("#experiences_table").tablesorter( {sortList: [[0,0]]} );

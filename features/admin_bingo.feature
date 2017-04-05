@@ -25,8 +25,8 @@ Feature: Bingo Administration
     Then the user sets the "Terms per individual" field to "15"
     Then the user sets the "Percent fewer terms if working in a group" field to "30"
     Then the user sets the project to the course's project
-    Then the user sets the "start" date to "02/29/1980"
-    Then the user sets the "end" date to "07/10/2008"
+    Then the user sets the bingo "start" date to "02/29/1980"
+    Then the user sets the bingo "end" date to "07/10/2008"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Bingo game"
     Then the user will see "success"
@@ -81,7 +81,6 @@ Feature: Bingo Administration
     Then the user sets the "Percent fewer terms if working in a group" field to "30"
     Then the user sets the project to the course's project
     Then the user sets the "Description" field to "this is the coolest"
-    Then show me the page
     Then the user clicks "Update Bingo game"
     Then the user will see "success"
     #Let's check the values stored

@@ -42,7 +42,7 @@ Then /^the user sets the "([^"]*)" field to "([^"]*)"$/ do |field, value|
   page.fill_in(field, with: value)
 end
 
-Then /^the user sets the "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
+Then /^the user sets the project "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%Y-%m-%dT%T')
   page.find('#project_' + date_field_prefix + '_date').set(new_date)
 end

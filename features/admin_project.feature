@@ -20,8 +20,8 @@ Feature: Project Administration
     Then the user opens the course
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the "start" date to "02/29/1980"
-    Then the user sets the "end" date to "07/10/2008"
+    Then the user sets the project "start" date to "02/29/1980"
+    Then the user sets the project "end" date to "07/10/2008"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
@@ -76,8 +76,8 @@ Feature: Project Administration
     Then the user opens the course
     Then the user clicks "Edit" on the existing project
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the "start" date to "05/10/1976"
-    Then the user sets the "end" date to "02/29/1980"
+    Then the user sets the project "start" date to "05/10/1976"
+    Then the user sets the project "end" date to "02/29/1980"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
@@ -154,8 +154,8 @@ Feature: Project Administration
     Then the user opens the course
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the "start" date to "02/29/1980"
-    Then the user sets the "end" date to "07/10/2008"
+    Then the user sets the project "start" date to "02/29/1980"
+    Then the user sets the project "end" date to "07/10/2008"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
@@ -176,8 +176,8 @@ Feature: Project Administration
 
     Then the user clicks "Edit Project Details"
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the "start" date to "05/10/1976"
-    Then the user sets the "end" date to "02/29/1980"
+    Then the user sets the project "start" date to "05/10/1976"
+    Then the user sets the project "end" date to "02/29/1980"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
@@ -206,8 +206,8 @@ Feature: Project Administration
     Then the user opens the course
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the "start" date to "02/29/1980"
-    Then the user sets the "end" date to "07/10/2008"
+    Then the user sets the project "start" date to "02/29/1980"
+    Then the user sets the project "end" date to "07/10/2008"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
@@ -263,8 +263,8 @@ Feature: Project Administration
     Then the user clicks "Add!"
     #Edit the groups
     Then the user clicks "Edit Project Details"
-    Then the user sets the "start" date to "yesterday"
-    Then the user sets the "end" date to "tomorrow"
+    Then the user sets the project "start" date to "yesterday"
+    Then the user sets the project "end" date to "tomorrow"
 
     Then set user 1 to group "my group"
     Then the user clicks "Update Project"
