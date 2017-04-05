@@ -120,7 +120,3 @@ end
 Then /^group "([^"]*)" has (\d+) revision$/ do |group_name, revision_count|
   Group.where(name: group_name).take.group_revisions.count.should eq revision_count.to_i
 end
-
-Then /^show me the page$/ do
-  puts page.body
-end

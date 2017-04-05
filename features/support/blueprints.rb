@@ -62,6 +62,7 @@ BingoGame.blueprint do
   end_date { DateTime.tomorrow }
   lead_time { 2 }
   individual_count { 20 }
+  group_discount { 0 }
   group_option { false }
   active { false }
 end
