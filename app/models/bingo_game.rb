@@ -12,7 +12,8 @@ class BingoGame < ActiveRecord::Base
       less_than_or_equal_to: 100 }
   validates :individual_count, numericality: { only_integer: true }
   validate :date_sanity
-  #TODO: must validate group components {project, group, discount}
+
+  validate :group_components
 
   before_validation :timezone_adjust
   validate :dates_within_course
@@ -82,5 +83,12 @@ class BingoGame < ActiveRecord::Base
       end
     end
     errors
+  end
+  #We must validate group components {project and discount}
+  def group_components
+    if self.group_option
+      errors.add( :project_id, "The group option requires that a project be selected" ) if self.project.nil?
+      errors.add( :project_id, "The group option requires that a project be selected" ) if self.project.nil?
+    end
   end
 end
