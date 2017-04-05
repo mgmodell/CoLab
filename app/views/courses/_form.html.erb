@@ -26,25 +26,170 @@
       <% @course.rosters.students.each do |roster| %>
         <%= roster.user.name %> <i><%= mail_to roster.user.email %></i> (<%= roster.role.name %> )<br>
       <% end %>
+        <table data-role="table"
+          id="basicTable"
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>"
+          data-column-btn-text="Show/hide columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+
+    <thead>
+    <tr>
+      <th >Family Name</th>
+      <th data-priority="0">Given Name</th>
+      <th data-priority="1">Email</th>
+      <th >Status</th>
+      <th data-priority="1">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+      <% @course.rosters.students.each do |roster| %>
+      <tr>
+        <td>
+          <%= roster.user.last_name.blank? ? "<not given>" : roster.user.last_name %>
+        </td>
+        <td>
+          <%= roster.user.first_name.blank? ? "<not given>" : roster.user.first_name %>
+        </td>
+        <td>
+          <%= mail_to roster.user.email %>
+        </td>
+        <td>
+          <%= roster.role.name %>
+        </td>
+        <td><%= link_to( "Re-Invite", re_invite_student_path( roster.user ) ) unless roster.role.name == "Enrolled Student" %>&nbsp;|&nbsp;
+        <%= link_to "Drop", drop_student_path( roster.id ) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
     </div>
     <div id="activities" class="ui-body-<%= theme_code %> ui-content">
       <h2>Course Activities</h2>
-      <h3>Course instructors</h3>
-      <% @course.rosters.instructorships.each do |roster| %>
-        <%= roster.user.name %> (<%= roster.role.name %>)<br>
-      <% end %>
-      <h3>Bingo Games</h3>
-      <% @course.bingo_games.each do |game| %>
-        <%= game.name %></br>
-    <% end %>
-      <h3>Projects</h3>
-      <% @course.projects.each do |project| %>
-        <%= project.name %></br>
-    <% end %>
-    <h3>Experiences</h3>
-    <% @course.experiences.each do |experience| %>
-      <%= experience.name %></br>
+<p>
+  <h3>Bingo! Games</h3>
+  <% if @course.bingo_games.count < 1 %>
+    No Bingo! games.</br>
+  <% else %>
+    <table data-role="table"
+          id="bingo_table"
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>"
+          data-column-btn-text="Show/hide columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th data-priority="1">Status</th>
+        <th data-priority="0">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+          <% @course.bingo_games.each do |game| %>
+            <tr>
+                <td><%= game.name %></td>
+                <td>
+                <% if game.active %>
+                Active
+                <% else %>
+                <span class="error">Inactive</span>
+                <% end %></td>
+                <td><%= link_to 'Show', game %>&nbsp;|&nbsp;
+                <%= link_to( "Activate", activate_bingo_game_path( game ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
+                <%= link_to 'Edit', edit_bingo_game_path(game) %>&nbsp;|&nbsp;
+                <%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            </tr>
+          <% end %>
+      </tbody>
+    </table>
   <% end %>
+  <%= link_to "New Bingo Game", new_bingo_game_path( :course_id => @course.id ),
+      :data => { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" }%>
+</p>
+<p>
+  </br></br>
+  <h3>Projects</h3>
+  <% if @course.projects.count < 1 %>
+    No projects.</br>
+  <% else %>
+    <table data-role="table"
+          id="projects_table"
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>"
+          data-column-btn-text="Show/hide columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th data-priority="1">Status</th>
+          <th data-priority="0">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+          <% @course.projects.each do |project| %>
+            <tr>
+                <td><%= project.name %></td>
+                <td>
+                <% if project.active %>
+                Active
+                <% else %>
+                <span class="error">Inactive</span>
+                <% end %></td>
+                <td><%= link_to 'Show', project %>&nbsp;|&nbsp;
+                <%= link_to( "Activate", activate_project_path( project ) ) + raw("&nbsp;|&nbsp;" ) unless project.active %>
+                <%= link_to 'Edit', edit_project_path(project) %>&nbsp;|&nbsp;
+                <%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            </tr>
+          <% end %>
+      </tbody>
+    </table>
+  <% end %>
+  <%= link_to "New Project", new_project_path( :course_id => @course.id ),
+      :data => { :icon => "plus", :mini => "true", :inline => "true", :role => "button" }%>
+</p>
+<p>
+  </br></br>
+  <h3>Experiences</h3>
+  <% if @course.experiences.count < 1 %>
+    No Experiences.</br>
+  <% else %>
+    <table data-role="table"
+          id="experiences_table"
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>"
+          data-column-btn-text="Show/hide columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive " >
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th data-priority="1">Status</th>
+          <th data-priority="0">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+          <% @course.experiences.each do |experience| %>
+            <tr>
+                <td><%= experience.name %></td>
+                <td>
+                <% if experience.active %>
+                  Active
+                <% else %>
+                  <span class="error">Inactive</span>
+                <% end %>
+                </td>
+                <td><%= link_to 'Show', experience %>&nbsp;|&nbsp;
+                  <%= link_to( "Activate", activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>
+                  <%= link_to 'Edit', edit_experience_path(experience) %>&nbsp;|&nbsp;
+                  <%= link_to 'Destroy', experience, method: :delete, data: { confirm: 'Are you sure?' } %>
+                </td>
+            </tr>
+          <% end %>
+      </tbody>
+    </table>
+  <% end %>
+  <%= link_to "New Experience", new_experience_path( :course_id => @course.id ),
+      :data => { :icon => "plus", :inline => "true", :mini => "true", :role => "button" }%>
+</p>
 </div>
 </div>
 <div class="form-actions">

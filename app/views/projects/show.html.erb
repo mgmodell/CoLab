@@ -58,8 +58,7 @@
       <%= submit_tag "Add!" %>
     <% end %>
     <% if @project.groups.any? || @project.course.enrolled_students.any? %>
-      <table id="project_table" width="90%" data-role="table"
-          id="groups_table"
+      <table id="groups_table" width="90%" data-role="table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="Select columns&hellip;"
