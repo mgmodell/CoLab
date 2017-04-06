@@ -36,12 +36,12 @@ class BingoGame < ActiveRecord::Base
       cl = CandidateList.new
       cl.user_id = user.id
       cl.bingo_game_id = id
-      cl.group_id = project.group_for_user(user)
+      cl.group_id = project.group_for_user(user).id if group_option
       cl.is_group = false
       cl.group_requested = false
 
       individual_count.times do
-        cl.candidates << Candidate.new(name: '', definition: '')
+        cl.candidates << Candidate.new(term: '', definition: '')
       end
       cl.save
     elsif  cl.is_group

@@ -3,7 +3,7 @@ Feature: Submitting Candidate words for Bingo!
 
   Background:
     Given there is a course with an assessed project
-    Given the course started "two months ago" and ended "two months later"
+    Given the course started "two months ago" and ended "two months from now"
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
     Given the project has a group with 4 confirmed users
     Given the project has a group with 4 confirmed users
@@ -32,8 +32,7 @@ Feature: Submitting Candidate words for Bingo!
     Then user should see 1 open task
     When the user clicks the link to the candidate list
     Then the user should see the Bingo candidate list
-    Then the user will see 7 "term" fields
-    Then the user will see 7 "definition" fields
+    Then the user will see 7 term field sets
     Then the candidate entries should be empty
     Then the user clicks "Save"
     Then the candidate properties should be empty

@@ -28,24 +28,26 @@ Then /^the user should see the Bingo candidate list$/  do
   page.should have_content( @user.name )
 end
 
-Then /^the user will see (\d+) "([^"]*)" fields$/  do |count, field_name|
-  # We should have an id, a term and a definition for each candidate (*3)
+Then /^the user will see (\d+) term field sets$/  do |count|
   page.all( :xpath, 
-            '//input[starts-with(@id, "candidate_list_candidates_attributes_")]').
-            count.should eq (count * 3 )
+            "//textarea[contains(@id, '_definition')]").
+            count.should eq (count.to_i )
+  page.all( :xpath, 
+            "//input[contains(@id, '_term')]").
+            count.should eq (count.to_i )
 end
 
 Then /^the candidate entries should be empty$/ do
-  @bingo.individual_count.each do |index|
-    query = "//input[@id='candidate_list_candidates_attributes_#{index.to_s}_term']"
+  @bingo.individual_count.times do |index|
+    query = "//input[@id='candidate_list_candidates_attributes_#{index}_term']"
     page.find( :xpath, query ).value.should eq ""
-    query = "//input[@id='candidate_list_candidates_attributes_#{index.to_s}_definition']"
+    query = "//textarea[@id='candidate_list_candidates_attributes_#{index}_definition']"
     page.find( :xpath, query ).value.should eq ""
   end
 end
 
 Then /^the candidate properties should be empty$/ do
-  cl = @bingo.candidate_list_for_user user
+  cl = @bingo.candidate_list_for_user @user
   cl.candidates.each do |candidate|
     candidate.term.should eq ""
     candidate.definition.should eq ""
@@ -53,9 +55,9 @@ Then /^the candidate properties should be empty$/ do
 end
 
 When /^the user populates (\d+) of the "([^"]*)" entries$/  do |count, field|
-  @entries_lists = { } if @entries_lists.nil?
-  entries = @entries_list[ field ].nil? ? [ ] : @entries_list[ field ]
-  count.each do |index|
+  @entries_lists = Hash.new if @entries_lists.nil?
+  entries = @entries_lists[ field ].nil? ? Array.new : @entries_lists[ field ]
+  count.to_i.times do |index|
     entries[ index ] = field == "term" ? Forgery::Name.industry : Forgery::Basic.text
     page.fill_in( "candidate_list_candidates_attributes_#{index.to_s}_#{field}",
                 with: entries[ index ] )
