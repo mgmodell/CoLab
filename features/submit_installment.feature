@@ -9,7 +9,7 @@ Feature: Submitting Reports
   Scenario: User should be able to complete an open weekly installment
     Given the project measures 3 factors
     Given the project has a consent form
-    Given the user is the "last" user
+    Given the user is the "last" user in the group
     Given the consent form "has" been presented to the user
     Given the project has been activated
     Given the user "has" had demographics requested
@@ -28,7 +28,7 @@ Feature: Submitting Reports
     Given the project measures 4 factors
     Given the project has a group with 4 confirmed users
     Given the project has a consent form
-    Given the user is the "last" user
+    Given the user is the "last" user in the group
     Given the consent form "has" been presented to the user
     Given the project has been activated
     Then the user logs in and submits an installment
@@ -38,7 +38,7 @@ Feature: Submitting Reports
   Scenario: An installment's factor values can be randomly assigned
     Given the project measures 3 factors
     Given the project has a consent form
-    Given the user is the "last" user
+    Given the user is the "last" user in the group
     Given the consent form "has" been presented to the user
     Given the project has been activated
     Given the user "has" had demographics requested
@@ -56,7 +56,7 @@ Feature: Submitting Reports
   Scenario: A installment's factor column need not sum to 600 or be distributed evenly
     Given the project measures 3 factors
     Given the project has a consent form
-    Given the user is the "last" user
+    Given the user is the "last" user in the group
     Given the consent form "has" been presented to the user
     Given the project has been activated
     Given the user "has" had demographics requested
@@ -74,7 +74,7 @@ Feature: Submitting Reports
   Scenario: A installment's factor column need not sum to 600
     Given the project measures 3 factors
     Given the project has a consent form
-    Given the user is the "last" user
+    Given the user is the "last" user in the group
     Given the consent form "has" been presented to the user
     Given the project has been activated
     Given the user "has" had demographics requested
@@ -92,7 +92,7 @@ Feature: Submitting Reports
   Scenario: User should not be able to submit an installment after the assessment has closed
     Given the project measures 3 factors
     Given the project has a consent form
-    Given the user is the "last" user
+    Given the user is the "last" user in the group
     Given the consent form "has" been presented to the user
     Given the project has been activated
     Given the user "has" had demographics requested

@@ -8,7 +8,7 @@ Feature: Timezone Support
     Given today is "March 8, 1980"
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
-    Given the user is the "last" user
+    Given the user is the "last" user in the group
     Given the user "has" had demographics requested
     Given the factor pack is set to "Original"
     Given the email queue is empty

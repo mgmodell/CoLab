@@ -21,7 +21,7 @@ When /^user clicks the link to the project, they will be presented with the cons
   page.should have_content 'Please review the document below.'
 end
 
-Given /^the user is the "(.*?)" user$/ do |ordinal|
+Given /^the user is the "(.*?)" user in the group$/ do |ordinal|
   @user = if ordinal == 'last'
             @group.users.last
           elsif ordinal == 'first'
