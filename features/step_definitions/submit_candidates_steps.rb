@@ -37,9 +37,9 @@ end
 
 Then /^the candidate entries should be empty$/ do
   @bingo.individual_count.each do |index|
-    query = "//input[@id='candidate_list_candidates_attributes_" + index.to_s + "_term']"
+    query = "//input[@id='candidate_list_candidates_attributes_#{index.to_s}_term']"
     page.find( :xpath, query ).value.should eq ""
-    query = "//input[@id='candidate_list_candidates_attributes_" + index.to_s + "_definition']"
+    query = "//input[@id='candidate_list_candidates_attributes_#{index.to_s}_definition']"
     page.find( :xpath, query ).value.should eq ""
   end
 end
@@ -57,7 +57,7 @@ When /^the user populates (\d+) of the "([^"]*)" entries$/  do |count, field|
   entries = @entries_list[ field ].nil? ? [ ] : @entries_list[ field ]
   count.each do |index|
     entries[ index ] = field == "term" ? Forgery::Name.industry : Forgery::Basic.text
-    page.fill_in( "candidate_list_candidates_attributes_" + index.to_s + "_" + field,
+    page.fill_in( "candidate_list_candidates_attributes_#{index.to_s}_#{field}",
                 with: entries[ index ] )
   end
 end

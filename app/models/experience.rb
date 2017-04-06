@@ -92,10 +92,10 @@ class Experience < ActiveRecord::Base
   def dates_within_course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date
-        errors.add(:start_date, 'The experience cannot begin before the course has begun')
+        errors.add(:start_date, "The experience cannot begin before the course has begun (#{course.start_date})")
       end
       if end_date > course.end_date
-        errors.add(:end_date, 'The experience cannot continue after the course has ended')
+        errors.add(:end_date, "The experience cannot continue after the course has ended (#{course.end_date})")
       end
     end
     errors
