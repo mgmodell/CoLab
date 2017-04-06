@@ -27,7 +27,7 @@ Given /^the user is the "(.*?)" user in the group$/ do |ordinal|
           elsif ordinal == 'first'
             @group.users[0]
           else
-            @group.users[1]
+            @group.users.sample
           end
 end
 

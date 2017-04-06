@@ -10,11 +10,7 @@ Given(/^there is a course with an experience$/) do
 end
 
 Given(/^the experience "([^"]*)" been activated$/) do |has_or_has_not|
-  @experience.active = if has_or_has_not == 'has'
-                         true
-                       else
-                         false
-                       end
+  @experience.active = has_or_has_not == 'has'
   @experience.save
 end
 

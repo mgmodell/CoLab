@@ -70,3 +70,7 @@ Then /^the candidate list entries should match the list$/  do
   pending # Write code here that turns the phrase above into concrete actions
 end
 
+Given(/^the Bingo! "([^"]*)" been activated$/) do |has_or_has_not|
+  @bingo.active = has_or_has_not == 'has'
+  @bingo.save
+end

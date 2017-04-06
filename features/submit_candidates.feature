@@ -11,12 +11,19 @@ Feature: Submitting Candidate words for Bingo!
     Given the course has a Bingo! game
     Given the Bingo! game individual count is 7
     Given the Bingo! started "last month" and ends "2 days from now"
-    Given the user is the "first" user in the group
+    Given the Bingo! "has" been activated
+    Given the user is the "random" user in the group
     Given the user "has" had demographics requested
+
+  Scenario: User should not be able to closed list of candidates
+    Given the Bingo! "has not" been activated
+    Given the user logs in
+    Then user should see 0 open task
 
   Scenario: User should not be able to closed list of candidates
     Given the Bingo! game required 1 day of lead time
     Given the Bingo! started "last month" and ends "tomorrow"
+    Given the Bingo! "has" been activated
     Given the user logs in
     Then user should see 0 open task
 
