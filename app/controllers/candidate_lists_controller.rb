@@ -35,6 +35,6 @@ class CandidateListsController < ApplicationController
   end
 
   def candidate_list_params
-    params.require(:candidate_list).permit(:is_group, candidates_attributes: [:id, :name, :definition])
+    params.require(:candidate_list).permit(:is_group, candidates_attributes: [:id, :term, :definition])
   end
 end

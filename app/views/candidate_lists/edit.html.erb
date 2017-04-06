@@ -34,7 +34,7 @@
     </tr>
   </table>
   <h2>Terms</h2>
-  <table width="100%"
+  <table id="candidates_table" width="100%"
         class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
     <thead>
       <tr>
@@ -48,7 +48,7 @@
       <%= f.simple_fields_for :candidates do |cf| %>
       <tr>
         <td><%= count += 1 %><%= cf.input :id, as: :hidden %></td>
-        <td><%= cf.input :name, label: false %></td>
+        <td><%= cf.input :term, label: false %></td>
         <td><%= cf.input :definition, as: :text, label: false %></td>
       </tr>
       <% end %>

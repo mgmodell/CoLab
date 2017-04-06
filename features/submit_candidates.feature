@@ -9,6 +9,8 @@ Feature: Submitting Candidate words for Bingo!
     Given the project has a group with 4 confirmed users
     Given the project has a group with 4 confirmed users
     Given the course has a Bingo! game
+    Given the Bingo! game individual count is 7
+    Given the Bingo! started "last month" and ends "2 days from now"
     Given the user is the "first" user in the group
     Given the user "has" had demographics requested
 
@@ -18,14 +20,45 @@ Feature: Submitting Candidate words for Bingo!
     Given the user logs in
     Then user should see 0 open task
 
-  Scenario: User should be able to open an unstarted list of candidates
-
-  Scenario: User should be able to open a list of candidates that is in progress
-    Given the Bingo! game required 1 day of lead time
-    Given the Bingo! started "last month" and ends "2 days from now"
+  Scenario: User should be able to open and save an unstarted list of candidates
     Given the user logs in
     Then user should see 1 open task
+    When the user clicks the link to the candidate list
+    Then the user should see the Bingo candidate list
+    Then the user will see 7 "term" fields
+    Then the user will see 7 "definition" fields
+    Then the candidate entries should be empty
+    Then the user clicks "Save"
+    Then the candidate properties should be empty
 
-  Scenario: User should be able to save a partial list of candidates
+  Scenario: User should be able to open update and then re-edit a list of candidates
+    Given the user logs in
+    Then user should see 1 open task
+    When the user clicks the link to the candidate list
+    Then the user should see the Bingo candidate list
+    When the user populates 3 of the "term" entries
+     And the user populates 3 of the "definition" entries
+    Then the user clicks "Save"
+    Then the user will see "success"
+    Then retrieve the latest Bingo! game from the db
+    Then the candidate list entries should match the list
+    When the user populates 7 of the "term" entries
+     And the user populates 7 of the "definition" entries
+    Then the user clicks "Save"
+    Then the user will see "success"
+    Then the user will see "100%"
+    Then retrieve the latest Bingo! game from the db
+    Then the candidate list entries should match the list
 
-  Scenario: User should be able to save a completed list of candidates
+  Scenario: User should be able to open update and then re-edit a list of candidates
+    Given the user logs in
+    Then user should see 1 open task
+    When the user clicks the link to the candidate list
+    Then the user should see the Bingo candidate list
+    When the user populates 7 of the "term" entries
+     And the user populates 7 of the "definition" entries
+    Then the user clicks "Save"
+    Then the user will see "success"
+    Then the user will see "100%"
+    Then retrieve the latest Bingo! game from the db
+    Then the candidate list entries should match the list
