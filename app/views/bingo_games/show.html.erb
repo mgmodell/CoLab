@@ -11,7 +11,7 @@
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
     <h2>Bingo! Game Details</h2>
     <p>
-      <strong>Name:</strong>
+      <h3>Name:</h3>
       <%= @bingo_game.name %>
       (<% if @bingo_game.active %>
         Active
@@ -21,15 +21,28 @@
       <% end %>)
     </p>
     <p>
-      <strong>Course:</strong>
-      <%= @bingo_game.course.name %>
+      <h3>Description:</h3>
+      <%= @bingo_game.description %></br>
+      Attached to course <%= @bingo_game.course.name %>.
+      <h4>Days allocated for instructor prep:</h4><%= @bingo_game.lead_time %>
+      <h4>Terms required of individuals:</h4><%= @bingo_game.individual_count %>
     </p>
     <p>
-      <strong>Dates:</strong>
-      <%= @bingo_game.start_date %> to
-  <%= @bingo_game.start_date %></br>
-    <em>Note: This Bingo! game occurs in the <%= @bingo_game.course.timezone %> timezone and all dates reflect this.</em>
-  </p>
+      <h3>Group options:</h3>
+      <% if @bingo_game.group_option %>
+        <h4>Term discount for group work:</h4><%= @bingo_game.group_discount %>
+        <h4>Groups pulled from project:</h4><%= @bingo_game.project.name %>
+      <% else %>
+        No group options set.
+      <% end %>
+    </p>
+    <p>
+      <h3>Dates:</h3>
+      <%= @bingo_game.start_date.strftime( "%a, %b %-d at %-l:%M%P %Z")%> to
+  <%= @bingo_game.end_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
+    <em>Note: This Bingo! game occurs in the <%= @bingo_game.course.timezone %> 
+            timezone and all dates reflect this.</em>
+    </p>
   <%= link_to 'Edit Bingo! game details', edit_bingo_game_path(@bingo_game) %>
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">

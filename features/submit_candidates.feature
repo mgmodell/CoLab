@@ -22,7 +22,7 @@ Feature: Submitting Candidate words for Bingo!
 
   Scenario: User should not be able to closed list of candidates
     Given the Bingo! game required 1 day of lead time
-    Given the Bingo! started "last month" and ends "tomorrow"
+    Given the Bingo! started "last month" and ends "today"
     Given the Bingo! "has" been activated
     Given the user logs in
     Then user should see 0 open task
