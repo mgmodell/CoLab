@@ -52,9 +52,12 @@ Feature: Submitting Candidate words for Bingo!
      And the user populates 7 of the "definition" entries
     Then the user clicks "Save"
     Then the user will see "success"
+    Then the candidate list entries should match the list
+    Then the user logs out
+    Then the user logs in
     Then the user will see "100%"
     Then retrieve the latest Bingo! game from the db
-    Then the candidate list entries should match the list
+    Then the candidate list properties will match the list
 
   Scenario: User should be able to open update and then re-edit a list of candidates
     Given the user logs in
@@ -65,6 +68,9 @@ Feature: Submitting Candidate words for Bingo!
      And the user populates 7 of the "definition" entries
     Then the user clicks "Save"
     Then the user will see "success"
+    Then the candidate list entries should match the list
+    Then the user logs out
+    Then the user logs in
     Then the user will see "100%"
     Then retrieve the latest Bingo! game from the db
-    Then the candidate list entries should match the list
+    Then the candidate list properties will match the list

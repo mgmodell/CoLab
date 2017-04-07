@@ -55,21 +55,32 @@ Then /^the candidate properties should be empty$/ do
 end
 
 When /^the user populates (\d+) of the "([^"]*)" entries$/  do |count, field|
-  @entries_lists = Hash.new if @entries_lists.nil?
-  entries = @entries_lists[ field ].nil? ? Array.new : @entries_lists[ field ]
+  @entries_list = Array.new if @entries_list.nil?
   count.to_i.times do |index|
-    entries[ index ] = field == "term" ? Forgery::Name.industry : Forgery::Basic.text
+    @entries_list[ index ] = Hash.new if @entries_list[ index ].nil?
+    @entries_list[ index ][ field ] = field == "term" ? 
+                        Forgery::Name.industry : 
+                        Forgery::Basic.text
     page.fill_in( "candidate_list_candidates_attributes_#{index.to_s}_#{field}",
-                with: entries[ index ] )
+                with: @entries_list[ index ][ field ] )
   end
 end
 
 Then /^the candidate list properties will match the list$/  do
-  pending # Write code here that turns the phrase above into concrete actions
+  cl = @bingo.candidate_list_for_user @user
+  cl.candidates.each_with_index do |candidate,index|
+    candidate.term.should eq @entries_list[ index ][ "term" ]
+    candidate.definition.should eq @entries_list[ index ][ "definition" ]
+  end
 end
 
 Then /^the candidate list entries should match the list$/  do
-  pending # Write code here that turns the phrase above into concrete actions
+  @entries_list.each_with_index do |candidate,index|
+    query = "//input[@id='candidate_list_candidates_attributes_#{index}_term']"
+    page.find( :xpath, query ).value.should eq candidate[ "term" ]
+    query = "//textarea[@id='candidate_list_candidates_attributes_#{index}_definition']"
+    page.find( :xpath, query ).value.should eq candidate[ "definition" ]
+  end
 end
 
 Given(/^the Bingo! "([^"]*)" been activated$/) do |has_or_has_not|
