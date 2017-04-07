@@ -6,10 +6,12 @@ Feature: Bingo Administration
     Given a user has signed up
     Given the user "has" had demographics requested
     Given there is a course with an assessed project
-    Given the course has a Bingo! game
     Given the course has 8 confirmed users
     Given the course timezone is "Mexico City"
     Given the user timezone is "Nairobi"
+    Given the course has a Bingo! game
+    Given the course started "5/10/1976" and ended "tomorrow"
+    Given the Bingo! started "2/29/1980" and ends "7/10/2008"
     Given the course started "5/10/1976" and ended "11/01/2012"
 
   Scenario: Instructor creates a new Bingo! game
@@ -85,10 +87,9 @@ Feature: Bingo Administration
     Then the user will see "success"
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
-    Then the bingo "Name" is "Cool-yo!"
+    Then the bingo "Topic" is "Privacy"
     Then the bingo "Description" is "this is the coolest"
     #check the dates
-    Then the bingo "start" date is "5/10/1976"
-    Then the bingo "end" date is "2/29/1980"
-    #check the selects
+    Then the bingo "start" date is "2/29/1980"
+    Then the bingo "end" date is "7/10/2008"
 
