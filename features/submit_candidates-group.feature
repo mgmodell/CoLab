@@ -133,7 +133,7 @@ Feature: Submitting Candidate words for Bingo!
      When the user clicks the link to the candidate list
      Then the user should see the Bingo candidate list
      Then the user "should not" see collaboration was requested
-     Then the user "should not" see collaboration request option
+     Then the user "should not" see collaboration request button
      Then the user will see 36 term field sets
      Then the candidate entries should be empty
     Given the user logs out
@@ -143,7 +143,7 @@ Feature: Submitting Candidate words for Bingo!
      When the user clicks the link to the candidate list
      Then the user should see the Bingo candidate list
      Then the user "should not" see collaboration was requested
-     Then the user "should not" see collaboration request option
+     Then the user "should not" see collaboration request button
      Then the user will see 36 term field sets
      Then the candidate entries should be empty
     Given the user logs out
@@ -236,7 +236,7 @@ Feature: Submitting Candidate words for Bingo!
      When the user clicks the link to the candidate list
      Then the user should see the Bingo candidate list
      Then the user "should not" see collaboration was requested
-     Then the user "should not" see collaboration request option
+     Then the user "should not" see collaboration request button
      Then the user will see 36 term field sets
      When the user populates 3 of the "term" entries
       And the user populates 3 of the "definition" entries
@@ -252,7 +252,7 @@ Feature: Submitting Candidate words for Bingo!
      When the user clicks the link to the candidate list
      Then the user should see the Bingo candidate list
      Then the user "should not" see collaboration was requested
-     Then the user "should not" see collaboration request option
+     Then the user "should not" see collaboration request button
      Then the user will see 36 term field sets
      When the user populates 4 of the "term" entries
       And the user populates 4 of the "definition" entries
@@ -268,7 +268,7 @@ Feature: Submitting Candidate words for Bingo!
      When the user clicks the link to the candidate list
      Then the user should see the Bingo candidate list
      Then the user "should not" see collaboration was requested
-     Then the user "should not" see collaboration request option
+     Then the user "should not" see collaboration request button
      Then the user will see 36 term field sets
      When the user populates 4 additional "term" entries
       And the user populates 4 additional "definition" entries
@@ -284,7 +284,7 @@ Feature: Submitting Candidate words for Bingo!
      When the user clicks the link to the candidate list
      Then the user should see the Bingo candidate list
      Then the user "should not" see collaboration was requested
-     Then the user "should not" see collaboration request option
+     Then the user "should not" see collaboration request button
      Then the user will see 36 term field sets
      When the user changes the first 4 "term" entries
      When the user changes the first 4 "definition" entries
@@ -295,5 +295,5 @@ Feature: Submitting Candidate words for Bingo!
      Then the candidate list entries should match the list
     Given the user logs out
 
-  Scenario: Moving a student between groups properly assigns their group options on current CLs
+  Scenario: Moving a student between groups properly assigns their group buttons on current CLs
     #Basically, run through open CLs and make sure they see any group CLs 

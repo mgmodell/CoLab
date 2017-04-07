@@ -1,5 +1,7 @@
-Given /^the Bingo! is group\-enabled with the project and a (\d+) percent group discount$/  do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
+Given /^the Bingo! is group\-enabled with the project and a (\d+) percent group discount$/  do |group_discount|
+  @bingo.group_option = true
+  @bingo.project = @project
+  @bingo.group_discount = group_discount
 end
 
 Then /^the user "([^"]*)" see collaboration was requested$/  do |arg1|
@@ -22,7 +24,7 @@ Then /^the user "([^"]*)" the collaboration request$/  do |arg1|
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then /^the user "([^"]*)" see collaboration request option$/  do |arg1|
+Then /^the user "([^"]*)" see collaboration request button$/  do |arg1|
   pending # Write code here that turns the phrase above into concrete actions
 end
 
