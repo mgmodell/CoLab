@@ -73,8 +73,7 @@ class User < ActiveRecord::Base
   end
 
   def is_instructor?
-    if admin || instructor || Roster.instructorships.where('user_id = ?', id).count > 0
-      self.instructor = true
+    if admin || Roster.instructorships.where('user_id = ?', id).count > 0
       true
     else
       false

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170406070715) do
+ActiveRecord::Schema.define(version: 20170407024545) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -392,7 +392,6 @@ ActiveRecord::Schema.define(version: 20170406070715) do
     t.datetime "last_emailed"
     t.integer  "theme_id",               limit: 4,   default: 1
     t.integer  "school_id",              limit: 4
-    t.boolean  "instructor"
   end
 
   add_index "users", ["age_range_id"], name: "index_users_on_age_range_id", using: :btree

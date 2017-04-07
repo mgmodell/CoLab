@@ -23,7 +23,7 @@ class BingoGame < ActiveRecord::Base
   end
 
   def is_open
-    if start_date <= DateTime.current && end_date >= (DateTime.current - lead_time.day)
+    if start_date <= DateTime.current && end_date >= (DateTime.current + lead_time.days)
       true
     else
       false
