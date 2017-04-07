@@ -1,8 +1,8 @@
-Given /^there is a course$/  do
+# frozen_string_literal: true
+Given /^there is a course$/ do
   @course = Course.make
 end
 
-Then /^the user sets the project to the course's project$/  do
-  page.select( @project.name, from: "Source of project groups" )
+Then /^the user sets the project to the course's project$/ do
+  page.select(@project.name, from: 'Source of project groups')
 end
-

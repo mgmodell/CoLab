@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%Y-%m-%dT%T')
   page.find('#bingo_game_' + date_field_prefix + '_date').set(new_date)
@@ -7,11 +8,11 @@ Then /^the user clicks "([^"]*)" on the existing bingo game$/ do |action|
   find(:xpath, "//tr[td[contains(.,'#{@bingo.name}')]]/td/a", text: action).click
 end
 
-Then /^retrieve the latest Bingo! game from the db$/  do
+Then /^retrieve the latest Bingo! game from the db$/ do
   @bingo = BingoGame.last
 end
 
-Given /^the course has a Bingo! game$/  do
+Given /^the course has a Bingo! game$/ do
   @bingo = BingoGame.make
   @bingo.course = @course
   @bingo.save
@@ -35,12 +36,12 @@ Then /^the bingo "([^"]*)" is "([^"]*)"$/ do |field, value|
   end
 end
 
-Then /^the bingo project is the course's project$/  do
+Then /^the bingo project is the course's project$/ do
   @bingo.project_id.should eq @project.id
   @bingo.project.should eq @project
 end
 
-Then /^the bingo "([^"]*)" date is "([^"]*)"$/  do |date_field_prefix, date_value|
+Then /^the bingo "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value|
   tz = ActiveSupport::TimeZone.new(@course.timezone)
 
   case date_field_prefix
@@ -59,5 +60,4 @@ Then /^the bingo "([^"]*)" date is "([^"]*)"$/  do |date_field_prefix, date_valu
   else
     puts "We didn't test anything there: " + date_field_prefix + ' not found'
   end
-
 end

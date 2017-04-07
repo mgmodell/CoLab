@@ -76,19 +76,20 @@ class BingoGame < ActiveRecord::Base
   def dates_within_course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date
-        errors.add(:start_date, "The bingo game cannot begin before the course has begun (#{course.start_date.strftime "%F"})")
+        errors.add(:start_date, "The bingo game cannot begin before the course has begun (#{course.start_date.strftime '%F'})")
       end
       if end_date > course.end_date
-        errors.add(:end_date, "The bingo game cannot occur after the course has ended (#{course.end_date.strftime "%F"})")
+        errors.add(:end_date, "The bingo game cannot occur after the course has ended (#{course.end_date.strftime '%F'})")
       end
     end
     errors
   end
-  #We must validate group components {project and discount}
+
+  # We must validate group components {project and discount}
   def group_components
-    if self.group_option
-      errors.add( :project_id, "The group option requires that a project be selected" ) if self.project.nil?
-      errors.add( :project_id, "The group option requires that a project be selected" ) if self.project.nil?
+    if group_option
+      errors.add(:project_id, 'The group option requires that a project be selected') if project.nil?
+      errors.add(:project_id, 'The group option requires that a project be selected') if project.nil?
     end
   end
 end
