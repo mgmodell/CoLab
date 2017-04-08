@@ -58,7 +58,9 @@ Then /^the candidate properties should be empty$/ do
 end
 
 When /^the user populates (\d+) of the "([^"]*)" entries$/ do |count, field|
-  @entries_list = [] if @entries_list.nil?
+  @entries_lists = Hash.new if @entries_lists.nil?
+  @entries_lists[ @user ] = [ ] if @entries_lists[ @user ].nil?
+  @entries_list = @entries_lists[ @user ]
   count.to_i.times do |index|
     @entries_list[index] = {} if @entries_list[index].nil?
     @entries_list[index][field] = field == 'term' ?

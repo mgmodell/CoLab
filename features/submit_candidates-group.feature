@@ -144,6 +144,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user should see the Bingo candidate list
      Then the user "should not" see collaboration was requested
      Then the user "should not" see collaboration request button
+     Then the candidate lists have been merged
      Then the user will see 36 term field sets
      Then the candidate entries should be empty
     Given the user logs out
@@ -153,8 +154,8 @@ Feature: Submitting Candidate words for Bingo!
      Then user should see 1 open task
      When the user clicks the link to the candidate list
      Then the user should see the Bingo candidate list
-     When the user populates 3 of the "term" entries prepped for group
-      And the user populates 3 of the "definition" entries prepped for group
+     When the user populates 3 of the "term" entries
+      And the user populates 3 of the "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
      Then the user logs out
@@ -162,8 +163,8 @@ Feature: Submitting Candidate words for Bingo!
      When group user 3 logs in
      When the user clicks the link to the candidate list
      Then the user should see the Bingo candidate list
-     When the user populates 3 of the "term" entries prepped for group
-      And the user populates 3 of the "definition" entries prepped for group
+     When the user populates 3 of the "term" entries
+      And the user populates 3 of the "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
      When the user requests collaboration
@@ -195,6 +196,7 @@ Feature: Submitting Candidate words for Bingo!
      When the user clicks the link to the candidate list
      Then the user "should" see collaboration was requested
      Then the user "accepts" the collaboration request
+     Then the candidate lists have been merged
      Then the user will see 36 term field sets
     Then the candidate list entries should match the list
 
@@ -238,6 +240,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user "should not" see collaboration was requested
      Then the user "should not" see collaboration request button
      Then the user will see 36 term field sets
+     Then the candidate lists have been merged
      When the user populates 3 of the "term" entries
       And the user populates 3 of the "definition" entries
      Then the candidate entries should be empty
