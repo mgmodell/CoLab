@@ -57,12 +57,37 @@ Then /^the user "([^"]*)" see collaboration request button$/  do |button_present
   end
 end
 
-When /^the user populates (\d+) additional "([^"]*)" entries$/  do |arg1, arg2|
-  pending # Write code here that turns the phrase above into concrete actions
+When /^the user populates (\d+) additional "([^"]*)" entries$/  do |count, field|
+  required_term_count = @bingo.required_terms_for_group( @bingo.project.get_group_for_user( user ) )
+
+  @entries_lists = Hash.new if @entries_lists.nil?
+  @entries_lists[ @user ] = [ ] if @entries_lists[ @user ].nil?
+  @entries_list = @entries_lists[ @user ]
+
+  existing_count = @entries_list.count
+  count.to_i.times do |index|
+    @entries_list[existing_count + index] = {} if @entries_list[index].nil?
+    @entries_list[existing_count + index][field] = field == 'term' ?
+                        Forgery::Name.industry :
+                        Forgery::Basic.text
+    page.fill_in("candidate_list_candidates_attributes_#{existing_count + index}_#{field}",
+                 with: @entries_list[existing_count + index][field])
+  end
 end
 
-When /^the user changes the first (\d+) "([^"]*)" entries$/  do |arg1, arg2|
-  pending # Write code here that turns the phrase above into concrete actions
+When /^the user changes the first (\d+) "([^"]*)" entries$/  do |count, field|
+  @entries_lists = Hash.new if @entries_lists.nil?
+  @entries_lists[ @user ] = [ ] if @entries_lists[ @user ].nil?
+  @entries_list = @entries_lists[ @user ]
+
+  count.to_i.times do |index|
+    @entries_list[index] = {} if @entries_list[index].nil?
+    @entries_list[index][field] = field == 'term' ?
+                        Forgery::Name.industry :
+                        Forgery::Basic.text
+    page.fill_in("candidate_list_candidates_attributes_#{index}_#{field}",
+                 with: @entries_list[index][field])
+  end
 end
 
 Then /^the candidate lists have been merged$/ do

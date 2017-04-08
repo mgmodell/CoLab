@@ -30,6 +30,11 @@ class BingoGame < ActiveRecord::Base
     end
   end
 
+  def required_terms_for_group group
+    remaining_percent = ( 100 - group_discount ) / 100
+    discounted = ( group.users.count * individual_count * remaining_percent ).floor
+  end
+
   def candidate_list_for_user(user)
     cl = candidate_lists.where(user_id: user.id).take
     if cl.nil?
