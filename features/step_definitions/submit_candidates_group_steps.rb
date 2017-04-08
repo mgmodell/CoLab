@@ -66,5 +66,17 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/  do |arg1, arg2|
 end
 
 Then /^the candidate lists have been merged$/ do
-  pending # Write code here that turns the phrase above into concrete actions
+  combined_list = []
+  @bingo.project.group_for_user( user ).users.each do |user|
+    unless @entries_lists[ user ].nil?
+      @entries_lists[ user ].each do |list_item|
+        if list_item[ "term" ].present? || list_item[ "definition" ]
+          combined_list << list_item
+        end
+      end
+    end
+  end
+  @bingo.project.group_for_user( user ).users.each do |user|
+    @entries_lists[ user ] = combined_list
+  end
 end

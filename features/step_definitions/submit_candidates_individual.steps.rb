@@ -80,12 +80,20 @@ Then /^the candidate list properties will match the list$/ do
 end
 
 Then /^the candidate list entries should match the list$/ do
-  @entries_list.each_with_index do |candidate, index|
-    query = "//input[@id='candidate_list_candidates_attributes_#{index}_term']"
-    page.find(:xpath, query).value.should eq candidate['term']
-    query = "//textarea[@id='candidate_list_candidates_attributes_#{index}_definition']"
-    page.find(:xpath, query).value.should eq candidate['definition']
+  field_count = page.all(:xpath, "//textarea[contains(@id, '_definition')]") .count
+
+  items_not_found = @entries_lists[ @user ].count
+  @entries_lists[ @user ].each do |candidate|
+    field_count.times do |index|
+      t_query = "//input[@id='candidate_list_candidates_attributes_#{index}_term']"
+      d_query = "//textarea[@id='candidate_list_candidates_attributes_#{index}_definition']"
+      if page.find(:xpath, t_query).value == candidate['term'] && 
+         page.find(:xpath, d_query).value == candidate['definition']
+        items_not_found -= 1
+      end
+    end
   end
+  items_not_found.should eq 0
 end
 
 Given(/^the Bingo! "([^"]*)" been activated$/) do |has_or_has_not|
