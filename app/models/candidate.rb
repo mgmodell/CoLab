@@ -5,4 +5,11 @@ class Candidate < ActiveRecord::Base
   belongs_to :concept, inverse_of: :candidates
 
   scope :completed, -> { where("term != '' AND definition != ''") }
+  before_save :trim_data
+
+  private
+    def trim_data
+      term.strip!
+      definition.strip!
+    end
 end
