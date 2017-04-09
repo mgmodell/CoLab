@@ -72,7 +72,7 @@
           <th>Student</th>
           <% groups = @project.groups %>
           <% groups.each do |group| %>
-            <th data-priority="0"><%= text_field_tag "group_" + group.id.to_s, group.name %></th>
+            <th align="center" data-priority="0"><%= text_field_tag "group_" + group.id.to_s, group.name %></th>
           <% end %>
           <th data-priority="0">[no group]</th>
         </tr>
