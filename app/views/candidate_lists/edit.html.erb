@@ -16,15 +16,15 @@
           <%= @current_user.name %>
           <% if @candidate_list.group_requested # Have you already requested collaboration? %>
             [Still waiting for a response to your help request]
-          <% elsif @candidate_list.others_requested_help? # Is your team waiting to hear from you? %>
+          <% elsif @candidate_list.others_requested_help > 0 # Is your team waiting to hear from you? %>
             Your team wants to collaborate: 
             <%= link_to "Accept?", request_bingo_collaboration_path( 
-                        candidate_list_id: @candidate_list.id, desired: true ) %> or 
+                        id: @candidate_list.id, desired: true ) %> or 
             <%= link_to "Decline?", request_bingo_collaboration_path( 
-                        candidate_list_id: @candidate_list.id, desired: false ) %> 
+                        id: @candidate_list.id, desired: false ) %> 
           <% else %>
             <%= link_to "Invite your group to help?", request_bingo_collaboration_path( 
-                        candidate_list_id: @candidate_list.id, desired: true ) %> 
+                        id: @candidate_list.id, desired: true ) %> 
           <% end %>
         <% end %>
     </tr>

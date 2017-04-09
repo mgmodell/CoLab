@@ -7,7 +7,7 @@ end
 Then /^the user "([^"]*)" see collaboration was requested$/  do |collaboration_pending|
   case collaboration_pending.downcase
   when 'should'
-    page.should have_content "Your group has asked you to collaborate: "
+    page.should have_content "Your team wants to collaborate"
   when 'should not'
     page.should_not have_content "Your group has asked you to collaborate: "
   else
@@ -21,6 +21,7 @@ end
 
 When /^group user (\d+) logs in$/  do |user_count|
   @user = @group.users[ user_count.to_i - 1 ]
+  step "the user \"has\" had demographics requested"
   step "the user logs in"
 end
 

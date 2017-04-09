@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
   scope 'bingo' do
     resources :candidate_lists, only: [:edit, :update]
-    get 'request_collaboration/:candidate_list_id/:desired' => 'candidate_lists#request_collaboration', :as => 'request_bingo_collaboration'
+    get 'request_collaboration/:id/:desired' => 'candidate_lists#request_collaboration', :as => 'request_bingo_collaboration'
   end
 
   get 'experiences/next/:experience_id:' => 'experiences#next', :as => 'next_experience'

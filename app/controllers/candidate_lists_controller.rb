@@ -7,12 +7,23 @@ class CandidateListsController < ApplicationController
   def request_collaboration
     desired = params[:desired]
     if desired
-      # if you are the first...
-      group.users.each do |user|
-        # send an email saying the group requested collaboration
+      @candidate_list.group_requested = true
+      @candidate_list.save
+      @candidate_list = merge_to_group_list if @candidate_list.others_requested_help == 1
+    else
+      @candidate_list.bingo.project.get_group_for_user( @current_user ).users.each do |user|
+        cl = @candidate_list.bingo.candidate_list_for_user( user )
+        cl.group_requested = false
+        cl.save
       end
     end
-    group_requested = true
+    render :edit
+  end
+
+  #TODO: Merge all the lists, add the merged whole to a new, group candidate_list,
+  # set is_group on all existing lists and then return the new list
+  def merge_to_group_list
+
   end
 
   def update
