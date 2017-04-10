@@ -23,11 +23,11 @@ class BingoGame < ActiveRecord::Base
   end
 
   def is_open
-    if start_date <= DateTime.current && end_date >= (DateTime.current + lead_time.days)
-      true
-    else
-      false
-    end
+    start_date <= DateTime.current && end_date >= (DateTime.current + lead_time.days)
+  end
+
+  def awaiting_review
+    end_date <= (DateTime.current + lead_time.days) && !reviewed
   end
 
   def required_terms_for_group(group)

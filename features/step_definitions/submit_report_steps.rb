@@ -40,7 +40,7 @@ When /^user clicks the link to the project$/ do
 end
 
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points, distribution|
-  task = @user.waiting_tasks[0]
+  task = @user.waiting_student_tasks[0]
 
   if column_points.to_i <= 0
     page.all(:xpath, '//input[starts-with(@id,"installment_values_attributes_")]').each do |element|
@@ -70,7 +70,7 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
 end
 
 Then /^the installment form should request factor x user values$/ do
-  tasks = @user.waiting_tasks
+  tasks = @user.waiting_student_tasks
   group = tasks[0].group_for_user(@user)
   factors = tasks[0].factors
 

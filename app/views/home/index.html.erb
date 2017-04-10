@@ -1,16 +1,16 @@
 <h1>Your Tasks</h1>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 <p>Hello <%= @first_name %>,
-  <% if @waiting_tasks.any? %>
-    <% if @waiting_tasks.count == 1 %>
+  <% if @waiting_student_tasks.any? %>
+    <% if @waiting_student_tasks.count == 1 %>
       You've got one task at the moment.
   <% else %>
-      You've got <%= @waiting_tasks.count %> tasks today.
+      You've got <%= @waiting_student_tasks.count %> tasks today.
   <% end %>
   <% else %>
     You do not currently have any tasks due. Check back later or contact your instructor.
   <% end %></p>
-<% if @waiting_tasks.any? %>
+<% if @waiting_student_tasks.any? %>
   <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -30,7 +30,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @waiting_tasks.each do |task| %>
+      <% @waiting_student_tasks.each do |task| %>
         <% if task.class.name == "Assessment" %>
           <% group = task.group_for_user( @current_user )%>
           <tr>

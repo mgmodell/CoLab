@@ -80,10 +80,11 @@ class User < ActiveRecord::Base
     end
   end
 
-  def waiting_tasks
+  def waiting_student_tasks
     waiting_tasks = assessments.still_open.to_a
-    available_rosters = rosters.joins(:role)
-                               .where("( roles.name = 'Enrolled Student' OR roles.name = 'Invited Student' )")
+
+    # Check available tasks for students
+    available_rosters = rosters.enrolled
 
     available_rosters.each do |roster|
       waiting_tasks.concat roster.course.experiences
