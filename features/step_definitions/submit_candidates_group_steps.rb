@@ -59,7 +59,7 @@ Then /^the user "([^"]*)" see collaboration request button$/  do |button_present
 end
 
 When /^the user populates (\d+) additional "([^"]*)" entries$/  do |count, field|
-  required_term_count = @bingo.required_terms_for_group( @bingo.project.get_group_for_user( user ) )
+  required_term_count = @bingo.required_terms_for_group( @bingo.project.group_for_user( @user ) )
 
   @entries_lists = Hash.new if @entries_lists.nil?
   @entries_lists[ @user ] = [ ] if @entries_lists[ @user ].nil?
@@ -67,7 +67,7 @@ When /^the user populates (\d+) additional "([^"]*)" entries$/  do |count, field
 
   existing_count = @entries_list.count
   count.to_i.times do |index|
-    @entries_list[existing_count + index] = {} if @entries_list[index].nil?
+    @entries_list[existing_count + index] = {} if @entries_list[existing_count + index].nil?
     @entries_list[existing_count + index][field] = field == 'term' ?
                         Forgery::Name.industry :
                         Forgery::Basic.text
