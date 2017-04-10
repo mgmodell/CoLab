@@ -8,8 +8,9 @@ class Candidate < ActiveRecord::Base
   before_save :trim_data
 
   private
-    def trim_data
-      term.strip!
-      definition.strip!
-    end
+
+  def trim_data
+    term.strip!
+    definition.strip!
+  end
 end

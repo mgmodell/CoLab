@@ -58,9 +58,9 @@ Then /^the candidate properties should be empty$/ do
 end
 
 When /^the user populates (\d+) of the "([^"]*)" entries$/ do |count, field|
-  @entries_lists = Hash.new if @entries_lists.nil?
-  @entries_lists[ @user ] = [ ] if @entries_lists[ @user ].nil?
-  @entries_list = @entries_lists[ @user ]
+  @entries_lists = {} if @entries_lists.nil?
+  @entries_lists[@user] = [] if @entries_lists[@user].nil?
+  @entries_list = @entries_lists[@user]
   count.to_i.times do |index|
     @entries_list[index] = {} if @entries_list[index].nil?
     @entries_list[index][field] = field == 'term' ?
@@ -82,12 +82,12 @@ end
 Then /^the candidate list entries should match the list$/ do
   field_count = page.all(:xpath, "//textarea[contains(@id, '_definition')]") .count
 
-  items_not_found = @entries_lists[ @user ].count
-  @entries_lists[ @user ].each do |candidate|
+  items_not_found = @entries_lists[@user].count
+  @entries_lists[@user].each do |candidate|
     field_count.times do |index|
       t_query = "//input[@id='candidate_list_candidates_attributes_#{index}_term']"
       d_query = "//textarea[@id='candidate_list_candidates_attributes_#{index}_definition']"
-      if page.find(:xpath, t_query).value == candidate['term'] && 
+      if page.find(:xpath, t_query).value == candidate['term'] &&
          page.find(:xpath, d_query).value == candidate['definition']
         items_not_found -= 1
       end

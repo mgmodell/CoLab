@@ -5,14 +5,14 @@ class CandidateListsController < ApplicationController
   def edit; end
 
   def request_collaboration
-    desired = params[:desired] == "yes"
+    desired = params[:desired] == 'yes'
     if desired
       @candidate_list.group_requested = true
       @candidate_list.save
-      @candidate_list = merge_to_group_list( @candidate_list ) if @candidate_list.others_requested_help == 1
+      @candidate_list = merge_to_group_list(@candidate_list) if @candidate_list.others_requested_help == 1
     else
-      @candidate_list.bingo_game.project.group_for_user( @current_user ).users.each do |user|
-        cl = @candidate_list.bingo_game.candidate_list_for_user( user )
+      @candidate_list.bingo_game.project.group_for_user(@current_user).users.each do |user|
+        cl = @candidate_list.bingo_game.candidate_list_for_user(user)
         cl.group_requested = false
         cl.save
       end
@@ -22,22 +22,22 @@ class CandidateListsController < ApplicationController
 
   # Merge all the lists, add the merged whole to a new, group candidate_list,
   # set is_group on all existing lists and then return the new list
-  def merge_to_group_list( candidate_list )
+  def merge_to_group_list(candidate_list)
     merged_list = []
-    merger_group = candidate_list.bingo_game.project.group_for_user( candidate_list.user )
-    required_terms = candidate_list.bingo_game.required_terms_for_group( merger_group )
+    merger_group = candidate_list.bingo_game.project.group_for_user(candidate_list.user)
+    required_terms = candidate_list.bingo_game.required_terms_for_group(merger_group)
 
     merger_group.users.each do |group_member|
-      cl = candidate_list.bingo_game.candidate_list_for_user( group_member )
+      cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
       cl.is_group = true
       cl.candidates.each do |candidate|
         merged_list << candidate if candidate.term.present? || candidate.definition.present?
       end
       cl.save
     end
-    if merged_list.count < ( required_terms - 1 )
-      merged_list.count.upto ( required_terms - 1 ) do
-        merged_list << Candidate.new( "term" => "", "definition" => "" )
+    if merged_list.count < (required_terms - 1)
+      merged_list.count.upto ( required_terms - 1) do
+        merged_list << Candidate.new('term' => '', 'definition' => '')
       end
     end
 
@@ -48,7 +48,6 @@ class CandidateListsController < ApplicationController
     cl.bingo_game = candidate_list.bingo_game
     cl.save
     cl
-
   end
 
   def update
