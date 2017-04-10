@@ -31,7 +31,7 @@ class BingoGame < ActiveRecord::Base
   end
 
   def required_terms_for_group group
-    remaining_percent = ( 100 - group_discount ) / 100
+    remaining_percent = ( 100.0 - group_discount ) / 100
     discounted = ( group.users.count * individual_count * remaining_percent ).floor
   end
 

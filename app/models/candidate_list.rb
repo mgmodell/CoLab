@@ -10,7 +10,8 @@ class CandidateList < ActiveRecord::Base
   def percent_complete
     percent = 0
     if is_group
-      percent = 100 * candidates.completed.count / bingo_game.group_count
+      required_term_count = bingo_game.required_terms_for_group( self.group )
+      percent = 100 * candidates.completed.count / required_term_count
     else
       percent = 100 * candidates.completed.count / bingo_game.individual_count
     end

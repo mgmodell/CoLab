@@ -25,12 +25,12 @@ When /^group user (\d+) logs in$/  do |user_count|
   step "the user logs in"
 end
 
-Then /^the user should see they're waiting on a collaboration response$/  do
+Then /^the user "([^"]*)" see they're waiting on a collaboration response$/  do |collaboration_pending|
   case collaboration_pending.downcase
   when 'should'
-    page.should have_content "Awaiting group response to collaboration request"
+    page.should have_content "awaiting a response to your group help request"
   when 'should not'
-    page.should_not have_content "Awaiting group response to collaboration request"
+    page.should_not have_content "awaiting a response to your group help request"
   else
     puts "We didn't test anything there: " + collaboration_pending
   end
@@ -38,10 +38,10 @@ end
 
 Then /^the user "([^"]*)" the collaboration request$/  do |accept_or_decline|
   case accept_or_decline.downcase
-  when 'should'
-    click_link_or_button "Collaborate"
-  when 'should not'
-    click_link_or_button "Work on my own"
+  when 'accepts'
+    click_link_or_button "Accept"
+  when 'declines'
+    click_link_or_button "Decline"
   else
     puts "We didn't test anything there: " + accept_or_decline
   end
@@ -92,8 +92,9 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/  do |count, field|
 end
 
 Then /^the candidate lists have been merged$/ do
+  @entries_lists = Hash.new if @entries_lists.nil?
   combined_list = []
-  @bingo.project.group_for_user( user ).users.each do |user|
+  @bingo.project.group_for_user( @user ).users.each do |user|
     unless @entries_lists[ user ].nil?
       @entries_lists[ user ].each do |list_item|
         if list_item[ "term" ].present? || list_item[ "definition" ]
@@ -102,7 +103,7 @@ Then /^the candidate lists have been merged$/ do
       end
     end
   end
-  @bingo.project.group_for_user( user ).users.each do |user|
+  @bingo.project.group_for_user( @user ).users.each do |user|
     @entries_lists[ user ] = combined_list
   end
 end

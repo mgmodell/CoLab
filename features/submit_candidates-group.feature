@@ -24,6 +24,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user should see the Bingo candidate list
      Then the user will see 10 term field sets
      Then the candidate entries should be empty
+     Then the user "should not" see they're waiting on a collaboration response
      Then the user "should not" see collaboration was requested
      When the user requests collaboration
     Given the user logs out
@@ -31,13 +32,14 @@ Feature: Submitting Candidate words for Bingo!
      When group user 2 logs in
      Then user should see 1 open task
      When the user clicks the link to the candidate list
+     Then the user "should not" see they're waiting on a collaboration response
      Then the user "should" see collaboration was requested
     Given the user logs out
      #user 1
      When group user 1 logs in
      Then user should see 1 open task
      When the user clicks the link to the candidate list
-     Then the user should see they're waiting on a collaboration response
+     Then the user "should" see they're waiting on a collaboration response
     Given the user logs out
      #user 3
      When group user 3 logs in
