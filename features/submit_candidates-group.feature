@@ -298,6 +298,7 @@ Feature: Submitting Candidate words for Bingo!
   Scenario: A student who is not in a group will not see the group options
     Given the course has 4 confirmed users
     Given the user is "a random" user
+    Given the user "has" had demographics requested
     Given the user logs in
      Then user should see 1 open task
      When the user clicks the link to the candidate list
