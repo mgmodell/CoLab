@@ -12,7 +12,7 @@ class CandidateListsController < ApplicationController
       @candidate_list = merge_to_group_list( @candidate_list ) if @candidate_list.others_requested_help == 1
     else
       @candidate_list.bingo_game.project.group_for_user( @current_user ).users.each do |user|
-        cl = @candidate_list.bingo.candidate_list_for_user( user )
+        cl = @candidate_list.bingo_game.candidate_list_for_user( user )
         cl.group_requested = false
         cl.save
       end
@@ -20,7 +20,7 @@ class CandidateListsController < ApplicationController
     render :edit
   end
 
-  #TODO: Merge all the lists, add the merged whole to a new, group candidate_list,
+  # Merge all the lists, add the merged whole to a new, group candidate_list,
   # set is_group on all existing lists and then return the new list
   def merge_to_group_list( candidate_list )
     merged_list = []
@@ -37,7 +37,7 @@ class CandidateListsController < ApplicationController
     end
     if merged_list.count < ( required_terms - 1 )
       merged_list.count.upto ( required_terms - 1 ) do
-        merged_list << Candidate.new( term: "", definition: "" )
+        merged_list << Candidate.new( "term" => "", "definition" => "" )
       end
     end
 

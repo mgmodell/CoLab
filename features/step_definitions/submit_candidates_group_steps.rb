@@ -67,7 +67,7 @@ When /^the user populates (\d+) additional "([^"]*)" entries$/  do |count, field
 
   existing_count = @entries_list.count
   count.to_i.times do |index|
-    @entries_list[existing_count + index] = {} if @entries_list[existing_count + index].nil?
+    @entries_list[existing_count + index] = { "term" => "", "definition" => "" } if @entries_list[existing_count + index].nil?
     @entries_list[existing_count + index][field] = field == 'term' ?
                         Forgery::Name.industry :
                         Forgery::Basic.text
