@@ -295,5 +295,18 @@ Feature: Submitting Candidate words for Bingo!
      Then the candidate list entries should match the list
     Given the user logs out
 
+  Scenario: A student who is not in a group will not see the group options
+    Given the course has 4 confirmed users
+    Given the user is "a random" user
+    Given the user logs in
+     Then user should see 1 open task
+     When the user clicks the link to the candidate list
+     Then the user should see the Bingo candidate list
+     Then the user will see 10 term field sets
+     Then the candidate entries should be empty
+     Then the user "should not" see they're waiting on a collaboration response
+     Then the user "should not" see collaboration was requested
+     Then the user "should not" see collaboration request button
+
   Scenario: Moving a student between groups properly assigns their group buttons on current CLs
     #Basically, run through open CLs and make sure they see any group CLs 
