@@ -12,7 +12,9 @@
       <td>
         <%= @current_user.name %>
 
-        <% if @candidate_list.bingo_game.group_option? # Is group play allowed? %>
+        <% # Is group play possible?
+          if @candidate_list.bingo_game.group_option? &&
+              @candidate_list.bingo_game.project.group_for_user( @current_user ).present? %>
           <% if @candidate_list.is_group? %>
             <em>on behalf of: <%= @candidate_list.group.name %></em>
           <% else %>
