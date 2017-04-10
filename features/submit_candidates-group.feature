@@ -175,8 +175,7 @@ Feature: Submitting Candidate words for Bingo!
      When group user 3 logs in
      Then user should see 1 open task
      When the user clicks the link to the candidate list
-     Then the user "should" see collaboration was requested
-     Then the user "accepts" the collaboration request
+     Then the user "should" see they're waiting on a collaboration response
     Given the user logs out
     #Let's have user 4
      When group user 4 logs in
