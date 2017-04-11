@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class BingoGamesController < ApplicationController
-  before_action :set_bingo_game, only: [:show, :edit, :update, :destroy]
+  before_action :set_bingo_game, only: [:show, :edit, :update, :destroy, :review_candidates]
   before_action :check_admin, except: [:next, :diagnose, :react]
 
   def show; end
@@ -52,6 +52,24 @@ class BingoGamesController < ApplicationController
     end
   end
 
+  def review_candidates
+  end
+
+  def update_candidate_review
+    respond_to do |format|
+      if @bingo_game.update(candidate_review_params)
+        if @bingo_game.reviewed
+          format.html { redirect_to root_path, 'Review was successfully saved and completed.' }
+        else
+          format.html { redirect_to @bingo_game, notice: 'Review was successfully saved.' }
+        end
+      else
+        format.html { render :review_candidates }
+      end
+    end
+
+  end
+
   def destroy
     @course = @bingo_game.course
     @bingo_game.destroy
@@ -97,5 +115,9 @@ class BingoGamesController < ApplicationController
     params.require(:bingo_game).permit(:course_id, :topic, :description, :link, :source,
                                        :group_option, :individual_count, :group_discount,
                                        :lead_time, :project_id, :start_date, :end_date)
+  end
+
+  def candidate_review_params
+    params.require(:bingo_game).permit(:course_id, candidate_lists: [ candidates: [ :candidate_feedback, :concept ] ] )
   end
 end
