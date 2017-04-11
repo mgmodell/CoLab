@@ -10,7 +10,7 @@ class Candidate < ActiveRecord::Base
   private
 
   def trim_data
-    term.strip!
+    term = term.nil? ? "" : term.strip.split.map(&:capitalize)*' '
     definition.strip!
   end
 end
