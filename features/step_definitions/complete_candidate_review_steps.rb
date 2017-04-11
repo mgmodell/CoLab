@@ -11,6 +11,6 @@ Given /^the user assigns "([^"]*)" to all candidates$/  do |arg1|
 end
 
 Given /^the user checks "([^"]*)"$/  do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
+  check( "Review complete" )
 end
 

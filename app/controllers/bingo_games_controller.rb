@@ -67,7 +67,6 @@ class BingoGamesController < ApplicationController
         format.html { render :review_candidates }
       end
     end
-
   end
 
   def destroy

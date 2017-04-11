@@ -21,11 +21,13 @@ end
 
 Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
   @group = Group.make
+  @users = []
   role = Role.enrolled.take
   user_count.to_i.times do
     user = User.make
     user.skip_confirmation!
     @group.users << user
+    @users << user
     r = Roster.new
     r.user = user
     r.course = @course
