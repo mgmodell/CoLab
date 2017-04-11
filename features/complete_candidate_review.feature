@@ -1,0 +1,63 @@
+Feature: Review Candidate words for Bingo!
+  Instructors must be able to review words submitted for Bingo! play
+
+  Background:
+    Given there is a course with an assessed project
+    Given the course started "two months ago" and ended "two months from now"
+    Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
+    Given the course timezone is "Mexico City"
+    Given the course has a Bingo! game
+    Given the Bingo! game individual count is 7
+    Given the Bingo! is group-enabled with the project and a 10 percent group discount
+    Given the Bingo! started "last month" and ends "2 days from now"
+    Given the Bingo! "has" been activated
+
+    #set up the users and have them complete the bingo! prep assignment
+    Given the project has a group with 4 confirmed users
+    Given the "group" users "finish" prep as "a group"
+    # 36 terms
+    Given the project has a group with 4 confirmed users
+    Given the "group" users "finish" prep as "individuals"
+    # 40 terms
+    Given the project has a group with 4 confirmed users
+    Given the "group" users "incomplete" prep as "individuals"
+    # 20
+    Given the project has a group with 4 confirmed users
+    Given the "group" users "incomplete" prep as "a group"
+    # 20
+    Given the project has a group with 4 confirmed users
+    Given the "group" users "don't" prep as "a group"
+    # 0
+    Given the course has 4 confirmed users
+    Given the "individual" users "incomplete" prep as "individuals"
+    # 20
+
+    Given the course has 1 confirmed users
+    Given the user "has" had demographics requested
+    Given the user is the instructor for the course
+
+  Scenario: Instructor sees 136 candidates
+    Given the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate list
+     Then the user sees 136 candidate items for review
+
+  Scenario: Instructor logs in and assigns feedback to 136 candidates
+    Given the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate list
+    Given the user assigns "Accept" to all candidates
+     Then the user clicks "Save"
+     Then the user will see "success"
+     Then user should see 1 open task
+     Then the user will see "100%"
+
+  Scenario: Instructor logs in and assigns feedback to 136 candidates
+    Given the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate list
+    Given the user assigns "Accept" to all candidates
+    Given the user checks "Review Completed"
+     Then the user clicks "Save"
+     Then the user will see "success"
+     Then user should see 0 open task

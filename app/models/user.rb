@@ -73,11 +73,23 @@ class User < ActiveRecord::Base
   end
 
   def is_instructor?
-    if admin || Roster.instructorships.where('user_id = ?', id).count > 0
+    if admin || rosters.instructorships.count > 0
       true
     else
       false
     end
+  end
+
+  def waiting_instructor_tasks
+    waiting_tasks = Array.new
+
+    rosters.instructorships.each do |roster|
+      roster.course.bingo_games.each do |game|
+        waiting_tasks.concat game if game.awaiting_review?
+      end
+    end
+
+    waiting_tasks.sort_by(&:end_date)
   end
 
   def waiting_student_tasks
@@ -96,7 +108,7 @@ class User < ActiveRecord::Base
       waiting_games = roster.course.bingo_games
                             .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ? AND bingo_games.active = ?',
                                    DateTime.current, DateTime.current, true).to_a
-      waiting_games.delete_if { |game| !game.is_open }
+      waiting_games.delete_if { |game| !game.is_open? }
       waiting_tasks.concat waiting_games
     end
 

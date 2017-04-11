@@ -10,6 +10,38 @@
   <% else %>
     You do not currently have any tasks due. Check back later or contact your instructor.
   <% end %></p>
+<% if @waiting_instructor_tasks.any? %>
+<h3>Instructor Tasks</h3>
+  <table data-role="table"
+          id="basicTable"
+          data-column-btn-theme"<%= theme_code %>" 
+          data-column-popup-theme="<%= theme_code %>" 
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="Select columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+    <thead>
+      <tr>
+        <th>Task Name</th>
+        <th data-priority="1">Task Type</th>
+        <th data-priority="0">Status</th>
+        <th data-priority="1">Course Name</th>
+        <th data-priority="0">Close Date</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @waiting_instructor_tasks.each do |task| %>
+      <tr>
+        <td data-priority="0"><%= link_to task.name, review_bingo_candidates_path( task )%> </td>
+        <td align="center" data-priority="1">Bingo! Candidate Review</td>
+        <td data-priority="1"><%= task.course.name %></td>
+        <td data-priority="0"><<%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
+</br>
 <% if @waiting_student_tasks.any? %>
   <table data-role="table"
           id="basicTable"

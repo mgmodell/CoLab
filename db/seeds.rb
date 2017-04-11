@@ -282,3 +282,19 @@ cip_data.each do |cip_code|
     description: cip_code.description
   )
 end
+
+# Bingo! support
+CandidateFeedback.create( name: "Acceptable", 
+    definition: "You've accurately identified and defined an important term related to the stated topic." )
+CandidateFeedback.create( name: "Definition: Incorrect",
+    definition: "You've identified an important term related to the stated topic, but the definition is wrong.")
+CandidateFeedback.create( name: "Definition: Insufficient",
+    definition: "You've identified an important term related to the stated topic, but the definition is incomplete in crucial ways.")
+CandidateFeedback.create( name: "Definition: Not Understood",
+    definition: "You've identified an important term related to the stated topic, but I was unable to understand the definition as you've provided it." )
+CandidateFeedback.create( name: "Definition: Plagiarised",
+    definition: "You've identified an important term related to the stated topic, but I recognize the definition provided as having been copied directly from another source." )
+CandidateFeedback.create( name: "Term: Too Genereic",
+    definition: "The term is not specific to the topic or the course." )
+CandidateFeedback.create( name: "Term: Too Obvious",
+    definition: "The term does not represent new learning or consideration relevant to the topic." )

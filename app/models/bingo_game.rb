@@ -4,6 +4,8 @@ class BingoGame < ActiveRecord::Base
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
   belongs_to :project, inverse_of: :bingo_games
 
+  has_many :candidates, through: :candidate_lists
+
   # validations
   validates :topic, :end_date, :start_date, presence: true
   validates :group_discount, numericality:
@@ -18,21 +20,22 @@ class BingoGame < ActiveRecord::Base
   before_validation :timezone_adjust
   validate :dates_within_course
 
+
   def name
     topic
   end
 
-  def is_open
+  def is_open?
     start_date <= DateTime.current && end_date >= (DateTime.current + lead_time.days)
-  end
-
-  def awaiting_review
-    end_date <= (DateTime.current + lead_time.days) && !reviewed
   end
 
   def required_terms_for_group(group)
     remaining_percent = (100.0 - group_discount) / 100
     discounted = (group.users.count * individual_count * remaining_percent).floor
+  end
+
+  def awaiting_review?
+    !reviewed && end_date <= ( DateTime.current + lead_time.days ) && end_date >= DateTime.current
   end
 
   def candidate_list_for_user(user)
