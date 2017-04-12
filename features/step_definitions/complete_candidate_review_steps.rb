@@ -1,10 +1,28 @@
-Given /^the users "([^"]*)" prep as "([^"]*)"$/  do |completion_level, group_or_individual|
+Given /^the users "([^"]*)" prep as a group$/  do |completion_level, group_or_individual|
   temp_user = @user
   @users.each do |user|
     @user = user
     step "the user logs in"
+    step "the user clicks the link to the candidate list"
+    step "the user \"accepts\" the collaboration request"
     step "the user logs out"
   end
+
+  @user = temp_user
+
+end
+
+Given /^the users "([^"]*)" prep as a group$/  do |completion_level, group_or_individual|
+  temp_user = @user
+  @users.each do |user|
+    @user = user
+    step "the user logs in"
+    step "the user clicks the link to the candidate list"
+    step "the user \"accepts\" the collaboration request"
+    step "the user logs out"
+  end
+
+  step "the user logs in"
 
   @user = temp_user
 

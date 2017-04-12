@@ -56,6 +56,7 @@ class BingoGamesController < ApplicationController
   end
 
   def update_candidate_review
+    #Process the data
     respond_to do |format|
       if @bingo_game.update(candidate_review_params)
         if @bingo_game.reviewed
