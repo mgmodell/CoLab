@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :candidate_lists, only: [:edit, :update]
     get 'request_collaboration/:id/:desired' => 'candidate_lists#request_collaboration', :as => 'request_bingo_collaboration'
     get 'review_candidates/:id' => 'bingo_games#review_candidates', :as => 'review_bingo_candidates'
+    patch 'review_candidates/:id' => 'bingo_games#update_review_candidates', :as => 'update_bingo_candidates_review'
   end
 
   get 'experiences/next/:experience_id:' => 'experiences#next', :as => 'next_experience'
