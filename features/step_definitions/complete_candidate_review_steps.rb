@@ -1,29 +1,61 @@
-Given /^the users "([^"]*)" prep as a group$/  do |completion_level, group_or_individual|
+Given /^the users "([^"]*)" prep "([^"]*)"$/  do |completion_level,group_or_solo|
+  # Store the previous user (do no harm)
   temp_user = @user
-  @users.each do |user|
-    @user = user
-    step "the user logs in"
-    step "the user clicks the link to the candidate list"
-    step "the user \"accepts\" the collaboration request"
-    step "the user logs out"
+
+  user_group = @users
+  # If we're working with a group, as a group, then...
+  if group_or_solo == "as a group"
+    collab_requested = false
+    @users.each do |user|
+      @user = user
+      step "the user \"has\" had demographics requested"
+      step "the user logs in"
+      step "user should see 1 open task"
+      step "the user clicks the link to the candidate list"
+      step "the user should see the Bingo candidate list"
+
+      if !collab_requested
+        step "the user requests collaboration"
+        collab_requested = true
+      else
+        step "the user \"accepts\" the collaboration request"
+      end
+      step "the user logs out"
+    end
+    user_group << @users.sample
   end
 
-  @user = temp_user
-
-end
-
-Given /^the users "([^"]*)" prep as a group$/  do |completion_level, group_or_individual|
-  temp_user = @user
-  @users.each do |user|
-    @user = user
-    step "the user logs in"
-    step "the user clicks the link to the candidate list"
-    step "the user \"accepts\" the collaboration request"
-    step "the user logs out"
-  end
-
+  @user = @users.sample unless @user.present?
+  step "the user \"has\" had demographics requested"
   step "the user logs in"
+  step "the user clicks the link to the candidate list"
+  fields = page.all( :xpath, "//input[contains(@id, '_definition')]")
+  step "the user logs out"
 
+  #set up how much we want to complete
+  case completion_level
+  when 'finish'
+    fields_to_complete = fields.count
+  when 'incomplete'
+    fields_to_complete = fields.count / 2
+  when 'don\'t'
+    fields_to_complete = 0
+  else
+    puts "we didn't test anything here: " + completion_level
+  end
+
+  user_group.each do |user|
+    @user = user
+    step "the user \"has\" had demographics requested"
+    step "the user logs in"
+    step "the user clicks the link to the candidate list"
+    step "the user populates #{fields_to_complete} of the \"term\" entries"
+    step "the user populates #{fields_to_complete} of the \"definition\" entries"
+    step "the user clicks \"Save\""
+    step "the user logs out"
+  end
+
+  # Reset back to previous user (whomever that was)
   @user = temp_user
 
 end
@@ -43,3 +75,6 @@ Given /^the user checks "([^"]*)"$/  do |arg1|
   check( "Review complete" )
 end
 
+Given /^the user is the most recently created user$/ do
+  @user = @users.last
+end

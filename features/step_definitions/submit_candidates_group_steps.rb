@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 Given /^the Bingo! is group\-enabled with the project and a (\d+) percent group discount$/ do |group_discount|
   @bingo.group_option = true
+  @project.should_not be_nil
   @bingo.project = @project
   @bingo.group_discount = group_discount
 end
@@ -17,6 +18,7 @@ Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pe
 end
 
 When /^the user requests collaboration$/  do
+  page.should have_content 'Invite your group to help?'
   click_link_or_button 'Invite your group to help?'
 end
 
