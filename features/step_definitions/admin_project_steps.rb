@@ -22,7 +22,7 @@ Then /^the user sees (\d+) course$/ do |course_count|
 end
 
 Given /^the user is the instructor for the course$/ do
-  Roster.create(user: @user, course: @course, role: Role.instructor.take)
+  @course.set_user_role @user, "Instructor"
 end
 
 Then /^the user opens the course$/ do

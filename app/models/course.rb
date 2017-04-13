@@ -14,6 +14,25 @@ class Course < ActiveRecord::Base
 
   before_validation :timezone_adjust
 
+  def set_user_role( user, role )
+    role = Role.where( name: role ).take if role.class == String
+    roster = rosters.where( user: user ).take
+    roster = Roster.new( user: user, course:self ) if roster.nil?
+    roster.role = role
+    roster.save
+  end
+
+  def drop_student(user)
+    roster = Roster.where(user: user, course: self).take
+    roster.role = Role.dropped.take
+    roster.save
+  end
+
+  def get_user_role user
+    roster = rosters.where( user: user ).take
+    roster.nil? ? nil : roster.role
+  end
+
   # Validation check code
   def date_sanity
     if start_date > end_date
@@ -53,10 +72,6 @@ class Course < ActiveRecord::Base
     self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day if end_date_changed?
   end
 
-  def get_roster_for_user(user)
-    rosters.where(user: user).take
-  end
-
   def add_user_by_email(user_email, instructor = false)
     role_name = instructor ? 'Instructor' : 'Invited Student'
     role = Role.where(name: role_name).take
@@ -91,11 +106,6 @@ class Course < ActiveRecord::Base
     end
   end
 
-  def drop_student(user)
-    roster = Roster.where(user: user, course: self).take
-    roster.role = Role.dropped.take
-    roster.save
-  end
 
   def enrolled_students
     rosters.joins(:role).where('roles.name = ? OR roles.name = ?', 'Enrolled Student', 'Invited Student').collect(&:user)

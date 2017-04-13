@@ -78,3 +78,8 @@ end
 Given /^the user is the most recently created user$/ do
   @user = @users.last
 end
+
+When /^the user clicks the link to the candidate review$/ do
+  click_link_or_button 'Review: ' + @bingo.name
+end
+

@@ -36,16 +36,22 @@ Feature: Review Candidate words for Bingo!
     Given the user "has" had demographics requested
     Given the user is the instructor for the course
 
+  Scenario: Instructor does not see the review until the prep time
+    Given the user logs in
+     Then user should see 0 open task
+
   Scenario: Instructor sees 136 candidates
+    Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
-    Given the user clicks the link to the candidate list
+    Given the user clicks the link to the candidate review
      Then the user sees 136 candidate items for review
 
   Scenario: Instructor logs in and assigns feedback to 136 candidates
+    Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
-    Given the user clicks the link to the candidate list
+    Given the user clicks the link to the candidate review
     Given the user assigns "Accept" to all candidates
      Then the user clicks "Save"
      Then the user will see "success"
@@ -53,9 +59,10 @@ Feature: Review Candidate words for Bingo!
      Then the user will see "100%"
 
   Scenario: Instructor logs in and assigns feedback to 136 candidates
+    Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
-    Given the user clicks the link to the candidate list
+    Given the user clicks the link to the candidate review
     Given the user assigns "Accept" to all candidates
     Given the user checks "Review Completed"
      Then the user clicks "Save"

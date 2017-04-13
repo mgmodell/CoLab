@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
 
     rosters.instructorships.each do |roster|
       roster.course.bingo_games.each do |game|
-        waiting_tasks.concat game if game.awaiting_review?
+        waiting_tasks << game if game.awaiting_review?
       end
     end
 

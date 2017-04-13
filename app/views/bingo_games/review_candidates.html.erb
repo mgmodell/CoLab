@@ -1,4 +1,4 @@
-<%= simple_form_for update_candidate_review_path( @bingo_game ) do |f| %>
+<%= simple_form_for update_bingo_candidates_review_path( @bingo_game ) do |f| %>
   <%= f.error_notification %>
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
   <h1>Bingo! Word List</h1>
@@ -24,20 +24,20 @@
         <th>Concept</th>
       </tr>
     </thead>
-    <tbody>
-      <% @bingo.candidates.each do |candidate| %>
+    <tbody><% count = 0 %>
+      <% @bingo_game.candidates.each do |candidate| %>
       <tr>
         <td><%= count += 1 %></td>
         <td><%= candidate.term %></td>
         <td><%= candidate.definition %></td>
         <td><%= f.input "candidate_feedback_#{candidate.id}",
                       value: candidate.candidate_feedback_id, 
-                      collection: CandidateFeedback.each_with_index.to_a,
+                      collection: CandidateFeedback.all.each_with_index.to_a,
                       prompt: true %>
         </td>
         <td><%= f.input "concept_#{candidate.id}",
                       value: candidate.concept_id, 
-                      collection: Concept.each_with_index.to_a,
+                      collection: Concept.all.each_with_index.to_a,
                       prompt: true %>
             <%= f.input "new_concept_#{candidate.id}", as: :text %>
         </td>

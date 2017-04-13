@@ -1,11 +1,12 @@
 <h1>Your Tasks</h1>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 <p>Hello <%= @first_name %>,
-  <% if @waiting_student_tasks.any? %>
-    <% if @waiting_student_tasks.count == 1 %>
+  <% task_count = @waiting_student_tasks.count + @waiting_instructor_tasks.count %>
+  <% if task_count > 0 %>
+    <% if task_count == 1 %>
       You've got one task at the moment.
   <% else %>
-      You've got <%= @waiting_student_tasks.count %> tasks today.
+      You've got <%= task_count %> tasks today.
   <% end %>
   <% else %>
     You do not currently have any tasks due. Check back later or contact your instructor.
@@ -32,7 +33,7 @@
     <tbody>
     <% @waiting_instructor_tasks.each do |task| %>
       <tr>
-        <td data-priority="0"><%= link_to task.name, review_bingo_candidates_path( task )%> </td>
+        <td data-priority="0"><%= link_to "Review: " + task.name, review_bingo_candidates_path( task )%> </td>
         <td align="center" data-priority="1">Bingo! Candidate Review</td>
         <td data-priority="1"><%= task.course.name %></td>
         <td data-priority="0"><<%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
@@ -63,7 +64,7 @@
     </thead>
     <tbody>
       <% @waiting_student_tasks.each do |task| %>
-        <% if task.class.name == "Assessment" %>
+        <% if task.class == Assessment %>
           <% group = task.group_for_user( @current_user )%>
           <tr>
             <td>
@@ -85,7 +86,7 @@
               <% end %>
             </td>
             <td> <%= group.name %></td>
-            <td> <%= task.project.course.name + "(" + task.project.course.get_roster_for_user( @current_user ).role.name + ")"%></td>
+            <td> <%= task.project.course.name %></td>
             <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td>
@@ -95,12 +96,12 @@
         <% elsif task.class.name == "BingoGame" %>
           <tr><% candidate_list = task.candidate_list_for_user( @current_user ) %>
             <td>
-              <%= link_to "Bingo! terms: #{task.name}", edit_candidate_list_path( candidate_list ) %>
+              <%= link_to "Terms for: " + task.name, edit_candidate_list_path( candidate_list ) %>
             </td>
             <td>
               <%= candidate_list.percent_complete %>%
             </td>
-            <td> <%= task.course.name + "(" + task.course.get_roster_for_user( @current_user ).role.name + ")"%></td>
+            <td> <%= task.course.name %></td>
             <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td>N/A</td>
@@ -120,7 +121,7 @@
                 <%= reaction.status %>
               </em>
             </td>
-            <td><%= task.course.name %> (<%= task.course.get_roster_for_user( @current_user ).role.name %>)</td>
+            <td><%= task.course.name %></td>
             <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td>
