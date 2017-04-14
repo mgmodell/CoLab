@@ -68,7 +68,22 @@ Then /^the user sees (\d+) candidate items for review$/  do |candidate_count|
                 count.should eq candidate_count.to_i
 end
 
-Given /^the user assigns "([^"]*)" to all candidates$/  do |feedback_type|
+Given /^the user sees review items for all the expected candidates$/ do
+  @bingo.candidates.completed.each do |candidate|
+    page.all( :xpath, "//select[@id='candidate_feedback_#{candidate.id}']" ).count.should eq 1
+    page.all( :xpath, "//select[@id='concept_#{candidate.id}']" ).count.should eq 1
+  end
+end
+
+Given /^the user assigns "([^"]*)" feedback to all candidates$/  do |feedback_type|
+  feedbacks = CandidateFeedback.where( name: feedback_type + "%" )
+  puts feedbacks.count.to_s + " feedbacks found"
+
+  
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+Given /^the saved reviews match the list$/ do
   pending # Write code here that turns the phrase above into concrete actions
 end
 

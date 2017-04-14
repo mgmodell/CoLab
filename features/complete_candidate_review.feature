@@ -52,19 +52,61 @@ Feature: Review Candidate words for Bingo!
     Given the user logs in
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
-    Given the user assigns "Accept" to all candidates
+    Given the user assigns "Accept" feedback to all candidates
      Then the user clicks "Save"
      Then the user will see "success"
      Then user should see 1 open task
      Then the user will see "100%"
 
-  Scenario: Instructor logs in and assigns feedback to 134 candidates
+  Scenario: Instructor logs in and accepts all 134 candidates
     Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
-    Given the user assigns "Accept" to all candidates
+    Given the user sees review items for all the expected candidates
+    Given the user assigns "Accept" feedback to all candidates
     Given the user checks "Review Completed"
      Then the user clicks "Save"
+     Then the saved reviews match the list
+     Then the user will see "success"
+     Then user should see 0 open task
+
+  Scenario: Instructor logs in and assigns term feedback to 134 candidates
+    Given today is "tomorrow"
+    Given the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    Given the user assigns "Term" feedback to all candidates
+    Given the user checks "Review Completed"
+     Then the user clicks "Save"
+     Then the saved reviews match the list
+     Then the user will see "success"
+     Then user should see 0 open task
+
+  Scenario: Instructor logs in and assigns definition feedback to 134 candidates
+    Given today is "tomorrow"
+    Given the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    Given the user assigns "Definition" feedback to all candidates
+    Given the user checks "Review Completed"
+     Then the user clicks "Save"
+     Then the saved reviews match the list
+     Then the user will see "success"
+     Then user should see 0 open task
+
+  Scenario: Instructor logs in and assigns mixed feedback to 134 candidates
+    Given today is "tomorrow"
+    Given the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    # Assign any sort of feedback
+    Given the user assigns "" feedback to all candidates
+    Given the user checks "Review Completed"
+     Then the user clicks "Save"
+     Then the saved reviews match the list
      Then the user will see "success"
      Then user should see 0 open task
