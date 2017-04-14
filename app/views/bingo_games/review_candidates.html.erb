@@ -32,20 +32,22 @@
         <td><%= candidate.definition %></td>
         <td><%= f.input "candidate_feedback_#{candidate.id}",
                       value: candidate.candidate_feedback_id, 
-                      collection: CandidateFeedback.all.each_with_index.to_a,
-                      prompt: true %>
+                      collection: CandidateFeedback.all,
+                      prompt: true,
+                      label: false %>
         </td>
         <td><%= f.input "concept_#{candidate.id}",
                       value: candidate.concept_id, 
-                      collection: Concept.all.each_with_index.to_a,
-                      prompt: true %>
-            <%= f.input "new_concept_#{candidate.id}", as: :text %>
+                      class: "awesomplete",
+                      data: { list: Concept.all.collect{|x| x.name }.join( ", " ) },
+                      label: false %>
         </td>
                       
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= f.input :reviewed, label: "Review complete" %>
 
 <div class="form-actions">
   <%= f.button :submit, "Save" %>

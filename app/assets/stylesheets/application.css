@@ -10,6 +10,7 @@
  *
  *= require_self
  *= require jquery.mobile
+ *= require awesomplete
  *= require colab
  *= require app_style
  */

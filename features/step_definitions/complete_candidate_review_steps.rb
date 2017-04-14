@@ -70,25 +70,40 @@ end
 
 Given /^the user sees review items for all the expected candidates$/ do
   @bingo.candidates.completed.each do |candidate|
-    page.all( :xpath, "//select[@id='candidate_feedback_#{candidate.id}']" ).count.should eq 1
-    page.all( :xpath, "//select[@id='concept_#{candidate.id}']" ).count.should eq 1
+    page.all( :xpath, "//select[@id='_bingo_review_candidates_#{@bingo.id}_candidate_feedback_#{candidate.id}']" ).count.should eq 1
+    page.all( :xpath, "//input[@id='_bingo_review_candidates_#{@bingo.id}_concept_#{candidate.id}']" ).count.should eq 1
   end
 end
 
 Given /^the user assigns "([^"]*)" feedback to all candidates$/  do |feedback_type|
-  feedbacks = CandidateFeedback.where( name: feedback_type + "%" )
-  puts feedbacks.count.to_s + " feedbacks found"
-
-  
-  pending # Write code here that turns the phrase above into concrete actions
+  concepts = [ "concept 1", "concept 2", "concept 3", "concept 4" ]
+  feedbacks = CandidateFeedback.where( "name like ?", feedback_type + "%" )
+  @feedback_list = Hash.new
+  @bingo.candidates.completed.each do |candidate|
+    feedback = feedbacks.sample
+    @feedback_list[ candidate.id ] =  { feedback: feedback }
+    concept = nil
+    unless feedback.name.start_with? "Def"
+      concept = concepts.rotate!(1).first
+      @feedback_list[ candidate.id ][ :concept ] = concept
+    end
+    page.find( :xpath, "//input[@id='_bingo_review_candidates_#{@bingo.id}_concept_#{candidate.id}']" ).
+              set( concept ) unless concept.nil?
+    page.find( :xpath, "//select[@id='_bingo_review_candidates_#{@bingo.id}_candidate_feedback_#{candidate.id}']" ).
+              find( "option[value='#{feedback.id}']" ).click
+    
+  end
 end
 
 Given /^the saved reviews match the list$/ do
-  pending # Write code here that turns the phrase above into concrete actions
+  @feedback_list.each do |key,value|
+    Candidate.find( key ).candidate_feedback_id.should eq value[ :feedback ]
+    Candidate.find( key ).concept.name.should eq value[ :concept ]
+  end
 end
 
-Given /^the user checks "([^"]*)"$/  do |arg1|
-  check( "Review complete" )
+Given /^the user checks "([^"]*)"$/  do |checkbox_name|
+  check( checkbox_name )
 end
 
 Given /^the user is the most recently created user$/ do
