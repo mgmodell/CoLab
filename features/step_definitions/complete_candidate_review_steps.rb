@@ -22,22 +22,22 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/  do |completion_level,group_or_solo
       end
       step "the user logs out"
     end
-    user_group << @users.sample
+    user_group = [ @users.sample ]
   end
 
   @user = @users.sample unless @user.present?
   step "the user \"has\" had demographics requested"
   step "the user logs in"
   step "the user clicks the link to the candidate list"
-  fields = page.all( :xpath, "//input[contains(@id, '_definition')]")
+  fields = page.all( :xpath, "//input[contains(@id, '_term')]").count
   step "the user logs out"
 
   #set up how much we want to complete
   case completion_level
   when 'finish'
-    fields_to_complete = fields.count
+    fields_to_complete = fields
   when 'incomplete'
-    fields_to_complete = fields.count / 2
+    fields_to_complete = fields / 2
   when 'don\'t'
     fields_to_complete = 0
   else
@@ -52,6 +52,7 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/  do |completion_level,group_or_solo
     step "the user populates #{fields_to_complete} of the \"term\" entries"
     step "the user populates #{fields_to_complete} of the \"definition\" entries"
     step "the user clicks \"Save\""
+    step "the user will see \"success\""
     step "the user logs out"
   end
 

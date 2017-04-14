@@ -25,7 +25,7 @@
       </tr>
     </thead>
     <tbody><% count = 0 %>
-      <% @bingo_game.candidates.each do |candidate| %>
+      <% @bingo_game.candidates.completed.each do |candidate| %>
       <tr>
         <td><%= count += 1 %></td>
         <td><%= candidate.term %></td>

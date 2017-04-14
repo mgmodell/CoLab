@@ -23,7 +23,7 @@ Feature: Review Candidate words for Bingo!
     # 20
     Given the project has a group with 4 confirmed users
     Given the users "incomplete" prep "as a group"
-    # 20
+    # 18
     Given the project has a group with 4 confirmed users
     Given the users "don't" prep "as a group"
     # 0
@@ -40,14 +40,14 @@ Feature: Review Candidate words for Bingo!
     Given the user logs in
      Then user should see 0 open task
 
-  Scenario: Instructor sees 136 candidates
+  Scenario: Instructor sees 134 candidates
     Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
-     Then the user sees 136 candidate items for review
+     Then the user sees 134 candidate items for review
 
-  Scenario: Instructor logs in and assigns feedback to 136 candidates
+  Scenario: Instructor logs in and assigns feedback to 134 candidates
     Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
@@ -58,7 +58,7 @@ Feature: Review Candidate words for Bingo!
      Then user should see 1 open task
      Then the user will see "100%"
 
-  Scenario: Instructor logs in and assigns feedback to 136 candidates
+  Scenario: Instructor logs in and assigns feedback to 134 candidates
     Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
