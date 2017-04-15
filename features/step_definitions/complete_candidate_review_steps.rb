@@ -70,8 +70,8 @@ end
 
 Given /^the user sees review items for all the expected candidates$/ do
   @bingo.candidates.completed.each do |candidate|
-    page.all( :xpath, "//select[@id='_bingo_review_candidates_#{@bingo.id}_candidate_feedback_#{candidate.id}']" ).count.should eq 1
-    page.all( :xpath, "//input[@id='_bingo_review_candidates_#{@bingo.id}_concept_#{candidate.id}']" ).count.should eq 1
+    page.all( :xpath, "//select[@id='_bingo_candidates_review_#{@bingo.id}_candidate_feedback_#{candidate.id}']" ).count.should eq 1
+    page.all( :xpath, "//input[@id='_bingo_candidates_review_#{@bingo.id}_concept_#{candidate.id}']" ).count.should eq 1
   end
 end
 
@@ -87,9 +87,9 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/  do |feedback_ty
       concept = concepts.rotate!(1).first
       @feedback_list[ candidate.id ][ :concept ] = concept
     end
-    page.find( :xpath, "//input[@id='_bingo_review_candidates_#{@bingo.id}_concept_#{candidate.id}']" ).
+    page.find( :xpath, "//input[@id='_bingo_candidates_review_#{@bingo.id}_concept_#{candidate.id}']" ).
               set( concept ) unless concept.nil?
-    page.find( :xpath, "//select[@id='_bingo_review_candidates_#{@bingo.id}_candidate_feedback_#{candidate.id}']" ).
+    page.find( :xpath, "//select[@id='_bingo_candidates_review_#{@bingo.id}_candidate_feedback_#{candidate.id}']" ).
               find( "option[value='#{feedback.id}']" ).click
     
   end
@@ -114,3 +114,6 @@ When /^the user clicks the link to the candidate review$/ do
   click_link_or_button 'Review: ' + @bingo.name
 end
 
+Then /^there will be (\d+) concepts$/ do |concept_count|
+  Concept.count.should eq concept_count
+end

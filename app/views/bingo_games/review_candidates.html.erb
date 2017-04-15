@@ -30,13 +30,13 @@
         <td><%= count += 1 %></td>
         <td><%= candidate.term %></td>
         <td><%= candidate.definition %></td>
-        <td><%= f.input "candidate_feedback_#{candidate.id}",
+        <td><%= f.input_field "candidate_feedback_#{candidate.id}",
                       value: candidate.candidate_feedback_id, 
                       collection: CandidateFeedback.all,
                       prompt: true,
                       label: false %>
         </td>
-        <td><%= f.input "concept_#{candidate.id}",
+        <td><%= f.input_field "concept_#{candidate.id}",
                       value: candidate.concept_id, 
                       class: "awesomplete",
                       data: { list: Concept.all.collect{|x| x.name }.join( ", " ) },
@@ -47,7 +47,7 @@
       <% end %>
     </tbody>
   </table>
-  <%= f.input :reviewed, label: "Review complete" %>
+  <%= f.input :reviewed, as: :boolean, label: "Review completed" %>
 
 <div class="form-actions">
   <%= f.button :submit, "Save" %>

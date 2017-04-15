@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class BingoGamesController < ApplicationController
-  before_action :set_bingo_game, only: [:show, :edit, :update, :destroy, :review_candidates]
-  before_action :check_admin, except: [:next, :diagnose, :react]
+  before_action :set_bingo_game, only: [:show, :edit, :update, :destroy, :review_candidates, :update_review_candidates ]
+  before_action :check_admin, except: [:next, :diagnose, :react, :update_review_candidates ]
 
   def show; end
 
@@ -55,8 +55,21 @@ class BingoGamesController < ApplicationController
   def review_candidates
   end
 
-  def update_candidate_review
+  def update_review_candidates
     #Process the data
+    prefix = "_bingo_candidates_review_" + @bingo_game.id.to_s
+    p params
+    @bingo_game.candidates.completed.each do |candidate|
+      p params[ "#{prefix}_candidate_feedback_#{candidate.id}" ]
+      candidate.candidate_feedback = CandidateFeedback.find( params[ prefix + "_candidate_feedback_#{candidate.id}" ] )
+      unless candidate.candidate_feedback.name.start_with? "Term"
+        concept = Concept.where( name: params[ prefix + "_concept_#{candidate.id}" ] ).take
+        concept = Concept.create( name: params[ prefix + "_concept_#{candidate.id}" ] ) if concept.nil?
+        candidate.concept = concept
+      end
+      candidate.save
+    end
+    @bingo_game.reviewed = params
     respond_to do |format|
       if @bingo_game.update(candidate_review_params)
         if @bingo_game.reviewed
@@ -115,9 +128,5 @@ class BingoGamesController < ApplicationController
     params.require(:bingo_game).permit(:course_id, :topic, :description, :link, :source,
                                        :group_option, :individual_count, :group_discount,
                                        :lead_time, :project_id, :start_date, :end_date)
-  end
-
-  def candidate_review_params
-    params.require(:bingo_game).permit(:course_id, candidate_lists: [ candidates: [ :candidate_feedback, :concept ] ] )
   end
 end

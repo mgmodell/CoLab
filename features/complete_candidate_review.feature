@@ -65,9 +65,10 @@ Feature: Review Candidate words for Bingo!
     Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
     Given the user assigns "Accept" feedback to all candidates
-    Given the user checks "Review Completed"
+    Given the user checks "Review completed"
      Then the user clicks "Save"
      Then the saved reviews match the list
+     Then there will be 4 concepts
      Then the user will see "success"
      Then user should see 0 open task
 
@@ -78,9 +79,10 @@ Feature: Review Candidate words for Bingo!
     Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
     Given the user assigns "Term" feedback to all candidates
-    Given the user checks "Review Completed"
+    Given the user checks "Review completed"
      Then the user clicks "Save"
      Then the saved reviews match the list
+     Then there will be 0 concepts
      Then the user will see "success"
      Then user should see 0 open task
 
@@ -91,9 +93,10 @@ Feature: Review Candidate words for Bingo!
     Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
     Given the user assigns "Definition" feedback to all candidates
-    Given the user checks "Review Completed"
+    Given the user checks "Review completed"
      Then the user clicks "Save"
      Then the saved reviews match the list
+     Then there will be 4 concepts
      Then the user will see "success"
      Then user should see 0 open task
 
@@ -105,8 +108,9 @@ Feature: Review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
     Given the user assigns "" feedback to all candidates
-    Given the user checks "Review Completed"
+    Given the user checks "Review completed"
      Then the user clicks "Save"
      Then the saved reviews match the list
+     Then there will be 4 concepts
      Then the user will see "success"
      Then user should see 0 open task
