@@ -58,28 +58,25 @@ class BingoGamesController < ApplicationController
   def update_review_candidates
     #Process the data
     prefix = "_bingo_candidates_review_" + @bingo_game.id.to_s
-    p params
+    params_act = params[ "/bingo/candidates_review/#{@bingo_game.id}" ]
     @bingo_game.candidates.completed.each do |candidate|
-      p params[ "#{prefix}_candidate_feedback_#{candidate.id}" ]
-      candidate.candidate_feedback = CandidateFeedback.find( params[ prefix + "_candidate_feedback_#{candidate.id}" ] )
+      code = "candidate_feedback_" + candidate.id.to_s
+      candidate.candidate_feedback = CandidateFeedback.find( params_act[ "candidate_feedback_#{candidate.id}" ] )
       unless candidate.candidate_feedback.name.start_with? "Term"
-        concept = Concept.where( name: params[ prefix + "_concept_#{candidate.id}" ] ).take
-        concept = Concept.create( name: params[ prefix + "_concept_#{candidate.id}" ] ) if concept.nil?
+        concept = Concept.where( name: params_act[ "concept_#{candidate.id}" ] ).take
+        concept = Concept.create( name: params_act[ "concept_#{candidate.id}" ] ) if concept.nil?
         candidate.concept = concept
       end
       candidate.save
     end
-    @bingo_game.reviewed = params
-    respond_to do |format|
-      if @bingo_game.update(candidate_review_params)
-        if @bingo_game.reviewed
-          format.html { redirect_to root_path, 'Review was successfully saved and completed.' }
-        else
-          format.html { redirect_to @bingo_game, notice: 'Review was successfully saved.' }
-        end
-      else
-        format.html { render :review_candidates }
-      end
+    @bingo_game.reviewed = params_act[ "reviewed" ]
+    @bingo_game.save
+    logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.nil?
+    flash[ :notice ] = "Review data successfully saved"
+    if @bingo_game.reviewed
+      redirect_to root_url, notice: "Review data successfully saved"
+    else
+      redirect_to :review_bingo_candidates, notice: "Review data successfully saved"
     end
   end
 
@@ -100,7 +97,7 @@ class BingoGamesController < ApplicationController
       bingo_game.save
     end
     @bingo_game = bingo_game
-    render :show
+    render :show, notice: "Review data successfully saved"
   end
 
   private

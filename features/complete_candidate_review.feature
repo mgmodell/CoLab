@@ -55,7 +55,8 @@ Feature: Review Candidate words for Bingo!
     Given the user assigns "Accept" feedback to all candidates
      Then the user clicks "Save"
      Then the user will see "success"
-     Then user should see 1 open task
+     Then the user logs out
+     Then the user logs in
      Then the user will see "100%"
 
   Scenario: Instructor logs in and accepts all 134 candidates

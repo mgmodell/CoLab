@@ -64,7 +64,7 @@ end
 Then /^the user sees (\d+) candidate items for review$/  do |candidate_count|
   page.all(:xpath, "//select[contains(@id, 'candidate_feedback')]").
                 count.should eq candidate_count.to_i
-  page.all(:xpath, "//select[contains(@id, 'concept')]").
+  page.all(:xpath, "//input[contains(@id, 'concept')]").
                 count.should eq candidate_count.to_i
 end
 
@@ -86,18 +86,21 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/  do |feedback_ty
     unless feedback.name.start_with? "Def"
       concept = concepts.rotate!(1).first
       @feedback_list[ candidate.id ][ :concept ] = concept
+    else
+      @feedback_list[ candidate.id ][ :concept ] = ""
     end
     page.find( :xpath, "//input[@id='_bingo_candidates_review_#{@bingo.id}_concept_#{candidate.id}']" ).
               set( concept ) unless concept.nil?
     page.find( :xpath, "//select[@id='_bingo_candidates_review_#{@bingo.id}_candidate_feedback_#{candidate.id}']" ).
-              find( "option[value='#{feedback.id}']" ).click
+              find( :xpath, "option[@value='#{feedback.id}']" ).select_option
     
   end
 end
 
 Given /^the saved reviews match the list$/ do
   @feedback_list.each do |key,value|
-    Candidate.find( key ).candidate_feedback_id.should eq value[ :feedback ]
+    p key
+    Candidate.find( key ).candidate_feedback_id.should eq value[ :feedback ][ :id ]
     Candidate.find( key ).concept.name.should eq value[ :concept ]
   end
 end
@@ -115,5 +118,5 @@ When /^the user clicks the link to the candidate review$/ do
 end
 
 Then /^there will be (\d+) concepts$/ do |concept_count|
-  Concept.count.should eq concept_count
+  Concept.count.should eq concept_count.to_i
 end
