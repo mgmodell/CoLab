@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
   end
 
   def waiting_instructor_tasks
-    waiting_tasks = Array.new
+    waiting_tasks = []
 
     rosters.instructorships.each do |roster|
       roster.course.bingo_games.each do |game|

@@ -73,13 +73,13 @@ After do |_scenario|
 end
 
 scenario_times = {}
- 
+
 Around() do |scenario, block|
   start = Time.now
   block.call
   scenario_times["#{scenario.feature.file}::#{scenario.name}"] = Time.now - start
 end
- 
+
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
   puts "------------- Top #{max_scenarios} slowest scenarios -------------"

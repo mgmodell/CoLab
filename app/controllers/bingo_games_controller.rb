@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class BingoGamesController < ApplicationController
-  before_action :set_bingo_game, only: [:show, :edit, :update, :destroy, :review_candidates, :update_review_candidates ]
-  before_action :check_admin, except: [:next, :diagnose, :react, :update_review_candidates ]
+  before_action :set_bingo_game, only: [:show, :edit, :update, :destroy, :review_candidates, :update_review_candidates]
+  before_action :check_admin, except: [:next, :diagnose, :react, :update_review_candidates]
 
   def show; end
 
@@ -52,31 +52,30 @@ class BingoGamesController < ApplicationController
     end
   end
 
-  def review_candidates
-  end
+  def review_candidates; end
 
   def update_review_candidates
-    #Process the data
-    params_act = params[ "/bingo/candidates_review/#{@bingo_game.id}" ]
+    # Process the data
+    params_act = params["/bingo/candidates_review/#{@bingo_game.id}"]
     @bingo_game.candidates.completed.each do |candidate|
-      code = "candidate_feedback_" + candidate.id.to_s
-      candidate.candidate_feedback = CandidateFeedback.find( params_act[ "candidate_feedback_#{candidate.id}" ] )
-      unless candidate.candidate_feedback.name.start_with? "Term"
-        concept = Concept.where( name: params_act[ "concept_#{candidate.id}" ] ).take
-        concept = Concept.create( name: params_act[ "concept_#{candidate.id}" ] ) if concept.nil?
+      code = 'candidate_feedback_' + candidate.id.to_s
+      candidate.candidate_feedback = CandidateFeedback.find(params_act["candidate_feedback_#{candidate.id}"])
+      unless candidate.candidate_feedback.name.start_with? 'Term'
+        concept = Concept.where(name: params_act["concept_#{candidate.id}"]).take
+        concept = Concept.create(name: params_act["concept_#{candidate.id}"]) if concept.nil?
         candidate.concept = concept
       end
       candidate.save
     end
-    
-    @bingo_game.reviewed = params_act[ "reviewed" ]
+
+    @bingo_game.reviewed = params_act['reviewed']
     @bingo_game.save
     logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.nil?
-    flash[ :notice ] = "Review data successfully saved"
+    flash[:notice] = 'Review data successfully saved'
     if @bingo_game.reviewed
-      redirect_to root_url, notice: "Review data successfully saved"
+      redirect_to root_url, notice: 'Review data successfully saved'
     else
-      redirect_to :review_bingo_candidates, notice: "Review data successfully saved"
+      redirect_to :review_bingo_candidates, notice: 'Review data successfully saved'
     end
   end
 
@@ -97,7 +96,7 @@ class BingoGamesController < ApplicationController
       bingo_game.save
     end
     @bingo_game = bingo_game
-    render :show, notice: "Review data successfully saved"
+    render :show, notice: 'Review data successfully saved'
   end
 
   private

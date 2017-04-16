@@ -17,7 +17,7 @@ Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pe
   end
 end
 
-When /^the user requests collaboration$/  do
+When /^the user requests collaboration$/ do
   page.should have_content 'Invite your group to help?'
   click_link_or_button 'Invite your group to help?'
 end

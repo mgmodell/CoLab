@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddDefinitionStringToCandidateFeedback < ActiveRecord::Migration
   def change
     add_column :candidate_feedbacks, :definition, :string

@@ -14,10 +14,10 @@ class Course < ActiveRecord::Base
 
   before_validation :timezone_adjust
 
-  def set_user_role( user, role )
-    role = Role.where( name: role ).take if role.class == String
-    roster = rosters.where( user: user ).take
-    roster = Roster.new( user: user, course:self ) if roster.nil?
+  def set_user_role(user, role)
+    role = Role.where(name: role).take if role.class == String
+    roster = rosters.where(user: user).take
+    roster = Roster.new(user: user, course: self) if roster.nil?
     roster.role = role
     roster.save
   end
@@ -28,8 +28,8 @@ class Course < ActiveRecord::Base
     roster.save
   end
 
-  def get_user_role user
-    roster = rosters.where( user: user ).take
+  def get_user_role(user)
+    roster = rosters.where(user: user).take
     roster.nil? ? nil : roster.role
   end
 
@@ -105,7 +105,6 @@ class Course < ActiveRecord::Base
       add_user_by_email(email, true)
     end
   end
-
 
   def enrolled_students
     rosters.joins(:role).where('roles.name = ? OR roles.name = ?', 'Enrolled Student', 'Invited Student').collect(&:user)

@@ -27,7 +27,6 @@ class BingoGame < ActiveRecord::Base
     else
       return 0
     end
-
   end
 
   def name
@@ -44,7 +43,7 @@ class BingoGame < ActiveRecord::Base
   end
 
   def awaiting_review?
-    !reviewed && end_date <= ( DateTime.current + lead_time.days ) && end_date >= DateTime.current
+    !reviewed && end_date <= (DateTime.current + lead_time.days) && end_date >= DateTime.current
   end
 
   def candidate_list_for_user(user)
