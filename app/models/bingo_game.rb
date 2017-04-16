@@ -20,6 +20,15 @@ class BingoGame < ActiveRecord::Base
   before_validation :timezone_adjust
   validate :dates_within_course
 
+  def status
+    completed = candidates.completed.count
+    if completed > 0
+      return 100 * candidates.reviewed.count / candidates.completed.count
+    else
+      return 0
+    end
+
+  end
 
   def name
     topic

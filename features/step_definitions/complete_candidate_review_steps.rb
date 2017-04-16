@@ -83,7 +83,7 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/  do |feedback_ty
     feedback = feedbacks.sample
     @feedback_list[ candidate.id ] =  { feedback: feedback }
     concept = nil
-    unless feedback.name.start_with? "Def"
+    unless feedback.name.start_with? "Term"
       concept = concepts.rotate!(1).first
       @feedback_list[ candidate.id ][ :concept ] = concept
     else
@@ -99,9 +99,8 @@ end
 
 Given /^the saved reviews match the list$/ do
   @feedback_list.each do |key,value|
-    p key
     Candidate.find( key ).candidate_feedback_id.should eq value[ :feedback ][ :id ]
-    Candidate.find( key ).concept.name.should eq value[ :concept ]
+    Candidate.find( key ).concept.name.should eq value[ :concept ] unless value[ :concept ].blank?
   end
 end
 

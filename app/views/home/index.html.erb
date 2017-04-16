@@ -35,6 +35,7 @@
       <tr>
         <td data-priority="0"><%= link_to "Review: " + task.name, review_bingo_candidates_path( task )%> </td>
         <td align="center" data-priority="1">Bingo! Candidate Review</td>
+        <td align="center" data-priority="1"><%= task.status %>%</td>
         <td data-priority="1"><%= task.course.name %></td>
         <td data-priority="0"><<%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
       </tr>

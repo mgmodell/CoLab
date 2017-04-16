@@ -57,7 +57,6 @@ class BingoGamesController < ApplicationController
 
   def update_review_candidates
     #Process the data
-    prefix = "_bingo_candidates_review_" + @bingo_game.id.to_s
     params_act = params[ "/bingo/candidates_review/#{@bingo_game.id}" ]
     @bingo_game.candidates.completed.each do |candidate|
       code = "candidate_feedback_" + candidate.id.to_s
@@ -69,6 +68,7 @@ class BingoGamesController < ApplicationController
       end
       candidate.save
     end
+    
     @bingo_game.reviewed = params_act[ "reviewed" ]
     @bingo_game.save
     logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.nil?
