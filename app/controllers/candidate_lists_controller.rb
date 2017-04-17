@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 class CandidateListsController < ApplicationController
-  before_action :set_candidate_list, only: [:edit, :update, :request_collaboration]
+  before_action :set_candidate_list, only: [:edit, :show, :update, :request_collaboration]
 
-  def edit; end
+  def edit
+    if !@candidate_list.bingo_game.is_open?
+      render :show
+    end
+  end
 
   def request_collaboration
     desired = params[:desired] == 'yes'
@@ -51,12 +55,22 @@ class CandidateListsController < ApplicationController
   end
 
   def update
-    respond_to do |format|
-      if @candidate_list.update(candidate_list_params)
-        format.html { redirect_to edit_candidate_list_path(@candidate_list), notice: 'Your list was successfully saved.' }
-      else
-        format.html { render :edit }
+    if !@candidate_list.bingo_game.is_open?
+      redirect_to :show
+    else
+      respond_to do |format|
+        if @candidate_list.update(candidate_list_params)
+          format.html { redirect_to edit_candidate_list_path(@candidate_list), notice: 'Your list was successfully saved.' }
+        else
+          format.html { render :edit }
+        end
       end
+    end
+  end
+
+  def show
+    if @candidate_list.bingo_game.is_open?
+      render :edit
     end
   end
 

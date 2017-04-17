@@ -3,7 +3,7 @@ Given /^the user is any student in the course$/  do
 end
 
 Then /^the user clicks the link to the concept list$/  do
-  pending # Write code here that turns the phrase above into concrete actions
+  click_link_or_button 'Terms for: ' + @bingo.name
 end
 
 Then /^the concept list should match the list$/  do
