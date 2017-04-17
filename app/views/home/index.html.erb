@@ -99,9 +99,15 @@
             <td>
               <%= link_to "Terms for: " + task.name, edit_candidate_list_path( candidate_list ) %>
             </td>
-            <td>
-              <%= candidate_list.percent_complete %>%
-            </td>
+            <% if task.is_open? %>
+              <td>
+                <%= candidate_list.percent_complete %>%
+              </td>
+            <% elsif task.reviewed %>
+              <td>
+                <% task.concepts.count %> concepts
+              </td>
+            <% end %>
             <td> <%= task.course.name %></td>
             <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>

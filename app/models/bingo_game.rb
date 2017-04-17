@@ -6,6 +6,8 @@ class BingoGame < ActiveRecord::Base
 
   has_many :candidates, through: :candidate_lists
 
+  has_many :concepts, through: :candidates
+
   # validations
   validates :topic, :end_date, :start_date, presence: true
   validates :group_discount, numericality:
