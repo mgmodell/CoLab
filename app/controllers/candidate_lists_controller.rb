@@ -67,9 +67,11 @@ class CandidateListsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_candidate_list
     @candidate_list = CandidateList.find(params[:id])
+    redirect_to root_path, notice: "This list is no longer available" unless @candidate_list.bingo_game.is_open?
   end
 
   def candidate_list_params
     params.require(:candidate_list).permit(:is_group, candidates_attributes: [:id, :term, :definition])
   end
+
 end

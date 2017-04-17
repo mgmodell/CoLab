@@ -1,5 +1,5 @@
-Feature: Review Candidate words for Bingo!
-  Instructors must be able to review words submitted for Bingo! play
+Feature: Students review Candidate words for Bingo!
+  Students must be able to review words submitted for Bingo! play
 
   Background:
     Given there is a course with an assessed project
@@ -31,93 +31,73 @@ Feature: Review Candidate words for Bingo!
     Given the users "incomplete" prep "as individuals"
     # 20
 
+    #Instructor time!
     Given the course has 1 confirmed users
     Given the user is the most recently created user
     Given the user "has" had demographics requested
     Given the user is the instructor for the course
-
-  Scenario: Student does not see a Bingo! in review
-    Given today is "tomorrow"
-    Given the user is any student in the course
-    Given the user logs in
-     Then user should see 0 open task
-
-  Scenario: Instructor does not see the review until the prep time
-    Given the user logs in
-     Then user should see 0 open task
-
-  Scenario: Instructor sees 134 candidates
     Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
-     Then the user sees 134 candidate items for review
 
   Scenario: Instructor logs in and assigns feedback to 134 candidates
-    Given today is "tomorrow"
-    Given the user logs in
-     Then user should see 1 open task
-    Given the user clicks the link to the candidate review
     Given the user assigns "Accept" feedback to all candidates
      Then the user clicks "Save"
-     Then the user will see "success"
      Then the user logs out
+     When the user is any student in the course
      Then the user logs in
-     Then the user will see "100%"
+     Then user should see 0 open task
 
   Scenario: Instructor logs in and accepts all 134 candidates
-    Given today is "tomorrow"
-    Given the user logs in
-     Then user should see 1 open task
-    Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
     Given the user assigns "Accept" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
-     Then the saved reviews match the list
-     Then there will be 4 concepts
-     Then the user will see "success"
-     Then user should see 0 open task
+     Then the user logs out
+     When the user is any student in the course
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the concept list should match the list
+     Then the user should see 4 concepts
+     
 
   Scenario: Instructor logs in and assigns term feedback to 134 candidates
-    Given today is "tomorrow"
-    Given the user logs in
-     Then user should see 1 open task
-    Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
     Given the user assigns "Term" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
-     Then the saved reviews match the list
-     Then there will be 0 concepts
-     Then the user will see "success"
-     Then user should see 0 open task
+     Then the user logs out
+     When the user is any student in the course
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the concept list should match the list
+     Then the user should see 0 concepts
 
   Scenario: Instructor logs in and assigns definition feedback to 134 candidates
-    Given today is "tomorrow"
-    Given the user logs in
-     Then user should see 1 open task
-    Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
     Given the user assigns "Definition" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
-     Then the saved reviews match the list
-     Then there will be 4 concepts
-     Then the user will see "success"
-     Then user should see 0 open task
+     Then the user logs out
+     When the user is any student in the course
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the concept list should match the list
+     Then the user should see 4 concepts
 
   Scenario: Instructor logs in and assigns mixed feedback to 134 candidates
-    Given today is "tomorrow"
-    Given the user logs in
-     Then user should see 1 open task
-    Given the user clicks the link to the candidate review
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
     Given the user assigns "" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
-     Then the saved reviews match the list
-     Then there will be 4 concepts
-     Then the user will see "success"
-     Then user should see 0 open task
+     Then the user logs out
+     When the user is any student in the course
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the concept list should match the list
