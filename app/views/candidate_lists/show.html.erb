@@ -1,5 +1,3 @@
-<%= simple_form_for @candidate_list do |f| %>
-  <%= f.error_notification %>
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
   <h1>Bingo! Word List</h1>
   <table>
@@ -8,59 +6,26 @@
       <td><%= @candidate_list.bingo_game.topic %></td>
     </tr>
     <tr>
-      <th align="right">For:</th>
-      <td>
-        <%= @current_user.name %>
-
-        <% # Is group play possible?
-          if @candidate_list.bingo_game.group_option? &&
-              @candidate_list.bingo_game.project.group_for_user( @current_user ).present? %>
-          <% if @candidate_list.is_group? %>
-            <em>on behalf of: <%= @candidate_list.group.name %></em>
-          <% else %>
-            <% if @candidate_list.group_requested # Have you already requested collaboration? %>
-              [Still awaiting a response to your group help request]
-            <% elsif @candidate_list.others_requested_help > 0 # Is your team waiting to hear from you? %>
-              Your team wants to collaborate: 
-              <%= link_to "Accept", request_bingo_collaboration_path( 
-                        id: @candidate_list.id, desired: "yes" ) %> or 
-              <%= link_to "Decline", request_bingo_collaboration_path( 
-                        id: @candidate_list.id, desired: "no" ) %> 
-            <% else %>
-              <%= link_to "Invite your group to help?", request_bingo_collaboration_path( 
-                        id: @candidate_list.id, desired: "yes" ) %> 
-            <% end %>
-          <% end %>
-        <% end %>
-    </tr>
-    <tr>
       <th align="right">Game date:</th>
       <td><%= @candidate_list.bingo_game.end_date %>
     </tr>
   </table>
   <h2>Terms</h2>
-  <table id="candidates_table" width="100%"
+  <table id="concept_table" width="100%"
         class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
     <thead>
       <tr>
         <th width="5%">#</th>
         <th width="30%">Term</th>
-        <th>Definition</th>
       </tr>
     </thead>
     <tbody>
-      <% count = 0 %>
+      <% @candidate_list.bingo.concepts.each_with_index do |concept,index| %>
       <%= f.simple_fields_for :candidates do |cf| %>
       <tr>
-        <td><%= count += 1 %><%= cf.input :id, as: :hidden %></td>
-        <td><%= cf.input :term, label: false %></td>
-        <td><%= cf.input :definition, as: :text, label: false %></td>
+        <td><%= index %></td>
+        <td><%= concept.name %></td>
       </tr>
       <% end %>
     </tbody>
   </table>
-
-<div class="form-actions">
-  <%= f.button :submit, "Save" %>
-</div>
-<% end %>

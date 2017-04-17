@@ -62,7 +62,6 @@ Feature: Students review Candidate words for Bingo!
      Then the concept list should match the list
      Then the user should see 4 concepts
      
-
   Scenario: Instructor logs in and assigns term feedback to 134 candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Term" feedback to all candidates

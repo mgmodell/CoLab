@@ -87,7 +87,7 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       @feedback_list[candidate.id][:concept] = ''
     else
       concept = concepts.rotate!(1).first
-      @feedback_list[candidate.id][:concept] = concept
+      @feedback_list[candidate.id][:concept] = concept.split.map(&:capitalize).*' '
     end
     unless concept.nil?
       page.find(:xpath, "//input[@id='_bingo_candidates_review_#{@bingo.id}_concept_#{candidate.id}']")
