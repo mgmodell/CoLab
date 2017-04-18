@@ -7,8 +7,9 @@ Then /^the user clicks the link to the concept list$/ do
 end
 
 Then /^the concept list should match the list$/ do
-  
-  pending # Write code here that turns the phrase above into concrete actions
+  @bingo.concepts.uniq.each do |concept|
+    page.find( :xpath, "//tr[@id='concept']/td[text()='#{concept.name}']" ).should_not be_nil
+  end
 end
 
 Then /^the user should see (\d+) concepts$/ do |concept_count|

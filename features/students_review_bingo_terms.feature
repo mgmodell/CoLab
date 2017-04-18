@@ -100,3 +100,9 @@ Feature: Students review Candidate words for Bingo!
      Then user should see 1 open task
      Then the user clicks the link to the concept list
      Then the concept list should match the list
+     Then the user logs out
+     # Let's try again tomorrow
+     Given today is "2 days from now"
+     When the user is any student in the course
+     Then the user logs in
+     Then user should see 0 open task
