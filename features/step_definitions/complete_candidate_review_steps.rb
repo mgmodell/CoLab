@@ -76,7 +76,13 @@ Given /^the user sees review items for all the expected candidates$/ do
 end
 
 Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_type|
-  concepts = ['concept 1', 'concept 2', 'concept 3', 'concept 4']
+  concept_count = Concept.count
+  concepts = Array.new
+  concepts << Concept.last.name unless concept_count < 1
+  concept_count.upto (concept_count + 3) do |counter|
+    concepts << "concept " + counter.to_s
+  end
+
   feedbacks = CandidateFeedback.where('name like ?', feedback_type + '%')
   @feedback_list = {}
   @bingo.candidates.completed.each do |candidate|
