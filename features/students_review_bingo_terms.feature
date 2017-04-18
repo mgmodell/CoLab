@@ -106,3 +106,55 @@ Feature: Students review Candidate words for Bingo!
      When the user is any student in the course
      Then the user logs in
      Then user should see 0 open task
+
+  Scenario: Instructor assigns mixed feedback to 2 courses successively
+    Given the user sees review items for all the expected candidates
+    # Assign any sort of feedback
+    Given the user assigns "" feedback to all candidates
+    Given the user checks "Review completed"
+     Then the user clicks "Save"
+     Then the user logs out
+     When the user is any student in the course
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the concept list should match the list
+     Then the user logs out
+
+    #Course 2
+    Given there is a course with an assessed project
+    Given the course started "two months ago" and ended "two months from now"
+    Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
+    Given the course has a Bingo! game
+    Given the Bingo! game individual count is 10
+    Given the Bingo! started "last month" and ends "5 days from now"
+    Given the Bingo! is group-enabled with the project and a 10 percent group discount
+    Given the Bingo! "has" been activated
+
+    #set up the users and have them complete the bingo! prep assignment
+    Given the project has a group with 4 confirmed users
+    Given the users "finish" prep "as a group"
+    # 36 terms
+
+    #Instructor time!
+    Given the course has 1 confirmed users
+    Given the user is the most recently created user
+    Given the user "has" had demographics requested
+    Given the user is the instructor for the course
+    Given today is "4 days from now"
+     Then the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    # Assign any sort of feedback
+    Given the user assigns "" feedback to all candidates
+    Given the user checks "Review completed"
+     Then the user clicks "Save"
+     Then the user logs out
+     When the user is any student in the course
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the concept list should match the list
+     Then the number of concepts is less than the total number of concepts
+     Then the user logs out

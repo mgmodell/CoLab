@@ -8,6 +8,10 @@ When /^the system emails stragglers$/ do
   AdministrativeMailer.send_reminder_emails
 end
 
+When /^the system emails instructor reports$/ do
+  AdministrativeMailer.inform_instructors
+end
+
 Then /^an email will be sent to each member of the group$/ do
   wt = @user.waiting_student_tasks
   g = wt[0].group_for_user(@user)

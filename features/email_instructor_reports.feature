@@ -4,26 +4,34 @@ Feature: Email experience stragglers
 
   Background:
     Given there is a course with an experience
-    Given the course has one instructor
     Given the course has 4 confirmed users
     Given the users "have" had demographics requested
-    Given the experience started "last month" and ends "next month"
+    Given the experience started "last month" and ends "3 days from now"
     Given the experience "has" been activated
+    Given the course has 1 confirmed users
+    Given the user is the most recently created user
+    Given the user "has" had demographics requested
+    Given the user is the instructor for the course
 
   Scenario: Course Instructor will be emailed when experience closes
     Given the email queue is empty
     When the system emails stragglers
     Then 4 emails will be sent
-    Given today is "32 days from now"
+    Given today is "4 days from now"
+    When the system emails instructor reports
     Given the email queue is empty
     Then 1 emails will be sent
 
   Scenario: Both Course Instructors will be emailed when experience closes
-    Given the course has one instructor
+    Given the course has 1 confirmed users
+    Given the user is the most recently created user
+    Given the user "has" had demographics requested
+    Given the user is the instructor for the course
     Given the email queue is empty
     When the system emails stragglers
     Then 4 emails will be sent
     Given today is "32 days from now"
+    When the system emails instructor reports
     Given the email queue is empty
     Then 2 emails will be sent
 

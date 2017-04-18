@@ -16,3 +16,7 @@ Then /^the user should see (\d+) concepts$/ do |concept_count|
   page.should have_content "Bingo! Word List"
   page.all( :xpath, "//tr[@id='concept']" ).count.should eq concept_count.to_i
 end
+
+Then /^the number of concepts is less than the total number of concepts$/ do
+  page.all( :xpath, "//tr[@id='concept']" ).count.should be < Concept.count
+end
