@@ -77,10 +77,10 @@ end
 
 Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_type|
   concept_count = Concept.count
-  concepts = Array.new
+  concepts = []
   concepts << Concept.last.name unless concept_count < 1
   concept_count.upto (concept_count + 3) do |counter|
-    concepts << "concept " + counter.to_s
+    concepts << 'concept ' + counter.to_s
   end
 
   feedbacks = CandidateFeedback.where('name like ?', feedback_type + '%')

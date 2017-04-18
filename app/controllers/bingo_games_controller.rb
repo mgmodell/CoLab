@@ -61,9 +61,9 @@ class BingoGamesController < ApplicationController
       code = 'candidate_feedback_' + candidate.id.to_s
       candidate.candidate_feedback = CandidateFeedback.find(params_act["candidate_feedback_#{candidate.id}"])
       unless candidate.candidate_feedback.name.start_with? 'Term'
-        concept_name = params_act[ "concept_#{candidate.id}" ].split.map(&:capitalize).*' '
-        concept = Concept.where(name: concept_name ).take
-        concept = Concept.create(name: concept_name ) if concept.nil?
+        concept_name = params_act["concept_#{candidate.id}"].split.map(&:capitalize).*' '
+        concept = Concept.where(name: concept_name).take
+        concept = Concept.create(name: concept_name) if concept.nil?
         candidate.concept = concept
       end
       candidate.save

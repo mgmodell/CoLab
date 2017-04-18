@@ -6,7 +6,7 @@ class CandidateListsController < ApplicationController
     if @candidate_list.bingo_game.reviewed
       render :show
     elsif !@candidate_list.bingo_game.is_open?
-      redirect_to :root_path, notice: "This list is no longer available for editing"
+      redirect_to :root_path, notice: 'This list is no longer available for editing'
     end
   end
 
@@ -71,8 +71,8 @@ class CandidateListsController < ApplicationController
   end
 
   def show
-    if !@candidate_list.bingo_game.reviewed
-      redirect_to :root_path, notice: "This list is not yet ready for review"
+    unless @candidate_list.bingo_game.reviewed
+      redirect_to :root_path, notice: 'This list is not yet ready for review'
     end
   end
 
@@ -88,5 +88,4 @@ class CandidateListsController < ApplicationController
   def candidate_list_params
     params.require(:candidate_list).permit(:is_group, candidates_attributes: [:id, :term, :definition])
   end
-
 end
