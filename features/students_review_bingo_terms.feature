@@ -59,8 +59,8 @@ Feature: Students review Candidate words for Bingo!
      Then the user logs in
      Then user should see 1 open task
      Then the user clicks the link to the concept list
-     Then the concept list should match the list
      Then the user should see 4 concepts
+     Then the concept list should match the list
      
   Scenario: Instructor logs in and assigns term feedback to 134 candidates
     Given the user sees review items for all the expected candidates
@@ -72,8 +72,8 @@ Feature: Students review Candidate words for Bingo!
      Then the user logs in
      Then user should see 1 open task
      Then the user clicks the link to the concept list
-     Then the concept list should match the list
      Then the user should see 0 concepts
+     Then the concept list should match the list
 
   Scenario: Instructor logs in and assigns definition feedback to 134 candidates
     Given the user sees review items for all the expected candidates
@@ -85,8 +85,8 @@ Feature: Students review Candidate words for Bingo!
      Then the user logs in
      Then user should see 1 open task
      Then the user clicks the link to the concept list
-     Then the concept list should match the list
      Then the user should see 4 concepts
+     Then the concept list should match the list
 
   Scenario: Instructor logs in and assigns mixed feedback to 134 candidates
     Given the user sees review items for all the expected candidates

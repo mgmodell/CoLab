@@ -7,9 +7,11 @@ Then /^the user clicks the link to the concept list$/ do
 end
 
 Then /^the concept list should match the list$/ do
+  
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then /^the user should see (\d+) concepts$/ do |_concept_count|
-  pending # Write code here that turns the phrase above into concrete actions
+Then /^the user should see (\d+) concepts$/ do |concept_count|
+  page.should have_content "Bingo! Word List"
+  page.all( :xpath, "//tr[@id='concept']" ).count.should eq concept_count.to_i
 end

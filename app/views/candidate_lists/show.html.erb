@@ -20,11 +20,10 @@
       </tr>
     </thead>
     <tbody>
-      <% @candidate_list.bingo.concepts.each_with_index do |concept,index| %>
-      <%= f.simple_fields_for :candidates do |cf| %>
-      <tr>
+      <% @candidate_list.bingo_game.concepts.uniq.each_with_index do |concept,index| %>
+      <tr id="concept">
         <td><%= index %></td>
-        <td><%= concept.name %></td>
+        <td id="term"><%= concept.name %></td>
       </tr>
       <% end %>
     </tbody>

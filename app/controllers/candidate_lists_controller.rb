@@ -3,8 +3,10 @@ class CandidateListsController < ApplicationController
   before_action :set_candidate_list, only: [:edit, :show, :update, :request_collaboration]
 
   def edit
-    if !@candidate_list.bingo_game.is_open?
+    if @candidate_list.bingo_game.reviewed
       render :show
+    elsif !@candidate_list.bingo_game.is_open?
+      redirect_to :root_path, notice: "This list is no longer available for editing"
     end
   end
 
@@ -69,8 +71,8 @@ class CandidateListsController < ApplicationController
   end
 
   def show
-    if @candidate_list.bingo_game.is_open?
-      render :edit
+    if !@candidate_list.bingo_game.reviewed
+      redirect_to :root_path, notice: "This list is not yet ready for review"
     end
   end
 
@@ -81,7 +83,6 @@ class CandidateListsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_candidate_list
     @candidate_list = CandidateList.find(params[:id])
-    redirect_to root_path, notice: "This list is no longer available" unless @candidate_list.bingo_game.is_open?
   end
 
   def candidate_list_params
