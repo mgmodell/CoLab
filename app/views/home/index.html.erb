@@ -56,7 +56,9 @@
     <thead>
       <tr>
         <th>Task Name</th>
+        <th data-priority="1">Type</th>
         <th>Status</th>
+        <th data-priority="1">Group</th>
         <th data-priority="0">Course Name</th>
         <th data-priority="1">Open Date</th>
         <th data-priority="0">Close Date</th>
@@ -70,15 +72,16 @@
           <tr>
             <td>
               <% if(task.is_completed_by_user @current_user) %>
-                <%= link_to "Assess Group: #{group.name}", edit_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
+                <%= link_to group.name, edit_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
                 <br>
                 (Project: <%= task.project.name %>)
                   <% else %>
-                <%= link_to "Assess Group: #{group.name}", new_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
+                <%= link_to group.name, new_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
                 <br>
                 (Project: <%= task.project.name %>)
                   <% end %>
             </td>
+            <td>Self- and Peer-Assessment</td>
             <td>
               <% if(task.is_completed_by_user @current_user) %>
                 <em>completed</em>
@@ -98,19 +101,28 @@
           <tr><% candidate_list = task.candidate_list_for_user( @current_user ) %>
             <% if task.is_open? %>
               <td>
-                <%= link_to "Terms for: " + task.name, edit_candidate_list_path( candidate_list ) %>
+                <%= link_to task.name, edit_candidate_list_path( candidate_list ) %>
               </td>
+              <td>Terms list submission</td>
               <td>
                 <%= candidate_list.percent_complete %>%
               </td>
             <% elsif task.reviewed %>
               <td>
-                <%= link_to "Terms for: " + task.name, candidate_list_path( candidate_list ) %>
+                <%= link_to task.name, candidate_list_path( candidate_list ) %>
               </td>
+              <td>Distilled concepts</td>
               <td>
                 <% task.concepts.count %> concepts
               </td>
             <% end %>
+            <td>
+              <% if task.project.present? && task.project.group_for_user( @current_user ) %>
+                <%= task.project.group_for_user( @current_user ).name %>
+              <% else %>
+                N/A
+              <% end %>
+            </td>
             <td> <%= task.course.name %></td>
             <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
@@ -121,17 +133,19 @@
             <td>
               <% reaction = task.get_user_reaction( @current_user ) %>
               <% if reaction.behavior.present? %>
-                <%= task.name + " experience" %>
+                <%= task.name %>
               <% else %>
-                <%= link_to task.name + " experience", next_experience_path( :experience_id => task.id ) %>
+                <%= link_to task.name, next_experience_path( :experience_id => task.id ) %>
               <% end %>
             </td>
+            <td>Collaboration experience simulation</td>
             <td>
               <em>
                 <%= reaction.status %>
               </em>
             </td>
-            <td><%= task.course.name %></td>
+            <td> N/A</td>
+            <td> <%= task.course.name %></td>
             <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td>
