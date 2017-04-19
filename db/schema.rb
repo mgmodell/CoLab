@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170419023423) do
+ActiveRecord::Schema.define(version: 20170419145439) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -23,9 +23,9 @@ ActiveRecord::Schema.define(version: 20170419023423) do
     t.datetime "end_date"
     t.datetime "start_date"
     t.integer  "project_id",         limit: 4
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
-    t.boolean  "instructor_updated",           default: false, null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.boolean  "instructor_updated",           null: false
   end
 
   add_index "assessments", ["project_id"], name: "index_assessments_on_project_id", using: :btree
@@ -185,7 +185,7 @@ ActiveRecord::Schema.define(version: 20170419023423) do
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
     t.boolean  "active"
-    t.boolean  "instructor_updated"
+    t.boolean  "instructor_updated",             null: false
   end
 
   add_index "experiences", ["course_id"], name: "index_experiences_on_course_id", using: :btree

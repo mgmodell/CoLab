@@ -105,7 +105,7 @@ class Experience < ActiveRecord::Base
     Experience.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |experience|
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
-        reaction = get_user_reaction student
+        reaction = experience.get_user_reaction student
         completion_hash[student] = reaction.status
 
         experience.course.instructors.each do |instructor|
