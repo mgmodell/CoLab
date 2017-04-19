@@ -11,7 +11,9 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :groups
   has_many :consent_logs, inverse_of: :user, dependent: :destroy
   has_many :candidate_lists, inverse_of: :user, dependent: :destroy
+  has_many :concepts, inverse_of: :user, dependent: :destroy
   has_many :projects, through: :groups
+  has_many :candidates, inverse_of: :user
   belongs_to :gender, inverse_of: :users
   belongs_to :theme, inverse_of: :users
   belongs_to :school

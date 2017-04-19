@@ -109,4 +109,5 @@ class Assessment < ActiveRecord::Base
 
     self.end_date -= course_tz.utc_offset if end_date_changed?
   end
+
 end

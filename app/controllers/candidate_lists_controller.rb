@@ -43,7 +43,7 @@ class CandidateListsController < ApplicationController
     end
     if merged_list.count < (required_terms - 1)
       merged_list.count.upto ( required_terms - 1) do
-        merged_list << Candidate.new('term' => '', 'definition' => '')
+        merged_list << Candidate.new('term' => '', 'definition' => '', user: @current_user)
       end
     end
 

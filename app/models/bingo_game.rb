@@ -58,7 +58,7 @@ class BingoGame < ActiveRecord::Base
       cl.group_requested = false
 
       individual_count.times do
-        cl.candidates << Candidate.new(term: '', definition: '')
+        cl.candidates << Candidate.new(term: '', definition: '', user: user)
       end
       cl.save
     elsif  cl.is_group
