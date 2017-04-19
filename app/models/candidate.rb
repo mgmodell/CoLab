@@ -3,6 +3,7 @@ class Candidate < ActiveRecord::Base
   belongs_to :candidate_list, inverse_of: :candidates
   belongs_to :candidate_feedback, inverse_of: :candidates
   belongs_to :concept, inverse_of: :candidates
+  belongs_to :user, inverse_of: :candidates
 
   scope :completed, -> { where("term != '' AND definition != ''") }
   scope :reviewed, -> { where('candidate_feedback_id > 0 ') }
