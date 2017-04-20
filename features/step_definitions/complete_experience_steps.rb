@@ -143,7 +143,7 @@ Given /^the course has an experience$/ do
   @experience = Experience.make
   @experience.course = @course
   @experience.save
-  puts @cexperience.errors.full_messages unless @experience.errors.nil?
+  puts @experience.errors.full_messages unless @experience.errors.nil?
 end
 
 Given /^the user enrolls in the course$/ do
