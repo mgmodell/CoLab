@@ -112,16 +112,16 @@ class GraphingController < ApplicationController
           sequential.each do |assessment|
             values = assessment_to_values[assessment]
             values.each do |value|
-              series = data_hash[value.behavior.id.to_s + '_' + value.installment.user_id.to_s]
+              series = data_hash[value.factor.id.to_s + '_' + value.installment.user_id.to_s]
               if series.nil?
                 series = {}
-                series.store('label', value.behavior.name + ' by ' + value.installment.user.name)
+                series.store('label', value.factor.name + ' by ' + value.installment.user.name)
               end
               series_data = series['data']
               series_data = [] if series_data.nil?
               series_data << [value.created_at.to_i * 1000, value.value]
               series.store('data', series_data)
-              data_hash.store(value.behavior.id.to_s + '_' + value.installment.user_id.to_s, series)
+              data_hash.store(value.factor.id.to_s + '_' + value.installment.user_id.to_s, series)
             end
           end
           @data_series = data_hash.values
@@ -133,10 +133,10 @@ class GraphingController < ApplicationController
           sequential.each do |assessment|
             values = assessment_to_values[assessment]
             values.each do |value|
-              series = data_hash[value.behavior.id.to_s]
+              series = data_hash[value.factor.id.to_s]
               if series.nil?
                 series = {}
-                series.store('label', value.behavior.name)
+                series.store('label', value.factor.name)
               end
               series_data = series['data']
               series_data = [] if series_data.nil?
@@ -144,7 +144,7 @@ class GraphingController < ApplicationController
 
               # collapsed_series_data << [ date, tmp.inject{|sum,el| sum + el[1] }.to_f / tmp.size ]
               series.store('data', series_data)
-              data_hash.store(value.behavior.id.to_s, series)
+              data_hash.store(value.factor.id.to_s, series)
             end
           end
           data_hash.each_pair do |_key, value|
