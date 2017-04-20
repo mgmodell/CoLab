@@ -21,6 +21,7 @@ Given /^a user has signed up$/ do
   @user = User.make
   @user.confirm
   @user.save
+  puts @user.errors.full_messages unless @user.errors.nil?
 end
 
 When /^the user "(.*?)" fill in demographics data$/ do |does_or_does_not|

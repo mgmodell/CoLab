@@ -2,13 +2,16 @@
 Given /^there is a global consent form$/ do
   @consent_form = ConsentForm.make
   @consent_form.save
+  puts @consent.errors.full_messages unless @consent.errors.nil?
 end
 
 Given /^the project has a consent form$/ do
   @consent_form = ConsentForm.make
   @consent_form.save
+  puts @consent_form.errors.full_messages unless @consent_form.errors.nil?
   @project.consent_form = @consent_form
   @project.save
+  puts @project.errors.full_messages unless @project.errors.nil?
 end
 
 Then /^user should see a consent form listed for the open project$/ do

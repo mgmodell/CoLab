@@ -4,14 +4,17 @@ require 'chronic'
 Given(/^there is a course with an experience$/) do
   @course = Course.make
   @course.save
+  puts @course.errors.full_messages unless @course.errors.nil?
   @experience = Experience.make
   @experience.course = @course
   @experience.save
+  puts @experience.errors.full_messages unless @experience.errors.nil?
 end
 
 Given(/^the experience "([^"]*)" been activated$/) do |has_or_has_not|
   @experience.active = has_or_has_not == 'has'
   @experience.save
+  puts @experience.errors.full_messages unless @experience.errors.nil?
 end
 
 Given(/^the course has (\d+) confirmed users$/) do |user_count|
@@ -26,6 +29,7 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
     r.course = @course
     r.role = role
     r.save
+    puts r.errors.full_messages unless r.errors.nil?
   end
 end
 
@@ -33,6 +37,7 @@ Given /^the experience started "([^"]*)" and ends "([^"]*)"$/ do |start_date, en
   @experience.start_date = Chronic.parse(start_date)
   @experience.end_date = Chronic.parse(end_date)
   @experience.save
+  puts @experience.errors.full_messages unless @experience.errors.nil?
 end
 
 Given /^the users "(.*?)" had demographics requested$/ do |with_demographics|
@@ -40,6 +45,7 @@ Given /^the users "(.*?)" had demographics requested$/ do |with_demographics|
   @users.each do |u|
     u.welcomed = demographics_requested
     u.save!
+    puts u.errors.full_messages unless u.errors.nil?
   end
 end
 
@@ -56,6 +62,7 @@ Given /^the course has an assessed project$/ do
   @project.style = Style.find(1)
   @project.course = @course
   @project.save
+  puts @project.errors.full_messages unless @project.errors.nil?
 end
 
 Given /^the user is in a group on the project$/ do
@@ -72,11 +79,13 @@ Given /^the user is in a group on the project$/ do
     r.course = @project.course
     r.role = role
     r.save
+    puts r.errors.full_messages unless r.errors.nil?
     @group.users << u
   end
   @group.users << @user
   @group.save
-  @group.save
+  puts @group.errors.full_messages unless @group.errors.nil?
   @project.active = false
   @project.save
+  puts @project.errors.full_messages unless @project.errors.nil?
 end

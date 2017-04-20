@@ -4,10 +4,12 @@ require 'chronic'
 Given /^there is a course with an assessed project$/ do
   @course = Course.make
   @course.save
+  puts @course.errors.full_messages unless @course.errors.nil?
   @project = Project.make
   @project.style = Style.find(1)
   @project.course = @course
   @project.save
+  puts @project.errors.full_messages unless @project.errors.nil?
 end
 
 Given /^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes "(.*?)"$/ do |start_date, end_date, start_dow, end_dow|
@@ -17,6 +19,7 @@ Given /^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes 
   @project.end_dow = Chronic.parse(end_dow).wday
 
   @project.save
+  puts @project.errors.full_messages unless @project.errors.nil?
 end
 
 Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
@@ -33,14 +36,17 @@ Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
     r.course = @course
     r.role = role
     r.save
+    puts r.errors.full_messages unless r.errors.nil?
   end
   @project.groups << @group
   @project.save
+  puts @project.errors.full_messages unless @project.errors.nil?
 end
 
 Given /^the project has been activated$/ do
   @project.active = true
   @project.save
+  puts @project.errors.full_messages unless @project.errors.nil?
 end
 
 Then /^the user should see a successful login message$/ do
@@ -66,6 +72,7 @@ Given /^the user "(.*?)" had demographics requested$/ do |with_demographics|
   demographics_requested = with_demographics == 'has'
   @user.welcomed = demographics_requested
   @user.save!
+  puts @user.errors.full_messages unless @user.errors.nil?
 end
 
 When /^the user logs in$/ do

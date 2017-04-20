@@ -11,6 +11,7 @@ end
 Given /^the user is an admin$/ do
   @user.admin = true
   @user.save
+  puts @user.errors.full_messages unless @user.errors.nil?
 end
 
 Then /^the user clicks the Admin button$/ do
@@ -103,6 +104,7 @@ Given /^the course started "([^"]*)" and ended "([^"]*)"$/ do |start_date, end_d
   @course.start_date = Chronic.parse(start_date)
   @course.end_date = Chronic.parse(end_date)
   @course.save
+  puts @course.errors.full_messages unless @course.errors.nil?
 end
 
 Then /^set user (\d+) to group "([^"]*)"$/ do |user_number, group_name|
