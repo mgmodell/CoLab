@@ -51,7 +51,7 @@ class Assessment < ActiveRecord::Base
       end
 
       assessment.project.course.enrolled_students.each do |student|
-        completion_hash[student] = 'Incomplete' unless completion_hash[student].present?
+        completion_hash[student.name] = 'Incomplete' unless completion_hash[student].present?
       end
       # Retrieve the course instructors
       # Retrieve names of those who did not complete their assessments

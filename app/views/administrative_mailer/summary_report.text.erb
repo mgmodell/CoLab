@@ -4,8 +4,8 @@ Below is your students' completion report from <%= @name %> at
 <%= link_to "CoLab.online", root_url %> which just wrapped up:
 
 Student | Completed at:
-<% @completion_report.keys do |user| %>
-<%= user.name %> | <%= @completion_report[ user ] %>
+<% @completion_report.keys do |user_name| %>
+<%= user_name %> | <%= @completion_report[ user_name ] %>
 <% end %>
 
 Thank you!
