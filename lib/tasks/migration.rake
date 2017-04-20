@@ -6,10 +6,13 @@ namespace :migratify do
     Assessment.where( instructor_updated: nil ).each do |a|
       a.instructor_updated = false
       a.save
+      puts a.errors.full_messages unless a.errors.nil?
     end
+    
     Experience.where( instructor_updated: nil ).each do |e|
       e.instructor_updated = false
       e.save
+      puts e.errors.full_messages unless e.errors.nil?
     end
     Rake::Task['db:migrate'].invoke
 
