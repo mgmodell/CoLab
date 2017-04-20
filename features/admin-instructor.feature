@@ -13,14 +13,14 @@ Feature: Administration: instructor
 
     Given the user is the instructor for the course
 
-  Scenario: Regular users do not see the Admin button 
+  Scenario: Instructors see admin buttons with a project
     Given the course has an assessed project
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user sees 1 course
 
-  Scenario: Regular users do not see the Admin button
+  Scenario: Instructors see admin buttons with an experience
     Given the course has an experience
     Given the user logs in
     Then the user "does" see an Admin button
@@ -34,7 +34,7 @@ Feature: Administration: instructor
     Then the user clicks the Admin button
     Then the user sees 1 course
 
-  Scenario: Regular users do not see the Admin button
+  Scenario: Instructor users see admin buttons.
     Given the course has a Bingo! game
     Given there is a course
     Given the user logs in
