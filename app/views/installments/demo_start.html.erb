@@ -1,23 +1,37 @@
-<h1>Your Tasks</h1>
+<h1>Your Tasks</h1><% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 <p>Hello <%= @current_user.nil? ? "John" : @current_user.first_name %>,
     You've got one task at the moment.
 
    
-  <table>
-    <tr>
-      <th>Task Name</th>
-      <th>Status</th>
-      <th>Course Name</th>
-      <th>Open Date</th>
-      <th>Close Date</th>
-      <th>Consent Form</th>
-    </tr>
+  <table data-role="table"
+          id="basicTable"
+          data-column-btn-theme"<%= theme_code %>"
+          data-column-popup-theme="<%= theme_code %>"
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="Select columns&hellip;"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+    <thead>
+      <tr>
+        <th>Task Name</th>
+        <th data-priority="1">Type</th>
+        <th>Status</th>
+        <th data-priority="1">Group</th>
+        <th data-priority="0">Course Name</th>
+        <th data-priority="1">Open Date</th>
+        <th data-priority="0">Close Date</th>
+        <th data-priority="1">Consent Form</th>
+      </tr>
+    </thead>
+    <tbody>
+
     <tr>
       <td>
-        <%= link_to "Assess Group: SuperStars", demo_complete_path %>
+        <%= link_to "SuperStars", demo_complete_path %>
         <br>
         (Project: Research Paper)
-                </td>
+      </td>
+      <td>Self- and Peer-Assessment</td>
       <td>
         <em>Not Started</em>
       </td>
@@ -29,4 +43,5 @@
         N/A
                 </td>
     </tr>
+    </tbody>
   </table>

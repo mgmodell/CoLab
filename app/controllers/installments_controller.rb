@@ -93,8 +93,15 @@ class InstallmentsController < ApplicationController
 
   def create
     @installment = Installment.new(i_params)
+
+    #Handle a demo run
+    if @installment.assessment_id < 0
+      flash[ :notice ] = "Your response would have been successfully saved. The demonstration is finished."
+      redirect_to root_url
+    else
     redirected = false
 
+    byebug
     # I need to figure out these redirects properly
     found = false
     @installment.group.users.each do |user|
@@ -106,7 +113,7 @@ class InstallmentsController < ApplicationController
                                      'therefore are not permitted to submit this installment.'
     elsif @installment.save
       project = @installment.assessment.project
-      flash[:notice] = 'Successfully saved your assessment installment.'
+      flash[:notice] = 'Successfully saved your response.'
       redirect_to root_url unless redirected
     else
       @factors = @installment.assessment.project.factors
@@ -122,6 +129,7 @@ class InstallmentsController < ApplicationController
         render @installment.assessment.project.style.filename
       end
 
+    end
     end
   end
 
