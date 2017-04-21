@@ -42,7 +42,7 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
   r.course = @course
   r.role = role
   r.save
-  puts r.errors.full_messages unless r.errors.nil?
+  puts r.errors.full_messages unless r.errors.blank?
   @group.users << @user
   user_count.to_i.times do
     user = User.make
@@ -53,9 +53,9 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
     r.course = @course
     r.role = role
     r.save
-    puts r.errors.full_messages unless r.errors.nil?
+    puts r.errors.full_messages unless r.errors.blank?
   end
   @project.groups << @group
   @project.save
-  puts @project.errors.full_messages unless @project.errors.nil?
+  puts @project.errors.full_messages unless @project.errors.blank?
 end

@@ -44,6 +44,7 @@ class Assessment < ActiveRecord::Base
 
   # Here we'll give instructors a little status update at the close of each assessment period
   def self.inform_instructors
+    count = 0
     Assessment.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |assessment|
       completion_hash = {}
       assessment.installments.each do |inst|
@@ -60,11 +61,13 @@ class Assessment < ActiveRecord::Base
         AdministrativeMailer.summary_report(assessment.project.name + ' (assessment)',
                                             instructor,
                                             completion_hash).deliver_later
+        count += 1
       end
 
       assessment.instructor_updated = true
       assessment.save
     end
+    logger.debug "\n\t**#{count} Assessment Reports sent to Instructors**"
   end
 
   # Create an assessment for a project if warranted

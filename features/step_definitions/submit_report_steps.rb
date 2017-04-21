@@ -7,10 +7,10 @@ Given /^the project measures (\d+) factors$/ do |num_factors|
     bp.factors << Factor.make
   end
   bp.save
-  puts bp.errors.full_messages unless bp.errors.nil?
+  puts bp.errors.full_messages unless bp.errors.blank?
   @project.factor_pack = bp
   @project.save
-  puts @project.errors.full_messages unless @project.errors.nil?
+  puts @project.errors.full_messages unless @project.errors.blank?
 end
 
 Given /^the project started last month and lasts (\d+) weeks, opened yesterday and closes tomorrow$/ do |num_weeks|

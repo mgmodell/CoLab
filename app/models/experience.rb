@@ -102,6 +102,7 @@ class Experience < ActiveRecord::Base
   end
 
   def self.inform_instructors
+    count = 0
     Experience.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |experience|
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
@@ -113,9 +114,11 @@ class Experience < ActiveRecord::Base
         AdministrativeMailer.summary_report(experience.name + ' (experience)',
                                             instructor,
                                             completion_hash).deliver_later
+        count += 1
       end
       experience.instructor_updated = true
       experience.save
     end
+    logger.debug "\n\t**#{count} Experience Reports sent to Instructors**"
   end
 end

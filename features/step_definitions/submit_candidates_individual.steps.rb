@@ -4,20 +4,20 @@ require 'forgery'
 Given /^the Bingo! game required (\d+) day of lead time$/ do |lead_time|
   @bingo.lead_time = lead_time
   @bingo.save
-  puts @bingo.errors.full_messages unless @bingo.errors.nil?
+  puts @bingo.errors.full_messages unless @bingo.errors.blank?
 end
 
 Given /^the Bingo! started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_date|
   @bingo.start_date = Chronic.parse(start_date)
   @bingo.end_date = Chronic.parse(end_date)
   @bingo.save
-  puts @bingo.errors.full_messages unless @bingo.errors.nil?
+  puts @bingo.errors.full_messages unless @bingo.errors.blank?
 end
 
 Given /^the Bingo! game individual count is (\d+)$/ do |individual_count|
   @bingo.individual_count = individual_count
   @bingo.save
-  puts @bingo.errors.full_messages unless @bingo.errors.nil?
+  puts @bingo.errors.full_messages unless @bingo.errors.blank?
 end
 
 When /^the user clicks the link to the candidate list$/ do
@@ -58,11 +58,11 @@ Then /^the candidate properties should be empty$/ do
 end
 
 When /^the user populates (\d+) of the "([^"]*)" entries$/ do |count, field|
-  @entries_lists = {} if @entries_lists.nil?
-  @entries_lists[@user] = [] if @entries_lists[@user].nil?
+  @entries_lists = {} if @entries_lists.blank?
+  @entries_lists[@user] = [] if @entries_lists[@user].blank?
   @entries_list = @entries_lists[@user]
   count.to_i.times do |index|
-    @entries_list[index] = {} if @entries_list[index].nil?
+    @entries_list[index] = {} if @entries_list[index].blank?
     @entries_list[index][field] = field == 'term' ?
                         Forgery::Name.industry :
                         Forgery::Basic.text
@@ -99,5 +99,5 @@ end
 Given(/^the Bingo! "([^"]*)" been activated$/) do |has_or_has_not|
   @bingo.active = has_or_has_not == 'has'
   @bingo.save
-  puts @bingo.errors.full_messages unless @bingo.errors.nil?
+  puts @bingo.errors.full_messages unless @bingo.errors.blank?
 end

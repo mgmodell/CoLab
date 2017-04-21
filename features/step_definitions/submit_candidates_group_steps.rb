@@ -64,13 +64,13 @@ end
 When /^the user populates (\d+) additional "([^"]*)" entries$/ do |count, field|
   required_term_count = @bingo.required_terms_for_group(@bingo.project.group_for_user(@user))
 
-  @entries_lists = {} if @entries_lists.nil?
-  @entries_lists[@user] = [] if @entries_lists[@user].nil?
+  @entries_lists = {} if @entries_lists.blank?
+  @entries_lists[@user] = [] if @entries_lists[@user].blank?
   @entries_list = @entries_lists[@user]
 
   existing_count = @entries_list.count
   count.to_i.times do |index|
-    @entries_list[existing_count + index] = { 'term' => '', 'definition' => '' } if @entries_list[existing_count + index].nil?
+    @entries_list[existing_count + index] = { 'term' => '', 'definition' => '' } if @entries_list[existing_count + index].blank?
     @entries_list[existing_count + index][field] = field == 'term' ?
                         Forgery::Name.industry :
                         Forgery::Basic.text
@@ -80,12 +80,12 @@ When /^the user populates (\d+) additional "([^"]*)" entries$/ do |count, field|
 end
 
 When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
-  @entries_lists = {} if @entries_lists.nil?
-  @entries_lists[@user] = [] if @entries_lists[@user].nil?
+  @entries_lists = {} if @entries_lists.blank?
+  @entries_lists[@user] = [] if @entries_lists[@user].blank?
   @entries_list = @entries_lists[@user]
 
   count.to_i.times do |index|
-    @entries_list[index] = {} if @entries_list[index].nil?
+    @entries_list[index] = {} if @entries_list[index].blank?
     @entries_list[index][field] = field == 'term' ?
                         Forgery::Name.industry :
                         Forgery::Basic.text
@@ -95,10 +95,10 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
 end
 
 Then /^the candidate lists have been merged$/ do
-  @entries_lists = {} if @entries_lists.nil?
+  @entries_lists = {} if @entries_lists.blank?
   combined_list = []
   @bingo.project.group_for_user(@user).users.each do |user|
-    next if @entries_lists[user].nil?
+    next if @entries_lists[user].blank?
     @entries_lists[user].each do |list_item|
       if list_item['term'].present? || list_item['definition']
         combined_list << list_item

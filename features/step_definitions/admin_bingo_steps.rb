@@ -16,7 +16,7 @@ Given /^the course has a Bingo! game$/ do
   @bingo = BingoGame.make
   @bingo.course = @course
   @bingo.save
-  puts @bingo.errors.full_messages unless @bingo.errors.nil?
+  puts @bingo.errors.full_messages unless @bingo.errors.blank?
 end
 
 Then /^the bingo "([^"]*)" is "([^"]*)"$/ do |field, value|
