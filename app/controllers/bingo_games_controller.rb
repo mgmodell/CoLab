@@ -100,6 +100,7 @@ class BingoGamesController < ApplicationController
     render :show, notice: 'Review data successfully saved'
   end
 
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

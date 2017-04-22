@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class CandidateListsController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:demo_complete]
   before_action :set_candidate_list, only: [:edit, :show, :update, :request_collaboration]
 
   def edit
@@ -74,6 +75,47 @@ class CandidateListsController < ApplicationController
     unless @candidate_list.bingo_game.reviewed
       redirect_to :root_path, notice: 'This list is not yet ready for review'
     end
+  end
+ 
+  # Demo support code
+  class BingoGameStub
+    def group_for_user( user )
+      nil
+    end
+    def topic
+      "What is collaboration?"
+    end
+    def end_date
+      1.day.from_now.end_of_day
+    end
+  end
+
+  class UserStub
+    attr_accessor :first_name
+    attr_accessor :last_name
+    def name
+      last_name + ', ' + first_name
+    end
+    def id
+      -1
+    end
+    def theme_code
+      "a"
+    end
+  end
+
+  def demo_complete
+    @candidate_list = CandidateList.new( is_group: false )
+    @candidate_list.bingo_game = BingoGame.new( id: -1,
+        topic: "What is collaboration?",
+        end_date: 1.day.from_now.end_of_day )
+
+    @candidate_list.candidates = Array.new
+    1.upto 10 do |index|
+      @candidate_list.candidates << Candidate.new( id: 0 - index )
+    end
+
+    render :edit
   end
 
   private

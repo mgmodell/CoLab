@@ -47,7 +47,7 @@ class Course < ActiveRecord::Base
       if experience.start_date < start_date
         errors.add(:start_date, 'Experience "' + experience.name + '" currently starts before this course does.')
       end
-      if project.end_date > end_date
+      if experience.end_date > end_date
         errors.add(:start_date, 'Experience "' + experience.name + '" currently ends after this course does.')
       end
     end
