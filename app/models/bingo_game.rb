@@ -13,7 +13,8 @@ class BingoGame < ActiveRecord::Base
   validates :group_discount, numericality:
     { only_integer: true,
       greater_than_or_equal_to: 0,
-      less_than_or_equal_to: 100 }
+      less_than_or_equal_to: 100,
+      allow_nil: true }
   validates :individual_count, numericality: { only_integer: true }
   validate :date_sanity
 
