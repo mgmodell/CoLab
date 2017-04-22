@@ -1,6 +1,6 @@
 <h1>Your Tasks</h1>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-<p>Hello <%= @first_name %>,
+<p>Hello <%= @first_name %>,</br>
   <% task_count = @waiting_student_tasks.count + @waiting_instructor_tasks.count %>
   <% if task_count > 0 %>
     <% if task_count == 1 %>

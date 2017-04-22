@@ -77,35 +77,12 @@ class CandidateListsController < ApplicationController
     end
   end
  
-  # Demo support code
-  class BingoGameStub
-    def group_for_user( user )
-      nil
-    end
-    def topic
-      "What is collaboration?"
-    end
-    def end_date
-      1.day.from_now.end_of_day
-    end
-  end
-
-  class UserStub
-    attr_accessor :first_name
-    attr_accessor :last_name
-    def name
-      last_name + ', ' + first_name
-    end
-    def id
-      -1
-    end
-    def theme_code
-      "a"
-    end
-  end
-
   def demo_complete
-    @candidate_list = CandidateList.new( is_group: false )
+    if @current_user.nil?
+      @current_user = User.new(first_name: 'John', last_name: 'Smith')
+    end
+    @candidate_list = CandidateList.new( id: -1, is_group: false )
+    @candidate_list.user = @current_user
     @candidate_list.bingo_game = BingoGame.new( id: -1,
         topic: "What is collaboration?",
         end_date: 1.day.from_now.end_of_day )
@@ -116,6 +93,12 @@ class CandidateListsController < ApplicationController
     end
 
     render :edit
+  end
+
+  #present as a hack to support the demo
+  def create
+    flash[ :notice ] = "Your response would have been successfully saved. The demonstration is finished."
+    redirect_to root_url
   end
 
   private
