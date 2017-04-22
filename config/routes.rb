@@ -39,12 +39,12 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
   root to: 'home#index'
+  get 'home/demo_start' => 'home#demo_start', :as => 'demo_start'
 
   # Consent log paths
   get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', :as => 'edit_consent_log'
   patch 'consent_logs/:id' => 'consent_logs#update', :as => 'consent_log'
 
-  get 'installments/demo_start' => 'installments#demo_start', :as => 'demo_start'
   get 'installments/demo_complete' => 'installments#demo_complete', :as => 'demo_complete'
 
   get 'installments/new/:assessment_id/:group_id' => 'installments#new', :as => 'new_installment'

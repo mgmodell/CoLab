@@ -62,10 +62,10 @@ Then /^the user "([^"]*)" see collaboration request button$/ do |button_present|
 end
 
 When /^the user populates (\d+) additional "([^"]*)" entries$/ do |count, field|
-  required_term_count = @bingo.required_terms_for_group(@bingo.project.group_for_user(@user))
+  #required_term_count = @bingo.required_terms_for_group(@bingo.project.group_for_user(@user))
 
-  @entries_lists = {} if @entries_lists.blank?
-  @entries_lists[@user] = [] if @entries_lists[@user].blank?
+  @entries_lists = {} if @entries_lists.nil?
+  @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
 
   existing_count = @entries_list.count
@@ -80,8 +80,8 @@ When /^the user populates (\d+) additional "([^"]*)" entries$/ do |count, field|
 end
 
 When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
-  @entries_lists = {} if @entries_lists.blank?
-  @entries_lists[@user] = [] if @entries_lists[@user].blank?
+  @entries_lists = {} if @entries_lists.nil?
+  @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
 
   count.to_i.times do |index|
@@ -95,12 +95,12 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
 end
 
 Then /^the candidate lists have been merged$/ do
-  @entries_lists = {} if @entries_lists.blank?
+  @entries_lists = {} if @entries_lists.nil?
   combined_list = []
   @bingo.project.group_for_user(@user).users.each do |user|
     next if @entries_lists[user].blank?
     @entries_lists[user].each do |list_item|
-      if list_item['term'].present? || list_item['definition']
+      if list_item['term'].present? || list_item['definition'].present?
         combined_list << list_item
       end
     end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class HomeController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:demo_start ]
+
   def index
     @current_user = current_user
     # The first thing we want to do is make sure they've had an opportunity to
@@ -20,4 +22,6 @@ class HomeController < ApplicationController
     @waiting_instructor_tasks = current_user.waiting_instructor_tasks
     @current_location = 'home'
   end
+
+  def demo_start; end
 end

@@ -58,11 +58,11 @@ Then /^the candidate properties should be empty$/ do
 end
 
 When /^the user populates (\d+) of the "([^"]*)" entries$/ do |count, field|
-  @entries_lists = {} if @entries_lists.blank?
-  @entries_lists[@user] = [] if @entries_lists[@user].blank?
+  @entries_lists = {} if @entries_lists.nil?
+  @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
   count.to_i.times do |index|
-    @entries_list[index] = {} if @entries_list[index].blank?
+    @entries_list[index] = {} if @entries_list[index].nil?
     @entries_list[index][field] = field == 'term' ?
                         Forgery::Name.industry :
                         Forgery::Basic.text

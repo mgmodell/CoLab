@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class InstallmentsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:demo_start, :demo_complete]
+  skip_before_action :authenticate_user!, only: [:demo_complete]
 
   def edit
     assessment_id = params[:assessment_id]
@@ -101,7 +101,6 @@ class InstallmentsController < ApplicationController
     else
     redirected = false
 
-    byebug
     # I need to figure out these redirects properly
     found = false
     @installment.group.users.each do |user|
@@ -132,8 +131,6 @@ class InstallmentsController < ApplicationController
     end
     end
   end
-
-  def demo_start; end
 
   class UserStub
     attr_accessor :id
