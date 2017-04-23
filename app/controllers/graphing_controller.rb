@@ -65,8 +65,9 @@ class GraphingController < ApplicationController
     sequential = assessment_to_values.keys.sort_by(&:start_date)
     sequential.each do |assessment|
       values = assessment_to_values[assessment]
-      data << [values[0].created_at.to_i * 1000,
-               values.inject(0) { |sum, value| sum + value.value }.to_f / values.size]
+      data << { x: values[0].created_at.to_i * 1000,
+                y: values.inject(0) { |sum, value| sum + value.value }.to_f / values.size,
+                name: values.map{ |x| x.installment.prettyComment }.join( "\n" ) }
     end
     series = {}
     series.store('data', data)
@@ -119,7 +120,9 @@ class GraphingController < ApplicationController
               end
               series_data = series['data']
               series_data = [] if series_data.nil?
-              series_data << [value.created_at.to_i * 1000, value.value]
+              series_data << {x: value.created_at.to_i * 1000,
+                              y: value.value,
+                              name: value.installment.prettyComment }
               series.store('data', series_data)
               data_hash.store(value.factor.id.to_s + '_' + value.installment.user_id.to_s, series)
             end
@@ -140,7 +143,9 @@ class GraphingController < ApplicationController
               end
               series_data = series['data']
               series_data = [] if series_data.nil?
-              series_data << [value.installment.assessment.start_date.to_time.to_i * 1000, value.value]
+              series_data << { x: value.installment.assessment.start_date.to_time.to_i * 1000,
+                               y: value.value,
+                               name: value.installment.prettyComment }
 
               # collapsed_series_data << [ date, tmp.inject{|sum,el| sum + el[1] }.to_f / tmp.size ]
               series.store('data', series_data)
@@ -149,15 +154,18 @@ class GraphingController < ApplicationController
           end
           data_hash.each_pair do |_key, value|
             tmp = []
-            date = value['data'][0][0]
+            date = value['data'][0][:x]
             new_collapsed_data = []
             value['data'].each do |v|
-              if v[0] != date
-                new_collapsed_data << [date, tmp.inject { |sum, el| sum + el }.to_f / tmp.size]
-                date = v[0]
+              if v[:x] != date
+                puts value
+                new_collapsed_data << {x: date,
+                                      y: tmp.inject { |sum, el| sum + el }.to_f / tmp.size,
+                                      name: "N/A" }
+                date = v[:x]
                 tmp = []
                end
-              tmp << v[1]
+              tmp << v[:y]
             end
             value['data'] = new_collapsed_data
           end

@@ -12,6 +12,15 @@ class Installment < ActiveRecord::Base
 
   before_save :normalize_sums
 
+  # Support inclusion of comments
+  def prettyComment
+    if comments.blank?
+      user.name + ": <no comment>"
+    else
+      user.name + ": " + comments
+    end
+  end
+
   def value_for_user_factor(user, factor)
     if @value_hash.nil?
       @value_hash = {}
