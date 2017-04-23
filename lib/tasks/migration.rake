@@ -2,6 +2,8 @@
 namespace :migratify do
   desc 'Set up infrastructure and send reminders and summaries'
   task april_20_2017: :environment do
+    # We should not need this one any longer.
+    return
     Assessment.where(instructor_updated: nil).each do |a|
       a.instructor_updated = false
       a.save
