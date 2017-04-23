@@ -19,6 +19,16 @@ $(document).ready ->
         type: "spline"
         zoomType: "x"
 
+      tooltip:
+        backgroundColor: null
+        borderWidth: 1
+        shadow: true
+        useHTML: true
+        shared: false
+        split: false
+        style:
+          padding: 0
+
       title:
         text: "Individual Summary"
 
