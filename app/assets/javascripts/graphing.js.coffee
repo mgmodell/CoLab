@@ -132,7 +132,7 @@ $ ->
         chart = window.charts[chart_num]
         index = 0
         #debug
-        console.log data.series
+        #console.log data.series
         chart.series[index].remove()  while index < chart.series.length
         chart.setTitle
           text: data.details.name
