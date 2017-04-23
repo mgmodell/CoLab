@@ -62,7 +62,7 @@ Then /^the user "([^"]*)" see collaboration request button$/ do |button_present|
 end
 
 When /^the user populates (\d+) additional "([^"]*)" entries$/ do |count, field|
-  #required_term_count = @bingo.required_terms_for_group(@bingo.project.group_for_user(@user))
+  # required_term_count = @bingo.required_terms_for_group(@bingo.project.group_for_user(@user))
 
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?

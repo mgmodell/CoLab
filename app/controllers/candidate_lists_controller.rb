@@ -76,28 +76,28 @@ class CandidateListsController < ApplicationController
       redirect_to :root_path, notice: 'This list is not yet ready for review'
     end
   end
- 
+
   def demo_complete
     if @current_user.nil?
       @current_user = User.new(first_name: 'John', last_name: 'Smith')
     end
-    @candidate_list = CandidateList.new( id: -1, is_group: false )
+    @candidate_list = CandidateList.new(id: -1, is_group: false)
     @candidate_list.user = @current_user
-    @candidate_list.bingo_game = BingoGame.new( id: -1,
-        topic: "What is collaboration?",
-        end_date: 1.day.from_now.end_of_day )
+    @candidate_list.bingo_game = BingoGame.new(id: -1,
+                                               topic: 'What is collaboration?',
+                                               end_date: 2.day.from_now.end_of_day)
 
-    @candidate_list.candidates = Array.new
+    @candidate_list.candidates = []
     1.upto 10 do |index|
-      @candidate_list.candidates << Candidate.new( id: 0 - index )
+      @candidate_list.candidates << Candidate.new(id: 0 - index)
     end
 
     render :edit
   end
 
-  #present as a hack to support the demo
+  # present as a hack to support the demo
   def create
-    flash[ :notice ] = "Your response would have been successfully saved. The demonstration is finished."
+    flash[:notice] = 'Your response would have been successfully saved. The demonstration is finished.'
     redirect_to root_url
   end
 
