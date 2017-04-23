@@ -30,38 +30,28 @@ class ExperiencesController < ApplicationController
   def create
     @experience = Experience.new(experience_params)
     @experience.course = Course.find(@experience.course_id)
-    respond_to do |format|
       if @experience.save
-        format.html { redirect_to @experience, notice: 'Experience was successfully created.' }
-        format.json { render :show, status: :created, location: @experience }
+        redirect_to @experience, notice: 'Experience was successfully created.' 
       else
-        format.html { render :new }
-        format.json { render json: @experience.errors, status: :unprocessable_entity }
+        render :new 
       end
-    end
   end
 
   def update
-    respond_to do |format|
       if @experience.update(experience_params)
-        format.html { redirect_to @experience, notice: 'Experience was successfully updated.' }
-        format.json { render :show, status: :ok, location: @experience }
+        redirect_to @experience, notice: 'Experience was successfully updated.'
       else
-        format.html { render :edit }
-        format.json { render json: @experience.errors, status: :unprocessable_entity }
+        render :edit
       end
-    end
   end
 
   def destroy
     @course = @experience.course
     @experience.destroy
-    respond_to do |format|
-      format.html { redirect_to @course, notice: 'Experience was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+      redirect_to @course, notice: 'Experience was successfully destroyed.'
   end
 
+  # Maybe build in JSON API support
   def next
     experience_id = params[:experience_id]
 

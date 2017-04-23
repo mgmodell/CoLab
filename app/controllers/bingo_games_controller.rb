@@ -29,27 +29,19 @@ class BingoGamesController < ApplicationController
 
   def create
     @bingo_game = BingoGame.new(bingo_game_params)
-    respond_to do |format|
       if @bingo_game.save
-        format.html { redirect_to @bingo_game, notice: 'Bingo Game was successfully created.' }
-        format.json { render :show, status: :created, location: @bingo_game }
+        redirect_to @bingo_game, notice: 'Bingo Game was successfully created.'
       else
-        format.html { render :new }
-        format.json { render json: @bingo_game.errors, status: :unprocessable_entity }
+        render :new
       end
-    end
   end
 
   def update
-    respond_to do |format|
       if @bingo_game.update(bingo_game_params)
-        format.html { redirect_to @bingo_game, notice: 'Bingo Game was successfully updated.' }
-        format.json { render :show, status: :ok, location: @bingo_game }
+        redirect_to @bingo_game, notice: 'Bingo Game was successfully updated.'
       else
-        format.html { render :edit }
-        format.json { render json: @bingo_game.errors, status: :unprocessable_entity }
+        render :edit
       end
-    end
   end
 
   def review_candidates; end
@@ -83,10 +75,7 @@ class BingoGamesController < ApplicationController
   def destroy
     @course = @bingo_game.course
     @bingo_game.destroy
-    respond_to do |format|
-      format.html { redirect_to @course, notice: 'Bingo Game was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+      redirect_to @course, notice: 'Bingo Game was successfully destroyed.'
   end
 
   def activate

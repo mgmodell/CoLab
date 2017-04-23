@@ -30,21 +30,16 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.course = Course.find(@project.course_id)
-    respond_to do |format|
       if @project.save
         notice = 'Project was successfully created.'
         notice += "Don't forget to activate it!" unless @project.active
-        format.html { redirect_to @project, notice: notice }
-        format.json { render :show, status: :created, location: @project }
+        redirect_to @project, notice: notice
       else
-        format.html { render :new }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
+        render :new
       end
-    end
   end
 
   def update
-    respond_to do |format|
       if @project.update(project_params)
         groups_users = {}
         @project.groups.each do |group|
@@ -67,22 +62,16 @@ class ProjectsController < ApplicationController
         end
         notice = 'Project was successfully updated.'
         notice += "Don't forget to activate it when you're done editing it." unless @project.active
-        format.html { redirect_to @project, notice: notice }
-        format.json { render :show, status: :ok, location: @project }
+        redirect_to @project, notice: notice 
       else
-        format.html { render :edit }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
+        render :edit 
       end
-    end
   end
 
   def destroy
     @course = @project.course
     @project.destroy
-    respond_to do |format|
-      format.html { redirect_to @course, notice: 'Project was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+      redirect_to @course, notice: 'Project was successfully destroyed.' 
   end
 
   def remove_group

@@ -35,52 +35,35 @@ class CoursesController < ApplicationController
     role = Role.instructor.take
     @course.rosters << Roster.new(role: role, user: @current_user)
 
-    respond_to do |format|
       if @course.save
-        format.html { redirect_to url: course_url(@course), notice: 'Course was successfully created.' }
-        format.json { render :show, status: :created, location: @course }
+        redirect_to url: course_url(@course), notice: 'Course was successfully created.'
       else
-        format.html { render :new }
-        format.json { render json: @course.errors, status: :unprocessable_entity }
+        render :new
       end
-    end
   end
 
   def update
-    respond_to do |format|
       if @course.update(course_params)
         @course.school = School.find(@course.school_id)
-        format.html { redirect_to course_path(@course), notice: 'Course was successfully updated.' }
-        format.json { render :show, status: :ok, location: @course }
+        redirect_to course_path(@course), notice: 'Course was successfully updated.' 
       else
-        format.html { render :edit }
-        format.json { render json: @course.errors, status: :unprocessable_entity }
+        render :edit
       end
-    end
   end
 
   def destroy
     @course.destroy
-    respond_to do |format|
-      format.html { redirect_to courses_url, notice: 'Course was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+      redirect_to courses_url, notice: 'Course was successfully destroyed.' 
   end
 
   def add_students
     @course.add_students_by_email params[:addresses]
-    respond_to do |format|
-      format.html { redirect_to @course, notice: 'Students have been invited.' }
-      format.json { render :show, status: :ok, location: @course }
-    end
+      redirect_to @course, notice: 'Students have been invited.' 
   end
 
   def add_instructors
     @course.add_instructors_by_email params[:addresses]
-    respond_to do |format|
-      format.html { redirect_to @course, notice: 'Instructor(s) have been invited.' }
-      format.json { render :show, status: :ok, location: @course }
-    end
+      redirect_to @course, notice: 'Instructor(s) have been invited.' 
   end
 
   def accept_roster
