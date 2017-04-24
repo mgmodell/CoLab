@@ -6,7 +6,7 @@ recently completed at <%= root_url %>. There are <%= @completion_report.keys.cou
 students enrolled in the course.
 
 Student | Completed at:
-<% @completion_report.keys do |user_email| %>
+<% @completion_report.keys.each do |user_email| %>
 <%= user_email %> | <%= @completion_report[ user_email ][ :name ] %> | <%= @completion_report[ user_email ][ :status ] %>
 <% end %>
 
