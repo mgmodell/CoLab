@@ -17,7 +17,7 @@
         <th>Student</th>
         <th>Completed at:</th>
       </tr>
-      <% @completion_report.keys do |user_email| %>
+      <% @completion_report.keys.each do |user_email| %>
         <tr>
           <td><%= mail_to user_email,
               @completion_report[ user_email ][ :name ]  %>

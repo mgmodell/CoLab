@@ -54,6 +54,24 @@ Feature: Email experience stragglers
     When the system emails instructor reports
     Then 1 emails will be sent
 
+  @wip
+  Scenario: Check project reports when a student has completed an assessment
+    Given the course has an assessed project
+    Given the project has a group with 4 confirmed users
+    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given the factor pack is set to "Original"
+    Given the project has been activated
+    Given the email queue is empty
+    Given the user is the "last" user in the group
+    Then the user logs in and submits an installment
+    Then the system emails stragglers
+    When the system emails stragglers
+    Then 3 emails will be sent
+    Given today is "4 days from now"
+    Given the email queue is empty
+    When the system emails instructor reports
+    Then 1 emails will be sent
+
   Scenario: Both Course Instructors will be emailed when the project assessment closes
     Given the course has 1 confirmed users
     Given the user is the most recently created user

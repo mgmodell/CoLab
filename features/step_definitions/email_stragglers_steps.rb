@@ -34,6 +34,12 @@ Then /^(\d+) emails will be sent$/ do |email_count|
   ActionMailer::Base.deliveries.count.should eq email_count.to_i
 end
 
+Then /^show the email queue$/ do
+  ActionMailer::Base.deliveries.each do |mail|
+    puts mail
+  end
+end
+
 Given /^the user is in a group on the project with (\d+) other users$/ do |user_count|
   @group = Group.make
   role = Role.enrolled.take
