@@ -48,11 +48,11 @@ class Assessment < ActiveRecord::Base
     Assessment.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |assessment|
       completion_hash = {}
       assessment.installments.each do |inst|
-        completion_hash[inst.user] = inst.inst_date.to_s
+        completion_hash[inst.email] = { name: inst.user.name, status: inst.inst_date.to_s }
       end
 
       assessment.project.course.enrolled_students.each do |student|
-        completion_hash[student.name] = 'Incomplete' unless completion_hash[student].present?
+        completion_hash[student.email] = { name: student.name, status: 'Incomplete' } unless completion_hash[student.email].present?
       end
       # Retrieve the course instructors
       # Retrieve names of those who did not complete their assessments

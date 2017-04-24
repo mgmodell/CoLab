@@ -107,7 +107,7 @@ class Experience < ActiveRecord::Base
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
         reaction = experience.get_user_reaction student
-        completion_hash[student.name] = reaction.status
+        completion_hash[student.email] = { name: student.name, status: reaction.status }
       end
 
       experience.course.instructors.each do |instructor|

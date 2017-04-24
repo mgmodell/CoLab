@@ -14,10 +14,12 @@
         <th>Student</th>
         <th>Completed at:</th>
       </tr>
-      <% @completion_report.keys do |user_name| %>
+      <% @completion_report.keys do |user_email| %>
         <tr>
-          <td><%= user_name %></td>
-          <td><%= @completion_report[ user_name ] %></td>
+          <td><%= mail_to user_email,
+              @completion_report[ user_email ][ :name ]  %>
+          </td>
+          <td><%= @completion_report[ user_email ][ :status ] %></td>
         </tr>
       <% end %>
     </table>
