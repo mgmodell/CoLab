@@ -48,7 +48,7 @@ class Assessment < ActiveRecord::Base
     Assessment.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |assessment|
       completion_hash = {}
       assessment.installments.each do |inst|
-        completion_hash[inst.email] = { name: inst.user.name, status: inst.inst_date.to_s }
+        completion_hash[inst.user.email] = { name: inst.user.name, status: inst.inst_date.to_s }
       end
 
       assessment.project.course.enrolled_students.each do |student|
