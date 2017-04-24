@@ -59,6 +59,7 @@ class Assessment < ActiveRecord::Base
       # InstructorNewsLetterMailer.inform( instructor ).deliver_later
       assessment.project.course.instructors.each do |instructor|
         AdministrativeMailer.summary_report(assessment.project.name + ' (assessment)',
+                                            assessment.project.course.prettyName,
                                             instructor,
                                             completion_hash).deliver_later
         count += 1
@@ -67,7 +68,7 @@ class Assessment < ActiveRecord::Base
       assessment.instructor_updated = true
       assessment.save
     end
-    logger.debug "\n\t**#{count} Assessment Reports sent to Instructors**"
+    logger.debug "\n\t********#{count} Assessment Reports sent to Instructors**"
   end
 
   # Create an assessment for a project if warranted

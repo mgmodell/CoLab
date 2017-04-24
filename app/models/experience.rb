@@ -112,6 +112,7 @@ class Experience < ActiveRecord::Base
 
       experience.course.instructors.each do |instructor|
         AdministrativeMailer.summary_report(experience.name + ' (experience)',
+                                            experience.course.prettyName,
                                             instructor,
                                             completion_hash).deliver_later
         count += 1

@@ -6,9 +6,12 @@
   <body>
     <h1>Hello, <%= @user.first_name %>.</h1>
     <p>
-      Below is your students' completion report from <%= @name %> at 
-          <%= link_to "CoLab.online", root_url %> which just wrapped up:
-          </P>
+      Below is your students' completion report from the task 
+      <em><%= @name %></em> in the course <em><%= @course_name %></em>
+      which recently completed at <%= link_to "CoLab.online", root_url %>.
+      There are <%= @completion_report.keys.count %> students enrolled in
+      the course.
+    </P>
     <table>
       <tr>
         <th>Student</th>

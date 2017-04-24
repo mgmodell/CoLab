@@ -10,12 +10,13 @@ class AdministrativeMailer < ActionMailer::Base
          track_opens: 'true')
   end
 
-  def summary_report(name, user, completion_hash)
+  def summary_report(name, course_name, user, completion_hash)
     @name = name
     @user = user
+    @course_name = course_name
     @completion_report = completion_hash
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
-         subject: 'CoLab Assessment status email',
+         subject: "CoLab : #{name}",
          tag: 'reporting',
          track_opens: 'true')
   end
