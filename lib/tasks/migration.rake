@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 namespace :migratify do
-  desc 'Set up infrastructure and send reminders and summaries'
+  desc 'Make instructor_updated false'
+  task falsify: :environment do
+    Experience.all.each do |exp|
+      exp.instructor_updated = false
+      exp.save
+    end
+
+    Assessment.all.each do |asmt|
+      asmt.instructor_updated = false
+      asmt.save
+    end
+  end
+
+  desc 'Get everything up to date with the current schema and seed data'
   task april_20_2017: :environment do
     # We should not need this one any longer.
     return
