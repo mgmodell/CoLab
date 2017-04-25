@@ -49,6 +49,30 @@ class BingoGame < ActiveRecord::Base
     !reviewed && end_date <= (DateTime.current + lead_time.days) && end_date >= DateTime.current
   end
 
+  def self.inform_instructors
+    count = 0
+    BingoGame.where( instructor_notified: false ).each do |bingo|
+      if bingo.end_date < DateTime.current + lead_time.days
+        completion_hash = { }
+        bingo.course.enrolled_students.each do |student|
+          completion_hash[ student.email ] = { name: student.name,
+                                              status: reaction.status }
+        end
+
+        bingo.course.instructors.each do |instructor|
+          AdministrativeMailer.summary_report( bingo.name + ' (terms list)',
+                                             bingo.course.prettyName,
+                                             instructor,
+                                             completion_hash ).deliver_later
+          count += 1
+        end
+        bingo.instructor_notified = true
+        bingo.save
+      end
+    end
+    logger.debug "\n\t**#{count} Candidate Terms List reports sent to Instructors**"
+  end
+
   def candidate_list_for_user(user)
     cl = candidate_lists.where(user_id: user.id).take
     if cl.nil?

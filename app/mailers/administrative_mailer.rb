@@ -32,6 +32,7 @@ class AdministrativeMailer < ActionMailer::Base
   def self.inform_instructors
     Assessment.inform_instructors
     Experience.inform_instructors
+    BingoGame.inform_instructors
   end
 
   # Send out email reminders to those who have yet to complete their waiting assessments
