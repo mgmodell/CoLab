@@ -125,7 +125,6 @@ Feature: Email experience stragglers
     #4 partials
     Given the project has a group with 4 confirmed users
     Given the users "incomplete" prep "as a group"
-    #5 incompletes
 
     Given the email queue is empty
     Given the user is the "last" user in the group
