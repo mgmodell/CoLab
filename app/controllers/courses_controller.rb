@@ -35,35 +35,35 @@ class CoursesController < ApplicationController
     role = Role.instructor.take
     @course.rosters << Roster.new(role: role, user: @current_user)
 
-      if @course.save
-        redirect_to url: course_url(@course), notice: 'Course was successfully created.'
-      else
-        render :new
-      end
+    if @course.save
+      redirect_to url: course_url(@course), notice: 'Course was successfully created.'
+    else
+      render :new
+    end
   end
 
   def update
-      if @course.update(course_params)
-        @course.school = School.find(@course.school_id)
-        redirect_to course_path(@course), notice: 'Course was successfully updated.' 
-      else
-        render :edit
-      end
+    if @course.update(course_params)
+      @course.school = School.find(@course.school_id)
+      redirect_to course_path(@course), notice: 'Course was successfully updated.'
+    else
+      render :edit
+    end
   end
 
   def destroy
     @course.destroy
-      redirect_to courses_url, notice: 'Course was successfully destroyed.' 
+    redirect_to courses_url, notice: 'Course was successfully destroyed.'
   end
 
   def add_students
     @course.add_students_by_email params[:addresses]
-      redirect_to @course, notice: 'Students have been invited.' 
+    redirect_to @course, notice: 'Students have been invited.'
   end
 
   def add_instructors
     @course.add_instructors_by_email params[:addresses]
-      redirect_to @course, notice: 'Instructor(s) have been invited.' 
+    redirect_to @course, notice: 'Instructor(s) have been invited.'
   end
 
   def accept_roster

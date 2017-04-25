@@ -30,25 +30,25 @@ class ExperiencesController < ApplicationController
   def create
     @experience = Experience.new(experience_params)
     @experience.course = Course.find(@experience.course_id)
-      if @experience.save
-        redirect_to @experience, notice: 'Experience was successfully created.' 
-      else
-        render :new 
-      end
+    if @experience.save
+      redirect_to @experience, notice: 'Experience was successfully created.'
+    else
+      render :new
+    end
   end
 
   def update
-      if @experience.update(experience_params)
-        redirect_to @experience, notice: 'Experience was successfully updated.'
-      else
-        render :edit
-      end
+    if @experience.update(experience_params)
+      redirect_to @experience, notice: 'Experience was successfully updated.'
+    else
+      render :edit
+    end
   end
 
   def destroy
     @course = @experience.course
     @experience.destroy
-      redirect_to @course, notice: 'Experience was successfully destroyed.'
+    redirect_to @course, notice: 'Experience was successfully destroyed.'
   end
 
   # Maybe build in JSON API support

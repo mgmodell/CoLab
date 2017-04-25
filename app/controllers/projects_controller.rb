@@ -30,48 +30,48 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.course = Course.find(@project.course_id)
-      if @project.save
-        notice = 'Project was successfully created.'
-        notice += "Don't forget to activate it!" unless @project.active
-        redirect_to @project, notice: notice
-      else
-        render :new
-      end
+    if @project.save
+      notice = 'Project was successfully created.'
+      notice += "Don't forget to activate it!" unless @project.active
+      redirect_to @project, notice: notice
+    else
+      render :new
+    end
   end
 
   def update
-      if @project.update(project_params)
-        groups_users = {}
-        @project.groups.each do |group|
-          groups_users[group] = []
-          new_name = params['group_' + group.id.to_s]
-          group.name = new_name unless new_name.blank?
-        end
-
-        @project.course.enrolled_students.each do |user|
-          gid = params['user_group_' + user.id.to_s]
-          unless gid.blank? || gid.to_i == -1
-            group = Group.find(gid)
-            groups_users[group] << user
-          end
-        end
-        groups_users.each do |group, users_array|
-          group.users = users_array
-          group.save
-          logger.debug group.errors.full_messages unless group.errors.nil?
-        end
-        notice = 'Project was successfully updated.'
-        notice += "Don't forget to activate it when you're done editing it." unless @project.active
-        redirect_to @project, notice: notice 
-      else
-        render :edit 
+    if @project.update(project_params)
+      groups_users = {}
+      @project.groups.each do |group|
+        groups_users[group] = []
+        new_name = params['group_' + group.id.to_s]
+        group.name = new_name unless new_name.blank?
       end
+
+      @project.course.enrolled_students.each do |user|
+        gid = params['user_group_' + user.id.to_s]
+        unless gid.blank? || gid.to_i == -1
+          group = Group.find(gid)
+          groups_users[group] << user
+        end
+      end
+      groups_users.each do |group, users_array|
+        group.users = users_array
+        group.save
+        logger.debug group.errors.full_messages unless group.errors.nil?
+      end
+      notice = 'Project was successfully updated.'
+      notice += "Don't forget to activate it when you're done editing it." unless @project.active
+      redirect_to @project, notice: notice
+    else
+      render :edit
+    end
   end
 
   def destroy
     @course = @project.course
     @project.destroy
-      redirect_to @course, notice: 'Project was successfully destroyed.' 
+    redirect_to @course, notice: 'Project was successfully destroyed.'
   end
 
   def remove_group

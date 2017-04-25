@@ -29,19 +29,19 @@ class BingoGamesController < ApplicationController
 
   def create
     @bingo_game = BingoGame.new(bingo_game_params)
-      if @bingo_game.save
-        redirect_to @bingo_game, notice: 'Bingo Game was successfully created.'
-      else
-        render :new
-      end
+    if @bingo_game.save
+      redirect_to @bingo_game, notice: 'Bingo Game was successfully created.'
+    else
+      render :new
+    end
   end
 
   def update
-      if @bingo_game.update(bingo_game_params)
-        redirect_to @bingo_game, notice: 'Bingo Game was successfully updated.'
-      else
-        render :edit
-      end
+    if @bingo_game.update(bingo_game_params)
+      redirect_to @bingo_game, notice: 'Bingo Game was successfully updated.'
+    else
+      render :edit
+    end
   end
 
   def review_candidates; end
@@ -75,7 +75,7 @@ class BingoGamesController < ApplicationController
   def destroy
     @course = @bingo_game.course
     @bingo_game.destroy
-      redirect_to @course, notice: 'Bingo Game was successfully destroyed.'
+    redirect_to @course, notice: 'Bingo Game was successfully destroyed.'
   end
 
   def activate

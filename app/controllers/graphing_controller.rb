@@ -67,7 +67,7 @@ class GraphingController < ApplicationController
       values = assessment_to_values[assessment]
       data << { x: values[0].created_at.to_i * 1000,
                 y: values.inject(0) { |sum, value| sum + value.value }.to_f / values.size,
-                name: values.map{ |x| x.installment.prettyComment }.join( "\n" ) }
+                name: values.map { |x| x.installment.prettyComment }.join("\n") }
     end
     series = {}
     series.store('data', data)
@@ -120,9 +120,9 @@ class GraphingController < ApplicationController
               end
               series_data = series['data']
               series_data = [] if series_data.nil?
-              series_data << {x: value.created_at.to_i * 1000,
-                              y: value.value,
-                              name: value.installment.prettyComment }
+              series_data << { x: value.created_at.to_i * 1000,
+                               y: value.value,
+                               name: value.installment.prettyComment }
               series.store('data', series_data)
               data_hash.store(value.factor.id.to_s + '_' + value.installment.user_id.to_s, series)
             end
@@ -158,10 +158,10 @@ class GraphingController < ApplicationController
             new_collapsed_data = []
             value['data'].each do |v|
               if v[:x] != date
-                comments = value[ 'data' ].collect{ |datum| datum[ :name ] + "\n" }.join( " " )
-                new_collapsed_data << {x: date,
-                                      y: tmp.inject { |sum, el| sum + el }.to_f / tmp.size,
-                                      name: comments }
+                comments = value['data'].collect { |datum| datum[:name] + "\n" }.join(' ')
+                new_collapsed_data << { x: date,
+                                        y: tmp.inject { |sum, el| sum + el }.to_f / tmp.size,
+                                        name: comments }
                 date = v[:x]
                 tmp = []
                end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddNotifiedFlagsToBingoGame < ActiveRecord::Migration
   def change
     add_column :bingo_games, :instructor_notified, :boolean

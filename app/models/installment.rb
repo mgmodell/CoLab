@@ -15,9 +15,9 @@ class Installment < ActiveRecord::Base
   # Support inclusion of comments
   def prettyComment
     if comments.blank?
-      user.name + ": <no comment>"
+      user.name + ': <no comment>'
     else
-      user.name + ": " + comments
+      user.name + ': ' + comments
     end
   end
 

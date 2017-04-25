@@ -15,8 +15,8 @@ class Course < ActiveRecord::Base
   before_validation :timezone_adjust
 
   def prettyName
-    prettyName = name.blank? ? "" : name
-    prettyName += number.blank? ? "" : number
+    prettyName = name.blank? ? '' : name
+    prettyName += number.blank? ? '' : number
   end
 
   def set_user_role(user, role)
