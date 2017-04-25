@@ -52,11 +52,12 @@ class BingoGame < ActiveRecord::Base
   def self.inform_instructors
     count = 0
     BingoGame.where(instructor_notified: false).each do |bingo|
-      next unless bingo.end_date < DateTime.current + lead_time.days
+      next unless bingo.end_date < DateTime.current + bingo.lead_time.days
       completion_hash = {}
       bingo.course.enrolled_students.each do |student|
+        candidate_list = bingo.candidate_list_for_user( student )
         completion_hash[student.email] = { name: student.name,
-                                           status: reaction.status }
+                                           status: candidate_list.percent_complete.to_s + "%" }
       end
 
       bingo.course.instructors.each do |instructor|
