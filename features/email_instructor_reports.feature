@@ -13,26 +13,41 @@ Feature: Email experience stragglers
 
   @wip
   Scenario: Instructor emailed when bingo closes and students responded
-    Given the course has an assessed project
+    Given there is a course with an assessed project
+    Given the course started "two months ago" and ended "two months from now"
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
     Given the course has a Bingo! game
     Given the Bingo! game individual count is 10
     Given the Bingo! started "last month" and ends "2 days from now"
     Given the Bingo! is group-enabled with the project and a 10 percent group discount
     Given the Bingo! "has" been activated
-    #4 completions
+
+    #set up the users and have them complete the bingo! prep assignment
     Given the project has a group with 4 confirmed users
     Given the users "finish" prep "as a group"
-    #4 completions
+    # 36 terms
     Given the project has a group with 4 confirmed users
     Given the users "finish" prep "as individuals"
-    #4 partials
+    # 40 terms
+    Given the project has a group with 4 confirmed users
+    Given the users "incomplete" prep "as individuals"
+    # 20
     Given the project has a group with 4 confirmed users
     Given the users "incomplete" prep "as a group"
+    # 18
+    Given the project has a group with 4 confirmed users
+    Given the users "don't" prep "as a group"
+    # 0
+    Given the course has 4 confirmed users
+    Given the users "incomplete" prep "as individuals"
+    # 20
+
+    Given the course has 1 confirmed users
+    Given the user is the most recently created user
+    Given the user "has" had demographics requested
+    Given the user is the instructor for the course
 
     Given the email queue is empty
-    Given the user is the "last" user in the group
-    Then the user logs in and submits an installment
     Then the system emails stragglers
     When the system emails stragglers
     Given today is "1 days from now"
