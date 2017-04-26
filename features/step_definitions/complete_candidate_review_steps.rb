@@ -26,7 +26,7 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
     user_group = [@users.sample]
   end
 
-  @user = @users.sample unless @user.present?
+  @user = @users.sample
   step 'the user "has" had demographics requested'
   step 'the user logs in'
   step 'the user clicks the link to the candidate list'

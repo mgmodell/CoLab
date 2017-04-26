@@ -11,7 +11,6 @@ Feature: Email experience stragglers
     Given the user "has" had demographics requested
     Given the user is the instructor for the course
 
-  @wip
   Scenario: Instructor emailed when bingo closes and students responded
     Given the course has an assessed project
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
@@ -32,14 +31,12 @@ Feature: Email experience stragglers
 
     Given the email queue is empty
     Given the user is the "last" user in the group
-    Then the user logs in and submits an installment
     Then the system emails stragglers
     When the system emails stragglers
     Given today is "1 days from now"
     Given the email queue is empty
     When the system emails instructor reports
     Then 1 emails will be sent
-    Then show the email queue
 
   Scenario: Course Instructor will be emailed when experience closes
     Given the course has an experience
