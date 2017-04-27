@@ -18,22 +18,16 @@
         <%= f.input :description %>
         <table width="100%">
           <tr>
-            <td width="45%">
-              <%= f.input :active %>
+            <td>
+              <%= f.input :individual_count, label: "Terms per individual" %>
             </td>
-            <td rowspan="4" width="10%" align="center" valign="center">&nbsp;</td>
+            <td></td>
             <td>
               <%= f.input :lead_time, label: "Days for instructor prep" %>
             </td>
           </tr>
           <tr>
-            <td>
-              <%= f.input :individual_count, label: "Terms per individual" %>
-            </td>
-            <td></td>
-          </tr>
-          <tr>
-            <td colspan="2">
+            <td colspan="3">
               <%= f.input :group_option, label: "Group submissions allowed?" %>
             </td>
           </tr>
@@ -41,6 +35,7 @@
             <td>
               <%= f.input :group_discount, label: "Percent fewer terms if working in a group" %>
             </td>
+            <td rowspan="2" width="10%" align="center" valign="center">&nbsp;</td>
             <td>
               <%= f.input :project_id,
                 collection: @bingo_game.course.projects.each.to_a,
@@ -59,10 +54,15 @@
           <tr>
             <td colspan="3">
               <em>Note: This game occurs in the <%= @bingo_game.course.timezone %> timezone and all dates reflect this.</em>
-            </br>
-          </br>
-        </td>
-      </tr>
+              </br>
+              </br>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <%= f.input :active %>
+            </td>
+          </tr>
     </table>
   </div>
 </div>
