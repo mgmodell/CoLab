@@ -30,11 +30,14 @@
             <td>
               <%= f.input :individual_count, label: "Terms per individual" %>
             </td>
-            <td>
+            <td></td>
+          </tr>
+          <tr>
+            <td colspan="2">
               <%= f.input :group_option, label: "Group submissions allowed?" %>
             </td>
           </tr>
-          <tr>
+          <tr id="group_options">
             <td>
               <%= f.input :group_discount, label: "Percent fewer terms if working in a group" %>
             </td>
