@@ -56,9 +56,9 @@ class BingoGame < ActiveRecord::Base
       next unless bingo.end_date < DateTime.current + bingo.lead_time.days
       completion_hash = {}
       bingo.course.enrolled_students.each do |student|
-        candidate_list = bingo.candidate_list_for_user( student )
+        candidate_list = bingo.candidate_list_for_user(student)
         completion_hash[student.email] = { name: student.name,
-                                           status: candidate_list.percent_complete.to_s + "%" }
+                                           status: candidate_list.percent_complete.to_s + '%' }
       end
 
       bingo.course.instructors.each do |instructor|
@@ -130,17 +130,21 @@ class BingoGame < ActiveRecord::Base
 
   def review_completed
     if reviewed && candidates.reviewed.count < candidates.completed.count
-        errors.add(:reviewed, "You must review all candidates to mark the review 'completed'" )
+      errors.add(:reviewed, "You must review all candidates to mark the review 'completed'")
     end
   end
 
   # We must validate group components {project and discount}
   def group_components
     if group_option
-      errors.add(:project_id,
-            'The group option requires that a project be selected') if project.nil?
-      errors.add(:group_discount,
-            'The group option requires that a group discount be entered') if group_discount.nil?
+      if project.nil?
+        errors.add(:project_id,
+                   'The group option requires that a project be selected')
+      end
+      if group_discount.nil?
+        errors.add(:group_discount,
+                   'The group option requires that a group discount be entered')
+      end
     end
   end
 end

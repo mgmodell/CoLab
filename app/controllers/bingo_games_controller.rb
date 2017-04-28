@@ -64,9 +64,8 @@ class BingoGamesController < ApplicationController
     @bingo_game.reviewed = params_act['reviewed']
     if @bingo_game.reviewed && !@bingo_game.students_notified
       @bingo_game.course.enrolled_students.each do |student|
-        AdministrativeMailer.notify_availability( student, 
-                        "#{@bingo_game.topic} terms list" ).deliver_later
-
+        AdministrativeMailer.notify_availability(student,
+                                                 "#{@bingo_game.topic} terms list").deliver_later
       end
       @bingo_game.students_notified = true
     end
