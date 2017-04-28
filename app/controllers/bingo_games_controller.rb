@@ -62,11 +62,22 @@ class BingoGamesController < ApplicationController
     end
 
     @bingo_game.reviewed = params_act['reviewed']
+    if @bingo_game.reviewed && !@bingo_game.students_notified
+      @bingo_game.course.enrolled_students.each do |student|
+        AdministrativeMailer.notify_availability( student, 
+                        "#{@bingo_game.topic} terms list" ).deliver_later
+
+      end
+      @bingo_game.students_notified = true
+    end
     @bingo_game.save
     logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.nil?
     flash[:notice] = 'Review data successfully saved'
-    if @bingo_game.reviewed
+
+    if @bingo_game.errors.empty? && @bingo_game.reviewed
       redirect_to root_url, notice: 'Review data successfully saved'
+    elsif !@bingo_game.errors.empty?
+      redirect_to :review_bingo_candidates, notice: 'There were problems with the review and it could not be saved'
     else
       redirect_to :review_bingo_candidates, notice: 'Review data successfully saved'
     end

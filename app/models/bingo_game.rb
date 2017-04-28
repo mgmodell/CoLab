@@ -17,6 +17,7 @@ class BingoGame < ActiveRecord::Base
       allow_nil: true }
   validates :individual_count, numericality: { only_integer: true }
   validate :date_sanity
+  validate :review_completed
 
   validate :group_components
 
@@ -127,11 +128,19 @@ class BingoGame < ActiveRecord::Base
     errors
   end
 
+  def review_completed
+    if reviewed && candidates.reviewed.count < candidates.completed.count
+        errors.add(:reviewed, "You must review all candidates to mark the review 'completed'" )
+    end
+  end
+
   # We must validate group components {project and discount}
   def group_components
     if group_option
-      errors.add(:project_id, 'The group option requires that a project be selected') if project.nil?
-      errors.add(:project_id, 'The group option requires that a project be selected') if project.nil?
+      errors.add(:project_id,
+            'The group option requires that a project be selected') if project.nil?
+      errors.add(:group_discount,
+            'The group option requires that a group discount be entered') if group_discount.nil?
     end
   end
 end

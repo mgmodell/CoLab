@@ -74,6 +74,7 @@ Feature: Review Candidate words for Bingo!
     Given the user assigns "Accept" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then 24 emails will be sent
      Then the saved reviews match the list
      Then there will be 4 concepts
      Then the user will see "success"
@@ -102,6 +103,7 @@ Feature: Review Candidate words for Bingo!
     Given the user assigns "Definition" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then 24 emails will be sent
      Then the saved reviews match the list
      Then there will be 4 concepts
      Then the user will see "success"
@@ -117,6 +119,7 @@ Feature: Review Candidate words for Bingo!
     Given the user assigns "" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then 24 emails will be sent
      Then the saved reviews match the list
      Then there will be 4 concepts
      Then the user will see "success"
@@ -131,6 +134,7 @@ Feature: Review Candidate words for Bingo!
     Given the user assigns "Accept" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then 24 emails will be sent
      Then the saved reviews match the list
      Then there will be 4 concepts
      Then the user will see "success"
@@ -155,7 +159,7 @@ Feature: Review Candidate words for Bingo!
     Given the user is the most recently created user
     Given the user "has" had demographics requested
     Given the user is the instructor for the course
-    #let's review course 2
+    #let's review bingo 2
     Given today is "4 days from now"
     Given the user logs in
      Then user should see 1 open task
@@ -164,6 +168,7 @@ Feature: Review Candidate words for Bingo!
     Given the user assigns "Accept" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then 28 emails will be sent
      Then the saved reviews match the list
      Then there will be 8 concepts
      Then the user will see "success"
