@@ -7,10 +7,10 @@ class School < ActiveRecord::Base
   has_many :rosters, through: :courses
 
   def instructors
-    rosters.joins( :role ).where( roles: { name: "Instructor" } ).collect{ |r| r.user }.uniq
+    rosters.joins(:role).where(roles: { name: 'Instructor' }).collect(&:user).uniq
   end
 
   def enrolled_students
-    rosters.joins( :role ).where( roles: { name: "Enrolled Student" } ).collect{ |r| r.user }.uniq
+    rosters.joins(:role).where(roles: { name: 'Enrolled Student' }).collect(&:user).uniq
   end
 end
