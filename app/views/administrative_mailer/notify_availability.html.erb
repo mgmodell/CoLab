@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>Hello, <%= @user.first_name %>.</h1>
+    <p>
+      The <%= @activity %> is now available for you on
+      <%= link_to 'CoLab', root_url %>. Please 
+      <%= link_to 'login', root_url %> at your earliest 
+      convenience to have a look.
+    </P>
+    <P>
+      <%= link_to root_url, root_url %>
+    </P>
+    <P>
+      Thank you!
+          </P>
+    <P>
+      CoLab Support
+          </p>
+  </body>
+</html>

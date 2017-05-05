@@ -16,7 +16,7 @@ class AdministrativeMailer < ActionMailer::Base
     @course_name = course_name
     @completion_report = completion_hash
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
-         subject: "CoLab : #{@name}",
+         subject: "CoLab: #{@name}",
          tag: 'reporting',
          track_opens: 'true')
   end
@@ -28,6 +28,17 @@ class AdministrativeMailer < ActionMailer::Base
          tag: 're-invite',
          track_opens: 'true')
   end
+
+  def notify_availability(user, activity)
+    @user = user
+    @activity = activity
+    mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
+         subject: "CoLab: #{activity} is available",
+         tag: 'availability',
+         track_opens: 'true')
+  end
+
+  # Business methods
 
   def self.inform_instructors
     Assessment.inform_instructors
