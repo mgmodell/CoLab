@@ -23,7 +23,7 @@
   <tbody>
     <% @projects.each do |project| %>
       <tr>
-        <td><%= project.name %></td>
+        <td><%= link_to project.name, project %></td>
         <td><%= project.start_date %></td>
         <td><%= project.end_date %></td>
         <td><%= Date::DAYNAMES.at project.start_dow %></td>

@@ -27,7 +27,7 @@
     <% @courses.each do |course| %>
       <tr>
         <td><%= course.number %></td>
-        <td><%= course.name %></td>
+        <td><%= link_to course.name, course %></td>
         <td><%= course.school.name %></td>
         <td><%= course.start_date %></td>
         <td><%= course.end_date %></td>

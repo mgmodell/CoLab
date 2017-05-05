@@ -22,7 +22,7 @@
   <tbody>
     <% @experiences.each do |experience| %>
       <tr>
-        <td><%= experience.name %></td>
+        <td><%= link_to experience.name, experience %></td>
         <td><%= experience.course.name %></td>
         <td><%= experience.start_date %></td>
         <td><%= experience.end_date %></td>

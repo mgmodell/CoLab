@@ -130,7 +130,7 @@
       <tbody>
           <% @course.bingo_games.each do |game| %>
             <tr>
-                <td><%= game.name %></td>
+                <td><%= link_to game.name, game %></td>
                 <td>
                 <% if game.active %>
                 Active
@@ -171,7 +171,7 @@
       <tbody>
           <% @course.projects.each do |project| %>
             <tr>
-                <td><%= project.name %></td>
+                <td><%= link_to project.name, project %></td>
                 <td>
                 <% if project.active %>
                 Active
@@ -212,7 +212,7 @@
       <tbody>
           <% @course.experiences.each do |experience| %>
             <tr>
-                <td><%= experience.name %></td>
+                <td><%= link_to experience.name, experience %></td>
                 <td>
                 <% if experience.active %>
                   Active

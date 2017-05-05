@@ -22,7 +22,7 @@
   <tbody>
     <% @bingo_games.each do |bingo_game| %>
       <tr>
-        <td><%= bingo_game.name %></td>
+        <td><%= link_to bingo_game.name, bingo_game %></td>
         <td><%= bingo_game.course.name %></td>
         <td><%= bingo_game.start_date %></td>
         <td><%= bingo_game.end_date %></td>
