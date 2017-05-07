@@ -31,7 +31,7 @@
         <td><%= candidate.term %></td>
         <td><%= candidate.definition %></td>
         <td><%= f.input_field "candidate_feedback_#{candidate.id}",
-                      value: candidate.candidate_feedback_id, 
+                      selected: candidate.candidate_feedback_id, 
                       collection: CandidateFeedback.all,
                       prompt: true,
                       label: false %>

@@ -51,14 +51,19 @@ class BingoGamesController < ApplicationController
     params_act = params["/bingo/candidates_review/#{@bingo_game.id}"]
     @bingo_game.candidates.completed.each do |candidate|
       code = 'candidate_feedback_' + candidate.id.to_s
-      candidate.candidate_feedback = CandidateFeedback.find(params_act["candidate_feedback_#{candidate.id}"])
-      unless candidate.candidate_feedback.name.start_with? 'Term'
-        concept_name = params_act["concept_#{candidate.id}"].split.map(&:capitalize).*' '
-        concept = Concept.where(name: concept_name).take
-        concept = Concept.create(name: concept_name) if concept.nil?
-        candidate.concept = concept
+      feedback_id = params_act["candidate_feedback_#{candidate.id}"]
+      unless feedback_id.blank?
+        candidate.candidate_feedback = CandidateFeedback.find( feedback_id )
+        candidate.candidate_feedback_id = candidate.candidate_feedback.id
+        unless candidate.candidate_feedback.name.start_with? 'Term'
+          concept_name = params_act["concept_#{candidate.id}"].split.map(&:capitalize).*' '
+          concept = Concept.where(name: concept_name).take
+          concept = Concept.create(name: concept_name) if concept.nil?
+          candidate.concept = concept
+        end
+        candidate.save
+        logger.debug candidate.errors.full_messages unless candidate.errors.nil?
       end
-      candidate.save
     end
 
     @bingo_game.reviewed = params_act['reviewed']
@@ -71,7 +76,6 @@ class BingoGamesController < ApplicationController
     end
     @bingo_game.save
     logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.nil?
-    flash[:notice] = 'Review data successfully saved'
 
     if @bingo_game.errors.empty? && @bingo_game.reviewed
       redirect_to root_url, notice: 'Review data successfully saved'
