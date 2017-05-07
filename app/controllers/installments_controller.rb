@@ -3,6 +3,7 @@ class InstallmentsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:demo_complete]
 
   def edit
+    @title = "How Did Your Group Work Together?"
     assessment_id = params[:assessment_id]
 
     project = Assessment.find(assessment_id).project
@@ -34,6 +35,7 @@ class InstallmentsController < ApplicationController
   end
 
   def update
+    @title = "How Did Your Group Work Together?"
     @installment = Installment.find(params[:id])
     if @installment.update_attributes(i_params)
       redirect_to root_url, notice: 'Installment successfully updated'
@@ -48,6 +50,7 @@ class InstallmentsController < ApplicationController
   end
 
   def new
+    @title = "How Did Your Group Work Together?"
     assessment_id = params[:assessment_id]
     if assessment_id == -1
       redirect_to root_path
@@ -92,6 +95,7 @@ class InstallmentsController < ApplicationController
   end
 
   def create
+    @title = "How Did Your Group Work Together?"
     @installment = Installment.new(i_params)
 
     # Handle a demo run
@@ -149,6 +153,7 @@ class InstallmentsController < ApplicationController
   end
 
   def demo_complete
+    @title = "How Did Your Group Work Together? (DEMO)"
     @project = ProjStub.new
     @project.style = Style.find(2)
 

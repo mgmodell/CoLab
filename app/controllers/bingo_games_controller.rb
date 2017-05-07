@@ -3,11 +3,16 @@ class BingoGamesController < ApplicationController
   before_action :set_bingo_game, only: [:show, :edit, :update, :destroy, :review_candidates, :update_review_candidates]
   before_action :check_admin, except: [:next, :diagnose, :react, :update_review_candidates]
 
-  def show; end
+  def show
+    @title = "Bingo! Game Details"
+  end
 
-  def edit; end
+  def edit
+    @title = "Edit a Bingo! Game"
+  end
 
   def index
+    @title = "Bingo! Games"
     @bingo_games = []
     if @current_user.is_admin?
       @bingo_games = BingoGame.all
@@ -20,6 +25,7 @@ class BingoGamesController < ApplicationController
   end
 
   def new
+    @title = "New Bingo! Game"
     @bingo_game = BingoGame.new
     @bingo_game.course_id = params[:course_id]
     @bingo_game.course = Course.find(params[:course_id])
@@ -28,6 +34,7 @@ class BingoGamesController < ApplicationController
   end
 
   def create
+    @title = "New Bingo! Game"
     @bingo_game = BingoGame.new(bingo_game_params)
     if @bingo_game.save
       redirect_to @bingo_game, notice: 'Bingo Game was successfully created.'
@@ -37,6 +44,7 @@ class BingoGamesController < ApplicationController
   end
 
   def update
+    @title = "Edit a Bingo! Game"
     if @bingo_game.update(bingo_game_params)
       redirect_to @bingo_game, notice: 'Bingo Game was successfully updated.'
     else
@@ -44,7 +52,9 @@ class BingoGamesController < ApplicationController
     end
   end
 
-  def review_candidates; end
+  def review_candidates
+    @title = "Candidate Terms for Review"
+  end
 
   def update_review_candidates
     # Process the data
@@ -100,6 +110,7 @@ class BingoGamesController < ApplicationController
       bingo_game.save
     end
     @bingo_game = bingo_game
+    @title = "Bingo! Game"
     render :show, notice: 'Review data successfully saved'
   end
 

@@ -212,6 +212,7 @@ class GraphingController < ApplicationController
   end
 
   def index
+    @title = "Reports"
     @user = current_user
     @current_users_projects = []
 

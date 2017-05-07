@@ -3,12 +3,17 @@ class CoursesController < ApplicationController
   before_action :set_course, only: [:show, :edit, :update, :destroy, :add_students, :add_instructors]
   before_action :check_admin, except: [:next, :diagnose, :react, :accept_roster, :decline_roster]
 
-  def show; end
+  def show
+    @title = "Course Details"
+  end
 
-  def edit; end
+  def edit
+    @title = "Edit Course"
+  end
 
   # GET /admin/coures
   def index
+    @title = "List of Courses"
     @courses = []
     if @current_user.admin?
       @courses = Course.all
@@ -21,6 +26,7 @@ class CoursesController < ApplicationController
   end
 
   def new
+    @title = "New Course"
     @course = Course.new
     @course.timezone = @current_user.timezone
     @course.school = @current_user.school unless @current_user.school.nil?
@@ -31,6 +37,7 @@ class CoursesController < ApplicationController
   end
 
   def create
+    @title = "New Course"
     @course = Course.new(course_params)
     role = Role.instructor.take
     @course.rosters << Roster.new(role: role, user: @current_user)
@@ -43,6 +50,7 @@ class CoursesController < ApplicationController
   end
 
   def update
+    @title = "Edit Course"
     if @course.update(course_params)
       @course.school = School.find(@course.school_id)
       redirect_to course_path(@course), notice: 'Course was successfully updated.'

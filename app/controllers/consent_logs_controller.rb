@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class ConsentLogsController < ApplicationController
   def update
+    @title = "Update Consent Response"
     @consent_log = ConsentLog.find(params[:id])
     if @consent_log.update!(cl_params)
       redirect_to controller: 'home', action: 'index'
@@ -10,6 +11,7 @@ class ConsentLogsController < ApplicationController
   end
 
   def edit
+    @title = "Update Consent Response"
     # validations here
     cf_id = params[:consent_form_id]
     u_id = current_user.id

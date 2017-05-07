@@ -3,20 +3,27 @@ class SchoolsController < ApplicationController
   before_action :set_school, only: [:show, :edit, :update, :destroy]
   before_action :check_admin
 
-  def show; end
+  def show
+    @title = "School Details"
+  end
 
-  def edit; end
+  def edit
+    @title = "Edit School"
+  end
 
   # GET /admin/school
   def index
+    @title = "List of Schools"
     @schools = School.all
   end
 
   def new
+    @title = "New School"
     @school = School.new
   end
 
   def create
+    @title = "New School"
     @school = School.new(school_params)
     if @school.save
       redirect_to url: school_url(@school), notice: 'School was successfully created.'
@@ -26,6 +33,7 @@ class SchoolsController < ApplicationController
   end
 
   def update
+    @title = "Edit School"
     if @school.update(school_params)
       @school.school = School.find(@school.school_id)
       redirect_to school_path(@school), notice: 'School was successfully updated.'

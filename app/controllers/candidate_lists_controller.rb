@@ -4,6 +4,7 @@ class CandidateListsController < ApplicationController
   before_action :set_candidate_list, only: [:edit, :show, :update, :request_collaboration]
 
   def edit
+    @title = "Complete the Term List"
     if @candidate_list.bingo_game.reviewed
       render :show
     elsif !@candidate_list.bingo_game.is_open?
@@ -12,6 +13,7 @@ class CandidateListsController < ApplicationController
   end
 
   def request_collaboration
+    @title = "Complete the Term List"
     desired = params[:desired] == 'yes'
     if desired
       @candidate_list.group_requested = true
@@ -72,12 +74,16 @@ class CandidateListsController < ApplicationController
   end
 
   def show
+    @title = "Terms List"
     unless @candidate_list.bingo_game.reviewed
       redirect_to :root_path, notice: 'This list is not yet ready for review'
     end
   end
 
   def demo_complete
+    #TODO: Add group functionality here
+    # pull it from installments ~133
+    @title = "Complete the Term List (DEMO)"
     if @current_user.nil?
       @current_user = User.new(first_name: 'John', last_name: 'Smith')
     end
