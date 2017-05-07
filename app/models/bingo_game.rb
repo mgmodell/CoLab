@@ -37,6 +37,10 @@ class BingoGame < ActiveRecord::Base
     topic
   end
 
+  def term_list_date
+    end_date - lead_time.days
+  end
+
   def is_open?
     start_date <= DateTime.current && end_date >= (DateTime.current + lead_time.days)
   end

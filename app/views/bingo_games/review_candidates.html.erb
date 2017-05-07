@@ -17,11 +17,11 @@
         class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
     <thead>
       <tr>
-        <th width="5%">#</th>
-        <th width="30%">Term</th>
+        <th>#</th>
+        <th>Term</th>
         <th>Definition</th>
         <th>Feedback</th>
-        <th>Concept</th>
+        <th width="20%">Concept</th>
       </tr>
     </thead>
     <tbody><% count = 0 %>
@@ -37,7 +37,7 @@
                       label: false %>
         </td>
         <td><%= f.input_field "concept_#{candidate.id}",
-                      value: candidate.concept_id, 
+                      value: candidate.concept.blank? ? "": candidate.concept.name, 
                       class: "awesomplete",
                       data: { list: Concept.all.collect{|x| x.name }.join( ", " ) },
                       label: false %>
