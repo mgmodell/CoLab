@@ -1,7 +1,6 @@
 <%= simple_form_for @candidate_list do |f| %>
   <%= f.error_notification %>
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-  <h1>Bingo! Word List</h1>
   <table>
     <tr>
       <th align="right">Topic:</th>

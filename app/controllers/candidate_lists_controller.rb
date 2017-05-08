@@ -74,7 +74,7 @@ class CandidateListsController < ApplicationController
   end
 
   def show
-    @title = "Terms List"
+    @title = "Terms List for Review"
     unless @candidate_list.bingo_game.reviewed
       redirect_to :root_path, notice: 'This list is not yet ready for review'
     end

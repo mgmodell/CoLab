@@ -2,7 +2,7 @@
 <html>
   <%= favicon_link_tag %>
   <head>
-    <title>CoLab Reporting</title>
+    <title>CoLab <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "installments_manifest" %>
@@ -12,7 +12,7 @@
   <body>
     <div data-role="page" data-theme="<%= @current_user.nil? ? "a" : @current_user.theme.code %>">
       <div data-role="header" data-position="fixed" style="overflow:hidden;" >
-        <h1>CoLab</h1>
+        <h1>CoLab <%= " : " + @title unless @title.nil? %></h1>
         <% if working %>
           <div data-role="controlgroup" data-type="horizontal" data-mini="true"
                                         class="ui-btn-right">

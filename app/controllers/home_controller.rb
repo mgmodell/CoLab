@@ -23,5 +23,7 @@ class HomeController < ApplicationController
     @current_location = 'home'
   end
 
-  def demo_start; end
+  def demo_start
+    @title = "Demonstration"
+  end
 end

@@ -113,7 +113,7 @@
               </td>
               <td>Distilled concepts</td>
               <td>
-                <% task.concepts.count %> concepts
+                <%= task.concepts.count %> concepts
               </td>
             <% end %>
             <td>
@@ -126,8 +126,8 @@
             <td> <%= task.course.name %></td>
             <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td>
-              <% task.term_list_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
-              (List for class on <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>)
+              <%= task.term_list_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
+              (List for class on <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d %Z") %>)
             </td>
             <td>N/A</td>
           </tr>

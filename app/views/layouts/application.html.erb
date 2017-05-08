@@ -11,7 +11,7 @@
   <body>
     <div data-role="page" data-theme="<%= @current_user.nil? ? "a" : @current_user.theme.code %>">
       <div data-role="header" data-position="fixed" style="overflow:hidden;" >
-        <h1>CoLab</h1>
+        <h1>CoLab <%= " : " + @title unless @title.nil? %></h1>
       </div>
       <div data-role="content">
         <% if flash[:error] -%>
