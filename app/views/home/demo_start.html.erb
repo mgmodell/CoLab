@@ -53,7 +53,10 @@
       <td>SuperStars</td>
       <td>Advanced Collaborative Research</td>
       <td> <%= 1.week.ago.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-      <td> <%= 2.day.from_now.end_of_day.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+      <td>
+        <%= 2.day.from_now.end_of_day.strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
+        <small><i><%= 4.day.from_now.end_of_day.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d") %></i></small>
+      </td>
       <td>N/A</td>
     </tr>
     </tbody>
