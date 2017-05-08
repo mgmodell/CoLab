@@ -4,16 +4,16 @@ class ProjectsController < ApplicationController
   before_action :check_admin, except: [:next, :diagnose, :react]
 
   def show
-    @title = "Project Details"
+    @title = 'Project Details'
   end
 
   def edit
-    @title = "Edit Project"
+    @title = 'Edit Project'
   end
 
   # GET /admin/coures
   def index
-    @title = "List of Projects"
+    @title = 'List of Projects'
     @projects = []
     if @current_user.is_admin?
       @projects = Project.all
@@ -26,7 +26,7 @@ class ProjectsController < ApplicationController
   end
 
   def new
-    @title = "New Project"
+    @title = 'New Project'
     @project = Project.new
     @project.course = Course.find params[:course_id]
     @project.start_date = @project.course.start_date
@@ -34,7 +34,7 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @title = "New Project"
+    @title = 'New Project'
     @project = Project.new(project_params)
     @project.course = Course.find(@project.course_id)
     if @project.save
@@ -47,7 +47,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    @title = "Edit Project"
+    @title = 'Edit Project'
     if @project.update(project_params)
       groups_users = {}
       @project.groups.each do |group|
@@ -89,7 +89,7 @@ class ProjectsController < ApplicationController
   end
 
   def add_group
-    @title = "Project Details"
+    @title = 'Project Details'
     @project = Project.find(params[:project_id])
     group = Group.create(name: params[:group_name], project: @project)
 
@@ -98,7 +98,7 @@ class ProjectsController < ApplicationController
   end
 
   def activate
-    @title = "Project Details"
+    @title = 'Project Details'
     project = Project.find(params[:project_id])
     if @current_user.is_admin? ||
        project.course.get_roster_for_user(@current_user).role.name == 'Instructor'

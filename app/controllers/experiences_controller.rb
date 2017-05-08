@@ -4,15 +4,15 @@ class ExperiencesController < ApplicationController
   before_action :check_admin, except: [:next, :diagnose, :react]
 
   def show
-    @title = "Experience Details"
+    @title = 'Experience Details'
   end
 
   def edit
-    @title = "Edit Experience"
+    @title = 'Edit Experience'
   end
 
   def index
-    @title = "List of Experiences"
+    @title = 'List of Experiences'
     @experiences = []
     if @current_user.is_admin?
       @experiences = Experience.all
@@ -25,7 +25,7 @@ class ExperiencesController < ApplicationController
   end
 
   def new
-    @title = "New Experience"
+    @title = 'New Experience'
     @experience = Experience.new
     @experience.course_id = params[:course_id]
     @experience.course = Course.find(params[:course_id])
@@ -39,7 +39,7 @@ class ExperiencesController < ApplicationController
     if @experience.save
       redirect_to @experience, notice: 'Experience was successfully created.'
     else
-      @title = "New Experience"
+      @title = 'New Experience'
       render :new
     end
   end
@@ -48,7 +48,7 @@ class ExperiencesController < ApplicationController
     if @experience.update(experience_params)
       redirect_to @experience, notice: 'Experience was successfully updated.'
     else
-      @title = "Edit Experience"
+      @title = 'Edit Experience'
       render :edit
     end
   end
@@ -75,13 +75,13 @@ class ExperiencesController < ApplicationController
         reaction.instructed = true
         reaction.save
         @experience = experience
-        @title = "Experience Instructions"
+        @title = 'Experience Instructions'
         render :instructions
       else
         if week.nil?
           @reaction = reaction
           # we just finished the last week
-          @title = "Experience Reaction"
+          @title = 'Experience Reaction'
           render :reaction
         else
           @diagnosis = Diagnosis.new(reaction: reaction, week: week)

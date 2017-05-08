@@ -4,7 +4,7 @@ class CandidateListsController < ApplicationController
   before_action :set_candidate_list, only: [:edit, :show, :update, :request_collaboration]
 
   def edit
-    @title = "Complete the Term List"
+    @title = 'Complete the Term List'
     if @candidate_list.bingo_game.reviewed
       render :show
     elsif !@candidate_list.bingo_game.is_open?
@@ -13,7 +13,7 @@ class CandidateListsController < ApplicationController
   end
 
   def request_collaboration
-    @title = "Complete the Term List"
+    @title = 'Complete the Term List'
     desired = params[:desired] == 'yes'
     if desired
       @candidate_list.group_requested = true
@@ -74,31 +74,30 @@ class CandidateListsController < ApplicationController
   end
 
   def show
-    @title = "Terms List for Review"
+    @title = 'Terms List for Review'
     unless @candidate_list.bingo_game.reviewed
       redirect_to :root_path, notice: 'This list is not yet ready for review'
     end
   end
 
   def demo_complete
-    #TODO: Add group functionality here
+    # TODO: Add group functionality here
     # pull it from installments ~133
-    @title = "Complete the Term List (DEMO)"
+    @title = 'Complete the Term List (DEMO)'
     if @current_user.nil?
       @current_user = User.new(first_name: 'John', last_name: 'Smith')
     end
-    demo_group = Group.new( );
+    demo_group = Group.new
     demo_group.name = 'SuperStars'
-    demo_group.users = [ @current_user ]
+    demo_group.users = [@current_user]
     @candidate_list = CandidateList.new(id: -1,
-                                        is_group: false )
+                                        is_group: false)
     @candidate_list.group = demo_group
     @candidate_list.user = @current_user
-    demo_project = Project.new( id: -1,
-                                name: 'Research Paper',
-                                course_id: -1 )
+    demo_project = Project.new(id: -1,
+                               name: 'Research Paper',
+                               course_id: -1)
     demo_project.groups << demo_group
-
 
     @candidate_list.bingo_game = BingoGame.new(id: -1,
                                                topic: 'What is collaboration?',
@@ -106,11 +105,11 @@ class CandidateListsController < ApplicationController
                                                group_option: true,
                                                project: demo_project,
                                                group_discount: 33,
-                                               individual_count: 0 )
+                                               individual_count: 0)
 
     @candidate_list.candidates = []
     1.upto 10 do |index|
-      @candidate_list.candidates << Candidate.new(id: 0 - index, candidate_list: @candidate_list )
+      @candidate_list.candidates << Candidate.new(id: 0 - index, candidate_list: @candidate_list)
     end
 
     render :edit
@@ -128,7 +127,7 @@ class CandidateListsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_candidate_list
-    if params[ :id ] == '-1' #Support for demo
+    if params[:id] == '-1' # Support for demo
       flash[:notice] = 'Collaboration would have been successfully requested. The demonstration is finished.'
       redirect_to root_url
     else

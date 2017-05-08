@@ -30,12 +30,11 @@ class Project < ActiveRecord::Base
   validate :activation_status
 
   def group_for_user(user)
-    if id == -1 #This hack supports demonstration of group term lists
-      Group.new( name: 'SuperStars', users: [ user ] )
+    if id == -1 # This hack supports demonstration of group term lists
+      Group.new(name: 'SuperStars', users: [user])
     else
       groups.joins(:users).where(users: { id: user.id }).take
     end
-      
   end
 
   def is_for_research?

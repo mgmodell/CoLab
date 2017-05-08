@@ -90,7 +90,7 @@ class BingoGame < ActiveRecord::Base
       individual_count.times do
         cl.candidates << Candidate.new(term: '', definition: '', user: user)
       end
-      cl.save unless id == -1 #This unless supports the demonstration only
+      cl.save unless id == -1 # This unless supports the demonstration only
     elsif  cl.is_group
       cl = candidate_lists.where(group_id: project.group_for_user(user).id).take
     end

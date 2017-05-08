@@ -24,6 +24,6 @@ class HomeController < ApplicationController
   end
 
   def demo_start
-    @title = "Demonstration"
+    @title = 'Demonstration'
   end
 end
