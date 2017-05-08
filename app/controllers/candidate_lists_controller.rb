@@ -87,15 +87,30 @@ class CandidateListsController < ApplicationController
     if @current_user.nil?
       @current_user = User.new(first_name: 'John', last_name: 'Smith')
     end
-    @candidate_list = CandidateList.new(id: -1, is_group: false)
+    demo_group = Group.new( );
+    demo_group.name = 'SuperStars'
+    demo_group.users = [ @current_user ]
+    @candidate_list = CandidateList.new(id: -1,
+                                        is_group: false )
+    @candidate_list.group = demo_group
     @candidate_list.user = @current_user
+    demo_project = Project.new( id: -1,
+                                name: 'Research Paper',
+                                course_id: -1 )
+    demo_project.groups << demo_group
+
+
     @candidate_list.bingo_game = BingoGame.new(id: -1,
                                                topic: 'What is collaboration?',
-                                               end_date: 2.day.from_now.end_of_day)
+                                               end_date: 2.day.from_now.end_of_day,
+                                               group_option: true,
+                                               project: demo_project,
+                                               group_discount: 33,
+                                               individual_count: 0 )
 
     @candidate_list.candidates = []
     1.upto 10 do |index|
-      @candidate_list.candidates << Candidate.new(id: 0 - index)
+      @candidate_list.candidates << Candidate.new(id: 0 - index, candidate_list: @candidate_list )
     end
 
     render :edit
@@ -113,7 +128,12 @@ class CandidateListsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_candidate_list
-    @candidate_list = CandidateList.find(params[:id])
+    if params[ :id ] == '-1' #Support for demo
+      flash[:notice] = 'Collaboration would have been successfully requested. The demonstration is finished.'
+      redirect_to root_url
+    else
+      @candidate_list = CandidateList.find(params[:id])
+    end
   end
 
   def candidate_list_params
