@@ -68,6 +68,7 @@ $(document).ready(function(){
   $("#projects_table").tablesorter( {sortList: [[0,0]]} );
   $("#experiences_table").tablesorter( {sortList: [[0,0]]} );
   $("#course_table").tablesorter( {sortList: [[0,0]]} );
+  $("#candidates_table").tablesorter( {sortList: [[0,0]]} );
 
   $( "[data-role='header'], [data-role='footer']" ).toolbar();
 
