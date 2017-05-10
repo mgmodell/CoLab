@@ -81,11 +81,9 @@ class CandidateListsController < ApplicationController
   end
 
   def demo_complete
-    # TODO: Add group functionality here
-    # pull it from installments ~133
     @title = 'Complete the Term List (DEMO)'
     if @current_user.nil?
-      @current_user = User.new(first_name: 'John', last_name: 'Smith')
+      @current_user = User.new(first_name: 'John', last_name: 'Smith', timezone: 'Seoul')
     end
     demo_group = Group.new
     demo_group.name = 'SuperStars'

@@ -25,5 +25,8 @@ class HomeController < ApplicationController
 
   def demo_start
     @title = 'Demonstration'
+    if @current_user.nil?
+      @current_user = User.new(first_name: 'John', last_name: 'Smith', timezone: 'Seoul')
+    end
   end
 end
