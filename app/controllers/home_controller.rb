@@ -32,6 +32,6 @@ class HomeController < ApplicationController
 
   def send_reset
     @current_user.send_reset_password_instructions
-    redirect_to root_url, notice: "A password reset link has been sent to your email address. Please log out and use the link to reset your password."
+    redirect_to root_url, notice: 'A password reset link has been sent to your email address. Please log out and use the link to reset your password.'
   end
 end
