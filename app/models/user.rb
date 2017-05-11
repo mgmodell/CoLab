@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
       name = email
     else
       name = (!first_name.nil? ? first_name : '[No First Name Given]') + ' '
-      name += (!last_name.nil? ? last_name : '[No Last Name Given]') 
+      name += (!last_name.nil? ? last_name : '[No Last Name Given]')
     end
   end
 
