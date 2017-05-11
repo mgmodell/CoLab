@@ -41,6 +41,15 @@ class User < ActiveRecord::Base
     end
   end
 
+  def informal_name
+    if last_name.nil? && first_name.nil?
+      name = email
+    else
+      name = (!first_name.nil? ? first_name : '[No First Name Given]') + ' '
+      name += (!last_name.nil? ? last_name : '[No Last Name Given]') 
+    end
+  end
+
   def waiting_consent_logs
     # Find those consent forms to which the user has not yet responded
     consent_forms = ConsentForm.all.to_a

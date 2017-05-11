@@ -41,7 +41,7 @@ visit each set of factors prior to submitting your report.</p>
                         @installment.value_for_user_factor( member, factor )do |value_form| %>
                   <%= value_form.hidden_field :factor_id %>
                   <%= value_form.hidden_field :user_id %>
-                  <%= label_tag :value, member.name %>
+                  <%= label_tag :value, member.informal_name %>
                 </td>
                 <td>
                   <br>
