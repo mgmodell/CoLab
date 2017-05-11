@@ -6,7 +6,6 @@ The CoLab system provides instructor support for collaborative learning groups. 
 
 * The CoLab system which is based upon and supports the continued research of Micah Gideon Modell, Ph.D.
 * Version: 3
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ## How do I get set up? ##
 
@@ -18,6 +17,8 @@ At a minimum, you will need to install git and a text editor (I use vi, but ther
 
 * [Official git page](https://git-scm.com/) [Windows](https://git-for-windows.github.io/) (other platforms are easy and I can help, but they're not worth listing here).
 * [Notepad++](https://notepad-plus-plus.org/download/v7.3.3.html)
+* [Learn Cucumber](https://cucumber.io/docs)
+* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### Testing ###
 * [rvm (does not work in regular Windows)](http://rvm.io/)
