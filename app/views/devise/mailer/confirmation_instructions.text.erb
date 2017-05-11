@@ -1,0 +1,14 @@
+Welcome to CoLab, <%= @email %>!
+
+CoLab (<%=link_to root_url %>) is a web-based system for helping instructors to make sure students engaged in group work get the most out of the experience.
+
+You are receiving this either because:
+
+ -- You've registered with CoLab, or
+ -- One of your instructors is requesting that you use CoLab in their class, or
+ -- You are an instructor in a course that's using CoLab.
+Please confirm your account email by clicking the link below and completing the registration process:
+
+<%= link_to confirmation_url(@resource, confirmation_token: @token) %>
+
+CoLab Support
