@@ -81,6 +81,7 @@
       <tr>
         <th>Name</th>
         <th data-priority="1">Status</th>
+        <th data-priority="1">Close Date</th>
         <th data-priority="0">Actions</th>
       </tr>
       </thead>
@@ -94,6 +95,9 @@
                 <% else %>
                 <span class="error">Inactive</span>
                 <% end %></td>
+                <td>
+                  <%= game.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
+                </td>
                 <td><%= link_to 'Show', game %>&nbsp;|&nbsp;
                 <%= link_to( "Activate", activate_bingo_game_path( game ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
                 <%= link_to 'Edit', edit_bingo_game_path(game) %>&nbsp;|&nbsp;
@@ -122,6 +126,7 @@
         <tr>
           <th>Name</th>
           <th data-priority="1">Status</th>
+          <th data-priority="1">Close Date</th>
           <th data-priority="0">Actions</th>
         </tr>
       </thead>
@@ -135,6 +140,9 @@
                 <% else %>
                 <span class="error">Inactive</span>
                 <% end %></td>
+                <td>
+                  <%= project.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
+                </td>
                 <td><%= link_to 'Show', project %>&nbsp;|&nbsp;
                 <%= link_to( "Activate", activate_project_path( project ) ) + raw("&nbsp;|&nbsp;" ) unless project.active %>
                 <%= link_to 'Edit', edit_project_path(project) %>&nbsp;|&nbsp;
@@ -163,6 +171,7 @@
         <tr>
           <th>Name</th>
           <th data-priority="1">Status</th>
+          <th data-priority="1">Close Date</th>
           <th data-priority="0">Actions</th>
         </tr>
       </thead>
@@ -176,6 +185,9 @@
                 <% else %>
                   <span class="error">Inactive</span>
                 <% end %>
+                </td>
+                <td>
+                  <%= experience.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
                 </td>
                 <td><%= link_to 'Show', experience %>&nbsp;|&nbsp;
                   <%= link_to( "Activate", activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>
