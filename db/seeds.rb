@@ -294,7 +294,7 @@ CandidateFeedback.create(name: 'Definition: Not Understood',
                          definition: "You've identified an important term related to the stated topic, but I was unable to understand the definition as you've provided it.")
 CandidateFeedback.create(name: 'Definition: Plagiarised',
                          definition: "You've identified an important term related to the stated topic, but I recognize the definition provided as having been copied directly from another source.")
-CandidateFeedback.create(name: 'Term: Too Genereic',
+CandidateFeedback.create(name: 'Term: Too Generic',
                          definition: 'The term is not specific to the topic or the course.')
 CandidateFeedback.create(name: 'Term: Too Obvious',
                          definition: 'The term does not represent new learning or consideration relevant to the topic.')
