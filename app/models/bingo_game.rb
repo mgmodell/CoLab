@@ -50,6 +50,20 @@ class BingoGame < ActiveRecord::Base
     discounted = (group.users.count * individual_count * remaining_percent).floor
   end
 
+  def get_current_lists_hash
+    candidate_lists = Hash.new
+    course.rosters.enrolled.each do |roster|
+      student = roster.user
+      candidate_list = self.candidate_list_for_user( student )
+      if candidate_lists[ candidate_list ].nil?
+        candidate_lists[ candidate_list ] = [ student ]
+      else
+        candidate_lists[ candidate_list ] << student
+      end
+    end
+    candidate_lists
+  end
+
   def awaiting_review?
     !reviewed && end_date <= (DateTime.current + lead_time.days) && end_date >= DateTime.current
   end
