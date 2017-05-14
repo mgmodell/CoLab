@@ -15,7 +15,7 @@ class CandidateList < ActiveRecord::Base
   def percent_accepted
     percent = 0
     if is_group
-      percent = get_concepts.count.to_f / bingo_game.required_terms_for_group( group )
+      percent = get_concepts.count.to_f / bingo_game.required_terms_for_group(group)
     else
       percent = get_concepts.count.to_f / bingo_game.individual_count
     end
@@ -23,11 +23,11 @@ class CandidateList < ActiveRecord::Base
   end
 
   def get_accepted_terms
-    candidates.joins( :candidate_feedback ).where( candidate_feedbacks: { name: "Accepted" } )
+    candidates.joins(:candidate_feedback).where(candidate_feedbacks: { name: 'Accepted' })
   end
 
   def get_not_accepted_terms
-    candidates.joins( :candidate_feedback ).includes( :candidate_feedback ).where( "candidate_feedbacks.name != 'Accepted' AND candidate_feedbacks.id IS NOT NULL" )
+    candidates.joins(:candidate_feedback).includes(:candidate_feedback).where("candidate_feedbacks.name != 'Accepted' AND candidate_feedbacks.id IS NOT NULL")
   end
 
   def percent_complete
