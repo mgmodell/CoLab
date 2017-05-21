@@ -298,3 +298,7 @@ CandidateFeedback.create(name: 'Term: Too Generic',
                          definition: 'The term is not specific to the topic or the course.')
 CandidateFeedback.create(name: 'Term: Too Obvious',
                          definition: 'The term does not represent new learning or consideration relevant to the topic.')
+CandidateFeedback.create(name: 'Term: Invalid/Incorrect',
+                         definition: 'The term is either not a real term or one that does not relate to the topic.')
+CandidateFeedback.create(name: 'Term: Not relevant',
+                         definition: 'The term is not relevant to the topic.')
