@@ -103,6 +103,27 @@ class User < ActiveRecord::Base
     waiting_tasks.sort_by(&:end_date)
   end
 
+  def activity_history
+    activities = [ ]
+    #Add in the candidate lists
+    rosters.enrolled.each do |roster|
+      roster.course.bingo_games.each do |bingo_game|
+        activities << bingo_game
+      end
+    end
+    #Add in the reactions
+    self.experiences.each do |experience|
+      activities << experience
+    end
+    #Add in projects
+    self.projects.each do |project|
+      activities << project
+    end
+
+    activities.sort_by( &:end_date)
+
+  end
+
   def waiting_student_tasks
     waiting_tasks = assessments.still_open.to_a
 

@@ -65,6 +65,7 @@
       <thead>
       <tr>
         <th>Activity</th>
+        <th data-priority="0">Course</th>
         <th data-priority="0">Type</th>
         <th data-priority="0">Completion Date</th>
         <th data-priority="0">Status</th>
@@ -72,32 +73,24 @@
       </tr>
       </thead>
       <tbody>
-      <% @current_user.courses.each do |course| %>
+      <% @current_user.activity_history.each do |activity| %>
       <tr>
-        <td><%= course.name %></td>
-        <td>Course</td>
-        <td><%= course.end_date.to_s %></td>
-        <td><%= DateTime.current < course.end_date ? "In Progress" : "Finished" %></td>
+        <td><%= activity.name %></td>
+        <td><%= activity.course.name %></td>
+        <td><%= activity.type %></td>
+        <td><%= activity.end_date %></td>
+        <td><%= activity.status_for_user( @current_user ) %></td>
         <td>
-          Project Count: <%= course.projects.count %></br>
-          SAPA completion rate: N/A</br>
-          Experience Count: <%= course.experiences.count %></br>
-        </td>
-      </tr>
-      <% end %>
-      <% @current_user.reactions.each do |reaction| %>
-      <tr>
-        <td><%= reaction.experience.name %></td>
-        <td>Experience</td>
-        <td><%= reaction.updated_at.to_s %></td>
-        <td>
-          <%= reaction.status %>
-        </td>
-        <td>
-        <% if reaction.status != "Not started" %>
-          Scenario ID: <%= reaction.narrative.id + (100 * reaction.narrative.scenario.id) %>
+        <% if activity.class.name == "BingoGame" %>
+          <%= activity.candidate_list_for_user( @current_user ).get_concepts.count %> unique concepts
+        <% elsif activity.class.name == "Experience" %>
+           <% if activity.get_user_reaction( @current_user ).status != "Not started" %>
+             Scenario ID: <%= activity.get_user_reaction( @current_user ).scenario_id %>
+           <% else %>
+              You must begin the experience first
+           <% end %>
         <% else %>
-          You must begin the experience first
+          Coming soon
         <% end %>
         </td>
       </tr>

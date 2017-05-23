@@ -21,6 +21,15 @@ class Experience < ActiveRecord::Base
     reaction
   end
 
+  def type
+    "Group work simulation"
+  end
+
+  def status_for_user( user )
+    self.get_user_reaction( user ).status
+
+  end
+
   def get_least_reviewed_narrative(include_ids = [])
     narrative_counts = if include_ids.empty?
                          reactions.group(:narrative_id).count

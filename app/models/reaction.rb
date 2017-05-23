@@ -4,6 +4,7 @@ class Reaction < ActiveRecord::Base
   belongs_to :narrative
   belongs_to :user
   belongs_to :experience, inverse_of: :reactions
+  has_one :course, through: :experience
 
   has_many :diagnoses, inverse_of: :reaction, dependent: :destroy
 
@@ -70,4 +71,17 @@ class Reaction < ActiveRecord::Base
       next_week.percent_complete.to_s + '%'
     end
   end
+
+  def end_date
+    experience.end_date
+  end
+
+  def name
+    experience.name
+  end
+
+  def scenario_id
+    self.id + (100 * self.narrative.scenario.id )
+  end
+
 end

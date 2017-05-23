@@ -91,6 +91,20 @@ class Project < ActiveRecord::Base
     is_available
   end
 
+  def type
+    "Self- and Peer-Assessed Project"
+  end
+
+  def status_for_user( user )
+    #get some sort of count of completion rates
+    "Coming soon"
+
+  end
+
+  def status
+    "Coming soon"
+  end
+
   # Validation check code
   def date_sanity
     unless start_date.nil? || end_date.nil?

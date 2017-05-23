@@ -50,6 +50,82 @@
   </div>
         <div id="responses" class="ui-body-<%= theme_code %> ui-content">
           <h2>Student Response Data</h2>
-          <p>Coming soon!</p>
+          <p>
+            <% if @bingo_game.reviewed %>
+              <% candidate_feedbacks = CandidateFeedback.all %>
+              <table data-role="table"
+                id="basicTable"
+                data-mode="columntoggle"
+                data-column-btn-theme="<%= theme_code %>"
+                data-column-btn-text="Show/hide columns&hellip;"
+                class="table-stroke ui-shadow table-stripe table-ui-responsive">
+                <thead>
+                  <tr>
+                    <th>Student</th>
+                    <th>Group</th>
+                    <th colspan="<%= candidate_feedbacks.count%>" data-priority="1">Challenged Responses</th>
+                    <th data-priority="0">Concepts Expected</th>
+                    <th data-priority="0">Terms entered</th>
+                    <th data-priority="0">Concepts Found</th>
+                    <th>Performance</th>
+                  </tr>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <% candidate_feedbacks.each do |cf| %>
+                    <th><%= cf.name %></th>
+                    <% end %>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <% @bingo_game.course.enrolled_students.each do |student| %>
+                  <% cl = @bingo_game.candidate_list_for_user( student ) %>
+                  <tr>
+                    <td><%= student.name %></td>
+                    <td><%= cl.is_group ? cl.group.name : "N/A" %></td>
+                    <% if cl.candidates.completed.count > 0 %>
+                      <% candidate_feedbacks.each do |cf| %>
+                        <td><%= 100 * cl.get_by_feedback( cf ).count / cl.candidates.completed.count %>%</td>
+                      <% end %>
+                    <% else %>
+                      <% candidate_feedbacks.each do |cf| %>
+                        <td>N/A</td>
+                      <% end %>
+                    <% end %>
+                    <td><%= cl.expected_count %></td>
+                    <td><%= cl.candidates.completed.count %></td>
+                    <td><%= cl.get_concepts.count %></td>
+                    <td><%= cl.performance %></td>
+                  </tr>
+                <% end %>
+              </table>
+          </p>
+          <p>
+            <table data-role="table"
+              id="basicTable"
+              data-mode="columntoggle"
+              data-column-btn-theme="<%= theme_code %>"
+              data-column-btn-text="Show/hide columns&hellip;"
+              class="table-stroke ui-shadow table-stripe table-ui-responsive">
+              <thead>
+                <tr>
+                  <th rowspan="">Concept</th>
+                </tr>
+              </thead>
+              <% @bingo_game.get_concepts.each do |concept| %>
+              <tr>
+                <td><%= concept.name %></td>
+              </tr>
+              <% end %>
+            </table>
+
+              
+            <% else %>
+              This has not yet been reviewed.
+            <% end %>
+          <p>
         </div>
         <%= link_to 'Back to course', @bingo_game.course %>

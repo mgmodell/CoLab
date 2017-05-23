@@ -24,6 +24,11 @@ class BingoGame < ActiveRecord::Base
   before_validation :timezone_adjust
   validate :dates_within_course
 
+  def status_for_user( user )
+    self.candidate_list_for_user( user ).status
+
+  end
+
   def status
     completed = candidates.completed.count
     if completed > 0
@@ -33,9 +38,19 @@ class BingoGame < ActiveRecord::Base
     end
   end
 
+  def get_concepts
+    concepts.to_a.uniq
+  end
+
+
   def name
     topic
   end
+
+  def type
+    "Task List"
+  end
+
 
   def term_list_date
     end_date - lead_time.days
@@ -76,7 +91,7 @@ class BingoGame < ActiveRecord::Base
       bingo.course.enrolled_students.each do |student|
         candidate_list = bingo.candidate_list_for_user(student)
         completion_hash[student.email] = { name: student.name,
-                                           status: candidate_list.percent_complete.to_s + '%' }
+                                           status: candidate_list.percent_completed.to_s + '%' }
       end
 
       bingo.course.instructors.each do |instructor|
