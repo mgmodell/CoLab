@@ -19,6 +19,7 @@
       <th >Students</th>
       <th data-priority="1">Projects</th>
       <th data-priority="1">Experiences</th>
+      <th data-priority="1">Terms Lists</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -34,6 +35,7 @@
         <td><%= course.rosters.students.count %></td>
         <td><%= course.projects.count %></td>
         <td><%= course.experiences.count %></td>
+        <td><%= course.bingo_games.count %></td>
         <td><%= link_to 'Show', course_path( course ) %>&nbsp;|&nbsp;
         <%= link_to 'Edit', edit_course_path(course) %>&nbsp;|&nbsp;
         <%= link_to 'Destroy', course_path( course ), method: :delete, data: { confirm: 'Are you sure?' } %></td>
