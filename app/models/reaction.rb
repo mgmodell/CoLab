@@ -81,7 +81,6 @@ class Reaction < ActiveRecord::Base
   end
 
   def scenario_id
-    self.id + (100 * self.narrative.scenario.id )
+    id + (100 * narrative.scenario.id)
   end
-
 end

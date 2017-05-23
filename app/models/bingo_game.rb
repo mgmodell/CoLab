@@ -24,9 +24,8 @@ class BingoGame < ActiveRecord::Base
   before_validation :timezone_adjust
   validate :dates_within_course
 
-  def status_for_user( user )
-    self.candidate_list_for_user( user ).status
-
+  def status_for_user(user)
+    candidate_list_for_user(user).status
   end
 
   def status
@@ -42,15 +41,13 @@ class BingoGame < ActiveRecord::Base
     concepts.to_a.uniq
   end
 
-
   def name
     topic
   end
 
   def type
-    "Task List"
+    'Task List'
   end
-
 
   def term_list_date
     end_date - lead_time.days

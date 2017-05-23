@@ -18,7 +18,7 @@ class Candidate < ActiveRecord::Base
   end
 
   def concept_assigned
-    if candidate_list.bingo_game.reviewed && ( self.term.present? || self.definition.present? )
+    if candidate_list.bingo_game.reviewed && (term.present? || definition.present?)
       unless CandidateFeedback.find(candidate_feedback_id).name.start_with? 'Term'
         if concept_id.empty?
           errors.add(:concept, "Unless there's a problem with the term, you must assign a concept.")

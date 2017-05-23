@@ -92,17 +92,16 @@ class Project < ActiveRecord::Base
   end
 
   def type
-    "Self- and Peer-Assessed Project"
+    'Self- and Peer-Assessed Project'
   end
 
-  def status_for_user( user )
-    #get some sort of count of completion rates
-    "Coming soon"
-
+  def status_for_user(_user)
+    # get some sort of count of completion rates
+    'Coming soon'
   end
 
   def status
-    "Coming soon"
+    'Coming soon'
   end
 
   # Validation check code

@@ -22,12 +22,11 @@ class Experience < ActiveRecord::Base
   end
 
   def type
-    "Group work simulation"
+    'Group work simulation'
   end
 
-  def status_for_user( user )
-    self.get_user_reaction( user ).status
-
+  def status_for_user(user)
+    get_user_reaction(user).status
   end
 
   def get_least_reviewed_narrative(include_ids = [])

@@ -14,11 +14,11 @@ class CandidateList < ActiveRecord::Base
   end
 
   def percent_completed
-    100 * candidates.completed.count / self.expected_count
+    100 * candidates.completed.count / expected_count
   end
 
-  def get_by_feedback( candidate_feedback )
-    candidates.where( candidate_feedback: candidate_feedback )
+  def get_by_feedback(candidate_feedback)
+    candidates.where(candidate_feedback: candidate_feedback)
   end
 
   def get_accepted_terms
@@ -38,14 +38,14 @@ class CandidateList < ActiveRecord::Base
   end
 
   def performance
-      100 * get_concepts.count / self.expected_count
+    100 * get_concepts.count / expected_count
   end
 
   def status
     if bingo_game.reviewed
-      "Score: #{self.performance}"
+      "Score: #{performance}"
     else
-      "Progress: #{self.percent_completed}"
+      "Progress: #{percent_completed}"
     end
   end
 
