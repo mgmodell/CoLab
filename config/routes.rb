@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     get 'request_collaboration/:id/:desired' => 'candidate_lists#request_collaboration', :as => 'request_bingo_collaboration'
     get 'candidates_review/:id' => 'bingo_games#review_candidates', :as => 'review_bingo_candidates'
     post 'candidates_review/:id' => 'bingo_games#update_review_candidates', :as => 'update_bingo_candidates_review'
+    get 'list_stats/:id' => 'candidate_lists#list_stats', :as => 'bingo_list_stats'
   end
 
   get 'experiences/next/:experience_id:' => 'experiences#next', :as => 'next_experience'

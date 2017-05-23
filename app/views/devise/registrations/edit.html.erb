@@ -75,7 +75,11 @@
       <tbody>
       <% @current_user.activity_history.each do |activity| %>
       <tr>
-        <td><%= activity.name %></td>
+        <% if activity.class.name == "BingoGame" && activity.reviewed %>
+          <td><%= link_to activity.name, bingo_list_stats_path( activity.candidate_list_for_user( @current_user ) ) %></td>
+        <% else %>
+          <td><%= activity.name %></td>
+        <% end %>
         <td><%= activity.course.name %></td>
         <td><%= activity.type %></td>
         <td><%= activity.end_date %></td>

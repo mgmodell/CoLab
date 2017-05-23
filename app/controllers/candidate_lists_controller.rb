@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 class CandidateListsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:demo_complete]
-  before_action :set_candidate_list, only: [:edit, :show, :update, :request_collaboration]
+  before_action :set_candidate_list, only: [:edit, :show, :update, :request_collaboration, :list_stats]
+
+  def list_stats
+    @title = 'Candidate List Stats'
+  end
 
   def edit
     @title = 'Complete the Term List'

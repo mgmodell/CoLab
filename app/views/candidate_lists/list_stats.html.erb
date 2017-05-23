@@ -1,0 +1,68 @@
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+  <table data-role="table"
+    id="stats_table"
+    data-mode="columntoggle"
+    data-column-btn-theme="<%= theme_code %>"
+    data-column-btn-text="Show/hide columns&hellip;"
+    class="table-stroke ui-shadow table-stripe table-ui-responsive">
+    <thead><% candidate_feedbacks = CandidateFeedback.all %>
+      <tr>
+        <th colspan="<%= candidate_feedbacks.count %>" data-priority="1">Challenged Responses</th>
+        <th data-priority="0">Concepts Expected</th>
+        <th data-priority="0">Terms Entered</th>
+        <th data-priority="0">Terms Found</th>
+        <th data->Performance</th>
+      </tr>
+      <tr>
+        <% candidate_feedbacks.each do |cf| %>
+          <th><%= cf.name %></th>
+        <% end %>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% candidate_feedbacks.each do |cf| %>
+        <% if @candidate_list.candidates.completed.count > 0 %>
+        <td><%= @candidate_list.get_by_feedback( cf ).count / @candidate_list.candidates.completed.count %></td>
+        <% else %>
+        <td>N/A</td>
+        <% end %>
+      <% end %>
+      <td><%= @candidate_list.expected_count %></td>
+      <td><%= @candidate_list.candidates.completed.count %></td>
+      <td><%= @candidate_list.get_concepts.count %></td>
+      <td><%= @candidate_list.performance %></td>
+    </tbody>
+  <table>
+  <p>
+  You <%= "and your group, #{@candidate_list.group.name}, " if @candidate_list.is_group %> identifed the
+  following terms, resulting in <% @candidate_list.get_concepts.count %> unique concepts:
+  <table data-role="table"
+    id="candidates_table"
+    data-mode="columntoggle"
+    data-column-btn-theme="<%= theme_code %>"
+    data-column-btn-text="Show/hide columns&hellip;"
+    class="table-stroke ui-shadow table-stripe table-ui-responsive">
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th data-priority="0">Definition</th>
+        <th data-priority="0">Feedback</th>
+        <th>Concept</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @candidate_list.candidates.completed.each do |candidate| %>
+      <tr>
+        <td><%= candidate.term %></td>
+        <td><%= candidate.definition %></td>
+        <td><%= candidate.candidate_feedback.present? ? candidate.candidate_feedback.name : "N/A" %></td>
+        <td><%= candidate.concept.present? ? candidate.concept.name : "N/A" %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  </p>
