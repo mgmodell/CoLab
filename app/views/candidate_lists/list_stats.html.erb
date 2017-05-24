@@ -26,7 +26,7 @@
     <tbody>
       <% candidate_feedbacks.each do |cf| %>
         <% if @candidate_list.candidates.completed.count > 0 %>
-        <td><%= @candidate_list.get_by_feedback( cf ).count / @candidate_list.candidates.completed.count %></td>
+        <td><%= @candidate_list.get_by_feedback( cf ).count * 100 / @candidate_list.candidates.completed.count %></td>
         <% else %>
         <td>N/A</td>
         <% end %>
