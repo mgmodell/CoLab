@@ -1,5 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+   anonymize = @current_user.research %>
 <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -21,8 +22,8 @@
   <tbody>
     <% @bingo_games.each do |bingo_game| %>
       <tr>
-        <td><%= link_to bingo_game.name, bingo_game %></td>
-        <td><%= bingo_game.course.name %></td>
+        <td><%= link_to bingo_game.get_name( anonymize ), bingo_game %></td>
+        <td><%= bingo_game.course.get_name( anonymize ) %></td>
         <td><%= bingo_game.start_date %></td>
         <td><%= bingo_game.end_date %></td>
         <td><%= bingo_game.active %></td>

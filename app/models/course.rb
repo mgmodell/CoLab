@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'forgery'
 class Course < ActiveRecord::Base
   belongs_to :school, inverse_of: :courses
   has_many :projects, inverse_of: :course, dependent: :destroy
@@ -9,14 +10,33 @@ class Course < ActiveRecord::Base
   has_many :experiences, inverse_of: :course, dependent: :destroy
 
   validates :timezone, :school, :start_date, :end_date, presence: true
+  validates :name, presence: true
   validate :date_sanity
   validate :activity_date_check
 
   before_validation :timezone_adjust
+  before_create :anonymize
 
-  def prettyName
-    prettyName = name.blank? ? '' : name
-    prettyName += number.blank? ? '' : number
+  def prettyName( anonymous=false )
+    prettyName = ''
+    unless anonymous
+      if number.present?
+        prettyName = "#{name} (#{number})"
+      else
+        prettyName = name
+      end
+    else
+      prettyName = "#{anon_name} (#{anon_number})"
+    end
+    prettyName
+  end
+
+  def get_name( anonymous=false )
+    anonymous ? anon_name : name
+  end
+
+  def get_number( anonymous=false )
+    anonymous ? anon_number : number
   end
 
   def set_user_role(user, role)
@@ -118,4 +138,12 @@ class Course < ActiveRecord::Base
   def instructors
     rosters.joins(:role).where('roles.name = ?', 'Instructor').collect(&:user)
   end
+
+  private
+    def anonymize
+      anon_name = "Beginning #{Forgery::Name.industry}"
+      dpts = [ 'BUS', 'MED', 'ENG', 'RTG', 'MSM', 'LEH', 'EDP',
+               'GEO', 'IST', 'MAT', 'YOW', 'GFB', 'RSV', 'CSV',  'MBV' ]
+      anon_number = "#{dpts.sample}-#{rand(100..700)}"
+    end
 end

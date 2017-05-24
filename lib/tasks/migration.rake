@@ -1,7 +1,51 @@
 # frozen_string_literal: true
 namespace :migratify do
+  desc 'Initialize existing PII objects with anonymized names'
+  task anonymize: :environment do
+    User.all.each do |user|
+      user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
+      user.anon_last_name = Forgery::Name.last_name if user.anon_last_name.blank?
+      user.save
+    end
+
+    Group.all.each do |group|
+      group.anon_name = "#{Forgery::Personal.language} #{Forgery::LoremIpsum.characters}s" if group.anon_name.blank?
+      group.save
+    end
+    
+    BingoGame.all.each do |bingo_game|
+      bingo_game.anon_topic = "#{Forgery::LoremIpsum.title}" if bingo_game.anon_topic.blank?
+      bingo_game.save
+    end
+
+    Experience.all.each do |experience|
+      experience.anon_name = "#{Forgery::Name.company_name}" if experience.anon_name.blank?
+      experience.save
+    end
+
+    Project.all.each do |project|
+      project.anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}" if project.anon_name.blank?
+      project.save
+    end
+
+    School.all.each do |school|
+      school.anon_name = "#{Forgery::Name.location} institute" if school.anon_name.blank?
+      school.save
+    end
+
+    depts = [ 'BUS', 'MED', 'ENG', 'RTG', 'MSM', 'LEH', 'EDP',
+              'GEO', 'IST', 'MAT', 'YOW', 'GFB', 'RSV', 'CSV',  'MBV' ]
+    Course.all.each do |course|
+      course.anon_name = "Beginning #{Forgery::Name.industry}" if course.anon_name.blank?
+      course.anon_number = "#{dpts.sample}-#{rand(100..700)}" if course.anon_number.blank?
+    end
+    
+  end
+
   desc 'Make instructor_updated false'
   task falsify: :environment do
+    # We should not need this one any longer.
+    return
     Experience.all.each do |exp|
       exp.instructor_updated = false
       exp.save

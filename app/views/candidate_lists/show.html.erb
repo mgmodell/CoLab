@@ -1,8 +1,9 @@
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+     anonymize = @current_user.research %>
   <table>
     <tr>
       <th align="right">Topic:</th>
-      <td><%= @candidate_list.bingo_game.topic %></td>
+      <td><%= @candidate_list.bingo_game.get_topic( anonymize ) %></td>
     </tr>
     <tr>
       <th align="right">Game date:</th>

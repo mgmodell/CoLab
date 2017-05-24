@@ -21,7 +21,7 @@ Given /^the Bingo! game individual count is (\d+)$/ do |individual_count|
 end
 
 When /^the user clicks the link to the candidate list$/ do
-  click_link_or_button @bingo.name
+  click_link_or_button @bingo.get_name
 end
 
 Then /^the user should see the Bingo candidate list$/ do

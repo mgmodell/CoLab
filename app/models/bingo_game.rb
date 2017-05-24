@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'forgery'
 class BingoGame < ActiveRecord::Base
   belongs_to :course, inverse_of: :bingo_games
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
@@ -22,6 +23,7 @@ class BingoGame < ActiveRecord::Base
   validate :group_components
 
   before_validation :timezone_adjust
+  before_create :anonymize
   validate :dates_within_course
 
   def status_for_user(user)
@@ -41,8 +43,12 @@ class BingoGame < ActiveRecord::Base
     concepts.to_a.uniq
   end
 
-  def name
-    topic
+  def get_topic( anonymous=false )
+    anonymous ? anon_topic : topic
+  end
+
+  def get_name( anonymous=false )
+    anonymous ? anon_topic : topic
   end
 
   def type
@@ -92,7 +98,7 @@ class BingoGame < ActiveRecord::Base
       end
 
       bingo.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(bingo.name + ' (terms list)',
+        AdministrativeMailer.summary_report(bingo.get_name + ' (terms list)',
                                             bingo.course.prettyName,
                                             instructor,
                                             completion_hash).deliver_later
@@ -177,4 +183,9 @@ class BingoGame < ActiveRecord::Base
       end
     end
   end
+
+  private
+    def anonymize
+      anon_topic = "#{Forgery::LoremIpsum.title}"
+    end
 end

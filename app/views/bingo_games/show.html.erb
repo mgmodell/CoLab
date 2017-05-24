@@ -1,5 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+   anonymize = @current_user.research %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -12,7 +13,7 @@
     <h2>Bingo! Game Details</h2>
     <p>
       <h3>Name:</h3>
-      <%= @bingo_game.name %>
+      <%= @bingo_game.get_name( anonymize ) %>
       (<% if @bingo_game.active %>
         Active
   <% else %>
@@ -23,7 +24,7 @@
     <p>
       <h3>Description:</h3>
       <%= @bingo_game.description %></br>
-      Attached to course <%= @bingo_game.course.name %>.
+      Attached to course <%= @bingo_game.course.get_name( anonymize ) %>.
       <h4>Days allocated for instructor prep:</h4><%= @bingo_game.lead_time %>
       <h4>Terms required of individuals:</h4><%= @bingo_game.individual_count %>
     </p>
@@ -31,7 +32,7 @@
       <h3>Group options:</h3>
       <% if @bingo_game.group_option %>
         <h4>Term discount for group work:</h4><%= @bingo_game.group_discount %>
-        <h4>Groups pulled from project:</h4><%= @bingo_game.project.name %>
+        <h4>Groups pulled from project:</h4><%= @bingo_game.project.get_name( anonymize ) %>
       <% else %>
         No group options set.
       <% end %>
@@ -84,7 +85,7 @@
                 <% @bingo_game.course.enrolled_students.each do |student| %>
                   <% cl = @bingo_game.candidate_list_for_user( student ) %>
                   <tr>
-                    <td><%= student.name %></td>
+                    <td><%= student.name( anonymize ) %></td>
                     <td><%= cl.is_group ? cl.group.name : "N/A" %></td>
                     <% if cl.candidates.completed.count > 0 %>
                       <% candidate_feedbacks.each do |cf| %>

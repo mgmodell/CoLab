@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'forgery'
 class Project < ActiveRecord::Base
   after_save :build_assessment
 
@@ -18,6 +19,7 @@ class Project < ActiveRecord::Base
   validates :end_date, :start_date, presence: true
 
   before_validation :timezone_adjust
+  before_create :anonymize
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
@@ -55,6 +57,10 @@ class Project < ActiveRecord::Base
 
   def get_group_appearance_counts
     Project.get_occurence_count_hash groups
+  end
+
+  def get_name( anonymous=false )
+    anonymous ? anon_name : name
   end
 
   def self.get_occurence_count_hash(input_array)
@@ -174,4 +180,9 @@ class Project < ActiveRecord::Base
       self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day if end_date_changed?
     end
   end
+
+  private
+    def anonymize
+      anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}"
+    end
 end

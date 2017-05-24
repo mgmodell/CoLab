@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'forgery'
+
 class User < ActiveRecord::Base
   has_many :emails, inverse_of: :user, dependent: :destroy
 
@@ -31,22 +33,33 @@ class User < ActiveRecord::Base
 
   has_many :assessments, through: :projects
 
+  before_create :anonymize
+
   # Give us a standard form of the name
-  def name
-    if last_name.nil? && first_name.nil?
-      name = email
+  def name( anonymous=false)
+    unless anonymous
+      if last_name.nil? && first_name.nil?
+        name = email
+      else
+        name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
+        name += (!first_name.nil? ? first_name : '[No First Name Given]')
+      end
     else
-      name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
-      name += (!first_name.nil? ? first_name : '[No First Name Given]')
+      name = "#{anon_last_name}, #{anon_first_name}"
     end
+
   end
 
-  def informal_name
-    if last_name.nil? && first_name.nil?
-      name = email
+  def informal_name( anonymous=false)
+    unless anonymous
+      if last_name.nil? && first_name.nil?
+        name = email
+      else
+        name = (!first_name.nil? ? first_name : '[No First Name Given]') + ' '
+        name += (!last_name.nil? ? last_name : '[No Last Name Given]')
+      end
     else
-      name = (!first_name.nil? ? first_name : '[No First Name Given]') + ' '
-      name += (!last_name.nil? ? last_name : '[No Last Name Given]')
+      name = "#{anon_first_name} #{anon_last_name}"
     end
   end
 
@@ -161,4 +174,10 @@ class User < ActiveRecord::Base
     user.confirm
     user
   end
+
+  private
+    def anonymize
+      anon_first_name = Forgery::Name.first_name
+      anon_last_name = Forgery::Name.last_name
+    end
 end
