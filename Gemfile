@@ -39,6 +39,7 @@ gem 'postmark-rails', '>= 0.15.0'
 gem 'puma'
 gem 'rails_12factor', group: :production
 gem 'simple_form'
+gem 'forgery'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -54,7 +55,6 @@ group :development, :test do
   gem 'byebug'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
-  gem 'forgery'
   gem 'htmlbeautifier'
   gem 'machinist'
   gem 'railroady'
