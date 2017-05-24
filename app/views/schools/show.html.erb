@@ -1,6 +1,7 @@
 <p id="notice"><%= notice %></p>
 
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+   anonymize = @current_user.research %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -12,7 +13,7 @@
     <h3>School Details</h3>
     <p>
       <h3>Name:</h3>
-      <%= @school.name %>
+      <%= @school.get_name( anonymize ) %>
     </p>
 
     <p>
@@ -51,8 +52,8 @@
       <tbody>
           <% @school.courses.each do |course| %>
             <tr>
-                <td><%= link_to course.name, course %></td>
-                <td><%= course.number %></td>
+                <td><%= link_to course.get_name( anonymize ), course %></td>
+                <td><%= course.get_number( anonymize ) %></td>
                 <td><%= course.instructors.count %></td>
                 <td><%= course.enrolled_students.count %></td>
                 <td><%= course.projects.count %></td>

@@ -1,5 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+   anonymize = @current_user.research %>
 <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -21,8 +22,8 @@
   <tbody>
     <% @experiences.each do |experience| %>
       <tr>
-        <td><%= link_to experience.name, experience %></td>
-        <td><%= experience.course.name %></td>
+        <td><%= link_to experience.get_name( anonymize ), experience %></td>
+        <td><%= experience.course.get_name( anonymize ) %></td>
         <td><%= experience.start_date %></td>
         <td><%= experience.end_date %></td>
         <td><%= experience.active %></td>

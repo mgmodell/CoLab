@@ -1,5 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+   anonymize = @current_user.research %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -13,7 +14,7 @@
     <h2>Project Details</h2>
     <p>
       <h3>Name:</h3>
-      <%= @project.name %>
+      <%= @project.get_name( anonymize ) %>
       (<% if @project.active %>
         Active
       <% else %>
@@ -68,7 +69,7 @@
             <th>Student</th>
             <% groups = @project.groups %>
             <% groups.each do |group| %>
-              <th align="center" data-priority="0"><%= group.name %></th>
+              <th align="center" data-priority="0"><%= group.get_name( anonymize ) %></th>
             <% end %>
             <th data-priority="0">[no group]</th>
           </tr>
@@ -76,7 +77,7 @@
         <tbody>
           <% @project.course.enrolled_students.each do |user| %>
             <tr>
-              <td><%= mail_to user.email, user.name %></td>
+              <td><%= mail_to user.email, user.name( anonymize ) %></td>
               <% @project.groups.each do |group| %>
                 <td>
                   <center><%= raw( "&#10004;" ) if group.has_user user %></center>

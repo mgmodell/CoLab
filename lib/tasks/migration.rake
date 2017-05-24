@@ -2,6 +2,9 @@
 namespace :migratify do
   desc 'Initialize existing PII objects with anonymized names'
   task anonymize: :environment do
+    #Make sure the DB is primed and ready!
+    Rake::Task['db:migrate'].invoke
+
     User.all.each do |user|
       user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
       user.anon_last_name = Forgery::Name.last_name if user.anon_last_name.blank?
