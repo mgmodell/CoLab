@@ -43,11 +43,11 @@ class BingoGame < ActiveRecord::Base
     concepts.to_a.uniq
   end
 
-  def get_topic( anonymous=false )
+  def get_topic(anonymous = false)
     anonymous ? anon_topic : topic
   end
 
-  def get_name( anonymous=false )
+  def get_name(anonymous = false)
     anonymous ? anon_topic : topic
   end
 
@@ -185,7 +185,8 @@ class BingoGame < ActiveRecord::Base
   end
 
   private
-    def anonymize
-      anon_topic = "#{Forgery::LoremIpsum.title}"
-    end
+
+  def anonymize
+    anon_topic = Forgery::LoremIpsum.title.to_s
+  end
 end

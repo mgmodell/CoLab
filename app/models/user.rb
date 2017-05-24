@@ -36,30 +36,29 @@ class User < ActiveRecord::Base
   before_create :anonymize
 
   # Give us a standard form of the name
-  def name( anonymous=false)
-    unless anonymous
+  def name(anonymous = false)
+    if anonymous
+      name = "#{anon_last_name}, #{anon_first_name}"
+    else
       if last_name.nil? && first_name.nil?
         name = email
       else
         name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
         name += (!first_name.nil? ? first_name : '[No First Name Given]')
       end
-    else
-      name = "#{anon_last_name}, #{anon_first_name}"
     end
-
   end
 
-  def informal_name( anonymous=false)
-    unless anonymous
+  def informal_name(anonymous = false)
+    if anonymous
+      name = "#{anon_first_name} #{anon_last_name}"
+    else
       if last_name.nil? && first_name.nil?
         name = email
       else
         name = (!first_name.nil? ? first_name : '[No First Name Given]') + ' '
         name += (!last_name.nil? ? last_name : '[No Last Name Given]')
       end
-    else
-      name = "#{anon_first_name} #{anon_last_name}"
     end
   end
 
@@ -176,8 +175,9 @@ class User < ActiveRecord::Base
   end
 
   private
-    def anonymize
-      anon_first_name = Forgery::Name.first_name
-      anon_last_name = Forgery::Name.last_name
-    end
+
+  def anonymize
+    anon_first_name = Forgery::Name.first_name
+    anon_last_name = Forgery::Name.last_name
+  end
 end

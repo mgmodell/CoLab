@@ -30,6 +30,7 @@ gem 'chronic'
 gem 'country_select'
 gem 'devise'
 gem 'devise-multi_email'
+gem 'forgery'
 gem 'highcharts-rails'
 gem 'jquery-tablesorter'
 gem 'jquery_mobile_rails'
@@ -39,7 +40,6 @@ gem 'postmark-rails', '>= 0.15.0'
 gem 'puma'
 gem 'rails_12factor', group: :production
 gem 'simple_form'
-gem 'forgery'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

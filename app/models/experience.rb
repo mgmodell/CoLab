@@ -27,7 +27,7 @@ class Experience < ActiveRecord::Base
     'Group work simulation'
   end
 
-  def get_name( anonymous=false )
+  def get_name(anonymous = false)
     anonymous ? anon_name : name
   end
 
@@ -138,7 +138,8 @@ class Experience < ActiveRecord::Base
   end
 
   private
-    def anonymize
-      anon_name = "#{Forgery::Name.company_name}"
-    end
+
+  def anonymize
+    anon_name = Forgery::Name.company_name.to_s
+  end
 end

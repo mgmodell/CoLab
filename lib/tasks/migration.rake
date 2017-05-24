@@ -2,7 +2,7 @@
 namespace :migratify do
   desc 'Initialize existing PII objects with anonymized names'
   task anonymize: :environment do
-    #Make sure the DB is primed and ready!
+    # Make sure the DB is primed and ready!
     Rake::Task['db:migrate'].invoke
 
     User.all.each do |user|
@@ -15,14 +15,14 @@ namespace :migratify do
       group.anon_name = "#{Forgery::Personal.language} #{Forgery::LoremIpsum.characters}s" if group.anon_name.blank?
       group.save
     end
-    
+
     BingoGame.all.each do |bingo_game|
-      bingo_game.anon_topic = "#{Forgery::LoremIpsum.title}" if bingo_game.anon_topic.blank?
+      bingo_game.anon_topic = Forgery::LoremIpsum.title.to_s if bingo_game.anon_topic.blank?
       bingo_game.save
     end
 
     Experience.all.each do |experience|
-      experience.anon_name = "#{Forgery::Name.company_name}" if experience.anon_name.blank?
+      experience.anon_name = Forgery::Name.company_name.to_s if experience.anon_name.blank?
       experience.save
     end
 
@@ -36,13 +36,12 @@ namespace :migratify do
       school.save
     end
 
-    depts = [ 'BUS', 'MED', 'ENG', 'RTG', 'MSM', 'LEH', 'EDP',
-              'GEO', 'IST', 'MAT', 'YOW', 'GFB', 'RSV', 'CSV',  'MBV' ]
+    depts = %w(BUS MED ENG RTG MSM LEH EDP
+               GEO IST MAT YOW GFB RSV CSV MBV)
     Course.all.each do |course|
       course.anon_name = "Beginning #{Forgery::Name.industry}" if course.anon_name.blank?
       course.anon_number = "#{dpts.sample}-#{rand(100..700)}" if course.anon_number.blank?
     end
-    
   end
 
   desc 'Make instructor_updated false'

@@ -17,25 +17,25 @@ class Course < ActiveRecord::Base
   before_validation :timezone_adjust
   before_create :anonymize
 
-  def prettyName( anonymous=false )
+  def prettyName(anonymous = false)
     prettyName = ''
-    unless anonymous
-      if number.present?
-        prettyName = "#{name} (#{number})"
-      else
-        prettyName = name
-      end
-    else
-      prettyName = "#{anon_name} (#{anon_number})"
-    end
+    prettyName = if anonymous
+                   "#{anon_name} (#{anon_number})"
+                 else
+                   if number.present?
+                     "#{name} (#{number})"
+                   else
+                     name
+                                end
+                 end
     prettyName
   end
 
-  def get_name( anonymous=false )
+  def get_name(anonymous = false)
     anonymous ? anon_name : name
   end
 
-  def get_number( anonymous=false )
+  def get_number(anonymous = false)
     anonymous ? anon_number : number
   end
 
@@ -140,10 +140,11 @@ class Course < ActiveRecord::Base
   end
 
   private
-    def anonymize
-      anon_name = "Beginning #{Forgery::Name.industry}"
-      dpts = [ 'BUS', 'MED', 'ENG', 'RTG', 'MSM', 'LEH', 'EDP',
-               'GEO', 'IST', 'MAT', 'YOW', 'GFB', 'RSV', 'CSV',  'MBV' ]
-      anon_number = "#{dpts.sample}-#{rand(100..700)}"
-    end
+
+  def anonymize
+    anon_name = "Beginning #{Forgery::Name.industry}"
+    dpts = %w(BUS MED ENG RTG MSM LEH EDP
+              GEO IST MAT YOW GFB RSV CSV MBV)
+    anon_number = "#{dpts.sample}-#{rand(100..700)}"
+  end
 end

@@ -59,7 +59,7 @@ class Project < ActiveRecord::Base
     Project.get_occurence_count_hash groups
   end
 
-  def get_name( anonymous=false )
+  def get_name(anonymous = false)
     anonymous ? anon_name : name
   end
 
@@ -182,7 +182,8 @@ class Project < ActiveRecord::Base
   end
 
   private
-    def anonymize
-      anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}"
-    end
+
+  def anonymize
+    anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}"
+  end
 end
