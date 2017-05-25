@@ -62,6 +62,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def anonymize?
+    researcher
+  end
+
   def waiting_consent_logs
     # Find those consent forms to which the user has not yet responded
     consent_forms = ConsentForm.all.to_a

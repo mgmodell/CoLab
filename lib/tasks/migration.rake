@@ -8,6 +8,7 @@ namespace :migratify do
     User.all.each do |user|
       user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
       user.anon_last_name = Forgery::Name.last_name if user.anon_last_name.blank?
+      user.researcher = false unless user.researcher.present?
       user.save
     end
 
@@ -40,7 +41,7 @@ namespace :migratify do
                GEO IST MAT YOW GFB RSV CSV MBV)
     Course.all.each do |course|
       course.anon_name = "Beginning #{Forgery::Name.industry}" if course.anon_name.blank?
-      course.anon_number = "#{dpts.sample}-#{rand(100..700)}" if course.anon_number.blank?
+      course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
     end
   end
 

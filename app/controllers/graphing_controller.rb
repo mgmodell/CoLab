@@ -22,7 +22,7 @@ class GraphingController < ApplicationController
         @subjects = Project.find(project_id).users.collect { |user| [user.name( anonymize ), user.id] }
       end
     when 'Group'
-      @subjects = Project.find(project_id).groups.collect { |group| [group.name( anonymize ), group.id] }
+      @subjects = Project.find(project_id).groups.collect { |group| [group.get_name( anonymize ), group.id] }
 
     end
     # Return the retrieved data
@@ -250,11 +250,11 @@ class GraphingController < ApplicationController
     @data = installments
     respond_to do |format|
       format.csv do
-        <% if anonymize %>
+        if anonymize
           headers['Content-Disposition'] = "attachment; filename=\"#{user.anon_last_name}_#{user.anon_first_name}.csv\""
-        <% else %>
+        else
           headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
-        <% end %>
+        end
         headers['Content-Type'] ||= 'text/csv'
       end
     end
