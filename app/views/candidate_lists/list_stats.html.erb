@@ -1,5 +1,5 @@
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-     anonymize = @current_user.anonymize? %>
+     anonymize = false %>
   <table data-role="table"
     id="stats_table"
     data-mode="columntoggle"

@@ -150,6 +150,10 @@ class InstallmentsController < ApplicationController
   class GroupStub
     attr_accessor :name
     attr_accessor :users
+
+    def get_name( anon = false )
+      name
+    end
   end
 
   def demo_complete
