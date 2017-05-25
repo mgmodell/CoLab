@@ -31,7 +31,7 @@
             <table width="100%">
               <tr><% if @current_user.is_instructor? %>
                 <td width="20%">
-              <%= f.input :research, as: :select,
+              <%= f.input :researcher, as: :select,
                           label: "Anonymize names?",
                           input_html: { data: 
                             { role: "flipswitch", 

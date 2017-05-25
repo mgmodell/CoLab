@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :email, :password, :current_password, :age_range_id, :timezone, :country, :gender_id, :welcomed, :theme_id, :school_id])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :email, :password, :current_password, :age_range_id, :timezone, :country, :gender_id, :welcomed, :theme_id, :school_id])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :email, :password, :current_password, :age_range_id, :timezone, :country, :gender_id, :welcomed, :theme_id, :school_id, :researcher])
   end
 
   def set_time_zone
