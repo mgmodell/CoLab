@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 namespace :migratify do
   desc 'Initialize existing PII objects with anonymized names'
-  task anonymize: :environment do
+  task anon_n_clean: :environment do
     # Make sure the DB is primed and ready!
     Rake::Task['db:migrate'].invoke
 
@@ -42,6 +42,13 @@ namespace :migratify do
     Course.all.each do |course|
       course.anon_name = "Beginning #{Forgery::Name.industry}" if course.anon_name.blank?
       course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
+    end
+
+    Candidate.all.each do |candidate|
+      candidate.filtered_consistent = 
+        candidate.term.nil? ? '' : 
+        Candidate.filter.filter( candidate.term.strip.split.map(&:downcase) ).join( " " )
+      candidate.save
     end
   end
 
