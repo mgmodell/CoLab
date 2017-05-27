@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'forgery'
 class School < ActiveRecord::Base
   has_many :courses, inverse_of: :school, dependent: :destroy
   has_many :bingo_games, through: :courses
@@ -6,11 +7,23 @@ class School < ActiveRecord::Base
   has_many :experiences, through: :courses
   has_many :rosters, through: :courses
 
+  before_create :anonymize
+
   def instructors
     rosters.joins(:role).where(roles: { name: 'Instructor' }).collect(&:user).uniq
   end
 
   def enrolled_students
     rosters.joins(:role).where(roles: { name: 'Enrolled Student' }).collect(&:user).uniq
+  end
+
+  def get_name(anonymous = false)
+    anonymous ? anon_name : name
+  end
+
+  private
+
+  def anonymize
+    anon_name = "#{Forgery::Name.location} institute"
   end
 end

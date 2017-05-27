@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_170_425_000_307) do
+ActiveRecord::Schema.define(version: 20_170_524_112_411) do
   create_table 'age_ranges', force: :cascade do |t|
     t.string   'name',       limit: 255
     t.datetime 'created_at',             null: false
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(version: 20_170_425_000_307) do
     t.boolean  'reviewed'
     t.boolean  'instructor_notified',               default: false, null: false
     t.boolean  'students_notified',                 default: false, null: false
+    t.string   'anon_topic', limit: 255
   end
 
   add_index 'bingo_games', ['course_id'], name: 'index_bingo_games_on_course_id', using: :btree
@@ -147,6 +148,8 @@ ActiveRecord::Schema.define(version: 20_170_425_000_307) do
     t.datetime 'created_at',              null: false
     t.datetime 'updated_at',              null: false
     t.string   'number',      limit: 255
+    t.string   'anon_name',   limit: 255
+    t.string   'anon_number', limit: 255
   end
 
   add_index 'courses', ['school_id'], name: 'index_courses_on_school_id', using: :btree
@@ -188,6 +191,7 @@ ActiveRecord::Schema.define(version: 20_170_425_000_307) do
     t.datetime 'updated_at',                                     null: false
     t.boolean  'active'
     t.boolean  'instructor_updated', default: false, null: false
+    t.string   'anon_name',          limit: 255
   end
 
   add_index 'experiences', ['course_id'], name: 'index_experiences_on_course_id', using: :btree
@@ -237,6 +241,7 @@ ActiveRecord::Schema.define(version: 20_170_425_000_307) do
     t.integer  'project_id', limit: 4
     t.datetime 'created_at',             null: false
     t.datetime 'updated_at',             null: false
+    t.string   'anon_name', limit: 255
   end
 
   add_index 'groups', ['project_id'], name: 'index_groups_on_project_id', using: :btree
@@ -285,6 +290,7 @@ ActiveRecord::Schema.define(version: 20_170_425_000_307) do
     t.integer  'consent_form_id', limit: 4
     t.integer  'factor_pack_id',  limit: 4
     t.integer  'style_id',        limit: 4
+    t.string   'anon_name',       limit: 255
   end
 
   add_index 'projects', ['consent_form_id'], name: 'index_projects_on_consent_form_id', using: :btree
@@ -342,6 +348,7 @@ ActiveRecord::Schema.define(version: 20_170_425_000_307) do
     t.string   'name',        limit: 255
     t.datetime 'created_at',              null: false
     t.datetime 'updated_at',              null: false
+    t.string   'anon_name', limit: 255
   end
 
   create_table 'sessions', force: :cascade do |t|
@@ -398,6 +405,9 @@ ActiveRecord::Schema.define(version: 20_170_425_000_307) do
     t.datetime 'last_emailed'
     t.integer  'theme_id',               limit: 4, default: 1
     t.integer  'school_id',              limit: 4
+    t.string   'anon_first_name',        limit: 255
+    t.string   'anon_last_name',         limit: 255
+    t.boolean  'researcher'
   end
 
   add_index 'users', ['age_range_id'], name: 'index_users_on_age_range_id', using: :btree

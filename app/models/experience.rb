@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'forgery'
 class Experience < ActiveRecord::Base
   belongs_to :course, inverse_of: :experiences
   has_many :reactions, inverse_of: :experience
@@ -7,6 +8,7 @@ class Experience < ActiveRecord::Base
   validates :name, :end_date, :start_date, presence: true
   validate :date_sanity
   before_validation :timezone_adjust
+  before_create :anonymize
   validate :dates_within_course
 
   scope :still_open, -> {
@@ -23,6 +25,10 @@ class Experience < ActiveRecord::Base
 
   def type
     'Group work simulation'
+  end
+
+  def get_name(anonymous = false)
+    anonymous ? anon_name : name
   end
 
   def status_for_user(user)
@@ -129,5 +135,11 @@ class Experience < ActiveRecord::Base
       experience.save
     end
     logger.debug "\n\t**#{count} Experience Reports sent to Instructors**"
+  end
+
+  private
+
+  def anonymize
+    anon_name = Forgery::Name.company_name.to_s
   end
 end

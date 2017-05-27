@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'forgery'
 class Group < ActiveRecord::Base
   around_update :track_history
   after_initialize :store_load_state
@@ -13,6 +14,8 @@ class Group < ActiveRecord::Base
   validates :name, :project_id, presence: true
   validate :validate_activation_status, on: :update
 
+  before_create :anonymize
+
   def validate_activation_status
     if project_id_was != project_id
       errors.add(:project,
@@ -22,6 +25,10 @@ class Group < ActiveRecord::Base
       project.active = false
       project.save
     end
+  end
+
+  def get_name(anonymous = false)
+    anonymous ? anon_name : name
   end
 
   def has_user(user)
@@ -53,5 +60,11 @@ class Group < ActiveRecord::Base
     yield # Do that save thing
 
     gr.save if persisted? && i_changed
+  end
+
+  private
+
+  def anonymize
+    anon_name = "#{Forgery::Personal.language} #{Forgery::LoremIpsum.characters}s"
   end
 end

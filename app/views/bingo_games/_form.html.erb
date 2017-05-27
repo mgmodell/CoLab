@@ -1,6 +1,7 @@
 <%= simple_form_for @bingo_game do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+     anonymize = @current_research %>
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
@@ -12,7 +13,7 @@
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
       <h2>Bingo! Game Details</h2>
       <div class="form-inputs">
-        <strong>Course:</strong> <%= @bingo_game.course.name %></br></br>
+        <strong>Course:</strong> <%= @bingo_game.course.get_name( anonymize ) %></br></br>
         <%= f.input :course_id, as: :hidden %>
         <%= f.input :topic %>
         <%= f.input :description %>
@@ -107,8 +108,8 @@
                 <% @bingo_game.course.enrolled_students.each do |student| %>
                   <% cl = @bingo_game.candidate_list_for_user( student ) %>
                   <tr>
-                    <td><%= student.name %></td>
-                    <td><%= cl.is_group ? cl.group.name : "N/A" %></td>
+                    <td><%= student.name( anonymize ) %></td>
+                    <td><%= cl.is_group ? cl.group.get_name( anonymize ) : "N/A" %></td>
                     <% if cl.candidates.completed.count > 0 %>
                       <% candidate_feedbacks.each do |cf| %>
                         <td><%= 100 * cl.get_by_feedback( cf ).count / cl.candidates.completed.count %>%</td>

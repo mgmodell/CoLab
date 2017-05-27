@@ -1,5 +1,6 @@
 <h1>Your Tasks</h1>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% anonymize = @current_user.nil? ? false : @current_user.anonymize? %>
 <p>Hello <%= @first_name %>,</br>
   <% task_count = @waiting_student_tasks.count + @waiting_instructor_tasks.count %>
   <% if task_count > 0 %>
@@ -33,10 +34,10 @@
     <tbody>
     <% @waiting_instructor_tasks.each do |task| %>
       <tr>
-        <td data-priority="0"><%= link_to "Review: " + task.name, review_bingo_candidates_path( task )%> </td>
+        <td data-priority="0"><%= link_to "Review: " + task.get_name( anonymize ), review_bingo_candidates_path( task )%> </td>
         <td align="center" data-priority="1">Bingo! Candidate Review</td>
         <td align="center" data-priority="1"><%= task.status %>%</td>
-        <td data-priority="1"><%= task.course.name %></td>
+        <td data-priority="1"><%= task.course.get_name( anonymize ) %></td>
         <td data-priority="0"><<%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
       </tr>
     <% end %>
@@ -72,13 +73,13 @@
           <tr>
             <td>
               <% if(task.is_completed_by_user @current_user) %>
-                <%= link_to group.name, edit_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
+                <%= link_to group.get_name( anonymize ), edit_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
                 <br>
-                (Project: <%= task.project.name %>)
+                (Project: <%= task.project.get_name( anonymize ) %>)
                   <% else %>
-                <%= link_to group.name, new_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
+                <%= link_to group.get_name( anonymize ), new_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
                 <br>
-                (Project: <%= task.project.name %>)
+                (Project: <%= task.project.get_name( anonymize ) %>)
                   <% end %>
             </td>
             <td>Self- and Peer-Assessment</td>
@@ -89,19 +90,19 @@
                 <em>Not Started</em>
               <% end %>
             </td>
-            <td> <%= group.name %></td>
-            <td> <%= task.project.course.name %></td>
+            <td> <%= group.get_name( anonymize ) %></td>
+            <td> <%= task.project.course.get_name( anonymize ) %></td>
             <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td>
               <%= render :partial => "shared/consent", :locals => { :project => task.project } %>
             </td>
           </tr>
-        <% elsif task.class.name == "BingoGame" %>
+        <% elsif task.class == BingoGame %>
           <tr><% candidate_list = task.candidate_list_for_user( @current_user ) %>
             <% if task.is_open? %>
               <td>
-                <%= link_to task.name, edit_candidate_list_path( candidate_list ) %>
+                <%= link_to task.get_name( anonymize ), edit_candidate_list_path( candidate_list ) %>
               </td>
               <td>Terms list submission</td>
               <td>
@@ -109,7 +110,7 @@
               </td>
             <% elsif task.reviewed %>
               <td>
-                <%= link_to task.name, candidate_list_path( candidate_list ) %>
+                <%= link_to task.get_name( anonymize ), candidate_list_path( candidate_list ) %>
               </td>
               <td>Distilled concepts</td>
               <td>
@@ -118,12 +119,12 @@
             <% end %>
             <td>
               <% if task.project.present? && task.project.group_for_user( @current_user ) %>
-                <%= task.project.group_for_user( @current_user ).name %>
+                <%= task.project.group_for_user( @current_user ).get_name( anonymize ) %>
               <% else %>
                 N/A
               <% end %>
             </td>
-            <td> <%= task.course.name %></td>
+            <td> <%= task.course.get_name( anonymize ) %></td>
             <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td>
               <%= task.term_list_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
@@ -136,9 +137,9 @@
             <td>
               <% reaction = task.get_user_reaction( @current_user ) %>
               <% if reaction.behavior.present? %>
-                <%= task.name %>
+                <%= task.get_name( anonymize ) %>
               <% else %>
-                <%= link_to task.name, next_experience_path( :experience_id => task.id ) %>
+                <%= link_to task.get_name( anonymize ), next_experience_path( :experience_id => task.id ) %>
               <% end %>
             </td>
             <td>Collaboration experience simulation</td>
@@ -148,7 +149,7 @@
               </em>
             </td>
             <td> N/A</td>
-            <td> <%= task.course.name %></td>
+            <td> <%= task.course.get_name( anonymize ) %></td>
             <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
             <td>

@@ -1,5 +1,6 @@
 <h1>You've been invited!</h1>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% anonymize = @current_user.nil? ? false : @current_user.anonymize? %>
 <p>Hello <%= @first_name %>,
     <% pluralize = true if @waiting_rosters.count > 1 %>
   You've been added to <%= pluralize ? "courses" : "a course" %>, but sometimes instructors make mistakes, so please do confirm that you are actually enrolled in the <%= @waiting_rosters.count if pluralize %> course<%= "s" if pluralize %> listed below:
@@ -30,7 +31,7 @@
             <%= link_to "Decline", decline_roster_path( :roster_id => roster.id ) %> enrollment
           </td>
         <td><em>Waiting</em></td>
-        <td><%= roster.course.name %></td>
+        <td><%= roster.course.get_name( anonymize ) %></td>
         <td><%= roster.course.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
         <td><%= roster.course.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
         <td>N/A</td>

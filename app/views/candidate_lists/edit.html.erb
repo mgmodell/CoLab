@@ -1,6 +1,7 @@
 <%= simple_form_for @candidate_list do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+     anonymize = false %>
   <table>
     <tr>
       <th align="right">Topic:</th>
@@ -9,13 +10,13 @@
     <tr>
       <th align="right">For:</th>
       <td>
-        <%= @current_user.name %>
+        <%= @current_user.name( anonymize ) %>
 
         <% # Is group play possible?
           if @candidate_list.bingo_game.group_option? &&
               @candidate_list.bingo_game.project.group_for_user( @current_user ).present? %>
           <% if @candidate_list.is_group? %>
-            <em>on behalf of: <%= @candidate_list.group.name %></em>
+            <em>on behalf of: <%= @candidate_list.group.get_name( anonymize ) %></em>
           <% else %>
             <% if @candidate_list.group_requested # Have you already requested collaboration? %>
               [Still awaiting a response to your group help request]

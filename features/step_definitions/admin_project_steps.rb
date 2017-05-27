@@ -2,9 +2,9 @@ require 'chronic'
 # frozen_string_literal: true
 Then /^the user "([^"]*)" see an Admin button$/ do |admin|
   if admin == 'does'
-    page.should have_content('Admin')
+    page.should have_content('Administration')
   else
-    page.should_not have_content('Admin')
+    page.should_not have_content('Administration')
   end
 end
 
@@ -15,7 +15,7 @@ Given /^the user is an admin$/ do
 end
 
 Then /^the user clicks the Admin button$/ do
-  click_link_or_button 'Admin'
+  click_link_or_button 'Administration'
 end
 
 Then /^the user sees (\d+) course$/ do |course_count|

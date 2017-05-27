@@ -1,6 +1,7 @@
 <%= simple_form_for @project do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+     anonymize = @current_user.anonymize? %>
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
@@ -13,7 +14,7 @@
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
       <h2>Project Details</h2>
       <div class="form-inputs">
-        <strong>Course: </strong> <%= @project.course.name %></br></br>
+        <strong>Course: </strong> <%= @project.course.get_name( anonymize ) %></br></br>
         <%= f.input :course_id, as: :hidden %>
         <%= f.input :name %>
         <%= f.input :active %>
@@ -72,7 +73,7 @@
           <th>Student</th>
           <% groups = @project.groups %>
           <% groups.each do |group| %>
-            <th align="center" data-priority="0"><%= text_field_tag "group_" + group.id.to_s, group.name %></th>
+            <th align="center" data-priority="0"><%= text_field_tag "group_" + group.id.to_s, group.get_name( anonymize ) %></th>
           <% end %>
           <th data-priority="0">[no group]</th>
         </tr>
@@ -80,7 +81,7 @@
       <tbody>
         <% @project.course.enrolled_students.each do |user| %>
           <tr>
-            <td><%= mail_to user.email, user.name %></td>
+            <td><%= mail_to user.email, user.name( anonymize ) %></td>
             <% groups.each do |group| %>
               <td align="center"><%= radio_button_tag "user_group_#{user.id}", group.id, group.has_user( user ) %></td>
             <% end %>

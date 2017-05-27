@@ -1,4 +1,5 @@
 <h2>Your weekly installment</h2><% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% anonymize = false %>
 <% if flash[:notice] %>
   <p class="notice"><%= flash[:notice] %></p>
 <% end %>
@@ -7,7 +8,7 @@
 <% end %>
 <div class="instructions">
   <p>Please complete this weeks' assessment for 
-group <em><%= @group.name %></em> by indicating how much effort each of the
+group <em><%= @group.get_name( anonymize ) %></em> by indicating how much effort each of the
     <%= @members.count %> members of your group contributed towards each of
 the <%= @factors.count %> factors. Please keep in mind that <em>this
 report <u>should only cover this past week</u> and none of the period 
@@ -41,7 +42,7 @@ visit each set of factors prior to submitting your report.</p>
                         @installment.value_for_user_factor( member, factor )do |value_form| %>
                   <%= value_form.hidden_field :factor_id %>
                   <%= value_form.hidden_field :user_id %>
-                  <%= label_tag :value, member.informal_name %>
+                  <%= label_tag :value, member.informal_name( anonymize ) %>
                 </td>
                 <td>
                   <br>

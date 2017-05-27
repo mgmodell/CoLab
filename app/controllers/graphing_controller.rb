@@ -9,6 +9,7 @@ class GraphingController < ApplicationController
     unit_of_analysis = params[:unit_of_analysis]
     project_id = params[:project_id]
     for_research = params[:for_research] == 'true' ? true : false
+    anonymize = @current_user.anonymize?
 
     @subjects = []
     case unit_of_analysis
@@ -16,12 +17,12 @@ class GraphingController < ApplicationController
       if for_research
         @subjects = User.joins(:consent_logs, :projects)
                         .where(consent_logs: { accepted: true }, projects: { id: project_id })
-                        .collect { |user| [user.name, user.id] }
+                        .collect { |user| [user.name( anonymize ), user.id] }
       else
-        @subjects = Project.find(project_id).users.collect { |user| [user.name, user.id] }
+        @subjects = Project.find(project_id).users.collect { |user| [user.name( anonymize ), user.id] }
       end
     when 'Group'
-      @subjects = Project.find(project_id).groups.collect { |group| [group.name, group.id] }
+      @subjects = Project.find(project_id).groups.collect { |group| [group.get_name( anonymize ), group.id] }
 
     end
     # Return the retrieved data
@@ -33,6 +34,7 @@ class GraphingController < ApplicationController
   # Retrieve all the reported values relating to the
   # specified user and hash them up by Installment.
   def pull_and_organise_user_data(user_id, project_id, for_research = false)
+    #for_research = @current_user.anonymize?
     values = []
     if for_research
       values = Value.includes(:user, :factor, installment: [:assessment, :user])
@@ -60,6 +62,7 @@ class GraphingController < ApplicationController
   end
 
   def individual_summary_data(user, project_id, for_research = false)
+    anonymize = @current_user.anonymize?
     assessment_to_values = pull_and_organise_user_data(user.id, project_id, for_research)
     data = []
     sequential = assessment_to_values.keys.sort_by(&:start_date)
@@ -67,11 +70,11 @@ class GraphingController < ApplicationController
       values = assessment_to_values[assessment]
       data << { x: values[0].created_at.to_i * 1000,
                 y: values.inject(0) { |sum, value| sum + value.value }.to_f / values.size,
-                name: values.map { |x| x.installment.prettyComment }.join("\n") }
+                name: values.map { |x| x.installment.prettyComment( anonymize ) }.join("\n") }
     end
     series = {}
     series.store('data', data)
-    series.store('label', user.name)
+    series.store('label', user.name( anonymize ))
     series
   end
 
@@ -88,6 +91,7 @@ class GraphingController < ApplicationController
     project = Project.find(params[:project])
     subject = params[:subject]
     for_research = params[:for_research] == 'true' ? true : false
+    anonymize = @current_user.anonymize?
 
     # TODO: - validate that the user has access to the requested data
     @data_series = []
@@ -100,7 +104,7 @@ class GraphingController < ApplicationController
       case unit_of_analysis
       when 'Individual'
         user = User.find(subject.to_i)
-        @detail_hash.store('name', user.name)
+        @detail_hash.store('name', user.name( anonymize ) )
 
         case data_processing
         when 'Summary'
@@ -116,13 +120,13 @@ class GraphingController < ApplicationController
               series = data_hash[value.factor.id.to_s + '_' + value.installment.user_id.to_s]
               if series.nil?
                 series = {}
-                series.store('label', value.factor.name + ' by ' + value.installment.user.name)
+                series.store('label', value.factor.name + ' by ' + value.installment.user.name( anonymize ))
               end
               series_data = series['data']
               series_data = [] if series_data.nil?
               series_data << { x: value.created_at.to_i * 1000,
                                y: value.value,
-                               name: value.installment.prettyComment }
+                               name: value.installment.prettyComment( anonymize ) }
               series.store('data', series_data)
               data_hash.store(value.factor.id.to_s + '_' + value.installment.user_id.to_s, series)
             end
@@ -145,7 +149,7 @@ class GraphingController < ApplicationController
               series_data = [] if series_data.nil?
               series_data << { x: value.installment.assessment.start_date.to_time.to_i * 1000,
                                y: value.value,
-                               name: value.installment.prettyComment }
+                               name: value.installment.prettyComment( anonymize ) }
 
               # collapsed_series_data << [ date, tmp.inject{|sum,el| sum + el[1] }.to_f / tmp.size ]
               series.store('data', series_data)
@@ -173,7 +177,7 @@ class GraphingController < ApplicationController
         end
       when 'Group'
         group = Group.find(subject.to_i)
-        @detail_hash.store('name', group.name)
+        @detail_hash.store('name', group.get_name( anonymize ) )
 
         case data_processing
         when 'Summary'
@@ -183,7 +187,7 @@ class GraphingController < ApplicationController
         end
       when 'Raw Data'
         user = User.confirmed.find(subject.to_i)
-        @detail_hash.store('name', user.name)
+        @detail_hash.store('name', user.name( anonymize ) )
 
         case data_processing
         when 'Comments'
@@ -192,7 +196,11 @@ class GraphingController < ApplicationController
           @data = installments
           respond_to do |format|
             format.csv do
-              headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
+              if anonymize
+                headers['Content-Disposition'] = "attachment; filename=\"#{user.anon_last_name}_#{user.anon_first_name}.csv\""
+              else
+                headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
+              end
               headers['Content-Type'] ||= 'text/csv'
             end
           end
@@ -236,13 +244,18 @@ class GraphingController < ApplicationController
   #
   def raw_data
     user = User.find(subject.to_i)
+    anonymize = @current_user.anonymize?
 
     installments = Installment.joins(:assessment)
                               .where(user_id: subject.to_i, assessment: { project_id: assessment.to_i })
     @data = installments
     respond_to do |format|
       format.csv do
-        headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
+        if anonymize
+          headers['Content-Disposition'] = "attachment; filename=\"#{user.anon_last_name}_#{user.anon_first_name}.csv\""
+        else
+          headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
+        end
         headers['Content-Type'] ||= 'text/csv'
       end
     end

@@ -1,6 +1,7 @@
 <%= simple_form_for @course do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+     anonymize = @current_user.anonymize? %>
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
@@ -24,7 +25,7 @@
     <div id="participants" class="ui-body-<%= theme_code %> ui-content">
       <h2>Rosters</h2>
       <% @course.rosters.students.each do |roster| %>
-        <%= roster.user.name %> <i><%= mail_to roster.user.email %></i> (<%= roster.role.name %> )<br>
+        <%= roster.user.name( anonymize ) %> <i><%= mail_to roster.user.email unless anonymize %></i> (<%= roster.role.name %> )<br>
       <% end %>
         <table data-role="table"
           id="basicTable"
@@ -46,13 +47,21 @@
       <% @course.rosters.students.each do |roster| %>
       <tr>
         <td>
-          <%= roster.user.last_name.blank? ? "<not given>" : roster.user.last_name %>
+          <% if anonymize %>
+            <%= roster.user.anon_last_name %>
+          <% else %>
+            <%= roster.user.last_name.blank? ? "<not given>" : roster.user.last_name %>
+          <% end %>
         </td>
         <td>
-          <%= roster.user.first_name.blank? ? "<not given>" : roster.user.first_name %>
+          <% if anonymize %>
+            <%= roster.user.anon_first_name %>
+          <% else %>
+            <%= roster.user.first_name.blank? ? "<not given>" : roster.user.first_name %>
+          <% end %>
         </td>
         <td>
-          <%= mail_to roster.user.email %>
+          <%= mail_to roster.user.email unless anonymize %>
         </td>
         <td>
           <%= roster.role.name %>
@@ -88,7 +97,7 @@
       <tbody>
           <% @course.bingo_games.each do |game| %>
             <tr>
-                <td><%= link_to game.name, game %></td>
+                <td><%= link_to game.get_name( anonymize ), game %></td>
                 <td>
                 <% if game.active %>
                 Active
@@ -133,7 +142,7 @@
       <tbody>
           <% @course.projects.each do |project| %>
             <tr>
-                <td><%= link_to project.name, project %></td>
+                <td><%= link_to project.get_name( anonymize ), project %></td>
                 <td>
                 <% if project.active %>
                 Active
@@ -178,7 +187,7 @@
       <tbody>
           <% @course.experiences.each do |experience| %>
             <tr>
-                <td><%= link_to experience.name, experience %></td>
+                <td><%= link_to experience.get_name( anonymize ), experience %></td>
                 <td>
                 <% if experience.active %>
                   Active

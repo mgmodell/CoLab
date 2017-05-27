@@ -1,4 +1,5 @@
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+     anonymize = false %>
   <table data-role="table"
     id="stats_table"
     data-mode="columntoggle"
@@ -38,7 +39,7 @@
     </tbody>
   <table>
   <p>
-  You <%= "and your group, #{@candidate_list.group.name}, " if @candidate_list.is_group %> identifed the
+  You <%= "and your group, #{@candidate_list.group.get_name( anonymize )}, " if @candidate_list.is_group %> identifed the
   following terms, resulting in <% @candidate_list.get_concepts.count %> unique concepts:
   <table data-role="table"
     id="candidates_table"

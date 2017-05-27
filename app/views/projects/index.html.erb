@@ -1,5 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+   anonymize = @current_user.anonymize? %>
 <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -22,7 +23,7 @@
   <tbody>
     <% @projects.each do |project| %>
       <tr>
-        <td><%= link_to project.name, project %></td>
+        <td><%= link_to project.get_name( anonymize ), project %></td>
         <td><%= project.start_date %></td>
         <td><%= project.end_date %></td>
         <td><%= Date::DAYNAMES.at project.start_dow %></td>

@@ -1,6 +1,7 @@
 <p id="notice"><%= notice %></p>
 
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code
+   anonymize = @current_user.anonymize? %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -13,12 +14,12 @@
   <h3>Course Details</h3>
 <p>
   <h3>Name:</h3>
-  <%= @course.name %>
+  <%= @course.get_name( anonymize ) %>
 </p>
 
 <p>
   <h3>Number:</h3>
-  <%= @course.number %>
+  <%= @course.get_number( anonymize ) %>
 </p>
 
 <p>
@@ -33,7 +34,7 @@
 <p>
   <h3>Course instructors</h3>
   <% @course.rosters.instructorships.each do |roster| %>
-    <%= roster.user.name %> | <%= link_to "Remove", remove_instructor_path( roster ) %></br>
+    <%= roster.user.name( anonymize ) %> | <%= link_to "Remove", remove_instructor_path( roster ) %></br>
   <% end %>
 
 </p>
@@ -49,7 +50,7 @@
     <%= submit_tag "Add!" %>
   <% end %>
   <% @course.rosters.instructorships.each do |roster| %>
-    <%= roster.user.name %></br>
+    <%= roster.user.name( anonymize ) %></br>
   <% end %>
 
   <h3>Student roster</h3>
@@ -87,10 +88,18 @@
       <% @course.rosters.students.each do |roster| %>
       <tr>
         <td>
+        <% if anonymize %>
+          <%= roster.user.anon_last_name %>
+        <% else %>
           <%= roster.user.last_name.blank? ? "<not given>" : roster.user.last_name %>
+        <% end %>
         </td>
         <td>
+        <% if anonymize %>
+          <%= roster.user.anon_first_name %>
+        <% else %>
           <%= roster.user.first_name.blank? ? "<not given>" : roster.user.first_name %>
+        <% end %>
         </td>
         <td>
           <%= mail_to roster.user.email %>
@@ -131,7 +140,7 @@
       <tbody>
           <% @course.bingo_games.each do |game| %>
             <tr>
-                <td><%= link_to game.name, game %></td>
+                <td><%= link_to game.get_name( anonymize ), game %></td>
                 <td>
                 <% if game.active %>
                 Active
@@ -176,7 +185,7 @@
       <tbody>
           <% @course.projects.each do |project| %>
             <tr>
-                <td><%= link_to project.name, project %></td>
+                <td><%= link_to project.get_name( anonymize ), project %></td>
                 <td>
                 <% if project.active %>
                 Active
@@ -221,7 +230,7 @@
       <tbody>
           <% @course.experiences.each do |experience| %>
             <tr>
-                <td><%= link_to experience.name, experience %></td>
+                <td><%= link_to experience.get_name( anonymize ), experience %></td>
                 <td>
                 <% if experience.active %>
                   Active
