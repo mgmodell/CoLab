@@ -73,10 +73,10 @@ end
 
 Then /^the candidate list properties will match the list$/ do
   cl = @bingo.candidate_list_for_user @user
-  cl.candidates.each_with_index do |candidate, index|
-    candidate.term.should eq @entries_list[index]['term']
-    candidate.definition.should eq @entries_list[index]['definition']
+  @entries_list.each do |cand|
+    cl.candidates.where( term: cand['term'], definition: cand['definition'] ).count.should eq 1
   end
+
 end
 
 Then /^the candidate list entries should match the list$/ do
@@ -84,10 +84,11 @@ Then /^the candidate list entries should match the list$/ do
 
   items_not_found = @entries_lists[@user].count
   @entries_lists[@user].each do |candidate|
+
     field_count.times do |index|
       t_query = "//input[@id='candidate_list_candidates_attributes_#{index}_term']"
       d_query = "//textarea[@id='candidate_list_candidates_attributes_#{index}_definition']"
-      if page.find(:xpath, t_query).value == candidate['term'] &&
+      if page.find(:xpath, t_query).value == candidate['term'].strip.split.map(&:capitalize) * ' ' &&
          page.find(:xpath, d_query).value == candidate['definition']
         items_not_found -= 1
       end

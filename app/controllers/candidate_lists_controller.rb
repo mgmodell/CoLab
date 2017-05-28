@@ -9,6 +9,11 @@ class CandidateListsController < ApplicationController
 
   def edit
     @title = 'Complete the Term List'
+    @term_counts = Hash.new
+    @candidate_list.candidates.each do |candidate|
+      @term_counts[ candidate.filtered_consistent ] = @term_counts[ candidate.filtered_consistent ].to_i + 1
+    end
+
     if @candidate_list.bingo_game.reviewed
       render :show
     elsif !@candidate_list.bingo_game.is_open?
@@ -29,6 +34,10 @@ class CandidateListsController < ApplicationController
         cl.group_requested = false
         cl.save
       end
+    end
+    @term_counts = Hash.new
+    @candidate_list.candidates.each do |candidate|
+      @term_counts[ candidate.filtered_consistent ] = @term_counts[ candidate.filtered_consistent ].to_i + 1
     end
     render :edit
   end
