@@ -45,9 +45,9 @@ namespace :migratify do
     end
 
     Candidate.all.each do |candidate|
-      candidate.filtered_consistent = 
-        candidate.term.nil? ? '' : 
-        Candidate.filter.filter( candidate.term.strip.split.map(&:downcase) ).join( " " )
+      candidate.filtered_consistent =
+        candidate.term.nil? ? '' :
+        Candidate.filter.filter(candidate.term.strip.split.map(&:downcase)).join(' ')
       candidate.save
     end
   end

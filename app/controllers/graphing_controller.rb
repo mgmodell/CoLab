@@ -17,12 +17,12 @@ class GraphingController < ApplicationController
       if for_research
         @subjects = User.joins(:consent_logs, :projects)
                         .where(consent_logs: { accepted: true }, projects: { id: project_id })
-                        .collect { |user| [user.name( anonymize ), user.id] }
+                        .collect { |user| [user.name(anonymize), user.id] }
       else
-        @subjects = Project.find(project_id).users.collect { |user| [user.name( anonymize ), user.id] }
+        @subjects = Project.find(project_id).users.collect { |user| [user.name(anonymize), user.id] }
       end
     when 'Group'
-      @subjects = Project.find(project_id).groups.collect { |group| [group.get_name( anonymize ), group.id] }
+      @subjects = Project.find(project_id).groups.collect { |group| [group.get_name(anonymize), group.id] }
 
     end
     # Return the retrieved data
@@ -34,7 +34,7 @@ class GraphingController < ApplicationController
   # Retrieve all the reported values relating to the
   # specified user and hash them up by Installment.
   def pull_and_organise_user_data(user_id, project_id, for_research = false)
-    #for_research = @current_user.anonymize?
+    # for_research = @current_user.anonymize?
     values = []
     if for_research
       values = Value.includes(:user, :factor, installment: [:assessment, :user])
@@ -70,11 +70,11 @@ class GraphingController < ApplicationController
       values = assessment_to_values[assessment]
       data << { x: values[0].created_at.to_i * 1000,
                 y: values.inject(0) { |sum, value| sum + value.value }.to_f / values.size,
-                name: values.map { |x| x.installment.prettyComment( anonymize ) }.join("\n") }
+                name: values.map { |x| x.installment.prettyComment(anonymize) }.join("\n") }
     end
     series = {}
     series.store('data', data)
-    series.store('label', user.name( anonymize ))
+    series.store('label', user.name(anonymize))
     series
   end
 
@@ -104,7 +104,7 @@ class GraphingController < ApplicationController
       case unit_of_analysis
       when 'Individual'
         user = User.find(subject.to_i)
-        @detail_hash.store('name', user.name( anonymize ) )
+        @detail_hash.store('name', user.name(anonymize))
 
         case data_processing
         when 'Summary'
@@ -120,13 +120,13 @@ class GraphingController < ApplicationController
               series = data_hash[value.factor.id.to_s + '_' + value.installment.user_id.to_s]
               if series.nil?
                 series = {}
-                series.store('label', value.factor.name + ' by ' + value.installment.user.name( anonymize ))
+                series.store('label', value.factor.name + ' by ' + value.installment.user.name(anonymize))
               end
               series_data = series['data']
               series_data = [] if series_data.nil?
               series_data << { x: value.created_at.to_i * 1000,
                                y: value.value,
-                               name: value.installment.prettyComment( anonymize ) }
+                               name: value.installment.prettyComment(anonymize) }
               series.store('data', series_data)
               data_hash.store(value.factor.id.to_s + '_' + value.installment.user_id.to_s, series)
             end
@@ -149,7 +149,7 @@ class GraphingController < ApplicationController
               series_data = [] if series_data.nil?
               series_data << { x: value.installment.assessment.start_date.to_time.to_i * 1000,
                                y: value.value,
-                               name: value.installment.prettyComment( anonymize ) }
+                               name: value.installment.prettyComment(anonymize) }
 
               # collapsed_series_data << [ date, tmp.inject{|sum,el| sum + el[1] }.to_f / tmp.size ]
               series.store('data', series_data)
@@ -177,7 +177,7 @@ class GraphingController < ApplicationController
         end
       when 'Group'
         group = Group.find(subject.to_i)
-        @detail_hash.store('name', group.get_name( anonymize ) )
+        @detail_hash.store('name', group.get_name(anonymize))
 
         case data_processing
         when 'Summary'
@@ -187,7 +187,7 @@ class GraphingController < ApplicationController
         end
       when 'Raw Data'
         user = User.confirmed.find(subject.to_i)
-        @detail_hash.store('name', user.name( anonymize ) )
+        @detail_hash.store('name', user.name(anonymize))
 
         case data_processing
         when 'Comments'

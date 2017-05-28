@@ -151,7 +151,7 @@ class InstallmentsController < ApplicationController
     attr_accessor :name
     attr_accessor :users
 
-    def get_name( anon = false )
+    def get_name(_anon = false)
       name
     end
   end

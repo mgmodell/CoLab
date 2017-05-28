@@ -13,11 +13,11 @@ class Installment < ActiveRecord::Base
   before_save :normalize_sums
 
   # Support inclusion of comments
-  def prettyComment( anonymize = false )
+  def prettyComment(anonymize = false)
     if comments.blank?
-      user.name( anonymize ) + ': <no comment>'
+      user.name(anonymize) + ': <no comment>'
     else
-      user.name( anonymize ) + ': ' + comments
+      user.name(anonymize) + ': ' + comments
     end
   end
 

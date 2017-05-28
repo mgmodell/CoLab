@@ -5,14 +5,13 @@ class Candidate < ActiveRecord::Base
   belongs_to :concept, inverse_of: :candidates
   belongs_to :user, inverse_of: :candidates
 
-  default_scope {order( :filtered_consistent ) }
+  default_scope { order(:filtered_consistent) }
   scope :completed, -> { where("term != '' AND definition != ''") }
   scope :reviewed, -> { where('candidate_feedback_id > 0 ') }
   before_save :clean_data
   validate :concept_assigned
 
-
-  @@filter = Stopwords::Snowball::Filter.new( "en" )
+  @@filter = Stopwords::Snowball::Filter.new('en')
 
   def self.filter
     @@filter
@@ -22,7 +21,7 @@ class Candidate < ActiveRecord::Base
 
   def clean_data
     term = term.nil? ? '' : term.strip.split.map(&:capitalize) * ' '
-    filtered_consistent = term.nil? ? '' : Candidate.filter.filter( term.strip.split.map(&:downcase) ).join( " " )
+    filtered_consistent = term.nil? ? '' : Candidate.filter.filter(term.strip.split.map(&:downcase)).join(' ')
     definition.strip!
   end
 
