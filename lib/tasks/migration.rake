@@ -50,7 +50,13 @@ namespace :migratify do
         Candidate.filter.filter(candidate.term.strip.split.map(&:downcase)).join(' ')
       candidate.save
     end
+
+    CandidateFeedback.create(name: 'Term: Doesn\'t match',
+                             definition: 'The term does not match the definition.')
+    CandidateFeedback.create(name: 'Term: Product Name',
+                             definition: 'Products should not be used unless they are dominant/household name.')
   end
+
 
   desc 'Make instructor_updated false'
   task falsify: :environment do

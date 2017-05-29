@@ -302,3 +302,7 @@ CandidateFeedback.create(name: 'Term: Invalid/Incorrect',
                          definition: 'The term is either not a real term or one that does not relate to the topic.')
 CandidateFeedback.create(name: 'Term: Not relevant',
                          definition: 'The term is not relevant to the topic.')
+CandidateFeedback.create(name: 'Term: Doesn\'t match',
+                         definition: 'The term does not match the definition.')
+CandidateFeedback.create(name: 'Term: Product Name',
+                         definition: 'Products should not be used unless they are dominant/household name.')
