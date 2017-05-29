@@ -57,7 +57,6 @@ namespace :migratify do
                              definition: 'Products should not be used unless they are dominant/household name.')
   end
 
-
   desc 'Make instructor_updated false'
   task falsify: :environment do
     # We should not need this one any longer.
