@@ -3,59 +3,48 @@ namespace :migratify do
   desc 'Initialize existing PII objects with anonymized names'
   task anon_n_clean: :environment do
     # Make sure the DB is primed and ready!
+    return
     Rake::Task['db:migrate'].invoke
 
     User.all.each do |user|
-      if user.anon_first_name.blank? || user.anon_last_name.blank? || user.researcher.present?
-        user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
-        user.anon_last_name = Forgery::Name.last_name if user.anon_last_name.blank?
-        user.researcher = false unless user.researcher.present?
-        user.save
-      end
+      user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
+      user.anon_last_name = Forgery::Name.last_name if user.anon_last_name.blank?
+      user.researcher = false unless user.researcher.present?
+      user.save
     end
 
     Group.all.each do |group|
-      if group.anon_name.blank?
-        group.anon_name = "#{Forgery::Personal.language} #{Forgery::LoremIpsum.characters}s" if group.anon_name.blank?
-        group.save
-      end
+      group.anon_name = "#{Forgery::Personal.language} #{Forgery::LoremIpsum.characters}s" if group.anon_name.blank?
+      group.save
     end
 
     BingoGame.all.each do |bingo_game|
-      if bingo_game.anon_topic.blank?
-        bingo_game.anon_topic = Forgery::LoremIpsum.title.to_s if bingo_game.anon_topic.blank?
-        bingo_game.save
-      end
+      bingo_game.anon_topic = Forgery::LoremIpsum.title.to_s if bingo_game.anon_topic.blank?
+      bingo_game.save
     end
 
     Experience.all.each do |experience|
-      if experience.anon_name.blank?
-        experience.anon_name = Forgery::Name.company_name.to_s if experience.anon_name.blank?
-        experience.save
-      end
+      experience.anon_name = Forgery::Name.company_name.to_s if experience.anon_name.blank?
+      experience.save
     end
 
     Project.all.each do |project|
-      if project.anon_name.blank?
-        project.anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}" if project.anon_name.blank?
-        project.save
-      end
+      project.anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}" if project.anon_name.blank?
+      project.save
     end
 
     School.all.each do |school|
-      if school.anon_name.blank?
-        school.anon_name = "#{Forgery::Name.location} institute" if school.anon_name.blank?
-        school.save
-      end
+      school.anon_name = "#{Forgery::Name.location} institute" if school.anon_name.blank?
+      school.save
     end
 
     depts = %w(BUS MED ENG RTG MSM LEH EDP
                GEO IST MAT YOW GFB RSV CSV MBV)
+    levels = [ "Beginning", "Intermediate", "Advanced" ]
     Course.all.each do |course|
-      if course.anon_name.blank? || course.anon_number.blank?
-        course.anon_name = "Beginning #{Forgery::Name.industry}" if course.anon_name.blank?
-        course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
-      end
+      course.anon_name = "#{levels.sample} #{Forgery::Name.industry}"
+      course.anon_number = "#{depts.sample}-#{rand(100..700)}"
+      course.save
     end
 
     Candidate.all.each do |candidate|

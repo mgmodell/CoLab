@@ -142,7 +142,8 @@ class Course < ActiveRecord::Base
   private
 
   def anonymize
-    anon_name = "Beginning #{Forgery::Name.industry}"
+    levels = [ "Beginning", "Intermediate", "Advanced" ]
+    anon_name = "#{levels.sample} #{Forgery::Name.industry}"
     dpts = %w(BUS MED ENG RTG MSM LEH EDP
               GEO IST MAT YOW GFB RSV CSV MBV)
     anon_number = "#{dpts.sample}-#{rand(100..700)}"
