@@ -40,7 +40,7 @@ namespace :migratify do
 
     depts = %w(BUS MED ENG RTG MSM LEH EDP
                GEO IST MAT YOW GFB RSV CSV MBV)
-    levels = [ "Beginning", "Intermediate", "Advanced" ]
+    levels = %w(Beginning Intermediate Advanced)
     Course.all.each do |course|
       course.anon_name = "#{levels.sample} #{Forgery::Name.industry}"
       course.anon_number = "#{depts.sample}-#{rand(100..700)}"
