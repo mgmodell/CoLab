@@ -6,42 +6,56 @@ namespace :migratify do
     Rake::Task['db:migrate'].invoke
 
     User.all.each do |user|
-      user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
-      user.anon_last_name = Forgery::Name.last_name if user.anon_last_name.blank?
-      user.researcher = false unless user.researcher.present?
-      user.save
+      if user.anon_first_name.blank? || user.anon_last_name.blank? || user.researcher.present?
+        user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
+        user.anon_last_name = Forgery::Name.last_name if user.anon_last_name.blank?
+        user.researcher = false unless user.researcher.present?
+        user.save
+      end
     end
 
     Group.all.each do |group|
-      group.anon_name = "#{Forgery::Personal.language} #{Forgery::LoremIpsum.characters}s" if group.anon_name.blank?
-      group.save
+      if group.anon_name.blank?
+        group.anon_name = "#{Forgery::Personal.language} #{Forgery::LoremIpsum.characters}s" if group.anon_name.blank?
+        group.save
+      end
     end
 
     BingoGame.all.each do |bingo_game|
-      bingo_game.anon_topic = Forgery::LoremIpsum.title.to_s if bingo_game.anon_topic.blank?
-      bingo_game.save
+      if bingo_game.anon_topic.blank?
+        bingo_game.anon_topic = Forgery::LoremIpsum.title.to_s if bingo_game.anon_topic.blank?
+        bingo_game.save
+      end
     end
 
     Experience.all.each do |experience|
-      experience.anon_name = Forgery::Name.company_name.to_s if experience.anon_name.blank?
-      experience.save
+      if experience.anon_name.blank?
+        experience.anon_name = Forgery::Name.company_name.to_s if experience.anon_name.blank?
+        experience.save
+      end
     end
 
     Project.all.each do |project|
-      project.anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}" if project.anon_name.blank?
-      project.save
+      if project.anon_name.blank?
+        project.anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}" if project.anon_name.blank?
+        project.save
+      end
     end
 
     School.all.each do |school|
-      school.anon_name = "#{Forgery::Name.location} institute" if school.anon_name.blank?
-      school.save
+      if school.anon_name.blank?
+        school.anon_name = "#{Forgery::Name.location} institute" if school.anon_name.blank?
+        school.save
+      end
     end
 
     depts = %w(BUS MED ENG RTG MSM LEH EDP
                GEO IST MAT YOW GFB RSV CSV MBV)
     Course.all.each do |course|
-      course.anon_name = "Beginning #{Forgery::Name.industry}" if course.anon_name.blank?
-      course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
+      if course.anon_name.blank? || course.anon_number.blank?
+        course.anon_name = "Beginning #{Forgery::Name.industry}" if course.anon_name.blank?
+        course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
+      end
     end
 
     Candidate.all.each do |candidate|
