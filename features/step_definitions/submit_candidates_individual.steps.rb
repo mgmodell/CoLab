@@ -21,14 +21,14 @@ Given /^the Bingo! game individual count is (\d+)$/ do |individual_count|
 end
 
 When /^the user clicks the link to the candidate list$/ do
-  click_link_or_button @bingo.get_name( @anon )
+  click_link_or_button @bingo.get_name(@anon)
 end
 
 Then /^the user should see the Bingo candidate list$/ do
   page.should have_content('Topic:')
   page.should have_content(@bingo.topic)
   page.should have_content('For:')
-  page.should have_content(@user.name (@anon ) )
+  page.should have_content(@user.name(@anon))
 end
 
 Then /^the user will see (\d+) term field sets$/ do |count|

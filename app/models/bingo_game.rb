@@ -93,12 +93,12 @@ class BingoGame < ActiveRecord::Base
       completion_hash = {}
       bingo.course.enrolled_students.each do |student|
         candidate_list = bingo.candidate_list_for_user(student)
-        completion_hash[student.email] = { name: student.name( false ),
+        completion_hash[student.email] = { name: student.name(false),
                                            status: candidate_list.percent_completed.to_s + '%' }
       end
 
       bingo.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(bingo.get_name( false ) + ' (terms list)',
+        AdministrativeMailer.summary_report(bingo.get_name(false) + ' (terms list)',
                                             bingo.course.prettyName,
                                             instructor,
                                             completion_hash).deliver_later

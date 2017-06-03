@@ -141,16 +141,16 @@ class Project < ActiveRecord::Base
         # Check the users
         user = User.find(user_id)
         if Roster.enrolled.where(user: user, course: course).count < 1
-          errors.add(:active, "#{user.name (false ) } is does not appear to be enrolled in this course.")
+          errors.add(:active, "#{user.name false} is does not appear to be enrolled in this course.")
         elsif count > 1
-          errors.add(:active, "#{user.name (false ) } appears #{count} times in your project.")
+          errors.add(:active, "#{user.name false} appears #{count} times in your project.")
         end
       end
       # Check the groups
       get_group_appearance_counts.each do |group_id, count|
         if count > 1
           group = Group.find(group_id)
-          errors.add(:active, "#{group.name (false ) } (group) appears #{count} times in your project.")
+          errors.add(:active, "#{group.name false} (group) appears #{count} times in your project.")
         end
       end
       if factor_pack.nil?
