@@ -184,6 +184,6 @@ class Project < ActiveRecord::Base
   private
 
   def anonymize
-    anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}"
+    anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"
   end
 end
