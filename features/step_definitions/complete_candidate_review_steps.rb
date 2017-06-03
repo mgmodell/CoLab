@@ -120,7 +120,7 @@ Given /^the user is the most recently created user$/ do
 end
 
 When /^the user clicks the link to the candidate review$/ do
-  click_link_or_button @bingo.get_name
+  click_link_or_button @bingo.get_name( @anon )
 end
 
 Then /^there will be (\d+) concepts$/ do |concept_count|

@@ -17,7 +17,7 @@ class School < ActiveRecord::Base
     rosters.joins(:role).where(roles: { name: 'Enrolled Student' }).collect(&:user).uniq
   end
 
-  def get_name(anonymous = false)
+  def get_name(anonymous)
     anonymous ? anon_name : name
   end
 

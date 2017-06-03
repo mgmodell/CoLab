@@ -27,7 +27,7 @@ class Experience < ActiveRecord::Base
     'Group work simulation'
   end
 
-  def get_name(anonymous = false)
+  def get_name(anonymous)
     anonymous ? anon_name : name
   end
 
@@ -121,7 +121,7 @@ class Experience < ActiveRecord::Base
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
         reaction = experience.get_user_reaction student
-        completion_hash[student.email] = { name: student.name, status: reaction.status }
+        completion_hash[student.email] = { name: student.name( false ), status: reaction.status }
       end
 
       experience.course.instructors.each do |instructor|

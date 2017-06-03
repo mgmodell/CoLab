@@ -27,7 +27,7 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def get_name(anonymous = false)
+  def get_name(anonymous)
     anonymous ? anon_name : name
   end
 

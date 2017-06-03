@@ -86,7 +86,7 @@
                   <% cl = @bingo_game.candidate_list_for_user( student ) %>
                   <tr>
                     <td><%= student.name( anonymize ) %></td>
-                    <td><%= cl.is_group ? cl.group.name : "N/A" %></td>
+                    <td><%= cl.is_group ? cl.group.name( anonymize ) : "N/A" %></td>
                     <% if cl.candidates.completed.count > 0 %>
                       <% candidate_feedbacks.each do |cf| %>
                         <td><%= 100 * cl.get_by_feedback( cf ).count / cl.candidates.completed.count %>%</td>

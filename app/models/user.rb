@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
   before_create :anonymize
 
   # Give us a standard form of the name
-  def name(anonymous = false)
+  def name(anonymous)
     if anonymous
       name = "#{anon_last_name}, #{anon_first_name}"
     else
@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def informal_name(anonymous = false)
+  def informal_name(anonymous)
     if anonymous
       name = "#{anon_first_name} #{anon_last_name}"
     else
