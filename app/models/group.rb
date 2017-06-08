@@ -27,7 +27,7 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def get_name(anonymous = false)
+  def get_name(anonymous)
     anonymous ? anon_name : name
   end
 
@@ -65,6 +65,6 @@ class Group < ActiveRecord::Base
   private
 
   def anonymize
-    anon_name = "#{Forgery::Personal.language} #{Forgery::LoremIpsum.characters}s"
+    anon_name = "#{rand < rand ? Forgery::Personal.language : Forgery::Name.location} #{Forgery::Name.company_name}s"
   end
 end

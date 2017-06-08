@@ -120,7 +120,11 @@ class CandidateListsController < ApplicationController
 
     @candidate_list.candidates = []
     1.upto 10 do |index|
-      @candidate_list.candidates << Candidate.new(id: 0 - index, candidate_list: @candidate_list)
+      @candidate_list.candidates << Candidate.new(id: 0 - index, term: '', definition: '', candidate_list: @candidate_list)
+    end
+    @term_counts = {}
+    @candidate_list.candidates.each do |candidate|
+      @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
     end
 
     render :edit
