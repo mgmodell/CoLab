@@ -6,34 +6,34 @@ namespace :migratify do
     return
     Rake::Task['db:migrate'].invoke
 
-    User.all.each do |user|
+    User.find_each do |user|
       user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
       user.anon_last_name = Forgery::Name.last_name if user.anon_last_name.blank?
       user.researcher = false unless user.researcher.present?
       user.save
     end
 
-    Group.all.each do |group|
+    Group.find_each do |group|
       group.anon_name = "#{Forgery::Personal.language} #{Forgery::LoremIpsum.characters}s" if group.anon_name.blank?
       group.save
     end
 
-    BingoGame.all.each do |bingo_game|
+    BingoGame.find_each do |bingo_game|
       bingo_game.anon_topic = Forgery::LoremIpsum.title.to_s if bingo_game.anon_topic.blank?
       bingo_game.save
     end
 
-    Experience.all.each do |experience|
+    Experience.find_each do |experience|
       experience.anon_name = Forgery::Name.company_name.to_s if experience.anon_name.blank?
       experience.save
     end
 
-    Project.all.each do |project|
+    Project.find_each do |project|
       project.anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}" if project.anon_name.blank?
       project.save
     end
 
-    School.all.each do |school|
+    School.find_each do |school|
       school.anon_name = "#{Forgery::Name.location} institute" if school.anon_name.blank?
       school.save
     end
@@ -41,13 +41,13 @@ namespace :migratify do
     depts = %w(BUS MED ENG RTG MSM LEH EDP
                GEO IST MAT YOW GFB RSV CSV MBV)
     levels = %w(Beginning Intermediate Advanced)
-    Course.all.each do |course|
+    Course.find_each do |course|
       course.anon_name = "#{levels.sample} #{Forgery::Name.industry}"
       course.anon_number = "#{depts.sample}-#{rand(100..700)}"
       course.save
     end
 
-    Candidate.all.each do |candidate|
+    Candidate.find_each do |candidate|
       candidate.filtered_consistent =
         candidate.term.nil? ? '' :
         Candidate.filter.filter(candidate.term.strip.split.map(&:downcase)).join(' ')
@@ -64,12 +64,12 @@ namespace :migratify do
   task falsify: :environment do
     # We should not need this one any longer.
     return
-    Experience.all.each do |exp|
+    Experience.find_each do |exp|
       exp.instructor_updated = false
       exp.save
     end
 
-    Assessment.all.each do |asmt|
+    Assessment.find_each do |asmt|
       asmt.instructor_updated = false
       asmt.save
     end
