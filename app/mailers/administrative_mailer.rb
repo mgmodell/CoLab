@@ -4,10 +4,12 @@ class AdministrativeMailer < ActionMailer::Base
 
   def remind(user)
     @user = user
+    headers "X-SMTPAPI" => {
+      category: ["reminder" ]
+    }.to_json
+
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
-         subject: 'CoLab Assessment reminder email',
-         tag: 'reminder',
-         track_opens: 'true')
+         subject: 'CoLab Assessment reminder email')
   end
 
   def summary_report(name, course_name, user, completion_hash)
@@ -15,27 +17,33 @@ class AdministrativeMailer < ActionMailer::Base
     @user = user
     @course_name = course_name
     @completion_report = completion_hash
+    headers "X-SMTPAPI" => {
+      category: ["reporting" ]
+    }.to_json
+
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
-         subject: "CoLab: #{@name}",
-         tag: 'reporting',
-         track_opens: 'true')
+         subject: "CoLab: #{@name}" )
   end
 
   def re_invite(user)
     @user = user
+    headers "X-SMTPAPI" => {
+      category: ["re-invite" ]
+    }.to_json
+
     mail(to: user.email.to_s,
-         subject: 'Invitation to CoLab',
-         tag: 're-invite',
-         track_opens: 'true')
+         subject: 'Invitation to CoLab' )
   end
 
   def notify_availability(user, activity)
     @user = user
     @activity = activity
+    headers "X-SMTPAPI" => {
+      category: ["availability" ]
+    }.to_json
+
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
-         subject: "CoLab: #{activity} is available",
-         tag: 'availability',
-         track_opens: 'true')
+         subject: "CoLab: #{activity} is available" )
   end
 
   # Business methods

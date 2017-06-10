@@ -36,7 +36,7 @@ gem 'jquery-tablesorter'
 gem 'jquery_mobile_rails'
 gem 'omniauth-google-oauth2'
 gem 'paperclip', '~> 5.0.0'
-gem 'postmark-rails', '>= 0.15.0'
+gem 'sendgrid-ruby'
 gem 'puma'
 gem 'rails_12factor', group: :production
 gem 'simple_form'
