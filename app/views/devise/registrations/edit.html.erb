@@ -17,11 +17,38 @@
               <h3>Edit your profile</h3>
             </div>
             <div class="ui-body ui-body-<%= theme_code %>">
-              <%= f.input :email, required: true, autofocus: true %>
               <%= f.input :first_name, required: true, autofocus: true %>
-              <%= f.input :last_name, required: true, autofocus: true %>
-              <%= f.input :email, required: true, autofocus: true %>
-              <%= link_to "Want to change your password? Click here and we'll email instructions.", send_reset_path %><br />
+              <%= f.input :last_name, required: true %>
+              <table width="100%">
+                <thead>
+                  <tr>
+                    <th>Registered Emails</th>
+                    <th>Primary</th>
+                    <th>Confirmed</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+              <% f.object.emails.each do |email| %>
+                <tbody>
+                  <tr>
+                    <td><%= email.email %></td>
+                    <td align="center"><%= email.primary ? raw( '&#x2714;' ) : '' %></td>
+                    <td align="center"><%= email.confirmed? ? raw( '&#x2714;' ) : '' %></td>
+                    <td align="center">
+                      <% if !email.primary %>
+                        <%= link_to 'Remove', remove_registered_email_path( email_id: email.id ) %> |
+                        <%= link_to 'Make Primary', set_primary_registered_email_path( email_id: email.id ) %>
+                      <% end %></td>
+                  </tr>
+                </tbody>
+              <% end %>
+              </table>
+              <br />
+              <%= link_to 'Want to add an address?', '#add_address_popup', 
+                    data: { rel: 'popup', transition: 'flip', position: { to: 'window' } },
+                    class: 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left' %><br />
+              <br />
+              <%= link_to 'Want to change your password? Click here and we''ll email instructions.', initiate_password_reset_path %><br />
             </div>
           <div class="form-inputs ui-corner-all custom-corners">
             <div class="ui-bar ui-bar-<%= theme_code %>">
@@ -128,5 +155,18 @@
 <h3>Cancel my account</h3>
 
 <p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
+<div data-role="popup" id="add_address_popup" data-theme="<%= theme_code %>" style="width:700px" 
+    class="ui-corner-all">
+  <div data-role="header" data-theme="<%= theme_code %>">
+    <h1>What is the new address?</h1>
+  </div>
+  <%= form_tag add_registered_email_path do %>
+    <div style="padding:10px 20px;">
+      <%= label_tag :email_address, "New address:" %>
+      <%= email_field_tag :email_address %><br />
+      <%= submit_tag "Add!" %>
+    </div>
+  <% end %>
+</div>
 
 <%= link_to "Back", :back %>

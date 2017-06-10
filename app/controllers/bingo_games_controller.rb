@@ -72,7 +72,7 @@ class BingoGamesController < ApplicationController
         candidate.concept = concept
       end
       candidate.save
-      logger.debug candidate.errors.full_messages unless candidate.errors.nil?
+      logger.debug candidate.errors.full_messages unless candidate.errors.empty?
     end
 
     @bingo_game.reviewed = params_act['reviewed']
@@ -84,7 +84,7 @@ class BingoGamesController < ApplicationController
       @bingo_game.students_notified = true
     end
     @bingo_game.save
-    logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.nil?
+    logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
 
     if @bingo_game.errors.empty? && @bingo_game.reviewed
       redirect_to root_url, notice: 'Review data successfully saved'

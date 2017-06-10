@@ -66,7 +66,7 @@ class ProjectsController < ApplicationController
       groups_users.each do |group, users_array|
         group.users = users_array
         group.save
-        logger.debug group.errors.full_messages unless group.errors.nil?
+        logger.debug group.errors.full_messages unless group.errors.empty?
       end
       notice = 'Project was successfully updated.'
       notice += "Don't forget to activate it when you're done editing it." unless @project.active

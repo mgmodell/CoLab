@@ -34,7 +34,13 @@ Rails.application.routes.draw do
   devise_for :users, controllers:
     { omniauth_callbacks: 'users/omniauth_callbacks',
       registrations: 'registrations' }
-  get 'users/password/send_reset' => 'home#send_reset', :as => 'send_reset'
+
+  as :user do
+    post 'users/remove_email/:email_id', to:'registrations#remove_email', as: :remove_registered_email
+    post 'users/set_primary_email/:email_id', to: 'registrations#set_primary_email', as: :set_primary_registered_email
+    post 'users/add_email', to: 'registrations#add_email', as: :add_registered_email
+    get 'users/password/send_reset', to: 'registrations#initiate_password_reset', as: :initiate_password_reset
+  end
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
