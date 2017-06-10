@@ -8,8 +8,8 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def add_email
-    address = params[ :email_address ]
-    email = Email.create( email: address, user: @current_user )
+    address = params[:email_address]
+    email = Email.create(email: address, user: @current_user)
     logger.debug email.errors.full_messages unless email.errors.empty?
     notice = email.errors.empty? ? 'Email was successfully added.' : 'The email could not be added. It may already be in use. Please contact support.'
     redirect_to edit_user_registration_url, notice: notice
@@ -32,8 +32,9 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
   def set_email
-    @email = Email.find( params[:email_id])
+    @email = Email.find(params[:email_id])
     redirect_to root_path unless @email.user == @current_user
   end
 end

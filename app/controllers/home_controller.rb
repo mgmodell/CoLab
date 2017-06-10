@@ -29,5 +29,4 @@ class HomeController < ApplicationController
       @current_user = User.new(first_name: 'John', last_name: 'Smith', timezone: 'Seoul')
     end
   end
-
 end
