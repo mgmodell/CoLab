@@ -42,7 +42,33 @@ Feature: Email assessment stragglers
     Given the factor pack is set to "Original"
     Given the project has been activated
     When the system emails stragglers
+    Given the project has been activated
     Then an email will be sent to each member of the group
     Given the email queue is empty
     When the system emails stragglers
     Then no emails will be sent
+
+  Scenario: 4 students are in a project, but the project has been deactivated - no emails are sent
+    Given the email queue is empty
+    Given the user is the "last" user in the group
+    Given the factor pack is set to "Original"
+    Given the project has been activated
+    Given the project has been deactivated
+    When the system emails stragglers
+    Then no emails will be sent
+
+  Scenario: 2 groups of 4 students and 1 group of 2. Group of 2 disbands and members split. 6 emails sent
+    Given the project has a group with 4 confirmed users
+    Given the project has a group with 2 confirmed users
+    Given the factor pack is set to "Original"
+    Given the project has been activated
+
+    Then the members of "the last" group go to other groups
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 6 emails will be sent
+

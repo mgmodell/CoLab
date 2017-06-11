@@ -43,6 +43,12 @@ Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
   puts @project.errors.full_messages unless @project.errors.blank?
 end
 
+Given /^the project has been deactivated$/ do
+  @project.active = false
+  @project.save
+  puts @project.errors.full_messages unless @project.errors.blank?
+end
+
 Given /^the project has been activated$/ do
   @project.active = true
   @project.save
