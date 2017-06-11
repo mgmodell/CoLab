@@ -86,7 +86,8 @@ Then /^the candidate list entries should match the list$/ do
     field_count.times do |index|
       t_query = "//input[@id='candidate_list_candidates_attributes_#{index}_term']"
       d_query = "//textarea[@id='candidate_list_candidates_attributes_#{index}_definition']"
-      if page.find(:xpath, t_query).value == candidate['term'].strip.split.map(&:capitalize) * ' ' &&
+      term = candidate['term'].blank? ? candidate['term'] : candidate['term'].strip.split.map(&:capitalize) * ' '
+      if page.find(:xpath, t_query).value == term &&
          page.find(:xpath, d_query).value == candidate['definition']
         items_not_found -= 1
       end

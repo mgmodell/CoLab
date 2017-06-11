@@ -9,6 +9,8 @@ class CandidateList < ActiveRecord::Base
 
   accepts_nested_attributes_for :candidates
 
+  before_save :cull_candidates
+
   def get_concepts
     concepts.to_a.uniq
   end
@@ -66,5 +68,14 @@ class CandidateList < ActiveRecord::Base
       end
     end
     tentative_group.nil? ? 0 : requested_count.to_f / tentative_group.users.count
+  end
+
+  private
+  def cull_candidates
+    candidates.each do |candidate|
+      if candidate.term.blank? && candidate.definition.blank?
+        candidate.delete
+      end
+    end
   end
 end

@@ -85,12 +85,21 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
   @entries_list = @entries_lists[@user]
 
   count.to_i.times do |index|
+    existing_term = page.find( :xpath, "//input[@id='candidate_list_candidates_attributes_#{index}_term']" )
+    new_val = field == 'term' ?
+            Forgery::Name.industry :
+            Forgery::Basic.text
+
     @entries_list[index] = {} if @entries_list[index].blank?
-    @entries_list[index][field] = field == 'term' ?
-                        Forgery::Name.industry :
-                        Forgery::Basic.text
-    page.fill_in("candidate_list_candidates_attributes_#{index}_#{field}",
-                 with: @entries_list[index][field])
+    @entries_list.each do |entry|
+      if entry['term'] == existing_term
+        puts "found #{existing_term}"
+        entry[field] = new_val
+        page.fill_in("candidate_list_candidates_attributes_#{index}_#{field}",
+                    with: @entries_list[index][field])
+
+      end
+    end
   end
 end
 
