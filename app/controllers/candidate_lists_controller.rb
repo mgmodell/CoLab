@@ -14,11 +14,11 @@ class CandidateListsController < ApplicationController
       @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
     end
 
-    empties = @candidate_list.expected_count - @candidate_list.candidates.count 
+    empties = @candidate_list.expected_count - @candidate_list.candidates.count
 
     empties.times do
-      @candidate_list.candidates.build( term: '', definition: '', 
-                                        user_id: @current_user.id )
+      @candidate_list.candidates.build(term: '', definition: '',
+                                       user_id: @current_user.id)
     end
 
     if @candidate_list.bingo_game.reviewed
@@ -97,17 +97,17 @@ class CandidateListsController < ApplicationController
 
     @candidate_list.candidates = []
 
-    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Cooperation', 
-                                              definition: 'Two or more entities applying their skills towards achieving a common goal', 
-                                              candidate_list: @candidate_list)
+    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Cooperation',
+                                                definition: 'Two or more entities applying their skills towards achieving a common goal',
+                                                candidate_list: @candidate_list)
     @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Team', definition: '', candidate_list: @candidate_list)
     @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Group', definition: '', candidate_list: @candidate_list)
-    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Group Dynamics', 
-                                              definition: 'The nature of how group members interact with one another', 
-                                              candidate_list: @candidate_list)
-    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Group Process', 
-                                              definition: 'The methods and techniques a group follows', 
-                                              candidate_list: @candidate_list)
+    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Group Dynamics',
+                                                definition: 'The nature of how group members interact with one another',
+                                                candidate_list: @candidate_list)
+    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Group Process',
+                                                definition: 'The methods and techniques a group follows',
+                                                candidate_list: @candidate_list)
     @term_counts = {}
     @candidate_list.candidates.each do |candidate|
       @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
@@ -123,6 +123,7 @@ class CandidateListsController < ApplicationController
   end
 
   protected
+
   # Merge all the lists, add the merged whole to a new, group candidate_list,
   # set is_group on all existing lists and then return the new list
   def merge_to_group_list(candidate_list)

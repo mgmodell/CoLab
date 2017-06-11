@@ -71,11 +71,10 @@ class CandidateList < ActiveRecord::Base
   end
 
   private
+
   def cull_candidates
     candidates.each do |candidate|
-      if candidate.term.blank? && candidate.definition.blank?
-        candidate.delete
-      end
+      candidate.delete if candidate.term.blank? && candidate.definition.blank?
     end
   end
 end
