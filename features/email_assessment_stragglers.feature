@@ -70,5 +70,5 @@ Feature: Email assessment stragglers
     Then no emails will be sent
     Given the project has been activated
     When the system emails stragglers
-    Then 6 emails will be sent
+    Then 10 emails will be sent
 

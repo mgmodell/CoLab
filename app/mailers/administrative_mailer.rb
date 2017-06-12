@@ -73,17 +73,14 @@ class AdministrativeMailer < ActionMailer::Base
     end
 
     # Make sure all the users are unique
-    uniqued = {}
-    current_users.each do |u|
-      uniqued[u] = 1
-    end
+    uniqued = current_users.uniq
 
     logger.debug '***********************************'
     logger.debug '            Mailing'
     logger.debug '***********************************'
     email_count = 0
 
-    uniqued.keys.each do |u|
+    uniqued.each do |u|
       next if !u.last_emailed.nil? && u.last_emailed.today?
       AdministrativeMailer.remind(u).deliver_later
       u.last_emailed = DateTime.current
