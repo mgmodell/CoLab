@@ -75,7 +75,6 @@ Feature: Email assessment stragglers
   Scenario: 2 groups of 4 students. 1 group of 2 added in week 2 - 10 emails sent in week 2
     Given the project has a group with 4 confirmed users
     Given the factor pack is set to "Original"
-    Given the project has been activated
 
     Given the email queue is empty
     When the system emails stragglers
@@ -85,6 +84,7 @@ Feature: Email assessment stragglers
     Then 8 emails will be sent
 
     Given today is "7 days from now"
+    #This should deactivate the project
     Given the project has a group with 2 confirmed users
 
     Given the email queue is empty
@@ -109,7 +109,6 @@ Feature: Email assessment stragglers
     Given the project has a group with 4 confirmed users
     Given the project has a group with 2 confirmed users
     Given the factor pack is set to "Original"
-    Given the project has been activated
 
     Given the email queue is empty
     When the system emails stragglers
