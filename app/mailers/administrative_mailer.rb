@@ -54,8 +54,9 @@ class AdministrativeMailer < ActionMailer::Base
                                 DateTime.current, DateTime.current).to_a
 
     current_users = User.joins(groups: { project: :assessments }, rosters: :role)
-                        .where('assessments.start_date <= ? AND assessments.end_date >= ? AND ( ' \
-                              'roles.name = "Invited Student" OR roles.name = "Enrolled Student" ) ',
+                        .where('assessments.start_date <= ? AND assessments.end_date >= ? AND ' \
+                              'projects.active = TRUE AND ' \
+                              '( roles.name = "Invited Student" OR roles.name = "Enrolled Student" ) ',
                                DateTime.current, DateTime.current).to_a
 
     finished_users.each do |user|
