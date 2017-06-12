@@ -46,9 +46,8 @@ class Assessment < ActiveRecord::Base
   def self.inform_instructors
     count = 0
     Assessment.joins( :project ).
-          where('instructor_updated = false AND end_date < ? AND projects.active = TRUE', 
+          where('instructor_updated = false AND assessments.end_date < ? AND projects.active = TRUE', 
                   DateTime.current).each do |assessment|
-      byebug
       completion_hash = {}
       assessment.installments.each do |inst|
         completion_hash[inst.user.email] = { name: inst.user.name(false), status: inst.inst_date.to_s }
