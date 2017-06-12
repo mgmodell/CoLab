@@ -66,7 +66,7 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
   puts @project.errors.full_messages unless @project.errors.blank?
 end
 
-Then /^the members of "([^"]*)" group go to other groups$/  do |ordinal|
+Then /^the members of "([^"]*)" group go to other groups$/ do |ordinal|
   if @project.groups.count > 1
     case ordinal
     when 'a random' then to_disperse = @project.groups.sample
@@ -81,11 +81,9 @@ Then /^the members of "([^"]*)" group go to other groups$/  do |ordinal|
         user = to_disperse.users.first
         group.users << user
         to_disperse.users.delete user
-      end  
+      end
       groups.rotate
     end
-    groups.each do |group|
-      group.save
-    end
+    groups.each(&:save)
   end
 end

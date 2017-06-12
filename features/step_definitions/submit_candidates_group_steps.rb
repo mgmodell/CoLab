@@ -117,7 +117,7 @@ Then /^the candidate lists have been merged$/ do
   end
 end
 
-Then /^all course users should see the terms list$/  do
+Then /^all course users should see the terms list$/ do
   temp_user = @user
   @course.users.each do |user|
     @user = user
