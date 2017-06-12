@@ -116,3 +116,17 @@ Then /^the candidate lists have been merged$/ do
     @entries_lists[user] = combined_list
   end
 end
+
+Then /^all course users should see the terms list$/  do
+  temp_user = @user
+  @course.users.each do |user|
+    @user = user
+    step 'the user logs in'
+    step 'user should see 1 open task'
+    step 'the user clicks the link to the candidate list'
+    step 'the user should see the Bingo candidate list'
+    step 'the user will see 10 term field sets'
+    step 'the user logs out'
+  end
+  @user = temp_user
+end
