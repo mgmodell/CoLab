@@ -4,7 +4,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def set_primary_email
     @current_user.primary_email = @email
-    redirect_to edit_user_registration_url, notice: 'Primary email has been set.'
+    redirect_to edit_user_registration_path, notice: 'Primary email has been set.'
   end
 
   def add_email
@@ -12,12 +12,12 @@ class RegistrationsController < Devise::RegistrationsController
     email = Email.create(email: address, user: @current_user)
     logger.debug email.errors.full_messages unless email.errors.empty?
     notice = email.errors.empty? ? 'Email was successfully added.' : 'The email could not be added. It may already be in use. Please contact support.'
-    redirect_to edit_user_registration_url, notice: notice
+    redirect_to edit_user_registration_path, notice: notice
   end
 
   def remove_email
     @email.destroy
-    redirect_to edit_user_registration_url, notice: 'Email was successfully destroyed.'
+    redirect_to edit_user_registration_path, notice: 'Email was successfully destroyed.'
   end
 
   def initiate_password_reset
