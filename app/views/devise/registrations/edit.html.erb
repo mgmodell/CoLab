@@ -36,8 +36,10 @@
                     <td align="center"><%= email.confirmed? ? raw( '&#x2714;' ) : '' %></td>
                     <td align="center">
                       <% if !email.primary %>
-                        <%= link_to 'Remove', remove_registered_email_path( email_id: email.id ) %> |
-                        <%= link_to 'Make Primary', set_primary_registered_email_path( email_id: email.id ) %>
+                        <%= link_to 'Remove', remove_registered_email_path( email_id: email.id ) %>
+                        <% if email.confirmed? %>
+                          | <%= link_to 'Make Primary', set_primary_registered_email_path( email_id: email.id ) %>
+                        <% end %>
                       <% end %></td>
                   </tr>
                 </tbody>
