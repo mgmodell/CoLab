@@ -127,3 +127,34 @@ Feature: Email assessment stragglers
     Given the project has been activated
     When the system emails stragglers
     Then 10 emails will be sent
+
+  Scenario: 2 groups of 4 students and 1 group of 2. Group of 2 disbands in second week - 10 emails sent
+    Given the project has a group with 4 confirmed users
+    Given the project has a group with 2 confirmed users
+    Given the factor pack is set to "Original"
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 10 emails will be sent
+
+    #Let's add a new group mid-stream
+    Given the project has a group with 2 confirmed users
+    Then 10 emails will be sent
+    When the system emails stragglers
+    Then no emails will be sent
+
+    Given the project has been activated
+    When the system emails stragglers
+    Then 12 emails will be sent
+
+    Given today is "7 days from now"
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 12 emails will be sent

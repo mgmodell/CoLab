@@ -12,20 +12,9 @@ class Group < ActiveRecord::Base
   has_many :installments, inverse_of: :group, dependent: :destroy
 
   validates :name, :project_id, presence: true
-  validate :validate_activation_status, on: :update
+  validate :validate_activation_status
 
   before_create :anonymize
-
-  def validate_activation_status
-    if project_id_was != project_id
-      errors.add(:project,
-                 'It is not possible to move a group from one project to another.')
-    end
-    if changed?
-      project.active = false
-      project.save
-    end
-  end
 
   def get_name(anonymous)
     anonymous ? anon_name : name
@@ -62,7 +51,16 @@ class Group < ActiveRecord::Base
     gr.save if persisted? && i_changed
   end
 
-  private
+  def validate_activation_status
+    if self.persisted? && project_id_was != project_id
+      errors.add(:project,
+                 'It is not possible to move a group from one project to another.')
+    end
+    if changed?
+      project.active = false
+      project.save
+    end
+  end
 
   def anonymize
     anon_name = "#{rand < rand ? Forgery::Personal.language : Forgery::Name.location} #{Forgery::Name.company_name}s"
