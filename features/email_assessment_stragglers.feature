@@ -96,11 +96,12 @@ Feature: Email assessment stragglers
 
     Given today is "10 days from now"
     Given the project has a group with 4 confirmed users
-    Given today is "14 days from now"
+    Given today is "4 days from now"
 
     Given the email queue is empty
     When the system emails stragglers
     Then no emails will be sent
+    # This is the final round for this one.
     Given the project has been activated
     When the system emails stragglers
     Then 14 emails will be sent
