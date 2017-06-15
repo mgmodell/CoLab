@@ -116,7 +116,7 @@ class Course < ActiveRecord::Base
       existing_roster.role = role
       existing_roster.save
     end
-    # Do we want to send an invitation email?
+    # TODO: Let's add course invitation emails here in the future
   end
 
   def add_students_by_email(student_emails)

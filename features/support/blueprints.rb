@@ -8,7 +8,7 @@ User.blueprint do
   last_name { Forgery::Name.last_name }
   password { 'password' }
   password_confirmation { 'password' }
-  email { Forgery::Basic.text + '@mailinator.com' }
+  email { Forgery::Internet.email_address }
   timezone { 'UTC' }
 end
 
