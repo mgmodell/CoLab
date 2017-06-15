@@ -363,3 +363,17 @@ Feature: Submitting Candidate words for Bingo!
 
   Scenario: Moving a student between groups properly assigns their group buttons on current CLs
     #Basically, run through open CLs and make sure they see any group CLs 
+    Given the user logs in
+     Then user should see 1 open task
+     When the user clicks the link to the candidate list
+     Then the user should see the Bingo candidate list
+     Then the user will see 10 term field sets
+     Then the candidate entries should be empty
+     Then the user "should not" see they're waiting on a collaboration response
+     Then the user "should not" see collaboration was requested
+    Given the user logs out
+     #Disperse the users
+     Then the members of "the last" group go to other groups
+
+     Then all course users should see the terms list
+

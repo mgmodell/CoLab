@@ -14,6 +14,13 @@ class CandidateListsController < ApplicationController
       @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
     end
 
+    empties = @candidate_list.expected_count - @candidate_list.candidates.count
+
+    empties.times do
+      @candidate_list.candidates.build(term: '', definition: '',
+                                       user_id: @current_user.id)
+    end
+
     if @candidate_list.bingo_game.reviewed
       render :show
     elsif !@candidate_list.bingo_game.is_open?
@@ -40,36 +47,6 @@ class CandidateListsController < ApplicationController
       @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
     end
     render :edit
-  end
-
-  # Merge all the lists, add the merged whole to a new, group candidate_list,
-  # set is_group on all existing lists and then return the new list
-  def merge_to_group_list(candidate_list)
-    merged_list = []
-    merger_group = candidate_list.bingo_game.project.group_for_user(candidate_list.user)
-    required_terms = candidate_list.bingo_game.required_terms_for_group(merger_group)
-
-    merger_group.users.each do |group_member|
-      cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
-      cl.is_group = true
-      cl.candidates.each do |candidate|
-        merged_list << candidate if candidate.term.present? || candidate.definition.present?
-      end
-      cl.save
-    end
-    if merged_list.count < (required_terms - 1)
-      merged_list.count.upto ( required_terms - 1) do
-        merged_list << Candidate.new('term' => '', 'definition' => '', user: @current_user)
-      end
-    end
-
-    cl = CandidateList.new
-    cl.group = merger_group
-    cl.candidates = merged_list
-    cl.is_group = true
-    cl.bingo_game = candidate_list.bingo_game
-    cl.save
-    cl
   end
 
   def update
@@ -116,12 +93,21 @@ class CandidateListsController < ApplicationController
                                                group_option: true,
                                                project: demo_project,
                                                group_discount: 33,
-                                               individual_count: 0)
+                                               individual_count: 10)
 
     @candidate_list.candidates = []
-    1.upto 10 do |index|
-      @candidate_list.candidates << Candidate.new(id: 0 - index, term: '', definition: '', candidate_list: @candidate_list)
-    end
+
+    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Cooperation',
+                                                definition: 'Two or more entities applying their skills towards achieving a common goal',
+                                                candidate_list: @candidate_list)
+    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Team', definition: '', candidate_list: @candidate_list)
+    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Group', definition: '', candidate_list: @candidate_list)
+    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Group Dynamics',
+                                                definition: 'The nature of how group members interact with one another',
+                                                candidate_list: @candidate_list)
+    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Group Process',
+                                                definition: 'The methods and techniques a group follows',
+                                                candidate_list: @candidate_list)
     @term_counts = {}
     @candidate_list.candidates.each do |candidate|
       @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
@@ -134,6 +120,38 @@ class CandidateListsController < ApplicationController
   def create
     flash[:notice] = 'Your response would have been successfully saved. The demonstration is finished.'
     redirect_to root_url
+  end
+
+  protected
+
+  # Merge all the lists, add the merged whole to a new, group candidate_list,
+  # set is_group on all existing lists and then return the new list
+  def merge_to_group_list(candidate_list)
+    merged_list = []
+    merger_group = candidate_list.bingo_game.project.group_for_user(candidate_list.user)
+    required_terms = candidate_list.bingo_game.required_terms_for_group(merger_group)
+
+    merger_group.users.each do |group_member|
+      cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
+      cl.is_group = true
+      cl.candidates.each do |candidate|
+        merged_list << candidate if candidate.term.present? || candidate.definition.present?
+      end
+      cl.save
+    end
+    if merged_list.count < (required_terms - 1)
+      merged_list.count.upto ( required_terms - 1) do
+        merged_list << Candidate.new('term' => '', 'definition' => '', user: @current_user)
+      end
+    end
+
+    cl = CandidateList.new
+    cl.group = merger_group
+    cl.candidates = merged_list
+    cl.is_group = true
+    cl.bingo_game = candidate_list.bingo_game
+    cl.save
+    cl
   end
 
   private
@@ -151,6 +169,6 @@ class CandidateListsController < ApplicationController
   end
 
   def candidate_list_params
-    params.require(:candidate_list).permit(:is_group, candidates_attributes: [:id, :term, :definition])
+    params.require(:candidate_list).permit(:is_group, candidates_attributes: [:id, :term, :definition, :user_id])
   end
 end

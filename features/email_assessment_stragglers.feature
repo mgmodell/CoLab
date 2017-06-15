@@ -42,7 +42,119 @@ Feature: Email assessment stragglers
     Given the factor pack is set to "Original"
     Given the project has been activated
     When the system emails stragglers
+    Given the project has been activated
     Then an email will be sent to each member of the group
     Given the email queue is empty
     When the system emails stragglers
     Then no emails will be sent
+
+  Scenario: 4 students are in a project, but the project has been deactivated - no emails are sent
+    Given the email queue is empty
+    Given the user is the "last" user in the group
+    Given the factor pack is set to "Original"
+    Given the project has been activated
+    Given the project has been deactivated
+    When the system emails stragglers
+    Then no emails will be sent
+
+  Scenario: 2 groups of 4 students and 1 group of 2. Group of 2 disbands and members split. 10 emails sent
+    Given the project has a group with 4 confirmed users
+    Given the project has a group with 2 confirmed users
+    Given the factor pack is set to "Original"
+    Given the project has been activated
+
+    Then the members of "the last" group go to other groups
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 10 emails will be sent
+
+  Scenario: 2 groups of 4 students. 1 group of 2 added in week 2 - 10 emails sent in week 2
+    Given the project has a group with 4 confirmed users
+    Given the factor pack is set to "Original"
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 8 emails will be sent
+
+    Given today is "7 days from now"
+    #This should deactivate the project
+    Given the project has a group with 2 confirmed users
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 10 emails will be sent
+
+    Given today is "10 days from now"
+    Given the project has a group with 4 confirmed users
+    Given today is "14 days from now"
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 14 emails will be sent
+
+  Scenario: 2 groups of 4 students and 1 group of 2. Group of 2 disbands in second week - 10 emails sent
+    Given the project has a group with 4 confirmed users
+    Given the project has a group with 2 confirmed users
+    Given the factor pack is set to "Original"
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 10 emails will be sent
+
+    Given today is "7 days from now"
+
+    Then the members of "the last" group go to other groups
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 10 emails will be sent
+
+  Scenario: 2 groups of 4 students and 1 group of 2. Group of 2 disbands in second week - 10 emails sent
+    Given the project has a group with 4 confirmed users
+    Given the project has a group with 2 confirmed users
+    Given the factor pack is set to "Original"
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 10 emails will be sent
+
+    #Let's add a new group mid-stream
+    Given the project has a group with 2 confirmed users
+    Then 10 emails will be sent
+    When the system emails stragglers
+    Then no emails will be sent
+
+    Given the project has been activated
+    When the system emails stragglers
+    Then 12 emails will be sent
+
+    Given today is "7 days from now"
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 12 emails will be sent

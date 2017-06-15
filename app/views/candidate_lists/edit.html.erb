@@ -56,7 +56,7 @@
       <% count = 0 %>
       <%= f.simple_fields_for :candidates do |cf| %>
       <tr>
-        <td><%= count += 1 %><%= cf.input :id, as: :hidden %></td>
+        <td><%= count += 1 %><%= cf.input :id, as: :hidden %><%= cf.input :user_id, as: :hidden %></td>
         <td><%= cf.object.term == '' ? '' : ( @term_counts[ cf.object.filtered_consistent ] > 1 ? '*' : '' ) %></td>
         <td><%= cf.input :term, label: false %></td>
         <td><%= cf.input :definition, as: :text, label: false %></td>

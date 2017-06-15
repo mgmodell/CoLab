@@ -62,8 +62,9 @@ class AdministrativeMailer < ActionMailer::Base
                                 DateTime.current, DateTime.current).to_a
 
     current_users = User.joins(groups: { project: :assessments }, rosters: :role)
-                        .where('assessments.start_date <= ? AND assessments.end_date >= ? AND ( ' \
-                              'roles.name = "Invited Student" OR roles.name = "Enrolled Student" ) ',
+                        .where('assessments.start_date <= ? AND assessments.end_date >= ? AND ' \
+                              'projects.active = TRUE AND ' \
+                              '( roles.name = "Invited Student" OR roles.name = "Enrolled Student" ) ',
                                DateTime.current, DateTime.current).to_a
 
     finished_users.each do |user|
@@ -80,17 +81,14 @@ class AdministrativeMailer < ActionMailer::Base
     end
 
     # Make sure all the users are unique
-    uniqued = {}
-    current_users.each do |u|
-      uniqued[u] = 1
-    end
+    uniqued = current_users.uniq
 
     logger.debug '***********************************'
     logger.debug '            Mailing'
     logger.debug '***********************************'
     email_count = 0
 
-    uniqued.keys.each do |u|
+    uniqued.each do |u|
       next if !u.last_emailed.nil? && u.last_emailed.today?
       AdministrativeMailer.remind(u).deliver_later
       u.last_emailed = DateTime.current

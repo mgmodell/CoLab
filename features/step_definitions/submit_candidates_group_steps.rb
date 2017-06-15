@@ -85,12 +85,19 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
   @entries_list = @entries_lists[@user]
 
   count.to_i.times do |index|
+    existing_term = page.find(:xpath, "//input[@id='candidate_list_candidates_attributes_#{index}_term']")
+    new_val = field == 'term' ?
+            Forgery::Name.industry :
+            Forgery::Basic.text
+
     @entries_list[index] = {} if @entries_list[index].blank?
-    @entries_list[index][field] = field == 'term' ?
-                        Forgery::Name.industry :
-                        Forgery::Basic.text
-    page.fill_in("candidate_list_candidates_attributes_#{index}_#{field}",
-                 with: @entries_list[index][field])
+    @entries_list.each do |entry|
+      next unless entry['term'] == existing_term
+      puts "found #{existing_term}"
+      entry[field] = new_val
+      page.fill_in("candidate_list_candidates_attributes_#{index}_#{field}",
+                   with: @entries_list[index][field])
+    end
   end
 end
 
@@ -108,4 +115,18 @@ Then /^the candidate lists have been merged$/ do
   @bingo.project.group_for_user(@user).users.each do |user|
     @entries_lists[user] = combined_list
   end
+end
+
+Then /^all course users should see the terms list$/ do
+  temp_user = @user
+  @course.users.each do |user|
+    @user = user
+    step 'the user logs in'
+    step 'user should see 1 open task'
+    step 'the user clicks the link to the candidate list'
+    step 'the user should see the Bingo candidate list'
+    step 'the user will see 10 term field sets'
+    step 'the user logs out'
+  end
+  @user = temp_user
 end

@@ -45,7 +45,9 @@ class Assessment < ActiveRecord::Base
   # Here we'll give instructors a little status update at the close of each assessment period
   def self.inform_instructors
     count = 0
-    Assessment.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |assessment|
+    Assessment.joins(:project)
+              .where('instructor_updated = false AND assessments.end_date < ? AND projects.active = TRUE',
+                     DateTime.current).each do |assessment|
       completion_hash = {}
       assessment.installments.each do |inst|
         completion_hash[inst.user.email] = { name: inst.user.name(false), status: inst.inst_date.to_s }
