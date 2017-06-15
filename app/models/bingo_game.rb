@@ -99,7 +99,7 @@ class BingoGame < ActiveRecord::Base
 
       bingo.course.instructors.each do |instructor|
         AdministrativeMailer.summary_report(bingo.get_name(false) + ' (terms list)',
-                                            bingo.course.prettyName,
+                                            bingo.course.pretty_name,
                                             instructor,
                                             completion_hash).deliver_later
         count += 1

@@ -61,7 +61,7 @@ class Assessment < ActiveRecord::Base
       # InstructorNewsLetterMailer.inform( instructor ).deliver_later
       assessment.project.course.instructors.each do |instructor|
         AdministrativeMailer.summary_report(assessment.project.get_name(false) + ' (assessment)',
-                                            assessment.project.course.prettyName(false),
+                                            assessment.project.course.pretty_name(false),
                                             instructor,
                                             completion_hash).deliver_later
         count += 1

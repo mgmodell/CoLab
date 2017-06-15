@@ -121,6 +121,7 @@ Then /^all course users should see the terms list$/ do
   temp_user = @user
   @course.users.each do |user|
     @user = user
+    step 'the user "has" had demographics requested'
     step 'the user logs in'
     step 'user should see 1 open task'
     step 'the user clicks the link to the candidate list'

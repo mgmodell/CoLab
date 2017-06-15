@@ -17,7 +17,7 @@ class Course < ActiveRecord::Base
   before_validation :timezone_adjust
   before_create :anonymize
 
-  def prettyName(anonymous = false)
+  def pretty_name(anonymous = false)
     prettyName = ''
     prettyName = if anonymous
                    "#{anon_name} (#{anon_number})"
