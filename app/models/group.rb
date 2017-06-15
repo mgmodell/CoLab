@@ -52,7 +52,7 @@ class Group < ActiveRecord::Base
   end
 
   def validate_activation_status
-    if self.persisted? && project_id_was != project_id
+    if persisted? && project_id_was != project_id
       errors.add(:project,
                  'It is not possible to move a group from one project to another.')
     end
@@ -65,4 +65,5 @@ class Group < ActiveRecord::Base
   def anonymize
     anon_name = "#{rand < rand ? Forgery::Personal.language : Forgery::Name.location} #{Forgery::Name.company_name}s"
   end
+
 end

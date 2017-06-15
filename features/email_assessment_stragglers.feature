@@ -144,7 +144,7 @@ Feature: Email assessment stragglers
     Given the project has a group with 2 confirmed users
     Then 10 emails will be sent
     When the system emails stragglers
-    Then no emails will be sent
+    Then 10 emails will be sent
 
     Given the project has been activated
     When the system emails stragglers
