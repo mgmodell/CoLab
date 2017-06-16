@@ -35,6 +35,9 @@ At a minimum, you will need to install git and a text editor (I use vi, but ther
 
 ### Deployment ###
 * [Heroku Toolbelt](https://devcenter.heroku.com/articles/heroku-cli)
+* [Configure an Amazon SES SMTP Account](https://www.sitepoint.com/deliver-the-mail-with-amazon-ses-and-rails/)
+    * heroku config:set SES_SMTP_USERNAME=<your username>
+    * heroku config:set SES_SMTP_PASSWORD=<your password>
 
 # Contribution instructions #
 * Review the issues
