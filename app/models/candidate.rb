@@ -17,7 +17,6 @@ class Candidate < ActiveRecord::Base
     @@filter
   end
 
-
   def clean_data
     self.term = term.nil? ? '' : term.strip.split.map(&:capitalize) * ' '
     self.filtered_consistent = term.nil? ? '' : Candidate.filter.filter(term.strip.split.map(&:downcase)).join(' ')
