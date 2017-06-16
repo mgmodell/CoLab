@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_filter :authenticate_user!
   before_filter :configure_permitted_parameters, if: :devise_controller?
-  before_filter :set_time_zone, if: :user_signed_in?
+  before_filter :set_locale, if: :user_signed_in?
 
   protected
 
@@ -14,7 +14,8 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :email, :password, :current_password, :age_range_id, :timezone, :country, :gender_id, :welcomed, :theme_id, :school_id, :researcher])
   end
 
-  def set_time_zone
+  def set_locale
     Time.zone = current_user.timezone if current_user.timezone
+    I18n.locale = current_user.language_code || params[:lang] || I18n.default_locale
   end
 end

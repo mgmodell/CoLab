@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   has_many :candidates, inverse_of: :user
   belongs_to :gender, inverse_of: :users
   belongs_to :theme, inverse_of: :users
+  belongs_to :language, inverse_of: :users
   belongs_to :school
   belongs_to :age_range, inverse_of: :users
   belongs_to :cip_code, inverse_of: :users
@@ -60,6 +61,10 @@ class User < ActiveRecord::Base
         name += (!last_name.nil? ? last_name : '[No Last Name Given]')
       end
     end
+  end
+
+  def language_code
+    language.nil? ? nil : language.code 
   end
 
   def anonymize?

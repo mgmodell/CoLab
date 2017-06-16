@@ -1,5 +1,14 @@
 # frozen_string_literal: true
 namespace :migratify do
+  desc 'Create the underpinnings for language support'
+  task en_ko_lang: :environment do
+    Rake::Task['db:migrate'].invoke
+
+    #Seed data
+    Language.create( name: "English: American", code: "en" ) if Language.where( code: "en" ).empty?
+    Language.create( name: "Korean", code: "ko" ) if Language.where( code: "ko" ).empty?
+  end
+
   desc 'Initialize existing PII objects with anonymized names'
   task anon_n_clean: :environment do
     # Make sure the DB is primed and ready!
