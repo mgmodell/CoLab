@@ -159,3 +159,48 @@ Feature: Email assessment stragglers
     Given the project has been activated
     When the system emails stragglers
     Then 12 emails will be sent
+
+  Scenario: Mess with running the set_up_assessments process
+    Given the project has a group with 4 confirmed users
+    Given the project has a group with 2 confirmed users
+    Given the factor pack is set to "Original"
+
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    Given the project has been activated
+    When the system emails stragglers
+    Then 10 emails will be sent
+    Then that the system's set_up_assessments process runs
+    When the system emails stragglers
+    Then 10 emails will be sent
+    Given today is "1 day from now"
+    Then that the system's set_up_assessments process runs
+    When the system emails stragglers
+    Then 10 emails will be sent
+
+    #Add a new group
+    Given the email queue is empty
+    Given today is "3 day from now"
+    Given the project has a group with 2 confirmed users
+    Then that the system's set_up_assessments process runs
+    When the system emails stragglers
+    Then no emails will be sent
+
+    Given today is "4 day from now"
+    Then that the system's set_up_assessments process runs
+    When the system emails stragglers
+    Then 12 emails will be sent
+
+    Then the members of "a random" group go to other groups
+    Then the project has been activated
+
+    Given today is "7 day from now"
+    Given the email queue is empty
+    When the system emails stragglers
+    Then no emails will be sent
+    #The setup process has to run or we don't have an open assessment
+    Then that the system's set_up_assessments process runs
+    When the system emails stragglers
+    Then 12 emails will be sent
+
