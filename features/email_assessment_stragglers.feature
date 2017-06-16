@@ -177,12 +177,13 @@ Feature: Email assessment stragglers
     Given today is "1 day from now"
     Then that the system's set_up_assessments process runs
     When the system emails stragglers
-    Then 10 emails will be sent
+    Then 20 emails will be sent
 
     #Add a new group
     Given the email queue is empty
     Given today is "3 day from now"
     Given the project has a group with 2 confirmed users
+    Given the project has been activated
     Then that the system's set_up_assessments process runs
     When the system emails stragglers
     Then no emails will be sent

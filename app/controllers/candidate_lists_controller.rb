@@ -97,19 +97,25 @@ class CandidateListsController < ApplicationController
 
     @candidate_list.candidates = []
 
-    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Cooperation',
+    @candidate_list.candidates << Candidate.new(id: 0, term: 'Cooperation',
                                                 definition: 'Two or more entities applying their skills towards achieving a common goal',
                                                 candidate_list: @candidate_list)
-    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Team', definition: '', candidate_list: @candidate_list)
-    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Group', definition: '', candidate_list: @candidate_list)
-    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Group Dynamics',
+    @candidate_list.candidates << Candidate.new(id: 0, term: 'Team', definition: '', candidate_list: @candidate_list)
+    @candidate_list.candidates << Candidate.new(id: 0, term: 'Group', definition: '', candidate_list: @candidate_list)
+    @candidate_list.candidates << Candidate.new(id: 0, term: 'Group Dynamics',
                                                 definition: 'The nature of how group members interact with one another',
                                                 candidate_list: @candidate_list)
-    @candidate_list.candidates << Candidate.new(id: 0 - index, term: 'Group Process',
+    @candidate_list.candidates << Candidate.new(id: 0,  term: 'Group Process',
                                                 definition: 'The methods and techniques a group follows',
                                                 candidate_list: @candidate_list)
+    5.times do
+      @candidate_list.candidates.build(term: '', definition: '',
+                                       user_id: @current_user.id)
+    end
+
     @term_counts = {}
     @candidate_list.candidates.each do |candidate|
+      candidate.clean_data
       @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
     end
 
