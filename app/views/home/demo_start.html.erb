@@ -1,7 +1,6 @@
-<h1>Your Tasks</h1><% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-<p><%= t :greeting, name: @current_user.nil? ? "John" : @current_user.first_name %>,</br>
-    You've got 2 tasks today.
-
+<h1><%= t( :your_tasks ) %></h1><% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<p><%= t 'home.greeting', name: @current_user.nil? ? "John" : @current_user.first_name %>,</br>
+  <%= t 'home.tasks', count: 2 %>
    
   <table data-role="table"
           id="basicTable"
@@ -13,14 +12,14 @@
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
     <thead>
       <tr>
-        <th>Task Name</th>
+        <th><%= t :task_name %></th>
         <th data-priority="1">Type</th>
-        <th>Status</th>
+        <th><%= t :status %></th>
         <th data-priority="1">Group</th>
-        <th data-priority="0">Course Name</th>
-        <th data-priority="1">Open Date</th>
-        <th data-priority="0">Close Date</th>
-        <th data-priority="1">Consent Form</th>
+        <th data-priority="0"><%= t :course_name %></th>
+        <th data-priority="1"><%= t :open_date %></th>
+        <th data-priority="0"><%= t :close_date %></th>
+        <th data-priority="1"><%= t :consent_form %></th>
       </tr>
     </thead>
     <tbody>
@@ -31,7 +30,7 @@
         <br>
         (Project: Research Paper)
       </td>
-      <td>Self- and Peer-Assessment</td>
+      <td><%= t 'home.sapa' %></td>
       <td>
         <em>Not Started</em>
       </td>
@@ -46,7 +45,7 @@
       <td>
         <%= link_to "What is collaboration?", bingo_demo_complete_path %>
       </td>
-      <td>Terms list submission</td>
+      <td><%= t 'home.terms_list' %></td>
       <td>
         <em>50%</em>
       </td>
