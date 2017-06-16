@@ -1,5 +1,5 @@
 <h1>Your Tasks</h1><% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-<p>Hello <%= @current_user.nil? ? "John" : @current_user.first_name %>,</br>
+<p><%= t :greeting, name: @current_user.nil? ? "John" : @current_user.first_name %>,</br>
     You've got 2 tasks today.
 
    
@@ -9,7 +9,7 @@
           data-column-popup-theme="<%= theme_code %>"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="Select columns&hellip;"
+          data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
     <thead>
       <tr>

@@ -1,7 +1,7 @@
 <h1>Your Tasks</h1>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 <% anonymize = @current_user.nil? ? false : @current_user.anonymize? %>
-<p><%= t :greeting %> <%= @first_name %>,</br>
+<p><%= t :greeting, name: @first_name %>,</br>
   <% task_count = @waiting_student_tasks.count + @waiting_instructor_tasks.count %>
   <% if task_count > 0 %>
     <% if task_count == 1 %>
@@ -52,7 +52,7 @@
           data-column-popup-theme="<%= theme_code %>" 
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="Select columns&hellip;"
+          data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
     <thead>
       <tr>
