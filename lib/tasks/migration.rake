@@ -4,9 +4,9 @@ namespace :migratify do
   task en_ko_lang: :environment do
     Rake::Task['db:migrate'].invoke
 
-    #Seed data
-    Language.create( name: "English: American", code: "en" ) if Language.where( code: "en" ).empty?
-    Language.create( name: "Korean", code: "ko" ) if Language.where( code: "ko" ).empty?
+    # Seed data
+    Language.create(name: 'English: American', code: 'en') if Language.where(code: 'en').empty?
+    Language.create(name: 'Korean', code: 'ko') if Language.where(code: 'ko').empty?
   end
 
   desc 'Initialize existing PII objects with anonymized names'

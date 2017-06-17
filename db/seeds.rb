@@ -307,5 +307,5 @@ CandidateFeedback.create(name: 'Term: Doesn\'t match',
 CandidateFeedback.create(name: 'Term: Product Name',
                          definition: 'Products should not be used unless they are dominant/household name.')
 # Multiple language support
-Language.create( name: "English: American", code: "en" )
-Language.create( name: "Korean", code: "ko" )
+Language.create(name: 'English: American', code: 'en')
+Language.create(name: 'Korean', code: 'ko')

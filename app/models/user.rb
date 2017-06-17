@@ -64,7 +64,7 @@ class User < ActiveRecord::Base
   end
 
   def language_code
-    language.nil? ? nil : language.code 
+    language.nil? ? nil : language.code
   end
 
   def anonymize?
