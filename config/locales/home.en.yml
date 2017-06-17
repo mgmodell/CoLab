@@ -31,6 +31,13 @@ en:
   accept: Accept
   decline: Decline
   waiting: Waiting
+  project: Project
+  complete: Completed
+  incomplete: In Progress
+  not_started: Not Started
+  n_a: N/A
+  titles:
+    demonstration: Demonstration
   home:
     your_tasks: Your Tasks
     invited: You've been invited!

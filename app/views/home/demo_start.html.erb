@@ -28,11 +28,11 @@
       <td>
         <%= link_to "SuperStars", assessment_demo_complete_path %>
         <br>
-        (Project: Research Paper)
+        (<%= t :project %>: Research Paper)
       </td>
       <td><%= t 'home.sapa' %></td>
       <td>
-        <em>Not Started</em>
+        <em><%= t :not_started %></em>
       </td>
       <td>SuperStars</td>
       <td>Advanced Collaborative Research</td>
@@ -56,7 +56,7 @@
         <%= 2.day.from_now.end_of_day.strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
         <small><i><%= 4.day.from_now.end_of_day.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d") %></i></small>
       </td>
-      <td>N/A</td>
+      <td><%= t :not_started %></td>
     </tr>
     </tbody>
   </table>

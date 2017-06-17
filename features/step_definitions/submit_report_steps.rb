@@ -90,7 +90,7 @@ Then /^the assessment should show up as completed$/ do
   link_text = @project.group_for_user(@user).name
 
   page.should have_xpath("//a[contains(., '#{link_text}')]/.."), 'No link to assessment'
-  page.should have_xpath("//td[contains(., 'completed')]"), "No 'completed' message"
+  page.should have_xpath("//td[contains(., 'Completed')]"), "No 'completed' message"
 end
 
 Then /^the user logs in and submits an installment$/ do
