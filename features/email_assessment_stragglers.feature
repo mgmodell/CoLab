@@ -182,6 +182,7 @@ Feature: Email assessment stragglers
     #Add a new group
     Given the email queue is empty
     Given today is "3 day from now"
+    Then we debug
     Given the project has a group with 2 confirmed users
     Given the project has been activated
     Then that the system's set_up_assessments process runs
