@@ -9,6 +9,15 @@ class Quote < ActiveRecord::Base
       @@quote_count = Quote.count
     end
     Quote.offset( rand( @@quote_count ) ).take
+  end
 
+  def get_local_quote
+    #localize here
+    en
+  end
+
+  def get_local_attribution
+    #localize here
+    attribution
   end
 end
