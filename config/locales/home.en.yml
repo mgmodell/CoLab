@@ -20,6 +20,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  title: CoLab
   column_select: Select columns&hellip;
   task_name: Task Name
   status: Status
@@ -35,6 +36,16 @@ en:
   back: Back
   show: Show
   edit: Edit
+  profile: Profile
+  #toolbar
+  c_panel: Admin&hellip;
+  reports: Reports
+  administration: Administration
+  logout: Logout
+  demo: Demo
+  about: About
+  support: Support
+  #admin functions
   destroy: Destroy
   confirmation: Are you sure?
   accept: Accept
@@ -58,6 +69,7 @@ en:
   titles:
     demonstration: Demonstration
   home:
+    title: Home
     your_tasks: Your Tasks
     invited: You've been invited!
     greeting: Hello %{name}

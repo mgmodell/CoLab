@@ -1,3 +1,9 @@
 en:
   experience:
     simulation: Collaboration experience simulation
+    instructions_lbl: Instructions
+    glossary_lbl: Glossary
+    scenario_lbl: Scenario
+    behavior_lbl: Behavior
+    close_pnl: Close panel
+
