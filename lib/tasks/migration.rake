@@ -1,12 +1,25 @@
 # frozen_string_literal: true
 namespace :migratify do
   desc 'Create the underpinnings for language support'
-  task en_ko_lang: :environment do
+  task locales_quotes: :environment do
     Rake::Task['db:migrate'].invoke
 
     # Seed data
     Language.create(name: 'English: American', code: 'en') if Language.where(code: 'en').empty?
     Language.create(name: 'Korean', code: 'ko') if Language.where(code: 'ko').empty?
+
+    # Quote seed data
+    class Quote_
+      attr_accessor :en, :attribution
+    end
+    quote_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
+    quote_data.each do |quote|
+      q = Quote.where( en: quote.en ).take
+      q = Quote.new if q.nil?
+      q.en = quote.en
+      q.attribution = quote.attribution
+      q.save
+    end
   end
 
   desc 'Initialize existing PII objects with anonymized names'

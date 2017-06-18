@@ -283,6 +283,18 @@ cip_data.each do |cip_code|
   )
 end
 
+class Quote_
+  attr_accessor :en, :attribution
+end
+quote_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
+quote_data.each do |quote|
+  q = Quote.where( en: quote.en ).take
+  q = Quote.new if q.nil?
+  q.en = quote.en
+  q.attribution = quote.attribution
+  q.save
+end
+
 # Bingo! support
 CandidateFeedback.create(name: 'Acceptable',
                          definition: "You've accurately identified and defined an important term related to the stated topic.")
