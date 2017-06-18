@@ -1,0 +1,13 @@
+en:
+  courses:
+    index:
+      title: List of Courses
+    edit:
+      title: Edit Course
+    show:
+      title: Course Details
+    new:
+      title: New Course
+    create_success: Course created successfully!
+    destroy_success: Course destroyed successfully!
+    update_success: Course updated successfully!

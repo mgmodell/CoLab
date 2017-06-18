@@ -1,4 +1,4 @@
-<h1>Editing School</h1>
+<h1><%= t '.title' %></h1>
 <%= render 'form' %>
-<%= link_to 'Show', schools_url( @school ) %> |
-<%= link_to 'Back', schools_path %>
+<%= link_to t(:show), schools_url( @school ) %> |
+<%= link_to t(:back), schools_path %>

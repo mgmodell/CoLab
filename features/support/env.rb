@@ -66,6 +66,7 @@ Cucumber::Rails::Database.javascript_strategy = :truncation
 # end
 Before do
   Chronic.time_class = Time.zone
+  travel_to DateTime.now.beginning_of_day
   @anon = false
 end
 

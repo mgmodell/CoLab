@@ -1,0 +1,17 @@
+en:
+  schools:
+    index:
+      title: List of Schools
+    edit:
+      title: Edit School
+    show:
+      title: School Details
+      edit_string: Edit school details
+    new:
+      title: New School
+    create_success: School created successfully!
+    destroy_success: School destroyed successfully!
+    update_success: School updated successfully!
+    courses: School Courses
+    no_courses: No courses.
+    back: Back to the list of schools

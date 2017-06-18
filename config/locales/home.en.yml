@@ -26,8 +26,17 @@ en:
   course_name: Course Name
   group: Group
   open_date: Open Date
+  start_date: Start Date
   close_date: Close Date
+  end_date: End Date
   consent_form: Consent Form
+  actions: Actions
+  activate: Activate
+  back: Back
+  show: Show
+  edit: Edit
+  destroy: Destroy
+  confirmation: Are you sure?
   accept: Accept
   decline: Decline
   waiting: Waiting
@@ -36,6 +45,16 @@ en:
   incomplete: In Progress
   not_started: Not Started
   n_a: N/A
+  instructors: Instructors
+  students: Students
+  projects: Projects
+  experiences: Experiences
+  terms_lists: Terms Lists
+  courses: Courses
+  details: Details
+  description: Description
+  name: Name
+  number: Number
   titles:
     demonstration: Demonstration
   home:

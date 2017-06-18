@@ -11,14 +11,14 @@
   class="table-stroke ui-shadow table-stripe table-ui-responsive ">
   <thead>
     <tr>
-      <th>Name</th>
-      <th data-priority="0">Courses</th>
-      <th data-priority="1">Instructors</th>
-      <th data-priority="0">Students</th>
-      <th data-priority="1">Projects</th>
-      <th data-priority="1">Experiences</th>
-      <th data-priority="1">Terms Lists</th>
-      <th data-priority="1">Actions</th>
+      <th><%= t :name %></th>
+      <th data-priority="0"><%= t :courses %></th>
+      <th data-priority="1"><%= t :instructors %></th>
+      <th data-priority="0"><%= t :students %></th>
+      <th data-priority="1"><%= t :projects %></th>
+      <th data-priority="1"><%= t :experiences %></th>
+      <th data-priority="1"><%= t :terms_lists %></th>
+      <th data-priority="1"><%= t :actions %></th>
     </tr>
   </thead>
   <tbody>
@@ -31,11 +31,11 @@
         <td><%= school.projects.count %></td>
         <td><%= school.experiences.count %></td>
         <td><%= school.bingo_games.count %></td>
-        <td><%= link_to 'Show', school_path( school ) %>&nbsp;|&nbsp;
-        <%= link_to 'Edit', edit_school_path(school) %>
+        <td><%= link_to t(:show), school_path( school ) %>&nbsp;|&nbsp;
+        <%= link_to t(:edit), edit_school_path(school) %>
       </tr>
     <% end %>
   </tbody>
 </table>
 <br>
-<%= link_to 'New School', new_school_path %>
+<%= link_to t('schools.new.title'), new_school_path %>
