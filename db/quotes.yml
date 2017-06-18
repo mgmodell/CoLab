@@ -98,3 +98,55 @@
 - !ruby/object:Quote_
   en: When spider webs unite, they can tie up a lion.
   attribution: Ethiopian Proverb
+
+- !ruby/object:Quote_
+  en: "It's a very important thing to learn to talk to people you disagree with."
+  attribution: Pete Seeger
+
+- !ruby/object:Quote_
+  en: No member of a crew is praised for the rugged individuality of his rowing.
+  attribution: Ralph Waldo Emerson
+
+- !ruby/object:Quote_
+  en: "You don't get harmony when everybody sings the same note."
+  attribution: Doug Floyd
+
+- !ruby/object:Quote_
+  en: "In teamwork, silence isn't golden. Its deadly."
+  attribution: Mark Sanborn
+
+- !ruby/object:Quote_
+  en: "If you try and we lose, then it isn't your fault. But if you don't try and we lose, then it's all your fault."
+  attribution: Orson Scott Card
+
+- !ruby/object:Quote_
+  en: There is little success where there is little laughter.
+  attribution: Andrew Carnegie
+
+- !ruby/object:Quote_
+  en: "A major reason capable people fail to advance is that they don't work well with their colleagues."
+  attribution: Lee Iacocca
+
+- !ruby/object:Quote_
+  en: It takes two flints to make a fire.
+  attribution: Louisa May Alcott
+
+- !ruby/object:Quote_
+  en: The main ingredient of stardom is the rest of the team.
+  attribution: John Wooden
+
+- !ruby/object:Quote_
+  en: Disruption isnt about what happens to you. Its about how you respond to what happens to you.
+  attribution: Jay Samit
+
+- !ruby/object:Quote_
+  en: As a coach, I play not my eleven best, but my best eleven.
+  attribution: Knute Rockne
+
+- !ruby/object:Quote_
+  en: I suppose leadership at one time meant muscles, but today it means getting along with people.
+  attribution: Mohandas Ghandi
+
+- !ruby/object:Quote_
+  en: "I'm not the smartest fellow in the world, but I sure can pick smart colleagues."
+  attribution: Franklin D. Roosevelt
