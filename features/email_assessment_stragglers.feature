@@ -169,12 +169,14 @@ Feature: Email assessment stragglers
     When the system emails stragglers
     Then no emails will be sent
     Given the project has been activated
+    #The project should be available
     When the system emails stragglers
     Then 10 emails will be sent
     Then that the system's set_up_assessments process runs
     When the system emails stragglers
     Then 10 emails will be sent
     Given today is "1 day from now"
+    #The project should be available
     Then that the system's set_up_assessments process runs
     When the system emails stragglers
     Then 20 emails will be sent
@@ -182,7 +184,7 @@ Feature: Email assessment stragglers
     #Add a new group
     Given the email queue is empty
     Given today is "3 day from now"
-    Then we debug
+    #The project should NOT be available
     Given the project has a group with 2 confirmed users
     Given the project has been activated
     Then that the system's set_up_assessments process runs

@@ -26,7 +26,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'activerecord-session_store'
 gem 'bourbon'
-gem 'chronic'
 gem 'country_select'
 gem 'devise'
 gem 'devise-multi_email'
@@ -53,6 +52,7 @@ gem 'stopwords-filter', require: 'stopwords'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  gem 'chronic'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'htmlbeautifier'

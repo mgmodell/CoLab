@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'chronic'
 
 class Assessment < ActiveRecord::Base
   belongs_to :project, inverse_of: :assessments
@@ -85,7 +84,8 @@ class Assessment < ActiveRecord::Base
     if day_delta == 0
       assessment.start_date = init_date
     else
-      assessment.start_date = Chronic.parse('last ' + Date::DAYNAMES[project.start_dow])
+      day_delta = 7 - day_delta if day_delta < 0
+      assessment.start_date = Date.today - day_delta.days
     end
     assessment.start_date = assessment.start_date.beginning_of_day
 
@@ -93,7 +93,8 @@ class Assessment < ActiveRecord::Base
     if day_delta == 0
       assessment.end_date = init_date.end_of_day
     else
-      assessment.end_date = Chronic.parse('this ' + Date::DAYNAMES[project.end_dow])
+      day_delta = 7 - day_delta if day_delta > 0
+      assessment.end_date = Date.today + day_delta.days
     end
     assessment.end_date = assessment.end_date.end_of_day
 
