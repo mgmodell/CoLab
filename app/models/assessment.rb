@@ -85,16 +85,16 @@ class Assessment < ActiveRecord::Base
       assessment.start_date = init_date
     else
       day_delta = 7 - day_delta if day_delta < 0
-      assessment.start_date = init_day - day_delta.days
+      assessment.start_date = init_date - day_delta.days
     end
     assessment.start_date = assessment.start_date.beginning_of_day
 
     day_delta = project.end_dow - init_day
-    #byebug # what's day_delta's value?
     if day_delta == 0
       assessment.end_date = init_date.end_of_day
     else
-      day_delta = 7 - day_delta if day_delta < 0
+      # byebug # what's day_delta's value?
+      day_delta = 7 + day_delta if day_delta < 0
       assessment.end_date = init_date.end_of_day + day_delta.days
     end
     assessment.end_date = assessment.end_date.end_of_day
