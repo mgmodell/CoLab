@@ -150,12 +150,14 @@ class User < ActiveRecord::Base
     # Check available tasks for students
     available_rosters = rosters.enrolled
 
+    #Add the experiences
     available_rosters.each do |roster|
       waiting_tasks.concat roster.course.experiences
         .where('experiences.end_date >= ? AND experiences.start_date <= ? AND experiences.active = ?',
                DateTime.current, DateTime.current, true).to_a
     end
 
+    #Add the bingo games
     available_rosters.each do |roster|
       waiting_games = roster.course.bingo_games
                             .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ? AND bingo_games.active = ?',
