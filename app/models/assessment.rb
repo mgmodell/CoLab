@@ -30,7 +30,6 @@ class Assessment < ActiveRecord::Base
 
   # Utility method for populating Assessments when they are needed
   def self.set_up_assessments
-    # TODO: Add timezone support here
     init_date = Date.today.beginning_of_day
     init_day = init_date.wday
     logger.debug "\n\t**Populating Assessments**"
@@ -89,14 +88,12 @@ class Assessment < ActiveRecord::Base
     end
     assessment.start_date = assessment.start_date.beginning_of_day
 
-    day_delta = project.end_dow - init_day
-    if day_delta == 0
-      assessment.end_date = init_date.end_of_day
-    else
-      # byebug # what's day_delta's value?
-      day_delta = 7 + day_delta if day_delta < 0
-      assessment.end_date = init_date.end_of_day + day_delta.days
-    end
+    #calc period
+    period = project.end_dow > project.start_dow ?
+      project.end_dow - project.start_dow :
+      7 - project.start_dow + project.end_dow
+
+    assessment.end_date = assessment.start_date + period.days
     assessment.end_date = assessment.end_date.end_of_day
 
     existing_assessment_count = project.assessments.where(
