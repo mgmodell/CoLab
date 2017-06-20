@@ -88,7 +88,7 @@ class Assessment < ActiveRecord::Base
     end
     assessment.start_date = assessment.start_date.beginning_of_day
 
-    #calc period
+    # calc period
     period = project.end_dow > project.start_dow ?
       project.end_dow - project.start_dow :
       7 - project.start_dow + project.end_dow

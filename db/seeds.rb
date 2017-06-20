@@ -288,7 +288,7 @@ class Quote_
 end
 quote_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
 quote_data.each do |quote|
-  q = Quote.where( en: quote.en ).take
+  q = Quote.where(en: quote.en).take
   q = Quote.new if q.nil?
   q.en = quote.en
   q.attribution = quote.attribution

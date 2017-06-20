@@ -5,8 +5,8 @@ class Group < ActiveRecord::Base
   after_initialize :store_load_state
 
   belongs_to :project, inverse_of: :groups
-  has_and_belongs_to_many :users, inverse_of: :groups, 
-    after_add: :set_dirty, after_remove: :set_dirty
+  has_and_belongs_to_many :users, inverse_of: :groups,
+                                  after_add: :set_dirty, after_remove: :set_dirty
   has_many :group_revisions, inverse_of: :group, dependent: :destroy
   has_many :candidate_lists, inverse_of: :group
 
@@ -16,7 +16,6 @@ class Group < ActiveRecord::Base
   validate :validate_activation_status
 
   before_create :anonymize
-
 
   def get_name(anonymous)
     anonymous ? anon_name : name
@@ -64,9 +63,8 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def set_dirty user
+  def set_dirty(_user)
     @dirty = true
-
   end
 
   def anonymize
