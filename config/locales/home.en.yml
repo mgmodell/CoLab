@@ -36,11 +36,15 @@ en:
   back: Back
   show: Show
   edit: Edit
+  save: Save
   profile: Profile
   #toolbar
   c_panel: Admin&hellip;
   reports: Reports
   administration: Administration
+  resp_summ: Response Summary
+  resp_data: Response Data
+  coming_soon: Coming soon!
   logout: Logout
   demo: Demo
   about: About
@@ -66,6 +70,7 @@ en:
   description: Description
   name: Name
   number: Number
+  member: Team Member
   titles:
     demonstration: Demonstration
   home:

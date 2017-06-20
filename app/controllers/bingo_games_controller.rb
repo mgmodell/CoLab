@@ -4,15 +4,15 @@ class BingoGamesController < ApplicationController
   before_action :check_admin, except: [:next, :diagnose, :react, :update_review_candidates]
 
   def show
-    @title = 'Bingo! Game Details'
+    @title = t '.title'
   end
 
   def edit
-    @title = 'Edit a Bingo! Game'
+    @title = t '.title'
   end
 
   def index
-    @title = 'Bingo! Games'
+    @title = t '.title'
     @bingo_games = []
     if @current_user.is_admin?
       @bingo_games = BingoGame.all
@@ -25,7 +25,7 @@ class BingoGamesController < ApplicationController
   end
 
   def new
-    @title = 'New Bingo! Game'
+    @title = t '.title'
     @bingo_game = BingoGame.new
     @bingo_game.course_id = params[:course_id]
     @bingo_game.course = Course.find(params[:course_id])
@@ -34,7 +34,7 @@ class BingoGamesController < ApplicationController
   end
 
   def create
-    @title = 'New Bingo! Game'
+    @title = t ".title"
     @bingo_game = BingoGame.new(bingo_game_params)
     if @bingo_game.save
       redirect_to @bingo_game, notice: 'Bingo Game was successfully created.'
@@ -44,7 +44,7 @@ class BingoGamesController < ApplicationController
   end
 
   def update
-    @title = 'Edit a Bingo! Game'
+    @title = t ".title"
     if @bingo_game.update(bingo_game_params)
       redirect_to @bingo_game, notice: 'Bingo Game was successfully updated.'
     else
@@ -53,7 +53,7 @@ class BingoGamesController < ApplicationController
   end
 
   def review_candidates
-    @title = 'Candidate Terms for Review'
+    @title = t ".title"
   end
 
   def update_review_candidates
@@ -87,18 +87,18 @@ class BingoGamesController < ApplicationController
     logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
 
     if @bingo_game.errors.empty? && @bingo_game.reviewed
-      redirect_to root_url, notice: 'Review data successfully saved'
+      redirect_to root_url, :notice => (t 'bingo_games.review_success')
     elsif !@bingo_game.errors.empty?
-      redirect_to :review_bingo_candidates, notice: 'There were problems with the review and it could not be saved'
+      redirect_to :review_bingo_candidates, :notice => (t 'bingo_games.review_problems')
     else
-      redirect_to :review_bingo_candidates, notice: 'Review data successfully saved'
+      redirect_to :review_bingo_candidates, :notice => (t 'bingo_games.review_success')
     end
   end
 
   def destroy
     @course = @bingo_game.course
     @bingo_game.destroy
-    redirect_to @course, notice: 'Bingo Game was successfully destroyed.'
+    redirect_to @course, :notice => (t 'bingo_games.destroy_success')
   end
 
   def activate
@@ -109,8 +109,8 @@ class BingoGamesController < ApplicationController
       bingo_game.save
     end
     @bingo_game = bingo_game
-    @title = 'Bingo! Game'
-    render :show, notice: 'Review data successfully saved'
+    @title = t '.title'
+    render :show, :notice => (t 'bingo_games.activate_success')
   end
 
   private

@@ -9,9 +9,9 @@ en:
       edit_string: Edit school details
     new:
       title: New School
-    create_success: School created successfully!
-    destroy_success: School destroyed successfully!
-    update_success: School updated successfully!
+    create_success: School was created successfully!
+    destroy_success: School was destroyed successfully!
+    update_success: School was updated successfully!
     courses: School Courses
     no_courses: No courses.
     back: Back to the list of schools

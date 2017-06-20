@@ -5,13 +5,13 @@
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
-        <li><a href="#details" data-ajax="false">Details</a></li>
-        <li><a href="#summary" data-ajax="false">Response Summary</a></li>
-        <li><a href="#responses" data-ajax="false">Response Data</a></li>
+        <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
+        <li><a href="#summary" data-ajax="false"><%= t :resp_summary %></a></li>
+        <li><a href="#responses" data-ajax="false"><%= t :resp_data %></a></li>
       </ul>
     </div>
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
-      <h2>Bingo! Game Details</h2>
+      <h2><%= t '.title' %></h2>
       <div class="form-inputs">
         <strong>Course:</strong> <%= @bingo_game.course.get_name( anonymize ) %></br></br>
         <%= f.input :course_id, as: :hidden %>
@@ -134,7 +134,7 @@
               id="basicTable"
               data-mode="columntoggle"
               data-column-btn-theme="<%= theme_code %>"
-              data-column-btn-text="Show/hide columns&hellip;"
+              data-column-btn-text="<%= t :column_select %>"
               class="table-stroke ui-shadow table-stripe table-ui-responsive">
               <thead>
                 <tr>

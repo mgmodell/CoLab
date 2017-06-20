@@ -6,15 +6,12 @@
   <p class="error"><%= flash[:error] %> </p>
 <% end %>
 <div class="instructions">
-  <p>Please complete this weeks' <%= @project_name %> assessment for 
-group `<%= @group.name %>' by indicating how much effort each of the
-    <%= @members.count %> members of your group contributed towards each of
-the <%= @factors.count %> factors. Please keep in mind that <em>this
-report <u>should only cover this past week</u> and none of the period 
-before</em>.</p>
-  <P>Each column below must total 6000 and the row at bottom will indicate
-the current total. Additionally, the submit button will only be available
-when the totals equal 600.</p>
+  <p><%= t 'installments.instructions',
+          group_name: @group.name,
+          project_name: @group.project.get_name( false ),
+          member_count: @members.count,
+          factor_count: @factors.count %></p>
+  <P><%= t 'installments.basic.instructions', total_val: Installment::TOTAL_VAL %></p>
 </div>
 <% if @installment.id.nil?
      url_params = { :action => "create" }
@@ -28,7 +25,7 @@ when the totals equal 600.</p>
   <%= f.hidden_field :group_id %>
   <table>
     <tr>
-      <th>User</th>
+      <th><%= t :member %></th>
       <% @factors.each do |factor| %>
         <th><%= factor.name %><br>
           <%= factor.description %></th>
@@ -56,16 +53,15 @@ when the totals equal 600.</p>
       </tr>
     <% end %>
     <tr>
-      <td>Totals:<br>
-        (must equal 6000)</td>
+      <td><%= t 'installments.basic.totals', total_val: Installment::TOTAL_VAL %>:</td>
       <% @factors.each do |factor| %>
         <td>
-          <%= text_field_tag ( factor.name.delete( ' ' ) + "_calc" ), 6000,
+          <%= text_field_tag ( factor.name.delete( ' ' ) + "_calc" ), Installment::TOTAL_VAL,
             :onchange => "alert( 'changed' );", :class => "total", :disabled => true %>
         </td>
       <% end %>
     </tr>
   </table>
   <%= render :partial => "installments/shared/comments", :object => f %>
-  <%= f.submit "Submit Weekly Installment" %>
+  <%= f.submit t 'installments.submit' %>
 <% end %>

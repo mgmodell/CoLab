@@ -1,0 +1,25 @@
+en:
+  bingo_games:
+    review_candidates:
+      title: Candidate Terms for Review
+    index:
+      title: List of Bingo! Games
+    edit:
+      title: Edit a Bingo! Game
+    show:
+      title: Bingo! Game Details
+    new:
+      title: New Bingo! Game
+    create_success: Bingo! Game created successfully!
+    destroy_success: Bingo! Game destroyed successfully!
+    update_success: Bingo! Game updated successfully!
+    review_success: Review data successfully saved
+    review_problems: There were problems with the review and it could not be saved
+    activate_success: Bingo! Game activated!
+    #Term data
+    topic: Topic
+    term: Term
+    definition: Definition
+    feedback: Feedback
+    concept: Concept
+    date: Game date

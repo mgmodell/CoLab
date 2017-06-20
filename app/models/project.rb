@@ -141,7 +141,7 @@ class Project < ActiveRecord::Base
         # Check the users
         user = User.find(user_id)
         if Roster.enrolled.where(user: user, course: course).count < 1
-          errors.add(:active, "#{user.name false} is does not appear to be enrolled in this course.")
+          errors.add(:active, "#{user.name false} does not appear to be enrolled in this course.")
         elsif count > 1
           errors.add(:active, "#{user.name false} appears #{count} times in your project.")
         end

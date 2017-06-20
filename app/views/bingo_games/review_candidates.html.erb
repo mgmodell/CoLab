@@ -3,11 +3,11 @@
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
   <table>
     <tr>
-      <th align="right">Topic:</th>
+      <th align="right"><%= t 'bingo_games.topic' %>:</th>
       <td><%= @bingo_game.topic %>
     </tr>
     <tr>
-      <th align="right">Game date:</th>
+      <th align="right"><%= t 'bingo_games' %>:</th>
       <td><%= @bingo_game.end_date %>
     </tr>
   </table>
@@ -17,10 +17,10 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Term</th>
-        <th>Definition</th>
-        <th>Feedback</th>
-        <th width="20%">Concept</th>
+        <th><%= t 'bingo_games.term' %></th>
+        <th><%= t 'bingo_games.definition' %></th>
+        <th><%= t 'bingo_games.feedback' %></th>
+        <th width="20%"><%= t 'bingo_games.concept' %></th>
       </tr>
     </thead>
     <tbody><% count = 0 %>
@@ -49,6 +49,6 @@
   <%= f.input :reviewed, as: :boolean, label: "Review completed" %>
 
 <div class="form-actions">
-  <%= f.button :submit, "Save" %>
+  <%= f.button :submit, t(:save) %>
 </div>
 <% end %>
