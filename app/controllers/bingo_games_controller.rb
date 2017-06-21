@@ -34,7 +34,7 @@ class BingoGamesController < ApplicationController
   end
 
   def create
-    @title = t ".title"
+    @title = t '.title'
     @bingo_game = BingoGame.new(bingo_game_params)
     if @bingo_game.save
       redirect_to @bingo_game, notice: 'Bingo Game was successfully created.'
@@ -44,7 +44,7 @@ class BingoGamesController < ApplicationController
   end
 
   def update
-    @title = t ".title"
+    @title = t '.title'
     if @bingo_game.update(bingo_game_params)
       redirect_to @bingo_game, notice: 'Bingo Game was successfully updated.'
     else
@@ -53,7 +53,7 @@ class BingoGamesController < ApplicationController
   end
 
   def review_candidates
-    @title = t ".title"
+    @title = t '.title'
   end
 
   def update_review_candidates
@@ -87,18 +87,18 @@ class BingoGamesController < ApplicationController
     logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
 
     if @bingo_game.errors.empty? && @bingo_game.reviewed
-      redirect_to root_url, :notice => (t 'bingo_games.review_success')
+      redirect_to root_url, notice: (t 'bingo_games.review_success')
     elsif !@bingo_game.errors.empty?
-      redirect_to :review_bingo_candidates, :notice => (t 'bingo_games.review_problems')
+      redirect_to :review_bingo_candidates, notice: (t 'bingo_games.review_problems')
     else
-      redirect_to :review_bingo_candidates, :notice => (t 'bingo_games.review_success')
+      redirect_to :review_bingo_candidates, notice: (t 'bingo_games.review_success')
     end
   end
 
   def destroy
     @course = @bingo_game.course
     @bingo_game.destroy
-    redirect_to @course, :notice => (t 'bingo_games.destroy_success')
+    redirect_to @course, notice: (t 'bingo_games.destroy_success')
   end
 
   def activate
@@ -110,7 +110,7 @@ class BingoGamesController < ApplicationController
     end
     @bingo_game = bingo_game
     @title = t '.title'
-    render :show, :notice => (t 'bingo_games.activate_success')
+    render :show, notice: (t 'bingo_games.activate_success')
   end
 
   private

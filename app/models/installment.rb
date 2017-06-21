@@ -77,7 +77,7 @@ class Installment < ActiveRecord::Base
       if difference != 0
         delta = difference <=> 0
         index = 0
-        difference.abs.times do
+        difference.abs.to_i.times do
           au_hash.values[index].value += delta
           index += 1
         end
