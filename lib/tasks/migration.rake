@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 namespace :migratify do
   desc 'Create the underpinnings for language support'
-  task locales_quotes: :environment do
+  task db_updates: :environment do
     Rake::Task['db:migrate'].invoke
 
     # Seed data
@@ -10,15 +10,63 @@ namespace :migratify do
 
     # Quote seed data
     class Quote_
-      attr_accessor :en, :attribution
+      attr_accessor :text_en, :attribution
     end
-    quote_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
-    quote_data.each do |quote|
-      q = Quote.where(en: quote.en).take
+    read_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
+    read_data.each do |quote|
+      q = Quote.where(text_en: quote.text_en).take
       q = Quote.new if q.nil?
-      q.en = quote.en
-      q.attribution = quote.attribution
+      q.text_en = quote.text_en unless q.text_en == quote.text_en 
+      q.attribution = quote.attribution unless q.attribution == quote.attribution
       q.save
+    end
+
+    # Gender seed data
+    class Gender_
+      attr_accessor :name_en, :name_ko
+    end
+    read_data = YAML.safe_load(File.open('db/genders.yml'), [Gender_])
+    read_data.each do |gender|
+      g = Gender.where(name_en: gender.name_en).take
+      g = Gender.new if g.nil?
+      g.name_en = gender.name_en unless g.name_en == gender.name_en
+      g.name_ko = gender.name_ko unless g.name_ko == gender.name_ko
+      g.save
+    end
+
+    # FactorPack seed data
+    class FactorPack_
+      attr_accessor :name_en, :name_ko
+      attr_accessor :description_en, :description_ko
+    end
+    read_data = YAML.safe_load(File.open('db/factor_pack.yml'), [FactorPack_])
+    read_data.each do |factor_pack|
+      g = FactorPack.where(name_en: factor_pack.name_en).take
+      g = FactorPack.new if g.nil?
+      g.name_en = factor_pack.name_en unless g.name_en == factor_pack.name_en
+      g.name_ko = factor_pack.name_ko unless g.name_ko == factor_pack.name_ko
+      g.description_en = factor_pack.description_en unless g.description_en == factor_pack.description_en
+      g.description_ko = factor_pack.description_ko unless g.description_ko == factor_pack.description_ko
+      g.save
+    end
+
+    # Factor seed data
+    class Factor_
+      attr_accessor :fp
+      attr_accessor :name_en, :name_ko
+      attr_accessor :description_en, :description_ko
+    end
+    read_data = YAML.safe_load(File.open('db/factor.yml'), [Factor_])
+    read_data.each do |factor|
+      g = Factor.where(name_en: factor.name_en).take
+      g = Factor.new if g.nil?
+      fp = FactorPack.where(name_en: factor.fp).take
+      g.name_en = factor.name_en unless g.name_en == factor.name_en
+      g.name_ko = factor.name_ko unless g.name_ko == factor.name_ko
+      g.description_en = factor.description_en unless g.description_en == factor.description_en
+      g.description_ko = factor.description_ko unless g.description_ko == factor.description_ko
+      g.factor_packs << fp
+      g.save
     end
   end
 

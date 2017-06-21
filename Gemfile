@@ -34,6 +34,7 @@ gem 'highcharts-rails'
 gem 'jquery-tablesorter'
 gem 'jquery_mobile_rails'
 gem 'omniauth-google-oauth2'
+gem 'traco'
 gem 'paperclip', '~> 5.0.0'
 gem 'puma'
 gem 'rails_12factor', group: :production

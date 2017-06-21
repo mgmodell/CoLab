@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class Quote < ActiveRecord::Base
+  translates :text
+
   @@reloaded_at = DateTime.current
   @@quote_count = Quote.count
 
@@ -13,7 +15,7 @@ class Quote < ActiveRecord::Base
 
   def get_local_quote
     # localize here
-    en
+    text
   end
 
   def get_local_attribution

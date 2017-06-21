@@ -1,39 +1,42 @@
 # frozen_string_literal: true
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
-#   Mayor.create(:name => 'Emanuel', :city => cities.first)
 
 # Foundational data
-bp = FactorPack.create(name: 'Simple', description: 'Borrowed from Goldfinch')
-Factor.create(name: 'Organizing', description: 'Helped to organize the group''s members and activities.', factor_packs: [bp])
-Factor.create(name: 'Understanding requirements', description: 'Understanding what was required of the group and of the individual group members.', factor_packs: [bp])
-Factor.create(name: 'Suggesting ideas', description: 'Suggesting ideas upon which the group could act or continue to build productively.', factor_packs: [bp])
-Factor.create(name: 'Producing', description: 'Coming up with something useful to contribute to the group''s efforts.', factor_packs: [bp])
-Factor.create(name: 'Performing tasks', description: 'Performing tasks allocated by the group within the specified timeframe.', factor_packs: [bp])
-# Create a new BP
-bp = FactorPack.create(name: 'Original', description: 'My earliest formulation')
-Factor.create(name: 'Work', description: 'Performing tasks allocated by the group within the specified timeframe.', factor_packs: [bp])
-Factor.create(name: 'Creativity', description: 'Performing tasks allocated by the group within the specified timeframe.', factor_packs: [bp])
-Factor.create(name: 'Group Dynamics', description: 'Performing tasks allocated by the group within the specified timeframe.', factor_packs: [bp])
-# Create a new BP
-bp = FactorPack.create(name: 'Distilled I', description: 'Distillation of factors from initial set of 23 sources')
-Factor.create(name: 'Standards', description: 'Establishing standards for quality and evaluating group performance and decisions in relation to these standards.', factor_packs: [bp])
-Factor.create(name: 'Constructive criticism', description: 'Delivering constructive criticism.', factor_packs: [bp])
-Factor.create(name: 'Valuing teammates', description: 'Valuing the contributions of teammates; maintaining a positive attitude and encouraging a positive attitude in teammates.', factor_packs: [bp])
-Factor.create(name: 'Facilitating communications', description: 'Facilitating communications between teammates; helping members understand one another.', factor_packs: [bp])
-Factor.create(name: 'Ideas and suggestions', description: 'Contributing ideas and suggestions to the group.', factor_packs: [bp])
-Factor.create(name: 'New information', description: 'Bringing new and relevant information to the group.', factor_packs: [bp])
-Factor.create(name: 'Integrating ideas', description: 'Interpreting, consolidating and integrating ideas and information into a useful result.', factor_packs: [bp])
-Factor.create(name: 'Accepting tasks', description: 'Accepting suggested tasks and/or volunteering for new ones.', factor_packs: [bp])
-Factor.create(name: 'Time-sensitive', description: 'Performing assigned tasks on time and/or notifying the group in a timely fashion when assigned tasks cannot be completed for any reason (e.g. wrong task, insufficient information, insufficient time, etc.)', factor_packs: [bp])
-Factor.create(name: 'Relevant questions', description: "Asking questions relevant to understanding the group's goals or how to achieve them. This includes questions aimed at understanding teammates' ideas and suggestions.", factor_packs: [bp])
-Factor.create(name: 'External communications', description: "Representing or demonstrating the group's progress, goals and/or positions effectively and accurately to non-members (orally, visually or otherwise).", factor_packs: [bp])
-Factor.create(name: 'Timeline management', description: "Managing the development of, adherence to and revision of the group's specific timeline.", factor_packs: [bp])
-Factor.create(name: 'Allocating resources', description: 'Suggesting allocation of resources (team members, materials, etc.) to individual task completions.', factor_packs: [bp])
+# FactorPack seed data
+class FactorPack_
+  attr_accessor :name_en, :name_ko
+  attr_accessor :description_en, :description_ko
+end
+read_data = YAML.safe_load(File.open('db/factor_pack.yml'), [FactorPack_])
+read_data.each do |factor_pack|
+  g = FactorPack.where(name_en: factor_pack.name_en).take
+  g = FactorPack.new if g.nil?
+  g.name_en = factor_pack.name_en unless g.name_en == factor_pack.name_en
+  g.name_ko = factor_pack.name_ko unless g.name_ko == factor_pack.name_ko
+  g.description_en = factor_pack.description_en unless g.description_en == factor_pack.description_en
+  g.description_ko = factor_pack.description_ko unless g.description_ko == factor_pack.description_ko
+  g.save
+end
+
+# Factor seed data
+class Factor_
+  attr_accessor :fp
+  attr_accessor :name_en, :name_ko
+  attr_accessor :description_en, :description_ko
+end
+read_data = YAML.safe_load(File.open('db/factor.yml'), [Factor_])
+read_data.each do |factor|
+  g = Factor.where(name_en: factor.name_en).take
+  g = Factor.new if g.nil?
+  fp = FactorPack.where(name_en: factor.fp).take
+  g.name_en = factor.name_en unless g.name_en == factor.name_en
+  g.name_ko = factor.name_ko unless g.name_ko == factor.name_ko
+  g.description_en = factor.description_en unless g.description_en == factor.description_en
+  g.description_ko = factor.description_ko unless g.description_ko == factor.description_ko
+  g.factor_packs << fp
+  g.save
+end
+
+
 
 Behavior.create(
   name: 'Equal participation',
@@ -98,9 +101,19 @@ AgeRange.create(name: '25-30')
 AgeRange.create(name: '31+')
 AgeRange.create(name: "I'd prefer not to answer")
 
-Gender.create(name: 'Male')
-Gender.create(name: 'Female')
-Gender.create(name: "I'd prefer not to answer")
+# Gender seed data
+class Gender_
+  attr_accessor :name_en, :name_ko
+end
+read_data = YAML.safe_load(File.open('db/genders.yml'), [Gender_])
+read_data.each do |gender|
+  g = Gender.where(name_en: gender.name_en).take
+  g = Gender.new if g.nil?
+  g.name_en = gender.name_en unless g.name_en == gender.name_en
+  g.name_ko = gender.name_ko unless g.name_ko == gender.name_ko
+  g.save
+end
+
 
 GroupProjectCount.create(name: 'none',
                          description: "I don't remember having been a part of a long-term group project.")
@@ -284,13 +297,13 @@ cip_data.each do |cip_code|
 end
 
 class Quote_
-  attr_accessor :en, :attribution
+  attr_accessor :text_en, :attribution
 end
 quote_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
 quote_data.each do |quote|
-  q = Quote.where(en: quote.en).take
+  q = Quote.where(text_en: quote.text_en).take
   q = Quote.new if q.nil?
-  q.en = quote.en
+  q.text_en = quote.text_en
   q.attribution = quote.attribution
   q.save
 end

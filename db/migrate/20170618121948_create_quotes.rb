@@ -2,7 +2,7 @@
 class CreateQuotes < ActiveRecord::Migration
   def change
     create_table :quotes do |t|
-      t.string :en, unique: true
+      t.string :text_en, unique: true
       t.string :attribution
 
       t.timestamps null: false
