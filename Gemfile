@@ -34,12 +34,12 @@ gem 'highcharts-rails'
 gem 'jquery-tablesorter'
 gem 'jquery_mobile_rails'
 gem 'omniauth-google-oauth2'
-gem 'traco'
 gem 'paperclip', '~> 5.0.0'
 gem 'puma'
 gem 'rails_12factor', group: :production
 gem 'simple_form'
 gem 'stopwords-filter', require: 'stopwords'
+gem 'traco'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

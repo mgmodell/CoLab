@@ -16,7 +16,7 @@ namespace :migratify do
     read_data.each do |quote|
       q = Quote.where(text_en: quote.text_en).take
       q = Quote.new if q.nil?
-      q.text_en = quote.text_en unless q.text_en == quote.text_en 
+      q.text_en = quote.text_en unless q.text_en == quote.text_en
       q.attribution = quote.attribution unless q.attribution == quote.attribution
       q.save
     end

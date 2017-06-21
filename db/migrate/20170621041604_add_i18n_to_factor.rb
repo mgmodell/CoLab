@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddI18nToFactor < ActiveRecord::Migration
   def change
     rename_column :factors, :name, :name_en

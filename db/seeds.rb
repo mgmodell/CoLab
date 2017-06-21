@@ -36,8 +36,6 @@ read_data.each do |factor|
   g.save
 end
 
-
-
 Behavior.create(
   name: 'Equal participation',
   description: "Each group member's contributions toward the group's
@@ -113,7 +111,6 @@ read_data.each do |gender|
   g.name_ko = gender.name_ko unless g.name_ko == gender.name_ko
   g.save
 end
-
 
 GroupProjectCount.create(name: 'none',
                          description: "I don't remember having been a part of a long-term group project.")

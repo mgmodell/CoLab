@@ -147,7 +147,7 @@ class InstallmentsController < ApplicationController
   class ProjStub
     attr_accessor :style, :name
 
-    def get_name(anon)
+    def get_name(_anon)
       name
     end
   end
@@ -156,7 +156,7 @@ class InstallmentsController < ApplicationController
     attr_accessor :users
     attr_accessor :project
 
-    def get_name(anon)
+    def get_name(_anon)
       name
     end
   end
@@ -165,7 +165,7 @@ class InstallmentsController < ApplicationController
     @title = 'How Did Your Group Work Together? (DEMO)'
     @project = ProjStub.new
     @project.style = Style.find(2)
-    @project.name = "Research Paper"
+    @project.name = 'Research Paper'
 
     @group = GroupStub.new
     @group.name = 'SuperStars'
