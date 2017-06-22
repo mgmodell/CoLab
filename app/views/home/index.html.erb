@@ -1,11 +1,21 @@
 <h1>Your Tasks</h1>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-<% anonymize = @current_user.nil? ? false : @current_user.anonymize? %>
+<% anonymize = false %>
 <p><%= t 'home.greeting', name: @first_name %>,</br>
-  <% task_count = @waiting_student_tasks.count + @waiting_instructor_tasks.count %>
-  <%= t 'home.tasks', count: task_count %></p>
+  <% tasks = @waiting_student_tasks + @waiting_instructor_tasks %>
+  <%= t 'home.tasks', count: tasks.count %></p>
+<div data-role="tabs" id="tabs">
+  <div data-role="navbar">
+    <ul>
+      <li><a href="#weekly" data-ajax="false">Week View</a></li>
+      <li><a href="#tasks" data-ajax="false">Task View</a></li>
+      <li><a href="#monthly" data-ajax="false">Month View</a></li>
+    </ul>
+  </div>
+  <div id="tasks" class="ui-body-<%= theme_code %> ui-content">
+    <h3>Task List</h3>
 <% if @waiting_instructor_tasks.any? %>
-<h3><%= t :instructor_tasks %></h3>
+<h4><%= t :instructor_tasks %></h4>
   <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -38,7 +48,7 @@
 <% end %>
 </br>
 <% if @waiting_student_tasks.any? %>
-<h3><%= t :student_tasks %></h3>
+<h4><%= t :student_tasks %></h4>
   <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -154,3 +164,29 @@
     </tbody>
   </table>
 <% end %>
+</div>
+  <div id="weekly" class="ui-body-<%= theme_code %> ui-content">
+    <h3>Month View</h3>
+    <%= week_calendar attribute: :start_date, events: tasks,  number_of_weeks: 2 do |date,meetings| %>
+      <%= date %>
+      <%= meetings.each do |meeting| %>
+        <div>
+          <%= render :partial => "shared/task_link", 
+                    :locals => { :task => meeting, :anonymize => anonymize, :user => @current_user } %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <div id="monthly" class="ui-body-<%= theme_code %> ui-content">
+    <h3>Month View</h3>
+    <%= month_calendar attribute: :start_date, events: tasks  do |date,meetings| %>
+      <%= date %>
+      <%= meetings.each do |meeting| %>
+        <div>
+          <%= render :partial => "shared/task_link", 
+                    :locals => { :task => meeting, :anonymize => anonymize, :user => @current_user } %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
