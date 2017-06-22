@@ -23,42 +23,40 @@ class HomeController < ApplicationController
     @current_location = 'home'
   end
 
-  #Data transport class
+  # Data transport class
   class Event_
     attr_accessor :name, :task_link, :task_name_post, :type, :status, :group_name
     attr_accessor :course_name, :start_time, :close_date
   end
-
 
   def demo_start
     @title = t 'titles.demonstration'
     if @current_user.nil?
       @current_user = User.new(first_name: 'John', last_name: 'Smith', timezone: 'Seoul')
     end
-    
+
     e = Event_.new
-    e.name = "SuperStars"
+    e.name = 'SuperStars'
     e.task_link = assessment_demo_complete_path
     e.task_name_post = '<br>' + "(#{t :project}: Research Paper)"
     e.type = t 'home.sapa'
     e.status = t :not_started
-    e.group_name = "SuperStars"
-    e.course_name = "Advanced Collaborative Research"
+    e.group_name = 'SuperStars'
+    e.course_name = 'Advanced Collaborative Research'
     e.start_time = 1.day.ago
     e.close_date = 1.day.from_now.end_of_day
 
-    @events = [ e ]
+    @events = [e]
     e = Event_.new
-    e.name = "What is collaboration?"
+    e.name = 'What is collaboration?'
     e.task_link = bingo_demo_complete_path
     e.task_name_post = ''
     e.type = t 'home.terms_list'
-    e.status = "50%"
-    e.group_name = "SuperStars"
-    e.course_name = "Advanced Collaborative Research"
+    e.status = '50%'
+    e.group_name = 'SuperStars'
+    e.course_name = 'Advanced Collaborative Research'
     e.start_time = 1.week.ago
     e.close_date = 2.day.from_now.end_of_day
     @events << e
-
   end
 end
