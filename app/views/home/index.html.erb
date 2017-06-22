@@ -157,10 +157,12 @@
 <% end %>
 </div>
   <div id="weekly" class="ui-body-<%= theme_code %> ui-content">
-    <h3>Month View</h3>
+    <h3>Week View</h3>
     <%= week_calendar attribute: :start_date, events: tasks,  number_of_weeks: 2 do |date,meetings| %>
-      <%= date %>
-      <%= meetings.each do |meeting| %>
+      <h4 style="font-weight:300;font-size:10px;text-align:center">
+        <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
+      </h4>
+      <% meetings.each do |meeting| %>
         <div>
           <%= render :partial => "shared/task_link", 
                     :locals => { :task => meeting, :anonymize => anonymize, :user => @current_user } %>
@@ -171,8 +173,10 @@
   <div id="monthly" class="ui-body-<%= theme_code %> ui-content">
     <h3>Month View</h3>
     <%= month_calendar attribute: :start_date, events: tasks  do |date,meetings| %>
-      <%= date %>
-      <%= meetings.each do |meeting| %>
+      <h4 style="font-weight:300;font-size:10px;text-align:center">
+        <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
+      </h4>
+      <% meetings.each do |meeting| %>
         <div>
           <%= render :partial => "shared/task_link", 
                     :locals => { :task => meeting, :anonymize => anonymize, :user => @current_user } %>

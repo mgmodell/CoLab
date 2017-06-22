@@ -39,7 +39,7 @@ class HomeController < ApplicationController
     e = Event_.new
     e.name = "SuperStars"
     e.task_link = assessment_demo_complete_path
-    e.task_name_post = "<br>#{t :project}: Research Paper)"
+    e.task_name_post = '<br>' + "(#{t :project}: Research Paper)"
     e.type = t 'home.sapa'
     e.status = t :not_started
     e.group_name = "SuperStars"

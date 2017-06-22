@@ -37,7 +37,7 @@
     <% @events.each do |event| %>
     <tr>
       <td>
-        <%= link_to event.name, event.task_link %><%= event.task_name_post %>
+        <%= link_to event.name, event.task_link %><%= raw event.task_name_post %>
       </td>
       <td><%= event.type %></td>
       <td>
@@ -55,12 +55,14 @@
   </table>
 </div>
   <div id="weekly" class="ui-body-<%= theme_code %> ui-content">
-    <h3>Month View</h3>
+    <h3>Week View</h3>
     <%= week_calendar attribute: :close_date, events: @events,  number_of_weeks: 2 do |date,meetings| %>
-      <%= date %>
-      <%= meetings.each do |meeting| %>
+      <h4 style="font-weight:300;font-size:10px;text-align:center">
+        <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
+      </h4>
+      <% meetings.each do |meeting| %>
         <div>
-          <%= link_to meeting.name, meeting.task_link %><%= meeting.task_name_post %>
+          <%= link_to meeting.name, meeting.task_link %><small><%= raw meeting.task_name_post %></small>
         </div>
       <% end %>
     <% end %>
@@ -68,10 +70,12 @@
   <div id="monthly" class="ui-body-<%= theme_code %> ui-content">
     <h3>Month View</h3>
     <%= month_calendar attribute: :close_date, events: @events  do |date,meetings| %>
-      <%= date %>
-      <%= meetings.each do |meeting| %>
+      <h4 style="font-weight:300;font-size:10px;text-align:center">
+        <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
+      </h4>
+      <% meetings.each do |meeting| %>
         <div>
-          <%= link_to meeting.name, meeting.task_link %><%= meeting.task_name_post %>
+          <%= link_to meeting.name, meeting.task_link %><small><%= raw meeting.task_name_post %></small>
         </div>
       <% end %>
     <% end %>
