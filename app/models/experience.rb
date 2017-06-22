@@ -32,7 +32,7 @@ class Experience < ActiveRecord::Base
   end
 
   def get_task_name(anon:, user:)
-    self.get_name( anon )
+    get_name(anon)
   end
 
   def status_for_user(user)

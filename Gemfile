@@ -37,10 +37,10 @@ gem 'omniauth-google-oauth2'
 gem 'paperclip', '~> 5.0.0'
 gem 'puma'
 gem 'rails_12factor', group: :production
+gem 'simple_calendar', '~> 2.0'
 gem 'simple_form'
 gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
-gem "simple_calendar", "~> 2.0"
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

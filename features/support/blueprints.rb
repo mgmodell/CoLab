@@ -35,12 +35,12 @@ Group.blueprint do
 end
 
 Factor.blueprint do
-  name { Forgery::Name.industry + ' Factor' }
+  name { "#{Forgery::Address.street_number}-#{Forgery::Name.industry} Factor" }
   description { Forgery::Basic.text }
 end
 
 FactorPack.blueprint do
-  name { Forgery::Name.industry + ' Factor Pack' }
+  name { "#{Forgery::Name.industry}-#{Forgery::Basic.color} Factor Pack" }
   description { Forgery::Basic.text }
 end
 

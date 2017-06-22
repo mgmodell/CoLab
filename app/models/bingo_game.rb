@@ -52,7 +52,7 @@ class BingoGame < ActiveRecord::Base
   end
 
   def get_task_name(anon:, user:)
-    self.get_name( anon )
+    get_name(anon)
   end
 
   def type
