@@ -31,6 +31,10 @@ class Experience < ActiveRecord::Base
     anonymous ? anon_name : name
   end
 
+  def get_task_name(anon:, user:)
+    self.get_name( anon )
+  end
+
   def status_for_user(user)
     get_user_reaction(user).status
   end

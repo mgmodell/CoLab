@@ -40,6 +40,10 @@ class Assessment < ActiveRecord::Base
     end
   end
 
+  def get_task_name(anon:, user:)
+    "#{self.group_for_user( user )} (#{I18n.t :project}: #{self.project.get_name( anon )})"
+  end
+
   # Here we'll give instructors a little status update at the close of each assessment period
   def self.inform_instructors
     count = 0

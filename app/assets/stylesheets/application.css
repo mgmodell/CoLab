@@ -13,6 +13,7 @@
  *= require awesomplete
  *= require colab
  *= require app_style
+ *= require simple_calendar
  */
 
 .connected

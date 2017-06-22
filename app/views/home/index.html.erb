@@ -36,7 +36,10 @@
     <tbody>
     <% @waiting_instructor_tasks.each do |task| %>
       <tr>
-        <td data-priority="0"><%= link_to "Review: " + task.get_name( anonymize ), review_bingo_candidates_path( task )%> </td>
+        <td data-priority="0">
+          <%= render :partial => "shared/task_link", 
+                    :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
+        </td>
         <td align="center" data-priority="1">Bingo! Candidate Review</td>
         <td align="center" data-priority="1"><%= task.status %>%</td>
         <td data-priority="1"><%= task.course.get_name( anonymize ) %></td>
@@ -74,16 +77,9 @@
         <% if task.class == Assessment %>
           <% group = task.group_for_user( @current_user )%>
           <tr>
-            <td>
-              <% if(task.is_completed_by_user @current_user) %>
-                <%= link_to group.get_name( anonymize ), edit_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
-                <br>
-                (<%= t :project %>: <%= task.project.get_name( anonymize ) %>)
-                  <% else %>
-                <%= link_to group.get_name( anonymize ), new_installment_path( :assessment_id => task.id, :group_id => group.id ) %>
-                <br>
-                (<%= t :project %>: <%= task.project.get_name( anonymize ) %>)
-                  <% end %>
+            <td data-priority="0">
+              <%= render :partial => "shared/task_link", 
+                        :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
             </td>
             <td><%= t 'home.sapa' %></td>
             <td>
@@ -103,18 +99,16 @@
           </tr>
         <% elsif task.class == BingoGame %>
           <tr><% candidate_list = task.candidate_list_for_user( @current_user ) %>
+            <td data-priority="0">
+              <%= render :partial => "shared/task_link", 
+                        :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
+            </td>
             <% if task.is_open? %>
-              <td>
-                <%= link_to task.get_name( anonymize ), edit_candidate_list_path( candidate_list ) %>
-              </td>
               <td><%= t 'candidates.submission' %></td>
               <td>
                 <%= candidate_list.percent_completed %>%
               </td>
             <% elsif task.reviewed %>
-              <td>
-                <%= link_to task.get_name( anonymize ), candidate_list_path( candidate_list ) %>
-              </td>
               <td><%= t 'candidates.distilled' %></td>
               <td>
                 <%= task.concepts.count %> concepts
@@ -136,14 +130,11 @@
             <td>N/A</td>
           </tr>
         <% else %>
+          <% reaction = task.get_user_reaction( @current_user ) %>
           <tr>
-            <td>
-              <% reaction = task.get_user_reaction( @current_user ) %>
-              <% if reaction.behavior.present? %>
-                <%= task.get_name( anonymize ) %>
-              <% else %>
-                <%= link_to task.get_name( anonymize ), next_experience_path( :experience_id => task.id ) %>
-              <% end %>
+            <td data-priority="0">
+              <%= render :partial => "shared/task_link", 
+                        :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
             </td>
             <td><%= t 'experience.simulation' %></td>
             <td>

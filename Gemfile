@@ -40,8 +40,7 @@ gem 'rails_12factor', group: :production
 gem 'simple_form'
 gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
-gem 'fullcalendar-rails'
-gem 'momentjs-rails'
+gem "simple_calendar", "~> 2.0"
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
