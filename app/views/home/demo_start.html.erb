@@ -2,6 +2,17 @@
 <p><%= t 'home.greeting', name: @current_user.nil? ? "John" : @current_user.first_name %>,</br>
   <%= t 'home.tasks', count: 2 %>
    
+<div data-role="tabs" id="tabs">
+  <div data-role="navbar">
+    <ul>
+      <li><a href="#weekly" data-ajax="false">Week View</a></li>
+      <li><a href="#tasks" data-ajax="false">Task View</a></li>
+      <li><a href="#monthly" data-ajax="false">Month View</a></li>
+    </ul>
+  </div>
+  <div id="tasks" class="ui-body-<%= theme_code %> ui-content">
+    <h3>Task List</h3>
+
   <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>"
@@ -23,40 +34,47 @@
       </tr>
     </thead>
     <tbody>
-
+    <% @events.each do |event| %>
     <tr>
       <td>
-        <%= link_to "SuperStars", assessment_demo_complete_path %>
-        <br>
-        (<%= t :project %>: Research Paper)
+        <%= link_to event.name, event.task_link %><%= event.task_name_post %>
       </td>
-      <td><%= t 'home.sapa' %></td>
+      <td><%= event.type %></td>
       <td>
-        <em><%= t :not_started %></em>
+        <em><%= event.status %></em>
       </td>
-      <td>SuperStars</td>
-      <td>Advanced Collaborative Research</td>
-      <td> <%= 1.day.ago.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-      <td> <%= 1.day.from_now.end_of_day.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+      <td><%= event.group_name %></td>
+      <td><%= event.course_name %></td>
+      <td> <%= event.start_time.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+      <td> <%= event.close_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
       <td>N/A</td>
     </tr>
+    <% end %>
 
-    <tr>
-      <td>
-        <%= link_to "What is collaboration?", bingo_demo_complete_path %>
-      </td>
-      <td><%= t 'home.terms_list' %></td>
-      <td>
-        <em>50%</em>
-      </td>
-      <td>SuperStars</td>
-      <td>Advanced Collaborative Research</td>
-      <td> <%= 1.week.ago.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-      <td>
-        <%= 2.day.from_now.end_of_day.strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
-        <small><i><%= 4.day.from_now.end_of_day.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d") %></i></small>
-      </td>
-      <td><%= t :not_started %></td>
-    </tr>
     </tbody>
   </table>
+</div>
+  <div id="weekly" class="ui-body-<%= theme_code %> ui-content">
+    <h3>Month View</h3>
+    <%= week_calendar attribute: :close_date, events: @events,  number_of_weeks: 2 do |date,meetings| %>
+      <%= date %>
+      <%= meetings.each do |meeting| %>
+        <div>
+          <%= link_to meeting.name, meeting.task_link %><%= meeting.task_name_post %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <div id="monthly" class="ui-body-<%= theme_code %> ui-content">
+    <h3>Month View</h3>
+    <%= month_calendar attribute: :close_date, events: @events  do |date,meetings| %>
+      <%= date %>
+      <%= meetings.each do |meeting| %>
+        <div>
+          <%= link_to meeting.name, meeting.task_link %><%= meeting.task_name_post %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
