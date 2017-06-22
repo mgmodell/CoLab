@@ -65,7 +65,7 @@ namespace :migratify do
       g.name_ko = factor.name_ko unless g.name_ko == factor.name_ko
       g.description_en = factor.description_en unless g.description_en == factor.description_en
       g.description_ko = factor.description_ko unless g.description_ko == factor.description_ko
-      g.factor_packs << fp
+      g.factor_pack = fp
       g.save
     end
   end

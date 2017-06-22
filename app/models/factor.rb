@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 class Factor < ActiveRecord::Base
   translates :name, :description
-  has_and_belongs_to_many :factor_packs
+  belongs_to :factor_pack
 end
