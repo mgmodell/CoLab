@@ -10,30 +10,115 @@ namespace :testing do
       puts '   Example: rake testing:examples[\'john_smith@gmail.com\']'
     else
       user = User.joins(:emails).where( emails: {email: args[:tester]} ).take
-      course = Course.new
-      course.school = School.find 1
-      course.name = "Advanced #{Forgery::Name.industry}"
-      course.timezone = user.timezone
-      course.start_date{ 2.weeks.ago }
-      course.end_date{ 2.weeks.from_now }
-      course.save
-      
-      course.add_user_by_email user.email
+      if user.nil?
+        puts "User with email <#{email}> not found"
+      else
+        
+        course = Course.new
+        course.school = School.find 1
+        course.name = "Advanced #{Forgery::Name.industry}"
+        course.number = "TEST-#{rand( 103..550 )}"
+        course.timezone = user.timezone
+        course.start_date = 2.months.ago
+        course.end_date = 2.months.from_now
+        course.save
+        puts course.errors.empty? ?
+            "New course: #{course.name}" :
+            course.errors.full_messages
+        
+        course.add_user_by_email user.email
+  
+        #Create an experience for the user
+        experience = Experience.new
+        experience.name = "#{Forgery::Name.industry} Group Simulation"
+        experience.start_date = 1.weeks.ago
+        experience.end_date = DateTime.tomorrow
+        experience.active = true
+        experience.course = course
+        experience.save
+        puts experience.errors.empty? ? 
+            "New experience: #{experience.name}" :
+            experience.errors.full_messages
+  
+        #Create Project with the user in a group
+        project = Project.new
+        project.name = "#{Forgery::Name.job_title} project"
+        project.start_date = 1.months.ago
+        project.end_date = 1.months.from_now
+        project.start_dow = Date.yesterday.wday
+        project.end_dow = Date.tomorrow.wday
+        project.course = course
+        project.factor_pack = FactorPack.find 1
+        project.save
+        puts project.errors.empty? ? 
+            "New project: #{project.name}" :
+            project.errors.full_messages
+  
+        #Create a group
+        group = Group.new
+        group.name = Forgery::Basic.text
+        group.project = project
+        group.users << user
+        3.times do
+          u = User.new
+          u.first_name = Forgery::Name.first_name
+          u.last_name = Forgery::Name.last_name
+          u.password = 'password'
+          u.password_confirmation = 'password'
+          u.email = Forgery::Internet.email_address
+          u.timezone = 'UTC'
+          u.save
+          puts u.errors.empty? ?
+              "New user: #{u.informal_name false}" :
+              u.errors.full_messages
+          course.add_user_by_email u.email
+          group.users << u
+        end
+        group.save
+        puts group.errors.empty? ?
+            "New group: #{group.name}" :
+            group.errors.full_messages
 
-      #Create an experience for the user
-      experience = Experience.new
-      experience.name = "#{Forgery::Name.industry} Group Simulation"
-      experience.start_date = 1.weeks.ago
-      experience.end_date = DateTime.tomorrow
-      experience.active = true
-      experience.save
-
-      #Create Project with the user in a group
-
-      #Create BingoGame 
-
-      #Create BingoGame with a user group
-
+        project.active = true
+        project.save
+        puts project.errors.empty? ? 
+            "Projct activated" :
+            project.errors.full_messages
+  
+        #Create BingoGame 
+        bingo = BingoGame.new
+        bingo.topic = Forgery::Name.company_name
+        bingo.description = Forgery::LoremIpsum.text
+        bingo.course = course
+        bingo.start_date = 1.month.ago
+        bingo.end_date = 4.days.from_now
+        bingo.lead_time = 2
+        bingo.individual_count = 10
+        bingo.group_option = false
+        bingo.active = true
+        bingo.save
+        puts bingo.errors.empty? ?
+            "New solo bingo: #{bingo.topic}":
+            bingo.full_messages
+  
+        #Create BingoGame with a user group
+        bingo = BingoGame.new
+        bingo.topic = Forgery::Name.company_name
+        bingo.description = Forgery::LoremIpsum.text
+        bingo.course = course
+        bingo.start_date = 1.month.ago
+        bingo.end_date = 4.days.from_now
+        bingo.lead_time = 2
+        bingo.individual_count = 10
+        bingo.group_option = true
+        bingo.group_discount = 35
+        bingo.project = project
+        bingo.active = true
+        bingo.save
+        puts bingo.errors.empty? ?
+            "New solo bingo: #{bingo.topic}":
+            bingo.full_messages
+      end
     end
   end
 
