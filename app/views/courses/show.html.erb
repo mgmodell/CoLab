@@ -8,6 +8,7 @@
       <li><a href="#details" data-ajax="false">Details</a></li>
       <li><a href="#students" data-ajax="false">Students</a></li>
       <li><a href="#activities" data-ajax="false">Activities</a></li>
+      <li><a href="#month" data-ajax="false">Month View</a></li>
     </ul>
   </div>
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
@@ -254,6 +255,23 @@
   <%= link_to "New Experience", new_experience_path( :course_id => @course.id ),
       :data => { :icon => "plus", :inline => "true", :mini => "true", :role => "button" }%>
 </p>
+  </div>
+  <div id="month" class="ui-body-<%= theme_code %> ui-content">
+  <h3>Monthly View</h3>
+    <% activities = @course.experiences + @course.bingo_games + @course.projects %>
+    <%= month_calendar attribute: :start_date, end_attribute: :end_date, events: activities do |date,activities| %>
+      <h4 style="font-weight:300;font-size:10px;text-align:center">
+        <%= t('date.abbr_month_names')[date.month] %> <%= date.day %>
+      </h4>
+      <ul>
+        <% activities.each do |activity| %>
+        <li>
+        <%= link_to activity.get_name( anonymize ), activity %>
+        </li>
+        <% end %>
+      </ul>
+    <% end %>
+    
   </div>
 </div>
 
