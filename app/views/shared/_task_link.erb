@@ -17,7 +17,7 @@ elsif task.class == Assessment
   else
     o_string = link_to group.get_name( anonymize ), new_installment_path( :assessment_id => task.id, :group_id => group.id )
   end
-  o_string += "<br><small>(#{t :project }: #{task.project.get_name( anonymize )})</small>"
+  o_string += raw ( "<br><small>(#{t :project }: #{task.project.get_name( anonymize )})</small>" )
 elsif task.class == Experience
   reaction = task.get_user_reaction( user )
   if reaction.behavior.present?
