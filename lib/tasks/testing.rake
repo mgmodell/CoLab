@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require 'forgery'
 namespace :testing do
-
   desc 'Set up some simple, current objects for testing'
   task :examples, [:tester] => [:environment] do |_t, args|
     if args[:tester].empty?
@@ -9,15 +8,15 @@ namespace :testing do
       puts '   Usage:   rake testing:examples[<user email>]'
       puts '   Example: rake testing:examples[\'john_smith@gmail.com\']'
     else
-      user = User.joins(:emails).where( emails: {email: args[:tester]} ).take
+      user = User.joins(:emails).where(emails: { email: args[:tester] }).take
       if user.nil?
         puts "User with email <#{email}> not found"
       else
-        
+
         course = Course.new
         course.school = School.find 1
         course.name = "Advanced #{Forgery::Name.industry}"
-        course.number = "TEST-#{rand( 103..550 )}"
+        course.number = "TEST-#{rand(103..550)}"
         course.timezone = user.timezone
         course.start_date = 2.months.ago
         course.end_date = 2.months.from_now
@@ -25,10 +24,10 @@ namespace :testing do
         puts course.errors.empty? ?
             "New course: #{course.name}" :
             course.errors.full_messages
-        
+
         course.add_user_by_email user.email
-  
-        #Create an experience for the user
+
+        # Create an experience for the user
         experience = Experience.new
         experience.name = "#{Forgery::Name.industry} Group Simulation"
         experience.start_date = 1.weeks.ago
@@ -36,11 +35,11 @@ namespace :testing do
         experience.active = true
         experience.course = course
         experience.save
-        puts experience.errors.empty? ? 
+        puts experience.errors.empty? ?
             "New experience: #{experience.name}" :
             experience.errors.full_messages
-  
-        #Create Project with the user in a group
+
+        # Create Project with the user in a group
         project = Project.new
         project.name = "#{Forgery::Name.job_title} project"
         project.start_date = 1.months.ago
@@ -50,11 +49,11 @@ namespace :testing do
         project.course = course
         project.factor_pack = FactorPack.find 1
         project.save
-        puts project.errors.empty? ? 
+        puts project.errors.empty? ?
             "New project: #{project.name}" :
             project.errors.full_messages
-  
-        #Create a group
+
+        # Create a group
         group = Group.new
         group.name = Forgery::Basic.text
         group.project = project
@@ -81,11 +80,11 @@ namespace :testing do
 
         project.active = true
         project.save
-        puts project.errors.empty? ? 
-            "Projct activated" :
+        puts project.errors.empty? ?
+            'Projct activated' :
             project.errors.full_messages
-  
-        #Create BingoGame 
+
+        # Create BingoGame
         bingo = BingoGame.new
         bingo.topic = Forgery::Name.company_name
         bingo.description = Forgery::LoremIpsum.text
@@ -98,10 +97,10 @@ namespace :testing do
         bingo.active = true
         bingo.save
         puts bingo.errors.empty? ?
-            "New solo bingo: #{bingo.topic}":
+            "New solo bingo: #{bingo.topic}" :
             bingo.full_messages
-  
-        #Create BingoGame with a user group
+
+        # Create BingoGame with a user group
         bingo = BingoGame.new
         bingo.topic = Forgery::Name.company_name
         bingo.description = Forgery::LoremIpsum.text
@@ -116,7 +115,7 @@ namespace :testing do
         bingo.active = true
         bingo.save
         puts bingo.errors.empty? ?
-            "New solo bingo: #{bingo.topic}":
+            "New solo bingo: #{bingo.topic}" :
             bingo.full_messages
       end
     end

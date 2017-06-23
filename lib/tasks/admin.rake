@@ -11,5 +11,4 @@ namespace :admin do
     AdministrativeMailer.send_reminder_emails
     AdministrativeMailer.inform_instructors
   end
-
 end
