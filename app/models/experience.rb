@@ -24,11 +24,11 @@ class Experience < ActiveRecord::Base
   end
 
   def next_deadline
-    self.end_date
+    end_date
   end
 
-  def get_activity_on_date(date:,anon:)
-    get_name( anon )
+  def get_activity_on_date(date:, anon:)
+    get_name(anon)
   end
 
   def type

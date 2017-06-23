@@ -18,7 +18,7 @@ class Assessment < ActiveRecord::Base
   end
 
   def next_deadline
-    self.end_date
+    end_date
   end
 
   def group_for_user(user)

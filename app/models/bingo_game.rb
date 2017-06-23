@@ -63,19 +63,19 @@ class BingoGame < ActiveRecord::Base
     end_date - lead_time.days
   end
 
-  def get_activity_on_date(date:,anon:)
-    if date <= self.term_list_date
-      "Terms list (#{get_name( anon )})"
+  def get_activity_on_date(date:, anon:)
+    if date <= term_list_date
+      "Terms list (#{get_name(anon)})"
     else
-      "Terms review (#{get_name( anon )})"
+      "Terms review (#{get_name(anon)})"
     end
   end
 
   def next_deadline
-    if self.is_open?
+    if is_open?
       term_list_date
     else
-      self.end_date
+      end_date
     end
   end
 
