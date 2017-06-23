@@ -35,12 +35,11 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
 end
 
 Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/ do |field, value|
-  find(:xpath, "//input[@id='" + field + "']").set value
-  # page.fill_in( field, with: value )
+  page.fill_in( field, with: value, visible: false )
 end
 
 Then /^the user sets the "([^"]*)" field to "([^"]*)"$/ do |field, value|
-  page.fill_in(field, with: value)
+  page.fill_in(field, with: value, visible: :all, disabled: :all)
 end
 
 Then /^the user sets the project "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|

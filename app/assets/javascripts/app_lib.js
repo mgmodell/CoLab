@@ -35,7 +35,7 @@ $(document).ready(function(){
 
 
   /*
-    Show/hide the alternative behavior text panel
+    Show/hide the alternative behavior text panel (for diagnoses)
   */
   $("input:radio[name='diagnosis[behavior_id]']").change(function(){
     if ($("input:radio[name='diagnosis[behavior_id]']:checked").val() == '6')
@@ -49,7 +49,7 @@ $(document).ready(function(){
   });
 
   /*
-    Show/hide the alternative behavior text panel
+    Show/hide the alternative behavior text panel (for reactions)
   */
   $("input:radio[name='reaction[behavior_id]']").change(function(){
     if ($("input:radio[name='reaction[behavior_id]']:checked").val() == '6')
@@ -59,6 +59,20 @@ $(document).ready(function(){
     else
     {
       $("#other_name_panel").hide();
+    }
+  });
+
+  /*
+    Show/hide the group options
+  */
+  $("input:checkbox[id=bingo_game_group_option]").change(function(){
+    if ($("input:checkbox[id=bingo_game_group_option]:checked").length > 0)
+    {
+      $("table #group_options").show();
+    }
+    else
+    {
+      $("table #group_options").hide();
     }
   });
 
