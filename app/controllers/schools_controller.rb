@@ -26,7 +26,7 @@ class SchoolsController < ApplicationController
     @title = t '.title'
     @school = School.new(school_params)
     if @school.save
-      redirect_to url: school_url(@school), notice: t( 'schools.create_success' )
+      redirect_to url: school_url(@school), notice: t('schools.create_success')
     else
       render :new
     end
@@ -35,7 +35,7 @@ class SchoolsController < ApplicationController
   def update
     @title = t '.title'
     if @school.update(school_params)
-      redirect_to school_path(@school), notice: t( 'schools.update_success' )
+      redirect_to school_path(@school), notice: t('schools.update_success')
     else
       render :edit
     end
@@ -43,7 +43,7 @@ class SchoolsController < ApplicationController
 
   def destroy
     @school.destroy
-    redirect_to schools_url, notice: t( 'schools.destroy_success' )
+    redirect_to schools_url, notice: t('schools.destroy_success')
   end
 
   private

@@ -4,7 +4,7 @@ Given /^the user is any student in the course$/ do
 end
 
 Then /^the user clicks the link to the concept list$/ do
-  first( :link, @bingo.get_name( @anon ) ).click
+  first(:link, @bingo.get_name(@anon)).click
 end
 
 Then /^the concept list should match the list$/ do

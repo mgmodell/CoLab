@@ -120,7 +120,7 @@ Given /^the user is the most recently created user$/ do
 end
 
 When /^the user clicks the link to the candidate review$/ do
-  first( :link, @bingo.get_name( @anon ) ).click
+  first(:link, @bingo.get_name(@anon)).click
   # click_link_or_button @bingo.get_name(@anon)
 end
 
