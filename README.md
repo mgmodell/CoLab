@@ -50,7 +50,7 @@ At a minimum, you will need to install git and a text editor (I use vi, but ther
 * Open [the test server](http://localhost:3000)
 * Play with it to understand the problem
     * Create your own user account
-    * Execute `rake admin:set_admin['true','<your email>']` to make yourself an admin
+    * Execute `rake testing:set_admin['true','<your email>']` to make yourself an admin
 * Start writing tests
 * Run your tests
     * `rake cucumber:rerun`
