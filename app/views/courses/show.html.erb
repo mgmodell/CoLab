@@ -263,13 +263,11 @@
       <h4 style="font-weight:300;font-size:10px;text-align:center">
         <%= t('date.abbr_month_names')[date.month] %> <%= date.day %>
       </h4>
-      <ul>
         <% activities.each do |activity| %>
-        <li>
-        <%= link_to activity.get_name( anonymize ), activity %>
-        </li>
+        <div style="font-weight:300;font-size:12px">
+        <%= link_to activity.get_activity_on_date( date: date, anon: anonymize ), activity %>
+        </div><br>
         <% end %>
-      </ul>
     <% end %>
     
   </div>

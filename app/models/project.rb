@@ -63,6 +63,27 @@ class Project < ActiveRecord::Base
     anonymous ? anon_name : name
   end
 
+  def get_activity_on_date(date:,anon:)
+    day = date.wday
+    o_string = self.get_name( anon )
+    add_string = ''
+    if self.has_inside_date_range?
+      if day < self.start_dow || day > self.end_dow
+        add_string = ' (work)'
+      else
+        add_string = ' (SAPA)'
+      end
+    else
+      if day < self.end_dow && day > self.start_dow
+        add_string = ' (work)'
+      else
+        add_string = ' (SAPA)'
+      end
+    end
+    o_string + add_string
+    
+  end
+
   def self.get_occurence_count_hash(input_array)
     dup_hash = Hash.new(0)
     input_array.each { |v| dup_hash.store(v.id, dup_hash[v.id] + 1) }

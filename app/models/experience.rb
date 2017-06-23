@@ -27,6 +27,10 @@ class Experience < ActiveRecord::Base
     self.end_date
   end
 
+  def get_activity_on_date(date:,anon:)
+    get_name( anon )
+  end
+
   def type
     'Group work simulation'
   end
