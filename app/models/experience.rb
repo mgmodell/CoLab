@@ -23,6 +23,10 @@ class Experience < ActiveRecord::Base
     reaction
   end
 
+  def next_deadline
+    self.end_date
+  end
+
   def type
     'Group work simulation'
   end

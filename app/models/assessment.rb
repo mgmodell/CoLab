@@ -17,6 +17,10 @@ class Assessment < ActiveRecord::Base
     0 != user.installments.where(assessment: self).count
   end
 
+  def next_deadline
+    self.end_date
+  end
+
   def group_for_user(user)
     groups = self.groups.joins(:users).where(users: { id: user })
     if groups.nil? || groups.count == 0
