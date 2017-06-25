@@ -41,6 +41,7 @@ gem 'simple_calendar', '~> 2.0'
 gem 'simple_form'
 gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
+gem 'thredded', '~> 0.13.0'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

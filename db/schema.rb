@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170622054630) do
+ActiveRecord::Schema.define(version: 20170622054334) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -212,6 +212,11 @@ ActiveRecord::Schema.define(version: 20170622054630) do
 
   add_index "factor_packs", ["name_en"], name: "index_factor_packs_on_name_en", unique: true, using: :btree
 
+  create_table "factor_packs_factors", id: false, force: :cascade do |t|
+    t.integer "factor_pack_id", limit: 4, null: false
+    t.integer "factor_id",      limit: 4, null: false
+  end
+
   create_table "factors", force: :cascade do |t|
     t.string   "description",    limit: 255
     t.string   "name_en",        limit: 255
@@ -225,6 +230,19 @@ ActiveRecord::Schema.define(version: 20170622054630) do
 
   add_index "factors", ["factor_pack_id"], name: "index_factors_on_factor_pack_id", using: :btree
   add_index "factors", ["name_en"], name: "index_factors_on_name_en", unique: true, using: :btree
+
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string   "slug",           limit: 255, null: false
+    t.integer  "sluggable_id",   limit: 4,   null: false
+    t.string   "sluggable_type", limit: 50
+    t.string   "scope",          limit: 255
+    t.datetime "created_at"
+  end
+
+  add_index "friendly_id_slugs", ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true, length: {"slug"=>70, "sluggable_type"=>nil, "scope"=>70}, using: :btree
+  add_index "friendly_id_slugs", ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", length: {"slug"=>140, "sluggable_type"=>nil}, using: :btree
+  add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
+  add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
   create_table "genders", force: :cascade do |t|
     t.string   "name_en",    limit: 255
@@ -400,6 +418,52 @@ ActiveRecord::Schema.define(version: 20170622054630) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
+
+  create_table "thredded_categories", force: :cascade do |t|
+    t.integer  "messageboard_id", limit: 4,   null: false
+    t.string   "name",            limit: 191, null: false
+    t.string   "description",     limit: 255
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "slug",            limit: 191, null: false
+  end
+
+  add_index "thredded_categories", ["messageboard_id", "slug"], name: "index_thredded_categories_on_messageboard_id_and_slug", unique: true, using: :btree
+  add_index "thredded_categories", ["messageboard_id"], name: "index_thredded_categories_on_messageboard_id", using: :btree
+  add_index "thredded_categories", ["name"], name: "thredded_categories_name_ci", using: :btree
+
+  create_table "thredded_messageboards", force: :cascade do |t|
+    t.string   "name",                  limit: 191,               null: false
+    t.string   "slug",                  limit: 191
+    t.text     "description",           limit: 65535
+    t.integer  "topics_count",          limit: 4,     default: 0
+    t.integer  "posts_count",           limit: 4,     default: 0
+    t.integer  "position",              limit: 4,                 null: false
+    t.integer  "last_topic_id",         limit: 4
+    t.integer  "messageboard_group_id", limit: 4
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+  end
+
+  add_index "thredded_messageboards", ["messageboard_group_id"], name: "index_thredded_messageboards_on_messageboard_group_id", using: :btree
+  add_index "thredded_messageboards", ["slug"], name: "index_thredded_messageboards_on_slug", using: :btree
+
+  create_table "thredded_posts", force: :cascade do |t|
+    t.integer  "user_id",          limit: 4
+    t.text     "content",          limit: 65535
+    t.string   "ip",               limit: 255
+    t.string   "source",           limit: 255,   default: "web"
+    t.integer  "postable_id",      limit: 4,                     null: false
+    t.integer  "messageboard_id",  limit: 4,                     null: false
+    t.integer  "moderation_state", limit: 4,                     null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+  end
+
+  add_index "thredded_posts", ["messageboard_id"], name: "index_thredded_posts_on_messageboard_id", using: :btree
+  add_index "thredded_posts", ["moderation_state", "updated_at"], name: "index_thredded_posts_for_display", using: :btree
+  add_index "thredded_posts", ["postable_id"], name: "index_thredded_posts_on_postable_id_and_postable_type", using: :btree
+  add_index "thredded_posts", ["user_id"], name: "index_thredded_posts_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "encrypted_password",     limit: 255, default: "", null: false
