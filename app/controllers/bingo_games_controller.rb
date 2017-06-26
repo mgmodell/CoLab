@@ -37,7 +37,7 @@ class BingoGamesController < ApplicationController
     @title = t '.title'
     @bingo_game = BingoGame.new(bingo_game_params)
     if @bingo_game.save
-      redirect_to @bingo_game, notice: t( 'bingo_games.create_success'
+      redirect_to @bingo_game, notice: t( 'bingo_games.create_success' )
     else
       render :new
     end
@@ -46,7 +46,7 @@ class BingoGamesController < ApplicationController
   def update
     @title = t '.title'
     if @bingo_game.update(bingo_game_params)
-      redirect_to @bingo_game, notice: t( 'bingo_games.update_success'
+      redirect_to @bingo_game, notice: t( 'bingo_games.update_success' )
     else
       render :edit
     end

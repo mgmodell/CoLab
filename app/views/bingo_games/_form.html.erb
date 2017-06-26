@@ -20,21 +20,21 @@
         <table width="100%">
           <tr>
             <td>
-              <%= f.input :individual_count, label: t 'bingo_games.ind_term_count' %>
+              <%= f.input( :individual_count, label: t ('bingo_games.ind_term_count') ) %>
             </td>
             <td></td>
             <td>
-              <%= f.input :lead_time, label: t 'bingo_games.days_for_prep' %>
+              <%= f.input( :lead_time, label: t ('bingo_games.days_for_prep') ) %>
             </td>
           </tr>
           <tr>
             <td colspan="3">
-              <%= f.input :group_option, label: t 'bingo_games.group_option' %>
+              <%= f.input( :group_option, label: t ('bingo_games.group_option') ) %>
             </td>
           </tr>
           <tr id="group_options" style="<%= @bingo_game.group_option ? '' : 'display:none' %>">
             <td>
-              <%= f.input :group_discount, label: t 'bingo_games.group_discount' %>
+              <%= f.input( :group_discount, label: t ('bingo_games.group_discount' )) %>
             </td>
             <td width="10%" align="center" valign="center">&nbsp;</td>
             <td>

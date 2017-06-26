@@ -38,8 +38,7 @@ Then /^the user should see an error indicating that the installment request expi
 end
 
 When /^user clicks the link to the project$/ do
-  first(:link, @project.group_for_user(@user).name).click
-  # click_link_or_button @project.group_for_user(@user).name
+  click_link_or_button @project.group_for_user(@user).name, visible: :all
 end
 
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points, distribution|
