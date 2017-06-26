@@ -1,4 +1,4 @@
-<h2>Your weekly installment</h2><% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<h2><%= t: 'installments.subtitle' %></h2><% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 <% anonymize = false %>
 <% if flash[:notice] %>
   <p class="notice"><%= flash[:notice] %></p>

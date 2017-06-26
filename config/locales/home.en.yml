@@ -21,10 +21,11 @@
 
 en:
   title: CoLab
-  column_select: Select columns&hellip;
+  column_select: Show/Hide columns&hellip;
   task_name: Task Name
   status: Status
   course_name: Course Name
+  student: Student
   group: Group
   open_date: Open Date
   start_date: Start Date
@@ -47,6 +48,8 @@ en:
   coming_soon: Coming soon!
   logout: Logout
   demo: Demo
+  demo_group: SuperStars
+  demo_project: Research Paper
   about: About
   support: Support
   #admin functions

@@ -20,42 +20,42 @@
         <table width="100%">
           <tr>
             <td>
-              <%= f.input :individual_count, label: "Terms per individual" %>
+              <%= f.input :individual_count, label: t 'bingo_games.ind_term_count' %>
             </td>
             <td></td>
             <td>
-              <%= f.input :lead_time, label: "Days for instructor prep" %>
+              <%= f.input :lead_time, label: t 'bingo_games.days_for_prep' %>
             </td>
           </tr>
           <tr>
             <td colspan="3">
-              <%= f.input :group_option, label: "Group submissions allowed?" %>
+              <%= f.input :group_option, label: t 'bingo_games.group_option' %>
             </td>
           </tr>
           <tr id="group_options" style="<%= @bingo_game.group_option ? '' : 'display:none' %>">
             <td>
-              <%= f.input :group_discount, label: "Percent fewer terms if working in a group" %>
+              <%= f.input :group_discount, label: t 'bingo_games.group_discount' %>
             </td>
             <td width="10%" align="center" valign="center">&nbsp;</td>
             <td>
               <%= f.input :project_id,
                 collection: @bingo_game.course.projects.each.to_a,
                 prompt: true,
-                label: "Source of project groups" %>
+                label: t 'bingo_games.group_source' %>
             </td>
           </tr>
           <tr>
             <td >
-              <%= f.input :start_date, as: :date_time_local, label: "Bingo Game start date" %>
+              <%= f.input :start_date, as: :date_time_local %>
             </td>
             <td width="10%" align="center" valign="center">&nbsp;</td>
             <td >
-              <%= f.input :end_date, as: :date_time_local, label: "Bingo Game end date" %>
+              <%= f.input :end_date, as: :date_time_local %>
             </td>
           </tr>
           <tr>
             <td colspan="3">
-              <em>Note: This game occurs in the <%= @bingo_game.course.timezone %> timezone and all dates reflect this.</em>
+              <em><%= t 'bingo_games.tz_warn', time_zone: @bingo_game.course.timezone %></em>
               </br>
               </br>
             </td>
@@ -69,11 +69,11 @@
   </div>
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Student Response Summary</h2>
-  <p>Coming soon!</p>
+  <h2><%= t :resp_summary %></h2>
+  <p><%= t :coming_soon %></p>
 </div>
 <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Student Response Data</h2>
+  <h2><%= resp_data %></h2>
           <p>
             <% if @bingo_game.reviewed %>
               <% candidate_feedbacks = CandidateFeedback.all %>
@@ -81,17 +81,27 @@
                 id="basicTable"
                 data-mode="columntoggle"
                 data-column-btn-theme="<%= theme_code %>"
-                data-column-btn-text="Show/hide columns&hellip;"
+                data-column-btn-text="<%= t :column_select %>"
                 class="table-stroke ui-shadow table-stripe table-ui-responsive">
                 <thead>
                   <tr>
-                    <th>Student</th>
-                    <th>Group</th>
-                    <th colspan="<%= candidate_feedbacks.count%>" data-priority="1">Challenged Responses</th>
-                    <th data-priority="0">Concepts Expected</th>
-                    <th data-priority="0">Terms Entered</th>
-                    <th data-priority="0">Concepts Found</th>
-                    <th>Performance</th>
+                    <th><%= :student %></th>
+                    <th><%= :group %></th>
+                    <th colspan="<%= candidate_feedbacks.count%>" data-priority="1">
+                      <%= t 'bingo_games.resp_challenged' %>
+                    </th>
+                    <th data-priority="0">
+                      <%= t 'bingo_games.resp_con_expct' %>
+                    </th>
+                    <th data-priority="0">
+                      <%= t 'bingo_games.resp_term_count' %>
+                    </th>
+                    <th data-priority="0">
+                      <%= t 'bingo_games.resp_con_count' %>
+                    </th>
+                    <th>
+                      <%= t 'bingo_games.resp_perf' %>
+                    </th>
                   </tr>
                   <tr>
                     <th></th>
@@ -130,7 +140,7 @@
               </table>
           </p>
           <p>
-          This class identified <%= @bingo_game.get_concepts.count %> unique concepts.
+          <%= t 'bingo_games.game_summary', con_count: @bingo_game.get_concepts.count %>
             <table data-role="table"
               id="basicTable"
               data-mode="columntoggle"
@@ -139,7 +149,7 @@
               class="table-stroke ui-shadow table-stripe table-ui-responsive">
               <thead>
                 <tr>
-                  <th>Concept</th>
+                  <th><%= t 'bingo_games.concept' %></th>
                 </tr>
               </thead>
               <% @bingo_game.get_concepts.each do |concept| %>
@@ -151,7 +161,7 @@
 
               
             <% else %>
-              This has not yet been reviewed.
+              <%= t 'bingo_games.not_reviewed' %>
             <% end %>
           <p>
 </div>
