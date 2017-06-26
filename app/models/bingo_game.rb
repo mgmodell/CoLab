@@ -51,10 +51,6 @@ class BingoGame < ActiveRecord::Base
     anonymous ? anon_topic : topic
   end
 
-  def get_task_name(anon:, user:)
-    get_name(anon)
-  end
-
   def type
     'Task List'
   end
