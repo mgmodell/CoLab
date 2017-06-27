@@ -47,6 +47,7 @@ Then /^the bingo "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value
   case date_field_prefix
   when 'start'
     date = Chronic.parse(date_value)
+    byebug # check the timezones
     date -= date.utc_offset
     date += tz.utc_offset
     date = date.getlocal(tz.utc_offset).beginning_of_day
