@@ -38,7 +38,7 @@ class InstallmentsController < ApplicationController
     @title = t 'installments.title'
     @installment = Installment.find(params[:id])
     if @installment.update_attributes(i_params)
-      notice = t( 'installments.success' )
+      notice = t('installments.success')
       redirect_to root_url, notice: notice
     else
       @group = Group.find(@installment.group)
@@ -101,7 +101,7 @@ class InstallmentsController < ApplicationController
 
     # Handle a demo run
     if @installment.assessment_id < 0
-      flash[:notice] = t ('installments.demo_success' )
+      flash[:notice] = t 'installments.demo_success'
       redirect_to root_url
     else
       redirected = false
@@ -113,7 +113,7 @@ class InstallmentsController < ApplicationController
       end
 
       if !found
-        redirect_to root_url error: ( t 'installments.err_not_member' )
+        redirect_to root_url error: (t 'installments.err_not_member')
       elsif @installment.save
         project = @installment.assessment.project
         flash[:notice] = t 'installments.success'
