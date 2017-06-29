@@ -73,6 +73,7 @@ Feature: Email assessment stragglers
     Then 10 emails will be sent
 
   Scenario: 2 groups of 4 students. 1 group of 2 added in week 2 - 10 emails sent in week 2
+    Given the project started "two months ago" and ends "30 days from now", opened "yesterday" and closes "tomorrow"
     Given the project has a group with 4 confirmed users
     Given the factor pack is set to "Original"
 

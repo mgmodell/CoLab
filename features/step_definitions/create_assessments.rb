@@ -3,6 +3,7 @@
 Given /^today is "(.*?)"$/ do |destination_time|
   # Chronic.time_class = Time.zone
   travel_to Chronic.parse(destination_time).utc
+  puts "Date is now: #{Date.today}"
 end
 
 Then /^the project should have (\d+) assessments attached to it$/ do |assessment_count|

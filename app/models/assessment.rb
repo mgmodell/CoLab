@@ -97,6 +97,7 @@ class Assessment < ActiveRecord::Base
       project.end_dow - project.start_dow :
       7 - project.start_dow + project.end_dow
 
+
     assessment.end_date = assessment.start_date + period.days
     assessment.end_date = assessment.end_date.end_of_day
 
@@ -109,6 +110,7 @@ class Assessment < ActiveRecord::Base
     if existing_assessment_count == 0
       assessment.project = project
       assessment.save
+      puts assessment.errors.full_messages unless assessment.errors.empty?
     end
   end
 
