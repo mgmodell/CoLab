@@ -17,8 +17,14 @@ en:
     update_success: Your list was successfully saved.
     not_ready_for_review: This list is not yet ready for review.
     demo_topic: What is collaboration?
+    ind_sum_msg: You identified the following terms, resulting in %{con_count} unique concepts
+    grp_sum_msg: >
+      You and your group, %{{grp_name}, identified the following terms, resulting 
+      in %{con_count} unique concepts
     list_stats:
       title: Candidate list stats
+      term: Term
+      def: Definition
     edit:
       title: Complete the term list
       instructions: >
@@ -38,3 +44,4 @@ en:
       def: Definition
     show:
       title: Terms list for review
+      term: Term

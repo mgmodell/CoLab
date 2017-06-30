@@ -2,11 +2,11 @@
      anonymize = false %>
   <table>
     <tr>
-      <th align="right">Topic:</th>
+      <th align="right"><%= t 'bingo_games.topic' %>:</th>
       <td><%= @candidate_list.bingo_game.get_topic( anonymize ) %></td>
     </tr>
     <tr>
-      <th align="right">Game date:</th>
+      <th align="right"><%= t 'bingo_games.date' %>:</th>
       <td><%= @candidate_list.bingo_game.end_date %>
     </tr>
   </table>
@@ -16,7 +16,7 @@
     <thead>
       <tr>
         <th width="5%">#</th>
-        <th width="30%">Term</th>
+        <th width="30%"><%= t 'bingo_games.term' %></th>
       </tr>
     </thead>
     <tbody>
