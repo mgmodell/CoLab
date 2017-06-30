@@ -104,17 +104,11 @@ class CandidateListsController < ApplicationController
 
     @candidate_list.candidates = []
 
-    @candidate_list.candidates << Candidate.new(id: 0, term: 'Cooperation',
-                                                definition: 'Two or more entities applying their skills towards achieving a common goal',
+    5.times do |index|
+      @candidate_list.candidates << Candidate.new(id: 0, term: (t "candidate_lists.demo_term#{index + 1}"),
+                                                definition: (t "candidate_lists.demo_def#{index + 1}" ),
                                                 candidate_list: @candidate_list)
-    @candidate_list.candidates << Candidate.new(id: 0, term: 'Group', definition: '', candidate_list: @candidate_list)
-    @candidate_list.candidates << Candidate.new(id: 0, term: 'Group Dynamics',
-                                                definition: 'The nature of how group members interact with one another',
-                                                candidate_list: @candidate_list)
-    @candidate_list.candidates << Candidate.new(id: 0, term: 'Group Process',
-                                                definition: 'The methods and techniques a group follows',
-                                                candidate_list: @candidate_list)
-    @candidate_list.candidates << Candidate.new(id: 0, term: 'Team', definition: '', candidate_list: @candidate_list)
+    end
 
     # Add in the remainder elements
     5.times do

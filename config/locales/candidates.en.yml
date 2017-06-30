@@ -4,6 +4,16 @@ en:
     distilled: Distilled concepts
     list_for_class: List for class on
     demo_title: Complete the term list (DEMO)
+    demo_term1: Cooperation
+    demo_def1: Two or more entitites applying their skills towards achieving a common goal
+    demo_term2: Group
+    demo_def2: ''
+    demo_term3: Group Dynamics
+    demo_def3: The nature of how group members interact with one another
+    demo_term4: Group Process
+    demo_def4: The methods and techniques a group follows
+    demo_term5: Team
+    demo_def5: ''
     update_success: Your list was successfully saved.
     not_ready_for_review: This list is not yet ready for review.
     demo_topic: What is collaboration?
@@ -11,5 +21,20 @@ en:
       title: Candidate list stats
     edit:
       title: Complete the term list
+      instructions: >
+        Please read up on the topic above, being sure to go through the assigned readings, as
+        well as to find your own materials. Make a list of what you believe to be the most
+        important and/or salient terms and enter them, along with definitions, below. Be sure to
+        provide the definitions in your own words.
+      behalf: on behalf of 
+      waiting: Still awaiting a response to your group help request
+      req_rec: Your team wants to collaborate
+      req_help: Invite your group to help?
+      confirm_accept: Are you sure? Did you save your changes? This cannot be undone.
+      confirm_decline: Are you sure? Did you save your changes?
+      terms: Terms
+      dup: Possible Duplicate
+      term: Term
+      def: Definition
     show:
       title: Terms list for review
