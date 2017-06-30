@@ -55,8 +55,10 @@ class CandidateListsController < ApplicationController
     else
       respond_to do |format|
         if @candidate_list.update(candidate_list_params)
-          format.html { redirect_to edit_candidate_list_path(@candidate_list), 
-                        notice: (t 'candidate_lists.update_success' ) }
+          format.html do
+            redirect_to edit_candidate_list_path(@candidate_list),
+                        notice: (t 'candidate_lists.update_success')
+          end
         else
           format.html { render :edit }
         end
@@ -67,17 +69,18 @@ class CandidateListsController < ApplicationController
   def show
     @title = t '.title'
     unless @candidate_list.bingo_game.reviewed
-      redirect_to :root_path, notice: (t 'candidate_lists.not_ready_for_review' )
+      redirect_to :root_path, notice: (t 'candidate_lists.not_ready_for_review')
     end
   end
 
   def demo_complete
     @title = t 'candidate_lists.demo_title'
     if @current_user.nil?
-      @current_user = User.new( 
-                      first_name: (t :demo_surname_1),
-                      last_name: (t :demo_fam_name_1),
-                      timezone: (t :demo_user_tz) )
+      @current_user = User.new(
+        first_name: (t :demo_surname_1),
+        last_name: (t :demo_fam_name_1),
+        timezone: (t :demo_user_tz)
+      )
     end
     demo_group = Group.new
     demo_group.name = t :demo_group
@@ -87,12 +90,12 @@ class CandidateListsController < ApplicationController
     @candidate_list.group = demo_group
     @candidate_list.user = @current_user
     demo_project = Project.new(id: -1,
-                               name: (t :demo_project ),
+                               name: (t :demo_project),
                                course_id: -1)
     demo_project.groups << demo_group
 
     @candidate_list.bingo_game = BingoGame.new(id: -1,
-                                               topic: ( t 'candidate_lists.demo_topic' ),
+                                               topic: (t 'candidate_lists.demo_topic'),
                                                end_date: 2.day.from_now.end_of_day,
                                                group_option: true,
                                                project: demo_project,
