@@ -1,5 +1,15 @@
 en:
-  candidates:
+  candidate_lists:
     submission: Terms list submission
     distilled: Distilled concepts
     list_for_class: List for class on
+    demo_title: Complete the term list (DEMO)
+    update_success: Your list was successfully saved.
+    not_ready_for_review: This list is not yet ready for review.
+    demo_topic: What is collaboration?
+    list_stats:
+      title: Candidate list stats
+    edit:
+      title: Complete the term list
+    show:
+      title: Terms list for review

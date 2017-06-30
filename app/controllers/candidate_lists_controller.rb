@@ -4,11 +4,11 @@ class CandidateListsController < ApplicationController
   before_action :set_candidate_list, only: [:edit, :show, :update, :request_collaboration, :list_stats]
 
   def list_stats
-    @title = 'Candidate List Stats'
+    @title = t '.title'
   end
 
   def edit
-    @title = 'Complete the Term List'
+    @title = t '.title'
     @term_counts = {}
     @candidate_list.candidates.each do |candidate|
       @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
@@ -29,7 +29,7 @@ class CandidateListsController < ApplicationController
   end
 
   def request_collaboration
-    @title = 'Complete the Term List'
+    @title = t '.title'
     desired = params[:desired] == 'yes'
     if desired
       @candidate_list.group_requested = true
@@ -55,7 +55,8 @@ class CandidateListsController < ApplicationController
     else
       respond_to do |format|
         if @candidate_list.update(candidate_list_params)
-          format.html { redirect_to edit_candidate_list_path(@candidate_list), notice: 'Your list was successfully saved.' }
+          format.html { redirect_to edit_candidate_list_path(@candidate_list), 
+                        notice: (t 'candidate_lists.update_success' ) }
         else
           format.html { render :edit }
         end
@@ -64,31 +65,34 @@ class CandidateListsController < ApplicationController
   end
 
   def show
-    @title = 'Terms List for Review'
+    @title = t '.title'
     unless @candidate_list.bingo_game.reviewed
-      redirect_to :root_path, notice: 'This list is not yet ready for review'
+      redirect_to :root_path, notice: (t 'candidate_lists.not_ready_for_review' )
     end
   end
 
   def demo_complete
-    @title = 'Complete the Term List (DEMO)'
+    @title = t 'candidate_lists.demo_title'
     if @current_user.nil?
-      @current_user = User.new(first_name: 'John', last_name: 'Smith', timezone: 'Seoul')
+      @current_user = User.new( 
+                      first_name: (t :demo_surname_1),
+                      last_name: (t :demo_fam_name_1),
+                      timezone: (t :demo_user_tz) )
     end
     demo_group = Group.new
-    demo_group.name = 'SuperStars'
+    demo_group.name = t :demo_group
     demo_group.users = [@current_user]
     @candidate_list = CandidateList.new(id: -1,
                                         is_group: false)
     @candidate_list.group = demo_group
     @candidate_list.user = @current_user
     demo_project = Project.new(id: -1,
-                               name: 'Research Paper',
+                               name: (t :demo_project ),
                                course_id: -1)
     demo_project.groups << demo_group
 
     @candidate_list.bingo_game = BingoGame.new(id: -1,
-                                               topic: 'What is collaboration?',
+                                               topic: ( t 'candidate_lists.demo_topic' ),
                                                end_date: 2.day.from_now.end_of_day,
                                                group_option: true,
                                                project: demo_project,

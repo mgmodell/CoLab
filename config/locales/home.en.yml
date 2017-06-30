@@ -47,11 +47,15 @@ en:
   resp_data: Response Data
   coming_soon: Coming soon!
   logout: Logout
+  #demo materials
   demo: Demo
   demo_group: SuperStars
   demo_project: Research Paper
   about: About
   support: Support
+  demo_surname_1: John
+  demo_fam_name_1: Smith
+  demo_user_tz: Seoul
   #admin functions
   destroy: Destroy
   confirmation: Are you sure?
