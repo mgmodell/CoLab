@@ -115,6 +115,34 @@ namespace :migratify do
       g.description_ko = role.description_ko unless g.description_ko == role.description_ko
       g.save
     end
+
+    # Theme seed data
+    class Theme_
+      attr_accessor :name_en, :name_ko
+    end
+    read_data = YAML.safe_load(File.open('db/theme.yml'), [Theme_])
+    read_data.each do |theme|
+      g = Theme.where(name_en: theme.name_en).take
+      g = Theme.new if g.nil?
+      g.name_en = theme.name_en unless g.name_en == theme.name_en
+      g.name_ko = theme.name_ko unless g.name_ko == theme.name_ko
+      g.save
+    end
+
+    class Style_
+      attr_accessor :name_en, :name_ko
+      attr_accessor :filename
+    end
+    read_data = YAML.safe_load(File.open('db/style.yml'), [Style_])
+    read_data.each do |theme|
+      g = Style.where(name_en: style.name_en).take
+      g = Style.new if g.nil?
+      g.name_en = style.name_en unless g.name_en == style.name_en
+      g.name_ko = style.name_ko unless g.name_ko == style.name_ko
+      g.filename = style.filename unless g.filename == style.filename
+      g.save
+    end
+
   end
   
   desc 'Initialize existing PII objects with anonymized names'

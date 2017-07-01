@@ -96,28 +96,36 @@ read_data.each do |gender|
   g.save
 end
 
-GroupProjectCount.create(name: 'none',
-                         description: "I don't remember having been a part of a long-term group project.")
-GroupProjectCount.create(name: 'few',
-                         description: 'I have been a part of one to five long-term group projects.')
-GroupProjectCount.create(name: 'some',
-                         description: 'I have been a part of five to ten long-term group projects.')
-
 School.create(name: 'Indiana University', description: 'A large, Midwestern university')
 School.create(name: 'SUNY Korea', description: 'The State University of New York, Korea')
 
-Theme.create(name: 'MJ', code: 'a')
-Theme.create(name: 'Maverick', code: 'b')
-Theme.create(name: 'Peppermint', code: 'c')
-Theme.create(name: 'Manhattan', code: 'd')
-Theme.create(name: 'Carrot', code: 'e')
-Theme.create(name: 'Hot Dog Stand', code: 'f')
-Theme.create(name: 'Decepticon', code: 'g')
-Theme.create(name: 'just one', code: 'h')
+# Theme seed data
+class Theme_
+  attr_accessor :name_en, :name_ko
+end
+read_data = YAML.safe_load(File.open('db/theme.yml'), [Theme_])
+read_data.each do |theme|
+  g = Theme.where(name_en: theme.name_en).take
+  g = Theme.new if g.nil?
+  g.name_en = theme.name_en unless g.name_en == theme.name_en
+  g.name_ko = theme.name_ko unless g.name_ko == theme.name_ko
+  g.save
+end
 
-Style.create(name: 'Default', filename: 'new')
-Style.create(name: 'Sliders (simple)', filename: 'slider_basic')
-Style.create(name: 'buttons (simple)', filename: 'button_basic')
+class Style_
+  attr_accessor :name_en, :name_ko
+  attr_accessor :filename
+end
+read_data = YAML.safe_load(File.open('db/style.yml'), [Style_])
+read_data.each do |style|
+  g = Style.where(name_en: style.name_en).take
+  g = Style.new if g.nil?
+  g.name_en = style.name_en unless g.name_en == style.name_en
+  g.name_ko = style.name_ko unless g.name_ko == style.name_ko
+  g.filename = style.filename unless g.filename == style.filename
+  g.save
+end
+
 
 u = User.new(first_name: 'Micah',
              last_name: 'Modell',

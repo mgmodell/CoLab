@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170701103930) do
+ActiveRecord::Schema.define(version: 20170701171634) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name_en",    limit: 255
@@ -240,11 +240,6 @@ ActiveRecord::Schema.define(version: 20170701103930) do
 
   add_index "genders", ["name_en"], name: "index_genders_on_name_en", unique: true, using: :btree
 
-  create_table "group_project_counts", force: :cascade do |t|
-    t.string "name",        limit: 255
-    t.string "description", limit: 255
-  end
-
   create_table "group_revisions", force: :cascade do |t|
     t.integer  "group_id",   limit: 4
     t.string   "name",       limit: 255
@@ -391,26 +386,33 @@ ActiveRecord::Schema.define(version: 20170701103930) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "styles", force: :cascade do |t|
-    t.string   "name",       limit: 255
+    t.string   "name_en",    limit: 255
     t.string   "filename",   limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "name_ko",    limit: 255
   end
+
+  add_index "styles", ["name_en"], name: "index_styles_on_name_en", unique: true, using: :btree
 
   create_table "themes", force: :cascade do |t|
     t.string   "code",       limit: 255
-    t.string   "name",       limit: 255
+    t.string   "name_en",    limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "name_ko",    limit: 255
   end
+
+  add_index "themes", ["code"], name: "index_themes_on_code", unique: true, using: :btree
+  add_index "themes", ["name_en"], name: "index_themes_on_name_en", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "encrypted_password",     limit: 255, default: "", null: false
