@@ -21,6 +21,19 @@ namespace :migratify do
       q.save
     end
 
+    # AgeRange seed data
+    class AgeRange_
+      attr_accessor :name_en, :name_ko
+    end
+    read_data = YAML.safe_load(File.open('db/age_range.yml'), [AgeRange_])
+    read_data.each do |age_range|
+      g = AgeRange.where(name_en: age_range.name_en).take
+      g = AgeRange.new if g.nil?
+      g.name_en = age_range.name_en unless g.name_en == age_range.name_en
+      g.name_ko = age_range.name_ko unless g.name_ko == age_range.name_ko
+      g.save
+    end
+
     # Gender seed data
     class Gender_
       attr_accessor :name_en, :name_ko

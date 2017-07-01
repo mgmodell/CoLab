@@ -11,13 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170630203930) do
+ActiveRecord::Schema.define(version: 20170701103930) do
 
   create_table "age_ranges", force: :cascade do |t|
-    t.string   "name",       limit: 255
+    t.string   "name_en",    limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "name_ko",    limit: 255
   end
+
+  add_index "age_ranges", ["name_en"], name: "index_age_ranges_on_name_en", unique: true, using: :btree
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -388,8 +391,8 @@ ActiveRecord::Schema.define(version: 20170630203930) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
