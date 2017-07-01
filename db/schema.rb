@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170701171634) do
+ActiveRecord::Schema.define(version: 20170701191534) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name_en",    limit: 255
@@ -70,11 +70,16 @@ ActiveRecord::Schema.define(version: 20170701171634) do
   add_index "bingo_games", ["project_id"], name: "index_bingo_games_on_project_id", using: :btree
 
   create_table "candidate_feedbacks", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "definition", limit: 255
+    t.string   "name_en",       limit: 255
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "definition",    limit: 255
+    t.string   "name_ko",       limit: 255
+    t.text     "definition_en", limit: 65535
+    t.text     "definition_ko", limit: 65535
   end
+
+  add_index "candidate_feedbacks", ["name_en"], name: "index_candidate_feedbacks_on_name_en", unique: true, using: :btree
 
   create_table "candidate_lists", force: :cascade do |t|
     t.integer  "user_id",         limit: 4
@@ -282,9 +287,13 @@ ActiveRecord::Schema.define(version: 20170701171634) do
   add_index "installments", ["user_id"], name: "index_installments_on_user_id", using: :btree
 
   create_table "languages", force: :cascade do |t|
-    t.string "code", limit: 255
-    t.string "name", limit: 255
+    t.string "code",    limit: 255
+    t.string "name_en", limit: 255
+    t.string "name_ko", limit: 255
   end
+
+  add_index "languages", ["code"], name: "index_languages_on_code", unique: true, using: :btree
+  add_index "languages", ["name_en"], name: "index_languages_on_name_en", unique: true, using: :btree
 
   create_table "narratives", force: :cascade do |t|
     t.string   "member",      limit: 255

@@ -4,10 +4,6 @@ namespace :migratify do
   task db_updates: :environment do
     Rake::Task['db:migrate'].invoke
 
-    # Seed data
-    Language.create(name: 'English: American', code: 'en') if Language.where(code: 'en').empty?
-    Language.create(name: 'Korean', code: 'ko') if Language.where(code: 'ko').empty?
-
     # Quote seed data
     class Quote_
       attr_accessor :text_en, :attribution
@@ -116,6 +112,22 @@ namespace :migratify do
       g.save
     end
 
+    # Bingo! support
+    class CandidateFeedback_
+      attr_accessor :name_en, :name_ko
+      attr_accessor :definition_en, :definition_ko
+    end
+    quote_data = YAML.safe_load(File.open('db/candidate_feedback.yml'), [CandidateFeedback_])
+    quote_data.each do |cf|
+      g = CandidateFeedback.where(name_en: cf.name_en).take
+      g = CandidateFeedback.new if g.nil?
+      g.name_en = cf.name_en unless g.name_en == cf.name_en
+      g.name_ko = cf.name_ko unless g.name_ko == cf.name_ko
+      g.definition_en = cf.definition_en unless g.definition_en == cf.definition_en
+      g.definition_ko = cf.definition_ko unless g.definition_ko == cf.definition_ko
+      g.save
+    end
+    
     # Theme seed data
     class Theme_
       attr_accessor :name_en, :name_ko
@@ -134,7 +146,7 @@ namespace :migratify do
       attr_accessor :filename
     end
     read_data = YAML.safe_load(File.open('db/style.yml'), [Style_])
-    read_data.each do |theme|
+    read_data.each do |style|
       g = Style.where(name_en: style.name_en).take
       g = Style.new if g.nil?
       g.name_en = style.name_en unless g.name_en == style.name_en
@@ -143,6 +155,21 @@ namespace :migratify do
       g.save
     end
 
+
+    # Multiple language support
+    class Lang_
+      attr_accessor :code
+      attr_accessor :name_en, :name_ko
+    end
+    quote_data = YAML.safe_load(File.open('db/language.yml'), [Lang_])
+    quote_data.each do |lang|
+      g = Language.where(name_en: lang.name_en).take
+      g = Language.new if g.nil?
+      g.code = lang.code unless g.code == lang.code
+      g.name_en = lang.name_en unless g.name_en == lang.name_en
+      g.name_ko = lang.name_ko unless g.name_ko == lang.name_ko
+      g.save
+    end
   end
   
   desc 'Initialize existing PII objects with anonymized names'

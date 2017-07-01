@@ -1,0 +1,95 @@
+---
+- !ruby/object:CandidateFeedback_
+  name_en: Acceptable
+  name_ko: 
+  definition_en: >
+    You've accurately identified and defined an important term related 
+    to the stated topic.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: 'Definition: Incorrect'
+  name_ko: 
+  definition_en: >
+    You've identified an important term related to the stated topic, but
+    the definition is wrong.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: 'Definition: Insufficient'
+  name_ko: 
+  definition_en: >
+    You've identified an important term related to the stated topic, but
+    the definition is incomplete in crucial ways.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: 'Definition: Not Understood'
+  name_ko: 
+  definition_en: >
+    You've identified an important term related to the stated topic,
+    but I was unable to understand the definition as you've provided it.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: 'Definition: Plagiarised'
+  name_ko: 
+  definition_en: >
+    You've identified an important term related to the stated topic,
+    but I recognize the definition provided as having been copied
+    directly from another source.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: 'Term: Too Generic'
+  name_ko: 
+  definition_en: >
+    The term is not specific to the topic or the course.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: 'Term: Too Generic'
+  name_ko: 
+  definition_en: >
+    The term is not specific to the topic or the course.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: 'Term: Too Obvious'
+  name_ko: 
+  definition_en: >
+    The term does not represent new learning or consideration relevant
+    to the topic.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: 'Term: Invalid/Incorrect'
+  name_ko: 
+  definition_en: >
+    The term does not represent new learning or consideration relevant
+    to the topic.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: 'Term: Not Relevant'
+  name_ko: 
+  definition_en: >
+    The term is not relevant to the topic.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: "Term: Doesn't match"
+  name_ko: 
+  definition_en: >
+    The term does not match the definition.
+  definition_ko:
+
+
+- !ruby/object:CandidateFeedback_
+  name_en: "Term: Product Name"
+  name_ko: 
+  definition_en: >
+    Products should not be used unless they are dominant to the point
+    of being a household name.
+  definition_ko:
+

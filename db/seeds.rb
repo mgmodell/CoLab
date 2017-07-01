@@ -298,28 +298,33 @@ quote_data.each do |quote|
 end
 
 # Bingo! support
-CandidateFeedback.create(name: 'Acceptable',
-                         definition: "You've accurately identified and defined an important term related to the stated topic.")
-CandidateFeedback.create(name: 'Definition: Incorrect',
-                         definition: "You've identified an important term related to the stated topic, but the definition is wrong.")
-CandidateFeedback.create(name: 'Definition: Insufficient',
-                         definition: "You've identified an important term related to the stated topic, but the definition is incomplete in crucial ways.")
-CandidateFeedback.create(name: 'Definition: Not Understood',
-                         definition: "You've identified an important term related to the stated topic, but I was unable to understand the definition as you've provided it.")
-CandidateFeedback.create(name: 'Definition: Plagiarised',
-                         definition: "You've identified an important term related to the stated topic, but I recognize the definition provided as having been copied directly from another source.")
-CandidateFeedback.create(name: 'Term: Too Generic',
-                         definition: 'The term is not specific to the topic or the course.')
-CandidateFeedback.create(name: 'Term: Too Obvious',
-                         definition: 'The term does not represent new learning or consideration relevant to the topic.')
-CandidateFeedback.create(name: 'Term: Invalid/Incorrect',
-                         definition: 'The term is either not a real term or one that does not relate to the topic.')
-CandidateFeedback.create(name: 'Term: Not relevant',
-                         definition: 'The term is not relevant to the topic.')
-CandidateFeedback.create(name: 'Term: Doesn\'t match',
-                         definition: 'The term does not match the definition.')
-CandidateFeedback.create(name: 'Term: Product Name',
-                         definition: 'Products should not be used unless they are dominant/household name.')
+class CandidateFeedback_
+  attr_accessor :name_en, :name_ko
+  attr_accessor :definition_en, :definition_ko
+end
+quote_data = YAML.safe_load(File.open('db/candidate_feedback.yml'), [CandidateFeedback_])
+quote_data.each do |cf|
+  g = CandidateFeedback.where(name_en: cf.name_en).take
+  g = CandidateFeedback.new if g.nil?
+  g.name_en = cf.name_en unless g.name_en == cf.name_en
+  g.name_ko = cf.name_ko unless g.name_ko == cf.name_ko
+  g.definition_en = cf.definition_en unless g.definition_en == cf.definition_en
+  g.definition_ko = cf.definition_ko unless g.definition_ko == cf.definition_ko
+  g.save
+end
+
 # Multiple language support
-Language.create(name: 'English: American', code: 'en')
-Language.create(name: 'Korean', code: 'ko')
+class Lang_
+  attr_accessor :code
+  attr_accessor :name_en, :name_ko
+end
+quote_data = YAML.safe_load(File.open('db/language.yml'), [Lang_])
+quote_data.each do |lang|
+  g = Language.where(name_en: lang.name_en).take
+  g = Language.new if g.nil?
+  g.code = lang.code unless g.code == lang.code
+  g.name_en = lang.name_en unless g.name_en == lang.name_en
+  g.name_ko = lang.name_ko unless g.name_ko == lang.name_ko
+  g.save
+end
+
