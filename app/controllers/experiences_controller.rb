@@ -132,7 +132,7 @@ class ExperiencesController < ApplicationController
   def activate
     experience = Experience.find(params[:experience_id])
     if @current_user.is_admin? ||
-       experience.course.get_roster_for_user(@current_user).role.name == 'Instructor'
+       experience.course.get_roster_for_user(@current_user).role.code == 'inst'
       experience.active = true
       experience.save
     end

@@ -32,7 +32,7 @@ end
 Then /^the database will show a new week (\d+) "([^"]*)" diagnosis from the user$/ do |week_num, behavior|
   diagnosis = Diagnosis.joins(:reaction).where(reactions: { user_id: @user.id }).last
   diagnosis.week.week_num.should eq week_num.to_i
-  diagnosis.behavior.name.should eq behavior
+  diagnosis.behavior.name_en.should eq behavior
 end
 
 Then /^the latest Diagnosis will show "([^"]*)" in the field "([^"]*)"$/ do |_value, fld|
@@ -57,24 +57,24 @@ Then /^the user completes a week$/ do
   behavior = Behavior.all.to_a.sample
   step_text = 'the user will see "Week ' + week.week_num.to_s + '"'
   step step_text
-  step_text = 'the user chooses the "' + behavior.name + '" radio button'
+  step_text = 'the user chooses the "' + behavior.name_en + '" radio button'
   step step_text
   step_text = 'they enter "FUBAR" in extant field "What behavior did you see?"'
   # Only enter behavior name if 'Other' is selected
-  step step_text if behavior.name == 'Other'
+  step step_text if behavior.name_en == 'Other'
   step_text = 'the user presses "Save and continue"'
   step step_text
-  step_text = 'the database will show a new week ' + week.week_num.to_s + ' "' + behavior.name + '" diagnosis from the user'
+  step_text = 'the database will show a new week ' + week.week_num.to_s + ' "' + behavior.name_en + '" diagnosis from the user'
   step step_text
 end
 
 Then(/^the database will show a reaction with "([^"]*)" as the behavior$/) do |behavior|
   reaction = Reaction.last
-  reaction.behavior.name.should eq behavior
+  reaction.behavior.name_en.should eq behavior
 end
 
 Then(/^the database will show a reaction for the user with "([^"]*)" as the behavior$/) do |behavior|
-  Reaction.where(user: @user, behavior: Behavior.where(name: behavior).take).count.should be >= 1
+  Reaction.where(user: @user, behavior: Behavior.where(name_en: behavior).take).count.should be >= 1
 end
 
 Then(/^the database will show a reaction with improvements of "([^"]*)"$/) do |improvements|

@@ -104,7 +104,7 @@ class BingoGamesController < ApplicationController
   def activate
     bingo_game = BingoGame.find(params[:bingo_game_id])
     if @current_user.is_admin? ||
-       bingo_game.course.get_roster_for_user(@current_user).role.name == 'Instructor'
+       bingo_game.course.get_roster_for_user(@current_user).role.code == 'inst'
       bingo_game.active = true
       bingo_game.save
     end

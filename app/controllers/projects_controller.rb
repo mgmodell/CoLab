@@ -101,7 +101,7 @@ class ProjectsController < ApplicationController
     @title = 'Project Details'
     project = Project.find(params[:project_id])
     if @current_user.is_admin? ||
-       project.course.get_roster_for_user(@current_user).role.name == 'Instructor'
+       project.course.get_roster_for_user(@current_user).role.code == 'inst'
       project.active = true
       project.save
     end

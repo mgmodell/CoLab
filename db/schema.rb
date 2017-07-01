@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170622054630) do
+ActiveRecord::Schema.define(version: 20170630203930) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -31,11 +31,15 @@ ActiveRecord::Schema.define(version: 20170622054630) do
   add_index "assessments", ["project_id"], name: "index_assessments_on_project_id", using: :btree
 
   create_table "behaviors", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.text     "description", limit: 65535
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.string   "name_en",        limit: 255
+    t.text     "description_en", limit: 65535
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "name_ko",        limit: 255
+    t.string   "description_ko", limit: 255
   end
+
+  add_index "behaviors", ["name_en"], name: "index_behaviors_on_name_en", unique: true, using: :btree
 
   create_table "bingo_games", force: :cascade do |t|
     t.string   "topic",               limit: 255
@@ -202,23 +206,21 @@ ActiveRecord::Schema.define(version: 20170622054630) do
 
   create_table "factor_packs", force: :cascade do |t|
     t.string   "name_en",        limit: 255
-    t.text     "description",    limit: 65535
+    t.text     "description_en", limit: 65535
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.string   "name_ko",        limit: 255
-    t.string   "description_en", limit: 255
     t.string   "description_ko", limit: 255
   end
 
   add_index "factor_packs", ["name_en"], name: "index_factor_packs_on_name_en", unique: true, using: :btree
 
   create_table "factors", force: :cascade do |t|
-    t.string   "description",    limit: 255
+    t.string   "description_en", limit: 255
     t.string   "name_en",        limit: 255
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.string   "name_ko",        limit: 255
-    t.string   "description_en", limit: 255
     t.string   "description_ko", limit: 255
     t.integer  "factor_pack_id", limit: 4
   end
@@ -342,11 +344,17 @@ ActiveRecord::Schema.define(version: 20170622054630) do
   add_index "reactions", ["user_id"], name: "index_reactions_on_user_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.string   "description", limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.string   "name_en",        limit: 255
+    t.string   "description_en", limit: 255
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.string   "name_ko",        limit: 255
+    t.string   "code",           limit: 255
+    t.string   "description_ko", limit: 255
   end
+
+  add_index "roles", ["code"], name: "index_roles_on_code", unique: true, using: :btree
+  add_index "roles", ["name_en"], name: "index_roles_on_name_en", unique: true, using: :btree
 
   create_table "rosters", force: :cascade do |t|
     t.integer  "role_id",    limit: 4
@@ -380,8 +388,8 @@ ActiveRecord::Schema.define(version: 20170622054630) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree

@@ -40,7 +40,7 @@ class Course < ActiveRecord::Base
   end
 
   def set_user_role(user, role)
-    role = Role.where(name: role).take if role.class == String
+    role = Role.where(code: role).take if role.class == String
     roster = rosters.where(user: user).take
     roster = Roster.new(user: user, course: self) if roster.nil?
     roster.role = role
@@ -98,8 +98,8 @@ class Course < ActiveRecord::Base
   end
 
   def add_user_by_email(user_email, instructor = false)
-    role_name = instructor ? 'Instructor' : 'Invited Student'
-    role = Role.where(name: role_name).take
+    role_code = instructor ? 'inst' : 'invt'
+    role = Role.where(code: role_code).take
     # Searching for the student and:
     user = User.joins(:emails).where(emails: { email: user_email }).take
 
@@ -132,11 +132,11 @@ class Course < ActiveRecord::Base
   end
 
   def enrolled_students
-    rosters.joins(:role).where('roles.name = ? OR roles.name = ?', 'Enrolled Student', 'Invited Student').collect(&:user)
+    rosters.joins(:role).where('roles.code = ? OR roles.code = ?', 'enr', 'invt').collect(&:user)
   end
 
   def instructors
-    rosters.joins(:role).where('roles.name = ?', 'Instructor').collect(&:user)
+    rosters.joins(:role).where('roles.code = ?', 'inst').collect(&:user)
   end
 
   private

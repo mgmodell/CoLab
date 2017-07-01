@@ -1,0 +1,56 @@
+---
+- !ruby/object:Behavior_
+  name_en: Equal participation
+  name_ko: 
+  description_en: >
+    Each group member's contributions toward the group's effort are roughly
+    equal. There will be variability in the types of contributions, and
+    individuals may see ups and downs, but the overall responsibility is
+    being fairly shared. <i>If no other behavior is clearly dominant,
+    select this option</i>
+  description_ko: 
+
+- !ruby/object:Behavior_
+  name_en: Ganging up on the task
+  name_ko: 
+  description_en: >
+    This is when only one member of the group engages with the task at hand
+    and the others actively avoid it.  The engaged member becomes
+    overwhelmed, and joins the rest of the group in avoidance activities.
+  description_ko: 
+
+- !ruby/object:Behavior_
+  name_en: Group domination
+  name_ko: 
+  description_en: >
+    This is when an individual asserts his or her authority through some
+    combination of commanding other members and controlling conversation.
+    This often involves the individual interrupting and otherwise devaluing
+    the contributions of others.
+  description_ko: 
+
+- !ruby/object:Behavior_
+  name_en: Social loafing
+  name_ko: 
+  description_en: >
+    This is when an individual consistently under-contributes to the efforts
+    of the group to achieve its goals. This forces other group members to
+    do extra work so the task can be completed successfully.
+  description_ko: 
+
+- !ruby/object:Behavior_
+  name_en: I don't know
+  name_ko: 
+  description_en: >
+    I am not sure which group behavior dominates this entry, but it is not
+    equal participation.
+  description_ko: 
+
+- !ruby/object:Behavior_
+  name_en: Other
+  name_ko: 
+  description_en: >
+    This entry indicates a behavior that is not listed and I will enter
+    it in myself.
+  description_ko: 
+

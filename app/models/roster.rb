@@ -6,18 +6,18 @@ class Roster < ActiveRecord::Base
 
   validates_uniqueness_of :user_id, scope: :course_id
 
-  scope :instructorships, -> { joins(:role).where('name = ?', 'Instructor') }
+  scope :instructorships, -> { joins(:role).where('code = ?', 'inst') }
   scope :students, -> {
-    joins(:role).where('name = ? OR name = ? OR name = ?',
-                       'Enrolled Student', 'Invited Student', 'Declined Student')
+    joins(:role).where('code = ? OR code = ? OR code = ?',
+                       'enr', 'invt', 'decl')
   }
-  scope :enrolled, -> { joins(:role).where('name = ? OR name = ?', 'Enrolled Student', 'Invited Student') }
+  scope :enrolled, -> { joins(:role).where('code = ? OR code = ?', 'enr', 'invt') }
   scope :student, -> {
-    joins(:role).where('name = ? OR name = ? OR name = ?',
-                       'Enrolled Student', 'Invited Student', 'Declined Student')
+    joins(:role).where('code = ? OR code = ? OR code = ?',
+                       'enr', 'invt', 'decl')
   }
-  scope :accepted, -> { joins(:role).where('name = ?', 'Enrolled Student') }
-  scope :awaiting, -> { joins(:role).where('name = ?', 'Invited Student') }
-  scope :declined, -> { joins(:role).where('name = ?', 'Declined Student') }
-  scope :dropped, -> { joins(:role).where('name = ?', 'Dropped Student') }
+  scope :accepted, -> { joins(:role).where('code = ?', 'enr') }
+  scope :awaiting, -> { joins(:role).where('code = ?', 'invt') }
+  scope :declined, -> { joins(:role).where('code = ?', 'decl') }
+  scope :dropped, -> { joins(:role).where('code = ?', 'drop') }
 end

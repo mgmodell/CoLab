@@ -36,61 +36,39 @@ read_data.each do |factor|
   g.save
 end
 
-Behavior.create(
-  name: 'Equal participation',
-  description: "Each group member's contributions toward the group's
-    effort are roughly equal. There will be variability in the types of
-    contributions, and individuals may see ups and downs, but the overall
-    responsibility is being fairly shared. <i>If no other behavior is clearly
-    dominant, select this option</i>."
-)
+# Behavior seed data
+class Behavior_
+  attr_accessor :name_en, :name_ko
+  attr_accessor :description_en, :description_ko
+end
+read_data = YAML.safe_load(File.open('db/behavior.yml'), [Behavior_])
+read_data.each do |behavior|
+  g = Behavior.where(name_en: behavior.name_en).take
+  g = Behavior.new if g.nil?
+  g.name_en = behavior.name_en unless g.name_en == behavior.name_en
+  g.name_ko = behavior.name_ko unless g.name_ko == behavior.name_ko
+  g.description_en = behavior.description_en unless g.description_en == behavior.description_en
+  g.description_ko = behavior.description_ko unless g.description_ko == behavior.description_ko
+  g.save
+end
 
-Behavior.create(
-  name: 'Ganging up on the task',
-  description: "This is when only one member of the group engages with the
-    task at hand and the others actively avoid it.  The engaged member becomes
-    overwhelmed, and joins the rest of the group in avoidance activities."
-)
-
-Behavior.create(
-  name: 'Group domination',
-  description: "This is when an individual asserts his or her authority
-    through some combination of commanding other members and controlling
-    conversation. This often involves the individual interrupting and otherwise
-    devaluing the contributions of others."
-)
-
-Behavior.create(
-  name: 'Social loafing',
-  description: "This is when an individual consistently under-contributes to
-    the efforts of the group to achieve its goals. This forces other group
-    members to do extra work so the task can be completed successfully."
-)
-
-Behavior.create(
-  name: "I don't know",
-  description: "I am not sure which group behavior dominates this entry, but
-    it is not equal participation."
-)
-
-Behavior.create(
-  name: 'Other',
-  description: "This entry indicates a behavior that is not listed and I will
-    enter it in myself."
-)
-
-Role.create(name: 'Instructor',
-            description: 'This user teaches the course.')
-Role.create(name: 'Assistant',
-            description: 'This user assists the course instructor.')
-Role.create(name: 'Enrolled Student',
-            description: 'This user is a student in this class.')
-Role.create(name: 'Invited Student',
-            description: 'This user is a student that has been invited to participatein this class.')
-Role.create(name: 'Declined Student',
-            description: 'This user is a student that has declined to participate in this class.')
-Role.create(name: 'Dropped Student',
-            description: 'This user is a student that was enrolled but is not any longer.')
+# Role seed data
+class Role_
+  attr_accessor :code
+  attr_accessor :name_en, :name_ko
+  attr_accessor :description_en, :description_ko
+end
+read_data = YAML.safe_load(File.open('db/role.yml'), [Role_])
+read_data.each do |role|
+  g = Role.where(name_en: role.name_en).take
+  g = Role.new if g.nil?
+  g.code = role.code unless g.code == role.code
+  g.name_en = role.name_en unless g.name_en == role.name_en
+  g.name_ko = role.name_ko unless g.name_ko == role.name_ko
+  g.description_en = role.description_en unless g.description_en == role.description_en
+  g.description_ko = role.description_ko unless g.description_ko == role.description_ko
+  g.save
+end
 
 AgeRange.create(name: '<18')
 AgeRange.create(name: '18-20')
