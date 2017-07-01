@@ -106,8 +106,8 @@ class CandidateListsController < ApplicationController
 
     5.times do |index|
       @candidate_list.candidates << Candidate.new(id: 0, term: (t "candidate_lists.demo_term#{index + 1}"),
-                                                definition: (t "candidate_lists.demo_def#{index + 1}" ),
-                                                candidate_list: @candidate_list)
+                                                  definition: (t "candidate_lists.demo_def#{index + 1}"),
+                                                  candidate_list: @candidate_list)
     end
 
     # Add in the remainder elements
