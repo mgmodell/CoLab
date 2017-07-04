@@ -99,6 +99,16 @@ end
 School.create(name: 'Indiana University', description: 'A large, Midwestern university')
 School.create(name: 'SUNY Korea', description: 'The State University of New York, Korea')
 
+u = User.new(first_name: 'Micah',
+             last_name: 'Modell',
+             admin: true,
+             password: 'testest',
+             password_confirmation: 'testest',
+             email: 'micah.modell@gmail.com',
+             timezone: 'UTC')
+u.skip_confirmation!
+u.save
+
 # Theme seed data
 class Theme_
   attr_accessor :name_en, :name_ko
@@ -126,163 +136,103 @@ read_data.each do |style|
   g.save
 end
 
+class Scenario_
+  attr_accessor :name_en, :name_ko
+  attr_accessor :name_en, :name_ko
+end
+read_data = YAML.safe_load(File.open('db/scenario.yml'),[Scenario_])
+read_data.each do |scenario|
+  g = Scenario.where( name_en: scenario.name_en ).take
+  g = Scenario.new if g.nil?
+  b = Behavior.where( name_en: scenario.name_en ).take
+  if b.nil?
+    puts "Could not find #{scenario.name_en} <Behavior>"
+  else
+    g.behavior = b
+    g.name_en = scenario.name_en unless g.name_en == scenario.name_en
+    g.name_ko = scenario.name_ko unless g.name_ko == scenario.name_ko
+    g.save
+  end
+end
 
-u = User.new(first_name: 'Micah',
-             last_name: 'Modell',
-             admin: true,
-             password: 'testest',
-             password_confirmation: 'testest',
-             email: 'micah.modell@gmail.com',
-             timezone: 'UTC')
-u.skip_confirmation!
-u.save
-
-# Scenario content here
-Scenario.create(name: 'Equal Participation', behavior_id: 1)
-Scenario.create(name: 'Group Domination', behavior_id: 3)
-Scenario.create(name: 'Social Loafing', behavior_id: 4)
+class Narrative_
+  attr_accessor :scenario
+  attr_accessor :member_en, :member_ko
+end
+read_data = YAML.safe_load(File.open('db/narrative.yml'), [Narrative_])
+read_data.each do |narrative|
+  g = Narrative.where(member_en: narrative.member_en).take
+  g = Narrative.new if g.nil?
+  s = Scenario.where( name_en: narrative.scenario ).take
+  if s.nil?
+    puts "Could not find #{scenario.name_en} <Scenario>"
+  else
+    g.scenario = s
+    g.member_en = narrative.member_en unless g.member_en == narrative.member_en
+    g.member_ko = narrative.member_ko unless g.member_ko == narrative.member_ko
+    g.save
+  end
+end
 
 # Scenario 1 (EC)
-Narrative.create(member: 'Alex', scenario_id: 1)
-Narrative.create(member: 'Natasha', scenario_id: 1)
-Narrative.create(member: 'Anika', scenario_id: 1)
-Narrative.create(member: 'Lionel', scenario_id: 1)
-
+narrative_names = ['Alex','Natasha','Anika','Lionel']
 class Week_
-  attr_accessor :week_num, :text
+  attr_accessor :week_num
+  attr_accessor :text_en, :text_ko
 end
-
-week_data = YAML.safe_load(File.open('db/narratives/ec_alex.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 1,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/ec_natasha.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 2,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/ec_anika.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 3,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/ec_lionel.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 4,
-    week_num: week.week_num,
-    text: week.text
-  )
+narrative_names.each do |name|
+  narrative = Narrative.where( member_en: name ).take
+  if narrative.nil?
+    puts "Could not find #{name} <Narrative>"
+  else
+    f_name = "db/narratives/ec_#{name.downcase}.yml"
+    week_data = YAML.safe_load(File.open(f_name), [Week_])
+    week_data.each do |week|
+      w = Week.where( narrative: narrative, week_num: week.week_num ).take
+      w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+      w.text_en = week.text_en unless w.text_en == week.text_en
+      w.text_ko = week.text_ko unless w.text_ko == week.text_ko
+      w.save
+    end
+  end
 end
 
 # Scenario 2 (GD)
-Narrative.create(member: 'Anna', scenario_id: 2)
-Narrative.create(member: 'Jose', scenario_id: 2)
-Narrative.create(member: 'Sam', scenario_id: 2)
-Narrative.create(member: 'Kim', scenario_id: 2)
-
-week_data = YAML.safe_load(File.open('db/narratives/gd_anna.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 5,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/gd_jose.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 6,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/gd_sam.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 7,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/gd_kim.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 8,
-    week_num: week.week_num,
-    text: week.text
-  )
+narrative_names = ['Anna','Jose','Sam','Kim']
+narrative_names.each do |name|
+  narrative = Narrative.where( member_en: name ).take
+  if narrative.nil?
+    puts "Could not find #{name} <Narrative>"
+  else
+    f_name = "db/narratives/gd_#{name.downcase}.yml"
+    week_data = YAML.safe_load(File.open(f_name), [Week_])
+    week_data.each do |week|
+      w = Week.where( narrative: narrative, week_num: week.week_num ).take
+      w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+      w.text_en = week.text_en unless w.text_en == week.text_en
+      w.text_ko = week.text_ko unless w.text_ko == week.text_ko
+      w.save
+    end
+  end
 end
 
 # Scenario 3 (SL)
-# Scenario 3 (SL)
-Narrative.create(member: 'John', scenario_id: 3)
-Narrative.create(member: 'Marie', scenario_id: 3)
-Narrative.create(member: 'Hannah', scenario_id: 3)
-Narrative.create(member: 'Iain', scenario_id: 3)
-
-week_data = YAML.safe_load(File.open('db/narratives/sl_john.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 9,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/sl_marie.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 10,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/sl_hannah.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 11,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/sl_iain.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 12,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-class Cip_
-  attr_accessor :id, :description
-end
-
-cip_data = YAML.safe_load(File.open('db/cip_constants.yml'), [Cip_])
-cip_data.each do |cip_code|
-  CipCode.create(
-    gov_code: cip_code.id,
-    description: cip_code.description
-  )
+narrative_names = ['John','Marie','Hannah','Iain']
+narrative_names.each do |name|
+  narrative = Narrative.where( member_en: name ).take
+  if narrative.nil?
+    puts "Could not find #{name} <Narrative>"
+  else
+    f_name = "db/narratives/sl_#{name.downcase}.yml"
+    week_data = YAML.safe_load(File.open(f_name), [Week_])
+    week_data.each do |week|
+      w = Week.where( narrative: narrative, week_num: week.week_num ).take
+      w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+      w.text_en = week.text_en unless w.text_en == week.text_en
+      w.text_ko = week.text_ko unless w.text_ko == week.text_ko
+      w.save
+    end
+  end
 end
 
 class Quote_

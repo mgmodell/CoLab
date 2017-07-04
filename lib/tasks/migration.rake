@@ -170,6 +170,102 @@ namespace :migratify do
       g.name_ko = lang.name_ko unless g.name_ko == lang.name_ko
       g.save
     end
+
+    class Scenario_
+      attr_accessor :name_en, :name_ko
+      attr_accessor :name_en, :name_ko
+    end
+    read_data = YAML.safe_load(File.open('db/scenario.yml'),[Scenario_])
+    read_data.each do |scenario|
+      g = Scenario.where( name_en: scenario.name_en ).take
+      g = Scenario.new if g.nil?
+      b = Behavior.where( name_en: scenario.name_en ).take
+      if b.nil?
+        puts "Could not find #{scenario.name_en} <Behavior>"
+      else
+        g.behavior = b
+        g.name_en = scenario.name_en unless g.name_en == scenario.name_en
+        g.name_ko = scenario.name_ko unless g.name_ko == scenario.name_ko
+        g.save
+      end
+    end
+    
+    class Narrative_
+      attr_accessor :scenario
+      attr_accessor :member_en, :member_ko
+    end
+    read_data = YAML.safe_load(File.open('db/narrative.yml'), [Narrative_])
+    read_data.each do |narrative|
+      g = Narrative.where(member_en: narrative.member_en).take
+      g = Narrative.new if g.nil?
+      s = Scenario.where( name_en: narrative.scenario ).take
+      if s.nil?
+        puts "Could not find #{scenario.name_en} <Scenario>"
+      else
+        g.scenario = s
+        g.member_en = narrative.member_en unless g.member_en == narrative.member_en
+        g.member_ko = narrative.member_ko unless g.member_ko == narrative.member_ko
+        g.save
+      end
+    end
+    
+    # Scenario 1 (EC)
+    narrative_names = ['Alex','Natasha','Anika','Lionel']
+    class Week_
+      attr_accessor :week_num
+      attr_accessor :text_en, :text_ko
+    end
+    narrative_names.each do |name|
+      narrative = Narrative.where( member_en: name ).take
+      if narrative.nil?
+        puts "Could not find #{name} <Narrative>"
+      else
+        week_data = YAML.safe_load(File.open("db/narratives/ec_#{name.downcase}.yml"), [Week_])
+        week_data.each do |week|
+          w = Week.where( narrative: narrative, week_num: week.week_num ).take
+          w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+          w.text_en = week.text_en unless w.text_en == week.text_en
+          w.text_ko = week.text_ko unless w.text_ko == week.text_ko
+          w.save
+        end
+      end
+    end
+    
+    # Scenario 2 (GD)
+    narrative_names = ['Anna','Jose','Sam','Kim']
+    narrative_names.each do |name|
+      narrative = Narrative.where( member_en: name ).take
+      if narrative.nil?
+        puts "Could not find #{name} <Narrative>"
+      else
+        week_data = YAML.safe_load(File.open("db/narratives/gd_#{name.downcase}.yml"), [Week_])
+        week_data.each do |week|
+          w = Week.where( narrative: narrative, week_num: week.week_num ).take
+          w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+          w.text_en = week.text_en unless w.text_en == week.text_en
+          w.text_ko = week.text_ko unless w.text_ko == week.text_ko
+          w.save
+        end
+      end
+    end
+    
+    # Scenario 3 (SL)
+    narrative_names = ['John','Marie','Hannah','Iain']
+    narrative_names.each do |name|
+      narrative = Narrative.where( member_en: name ).take
+      if narrative.nil?
+        puts "Could not find #{name} <Narrative>"
+      else
+        week_data = YAML.safe_load(File.open("db/narratives/sl_#{name.downcase}.yml"), [Week_])
+        week_data.each do |week|
+          w = Week.where( narrative: narrative, week_num: week.week_num ).take
+          w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+          w.text_en = week.text_en unless w.text_en == week.text_en
+          w.text_ko = week.text_ko unless w.text_ko == week.text_ko
+          w.save
+        end
+      end
+    end
   end
   
   desc 'Initialize existing PII objects with anonymized names'

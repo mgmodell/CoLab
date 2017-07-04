@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170701191534) do
+ActiveRecord::Schema.define(version: 20170702055534) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name_en",    limit: 255
@@ -296,10 +296,11 @@ ActiveRecord::Schema.define(version: 20170701191534) do
   add_index "languages", ["name_en"], name: "index_languages_on_name_en", unique: true, using: :btree
 
   create_table "narratives", force: :cascade do |t|
-    t.string   "member",      limit: 255
+    t.string   "member_en",   limit: 255
     t.integer  "scenario_id", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.string   "member_ko",   limit: 255
   end
 
   add_index "narratives", ["scenario_id"], name: "index_narratives_on_scenario_id", using: :btree
@@ -376,10 +377,11 @@ ActiveRecord::Schema.define(version: 20170701191534) do
   add_index "rosters", ["user_id"], name: "index_rosters_on_user_id", using: :btree
 
   create_table "scenarios", force: :cascade do |t|
-    t.string   "name",        limit: 255
+    t.string   "name_en",     limit: 255
     t.integer  "behavior_id", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.string   "name_ko",     limit: 255
   end
 
   add_index "scenarios", ["behavior_id"], name: "index_scenarios_on_behavior_id", using: :btree
@@ -395,8 +397,8 @@ ActiveRecord::Schema.define(version: 20170701191534) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
@@ -484,12 +486,14 @@ ActiveRecord::Schema.define(version: 20170701191534) do
   create_table "weeks", force: :cascade do |t|
     t.integer  "narrative_id", limit: 4
     t.integer  "week_num",     limit: 4
-    t.text     "text",         limit: 65535
+    t.text     "text_en",      limit: 65535
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.text     "text_ko",      limit: 65535
   end
 
   add_index "weeks", ["narrative_id"], name: "index_weeks_on_narrative_id", using: :btree
+  add_index "weeks", ["week_num", "narrative_id"], name: "index_weeks_on_week_num_and_narrative_id", unique: true, using: :btree
 
   add_foreign_key "assessments", "projects"
   add_foreign_key "bingo_games", "courses"

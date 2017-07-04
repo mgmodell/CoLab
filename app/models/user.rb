@@ -151,17 +151,19 @@ class User < ActiveRecord::Base
     available_rosters = rosters.enrolled
 
     # Add the experiences
+    cur_date = DateTime.current
     available_rosters.each do |roster|
       waiting_tasks.concat roster.course.experiences
         .where('experiences.end_date >= ? AND experiences.start_date <= ? AND experiences.active = ?',
-               DateTime.current, DateTime.current, true).to_a
+               cur_date, cur_date, true).to_a
     end
+    #byebug
 
     # Add the bingo games
     available_rosters.each do |roster|
       waiting_games = roster.course.bingo_games
                             .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ? AND bingo_games.active = ?',
-                                   DateTime.current, DateTime.current, true).to_a
+                                   cur_date, cur_date, true).to_a
       waiting_games.delete_if { |game| !game.is_open? && !game.reviewed }
       waiting_tasks.concat waiting_games
     end
