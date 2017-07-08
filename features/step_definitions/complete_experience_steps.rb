@@ -119,7 +119,7 @@ Then /^the user successfully completes an experience$/ do
   step 'the database will show a reaction for the user with "Social loafing" as the behavior'
   step 'the database will show a reaction for the user with improvements of "super comment super"'
   step 'the user will see "Your reaction to the experience was recorded"'
-  step 'the user will see "Completed"'
+  step 'the user will see "100%"'
 end
 
 Then /^all users complete the course successfully$/ do

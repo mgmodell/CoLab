@@ -1,30 +1,28 @@
 <div class="ui-corner-all custom-corners">
   <div class="ui-bar ui-bar-a">
-    <h3>Instructions for completing this experience</h3>
+    <h3><%= t '.title' %></h3>
   </div>
   <div class="ui-body ui-body-a">
     <%= render "shared/instructions" %>
     <p>
-      <strong>NOTE:</strong> You may access these instructions or the project
-      description at any time using the <i>Instructions</i> button in the upper
-      right-hand corner of the page.
+      <strong><%= t :note %>:</strong> <%= t'.reminder' %>
     </p>
   </div>
 </div>
 <br>
 <div class="ui-corner-all custom-corners">
   <div class="ui-bar ui-bar-a">
-    <h3>The behaviors</h3>
+    <h3><%= t '.behaviors_lbl' %></h3>
   </div>
   <div class="ui-body ui-body-a">
-    <h5>(These labels and descriptions are provided on each page which follows)</h5>
+    <h5>(<%= t '.behaviors_lbl_sub' %>)</h5>
     <%= render "shared/behaviors" %>
   </div>
 </div>
 <br>
 <div class="ui-corner-all custom-corners">
   <div class="ui-bar ui-bar-a">
-    <h3>The student project scenario</h3>
+    <h3><%= t '.scenario_lbl' %></h3>
   </div>
   <div class="ui-body ui-body-a">
     <%= render "shared/scenario" %>
@@ -33,5 +31,5 @@
 <br>
 <%= form_tag :next_experience, method: "get" do %>
   <% hidden_field_tag( :experience_id, @experience.id ) %>
-  <%= submit_tag( "Next" ) %>
+  <%= submit_tag( t :next ) %>
 <% end %>

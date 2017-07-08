@@ -14,16 +14,20 @@ en:
     demo_def4: The methods and techniques a group follows
     demo_term5: Team
     demo_def5: ''
+    demo_topic: What is collaboration?
+    demo_success: Your response would have been successfully saved. The demonstration is finished.
+    demo_colab_success: Collaboration would have been successfully requested. The demonstration is finished.
     update_success: Your list was successfully saved.
     not_ready_for_review: This list is not yet ready for review.
-    demo_topic: What is collaboration?
+    no_longer_available: This list is no longer available for editing.
     ind_sum_msg: You identified the following terms, resulting in %{con_count} unique concepts
+    term: Term
+    terms: Terms
     grp_sum_msg: >
       You and your group, %{{grp_name}, identified the following terms, resulting 
       in %{con_count} unique concepts
     list_stats:
       title: Candidate list stats
-      term: Term
       def: Definition
     edit:
       title: Complete the term list
@@ -38,10 +42,8 @@ en:
       req_help: Invite your group to help?
       confirm_accept: Are you sure? Did you save your changes? This cannot be undone.
       confirm_decline: Are you sure? Did you save your changes?
-      terms: Terms
       dup: Possible Duplicate
       term: Term
       def: Definition
     show:
       title: Terms list for review
-      term: Term

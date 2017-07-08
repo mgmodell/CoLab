@@ -62,9 +62,9 @@ class Reaction < ActiveRecord::Base
 
   def status
     if diagnoses.count == 0
-      'Not started'
+      '0%'
     elsif behavior.present?
-      'Completed'
+      '100%'
     elsif next_week.nil?
       '99%'
     else

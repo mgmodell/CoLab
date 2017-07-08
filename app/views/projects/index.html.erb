@@ -11,13 +11,13 @@
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
   <thead>
     <tr>
-      <th>Name</th>
-      <th data-priority="0">Start Date</th>
-      <th data-priority="0">End Date</th>
-      <th data-priority="1">Start DOW</th>
-      <th data-priority="1">End DOW</th>
-      <th data-priority="1">Groups</th>
-      <th data-priority="0">Actions</th>
+      <th><%= t :name %></th>
+      <th data-priority="0"><%= t :start_date %></th>
+      <th data-priority="0"><%= t :end_date %></th>
+      <th data-priority="1"><%= t :start_dow %></th>
+      <th data-priority="1"><%= t :end_dow %></th>
+      <th data-priority="1"><%= t :groups %></th>
+      <th data-priority="0"><%= t :actions %></th>
     </tr>
   </thead>
   <tbody>
@@ -29,12 +29,12 @@
         <td><%= Date::DAYNAMES.at project.start_dow %></td>
         <td><%= Date::DAYNAMES.at project.end_dow %></td>
         <td><%= project.groups.count %></td>
-        <td><%= link_to 'Show', project %>&nbsp;|&nbsp;
-        <%= link_to 'Edit', edit_project_path(project) %>&nbsp;|&nbsp;
-        <%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to t :show, project %>&nbsp;|&nbsp;
+        <%= link_to t :edit, edit_project_path(project) %>&nbsp;|&nbsp;
+        <%= link_to t :destroy, project, method: :delete, data: { confirm: t( :confirmation ) } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 <br>
-<%= link_to 'New Project', new_project_path %>
+<%= link_to t 'projects.new.title', new_project_path %>

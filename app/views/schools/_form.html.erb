@@ -5,12 +5,12 @@
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
-        <li><a href="#details" data-ajax="false">Details</a></li>
-        <li><a href="#courses" data-ajax="false">Courses</a></li>
+        <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
+        <li><a href="#courses" data-ajax="false"><%= t :courses %></a></li>
       </ul>
     </div>
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
-      <h2>School Details</h2>
+      <h2><%= t 'schools.show.title' %></h2>
       <div class="form-inputs">
         <%= f.input :name %>
         <%= f.input :description, as: :text %>
@@ -19,7 +19,7 @@
     <div id="courses" class="ui-body-<%= theme_code %> ui-content">
       <h2><%= t 'schools.courses' %></h2>
 <p>
-  <h3>Courses</h3>
+  <h3><%= t :courses %></h3>
   <% if @school.courses.count < 1 %>
     <%= t 'schools.no_courses' %></br>
   <% else %>
@@ -31,12 +31,12 @@
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
       <thead>
       <tr>
-        <th>Name</th>
-        <th>Number</th>
+        <th><%= t :name %></th>
+        <th><%= t :number %></th>
         <th data-priority="1"><%= t :instructors %></th>
         <th data-priority="0"><%= t :students %></th>
         <th data-priority="1"><%= t :projects %></th>
-        <th data-priority="1"><%= t :experiences %></th>
+        <th data-priority="1"><%= t :exps %></th>
         <th data-priority="1"><%= t :terms_lists %></th>
         <th data-priority="0"><%= t :start_date %></th>
         <th data-priority="0"><%= t :end_date %></th>

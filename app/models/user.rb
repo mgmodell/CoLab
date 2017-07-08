@@ -157,7 +157,6 @@ class User < ActiveRecord::Base
         .where('experiences.end_date >= ? AND experiences.start_date <= ? AND experiences.active = ?',
                cur_date, cur_date, true).to_a
     end
-    #byebug
 
     # Add the bingo games
     available_rosters.each do |roster|

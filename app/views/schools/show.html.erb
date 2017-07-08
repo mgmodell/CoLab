@@ -42,7 +42,7 @@
         <th data-priority="1"><%= t :instructors %></th>
         <th data-priority="0"><%= t :students %></th>
         <th data-priority="1"><%= t :projects %></th>
-        <th data-priority="1"><%= t :experiences %></th>
+        <th data-priority="1"><%= t :exps %></th>
         <th data-priority="1"><%= t :terms_lists %></th>
         <th data-priority="0">Start Date</th>
         <th data-priority="0">End Date</th>
@@ -63,7 +63,7 @@
                 <td><%= course.end_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
                 <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
                 <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
-                <%= link_to t(:destroy), course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <%= link_to t(:destroy), course, method: :delete, data: { confirm: t :confirmation } %></td>
             </tr>
           <% end %>
       </tbody>

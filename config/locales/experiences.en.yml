@@ -1,0 +1,92 @@
+en:
+  experiences:
+    simulation: Collaboration experience simulation
+    instructions_lbl: Instructions
+    glossary_lbl: Glossary
+    scenario_lbl: Scenario
+    narrative_lbl: Narrative
+    behavior_lbl: Behavior
+    overall_diagnosis: Overall Diagnosis
+    reaction_suggestions: Reaction Suggestions
+    start_date_lbl: Experience start date
+    end_date_lbl: Experience end date
+    close_pnl: Close panel
+    create_success: Experience was successfully created.
+    update_success: Experience was successfully updated.
+    destroy_success: Experience was successfully destroyed.
+    wrong_course: That experience is a part of another course.
+    instr_title: Experience Instruction
+    not_started: Not Started
+    not_completed: Not Completed
+    improvements: Improvements
+    tz_warn: This experience occurs in the %{time_zone} time zone and all dates reflect this.
+    react_title: Experience Reaction
+    editing: Editing Experience
+    react_success: Your reaction to the experience was recorded
+    react_fail: There was a proglem recording your reaction, please try again.
+    no_experiences: No Experiences
+    inst_p1: >
+      In this experience, you will read a weekly journal written by a student in a
+      semester-long collaborative group project. The entries document the fourteen
+      (14) weeks of the project. The student is fictional, so his or her privacy is
+      immaterial. As you read each narrative, you will decide <em>which
+      <strong>one</strong> of the listed behaviors <strong>best</strong>
+      characterizes the group's dynamic that week.</em>
+    inst_p2: >
+      After you have performed the above task for the fourteen weeks
+      of the narrative, you will be asked for your overall evaluation
+      of the group's behavior, using the same list of behaviors.
+    inst_p3: >
+      Please <em>do not use your browser's <strong>back</strong> button</em> during
+      the experience. If you need to stop for any reason, you can pick up where you
+      left off whenever you return.
+    scenario_p1: >
+      Students in this class are working on a research paper in groups of four, with
+      three other students they've not worked with before. They will have 14 weeks to
+      complete the paper.
+    scenario_p2: >
+      The first assignment, due in week 5, is to submit the group's selected paper
+      topic and a preliminary list of references with summaries. In week 9, students
+      will turn in a rough draft.  Week 13 will see each group making a formal
+      presentation of their work to the entire class and the final paper will be
+      delivered to the instructor by the end of week 14.
+    scenario_p3: >
+      Each group is expected to meet and work on this project outside of class, and
+      it is recommended that they schedule recurring meetings. Finally, each student
+      is required to maintain a weekly reflective journal detailing every member's
+      contributions so the instructor can understand how the group works together.
+    index:
+      title: List of Experiences
+    show:
+      title: Experience Details
+    edit:
+      title: Edit Experience
+    new:
+      title: New Experience
+    next:
+      journal: 'Journal entry: Week %{week_num}'
+      prompt: Which behavior best characterizes this group now?
+      other: What behavior did you see?
+      comments: Your comments
+      click_for_comment: >
+        Click here if you have additional comments for us regarding this narrative.
+      save_and_continue: Save and continue
+    reaction:
+      title: Overall Group Behavior
+      instructions: >
+        Please reflect on the entire narrative that you have just finished reading and
+        tell us which of the following behaviors best characterizes the group over the
+        course of the entire semester.
+      dom_behavior: What behavior dominated the narrative?
+      improve: How could I improve upon the narrative?
+      suggest: 'Your suggestions:'
+    instructions:
+      title: Instructions for completing this experience
+      scenario_lbl: The student project scenario
+      behaviors_lbl: The behaviors
+      behaviors_lbl_sub: These labels and descriptions are provided on each page which follows
+      reminder: >
+        You may access these instructions or the project description
+        at any time using the <i>Instructions</i> button in the upper right-hand
+        corner of the page.
+

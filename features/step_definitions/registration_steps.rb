@@ -4,13 +4,13 @@ Then /^the user will see the task listing page$/ do
 end
 
 Then /^the user will see a consent request$/ do
-  page.should have_content 'May we user your data for research?'
+  page.should have_content 'May we use your data for research?'
 end
 
 When /^the user "(.*?)" provide consent$/ do |does_or_does_not|
   consent = does_or_does_not == 'does'
   check('consent_log[accepted]') if consent
-  click_button 'Respond to Consent Form'
+  click_button 'Record my response to this Consent Form'
 end
 
 Then /^the user will see a request for demographics$/ do

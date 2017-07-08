@@ -1,4 +1,4 @@
-<h1>Editing Experience</h1>
+<h1><%= t 'experiences.editing' %></h1>
 <%= render 'form' %>
-<%= link_to 'Show', @experience %> |
-<%= link_to 'Back to course', @experience.course %>
+<%= link_to t :show, @experience %> |
+<%= link_to t :back_to_course, @experience.course %>

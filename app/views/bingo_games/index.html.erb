@@ -11,12 +11,12 @@
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Course</th>
-      <th data-priority="0">Start Date</th>
-      <th data-priority="0">End Date</th>
-      <th data-priority="0">Active</th>
-      <th data-priority="0">Actions</th>
+      <th><%= t :name %></th>
+      <th><%= t :course %></th>
+      <th data-priority="0"><%= t :start_date %></th>
+      <th data-priority="0"><%= t :end_date %></th>
+      <th data-priority="0"><%= t :active %></th>
+      <th data-priority="0"><%= t :actions %></th>
     </tr>
   </thead>
   <tbody>
@@ -27,12 +27,12 @@
         <td><%= bingo_game.start_date %></td>
         <td><%= bingo_game.end_date %></td>
         <td><%= bingo_game.active %></td>
-        <td><%= link_to 'Show', bingo_game %>&nbsp;|&nbsp;
-        <%= link_to 'Edit', edit_bingo_game_path(bingo_game) %>&nbsp;|&nbsp;
-        <%= link_to 'Destroy', bingo_game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to t( :show ), bingo_game %>&nbsp;|&nbsp;
+        <%= link_to t( :edit ), edit_bingo_game_path(bingo_game) %>&nbsp;|&nbsp;
+        <%= link_to t( :destroy ), bingo_game, method: :delete, data: { confirm: t( :confirmation ) } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 <br>
-<%= link_to 'New Bingo Game', new_bingo_game_path %>
+<%= link_to t ( 'bingo_games.new.title' ), new_bingo_game_path %>

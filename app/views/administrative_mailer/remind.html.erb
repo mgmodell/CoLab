@@ -4,22 +4,14 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <h1>Hello, <%= @user.first_name %>.</h1>
+    <h1><%= t 'home.greeting', name: @user.first_name %>.</h1>
     <p>
-      This email is to serve as a friendly reminder
-          that you have an open task waiting for you at
-          this time. Please <%= link_to 'login', root_url %>
-      at your earliest convenience to complete what is
-          available.
-          </P>
+      <%= t :reminder_body, site_link: link_to( t( :title ), root_url ) %>
+    </P>
     <P>
       <%= link_to root_url, root_url %>
     </P>
-    <P>
-      Thank you!
-          </P>
-    <P>
-      CoLab Support
-          </p>
+    <P><%= t :email_close %></p>
+    <P><%= t :support_formal %></p>
   </body>
 </html>

@@ -34,11 +34,11 @@ Feature: Users can complete 'experiences'
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
      And the user presses "Next"
-    Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment" in extant field "Your comments:"
+    Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment" in extant field "Your comments"
      And the user presses "Save and continue"
     Then the user will see "Week 1"
     Then the user will see "You must select a behavior"
-    Then in the field "Your comments:" they will see "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
+    Then in the field "Your comments" they will see "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
 
   Scenario: instructions are only presented when users first begin an experience
     Then user should see 1 open task
@@ -163,7 +163,7 @@ Feature: Users can complete 'experiences'
      And the database will show a reaction with improvements of "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
     Then the user will see "Your reaction to the experience was recorded"
     Then user should see 1 open task
-    Then the user will see "Completed"
+    Then the user will see "100%"
     Then there will be 1 reactions from 1 different scenarios recorded
     Then there will be 1 reactions from 1 different narratives recorded
 
@@ -250,7 +250,7 @@ Feature: Users can complete 'experiences'
      And the database will show a reaction for the user with improvements of "first comment"
     Then the user will see "Your reaction to the experience was recorded"
     Then user should see 1 open task
-    Then the user will see "Completed"
+    Then the user will see "100%"
     Then the user logs out
 
     #switch to the other user
@@ -275,7 +275,7 @@ Feature: Users can complete 'experiences'
      And the database will show a reaction with improvements of "second comment"
     Then the user will see "Your reaction to the experience was recorded"
     Then user should see 1 open task
-    Then the user will see "Completed"
+    Then the user will see "100%"
     
     Then there will be 2 reactions from 2 different narratives recorded
     Then there will be 2 reactions from 2 different scenarios recorded

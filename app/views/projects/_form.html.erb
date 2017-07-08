@@ -5,16 +5,16 @@
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
-        <li><a href="#details" data-ajax="false">Details</a></li>
+        <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
         <li><a href="#groups" data-ajax="false">Group Assignments</a></li>
-        <li><a href="#summary" data-ajax="false">Response Summary</a></li>
-        <li><a href="#responses" data-ajax="false">Response Data</a></li>
+        <li><a href="#summary" data-ajax="false"><%= t :resp_summ %></a></li>
+        <li><a href="#responses" data-ajax="false"><%= t :resp_data %></a></li>
       </ul>
     </div>
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
-      <h2>Project Details</h2>
+      <h2><%= t '.projects.show.title' %></h2>
       <div class="form-inputs">
-        <strong>Course: </strong> <%= @project.course.get_name( anonymize ) %></br></br>
+        <strong><%= t :course %>: </strong> <%= @project.course.get_name( anonymize ) %></br></br>
         <%= f.input :course_id, as: :hidden %>
         <%= f.input :name %>
         <%= f.input :active %>
@@ -30,7 +30,7 @@
           </tr>
           <tr>
             <td colspan="3">
-              <em>Note: This project occurs in the <%= @project.course.timezone %> timezone and all dates reflect this.</em>
+              <em><%= t :note %>: <%= t 'projects.tz_warn', time_zone: @project.course.timezone %></em>
             </br>
           </br>
         </td>
@@ -40,14 +40,14 @@
           <%= f.input :start_dow,
                           collection: Date::DAYNAMES.each_with_index.to_a,
                           prompt: true,
-                          label: "Opens every"  %>
+                          label: t( 'projects.opens' )  %>
         </td>
         <td width="10%" align="center" valign="center">&nbsp;</td>
         <td>
           <%= f.input :end_dow,
                           collection: Date::DAYNAMES.each_with_index.to_a,
                           prompt: true,
-                          label: "Closes every"  %>
+                          label: t( 'projects.closes' )  %>
         </td>
       </tr>
     </table>
@@ -70,12 +70,12 @@
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
       <thead>
         <tr>
-          <th>Student</th>
+          <th><%= t :student %></th>
           <% groups = @project.groups %>
           <% groups.each do |group| %>
             <th align="center" data-priority="0"><%= text_field_tag "group_" + group.id.to_s, group.get_name( anonymize ) %></th>
           <% end %>
-          <th data-priority="0">[no group]</th>
+          <th data-priority="0">[<%= t 'projects.no_group' %>]</th>
         </tr>
       </thead>
       <tbody>
@@ -93,10 +93,10 @@
   <% end %>
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Response Summary</h2>
+  <h2><%= t :resp_summ %></h2>
 </div>
 <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Responses</h2>
+  <h2><%= t :resp_data %></h2>
 </div>
 </div>
 <div class="form-actions">

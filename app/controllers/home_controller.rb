@@ -32,29 +32,31 @@ class HomeController < ApplicationController
   def demo_start
     @title = t 'titles.demonstration'
     if @current_user.nil?
-      @current_user = User.new(first_name: 'John', last_name: 'Smith', timezone: 'Seoul')
+      @current_user = User.new(first_name: t( :demo_surname_1),
+                              last_name: t( :demo_fam_name_1 ),
+                              timezone: t( :demo_user_tz ) )
     end
 
     e = Event_.new
-    e.name = 'SuperStars'
+    e.name = t( :demo_group )
     e.task_link = assessment_demo_complete_path
-    e.task_name_post = '<br>' + "(#{t :project}: Research Paper)"
+    e.task_name_post = '<br>' + "(#{t :project}: #{t( demo_project)})"
     e.type = t 'home.sapa'
     e.status = t :not_started
-    e.group_name = 'SuperStars'
-    e.course_name = 'Advanced Collaborative Research'
+    e.group_name = t( :demo_group )
+    e.course_name = t( :demo_course_name )
     e.start_time = 1.day.ago
     e.close_date = 1.day.from_now.end_of_day
-
+ 
     @events = [e]
     e = Event_.new
-    e.name = 'What is collaboration?'
+    e.name = t( 'candidate_lists.demo_topic' )
     e.task_link = bingo_demo_complete_path
     e.task_name_post = ''
     e.type = t 'home.terms_list'
     e.status = '50%'
-    e.group_name = 'SuperStars'
-    e.course_name = 'Advanced Collaborative Research'
+    e.group_name = t( :demo_group )
+    e.course_name = t( :demo_course_name )
     e.start_time = 1.week.ago
     e.close_date = 2.day.from_now.end_of_day
     @events << e

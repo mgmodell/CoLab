@@ -35,7 +35,7 @@
         <td><%= roster.course.get_name( anonymize ) %></td>
         <td><%= roster.course.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
         <td><%= roster.course.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
-        <td>N/A</td>
+        <td><%= t :n_a %></td>
       </tr>
     <% end %>
   </tbody>

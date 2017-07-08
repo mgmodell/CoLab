@@ -4,16 +4,15 @@ class ProjectsController < ApplicationController
   before_action :check_admin, except: [:next, :diagnose, :react]
 
   def show
-    @title = 'Project Details'
+    @title = t( '.title' )
   end
 
   def edit
-    @title = 'Edit Project'
+    @title = t( '.title' )
   end
 
-  # GET /admin/coures
   def index
-    @title = 'List of Projects'
+    @title = t( '.title' )
     @projects = []
     if @current_user.is_admin?
       @projects = Project.all
@@ -26,7 +25,7 @@ class ProjectsController < ApplicationController
   end
 
   def new
-    @title = 'New Project'
+    @title = t( '.title' )
     @project = Project.new
     @project.course = Course.find params[:course_id]
     @project.start_date = @project.course.start_date
@@ -34,12 +33,13 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @title = 'New Project'
+    @title = t( '.title' )
     @project = Project.new(project_params)
     @project.course = Course.find(@project.course_id)
     if @project.save
-      notice = 'Project was successfully created.'
-      notice += "Don't forget to activate it!" unless @project.active
+      notice = @project.active ?
+            t( 'projects.create_success' ) :
+            t( 'projects.create_success_inactive' )
       redirect_to @project, notice: notice
     else
       render :new
@@ -47,7 +47,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    @title = 'Edit Project'
+    @title = t( 'projects.edit.title' )
     if @project.update(project_params)
       groups_users = {}
       @project.groups.each do |group|
@@ -68,8 +68,9 @@ class ProjectsController < ApplicationController
         group.save
         logger.debug group.errors.full_messages unless group.errors.empty?
       end
-      notice = 'Project was successfully updated.'
-      notice += "Don't forget to activate it when you're done editing it." unless @project.active
+      notice = @project.active ?
+            t( 'projects.update_success' ) :
+            t( 'projects.update_success_inactive' )
       redirect_to @project, notice: notice
     else
       render :edit
@@ -79,7 +80,7 @@ class ProjectsController < ApplicationController
   def destroy
     @course = @project.course
     @project.destroy
-    redirect_to @course, notice: 'Project was successfully destroyed.'
+    redirect_to @course, notice: t( 'projects.destroy_success' )
   end
 
   def remove_group
@@ -89,16 +90,16 @@ class ProjectsController < ApplicationController
   end
 
   def add_group
-    @title = 'Project Details'
+    @title = t( '.title' )
     @project = Project.find(params[:project_id])
     group = Group.create(name: params[:group_name], project: @project)
 
-    flash.now[:notice] = 'Group successfully created'
+    flash.now[:notice] = t( 'projects.group_create_success' )
     render :show
   end
 
   def activate
-    @title = 'Project Details'
+    @title = t( '.title' )
     project = Project.find(params[:project_id])
     if @current_user.is_admin? ||
        project.course.get_roster_for_user(@current_user).role.code == 'inst'

@@ -1,0 +1,16 @@
+en:
+  consent_logs:
+    title: Update Consent Response
+    edit:
+      opening: May we use your data for research?
+      title: Consent Form
+      instructions: >
+        CoLab is built upon the results of research &mdash; any benefits it offers
+        are the result of rigorous analysis of student data and experiences such as
+        your own. As such, researchers would like permission to use your data in
+        their research. Please review the document below. You may need to scroll
+        down to view the entire document. If you agree to allow your information to
+        be used in accord with the terms of this document, please check the box
+        marked "I Agree" below.  You can return to this document at any time to
+        change your response.
+      submit_response: Record my response to this Consent Form
