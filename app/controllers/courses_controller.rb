@@ -4,16 +4,16 @@ class CoursesController < ApplicationController
   before_action :check_admin, except: [:next, :diagnose, :react, :accept_roster, :decline_roster]
 
   def show
-    @title = t( '.title' )
+    @title = t('.title')
   end
 
   def edit
-    @title = t( '.title' )
+    @title = t('.title')
   end
 
   # GET /admin/coures
   def index
-    @title = t( '.title' )
+    @title = t('.title')
     @courses = []
     if @current_user.admin?
       @courses = Course.all
@@ -26,7 +26,7 @@ class CoursesController < ApplicationController
   end
 
   def new
-    @title = t( '.title' )
+    @title = t('.title')
     @course = Course.new
     @course.timezone = @current_user.timezone
     @course.school = @current_user.school unless @current_user.school.nil?
@@ -37,23 +37,23 @@ class CoursesController < ApplicationController
   end
 
   def create
-    @title = t( 'courses.new.title' )
+    @title = t('courses.new.title')
     @course = Course.new(course_params)
     role = Role.instructor.take
     @course.rosters << Roster.new(role: role, user: @current_user)
 
     if @course.save
-      redirect_to url: course_url(@course), notice: t( 'courses.create_success' )
+      redirect_to url: course_url(@course), notice: t('courses.create_success')
     else
       render :new
     end
   end
 
   def update
-    @title = t( '.title' ) 
+    @title = t('.title')
     if @course.update(course_params)
       @course.school = School.find(@course.school_id)
-      redirect_to course_path(@course), notice: t( 'courses.update_success' )
+      redirect_to course_path(@course), notice: t('courses.update_success')
     else
       render :edit
     end
@@ -61,23 +61,23 @@ class CoursesController < ApplicationController
 
   def destroy
     @course.destroy
-    redirect_to courses_url, notice: t( 'courses.destroy_success' )
+    redirect_to courses_url, notice: t('courses.destroy_success')
   end
 
   def add_students
     @course.add_students_by_email params[:addresses]
-    redirect_to @course, notice: t( 'courses.students_invited' )
+    redirect_to @course, notice: t('courses.students_invited')
   end
 
   def add_instructors
     @course.add_instructors_by_email params[:addresses]
-    redirect_to @course, notice: t( 'courses.instructor_invited' )
+    redirect_to @course, notice: t('courses.instructor_invited')
   end
 
   def accept_roster
     r = Roster.student.where(id: params[:roster_id], user: @current_user).take
     if r.nil?
-      flash[:notice] = t( 'courses.accept_fail' )
+      flash[:notice] = t('courses.accept_fail')
     else
       r.role = Role.enrolled.take
       r.save
@@ -89,7 +89,7 @@ class CoursesController < ApplicationController
   def decline_roster
     r = Roster.student.where(id: params[:roster_id], user: @current_user).take
     if r.nil?
-      flash[:notice] = t( 'courses.decline_fail' )
+      flash[:notice] = t('courses.decline_fail')
     else
       r.role = Role.declined.take
       r.save
@@ -101,15 +101,15 @@ class CoursesController < ApplicationController
   def remove_instructor
     r = Roster.find(params[:roster_id])
     if !@current_user.is_instructor? && !current_user.is_admin?
-      flash[:notice] = t( 'courses.permission_fail' )
+      flash[:notice] = t('courses.permission_fail')
       flash.keep
       redirect_to :root
     elsif r.course.rosters.instructorships.count < 2
-      flash[:notice] = t( 'courses.last_instructor' )
+      flash[:notice] = t('courses.last_instructor')
       flash.keep
       redirect_to :root
     elsif r.nil?
-      flash[:notice] = t( 'courses.not_instructor' )
+      flash[:notice] = t('courses.not_instructor')
       flash.keep
       redirect_to :root
     else
@@ -127,13 +127,13 @@ class CoursesController < ApplicationController
   def drop_student
     r = Roster.find(params[:roster_id])
     if r.nil?
-      flash[:notice] = t( 'courses.no_roster' )
+      flash[:notice] = t('courses.no_roster')
       flash.keep
       redirect_to :root
     else
       instructor_action = r.user != @current_user
       if !instructor_action && r.user != @current_user
-        flash[:notice] = t( 'courses.permission_fail' )
+        flash[:notice] = t('courses.permission_fail')
         flash.keep
         redirect_to :root
       else

@@ -24,7 +24,7 @@ class CandidateListsController < ApplicationController
     if @candidate_list.bingo_game.reviewed
       render :show
     elsif !@candidate_list.bingo_game.is_open?
-      notice = t( 'candidate_lists.no_longer_available' )
+      notice = t('candidate_lists.no_longer_available')
       redirect_to :root_path, notice: notice
     end
   end
@@ -128,7 +128,7 @@ class CandidateListsController < ApplicationController
 
   # present as a hack to support the demo
   def create
-    flash[:notice] = t( 'candidate_lists.demo_success' )
+    flash[:notice] = t('candidate_lists.demo_success')
     redirect_to root_url
   end
 
@@ -171,7 +171,7 @@ class CandidateListsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_candidate_list
     if params[:id] == '-1' # Support for demo
-      flash[:notice] = t( 'candidate_lists.demo_colab_success' )
+      flash[:notice] = t('candidate_lists.demo_colab_success')
       redirect_to root_url
     else
       @candidate_list = CandidateList.find(params[:id])
