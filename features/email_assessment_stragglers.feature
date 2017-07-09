@@ -184,7 +184,7 @@ Feature: Email assessment stragglers
 
     #Add a new group
     Given the email queue is empty
-    Given today is "3 day from now"
+    Given today is "3 days from now"
     #The project should NOT be available
     Given the project has a group with 2 confirmed users
     Given the project has been activated
@@ -192,7 +192,7 @@ Feature: Email assessment stragglers
     When the system emails stragglers
     Then no emails will be sent
 
-    Given today is "4 day from now"
+    Given today is "4 days from now"
     Then that the system's set_up_assessments process runs
     When the system emails stragglers
     Then 12 emails will be sent
@@ -200,7 +200,7 @@ Feature: Email assessment stragglers
     Then the members of "a random" group go to other groups
     Then the project has been activated
 
-    Given today is "7 day from now"
+    Given today is "7 days from now"
     Given the email queue is empty
     When the system emails stragglers
     Then no emails will be sent

@@ -87,7 +87,7 @@ class Assessment < ActiveRecord::Base
     if day_delta == 0
       assessment.start_date = init_date
     else
-      day_delta = 7 - day_delta if day_delta < 0
+      day_delta = 7 + day_delta if day_delta < 0
       assessment.start_date = init_date - day_delta.days
     end
     assessment.start_date = assessment.start_date.beginning_of_day
