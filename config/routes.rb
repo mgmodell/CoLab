@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     get 'projects/activate/:project_id' => 'projects#activate', :as => 'activate_project'
     get 'experiences/activate/:experience_id' => 'experiences#activate', :as => 'activate_experience'
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate', :as => 'activate_bingo_game'
+    get 'bingo_games/validate/:id/:valid' => 'bingo_games#validate_win', :as => 'validate_bingo_win'
     resources :courses, :projects, :experiences, :bingo_games, :schools
   end
 
@@ -20,6 +21,10 @@ Rails.application.routes.draw do
     get 'candidates_review/:id' => 'bingo_games#review_candidates', :as => 'review_bingo_candidates'
     post 'candidates_review/:id' => 'bingo_games#update_review_candidates', :as => 'update_bingo_candidates_review'
     get 'list_stats/:id' => 'candidate_lists#list_stats', :as => 'bingo_list_stats'
+    #Gameplay functions
+    get 'get_board/:id' => 'bingo_games#get_board', :as => 'get_bingo_board'
+    get 'update_board/:id' => 'bingo_games#update_board', :as => 'update_bingo_board'
+    get 'play_board/:id' => 'bingo_games#play_board', :as => 'play_bingo'
   end
 
   get 'experiences/next/:experience_id:' => 'experiences#next', :as => 'next_experience'
