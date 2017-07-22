@@ -113,21 +113,13 @@ class BingoGamesController < ApplicationController
     render :show, notice: (t 'bingo_games.activate_success')
   end
 
-  def get_board
+  def get_board; end
 
-  end
+  def update_board; end
 
-  def update_board
+  def play_board; end
 
-  end
-
-  def play_board
-
-  end
-
-  def validate_win
-  
-  end
+  def validate_win; end
 
   private
 
