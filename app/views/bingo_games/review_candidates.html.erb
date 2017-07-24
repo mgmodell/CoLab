@@ -8,7 +8,7 @@
     </tr>
     <tr>
       <th align="right"><%= t 'bingo_games' %>:</th>
-      <td><%= @bingo_game.end_date %>
+      <td><%= l @bingo_game.end_date, format: :tz_clarity %>
     </tr>
   </table>
   <h2>Terms</h2>

@@ -106,7 +106,7 @@
                 <span class="error"><%= t :inactive %></span>
                 <% end %></td>
                 <td>
-                  <%= game.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
+                  <%= l game.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show ), game %>&nbsp;|&nbsp;
                 <%= link_to( t( :activate ), activate_bingo_game_path( game ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
@@ -151,7 +151,7 @@
                 <span class="error"><%= t :inactive %></span>
                 <% end %></td>
                 <td>
-                  <%= project.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
+                  <%= l project.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show ), project %>&nbsp;|&nbsp;
                 <%= link_to( t( :activate ), activate_project_path( project ) ) + raw("&nbsp;|&nbsp;" ) unless project.active %>
@@ -197,7 +197,7 @@
                 <% end %>
                 </td>
                 <td>
-                  <%= experience.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
+                  <%= l experience.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show ), experience %>&nbsp;|&nbsp;
                   <%= link_to( t( :activate ), activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>

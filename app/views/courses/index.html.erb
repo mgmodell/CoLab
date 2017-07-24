@@ -30,8 +30,8 @@
         <td><%= course.get_number( anonymize ) %></td>
         <td><%= link_to course.get_name( anonymize ), course %></td>
         <td><%= course.school.get_name( anonymize ) %></td>
-        <td><%= course.start_date %></td>
-        <td><%= course.end_date %></td>
+        <td><%= l course.start_date, format: :tz_clarity %></td>
+        <td><%= l course.end_date, format: :tz_clarity %></td>
         <td><%= course.rosters.instructorships.count %></td>
         <td><%= course.rosters.students.count %></td>
         <td><%= course.projects.count %></td>

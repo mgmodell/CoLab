@@ -24,8 +24,8 @@
     <% @projects.each do |project| %>
       <tr>
         <td><%= link_to project.get_name( anonymize ), project %></td>
-        <td><%= project.start_date %></td>
-        <td><%= project.end_date %></td>
+        <td><%= l project.start_date, format: :tz_clarity %></td>
+        <td><%= l project.end_date, format: :tz_clarity %></td>
         <td><%= Date::DAYNAMES.at project.start_dow %></td>
         <td><%= Date::DAYNAMES.at project.end_dow %></td>
         <td><%= project.groups.count %></td>

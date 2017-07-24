@@ -214,23 +214,21 @@ ActiveRecord::Schema.define(version: 20170702055534) do
 
   create_table "factor_packs", force: :cascade do |t|
     t.string   "name_en",        limit: 255
-    t.text     "description",    limit: 65535
+    t.text     "description_en", limit: 65535
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.string   "name_ko",        limit: 255
-    t.string   "description_en", limit: 255
     t.string   "description_ko", limit: 255
   end
 
   add_index "factor_packs", ["name_en"], name: "index_factor_packs_on_name_en", unique: true, using: :btree
 
   create_table "factors", force: :cascade do |t|
-    t.string   "description",    limit: 255
+    t.string   "description_en", limit: 255
     t.string   "name_en",        limit: 255
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.string   "name_ko",        limit: 255
-    t.string   "description_en", limit: 255
     t.string   "description_ko", limit: 255
     t.integer  "factor_pack_id", limit: 4
   end
@@ -399,8 +397,8 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree

@@ -59,8 +59,8 @@
                 <td><%= course.projects.count %></td>
                 <td><%= course.experiences.count %></td>
                 <td><%= course.bingo_games.count %></td>
-                <td><%= course.start_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
-                <td><%= course.end_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
+                <td><%= l course.start_date, format: :tz_clarity %></td>
+                <td><%= l course.end_date, format: :tz_clarity %></td>
                 <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
                 <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
                 <%= link_to t(:destroy), course, method: :delete, data: { confirm: t :confirmation } %></td>

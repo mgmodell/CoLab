@@ -39,8 +39,8 @@
     </p>
     <p>
       <h3><%= t :dates %>:</h3>
-      <%= @bingo_game.start_date.strftime( "%a, %b %-d at %-l:%M%P %Z")%> to
-  <%= @bingo_game.end_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
+      <%= l @bingo_game.start_date, format: :short_date %> to
+  <%= l @bingo_game.end_date, format: :short_date %></br>
     <em><%= t :note %>: <%= t 'bingo_games.tz_warn', time_zone: @bingo_game.course.timezone %></em>
     </p>
   <%= link_to t( 'bingo_games.edit.title' ), edit_bingo_game_path(@bingo_game) %>

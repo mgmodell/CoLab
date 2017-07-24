@@ -40,7 +40,7 @@ class HomeController < ApplicationController
     e = Event_.new
     e.name = t(:demo_group)
     e.task_link = assessment_demo_complete_path
-    e.task_name_post = '<br>' + "(#{t :project}: #{t(demo_project)})"
+    e.task_name_post = '<br>' + "(#{t :project}: #{t(:demo_project)})"
     e.type = t 'home.sapa'
     e.status = t :not_started
     e.group_name = t(:demo_group)

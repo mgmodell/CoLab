@@ -24,8 +24,8 @@
       <tr>
         <td><%= link_to experience.get_name( anonymize ), experience %></td>
         <td><%= experience.course.get_name( anonymize ) %></td>
-        <td><%= experience.start_date %></td>
-        <td><%= experience.end_date %></td>
+        <td><%= l experience.start_date, format: :tz_clarity %></td>
+        <td><%= l experience.end_date, format: :tz_clarity %></td>
         <td><%= experience.active %></td>
         <td><%= link_to t :show, experience %>&nbsp;|&nbsp;
         <%= link_to t :edit, edit_experience_path(experience) %>&nbsp;|&nbsp;

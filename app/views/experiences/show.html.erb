@@ -27,8 +27,8 @@
     </p>
     <p>
       <h3><%= t :dates %>:</h3>
-      <%= @experience.start_date %> to
-  <%= @experience.end_date %></br>
+      <%= l @experience.start_date, format: :short_date %> to
+  <%= l @experience.end_date, format: :short_date %></br>
     <em><%= t :note %>: <%= t '.tz_warn', time_zone: @experience.course.timezone %></em>
   </p>
   <%= link_to 'Edit experience details', edit_experience_path(@experience) %>
