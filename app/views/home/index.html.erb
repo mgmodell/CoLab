@@ -43,7 +43,9 @@
         <td align="center" data-priority="1">Bingo! Candidate Review</td>
         <td align="center" data-priority="1"><%= task.status %>%</td>
         <td data-priority="1"><%= task.course.get_name( anonymize ) %></td>
-        <td data-priority="0"><<%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
+        <td data-priority="0">
+          <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
+        </td>
       </tr>
     <% end %>
     </tbody>
@@ -91,8 +93,8 @@
             </td>
             <td> <%= group.get_name( anonymize ) %></td>
             <td> <%= task.project.course.get_name( anonymize ) %></td>
-            <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-            <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+            <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
+            <td> <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
             <td>
               <%= render :partial => "shared/consent", :locals => { :project => task.project } %>
             </td>
@@ -122,10 +124,10 @@
               <% end %>
             </td>
             <td> <%= task.course.get_name( anonymize ) %></td>
-            <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+            <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
             <td>
-              <%= task.term_list_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
-              <small><i>(<%= t 'candidates.list_for_class' %> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d") %></i></small>)
+              <%= l task.term_list_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></br>
+              <small><i>(<%= t 'candidates.list_for_class' %> <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :short_date %></i></small>)
             </td>
             <td>N/A</td>
           </tr>
@@ -144,8 +146,8 @@
             </td>
             <td> N/A</td>
             <td> <%= task.course.get_name( anonymize ) %></td>
-            <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-            <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+            <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
+            <td> <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
             <td>
               <%= t :n_a %>
                 </td>

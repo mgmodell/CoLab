@@ -20,6 +20,10 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  time:
+    formats:
+      tz_clarity: "%a, %b %-d at %-l:%M%P %Z"
+      short_date: "%a, %b %-d"
   title: CoLab
   column_select: Show/Hide columns&hellip;
   task_name: Task Name
