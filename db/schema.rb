@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702055534) do
+ActiveRecord::Schema.define(version: 20170728142028) do
 
   create_table "age_ranges", force: :cascade do |t|
     t.string   "name_en",    limit: 255
@@ -153,6 +153,12 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   add_index "consent_logs", ["consent_form_id"], name: "index_consent_logs_on_consent_form_id", using: :btree
   add_index "consent_logs", ["user_id"], name: "index_consent_logs_on_user_id", using: :btree
 
+  create_table "course_of_studies", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
   create_table "courses", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.string   "description", limit: 255
@@ -271,6 +277,26 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   end
 
   add_index "groups_users", ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id", unique: true, using: :btree
+
+  create_table "home_countries", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.string   "code",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "home_countries", ["code"], name: "index_home_countries_on_code", unique: true, using: :btree
+
+  create_table "home_states", force: :cascade do |t|
+    t.integer  "home_country_id", limit: 4
+    t.string   "name",            limit: 255
+    t.string   "code",            limit: 255
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "home_states", ["home_country_id", "name"], name: "index_home_states_on_home_country_id_and_name", unique: true, using: :btree
+  add_index "home_states", ["home_country_id"], name: "index_home_states_on_home_country_id", using: :btree
 
   create_table "installments", force: :cascade do |t|
     t.datetime "inst_date"
@@ -397,8 +423,8 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
@@ -447,7 +473,6 @@ ActiveRecord::Schema.define(version: 20170702055534) do
     t.string   "first_name",             limit: 255
     t.string   "last_name",              limit: 255
     t.integer  "gender_id",              limit: 4
-    t.integer  "age_range_id",           limit: 4
     t.string   "country",                limit: 255
     t.string   "timezone",               limit: 255
     t.boolean  "admin"
@@ -459,11 +484,17 @@ ActiveRecord::Schema.define(version: 20170702055534) do
     t.string   "anon_last_name",         limit: 255
     t.boolean  "researcher"
     t.integer  "language_id",            limit: 4
+    t.date     "date_of_birth"
+    t.integer  "home_state_id",          limit: 4
+    t.integer  "course_of_study_id",     limit: 4
+    t.integer  "primary_language_id",    limit: 4
+    t.date     "started_school"
   end
 
-  add_index "users", ["age_range_id"], name: "index_users_on_age_range_id", using: :btree
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+  add_index "users", ["course_of_study_id"], name: "index_users_on_course_of_study_id", using: :btree
   add_index "users", ["gender_id"], name: "index_users_on_gender_id", using: :btree
+  add_index "users", ["home_state_id"], name: "index_users_on_home_state_id", using: :btree
   add_index "users", ["language_id"], name: "index_users_on_language_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["school_id"], name: "index_users_on_school_id", using: :btree
@@ -517,6 +548,7 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   add_foreign_key "factors", "factor_packs"
   add_foreign_key "group_revisions", "groups"
   add_foreign_key "groups", "projects"
+  add_foreign_key "home_states", "home_countries"
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
   add_foreign_key "installments", "users"
@@ -533,8 +565,9 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   add_foreign_key "rosters", "roles"
   add_foreign_key "rosters", "users"
   add_foreign_key "scenarios", "behaviors"
-  add_foreign_key "users", "age_ranges"
+  add_foreign_key "users", "course_of_studies"
   add_foreign_key "users", "genders"
+  add_foreign_key "users", "home_states"
   add_foreign_key "users", "languages"
   add_foreign_key "users", "schools"
   add_foreign_key "users", "themes"
