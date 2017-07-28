@@ -49,7 +49,7 @@ class CreateThredded < Thredded::BaseMigration
       t.index [:slug], name: :index_thredded_messageboards_on_slug
     end
 
-    create_table :thredded_posts, options: 'ENGINE=MyISAM' do |t|
+    create_table :thredded_posts do |t|
       t.references :user, type: user_id_type, index: false
       t.text :content, limit: 65_535
       t.string :ip, limit: 255
@@ -104,7 +104,7 @@ class CreateThredded < Thredded::BaseMigration
       t.index [:topic_id], name: :index_thredded_topic_categories_on_topic_id
     end
 
-    create_table :thredded_topics, options: 'ENGINE=MyISAM' do |t|
+    create_table :thredded_topics do |t|
       t.references :user, type: user_id_type, index: false
       t.references :last_user, index: false
       t.string :title, limit: 255, null: false
