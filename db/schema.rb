@@ -11,16 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170728142028) do
-
-  create_table "age_ranges", force: :cascade do |t|
-    t.string   "name_en",    limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "name_ko",    limit: 255
-  end
-
-  add_index "age_ranges", ["name_en"], name: "index_age_ranges_on_name_en", unique: true, using: :btree
+ActiveRecord::Schema.define(version: 20170729030240) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -113,11 +104,14 @@ ActiveRecord::Schema.define(version: 20170728142028) do
   add_index "candidates", ["user_id"], name: "index_candidates_on_user_id", using: :btree
 
   create_table "cip_codes", force: :cascade do |t|
-    t.integer  "gov_code",    limit: 4
-    t.string   "description", limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.integer  "gov_code",       limit: 4
+    t.string   "description_en", limit: 255
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.string   "description_ko", limit: 255
   end
+
+  add_index "cip_codes", ["gov_code"], name: "index_cip_codes_on_gov_code", unique: true, using: :btree
 
   create_table "concepts", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -152,12 +146,6 @@ ActiveRecord::Schema.define(version: 20170728142028) do
 
   add_index "consent_logs", ["consent_form_id"], name: "index_consent_logs_on_consent_form_id", using: :btree
   add_index "consent_logs", ["user_id"], name: "index_consent_logs_on_user_id", using: :btree
-
-  create_table "course_of_studies", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
 
   create_table "courses", force: :cascade do |t|
     t.string   "name",        limit: 255
@@ -486,13 +474,11 @@ ActiveRecord::Schema.define(version: 20170728142028) do
     t.integer  "language_id",            limit: 4
     t.date     "date_of_birth"
     t.integer  "home_state_id",          limit: 4
-    t.integer  "course_of_study_id",     limit: 4
     t.integer  "primary_language_id",    limit: 4
     t.date     "started_school"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-  add_index "users", ["course_of_study_id"], name: "index_users_on_course_of_study_id", using: :btree
   add_index "users", ["gender_id"], name: "index_users_on_gender_id", using: :btree
   add_index "users", ["home_state_id"], name: "index_users_on_home_state_id", using: :btree
   add_index "users", ["language_id"], name: "index_users_on_language_id", using: :btree
@@ -565,7 +551,6 @@ ActiveRecord::Schema.define(version: 20170728142028) do
   add_foreign_key "rosters", "roles"
   add_foreign_key "rosters", "users"
   add_foreign_key "scenarios", "behaviors"
-  add_foreign_key "users", "course_of_studies"
   add_foreign_key "users", "genders"
   add_foreign_key "users", "home_states"
   add_foreign_key "users", "languages"

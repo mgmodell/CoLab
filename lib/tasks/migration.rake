@@ -17,19 +17,6 @@ namespace :migratify do
       q.save
     end
 
-    # AgeRange seed data
-    class AgeRange_
-      attr_accessor :name_en, :name_ko
-    end
-    read_data = YAML.safe_load(File.open('db/age_range.yml'), [AgeRange_])
-    read_data.each do |age_range|
-      g = AgeRange.where(name_en: age_range.name_en).take
-      g = AgeRange.new if g.nil?
-      g.name_en = age_range.name_en unless g.name_en == age_range.name_en
-      g.name_ko = age_range.name_ko unless g.name_ko == age_range.name_ko
-      g.save
-    end
-
     # Gender seed data
     class Gender_
       attr_accessor :name_en, :name_ko
@@ -40,6 +27,23 @@ namespace :migratify do
       g = Gender.new if g.nil?
       g.name_en = gender.name_en unless g.name_en == gender.name_en
       g.name_ko = gender.name_ko unless g.name_ko == gender.name_ko
+      g.save
+    end
+
+    # CIP Code seed data
+    class CipCode_
+      attr_accessor :gov_code
+      attr_accessor :description_en, :description_ko
+    end
+    read_data = YAML.safe_load(File.open('db/cip_constants.yml'), [CipCode_])
+    read_data.each do |cip_code|
+      g = CipCode.where(gov_code: cip_code.gov_code).take
+      g = CipCode.new if g.nil?
+      g.gov_code = cip_code.gov_code unless g.gov_code == cip_code.gov_code
+      g.description_en = cip_code.description_en.capitalize unless
+                        g.description_en == cip_code.description_en.capitalize
+      g.description_ko = cip_code.description_ko unless
+                        g.description_ko == cip_code.description_ko
       g.save
     end
 

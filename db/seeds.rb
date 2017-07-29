@@ -17,6 +17,24 @@ read_data.each do |factor_pack|
   g.save
 end
 
+# CIP Code seed data
+class CipCode_
+  attr_accessor :gov_code
+  attr_accessor :description_en, :description_ko
+end
+read_data = YAML.safe_load(File.open('db/cip_constants.yml'), [CipCode_])
+read_data.each do |cip_code|
+  g = CipCode.where(gov_code: cip_code.gov_code).take
+  g = CipCode.new if g.nil?
+  g.gov_code = cip_code.gov_code unless g.gov_code == cip_code.gov_code
+  g.description_en = cip_code.description_en.capitalize unless
+                    g.description_en == cip_code.description_en.capitalize
+  g.description_ko = cip_code.description_ko unless
+                    g.description_ko == cip_code.description_ko
+  g.save
+end
+
+
 # Factor seed data
 class Factor_
   attr_accessor :fp
@@ -67,19 +85,6 @@ read_data.each do |role|
   g.name_ko = role.name_ko unless g.name_ko == role.name_ko
   g.description_en = role.description_en unless g.description_en == role.description_en
   g.description_ko = role.description_ko unless g.description_ko == role.description_ko
-  g.save
-end
-
-# AgeRange seed data
-class AgeRange_
-  attr_accessor :name_en, :name_ko
-end
-read_data = YAML.safe_load(File.open('db/age_range.yml'), [AgeRange_])
-read_data.each do |age_range|
-  g = AgeRange.where(name_en: age_range.name_en).take
-  g = AgeRange.new if g.nil?
-  g.name_en = age_range.name_en unless g.name_en == age_range.name_en
-  g.name_ko = age_range.name_ko unless g.name_ko == age_range.name_ko
   g.save
 end
 
