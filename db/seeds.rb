@@ -34,6 +34,27 @@ read_data.each do |cip_code|
   g.save
 end
 
+# Countries
+CS.countries.each do |country|
+  hc = HomeCountry.where( code: country[ 0 ] ).take
+  hc = HomeCountry.new if hc.nil?
+  hc.code = country[ 0 ]
+  hc.name = country[ 1 ]
+  hc.save
+end
+
+# States
+HomeCountry.all.each do |country|
+  CS.get( country.code ).each do |state|
+    hs = HomeState.where( home_country_id: country.id, code: state[ 0 ] ).take
+    hs = HomeState.new if hs.nil?
+    hs.home_country_id = country.id
+    hs.code = state[ 0 ]
+    hs.name = state[ 1 ]
+    hs.save
+  end
+end
+
 
 # Factor seed data
 class Factor_

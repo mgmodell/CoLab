@@ -2,6 +2,16 @@
 class RegistrationsController < Devise::RegistrationsController
   before_action :set_email, only: [:set_primary_email, :remove_email]
 
+  # POST /resource
+  def create
+    super
+  end
+
+  # PUT /resource
+  def update
+    super
+  end
+
   def set_primary_email
     @current_user.primary_email = @email
     redirect_to edit_user_registration_path, notice: t('.set_primary')
