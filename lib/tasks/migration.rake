@@ -180,22 +180,20 @@ namespace :migratify do
       g.save
     end
 
-
-    # Multiple language support
-    class Lang_
-      attr_accessor :code
-      attr_accessor :name_en, :name_ko
-    end
-    quote_data = YAML.safe_load(File.open('db/language.yml'), [Lang_])
-    quote_data.each do |lang|
-      g = Language.where(name_en: lang.name_en).take
+    translated = [ 'en', 'ko' ]
+    en_langs = I18nData.languages( :en )
+    ko_langs = I18nData.languages( :ko )
+    
+    en_langs.keys.each do |lang_key|
+      g = Language.where(name_en: lang_key.downcase).take
       g = Language.new if g.nil?
-      g.code = lang.code unless g.code == lang.code
-      g.name_en = lang.name_en unless g.name_en == lang.name_en
-      g.name_ko = lang.name_ko unless g.name_ko == lang.name_ko
+      g.code = lang_key.downcase unless g.code == lang_key.downcase
+      g.name_en = en_langs[ lang_key ] unless g.name_en == en_langs[ lang_key ]
+      g.name_ko = ko_langs[ lang_key ] unless g.name_ko == ko_langs[ lang_key ]
+      g.translated = translated.include? lang_key.downcase
       g.save
     end
-
+    
     class Scenario_
       attr_accessor :name_en, :name_ko
       attr_accessor :name_en, :name_ko

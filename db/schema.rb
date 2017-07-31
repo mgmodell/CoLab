@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170729030240) do
+ActiveRecord::Schema.define(version: 20170731084719) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -301,9 +301,10 @@ ActiveRecord::Schema.define(version: 20170729030240) do
   add_index "installments", ["user_id"], name: "index_installments_on_user_id", using: :btree
 
   create_table "languages", force: :cascade do |t|
-    t.string "code",    limit: 255
-    t.string "name_en", limit: 255
-    t.string "name_ko", limit: 255
+    t.string  "code",       limit: 255
+    t.string  "name_en",    limit: 255
+    t.string  "name_ko",    limit: 255
+    t.boolean "translated"
   end
 
   add_index "languages", ["code"], name: "index_languages_on_code", unique: true, using: :btree
