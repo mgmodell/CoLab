@@ -42,6 +42,7 @@ gem 'simple_form'
 gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
 gem 'city-state'
+gem 'i18n_data'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

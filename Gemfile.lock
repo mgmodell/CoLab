@@ -316,6 +316,7 @@ DEPENDENCIES
   forgery
   highcharts-rails
   htmlbeautifier
+  i18n_data
   jbuilder (~> 2.0)
   jquery-rails
   jquery-tablesorter
