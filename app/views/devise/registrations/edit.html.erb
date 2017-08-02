@@ -87,11 +87,17 @@
               <% end %>
 
               <%= f.association :gender, prompt: "Select a gender" %>
-              <%= f.association :age_range, label: "How old are you?", prompt: "Select an age range" %>
-              <%= f.input :country, as: :country, label: "Where are you from?", prompt: "Select a country",
+              <%= f.input :date_of_birth, label: "When were you born?" %>
                     priority: ["United States", "Korea, Republic of" ] %>
-              <%= f.input :timezone, as: :time_zone, label: "What time zone are you in?", prompt: "Select a timezone",
-                    priority: /US|Seo/ %>
+              <%= f.input :timezone, as: :time_zone,
+                    label: "What time zone are you in?",
+                    prompt: "Select a timezone", priority: /US|Seo/ %>
+              <%= f.input :started_school, prompt: "When did you begin university?" %>
+              <%= f.association :cip_code, prompt: "What are you studying?" %>
+              <%= f.association :home_country, prompt: "Where country are you from?" %>
+              <%= f.association :home_state, prompt: "Where state are you from?" %>
+              <%= f.association :primary_language,
+                    prompt: "What language do you speak at home?" %>
             </div>
             </div>
           </div>

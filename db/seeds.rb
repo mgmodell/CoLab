@@ -45,12 +45,27 @@ end
 
 # States
 HomeCountry.all.each do |country|
-  CS.get( country.code ).each do |state|
-    hs = HomeState.where( home_country_id: country.id, code: state[ 0 ] ).take
+  if CS.get( country.code ).count > 0
+    CS.get( country.code ).each do |state|
+      hs = HomeState.where( home_country_id: country.id, code: state[ 0 ] ).take
+      hs = HomeState.new if hs.nil?
+      hs.home_country = country
+      hs.code = state[ 0 ]
+      hs.name = state[ 1 ]
+      hs.save
+    end
+    hs = HomeState.where( home_country_id: country.id, code: '??' ).take
     hs = HomeState.new if hs.nil?
-    hs.home_country_id = country.id
-    hs.code = state[ 0 ]
-    hs.name = state[ 1 ]
+    hs.home_country = country
+    hs.code = '??'
+    hs.name = 'I prefer not to specify the state'
+    hs.save
+  else
+    hs = HomeState.where( home_country_id: country.id, code: '--' ).take
+    hs = HomeState.new if hs.nil?
+    hs.home_country = country
+    hs.code = '--'
+    hs.name = 'not applicable'
     hs.save
   end
 end
