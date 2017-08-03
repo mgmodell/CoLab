@@ -23,6 +23,19 @@ class HomeController < ApplicationController
     @current_location = 'home'
   end
 
+  def states_for_country
+    country_code = params[:country_code]
+    country = HomeCountry.where( code: country_code ).take
+
+    @states = country.nil? ? [] : country.home_states
+
+    # Return the retrieved data
+    respond_to do |format|
+      format.json
+    end
+
+  end
+
   # Data transport class
   class Event_
     attr_accessor :name, :task_link, :task_name_post, :type, :status, :group_name

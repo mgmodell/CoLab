@@ -44,6 +44,16 @@ en:
       updated: "Your password has been changed successfully. You are now signed in."
       updated_not_active: "Your password has been changed successfully."
     registrations:
+      signup: Sign up
+      account_info: Enter your account information
+      current_uni: Which university are you currently at?
+      current_tz: What time zone are you in?
+      choose_lang: Please choose a language
+      lang_quest: What language will you use?
+      disp_stgs: Display Settings
+      optional_demo: >
+        Supplying the forllowing information about yourself is optional, but providing it may
+        help us to provide a smoother experience for you.
       destroyed: "Bye! Your account has been successfully cancelled. We hope to see you again soon."
       signed_up: "Welcome! You have signed up successfully."
       signed_up_but_inactive: >

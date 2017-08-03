@@ -20,17 +20,17 @@ end
 # CIP Code seed data
 class CipCode_
   attr_accessor :gov_code
-  attr_accessor :description_en, :description_ko
+  attr_accessor :name_en, :name_ko
 end
 read_data = YAML.safe_load(File.open('db/cip_constants.yml'), [CipCode_])
 read_data.each do |cip_code|
   g = CipCode.where(gov_code: cip_code.gov_code).take
   g = CipCode.new if g.nil?
   g.gov_code = cip_code.gov_code unless g.gov_code == cip_code.gov_code
-  g.description_en = cip_code.description_en.capitalize unless
-                    g.description_en == cip_code.description_en.capitalize
-  g.description_ko = cip_code.description_ko unless
-                    g.description_ko == cip_code.description_ko
+  g.name_en = cip_code.name_en.capitalize unless
+                    g.name_en == cip_code.name_en.capitalize
+  g.name_ko = cip_code.name_ko unless
+                    g.name_ko == cip_code.name_ko
   g.save
 end
 
@@ -42,6 +42,11 @@ CS.countries.each do |country|
   hc.name = country[ 1 ]
   hc.save
 end
+hc = HomeCountry.where( code: '??' ).take
+hc = HomeCountry.new if hc.nil?
+hc.code = '??'
+hc.name = 'I''d prefer not to specify my country'
+hc.save
 
 # States
 HomeCountry.all.each do |country|
@@ -304,12 +309,12 @@ quote_data.each do |cf|
   g.save
 end
 
-translated = [ 'en', 'ko' ]
+translated = [ 'en' ]
 en_langs = I18nData.languages( :en )
 ko_langs = I18nData.languages( :ko )
 
 en_langs.keys.each do |lang_key|
-  g = Language.where(name_en: lang_key.downcase).take
+  g = Language.where(code: lang_key.downcase).take
   g = Language.new if g.nil?
   g.code = lang_key.downcase unless g.code == lang_key.downcase
   g.translated = translated.include? lang_key.downcase
@@ -318,3 +323,9 @@ en_langs.keys.each do |lang_key|
   g.save
 end
 
+g = Language.where(code: '??').take
+g = Language.new if g.nil?
+g.code = '??' unless g.code == '??'
+g.translated = false
+g.name_en = 'I''d prefer not to answer' unless g.name_en == 'I''d prefer not to answer'
+g.save

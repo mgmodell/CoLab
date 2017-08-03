@@ -7,6 +7,30 @@ $(document).bind("mobileinit", function(){
 //Add some code to the page.
 $(document).ready(function(){
 
+  $(".country_select").change(function() {
+    var country_code, state_select, url;
+    country_code = $(this).val();
+    url = "/infra/states_for_country/" + country_code;
+    $.getJSON(url, function(data) {
+      state_select = $(".select_state");
+      var i, newOption, results;
+      i = void 0;
+      newOption = void 0;
+      $(state_select).empty();
+      i = 0;
+      results = [];
+      while (i < data.states.length) {
+        newOption = new Option( data.states[i].name, data.states[i].id );
+
+        $(state_select).append(newOption);
+        results.push(i++);
+      }
+      return results;
+    });
+    $(state_select).selectmenu('refresh', true );
+    return $(state_select).selectmenu('refresh', true);
+  });
+
   /*
     This code (next two functions) enacts the 
     JavaScript-based reveal.

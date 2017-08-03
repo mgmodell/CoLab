@@ -8,5 +8,9 @@
   name_ko: 여자
 
 - !ruby/object:Gender_
+  name_en: Non-binary
+  name_ko: 
+
+- !ruby/object:Gender_
   name_en: I'd prefer not to answer
   name_ko: 나는 대답하지 않는 것을 좋아한다

@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
   has_many :candidates, inverse_of: :user
   belongs_to :gender, inverse_of: :users
   belongs_to :theme, inverse_of: :users
-  belongs_to :home_country, inverse_of: :users
+  has_many :home_countries, through: :home_state
   belongs_to :home_state, inverse_of: :users
   belongs_to :cip_code, inverse_of: :users
 

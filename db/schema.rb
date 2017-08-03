@@ -104,11 +104,11 @@ ActiveRecord::Schema.define(version: 20170731084719) do
   add_index "candidates", ["user_id"], name: "index_candidates_on_user_id", using: :btree
 
   create_table "cip_codes", force: :cascade do |t|
-    t.integer  "gov_code",       limit: 4
-    t.string   "description_en", limit: 255
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.string   "description_ko", limit: 255
+    t.integer  "gov_code",   limit: 4
+    t.string   "name_en",    limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "name_ko",    limit: 255
   end
 
   add_index "cip_codes", ["gov_code"], name: "index_cip_codes_on_gov_code", unique: true, using: :btree
@@ -475,10 +475,12 @@ ActiveRecord::Schema.define(version: 20170731084719) do
     t.integer  "language_id",            limit: 4
     t.date     "date_of_birth"
     t.integer  "home_state_id",          limit: 4
+    t.integer  "cip_code_id",            limit: 4
     t.integer  "primary_language_id",    limit: 4
     t.date     "started_school"
   end
 
+  add_index "users", ["cip_code_id"], name: "index_users_on_cip_code_id", using: :btree
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["gender_id"], name: "index_users_on_gender_id", using: :btree
   add_index "users", ["home_state_id"], name: "index_users_on_home_state_id", using: :btree
@@ -552,6 +554,7 @@ ActiveRecord::Schema.define(version: 20170731084719) do
   add_foreign_key "rosters", "roles"
   add_foreign_key "rosters", "users"
   add_foreign_key "scenarios", "behaviors"
+  add_foreign_key "users", "cip_codes"
   add_foreign_key "users", "genders"
   add_foreign_key "users", "home_states"
   add_foreign_key "users", "languages"

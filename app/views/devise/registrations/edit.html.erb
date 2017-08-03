@@ -1,4 +1,4 @@
-<% theme_code = @current_user.nil? ? false : @current_user.theme.code %>
+<% theme_code = @current_user.nil? ? 'a' : @current_user.theme.code %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -54,7 +54,7 @@
             </div>
           <div class="form-inputs ui-corner-all custom-corners">
             <div class="ui-bar ui-bar-<%= theme_code %>">
-              <h3>Display Settings</h3>
+              <h3><% t 'devise.registrations.disp_stgs' %></h3>
             </div>
             <div class="ui-body ui-body-<%= theme_code %>">
             <table width="100%">
@@ -66,9 +66,25 @@
                             { role: "flipswitch", 
                               "wrapper-class": "custom-size-flipswitch"} } %>
                 </td>
-                <td width="10%"></td><%end%>
+                <td width="10%"></td>
                 <td>
-                  <%= f.association :theme, prompt: "Please choose a UI theme", label: "What UI theme would you like to use?" %>
+                <% else %>
+                  <td colspan='3'>
+                <%end%>
+                  <%= f.input :timezone, as: :time_zone,
+                          label: "What time zone are you in?",
+                          prompt: "Select a timezone", priority: /US|Seo/ %>
+                </td>
+              </tr>
+              <tr>
+                <td colspan='3'>
+                  <%= f.association :theme,
+                          prompt: "Please choose a UI theme",
+                          label: "What UI theme would you like to use?" %>
+                  <%= f.association :language,
+                          collection: Language.supported,
+                          prompt: t( 'devise.registrations.choose_lang' ),
+                          label: t( 'devise.registrations.lang_quest' ) %>
                 </td>
               </tr>
             </table>
@@ -87,17 +103,29 @@
               <% end %>
 
               <%= f.association :gender, prompt: "Select a gender" %>
-              <%= f.input :date_of_birth, label: "When were you born?" %>
-                    priority: ["United States", "Korea, Republic of" ] %>
-              <%= f.input :timezone, as: :time_zone,
-                    label: "What time zone are you in?",
-                    prompt: "Select a timezone", priority: /US|Seo/ %>
-              <%= f.input :started_school, prompt: "When did you begin university?" %>
-              <%= f.association :cip_code, prompt: "What are you studying?" %>
-              <%= f.association :home_country, prompt: "Where country are you from?" %>
-              <%= f.association :home_state, prompt: "Where state are you from?" %>
+              <%= f.input :date_of_birth, as: :date, html5: true,
+                      label: "When were you born?" %>
+              <%= f.input :started_school, as: :date, html5: true,
+                      prompt: "When did you begin university?" %>
+              <%= f.association :cip_code, label: "What are you studying?",
+                      prompt: "Choose your course of study" %>
+              <table width='100%'>
+                <tr>
+                  <td width='50%'>
+                    <%= select_tag :country,
+                         options_from_collection_for_select( HomeCountry.all, :code, :name ),
+                         :class => 'country_select' %>
+                  </td>
+                  <td width='50%'>
+                      <%= f.association :home_state, 
+                          input_html: { :class => 'select_state' },
+                         prompt: 'Which state are you from?' %>
+                  </td>
+                </tr>
+              </table>
               <%= f.association :primary_language,
-                    prompt: "What language do you speak at home?" %>
+                      label: "What language do you speak at home?",
+                      prompt: "Select your Primary Language" %>
             </div>
             </div>
           </div>
