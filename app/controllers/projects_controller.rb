@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy]
-  before_action :check_admin, except: [:next, :diagnose, :react]
+  before_action :set_project, only: [:show, :edit, :update, :destroy,
+                                    :rescore_group, :rescore_groups]
+  before_action :check_admin, except: [:next, :diagnose, :react,
+                                    :rescore_group, :rescore_groups]
 
   def show
     @title = t('.title')
@@ -86,7 +88,7 @@ class ProjectsController < ApplicationController
   def remove_group
     group = Group.find(params[:group_id])
     group&.delete
-    redirect_to show
+    redirect_to @project
   end
 
   def add_group
@@ -94,8 +96,30 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:project_id])
     group = Group.create(name: params[:group_name], project: @project)
 
-    flash.now[:notice] = t('projects.group_create_success')
-    render :show
+    redirect_to @project, notice: t('projects.group_create_success')
+  end
+
+  def rescore_group
+    @title = t('.title')
+    group = @project.groups.where( id: params[:group_id ] ).take
+    if group.present?
+      group.calc_diversity_score 
+      group.save
+      
+      redirect_to @project, notice: t('projects.diversity_calculated')
+    else
+      redirect_to @project, notice: t('projects.wrong_group')
+    end
+  end
+
+  def rescore_groups
+    @title = t('.title')
+    @project.groups.each do |group|
+      group.calc_diversity_score 
+      group.save
+    end
+
+    redirect_to @project, notice: t('projects.diversities_calculated')
   end
 
   def activate

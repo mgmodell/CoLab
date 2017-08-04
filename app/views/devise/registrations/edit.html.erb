@@ -46,7 +46,7 @@
               <% end %>
               </table>
               <br />
-              <%= link_to 'Want to add an address?', '#add_address_popup', 
+              <%= link_to t( 'devise.registrations.email_add' ), '#add_address_popup', 
                     data: { rel: 'popup', transition: 'flip', position: { to: 'window' } },
                     class: 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left' %><br />
               <br />
@@ -54,7 +54,7 @@
             </div>
           <div class="form-inputs ui-corner-all custom-corners">
             <div class="ui-bar ui-bar-<%= theme_code %>">
-              <h3><% t 'devise.registrations.disp_stgs' %></h3>
+              <h3><%= t('devise.registrations.disp_stgs')%></h3>
             </div>
             <div class="ui-body ui-body-<%= theme_code %>">
             <table width="100%">
@@ -118,7 +118,6 @@
                   </td>
                   <td width='50%'>
                       <%= f.association :home_state, 
-                          input_html: { :class => 'select_state' },
                          prompt: 'Which state are you from?' %>
                   </td>
                 </tr>

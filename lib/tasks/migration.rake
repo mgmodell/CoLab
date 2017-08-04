@@ -58,7 +58,7 @@ namespace :migratify do
     hc = HomeCountry.where( code: '??' ).take
     hc = HomeCountry.new if hc.nil?
     hc.code = '??'
-    hc.name = 'I''d prefer not to specify my country'
+    hc.name = "I'd prefer not to specify my country"
     hc.save
     
     # States

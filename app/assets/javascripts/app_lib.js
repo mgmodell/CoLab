@@ -12,7 +12,7 @@ $(document).ready(function(){
     country_code = $(this).val();
     url = "/infra/states_for_country/" + country_code;
     $.getJSON(url, function(data) {
-      state_select = $(".select_state");
+      state_select = $("#user_home_state_id");
       var i, newOption, results;
       i = void 0;
       newOption = void 0;
@@ -27,7 +27,6 @@ $(document).ready(function(){
       }
       return results;
     });
-    $(state_select).selectmenu('refresh', true );
     return $(state_select).selectmenu('refresh', true);
   });
 

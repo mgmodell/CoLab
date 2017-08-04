@@ -32,8 +32,10 @@ en:
   status: Status
   course_name: Course Name
   student: Student
+  student_names: Student names
   group: Group
   groups: Groups
+  group_names: Group names
   dates: Dates
   open_date: Open Date
   start_date: Start Date
@@ -117,11 +119,9 @@ en:
   instructors: Instructors
   students: Students
   student: Student
-  projects: Projects
   no_projects: No projects
   exps: Experiences
   terms_lists: Terms Lists
-  courses: Courses
   course: Course
   school: School
   active: Active

@@ -18,8 +18,6 @@ class Group < ActiveRecord::Base
   has_many :cip_codes, through: :users
   has_many :genders, through: :users
   has_many :primary_languages, through: :users
-  has_many :reactions, through: :users
-  has_many :scenarios, through: :reactions
 
   validates :name, :project_id, presence: true
   validate :validate_activation_status
@@ -38,26 +36,26 @@ class Group < ActiveRecord::Base
     users.select { |u| u.new_record? || u.marked_for_destruction? }.any?
   end
 
-  def diversity_score_update
+  def calc_diversity_score
     state_count = home_states.where.not( code: '??' ) .uniq.count
     country_count = home_countries.where.not( code: '??' ).uniq.count
     cip_count = cip_codes.where.not( gov_code: 0 ).uniq.count
     gender_count = genders.where.not( name_en: "I'd prefer not to answer" ).uniq.count
     primary_lang_count = primary_languages.where.not( code: '??' ).uniq.count
-    scenario_count = scenarios.uniq.count
+    scenario_count = users.joins( reactions: :narrative ).group( :scenario_id ).count.count
 
     now = Date.current
     values = [].extend(DescriptiveStatistics)
     self.users.each do |user|
-      values << now.year - user.date_of_birth.year
+      values << now.year - user.date_of_birth.year unless user.date_of_birth.nil?
     end
-    age_sd = values.standard_deviation
+    age_sd = values.empty? ? 0 : values.standard_deviation
 
-    values = [].clear
+    values.clear
     self.users.each do |user|
-      values << now.year - user.started_school.year
+      values << now.year - user.started_school.year unless user.started_school.nil?
     end
-    uni_years_sd = values.standard_deviation
+    uni_years_sd = values.empty? ? 0 : values.standard_deviation
 
     self.diversity_score = state_count + country_count + 
               primary_lang_count + scenario_count + 
@@ -84,7 +82,7 @@ class Group < ActiveRecord::Base
     end
     i_changed = (changed? || @initial_member_state != gr.members)
 
-    self.diversity_score_update if i_changed
+    self.calc_diversity_score if i_changed
     yield # Do that save thing
 
     gr.save if persisted? && i_changed

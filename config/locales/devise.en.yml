@@ -69,6 +69,7 @@ en:
         You updated your account successfully, but we need to verify your new email
         address. Please check your email and follow the confirm link to confirm your
         new email address.
+      email_add: Want to add an address?
       updated: "Your account has been updated successfully."
       email_added: The new email has successfully been added.
       email_not_added: >

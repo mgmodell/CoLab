@@ -8,7 +8,9 @@ Rails.application.routes.draw do
     get 'courses/re_invite_student/:user_id' => 'courses#re_invite_student', :as => 're_invite_student'
     get 'projects/add_group' => 'projects#add_group', :as => 'add_group'
     get 'projects/remove_group' => 'projects#remove_group', :as => 'remove_group'
-    get 'projects/activate/:project_id' => 'projects#activate', :as => 'activate_project'
+    get 'projects/activate/:id' => 'projects#activate', :as => 'activate_project'
+    get 'projects/rescore_group/:id/:group_id' => 'projects#rescore_group', :as => 'rescore_group'
+    get 'projects/rescore_groups/:id' => 'projects#rescore_groups', :as => 'rescore_groups'
     get 'experiences/activate/:experience_id' => 'experiences#activate', :as => 'activate_experience'
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate', :as => 'activate_bingo_game'
     resources :courses, :projects, :experiences, :bingo_games, :schools
