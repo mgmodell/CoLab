@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170731084719) do
+ActiveRecord::Schema.define(version: 20170803080009) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -250,11 +250,12 @@ ActiveRecord::Schema.define(version: 20170731084719) do
   add_index "group_revisions", ["group_id"], name: "index_group_revisions_on_group_id", using: :btree
 
   create_table "groups", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.integer  "project_id", limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "anon_name",  limit: 255
+    t.string   "name",            limit: 255
+    t.integer  "project_id",      limit: 4
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "anon_name",       limit: 255
+    t.integer  "diversity_score", limit: 4
   end
 
   add_index "groups", ["project_id"], name: "index_groups_on_project_id", using: :btree

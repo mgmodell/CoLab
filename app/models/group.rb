@@ -46,7 +46,23 @@ class Group < ActiveRecord::Base
     primary_lang_count = primary_languages.where.not( code: '??' ).uniq.count
     scenario_count = scenarios.uniq.count
 
-    #TODO: Do our std. deviations on ages here
+    now = Date.current
+    values = [].extend(DescriptiveStatistics)
+    self.users.each do |user|
+      values << now.year - user.date_of_birth.year
+    end
+    age_sd = values.standard_deviation
+
+    values = [].clear
+    self.users.each do |user|
+      values << now.year - user.started_school.year
+    end
+    uni_years_sd = values.standard_deviation
+
+    self.diversity_score = state_count + country_count + 
+              primary_lang_count + scenario_count + 
+              (2 * (gender_count + cip_count) ) +
+              (age_sd + uni_years_sd ).round
 
   end
 
@@ -68,6 +84,7 @@ class Group < ActiveRecord::Base
     end
     i_changed = (changed? || @initial_member_state != gr.members)
 
+    self.diversity_score_update if i_changed
     yield # Do that save thing
 
     gr.save if persisted? && i_changed
