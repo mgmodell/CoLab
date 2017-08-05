@@ -29,10 +29,6 @@
       <div class='ui-bar ui-bar-<%= theme_code %>'>
         <h3><%= t 'devise.registrations.disp_stgs' %></h3>
       </div>
-      <%= f.input :timezone, as: :time_zone,
-                  label: t( 'devise.registrations.current_tz' ),
-                  prompt: "Select a timezone",
-                  priority: /US|Seo/ %>
       <%= f.association :theme,
                   prompt: "Please choose a UI theme",
                   label: "What UI theme would you like to use?" %>
@@ -40,6 +36,10 @@
                   collection: Language.supported,
                   prompt: t( 'devise.registrations.choose_lang',
                   label: t( 'devise.registrations.lang_quest' ) %>
+      <%= f.input :timezone, as: :time_zone,
+                  label: t( 'devise.registrations.current_tz' ),
+                  prompt: "Select a timezone",
+                  priority: /US|Seo/ %>
     </div>
 
     <div class='ui-corner-all custom-corners'>
@@ -50,24 +50,33 @@
 
 
       <div class="ui-body ui-body-<%= theme_code %>">
+        <%= f.association :school,
+                label: t( 'devise.registrations.current_uni' ),
+                prompt: "Select a School" %>
         <%= f.association :gender, prompt: "Select a gender" %>
-        <%= f.input :date_of_birth, label: t( 'devise.registrations.dob' ) %>
-        <%= f.association :school, label:
-                  t( 'devise.registrations.current_uni' ),
-                  prompt: "Select a School" %>
-        <%= f.input :started_school, prompt: 'When did you begin university?' %>
+        <%= f.input :date_of_birth, as: :date, html5: true,
+                label: t( 'devise.registrations.dob' ) %>
+        <%= f.input :started_school, as: :date, html5: true,
+                prompt: 'When did you begin university?' %>
         <%= f.input :cip_code, prompt: 'What are you studying?' %>
         <table width='100%'>
+          <tr colspan='2'>
+            <td><%= label_tag :country, t( 'devise.registrations.hometown' ) %><td>
+          </tr>
           <tr>
             <td width='50%'>
+              <% init_country = f.object.home_state.nil? ?
+                HomeCountry.where( code: '__' ).take :
+                f.object.home_state.home_country %>
               <%= select_tag :country,
-                   options_from_collection_for_select( HomeCountry.all, :code, :name ),
+                   options_from_collection_for_select( HomeCountry.all,
+                              :code, :name, init_country.code  ),
                    :class => 'country_select' %>
             </td>
             <td width='50%'>
-                <%= f.input :home_state, 
-                   input_html: { :class => 'select_state' },
-                   prompt: 'Which state are you from?' %>
+                <%= f.association :home_state,
+                    collection: init_country.home_states,
+                    label: false %>
             </td>
           </tr>
         </table>

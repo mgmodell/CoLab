@@ -20,7 +20,8 @@ $(document).ready(function(){
       i = 0;
       results = [];
       while (i < data.states.length) {
-        newOption = new Option( data.states[i].name, data.states[i].id );
+        newOption = new Option( data.states[i].name,
+              data.states[i].id, i < 1, i < 1 );
 
         $(state_select).append(newOption);
         results.push(i++);
