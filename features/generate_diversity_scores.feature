@@ -1,0 +1,291 @@
+Feature: Generate diversity scores
+  Test our ability to generate diversity scores for our groups
+  and then to regenerate them upon changes being made.
+
+  Background:
+    Given a user has signed up
+    Given the user "has" had demographics requested
+    Given there is a course with an assessed project
+    Given the course has 8 confirmed users
+    Given the course timezone is "Mexico City"
+    Given the user timezone is "Nairobi"
+    Given the course started "5/10/1976" and ended "11/01/2012"
+
+  Scenario: Instructor creates a new project
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "New Project"
+    Then the user sets the "Name" field to "Cool-yo!"
+    Then the user sets the project "start" date to "02/29/1980"
+    Then the user sets the project "end" date to "07/10/2008"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
+    Then the user clicks "Create Project"
+    Then the user will see "success"
+    #Let's check the values stored
+    Then retrieve the latest project from the db
+    Then the project "Name" is "Cool-yo!"
+    Then the project "Description" is "this is the coolest"
+    #check the dates
+    Then the project "start" date is "02/29/1980"
+    Then the project "end" date is "07/10/2008"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
+
+  Scenario: Instructor creates a new project but leaves the dates untouched
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "New Project"
+    Then the user sets the "Name" field to "Cool-yo!"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
+    Then the user clicks "Create Project"
+    Then the user will see "success"
+    #Let's check the values stored
+    Then retrieve the latest project from the db
+    Then the project "Name" is "Cool-yo!"
+    Then the project "Description" is "this is the coolest"
+    #check the dates
+    Then the project "start" date is "05/10/1976"
+    Then the project "end" date is "11/01/2012"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
+
+  Scenario: Instructor edits an existing project
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "Edit" on the existing project
+    Then the user sets the "Name" field to "Cool-yo!"
+    Then the user sets the project "start" date to "05/10/1976"
+    Then the user sets the project "end" date to "02/29/1980"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
+    Then the user clicks "Update Project"
+    Then the user will see "success"
+    Then retrieve the latest project from the db
+    #Let's check the values stored
+    Then retrieve the latest project from the db
+    Then the project "Name" is "Cool-yo!"
+    Then the project "Description" is "this is the coolest"
+    #check the dates
+    Then the project "start" date is "5/10/1976"
+    Then the project "end" date is "2/29/1980"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
+
+  Scenario: Instructor creates a project and doesn't set the dates then edits it
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "New Project"
+    Then the user sets the "Name" field to "Cool-yo!"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
+    Then the user clicks "Create Project"
+    Then the user will see "success"
+    #Let's check the values stored
+    Then retrieve the latest project from the db
+    Then the project "Name" is "Cool-yo!"
+    Then the project "Description" is "this is the coolest"
+    #check the dates
+    Then the project "start" date is "05/10/1976"
+    Then the project "end" date is "11/01/2012"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
+
+    Then the user clicks "Edit Project Details"
+    Then the user sets the "Name" field to "Cool-yo!"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
+    Then the user clicks "Update Project"
+    Then the user will see "success"
+    Then retrieve the latest project from the db
+    #Let's check the values stored
+    Then retrieve the latest project from the db
+    Then the project "Name" is "Cool-yo!"
+    Then the project "Description" is "this is the coolest"
+    #check the dates
+    Then the project "start" date is "5/10/1976"
+    Then the project "end" date is "11/01/2012"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
+
+  Scenario: Instructor creates a project then edits it
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "New Project"
+    Then the user sets the "Name" field to "Cool-yo!"
+    Then the user sets the project "start" date to "02/29/1980"
+    Then the user sets the project "end" date to "07/10/2008"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
+    Then the user clicks "Create Project"
+    Then the user will see "success"
+    #Let's check the values stored
+    Then retrieve the latest project from the db
+    Then the project "Name" is "Cool-yo!"
+    Then the project "Description" is "this is the coolest"
+    #check the dates
+    Then the project "start" date is "02/29/1980"
+    Then the project "end" date is "07/10/2008"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
+
+    Then the user clicks "Edit Project Details"
+    Then the user sets the "Name" field to "Cool-yo!"
+    Then the user sets the project "start" date to "05/10/1976"
+    Then the user sets the project "end" date to "02/29/1980"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
+    Then the user clicks "Update Project"
+    Then the user will see "success"
+    Then retrieve the latest project from the db
+    #Let's check the values stored
+    Then retrieve the latest project from the db
+    Then the project "Name" is "Cool-yo!"
+    Then the project "Description" is "this is the coolest"
+    #check the dates
+    Then the project "start" date is "5/10/1976"
+    Then the project "end" date is "2/29/1980"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
+
+  Scenario: Instructor creates a project then edits it, but doesn't edit the dates
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "New Project"
+    Then the user sets the "Name" field to "Cool-yo!"
+    Then the user sets the project "start" date to "02/29/1980"
+    Then the user sets the project "end" date to "07/10/2008"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
+    Then the user clicks "Create Project"
+    Then the user will see "success"
+    #Let's check the values stored
+    Then retrieve the latest project from the db
+    Then the project "Name" is "Cool-yo!"
+    Then the project "Description" is "this is the coolest"
+    #check the dates
+    Then the project "start" date is "02/29/1980"
+    Then the project "end" date is "07/10/2008"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
+
+    Then the user clicks "Edit Project Details"
+    Then the user sets the "Name" field to "Cool beans"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
+    Then the user clicks "Update Project"
+    Then the user will see "success"
+    Then retrieve the latest project from the db
+    #Let's check the values stored
+    Then the project "Name" is "Cool beans"
+    Then the project "Description" is "this is the coolest"
+    #check the dates
+    Then the project "start" date is "02/29/1980"
+    Then the project "end" date is "07/10/2008"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
+
+  Scenario: Instructor assigns a course's students to groups
+    Given the course started "last month" and ended "next month"
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+
+    Then the user clicks "Show" on the existing project
+    Then the user sets the "New group name" field to "my group"
+    Then the user clicks "Add!"
+    Then the user will see "success"
+    Then the user sets the "New group name" field to "your group"
+    Then the user clicks "Add!"
+    #Edit the groups
+    Then the user clicks "Edit Project Details"
+    Then the user sets the project "start" date to "yesterday"
+    Then the user sets the project "end" date to "tomorrow"
+
+    Then set user 1 to group "my group"
+    Then the user clicks "Update Project"
+    Then the user will see "success"
+    Then retrieve the latest project from the db
+    Then the project "start" date is "yesterday"
+    Then the project "end" date is "tomorrow"
+    Then retrieve the latest project from the db
+    Then group "my group" has 1 user
+    Then group "my group" has 1 revision
+
+    #Another revision
+    Then the user clicks "Edit Project Details"
+    Then set user 2 to group "my group"
+    Then set user 3 to group "your group"
+    Then set user 4 to group "your group"
+    Then the user clicks "Update Project"
+    Then the user will see "success"
+    Then retrieve the latest project from the db
+    Then group "my group" has 2 user
+    Then group "my group" has 2 revision
+    Then group "your group" has 2 user
+    Then group "your group" has 1 revision
+
