@@ -28,10 +28,14 @@ When /^the user "(.*?)" fill in demographics data$/ do |does_or_does_not|
   give_demographics = does_or_does_not == 'does'
   if give_demographics
     page.select('Male', from: 'user_gender_id')
-    page.select('18-20', from: 'user_age_range_id')
-    page.select('Belize', from: 'user_country')
-    # Current password has been removed from this page.
-    # page.fill_in('user_current_password', with: 'password')
+    page.select('Education', from: 'user_cip_code_id')
+    page.select('Belize', from: 'country')
+    page.select('Avestan', from: 'user_primary_language_id')
+
+    new_date = Date.parse( '10-05-1976' )
+    page.find('#user_date_of_birth').set(new_date)
+    new_date = Date.parse( '10-09-2016' )
+    page.find('#user_date_of_birth').set(new_date)
   end
   click_button 'my profile'
 end
