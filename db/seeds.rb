@@ -27,8 +27,11 @@ read_data.each do |cip_code|
   g = CipCode.where(gov_code: cip_code.gov_code).take
   g = CipCode.new if g.nil?
   g.gov_code = cip_code.gov_code unless g.gov_code == cip_code.gov_code
-  g.name_en = cip_code.name_en.capitalize unless
-                    g.name_en == cip_code.name_en.capitalize
+
+  #Capitalize and strip trailing period
+  cip_en = cip_code.name_en.chomp( '.' ).capitalize
+  g.name_en = cip_en unless
+                    g.name_en == cip_en
   g.name_ko = cip_code.name_ko unless
                     g.name_ko == cip_code.name_ko
   g.save
@@ -42,10 +45,11 @@ CS.countries.each do |country|
   hc.name = country[ 1 ]
   hc.save
 end
-hc = HomeCountry.where( code: '??' ).take
+hc = HomeCountry.where( code: '__' ).take
 hc = HomeCountry.new if hc.nil?
-hc.code = '??'
-hc.name = "I'd prefer not to specify my country"
+hc.code = '__' unless hc.code == '__'
+hc.name = 'I prefer not to specify my country' unless
+          hc.name == 'I prefer not to specify my country'
 hc.save
 
 # States
@@ -59,10 +63,10 @@ HomeCountry.all.each do |country|
       hs.name = state[ 1 ]
       hs.save
     end
-    hs = HomeState.where( home_country_id: country.id, code: '??' ).take
+    hs = HomeState.where( home_country_id: country.id, code: '__' ).take
     hs = HomeState.new if hs.nil?
     hs.home_country = country
-    hs.code = '??'
+    hs.code = '__'
     hs.name = 'I prefer not to specify the state'
     hs.save
   else
@@ -323,9 +327,9 @@ en_langs.keys.each do |lang_key|
   g.save
 end
 
-g = Language.where(code: '??').take
+g = Language.where(code: '__').take
 g = Language.new if g.nil?
-g.code = '??' unless g.code == '??'
+g.code = '__' unless g.code == '__'
 g.translated = false
-g.name_en = 'I''d prefer not to answer' unless g.name_en == 'I''d prefer not to answer'
+g.name_en = 'I prefer not to answer' unless g.name_en == 'I prefer not to answer'
 g.save

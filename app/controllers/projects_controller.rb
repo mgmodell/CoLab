@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :destroy,
-                                    :rescore_group, :rescore_groups]
+                                     :rescore_group, :rescore_groups]
   before_action :check_admin, except: [:next, :diagnose, :react,
-                                    :rescore_group, :rescore_groups]
+                                       :rescore_group, :rescore_groups]
 
   def show
     @title = t('.title')
@@ -101,11 +101,11 @@ class ProjectsController < ApplicationController
 
   def rescore_group
     @title = t('.title')
-    group = @project.groups.where( id: params[:group_id ] ).take
+    group = @project.groups.where(id: params[:group_id]).take
     if group.present?
-      group.calc_diversity_score 
+      group.calc_diversity_score
       group.save
-      
+
       redirect_to @project, notice: t('projects.diversity_calculated')
     else
       redirect_to @project, notice: t('projects.wrong_group')
@@ -115,7 +115,7 @@ class ProjectsController < ApplicationController
   def rescore_groups
     @title = t('.title')
     @project.groups.each do |group|
-      group.calc_diversity_score 
+      group.calc_diversity_score
       group.save
     end
 

@@ -25,7 +25,7 @@ class HomeController < ApplicationController
 
   def states_for_country
     country_code = params[:country_code]
-    country = HomeCountry.where( code: country_code ).take
+    country = HomeCountry.where(code: country_code).take
 
     @states = country.nil? ? [] : country.home_states
 
@@ -33,7 +33,6 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.json
     end
-
   end
 
   # Data transport class

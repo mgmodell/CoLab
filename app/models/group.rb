@@ -37,31 +37,30 @@ class Group < ActiveRecord::Base
   end
 
   def calc_diversity_score
-    state_count = home_states.where.not( code: '??' ) .uniq.count
-    country_count = home_countries.where.not( code: '??' ).uniq.count
-    cip_count = cip_codes.where.not( gov_code: 0 ).uniq.count
-    gender_count = genders.where.not( name_en: "I'd prefer not to answer" ).uniq.count
-    primary_lang_count = primary_languages.where.not( code: '??' ).uniq.count
-    scenario_count = users.joins( reactions: :narrative ).group( :scenario_id ).count.count
+    state_count = home_states.where.not(code: '??') .uniq.count
+    country_count = home_countries.where.not(code: '??').uniq.count
+    cip_count = cip_codes.where.not(gov_code: 0).uniq.count
+    gender_count = genders.where.not(name_en: "I'd prefer not to answer").uniq.count
+    primary_lang_count = primary_languages.where.not(code: '??').uniq.count
+    scenario_count = users.joins(reactions: :narrative).group(:scenario_id).count.count
 
     now = Date.current
     values = [].extend(DescriptiveStatistics)
-    self.users.each do |user|
+    users.each do |user|
       values << now.year - user.date_of_birth.year unless user.date_of_birth.nil?
     end
     age_sd = values.empty? ? 0 : values.standard_deviation
 
     values.clear
-    self.users.each do |user|
+    users.each do |user|
       values << now.year - user.started_school.year unless user.started_school.nil?
     end
     uni_years_sd = values.empty? ? 0 : values.standard_deviation
 
-    self.diversity_score = state_count + country_count + 
-              primary_lang_count + scenario_count + 
-              (2 * (gender_count + cip_count) ) +
-              (age_sd + uni_years_sd ).round
-
+    self.diversity_score = state_count + country_count +
+                           primary_lang_count + scenario_count +
+                           (2 * (gender_count + cip_count)) +
+                           (age_sd + uni_years_sd).round
   end
 
   private
@@ -82,7 +81,7 @@ class Group < ActiveRecord::Base
     end
     i_changed = (changed? || @initial_member_state != gr.members)
 
-    self.calc_diversity_score if i_changed
+    calc_diversity_score if i_changed
     yield # Do that save thing
 
     gr.save if persisted? && i_changed
