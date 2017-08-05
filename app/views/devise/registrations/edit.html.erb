@@ -25,7 +25,7 @@
                     <th>Registered Emails</th>
                     <th>Primary</th>
                     <th>Confirmed</th>
-                    <th>Actions</th>
+                    <th><%= t :actions %></th>
                   </tr>
                 </thead>
               <% f.object.emails.each do |email| %>
@@ -156,10 +156,10 @@
       <thead>
       <tr>
         <th>Activity</th>
-        <th data-priority="0">Course</th>
+        <th data-priority="0"><%= t :course %></th>
         <th data-priority="0">Type</th>
         <th data-priority="0">Completion Date</th>
-        <th data-priority="0">Status</th>
+        <th data-priority="0"><%= t :status %></th>
         <th data-priority="1">Other information</th>
       </tr>
       </thead>

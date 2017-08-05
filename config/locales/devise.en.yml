@@ -4,8 +4,13 @@ en:
   devise:
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
-      send_instructions: "You will receive an email with instructions for how to confirm your email address in a few minutes."
-      send_paranoid_instructions: "If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes."
+      send_instructions: >
+        You will receive an email with instructions for how to confirm your email
+        address in a few minutes.
+      send_paranoid_instructions: >
+        If your email address exists in our database, you will receive an
+        email with instructions for how to confirm your email address in a few minutes.
+      no_instructions: "Didn't receive confirmation instructions?"
     failure:
       already_authenticated: "You are already signed in."
       inactive: "Your account is not activated yet."
@@ -28,6 +33,7 @@ en:
     omniauth_callbacks:
       failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
       success: "Successfully authenticated from %{kind} account."
+      google_auth: Sign in with Google
     passwords:
       no_token: >
         You can't access this page without coming from a password reset email. If
@@ -43,6 +49,13 @@ en:
         receive it, be sure to log out before clicking the reset link.
       updated: "Your password has been changed successfully. You are now signed in."
       updated_not_active: "Your password has been changed successfully."
+      change_title: Change your password
+      new: New password
+      confirm: Confirm your new password
+      change_submit: Change my password
+      hint: "%{min} characters minimum"
+      forgot_title: Forgot your password?
+      forgot_submit: Send me reset password instructions
     registrations:
       signup: Sign up
       account_info: Enter your account information
@@ -82,6 +95,8 @@ en:
       signed_in: "Signed in successfully."
       signed_out: "Signed out successfully."
       already_signed_out: "Signed out successfully."
+      login: Log in
+      login_submit: Log in!
     unlocks:
       send_instructions: >
         You will receive an email with instructions for how to unlock your account
@@ -90,6 +105,9 @@ en:
         If your account exists, you will receive an email with instructions for how
         to unlock it in a few minutes.
       unlocked: "Your account has been unlocked successfully. Please sign in to continue."
+      no_instructions: "Didn't receive unlock instructions?"
+      resend_title: Resend unlock instructions
+      resend_submit: Resend unlock instructions!
   errors:
     messages:
       already_confirmed: "was already confirmed, please try signing in"
