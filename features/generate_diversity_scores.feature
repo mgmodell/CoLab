@@ -1,4 +1,4 @@
-Feature: Generate diversity scores
+Feature: Generate diversity scores (DS)
   Test our ability to generate diversity scores for our groups
   and then to regenerate them upon changes being made.
 
@@ -6,286 +6,96 @@ Feature: Generate diversity scores
     Given a user has signed up
     Given the user "has" had demographics requested
     Given there is a course with an assessed project
-    Given the course has 8 confirmed users
-    Given the course timezone is "Mexico City"
-    Given the user timezone is "Nairobi"
-    Given the course started "5/10/1976" and ended "11/01/2012"
-
-  Scenario: Instructor creates a new project
     Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Then the user clicks "New Project"
-    Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the project "start" date to "02/29/1980"
-    Then the user sets the project "end" date to "07/10/2008"
-    Then the user selects "Monday" as "Opens every"
-    Then the user selects "Tuesday" as "Closes every"
-    Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Create Project"
-    Then the user will see "success"
-    #Let's check the values stored
-    Then retrieve the latest project from the db
-    Then the project "Name" is "Cool-yo!"
-    Then the project "Description" is "this is the coolest"
-    #check the dates
-    Then the project "start" date is "02/29/1980"
-    Then the project "end" date is "07/10/2008"
-    #check the selects
-    Then the project Factor pack is "Simple"
-    Then the project Style is "Sliders (simple)"
+    Given the project has a group with 4 confirmed users
 
-  Scenario: Instructor creates a new project but leaves the dates untouched
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Then the user clicks "New Project"
-    Then the user sets the "Name" field to "Cool-yo!"
-    Then the user selects "Monday" as "Opens every"
-    Then the user selects "Tuesday" as "Closes every"
-    Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Create Project"
-    Then the user will see "success"
-    #Let's check the values stored
-    Then retrieve the latest project from the db
-    Then the project "Name" is "Cool-yo!"
-    Then the project "Description" is "this is the coolest"
-    #check the dates
-    Then the project "start" date is "05/10/1976"
-    Then the project "end" date is "11/01/2012"
-    #check the selects
-    Then the project Factor pack is "Simple"
-    Then the project Style is "Sliders (simple)"
+  Scenario: With no demographics entered, DS will be 0
+     Then we update the group's diversity score
+     Then the group's diversity score is 0
 
-  Scenario: Instructor edits an existing project
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Then the user clicks "Edit" on the existing project
-    Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the project "start" date to "05/10/1976"
-    Then the user sets the project "end" date to "02/29/1980"
-    Then the user selects "Monday" as "Opens every"
-    Then the user selects "Tuesday" as "Closes every"
-    Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
-    Then retrieve the latest project from the db
-    #Let's check the values stored
-    Then retrieve the latest project from the db
-    Then the project "Name" is "Cool-yo!"
-    Then the project "Description" is "this is the coolest"
-    #check the dates
-    Then the project "start" date is "5/10/1976"
-    Then the project "end" date is "2/29/1980"
-    #check the selects
-    Then the project Factor pack is "Simple"
-    Then the project Style is "Sliders (simple)"
+  Scenario: 2 different genders gives us a DS of 4
+     Then we update the group's diversity score
+     Then the group's diversity score is 4
 
-  Scenario: Instructor creates a project and doesn't set the dates then edits it
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Then the user clicks "New Project"
-    Then the user sets the "Name" field to "Cool-yo!"
-    Then the user selects "Monday" as "Opens every"
-    Then the user selects "Tuesday" as "Closes every"
-    Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Create Project"
-    Then the user will see "success"
-    #Let's check the values stored
-    Then retrieve the latest project from the db
-    Then the project "Name" is "Cool-yo!"
-    Then the project "Description" is "this is the coolest"
-    #check the dates
-    Then the project "start" date is "05/10/1976"
-    Then the project "end" date is "11/01/2012"
-    #check the selects
-    Then the project Factor pack is "Simple"
-    Then the project Style is "Sliders (simple)"
+  Scenario: 3 different genders gives us a DS of 6
+     Then we update the group's diversity score
+     Then the group's diversity score is 6
 
-    Then the user clicks "Edit Project Details"
-    Then the user sets the "Name" field to "Cool-yo!"
-    Then the user selects "Monday" as "Opens every"
-    Then the user selects "Tuesday" as "Closes every"
-    Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
-    Then retrieve the latest project from the db
-    #Let's check the values stored
-    Then retrieve the latest project from the db
-    Then the project "Name" is "Cool-yo!"
-    Then the project "Description" is "this is the coolest"
-    #check the dates
-    Then the project "start" date is "5/10/1976"
-    Then the project "end" date is "11/01/2012"
-    #check the selects
-    Then the project Factor pack is "Simple"
-    Then the project Style is "Sliders (simple)"
+  Scenario: 3 different genders and one non-answer gives us a DS of 6
+     Then we update the group's diversity score
+     Then the group's diversity score is 6
 
-  Scenario: Instructor creates a project then edits it
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Then the user clicks "New Project"
-    Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the project "start" date to "02/29/1980"
-    Then the user sets the project "end" date to "07/10/2008"
-    Then the user selects "Monday" as "Opens every"
-    Then the user selects "Tuesday" as "Closes every"
-    Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Create Project"
-    Then the user will see "success"
-    #Let's check the values stored
-    Then retrieve the latest project from the db
-    Then the project "Name" is "Cool-yo!"
-    Then the project "Description" is "this is the coolest"
-    #check the dates
-    Then the project "start" date is "02/29/1980"
-    Then the project "end" date is "07/10/2008"
-    #check the selects
-    Then the project Factor pack is "Simple"
-    Then the project Style is "Sliders (simple)"
+  Scenario: 2 different states in the same country gives us a DS of 2
+     Then we update the group's diversity score
+     Then the group's diversity score is 4
 
-    Then the user clicks "Edit Project Details"
-    Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the project "start" date to "05/10/1976"
-    Then the user sets the project "end" date to "02/29/1980"
-    Then the user selects "Monday" as "Opens every"
-    Then the user selects "Tuesday" as "Closes every"
-    Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
-    Then retrieve the latest project from the db
-    #Let's check the values stored
-    Then retrieve the latest project from the db
-    Then the project "Name" is "Cool-yo!"
-    Then the project "Description" is "this is the coolest"
-    #check the dates
-    Then the project "start" date is "5/10/1976"
-    Then the project "end" date is "2/29/1980"
-    #check the selects
-    Then the project Factor pack is "Simple"
-    Then the project Style is "Sliders (simple)"
+  Scenario: 2 selected states in different home countries gives us a DS of 4
+     Then we update the group's diversity score
+     Then the group's diversity score is 4
 
-  Scenario: Instructor creates a project then edits it, but doesn't edit the dates
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Then the user clicks "New Project"
-    Then the user sets the "Name" field to "Cool-yo!"
-    Then the user sets the project "start" date to "02/29/1980"
-    Then the user sets the project "end" date to "07/10/2008"
-    Then the user selects "Monday" as "Opens every"
-    Then the user selects "Tuesday" as "Closes every"
-    Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Create Project"
-    Then the user will see "success"
-    #Let's check the values stored
-    Then retrieve the latest project from the db
-    Then the project "Name" is "Cool-yo!"
-    Then the project "Description" is "this is the coolest"
-    #check the dates
-    Then the project "start" date is "02/29/1980"
-    Then the project "end" date is "07/10/2008"
-    #check the selects
-    Then the project Factor pack is "Simple"
-    Then the project Style is "Sliders (simple)"
+  Scenario: 2 countries with just one selected state gives a DS of 3
+     Then we update the group's diversity score
+     Then the group's diversity score is 4
 
-    Then the user clicks "Edit Project Details"
-    Then the user sets the "Name" field to "Cool beans"
-    Then the user selects "Monday" as "Opens every"
-    Then the user selects "Tuesday" as "Closes every"
-    Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
-    Then retrieve the latest project from the db
-    #Let's check the values stored
-    Then the project "Name" is "Cool beans"
-    Then the project "Description" is "this is the coolest"
-    #check the dates
-    Then the project "start" date is "02/29/1980"
-    Then the project "end" date is "07/10/2008"
-    #check the selects
-    Then the project Factor pack is "Simple"
-    Then the project Style is "Sliders (simple)"
+  Scenario: 4 different home languages gives us a DS of 4
+     Then we update the group's diversity score
+     Then the group's diversity score is 4
 
-  Scenario: Instructor assigns a course's students to groups
-    Given the course started "last month" and ended "next month"
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
+  Scenario: 15 completed scenarios gives us a DS of 12
+     Then we update the group's diversity score
+     Then the group's diversity score is 12
 
-    Then the user clicks "Show" on the existing project
-    Then the user sets the "New group name" field to "my group"
-    Then the user clicks "Add!"
-    Then the user will see "success"
-    Then the user sets the "New group name" field to "your group"
-    Then the user clicks "Add!"
-    #Edit the groups
-    Then the user clicks "Edit Project Details"
-    Then the user sets the project "start" date to "yesterday"
-    Then the user sets the project "end" date to "tomorrow"
+  Scenario: 7 different scenarios gives us a DS of 7
+     Then we update the group's diversity score
+     Then the group's diversity score is 7
 
-    Then set user 1 to group "my group"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
-    Then retrieve the latest project from the db
-    Then the project "start" date is "yesterday"
-    Then the project "end" date is "tomorrow"
-    Then retrieve the latest project from the db
-    Then group "my group" has 1 user
-    Then group "my group" has 1 revision
+  Scenario: 2 different incomplete scenarios gives us a DS of 2
+     Then we update the group's diversity score
+     Then the group's diversity score is 2
 
-    #Another revision
-    Then the user clicks "Edit Project Details"
-    Then set user 2 to group "my group"
-    Then set user 3 to group "your group"
-    Then set user 4 to group "your group"
-    Then the user clicks "Update Project"
-    Then the user will see "success"
-    Then retrieve the latest project from the db
-    Then group "my group" has 2 user
-    Then group "my group" has 2 revision
-    Then group "your group" has 2 user
-    Then group "your group" has 1 revision
+  Scenario: 2 different incomplete scenarios gives us a DS of 2
+     Then we update the group's diversity score
+     Then the group's diversity score is 2
 
+  Scenario: DOBs of 1980 and 1976 give a DS of 2
+     Then we update the group's diversity score
+     Then the group's diversity score is 2
+
+  Scenario: DOBs of 1980, 1976 and 2008 give a DS of 14
+     Then we update the group's diversity score
+     Then the group's diversity score is 14
+
+  Scenario: A Uni. start of 2015 give a DS of 0
+     Then we update the group's diversity score
+     Then the group's diversity score is 0
+
+  Scenario: Uni. starts of 2015, 2011, 2014 and 2015 give a DS of 2
+     Then we update the group's diversity score
+     Then the group's diversity score is 2
+
+  Scenario: If a DS:3 group makes a demographic change, the DS does not update automatically
+     Then we update the group's diversity score
+     Then the group's diversity score is 3
+
+  Scenario: If an all-male group (DS:1) group adds a gender-non-binary, then DS:2
+    Given the course has 1 confirmed users
+     Then we update the group's diversity score
+     Then the group's diversity score is 2
+
+  Scenario: A proposed group from 4 users with 2 genders gives a ds of 2
+    Given the course has 4 confirmed users
+     Then the score calculated from the users is 2
+
+  Scenario: Diversity combinations (2 gender + 2 lang) are additive
+     Then we update the group's diversity score
+     Then the group's diversity score is 4
+
+  Scenario: Diversity combination (full on)
+    #2011, 2012, 2011, 2011
+    #M + F
+    #1 Country + 2 Provinces
+    #1996, 1997, 1998, 1997
+    #4 scenarios
+    #2 languages
+    #2 CIP
+     Then the group's diversity score is 16
