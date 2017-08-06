@@ -2,19 +2,21 @@
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
-      <li class="ui-state-active ui-tabs-active"><a href="#profile" data-ajax="false">About You</a></li>
-      <li><a href="#history" data-ajax="false">History</a></li>
+      <li class="ui-state-active ui-tabs-active">
+        <a href="#profile" data-ajax="false"><%= t :about_you %></a>
+      </li>
+      <li><a href="#history" data-ajax="false"><%= t :history %></a></li>
     </ul>
   </div>
   <div id="profile" class="ui-body-<%= theme_code %> ui-content">
 <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-        <h2>Your account information</h2>
+        <h2><%= t 'devise.registrations.your_info' %></h2>
           <%= f.error_notification %>
           <%= f.input :welcomed, as: :hidden, input_html: { value: true } %>
 
           <div class="form-inputs ui-corner-all custom-corners">
             <div class="ui-bar ui-bar-<%= theme_code %>">
-              <h3>Edit your profile</h3>
+              <h3><%= t 'devise.registrations.edit_profile' %></h3>
             </div>
             <div class="ui-body ui-body-<%= theme_code %>">
               <%= f.input :first_name, required: true, autofocus: true %>
@@ -126,33 +128,39 @@
             </div>
           </div>
   <div class="form-actions">
-    <%= f.button :submit, "Update my profile!" %>
+    <%= f.button :submit, t( 'devise.registrations.update_profile_submit' ) %>
   </div>
 <% end %>
   </div>
+  </div>
   <div id="history" class="ui-body-<%= theme_code %> ui-content">
-    <h2>History of Activities in Which You've Taken Part</h2>
-<table data-role="table"
-          id="basicTable"
-          data-column-btn-theme"<%= theme_code %>" 
-          data-column-popup-theme="<%= theme_code %>" 
-          data-mode="columntoggle"
-          data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="<%= t :column_select %>"
-          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+    <h2><%= t 'devise.registrations.activity_history' %></h2>
+      <% activities = @current_user.activity_history
+      if activities.count < 1 %>
+        <p><%= t 'devise.registrations.no_activities' %></p>
+      <% else %>
+        <table data-role="table"
+            id="basicTable"
+            data-column-btn-theme"<%= theme_code %>" 
+            data-column-popup-theme="<%= theme_code %>" 
+            data-mode="columntoggle"
+            data-column-btn-theme="<%= theme_code %>" 
+            data-column-btn-text="<%= t :column_select %>"
+            class="table-stroke ui-shadow table-stripe table-ui-responsive ">
 
-      <thead>
-      <tr>
-        <th>Activity</th>
-        <th data-priority="0"><%= t :course %></th>
-        <th data-priority="0">Type</th>
-        <th data-priority="0">Completion Date</th>
-        <th data-priority="0"><%= t :status %></th>
-        <th data-priority="1">Other information</th>
-      </tr>
-      </thead>
+        <thead>
+          <tr>
+            <th>Activity</th>
+            <th data-priority="0"><%= t :course %></th>
+            <th data-priority="0">Type</th>
+            <th data-priority="0">Completion Date</th>
+            <th data-priority="0"><%= t :status %></th>
+            <th data-priority="1">Other information</th>
+          </tr>
+        </thead>
       <tbody>
-      <% @current_user.activity_history.each do |activity| %>
+
+      <% activities.each do |activity| %>
       <tr>
         <% if activity.class.name == "BingoGame" && activity.reviewed %>
           <td><%= link_to activity.name, bingo_list_stats_path( activity.candidate_list_for_user( @current_user ) ) %></td>
@@ -180,6 +188,7 @@
       <% end %>
       </tbody>
     </table>
+    <% end %>
   </div>
 </div>
 
@@ -201,4 +210,4 @@
   <% end %>
 </div>
 
-<%= link_to "Back", :back %>
+<%= link_to t( :back ), :back %>

@@ -5,8 +5,10 @@
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
-      <li class="ui-state-active ui-tabs-active"><a href="#profile" data-ajax="false">About You</a></li>
-      <li><a href="#history" data-ajax="false">History</a></li>
+      <li class="ui-state-active ui-tabs-active">
+        <a href="#profile" data-ajax="false"><%= t :about_you %></a>
+      </li>
+      <li><a href="#history" data-ajax="false"><%= t :history %></a></li>
     </ul>
   </div>
   <div id="profile" class="ui-body-<%= theme_code %> ui-content">
@@ -38,7 +40,7 @@
 
     <div class='ui-corner-all custom-corners'>
       <div class="ui-bar ui-bar-<%= theme_code %>">
-        <h3>Tell us about yourself</h3>
+        <h3><%= t 'devise.registrations.tell_about' %></h3>
         <p><%= t 'devise.registrations.optional_demo' %></p>
       </div>
 
@@ -76,13 +78,13 @@
   </div>
   </div>
   <div id="history" class="ui-body-<%= theme_code %> ui-content">
-    <h2>History of Activities in Which You've Taken Part</h2>
-    <p>No activities yet</p>
+    <h2><%= t 'devise.registrations.activity_history' %></h2>
+    <p><%= t 'devise.registrations.no_activities' %></p>
   </div>
 </div>
 
 <div class="form-actions">
-<%= f.button :submit, "Create my profile!" %>
+<%= f.button :submit, t( 'devise.registrations.new_profile_submit' ) %>
 </div>
 <% end %>
 

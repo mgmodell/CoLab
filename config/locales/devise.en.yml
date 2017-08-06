@@ -60,7 +60,14 @@ en:
       signup: Sign up
       hometown: Where did you spend most of your time growing up?
       account_info: Enter your account information
+      tell_about: Tell us about yourself
+      activity_history: History of Activities in Which You've Taken Part
+      no_activities: No activities yet
       disp_stgs: Display Settings
+      new_profile_submit: Create my profile!
+      update_profile_submit: Update my profile!
+      your_info: Your account information
+      edit_profile: Edit your profile
       optional_demo: >
         Supplying the forllowing information about yourself is optional, but providing it may
         help us to provide a smoother experience for you.
