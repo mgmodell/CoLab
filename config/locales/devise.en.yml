@@ -61,6 +61,7 @@ en:
       hometown: Where did you spend most of your time growing up?
       account_info: Enter your account information
       tell_about: Tell us about yourself
+      tell_about_personalized: "Tell us about yourself, %{name}"
       activity_history: History of Activities in Which You've Taken Part
       no_activities: No activities yet
       disp_stgs: Display Settings
@@ -68,6 +69,19 @@ en:
       update_profile_submit: Update my profile!
       your_info: Your account information
       edit_profile: Edit your profile
+      reg_emails: Registered Emails
+      primary: Primary
+      confirmed: Confirmed
+      waiting_confirmations: "Currently awaiting confirmation for:"
+      password_change: Wan't to change your password? Click here and we'll email instructions.
+      make_prim: Make Primary
+      scenario_id: "Scenario ID: %{scenario_id}"
+      experience_not_started: You must begin the experience first
+      unhappy: Are you unhappy? Email support about having your account removed.
+      cancel_acct_hdg: Cancelling your account
+      cancel_acct_link: Mark your account for removal
+      new_address_lbl: "New address:"
+      new_address_prompt: What is the new address?
       optional_demo: >
         Supplying the forllowing information about yourself is optional, but providing it may
         help us to provide a smoother experience for you.

@@ -42,6 +42,9 @@ en:
   open_date: Open Date
   start_date: Start Date
   close_date: Close Date
+  completion_date: Completion Date
+  type: Type
+  other_info: Other information
   start_dow: Start DOW
   end_dow: End DOW
   end_date: End Date
@@ -58,6 +61,7 @@ en:
   show: Show
   edit: Edit
   save: Save
+  add: Add!
   submit: Submit
   #toolbar
   profile: Profile
