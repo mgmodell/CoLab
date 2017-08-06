@@ -37,12 +37,50 @@ class Group < ActiveRecord::Base
   end
 
   def calc_diversity_score
-    state_count = home_states.where.not(code: '??') .uniq.count
-    country_count = home_countries.where.not(code: '??').uniq.count
-    cip_count = cip_codes.where.not(gov_code: 0).uniq.count
-    gender_count = genders.where.not(name_en: "I'd prefer not to answer").uniq.count
-    primary_lang_count = primary_languages.where.not(code: '??').uniq.count
-    scenario_count = users.joins(reactions: :narrative).group(:scenario_id).count.count
+    self.diversity_score = Group.calc_diversity_score_for_group(
+              users: self.users.includes( :gender, :primary_language,
+                  :cip_code,
+                  home_state: [:home_country ] ,
+                  reactions: [narrative: [:scenario] ] ) )
+
+  end
+
+  def self.calc_diversity_score_for_proposed_group emails:
+    users = User.joins( :emails ).where( emails: emails.split(/\s*,\s*/) ).
+      includes( :gender, :primary_language,
+                  :cip_code,
+                  home_state: [:home_country ] ,
+                  reactions: [narrative: [:scenario] ] )
+
+    Group.calc_diversity_score_for_group uers: users
+  end
+
+  def self.calc_diversity_score_for_group users:
+    state_hash = Hash.new( 0 )
+    country_hash = Hash.new( 0 )
+    cip_hash = Hash.new( 0 )
+    gender_hash = Hash.new( 0 )
+    primary_lang_hash = Hash.new( 0 )
+    country_hash = Hash.new( 0 )
+    scenario_hash = Hash.new( 0 )
+    
+    users.each do |user|
+      if user.home_state.present?
+        state_hash[ user.home_state ] += 1 unless
+          user.home_state.code == '__'
+        country_hash[ user.home_state.home_country ] += 1 unless
+          user.home_state.home_country.code == '__'
+      end
+      cip_hash[ user.cip_code ] += 1 unless
+          user.cip_code.nil? || user.cip_code.gov_code == 0
+      primary_lang_hash[ user.primary_language ] += 1 unless
+          user.primary_language.nil? || user.primary_language.code == '__'
+      gender_hash[ user.gender ] += 1 unless
+          user.gender.nil? || user.gender.name_en == "I'd prefer not to answer"
+      user.reactions.each do |reaction|
+        scenario_hash[ reaction.narrative.scenario ] += 1
+      end
+    end
 
     now = Date.current
     values = [].extend(DescriptiveStatistics)
@@ -57,10 +95,10 @@ class Group < ActiveRecord::Base
     end
     uni_years_sd = values.empty? ? 0 : values.standard_deviation
 
-    self.diversity_score = state_count + country_count +
-                           primary_lang_count + scenario_count +
-                           (2 * (gender_count + cip_count)) +
-                           (age_sd + uni_years_sd).round
+    return state_hash.keys.count + primary_lang_hash.keys.count +
+              country_hash.keys.count + scenario_hash.keys.count +
+              (2 * (gender_hash.keys.count + cip_hash.keys.count)) +
+              (age_sd + uni_years_sd).round
   end
 
   private

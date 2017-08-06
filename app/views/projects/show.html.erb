@@ -69,10 +69,8 @@
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
         <thead>
           <tr>
-            <th rowspan='2'>
+            <th>
               <%= t :groups_names %><br>
-              <%= t 'projects.diversity_scores' %><br><br>
-              <%= t :student_names %>
             </th>
             <% groups = @project.groups %>
             <% groups.each do |group| %>
@@ -83,6 +81,10 @@
             <th data-priority="0" rowspan='2'>[<%= t 'projects.no_group' %>]</th>
           </tr>
           <tr>
+            <th>
+              <%= t 'projects.diversity_scores' %><br><br>
+              <%= t :student_names %>
+            </th>
             <% groups = @project.groups %>
             <% groups.each do |group| %>
               <td align="center">
