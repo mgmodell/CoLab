@@ -58,12 +58,8 @@ en:
       forgot_submit: Send me reset password instructions
     registrations:
       signup: Sign up
-      account_info: Enter your account information
-      current_uni: Which university are you currently at?
       hometown: Where did you spend most of your time growing up?
-      current_tz: What time zone are you in?
-      choose_lang: Please choose a language
-      lang_quest: What language will you use?
+      account_info: Enter your account information
       disp_stgs: Display Settings
       optional_demo: >
         Supplying the forllowing information about yourself is optional, but providing it may

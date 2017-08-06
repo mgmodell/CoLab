@@ -64,20 +64,15 @@
             <table width="100%">
               <tr>
                 <td colspan='3'>
-                  <%= f.association :theme,
-                          prompt: "Please choose a UI theme",
-                          label: "What UI theme would you like to use?" %>
+                  <%= f.association :theme %>
                   <%= f.association :language,
-                          collection: Language.supported,
-                          prompt: t( 'devise.registrations.choose_lang' ),
-                          label: t( 'devise.registrations.lang_quest' ) %>
+                          collection: Language.supported %>
                 </td>
               </tr>
               <tr>
               <% if @current_user.is_instructor? %>
                 <td width="20%">
               <%= f.input :researcher, as: :select,
-                          label: "Anonymize names?",
                           input_html: { data: 
                             { role: "flipswitch", 
                               "wrapper-class": "custom-size-flipswitch"} } %>
@@ -87,9 +82,7 @@
                 <% else %>
                   <td colspan='3'>
                 <%end%>
-                  <%= f.input :timezone, as: :time_zone,
-                          label: "What time zone are you in?",
-                          prompt: "Select a timezone", priority: /US|Seo/ %>
+                  <%= f.input :timezone, as: :time_zone, priority: /US|Seo/ %>
                 </td>
               </tr>
             </table>
@@ -101,15 +94,12 @@
                   <h3>Tell us about yourself<%= ", " + @current_user.first_name unless @current_user.first_name.nil? %></h3>
                 </div>
                 <div class="ui-body ui-body-<%=theme_code %>">
-              <%= f.association :school, label: "Which school are you currently at?", prompt: "Select a School" %>
+              <%= f.association :school %>
 
-              <%= f.association :gender, prompt: "Select a gender" %>
-              <%= f.input :date_of_birth, as: :date, html5: true,
-                      label: t( 'devise.registrations.dob' ) %>
-              <%= f.input :started_school, as: :date, html5: true,
-                      prompt: "When did you begin university?" %>
-              <%= f.association :cip_code, label: "What are you studying?",
-                      prompt: "Choose your course of study" %>
+              <%= f.association :gender %>
+              <%= f.input :date_of_birth, as: :date, html5: true %>
+              <%= f.input :started_school, as: :date, html5: true %>
+              <%= f.association :cip_code %>
               <table width='100%'>
                 <tr colspan='2'>
                   <td><%= label_tag :country, t( 'devise.registrations.hometown' ) %><td>
@@ -131,9 +121,7 @@
                   </td>
                 </tr>
               </table>
-              <%= f.association :primary_language,
-                      label: "What language do you speak at home?",
-                      prompt: "Select your Primary Language" %>
+              <%= f.association :primary_language %>
             </div>
             </div>
           </div>

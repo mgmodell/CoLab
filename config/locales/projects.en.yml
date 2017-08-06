@@ -11,7 +11,7 @@ en:
     group_create_success: Group successfully created.
     tz_warn: This project occurs in the %{time_zone} time zone and all dates reflect this.
     opens: Opens every
-    no_group: no group
+    no_group: unassigned
     rescore: rescore
     new_group: New group name
     closes: Closes every
