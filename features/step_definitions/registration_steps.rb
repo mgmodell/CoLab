@@ -32,9 +32,9 @@ When /^the user "(.*?)" fill in demographics data$/ do |does_or_does_not|
     page.select('Belize', from: 'country')
     page.select('Avestan', from: 'user_primary_language_id')
 
-    new_date = Date.parse( '10-05-1976' )
+    new_date = Date.parse('10-05-1976')
     page.find('#user_date_of_birth').set(new_date)
-    new_date = Date.parse( '10-09-2016' )
+    new_date = Date.parse('10-09-2016')
     page.find('#user_date_of_birth').set(new_date)
   end
   click_button 'my profile'
