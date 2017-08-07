@@ -13,22 +13,28 @@ Feature: Generate diversity scores (DS)
      Then we update the group's diversity score
      Then the group's diversity score is 0
 
+  Scenario: 1 gender gives us a DS of 2
+     Then the "gender" of the "random" group user is "f"
+     Then we update the group's diversity score
+     Then the group's diversity score is 2
+
   Scenario: 2 different genders gives us a DS of 4
-     Then the "gender" of the "random" user is "f"
+     Then the "gender" of the "first" group user is "f"
+     Then the "gender" of the "last" group user is "nb"
      Then we update the group's diversity score
      Then the group's diversity score is 4
 
   Scenario: 3 different genders gives us a DS of 6
-     Then the "gender" of the "first" user is "f"
-     Then the "gender" of the "third" user is "m"
-     Then the "gender" of the "last" user is "nb"
+     Then the "gender" of the "first" group user is "f"
+     Then the "gender" of the "third" group user is "m"
+     Then the "gender" of the "last" group user is "nb"
      Then we update the group's diversity score
      Then the group's diversity score is 6
 
   Scenario: 3 different genders and one non-answer gives us a DS of 6
-     Then the "gender" of the "first" user is "f"
-     Then the "gender" of the "third" user is "m"
-     Then the "gender" of the "last" user is "__"
+     Then the "gender" of the "first" group user is "f"
+     Then the "gender" of the "third" group user is "m"
+     Then the "gender" of the "last" group user is "__"
      Then we update the group's diversity score
      Then the group's diversity score is 6
 
@@ -44,21 +50,45 @@ Feature: Generate diversity scores (DS)
      Then we update the group's diversity score
      Then the group's diversity score is 4
 
+  Scenario: 4 users with no language response DS:0
+     Then the "language" of the "first" group user is "__"
+     Then the "language" of the "last" group user is "__"
+     Then the "language" of the "third" group user is "__"
+     Then the "language" of the "second" group user is "__"
+     Then we update the group's diversity score
+     Then the group's diversity score is 0
+
+  Scenario: 2 distinct but repeated languages DS:4
+     Then the "language" of the "first" group user is "ko"
+     Then the "language" of the "last" group user is "ko"
+     Then the "language" of the "third" group user is "fj"
+     Then the "language" of the "second" group user is "fj"
+     Then we update the group's diversity score
+     Then the group's diversity score is 4
+
+  Scenario: 3 users with the same language DS:2
+     Then the "language" of the "last" group user is "zu"
+     Then the "language" of the "third" group user is "zu"
+     Then the "language" of the "second" group user is "zu"
+     Then we update the group's diversity score
+     Then the group's diversity score is 2
+
   Scenario: 3 different home languages and one non gives us a DS of 6
-     Then the "language" of the "first" user is "__"
-     Then the "language" of the "last" user is "ga"
-     Then the "language" of the "third" user is "qu"
+     Then the "language" of the "first" group user is "__"
+     Then the "language" of the "last" group user is "ga"
+     Then the "language" of the "third" group user is "qu"
+     Then the "language" of the "second" group user is "en"
      Then we update the group's diversity score
      Then the group's diversity score is 6
 
   Scenario: 2 different home languages gives us a DS of 4
-     Then the "language" of the "first" user is "bn"
-     Then the "language" of the "last" user is "gd"
+     Then the "language" of the "first" group user is "bn"
+     Then the "language" of the "last" group user is "gd"
      Then we update the group's diversity score
      Then the group's diversity score is 4
 
   Scenario: 1 home languages gives us a DS of 2
-     Then the "language" of the "random" user is "sr"
+     Then the "language" of the "random" group user is "sr"
      Then we update the group's diversity score
      Then the group's diversity score is 2
 
@@ -79,15 +109,15 @@ Feature: Generate diversity scores (DS)
      Then the group's diversity score is 2
 
   Scenario: DOBs of 1980 and 1976 give a DS of 2
-     Then the "dob" of the "first" user is "5/10/1976"
-     Then the "dob" of the "last" user is "2/29/1980"
+     Then the "dob" of the "first" group user is "5/10/1976"
+     Then the "dob" of the "last" group user is "2/29/1980"
      Then we update the group's diversity score
      Then the group's diversity score is 2
 
   Scenario: DOBs of 1980, 1976 and 2008 give a DS of 14
-     Then the "dob" of the "first" user is "5/10/1976"
-     Then the "dob" of the "second" user is "2/29/1980"
-     Then the "dob" of the "third" user is "7/10/2008"
+     Then the "dob" of the "first" group user is "5/10/1976"
+     Then the "dob" of the "second" group user is "2/29/1980"
+     Then the "dob" of the "third" group user is "7/10/2008"
      Then we update the group's diversity score
      Then the group's diversity score is 14
 
@@ -98,6 +128,10 @@ Feature: Generate diversity scores (DS)
   Scenario: Uni. starts of 2015, 2011, 2014 and 2015 give a DS of 2
      Then we update the group's diversity score
      Then the group's diversity score is 2
+
+  Scenario: If we add a member to a group, the DS automatically updates
+     Then we update the group's diversity score
+     Then the group's diversity score is 3
 
   Scenario: If a DS:3 group makes a demographic change, the DS does not update automatically
      Then we update the group's diversity score
@@ -115,10 +149,13 @@ Feature: Generate diversity scores (DS)
 
   Scenario: A proposed group from 1 male user - DS:0
     Given the course has 1 confirmed users
+     Then the "gender" of the "random" group user is "m"
      Then the score calculated from the users is 0
 
   Scenario: A proposed group from 4 users with 2 genders gives a ds of 2
     Given the course has 4 confirmed users
+     Then the "gender" of the "first" group user is "m"
+     Then the "gender" of the "last" group user is "f"
      Then the score calculated from the users is 2
 
   Scenario: Diversity combinations (2 gender + 2 lang) are additive

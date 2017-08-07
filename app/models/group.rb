@@ -46,18 +46,18 @@ class Group < ActiveRecord::Base
   end
 
   def self.calc_diversity_score_for_proposed_group(emails:)
-    users = User.joins(:emails).where(emails: emails.split(/\s*,\s*/))
+    users = User.joins(:emails).where(emails: {email: emails.split(/\s*,\s*/) } )
                 .includes(:gender, :primary_language,
                           :cip_code,
                           home_state: [:home_country],
                           reactions: [narrative: [:scenario]])
 
-    Group.calc_diversity_score_for_group uers: users
+    Group.calc_diversity_score_for_group users: users
   end
 
   def self.calc_diversity_score_for_group(users:)
     ds = 0
-    if users.count > 2
+    if users.count > 1
       state_hash = Hash.new(0)
       country_hash = Hash.new(0)
       cip_hash = Hash.new(0)
@@ -66,7 +66,7 @@ class Group < ActiveRecord::Base
       country_hash = Hash.new(0)
       scenario_hash = Hash.new(0)
 
-      users.each do |user|
+      users.each do |user| 
         if user.home_state.present?
           state_hash[user.home_state] += 1 unless
             user.home_state.code == '__'
@@ -97,9 +97,8 @@ class Group < ActiveRecord::Base
       end
       uni_years_sd = values.empty? ? 0 : values.standard_deviation
 
-      ds = state_hash.keys.count + primary_lang_hash.keys.count +
-           country_hash.keys.count + scenario_hash.keys.count +
-           (2 * (gender_hash.keys.count + cip_hash.keys.count)) +
+      ds = state_hash.keys.count + country_hash.keys.count + scenario_hash.keys.count +
+           (2 * (gender_hash.keys.count + cip_hash.keys.count + primary_lang_hash.keys.count )) +
            (age_sd + uni_years_sd).round
     end
     ds
@@ -109,7 +108,7 @@ class Group < ActiveRecord::Base
 
   def store_load_state
     @initial_member_state = ''
-    user_ids.each do |user_id|
+    user_ids.sort.each do |user_id|
       @initial_member_state += user_id.to_s + ' '
     end
   end
@@ -118,12 +117,12 @@ class Group < ActiveRecord::Base
   def track_history
     gr = GroupRevision.new(group: self, members: '')
     gr.name = name_was
-    user_ids.each do |user_id|
+    user_ids.sort.each do |user_id|
       gr.members += user_id.to_s + ' '
     end
     i_changed = (changed? || @initial_member_state != gr.members)
 
-    calc_diversity_score if i_changed
+    calc_diversity_score if @initial_member_state != gr.members
     yield # Do that save thing
 
     gr.save if persisted? && i_changed
