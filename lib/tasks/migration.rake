@@ -24,7 +24,7 @@ namespace :migratify do
     end
     read_data = YAML.safe_load(File.open('db/genders.yml'), [Gender_])
     read_data.each do |gender|
-      g = Gender.where(code: gender.code).take
+      g = Gender.where( "code = ? OR name_en = ?",  gender.code, gender.name_en ).take
       g = Gender.new if g.nil?
       g.code = gender.code unless g.code == gender.code
       g.name_en = gender.name_en unless g.name_en == gender.name_en

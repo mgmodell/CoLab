@@ -56,49 +56,53 @@ class Group < ActiveRecord::Base
   end
 
   def self.calc_diversity_score_for_group users:
-    state_hash = Hash.new( 0 )
-    country_hash = Hash.new( 0 )
-    cip_hash = Hash.new( 0 )
-    gender_hash = Hash.new( 0 )
-    primary_lang_hash = Hash.new( 0 )
-    country_hash = Hash.new( 0 )
-    scenario_hash = Hash.new( 0 )
-    
-    users.each do |user|
-      if user.home_state.present?
-        state_hash[ user.home_state ] += 1 unless
-          user.home_state.code == '__'
-        country_hash[ user.home_state.home_country ] += 1 unless
-          user.home_state.home_country.code == '__'
+    ds = 0
+    if users.count > 2
+      state_hash = Hash.new( 0 )
+      country_hash = Hash.new( 0 )
+      cip_hash = Hash.new( 0 )
+      gender_hash = Hash.new( 0 )
+      primary_lang_hash = Hash.new( 0 )
+      country_hash = Hash.new( 0 )
+      scenario_hash = Hash.new( 0 )
+      
+      users.each do |user|
+        if user.home_state.present?
+          state_hash[ user.home_state ] += 1 unless
+            user.home_state.code == '__'
+          country_hash[ user.home_state.home_country ] += 1 unless
+            user.home_state.home_country.code == '__'
+        end
+        cip_hash[ user.cip_code ] += 1 unless
+            user.cip_code.nil? || user.cip_code.gov_code == 0
+        primary_lang_hash[ user.primary_language ] += 1 unless
+            user.primary_language.nil? || user.primary_language.code == '__'
+        gender_hash[ user.gender ] += 1 unless
+            user.gender.nil? || user.gender.code == '__'
+        user.reactions.each do |reaction|
+          scenario_hash[ reaction.narrative.scenario ] += 1
+        end
       end
-      cip_hash[ user.cip_code ] += 1 unless
-          user.cip_code.nil? || user.cip_code.gov_code == 0
-      primary_lang_hash[ user.primary_language ] += 1 unless
-          user.primary_language.nil? || user.primary_language.code == '__'
-      gender_hash[ user.gender ] += 1 unless
-          user.gender.nil? || user.gender.code == '__'
-      user.reactions.each do |reaction|
-        scenario_hash[ reaction.narrative.scenario ] += 1
+
+      now = Date.current
+      values = [].extend(DescriptiveStatistics)
+      users.each do |user|
+        values << now.year - user.date_of_birth.year unless user.date_of_birth.nil?
       end
-    end
+      age_sd = values.empty? ? 0 : values.standard_deviation
 
-    now = Date.current
-    values = [].extend(DescriptiveStatistics)
-    users.each do |user|
-      values << now.year - user.date_of_birth.year unless user.date_of_birth.nil?
-    end
-    age_sd = values.empty? ? 0 : values.standard_deviation
+      values.clear
+      users.each do |user|
+        values << now.year - user.started_school.year unless user.started_school.nil?
+      end
+      uni_years_sd = values.empty? ? 0 : values.standard_deviation
 
-    values.clear
-    users.each do |user|
-      values << now.year - user.started_school.year unless user.started_school.nil?
+      ds = state_hash.keys.count + primary_lang_hash.keys.count +
+                country_hash.keys.count + scenario_hash.keys.count +
+                (2 * (gender_hash.keys.count + cip_hash.keys.count)) +
+                (age_sd + uni_years_sd).round
     end
-    uni_years_sd = values.empty? ? 0 : values.standard_deviation
-
-    return state_hash.keys.count + primary_lang_hash.keys.count +
-              country_hash.keys.count + scenario_hash.keys.count +
-              (2 * (gender_hash.keys.count + cip_hash.keys.count)) +
-              (age_sd + uni_years_sd).round
+    return ds
   end
 
   private
