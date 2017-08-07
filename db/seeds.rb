@@ -38,6 +38,7 @@ read_data.each do |cip_code|
 end
 
 # Countries
+CS.update
 CS.countries.each do |country|
   hc = HomeCountry.where( code: country[ 0 ] ).take
   hc = HomeCountry.new if hc.nil?
