@@ -76,7 +76,7 @@ class Group < ActiveRecord::Base
       primary_lang_hash[ user.primary_language ] += 1 unless
           user.primary_language.nil? || user.primary_language.code == '__'
       gender_hash[ user.gender ] += 1 unless
-          user.gender.nil? || user.gender.name_en == "I'd prefer not to answer"
+          user.gender.nil? || user.gender.code == '__'
       user.reactions.each do |reaction|
         scenario_hash[ reaction.narrative.scenario ] += 1
       end

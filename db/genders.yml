@@ -1,16 +1,20 @@
 ---
 - !ruby/object:Gender_
+  code: m
   name_en: Male
   name_ko: 남성
 
 - !ruby/object:Gender_
+  code: f
   name_en: Female
   name_ko: 여자
 
 - !ruby/object:Gender_
+  code: nb
   name_en: Non-binary
   name_ko: 
 
 - !ruby/object:Gender_
-  name_en: I'd prefer not to answer
+  code: __
+  name_en: I prefer not to answer
   name_ko: 나는 대답하지 않는 것을 좋아한다

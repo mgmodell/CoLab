@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170803080009) do
+ActiveRecord::Schema.define(version: 20170807013336) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -235,6 +235,7 @@ ActiveRecord::Schema.define(version: 20170803080009) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.string   "name_ko",    limit: 255
+    t.string   "code",       limit: 255
   end
 
   add_index "genders", ["name_en"], name: "index_genders_on_name_en", unique: true, using: :btree

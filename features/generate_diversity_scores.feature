@@ -14,14 +14,21 @@ Feature: Generate diversity scores (DS)
      Then the group's diversity score is 0
 
   Scenario: 2 different genders gives us a DS of 4
+     Then the "random" user is "Female"
      Then we update the group's diversity score
      Then the group's diversity score is 4
 
   Scenario: 3 different genders gives us a DS of 6
+     Then the "first" user is "Female"
+     Then the "third" user is "Male"
+     Then the "last" user is "Non-binary"
      Then we update the group's diversity score
      Then the group's diversity score is 6
 
   Scenario: 3 different genders and one non-answer gives us a DS of 6
+     Then the "first" user is "Female"
+     Then the "third" user is "Male"
+     Then the "last" user is "I prefer not to answer"
      Then we update the group's diversity score
      Then the group's diversity score is 6
 
