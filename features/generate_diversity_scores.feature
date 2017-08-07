@@ -33,6 +33,8 @@ Feature: Generate diversity scores (DS)
 
   Scenario: 3 different genders and one non-answer gives us a DS of 6
      Then the "gender" of the "first" group user is "f"
+     Then the "gender" of the "third" group user is "f"
+     Then the "gender" of the "second" group user is "nb"
      Then the "gender" of the "third" group user is "m"
      Then the "gender" of the "last" group user is "__"
      Then we update the group's diversity score
