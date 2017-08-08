@@ -48,13 +48,15 @@ Feature: Generate diversity scores (DS)
 
   Scenario: 2 selected states in different home countries gives us a DS of 4
     Given the "first" "group" user is from "NY" in "US"
-    Given the "last" "group" user is from "VT" in "KR"
+    Given the "last" "group" user is from "47" in "KR"
      When we update the group's diversity score
      Then the group's diversity score is 4
 
   Scenario: 2 countries with just one selected state gives a DS of 3
+    Given the "first" "group" user is from "NY" in "US"
+    Given the "last" "group" user is from "__" in "KR"
      When we update the group's diversity score
-     Then the group's diversity score is 4
+     Then the group's diversity score is 3
 
   Scenario: 4 users with no language response DS:0
     Given the "language" of the "first" "group" user is "__"
@@ -128,10 +130,15 @@ Feature: Generate diversity scores (DS)
      Then the group's diversity score is 14
 
   Scenario: A Uni. start of 2015 give a DS of 0
+    Given the "uni_date" of the "random" "group" user is "8/28/2015"
      When we update the group's diversity score
      Then the group's diversity score is 0
 
   Scenario: Uni. starts of 2015, 2011, 2014 and 2015 give a DS of 2
+    Given the "uni_date" of the "last" "group" user is "8/28/2015"
+    Given the "uni_date" of the "second" "group" user is "8/28/2011"
+    Given the "uni_date" of the "first" "group" user is "5/28/2014"
+    Given the "uni_date" of the "third" "group" user is "1/01/2015"
      When we update the group's diversity score
      Then the group's diversity score is 2
 
@@ -140,8 +147,14 @@ Feature: Generate diversity scores (DS)
      Then the group's diversity score is 3
 
   Scenario: If a DS:3 group makes a demographic change, the DS does not auto-update
+    Given the "first" "group" user is from "NY" in "US"
+    Given the "last" "group" user is from "VT" in "US"
      When we update the group's diversity score
      Then the group's diversity score is 3
+    Given the "second" "group" user is from "KN" in "CD"
+     Then the group's diversity score is 3
+     When we update the group's diversity score
+     Then the group's diversity score is 5
 
   Scenario: If an all-male group (DS:1) group adds a gender-non-binary, then DS:2
     Given the course has 1 confirmed users

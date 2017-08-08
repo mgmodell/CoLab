@@ -51,7 +51,7 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
     u.gender = Gender.where(code: code).take
   when 'language'
     u.primary_language = Language.where(code: code).take
-  when 'uni_year'
+  when 'uni_date'
     u.started_school = Chronic.parse code
   when 'dob'
     u.date_of_birth = Chronic.parse code
