@@ -269,10 +269,11 @@ ActiveRecord::Schema.define(version: 20170807013336) do
   add_index "groups_users", ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id", unique: true, using: :btree
 
   create_table "home_countries", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.string   "code",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",        limit: 255
+    t.string   "code",        limit: 255
+    t.boolean  "no_response"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   add_index "home_countries", ["code"], name: "index_home_countries_on_code", unique: true, using: :btree
@@ -281,6 +282,7 @@ ActiveRecord::Schema.define(version: 20170807013336) do
     t.integer  "home_country_id", limit: 4
     t.string   "name",            limit: 255
     t.string   "code",            limit: 255
+    t.boolean  "no_response"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
   end
@@ -414,8 +416,8 @@ ActiveRecord::Schema.define(version: 20170807013336) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree

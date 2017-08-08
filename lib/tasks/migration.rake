@@ -57,12 +57,14 @@ namespace :migratify do
     CS.countries.each do |country|
       hc = HomeCountry.where( code: country[ 0 ] ).take
       hc = HomeCountry.new if hc.nil?
+      hc.no_response = false
       hc.code = country[ 0 ]
       hc.name = country[ 1 ]
       hc.save
     end
     hc = HomeCountry.where( code: '__' ).take
     hc = HomeCountry.new if hc.nil?
+    hc.no_response = true
     hc.code = '__'
     hc.name = "I prefer not to specify my country"
     hc.save
@@ -71,26 +73,29 @@ namespace :migratify do
     HomeCountry.all.each do |country|
       if CS.get( country.code ).count > 0
         CS.get( country.code ).each do |state|
-          hs = HomeState.where( home_country_id: country.id, code: state[ 0 ] ).take
+          hs = HomeState.where( home_country_id: country.id, code: "#{state[ 0 ]}:#{country.code}" ).take
           hs = HomeState.new if hs.nil?
+          hs.no_response = false
           hs.home_country = country
-          hs.code = state[ 0 ]
+          hs.code = "#{state[ 0 ]}:#{country.code}"
           hs.name = state[ 1 ]
           hs.save
         end
         if CS.get( country.code ).count > 1
-          hs = HomeState.where( home_country_id: country.id, code: '__' ).take
+          hs = HomeState.where( home_country_id: country.id, code: "__:#{country.code}" ).take
           hs = HomeState.new if hs.nil?
+          hs.no_response = true
           hs.home_country = country
-          hs.code = '__'
+          hs.code = "__:#{country.code}"
           hs.name = 'I prefer not to specify the state'
           hs.save
         end
       else
-        hs = HomeState.where( home_country_id: country.id, code: '--' ).take
+        hs = HomeState.where( home_country_id: country.id, code: "--:#{country.code}" ).take
         hs = HomeState.new if hs.nil?
+        hs.no_response = false
         hs.home_country = country
-        hs.code = '--'
+        hs.code = "--:#{country.code}"
         hs.name = 'not applicable'
         hs.save
       end

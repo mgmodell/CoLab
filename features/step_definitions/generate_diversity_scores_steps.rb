@@ -13,21 +13,32 @@ Then /^the score calculated from the users is (\d+)$/ do |ds|
   Group.calc_diversity_score_for_proposed_group(emails:emails_list.join(', ')).should eq ds.to_i
 end
 
-Then /^the "([^"]*)" of the "([^"]*)" user is "([^"]*)"$/ do |demographic, ordinal, code|
+Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demographic, ordinal, type, code|
+  users = []
+  case type
+  when 'group'
+    users = @group.users
+  when 'loose'
+    users = @users
+  else
+    puts "There's no such thing as a '#{type}' user"
+    pending
+  end
+
   u = nil
   case ordinal
   when 'first'
-    u = @users.first
+    u = users.first
   when 'second'
-    u = @users[1]
+    u = users[1]
   when 'third'
-    u = @users[2]
+    u = users[2]
   when 'fourth'
-    u = @users[3]
+    u = users[3]
   when 'last'
-    u = @users.last
+    u = users.last
   when 'random'
-    u = @users[rand(@users.count) - 1]
+    u = users[rand(users.count) - 1]
   else
     puts "There's no such thing as a '#{ordinal}' user"
     pending
@@ -52,40 +63,39 @@ Then /^the "([^"]*)" of the "([^"]*)" user is "([^"]*)"$/ do |demographic, ordin
 
 end
 
-Then /^the "([^"]*)" of the "([^"]*)" group user is "([^"]*)"$/ do |demographic, ordinal, code|
+Given(/^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/) do |ordinal, type, state, country|
+  users = []
+  case type
+  when 'group'
+    users = @group.users
+  when 'loose'
+    users = @users
+  else
+    puts "There's no such thing as a '#{type}' user"
+    pending
+  end
+
   u = nil
   case ordinal
   when 'first'
-    u = @group.users.first
+    u = users.first
   when 'second'
-    u = @group.users[1]
+    u = users[1]
   when 'third'
-    u = @group.users[2]
+    u = users[2]
   when 'fourth'
-    u = @group.users[3]
+    u = users[3]
   when 'last'
-    u = @group.users.last
+    u = users.last
   when 'random'
-    u = @group.users[rand(@group.users.count) - 1]
+    u = users[rand(users.count) - 1]
   else
     puts "There's no such thing as a '#{ordinal}' user"
     pending
   end
 
-  case demographic
-  when 'cip'
-    u.cip_code = CipCode.where(code: code).take
-  when 'gender'
-    u.gender = Gender.where(code: code).take
-  when 'language'
-    u.primary_language = Language.where(code: code).take
-  when 'uni_year'
-    u.started_school = Chronic.parse code
-  when 'dob'
-    u.date_of_birth = Chronic.parse code
-  else
-    puts "#{demographic} is not an available demographic"
-    pending
-  end
+  u.home_state = HomeState.where( code: "#{state}:#{country}" ).take
+  pending if state.nil?
   u.save
 end
+

@@ -110,7 +110,7 @@
                 <tr>
                   <td width='50%'>
                     <% init_country = f.object.home_state.nil? ?
-                      HomeCountry.where( code: '__' ).take :
+                      HomeCountry.where( no_response: true ).take :
                       f.object.home_state.home_country %>
                     <%= select_tag :country,
                          options_from_collection_for_select( HomeCountry.all,

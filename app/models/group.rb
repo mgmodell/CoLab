@@ -69,9 +69,9 @@ class Group < ActiveRecord::Base
       users.each do |user| 
         if user.home_state.present?
           state_hash[user.home_state] += 1 unless
-            user.home_state.code == '__'
+            user.home_state.no_response == true
           country_hash[user.home_state.home_country] += 1 unless
-            user.home_state.home_country.code == '__'
+            user.home_state.home_country.no_response == true
         end
         cip_hash[user.cip_code] += 1 unless
             user.cip_code.nil? || user.cip_code.gov_code == 0

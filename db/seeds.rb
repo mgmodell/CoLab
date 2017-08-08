@@ -42,6 +42,7 @@ CS.update
 CS.countries.each do |country|
   hc = HomeCountry.where( code: country[ 0 ] ).take
   hc = HomeCountry.new if hc.nil?
+  hc.no_response = false
   hc.code = country[ 0 ]
   hc.name = country[ 1 ]
   hc.save
@@ -49,6 +50,7 @@ end
 hc = HomeCountry.where( code: '__' ).take
 hc = HomeCountry.new if hc.nil?
 hc.code = '__' unless hc.code == '__'
+hc.no_response = true
 hc.name = 'I prefer not to specify my country' unless
           hc.name == 'I prefer not to specify my country'
 hc.save
@@ -57,24 +59,27 @@ hc.save
 HomeCountry.all.each do |country|
   if CS.get( country.code ).count > 0
     CS.get( country.code ).each do |state|
-      hs = HomeState.where( home_country_id: country.id, code: state[ 0 ] ).take
+      hs = HomeState.where( home_country_id: country.id, code: "#{state[ 0 ]}:#{country.code}" ).take
       hs = HomeState.new if hs.nil?
       hs.home_country = country
-      hs.code = state[ 0 ]
+      hs.no_response = false
+      hs.code = "#{state[ 0 ]}:#{country.code}"
       hs.name = state[ 1 ]
       hs.save
     end
-    hs = HomeState.where( home_country_id: country.id, code: '__' ).take
+    hs = HomeState.where( home_country_id: country.id, code: "__:#{country.code}" ).take
     hs = HomeState.new if hs.nil?
     hs.home_country = country
-    hs.code = '__'
+    hs.no_response = true
+    hs.code = "__:#{country.code}"
     hs.name = 'I prefer not to specify the state'
     hs.save
   else
-    hs = HomeState.where( home_country_id: country.id, code: '--' ).take
+    hs = HomeState.where( home_country_id: country.id, code: "--:#{country.code}" ).take
     hs = HomeState.new if hs.nil?
     hs.home_country = country
-    hs.code = '--'
+    hs.no_response = false
+    hs.code = "--:#{country.code}"
     hs.name = 'not applicable'
     hs.save
   end

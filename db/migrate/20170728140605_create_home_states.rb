@@ -4,6 +4,7 @@ class CreateHomeStates < ActiveRecord::Migration
       t.references :home_country, index: true, foreign_key: true
       t.string :name
       t.string :code
+      t.boolean :no_response
 
       t.timestamps null: false
     end
