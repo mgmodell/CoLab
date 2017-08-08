@@ -8,8 +8,21 @@
                   :data => { :icon => "home", :role => "button" } %>
             <% end %>
             <% unless @current_user.nil? || @current_location == "profile"  %>
-              <%= link_to t(:profile), edit_user_registration_path(@current_user),
-                  :data => { :icon => "user", :role => "button" } %>
+                <a href="#profileMenu" data-rel="popup" data-transition="fade"
+                       class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-user ui-btn-icon-left ui-btn-<%= theme_code %>"><%= raw (t :your_info ) %></a>
+                  <div data-role="popup" id="profileMenu" data-theme="<%= theme_code %>">
+                    <ul data-role="listview" data-inset="true" >
+                    <li>
+                      <%= link_to t(:profile), edit_user_registration_path(@current_user),
+                          :data => { :role => "button" } %>
+                    </li>
+                    <li>
+                      <a href="#diversityPop" data-rel="popup" data-position-to="window" data-transition='flip' data-role="button">
+                        <%= t(:calc_diversity) %>
+                      </a>
+                    </li>
+                    </ul>
+                  </div>
             <% end %>
             <% if !@current_user.nil? %>
               <% if @current_user.is_instructor? %>

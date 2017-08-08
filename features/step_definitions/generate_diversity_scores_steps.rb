@@ -46,7 +46,7 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
 
   case demographic
   when 'cip'
-    u.cip_code = CipCode.where(code: code).take
+    u.cip_code = CipCode.where(gov_code: code).take
   when 'gender'
     u.gender = Gender.where(code: code).take
   when 'language'

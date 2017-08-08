@@ -18,6 +18,19 @@ Feature: Generate diversity scores (DS)
      When we update the group's diversity score
      Then the group's diversity score is 2
 
+  Scenario: 3 CIPS representing 2 different courses of study gives us a DS:2
+    Given the "cip" of the "first" "group" user is "46"
+    Given the "cip" of the "last" "group" user is "9"
+    Given the "cip" of the "third" "group" user is "46"
+     When we update the group's diversity score
+     Then the group's diversity score is 2
+
+  Scenario: 2 different courses of study gives us a DS:2
+    Given the "cip" of the "first" "group" user is "13"
+    Given the "cip" of the "last" "group" user is "47"
+     When we update the group's diversity score
+     Then the group's diversity score is 2
+
   Scenario: 2 different genders gives us a DS of 4
     Given the "gender" of the "first" "group" user is "f"
     Given the "gender" of the "last" "group" user is "nb"
@@ -177,16 +190,36 @@ Feature: Generate diversity scores (DS)
     Given the "gender" of the "last" "group" user is "f"
      Then the score calculated from the users is 2
 
-  Scenario: Diversity combinations (2 gender + 2 lang) are additive
+  Scenario: Diversity combinations (4 gender + 4 lang) are additive
+    Given the "gender" of the "second" "group" user is "f"
+    Given the "gender" of the "third" "group" user is "nb"
+    Given the "language" of the "last" "group" user is "ty"
+    Given the "language" of the "first" "group" user is "lo"
      When we update the group's diversity score
-     Then the group's diversity score is 4
+     Then the group's diversity score is 8
 
   Scenario: Diversity combination (full on)
     #2011, 2012, 2011, 2011
+    Given the "dob" of the "first" "group" user is "5/28/2011"
+    Given the "dob" of the "second" "group" user is "5/28/2012"
+    Given the "dob" of the "third" "group" user is "5/28/2011"
+    Given the "dob" of the "last" "group" user is "5/28/2011"
     #M + F
+    Given the "gender" of the "second" "group" user is "f"
+    Given the "gender" of the "third" "group" user is "m"
     #1 Country + 2 Provinces
+    Given the "first" "group" user is from "CA" in "US"
+    Given the "last" "group" user is from "CT" in "US"
     #1996, 1997, 1998, 1997
+    Given the "uni_date" of the "first" "group" user is "5/28/1996"
+    Given the "uni_date" of the "second" "group" user is "5/28/1997"
+    Given the "uni_date" of the "last" "group" user is "5/28/1998"
+    Given the "uni_date" of the "third" "group" user is "5/28/1997"
     #4 scenarios
     #2 languages
+    Given the "language" of the "last" "group" user is "zu"
+    Given the "language" of the "first" "group" user is "ga"
     #2 CIP
+    Given the "cip" of the "last" "group" user is "46"
+    Given the "cip" of the "third" "group" user is "11"
      Then the group's diversity score is 16
