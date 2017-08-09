@@ -12,9 +12,20 @@ $(document).ready(function(){
     emails = $("#emails_for_ds").val( );
     url = "/infra/diversity_score_for?emails=";
     url += encodeURIComponent( emails );
-    console.log( url );
     $.getJSON(url, function(data) {
-      $("#users").html( data.found_users.length );
+      var i, user_list;
+      i = 0;
+      user_list = "<ol>"
+      while (i < data.found_users.length){
+        var user = data.found_users[ i ];
+        user_list += "<li><a href='mailto:" + user.email + "'>";
+        user_list += user.name; 
+        user_list += "</a></li>";
+        i++;
+      }
+      user_list += "</ol>";
+      console.log( user_list );
+      $("#users").html( user_list );
       $("#diversity_score").html( data.diversity_score );
       $("#results").show( );
     });

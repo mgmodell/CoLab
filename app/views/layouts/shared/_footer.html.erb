@@ -17,22 +17,22 @@
                       <div data-role="popup" id="diversityPop" data-theme="<%= theme_code %>" class="ui-corner-all">
                         <form>
                           <div style="padding:10px 20px;">
-                            <h1>Calculate it!</h1>
-                            <label for="emails_for_ds">Enter the emails of the proposed users:</label>
+                            <h1><%= t :calc_it %></h1>
+                            <label for="emails_for_ds"><%= t :ds_emails_lbl %>:</label>
                             <input type="text" id="emails_for_ds" name="emails">
-                            <input type="submit" id="calc_diversity" value="Tell me the score!">
+                            <input type="submit" id="calc_diversity" value="<%= t :calc_diversity_sub %>">
                             <div id="results" style="display:none">
                               <table width='100%' display="false">
                                 <thead>
                                   <tr>
-                                    <th>Users</th>
-                                    <th>Diversity Score</th>
+                                    <th><%= t :users %></th>
+                                    <th><%= t :diversity_score %></th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   <tr>
                                     <td id='users'>&nbsp;</td>
-                                    <td id='diversity_score'>&nbsp;</td>
+                                    <td align="center" id='diversity_score'>&nbsp;</td>
                                   </tr>
                                 </tbody>
 
