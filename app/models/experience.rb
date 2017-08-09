@@ -44,36 +44,55 @@ class Experience < ActiveRecord::Base
   end
 
   def get_least_reviewed_narrative(include_ids = [])
+    puts "include ids: #{include_ids}"
     narrative_counts = if include_ids.empty?
                          reactions.group(:narrative_id).count
                        else
                          reactions
-                           .where('narrative_id IN (?)', include_ids)
+                           .where(narrative_id: include_ids)
                            .group(:narrative_id).count
                        end
 
+    puts "narrative_counts: #{narrative_counts}"
     narrative = nil
     if narrative_counts.empty?
-      narrative = if include_ids.empty?
-                    Narrative.take
-                  else
-                    Narrative.where('id IN (?)', include_ids).take
-                  end
+      if include_ids.empty?
+        narrative = Narrative.take
+      else
+        narrative_counts = Reaction.includes( :narrative ).
+                              where( narrative_id: include_ids ).
+                              group( :narrative_id ).count
+        if narrative_counts.count < include_ids.count
+          possible = include_ids - narrative_counts.keys
+          puts "World narrative counts: #{narrative_counts}"
+          puts possible
+          narrative = Narrative.find( possible.sample )
+        else
+          sorted =  narrative_counts.sort{|x,y| x[1]<=>y[1]}
+          narrative = Narrative.find ( sorted[0][0] )
+        end
+        #narrative = Narrative.where( id: include_ids).take
+      end
     elsif narrative_counts.count < Narrative.all.count
 
       scenario_counts = reactions.joins(:narrative).group(:scenario_id).count
+
+      puts "Scenario counts: #{scenario_counts}"
       if scenario_counts.count < Scenario.all.count
         # Must account for completed counts - add: and not IN narrative_counts
-        narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.collect { |x| x[0] })
-                             .where('id NOT IN (?)', narrative_counts.collect { |x| x[0] }).take
+        puts Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
+                             .where('id NOT IN (?)', narrative_counts.keys ).to_sql
+        narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
+                             .where('id NOT IN (?)', narrative_counts.keys ).take
       end
 
       if narrative.nil?
-        narrative = Narrative.where('id NOT IN (?)', narrative_counts.collect { |x| x[0] }).take
+        narrative = Narrative.where('id NOT IN (?)', narrative_counts.keys).take
       end
     else
       narrative = Narrative.find(narrative_counts.sort { |x, y| x[1] <=> y[1] }[0][0])
     end
+    puts "least reviewed: #{narrative.id}"
     narrative
   end
 

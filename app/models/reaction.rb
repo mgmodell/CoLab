@@ -20,13 +20,19 @@ class Reaction < ActiveRecord::Base
       found_narrative = NilClass
       # If we've already been assigned at least one reaction
       if user.reactions.count > 0 && user.reactions.count < Narrative.all.count
+        puts "* We've completed #{user.reactions.count} reaction"
         if user.reactions.count < Scenario.all.count
           # If they haven't yet been assigned all possible scenarios
+          puts "not yet assigned all possible scenarios"
           assigned_scenarios = user.reactions.joins(:narrative).group(:scenario_id).count
-          possible_narratives = Narrative.where('scenario_id NOT IN (?)', assigned_scenarios.to_a.collect { |x| x[0] })
+          puts "assigned: #{assigned_scenarios.inspect}"
+          possible_narratives = Narrative.
+              where('scenario_id NOT IN (?)', assigned_scenarios.keys)
+
           found_narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
 
         else
+          puts "all scenarios, but not all the narratives yet"
           # If they've been assigned all scenarios, but not all narratives
           available_scenarios = user.reactions.group(:narrative_id).count
           possible_narratives = Narrative.where('id NOT IN (?)', available_scenarios.keys)
