@@ -18,18 +18,25 @@ Feature: Generate diversity scores (DS)
      When we update the group's diversity score
      Then the group's diversity score is 2
 
-  Scenario: 3 CIPS representing 2 different courses of study gives us a DS:2
+  Scenario: 3 CIPS representing 2 different courses of study gives us a DS:4
     Given the "cip" of the "first" "group" user is "46"
     Given the "cip" of the "last" "group" user is "9"
     Given the "cip" of the "third" "group" user is "46"
      When we update the group's diversity score
-     Then the group's diversity score is 2
+     Then the group's diversity score is 4
+
+  Scenario: 2 different courses of study and one non-answer gives us a DS:4
+    Given the "cip" of the "first" "group" user is "13"
+    Given the "cip" of the "last" "group" user is "47"
+    Given the "cip" of the "third" "group" user is "0"
+     When we update the group's diversity score
+     Then the group's diversity score is 4
 
   Scenario: 2 different courses of study gives us a DS:2
     Given the "cip" of the "first" "group" user is "13"
     Given the "cip" of the "last" "group" user is "47"
      When we update the group's diversity score
-     Then the group's diversity score is 2
+     Then the group's diversity score is 4
 
   Scenario: 2 different genders gives us a DS of 4
     Given the "gender" of the "first" "group" user is "f"
@@ -114,20 +121,282 @@ Feature: Generate diversity scores (DS)
      Then the group's diversity score is 2
 
   Scenario: 15 completed scenarios gives us a DS of 12
+    Given the course has an experience
+    Given the experience started "last month" and ends "tomorrow"
+    Given the experience "has" been activated
+    Given the users "have" had demographics requested
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The third user
+    Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The second user
+    Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #experience 2
+    Given the course has an experience
+    Given the experience started "3 days from now" and ends "7 days from now"
+    Given the experience "has" been activated
+    Given today is "5 days from now"
+
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The second user
+    Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #experience 3
+    Given the course has an experience
+    Given the experience started "10 days from now" and ends "20 days from now"
+    Given the experience "has" been activated
+    Given today is "15 days from now"
+
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The third user
+    Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #experience 4
+    Given the course has an experience
+    Given the experience started "23 days from now" and ends "27 days from now"
+    Given the experience "has" been activated
+    Given today is "25 days from now"
+
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The third user
+    Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The second user
+    Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
      When we update the group's diversity score
      Then the group's diversity score is 12
 
   Scenario: 7 different scenarios gives us a DS of 7
+    Given the course has an experience
+    Given the experience started "last month" and ends "tomorrow"
+    Given the experience "has" been activated
+    Given the users "have" had demographics requested
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The third user
+    Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The second user
+    Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #Next experience
+    Given the course has an experience
+    Given the experience started "3 days from now" and ends "7 days from now"
+    Given the experience "has" been activated
+    Given today is "5 days from now"
+
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The third user
+    Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The second user
+    Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
      When we update the group's diversity score
      Then the group's diversity score is 7
 
-  Scenario: 2 different incomplete scenarios gives us a DS of 2
+  Scenario: 2 complete scenarios gives us a DS of 2
+    Given the course has an experience
+    Given the experience started "last month" and ends "next month"
+    Given the experience "has" been activated
+    Given the users "have" had demographics requested
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
      When we update the group's diversity score
      Then the group's diversity score is 2
 
-  Scenario: 2 different incomplete scenarios gives us a DS of 2
+  Scenario: 3 different incomplete scenarios gives us a DS of 3
+    Given the course has an experience
+    Given the experience started "last month" and ends "next month"
+    Given the experience "has" been activated
+    Given the users "have" had demographics requested
+    #The second user
+    Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user clicks the link to the experience
+     Then the user sees the experience instructions page
+      And the user presses "Next"
+     Then the user completes a week
+     Then the user logs out
+
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user clicks the link to the experience
+     Then the user sees the experience instructions page
+      And the user presses "Next"
+     Then the user completes a week
+     Then the user completes a week
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user clicks the link to the experience
+     Then the user sees the experience instructions page
+      And the user presses "Next"
+     Then the user completes a week
+     Then the user completes a week
+     Then the user completes a week
+     Then the user completes a week
+     Then the user completes a week
+     Then the user logs out
+
      When we update the group's diversity score
-     Then the group's diversity score is 2
+     Then the group's diversity score is 3
 
   Scenario: DOBs of 1980 and 1976 give a DS of 2
     Given the "dob" of the "first" "group" user is "5/10/1976"
@@ -181,14 +450,14 @@ Feature: Generate diversity scores (DS)
 
   Scenario: A proposed group from 1 male user - DS:0
     Given the course has 1 confirmed users
-    Given the "gender" of the "random" "group" user is "m"
+    Given the "gender" of the "random" "loose" user is "m"
      Then the score calculated from the users is 0
 
   Scenario: A proposed group from 4 users with 2 genders gives a ds of 2
     Given the course has 4 confirmed users
-    Given the "gender" of the "first" "group" user is "m"
-    Given the "gender" of the "last" "group" user is "f"
-     Then the score calculated from the users is 2
+    Given the "gender" of the "first" "loose" user is "m"
+    Given the "gender" of the "last" "loose" user is "f"
+     Then the score calculated from the users is 4
 
   Scenario: Diversity combinations (4 gender + 4 lang) are additive
     Given the "gender" of the "second" "group" user is "f"
@@ -216,10 +485,13 @@ Feature: Generate diversity scores (DS)
     Given the "uni_date" of the "last" "group" user is "5/28/1998"
     Given the "uni_date" of the "third" "group" user is "5/28/1997"
     #4 scenarios
+    #TODO 
     #2 languages
     Given the "language" of the "last" "group" user is "zu"
     Given the "language" of the "first" "group" user is "ga"
     #2 CIP
     Given the "cip" of the "last" "group" user is "46"
     Given the "cip" of the "third" "group" user is "11"
-     Then the group's diversity score is 16
+     When we update the group's diversity score
+     #TODO correct this number
+     Then the group's diversity score is 52

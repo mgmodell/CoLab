@@ -13,6 +13,14 @@ Then /^the score calculated from the users is (\d+)$/ do |ds|
   Group.calc_diversity_score_for_proposed_group(emails:emails_list.join(', ')).should eq ds.to_i
 end
 
+Then /^we add the users to the group$/ do
+  @users.each do |user|
+    @group.users << user
+  end
+  @group.save
+
+end
+
 Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demographic, ordinal, type, code|
   users = []
   case type
