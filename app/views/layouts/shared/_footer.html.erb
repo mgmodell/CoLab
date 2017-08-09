@@ -8,21 +8,40 @@
                   :data => { :icon => "home", :role => "button" } %>
             <% end %>
             <% unless @current_user.nil? || @current_location == "profile"  %>
-                <a href="#profileMenu" data-rel="popup" data-transition="fade"
-                       class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-user ui-btn-icon-left ui-btn-<%= theme_code %>"><%= raw (t :your_info ) %></a>
-                  <div data-role="popup" id="profileMenu" data-theme="<%= theme_code %>">
-                    <ul data-role="listview" data-inset="true" >
-                    <li>
                       <%= link_to t(:profile), edit_user_registration_path(@current_user),
-                          :data => { :role => "button" } %>
-                    </li>
-                    <li>
-                      <a href="#diversityPop" data-rel="popup" data-position-to="window" data-transition='flip' data-role="button">
-                        <%= t(:calc_diversity) %>
+                          :data => { :icon => 'user', :role => 'button' } %>
+                      <a href="#diversityPop" data-rel="popup" data-position-to="window"
+                          data-transition='flip' data-role="button" data-icon="check">
+                        <%= raw t(:calc_diversity) %>
                       </a>
-                    </li>
-                    </ul>
-                  </div>
+                      <div data-role="popup" id="diversityPop" data-theme="<%= theme_code %>" class="ui-corner-all">
+                        <form>
+                          <div style="padding:10px 20px;">
+                            <h1>Calculate it!</h1>
+                            <label for="emails_for_ds">Enter the emails of the proposed users:</label>
+                            <input type="text" id="emails_for_ds" name="emails">
+                            <input type="submit" id="calc_diversity" value="Tell me the score!">
+                            <div id="results" style="display:none">
+                              <table width='100%' display="false">
+                                <thead>
+                                  <tr>
+                                    <th>Users</th>
+                                    <th>Diversity Score</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td id='users'>&nbsp;</td>
+                                    <td id='diversity_score'>&nbsp;</td>
+                                  </tr>
+                                </tbody>
+
+                              </table>
+                            </div>
+
+                          </div>
+                        </form>
+                      </div>
             <% end %>
             <% if !@current_user.nil? %>
               <% if @current_user.is_instructor? %>

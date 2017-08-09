@@ -7,6 +7,20 @@ $(document).bind("mobileinit", function(){
 //Add some code to the page.
 $(document).ready(function(){
 
+  $("#calc_diversity").click(function() {
+    var emails;
+    emails = $("#emails_for_ds").val( );
+    url = "/infra/diversity_score_for?emails=";
+    url += encodeURIComponent( emails );
+    console.log( url );
+    $.getJSON(url, function(data) {
+      $("#users").html( data.found_users.length );
+      $("#diversity_score").html( data.diversity_score );
+      $("#results").show( );
+    });
+    return false;
+  });
+
   $(".country_select").change(function() {
     var country_code, state_select, url;
     country_code = $(this).val();

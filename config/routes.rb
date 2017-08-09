@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   end
 
   get 'infra/states_for_country/:country_code' => 'home#states_for_country', as: :states_for
-  get 'infra/diversity_score_for/:emails' => 'home#check_diversity_score',
+  get 'infra/diversity_score_for' => 'home#check_diversity_score',
       as: :check_diversity_score
 
   get 'experiences/next/:experience_id:' => 'experiences#next', as: :next_experience
