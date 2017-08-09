@@ -39,18 +39,16 @@ class Group < ActiveRecord::Base
   def calc_diversity_score
     self.diversity_score = Group.calc_diversity_score_for_group(
       users: users.includes(:gender, :primary_language,
-                            :cip_code,
-                            home_state: [:home_country],
-                            reactions: [narrative: [:scenario]])
+                            :cip_code, reactions: :narrative,
+                            home_state: [:home_country] )
     )
   end
 
   def self.calc_diversity_score_for_proposed_group(emails:)
     users = User.joins(:emails).where(emails: {email: emails.split(/\s*,\s*/) } )
                 .includes(:gender, :primary_language,
-                          :cip_code,
-                          home_state: [:home_country],
-                          reactions: [narrative: [:scenario]])
+                          :cip_code, reactions: :narrative,
+                          home_state: [:home_country] )
 
     Group.calc_diversity_score_for_group users: users
   end
@@ -66,6 +64,7 @@ class Group < ActiveRecord::Base
       country_hash = Hash.new(0)
       scenario_hash = Hash.new(0)
 
+
       users.each do |user| 
         if user.home_state.present?
           state_hash[user.home_state] += 1 unless
@@ -80,7 +79,7 @@ class Group < ActiveRecord::Base
         gender_hash[user.gender] += 1 unless
             user.gender.nil? || user.gender.code == '__'
         user.reactions.each do |reaction|
-          scenario_hash[reaction.narrative.scenario] += 1
+          scenario_hash[reaction.narrative.member] += 1
         end
       end
 
@@ -96,6 +95,7 @@ class Group < ActiveRecord::Base
         values << now.year - user.started_school.year unless user.started_school.nil?
       end
       uni_years_sd = values.empty? ? 0 : values.standard_deviation
+
 
       ds = state_hash.keys.count + country_hash.keys.count + scenario_hash.keys.count +
            (2 * (gender_hash.keys.count + cip_hash.keys.count + primary_lang_hash.keys.count )) +

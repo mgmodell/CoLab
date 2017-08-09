@@ -177,8 +177,8 @@
           <%= activity.candidate_list_for_user( @current_user ).get_concepts.count %> unique concepts
         <% elsif activity.class.name == "Experience" %>
            <% if activity.get_user_reaction( @current_user ).status != "Not started" %>
-             <%= t 'devise.registrations.scenario_id', 
-                    scenario_id: activity.get_user_reaction( @current_user ).scenario_id %>
+             <%= t 'devise.registrations.simulation_id', 
+                    sim_id: activity.get_user_reaction( @current_user ).sim_id %>
            <% else %>
              <%= t 'devise.registrations.experience_not_started' %>
            <% end %>

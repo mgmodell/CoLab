@@ -75,7 +75,7 @@ en:
       waiting_confirmations: "Currently awaiting confirmation for:"
       password_change: Wan't to change your password? Click here and we'll email instructions.
       make_prim: Make Primary
-      scenario_id: "Scenario ID: %{scenario_id}"
+      simulation_id: "Simulation ID: %{sim_id}"
       experience_not_started: You must begin the experience first
       unhappy: Are you unhappy? Email support about having your account removed.
       cancel_acct_hdg: Cancelling your account

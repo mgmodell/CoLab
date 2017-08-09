@@ -691,3 +691,158 @@ Feature: Users can complete 'experiences'
 
     Then there will be 96 reactions from 12 different narratives recorded
     Then there will be 96 reactions from 3 different scenarios recorded
+
+  Scenario: A course with four users deploys 4 experiences will see 12 narratives and 3 scenarios recorded
+     Then the user logs out
+    Given the experience started "last month" and ends "tomorrow"
+    Given the experience "has" been activated
+
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The third user
+    Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The second user
+    Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #experience 2
+    Given the course has an experience
+    Given the experience started "3 days from now" and ends "7 days from now"
+    Given the experience "has" been activated
+    Given today is "5 days from now"
+
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The third user
+    Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The second user
+    Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #experience 3
+    Given the course has an experience
+    Given the experience started "10 days from now" and ends "20 days from now"
+    Given the experience "has" been activated
+    Given today is "15 days from now"
+
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The third user
+    Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The second user
+    Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #experience 4
+    Given the course has an experience
+    Given the experience started "23 days from now" and ends "27 days from now"
+    Given the experience "has" been activated
+    Given today is "25 days from now"
+
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The third user
+    Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+    #The second user
+    Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user successfully completes an experience
+     Then the user logs out
+
+
+    Then there will be 16 reactions from 12 different narratives recorded
+    Then there will be 16 reactions from 3 different scenarios recorded
