@@ -49,7 +49,7 @@
     <%= label_tag :addresses, t( '.add_instructor_lbl' ) %>
     <%= text_field_tag :addresses %>
     <%= hidden_field_tag :id, @course.id %>
-    <%= submit_tag t( '.add' ) %>
+    <%= submit_tag t( :add ) %>
   <% end %>
   <% @course.rosters.instructorships.each do |roster| %>
     <%= roster.user.name( anonymize ) %></br>
@@ -60,7 +60,7 @@
     <%= label_tag :addresses, t( '.add_student_lbl' ) %>
     <%= text_field_tag :addresses %>
     <%= hidden_field_tag :id, @course.id %>
-    <%= submit_tag t( '.add' ) %>
+    <%= submit_tag t( :add ) %>
   <% end %>
   <% if @course.rosters.students.count > 0 %>
     <p>
@@ -162,7 +162,7 @@
 </p>
 <p>
   </br></br>
-  <h3><%= t :projects %></h3>
+  <h3><%= t 'projects.projects' %></h3>
   <% if @course.projects.count < 1 %>
     <%= t :no_projects %></br>
   <% else %>

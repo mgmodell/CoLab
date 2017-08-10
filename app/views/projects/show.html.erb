@@ -52,6 +52,9 @@
 <div id="groups" class="ui-body-<%= theme_code %> ui-content">
   <h2><%= t :groups %></h2>
   <p>
+    <%= t 'projects.groups_intro', group_count: @project.groups.count %><br><br>
+    <%= link_to t('projects.recalculate_diversities'),
+        rescore_groups_path( id: @project.id ) %>
     <%= form_tag add_group_path, method: :get do %>
       <%= label_tag :group_name, t( 'projects.new_group' ) %>
       <%= text_field_tag :group_name %>
@@ -66,12 +69,32 @@
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
         <thead>
           <tr>
-            <th><%= t :student %></th>
+            <th>
+              <%= t :groups_names %><br>
+            </th>
             <% groups = @project.groups %>
             <% groups.each do |group| %>
-              <th align="center" data-priority="0"><%= group.get_name( anonymize ) %></th>
+              <th align="center" data-priority="0">
+                <%= group.get_name( anonymize ) %>
+              </th>
             <% end %>
-            <th data-priority="0">[no group]</th>
+            <th data-priority="0" rowspan='2'>[<%= t 'projects.no_group' %>]</th>
+          </tr>
+          <tr>
+            <th>
+              <%= t 'projects.diversity_scores' %><br><br>
+              <%= t :student_names %>
+            </th>
+            <% groups = @project.groups %>
+            <% groups.each do |group| %>
+              <td align="center">
+                <center>
+                  <%= group.diversity_score.nil? ? '--' : group.diversity_score %><br>
+                  <%= link_to "[#{t('projects.rescore')}]",
+                          rescore_group_path( id: @project.id, group_id: group.id ) %>
+                </center>
+              </td>
+            <% end %>
           </tr>
         </thead>
         <tbody>

@@ -10,6 +10,30 @@ en:
       # html: '<abbr title="required">*</abbr>'
     error_notification:
       default_message: "Please review the problems below:"
+    prompt:
+      user:
+        gender: Select your gender
+        cip_code: Select your course of study
+        timezone: Select your time zone
+        school: Select your university
+        primary_language: Select the language you speak at home
+        theme: Select your UI theme
+        language: Select your UI language
+    labels:
+      user:
+        first_name: Given name
+        last_name: Family name
+        gender: What is your gender?
+        date_of_birth: When were you born?
+        started_school: When did you begin university?
+        cip_code: What are you studying?
+        timezone: What time zone are you in?
+        school: Which school are you currently at?
+        primary_language: What language do you speak at home?
+        theme: What UI theme would you like to use?
+        language: What language would you like to use for CoLab?
+        researcher: Anonymize names?
+
     # Examples
     # labels:
     #   defaults:

@@ -6,7 +6,7 @@
     <div data-role="navbar">
       <ul>
         <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
-        <li><a href="#courses" data-ajax="false"><%= t :courses %></a></li>
+        <li><a href="#courses" data-ajax="false"><%= t 'courses.courses' %></a></li>
       </ul>
     </div>
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
@@ -19,7 +19,7 @@
     <div id="courses" class="ui-body-<%= theme_code %> ui-content">
       <h2><%= t 'schools.courses' %></h2>
 <p>
-  <h3><%= t :courses %></h3>
+  <h3><%= t 'courses.courses' %></h3>
   <% if @school.courses.count < 1 %>
     <%= t 'schools.no_courses' %></br>
   <% else %>
@@ -35,7 +35,7 @@
         <th><%= t :number %></th>
         <th data-priority="1"><%= t :instructors %></th>
         <th data-priority="0"><%= t :students %></th>
-        <th data-priority="1"><%= t :projects %></th>
+        <th data-priority="1"><%= t 'projects.projects' %></th>
         <th data-priority="1"><%= t :exps %></th>
         <th data-priority="1"><%= t :terms_lists %></th>
         <th data-priority="0"><%= t :start_date %></th>

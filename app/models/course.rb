@@ -120,13 +120,13 @@ class Course < ActiveRecord::Base
   end
 
   def add_students_by_email(student_emails)
-    student_emails.split(/\s*,\s*/).each do |email|
+    student_emails.split(/[\s,]+/).each do |email|
       add_user_by_email email
     end
   end
 
   def add_instructors_by_email(instructor_emails)
-    instructor_emails.split(/\s*,\s*/).each do |email|
+    instructor_emails.split(/[\s,]+/).each do |email|
       add_user_by_email(email, true)
     end
   end
