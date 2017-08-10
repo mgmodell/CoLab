@@ -71,7 +71,7 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
 
 end
 
-Given(/^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/) do |ordinal, type, state, country|
+Given /^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/  do |ordinal, type, state, country|
   users = []
   case type
   when 'group'
@@ -107,3 +107,44 @@ Given(/^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/) do |ordin
   u.save
 end
 
+Then /^we remove the "([^"]*)" user$/ do |ordinal|
+  case ordinal
+  when 'first'
+    @group.users.delete(  @group.users[ 0 ] )
+  when 'second'
+    @group.users.delete(  @group.users[ 1 ] )
+  when 'third'
+    @group.users.delete(  @group.users[ 2 ] )
+  when 'fourth'
+    @group.users.delete(  @group.users[ 3 ] )
+  when 'last'
+    @group.users.delete(  @group.users[ 4 ] )
+  when 'random'
+    @group.users.delete(  @group.users.sample )
+  else
+    puts "There's no such thing as a '#{ordinal}' user"
+    pending
+  end
+  @group.save
+end
+
+Then /^the "([^"]*)" "([^"]*)" user is added to the group$/ do |ordinal,type|
+  case ordinal
+  when 'first'
+    @group.users << @users[ 0 ] 
+  when 'second'
+    @group.users <<  @users[ 1 ] 
+  when 'third'
+    @group.users <<  @users[ 2 ]
+  when 'fourth'
+    @group.users <<  @users[ 3 ]
+  when 'last'
+    @group.users <<  @users[ 4 ]
+  when 'random'
+    @group.users <<  @users.sample
+  else
+    puts "There's no such thing as a '#{ordinal}' user"
+    pending
+  end
+  @group.save
+end

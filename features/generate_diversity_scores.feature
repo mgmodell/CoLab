@@ -425,7 +425,13 @@ Feature: Generate diversity scores (DS)
      Then the group's diversity score is 2
 
   Scenario: If we add a member to a group, the DS automatically updates
+    Given the "first" "group" user is from "NY" in "US"
+    Given the "last" "group" user is from "VT" in "US"
+    Given the "second" "group" user is from "KN" in "CD"
      When we update the group's diversity score
+     Then the group's diversity score is 5
+     When we remove the "second" user
+     Then we update the group's diversity score
      Then the group's diversity score is 3
 
   Scenario: If a DS:3 group makes a demographic change, the DS does not auto-update
@@ -438,10 +444,17 @@ Feature: Generate diversity scores (DS)
      When we update the group's diversity score
      Then the group's diversity score is 5
 
-  Scenario: If an all-male group (DS:1) group adds a gender-non-binary, then DS:2
-    Given the course has 1 confirmed users
+  Scenario: If an all-male group (DS:2) group adds a gender-non-binary, then DS:4
+    Given the "gender" of the "first" "group" user is "m"
+    Given the "gender" of the "second" "group" user is "m"
+    Given the "gender" of the "third" "group" user is "m"
+    Given the "gender" of the "last" "group" user is "m"
      When we update the group's diversity score
+    Given the course has 4 confirmed users
+    Given the "gender" of the "first" "loose" user is "f"
      Then the group's diversity score is 2
+     Then the "first" "loose" user is added to the group
+     Then the group's diversity score is 4
 
   Scenario: A group with one user with all demographics completed - DS:0
     Given the project has a group with 1 confirmed users
@@ -485,7 +498,60 @@ Feature: Generate diversity scores (DS)
     Given the "uni_date" of the "last" "group" user is "5/28/1998"
     Given the "uni_date" of the "third" "group" user is "5/28/1997"
     #4 scenarios
-    #TODO 
+    Given the course has an experience
+    Given the experience started "last month" and ends "next month"
+    Given the experience "has" been activated
+    Given the users "have" had demographics requested
+    #The second user
+    Given the user is "the second" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user clicks the link to the experience
+     Then the user sees the experience instructions page
+      And the user presses "Next"
+     Then the user completes a week
+     Then the user logs out
+
+    #The third user
+    Given the user is "the third" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user clicks the link to the experience
+     Then the user sees the experience instructions page
+      And the user presses "Next"
+     Then the user completes a week
+     Then the user completes a week
+     Then the user logs out
+
+    #The first user
+    Given the user is "the first" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user clicks the link to the experience
+     Then the user sees the experience instructions page
+      And the user presses "Next"
+     Then the user completes a week
+     Then the user completes a week
+     Then the user logs out
+
+    #The last user
+    Given the user is "the last" user
+     Then the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+     Then the user clicks the link to the experience
+     Then the user sees the experience instructions page
+      And the user presses "Next"
+     Then the user completes a week
+     Then the user completes a week
+     Then the user completes a week
+     Then the user completes a week
+     Then the user completes a week
+     Then the user logs out
+
     #2 languages
     Given the "language" of the "last" "group" user is "zu"
     Given the "language" of the "first" "group" user is "ga"
@@ -494,4 +560,4 @@ Feature: Generate diversity scores (DS)
     Given the "cip" of the "third" "group" user is "11"
      When we update the group's diversity score
      #TODO correct this number
-     Then the group's diversity score is 52
+     Then the group's diversity score is 20
