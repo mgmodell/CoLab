@@ -1,4 +1,22 @@
 <p id="notice"><%= notice %></p>
+<h1>Name:</h1>
+<p><%= @consent_form.name %></p>
 
+<h2>Owner/Creator:</h2>
+<p><%= @consent_form.user.informal_name( false ) %></p>
+
+<h2>Applicable to:</h2>
+<% if @consent_form.projects.empty? %>
+<p>Applies to all users throughout the system.</p>
+<% else %>
+<ul><% @consent_form.projects.each do |project|%>
+  <li><%= project.course.pretty_name( false ) %> : 
+      <%= project.get_name( false ) %></li>
+<% end %>
+</ul>
+
+<h2>Consent Form Text</h2>
+<p><%= @consent_form.form_text %></p>
+<br>
 <%= link_to 'Edit', edit_consent_form_path(@consent_form) %> |
 <%= link_to 'Back', consent_forms_path %>
