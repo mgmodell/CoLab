@@ -10,7 +10,7 @@ end
 
 Then /^the score calculated from the users is (\d+)$/ do |ds|
   emails_list = @users.collect(&:email)
-  Group.calc_diversity_score_for_proposed_group(emails:emails_list.join(', ')).should eq ds.to_i
+  Group.calc_diversity_score_for_proposed_group(emails: emails_list.join(', ')).should eq ds.to_i
 end
 
 Then /^we add the users to the group$/ do
@@ -18,7 +18,6 @@ Then /^we add the users to the group$/ do
     @group.users << user
   end
   @group.save
-
 end
 
 Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demographic, ordinal, type, code|
@@ -68,10 +67,9 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
     pending
   end
   u.save
-
 end
 
-Given /^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/  do |ordinal, type, state, country|
+Given /^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/ do |ordinal, type, state, country|
   users = []
   case type
   when 'group'
@@ -102,7 +100,7 @@ Given /^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/  do |ordin
     pending
   end
 
-  u.home_state = HomeState.where( code: "#{state}:#{country}" ).take
+  u.home_state = HomeState.where(code: "#{state}:#{country}").take
   pending if state.nil?
   u.save
 end
@@ -110,17 +108,17 @@ end
 Then /^we remove the "([^"]*)" user$/ do |ordinal|
   case ordinal
   when 'first'
-    @group.users.delete(  @group.users[ 0 ] )
+    @group.users.delete(@group.users[0])
   when 'second'
-    @group.users.delete(  @group.users[ 1 ] )
+    @group.users.delete(@group.users[1])
   when 'third'
-    @group.users.delete(  @group.users[ 2 ] )
+    @group.users.delete(@group.users[2])
   when 'fourth'
-    @group.users.delete(  @group.users[ 3 ] )
+    @group.users.delete(@group.users[3])
   when 'last'
-    @group.users.delete(  @group.users[ 4 ] )
+    @group.users.delete(@group.users[4])
   when 'random'
-    @group.users.delete(  @group.users.sample )
+    @group.users.delete(@group.users.sample)
   else
     puts "There's no such thing as a '#{ordinal}' user"
     pending
@@ -128,18 +126,18 @@ Then /^we remove the "([^"]*)" user$/ do |ordinal|
   @group.save
 end
 
-Then /^the "([^"]*)" "([^"]*)" user is added to the group$/ do |ordinal,type|
+Then /^the "([^"]*)" "([^"]*)" user is added to the group$/ do |ordinal, _type|
   case ordinal
   when 'first'
-    @group.users << @users[ 0 ] 
+    @group.users << @users[0]
   when 'second'
-    @group.users <<  @users[ 1 ] 
+    @group.users <<  @users[1]
   when 'third'
-    @group.users <<  @users[ 2 ]
+    @group.users <<  @users[2]
   when 'fourth'
-    @group.users <<  @users[ 3 ]
+    @group.users <<  @users[3]
   when 'last'
-    @group.users <<  @users[ 4 ]
+    @group.users <<  @users[4]
   when 'random'
     @group.users <<  @users.sample
   else
