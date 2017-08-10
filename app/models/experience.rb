@@ -44,7 +44,6 @@ class Experience < ActiveRecord::Base
   end
 
   def get_least_reviewed_narrative(include_ids = [])
-    puts "include ids: #{include_ids}"
     narrative_counts = if include_ids.empty?
                          reactions.group(:narrative_id).count
                        else
@@ -53,7 +52,6 @@ class Experience < ActiveRecord::Base
                            .group(:narrative_id).count
                        end
 
-    puts "narrative_counts: #{narrative_counts}"
     narrative = nil
     if narrative_counts.empty?
       if include_ids.empty?
@@ -64,8 +62,6 @@ class Experience < ActiveRecord::Base
                               group( :narrative_id ).count
         if narrative_counts.count < include_ids.count
           possible = include_ids - narrative_counts.keys
-          puts "World narrative counts: #{narrative_counts}"
-          puts possible
           narrative = Narrative.find( possible.sample )
         else
           sorted =  narrative_counts.sort{|x,y| x[1]<=>y[1]}
@@ -77,13 +73,28 @@ class Experience < ActiveRecord::Base
 
       scenario_counts = reactions.joins(:narrative).group(:scenario_id).count
 
-      puts "Scenario counts: #{scenario_counts}"
       if scenario_counts.count < Scenario.all.count
         # Must account for completed counts - add: and not IN narrative_counts
-        puts Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
-                             .where('id NOT IN (?)', narrative_counts.keys ).to_sql
-        narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
+        exp = include_ids - narrative_counts.keys
+        world = exp - Reaction.group( :narrative_id ).count.keys
+
+        i = Narrative.joins( :reactions ).where('scenario_id NOT IN (?)', scenario_counts.keys )
+                             .where( reactions: {narrative_id: exp } ).
+                             group( :narrative_id ).count
+        if include_ids.empty?
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
                              .where('id NOT IN (?)', narrative_counts.keys ).take
+        elsif world.count > 0
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
+                             .where( id: world ).take 
+
+        elsif exp.count > 0
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
+                             .where( id: world ).take 
+        else
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
+                             .where( id: include_ids ).take 
+        end
       end
 
       if narrative.nil?
@@ -92,7 +103,6 @@ class Experience < ActiveRecord::Base
     else
       narrative = Narrative.find(narrative_counts.sort { |x, y| x[1] <=> y[1] }[0][0])
     end
-    puts "least reviewed: #{narrative.id}"
     narrative
   end
 
