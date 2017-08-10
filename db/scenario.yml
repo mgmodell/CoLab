@@ -1,0 +1,13 @@
+---
+- !ruby/object:Scenario_
+  name_en: Equal Participation
+  name_ko:
+
+- !ruby/object:Scenario_
+  name_en: Group Domination
+  name_ko:
+
+- !ruby/object:Scenario_
+  name_en: Social Loafing
+  name_ko:
+

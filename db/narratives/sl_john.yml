@@ -1,7 +1,8 @@
 ---
 - !ruby/object:Week_
   week_num: 1
-  text: |
+  text_ko:  
+  text_en: |
     <p> In group time the first week, we began by setting up weekly team
     meetings. The project is fairly open-ended, so we brainstormed topic ideas
     for the rest of the time. </p>
@@ -30,7 +31,8 @@
 
 - !ruby/object:Week_
   week_num: 2
-  text: |
+  text_ko:  
+  text_en: |
     <p> Hannah started getting upset because she had found few materials and
     complained that it was too difficult. Before I had a chance to speak, Iain
     pointed out that he'd gotten more than enough to start with and even
@@ -55,7 +57,8 @@
 
 - !ruby/object:Week_
   week_num: 3
-  text: |
+  text_ko:  
+  text_en: |
     <p> We began our meeting by sorting through the materials. Together, Iain
     and Hannah were able to collect some quality materials and the summaries
     they've written help Marie and I to understand their value quickly. Clearly
@@ -81,7 +84,8 @@
 
 - !ruby/object:Week_
   week_num: 4
-  text: |
+  text_ko:  
+  text_en: |
     <p> I spent another hour reviewing all the materials and proofreading my
     work prior to the meeting. Iain was late by about five minutes, but Hannah
     was not in class at all and had not arrived at our meeting by the time Iain
@@ -110,7 +114,8 @@
 
 - !ruby/object:Week_
   week_num: 5
-  text: |
+  text_ko:  
+  text_en: |
     <p> I turned in our assignment during class and it felt good to know that
     we were on track. Our instructor gave us some of time in class to meet, and
     we discussed our progress, but none of us expected to have this time, so no
@@ -154,7 +159,8 @@
 
 - !ruby/object:Week_
   week_num: 6
-  text: |
+  text_ko:  
+  text_en: |
     <p> Iain was in class this week, but he emailed the team about an hour and
     a half before the meeting to say that there was a family emergency and that
     he would not be able to make the meeting. He sent over his progress on
@@ -177,7 +183,8 @@
 
 - !ruby/object:Week_
   week_num: 7
-  text: |
+  text_ko:  
+  text_en: |
     <p> This week turned out to be very busy, so I'm glad we decided to cut the
     meeting time down. Hannah gave everyone a copy of the document she
     assembled. After about 15 minutes of what was scheduled to be a half-hour
@@ -210,7 +217,8 @@
 
 - !ruby/object:Week_
   week_num: 8
-  text: |
+  text_ko:  
+  text_en: |
     <p> Everyone was there by the time I arrived this week. My instructor let
     me take a little extra time on my mid-term, which helped me out, but made
     me a little late to the meeting. </p>
@@ -239,7 +247,8 @@
 
 - !ruby/object:Week_
   week_num: 9
-  text: |
+  text_ko:  
+  text_en: |
     <p> Hannah didn't provide copies to everyone before class, and that was
     nerve-wracking, but she did have one to turn in to the instructor. She
     turned it in and now we get to wait for feedback. Of course, we already
@@ -259,7 +268,8 @@
 
 - !ruby/object:Week_
   week_num: 10
-  text: |
+  text_ko:  
+  text_en: |
     <p> Marie and I both arrived early to this week's meeting, and started
     looking at the images she put together over the past week while we waited
     for Hannah and Iain to arrive. The images were a bit odd and I don't think
@@ -290,7 +300,8 @@
 
 - !ruby/object:Week_
   week_num: 11
-  text: |
+  text_ko:  
+  text_en: |
     <p> In class, the instructor returned the drafts to the groups and gave us
     time during class to review it. Unfortunately, while we know there were
     many problems with that version, the instructor left only five comments in
@@ -332,7 +343,8 @@
 
 - !ruby/object:Week_
   week_num: 12
-  text: |
+  text_ko:  
+  text_en: |
     <p> Everyone arrived on time for the meeting this week. Iain provided
     feedback on Marie's section and, reading through it, it became clear that
     making these changes would require more substantial changes throughout the
@@ -360,7 +372,8 @@
 
 - !ruby/object:Week_
   week_num: 13
-  text: |
+  text_ko:  
+  text_en: |
     <p> The presentation went very smoothly. Hannah seemed nervous, spoke too
     quickly, and faced the PowerPoint instead of the class, but she knew what
     she was talking about and that showed. The audience asked some good
@@ -384,7 +397,8 @@
 
 - !ruby/object:Week_
   week_num: 14
-  text: |
+  text_ko:  
+  text_en: |
     <p> At the final meeting, we reviewed the paper to make sure it was ready
     for submission at the end of the week. Iain volunteered to do a final read,
     print the document and send it to the instructor. Marie started to attack

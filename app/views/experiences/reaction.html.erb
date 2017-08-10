@@ -1,12 +1,10 @@
 <div class="ui-corner-all custom-corners">
   <div class="ui-bar ui-bar-a">
-    <h3>Overall Group Behavior</h3>
+    <h3><%= t '.title' %></h3>
   </div>
   <div class="ui-body ui-body-a">
     <p>
-      Please reflect on the entire narrative that you have just finished reading and
-    tell us which of the following behaviors best characterizes the group over the course
-    of the entire semester.
+      <%= t '.instructions' %>
     </p>
   </div>
 </div>
@@ -19,7 +17,7 @@
   <% end %>
   <div class="ui-corner-all custom-corners">
     <div class="ui-bar ui-bar-a">
-      <h3>What behavior dominated the narrative?</h3>
+      <h3><%= t '.dom_behavior' %></h3>
     </div>
     <div class="ui-body ui-body-a">
       <%= f.association :behavior, :collection => Behavior.all, :as => :radio_buttons, label: false, :error => false %>
@@ -29,17 +27,17 @@
         <% else %>
           <div id="other_name_panel">
           <% end %>
-          <%= f.input :other_name, label: "What behavior did you see?" %><br>
+          <%= f.input :other_name, label: t( 'experiences.next.other') %><br>
         </div>
       </div>
     </div>
     <div>
       <div class="ui-bar ui-bar-a" >
-        <h3>How could I improve upon the narrative? </h3>
+        <h3><%= t '.improve' %></h3>
       </div>
-      <%= f.input :improvements, as: :text, size: "24x6", label: "Your suggestions:" %>
+      <%= f.input :improvements, as: :text, size: "24x6", label: t( '.suggest' ) %>
     </div>
     <div id="final_submit_panel" >
-      <%= f.submit "Submit" %>
+      <%= f.submit t :submit %>
     </div>
   <% end %>

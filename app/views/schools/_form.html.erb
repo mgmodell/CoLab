@@ -5,42 +5,42 @@
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
-        <li><a href="#details" data-ajax="false">Details</a></li>
-        <li><a href="#courses" data-ajax="false">Courses</a></li>
+        <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
+        <li><a href="#courses" data-ajax="false"><%= t 'courses.courses' %></a></li>
       </ul>
     </div>
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
-      <h2>School Details</h2>
+      <h2><%= t 'schools.show.title' %></h2>
       <div class="form-inputs">
         <%= f.input :name %>
         <%= f.input :description, as: :text %>
       </div>
     </div>
     <div id="courses" class="ui-body-<%= theme_code %> ui-content">
-      <h2>School Courses</h2>
+      <h2><%= t 'schools.courses' %></h2>
 <p>
-  <h3>Courses</h3>
+  <h3><%= t 'courses.courses' %></h3>
   <% if @school.courses.count < 1 %>
-    No courses.</br>
+    <%= t 'schools.no_courses' %></br>
   <% else %>
     <table data-role="table"
           id="course_table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>"
-          data-column-btn-text="Show/hide columns&hellip;"
+          data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
       <thead>
       <tr>
-        <th>Name</th>
-        <th>Number</th>
-        <th data-priority="1">Instructors</th>
-        <th data-priority="0">Students</th>
-        <th data-priority="1">Projects</th>
-        <th data-priority="1">Experiences</th>
-        <th data-priority="1">Terms Lists</th>
-        <th data-priority="0">Start Date</th>
-        <th data-priority="0">End Date</th>
-        <th data-priority="1">Actions</th>
+        <th><%= t :name %></th>
+        <th><%= t :number %></th>
+        <th data-priority="1"><%= t :instructors %></th>
+        <th data-priority="0"><%= t :students %></th>
+        <th data-priority="1"><%= t 'projects.projects' %></th>
+        <th data-priority="1"><%= t :exps %></th>
+        <th data-priority="1"><%= t :terms_lists %></th>
+        <th data-priority="0"><%= t :start_date %></th>
+        <th data-priority="0"><%= t :end_date %></th>
+        <th data-priority="1"><%= t :actions %></th>
       </tr>
       </thead>
       <tbody>
@@ -53,18 +53,17 @@
                 <td><%= course.projects.count %></td>
                 <td><%= course.experiences.count %></td>
                 <td><%= course.bingo_games.count %></td>
-                <td><%= course.start_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
-                <td><%= course.end_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
-                <td><%= link_to 'Show', game %>&nbsp;|&nbsp;
-                <%= link_to( "Activate", activate_bingo_game_path( game ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
-                <%= link_to 'Edit', edit_bingo_game_path(game) %>&nbsp;|&nbsp;
-                <%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <td><%= l course.start_date, format: :tz_clarity %></td>
+                <td><%= l course.end_date, format: :tz_clarity %></td>
+                <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
+                <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
+                <%= link_to t(:destroy), course, method: :delete, data: { confirm: t(:confirmation) } %></td>
             </tr>
           <% end %>
       </tbody>
     </table>
   <% end %>
-  <%= link_to "New Course", new_course_path( :school_id => @school.id ),
+  <%= link_to t( "courses.new.title"), new_course_path( :school_id => @school.id ),
       :data => { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" }%>
 </p>
 </div>

@@ -23,7 +23,9 @@ class Reaction < ActiveRecord::Base
         if user.reactions.count < Scenario.all.count
           # If they haven't yet been assigned all possible scenarios
           assigned_scenarios = user.reactions.joins(:narrative).group(:scenario_id).count
-          possible_narratives = Narrative.where('scenario_id NOT IN (?)', assigned_scenarios.to_a.collect { |x| x[0] })
+          possible_narratives = Narrative.
+              where('scenario_id NOT IN (?)', assigned_scenarios.keys)
+
           found_narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
 
         else
@@ -62,9 +64,9 @@ class Reaction < ActiveRecord::Base
 
   def status
     if diagnoses.count == 0
-      'Not started'
+      '0%'
     elsif behavior.present?
-      'Completed'
+      '100%'
     elsif next_week.nil?
       '99%'
     else
@@ -80,7 +82,7 @@ class Reaction < ActiveRecord::Base
     experience.name
   end
 
-  def scenario_id
-    id + (100 * narrative.scenario.id)
+  def sim_id
+    narrative.id + (100 * narrative.scenario.id)
   end
 end

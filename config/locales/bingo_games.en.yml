@@ -1,0 +1,47 @@
+en:
+  bingo_games:
+    review_candidates:
+      title: Candidate Terms for Review
+    index:
+      title: List of Bingo! Games
+    edit:
+      title: Edit a Bingo! Game
+    show:
+      title: Bingo! Game Details
+      identified_concepts:
+        one: This class only identified one unique concept.
+        other: This class identified %{count} unique concepts.
+      not_reviewed: This has not yet been reviewed.
+    new:
+      title: New Bingo! Game
+    create_success: Bingo! Game created successfully!
+    destroy_success: Bingo! Game destroyed successfully!
+    update_success: Bingo! Game updated successfully!
+    review_success: Review data successfully saved
+    review_problems: There were problems with the review and it could not be saved
+    activate_success: Bingo! Game activated!
+    #Term data
+    topic: Topic
+    definition: Definition
+    feedback: Feedback
+    concept: Concept
+    date: Game date
+    bingo_games: Bingo! Games
+    no_games: No Bingo! games
+    group_opts: Group options
+    ind_term_count: Terms per individual
+    days_for_prep: Days for instructor prep
+    attached_to: Attached to %{course_name} course.
+    group_option: Group submissions allowed?
+    group_discount: Percent fewer terms if working in a group
+    group_source: Source of project groups
+    no_group: No group options set.
+    tz_warn: This game occurs in the %{time_zone} time zone and all dates reflect this.
+    response_summary: Student Response Summary
+    resp_challenged: Challenged responses
+    resp_con_expct: Concepts expected
+    resp_term_count: Terms entered
+    resp_con_count: Concepts found
+    resp_perf: Performance
+    game_summary: This class identified %{con_count} unique concepts.
+    not_reviewed: This has not yet been reviewed.

@@ -26,7 +26,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'activerecord-session_store'
 gem 'bourbon'
-gem 'chronic'
 gem 'country_select'
 gem 'devise'
 gem 'devise-multi_email'
@@ -38,8 +37,12 @@ gem 'omniauth-google-oauth2'
 gem 'paperclip', '~> 5.0.0'
 gem 'puma'
 gem 'rails_12factor', group: :production
+gem 'simple_calendar', '~> 2.0'
 gem 'simple_form'
 gem 'aws-sdk', '~> 2.3.0'
+gem 'stopwords-filter', require: 'stopwords'
+gem 'traco'
+gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -53,6 +56,7 @@ gem 'aws-sdk', '~> 2.3.0'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  gem 'chronic'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'htmlbeautifier'
@@ -60,6 +64,8 @@ group :development, :test do
   gem 'railroady'
   gem 'rspec'
   gem 'rubocop'
+  gem 'city-state'
+  gem 'i18n_data'
 end
 
 group :development do

@@ -4,13 +4,13 @@ Then /^the user will see the task listing page$/ do
 end
 
 Then /^the user will see a consent request$/ do
-  page.should have_content 'May we user your data for research?'
+  page.should have_content 'May we use your data for research?'
 end
 
 When /^the user "(.*?)" provide consent$/ do |does_or_does_not|
   consent = does_or_does_not == 'does'
   check('consent_log[accepted]') if consent
-  click_button 'Respond to Consent Form'
+  click_button 'Record my response to this Consent Form'
 end
 
 Then /^the user will see a request for demographics$/ do
@@ -28,10 +28,14 @@ When /^the user "(.*?)" fill in demographics data$/ do |does_or_does_not|
   give_demographics = does_or_does_not == 'does'
   if give_demographics
     page.select('Male', from: 'user_gender_id')
-    page.select('18-20', from: 'user_age_range_id')
-    page.select('Belize', from: 'user_country')
-    # Current password has been removed from this page.
-    # page.fill_in('user_current_password', with: 'password')
+    page.select('Education', from: 'user_cip_code_id')
+    page.select('Belize', from: 'country')
+    page.select('Avestan', from: 'user_primary_language_id')
+
+    new_date = Date.parse('10-05-1976')
+    page.find('#user_date_of_birth').set(new_date)
+    new_date = Date.parse('10-09-2016')
+    page.find('#user_date_of_birth').set(new_date)
   end
   click_button 'my profile'
 end
@@ -65,7 +69,7 @@ Then /^the users are added to the course as instructors by email address$/ do
 end
 
 Then /^the course has (\d+) "([^"]*)" users$/ do |user_count, user_status|
-  @course.rosters.joins(:role).where(roles: { name: user_status }).count.should eq user_count.to_i
+  @course.rosters.joins(:role).where(roles: { name_en: user_status }).count.should eq user_count.to_i
 end
 
 Then /^(\d+) emails will have been sent$/  do |email_count|

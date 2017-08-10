@@ -17,7 +17,7 @@ class Course < ActiveRecord::Base
   before_validation :timezone_adjust
   before_create :anonymize
 
-  def prettyName(anonymous = false)
+  def pretty_name(anonymous = false)
     prettyName = ''
     prettyName = if anonymous
                    "#{anon_name} (#{anon_number})"
@@ -40,7 +40,7 @@ class Course < ActiveRecord::Base
   end
 
   def set_user_role(user, role)
-    role = Role.where(name: role).take if role.class == String
+    role = Role.where(code: role).take if role.class == String
     roster = rosters.where(user: user).take
     roster = Roster.new(user: user, course: self) if roster.nil?
     roster.role = role
@@ -98,8 +98,8 @@ class Course < ActiveRecord::Base
   end
 
   def add_user_by_email(user_email, instructor = false)
-    role_name = instructor ? 'Instructor' : 'Invited Student'
-    role = Role.where(name: role_name).take
+    role_code = instructor ? 'inst' : 'invt'
+    role = Role.where(code: role_code).take
     # Searching for the student and:
     user = User.joins(:emails).where(emails: { email: user_email }).take
 
@@ -116,33 +116,34 @@ class Course < ActiveRecord::Base
       existing_roster.role = role
       existing_roster.save
     end
-    # Do we want to send an invitation email?
+    # TODO: Let's add course invitation emails here in the future
   end
 
   def add_students_by_email(student_emails)
-    student_emails.split(/\s*,\s*/).each do |email|
+    student_emails.split(/[\s,]+/).each do |email|
       add_user_by_email email
     end
   end
 
   def add_instructors_by_email(instructor_emails)
-    instructor_emails.split(/\s*,\s*/).each do |email|
+    instructor_emails.split(/[\s,]+/).each do |email|
       add_user_by_email(email, true)
     end
   end
 
   def enrolled_students
-    rosters.joins(:role).where('roles.name = ? OR roles.name = ?', 'Enrolled Student', 'Invited Student').collect(&:user)
+    rosters.joins(:role).where('roles.code = ? OR roles.code = ?', 'enr', 'invt').collect(&:user)
   end
 
   def instructors
-    rosters.joins(:role).where('roles.name = ?', 'Instructor').collect(&:user)
+    rosters.joins(:role).where('roles.code = ?', 'inst').collect(&:user)
   end
 
   private
 
   def anonymize
-    anon_name = "Beginning #{Forgery::Name.industry}"
+    levels = %w(Beginning Intermediate Advanced)
+    anon_name = "#{levels.sample} #{Forgery::Name.industry}"
     dpts = %w(BUS MED ENG RTG MSM LEH EDP
               GEO IST MAT YOW GFB RSV CSV MBV)
     anon_number = "#{dpts.sample}-#{rand(100..700)}"

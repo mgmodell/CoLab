@@ -4,31 +4,63 @@
         <div class="ui-block-a">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true">
             <% unless @current_location == "home" %>
-              <%= link_to "Home", root_path,
+              <%= link_to t('home.title'), root_path,
                   :data => { :icon => "home", :role => "button" } %>
             <% end %>
             <% unless @current_user.nil? || @current_location == "profile"  %>
-              <%= link_to 'Profile', edit_user_registration_path(@current_user),
-                  :data => { :icon => "user", :role => "button" } %>
+                      <%= link_to t(:profile), edit_user_registration_path(@current_user),
+                          :data => { :icon => 'user', :role => 'button' } %>
+                      <a href="#diversityPop" data-rel="popup" data-position-to="window"
+                          data-transition='flip' data-role="button" data-icon="check">
+                        <%= raw t(:calc_diversity) %>
+                      </a>
+                      <div data-role="popup" id="diversityPop" data-theme="<%= theme_code %>" class="ui-corner-all">
+                        <form>
+                          <div style="padding:10px 20px;">
+                            <h1><%= t :calc_it %></h1>
+                            <label for="emails_for_ds"><%= t :ds_emails_lbl %>:</label>
+                            <input type="text" id="emails_for_ds" name="emails">
+                            <input type="submit" id="calc_diversity" value="<%= t :calc_diversity_sub %>">
+                            <div id="results" style="display:none">
+                              <table width='100%' display="false">
+                                <thead>
+                                  <tr>
+                                    <th><%= t :users %></th>
+                                    <th><%= t :diversity_score %></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td id='users'>&nbsp;</td>
+                                    <td align="center" id='diversity_score'>&nbsp;</td>
+                                  </tr>
+                                </tbody>
+
+                              </table>
+                            </div>
+
+                          </div>
+                        </form>
+                      </div>
             <% end %>
             <% if !@current_user.nil? %>
               <% if @current_user.is_instructor? %>
                 <a href="#adminMenu" data-rel="popup" data-transition="fade"
-                       class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-<%= theme_code %>">Admin&hellip;</a>
+                       class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-<%= theme_code %>"><%= raw (t :c_panel ) %></a>
                   <div data-role="popup" id="adminMenu" data-theme="<%= theme_code %>">
                     <ul data-role="listview" data-inset="true" >
                     <li>
-                      <%= link_to "Reports", graphing_path,
+                      <%= link_to t(:reports), graphing_path,
                         :data => { :icon => "bullets" } %>
                     </li>
                     <li>
-                      <%= link_to "Administration", admin_path,
+                      <%= link_to t(:administration), admin_path,
                         :data => { :icon => "gear" } %>
                     </li>
                     </ul>
                   </div>
               <% end %>
-              <%= link_to 'Logout', destroy_user_session_path, :method => :delete,
+              <%= link_to t(:logout), destroy_user_session_path, :method => :delete,
                   :data => { :icon => "power", :role => "button" } %>
             <% end %>
           </div>
@@ -37,13 +69,13 @@
           <div data-role="controlgroup" data-type="horizontal" data-mini="true" align="right">
 
             <% if @current_user.nil? || @current_location == "home" %>
-            <%= link_to "Demo", demo_start_path,
+            <%= link_to t(:demo), demo_start_path,
                   :data => { :icon => "action", :role => "button" } %>
             <% end %>
-            <%= mail_to "support@CoLab.onlin", "Support",
+            <%= mail_to "support@CoLab.onlin", t(:support),
                   :subject => "SAPA Support Request",
                   :data => { :icon => "mail", :role => "button" } %>
-            <%= link_to "About", "https://www.PeerAssess.info",
+            <%= link_to t(:about), "https://www.PeerAssess.info",
                   :data => { :icon => "info", :role => "button" } %>
           </div>
         </div>

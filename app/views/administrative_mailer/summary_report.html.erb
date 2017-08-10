@@ -4,18 +4,17 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <h1>Hello, <%= @user.first_name %>.</h1>
+    <h1><%= t 'home.greeting', name: @user.first_name %>.</h1>
     <p>
-      Below is your students' completion report from the task 
-      <em><%= @name %></em> in the course <em><%= @course_name %></em>
-      which recently completed at <%= link_to "CoLab.online", root_url %>.
-      There are <%= @completion_report.keys.count %> students enrolled in
-      the course.
+      <%= t :summary_body, task_name: @name,
+                           course_name: @course_name,
+                           site_link: (link_to t( :title ), root_url) %>
+      <%= t :enrolled_student, count: @completion_report.keys.count %>
     </P>
     <table>
       <tr>
-        <th>Student</th>
-        <th>Completed at:</th>
+        <th><%= t :student %></th>
+        <th><%= t :completed_at %></th>
       </tr>
       <% @completion_report.keys.each do |user_email| %>
         <tr>
@@ -26,11 +25,7 @@
         </tr>
       <% end %>
     </table>
-    <P>
-      Thank you!
-          </P>
-    <P>
-      CoLab Support
-          </p>
+    <P><%= t :email_close %></p>
+    <P><%= t :support_formal %></p>
   </body>
 </html>

@@ -23,15 +23,71 @@ class HomeController < ApplicationController
     @current_location = 'home'
   end
 
-  def demo_start
-    @title = 'Demonstration'
-    if @current_user.nil?
-      @current_user = User.new(first_name: 'John', last_name: 'Smith', timezone: 'Seoul')
+  def states_for_country
+    country_code = params[:country_code]
+    country = HomeCountry.where(code: country_code).take
+
+    @states = country.nil? ? [] : country.home_states
+
+    # Return the retrieved data
+    respond_to do |format|
+      format.json
     end
   end
 
-  def send_reset
-    @current_user.send_reset_password_instructions
-    redirect_to root_url, notice: 'A password reset link has been sent to your email address. Please log out and use the link to reset your password.'
+  def check_diversity_score
+    emails = params[ :emails ]
+    users = User.joins(:emails).where(emails: {email: emails.split(/[\s,]+/)} )
+                    .includes(:gender, :primary_language,
+                    :cip_code, home_state: [:home_country],
+                    reactions: [narrative: [:scenario]])
+    @diversity_score = Group.calc_diversity_score_for_group users: users
+    @found_users = users.collect{ |u| {email: u.email,
+                                        name: u.informal_name( false ),
+                                       family_name: u.last_name,
+                                       given_name: u.first_name } }
+    # Return the retrieved data
+    respond_to do |format|
+      format.json
+    end
+  end
+
+  # Data transport class
+  class Event_
+    attr_accessor :name, :task_link, :task_name_post, :type, :status, :group_name
+    attr_accessor :course_name, :start_time, :close_date
+  end
+
+  def demo_start
+    @title = t 'titles.demonstration'
+    if @current_user.nil?
+      @current_user = User.new(first_name: t(:demo_surname_1),
+                               last_name: t(:demo_fam_name_1),
+                               timezone: t(:demo_user_tz))
+    end
+
+    e = Event_.new
+    e.name = t(:demo_group)
+    e.task_link = assessment_demo_complete_path
+    e.task_name_post = '<br>' + "(#{t :project}: #{t(:demo_project)})"
+    e.type = t 'home.sapa'
+    e.status = t :not_started
+    e.group_name = t(:demo_group)
+    e.course_name = t(:demo_course_name)
+    e.start_time = 1.day.ago
+    e.close_date = 1.day.from_now.end_of_day
+
+    @events = [e]
+    e = Event_.new
+    e.name = t('candidate_lists.demo_topic')
+    e.task_link = bingo_demo_complete_path
+    e.task_name_post = ''
+    e.type = t 'home.terms_list'
+    e.status = '50%'
+    e.group_name = t(:demo_group)
+    e.course_name = t(:demo_course_name)
+    e.start_time = 1.week.ago
+    e.close_date = 2.day.from_now.end_of_day
+    @events << e
   end
 end

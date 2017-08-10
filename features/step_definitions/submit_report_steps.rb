@@ -38,7 +38,8 @@ Then /^the user should see an error indicating that the installment request expi
 end
 
 When /^user clicks the link to the project$/ do
-  click_link_or_button @project.group_for_user(@user).name
+  first(:link, @project.group_for_user(@user).name).click
+  # click_link_or_button @project.group_for_user(@user).name, visible: :all
 end
 
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points, distribution|
@@ -90,7 +91,7 @@ Then /^the assessment should show up as completed$/ do
   link_text = @project.group_for_user(@user).name
 
   page.should have_xpath("//a[contains(., '#{link_text}')]/.."), 'No link to assessment'
-  page.should have_xpath("//td[contains(., 'completed')]"), "No 'completed' message"
+  page.should have_xpath("//td[contains(., 'Completed')]"), "No 'completed' message"
 end
 
 Then /^the user logs in and submits an installment$/ do

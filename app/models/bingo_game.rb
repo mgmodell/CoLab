@@ -43,11 +43,11 @@ class BingoGame < ActiveRecord::Base
     concepts.to_a.uniq
   end
 
-  def get_topic(anonymous = false)
+  def get_topic(anonymous)
     anonymous ? anon_topic : topic
   end
 
-  def get_name(anonymous = false)
+  def get_name(anonymous)
     anonymous ? anon_topic : topic
   end
 
@@ -57,6 +57,22 @@ class BingoGame < ActiveRecord::Base
 
   def term_list_date
     end_date - lead_time.days
+  end
+
+  def get_activity_on_date(date:, anon:)
+    if date <= term_list_date
+      "Terms list (#{get_name(anon)})"
+    else
+      "Terms review (#{get_name(anon)})"
+    end
+  end
+
+  def next_deadline
+    if is_open?
+      term_list_date
+    else
+      end_date
+    end
   end
 
   def is_open?
@@ -93,13 +109,13 @@ class BingoGame < ActiveRecord::Base
       completion_hash = {}
       bingo.course.enrolled_students.each do |student|
         candidate_list = bingo.candidate_list_for_user(student)
-        completion_hash[student.email] = { name: student.name,
+        completion_hash[student.email] = { name: student.name(false),
                                            status: candidate_list.percent_completed.to_s + '%' }
       end
 
       bingo.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(bingo.get_name + ' (terms list)',
-                                            bingo.course.prettyName,
+        AdministrativeMailer.summary_report(bingo.get_name(false) + ' (terms list)',
+                                            bingo.course.pretty_name,
                                             instructor,
                                             completion_hash).deliver_later
         count += 1

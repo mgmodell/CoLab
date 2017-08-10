@@ -1,5 +1,5 @@
 <dl>
-  <% Behavior.all.each do |b| %>
+  <% Behavior.find_each do |b| %>
   <dt><%= b.name %><dt>
     <dd><%= b.description.html_safe %><dd>
   <% end %>

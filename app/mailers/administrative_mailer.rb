@@ -4,10 +4,12 @@ class AdministrativeMailer < ActionMailer::Base
 
   def remind(user)
     @user = user
+    headers 'X-SMTPAPI' => {
+      category: ['reminder']
+    }.to_json
+
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
-         subject: 'CoLab Assessment reminder email',
-         tag: 'reminder',
-         track_opens: 'true')
+         subject: 'CoLab Assessment reminder email')
   end
 
   def summary_report(name, course_name, user, completion_hash)
@@ -15,27 +17,33 @@ class AdministrativeMailer < ActionMailer::Base
     @user = user
     @course_name = course_name
     @completion_report = completion_hash
+    headers 'X-SMTPAPI' => {
+      category: ['reporting']
+    }.to_json
+
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
-         subject: "CoLab: #{@name}",
-         tag: 'reporting',
-         track_opens: 'true')
+         subject: "CoLab: #{@name}")
   end
 
   def re_invite(user)
     @user = user
+    headers 'X-SMTPAPI' => {
+      category: ['re-invite']
+    }.to_json
+
     mail(to: user.email.to_s,
-         subject: 'Invitation to CoLab',
-         tag: 're-invite',
-         track_opens: 'true')
+         subject: 'Invitation to CoLab')
   end
 
   def notify_availability(user, activity)
     @user = user
     @activity = activity
+    headers 'X-SMTPAPI' => {
+      category: ['availability']
+    }.to_json
+
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
-         subject: "CoLab: #{activity} is available",
-         tag: 'availability',
-         track_opens: 'true')
+         subject: "CoLab: #{activity} is available")
   end
 
   # Business methods
@@ -49,14 +57,16 @@ class AdministrativeMailer < ActionMailer::Base
   # Send out email reminders to those who have yet to complete their waiting assessments
   def self.send_reminder_emails
     logger.debug 'Sending reminder emails'
+    curr_date = DateTime.current
     finished_users = User.joins(installments: :assessment)
                          .where('assessments.start_date < ? AND assessments.end_date > ?',
-                                DateTime.current, DateTime.current).to_a
+                                curr_date, curr_date).to_a
 
     current_users = User.joins(groups: { project: :assessments }, rosters: :role)
-                        .where('assessments.start_date <= ? AND assessments.end_date >= ? AND ( ' \
-                              'roles.name = "Invited Student" OR roles.name = "Enrolled Student" ) ',
-                               DateTime.current, DateTime.current).to_a
+                        .where('assessments.start_date <= ? AND assessments.end_date >= ? AND ' \
+                              'projects.active = TRUE AND ' \
+                              '( roles.code = "invt" OR roles.code = "enr" ) ',
+                               curr_date, curr_date).to_a
 
     finished_users.each do |user|
       current_users.delete user
@@ -72,22 +82,19 @@ class AdministrativeMailer < ActionMailer::Base
     end
 
     # Make sure all the users are unique
-    uniqued = {}
-    current_users.each do |u|
-      uniqued[u] = 1
-    end
+    uniqued = current_users.uniq
 
     logger.debug '***********************************'
     logger.debug '            Mailing'
     logger.debug '***********************************'
     email_count = 0
 
-    uniqued.keys.each do |u|
+    uniqued.each do |u|
       next if !u.last_emailed.nil? && u.last_emailed.today?
       AdministrativeMailer.remind(u).deliver_later
-      u.last_emailed = DateTime.current
+      u.last_emailed = curr_date
       u.save
-      logger.debug "Email sent to: #{u.name} <#{u.email}>"
+      logger.debug "Email sent to: #{u.name false} <#{u.email}>"
       email_count += 1
     end
 

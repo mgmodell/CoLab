@@ -1,0 +1,62 @@
+---
+- !ruby/object:Narrative_
+  scenario: Equal Participation
+  member_en: Natasha
+  member_ko: 
+
+- !ruby/object:Narrative_
+  scenario: Equal Participation
+  member_en: Anika
+  member_ko: 
+
+- !ruby/object:Narrative_
+  scenario: Equal Participation
+  member_en: Lionel
+  member_ko: 
+
+- !ruby/object:Narrative_
+  scenario: Equal Participation
+  member_en: Alex
+  member_ko: 
+
+- !ruby/object:Narrative_
+  scenario: Group Domination
+  member_en: Anna
+  member_ko: 
+
+- !ruby/object:Narrative_
+  scenario: Group Domination
+  member_en: Jose
+  member_ko: 
+
+- !ruby/object:Narrative_
+  scenario: Group Domination
+  member_en: Sam
+  member_ko: 
+
+- !ruby/object:Narrative_
+  scenario: Group Domination
+  member_en: Kim
+  member_ko: 
+
+- !ruby/object:Narrative_
+  scenario: Social Loafing
+  member_en: John
+  member_ko: 
+
+- !ruby/object:Narrative_
+  scenario: Social Loafing
+  member_en: Marie
+  member_ko: 
+
+- !ruby/object:Narrative_
+  scenario: Social Loafing
+  member_en: Hannah
+  member_ko: 
+
+- !ruby/object:Narrative_
+  scenario: Social Loafing
+  member_en: Iain
+  member_ko: 
+  member_ko: 
+

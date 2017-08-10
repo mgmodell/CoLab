@@ -1,0 +1,25 @@
+---
+- !ruby/object:AgeRange_
+  name_en: <18
+  name_ko: <18
+
+- !ruby/object:AgeRange_
+  name_en: 18-20
+  name_ko: 18-20
+
+- !ruby/object:AgeRange_
+  name_en: 21-25
+  name_ko: 21-25
+
+- !ruby/object:AgeRange_
+  name_en: 25-30
+  name_ko: 25-30
+
+- !ruby/object:AgeRange_
+  name_en: 31+
+  name_ko: 31+
+
+- !ruby/object:AgeRange_
+  name_en: I'd prefer not to answer
+  name_ko: 
+

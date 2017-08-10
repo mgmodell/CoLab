@@ -1,4 +1,4 @@
-<h1>Editing Bingo Game</h1>
+<h1><%= t '.title'%></h1>
 <%= render 'form' %>
-<%= link_to 'Show', @bingo_game %> |
-<%= link_to 'Back to course', @bingo_game.course %>
+<%= link_to t( :show ), @bingo_game %> |
+<%= link_to t( :back ), @bingo_game.course %>

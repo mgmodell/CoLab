@@ -1,0 +1,11 @@
+---
+- !ruby/object:Lang_
+  code: en
+  name_en: 'English: American'
+  name_ko: 
+
+- !ruby/object:Lang_
+  code: ko
+  name_en: Korean
+  name_ko: 
+

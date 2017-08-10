@@ -12,12 +12,14 @@ class Installment < ActiveRecord::Base
 
   before_save :normalize_sums
 
+  TOTAL_VAL = 6000.0
+
   # Support inclusion of comments
-  def prettyComment( anonymize = false )
+  def prettyComment(anonymize = false)
     if comments.blank?
-      user.name( anonymize ) + ': <no comment>'
+      user.name(anonymize) + ': <no comment>'
     else
-      user.name( anonymize ) + ': ' + comments
+      user.name(anonymize) + ': ' + comments
     end
   end
 
@@ -67,21 +69,21 @@ class Installment < ActiveRecord::Base
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }
 
       au_hash.values.each do |v|
-        v.value = ((6000.0 * v.value) / total).round
+        v.value = ((Installment::TOTAL_VAL * v.value) / total).round
       end
 
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }
-      difference = 6000 - total
+      difference = Installment::TOTAL_VAL - total
       if difference != 0
         delta = difference <=> 0
         index = 0
-        difference.abs.times do
+        difference.abs.to_i.times do
           au_hash.values[index].value += delta
           index += 1
         end
         total = au_hash.values.inject(0) { |sum, v| sum + v.value }
       end
-      if 6000 != total
+      if Installment::TOTAL_VAL != total
         errors[:base] << 'Unable to reconcile reported values. Please contact an administrator.'
       end
     end

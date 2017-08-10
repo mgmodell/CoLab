@@ -1,0 +1,18 @@
+---
+- !ruby/object:FactorPack_
+  name_en: Simple
+  name_ko: 단순한
+  description_en: Borrowed from Goldfinch
+  description_ko: Goldfinch에서 빌린
+
+- !ruby/object:FactorPack_
+  name_en: Original
+  name_ko: 실물
+  description_en: My earliest formulation
+  description_ko: 나의 가장 초기의 배합
+
+- !ruby/object:FactorPack_
+  name_en: Distilled I
+  name_ko: 증류 한
+  description_en: Distillation of factors from 23 sources
+  description_ko: 23 개 출처의 요인 증류

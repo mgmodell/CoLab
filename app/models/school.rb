@@ -10,20 +10,20 @@ class School < ActiveRecord::Base
   before_create :anonymize
 
   def instructors
-    rosters.joins(:role).where(roles: { name: 'Instructor' }).collect(&:user).uniq
+    rosters.joins(:role).where(roles: { code: 'inst' }).collect(&:user).uniq
   end
 
   def enrolled_students
-    rosters.joins(:role).where(roles: { name: 'Enrolled Student' }).collect(&:user).uniq
+    rosters.joins(:role).where(roles: { code: 'enr' }).collect(&:user).uniq
   end
 
-  def get_name(anonymous = false)
+  def get_name(anonymous)
     anonymous ? anon_name : name
   end
 
   private
 
   def anonymize
-    anon_name = "#{Forgery::Name.location} institute"
+    anon_name = "#{rand < rand ? Forgery::Name.location : Forgery::Name.company_name} institute"
   end
 end

@@ -4,39 +4,38 @@ class SchoolsController < ApplicationController
   before_action :check_admin
 
   def show
-    @title = 'School Details'
+    @title = t '.title'
   end
 
   def edit
-    @title = 'Edit School'
+    @title = t '.title'
   end
 
   # GET /admin/school
   def index
-    @title = 'List of Schools'
+    @title = t '.title'
     @schools = School.all
   end
 
   def new
-    @title = 'New School'
+    @title = t '.title'
     @school = School.new
   end
 
   def create
-    @title = 'New School'
+    @title = t '.title'
     @school = School.new(school_params)
     if @school.save
-      redirect_to url: school_url(@school), notice: 'School was successfully created.'
+      redirect_to url: school_url(@school), notice: t('schools.create_success')
     else
       render :new
     end
   end
 
   def update
-    @title = 'Edit School'
+    @title = t '.title'
     if @school.update(school_params)
-      @school.school = School.find(@school.school_id)
-      redirect_to school_path(@school), notice: 'School was successfully updated.'
+      redirect_to school_path(@school), notice: t('schools.update_success')
     else
       render :edit
     end
@@ -44,7 +43,7 @@ class SchoolsController < ApplicationController
 
   def destroy
     @school.destroy
-    redirect_to schools_url, notice: 'School was successfully destroyed.'
+    redirect_to schools_url, notice: t('schools.destroy_success')
   end
 
   private

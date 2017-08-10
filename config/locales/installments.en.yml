@@ -1,0 +1,32 @@
+en:
+  installments:
+    title: How did your group work together?
+    demo_title: How did your group work together? (DEMO)
+    subtitle: Your weekly installment
+    submit: Submit Weekly Installment
+    success: Your response was successfully saved
+    err_unknown: Your response could not be recorded
+    demo_success: Your response would have been successfully saved. The demonstration is finished.
+    err_not_member: >
+      You are not a member of this group and therefore are not permitted
+      to submit this installment.
+    comment_prompt: Would you like to add additional comments?
+    instructions: >
+      Please complete this weeks' assessment for group 
+      <em>%{group_name}</em> (working with you on <em>%{project_name}</em>)
+      by indicating how much effort each of the %{member_count} members of 
+      your group contributed towards each of the %{factor_count} factors. 
+      Please keep in mind that <em>this report <u>should only cover this 
+      past week</u> and none of the period before</em>.
+    slider:
+      instructions: >
+        Use the sliders to increase or decrease the effort each member put in
+        towards each factor. Notice that when you increase one slider, all other
+        sliders will automatically drop proportionally and vice versa. Please do
+        visit each set of factors prior to submitting your report.
+    basic:
+      instructions: >
+        Each column below must total %{total_val} and the row at bottom will indicate
+        the current total. Additionally, the submit button will only be available
+        when the totals equal %{total_val}.
+      totals: Totals<br>(must equal %{total_val})

@@ -4,53 +4,52 @@
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
-      <li><a href="#details" data-ajax="false">Details</a></li>
-      <li><a href="#summary" data-ajax="false">Response Summary</a></li>
-      <li><a href="#responses" data-ajax="false">Response Data</a></li>
+      <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
+      <li><a href="#summary" data-ajax="false"><%= t :resp_summ %></a></li>
+      <li><a href="#responses" data-ajax="false"><%= t :resp_data %></a></li>
     </ul>
   </div>
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
-    <h2>Bingo! Game Details</h2>
+    <h2><%= t '.title' %></h2>
     <p>
-      <h3>Name:</h3>
+      <h3><%= t :name %>:</h3>
       <%= @bingo_game.get_name( anonymize ) %>
       (<% if @bingo_game.active %>
-        Active
+        <%= t :active %>
   <% else %>
-        <span class="error">Inactive</span> &mdash;
-        <%= link_to "Activate?", activate_bingo_game_path( @bingo_game ) %>
+        <span class="error"><%= t :inactive %></span> &mdash;
+        <%= link_to (t :activate ), activate_bingo_game_path( @bingo_game ) %>
       <% end %>)
     </p>
     <p>
-      <h3>Description:</h3>
+      <h3><%= t :description %>:</h3>
       <%= @bingo_game.description %></br>
-      Attached to course <%= @bingo_game.course.get_name( anonymize ) %>.
-      <h4>Days allocated for instructor prep:</h4><%= @bingo_game.lead_time %>
-      <h4>Terms required of individuals:</h4><%= @bingo_game.individual_count %>
+      <%= t( 'bingo_games.attached_to', course_name: @bingo_game.course.get_name( anonymize ) ) %>
+      <h4><%= t 'bingo_games.days_for_prep' %>:</h4><%= @bingo_game.lead_time %>
+      <h4><%= t 'bingo_games.ind_term_count' %>:</h4><%= @bingo_game.individual_count %>
     </p>
     <p>
-      <h3>Group options:</h3>
+      <h3><%= t 'bingo_games.group_opts' %>:</h3>
       <% if @bingo_game.group_option %>
-        <h4>Term discount for group work:</h4><%= @bingo_game.group_discount %>
-        <h4>Groups pulled from project:</h4><%= @bingo_game.project.get_name( anonymize ) %>
+        <h4><%= t 'bingo_games.group_discount' %>:</h4><%= @bingo_game.group_discount %>
+        <h4><%= t 'bingo_games.group_source' %>:</h4><%= @bingo_game.project.get_name( anonymize ) %>
       <% else %>
-        No group options set.
+        <%= t 'bingo_games.no_group' %>
       <% end %>
     </p>
     <p>
-      <h3>Dates:</h3>
-      <%= @bingo_game.start_date.strftime( "%a, %b %-d at %-l:%M%P %Z")%> to
-  <%= @bingo_game.end_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
-    <em>Note: This Bingo! game occurs in the <%= @bingo_game.course.timezone %> 
-            timezone and all dates reflect this.</em>
+      <h3><%= t :dates %>:</h3>
+      <%= l @bingo_game.start_date, format: :short_date %> to
+  <%= l @bingo_game.end_date, format: :short_date %></br>
+    <em><%= t :note %>: <%= t 'bingo_games.tz_warn', time_zone: @bingo_game.course.timezone %></em>
     </p>
-  <%= link_to 'Edit Bingo! game details', edit_bingo_game_path(@bingo_game) %>
+  <%= link_to t( 'bingo_games.edit.title' ), edit_bingo_game_path(@bingo_game) %>
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Student Response Summary</h2>
+  <h2><%= t :resp_data %></h2>
   </div>
         <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-          <h2>Student Response Data</h2>
+          <h2><%= t :resp_data %></h2>
           <p>
             <% if @bingo_game.reviewed %>
               <% candidate_feedbacks = CandidateFeedback.all %>
@@ -58,17 +57,25 @@
                 id="basicTable"
                 data-mode="columntoggle"
                 data-column-btn-theme="<%= theme_code %>"
-                data-column-btn-text="Show/hide columns&hellip;"
+                data-column-btn-text="<%= t :column_select %>"
                 class="table-stroke ui-shadow table-stripe table-ui-responsive">
                 <thead>
                   <tr>
-                    <th>Student</th>
-                    <th>Group</th>
-                    <th colspan="<%= candidate_feedbacks.count%>" data-priority="1">Challenged Responses</th>
-                    <th data-priority="0">Concepts Expected</th>
-                    <th data-priority="0">Terms entered</th>
-                    <th data-priority="0">Concepts Found</th>
-                    <th>Performance</th>
+                    <th><%= t :student %></th>
+                    <th><%= t :group %></th>
+                    <th colspan="<%= candidate_feedbacks.count%>" data-priority="1">
+                      <%= t 'bingo_games.resp_challenged' %>
+                    </th>
+                    <th data-priority="0">
+                      <%= t 'bingo_games.resp_con_expct' %>
+                    </th>
+                    <th data-priority="0">
+                      <%= t 'bingo_games.resp_term_count' %>
+                    </th>
+                    <th data-priority="0">
+                      <%= t 'bingo_games.resp_con_count' %>
+                    </th>
+                    <th><%= t 'bingo_games.resp_perf' %></th>
                   </tr>
                   <tr>
                     <th></th>
@@ -86,14 +93,14 @@
                   <% cl = @bingo_game.candidate_list_for_user( student ) %>
                   <tr>
                     <td><%= student.name( anonymize ) %></td>
-                    <td><%= cl.is_group ? cl.group.name : "N/A" %></td>
+                    <td><%= cl.is_group ? cl.group.name( anonymize ) : t( :n_a ) %></td>
                     <% if cl.candidates.completed.count > 0 %>
                       <% candidate_feedbacks.each do |cf| %>
                         <td><%= 100 * cl.get_by_feedback( cf ).count / cl.candidates.completed.count %>%</td>
                       <% end %>
                     <% else %>
                       <% candidate_feedbacks.each do |cf| %>
-                        <td>N/A</td>
+                        <td><%= t :n_a %></td>
                       <% end %>
                     <% end %>
                     <td><%= cl.expected_count %></td>
@@ -105,7 +112,7 @@
               </table>
           </p>
           <p>
-          This class identified <%= @bingo_game.get_concepts.count %> unique concepts.
+            <%= t '.identified_concepts', count: @bingo_game.get_concepts.count %>
             <table data-role="table"
               id="basicTable"
               data-mode="columntoggle"
@@ -114,7 +121,7 @@
               class="table-stroke ui-shadow table-stripe table-ui-responsive">
               <thead>
                 <tr>
-                  <th rowspan="">Concept</th>
+                  <th rowspan=""><%= t 'bingo_games.concept' %></th>
                 </tr>
               </thead>
               <% @bingo_game.get_concepts.each do |concept| %>
@@ -126,8 +133,8 @@
 
               
             <% else %>
-              This has not yet been reviewed.
+              <%= t '.not_reviewed' %>
             <% end %>
           <p>
         </div>
-        <%= link_to 'Back to course', @bingo_game.course %>
+        <%= link_to t( :back_to_course ), @bingo_game.course %>

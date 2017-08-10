@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'chronic'
 
 class Assessment < ActiveRecord::Base
   belongs_to :project, inverse_of: :assessments
@@ -18,6 +17,10 @@ class Assessment < ActiveRecord::Base
     0 != user.installments.where(assessment: self).count
   end
 
+  def next_deadline
+    end_date
+  end
+
   def group_for_user(user)
     groups = self.groups.joins(:users).where(users: { id: user })
     if groups.nil? || groups.count == 0
@@ -31,7 +34,6 @@ class Assessment < ActiveRecord::Base
 
   # Utility method for populating Assessments when they are needed
   def self.set_up_assessments
-    # TODO: Add timezone support here
     init_date = Date.today.beginning_of_day
     init_day = init_date.wday
     logger.debug "\n\t**Populating Assessments**"
@@ -45,21 +47,23 @@ class Assessment < ActiveRecord::Base
   # Here we'll give instructors a little status update at the close of each assessment period
   def self.inform_instructors
     count = 0
-    Assessment.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |assessment|
+    Assessment.joins(:project)
+              .where('instructor_updated = false AND assessments.end_date < ? AND projects.active = TRUE',
+                     DateTime.current).each do |assessment|
       completion_hash = {}
       assessment.installments.each do |inst|
-        completion_hash[inst.user.email] = { name: inst.user.name, status: inst.inst_date.to_s }
+        completion_hash[inst.user.email] = { name: inst.user.name(false), status: inst.inst_date.to_s }
       end
 
       assessment.project.course.enrolled_students.each do |student|
-        completion_hash[student.email] = { name: student.name, status: 'Incomplete' } unless completion_hash[student.email].present?
+        completion_hash[student.email] = { name: student.name(false), status: 'Incomplete' } unless completion_hash[student.email].present?
       end
       # Retrieve the course instructors
       # Retrieve names of those who did not complete their assessments
       # InstructorNewsLetterMailer.inform( instructor ).deliver_later
       assessment.project.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(assessment.project.name + ' (assessment)',
-                                            assessment.project.course.prettyName,
+        AdministrativeMailer.summary_report(assessment.project.get_name(false) + ' (assessment)',
+                                            assessment.project.course.pretty_name(false),
                                             instructor,
                                             completion_hash).deliver_later
         count += 1
@@ -83,16 +87,17 @@ class Assessment < ActiveRecord::Base
     if day_delta == 0
       assessment.start_date = init_date
     else
-      assessment.start_date = Chronic.parse('last ' + Date::DAYNAMES[project.start_dow])
+      day_delta = 7 + day_delta if day_delta < 0
+      assessment.start_date = init_date - day_delta.days
     end
     assessment.start_date = assessment.start_date.beginning_of_day
 
-    day_delta = project.end_dow - init_day
-    if day_delta == 0
-      assessment.end_date = init_date.end_of_day
-    else
-      assessment.end_date = Chronic.parse('this ' + Date::DAYNAMES[project.end_dow])
-    end
+    # calc period
+    period = project.end_dow > project.start_dow ?
+      project.end_dow - project.start_dow :
+      7 - project.start_dow + project.end_dow
+
+    assessment.end_date = assessment.start_date + period.days
     assessment.end_date = assessment.end_date.end_of_day
 
     existing_assessment_count = project.assessments.where(
@@ -104,6 +109,7 @@ class Assessment < ActiveRecord::Base
     if existing_assessment_count == 0
       assessment.project = project
       assessment.save
+      puts assessment.errors.full_messages unless assessment.errors.empty?
     end
   end
 

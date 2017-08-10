@@ -23,11 +23,19 @@ class Experience < ActiveRecord::Base
     reaction
   end
 
+  def next_deadline
+    end_date
+  end
+
+  def get_activity_on_date(date:, anon:)
+    get_name(anon)
+  end
+
   def type
     'Group work simulation'
   end
 
-  def get_name(anonymous = false)
+  def get_name(anonymous)
     anonymous ? anon_name : name
   end
 
@@ -40,24 +48,57 @@ class Experience < ActiveRecord::Base
                          reactions.group(:narrative_id).count
                        else
                          reactions
-                           .where('narrative_id IN (?)', include_ids)
+                           .where(narrative_id: include_ids)
                            .group(:narrative_id).count
                        end
 
-    narrative = NilClass
+    narrative = nil
     if narrative_counts.empty?
-      narrative = if include_ids.empty?
-                    Narrative.take
-                  else
-                    Narrative.where('id IN (?)', include_ids).take
-                  end
+      if include_ids.empty?
+        narrative = Narrative.take
+      else
+        narrative_counts = Reaction.includes( :narrative ).
+                              where( narrative_id: include_ids ).
+                              group( :narrative_id ).count
+        if narrative_counts.count < include_ids.count
+          possible = include_ids - narrative_counts.keys
+          narrative = Narrative.find( possible.sample )
+        else
+          sorted =  narrative_counts.sort{|x,y| x[1]<=>y[1]}
+          narrative = Narrative.find ( sorted[0][0] )
+        end
+        #narrative = Narrative.where( id: include_ids).take
+      end
     elsif narrative_counts.count < Narrative.all.count
 
       scenario_counts = reactions.joins(:narrative).group(:scenario_id).count
+
       if scenario_counts.count < Scenario.all.count
-        narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.collect { |x| x[0] }).take
-      else
-        narrative = Narrative.where('id NOT IN (?)', narrative_counts.collect { |x| x[0] }).take
+        # Must account for completed counts - add: and not IN narrative_counts
+        exp = include_ids - narrative_counts.keys
+        world = exp - Reaction.group( :narrative_id ).count.keys
+
+        i = Narrative.joins( :reactions ).where('scenario_id NOT IN (?)', scenario_counts.keys )
+                             .where( reactions: {narrative_id: exp } ).
+                             group( :narrative_id ).count
+        if include_ids.empty?
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
+                             .where('id NOT IN (?)', narrative_counts.keys ).take
+        elsif world.count > 0
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
+                             .where( id: world ).take 
+
+        elsif exp.count > 0
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
+                             .where( id: world ).take 
+        else
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
+                             .where( id: include_ids ).take 
+        end
+      end
+
+      if narrative.nil?
+        narrative = Narrative.where('id NOT IN (?)', narrative_counts.keys).take
       end
     else
       narrative = Narrative.find(narrative_counts.sort { |x, y| x[1] <=> y[1] }[0][0])
@@ -121,12 +162,12 @@ class Experience < ActiveRecord::Base
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
         reaction = experience.get_user_reaction student
-        completion_hash[student.email] = { name: student.name, status: reaction.status }
+        completion_hash[student.email] = { name: student.name(false), status: reaction.status }
       end
 
       experience.course.instructors.each do |instructor|
         AdministrativeMailer.summary_report(experience.name + ' (experience)',
-                                            experience.course.prettyName,
+                                            experience.course.pretty_name,
                                             instructor,
                                             completion_hash).deliver_later
         count += 1

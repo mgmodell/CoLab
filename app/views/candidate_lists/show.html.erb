@@ -2,21 +2,21 @@
      anonymize = false %>
   <table>
     <tr>
-      <th align="right">Topic:</th>
+      <th align="right"><%= t 'bingo_games.topic' %>:</th>
       <td><%= @candidate_list.bingo_game.get_topic( anonymize ) %></td>
     </tr>
     <tr>
-      <th align="right">Game date:</th>
-      <td><%= @candidate_list.bingo_game.end_date %>
+      <th align="right"><%= t 'bingo_games.date' %>:</th>
+      <td><%= l @candidate_list.bingo_game.end_date, format: :tz_clarity %>
     </tr>
   </table>
-  <h2>Terms</h2>
+  <h2><%= t 'candidate_lists.terms' %></h2>
   <table id="concept_table" width="100%"
         class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
     <thead>
       <tr>
         <th width="5%">#</th>
-        <th width="30%">Term</th>
+        <th width="30%"><%= t 'bingo_games.term' %></th>
       </tr>
     </thead>
     <tbody>

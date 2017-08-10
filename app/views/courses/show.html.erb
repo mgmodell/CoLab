@@ -5,83 +5,81 @@
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
-      <li><a href="#details" data-ajax="false">Details</a></li>
-      <li><a href="#students" data-ajax="false">Students</a></li>
-      <li><a href="#activities" data-ajax="false">Activities</a></li>
+      <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
+      <li><a href="#students" data-ajax="false"><%= t :students %></a></li>
+      <li><a href="#activities" data-ajax="false"><%= t :activities %></a></li>
+      <li><a href="#month" data-ajax="false"><%= t :month_view %></a></li>
     </ul>
   </div>
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
-  <h3>Course Details</h3>
+  <h3><%= t 'courses.show.title' %></h3>
 <p>
-  <h3>Name:</h3>
+  <h3><%= t :name %>:</h3>
   <%= @course.get_name( anonymize ) %>
 </p>
 
 <p>
-  <h3>Number:</h3>
+  <h3><%= t :number %>:</h3>
   <%= @course.get_number( anonymize ) %>
 </p>
 
 <p>
-  <h3>Description:</h3>
+  <h3><%= t :description %>:</h3>
   <%= @course.description %>
 </p>
 <p>
-  <h3>Dates:</h3>
-  <%= @course.start_date %> to
-  <%= @course.end_date %>
+  <h3><%= t :dates %>:</h3>
+  <%= l @course.start_date, format: :short_date %> to
+  <%= l @course.end_date, format: :short_date %>
 </p>
 <p>
-  <h3>Course instructors</h3>
+  <h3><%= t '.instructors' %></h3>
   <% @course.rosters.instructorships.each do |roster| %>
-    <%= roster.user.name( anonymize ) %> | <%= link_to "Remove", remove_instructor_path( roster ) %></br>
+    <%= roster.user.name( anonymize ) %> |
+    <%= link_to t( :remove) , remove_instructor_path( roster ) %></br>
   <% end %>
 
 </p>
-<%= link_to 'Edit course details', edit_course_path(@course) %>
+<%= link_to t( 'courses.edit.title' ), edit_course_path(@course) %>
   </div>
   <div id="students" class="ui-body-<%= theme_code %> ui-content">
 <p>
-  <h3>Course instructors</h3>
+  <h3><%= t '.instructors' %></h3>
   <%= form_tag add_instructors_path, method: :get do %>
-    <%= label_tag :addresses, "Add instructor by email:" %>
+    <%= label_tag :addresses, t( '.add_instructor_lbl' ) %>
     <%= text_field_tag :addresses %>
     <%= hidden_field_tag :id, @course.id %>
-    <%= submit_tag "Add!" %>
+    <%= submit_tag t( :add ) %>
   <% end %>
   <% @course.rosters.instructorships.each do |roster| %>
     <%= roster.user.name( anonymize ) %></br>
   <% end %>
 
-  <h3>Student roster</h3>
+  <h3><%= t '.roster' %></h3>
   <%= form_tag add_students_path, method: :get do %>
-    <%= label_tag :addresses, "Add users by email:" %>
+    <%= label_tag :addresses, t( '.add_student_lbl' ) %>
     <%= text_field_tag :addresses %>
     <%= hidden_field_tag :id, @course.id %>
-    <%= submit_tag "Add!" %>
+    <%= submit_tag t( :add ) %>
   <% end %>
   <% if @course.rosters.students.count > 0 %>
     <p>
-    <% if @course.rosters.students.count == 1 %>
-      There is one student enrolled.
-    <% else %>
-      There are <%= @course.rosters.students.count %> students enrolled.
-    <% end %>
+      <%= t '.enrolled_count', count: @course.rosters.students.count %>
     </p>
         <table data-role="table"
           id="basicTable"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>"
-          data-column-btn-text="Show/hide columns&hellip;"
+          data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
 
     <thead>
     <tr>
-      <th >Family Name</th>
-      <th data-priority="0">Given Name</th>
-      <th data-priority="1">Email</th>
-      <th >Status</th>
-      <th data-priority="1">Actions</th>
+      <th ><%= t :family_name %></th>
+      <th data-priority="0"><%= t :given_name %></th>
+      <th data-priority="1"><%= t :email %></th>
+      <th ><%= t :status %></th>
+      <th data-priority="1"><%= t :actions %></th>
     </tr>
     </thead>
     <tbody>
@@ -91,14 +89,14 @@
         <% if anonymize %>
           <%= roster.user.anon_last_name %>
         <% else %>
-          <%= roster.user.last_name.blank? ? "<not given>" : roster.user.last_name %>
+          <%= roster.user.last_name.blank? ? t( :not_given ) : roster.user.last_name %>
         <% end %>
         </td>
         <td>
         <% if anonymize %>
           <%= roster.user.anon_first_name %>
         <% else %>
-          <%= roster.user.first_name.blank? ? "<not given>" : roster.user.first_name %>
+          <%= roster.user.first_name.blank? ? t( :not_given ) : roster.user.first_name %>
         <% end %>
         </td>
         <td>
@@ -107,8 +105,8 @@
         <td>
           <%= roster.role.name %>
         </td>
-        <td><%= link_to( "Re-Invite", re_invite_student_path( roster.user ) ) unless roster.role.name == "Enrolled Student" %>&nbsp;|&nbsp;
-        <%= link_to "Drop", drop_student_path( roster.id ) %></td>
+        <td><%= link_to( t( 'courses.re_invite' ), re_invite_student_path( roster.user ) ) unless roster.role.code == 'enr' %>&nbsp;|&nbsp;
+        <%= link_to t( 'courses.drop' ), drop_student_path( roster.id ) %></td>
       </tr>
     <% end %>
     </tbody>
@@ -119,22 +117,22 @@
   <div id="activities" class="ui-body-<%= theme_code %> ui-content">
 
 <p>
-  <h3>Bingo! Games</h3>
+  <h3><%= t 'bingo_games.bingo_games' %></h3>
   <% if @course.bingo_games.count < 1 %>
-    No Bingo! games.</br>
+    <%= t 'bingo_games.no_games' %></br>
   <% else %>
     <table data-role="table"
           id="bingo_table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>"
-          data-column-btn-text="Show/hide columns&hellip;"
+          data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
       <thead>
       <tr>
-        <th>Name</th>
-        <th data-priority="1">Status</th>
-        <th data-priority="1">Close Date</th>
-        <th data-priority="0">Actions</th>
+        <th><%= t :name %></th>
+        <th data-priority="1"><%= t :status %></th>
+        <th data-priority="1"><%= t :close_date %></th>
+        <th data-priority="0"><%= t :actions %></th>
       </tr>
       </thead>
       <tbody>
@@ -143,43 +141,43 @@
                 <td><%= link_to game.get_name( anonymize ), game %></td>
                 <td>
                 <% if game.active %>
-                Active
+                <%= t :active %>
                 <% else %>
-                <span class="error">Inactive</span>
+                <span class="error"><%= t :inactive %></span>
                 <% end %></td>
                 <td>
-                  <%= game.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
+                  <%= l game.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
                 </td>
-                <td><%= link_to 'Show', game %>&nbsp;|&nbsp;
-                <%= link_to( "Activate", activate_bingo_game_path( game ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
-                <%= link_to 'Edit', edit_bingo_game_path(game) %>&nbsp;|&nbsp;
-                <%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <td><%= link_to t( :show ), game %>&nbsp;|&nbsp;
+                <%= link_to( t( :activate ), activate_bingo_game_path( game ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
+                <%= link_to t( :edit ), edit_bingo_game_path(game) %>&nbsp;|&nbsp;
+                <%= link_to t( :destroy ), game, method: :delete, data: { confirm: t( :confirmation) } %></td>
             </tr>
           <% end %>
       </tbody>
     </table>
   <% end %>
-  <%= link_to "New Bingo Game", new_bingo_game_path( :course_id => @course.id ),
-      :data => { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" }%>
+  <%= link_to t( 'bingo_games.new.title' ), new_bingo_game_path( :course_id => @course.id ),
+      data: { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" } %>
 </p>
 <p>
   </br></br>
-  <h3>Projects</h3>
+  <h3><%= t 'projects.projects' %></h3>
   <% if @course.projects.count < 1 %>
-    No projects.</br>
+    <%= t :no_projects %></br>
   <% else %>
     <table data-role="table"
           id="projects_table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>"
-          data-column-btn-text="Show/hide columns&hellip;"
+          data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
       <thead>
         <tr>
-          <th>Name</th>
-          <th data-priority="1">Status</th>
-          <th data-priority="1">Close date</th>
-          <th data-priority="0">Actions</th>
+          <th><%= t :name %></th>
+          <th data-priority="1"><%= t :status %></th>
+          <th data-priority="1"><%= t :close_date %></th>
+          <th data-priority="0"><%= t :actions %></th>
         </tr>
       </thead>
       <tbody>
@@ -188,43 +186,43 @@
                 <td><%= link_to project.get_name( anonymize ), project %></td>
                 <td>
                 <% if project.active %>
-                Active
+                <%= t :active %>
                 <% else %>
-                <span class="error">Inactive</span>
+                <span class="error"><%= t :inactive %></span>
                 <% end %></td>
                 <td>
-                  <%= project.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
+                  <%= l project.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
                 </td>
-                <td><%= link_to 'Show', project %>&nbsp;|&nbsp;
-                <%= link_to( "Activate", activate_project_path( project ) ) + raw("&nbsp;|&nbsp;" ) unless project.active %>
-                <%= link_to 'Edit', edit_project_path(project) %>&nbsp;|&nbsp;
-                <%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <td><%= link_to t( :show ), project %>&nbsp;|&nbsp;
+                <%= ( link_to( t( :activate ), activate_project_path( project ) ) + raw("&nbsp;|&nbsp;" )) unless project.active %>
+                <%= link_to t( :edit ), edit_project_path(project) %>&nbsp;|&nbsp;
+                <%= link_to t( :destroy ), project, method: :delete, data: { confirm: t( :confirmation) } %></td>
             </tr>
           <% end %>
       </tbody>
     </table>
   <% end %>
-  <%= link_to "New Project", new_project_path( :course_id => @course.id ),
+  <%= link_to t( 'projects.new.title'), new_project_path( :course_id => @course.id ),
       :data => { :icon => "plus", :mini => "true", :inline => "true", :role => "button" }%>
 </p>
 <p>
   </br></br>
-  <h3>Experiences</h3>
+  <h3><%= t :exps %></h3>
   <% if @course.experiences.count < 1 %>
-    No Experiences.</br>
+    <%= t 'experiences.no_experiences' %></br>
   <% else %>
     <table data-role="table"
           id="experiences_table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>"
-          data-column-btn-text="Show/hide columns&hellip;"
+          data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive " >
       <thead>
         <tr>
-          <th>Name</th>
-          <th data-priority="1">Status</th>
-          <th data-priority="1">Close Date</th>
-          <th data-priority="0">Actions</th>
+          <th><%= t :name %></th>
+          <th data-priority="1"><%= t :status %></th>
+          <th data-priority="1"><%= t :close_date %></th>
+          <th data-priority="0"><%= t :actions %></th>
         </tr>
       </thead>
       <tbody>
@@ -233,29 +231,50 @@
                 <td><%= link_to experience.get_name( anonymize ), experience %></td>
                 <td>
                 <% if experience.active %>
-                  Active
+                  <%= t :active %>
                 <% else %>
-                  <span class="error">Inactive</span>
+                  <span class="error"><%= t :inactive %></span>
                 <% end %>
                 </td>
                 <td>
-                  <%= experience.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
+                  <%= l experience.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
                 </td>
-                <td><%= link_to 'Show', experience %>&nbsp;|&nbsp;
-                  <%= link_to( "Activate", activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>
-                  <%= link_to 'Edit', edit_experience_path(experience) %>&nbsp;|&nbsp;
-                  <%= link_to 'Destroy', experience, method: :delete, data: { confirm: 'Are you sure?' } %>
+                <td><%= link_to t( :show), experience %>&nbsp;|&nbsp;
+                  <%= link_to( t :activate, activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>
+                  <%= link_to t( :edit), edit_experience_path(experience) %>&nbsp;|&nbsp;
+                  <%= link_to t( :destroy), experience,
+                              method: :delete,
+                              data: { confirm: t( :confirmation) } %>
                 </td>
             </tr>
           <% end %>
       </tbody>
     </table>
-  <% end %>
-  <%= link_to "New Experience", new_experience_path( :course_id => @course.id ),
-      :data => { :icon => "plus", :inline => "true", :mini => "true", :role => "button" }%>
+  <% end %><% label = t( 'experiences.new.title' ) %>
+  <%= link_to label, new_experience_path( :course_id => @course.id ),
+                :data => { 
+                  :icon => "plus", 
+                  :inline => "true", 
+                  :mini => "true", 
+                  :role => "button" } %>
 </p>
+  </div>
+  <div id="month" class="ui-body-<%= theme_code %> ui-content">
+  <h3><%= t :month_view %></h3>
+    <% activities = @course.experiences + @course.bingo_games + @course.projects %>
+    <%= month_calendar attribute: :start_date, end_attribute: :end_date, events: activities do |date,activities| %>
+      <h4 style="font-weight:300;font-size:10px;text-align:center">
+        <%= t('date.abbr_month_names')[date.month] %> <%= date.day %>
+      </h4>
+        <% activities.each do |activity| %>
+        <div style="font-weight:300;font-size:12px">
+        <%= link_to activity.get_activity_on_date( date: date, anon: anonymize ), activity %>
+        </div><br>
+        <% end %>
+    <% end %>
+    
   </div>
 </div>
 
 
-<%= link_to 'Back to the list of courses', courses_path %>
+<%= link_to t( :back_to_courses ), courses_path %>

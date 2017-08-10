@@ -1,7 +1,8 @@
 ---
 - !ruby/object:Week_
   week_num: 1
-  text: |
+  text_ko:  
+  text_en: |
     <p> In group time, we began by setting up weekly team meetings. My group
     seems to be nice, and Anika and I shared one of our big lecture courses
     last semester. Lionel says he just transferred into this school. The
@@ -31,7 +32,8 @@
 
 - !ruby/object:Week_
   week_num: 2
-  text: |
+  text_ko:  
+  text_en: |
     <p> Anika found a lot of materials for one of the topics that I had a rough
     time with, but Lionel and Natasha also focused on the same two as me. We
     ended up with a lot of duplication, but at least we all know those topics.
@@ -63,7 +65,8 @@
 
 - !ruby/object:Week_
   week_num: 3
-  text: |
+  text_ko:  
+  text_en: |
     <p> During our meeting, we began sorting through the materials. Lionel's
     and Natasha's materials were in good shape. At one point, Natasha misread
     one of Lionel's summaries and made everyone laugh, but it was a pretty
@@ -93,7 +96,8 @@
 
 - !ruby/object:Week_
   week_num: 4
-  text: |
+  text_ko:  
+  text_en: |
     <p> Lionel was a bit late to the meeting this week, but Anika wasn't there
     at all. She hadn't been in class and no one had heard anything from her, so
     we weren't sure what was going on.  </p>
@@ -113,7 +117,8 @@
 
 - !ruby/object:Week_
   week_num: 5
-  text: |
+  text_ko:  
+  text_en: |
     <p> Lionel turned in our assignment this week in class and Anika was there,
     too. It seems she'd had to go home in a rush because her mother went to the
     hospital, but she had done her summaries and got them to Lionel in time for
@@ -149,7 +154,8 @@
 
 - !ruby/object:Week_
   week_num: 6
-  text: |
+  text_ko:  
+  text_en: |
     <p> It seems that no one was really able to make the pieces work quite
     right, so we had to rethink our approach. I had a feeling Anika would bring
     up her idea from last week, and she did. Fortunately, I'd thought a lot
@@ -184,7 +190,8 @@
 
 - !ruby/object:Week_
   week_num: 7
-  text: |
+  text_ko:  
+  text_en: |
     <p> I was a bit late because one of my instructors offered to run a study
     session to prepare for the midterms, and I desperately needed the help. I
     felt bad that I forgot to tell the group last week, but when I arrived I
@@ -219,7 +226,8 @@
 
 - !ruby/object:Week_
   week_num: 8
-  text: |
+  text_ko:  
+  text_en: |
     <p> I thought the group would be bummed that I was so nitpicky, but they
     were thrilled I'd found so much stuff. Anika found good stuff, too, but I
     had almost everything she did and then about half again as many. We decided
@@ -252,7 +260,8 @@
 
 - !ruby/object:Week_
   week_num: 9
-  text: |
+  text_ko:  
+  text_en: |
     <p> Anika not only brought a copy of our paper to class for the instructor,
     but also brought copies for each of us to look at between class and our
     meeting. This way, we didn't waste our meeting time on reading through it.
@@ -284,7 +293,8 @@
 
 - !ruby/object:Week_
   week_num: 10
-  text: |
+  text_ko:  
+  text_en: |
     <p> I liked my presentation, but Anika and Natasha both had some ideas for
     improvement. One of Anika's ideas was really a good one, but most of them
     were sort of picky. It's no big deal, though &mdash; while I don't think
@@ -319,13 +329,15 @@
 
 - !ruby/object:Week_
   week_num: 11
-  text: |
+  text_ko:  
+  text_en: |
     <p> In class, the instructor returned the drafts and we met briefly during
     class to review it. There weren't many comments, and most of them were
     pretty minor or issues that Natasha had already fixed. However, there was
     one comment that concerned us all: a diagram might help here. I can't
     believe that this was the first time I realized that we were presenting our
-    instructor with a great big wall of text! How could we have missed that?
+    instructor with a great big wall of text_ko:  
+    text_en! How could we have missed that?
     We'd definitely have things to talk about at this week's team meeting. </p>
 
     <p> Lionel arrived a bit late as we were talking about our complete lack of
@@ -360,7 +372,8 @@
 
 - !ruby/object:Week_
   week_num: 12
-  text: |
+  text_ko:  
+  text_en: |
     <p> Lionel's images really added a lot to our paper, making it easier for
     people to understand parts of it. Lionel also claimed one of the images for
     one of his slides, and it worked much better than the bullet points he'd
@@ -380,7 +393,8 @@
 
 - !ruby/object:Week_
   week_num: 13
-  text: |
+  text_ko:  
+  text_en: |
     <p> The presentation went OK, but not quite as smoothly as I'd hoped. I was
     nervous and I think I didn't speak as loudly as I should have. I'm pretty
     sure that most people heard me, but it should have been louder. Anika, on
@@ -410,7 +424,8 @@
 
 - !ruby/object:Week_
   week_num: 14
-  text: |
+  text_ko:  
+  text_en: |
     <p> At the final meeting, we reviewed the paper to make sure it was ready
     for submission at the end of the week. As we went through it, Anika took
     issue with a few of the changes I'd made. The language I used was a bit
