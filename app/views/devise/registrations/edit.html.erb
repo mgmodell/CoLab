@@ -6,6 +6,7 @@
         <a href="#profile" data-ajax="false"><%= t :about_you %></a>
       </li>
       <li><a href="#history" data-ajax="false"><%= t :history %></a></li>
+      <li><a href="#consent_forms" data-ajax="false"><%= t 'consent_forms.multiple' %></a></li>
     </ul>
   </div>
   <div id="profile" class="ui-body-<%= theme_code %> ui-content">
@@ -191,6 +192,17 @@
       </tbody>
     </table>
     <% end %>
+  </div>
+  <div id="consent_forms" class="ui-body-<%= theme_code %> ui-content">
+    <h2><%= t 'devise.registrations.consent_history' %></h2>
+    <table>
+    <% @current_user.consent_logs.each do |consent_log| %>
+      <tr>
+        <td> <%= consent_log.consent_form.name %></td>
+        <td> <%= consent_log.accepted %></td>
+      </tr>
+    <% end %>
+    </table>
   </div>
 </div>
 

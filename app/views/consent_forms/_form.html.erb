@@ -3,9 +3,9 @@
 
   <div class="form-inputs">
     <%= f.input :name %>
-    <%= f.association :user %>
+    <%= f.association :user, label_method: :email, selected: @current_user.id %>
     <%= f.input :pdf, as: :file %>
-    <%= f.association :projects %>
+    <%= f.association :projects, as: :check_boxes %>
     <%= f.input :form_text %>
   </div>
 

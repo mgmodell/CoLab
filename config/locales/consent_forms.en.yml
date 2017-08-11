@@ -1,0 +1,19 @@
+en:
+  consent_forms:
+    new_title: New Consent Form
+    title: Update Consent Response
+    multiple: Research Participation
+    edit:
+      title: Consent Form
+    index:
+      title: Listing Consent Forms
+    show:
+      name: Name of the Study
+      lead_admin: Lead Administrator of the Study
+      applicable_lbl: Projects Covered
+      applicable_txt: This consent form applies to all users of the system.
+      form_text_lbl: Consent Form Text
+      form_text: >
+        The text below will be presented to all potential study
+        participants. Please use basic html to format your text.
+

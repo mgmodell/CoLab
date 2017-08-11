@@ -73,6 +73,7 @@ en:
       primary: Primary
       confirmed: Confirmed
       waiting_confirmations: "Currently awaiting confirmation for:"
+      consent_history: Records of Currently Applicable Research Participation
       password_change: Wan't to change your password? Click here and we'll email instructions.
       make_prim: Make Primary
       simulation_id: "Simulation ID: %{sim_id}"

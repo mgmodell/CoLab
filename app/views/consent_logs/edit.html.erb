@@ -4,7 +4,7 @@
   <%= t '.instructions' %>
 </p>
 <iframe src="<%= @consent_log.consent_form.pdf.url%>" width="400" height="516"></iframe>
-<P><%= @consent_log.consent_form.form_text %></p>
+<P><%= raw @consent_log.consent_form.form_text %></p>
 <%= form_for @consent_log do |f| %>
   <%= f.hidden_field :user_id %>
   <%= f.hidden_field :presented, :value => true %>
