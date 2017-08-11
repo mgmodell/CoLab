@@ -44,3 +44,11 @@
     This user is a student that was enrolled, but is not any longer.
   description_ko: 
 
+- !ruby/object:Role_
+  code: res
+  name_en: Researcher
+  name_ko: 
+  description_en: >
+    This user is a researcher associated with a specific course.
+  description_ko: 
+
