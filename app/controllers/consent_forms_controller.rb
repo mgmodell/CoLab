@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ConsentFormsController < ApplicationController
   before_action :set_consent_form, only: [:show, :edit, :update, :destroy]
 
@@ -9,8 +10,7 @@ class ConsentFormsController < ApplicationController
 
   # GET /consent_forms/1
   # GET /consent_forms/1.json
-  def show
-  end
+  def show; end
 
   # GET /consent_forms/new
   def new
@@ -18,8 +18,7 @@ class ConsentFormsController < ApplicationController
   end
 
   # GET /consent_forms/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /consent_forms
   # POST /consent_forms.json
@@ -62,13 +61,14 @@ class ConsentFormsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_consent_form
-      @consent_form = ConsentForm.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def consent_form_params
-      params.require(:consent_form).permit(:name,:user_id,:pdf,:project_ids,:form_text)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_consent_form
+    @consent_form = ConsentForm.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def consent_form_params
+    params.require(:consent_form).permit(:name, :user_id, :pdf, :project_ids, :form_text)
+  end
 end

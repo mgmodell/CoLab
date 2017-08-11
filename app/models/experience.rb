@@ -57,17 +57,17 @@ class Experience < ActiveRecord::Base
       if include_ids.empty?
         narrative = Narrative.take
       else
-        narrative_counts = Reaction.includes( :narrative ).
-                              where( narrative_id: include_ids ).
-                              group( :narrative_id ).count
+        narrative_counts = Reaction.includes(:narrative)
+                                   .where(narrative_id: include_ids)
+                                   .group(:narrative_id).count
         if narrative_counts.count < include_ids.count
           possible = include_ids - narrative_counts.keys
-          narrative = Narrative.find( possible.sample )
+          narrative = Narrative.find(possible.sample)
         else
-          sorted =  narrative_counts.sort{|x,y| x[1]<=>y[1]}
-          narrative = Narrative.find ( sorted[0][0] )
+          sorted =  narrative_counts.sort { |x, y| x[1] <=> y[1] }
+          narrative = Narrative.find ( sorted[0][0])
         end
-        #narrative = Narrative.where( id: include_ids).take
+        # narrative = Narrative.where( id: include_ids).take
       end
     elsif narrative_counts.count < Narrative.all.count
 
@@ -76,24 +76,24 @@ class Experience < ActiveRecord::Base
       if scenario_counts.count < Scenario.all.count
         # Must account for completed counts - add: and not IN narrative_counts
         exp = include_ids - narrative_counts.keys
-        world = exp - Reaction.group( :narrative_id ).count.keys
+        world = exp - Reaction.group(:narrative_id).count.keys
 
-        i = Narrative.joins( :reactions ).where('scenario_id NOT IN (?)', scenario_counts.keys )
-                             .where( reactions: {narrative_id: exp } ).
-                             group( :narrative_id ).count
+        i = Narrative.joins(:reactions).where('scenario_id NOT IN (?)', scenario_counts.keys)
+                     .where(reactions: { narrative_id: exp })
+                     .group(:narrative_id).count
         if include_ids.empty?
-          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
-                             .where('id NOT IN (?)', narrative_counts.keys ).take
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys)
+                               .where('id NOT IN (?)', narrative_counts.keys).take
         elsif world.count > 0
-          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
-                             .where( id: world ).take 
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys)
+                               .where(id: world).take
 
         elsif exp.count > 0
-          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
-                             .where( id: world ).take 
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys)
+                               .where(id: world).take
         else
-          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys )
-                             .where( id: include_ids ).take 
+          narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys)
+                               .where(id: include_ids).take
         end
       end
 

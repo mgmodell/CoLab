@@ -2,7 +2,7 @@
 class ExperiencesController < ApplicationController
   before_action :set_experience, only: [:show, :edit, :update, :destroy]
   before_action :check_viewer, only: [:show, :index]
-  before_action :check_editor, only: [:edit, :update, :destroy ]
+  before_action :check_editor, only: [:edit, :update, :destroy]
 
   def show
     @title = t('.title')
@@ -160,8 +160,8 @@ class ExperiencesController < ApplicationController
 
   def check_viewer
     redirect_to root_path unless @current_user.is_admin? ||
-                                  @current_user.is_instructor? ||
-                                  @current_user.is_researcher?
+                                 @current_user.is_instructor? ||
+                                 @current_user.is_researcher?
   end
 
   def check_editor

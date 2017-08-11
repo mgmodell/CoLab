@@ -133,8 +133,8 @@ class BingoGamesController < ApplicationController
 
   def check_viewer
     redirect_to root_path unless @current_user.is_admin? ||
-                                  @current_user.is_instructor? ||
-                                  @current_user.is_researcher?
+                                 @current_user.is_instructor? ||
+                                 @current_user.is_researcher?
   end
 
   def check_editor

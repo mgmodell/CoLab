@@ -23,8 +23,8 @@ class Reaction < ActiveRecord::Base
         if user.reactions.count < Scenario.all.count
           # If they haven't yet been assigned all possible scenarios
           assigned_scenarios = user.reactions.joins(:narrative).group(:scenario_id).count
-          possible_narratives = Narrative.
-              where('scenario_id NOT IN (?)', assigned_scenarios.keys)
+          possible_narratives = Narrative
+                                .where('scenario_id NOT IN (?)', assigned_scenarios.keys)
 
           found_narrative = experience.get_least_reviewed_narrative(possible_narratives.collect(&:id))
 
