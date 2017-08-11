@@ -33,23 +33,21 @@ en:
         theme: What UI theme would you like to use?
         language: What language would you like to use for CoLab?
         researcher: Anonymize names?
+      consent_form:
+        name: Name of the Study
+        user: Lead Administrator of the Study
+        pdf: A PDF of the Study Consent Form
+        projects: Specific Projects to which this Form Applies
+        form_text: Consent Form Text
+    hints:
+      consent_form:
+        name: >
+          This is the Title of the Study which will be presented
+          to each potential participant.
 
-    # Examples
-    # labels:
-    #   defaults:
-    #     password: 'Password'
-    #   user:
-    #     new:
-    #       email: 'E-mail to sign in.'
-    #     edit:
-    #       email: 'E-mail.'
-    # hints:
-    #   defaults:
-    #     username: 'User name to sign in.'
-    #     password: 'No special characters, please.'
-    # include_blanks:
-    #   defaults:
-    #     age: 'Rather not say'
-    # prompts:
-    #   defaults:
-    #     age: 'Select your age'
+        projects: >
+          If no projects are selected, this Consent Form will
+          apply to all CoLab projects.
+        form_text: >
+          This text will be presented to all potential study
+          participants. Please use basic html to format your text.
