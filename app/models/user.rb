@@ -116,6 +116,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def is_researcher?
+    researcher
+  end
+
   def waiting_instructor_tasks
     waiting_tasks = []
 

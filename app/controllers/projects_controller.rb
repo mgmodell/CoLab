@@ -2,8 +2,10 @@
 class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :destroy,
                                      :rescore_group, :rescore_groups]
-  before_action :check_admin, except: [:next, :diagnose, :react,
-                                       :rescore_group, :rescore_groups]
+  before_action :check_editor, except: [:next, :diagnose, :react,
+                                       :rescore_group, :rescore_groups,
+                                       :show, :index]
+  before_action :check_viewer, only: [:show, :index]
 
   def show
     @title = t('.title')
@@ -151,7 +153,13 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def check_admin
+  def check_viewer
+    redirect_to root_path unless @current_user.is_admin? ||
+                                  @current_user.is_instructor? ||
+                                  @current_user.is_researcher?
+  end
+
+  def check_editor
     redirect_to root_path unless @current_user.is_admin? || @current_user.is_instructor?
   end
 

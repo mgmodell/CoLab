@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 class CoursesController < ApplicationController
   before_action :set_course, only: [:show, :edit, :update, :destroy, :add_students, :add_instructors]
-  before_action :check_admin, except: [:next, :diagnose, :react, :accept_roster, :decline_roster]
+  before_action :check_editor, except: [:next, :diagnose, :react, :accept_roster, :decline_roster, :show, :index]
+  before_action :check_viewer, except: [:next, :diagnose, :react, :accept_roster, :decline_roster ]
 
   def show
     @title = t('.title')
@@ -160,7 +161,13 @@ class CoursesController < ApplicationController
     end
   end
 
-  def check_admin
+  def check_viewer
+    redirect_to root_path unless @current_user.is_admin? ||
+                                  @current_user.is_instructor? ||
+                                  @current_user.is_researcher?
+  end
+
+  def check_editor
     redirect_to root_path unless @current_user.is_admin? || @current_user.is_instructor?
   end
 
