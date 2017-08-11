@@ -18,7 +18,7 @@ Rails.application.routes.draw do
         as: :activate_experience
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate', 
         as: :activate_bingo_game
-    resources :courses, :projects, :experiences, :bingo_games, :schools
+    resources :courses, :projects, :experiences, :bingo_games, :schools, :consent_forms
   end
 
   scope 'bingo' do

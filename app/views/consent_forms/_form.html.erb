@@ -1,0 +1,15 @@
+<%= simple_form_for(@consent_form) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.association :user, label_method: :email, selected: @current_user.id %>
+    <%= f.input :pdf, as: :file %>
+    <%= f.association :projects, as: :check_boxes %>
+    <%= f.input :form_text %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
