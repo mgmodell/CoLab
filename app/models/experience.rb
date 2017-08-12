@@ -55,7 +55,7 @@ class Experience < ActiveRecord::Base
     narrative = nil
     if narrative_counts.empty?
       if include_ids.empty?
-        narrative = Narrative.take
+        narrative = Narrative.all.sample
       else
         narrative_counts = Reaction.includes(:narrative)
                                    .where(narrative_id: include_ids)
@@ -83,22 +83,22 @@ class Experience < ActiveRecord::Base
                      .group(:narrative_id).count
         if include_ids.empty?
           narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys)
-                               .where('id NOT IN (?)', narrative_counts.keys).take
+                               .where('id NOT IN (?)', narrative_counts.keys).sample
         elsif world.count > 0
           narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys)
-                               .where(id: world).take
+                               .where(id: world).sample
 
         elsif exp.count > 0
           narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys)
-                               .where(id: world).take
+                               .where(id: world).sample
         else
           narrative = Narrative.where('scenario_id NOT IN (?)', scenario_counts.keys)
-                               .where(id: include_ids).take
+                               .where(id: include_ids).sample
         end
       end
 
       if narrative.nil?
-        narrative = Narrative.where('id NOT IN (?)', narrative_counts.keys).take
+        narrative = Narrative.where('id NOT IN (?)', narrative_counts.keys).sample
       end
     else
       narrative = Narrative.find(narrative_counts.sort { |x, y| x[1] <=> y[1] }[0][0])
