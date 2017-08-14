@@ -37,7 +37,7 @@ class BingoGamesController < ApplicationController
     @title = t '.title'
     @bingo_game = BingoGame.new(bingo_game_params)
     if @bingo_game.save
-      redirect_to @bingo_game, notice: 'Bingo Game was successfully created.'
+      redirect_to @bingo_game, notice: t('bingo_games.create_success')
     else
       render :new
     end
@@ -46,7 +46,7 @@ class BingoGamesController < ApplicationController
   def update
     @title = t '.title'
     if @bingo_game.update(bingo_game_params)
-      redirect_to @bingo_game, notice: 'Bingo Game was successfully updated.'
+      redirect_to @bingo_game, notice: t('bingo_games.update_success')
     else
       render :edit
     end
@@ -104,7 +104,7 @@ class BingoGamesController < ApplicationController
   def activate
     bingo_game = BingoGame.find(params[:bingo_game_id])
     if @current_user.is_admin? ||
-       bingo_game.course.get_roster_for_user(@current_user).role.name == 'Instructor'
+       bingo_game.course.get_roster_for_user(@current_user).role.code == 'inst'
       bingo_game.active = true
       bingo_game.save
     end

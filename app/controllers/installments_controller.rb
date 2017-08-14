@@ -3,7 +3,7 @@ class InstallmentsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:demo_complete]
 
   def edit
-    @title = 'How Did Your Group Work Together?'
+    @title = t 'installments.title'
     assessment_id = params[:assessment_id]
 
     project = Assessment.find(assessment_id).project
@@ -35,10 +35,11 @@ class InstallmentsController < ApplicationController
   end
 
   def update
-    @title = 'How Did Your Group Work Together?'
+    @title = t 'installments.title'
     @installment = Installment.find(params[:id])
     if @installment.update_attributes(i_params)
-      redirect_to root_url, notice: 'Installment successfully updated'
+      notice = t('installments.success')
+      redirect_to root_url, notice: notice
     else
       @group = Group.find(@installment.group)
       @project = @installment.assessment.project
@@ -50,7 +51,7 @@ class InstallmentsController < ApplicationController
   end
 
   def new
-    @title = 'How Did Your Group Work Together?'
+    @title = t 'installments.title'
     assessment_id = params[:assessment_id]
     if assessment_id == -1
       redirect_to root_path
@@ -82,7 +83,7 @@ class InstallmentsController < ApplicationController
         @members = @group.users
         # removed proactive build of value objects.
 
-        cell_value = 6000 / @members.size
+        cell_value = Installment::TOTAL_VAL / @members.size
         @members.each do |u|
           @factors.each do |b|
             @installment.values.build(factor: b, user: u, value: cell_value)
@@ -95,12 +96,12 @@ class InstallmentsController < ApplicationController
   end
 
   def create
-    @title = 'How Did Your Group Work Together?'
+    @title = t 'installments.title'
     @installment = Installment.new(i_params)
 
     # Handle a demo run
     if @installment.assessment_id < 0
-      flash[:notice] = 'Your response would have been successfully saved. The demonstration is finished.'
+      flash[:notice] = t 'installments.demo_success'
       redirect_to root_url
     else
       redirected = false
@@ -112,11 +113,10 @@ class InstallmentsController < ApplicationController
       end
 
       if !found
-        redirect_to root_url error: 'You are not a member of this group and ' \
-                                       'therefore are not permitted to submit this installment.'
+        redirect_to root_url error: (t 'installments.err_not_member')
       elsif @installment.save
         project = @installment.assessment.project
-        flash[:notice] = 'Successfully saved your response.'
+        flash[:notice] = t 'installments.success'
         redirect_to root_url unless redirected
       else
         @factors = @installment.assessment.project.factors
@@ -128,7 +128,7 @@ class InstallmentsController < ApplicationController
           flash[:error] = @installment.errors[:base][0]
           redirect_to root_url
         else
-          flash[:error] = 'Your assessment installment could not be recorded'
+          flash[:error] = t 'installments.err_unknown'
           render @installment.assessment.project.style.filename
         end
 
@@ -162,13 +162,13 @@ class InstallmentsController < ApplicationController
   end
 
   def demo_complete
-    @title = 'How Did Your Group Work Together? (DEMO)'
+    @title = t 'installments.demo_title'
     @project = ProjStub.new
     @project.style = Style.find(2)
-    @project.name = 'Research Paper'
+    @project.name = t 'installments.demo_project'
 
     @group = GroupStub.new
-    @group.name = 'SuperStars'
+    @group.name = t 'installments.demo_group'
     user_names = [%w(Doe Robert),
                   %w(Jones Roberta), %w(Kim Janice)]
     @group.users = []
@@ -190,7 +190,7 @@ class InstallmentsController < ApplicationController
     @factors = FactorPack.find(1).factors
 
     @members = @group.users
-    cell_value = 6000 / @members.size
+    cell_value = Installment::TOTAL_VAL / @members.size
     @members.each do |_u|
       @factors.each do |b|
         @installment.values.build(factor: b, user: _u, value: cell_value)

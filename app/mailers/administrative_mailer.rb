@@ -57,15 +57,16 @@ class AdministrativeMailer < ActionMailer::Base
   # Send out email reminders to those who have yet to complete their waiting assessments
   def self.send_reminder_emails
     logger.debug 'Sending reminder emails'
+    curr_date = DateTime.current
     finished_users = User.joins(installments: :assessment)
                          .where('assessments.start_date < ? AND assessments.end_date > ?',
-                                DateTime.current, DateTime.current).to_a
+                                curr_date, curr_date).to_a
 
     current_users = User.joins(groups: { project: :assessments }, rosters: :role)
                         .where('assessments.start_date <= ? AND assessments.end_date >= ? AND ' \
                               'projects.active = TRUE AND ' \
-                              '( roles.name = "Invited Student" OR roles.name = "Enrolled Student" ) ',
-                               DateTime.current, DateTime.current).to_a
+                              '( roles.code = "invt" OR roles.code = "enr" ) ',
+                               curr_date, curr_date).to_a
 
     finished_users.each do |user|
       current_users.delete user
@@ -91,7 +92,7 @@ class AdministrativeMailer < ActionMailer::Base
     uniqued.each do |u|
       next if !u.last_emailed.nil? && u.last_emailed.today?
       AdministrativeMailer.remind(u).deliver_later
-      u.last_emailed = DateTime.current
+      u.last_emailed = curr_date
       u.save
       logger.debug "Email sent to: #{u.name false} <#{u.email}>"
       email_count += 1

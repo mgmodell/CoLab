@@ -7,13 +7,13 @@
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
-      <li><a href="#weekly" data-ajax="false">Week View</a></li>
-      <li><a href="#tasks" data-ajax="false">Task View</a></li>
-      <li><a href="#monthly" data-ajax="false">Month View</a></li>
+      <li><a href="#weekly" data-ajax="false"><%= t :week_view %></a></li>
+      <li><a href="#tasks" data-ajax="false"><%= t :task_view %></a></li>
+      <li><a href="#monthly" data-ajax="false"><%= t :month_view %></a></li>
     </ul>
   </div>
   <div id="tasks" class="ui-body-<%= theme_code %> ui-content">
-    <h3>Task List</h3>
+    <h3><%= t :task_view %></h3>
 <% if @waiting_instructor_tasks.any? %>
 <h4><%= t :instructor_tasks %></h4>
   <table data-role="table"
@@ -43,7 +43,9 @@
         <td align="center" data-priority="1">Bingo! Candidate Review</td>
         <td align="center" data-priority="1"><%= task.status %>%</td>
         <td data-priority="1"><%= task.course.get_name( anonymize ) %></td>
-        <td data-priority="0"><<%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
+        <td data-priority="0">
+          <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
+        </td>
       </tr>
     <% end %>
     </tbody>
@@ -91,8 +93,8 @@
             </td>
             <td> <%= group.get_name( anonymize ) %></td>
             <td> <%= task.project.course.get_name( anonymize ) %></td>
-            <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-            <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+            <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
+            <td> <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
             <td>
               <%= render :partial => "shared/consent", :locals => { :project => task.project } %>
             </td>
@@ -122,10 +124,10 @@
               <% end %>
             </td>
             <td> <%= task.course.get_name( anonymize ) %></td>
-            <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+            <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
             <td>
-              <%= task.term_list_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
-              <small><i>(<%= t 'candidates.list_for_class' %> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d") %></i></small>)
+              <%= l task.term_list_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></br>
+              <small><i>(<%= t 'candidates.list_for_class' %> <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :short_date %></i></small>)
             </td>
             <td>N/A</td>
           </tr>
@@ -144,8 +146,8 @@
             </td>
             <td> N/A</td>
             <td> <%= task.course.get_name( anonymize ) %></td>
-            <td> <%= task.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-            <td> <%= task.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+            <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
+            <td> <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
             <td>
               <%= t :n_a %>
                 </td>
@@ -157,7 +159,7 @@
 <% end %>
 </div>
   <div id="weekly" class="ui-body-<%= theme_code %> ui-content">
-    <h3>Week View</h3>
+    <h3><%= t :week_view %></h3>
     <%= week_calendar attribute: :next_deadline, events: tasks,  number_of_weeks: 2 do |date,meetings| %>
       <h4 style="font-weight:300;font-size:10px;text-align:center">
         <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
@@ -173,7 +175,7 @@
     <% end %>
   </div>
   <div id="monthly" class="ui-body-<%= theme_code %> ui-content">
-    <h3>Month View</h3>
+    <h3><%= t :month_view %></h3>
     <%= month_calendar attribute: :next_deadline, events: tasks  do |date,meetings| %>
       <h4 style="font-weight:300;font-size:10px;text-align:center">
         <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>

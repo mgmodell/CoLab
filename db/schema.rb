@@ -11,13 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170622054334) do
-
-  create_table "age_ranges", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
+ActiveRecord::Schema.define(version: 20170807013336) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -31,11 +25,15 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_index "assessments", ["project_id"], name: "index_assessments_on_project_id", using: :btree
 
   create_table "behaviors", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.text     "description", limit: 65535
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.string   "name_en",        limit: 255
+    t.text     "description_en", limit: 65535
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "name_ko",        limit: 255
+    t.string   "description_ko", limit: 255
   end
+
+  add_index "behaviors", ["name_en"], name: "index_behaviors_on_name_en", unique: true, using: :btree
 
   create_table "bingo_games", force: :cascade do |t|
     t.string   "topic",               limit: 255
@@ -63,11 +61,16 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_index "bingo_games", ["project_id"], name: "index_bingo_games_on_project_id", using: :btree
 
   create_table "candidate_feedbacks", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "definition", limit: 255
+    t.string   "name_en",       limit: 255
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "definition",    limit: 255
+    t.string   "name_ko",       limit: 255
+    t.text     "definition_en", limit: 65535
+    t.text     "definition_ko", limit: 65535
   end
+
+  add_index "candidate_feedbacks", ["name_en"], name: "index_candidate_feedbacks_on_name_en", unique: true, using: :btree
 
   create_table "candidate_lists", force: :cascade do |t|
     t.integer  "user_id",         limit: 4
@@ -101,11 +104,14 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_index "candidates", ["user_id"], name: "index_candidates_on_user_id", using: :btree
 
   create_table "cip_codes", force: :cascade do |t|
-    t.integer  "gov_code",    limit: 4
-    t.string   "description", limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.integer  "gov_code",   limit: 4
+    t.string   "name_en",    limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "name_ko",    limit: 255
   end
+
+  add_index "cip_codes", ["gov_code"], name: "index_cip_codes_on_gov_code", unique: true, using: :btree
 
   create_table "concepts", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -202,28 +208,21 @@ ActiveRecord::Schema.define(version: 20170622054334) do
 
   create_table "factor_packs", force: :cascade do |t|
     t.string   "name_en",        limit: 255
-    t.text     "description",    limit: 65535
+    t.text     "description_en", limit: 65535
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.string   "name_ko",        limit: 255
-    t.string   "description_en", limit: 255
     t.string   "description_ko", limit: 255
   end
 
   add_index "factor_packs", ["name_en"], name: "index_factor_packs_on_name_en", unique: true, using: :btree
 
-  create_table "factor_packs_factors", id: false, force: :cascade do |t|
-    t.integer "factor_pack_id", limit: 4, null: false
-    t.integer "factor_id",      limit: 4, null: false
-  end
-
   create_table "factors", force: :cascade do |t|
-    t.string   "description",    limit: 255
+    t.string   "description_en", limit: 255
     t.string   "name_en",        limit: 255
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.string   "name_ko",        limit: 255
-    t.string   "description_en", limit: 255
     t.string   "description_ko", limit: 255
     t.integer  "factor_pack_id", limit: 4
   end
@@ -249,14 +248,10 @@ ActiveRecord::Schema.define(version: 20170622054334) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.string   "name_ko",    limit: 255
+    t.string   "code",       limit: 255
   end
 
   add_index "genders", ["name_en"], name: "index_genders_on_name_en", unique: true, using: :btree
-
-  create_table "group_project_counts", force: :cascade do |t|
-    t.string "name",        limit: 255
-    t.string "description", limit: 255
-  end
 
   create_table "group_revisions", force: :cascade do |t|
     t.integer  "group_id",   limit: 4
@@ -269,11 +264,12 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_index "group_revisions", ["group_id"], name: "index_group_revisions_on_group_id", using: :btree
 
   create_table "groups", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.integer  "project_id", limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "anon_name",  limit: 255
+    t.string   "name",            limit: 255
+    t.integer  "project_id",      limit: 4
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "anon_name",       limit: 255
+    t.integer  "diversity_score", limit: 4
   end
 
   add_index "groups", ["project_id"], name: "index_groups_on_project_id", using: :btree
@@ -284,6 +280,28 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   end
 
   add_index "groups_users", ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id", unique: true, using: :btree
+
+  create_table "home_countries", force: :cascade do |t|
+    t.string   "name",        limit: 255
+    t.string   "code",        limit: 255
+    t.boolean  "no_response"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "home_countries", ["code"], name: "index_home_countries_on_code", unique: true, using: :btree
+
+  create_table "home_states", force: :cascade do |t|
+    t.integer  "home_country_id", limit: 4
+    t.string   "name",            limit: 255
+    t.string   "code",            limit: 255
+    t.boolean  "no_response"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "home_states", ["home_country_id", "name"], name: "index_home_states_on_home_country_id_and_name", unique: true, using: :btree
+  add_index "home_states", ["home_country_id"], name: "index_home_states_on_home_country_id", using: :btree
 
   create_table "installments", force: :cascade do |t|
     t.datetime "inst_date"
@@ -300,15 +318,21 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_index "installments", ["user_id"], name: "index_installments_on_user_id", using: :btree
 
   create_table "languages", force: :cascade do |t|
-    t.string "code", limit: 255
-    t.string "name", limit: 255
+    t.string  "code",       limit: 255
+    t.string  "name_en",    limit: 255
+    t.string  "name_ko",    limit: 255
+    t.boolean "translated"
   end
 
+  add_index "languages", ["code"], name: "index_languages_on_code", unique: true, using: :btree
+  add_index "languages", ["name_en"], name: "index_languages_on_name_en", unique: true, using: :btree
+
   create_table "narratives", force: :cascade do |t|
-    t.string   "member",      limit: 255
+    t.string   "member_en",   limit: 255
     t.integer  "scenario_id", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.string   "member_ko",   limit: 255
   end
 
   add_index "narratives", ["scenario_id"], name: "index_narratives_on_scenario_id", using: :btree
@@ -360,11 +384,17 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_index "reactions", ["user_id"], name: "index_reactions_on_user_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.string   "description", limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.string   "name_en",        limit: 255
+    t.string   "description_en", limit: 255
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.string   "name_ko",        limit: 255
+    t.string   "code",           limit: 255
+    t.string   "description_ko", limit: 255
   end
+
+  add_index "roles", ["code"], name: "index_roles_on_code", unique: true, using: :btree
+  add_index "roles", ["name_en"], name: "index_roles_on_name_en", unique: true, using: :btree
 
   create_table "rosters", force: :cascade do |t|
     t.integer  "role_id",    limit: 4
@@ -379,10 +409,11 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_index "rosters", ["user_id"], name: "index_rosters_on_user_id", using: :btree
 
   create_table "scenarios", force: :cascade do |t|
-    t.string   "name",        limit: 255
+    t.string   "name_en",     limit: 255
     t.integer  "behavior_id", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.string   "name_ko",     limit: 255
   end
 
   add_index "scenarios", ["behavior_id"], name: "index_scenarios_on_behavior_id", using: :btree
@@ -406,18 +437,25 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "styles", force: :cascade do |t|
-    t.string   "name",       limit: 255
+    t.string   "name_en",    limit: 255
     t.string   "filename",   limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "name_ko",    limit: 255
   end
+
+  add_index "styles", ["name_en"], name: "index_styles_on_name_en", unique: true, using: :btree
 
   create_table "themes", force: :cascade do |t|
     t.string   "code",       limit: 255
-    t.string   "name",       limit: 255
+    t.string   "name_en",    limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "name_ko",    limit: 255
   end
+
+  add_index "themes", ["code"], name: "index_themes_on_code", unique: true, using: :btree
+  add_index "themes", ["name_en"], name: "index_themes_on_name_en", unique: true, using: :btree
 
   create_table "thredded_categories", force: :cascade do |t|
     t.integer  "messageboard_id", limit: 4,   null: false
@@ -431,6 +469,32 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_index "thredded_categories", ["messageboard_id", "slug"], name: "index_thredded_categories_on_messageboard_id_and_slug", unique: true, using: :btree
   add_index "thredded_categories", ["messageboard_id"], name: "index_thredded_categories_on_messageboard_id", using: :btree
   add_index "thredded_categories", ["name"], name: "thredded_categories_name_ci", using: :btree
+
+  create_table "thredded_messageboard_groups", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.integer  "position",   limit: 4,   null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "thredded_messageboard_notifications_for_followed_topics", force: :cascade do |t|
+    t.integer "user_id",         limit: 4,                 null: false
+    t.integer "messageboard_id", limit: 4,                 null: false
+    t.string  "notifier_key",    limit: 90,                null: false
+    t.boolean "enabled",                    default: true, null: false
+  end
+
+  add_index "thredded_messageboard_notifications_for_followed_topics", ["user_id", "messageboard_id", "notifier_key"], name: "thredded_messageboard_notifications_for_followed_topics_unique", unique: true, using: :btree
+
+  create_table "thredded_messageboard_users", force: :cascade do |t|
+    t.integer  "thredded_user_detail_id",  limit: 4, null: false
+    t.integer  "thredded_messageboard_id", limit: 4, null: false
+    t.datetime "last_seen_at",                       null: false
+  end
+
+  add_index "thredded_messageboard_users", ["thredded_messageboard_id", "last_seen_at"], name: "index_thredded_messageboard_users_for_recently_active", using: :btree
+  add_index "thredded_messageboard_users", ["thredded_messageboard_id", "thredded_user_detail_id"], name: "index_thredded_messageboard_users_primary", using: :btree
+  add_index "thredded_messageboard_users", ["thredded_user_detail_id"], name: "fk_rails_06e42c62f5", using: :btree
 
   create_table "thredded_messageboards", force: :cascade do |t|
     t.string   "name",                  limit: 191,               null: false
@@ -448,6 +512,36 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_index "thredded_messageboards", ["messageboard_group_id"], name: "index_thredded_messageboards_on_messageboard_group_id", using: :btree
   add_index "thredded_messageboards", ["slug"], name: "index_thredded_messageboards_on_slug", using: :btree
 
+  create_table "thredded_notifications_for_followed_topics", force: :cascade do |t|
+    t.integer "user_id",      limit: 4,                 null: false
+    t.string  "notifier_key", limit: 90,                null: false
+    t.boolean "enabled",                 default: true, null: false
+  end
+
+  add_index "thredded_notifications_for_followed_topics", ["user_id", "notifier_key"], name: "thredded_notifications_for_followed_topics_unique", unique: true, using: :btree
+
+  create_table "thredded_notifications_for_private_topics", force: :cascade do |t|
+    t.integer "user_id",      limit: 4,                 null: false
+    t.string  "notifier_key", limit: 90,                null: false
+    t.boolean "enabled",                 default: true, null: false
+  end
+
+  add_index "thredded_notifications_for_private_topics", ["user_id", "notifier_key"], name: "thredded_notifications_for_private_topics_unique", unique: true, using: :btree
+
+  create_table "thredded_post_moderation_records", force: :cascade do |t|
+    t.integer  "post_id",                   limit: 4
+    t.integer  "messageboard_id",           limit: 4
+    t.text     "post_content",              limit: 65535
+    t.integer  "post_user_id",              limit: 4
+    t.text     "post_user_name",            limit: 65535
+    t.integer  "moderator_id",              limit: 4
+    t.integer  "moderation_state",          limit: 4,     null: false
+    t.integer  "previous_moderation_state", limit: 4,     null: false
+    t.datetime "created_at",                              null: false
+  end
+
+  add_index "thredded_post_moderation_records", ["messageboard_id", "created_at"], name: "index_thredded_moderation_records_for_display", using: :btree
+
   create_table "thredded_posts", force: :cascade do |t|
     t.integer  "user_id",          limit: 4
     t.text     "content",          limit: 65535
@@ -460,10 +554,150 @@ ActiveRecord::Schema.define(version: 20170622054334) do
     t.datetime "updated_at",                                     null: false
   end
 
+  add_index "thredded_posts", ["content"], name: "thredded_posts_content_fts", type: :fulltext
   add_index "thredded_posts", ["messageboard_id"], name: "index_thredded_posts_on_messageboard_id", using: :btree
   add_index "thredded_posts", ["moderation_state", "updated_at"], name: "index_thredded_posts_for_display", using: :btree
   add_index "thredded_posts", ["postable_id"], name: "index_thredded_posts_on_postable_id_and_postable_type", using: :btree
   add_index "thredded_posts", ["user_id"], name: "index_thredded_posts_on_user_id", using: :btree
+
+  create_table "thredded_private_posts", force: :cascade do |t|
+    t.integer  "user_id",     limit: 4
+    t.text     "content",     limit: 65535
+    t.integer  "postable_id", limit: 4,     null: false
+    t.string   "ip",          limit: 255
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  create_table "thredded_private_topics", force: :cascade do |t|
+    t.integer  "user_id",      limit: 4
+    t.integer  "last_user_id", limit: 4
+    t.string   "title",        limit: 255,             null: false
+    t.string   "slug",         limit: 191,             null: false
+    t.integer  "posts_count",  limit: 4,   default: 0
+    t.string   "hash_id",      limit: 191,             null: false
+    t.datetime "last_post_at"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  add_index "thredded_private_topics", ["hash_id"], name: "index_thredded_private_topics_on_hash_id", using: :btree
+  add_index "thredded_private_topics", ["slug"], name: "index_thredded_private_topics_on_slug", using: :btree
+
+  create_table "thredded_private_users", force: :cascade do |t|
+    t.integer  "private_topic_id", limit: 4
+    t.integer  "user_id",          limit: 4
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "thredded_private_users", ["private_topic_id"], name: "index_thredded_private_users_on_private_topic_id", using: :btree
+  add_index "thredded_private_users", ["user_id"], name: "index_thredded_private_users_on_user_id", using: :btree
+
+  create_table "thredded_topic_categories", force: :cascade do |t|
+    t.integer "topic_id",    limit: 4, null: false
+    t.integer "category_id", limit: 4, null: false
+  end
+
+  add_index "thredded_topic_categories", ["category_id"], name: "index_thredded_topic_categories_on_category_id", using: :btree
+  add_index "thredded_topic_categories", ["topic_id"], name: "index_thredded_topic_categories_on_topic_id", using: :btree
+
+  create_table "thredded_topics", force: :cascade do |t|
+    t.integer  "user_id",          limit: 4
+    t.integer  "last_user_id",     limit: 4
+    t.string   "title",            limit: 255,                 null: false
+    t.string   "slug",             limit: 191,                 null: false
+    t.integer  "messageboard_id",  limit: 4,                   null: false
+    t.integer  "posts_count",      limit: 4,   default: 0,     null: false
+    t.boolean  "sticky",                       default: false, null: false
+    t.boolean  "locked",                       default: false, null: false
+    t.string   "hash_id",          limit: 191,                 null: false
+    t.string   "type",             limit: 191
+    t.integer  "moderation_state", limit: 4,                   null: false
+    t.datetime "last_post_at"
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+  end
+
+  add_index "thredded_topics", ["hash_id"], name: "index_thredded_topics_on_hash_id", using: :btree
+  add_index "thredded_topics", ["messageboard_id"], name: "index_thredded_topics_on_messageboard_id", using: :btree
+  add_index "thredded_topics", ["moderation_state", "sticky", "updated_at"], name: "index_thredded_topics_for_display", using: :btree
+  add_index "thredded_topics", ["slug"], name: "index_thredded_topics_on_slug", unique: true, using: :btree
+  add_index "thredded_topics", ["title"], name: "thredded_topics_title_fts", type: :fulltext
+  add_index "thredded_topics", ["user_id"], name: "index_thredded_topics_on_user_id", using: :btree
+
+  create_table "thredded_user_details", force: :cascade do |t|
+    t.integer  "user_id",                     limit: 4,             null: false
+    t.datetime "latest_activity_at"
+    t.integer  "posts_count",                 limit: 4, default: 0
+    t.integer  "topics_count",                limit: 4, default: 0
+    t.datetime "last_seen_at"
+    t.integer  "moderation_state",            limit: 4, default: 0, null: false
+    t.datetime "moderation_state_changed_at"
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
+  end
+
+  add_index "thredded_user_details", ["latest_activity_at"], name: "index_thredded_user_details_on_latest_activity_at", using: :btree
+  add_index "thredded_user_details", ["moderation_state", "moderation_state_changed_at"], name: "index_thredded_user_details_for_moderations", using: :btree
+  add_index "thredded_user_details", ["user_id"], name: "index_thredded_user_details_on_user_id", using: :btree
+
+  create_table "thredded_user_messageboard_preferences", force: :cascade do |t|
+    t.integer  "user_id",                  limit: 4,                 null: false
+    t.integer  "messageboard_id",          limit: 4,                 null: false
+    t.boolean  "follow_topics_on_mention",           default: true,  null: false
+    t.boolean  "auto_follow_topics",                 default: false, null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
+  end
+
+  add_index "thredded_user_messageboard_preferences", ["user_id", "messageboard_id"], name: "thredded_user_messageboard_preferences_user_id_messageboard_id", unique: true, using: :btree
+
+  create_table "thredded_user_post_notifications", force: :cascade do |t|
+    t.integer  "user_id",     limit: 4, null: false
+    t.integer  "post_id",     limit: 4, null: false
+    t.datetime "notified_at",           null: false
+  end
+
+  add_index "thredded_user_post_notifications", ["post_id"], name: "index_thredded_user_post_notifications_on_post_id", using: :btree
+  add_index "thredded_user_post_notifications", ["user_id", "post_id"], name: "index_thredded_user_post_notifications_on_user_id_and_post_id", unique: true, using: :btree
+
+  create_table "thredded_user_preferences", force: :cascade do |t|
+    t.integer  "user_id",                  limit: 4,                 null: false
+    t.boolean  "follow_topics_on_mention",           default: true,  null: false
+    t.boolean  "auto_follow_topics",                 default: false, null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
+  end
+
+  add_index "thredded_user_preferences", ["user_id"], name: "index_thredded_user_preferences_on_user_id", using: :btree
+
+  create_table "thredded_user_private_topic_read_states", force: :cascade do |t|
+    t.integer  "user_id",     limit: 4,             null: false
+    t.integer  "postable_id", limit: 4,             null: false
+    t.integer  "page",        limit: 4, default: 1, null: false
+    t.datetime "read_at",                           null: false
+  end
+
+  add_index "thredded_user_private_topic_read_states", ["user_id", "postable_id"], name: "thredded_user_private_topic_read_states_user_postable", unique: true, using: :btree
+
+  create_table "thredded_user_topic_follows", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4, null: false
+    t.integer  "topic_id",   limit: 4, null: false
+    t.datetime "created_at",           null: false
+    t.integer  "reason",     limit: 1
+  end
+
+  add_index "thredded_user_topic_follows", ["user_id", "topic_id"], name: "thredded_user_topic_follows_user_topic", unique: true, using: :btree
+
+  create_table "thredded_user_topic_read_states", force: :cascade do |t|
+    t.integer  "user_id",     limit: 4,             null: false
+    t.integer  "postable_id", limit: 4,             null: false
+    t.integer  "page",        limit: 4, default: 1, null: false
+    t.datetime "read_at",                           null: false
+  end
+
+  add_index "thredded_user_topic_read_states", ["user_id", "postable_id"], name: "thredded_user_topic_read_states_user_postable", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "encrypted_password",     limit: 255, default: "", null: false
@@ -487,7 +721,6 @@ ActiveRecord::Schema.define(version: 20170622054334) do
     t.string   "first_name",             limit: 255
     t.string   "last_name",              limit: 255
     t.integer  "gender_id",              limit: 4
-    t.integer  "age_range_id",           limit: 4
     t.string   "country",                limit: 255
     t.string   "timezone",               limit: 255
     t.boolean  "admin"
@@ -499,11 +732,17 @@ ActiveRecord::Schema.define(version: 20170622054334) do
     t.string   "anon_last_name",         limit: 255
     t.boolean  "researcher"
     t.integer  "language_id",            limit: 4
+    t.date     "date_of_birth"
+    t.integer  "home_state_id",          limit: 4
+    t.integer  "cip_code_id",            limit: 4
+    t.integer  "primary_language_id",    limit: 4
+    t.date     "started_school"
   end
 
-  add_index "users", ["age_range_id"], name: "index_users_on_age_range_id", using: :btree
+  add_index "users", ["cip_code_id"], name: "index_users_on_cip_code_id", using: :btree
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["gender_id"], name: "index_users_on_gender_id", using: :btree
+  add_index "users", ["home_state_id"], name: "index_users_on_home_state_id", using: :btree
   add_index "users", ["language_id"], name: "index_users_on_language_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["school_id"], name: "index_users_on_school_id", using: :btree
@@ -526,12 +765,14 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   create_table "weeks", force: :cascade do |t|
     t.integer  "narrative_id", limit: 4
     t.integer  "week_num",     limit: 4
-    t.text     "text",         limit: 65535
+    t.text     "text_en",      limit: 65535
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.text     "text_ko",      limit: 65535
   end
 
   add_index "weeks", ["narrative_id"], name: "index_weeks_on_narrative_id", using: :btree
+  add_index "weeks", ["week_num", "narrative_id"], name: "index_weeks_on_week_num_and_narrative_id", unique: true, using: :btree
 
   add_foreign_key "assessments", "projects"
   add_foreign_key "bingo_games", "courses"
@@ -555,6 +796,7 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_foreign_key "factors", "factor_packs"
   add_foreign_key "group_revisions", "groups"
   add_foreign_key "groups", "projects"
+  add_foreign_key "home_states", "home_countries"
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
   add_foreign_key "installments", "users"
@@ -571,8 +813,13 @@ ActiveRecord::Schema.define(version: 20170622054334) do
   add_foreign_key "rosters", "roles"
   add_foreign_key "rosters", "users"
   add_foreign_key "scenarios", "behaviors"
-  add_foreign_key "users", "age_ranges"
+  add_foreign_key "thredded_messageboard_users", "thredded_messageboards", on_delete: :cascade
+  add_foreign_key "thredded_messageboard_users", "thredded_user_details", on_delete: :cascade
+  add_foreign_key "thredded_user_post_notifications", "thredded_posts", column: "post_id", on_delete: :cascade
+  add_foreign_key "thredded_user_post_notifications", "users", on_delete: :cascade
+  add_foreign_key "users", "cip_codes"
   add_foreign_key "users", "genders"
+  add_foreign_key "users", "home_states"
   add_foreign_key "users", "languages"
   add_foreign_key "users", "schools"
   add_foreign_key "users", "themes"

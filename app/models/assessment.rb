@@ -44,10 +44,6 @@ class Assessment < ActiveRecord::Base
     end
   end
 
-  def get_task_name(anon:, user:)
-    "#{group_for_user(user)} (#{I18n.t :project}: #{project.get_name(anon)})"
-  end
-
   # Here we'll give instructors a little status update at the close of each assessment period
   def self.inform_instructors
     count = 0
@@ -91,7 +87,7 @@ class Assessment < ActiveRecord::Base
     if day_delta == 0
       assessment.start_date = init_date
     else
-      day_delta = 7 - day_delta if day_delta < 0
+      day_delta = 7 + day_delta if day_delta < 0
       assessment.start_date = init_date - day_delta.days
     end
     assessment.start_date = assessment.start_date.beginning_of_day
@@ -113,6 +109,7 @@ class Assessment < ActiveRecord::Base
     if existing_assessment_count == 0
       assessment.project = project
       assessment.save
+      puts assessment.errors.full_messages unless assessment.errors.empty?
     end
   end
 

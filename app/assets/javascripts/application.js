@@ -12,6 +12,7 @@
 //
 //= require jquery2
 //= require jquery_ujs
+//= require thredded
 //= require app_lib
 //= require jquery.mobile
 //= require jquery-tablesorter

@@ -3,11 +3,33 @@ en:
     index:
       title: List of Courses
     edit:
-      title: Edit Course
+      title: Edit Course Details
     show:
       title: Course Details
+      instructors: Course Instructors
+      roster: Student Roster
+      add_instructor_lbl: 'Add instructor by email:'
+      add_student_lbl: 'Add student by email:'
+      add: Add!
+      enrolled_count:
+        one: There is one student enrolled.
+        other: There are %{count} students enrolled.
     new:
       title: New Course
     create_success: Course created successfully!
     destroy_success: Course destroyed successfully!
     update_success: Course updated successfully!
+    instructor_invited: Instructor(s) have been invited.
+    students_invited: Student(s) have been invited.
+    accept_fail: You can only accept your own enrollments
+    decline_fail: You can only decline your own enrollments
+    permission_fail: You are not permitted to make that sort of change.
+    last_instructor: Courses must always have at least one instructor.
+    not_instructor: This user is not an instructor in this course.
+    no_roster: That user is not listed as a student in that course.
+    editing: Editing Course
+    participants: Participants
+    activities: Course Activities
+    re_invite: Re-Invite
+    drop: Drop
+    courses: Courses

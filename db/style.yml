@@ -1,0 +1,11 @@
+---
+- !ruby/object:Style_
+  name_en: Default
+  name_ko: 
+  filename: new
+
+- !ruby/object:Style_
+  name_en: Sliders (simple)
+  name_ko: 
+  filename: slider_basic
+

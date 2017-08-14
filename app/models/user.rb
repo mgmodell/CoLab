@@ -18,10 +18,14 @@ class User < ActiveRecord::Base
   has_many :candidates, inverse_of: :user
   belongs_to :gender, inverse_of: :users
   belongs_to :theme, inverse_of: :users
-  belongs_to :language, inverse_of: :users
-  belongs_to :school
-  belongs_to :age_range, inverse_of: :users
+  has_many :home_countries, through: :home_state
+  belongs_to :home_state, inverse_of: :users
   belongs_to :cip_code, inverse_of: :users
+
+  belongs_to :language, inverse_of: :users
+  belongs_to :primary_language, inverse_of: :home_users, class_name: 'Language'
+
+  belongs_to :school
   has_many :installments, inverse_of: :user, dependent: :destroy
   has_many :rosters, inverse_of: :user, dependent: :destroy
   has_many :courses, through: :projects
@@ -151,17 +155,18 @@ class User < ActiveRecord::Base
     available_rosters = rosters.enrolled
 
     # Add the experiences
+    cur_date = DateTime.current
     available_rosters.each do |roster|
       waiting_tasks.concat roster.course.experiences
         .where('experiences.end_date >= ? AND experiences.start_date <= ? AND experiences.active = ?',
-               DateTime.current, DateTime.current, true).to_a
+               cur_date, cur_date, true).to_a
     end
 
     # Add the bingo games
     available_rosters.each do |roster|
       waiting_games = roster.course.bingo_games
                             .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ? AND bingo_games.active = ?',
-                                   DateTime.current, DateTime.current, true).to_a
+                                   cur_date, cur_date, true).to_a
       waiting_games.delete_if { |game| !game.is_open? && !game.reviewed }
       waiting_tasks.concat waiting_games
     end

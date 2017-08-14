@@ -1,7 +1,8 @@
 ---
 - !ruby/object:Week_
   week_num: 1
-  text: |
+  text_ko:  
+  text_en: |
     <p> In group time the first week, we began by setting up weekly team
     meetings. The rest of the group seem to be freshmen. They're all so nervous
     about this "huge project" but, as a junior, I know it's not that big of a
@@ -32,7 +33,8 @@
 
 - !ruby/object:Week_
   week_num: 2
-  text: |
+  text_ko:  
+  text_en: |
     <p> Hannah had a breakdown when she arrived because she couldn't find much
     &mdash; she's clearly out of her depth. I pointed out that I'd got more
     than enough to start with and I offered to work with her after the meeting
@@ -60,7 +62,8 @@
 
 - !ruby/object:Week_
   week_num: 3
-  text: |
+  text_ko:  
+  text_en: |
     <p> In this week's meeting, we began sorting through the materials.
     Together, Hannah and I had easily the best materials and summaries, and we
     didn't spend much time reviewing it. John's materials, on the other hand,
@@ -80,7 +83,8 @@
 
 - !ruby/object:Week_
   week_num: 4
-  text: |
+  text_ko:  
+  text_en: |
     <p> I arrived a little late to the meeting, but Hannah wasn't there at all.
     She wasn't even in class and no one had heard anything from her. The
     instructor would tell us if she dropped the class, right? </p>
@@ -108,7 +112,8 @@
 
 - !ruby/object:Week_
   week_num: 5
-  text: |
+  text_ko:  
+  text_en: |
     <p> John turned in our assignment during class, and our instructor gave us
     some time in class to meet. We discussed our progress, but none of us
     expected to have this time, so no one brought their materials to review. No
@@ -151,7 +156,8 @@
 
 - !ruby/object:Week_
   week_num: 6
-  text: |
+  text_ko:  
+  text_en: |
     <p> The morning of our meeting, I picked up Marie's paper again but I just
     couldn't manage to get through it. It seems that she tried hard to be
     different and come up with a unique perspective, but the end result doesn't
@@ -172,7 +178,8 @@
 
 - !ruby/object:Week_
   week_num: 7
-  text: |
+  text_ko:  
+  text_en: |
     <p> I arrived late because of the study group and Hannah asked if
     everything was OK. I explained that something came up with my brother but
     that he was OK and they gave me a copy of the assembled document &mdash; it
@@ -190,7 +197,8 @@
 
 - !ruby/object:Week_
   week_num: 8
-  text: |
+  text_ko:  
+  text_en: |
     <p> I arrived early this week. They've been making decent progress without
     me though, so it's not a problem. This time John arrived late because his
     exam had run late. </p>
@@ -214,7 +222,8 @@
 
 - !ruby/object:Week_
   week_num: 9
-  text: |
+  text_ko:  
+  text_en: |
     <p> Hannah brought our paper to class and turned it in to the instructor.
     Now we get to wait for feedback while we continue to work. </p>
 
@@ -232,7 +241,8 @@
 
 - !ruby/object:Week_
   week_num: 10
-  text: |
+  text_ko:  
+  text_en: |
     <p> My buddy offered me his extra seat to the game, and the seats were
     amazing, so I accepted without realizing this was the night of our meeting.
     As soon as I remembered, I let Hannah know I wouldn't be there.  </p>
@@ -249,7 +259,8 @@
 
 - !ruby/object:Week_
   week_num: 11
-  text: |
+  text_ko:  
+  text_en: |
     <p> In class, the instructor returned the drafts and our team met briefly
     during class to review it. Unfortunately, while we knew there were lots of
     problems with that version, the instructor left only five comments in the
@@ -291,7 +302,8 @@
 
 - !ruby/object:Week_
   week_num: 12
-  text: |
+  text_ko:  
+  text_en: |
     <p> Everyone arrived on time for the meeting this week. </p>
 
     <p> We began by walking through the changes I proposed, making it clear
@@ -315,7 +327,8 @@
 
 - !ruby/object:Week_
   week_num: 13
-  text: |
+  text_ko:  
+  text_en: |
     <p> The presentation went very smoothly. Hannah was a bit nervous, but she
     knew what she was talking about and it showed. The audience asked some good
     questions, which showed that they understood our presentation. I answered
@@ -335,7 +348,8 @@
 
 - !ruby/object:Week_
   week_num: 14
-  text: |
+  text_ko:  
+  text_en: |
     <p> At the final meeting, we reviewed the paper to make sure it was ready
     for submission at the end of the week. I volunteered to do a final read,
     print the document and send it to the instructor, but Marie said she was

@@ -4,21 +4,16 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <h1>Hello, <%= @user.first_name %>.</h1>
+    <h1><%= t 'home.greeting', name: @user.first_name %>.</h1>
     <p>
-      The <%= @activity %> is now available for you on
-      <%= link_to 'CoLab', root_url %>. Please 
-      <%= link_to 'login', root_url %> at your earliest 
-      convenience to have a look.
+      <%= t :avail_body, activity_name: @activity,
+          site_link: link_to( t( :title ), root_url ),
+          login_link: link_to( t( :login ), root_url ) %>
     </P>
     <P>
       <%= link_to root_url, root_url %>
     </P>
-    <P>
-      Thank you!
-          </P>
-    <P>
-      CoLab Support
-          </p>
+    <P><%= t :email_close %></p>
+    <P><%= t :support_formal %></p>
   </body>
 </html>

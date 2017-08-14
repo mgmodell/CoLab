@@ -1,7 +1,8 @@
 ---
 - !ruby/object:Week_
   week_num: 1
-  text: |
+  text_ko:  
+  text_en: |
     <p> In group time the first week, we began by setting up weekly team
     meetings. I think we got lucky, because Anna is already a sophomore, while
     the rest of us are freshmen. It seems like she knows what she's doing. </p>
@@ -34,7 +35,8 @@
 
 - !ruby/object:Week_
   week_num: 2
-  text: |
+  text_ko:  
+  text_en: |
     <p> We began the meeting by going over the materials we collected over the
     last week. Anna was clearly disappointed, and she didn't hide it well. She
     spent most of the meeting talking about how she did her research. It was
@@ -60,7 +62,8 @@
 
 - !ruby/object:Week_
   week_num: 3
-  text: |
+  text_ko:  
+  text_en: |
     <p> During this week's meeting, we sorted through the materials to decide
     on a topic; we have much better materials this week. It turns out that
     Sam's topic is really cool, but it was clear Anna was more interested in
@@ -98,7 +101,8 @@
 
 - !ruby/object:Week_
   week_num: 4
-  text: |
+  text_ko:  
+  text_en: |
     <p> After class this week, Anna handed me her "help" &mdash; her completed
     summary was even longer than mine! Does she think I'm not competent to
     write anything? I wasn't sure how to respond; I just kept thinking this
@@ -148,7 +152,8 @@
 
 - !ruby/object:Week_
   week_num: 5
-  text: |
+  text_ko:  
+  text_en: |
     <p> Kim had our assignment ready and turned it in during class. The
     instructor allowed some time at the end of class this week, so we reviewed
     what she and Sam put together. It seems they met up in the middle of the
@@ -183,7 +188,8 @@
 
 - !ruby/object:Week_
   week_num: 6
-  text: |
+  text_ko:  
+  text_en: |
     <p> I was a little late again for our meeting this week because of
     practice. Before I arrived, the group went through Kim's and Sam's work. I
     didn't really get a chance to read either of them, but Sam included visuals
@@ -209,7 +215,8 @@
 
 - !ruby/object:Week_
   week_num: 7
-  text: |
+  text_ko:  
+  text_en: |
     <p> I was a little late this week because I think I pulled a muscle or
     something in my leg at practice. When I arrived Anna yelled at me for it.
     Couldn't she see that I was limping? Anyway, what did it matter since she
@@ -243,7 +250,8 @@
 
 - !ruby/object:Week_
   week_num: 8
-  text: |
+  text_ko:  
+  text_en: |
     <p> During this week's class some of the discussion touched on the topic of
     our paper, and it felt good to have a lot to contribute in class. There was
     some good debate about the competing points of view &mdash; specifically,
@@ -285,7 +293,8 @@
 
 - !ruby/object:Week_
   week_num: 9
-  text: |
+  text_ko:  
+  text_en: |
     <p> Kim had our paper ready to be submitted when she arrived in class. She
     also brought a copy for each of us to review. I took a look that evening
     and Kim had done a great job of adding in my new section. She'd made a few
@@ -319,7 +328,8 @@
 
 - !ruby/object:Week_
   week_num: 10
-  text: |
+  text_ko:  
+  text_en: |
     <p> Wow! Anna found nothing but fault in my presentation! She pointed out
     everything I forgot to include and didn't seem to like anything about what
     I did include. To be fair, she wasn't the only one, but she was pretty
@@ -339,7 +349,8 @@
 
 - !ruby/object:Week_
   week_num: 11
-  text: |
+  text_ko:  
+  text_en: |
     <p> In class, the instructor returned the drafts to the groups, and we met
     briefly during class to review it. The instructor left only six comments in
     our paper, but one at the front of the paper read, "Interesting approach! I
@@ -374,7 +385,8 @@
 
 - !ruby/object:Week_
   week_num: 12
-  text: |
+  text_ko:  
+  text_en: |
     <p> Kim let me know that she'd be late because of another meeting, so we
     started without her. We spent some time reviewing Anna's changes to the
     paper, and then she asked Sam about the reference we needed to check on. He
@@ -400,7 +412,8 @@
 
 - !ruby/object:Week_
   week_num: 13
-  text: |
+  text_ko:  
+  text_en: |
     <p> We were the only group dressed professionally, and I think that
     probably earned us some points. Kim managed to speak loudly and clearly
     enough that the instructor only had to ask her to speak up once. I stumbled
@@ -418,7 +431,8 @@
 
 - !ruby/object:Week_
   week_num: 14
-  text: |
+  text_ko:  
+  text_en: |
     <p> At the final meeting, we compared notes and found that we had no major
     changes to make. Kim took all four versions and said she'd make what few
     changes there were and submit it at the end of the week. Anna asked her to

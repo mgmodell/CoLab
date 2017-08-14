@@ -5,13 +5,13 @@
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
-      <li><a href="#weekly" data-ajax="false">Week View</a></li>
-      <li><a href="#tasks" data-ajax="false">Task View</a></li>
-      <li><a href="#monthly" data-ajax="false">Month View</a></li>
+      <li><a href="#weekly" data-ajax="false"><%= t :week_view %></a></li>
+      <li><a href="#tasks" data-ajax="false"><%= t :task_view %></a></li>
+      <li><a href="#monthly" data-ajax="false"><%= t :month_view %></a></li>
     </ul>
   </div>
   <div id="tasks" class="ui-body-<%= theme_code %> ui-content">
-    <h3>Task List</h3>
+    <h3><%= t :task_view %></h3>
 
   <table data-role="table"
           id="basicTable"
@@ -45,8 +45,8 @@
       </td>
       <td><%= event.group_name %></td>
       <td><%= event.course_name %></td>
-      <td> <%= event.start_time.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-      <td> <%= event.close_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+      <td> <%= l event.start_time, format: :tz_clarity %> </td>
+      <td> <%= l event.close_date, format: :tz_clarity %> </td>
       <td>N/A</td>
     </tr>
     <% end %>
@@ -55,7 +55,7 @@
   </table>
 </div>
   <div id="weekly" class="ui-body-<%= theme_code %> ui-content">
-    <h3>Week View</h3>
+    <h3><%= t :week_view %></h3>
     <%= week_calendar attribute: :close_date, events: @events,  number_of_weeks: 2 do |date,meetings| %>
       <h4 style="font-weight:300;font-size:10px;text-align:center">
         <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
@@ -70,7 +70,7 @@
     <% end %>
   </div>
   <div id="monthly" class="ui-body-<%= theme_code %> ui-content">
-    <h3>Month View</h3>
+    <h3><%= t :month_view %></h3>
     <%= month_calendar attribute: :close_date, events: @events  do |date,meetings| %>
       <h4 style="font-weight:300;font-size:10px;text-align:center">
         <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>

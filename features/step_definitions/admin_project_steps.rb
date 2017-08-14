@@ -23,7 +23,7 @@ Then /^the user sees (\d+) course$/ do |course_count|
 end
 
 Given /^the user is the instructor for the course$/ do
-  @course.set_user_role @user, 'Instructor'
+  @course.set_user_role @user, 'inst'
 end
 
 Then /^the user opens the course$/ do

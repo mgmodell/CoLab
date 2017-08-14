@@ -4,15 +4,15 @@ class ExperiencesController < ApplicationController
   before_action :check_admin, except: [:next, :diagnose, :react]
 
   def show
-    @title = 'Experience Details'
+    @title = t('.title')
   end
 
   def edit
-    @title = 'Edit Experience'
+    @title = t('.title')
   end
 
   def index
-    @title = 'List of Experiences'
+    @title = t('.title')
     @experiences = []
     if @current_user.is_admin?
       @experiences = Experience.all
@@ -25,7 +25,7 @@ class ExperiencesController < ApplicationController
   end
 
   def new
-    @title = 'New Experience'
+    @title = t('.title')
     @experience = Experience.new
     @experience.course_id = params[:course_id]
     @experience.course = Course.find(params[:course_id])
@@ -37,18 +37,18 @@ class ExperiencesController < ApplicationController
     @experience = Experience.new(experience_params)
     @experience.course = Course.find(@experience.course_id)
     if @experience.save
-      redirect_to @experience, notice: 'Experience was successfully created.'
+      redirect_to @experience, notice: t('experiences.create_success')
     else
-      @title = 'New Experience'
+      @title = t('experiences.new.title')
       render :new
     end
   end
 
   def update
     if @experience.update(experience_params)
-      redirect_to @experience, notice: 'Experience was successfully updated.'
+      redirect_to @experience, notice: t('experiences.update_success')
     else
-      @title = 'Edit Experience'
+      @title = t('experiences.edit.title')
       render :edit
     end
   end
@@ -56,7 +56,7 @@ class ExperiencesController < ApplicationController
   def destroy
     @course = @experience.course
     @experience.destroy
-    redirect_to @course, notice: 'Experience was successfully destroyed.'
+    redirect_to @course, notice: t('experiences.destroy_success')
   end
 
   # Maybe build in JSON API support
@@ -67,7 +67,7 @@ class ExperiencesController < ApplicationController
                            .where(id: experience_id, users: { id: @current_user }).take
 
     if experience.nil? && !experience.is_open
-      redirect_to '/', notice: 'That experience is a part of another course'
+      redirect_to '/', notice: t('experiences.wrong_course')
     else
       reaction = experience.get_user_reaction(@current_user)
       week = reaction.next_week
@@ -75,13 +75,13 @@ class ExperiencesController < ApplicationController
         reaction.instructed = true
         reaction.save
         @experience = experience
-        @title = 'Experience Instructions'
+        @title = t('experiences.instr_title')
         render :instructions
       else
         if week.nil?
           @reaction = reaction
           # we just finished the last week
-          @title = 'Experience Reaction'
+          @title = t('experiences.react_title')
           render :reaction
         else
           @diagnosis = Diagnosis.new(reaction: reaction, week: week)
@@ -120,10 +120,10 @@ class ExperiencesController < ApplicationController
                 end
     respond_to do |format|
       if @reaction.update(reaction_params)
-        format.html { redirect_to root_path, notice: 'Your reaction to the experience was recorded' }
+        format.html { redirect_to root_path, notice: t('experiences.react_success') }
         format.json { render :show, status: :ok, location: @reaction }
       else
-        format.html { render :reaction, notice: 'There was a problem with your reaction, try again.' }
+        format.html { render :reaction, notice: t('experiences.react_fail') }
         format.json { render json: @reaction.errors, status: :unprocessable_entity }
       end
     end
@@ -132,7 +132,7 @@ class ExperiencesController < ApplicationController
   def activate
     experience = Experience.find(params[:experience_id])
     if @current_user.is_admin? ||
-       experience.course.get_roster_for_user(@current_user).role.name == 'Instructor'
+       experience.course.get_roster_for_user(@current_user).role.code == 'inst'
       experience.active = true
       experience.save
     end

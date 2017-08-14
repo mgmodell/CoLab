@@ -17,6 +17,75 @@ read_data.each do |factor_pack|
   g.save
 end
 
+# CIP Code seed data
+class CipCode_
+  attr_accessor :gov_code
+  attr_accessor :name_en, :name_ko
+end
+read_data = YAML.safe_load(File.open('db/cip_constants.yml'), [CipCode_])
+read_data.each do |cip_code|
+  g = CipCode.where(gov_code: cip_code.gov_code).take
+  g = CipCode.new if g.nil?
+  g.gov_code = cip_code.gov_code unless g.gov_code == cip_code.gov_code
+
+  #Capitalize and strip trailing period
+  cip_en = cip_code.name_en.chomp( '.' ).capitalize
+  g.name_en = cip_en unless
+                    g.name_en == cip_en
+  g.name_ko = cip_code.name_ko unless
+                    g.name_ko == cip_code.name_ko
+  g.save
+end
+
+# Countries
+CS.update
+CS.countries.each do |country|
+  hc = HomeCountry.where( code: country[ 0 ] ).take
+  hc = HomeCountry.new if hc.nil?
+  hc.no_response = false
+  hc.code = country[ 0 ]
+  hc.name = country[ 1 ]
+  hc.save
+end
+hc = HomeCountry.where( code: '__' ).take
+hc = HomeCountry.new if hc.nil?
+hc.code = '__' unless hc.code == '__'
+hc.no_response = true
+hc.name = 'I prefer not to specify my country' unless
+          hc.name == 'I prefer not to specify my country'
+hc.save
+
+# States
+HomeCountry.all.each do |country|
+  if CS.get( country.code ).count > 0
+    CS.get( country.code ).each do |state|
+      hs = HomeState.where( home_country_id: country.id, code: "#{state[ 0 ]}:#{country.code}" ).take
+      hs = HomeState.new if hs.nil?
+      hs.home_country = country
+      hs.no_response = false
+      hs.code = "#{state[ 0 ]}:#{country.code}"
+      hs.name = state[ 1 ]
+      hs.save
+    end
+    hs = HomeState.where( home_country_id: country.id, code: "__:#{country.code}" ).take
+    hs = HomeState.new if hs.nil?
+    hs.home_country = country
+    hs.no_response = true
+    hs.code = "__:#{country.code}"
+    hs.name = 'I prefer not to specify the state'
+    hs.save
+  else
+    hs = HomeState.where( home_country_id: country.id, code: "--:#{country.code}" ).take
+    hs = HomeState.new if hs.nil?
+    hs.home_country = country
+    hs.no_response = false
+    hs.code = "--:#{country.code}"
+    hs.name = 'not applicable'
+    hs.save
+  end
+end
+
+
 # Factor seed data
 class Factor_
   attr_accessor :fp
@@ -36,104 +105,57 @@ read_data.each do |factor|
   g.save
 end
 
-Behavior.create(
-  name: 'Equal participation',
-  description: "Each group member's contributions toward the group's
-    effort are roughly equal. There will be variability in the types of
-    contributions, and individuals may see ups and downs, but the overall
-    responsibility is being fairly shared. <i>If no other behavior is clearly
-    dominant, select this option</i>."
-)
+# Behavior seed data
+class Behavior_
+  attr_accessor :name_en, :name_ko
+  attr_accessor :description_en, :description_ko
+end
+read_data = YAML.safe_load(File.open('db/behavior.yml'), [Behavior_])
+read_data.each do |behavior|
+  g = Behavior.where(name_en: behavior.name_en).take
+  g = Behavior.new if g.nil?
+  g.name_en = behavior.name_en unless g.name_en == behavior.name_en
+  g.name_ko = behavior.name_ko unless g.name_ko == behavior.name_ko
+  g.description_en = behavior.description_en unless g.description_en == behavior.description_en
+  g.description_ko = behavior.description_ko unless g.description_ko == behavior.description_ko
+  g.save
+end
 
-Behavior.create(
-  name: 'Ganging up on the task',
-  description: "This is when only one member of the group engages with the
-    task at hand and the others actively avoid it.  The engaged member becomes
-    overwhelmed, and joins the rest of the group in avoidance activities."
-)
-
-Behavior.create(
-  name: 'Group domination',
-  description: "This is when an individual asserts his or her authority
-    through some combination of commanding other members and controlling
-    conversation. This often involves the individual interrupting and otherwise
-    devaluing the contributions of others."
-)
-
-Behavior.create(
-  name: 'Social loafing',
-  description: "This is when an individual consistently under-contributes to
-    the efforts of the group to achieve its goals. This forces other group
-    members to do extra work so the task can be completed successfully."
-)
-
-Behavior.create(
-  name: "I don't know",
-  description: "I am not sure which group behavior dominates this entry, but
-    it is not equal participation."
-)
-
-Behavior.create(
-  name: 'Other',
-  description: "This entry indicates a behavior that is not listed and I will
-    enter it in myself."
-)
-
-Role.create(name: 'Instructor',
-            description: 'This user teaches the course.')
-Role.create(name: 'Assistant',
-            description: 'This user assists the course instructor.')
-Role.create(name: 'Enrolled Student',
-            description: 'This user is a student in this class.')
-Role.create(name: 'Invited Student',
-            description: 'This user is a student that has been invited to participatein this class.')
-Role.create(name: 'Declined Student',
-            description: 'This user is a student that has declined to participate in this class.')
-Role.create(name: 'Dropped Student',
-            description: 'This user is a student that was enrolled but is not any longer.')
-
-AgeRange.create(name: '<18')
-AgeRange.create(name: '18-20')
-AgeRange.create(name: '21-25')
-AgeRange.create(name: '25-30')
-AgeRange.create(name: '31+')
-AgeRange.create(name: "I'd prefer not to answer")
+# Role seed data
+class Role_
+  attr_accessor :code
+  attr_accessor :name_en, :name_ko
+  attr_accessor :description_en, :description_ko
+end
+read_data = YAML.safe_load(File.open('db/role.yml'), [Role_])
+read_data.each do |role|
+  g = Role.where(name_en: role.name_en).take
+  g = Role.new if g.nil?
+  g.code = role.code unless g.code == role.code
+  g.name_en = role.name_en unless g.name_en == role.name_en
+  g.name_ko = role.name_ko unless g.name_ko == role.name_ko
+  g.description_en = role.description_en unless g.description_en == role.description_en
+  g.description_ko = role.description_ko unless g.description_ko == role.description_ko
+  g.save
+end
 
 # Gender seed data
 class Gender_
+  attr_accessor :code
   attr_accessor :name_en, :name_ko
 end
 read_data = YAML.safe_load(File.open('db/genders.yml'), [Gender_])
 read_data.each do |gender|
-  g = Gender.where(name_en: gender.name_en).take
+  g = Gender.where( "code = ? OR name_en = ?",  gender.code, gender.name_en ).take
   g = Gender.new if g.nil?
+  g.code = gender.code unless g.code == gender.code
   g.name_en = gender.name_en unless g.name_en == gender.name_en
   g.name_ko = gender.name_ko unless g.name_ko == gender.name_ko
   g.save
 end
 
-GroupProjectCount.create(name: 'none',
-                         description: "I don't remember having been a part of a long-term group project.")
-GroupProjectCount.create(name: 'few',
-                         description: 'I have been a part of one to five long-term group projects.')
-GroupProjectCount.create(name: 'some',
-                         description: 'I have been a part of five to ten long-term group projects.')
-
 School.create(name: 'Indiana University', description: 'A large, Midwestern university')
 School.create(name: 'SUNY Korea', description: 'The State University of New York, Korea')
-
-Theme.create(name: 'MJ', code: 'a')
-Theme.create(name: 'Maverick', code: 'b')
-Theme.create(name: 'Peppermint', code: 'c')
-Theme.create(name: 'Manhattan', code: 'd')
-Theme.create(name: 'Carrot', code: 'e')
-Theme.create(name: 'Hot Dog Stand', code: 'f')
-Theme.create(name: 'Decepticon', code: 'g')
-Theme.create(name: 'just one', code: 'h')
-
-Style.create(name: 'Default', filename: 'new')
-Style.create(name: 'Sliders (simple)', filename: 'slider_basic')
-Style.create(name: 'buttons (simple)', filename: 'button_basic')
 
 u = User.new(first_name: 'Micah',
              last_name: 'Modell',
@@ -145,152 +167,130 @@ u = User.new(first_name: 'Micah',
 u.skip_confirmation!
 u.save
 
-# Scenario content here
-Scenario.create(name: 'Equal Participation', behavior_id: 1)
-Scenario.create(name: 'Group Domination', behavior_id: 3)
-Scenario.create(name: 'Social Loafing', behavior_id: 4)
+# Theme seed data
+class Theme_
+  attr_accessor :name_en, :name_ko
+end
+read_data = YAML.safe_load(File.open('db/theme.yml'), [Theme_])
+read_data.each do |theme|
+  g = Theme.where(name_en: theme.name_en).take
+  g = Theme.new if g.nil?
+  g.name_en = theme.name_en unless g.name_en == theme.name_en
+  g.name_ko = theme.name_ko unless g.name_ko == theme.name_ko
+  g.save
+end
+
+class Style_
+  attr_accessor :name_en, :name_ko
+  attr_accessor :filename
+end
+read_data = YAML.safe_load(File.open('db/style.yml'), [Style_])
+read_data.each do |style|
+  g = Style.where(name_en: style.name_en).take
+  g = Style.new if g.nil?
+  g.name_en = style.name_en unless g.name_en == style.name_en
+  g.name_ko = style.name_ko unless g.name_ko == style.name_ko
+  g.filename = style.filename unless g.filename == style.filename
+  g.save
+end
+
+class Scenario_
+  attr_accessor :name_en, :name_ko
+  attr_accessor :name_en, :name_ko
+end
+read_data = YAML.safe_load(File.open('db/scenario.yml'),[Scenario_])
+read_data.each do |scenario|
+  g = Scenario.where( name_en: scenario.name_en ).take
+  g = Scenario.new if g.nil?
+  b = Behavior.where( name_en: scenario.name_en ).take
+  if b.nil?
+    puts "Could not find #{scenario.name_en} <Behavior>"
+  else
+    g.behavior = b
+    g.name_en = scenario.name_en unless g.name_en == scenario.name_en
+    g.name_ko = scenario.name_ko unless g.name_ko == scenario.name_ko
+    g.save
+  end
+end
+
+class Narrative_
+  attr_accessor :scenario
+  attr_accessor :member_en, :member_ko
+end
+read_data = YAML.safe_load(File.open('db/narrative.yml'), [Narrative_])
+read_data.each do |narrative|
+  g = Narrative.where(member_en: narrative.member_en).take
+  g = Narrative.new if g.nil?
+  s = Scenario.where( name_en: narrative.scenario ).take
+  if s.nil?
+    puts "Could not find #{scenario.name_en} <Scenario>"
+  else
+    g.scenario = s
+    g.member_en = narrative.member_en unless g.member_en == narrative.member_en
+    g.member_ko = narrative.member_ko unless g.member_ko == narrative.member_ko
+    g.save
+  end
+end
 
 # Scenario 1 (EC)
-Narrative.create(member: 'Alex', scenario_id: 1)
-Narrative.create(member: 'Natasha', scenario_id: 1)
-Narrative.create(member: 'Anika', scenario_id: 1)
-Narrative.create(member: 'Lionel', scenario_id: 1)
-
+narrative_names = ['Alex','Natasha','Anika','Lionel']
 class Week_
-  attr_accessor :week_num, :text
+  attr_accessor :week_num
+  attr_accessor :text_en, :text_ko
 end
-
-week_data = YAML.safe_load(File.open('db/narratives/ec_alex.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 1,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/ec_natasha.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 2,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/ec_anika.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 3,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/ec_lionel.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 4,
-    week_num: week.week_num,
-    text: week.text
-  )
+narrative_names.each do |name|
+  narrative = Narrative.where( member_en: name ).take
+  if narrative.nil?
+    puts "Could not find #{name} <Narrative>"
+  else
+    f_name = "db/narratives/ec_#{name.downcase}.yml"
+    week_data = YAML.safe_load(File.open(f_name), [Week_])
+    week_data.each do |week|
+      w = Week.where( narrative: narrative, week_num: week.week_num ).take
+      w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+      w.text_en = week.text_en unless w.text_en == week.text_en
+      w.text_ko = week.text_ko unless w.text_ko == week.text_ko
+      w.save
+    end
+  end
 end
 
 # Scenario 2 (GD)
-Narrative.create(member: 'Anna', scenario_id: 2)
-Narrative.create(member: 'Jose', scenario_id: 2)
-Narrative.create(member: 'Sam', scenario_id: 2)
-Narrative.create(member: 'Kim', scenario_id: 2)
-
-week_data = YAML.safe_load(File.open('db/narratives/gd_anna.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 5,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/gd_jose.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 6,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/gd_sam.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 7,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/gd_kim.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 8,
-    week_num: week.week_num,
-    text: week.text
-  )
+narrative_names = ['Anna','Jose','Sam','Kim']
+narrative_names.each do |name|
+  narrative = Narrative.where( member_en: name ).take
+  if narrative.nil?
+    puts "Could not find #{name} <Narrative>"
+  else
+    f_name = "db/narratives/gd_#{name.downcase}.yml"
+    week_data = YAML.safe_load(File.open(f_name), [Week_])
+    week_data.each do |week|
+      w = Week.where( narrative: narrative, week_num: week.week_num ).take
+      w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+      w.text_en = week.text_en unless w.text_en == week.text_en
+      w.text_ko = week.text_ko unless w.text_ko == week.text_ko
+      w.save
+    end
+  end
 end
 
 # Scenario 3 (SL)
-# Scenario 3 (SL)
-Narrative.create(member: 'John', scenario_id: 3)
-Narrative.create(member: 'Marie', scenario_id: 3)
-Narrative.create(member: 'Hannah', scenario_id: 3)
-Narrative.create(member: 'Iain', scenario_id: 3)
-
-week_data = YAML.safe_load(File.open('db/narratives/sl_john.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 9,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/sl_marie.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 10,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/sl_hannah.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 11,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-week_data = YAML.safe_load(File.open('db/narratives/sl_iain.yml'), [Week_])
-week_data.each do |week|
-  Week.create(
-    narrative_id: 12,
-    week_num: week.week_num,
-    text: week.text
-  )
-end
-
-class Cip_
-  attr_accessor :id, :description
-end
-
-cip_data = YAML.safe_load(File.open('db/cip_constants.yml'), [Cip_])
-cip_data.each do |cip_code|
-  CipCode.create(
-    gov_code: cip_code.id,
-    description: cip_code.description
-  )
+narrative_names = ['John','Marie','Hannah','Iain']
+narrative_names.each do |name|
+  narrative = Narrative.where( member_en: name ).take
+  if narrative.nil?
+    puts "Could not find #{name} <Narrative>"
+  else
+    f_name = "db/narratives/sl_#{name.downcase}.yml"
+    week_data = YAML.safe_load(File.open(f_name), [Week_])
+    week_data.each do |week|
+      w = Week.where( narrative: narrative, week_num: week.week_num ).take
+      w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+      w.text_en = week.text_en unless w.text_en == week.text_en
+      w.text_ko = week.text_ko unless w.text_ko == week.text_ko
+      w.save
+    end
+  end
 end
 
 class Quote_
@@ -306,28 +306,38 @@ quote_data.each do |quote|
 end
 
 # Bingo! support
-CandidateFeedback.create(name: 'Acceptable',
-                         definition: "You've accurately identified and defined an important term related to the stated topic.")
-CandidateFeedback.create(name: 'Definition: Incorrect',
-                         definition: "You've identified an important term related to the stated topic, but the definition is wrong.")
-CandidateFeedback.create(name: 'Definition: Insufficient',
-                         definition: "You've identified an important term related to the stated topic, but the definition is incomplete in crucial ways.")
-CandidateFeedback.create(name: 'Definition: Not Understood',
-                         definition: "You've identified an important term related to the stated topic, but I was unable to understand the definition as you've provided it.")
-CandidateFeedback.create(name: 'Definition: Plagiarised',
-                         definition: "You've identified an important term related to the stated topic, but I recognize the definition provided as having been copied directly from another source.")
-CandidateFeedback.create(name: 'Term: Too Generic',
-                         definition: 'The term is not specific to the topic or the course.')
-CandidateFeedback.create(name: 'Term: Too Obvious',
-                         definition: 'The term does not represent new learning or consideration relevant to the topic.')
-CandidateFeedback.create(name: 'Term: Invalid/Incorrect',
-                         definition: 'The term is either not a real term or one that does not relate to the topic.')
-CandidateFeedback.create(name: 'Term: Not relevant',
-                         definition: 'The term is not relevant to the topic.')
-CandidateFeedback.create(name: 'Term: Doesn\'t match',
-                         definition: 'The term does not match the definition.')
-CandidateFeedback.create(name: 'Term: Product Name',
-                         definition: 'Products should not be used unless they are dominant/household name.')
-# Multiple language support
-Language.create(name: 'English: American', code: 'en')
-Language.create(name: 'Korean', code: 'ko')
+class CandidateFeedback_
+  attr_accessor :name_en, :name_ko
+  attr_accessor :definition_en, :definition_ko
+end
+quote_data = YAML.safe_load(File.open('db/candidate_feedback.yml'), [CandidateFeedback_])
+quote_data.each do |cf|
+  g = CandidateFeedback.where(name_en: cf.name_en).take
+  g = CandidateFeedback.new if g.nil?
+  g.name_en = cf.name_en unless g.name_en == cf.name_en
+  g.name_ko = cf.name_ko unless g.name_ko == cf.name_ko
+  g.definition_en = cf.definition_en unless g.definition_en == cf.definition_en
+  g.definition_ko = cf.definition_ko unless g.definition_ko == cf.definition_ko
+  g.save
+end
+
+translated = [ 'en' ]
+en_langs = I18nData.languages( :en )
+ko_langs = I18nData.languages( :ko )
+
+en_langs.keys.each do |lang_key|
+  g = Language.where(code: lang_key.downcase).take
+  g = Language.new if g.nil?
+  g.code = lang_key.downcase unless g.code == lang_key.downcase
+  g.translated = translated.include? lang_key.downcase
+  g.name_ko = ko_langs[ lang_key ] unless g.name_ko == ko_langs[ lang_key ]
+  g.name_en = en_langs[ lang_key ] unless g.name_en == en_langs[ lang_key ]
+  g.save
+end
+
+g = Language.where(code: '__').take
+g = Language.new if g.nil?
+g.code = '__' unless g.code == '__'
+g.translated = false
+g.name_en = 'I prefer not to answer' unless g.name_en == 'I prefer not to answer'
+g.save

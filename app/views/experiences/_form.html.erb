@@ -5,31 +5,31 @@
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
-        <li><a href="#details" data-ajax="false">Details</a></li>
-        <li><a href="#summary" data-ajax="false">Response Summary</a></li>
-        <li><a href="#responses" data-ajax="false">Response Data</a></li>
+        <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
+        <li><a href="#summary" data-ajax="false"><%= t :resp_summ %></a></li>
+        <li><a href="#responses" data-ajax="false"><%= t :resp_data %></a></li>
       </ul>
     </div>
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
-      <h2>Experience Details</h2>
+      <h2><%= t 'experiences.show.title' %></h2>
       <div class="form-inputs">
-        <strong>Course: </strong> <%= @experience.course.name %></br></br>
+        <strong><%= t :course %>: </strong> <%= @experience.course.name %></br></br>
         <%= f.input :course_id, as: :hidden %>
         <%= f.input :name %>
         <%= f.input :active %>
         <table width="100%">
           <tr>
             <td width="45%">
-              <%= f.input :start_date, as: :date_time_local, label: "Experience start date" %>
+              <%= f.input :start_date, as: :date_time_local, label: t 'experiences.start_date_lbl' %>
             </td>
             <td width="10%" align="center" valign="center">&nbsp;</td>
             <td width="45%">
-              <%= f.input :end_date, as: :date_time_local, label: "Experience end date" %>
+              <%= f.input :end_date, as: :date_time_local, label: t 'experiences.end_date_lbl' %>
             </td>
           </tr>
           <tr>
             <td colspan="3">
-              <em>Note: This experience occurs in the <%= @experience.course.timezone %> timezone and all dates reflect this.</em>
+              <em><%= t :note %>: <%= t 'experiences.tz_warn', time_zone: @experience.course.timezone %></em>
             </br>
           </br>
         </td>
@@ -38,7 +38,7 @@
   </div>
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Student Response Summary</h2>
+  <h2><%= t 'bingo_games.response_summary' %></h2>
   <table width="90%" data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -49,14 +49,14 @@
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
     <thead>
       <tr>
-        <th>Family Name</th>
-        <th>Given Name</th>
-        <th data-priority="1">Email</th>
-        <th>Status</th>
-        <th data-priority="1">Scenario</th>
-        <th data-priority="1">Narrative</th>
-        <th>Overall Diagnosis</th>
-        <th data-priority="0">Reaction Suggestions</th>
+        <th><%= t :family_name %></th>
+        <th><%= t :given_name %></th>
+        <th data-priority="1"><%= t :email %></th>
+        <th><%= t :status %></th>
+        <th data-priority="1"><%= t 'experiences.scenario_lbl' %></th>
+        <th data-priority="1"><%= t 'experiences.narrative_lbl' %></th>
+        <th><%= t 'experiences.overall_diagnosis' %></th>
+        <th data-priority="0"><%= t 'experiences.reaction_diagnosis' %></th>
         <tr>
         </thead>
         <tbody>
@@ -66,8 +66,8 @@
                 <td><%= student.anon_last_name %></td>
                 <td><%= student.anon_first_name %></td>
               <% else %>
-                <td><%= student.last_name.nil? ? "[not given]" : student.last_name %></td>
-                <td><%= student.first_name.nil? ? "[not given]" : student.first_name %></td>
+                <td><%= student.last_name.nil? ? t( :not_given ): student.last_name %></td>
+                <td><%= student.first_name.nil? ? t( :not_given ): student.first_name %></td>
               <% end %>
               <td><%= mail_to student.email %></td>
               <% if reaction.behavior.present? #completed %>
@@ -79,21 +79,24 @@
                   <% if reaction.improvements.blank? %>
                     N/A
           <% else %>
-                    <a href="#imp_<%= reaction.id %>" class="ui-btn ui-corner-all ui-shadow ui-btn-inline" data-rel="popup" data-position-to="origin">Improvements</a>
+                    <a href="#imp_<%= reaction.id %>"
+                              class="ui-btn ui-corner-all ui-shadow ui-btn-inline"
+                              data-rel="popup"
+                              data-position-to="origin"><%= t 'experiences.improvements' %></a>
                   <% end %>
                 </td>
               <% elsif reaction.next_week.nil? #all but the conclusions %>
                 <td>97%</td>
                 <td><%= reaction.narrative.scenario.behavior.name %></td>
                 <td><%= reaction.narrative.member %></td>
-                <td>Not Completed</td>
-                <td>Not Completed</td>
-              <% elsif reaction.status == "Not started" %>
+                <td><%= t 'experiences.not_completed' %></td>
+                <td><%= t 'experiences.not_completed' %></td>
+              <% elsif reaction.status == '0%' %>
                 <td>0%</td>
-                <td>Not Started</td>
-                <td>Not Started</td>
-                <td>Not Started</td>
-                <td>Not Started</td>
+                <td><%= t 'experiences.not_started' %></td>
+                <td><%= t 'experiences.not_started' %></td>
+                <td><%= t 'experiences.not_started' %></td>
+                <td><%= t 'experiences.not_started' %></td>
               <% else #in progress %>
                 <td><%= reaction.status %></td>
                 <td><%= reaction.narrative.scenario.behavior.name %></td>
@@ -115,8 +118,8 @@
           <% end %>
         </div>
         <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-          <h2>Student Response Data</h2>
-          <p>Coming soon!</p>
+          <h2><%= t :resp_data %></h2>
+          <p><%= t :coming_soon %></p>
         </div>
         <div class="form-actions">
           <%= f.button :submit %>

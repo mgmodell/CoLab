@@ -1,0 +1,41 @@
+en:
+  projects:
+    create_success: Project was successfully created.
+    create_success_inactive: >
+      Project was successfully created. Don't forget to activate it!
+    update_success: Project was successfully updated.
+    update_success_inactive: >
+      Project was successfully updated. Don't forget to activate it!
+    destroy_success: Project was successfully destroyed.
+    factor_pack: Factor Pack
+    group_create_success: Group successfully created.
+    tz_warn: This project occurs in the %{time_zone} time zone and all dates reflect this.
+    opens: Opens every
+    no_group: unassigned
+    rescore: rescore
+    new_group: New group name
+    closes: Closes every
+    groups_intro: >
+      This project currently contains %{group_count} groups as specified below. Their
+      respective diversity scores are listed below their names. You may recalculate
+      any or all of those diversity scores.
+    diversity_calculated: Diversity score calculated based on current data.
+    diversities_calculated: Diversity scores calculated based on current data.
+    recalculate_diversities: Calculate all diversity scores!
+    wrong_group: The specified group is not in this project.
+    show:
+      title: Project Details
+    edit:
+      title: Edit Project Details
+      editing: Editing Project
+      show: Show the project
+      date_summ: >
+        Between <strong>%{start_date}</strong> and <strong>%{end_date}</strong>, the
+        assessments will run weekly, opening each <strong>%{start_dow}</strong> and
+        running through <strong>%{end_dow}</strong>.
+    index:
+      title: List of Projects
+    new:
+      title: New Project
+    projects: Projects
+    diversity_scores: Diversity scores

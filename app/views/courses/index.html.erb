@@ -11,17 +11,17 @@
   class="table-stroke ui-shadow table-stripe table-ui-responsive ">
   <thead>
     <tr>
-      <th>Number</th>
-      <th>Name</th>
-      <th data-priority="0">School</th>
-      <th data-priority="1">Start Date</th>
-      <th data-priority="1">End Date</th>
-      <th data-priority="1">Instructors</th>
-      <th >Students</th>
-      <th data-priority="1">Projects</th>
-      <th data-priority="1">Experiences</th>
-      <th data-priority="1">Terms Lists</th>
-      <th>Actions</th>
+      <th><%= t :number %></th>
+      <th><%= t :name %></th>
+      <th data-priority="0"><%= t :school %></th>
+      <th data-priority="1"><%= t :start_date %></th>
+      <th data-priority="1"><%= t :end_date %></th>
+      <th data-priority="1"><%= t :instructors %></th>
+      <th ><%= t :students %></th>
+      <th data-priority="1"><%= t 'projects.projects' %></th>
+      <th data-priority="1"><%= t :exps %></th>
+      <th data-priority="1"><%= t :terms_lists %></th>
+      <th><%= t :actions %></th>
     </tr>
   </thead>
   <tbody>
@@ -30,19 +30,24 @@
         <td><%= course.get_number( anonymize ) %></td>
         <td><%= link_to course.get_name( anonymize ), course %></td>
         <td><%= course.school.get_name( anonymize ) %></td>
-        <td><%= course.start_date %></td>
-        <td><%= course.end_date %></td>
+        <td><%= l course.start_date, format: :tz_clarity %></td>
+        <td><%= l course.end_date, format: :tz_clarity %></td>
         <td><%= course.rosters.instructorships.count %></td>
         <td><%= course.rosters.students.count %></td>
         <td><%= course.projects.count %></td>
         <td><%= course.experiences.count %></td>
         <td><%= course.bingo_games.count %></td>
-        <td><%= link_to 'Show', course_path( course ) %>&nbsp;|&nbsp;
-        <%= link_to 'Edit', edit_course_path(course) %>&nbsp;|&nbsp;
-        <%= link_to 'Destroy', course_path( course ), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+          <%= link_to t( :show ), course_path( course ) %>&nbsp;|&nbsp;
+          <%= link_to t( :edit ), edit_course_path(course) %>&nbsp;|&nbsp;
+          <%= link_to t( :destroy ),
+                        course_path( course ),
+                        method: :delete,
+                        data: { confirm: t( :confirmation ) } %>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 <br>
-<%= link_to 'New Course', new_course_path %>
+<%= link_to t( 'courses.new.title' ), new_course_path %>

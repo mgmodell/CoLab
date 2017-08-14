@@ -14,7 +14,7 @@ Then /^the concept list should match the list$/ do
 end
 
 Then /^the user should see (\d+) concepts$/ do |concept_count|
-  page.should have_content 'Terms List for Review'
+  page.should have_content 'Terms list for review'
   page.all(:xpath, "//tr[@id='concept']").count.should eq concept_count.to_i
 end
 
