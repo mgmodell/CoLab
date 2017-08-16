@@ -39,6 +39,8 @@ en:
         pdf: A PDF of the Study Consent Form
         projects: Specific Projects to which this Form Applies
         form_text: Consent Form Text
+      consent_log:
+        accepted: I Agree
     hints:
       consent_form:
         name: >
