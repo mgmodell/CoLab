@@ -4,8 +4,13 @@ en:
   devise:
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
-      send_instructions: "You will receive an email with instructions for how to confirm your email address in a few minutes."
-      send_paranoid_instructions: "If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes."
+      send_instructions: >
+        You will receive an email with instructions for how to confirm your email
+        address in a few minutes.
+      send_paranoid_instructions: >
+        If your email address exists in our database, you will receive an
+        email with instructions for how to confirm your email address in a few minutes.
+      no_instructions: "Didn't receive confirmation instructions?"
     failure:
       already_authenticated: "You are already signed in."
       inactive: "Your account is not activated yet."
@@ -28,28 +33,104 @@ en:
     omniauth_callbacks:
       failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
       success: "Successfully authenticated from %{kind} account."
+      google_auth: Sign in with Google
     passwords:
-      no_token: "You can't access this page without coming from a password reset email. If you do come from a password reset email, please make sure you used the full URL provided."
-      send_instructions: "You will receive an email with instructions on how to reset your password in a few minutes."
-      send_paranoid_instructions: "If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes."
+      no_token: >
+        You can't access this page without coming from a password reset email. If
+        you do come from a password reset email, please make sure you used the
+        full URL provided.
+      send_instructions: >
+        You will receive an email at your primary email address with instructions
+        on how to reset your password in a few minutes. Please log out and use the
+        link in the email to reset your password.
+      send_paranoid_instructions: >
+        If your email address exists in our database, you will receive a password
+        recovery link at your primary email address in a few minutes. When you
+        receive it, be sure to log out before clicking the reset link.
       updated: "Your password has been changed successfully. You are now signed in."
       updated_not_active: "Your password has been changed successfully."
+      change_title: Change your password
+      new: New password
+      confirm: Confirm your new password
+      change_submit: Change my password
+      hint: "%{min} characters minimum"
+      forgot_title: Forgot your password?
+      forgot_submit: Send me reset password instructions
     registrations:
+      signup: Sign up
+      hometown: Where did you spend most of your time growing up?
+      account_info: Enter your account information
+      tell_about: Tell us about yourself
+      tell_about_personalized: "Tell us about yourself, %{name}"
+      activity_history: History of Activities in Which You've Taken Part
+      no_activities: No activities yet
+      disp_stgs: Display Settings
+      new_profile_submit: Create my profile!
+      update_profile_submit: Update my profile!
+      your_info: Your account information
+      edit_profile: Edit your profile
+      reg_emails: Registered Emails
+      primary: Primary
+      study_title: Study Title
+      study_status: Your Participation Status
+      study_participant: Participating
+      study_non_participant: Not Participating
+      update_status: Review/Change
+      confirmed: Confirmed
+      waiting_confirmations: "Currently awaiting confirmation for:"
+      consent_history: Records of Currently Applicable Research Participation
+      password_change: Wan't to change your password? Click here and we'll email instructions.
+      make_prim: Make Primary
+      simulation_id: "Simulation ID: %{sim_id}"
+      experience_not_started: You must begin the experience first
+      unhappy: Are you unhappy? Email support about having your account removed.
+      cancel_acct_hdg: Cancelling your account
+      cancel_acct_link: Mark your account for removal
+      new_address_lbl: "New address:"
+      new_address_prompt: What is the new address?
+      optional_demo: >
+        Supplying the forllowing information about yourself is optional, but providing it may
+        help us to provide a smoother experience for you.
       destroyed: "Bye! Your account has been successfully cancelled. We hope to see you again soon."
       signed_up: "Welcome! You have signed up successfully."
-      signed_up_but_inactive: "You have signed up successfully. However, we could not sign you in because your account is not yet activated."
-      signed_up_but_locked: "You have signed up successfully. However, we could not sign you in because your account is locked."
-      signed_up_but_unconfirmed: "A message with a confirmation link has been sent to your email address. Please follow the link to activate your account."
-      update_needs_confirmation: "You updated your account successfully, but we need to verify your new email address. Please check your email and follow the confirm link to confirm your new email address."
+      signed_up_but_inactive: >
+        You have signed up successfully. However, we could not sign you in because your
+        account is not yet activated.
+      signed_up_but_locked: >
+        You have signed up successfully. However, we could not sign you in because your
+        account is locked.
+      signed_up_but_unconfirmed: >
+        A message with a confirmation link has been sent to your email address. Please
+        follow the link to activate your account.
+      update_needs_confirmation: >
+        You updated your account successfully, but we need to verify your new email
+        address. Please check your email and follow the confirm link to confirm your
+        new email address.
+      email_add: Want to add an address?
       updated: "Your account has been updated successfully."
+      email_added: The new email has successfully been added.
+      email_not_added: >
+        That email address could not be added. Perhaps it is already in use? Please 
+        contact support for assistance.
+      email_destroyed: That email address was completely removed from our records.
+      set_primary: Your primary email address has been set.
     sessions:
       signed_in: "Signed in successfully."
       signed_out: "Signed out successfully."
       already_signed_out: "Signed out successfully."
+      login: Log in
+      login_submit: Log in!
     unlocks:
-      send_instructions: "You will receive an email with instructions for how to unlock your account in a few minutes."
-      send_paranoid_instructions: "If your account exists, you will receive an email with instructions for how to unlock it in a few minutes."
+      send_instructions: >
+        You will receive an email with instructions for how to unlock your account
+        in a few minutes.
+      send_paranoid_instructions: >
+        If your account exists, you will receive an email with instructions for how
+        to unlock it in a few minutes.
       unlocked: "Your account has been unlocked successfully. Please sign in to continue."
+      no_instructions: "Didn't receive unlock instructions?"
+      resend_title: Resend unlock instructions
+      resend_submit: Resend unlock instructions!
   errors:
     messages:
       already_confirmed: "was already confirmed, please try signing in"

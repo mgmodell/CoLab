@@ -1,0 +1,45 @@
+---
+- !ruby/object:Role_
+  code: inst
+  name_en: Instructor
+  name_ko: 
+  description_en: This user teaches the course.
+  description_ko: 
+
+- !ruby/object:Role_
+  code: asst
+  name_en: Assistant
+  name_ko: 
+  description_en: This user assists the course instructor.
+  description_ko: 
+
+- !ruby/object:Role_
+  code: enr
+  name_en: Enrolled Student
+  name_ko: 
+  description_en: This user is a student in this class.
+  description_ko: 
+
+- !ruby/object:Role_
+  code: invt
+  name_en: Invited Student
+  name_ko: 
+  description_en: >
+    This user is a student that has been invited to participate in this class.
+  description_ko: 
+
+- !ruby/object:Role_
+  code: decl
+  name_en: Declined Student
+  name_ko: 
+  description_en: >
+    This user is a student that has declined to participate in this class.
+  description_ko: 
+
+- !ruby/object:Role_
+  code: drop
+  name_en: Dropped Student
+  name_ko: 
+  description_en: >
+    This user is a student that was enrolled, but is not any longer.
+  description_ko: 

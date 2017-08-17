@@ -34,6 +34,12 @@ Then /^(\d+) emails will be sent$/ do |email_count|
   ActionMailer::Base.deliveries.count.should eq email_count.to_i
 end
 
+Then /^show the email queue$/ do
+  ActionMailer::Base.deliveries.each do |mail|
+    puts mail
+  end
+end
+
 Given /^the user is in a group on the project with (\d+) other users$/ do |user_count|
   @group = Group.make
   role = Role.enrolled.take
@@ -58,4 +64,26 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
   @project.groups << @group
   @project.save
   puts @project.errors.full_messages unless @project.errors.blank?
+end
+
+Then /^the members of "([^"]*)" group go to other groups$/ do |ordinal|
+  if @project.groups.count > 1
+    case ordinal
+    when 'a random' then to_disperse = @project.groups.sample
+    when 'the first' then to_disperse = @project.groups.first
+    when 'the last' then to_disperse = @project.groups.last
+    end
+
+    groups = @project.groups
+    to_disperse.users.each do |user|
+      group = groups.first
+      unless group == to_disperse
+        user = to_disperse.users.first
+        group.users << user
+        to_disperse.users.delete user
+      end
+      groups.rotate
+    end
+    groups.each(&:save)
+  end
 end

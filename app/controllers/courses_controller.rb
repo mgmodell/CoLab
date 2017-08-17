@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 class CoursesController < ApplicationController
   before_action :set_course, only: [:show, :edit, :update, :destroy, :add_students, :add_instructors]
-  before_action :check_admin, except: [:next, :diagnose, :react, :accept_roster, :decline_roster]
+  before_action :check_editor, except: [:next, :diagnose, :react, :accept_roster, :decline_roster, :show, :index]
+  before_action :check_viewer, except: [:next, :diagnose, :react, :accept_roster, :decline_roster]
 
-  def show; end
+  def show
+    @title = t('.title')
+  end
 
-  def edit; end
+  def edit
+    @title = t('.title')
+  end
 
   # GET /admin/coures
   def index
+    @title = t('.title')
     @courses = []
     if @current_user.admin?
       @courses = Course.all
@@ -21,6 +27,7 @@ class CoursesController < ApplicationController
   end
 
   def new
+    @title = t('.title')
     @course = Course.new
     @course.timezone = @current_user.timezone
     @course.school = @current_user.school unless @current_user.school.nil?
@@ -31,62 +38,47 @@ class CoursesController < ApplicationController
   end
 
   def create
+    @title = t('courses.new.title')
     @course = Course.new(course_params)
     role = Role.instructor.take
     @course.rosters << Roster.new(role: role, user: @current_user)
 
-    respond_to do |format|
-      if @course.save
-        format.html { redirect_to url: course_url(@course), notice: 'Course was successfully created.' }
-        format.json { render :show, status: :created, location: @course }
-      else
-        format.html { render :new }
-        format.json { render json: @course.errors, status: :unprocessable_entity }
-      end
+    if @course.save
+      redirect_to url: course_url(@course), notice: t('courses.create_success')
+    else
+      render :new
     end
   end
 
   def update
-    respond_to do |format|
-      if @course.update(course_params)
-        @course.school = School.find(@course.school_id)
-        format.html { redirect_to course_path(@course), notice: 'Course was successfully updated.' }
-        format.json { render :show, status: :ok, location: @course }
-      else
-        format.html { render :edit }
-        format.json { render json: @course.errors, status: :unprocessable_entity }
-      end
+    @title = t('.title')
+    if @course.update(course_params)
+      @course.school = School.find(@course.school_id)
+      redirect_to course_path(@course), notice: t('courses.update_success')
+    else
+      render :edit
     end
   end
 
   def destroy
     @course.destroy
-    respond_to do |format|
-      format.html { redirect_to courses_url, notice: 'Course was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to courses_url, notice: t('courses.destroy_success')
   end
 
   def add_students
     @course.add_students_by_email params[:addresses]
-    respond_to do |format|
-      format.html { redirect_to @course, notice: 'Students have been invited.' }
-      format.json { render :show, status: :ok, location: @course }
-    end
+    redirect_to @course, notice: t('courses.students_invited')
   end
 
   def add_instructors
     @course.add_instructors_by_email params[:addresses]
-    respond_to do |format|
-      format.html { redirect_to @course, notice: 'Instructor(s) have been invited.' }
-      format.json { render :show, status: :ok, location: @course }
-    end
+    redirect_to @course, notice: t('courses.instructor_invited')
   end
 
   def accept_roster
     r = Roster.student.where(id: params[:roster_id], user: @current_user).take
     if r.nil?
-      flash[:notice] = 'You can only accept your own enrollments'
+      flash[:notice] = t('courses.accept_fail')
     else
       r.role = Role.enrolled.take
       r.save
@@ -98,7 +90,7 @@ class CoursesController < ApplicationController
   def decline_roster
     r = Roster.student.where(id: params[:roster_id], user: @current_user).take
     if r.nil?
-      flash[:notice] = 'You can only decline your own enrollments'
+      flash[:notice] = t('courses.decline_fail')
     else
       r.role = Role.declined.take
       r.save
@@ -110,15 +102,15 @@ class CoursesController < ApplicationController
   def remove_instructor
     r = Roster.find(params[:roster_id])
     if !@current_user.is_instructor? && !current_user.is_admin?
-      flash[:notice] = 'You are not permitted to make that sort of change.'
+      flash[:notice] = t('courses.permission_fail')
       flash.keep
       redirect_to :root
     elsif r.course.rosters.instructorships.count < 2
-      flash[:notice] = 'Courses must always have at least one instructor.'
+      flash[:notice] = t('courses.last_instructor')
       flash.keep
       redirect_to :root
     elsif r.nil?
-      flash[:notice] = 'This is not an instructor in this course'
+      flash[:notice] = t('courses.not_instructor')
       flash.keep
       redirect_to :root
     else
@@ -136,13 +128,13 @@ class CoursesController < ApplicationController
   def drop_student
     r = Roster.find(params[:roster_id])
     if r.nil?
-      flash[:notice] = 'That is not a valid user-course relationship'
+      flash[:notice] = t('courses.no_roster')
       flash.keep
       redirect_to :root
     else
       instructor_action = r.user != @current_user
       if !instructor_action && r.user != @current_user
-        flash[:notice] = 'You are not permitted to make that sort of change.'
+        flash[:notice] = t('courses.permission_fail')
         flash.keep
         redirect_to :root
       else
@@ -169,7 +161,13 @@ class CoursesController < ApplicationController
     end
   end
 
-  def check_admin
+  def check_viewer
+    redirect_to root_path unless @current_user.is_admin? ||
+                                 @current_user.is_instructor? ||
+                                 @current_user.is_researcher?
+  end
+
+  def check_editor
     redirect_to root_path unless @current_user.is_admin? || @current_user.is_instructor?
   end
 

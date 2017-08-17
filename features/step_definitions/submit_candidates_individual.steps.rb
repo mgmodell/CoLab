@@ -21,14 +21,15 @@ Given /^the Bingo! game individual count is (\d+)$/ do |individual_count|
 end
 
 When /^the user clicks the link to the candidate list$/ do
-  click_link_or_button @bingo.name
+  first(:link, @bingo.get_name(@anon)).click
+  # click_link_or_button @bingo.get_name(@anon)
 end
 
 Then /^the user should see the Bingo candidate list$/ do
   page.should have_content('Topic:')
   page.should have_content(@bingo.topic)
   page.should have_content('For:')
-  page.should have_content(@user.name)
+  page.should have_content(@user.name(@anon))
 end
 
 Then /^the user will see (\d+) term field sets$/ do |count|
@@ -73,9 +74,8 @@ end
 
 Then /^the candidate list properties will match the list$/ do
   cl = @bingo.candidate_list_for_user @user
-  cl.candidates.each_with_index do |candidate, index|
-    candidate.term.should eq @entries_list[index]['term']
-    candidate.definition.should eq @entries_list[index]['definition']
+  @entries_list.each do |cand|
+    cl.candidates.where(term: cand['term'], definition: cand['definition']).count.should eq 1
   end
 end
 
@@ -87,7 +87,8 @@ Then /^the candidate list entries should match the list$/ do
     field_count.times do |index|
       t_query = "//input[@id='candidate_list_candidates_attributes_#{index}_term']"
       d_query = "//textarea[@id='candidate_list_candidates_attributes_#{index}_definition']"
-      if page.find(:xpath, t_query).value == candidate['term'] &&
+      term = candidate['term'].blank? ? candidate['term'] : candidate['term'].strip.split.map(&:capitalize) * ' '
+      if page.find(:xpath, t_query).value == term &&
          page.find(:xpath, d_query).value == candidate['definition']
         items_not_found -= 1
       end

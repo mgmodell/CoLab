@@ -1,11 +1,13 @@
 Hello, <%= @user.first_name %>.
 
-Below is your students' completion report from <%= @name %> at
-<%= link_to "CoLab.online", root_url %> which just wrapped up:
+Below is your students' completion report from the task 
+'<%= @name %>' in the course '<%= @course_name %>' which 
+recently completed at <%= root_url %>. There are <%= @completion_report.keys.count %>
+students enrolled in the course.
 
 Student | Completed at:
-<% @completion_report.keys do |user_name| %>
-<%= user_name %> | <%= @completion_report[ user_name ] %>
+<% @completion_report.keys.each do |user_email| %>
+<%= user_email %> | <%= @completion_report[ user_email ][ :name ] %> | <%= @completion_report[ user_email ][ :status ] %>
 <% end %>
 
 Thank you!

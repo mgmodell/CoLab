@@ -1,8 +1,10 @@
-<h1>You've been invited!</h1>
+<h1><%= t :invited %></h2>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-<p>Hello <%= @first_name %>,
-    <% pluralize = true if @waiting_rosters.count > 1 %>
-  You've been added to <%= pluralize ? "courses" : "a course" %>, but sometimes instructors make mistakes, so please do confirm that you are actually enrolled in the <%= @waiting_rosters.count if pluralize %> course<%= "s" if pluralize %> listed below:
+<% anonymize = @current_user.nil? ? false : @current_user.anonymize? %>
+<p><%= t 'home.greeting', name: @current_user.nil? ? "John" : @current_user.first_name %>,
+    <%= t 'home.course_confirm', 
+          course_list_text: t( 'home.courses', count: @waiting_rosters.count),
+          proper_course_list: t( 'home.courses_proper', count: @waiting_rosters.count ) %>:
   </p>
 <table data-role="table"
           id="basicTable"
@@ -10,30 +12,30 @@
           data-column-popup-theme="<%= theme_code %>" 
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="Select columns&hellip;"
+          data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
   <thead>
     <tr>
-      <th>Task Name</th>
-      <th>Status</th>
-      <th data-priority="0">Course Name</th>
-      <th data-priority="1">Open Date</th>
-      <th data-priority="0">Close Date</th>
-      <th data-priority="1">Consent Form</th>
+      <th><%= t :task_name %></th>
+      <th><%= t :status %></th>
+      <th data-priority="0"><%= t :course_name %></th>
+      <th data-priority="1"><%= t :open_date %></th>
+      <th data-priority="0"><%= t :close_date %></th>
+      <th data-priority="1"><%= t :consent_form %></th>
     </tr>
   </thead>
   <tbody>
     <% @waiting_rosters.each do |roster| %>
       <tr>
         <td>
-          <%= link_to "Accept", accept_roster_path( :roster_id => roster.id ) %> / 
-            <%= link_to "Decline", decline_roster_path( :roster_id => roster.id ) %> enrollment
+          <%= link_to t( :accept ), accept_roster_path( :roster_id => roster.id ) %> / 
+            <%= link_to t( :decline ), decline_roster_path( :roster_id => roster.id ) %>
           </td>
-        <td><em>Waiting</em></td>
-        <td><%= roster.course.name %></td>
-        <td><%= roster.course.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
-        <td><%= roster.course.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
-        <td>N/A</td>
+        <td><em><%= t :waiting %></em></td>
+        <td><%= roster.course.get_name( anonymize ) %></td>
+        <td><%= l roster.course.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></td>
+        <td><%= l roster.course.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></td>
+        <td><%= t :n_a %></td>
       </tr>
     <% end %>
   </tbody>

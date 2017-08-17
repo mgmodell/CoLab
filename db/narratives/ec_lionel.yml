@@ -1,7 +1,8 @@
 ---
 - !ruby/object:Week_
   week_num: 1
-  text: |
+  text_ko:  
+  text_en: |
     <p> In group time, we began by setting up weekly team meetings. This
     project is pretty huge and I don't think any of us have had to do one like
     this before.  I know how to work hard, though &mdash; I had a rough time at
@@ -34,7 +35,8 @@
 
 - !ruby/object:Week_
   week_num: 2
-  text: |
+  text_ko:  
+  text_en: |
     <p> Anika found a lot of materials for one of the topics that I had a rough
     time with, but Alex and Natasha also focused on the same two as I did. We
     ended up with a lot of duplication, but at least we all know those topics.
@@ -63,7 +65,8 @@
 
 - !ruby/object:Week_
   week_num: 3
-  text: |
+  text_ko:  
+  text_en: |
     <p> During our meeting, we began sorting through the materials. I showed
     mine first to get it over with, and no one had any complaints. Natasha made
     me laugh when she misread one of my summaries and shone a completely
@@ -87,7 +90,8 @@
 
 - !ruby/object:Week_
   week_num: 4
-  text: |
+  text_ko:  
+  text_en: |
     <p> Anika wasn't at the meeting when I got there. She hadn't been in class,
     and no one had heard anything from her. We weren't sure what was going on.
     </p>
@@ -116,7 +120,8 @@
 
 - !ruby/object:Week_
   week_num: 5
-  text: |
+  text_ko:  
+  text_en: |
     <p> I turned in our assignment this week in class, and our instructor gave
     us some time to meet as a group. We spent the time looking at Alex's
     outline since that was the only new thing we had. I thought it was decent,
@@ -148,7 +153,8 @@
 
 - !ruby/object:Week_
   week_num: 6
-  text: |
+  text_ko:  
+  text_en: |
     <p> This week's meeting was uncomfortable. I thought the rest of the group
     would be able to help me smooth out the rough parts of my piece, but it
     turned out everyone had similar rough spots. No one was really able to make
@@ -187,7 +193,8 @@
 
 - !ruby/object:Week_
   week_num: 7
-  text: |
+  text_ko:  
+  text_en: |
     <p> I was late this week by about ten minutes because I had a study session
     for one of my midterms coming next week. However, I was only the second
     person to arrive. Natasha walked in five minutes later, out of breath from
@@ -221,7 +228,8 @@
 
 - !ruby/object:Week_
   week_num: 8
-  text: |
+  text_ko:  
+  text_en: |
     <p> While Alex may not be good at making sure he puts all the right details
     in himself, he is good at making sure everyone else puts them in. He found
     all sorts of issues all over the paper. Most of them were pretty small, but
@@ -262,7 +270,8 @@
 
 - !ruby/object:Week_
   week_num: 9
-  text: |
+  text_ko:  
+  text_en: |
     <p> Anika not only brought a copy of our paper to class for the instructor,
     but also brought copies for each of us to look at between class and our
     meeting. This way, we didn't waste our meeting time on reading through it.
@@ -300,7 +309,8 @@
 
 - !ruby/object:Week_
   week_num: 10
-  text: |
+  text_ko:  
+  text_en: |
     <p> So, maybe I should have spent some more time on what I would say in the
     introduction and less time on the slides (I think I went overboard).
     Natasha will open the presentation and I feel pretty dumb. On the plus
@@ -328,7 +338,8 @@
 
 - !ruby/object:Week_
   week_num: 11
-  text: |
+  text_ko:  
+  text_en: |
     <p> In class, the instructor returned the drafts, and we met briefly during
     class to review it. There weren't many comments. Most of them were pretty
     minor or issues that Natasha had already fixed. There was one comment that
@@ -370,7 +381,8 @@
 
 - !ruby/object:Week_
   week_num: 12
-  text: |
+  text_ko:  
+  text_en: |
     <p> The images Natasha put together really added a lot to our paper and I
     can see them making it easier for people to understand some aspects of it.
     I also claimed one of the images for one of my slides, because it would
@@ -395,7 +407,8 @@
 
 - !ruby/object:Week_
   week_num: 13
-  text: |
+  text_ko:  
+  text_en: |
     <p> The presentation went OK, but not quite as smoothly as I'd hoped. Alex
     seemed a bit nervous and got quiet, but I'm pretty sure that most people
     heard him. Anika, on the other hand, raced through her presentation and as
@@ -424,7 +437,8 @@
 
 - !ruby/object:Week_
   week_num: 14
-  text: |
+  text_ko:  
+  text_en: |
     <p> At the final meeting, we reviewed the paper to make sure it was ready
     for submission at the end of the week. As we went through it, Anika took
     issue with a few of the changes Alex made. It didn't seem like anything

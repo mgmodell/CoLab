@@ -1,60 +1,88 @@
-<h1>Your Tasks</h1><% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-<p>Hello <%= @current_user.nil? ? "John" : @current_user.first_name %>,</br>
-    You've got one task at the moment.
-
+<h1><%= t( :your_tasks ) %></h1><% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<p><%= t 'home.greeting', name: @current_user.nil? ? "John" : @current_user.first_name %>,</br>
+  <%= t 'home.tasks', count: 2 %>
    
+<div data-role="tabs" id="tabs">
+  <div data-role="navbar">
+    <ul>
+      <li><a href="#weekly" data-ajax="false"><%= t :week_view %></a></li>
+      <li><a href="#tasks" data-ajax="false"><%= t :task_view %></a></li>
+      <li><a href="#monthly" data-ajax="false"><%= t :month_view %></a></li>
+    </ul>
+  </div>
+  <div id="tasks" class="ui-body-<%= theme_code %> ui-content">
+    <h3><%= t :task_view %></h3>
+
   <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>"
           data-column-popup-theme="<%= theme_code %>"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="Select columns&hellip;"
+          data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
     <thead>
       <tr>
-        <th>Task Name</th>
+        <th><%= t :task_name %></th>
         <th data-priority="1">Type</th>
-        <th>Status</th>
+        <th><%= t :status %></th>
         <th data-priority="1">Group</th>
-        <th data-priority="0">Course Name</th>
-        <th data-priority="1">Open Date</th>
-        <th data-priority="0">Close Date</th>
-        <th data-priority="1">Consent Form</th>
+        <th data-priority="0"><%= t :course_name %></th>
+        <th data-priority="1"><%= t :open_date %></th>
+        <th data-priority="0"><%= t :close_date %></th>
+        <th data-priority="1"><%= t :consent_form %></th>
       </tr>
     </thead>
     <tbody>
-
+    <% @events.each do |event| %>
     <tr>
       <td>
-        <%= link_to "SuperStars", assessment_demo_complete_path %>
-        <br>
-        (Project: Research Paper)
+        <%= link_to event.name, event.task_link %><%= raw event.task_name_post %>
       </td>
-      <td>Self- and Peer-Assessment</td>
+      <td><%= event.type %></td>
       <td>
-        <em>Not Started</em>
+        <em><%= event.status %></em>
       </td>
-      <td>SuperStars</td>
-      <td>Advanced Collaborative Research</td>
-      <td> <%= 1.day.ago.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-      <td> <%= 1.day.from_now.end_of_day.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+      <td><%= event.group_name %></td>
+      <td><%= event.course_name %></td>
+      <td> <%= l event.start_time, format: :tz_clarity %> </td>
+      <td> <%= l event.close_date, format: :tz_clarity %> </td>
       <td>N/A</td>
     </tr>
+    <% end %>
 
-    <tr>
-      <td>
-        <%= link_to "What is collaboration?", bingo_demo_complete_path %>
-      </td>
-      <td>Terms list submission</td>
-      <td>
-        <em>0%</em>
-      </td>
-      <td>SuperStars</td>
-      <td>Advanced Collaborative Research</td>
-      <td> <%= 1.week.ago.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-      <td> <%= 2.day.from_now.end_of_day.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-      <td>N/A</td>
-    </tr>
     </tbody>
   </table>
+</div>
+  <div id="weekly" class="ui-body-<%= theme_code %> ui-content">
+    <h3><%= t :week_view %></h3>
+    <%= week_calendar attribute: :close_date, events: @events,  number_of_weeks: 2 do |date,meetings| %>
+      <h4 style="font-weight:300;font-size:10px;text-align:center">
+        <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
+      </h4>
+      <ul>
+      <% meetings.each do |meeting| %>
+        <li>
+          <%= link_to meeting.name, meeting.task_link %><small><%= raw meeting.task_name_post %></small>
+        </li>
+      <% end %>
+      </ul>
+    <% end %>
+  </div>
+  <div id="monthly" class="ui-body-<%= theme_code %> ui-content">
+    <h3><%= t :month_view %></h3>
+    <%= month_calendar attribute: :close_date, events: @events  do |date,meetings| %>
+      <h4 style="font-weight:300;font-size:10px;text-align:center">
+        <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
+      </h4>
+      <ul>
+      <% meetings.each do |meeting| %>
+        <li>
+          <%= link_to meeting.name, meeting.task_link %><small><%= raw meeting.task_name_post %></small>
+        </li>
+      <% end %>
+      </ul>
+    <% end %>
+  </div>
+</div>
+

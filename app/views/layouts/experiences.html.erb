@@ -2,7 +2,7 @@
 <html>
   <%= favicon_link_tag %>
   <head>
-    <title>CoLab Reporting</title>
+    <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "installments_manifest" %>
@@ -12,14 +12,17 @@
   <body>
     <div data-role="page" data-theme="<%= @current_user.nil? ? "a" : @current_user.theme.code %>">
       <div data-role="header" data-position="fixed" style="overflow:hidden;" >
-        <h1>CoLab</h1>
+        <h1><%= t :title %> <%= " : " + @title unless @title.nil? %></h1>
+        <p style="font-weight:300;font-size:10px;text-align:center"><% q = Quote.get_quote %><%= raw( q.get_local_quote) %>
+              (<%= q.get_local_attribution %>)
+        </p>
         <% if working %>
           <div data-role="controlgroup" data-type="horizontal" data-mini="true"
                                         class="ui-btn-right">
             <a data-role="button" href="#instructions" id="instr_btn" data-icon="info"
-                class="ui-btn ui-btn-corner-all ui-icon-info ui-btn-icon-left" >Instructions</a>
+                class="ui-btn ui-btn-corner-all ui-icon-info ui-btn-icon-left" ><%= t 'experience.instruction_lbl' %></a>
             <a data-role="button" href="#glossary" id="instr_btn" data-icon="help"
-                class="ui-btn ui-btn-corner-all ui-icon-tag ui-btn-icon-right" >Glossary</a>
+                class="ui-btn ui-btn-corner-all ui-icon-tag ui-btn-icon-right" ><%= t 'experience.glossary_lbl' %></a>
           </div>
         <% end %>
       </div>
@@ -29,7 +32,7 @@
         <div id="progressbar" style="width: 50%; margin: auto">
           <% if !@diagnosis.nil? && !@diagnosis.week.nil? %>
             <div style="width: <%= @diagnosis.week.percent_complete %>%">
-              <center><%= @diagnosis.week.percent_complete %>% Complete</center>
+              <center><%= @diagnosis.week.percent_complete %>% <%= t :complete %></center>
             <% else %>
               <div style="width: 98%">
               <% end %>
@@ -48,19 +51,19 @@
       </div>
       <% if working %>
         <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="instructions">
-          <a href="#instr_btn" class="ui-btn ui-icon-delete" data-rel="close"> Close panel</a>
+          <a href="#instr_btn" class="ui-btn ui-icon-delete" data-rel="close"> <%= t 'experience.close_pnl' %></a>
           <div data-role="collapsible">
-            <h4>Instructions</h4>
+            <h4><%= t 'experience.scenario_lbl' %></h4>
             <%= render "shared/instructions" %>
           </div>
           <div data-role="collapsible">
-            <h4>Scenario</h4>
+            <h4><%= t 'experience.instructions_lbl' %></h4>
             <%= render "shared/scenario" %>
           </div>
         </div>
         <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="glossary">
-          <a href="#instr_btn" class="ui-btn ui-icon-delete" data-rel="close"> Close panel</a>
-          <h4>Behaviors</h4>
+          <a href="#instr_btn" class="ui-btn ui-icon-delete" data-rel="close"> <%= t 'experience.close_pnl' %></a>
+          <h4><%= t 'experience.behavior_lbl' %></h4>
           <%= render "shared/behaviors" %>
         </div>
       <% end %>

@@ -2,7 +2,7 @@
 <html>
   <%= favicon_link_tag %>
   <head>
-    <title>CoLab Reporting</title>
+    <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "installments_manifest" %>
@@ -11,7 +11,10 @@
   <body>
     <div data-role="page" data-theme="<%= @current_user.nil? ? "a" : @current_user.theme.code %>">
       <div data-role="header" data-position="fixed" style="overflow:hidden;" >
-        <h1>CoLab : Self- and Peer-Assessment</h1>
+        <h1><%= t :title %> <%= " : " + @title unless @title.nil? %></h1>
+        <p style="font-weight:300;font-size:10px;text-align:center"><% q = Quote.get_quote %><%= raw( q.get_local_quote) %>
+              (<%= q.get_local_attribution %>)
+        </p>
       </div>
       <div data-role="content">
         <% if flash[:error] -%>

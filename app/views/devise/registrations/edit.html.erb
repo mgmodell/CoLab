@@ -1,115 +1,242 @@
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = @current_user.nil? ? 'a' : @current_user.theme.code %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
-      <li class="ui-state-active ui-tabs-active"><a href="#profile" data-ajax="false">About You</a></li>
-      <li><a href="#history" data-ajax="false">History</a></li>
+      <li class="ui-state-active ui-tabs-active">
+        <a href="#profile" data-ajax="false"><%= t :about_you %></a>
+      </li>
+      <li><a href="#history" data-ajax="false"><%= t :history %></a></li>
+      <li><a href="#consent_forms" data-ajax="false"><%= t 'consent_forms.multiple' %></a></li>
     </ul>
   </div>
   <div id="profile" class="ui-body-<%= theme_code %> ui-content">
 <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-        <h2>Your account information</h2>
+        <h2><%= t 'devise.registrations.your_info' %></h2>
           <%= f.error_notification %>
           <%= f.input :welcomed, as: :hidden, input_html: { value: true } %>
 
           <div class="form-inputs ui-corner-all custom-corners">
             <div class="ui-bar ui-bar-<%= theme_code %>">
-              <h3>Edit your profile</h3>
+              <h3><%= t 'devise.registrations.edit_profile' %></h3>
             </div>
             <div class="ui-body ui-body-<%= theme_code %>">
-              <%= f.input :email, required: true, autofocus: true %>
               <%= f.input :first_name, required: true, autofocus: true %>
-              <%= f.input :last_name, required: true, autofocus: true %>
-              <%= f.input :email, required: true, autofocus: true %>
-              <%= link_to "Want to change your password?", new_password_path(resource_name) %><br />
+              <%= f.input :last_name, required: true %>
+              <table width="100%">
+                <thead>
+                  <tr>
+                    <th><%= t 'devise.registrations.reg_emails' %></th>
+                    <th><%= t 'devise.registrations.primary' %></th>
+                    <th><%= t 'devise.registrations.confirmed' %></th>
+                    <th><%= t :actions %></th>
+                  </tr>
+                </thead>
+              <% f.object.emails.each do |email| %>
+                <tbody>
+                  <tr>
+                    <td><%= email.email %></td>
+                    <td align="center"><%= email.primary ? raw( '&#x2714;' ) : '' %></td>
+                    <td align="center"><%= email.confirmed? ? raw( '&#x2714;' ) : '' %></td>
+                    <td align="center">
+                      <% if !email.primary %>
+                        <%= link_to t( :remove ), remove_registered_email_path( email_id: email.id ) %>
+                        <% if email.confirmed? %>
+                          | <%= link_to t( 'devise.registrations.make_prim'),
+                                  set_primary_registered_email_path( email_id: email.id ) %>
+                        <% end %>
+                      <% end %></td>
+                  </tr>
+                </tbody>
+              <% end %>
+              </table>
+              <br />
+              <%= link_to t( 'devise.registrations.email_add' ), '#add_address_popup', 
+                    data: { rel: 'popup', transition: 'flip', position: { to: 'window' } },
+                    class: 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left' %><br />
+              <br />
+              <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                <p><%= t 'devise.registrations.waiting_confirmations' %> <%= resource.unconfirmed_email %></p>
+              <% end %>
+
+              <%= link_to t( 'devise.registrations.password_change' ), initiate_password_reset_path %><br />
+            </div>
+          <div class="form-inputs ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-<%= theme_code %>">
+              <h3><%= t('devise.registrations.disp_stgs')%></h3>
+            </div>
+            <div class="ui-body ui-body-<%= theme_code %>">
+            <table width="100%">
+              <tr>
+                <td colspan='3'>
+                  <%= f.association :theme %>
+                  <%= f.association :language,
+                          collection: Language.supported %>
+                </td>
+              </tr>
+              <tr>
+              <% if @current_user.is_instructor? %>
+                <td width="20%">
+              <%= f.input :researcher, as: :select,
+                          input_html: { data: 
+                            { role: "flipswitch", 
+                              "wrapper-class": "custom-size-flipswitch"} } %>
+                </td>
+                <td width="10%"></td>
+                <td>
+                <% else %>
+                  <td colspan='3'>
+                <%end%>
+                  <%= f.input :timezone, as: :time_zone, priority: /US|Seo/ %>
+                </td>
+              </tr>
+            </table>
             </div>
 
 
               <div class="ui-corner-all custom-corners">
                 <div class="ui-bar ui-bar-<%=theme_code %>">
-                  <h3>Tell us about yourself<%= ", " + @current_user.first_name unless @current_user.first_name.nil? %></h3>
+                  <h3><%= t 'devise.registrations.tell_about_personalized', name: (@current_user.first_name unless @current_user.first_name.nil? ) %></h3>
                 </div>
                 <div class="ui-body ui-body-<%=theme_code %>">
-              <%= f.association :school, label: "Which school are you currently at?", prompt: "Select a School" %>
+              <%= f.association :school %>
 
-              <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-                <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
-              <% end %>
-
-              <%= f.association :gender, prompt: "Select a gender" %>
-              <%= f.association :age_range, label: "How old are you?", prompt: "Select an age range" %>
-              <%= f.input :country, as: :country, label: "Where are you from?", prompt: "Select a country",
-                    priority: ["United States", "Korea, Republic of" ] %>
-              <%= f.input :timezone, as: :time_zone, label: "What time zone are you in?", prompt: "Select a timezone",
-                    priority: /US|Seo/ %>
-              <%= f.association :theme, prompt: "Please choose a UI theme", label: "What UI theme would you like to use?" %>
+              <%= f.association :gender %>
+              <%= f.input :date_of_birth, as: :date, html5: true %>
+              <%= f.input :started_school, as: :date, html5: true %>
+              <%= f.association :cip_code %>
+              <table width='100%'>
+                <tr colspan='2'>
+                  <td><%= label_tag :country, t( 'devise.registrations.hometown' ) %><td>
+                </tr>
+                <tr>
+                  <td width='50%'>
+                    <% init_country = f.object.home_state.nil? ?
+                      HomeCountry.where( no_response: true ).take :
+                      f.object.home_state.home_country %>
+                    <%= select_tag :country,
+                         options_from_collection_for_select( HomeCountry.all,
+                                    :code, :name, init_country.code  ),
+                         :class => 'country_select' %>
+                  </td>
+                  <td width='50%'>
+                      <%= f.association :home_state,
+                          collection: init_country.home_states,
+                          label: false %>
+                  </td>
+                </tr>
+              </table>
+              <%= f.association :primary_language %>
             </div>
             </div>
           </div>
   <div class="form-actions">
-    <%= f.button :submit, "Update my profile!" %>
+    <%= f.button :submit, t( 'devise.registrations.update_profile_submit' ) %>
   </div>
 <% end %>
   </div>
+  </div>
   <div id="history" class="ui-body-<%= theme_code %> ui-content">
-    <h2>History of Activities in Which You've Taken Part</h2>
-<table data-role="table"
-          id="basicTable"
-          data-column-btn-theme"<%= theme_code %>" 
-          data-column-popup-theme="<%= theme_code %>" 
-          data-mode="columntoggle"
-          data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="Select columns&hellip;"
-          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+    <h2><%= t 'devise.registrations.activity_history' %></h2>
+      <% activities = @current_user.activity_history
+      if activities.count < 1 %>
+        <p><%= t 'devise.registrations.no_activities' %></p>
+      <% else %>
+        <table data-role="table"
+            id="basicTable"
+            data-column-btn-theme"<%= theme_code %>" 
+            data-column-popup-theme="<%= theme_code %>" 
+            data-mode="columntoggle"
+            data-column-btn-theme="<%= theme_code %>" 
+            data-column-btn-text="<%= t :column_select %>"
+            class="table-stroke ui-shadow table-stripe table-ui-responsive ">
 
-      <thead>
-      <tr>
-        <th>Activity</th>
-        <th data-priority="0">Type</th>
-        <th data-priority="0">Completion Date</th>
-        <th data-priority="0">Status</th>
-        <th data-priority="1">Other information</th>
-      </tr>
-      </thead>
+        <thead>
+          <tr>
+            <th>Activity</th>
+            <th data-priority="0"><%= t :course %></th>
+            <th data-priority="0"><%= t :type %></th>
+            <th data-priority="0"><%= t :completion_date %></th>
+            <th data-priority="0"><%= t :status %></th>
+            <th data-priority="1"><%= t :other_info %></th>
+          </tr>
+        </thead>
       <tbody>
-      <% @current_user.courses.each do |course| %>
+
+      <% activities.each do |activity| %>
       <tr>
-        <td><%= course.name %></td>
-        <td>Course</td>
-        <td><%= course.end_date.to_s %></td>
-        <td><%= DateTime.current < course.end_date ? "In Progress" : "Finished" %></td>
-        <td>
-          Project Count: <%= course.projects.count %></br>
-          SAPA completion rate: N/A</br>
-          Experience Count: <%= course.experiences.count %></br>
-        </td>
-      </tr>
-      <% end %>
-      <% @current_user.reactions.each do |reaction| %>
-      <tr>
-        <td><%= reaction.experience.name %></td>
-        <td>Experience</td>
-        <td><%= reaction.updated_at.to_s %></td>
-        <td>
-          <%= reaction.status %>
-        </td>
-        <td>
-        <% if reaction.status != "Not started" %>
-          Scenario ID: <%= reaction.narrative.id + (100 * reaction.narrative.scenario.id) %>
+        <% if activity.class.name == "BingoGame" && activity.reviewed %>
+          <td><%= link_to activity.name, bingo_list_stats_path( activity.candidate_list_for_user( @current_user ) ) %></td>
         <% else %>
-          You must begin the experience first
+          <td><%= activity.get_name false %></td>
+        <% end %>
+        <td><%= activity.course.pretty_name false %></td>
+        <td><%= activity.type %></td>
+        <td><%= activity.end_date %></td>
+        <td><%= activity.status_for_user( @current_user ) %></td>
+        <td>
+        <% if activity.class.name == "BingoGame" %>
+          <%= activity.candidate_list_for_user( @current_user ).get_concepts.count %> unique concepts
+        <% elsif activity.class.name == "Experience" %>
+           <% if activity.get_user_reaction( @current_user ).status != "Not started" %>
+             <%= t 'devise.registrations.simulation_id', 
+                    sim_id: activity.get_user_reaction( @current_user ).sim_id %>
+           <% else %>
+             <%= t 'devise.registrations.experience_not_started' %>
+           <% end %>
+        <% else %>
+          <%= t :coming_soon %>
         <% end %>
         </td>
       </tr>
       <% end %>
       </tbody>
     </table>
+    <% end %>
+  </div>
+  <div id="consent_forms" class="ui-body-<%= theme_code %> ui-content">
+    <h2><%= t 'devise.registrations.consent_history' %></h2>
+    <table width='100%'>
+      <thead>
+        <th><%= t ('devise.registrations.study_title' ) %></th>
+        <th><%= t ('devise.registrations.study_status' ) %></th>
+        <th><%= t ( :actions ) %></th>
+      </thead>
+      <tbody>
+    <% @current_user.consent_logs.each do |consent_log| %>
+      <tr>
+        <td><%= consent_log.consent_form.name %></td>
+        <td><%= consent_log.accepted ? t( 'devise.registrations.study_participant' ) :
+                                         t( 'devise.registrations.study_non_participant' ) %>
+        </td>
+        <td>
+          <center>
+            <%= link_to t( 'devise.registrations.update_status' ), 
+                edit_consent_log_path( consent_log ) %>
+          </center>
+        </td>
+      </tr>
+    <% end %>
+      </tbody>
+    </table>
   </div>
 </div>
 
 
-<h3>Cancel my account</h3>
+<h3><%= t 'devise.registrations.cancel_acct_hdg' %></h3>
 
-<p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
+<p><%= t 'devise.registrations.unhappy' %>
+<div data-role="popup" id="add_address_popup" data-theme="<%= theme_code %>" style="width:700px" 
+    class="ui-corner-all">
+  <div data-role="header" data-theme="<%= theme_code %>">
+    <h1><%= t 'devise.registrations.new_address_prompt' %></h1>
+  </div>
+  <%= form_tag add_registered_email_path do %>
+    <div style="padding:10px 20px;">
+      <%= label_tag :email_address, t( 'devise.registrations.new_address_lbl' ) %>
+      <%= email_field_tag :email_address %><br />
+      <%= submit_tag t( :add ) %>
+    </div>
+  <% end %>
+</div>
 
-<%= link_to "Back", :back %>
+<%= link_to t( :back ), :back %>

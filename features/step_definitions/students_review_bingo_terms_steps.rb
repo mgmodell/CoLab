@@ -4,7 +4,7 @@ Given /^the user is any student in the course$/ do
 end
 
 Then /^the user clicks the link to the concept list$/ do
-  click_link_or_button @bingo.name
+  first(:link, @bingo.get_name(@anon)).click
 end
 
 Then /^the concept list should match the list$/ do
@@ -14,7 +14,7 @@ Then /^the concept list should match the list$/ do
 end
 
 Then /^the user should see (\d+) concepts$/ do |concept_count|
-  page.should have_content 'Bingo! Word List'
+  page.should have_content 'Terms list for review'
   page.all(:xpath, "//tr[@id='concept']").count.should eq concept_count.to_i
 end
 

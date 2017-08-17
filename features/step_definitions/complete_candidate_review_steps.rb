@@ -26,7 +26,7 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
     user_group = [@users.sample]
   end
 
-  @user = @users.sample unless @user.present?
+  @user = @users.sample
   step 'the user "has" had demographics requested'
   step 'the user logs in'
   step 'the user clicks the link to the candidate list'
@@ -83,7 +83,7 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
     concepts << 'concept ' + counter.to_s
   end
 
-  feedbacks = CandidateFeedback.where('name like ?', feedback_type + '%')
+  feedbacks = CandidateFeedback.where('name_en like ?', feedback_type + '%')
   @feedback_list = {}
   @bingo.candidates.completed.each do |candidate|
     feedback = feedbacks.sample
@@ -120,7 +120,8 @@ Given /^the user is the most recently created user$/ do
 end
 
 When /^the user clicks the link to the candidate review$/ do
-  click_link_or_button @bingo.name
+  first(:link, @bingo.get_name(@anon)).click
+  # click_link_or_button @bingo.get_name(@anon)
 end
 
 Then /^there will be (\d+) concepts$/ do |concept_count|

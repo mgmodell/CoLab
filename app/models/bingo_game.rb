@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'forgery'
 class BingoGame < ActiveRecord::Base
   belongs_to :course, inverse_of: :bingo_games
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
@@ -17,11 +18,17 @@ class BingoGame < ActiveRecord::Base
       allow_nil: true }
   validates :individual_count, numericality: { only_integer: true }
   validate :date_sanity
+  validate :review_completed
 
   validate :group_components
 
   before_validation :timezone_adjust
+  before_create :anonymize
   validate :dates_within_course
+
+  def status_for_user(user)
+    candidate_list_for_user(user).status
+  end
 
   def status
     completed = candidates.completed.count
@@ -32,8 +39,40 @@ class BingoGame < ActiveRecord::Base
     end
   end
 
-  def name
-    topic
+  def get_concepts
+    concepts.to_a.uniq
+  end
+
+  def get_topic(anonymous)
+    anonymous ? anon_topic : topic
+  end
+
+  def get_name(anonymous)
+    anonymous ? anon_topic : topic
+  end
+
+  def type
+    'Task List'
+  end
+
+  def term_list_date
+    end_date - lead_time.days
+  end
+
+  def get_activity_on_date(date:, anon:)
+    if date <= term_list_date
+      "Terms list (#{get_name(anon)})"
+    else
+      "Terms review (#{get_name(anon)})"
+    end
+  end
+
+  def next_deadline
+    if is_open?
+      term_list_date
+    else
+      end_date
+    end
   end
 
   def is_open?
@@ -45,8 +84,46 @@ class BingoGame < ActiveRecord::Base
     discounted = (group.users.count * individual_count * remaining_percent).floor
   end
 
+  def get_current_lists_hash
+    candidate_lists = {}
+    course.rosters.enrolled.each do |roster|
+      student = roster.user
+      candidate_list = candidate_list_for_user(student)
+      if candidate_lists[candidate_list].nil?
+        candidate_lists[candidate_list] = [student]
+      else
+        candidate_lists[candidate_list] << student
+      end
+    end
+    candidate_lists
+  end
+
   def awaiting_review?
     !reviewed && end_date <= (DateTime.current + lead_time.days) && end_date >= DateTime.current
+  end
+
+  def self.inform_instructors
+    count = 0
+    BingoGame.where(instructor_notified: false).each do |bingo|
+      next unless bingo.end_date < DateTime.current + bingo.lead_time.days
+      completion_hash = {}
+      bingo.course.enrolled_students.each do |student|
+        candidate_list = bingo.candidate_list_for_user(student)
+        completion_hash[student.email] = { name: student.name(false),
+                                           status: candidate_list.percent_completed.to_s + '%' }
+      end
+
+      bingo.course.instructors.each do |instructor|
+        AdministrativeMailer.summary_report(bingo.get_name(false) + ' (terms list)',
+                                            bingo.course.pretty_name,
+                                            instructor,
+                                            completion_hash).deliver_later
+        count += 1
+      end
+      bingo.instructor_notified = true
+      bingo.save
+    end
+    logger.debug "\n\t**#{count} Candidate Terms List reports sent to Instructors**"
   end
 
   def candidate_list_for_user(user)
@@ -61,7 +138,7 @@ class BingoGame < ActiveRecord::Base
       individual_count.times do
         cl.candidates << Candidate.new(term: '', definition: '', user: user)
       end
-      cl.save
+      cl.save unless id == -1 # This unless supports the demonstration only
     elsif  cl.is_group
       cl = candidate_lists.where(group_id: project.group_for_user(user).id).take
     end
@@ -103,11 +180,29 @@ class BingoGame < ActiveRecord::Base
     errors
   end
 
+  def review_completed
+    if reviewed && candidates.reviewed.count < candidates.completed.count
+      errors.add(:reviewed, "You must review all candidates to mark the review 'completed'")
+    end
+  end
+
   # We must validate group components {project and discount}
   def group_components
     if group_option
-      errors.add(:project_id, 'The group option requires that a project be selected') if project.nil?
-      errors.add(:project_id, 'The group option requires that a project be selected') if project.nil?
+      if project.nil?
+        errors.add(:project_id,
+                   'The group option requires that a project be selected')
+      end
+      if group_discount.nil?
+        errors.add(:group_discount,
+                   'The group option requires that a group discount be entered')
+      end
     end
+  end
+
+  private
+
+  def anonymize
+    anon_topic = Forgery::LoremIpsum.title.to_s
   end
 end

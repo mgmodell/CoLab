@@ -1,10 +1,11 @@
 <p>Please use the panels below to visualise the data available for your students.</p>
 <% if @current_user.admin %>
+  <% anonymize = @current_user.anonymize? %>
   <div data-role="fieldcontain">
     <label for="for_research" style="align:right">Consenting users only?</label>
     <select name="for_research" id="for_research" data-role="slider" data-mini="true" >
-      <option value="true">Yes</option>
-      <option value="false" selected>No</option>
+      <option value="true"><%= t 'simple_form.yes' %></option>
+      <option value="false" selected><%= t 'simple_form.no' %></option>
     </select>
   </div>
 <% end %>
@@ -15,26 +16,26 @@
       <fieldset class="ui-grid-b">
         <div class="ui-block-a">
           <%= hidden_field_tag( :unit_of_analysis, unit[ 0 ] ) %>
-          <%= label_tag(:assessment, "Assessment:" ) %>
+          <%= label_tag(:assessment, t('.which')) %>
         </div>
         <div class="ui-block-b">
-          <%= label_tag(:subject, "Who would you like to see?" ) %>
+          <%= label_tag(:subject, t('.who' ))%>
         </div>
         <div class="ui-block-c">
-          <%= label_tag( :data_processing, "What data would you like to see?" ) %>
+          <%= label_tag( :data_processing, t('.what_data')) %>
         </div>
       </fieldset>
       <fieldset class="ui-grid-b">
         <div class="ui-block-a">
-	<% assessments = @current_users_projects.collect{ |user| [user.name, user.id] }
-	assessments.insert( 0, ["None selected", -1] ) %>
+	<% projects = @current_users_projects.collect{ |project| [project.get_name( anonymize ), project.id] }
+	projects.insert( 0, [ t( :none_selected ), -1] ) %>
           <%= select_tag :project, 
-            options_for_select( assessments ) ,
+            options_for_select( projects ) ,
             :class => "project_select",
             :data => {:mini => true} %>
         </div>
         <div class="ui-block-b">
-          <%= select_tag :subject, options_for_select( [ [ "Not Available", -1] ] ),
+          <%= select_tag :subject, options_for_select( [ [ t(:not_available), -1] ] ),
             :data => {:mini => true}, :class => "submitting_select" %>
         </div>
         <div class="ui-block-c">

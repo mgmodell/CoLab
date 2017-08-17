@@ -53,7 +53,12 @@ Given /^the user is "(.*?)" user$/ do |which|
   case which
   when 'a random' then @user = @users.sample
   when 'the first' then @user = @users.first
+  when 'the second' then @user = @users[1]
+  when 'the third' then @user = @users[2]
   when 'the last' then @user = @users.last
+  else
+    puts "There's no '#{which}' user"
+    pending
   end
 end
 

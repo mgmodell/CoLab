@@ -21,7 +21,7 @@ Feature: Bingo Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "New Bingo Game"
+    Then the user clicks "New Bingo! Game"
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor prep" field to "2"
     Then the user sets the "Terms per individual" field to "15"
@@ -51,7 +51,7 @@ Feature: Bingo Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "New Bingo Game"
+    Then the user clicks "New Bingo! Game"
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor prep" field to "2"
     Then the user sets the "Terms per individual" field to "15"

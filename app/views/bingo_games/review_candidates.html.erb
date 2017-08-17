@@ -1,15 +1,14 @@
 <%= simple_form_for update_bingo_candidates_review_path( @bingo_game ) do |f| %>
   <%= f.error_notification %>
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-  <h1>Bingo! Word List</h1>
   <table>
     <tr>
-      <th align="right">Topic:</th>
+      <th align="right"><%= t 'bingo_games.topic' %>:</th>
       <td><%= @bingo_game.topic %>
     </tr>
     <tr>
-      <th align="right">Game date:</th>
-      <td><%= @bingo_game.end_date %>
+      <th align="right"><%= t 'bingo_games' %>:</th>
+      <td><%= l @bingo_game.end_date, format: :tz_clarity %>
     </tr>
   </table>
   <h2>Terms</h2>
@@ -17,11 +16,11 @@
         class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
     <thead>
       <tr>
-        <th width="5%">#</th>
-        <th width="30%">Term</th>
-        <th>Definition</th>
-        <th>Feedback</th>
-        <th>Concept</th>
+        <th>#</th>
+        <th><%= t 'bingo_games.term' %></th>
+        <th><%= t 'bingo_games.definition' %></th>
+        <th><%= t 'bingo_games.feedback' %></th>
+        <th width="20%"><%= t 'bingo_games.concept' %></th>
       </tr>
     </thead>
     <tbody><% count = 0 %>
@@ -31,13 +30,13 @@
         <td><%= candidate.term %></td>
         <td><%= candidate.definition %></td>
         <td><%= f.input_field "candidate_feedback_#{candidate.id}",
-                      value: candidate.candidate_feedback_id, 
+                      selected: candidate.candidate_feedback_id, 
                       collection: CandidateFeedback.all,
                       prompt: true,
                       label: false %>
         </td>
         <td><%= f.input_field "concept_#{candidate.id}",
-                      value: candidate.concept_id, 
+                      value: candidate.concept.blank? ? "": candidate.concept.name, 
                       class: "awesomplete",
                       data: { list: Concept.all.collect{|x| x.name }.join( ", " ) },
                       label: false %>
@@ -50,6 +49,6 @@
   <%= f.input :reviewed, as: :boolean, label: "Review completed" %>
 
 <div class="form-actions">
-  <%= f.button :submit, "Save" %>
+  <%= f.button :submit, t(:save) %>
 </div>
 <% end %>

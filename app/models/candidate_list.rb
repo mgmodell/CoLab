@@ -4,18 +4,59 @@ class CandidateList < ActiveRecord::Base
   belongs_to :group, inverse_of: :candidate_lists
   belongs_to :bingo_game, inverse_of: :candidate_lists
   has_many :candidates, inverse_of: :candidate_list, dependent: :destroy
+  has_many :concepts, through: :candidates
+  has_one :course, through: :bingo_game
 
   accepts_nested_attributes_for :candidates
 
-  def percent_complete
-    percent = 0
+  before_save :cull_candidates
+
+  def get_concepts
+    concepts.to_a.uniq
+  end
+
+  def percent_completed
+    100 * candidates.completed.count / expected_count
+  end
+
+  def get_by_feedback(candidate_feedback)
+    candidates.where(candidate_feedback: candidate_feedback)
+  end
+
+  def get_accepted_terms
+    candidates.joins(:candidate_feedback).where(candidate_feedbacks: { name: 'Accepted' })
+  end
+
+  def get_not_accepted_terms
+    candidates.joins(:candidate_feedback).includes(:candidate_feedback).where("candidate_feedbacks.name != 'Accepted' AND candidate_feedbacks.id IS NOT NULL")
+  end
+
+  def expected_count
     if is_group
       required_term_count = bingo_game.required_terms_for_group(group)
-      percent = 100 * candidates.completed.count / required_term_count
     else
-      percent = 100 * candidates.completed.count / bingo_game.individual_count
+      bingo_game.individual_count
     end
-    percent
+  end
+
+  def performance
+    100 * get_concepts.count / expected_count
+  end
+
+  def status
+    if bingo_game.reviewed
+      "Score: #{performance}"
+    else
+      "Progress: #{percent_completed}"
+    end
+  end
+
+  def end_date
+    bingo_game.end_date
+  end
+
+  def name
+    bingo_game.name
   end
 
   def others_requested_help
@@ -27,5 +68,13 @@ class CandidateList < ActiveRecord::Base
       end
     end
     tentative_group.nil? ? 0 : requested_count.to_f / tentative_group.users.count
+  end
+
+  private
+
+  def cull_candidates
+    candidates.each do |candidate|
+      candidate.delete if candidate.term.blank? && candidate.definition.blank?
+    end
   end
 end

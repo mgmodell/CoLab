@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'forgery'
 class Project < ActiveRecord::Base
   after_save :build_assessment
 
@@ -18,6 +19,7 @@ class Project < ActiveRecord::Base
   validates :end_date, :start_date, presence: true
 
   before_validation :timezone_adjust
+  before_create :anonymize
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
@@ -30,7 +32,11 @@ class Project < ActiveRecord::Base
   validate :activation_status
 
   def group_for_user(user)
-    groups.joins(:users).where(users: { id: user.id }).take
+    if id == -1 # This hack supports demonstration of group term lists
+      Group.new(name: 'SuperStars', users: [user])
+    else
+      groups.joins(:users).where(users: { id: user.id }).take
+    end
   end
 
   def is_for_research?
@@ -51,6 +57,30 @@ class Project < ActiveRecord::Base
 
   def get_group_appearance_counts
     Project.get_occurence_count_hash groups
+  end
+
+  def get_name(anonymous)
+    anonymous ? anon_name : name
+  end
+
+  def get_activity_on_date(date:, anon:)
+    day = date.wday
+    o_string = get_name(anon)
+    add_string = ''
+    add_string = if has_inside_date_range?
+                   if day < start_dow || day > end_dow
+                     ' (work)'
+                   else
+                     ' (SAPA)'
+                                end
+                 else
+                   if day < end_dow && day > start_dow
+                     ' (work)'
+                   else
+                     ' (SAPA)'
+                                end
+                 end
+    o_string + add_string
   end
 
   def self.get_occurence_count_hash(input_array)
@@ -87,6 +117,19 @@ class Project < ActiveRecord::Base
     is_available
   end
 
+  def type
+    'Self- and Peer-Assessed Project'
+  end
+
+  def status_for_user(_user)
+    # get some sort of count of completion rates
+    'Coming soon'
+  end
+
+  def status
+    'Coming soon'
+  end
+
   # Validation check code
   def date_sanity
     unless start_date.nil? || end_date.nil?
@@ -118,16 +161,16 @@ class Project < ActiveRecord::Base
         # Check the users
         user = User.find(user_id)
         if Roster.enrolled.where(user: user, course: course).count < 1
-          errors.add(:active, "#{user.name} is does not appear to be enrolled in this course.")
+          errors.add(:active, "#{user.name false} does not appear to be enrolled in this course.")
         elsif count > 1
-          errors.add(:active, "#{user.name} appears #{count} times in your project.")
+          errors.add(:active, "#{user.name false} appears #{count} times in your project.")
         end
       end
       # Check the groups
       get_group_appearance_counts.each do |group_id, count|
         if count > 1
           group = Group.find(group_id)
-          errors.add(:active, "#{group.name} (group) appears #{count} times in your project.")
+          errors.add(:active, "#{group.name false} (group) appears #{count} times in your project.")
         end
       end
       if factor_pack.nil?
@@ -156,5 +199,11 @@ class Project < ActiveRecord::Base
       new_date = end_date - user_tz.utc_offset + course_tz.utc_offset
       self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day if end_date_changed?
     end
+  end
+
+  private
+
+  def anonymize
+    anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"
   end
 end

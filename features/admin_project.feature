@@ -256,10 +256,10 @@ Feature: Project Administration
     Then the user opens the course
 
     Then the user clicks "Show" on the existing project
-    Then the user sets the "New group name:" field to "my group"
+    Then the user sets the "New group name" field to "my group"
     Then the user clicks "Add!"
     Then the user will see "success"
-    Then the user sets the "New group name:" field to "your group"
+    Then the user sets the "New group name" field to "your group"
     Then the user clicks "Add!"
     #Edit the groups
     Then the user clicks "Edit Project Details"

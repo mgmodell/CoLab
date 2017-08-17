@@ -1,13 +1,19 @@
 # frozen_string_literal: true
 class BingoGamesController < ApplicationController
   before_action :set_bingo_game, only: [:show, :edit, :update, :destroy, :review_candidates, :update_review_candidates]
-  before_action :check_admin, except: [:next, :diagnose, :react, :update_review_candidates]
+  before_action :check_editor, except: [:next, :diagnose, :react, :update_review_candidates, :show, :index]
+  before_action :check_viewer, only: [:show, :index]
 
-  def show; end
+  def show
+    @title = t '.title'
+  end
 
-  def edit; end
+  def edit
+    @title = t '.title'
+  end
 
   def index
+    @title = t '.title'
     @bingo_games = []
     if @current_user.is_admin?
       @bingo_games = BingoGame.all
@@ -20,6 +26,7 @@ class BingoGamesController < ApplicationController
   end
 
   def new
+    @title = t '.title'
     @bingo_game = BingoGame.new
     @bingo_game.course_id = params[:course_id]
     @bingo_game.course = Course.find(params[:course_id])
@@ -28,38 +35,37 @@ class BingoGamesController < ApplicationController
   end
 
   def create
+    @title = t '.title'
     @bingo_game = BingoGame.new(bingo_game_params)
-    respond_to do |format|
-      if @bingo_game.save
-        format.html { redirect_to @bingo_game, notice: 'Bingo Game was successfully created.' }
-        format.json { render :show, status: :created, location: @bingo_game }
-      else
-        format.html { render :new }
-        format.json { render json: @bingo_game.errors, status: :unprocessable_entity }
-      end
+    if @bingo_game.save
+      redirect_to @bingo_game, notice: t('bingo_games.create_success')
+    else
+      render :new
     end
   end
 
   def update
-    respond_to do |format|
-      if @bingo_game.update(bingo_game_params)
-        format.html { redirect_to @bingo_game, notice: 'Bingo Game was successfully updated.' }
-        format.json { render :show, status: :ok, location: @bingo_game }
-      else
-        format.html { render :edit }
-        format.json { render json: @bingo_game.errors, status: :unprocessable_entity }
-      end
+    @title = t '.title'
+    if @bingo_game.update(bingo_game_params)
+      redirect_to @bingo_game, notice: t('bingo_games.update_success')
+    else
+      render :edit
     end
   end
 
-  def review_candidates; end
+  def review_candidates
+    @title = t '.title'
+  end
 
   def update_review_candidates
     # Process the data
     params_act = params["/bingo/candidates_review/#{@bingo_game.id}"]
     @bingo_game.candidates.completed.each do |candidate|
       code = 'candidate_feedback_' + candidate.id.to_s
-      candidate.candidate_feedback = CandidateFeedback.find(params_act["candidate_feedback_#{candidate.id}"])
+      feedback_id = params_act["candidate_feedback_#{candidate.id}"]
+      next if feedback_id.blank?
+      candidate.candidate_feedback = CandidateFeedback.find(feedback_id)
+      candidate.candidate_feedback_id = candidate.candidate_feedback.id
       unless candidate.candidate_feedback.name.start_with? 'Term'
         concept_name = params_act["concept_#{candidate.id}"].split.map(&:capitalize).*' '
         concept = Concept.where(name: concept_name).take
@@ -67,37 +73,45 @@ class BingoGamesController < ApplicationController
         candidate.concept = concept
       end
       candidate.save
+      logger.debug candidate.errors.full_messages unless candidate.errors.empty?
     end
 
     @bingo_game.reviewed = params_act['reviewed']
+    if @bingo_game.reviewed && !@bingo_game.students_notified
+      @bingo_game.course.enrolled_students.each do |student|
+        AdministrativeMailer.notify_availability(student,
+                                                 "#{@bingo_game.topic} terms list").deliver_later
+      end
+      @bingo_game.students_notified = true
+    end
     @bingo_game.save
-    logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.nil?
-    flash[:notice] = 'Review data successfully saved'
-    if @bingo_game.reviewed
-      redirect_to root_url, notice: 'Review data successfully saved'
+    logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
+
+    if @bingo_game.errors.empty? && @bingo_game.reviewed
+      redirect_to root_url, notice: (t 'bingo_games.review_success')
+    elsif !@bingo_game.errors.empty?
+      redirect_to :review_bingo_candidates, notice: (t 'bingo_games.review_problems')
     else
-      redirect_to :review_bingo_candidates, notice: 'Review data successfully saved'
+      redirect_to :review_bingo_candidates, notice: (t 'bingo_games.review_success')
     end
   end
 
   def destroy
     @course = @bingo_game.course
     @bingo_game.destroy
-    respond_to do |format|
-      format.html { redirect_to @course, notice: 'Bingo Game was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to @course, notice: (t 'bingo_games.destroy_success')
   end
 
   def activate
     bingo_game = BingoGame.find(params[:bingo_game_id])
     if @current_user.is_admin? ||
-       bingo_game.course.get_roster_for_user(@current_user).role.name == 'Instructor'
+       bingo_game.course.get_roster_for_user(@current_user).role.code == 'inst'
       bingo_game.active = true
       bingo_game.save
     end
     @bingo_game = bingo_game
-    render :show, notice: 'Review data successfully saved'
+    @title = t '.title'
+    render :show, notice: (t 'bingo_games.activate_success')
   end
 
   private
@@ -117,7 +131,13 @@ class BingoGamesController < ApplicationController
     end
   end
 
-  def check_admin
+  def check_viewer
+    redirect_to root_path unless @current_user.is_admin? ||
+                                 @current_user.is_instructor? ||
+                                 @current_user.is_researcher?
+  end
+
+  def check_editor
     redirect_to root_path unless @current_user.is_admin? || @current_user.is_instructor?
   end
 

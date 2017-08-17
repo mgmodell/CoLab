@@ -1,40 +1,42 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+   anonymize = @current_user.anonymize? %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
-      <li><a href="#details" data-ajax="false">Details</a></li>
+      <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
       <li><a href="#groups" data-ajax="false">Group Assignments</a></li>
-      <li><a href="#summary" data-ajax="false">Response Summary</a></li>
-      <li><a href="#responses" data-ajax="false">Response Data</a></li>
+      <li><a href="#summary" data-ajax="false"><%= t :resp_summ %></a></li>
+      <li><a href="#responses" data-ajax="false"><%= t :resp_data %></a></li>
     </ul>
   </div>
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
-    <h2>Project Details</h2>
+    <h2><%= t '.title' %></h2>
     <p>
-      <h3>Name:</h3>
-      <%= @project.name %>
+      <h3><%= t :name %>:</h3>
+      <%= @project.get_name( anonymize ) %>
       (<% if @project.active %>
-        Active
+        <%= t :active %>
       <% else %>
-        <span class="error">Inactive</span> &mdash;
-        <%= link_to "Activate?", activate_project_path( @project ) %>
+        <span class="error"><%= t :inactive %></span> &mdash;
+        <%= link_to t( :activate ), activate_project_path( @project ) %>
       <% end %>)
     </p>
     <p>
-      <h3>Dates:</h3>
-      <%= @project.start_date %> to
-      <%= @project.end_date %><br>
-      The assessments run weekly from <strong><%= Date::DAYNAMES.at @project.start_dow %></strong> to
-      <strong><%= Date::DAYNAMES.at @project.end_dow %></strong><br>
-      <em>Note: This project occurs in the <%= @project.course.timezone %> timezone and all dates reflect this.</em></br>
+      <h3><%= t :dates %>:</h3>
+      <%= t( '.date_summ',
+            start_date: @project.start_date,
+            end_date: @project.end_date,
+            start_dow: ( Date::DAYNAMES.at @project.start_dow ),
+            end_dow: ( Date::DAYNAMES.at @project.end_dow ) ) %><br>
+      <em><%= t :note %>: <%= t 'projects.tz_warn', time_zone: @project.course.timezone %></em></br>
   </p>
   <p>
-    <h3>Description:</h3>
+    <h3><%= t :description %>:</h3>
     <%= @project.description %>
   </p>
   <p>
-    <h3>Factor Pack:</h3>
+    <h3><%= t :factor_pack %>:</h3>
     <% if @project.factor_pack.present? %>
       <%= @project.factor_pack.name %></br>
     <ul>
@@ -43,16 +45,18 @@
       <% end %>
     </ul>
   <% else %>
-    [Not set]
+    [<%= t :not_set %>]
       <% end %>
 </p>
-<%= link_to 'Edit Project Details', edit_project_path(@project) %>
 </div>
 <div id="groups" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Groups</h2>
+  <h2><%= t :groups %></h2>
   <p>
+    <%= t 'projects.groups_intro', group_count: @project.groups.count %><br><br>
+    <%= link_to t('projects.recalculate_diversities'),
+        rescore_groups_path( id: @project.id ) %>
     <%= form_tag add_group_path, method: :get do %>
-      <%= label_tag :group_name, "New group name:" %>
+      <%= label_tag :group_name, t( 'projects.new_group' ) %>
       <%= text_field_tag :group_name %>
       <%= hidden_field_tag :project_id, @project.id %>
       <%= submit_tag "Add!" %>
@@ -61,22 +65,42 @@
       <table id="groups_table" width="90%" data-role="table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="Select columns&hellip;"
+          data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
         <thead>
           <tr>
-            <th>Student</th>
+            <th>
+              <%= t :groups_names %><br>
+            </th>
             <% groups = @project.groups %>
             <% groups.each do |group| %>
-              <th align="center" data-priority="0"><%= group.name %></th>
+              <th align="center" data-priority="0">
+                <%= group.get_name( anonymize ) %>
+              </th>
             <% end %>
-            <th data-priority="0">[no group]</th>
+            <th data-priority="0" rowspan='2'>[<%= t 'projects.no_group' %>]</th>
+          </tr>
+          <tr>
+            <th>
+              <%= t 'projects.diversity_scores' %><br><br>
+              <%= t :student_names %>
+            </th>
+            <% groups = @project.groups %>
+            <% groups.each do |group| %>
+              <td align="center">
+                <center>
+                  <%= group.diversity_score.nil? ? '--' : group.diversity_score %><br>
+                  <%= link_to "[#{t('projects.rescore')}]",
+                          rescore_group_path( id: @project.id, group_id: group.id ) %>
+                </center>
+              </td>
+            <% end %>
           </tr>
         </thead>
         <tbody>
           <% @project.course.enrolled_students.each do |user| %>
             <tr>
-              <td><%= mail_to user.email, user.name %></td>
+              <td><%= mail_to user.email, user.name( anonymize ) %></td>
               <% @project.groups.each do |group| %>
                 <td>
                   <center><%= raw( "&#10004;" ) if group.has_user user %></center>
@@ -91,13 +115,13 @@
       </table>
     <% end %>
   </p>
-  <%= link_to 'Edit Project', edit_project_path(@project) %>
+  <%= link_to (t 'projects.edit.title'), edit_project_path(@project) %>
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Response Summary</h2>
+  <h2><%= t :resp_summ %></h2>
 </div>
 <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-  <h2>Responses</h2>
+  <h2><%= t :resp_data %>h2>
 </div>
 </div>
-<%= link_to 'Back to course', @project.course %>
+<%= link_to (t :back_to_course), @project.course %>
