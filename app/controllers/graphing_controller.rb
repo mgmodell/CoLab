@@ -162,17 +162,10 @@ class GraphingController < ApplicationController
             new_collapsed_data = []
             value['data'].each do |v|
               if v[:x] != date
-<<<<<<< HEAD
-                comments = value[ 'data' ].uniq.collect{ |datum| datum[ :name ] + "\n" }.join( " </br>" )
-                new_collapsed_data << {x: date,
-                                      y: tmp.inject { |sum, el| sum + el }.to_f / tmp.size,
-                                      name: comments }
-=======
-                comments = value['data'].collect { |datum| datum[:name] + "\n" }.join(' ')
+                comments = value['data'].uniq.collect { |datum| datum[:name] + "\n" }.join('</br>')
                 new_collapsed_data << { x: date,
                                         y: tmp.inject { |sum, el| sum + el }.to_f / tmp.size,
                                         name: comments }
->>>>>>> master
                 date = v[:x]
                 tmp = []
                end
