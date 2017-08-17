@@ -1,3 +1,17 @@
+GIT
+  remote: https://github.com/Sailias/bitcoin_payable
+  revision: 0ade6ed07d804f98ce5c3f5e5be02ceb5df2259d
+  branch: master
+  specs:
+    bitcoin_payable (0.6.0)
+      blockcypher-ruby
+      cucumber-rails
+      database_cleaner
+      money-tree
+      rails
+      rspec-rails
+      state_machine
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -55,6 +69,10 @@ GEM
     bcrypt (3.1.11)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bitcoin-ruby (0.0.11)
+    blockcypher-ruby (0.2.4)
+      bitcoin-ruby (~> 0.0.5)
+      ffi
     bourbon (4.3.1)
       sass (~> 3.4)
       thor (~> 0.19)
@@ -121,6 +139,7 @@ GEM
     execjs (2.7.0)
     faraday (0.10.1)
       multipart-post (>= 1.2, < 3)
+    ffi (1.9.18)
     forgery (0.6.0)
     gherkin (4.0.0)
     globalid (0.3.7)
@@ -159,6 +178,8 @@ GEM
     money (6.8.1)
       i18n (>= 0.6.4, <= 0.7.0)
       sixarm_ruby_unaccent (>= 1.1.1, < 2)
+    money-tree (0.9.0)
+      ffi
     multi_json (1.12.1)
     multi_test (0.1.2)
     multi_xml (0.6.0)
@@ -245,6 +266,14 @@ GEM
     rspec-mocks (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
+    rspec-rails (3.5.2)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      railties (>= 3.0)
+      rspec-core (~> 3.5.0)
+      rspec-expectations (~> 3.5.0)
+      rspec-mocks (~> 3.5.0)
+      rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
     rubocop (0.47.1)
       parser (>= 2.3.3.1, < 3.0)
@@ -281,6 +310,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    state_machine (1.2.0)
     stopwords-filter (0.4.1)
     thor (0.19.4)
     thread_safe (0.3.5)
@@ -312,6 +342,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-session_store
   aws-sdk (~> 2.3.0)
+  bitcoin_payable!
   bourbon
   byebug
   chronic

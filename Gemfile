@@ -44,6 +44,7 @@ gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
 gem 'city-state'
 gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
+gem 'bitcoin_payable', git: 'https://github.com/Sailias/bitcoin_payable', branch: 'master'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

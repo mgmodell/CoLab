@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170807013336) do
+ActiveRecord::Schema.define(version: 20170817082817) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -59,6 +59,34 @@ ActiveRecord::Schema.define(version: 20170807013336) do
 
   add_index "bingo_games", ["course_id"], name: "index_bingo_games_on_course_id", using: :btree
   add_index "bingo_games", ["project_id"], name: "index_bingo_games_on_project_id", using: :btree
+
+  create_table "bitcoin_payment_transactions", force: :cascade do |t|
+    t.integer  "estimated_value",    limit: 4
+    t.string   "transaction_hash",   limit: 255
+    t.string   "block_hash",         limit: 255
+    t.datetime "block_time"
+    t.datetime "estimated_time"
+    t.integer  "bitcoin_payment_id", limit: 4
+    t.integer  "btc_conversion",     limit: 4
+  end
+
+  add_index "bitcoin_payment_transactions", ["bitcoin_payment_id"], name: "index_bitcoin_payment_transactions_on_bitcoin_payment_id", using: :btree
+
+  create_table "bitcoin_payments", force: :cascade do |t|
+    t.string   "payable_type",   limit: 255
+    t.integer  "payable_id",     limit: 4
+    t.string   "currency",       limit: 255
+    t.string   "reason",         limit: 255
+    t.integer  "price",          limit: 4
+    t.float    "btc_amount_due", limit: 24,  default: 0.0
+    t.string   "address",        limit: 255
+    t.string   "state",          limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "btc_conversion", limit: 4
+  end
+
+  add_index "bitcoin_payments", ["payable_type", "payable_id"], name: "index_bitcoin_payments_on_payable_type_and_payable_id", using: :btree
 
   create_table "candidate_feedbacks", force: :cascade do |t|
     t.string   "name_en",       limit: 255
@@ -162,6 +190,13 @@ ActiveRecord::Schema.define(version: 20170807013336) do
   end
 
   add_index "courses", ["school_id"], name: "index_courses_on_school_id", using: :btree
+
+  create_table "currency_conversions", force: :cascade do |t|
+    t.float    "currency",   limit: 24
+    t.integer  "btc",        limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "diagnoses", force: :cascade do |t|
     t.integer  "behavior_id", limit: 4
