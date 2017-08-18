@@ -44,10 +44,12 @@ class GraphingController < ApplicationController
                            user_id: user_id,
                            installments: { user_id: User.consented_to_project(project_id) },
                            projects: { id: project_id })
+                    .order( installment: :inst_date )
     else
       values = Value.includes(:user, :factor, installment: [:assessment, :user])
                     .joins(installment: :assessment)
                     .where(user_id: user_id, assessments: { project_id: project_id })
+                    .order( installment: :inst_date )
     end
 
     assessment_to_values = {}
