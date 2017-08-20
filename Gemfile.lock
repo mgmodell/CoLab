@@ -105,6 +105,8 @@ GEM
       nokogiri (~> 1.5)
       railties (>= 3, < 5.1)
     cucumber-wire (0.0.1)
+    d3-rails (4.10.0)
+      railties (>= 3.1)
     database_cleaner (1.5.3)
     debug_inspector (0.0.2)
     descriptive_statistics (2.4.0)
@@ -319,6 +321,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   country_select
   cucumber-rails
+  d3-rails
   database_cleaner
   descriptive_statistics (~> 2.4.0)
   devise

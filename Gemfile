@@ -44,6 +44,7 @@ gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
 gem 'city-state'
 gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
+gem 'd3-rails'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
