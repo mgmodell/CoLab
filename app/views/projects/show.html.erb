@@ -24,7 +24,7 @@
     </p>
     <p>
       <h3><%= t :dates %>:</h3>
-      <%= t( '.date_summ',
+      <%= raw t( 'projects.edit.date_summ',
             start_date: @project.start_date,
             end_date: @project.end_date,
             start_dow: ( Date::DAYNAMES.at @project.start_dow ),
@@ -121,7 +121,7 @@
   <h2><%= t :resp_summ %></h2>
 </div>
 <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-  <h2><%= t :resp_data %>h2>
+  <h2><%= t :resp_data %><h2>
 </div>
 </div>
 <%= link_to (t :back_to_course), @project.course %>
