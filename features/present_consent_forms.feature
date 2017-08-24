@@ -21,6 +21,19 @@ Feature: Presenting Consent Forms
     When the user visits the index
     Then the user will see a consent request
 
+  Scenario: User should be presented with an active unpresented global consent form with no end date if one exists
+    When the user logs in
+    Then the user should see a successful login message
+    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
+    Given there is a global consent form
+    Given the consent form started "1 month ago" and ends "NULL"
+    Given the consent form "is" active
+    Given the consent form "has not" been presented to the user
+    Given the project has been activated
+    Given the user "has" had demographics requested
+    When the user visits the index
+    Then the user will see a consent request
+
   Scenario: User should be presented with an unpresented global consent form if one exists
     When the user logs in
     Then the user should see a successful login message
