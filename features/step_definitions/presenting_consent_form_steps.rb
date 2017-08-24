@@ -59,9 +59,11 @@ end
 Given /^the consent form started "([^"]*)" and ends "([^"]*)"$/  do |start_date, end_date|
   @consent_form.start_date = Chronic.parse( start_date )
   @consent_form.end_date = end_date.downcase == 'null' ? nil : Chronic.parse( end_date )
+  @consent_form.save
 end
 
 Given /^the consent form "([^"]*)" active$/  do |is_active|
   @consent_form.active = is_active == 'is'
+  @consent_form.save
 end
 

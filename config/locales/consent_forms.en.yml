@@ -3,6 +3,7 @@ en:
     new_title: New Consent Form
     title: Update Consent Response
     multiple: Research Participation
+    not_for_research: Not for Research
     edit:
       title: Consent Form
     index:
