@@ -53,7 +53,7 @@ namespace :migratify do
     end
     
     # Countries
-    CS.update
+    CS.update if CS.countries.count < 100
     CS.countries.each do |country|
       hc = HomeCountry.where( code: country[ 0 ] ).take
       hc = HomeCountry.new if hc.nil?
@@ -224,7 +224,7 @@ namespace :migratify do
     ko_langs = I18nData.languages( :ko )
     
     en_langs.keys.each do |lang_key|
-      g = Language.where(name_en: lang_key.downcase).take
+      g = Language.where(code: lang_key.downcase).take
       g = Language.new if g.nil?
       g.code = lang_key.downcase unless g.code == lang_key.downcase
       g.name_en = en_langs[ lang_key ] unless g.name_en == en_langs[ lang_key ]

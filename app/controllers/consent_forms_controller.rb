@@ -69,6 +69,9 @@ class ConsentFormsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def consent_form_params
-    params.require(:consent_form).permit(:name, :user_id, :pdf, :project_ids, :form_text)
+    params.require(:consent_form).
+                  permit(:name, :user_id, :pdf, :project_ids,
+                  :form_text_en, :form_text_ko,
+                  :start_date, :end_date, :active)
   end
 end
