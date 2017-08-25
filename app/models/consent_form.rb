@@ -18,6 +18,6 @@ class ConsentForm < ActiveRecord::Base
 
   def is_active?
     now = Date.today
-    active && now >= start_date && ( end_date.nil? || now <= end_date )
+    active && now >= start_date && (end_date.nil? || now <= end_date)
   end
 end
