@@ -1,3 +1,4 @@
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 <p id="notice"><%= notice %></p>
 <h1><%= t 'consent_forms.show.name' %>:</h1>
 <p><%= @consent_form.name %></p>
@@ -10,9 +11,9 @@
 
 <h2><%= t :dates %>:</h2>
 <p>
-  <%= t( '.date_summ',
-            start_date: @project.start_date,
-            end_date: @project.end_date ) %>
+  <%= raw( t( '.date_summ',
+            start_date: @consent_form.start_date,
+            end_date: @consent_form.end_date ) ) %>
 </p>
 
 <h2><%= t 'consent_forms.show.applicable_lbl' %>:</h2>
@@ -32,12 +33,12 @@
     <ul>
       <li>
         <a href="#english" data-ajax="false">
-          <%= Language.where( code: 'en' ).name %>
+          <%= Language.where( code: 'en' ).take.name %>
         </a>
       </li>
       <li>
         <a href="#korean" data-ajax="false">
-          <%= Language.where( code: 'ko' ).name %>
+          <%= Language.where( code: 'ko' ).take.name %>
         </a>
       </li>
     </ul>
@@ -45,18 +46,16 @@
   <div id="english" class="ui-body-<%= theme_code %> ui-content">
     <h1>
       <%= t 'consent_forms.show.form_text_lbl' %>
-        (<%= Language.where( code: 'en' ).name %>)
+        (<%= Language.where( code: 'en' ).take.name %>)
     </h1>
-    <p><%= t 'consent_forms.show.form_text_en' %></p>
-    <p><%= raw @consent_form.form_text %></p>
+    <p><%= raw @consent_form.form_text_en %></p>
   </div>
   <div id="korean" class="ui-body-<%= theme_code %> ui-content">
     <h1>
       <%= t 'consent_forms.show.form_text_lbl' %>
-        (<%= Language.where( code: 'ko' ).name %>)
+        (<%= Language.where( code: 'ko' ).take.name %>)
     </h1>
-    <p><%= t 'consent_forms.show.form_text_ko' %></p>
-    <p><%= raw @consent_form.form_text %></p>
+    <p><%= raw @consent_form.form_text_ko %></p>
   </div>
 </div>
 <br>
