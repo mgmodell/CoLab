@@ -8,8 +8,9 @@ class InstallmentsController < ApplicationController
 
     project = Assessment.find(assessment_id).project
     if !project.nil? && !project.consent_form.nil? &&
-       ConsentLog.where('user_id = ? AND consent_form_id = ? AND presented = ?',
-                        current_user.id, project.consent_form.id, true).empty?
+       ConsentLog.where(user_id: current_user.id,
+                        consent_form_id: project.consent_form.id,
+                        presented: true ).empty?
       redirect_to controller: 'consent_log', action: 'edit',
                   consent_form_id: project.consent_form.id
     else
@@ -59,10 +60,10 @@ class InstallmentsController < ApplicationController
 
       project = Assessment.find(assessment_id).project
       if !project.nil? && !project.consent_form.nil? &&
-         ConsentLog.where('user_id = ? AND consent_form_id = ? AND presented = ?',
-                          current_user.id, project.consent_form.id, true).empty?
-        redirect_to controller: 'consent_log', action: 'edit',
-                    consent_form_id: project.consent_form.id
+                        ConsentLog.joins( :consent_form ).
+                          where('consent_logs.user_id = ? AND consent_form_id = ? AND ( presented = ? OR consent_forms.active = ? )',
+                          current_user.id, project.consent_form.id, true, false).empty?
+        redirect_to edit_consent_log_path( consent_form_id: project.consent_form.id )
       else
 
         group_id = params[:group_id]
