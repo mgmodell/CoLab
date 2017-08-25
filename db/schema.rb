@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170807013336) do
+ActiveRecord::Schema.define(version: 20170824050028) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -124,13 +124,17 @@ ActiveRecord::Schema.define(version: 20170807013336) do
   create_table "consent_forms", force: :cascade do |t|
     t.string   "name",             limit: 255
     t.integer  "user_id",          limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.string   "pdf_file_name",    limit: 255
     t.string   "pdf_content_type", limit: 255
     t.integer  "pdf_file_size",    limit: 4
     t.datetime "pdf_updated_at"
-    t.text     "form_text",        limit: 65535
+    t.text     "form_text_en",     limit: 65535
+    t.date     "start_date"
+    t.date     "end_date"
+    t.boolean  "active",                         default: false, null: false
+    t.text     "form_text_ko",     limit: 65535
   end
 
   add_index "consent_forms", ["user_id"], name: "index_consent_forms_on_user_id", using: :btree
@@ -416,8 +420,8 @@ ActiveRecord::Schema.define(version: 20170807013336) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
