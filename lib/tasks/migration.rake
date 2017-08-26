@@ -72,13 +72,13 @@ namespace :migratify do
     # States
     HomeCountry.all.each do |country|
       if CS.get( country.code ).count > 0
-        CS.get( country.code ).each do |state|
-          hs = HomeState.where( home_country_id: country.id, code: "#{state[ 0 ]}:#{country.code}" ).take
+        CS.get( country.code ).each do |state_code,state_name|
+          hs = HomeState.where( home_country_id: country.id, code: "#{state_code}:#{country.code}" ).take
           hs = HomeState.new if hs.nil?
           hs.no_response = false
           hs.home_country = country
-          hs.code = "#{state[ 0 ]}:#{country.code}"
-          hs.name = state[ 1 ]
+          hs.code = "#{state_code}:#{country.code}"
+          hs.name = state_name
           hs.save
         end
         if CS.get( country.code ).count > 1
