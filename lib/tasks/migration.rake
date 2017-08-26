@@ -53,7 +53,7 @@ namespace :migratify do
     end
     
     # Countries
-    CS.update if CS.countries.count < 100
+    CS.update # if CS.countries.count < 100
     CS.countries.each do |country|
       hc = HomeCountry.where( code: country[ 0 ] ).take
       hc = HomeCountry.new if hc.nil?
