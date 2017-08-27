@@ -157,15 +157,6 @@ end
 School.create(name: 'Indiana University', description: 'A large, Midwestern university')
 School.create(name: 'SUNY Korea', description: 'The State University of New York, Korea')
 
-u = User.new(first_name: 'Micah',
-             last_name: 'Modell',
-             admin: true,
-             password: 'testest',
-             password_confirmation: 'testest',
-             email: 'micah.modell@gmail.com',
-             timezone: 'UTC')
-u.skip_confirmation!
-u.save
 
 # Theme seed data
 class Theme_
@@ -342,4 +333,14 @@ g = Language.new if g.nil?
 g.code = '__' unless g.code == '__'
 g.translated = false
 g.name_en = 'I prefer not to answer' unless g.name_en == 'I prefer not to answer'
+
 g.save
+u = User.new(first_name: 'Micah',
+             last_name: 'Modell',
+             admin: true,
+             password: 'testest',
+             password_confirmation: 'testest',
+             email: 'micah.modell@gmail.com',
+             timezone: 'UTC')
+u.skip_confirmation!
+u.save
