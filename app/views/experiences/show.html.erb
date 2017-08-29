@@ -18,7 +18,7 @@
         <%= t :active %>
   <% else %>
         <span class="error"><%= t :inactive %></span> &mdash;
-        <%= link_to t :activate, activate_experience_path( @experience ) %>
+        <%= link_to t(:activate ), activate_experience_path( @experience ) %>
       <% end %>)
     </p>
     <p>
