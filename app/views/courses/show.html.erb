@@ -240,7 +240,7 @@
                   <%= l experience.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show), experience %>&nbsp;|&nbsp;
-                  <%= link_to( t :activate, activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>
+                  <%= link_to( t (:activate ), activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>
                   <%= link_to t( :edit), edit_experience_path(experience) %>&nbsp;|&nbsp;
                   <%= link_to t( :destroy), experience,
                               method: :delete,
