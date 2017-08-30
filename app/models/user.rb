@@ -174,11 +174,12 @@ class User < ActiveRecord::Base
 
     # Add the bingo games
     waiting_games = BingoGame.joins( course: {rosters: :role} )
-              .where( 'rosters.user_id': self.id, 'bingo_games.active': true, 'bingo_games.reviewed': false )
+              .where( 'rosters.user_id': self.id, 'bingo_games.active': true )
               .where( 'roles.code = ? OR roles.code = ?', 'enr', 'invt' )
               .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ?', cur_date, cur_date )
               .to_a
-    waiting_games.delete_if { |game| !game.is_open? }
+
+    waiting_games.delete_if { |game| !game.is_open? && !game.reviewed}
     waiting_tasks.concat waiting_games
 
     waiting_tasks.sort_by(&:end_date)
