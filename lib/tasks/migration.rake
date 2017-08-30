@@ -53,7 +53,7 @@ namespace :migratify do
     end
     
     # Countries
-    CS.update
+    CS.update # if CS.countries.count < 100
     CS.countries.each do |country|
       hc = HomeCountry.where( code: country[ 0 ] ).take
       hc = HomeCountry.new if hc.nil?
@@ -72,13 +72,13 @@ namespace :migratify do
     # States
     HomeCountry.all.each do |country|
       if CS.get( country.code ).count > 0
-        CS.get( country.code ).each do |state|
-          hs = HomeState.where( home_country_id: country.id, code: "#{state[ 0 ]}:#{country.code}" ).take
+        CS.get( country.code ).each do |state_code,state_name|
+          hs = HomeState.where( home_country_id: country.id, code: "#{state_code}:#{country.code}" ).take
           hs = HomeState.new if hs.nil?
           hs.no_response = false
           hs.home_country = country
-          hs.code = "#{state[ 0 ]}:#{country.code}"
-          hs.name = state[ 1 ]
+          hs.code = "#{state_code}:#{country.code}"
+          hs.name = state_name
           hs.save
         end
         if CS.get( country.code ).count > 1
@@ -194,12 +194,14 @@ namespace :migratify do
     
     # Theme seed data
     class Theme_
+      attr_accessor :code
       attr_accessor :name_en, :name_ko
     end
     read_data = YAML.safe_load(File.open('db/theme.yml'), [Theme_])
     read_data.each do |theme|
-      g = Theme.where(name_en: theme.name_en).take
+      g = Theme.where(code: theme.code).take
       g = Theme.new if g.nil?
+      g.code = theme.code unless g.code == theme.code
       g.name_en = theme.name_en unless g.name_en == theme.name_en
       g.name_ko = theme.name_ko unless g.name_ko == theme.name_ko
       g.save
@@ -224,7 +226,7 @@ namespace :migratify do
     ko_langs = I18nData.languages( :ko )
     
     en_langs.keys.each do |lang_key|
-      g = Language.where(name_en: lang_key.downcase).take
+      g = Language.where(code: lang_key.downcase).take
       g = Language.new if g.nil?
       g.code = lang_key.downcase unless g.code == lang_key.downcase
       g.name_en = en_langs[ lang_key ] unless g.name_en == en_langs[ lang_key ]

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170807013336) do
+ActiveRecord::Schema.define(version: 20170828054803) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -124,13 +124,17 @@ ActiveRecord::Schema.define(version: 20170807013336) do
   create_table "consent_forms", force: :cascade do |t|
     t.string   "name",             limit: 255
     t.integer  "user_id",          limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.string   "pdf_file_name",    limit: 255
     t.string   "pdf_content_type", limit: 255
     t.integer  "pdf_file_size",    limit: 4
     t.datetime "pdf_updated_at"
-    t.text     "form_text",        limit: 65535
+    t.text     "form_text_en",     limit: 65535
+    t.date     "start_date"
+    t.date     "end_date"
+    t.boolean  "active",                         default: false, null: false
+    t.text     "form_text_ko",     limit: 65535
   end
 
   add_index "consent_forms", ["user_id"], name: "index_consent_forms_on_user_id", using: :btree
@@ -384,9 +388,9 @@ ActiveRecord::Schema.define(version: 20170807013336) do
   add_index "roles", ["name_en"], name: "index_roles_on_name_en", unique: true, using: :btree
 
   create_table "rosters", force: :cascade do |t|
-    t.integer  "role_id",    limit: 4
+    t.integer  "role_id",    limit: 4, null: false
     t.integer  "course_id",  limit: 4
-    t.integer  "user_id",    limit: 4
+    t.integer  "user_id",    limit: 4, null: false
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
   end

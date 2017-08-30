@@ -3,6 +3,7 @@ en:
     new_title: New Consent Form
     title: Update Consent Response
     multiple: Research Participation
+    not_for_research: Not for Research
     edit:
       title: Consent Form
     index:
@@ -16,4 +17,7 @@ en:
       form_text: >
         The text below will be presented to all potential study
         participants. Please use basic html to format your text.
+      date_summ: >
+        This consent form applies between <strong>%{start_date}</strong> and 
+        <strong>%{end_date}</strong>.
 

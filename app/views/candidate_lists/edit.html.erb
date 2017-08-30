@@ -8,6 +8,10 @@
       <td><%= @candidate_list.bingo_game.topic %></td>
     </tr>
     <tr>
+      <th align="right">Description:</th>
+      <td><%= @candidate_list.bingo_game.description %></td>
+    </tr>
+    <tr>
       <th align="right">For:</th>
       <td>
         <%= @current_user.name( anonymize ) %>

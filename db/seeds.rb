@@ -38,7 +38,7 @@ read_data.each do |cip_code|
 end
 
 # Countries
-CS.update
+CS.update # if CS.countries.count < 100
 CS.countries.each do |country|
   hc = HomeCountry.where( code: country[ 0 ] ).take
   hc = HomeCountry.new if hc.nil?
@@ -58,13 +58,13 @@ hc.save
 # States
 HomeCountry.all.each do |country|
   if CS.get( country.code ).count > 0
-    CS.get( country.code ).each do |state|
-      hs = HomeState.where( home_country_id: country.id, code: "#{state[ 0 ]}:#{country.code}" ).take
+    CS.get( country.code ).each do |state_code,state_name|
+      hs = HomeState.where( home_country_id: country.id, code: "#{state_code}:#{country.code}" ).take
       hs = HomeState.new if hs.nil?
       hs.home_country = country
       hs.no_response = false
-      hs.code = "#{state[ 0 ]}:#{country.code}"
-      hs.name = state[ 1 ]
+      hs.code = "#{state_code}:#{country.code}"
+      hs.name = state_name
       hs.save
     end
     hs = HomeState.where( home_country_id: country.id, code: "__:#{country.code}" ).take
@@ -157,24 +157,17 @@ end
 School.create(name: 'Indiana University', description: 'A large, Midwestern university')
 School.create(name: 'SUNY Korea', description: 'The State University of New York, Korea')
 
-u = User.new(first_name: 'Micah',
-             last_name: 'Modell',
-             admin: true,
-             password: 'testest',
-             password_confirmation: 'testest',
-             email: 'micah.modell@gmail.com',
-             timezone: 'UTC')
-u.skip_confirmation!
-u.save
 
 # Theme seed data
 class Theme_
+  attr_accessor :code
   attr_accessor :name_en, :name_ko
 end
 read_data = YAML.safe_load(File.open('db/theme.yml'), [Theme_])
 read_data.each do |theme|
-  g = Theme.where(name_en: theme.name_en).take
+  g = Theme.where(code: theme.code).take
   g = Theme.new if g.nil?
+  g.code = theme.code unless g.code == theme.code
   g.name_en = theme.name_en unless g.name_en == theme.name_en
   g.name_ko = theme.name_ko unless g.name_ko == theme.name_ko
   g.save
@@ -340,4 +333,14 @@ g = Language.new if g.nil?
 g.code = '__' unless g.code == '__'
 g.translated = false
 g.name_en = 'I prefer not to answer' unless g.name_en == 'I prefer not to answer'
+
 g.save
+u = User.new(first_name: 'Micah',
+             last_name: 'Modell',
+             admin: true,
+             password: 'testest',
+             password_confirmation: 'testest',
+             email: 'micah.modell@gmail.com',
+             timezone: 'UTC')
+u.skip_confirmation!
+u.save
