@@ -126,9 +126,9 @@ class User < ActiveRecord::Base
   def waiting_instructor_tasks
     waiting_tasks = []
 
-    BingoGame.joins( course: {rosters: :role} )
-              .where( 'rosters.user_id': self.id, 'roles.code': 'inst' )
-              .find_each do |game|
+    BingoGame.joins(course: { rosters: :role })
+             .where('rosters.user_id': id, 'roles.code': 'inst')
+             .find_each do |game|
       waiting_tasks << game if game.awaiting_review?
     end
 
@@ -138,12 +138,12 @@ class User < ActiveRecord::Base
   def activity_history
     activities = []
     # Add in the candidate lists
-    BingoGame.joins( course: {rosters: :role} )
-                  .where( 'rosters.user_id': self.id)
-                  .where( 'roles.code = ? OR roles.code = ?', 'enr', 'invt' )
-                  .find_each do |bingo_game|
+    BingoGame.joins(course: { rosters: :role })
+             .where('rosters.user_id': id)
+             .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
+             .find_each do |bingo_game|
 
-        activities << bingo_game
+      activities << bingo_game
     end
     # Add in the reactions
     experiences.each do |experience|
@@ -166,20 +166,20 @@ class User < ActiveRecord::Base
     # Add the experiences
     cur_date = DateTime.current
 
-    waiting_tasks.concat Experience.joins( course: {rosters: :role} )
-              .where( 'rosters.user_id': self.id, 'experiences.active': true )
-              .where( 'roles.code = ? OR roles.code = ?', 'enr', 'invt' )
-              .where('experiences.end_date >= ? AND experiences.start_date <= ?', cur_date, cur_date )
-              .to_a
+    waiting_tasks.concat Experience.joins(course: { rosters: :role })
+      .where('rosters.user_id': id, 'experiences.active': true)
+      .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
+      .where('experiences.end_date >= ? AND experiences.start_date <= ?', cur_date, cur_date)
+      .to_a
 
     # Add the bingo games
-    waiting_games = BingoGame.joins( course: {rosters: :role} )
-              .where( 'rosters.user_id': self.id, 'bingo_games.active': true )
-              .where( 'roles.code = ? OR roles.code = ?', 'enr', 'invt' )
-              .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ?', cur_date, cur_date )
-              .to_a
+    waiting_games = BingoGame.joins(course: { rosters: :role })
+                             .where('rosters.user_id': id, 'bingo_games.active': true)
+                             .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
+                             .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ?', cur_date, cur_date)
+                             .to_a
 
-    waiting_games.delete_if { |game| !game.is_open? && !game.reviewed}
+    waiting_games.delete_if { |game| !game.is_open? && !game.reviewed }
     waiting_tasks.concat waiting_games
 
     waiting_tasks.sort_by(&:end_date)

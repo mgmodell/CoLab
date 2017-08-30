@@ -106,10 +106,10 @@ class Course < ActiveRecord::Base
     passwd = (0...8).map { (65 + rand(26)).chr }.join
 
     if user.nil?
-        user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
+      user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
       end
 
-      if !user.nil?
+    unless user.nil?
       existing_roster = Roster.where(course: self, user: user).take
       if existing_roster.nil?
         Roster.create(user: user, course: self, role: role)
@@ -117,8 +117,8 @@ class Course < ActiveRecord::Base
         existing_roster.role = role
         existing_roster.save
       end
-      # TODO: Let's add course invitation emails here in the future
-    end
+    # TODO: Let's add course invitation emails here in the future
+  end
   end
 
   def add_students_by_email(student_emails)
