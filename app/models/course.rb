@@ -109,7 +109,7 @@ class Course < ActiveRecord::Base
         user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
       end
 
-      if user.nil?
+      if !user.nil?
       existing_roster = Roster.where(course: self, user: user).take
       if existing_roster.nil?
         Roster.create(user: user, course: self, role: role)
