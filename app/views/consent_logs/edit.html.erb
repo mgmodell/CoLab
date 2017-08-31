@@ -1,14 +1,14 @@
 <h1><%= t '.opening' %></h1>
 <h2><%= t '.title' %></h2>
 <P>
-  <%= t '.instructions' %>
+  <%= raw t ('.instructions') %>
 </p>
-<iframe src="<%= @consent_log.consent_form.pdf.url%>" width="400" height="516"></iframe>
 <P><%= raw @consent_log.consent_form.form_text %></p>
-<%= form_for @consent_log do |f| %>
+<p><%= link_to t( '.consent_dl' ), @consent_log.consent_form.pdf.url %></p>
+<%= simple_form_for @consent_log do |f| %>
   <%= f.hidden_field :user_id %>
   <%= f.hidden_field :presented, :value => true %>
   <%= f.hidden_field :consent_form_id %>
-  <%= f.check_box :accepted %>
-  <%= f.submit t '.submit_response' %>
+  <%= f.input :accepted %></br>
+  <%= f.submit t( '.submit_response' ) %>
 <% end %>

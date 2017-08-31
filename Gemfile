@@ -42,6 +42,7 @@ gem 'simple_form'
 gem 'aws-sdk', '~> 2.3.0'
 gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
+gem 'city-state'
 gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
 
 # Use ActiveModel has_secure_password
@@ -64,7 +65,6 @@ group :development, :test do
   gem 'railroady'
   gem 'rspec'
   gem 'rubocop'
-  gem 'city-state'
   gem 'i18n_data'
 end
 

@@ -195,13 +195,28 @@
   </div>
   <div id="consent_forms" class="ui-body-<%= theme_code %> ui-content">
     <h2><%= t 'devise.registrations.consent_history' %></h2>
-    <table>
+    <table width='100%'>
+      <thead>
+        <th><%= t ('devise.registrations.study_title' ) %></th>
+        <th><%= t ('devise.registrations.study_status' ) %></th>
+        <th><%= t ( :actions ) %></th>
+      </thead>
+      <tbody>
     <% @current_user.consent_logs.each do |consent_log| %>
       <tr>
-        <td> <%= consent_log.consent_form.name %></td>
-        <td> <%= consent_log.accepted %></td>
+        <td><%= consent_log.consent_form.name %></td>
+        <td><%= consent_log.accepted ? t( 'devise.registrations.study_participant' ) :
+                                         t( 'devise.registrations.study_non_participant' ) %>
+        </td>
+        <td>
+          <center>
+            <%= link_to t( 'devise.registrations.update_status' ), 
+                edit_consent_log_path( consent_log.consent_form_id ) %>
+          </center>
+        </td>
       </tr>
     <% end %>
+      </tbody>
     </table>
   </div>
 </div>

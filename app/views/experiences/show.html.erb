@@ -18,7 +18,7 @@
         <%= t :active %>
   <% else %>
         <span class="error"><%= t :inactive %></span> &mdash;
-        <%= link_to t :activate, activate_experience_path( @experience ) %>
+        <%= link_to t(:activate ), activate_experience_path( @experience ) %>
       <% end %>)
     </p>
     <p>
@@ -29,7 +29,7 @@
       <h3><%= t :dates %>:</h3>
       <%= l @experience.start_date, format: :short_date %> to
   <%= l @experience.end_date, format: :short_date %></br>
-    <em><%= t :note %>: <%= t '.tz_warn', time_zone: @experience.course.timezone %></em>
+    <em><%= t :note %>: <%= t 'experiences.tz_warn', time_zone: @experience.course.timezone %></em>
   </p>
   <%= link_to 'Edit experience details', edit_experience_path(@experience) %>
 </div>
@@ -66,8 +66,8 @@
                 <td><%= student.anon_first_name %></td>
                 <td><%= t :email_redacted %></td>
               <% else %>
-                <td><%= student.last_name.nil? ? t :not_given : student.last_name %></td>
-                <td><%= student.first_name.nil? ? t :not_given : student.first_name %></td>
+                <td><%= student.last_name.nil? ? t( :not_given ): student.last_name %></td>
+                <td><%= student.first_name.nil? ? t( :not_given ) : student.first_name %></td>
                 <td><%= mail_to student.email %></td>
               <% end %>
               <% if reaction.behavior.present? #completed %>
@@ -118,4 +118,4 @@
           <h2><%= t :resp_data %></h2>
           <p><%= t :coming_soon %></p>
         </div>
-        <%= link_to t :back_to_course, @experience.course %>
+        <%= link_to t( :back_to_course ), @experience.course %>

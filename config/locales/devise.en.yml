@@ -71,6 +71,11 @@ en:
       edit_profile: Edit your profile
       reg_emails: Registered Emails
       primary: Primary
+      study_title: Study Title
+      study_status: Your Participation Status
+      study_participant: Participating
+      study_non_participant: Not Participating
+      update_status: Review/Change
       confirmed: Confirmed
       waiting_confirmations: "Currently awaiting confirmation for:"
       consent_history: Records of Currently Applicable Research Participation

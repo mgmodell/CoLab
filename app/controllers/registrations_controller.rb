@@ -12,8 +12,8 @@ class RegistrationsController < Devise::RegistrationsController
     email = Email.create(email: address, user: @current_user)
     logger.debug email.errors.full_messages unless email.errors.empty?
     notice = email.errors.empty? ?
-      t('.email_added') :
-      t('.email_not_added')
+      t('devise.registrations.email_added') :
+      t('devise.registrations.email_not_added')
     redirect_to edit_user_registration_path, notice: notice
   end
 

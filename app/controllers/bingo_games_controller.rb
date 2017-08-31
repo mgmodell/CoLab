@@ -110,7 +110,7 @@ class BingoGamesController < ApplicationController
       bingo_game.save
     end
     @bingo_game = bingo_game
-    @title = t '.title'
+    @title = t 'bingo_games.show.title'
     render :show, notice: (t 'bingo_games.activate_success')
   end
 
