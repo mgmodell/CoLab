@@ -36,7 +36,7 @@ class Installment < ActiveRecord::Base
   def values_by_factor
     hash_hash = {}
 
-    values.includes( :factor ).each do |v|
+    values.includes(:factor).each do |v|
       au_hash = hash_hash[v.factor]
       au_hash = {} if au_hash.nil?
       au_hash.store(v.user, v)
@@ -47,7 +47,7 @@ class Installment < ActiveRecord::Base
 
   def values_by_user
     hash_hash = {}
-    values.includes( :factor ).each do |v|
+    values.includes(:factor).each do |v|
       b_hash = hash_hash[v.user]
       b_hash = {} if b_hash.nil?
       b_hash.store(v.factor, v)

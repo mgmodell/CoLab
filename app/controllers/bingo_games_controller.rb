@@ -18,7 +18,7 @@ class BingoGamesController < ApplicationController
     if @current_user.is_admin?
       @bingo_games = BingoGame.all
     else
-      rosters = @current_user.rosters.instructorships.includes( :bingo_games )
+      rosters = @current_user.rosters.instructorships.includes(:bingo_games)
       rosters.each do |roster|
         @bingo_games.concat roster.course.bingo_games.to_a
       end
@@ -60,29 +60,29 @@ class BingoGamesController < ApplicationController
   def update_review_candidates
     # Process the data
     params_act = params["/bingo/candidates_review/#{@bingo_game.id}"]
-    existing_concepts = Hash.new
+    existing_concepts = {}
 
-    #Cache the concepts for existince checking
+    # Cache the concepts for existince checking
     Concept.find_each do |concept|
-      existing_concepts[ concept.name ] = concept
+      existing_concepts[concept.name] = concept
     end
 
-    candidate_feedbacks = Hash.new
+    candidate_feedbacks = {}
     CandidateFeedback.all.each do |cf|
-      candidate_feedbacks[ cf.id ] = cf
+      candidate_feedbacks[cf.id] = cf
     end
     @bingo_game.candidates.completed.each do |candidate|
       code = 'candidate_feedback_' + candidate.id.to_s
       feedback_id = params_act["candidate_feedback_#{candidate.id}"]
       next if feedback_id.blank?
-      candidate.candidate_feedback = candidate_feedbacks[ feedback_id.to_i ]
+      candidate.candidate_feedback = candidate_feedbacks[feedback_id.to_i]
       candidate.candidate_feedback_id = candidate.candidate_feedback.id
       unless candidate.candidate_feedback.name.start_with? 'Term'
         concept_name = params_act["concept_#{candidate.id}"].split.map(&:capitalize).*' '
-        concept = existing_concepts[ concept_name ]
+        concept = existing_concepts[concept_name]
         if concept.nil?
           concept = Concept.create(name: concept_name)
-          existing_concepts[ concept_name ] = concept
+          existing_concepts[concept_name] = concept
         end
         candidate.concept = concept
       end
