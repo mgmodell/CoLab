@@ -23,7 +23,11 @@
         <th width="20%"><%= t 'bingo_games.concept' %></th>
       </tr>
     </thead>
-    <tbody><% count = 0 %>
+    <tbody><%
+      count = 0
+      concepts = Concept.all
+      candidate_feedbacks = CandidateFeedback.all
+      %>
       <% @bingo_game.candidates.completed.each do |candidate| %>
       <tr>
         <td><%= count += 1 %></td>
@@ -31,14 +35,14 @@
         <td><%= candidate.definition %></td>
         <td><%= f.input_field "candidate_feedback_#{candidate.id}",
                       selected: candidate.candidate_feedback_id, 
-                      collection: CandidateFeedback.all,
+                      collection: candidate_feedbacks,
                       prompt: true,
                       label: false %>
         </td>
         <td><%= f.input_field "concept_#{candidate.id}",
                       value: candidate.concept.blank? ? "": candidate.concept.name, 
                       class: "awesomplete",
-                      data: { list: Concept.all.collect{|x| x.name }.join( ", " ) },
+                      data: { list: concepts.collect{|x| x.name }.join( ", " ) },
                       label: false %>
         </td>
                       
