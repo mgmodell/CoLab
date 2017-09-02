@@ -7,11 +7,11 @@
       <td><%= @bingo_game.topic %>
     </tr>
     <tr>
-      <th align="right"><%= t 'bingo_games' %>:</th>
+      <th align="right"><%= t :close_date %>:</th>
       <td><%= l @bingo_game.end_date, format: :tz_clarity %>
     </tr>
   </table>
-  <h2>Terms</h2>
+  <h2><%= t 'candidate_lists.terms' %>:</h2>
   <table id="candidates_table" width="100%"
         class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
     <thead>

@@ -21,7 +21,7 @@ en:
     review_problems: There were problems with the review and it could not be saved
     activate_success: Bingo! Game activated!
     #Term data
-    topic: Topic
+    topic: 'Topic:'
     definition: Definition
     feedback: Feedback
     concept: Concept

@@ -4,15 +4,15 @@
      anonymize = false %>
   <table>
     <tr>
-      <th align="right">Topic:</th>
+      <th align="right"><%= t 'bingo_games.topic' %>Topic:</th>
       <td><%= @candidate_list.bingo_game.topic %></td>
     </tr>
     <tr>
-      <th align="right">Description:</th>
+      <th align="right"><%= t :description %>:</th>
       <td><%= raw( @candidate_list.bingo_game.description ) %></td>
     </tr>
     <tr>
-      <th align="right">For:</th>
+      <th align="right"><%= :for %>:</th>
       <td>
         <%= @current_user.name( anonymize ) %>
 
