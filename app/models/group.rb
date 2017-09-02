@@ -12,6 +12,13 @@ class Group < ActiveRecord::Base
 
   has_many :installments, inverse_of: :group, dependent: :destroy
 
+  # For Diversity calculation
+  has_many :home_states, through: :users
+  has_many :home_countries, through: :home_states
+  has_many :cip_codes, through: :users
+  has_many :genders, through: :users
+  has_many :primary_languages, through: :users
+
   validates :name, :project_id, presence: true
   validate :validate_activation_status
 
@@ -29,11 +36,77 @@ class Group < ActiveRecord::Base
     users.select { |u| u.new_record? || u.marked_for_destruction? }.any?
   end
 
+  def calc_diversity_score
+    self.diversity_score = Group.calc_diversity_score_for_group(
+      users: users.includes(:gender, :primary_language,
+                            :cip_code, reactions: :narrative,
+                                       home_state: [:home_country])
+    )
+  end
+
+  def self.calc_diversity_score_for_proposed_group(emails:)
+    users = User.joins(:emails).where(emails: { email: emails.split(/\s*,\s*/) })
+                .includes(:gender, :primary_language,
+                          :cip_code, reactions: :narrative,
+                                     home_state: [:home_country])
+
+    Group.calc_diversity_score_for_group users: users
+  end
+
+  def self.calc_diversity_score_for_group(users:)
+    ds = 0
+    if users.count > 1
+      state_hash = Hash.new(0)
+      country_hash = Hash.new(0)
+      cip_hash = Hash.new(0)
+      gender_hash = Hash.new(0)
+      primary_lang_hash = Hash.new(0)
+      country_hash = Hash.new(0)
+      scenario_hash = Hash.new(0)
+
+      users.each do |user|
+        if user.home_state.present?
+          state_hash[user.home_state] += 1 unless
+            user.home_state.no_response == true
+          country_hash[user.home_state.home_country] += 1 unless
+            user.home_state.home_country.no_response == true
+        end
+        cip_hash[user.cip_code] += 1 unless
+            user.cip_code.nil? || user.cip_code.gov_code == 0
+        primary_lang_hash[user.primary_language] += 1 unless
+            user.primary_language.nil? || user.primary_language.code == '__'
+        gender_hash[user.gender] += 1 unless
+            user.gender.nil? || user.gender.code == '__'
+        user.reactions.each do |reaction|
+          scenario_hash[reaction.narrative.member] += 1
+        end
+      end
+
+      now = Date.current
+      values = [].extend(DescriptiveStatistics)
+      users.each do |user|
+        values << now.year - user.date_of_birth.year unless user.date_of_birth.nil?
+      end
+      age_sd = values.empty? ? 0 : values.standard_deviation
+
+      values.clear
+      users.each do |user|
+        values << now.year - user.started_school.year unless user.started_school.nil?
+      end
+      uni_years_sd = values.empty? ? 0 : values.standard_deviation
+
+      ds = state_hash.keys.count + country_hash.keys.count + scenario_hash.keys.count +
+           (2 * (gender_hash.keys.count + cip_hash.keys.count + primary_lang_hash.keys.count)) +
+           (age_sd + uni_years_sd).round
+    end
+    ds
+  end
+
   private
 
   def store_load_state
     @initial_member_state = ''
-    user_ids.each do |user_id|
+    user_ids.sort.each do |user_id|
       @initial_member_state += user_id.to_s + ' '
     end
   end
@@ -42,11 +115,12 @@ class Group < ActiveRecord::Base
   def track_history
     gr = GroupRevision.new(group: self, members: '')
     gr.name = name_was
-    user_ids.each do |user_id|
+    user_ids.sort.each do |user_id|
       gr.members += user_id.to_s + ' '
     end
     i_changed = (changed? || @initial_member_state != gr.members)
 
+    calc_diversity_score if @initial_member_state != gr.members
     yield # Do that save thing
 
     gr.save if persisted? && i_changed

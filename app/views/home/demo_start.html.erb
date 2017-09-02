@@ -45,8 +45,8 @@
       </td>
       <td><%= event.group_name %></td>
       <td><%= event.course_name %></td>
-      <td> <%= event.start_time.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
-      <td> <%= event.close_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %> </td>
+      <td> <%= l event.start_time, format: :tz_clarity %> </td>
+      <td> <%= l event.close_date, format: :tz_clarity %> </td>
       <td>N/A</td>
     </tr>
     <% end %>

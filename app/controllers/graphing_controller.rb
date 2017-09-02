@@ -44,10 +44,12 @@ class GraphingController < ApplicationController
                            user_id: user_id,
                            installments: { user_id: User.consented_to_project(project_id) },
                            projects: { id: project_id })
+                    .order('installments.inst_date DESC')
     else
       values = Value.includes(:user, :factor, installment: [:assessment, :user])
                     .joins(installment: :assessment)
                     .where(user_id: user_id, assessments: { project_id: project_id })
+                    .order('installments.inst_date DESC')
     end
 
     assessment_to_values = {}
@@ -70,7 +72,7 @@ class GraphingController < ApplicationController
       values = assessment_to_values[assessment]
       data << { x: values[0].created_at.to_i * 1000,
                 y: values.inject(0) { |sum, value| sum + value.value }.to_f / values.size,
-                name: values.map { |x| x.installment.prettyComment(anonymize) }.join("\n") }
+                name: values.map { |x| x.installment.prettyComment(anonymize) }.join("</br>\n") }
     end
     series = {}
     series.store('data', data)
@@ -162,7 +164,7 @@ class GraphingController < ApplicationController
             new_collapsed_data = []
             value['data'].each do |v|
               if v[:x] != date
-                comments = value['data'].collect { |datum| datum[:name] + "\n" }.join(' ')
+                comments = value['data'].uniq.collect { |datum| datum[:name] + "\n" }.join('</br>')
                 new_collapsed_data << { x: date,
                                         y: tmp.inject { |sum, el| sum + el }.to_f / tmp.size,
                                         name: comments }

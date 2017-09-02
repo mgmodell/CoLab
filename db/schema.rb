@@ -11,16 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702055534) do
-
-  create_table "age_ranges", force: :cascade do |t|
-    t.string   "name_en",    limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "name_ko",    limit: 255
-  end
-
-  add_index "age_ranges", ["name_en"], name: "index_age_ranges_on_name_en", unique: true, using: :btree
+ActiveRecord::Schema.define(version: 20170828054803) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -113,11 +104,14 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   add_index "candidates", ["user_id"], name: "index_candidates_on_user_id", using: :btree
 
   create_table "cip_codes", force: :cascade do |t|
-    t.integer  "gov_code",    limit: 4
-    t.string   "description", limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.integer  "gov_code",   limit: 4
+    t.string   "name_en",    limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "name_ko",    limit: 255
   end
+
+  add_index "cip_codes", ["gov_code"], name: "index_cip_codes_on_gov_code", unique: true, using: :btree
 
   create_table "concepts", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -130,13 +124,17 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   create_table "consent_forms", force: :cascade do |t|
     t.string   "name",             limit: 255
     t.integer  "user_id",          limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.string   "pdf_file_name",    limit: 255
     t.string   "pdf_content_type", limit: 255
     t.integer  "pdf_file_size",    limit: 4
     t.datetime "pdf_updated_at"
-    t.text     "form_text",        limit: 65535
+    t.text     "form_text_en",     limit: 65535
+    t.date     "start_date"
+    t.date     "end_date"
+    t.boolean  "active",                         default: false, null: false
+    t.text     "form_text_ko",     limit: 65535
   end
 
   add_index "consent_forms", ["user_id"], name: "index_consent_forms_on_user_id", using: :btree
@@ -241,6 +239,7 @@ ActiveRecord::Schema.define(version: 20170702055534) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.string   "name_ko",    limit: 255
+    t.string   "code",       limit: 255
   end
 
   add_index "genders", ["name_en"], name: "index_genders_on_name_en", unique: true, using: :btree
@@ -256,11 +255,12 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   add_index "group_revisions", ["group_id"], name: "index_group_revisions_on_group_id", using: :btree
 
   create_table "groups", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.integer  "project_id", limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "anon_name",  limit: 255
+    t.string   "name",            limit: 255
+    t.integer  "project_id",      limit: 4
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "anon_name",       limit: 255
+    t.integer  "diversity_score", limit: 4
   end
 
   add_index "groups", ["project_id"], name: "index_groups_on_project_id", using: :btree
@@ -271,6 +271,28 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   end
 
   add_index "groups_users", ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id", unique: true, using: :btree
+
+  create_table "home_countries", force: :cascade do |t|
+    t.string   "name",        limit: 255
+    t.string   "code",        limit: 255
+    t.boolean  "no_response"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "home_countries", ["code"], name: "index_home_countries_on_code", unique: true, using: :btree
+
+  create_table "home_states", force: :cascade do |t|
+    t.integer  "home_country_id", limit: 4
+    t.string   "name",            limit: 255
+    t.string   "code",            limit: 255
+    t.boolean  "no_response"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "home_states", ["home_country_id", "name"], name: "index_home_states_on_home_country_id_and_name", unique: true, using: :btree
+  add_index "home_states", ["home_country_id"], name: "index_home_states_on_home_country_id", using: :btree
 
   create_table "installments", force: :cascade do |t|
     t.datetime "inst_date"
@@ -287,9 +309,10 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   add_index "installments", ["user_id"], name: "index_installments_on_user_id", using: :btree
 
   create_table "languages", force: :cascade do |t|
-    t.string "code",    limit: 255
-    t.string "name_en", limit: 255
-    t.string "name_ko", limit: 255
+    t.string  "code",       limit: 255
+    t.string  "name_en",    limit: 255
+    t.string  "name_ko",    limit: 255
+    t.boolean "translated"
   end
 
   add_index "languages", ["code"], name: "index_languages_on_code", unique: true, using: :btree
@@ -365,9 +388,9 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   add_index "roles", ["name_en"], name: "index_roles_on_name_en", unique: true, using: :btree
 
   create_table "rosters", force: :cascade do |t|
-    t.integer  "role_id",    limit: 4
+    t.integer  "role_id",    limit: 4, null: false
     t.integer  "course_id",  limit: 4
-    t.integer  "user_id",    limit: 4
+    t.integer  "user_id",    limit: 4, null: false
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
   end
@@ -447,7 +470,6 @@ ActiveRecord::Schema.define(version: 20170702055534) do
     t.string   "first_name",             limit: 255
     t.string   "last_name",              limit: 255
     t.integer  "gender_id",              limit: 4
-    t.integer  "age_range_id",           limit: 4
     t.string   "country",                limit: 255
     t.string   "timezone",               limit: 255
     t.boolean  "admin"
@@ -459,11 +481,17 @@ ActiveRecord::Schema.define(version: 20170702055534) do
     t.string   "anon_last_name",         limit: 255
     t.boolean  "researcher"
     t.integer  "language_id",            limit: 4
+    t.date     "date_of_birth"
+    t.integer  "home_state_id",          limit: 4
+    t.integer  "cip_code_id",            limit: 4
+    t.integer  "primary_language_id",    limit: 4
+    t.date     "started_school"
   end
 
-  add_index "users", ["age_range_id"], name: "index_users_on_age_range_id", using: :btree
+  add_index "users", ["cip_code_id"], name: "index_users_on_cip_code_id", using: :btree
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["gender_id"], name: "index_users_on_gender_id", using: :btree
+  add_index "users", ["home_state_id"], name: "index_users_on_home_state_id", using: :btree
   add_index "users", ["language_id"], name: "index_users_on_language_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["school_id"], name: "index_users_on_school_id", using: :btree
@@ -517,6 +545,7 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   add_foreign_key "factors", "factor_packs"
   add_foreign_key "group_revisions", "groups"
   add_foreign_key "groups", "projects"
+  add_foreign_key "home_states", "home_countries"
   add_foreign_key "installments", "assessments"
   add_foreign_key "installments", "groups"
   add_foreign_key "installments", "users"
@@ -533,8 +562,9 @@ ActiveRecord::Schema.define(version: 20170702055534) do
   add_foreign_key "rosters", "roles"
   add_foreign_key "rosters", "users"
   add_foreign_key "scenarios", "behaviors"
-  add_foreign_key "users", "age_ranges"
+  add_foreign_key "users", "cip_codes"
   add_foreign_key "users", "genders"
+  add_foreign_key "users", "home_states"
   add_foreign_key "users", "languages"
   add_foreign_key "users", "schools"
   add_foreign_key "users", "themes"

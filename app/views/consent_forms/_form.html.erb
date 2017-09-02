@@ -1,0 +1,50 @@
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<%= simple_form_for(@consent_form) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :active %>
+    <%= f.input :start_date %>
+    <%= f.input :end_date %>
+    <%= f.association :user, label_method: :email, selected: @current_user.id %>
+    <%= f.input :pdf, as: :file %>
+    <% #This will have to be fixed later %= f.association :projects, as: :checkboxes %>
+
+    <div data-role="tabs" id="text-tab">
+      <div data-role="navbar">
+        <ul>
+          <li>
+            <a href="#english" data-ajax="false">
+              <%= Language.where( code: 'en' ).take.name %>
+            </a>
+          </li>
+          <li>
+            <a href="#korean" data-ajax="false">
+              <%= Language.where( code: 'ko' ).take.name %>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div id="english" class="ui-body-<%= theme_code %> ui-content">
+        <h1>
+          <%= t 'consent_forms.show.form_text_lbl' %>
+            (<%= Language.where( code: 'en' ).take.name %>)
+        </h1>
+        <%= f.input :form_text_en, label: false %>
+      </div>
+      <div id="korean" class="ui-body-<%= theme_code %> ui-content">
+        <h1>
+          <%= t 'consent_forms.show.form_text_lbl' %>
+            (<%= Language.where( code: 'ko' ).take.name %>)
+        </h1>
+        <%= f.input :form_text_ko, label: false %>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

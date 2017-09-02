@@ -60,6 +60,7 @@
 </div>
 <div id="groups" class="ui-body-<%= theme_code %> ui-content">
   <h2>Group memberships</h2>
+    <%= t 'projects.groups_intro', group_count: @project.groups.count %><br><br>
   <% if @project.groups.any? || @project.enrolled_user_rosters.any? %>
     <table id="project_table" width="90%" data-role="table"
           data-column-btn-theme"<%= theme_code %>" 
@@ -77,6 +78,20 @@
           <% end %>
           <th data-priority="0">[<%= t 'projects.no_group' %>]</th>
         </tr>
+          <tr>
+            <th>
+              <%= t 'projects.diversity_scores' %><hr>
+              <%= t :student_names %>
+            </th>
+            <% groups = @project.groups %>
+            <% groups.each do |group| %>
+              <td align="center">
+                <center>
+                  <%= group.diversity_score.nil? ? '--' : group.diversity_score %><br>
+                </center>
+              </td>
+            <% end %>
+          </tr>
       </thead>
       <tbody>
         <% @project.course.enrolled_students.each do |user| %>

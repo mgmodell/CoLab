@@ -18,10 +18,14 @@ class User < ActiveRecord::Base
   has_many :candidates, inverse_of: :user
   belongs_to :gender, inverse_of: :users
   belongs_to :theme, inverse_of: :users
-  belongs_to :language, inverse_of: :users
-  belongs_to :school
-  belongs_to :age_range, inverse_of: :users
+  has_many :home_countries, through: :home_state
+  belongs_to :home_state, inverse_of: :users
   belongs_to :cip_code, inverse_of: :users
+
+  belongs_to :language, inverse_of: :users
+  belongs_to :primary_language, inverse_of: :home_users, class_name: 'Language'
+
+  belongs_to :school
   has_many :installments, inverse_of: :user, dependent: :destroy
   has_many :rosters, inverse_of: :user, dependent: :destroy
   has_many :courses, through: :projects
@@ -73,7 +77,10 @@ class User < ActiveRecord::Base
 
   def waiting_consent_logs
     # Find those consent forms to which the user has not yet responded
-    consent_forms = ConsentForm.all.to_a
+    all_consent_forms = ConsentForm.all.to_a
+
+    # We only want to do this for currently active consent forms
+    consent_forms = all_consent_forms.delete_if { |cf| !cf.is_active? }
 
     # Have we completed it already?
     consent_logs.where(presented: true).each do |consent_log|
@@ -112,13 +119,17 @@ class User < ActiveRecord::Base
     end
   end
 
+  def is_researcher?
+    researcher
+  end
+
   def waiting_instructor_tasks
     waiting_tasks = []
 
-    rosters.instructorships.each do |roster|
-      roster.course.bingo_games.each do |game|
-        waiting_tasks << game if game.awaiting_review?
-      end
+    BingoGame.joins(course: { rosters: :role })
+             .where('rosters.user_id': id, 'roles.code': 'inst')
+             .find_each do |game|
+      waiting_tasks << game if game.awaiting_review?
     end
 
     waiting_tasks.sort_by(&:end_date)
@@ -127,10 +138,12 @@ class User < ActiveRecord::Base
   def activity_history
     activities = []
     # Add in the candidate lists
-    rosters.enrolled.each do |roster|
-      roster.course.bingo_games.each do |bingo_game|
-        activities << bingo_game
-      end
+    BingoGame.joins(course: { rosters: :role })
+             .where('rosters.user_id': id)
+             .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
+             .find_each do |bingo_game|
+
+      activities << bingo_game
     end
     # Add in the reactions
     experiences.each do |experience|
@@ -152,20 +165,22 @@ class User < ActiveRecord::Base
 
     # Add the experiences
     cur_date = DateTime.current
-    available_rosters.each do |roster|
-      waiting_tasks.concat roster.course.experiences
-        .where('experiences.end_date >= ? AND experiences.start_date <= ? AND experiences.active = ?',
-               cur_date, cur_date, true).to_a
-    end
+
+    waiting_tasks.concat Experience.joins(course: { rosters: :role })
+      .where('rosters.user_id': id, 'experiences.active': true)
+      .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
+      .where('experiences.end_date >= ? AND experiences.start_date <= ?', cur_date, cur_date)
+      .to_a
 
     # Add the bingo games
-    available_rosters.each do |roster|
-      waiting_games = roster.course.bingo_games
-                            .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ? AND bingo_games.active = ?',
-                                   cur_date, cur_date, true).to_a
-      waiting_games.delete_if { |game| !game.is_open? && !game.reviewed }
-      waiting_tasks.concat waiting_games
-    end
+    waiting_games = BingoGame.joins(course: { rosters: :role })
+                             .where('rosters.user_id': id, 'bingo_games.active': true)
+                             .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
+                             .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ?', cur_date, cur_date)
+                             .to_a
+
+    waiting_games.delete_if { |game| !game.is_open? && !game.reviewed }
+    waiting_tasks.concat waiting_games
 
     waiting_tasks.sort_by(&:end_date)
   end

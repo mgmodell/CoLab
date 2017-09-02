@@ -24,8 +24,8 @@
       <tr>
         <td><%= link_to bingo_game.get_name( anonymize ), bingo_game %></td>
         <td><%= bingo_game.course.get_name( anonymize ) %></td>
-        <td><%= bingo_game.start_date %></td>
-        <td><%= bingo_game.end_date %></td>
+        <td><%= l bingo_game.start_date, format: :tz_clarity %></td>
+        <td><%= l bingo_game.end_date, format: :tz_clarity %></td>
         <td><%= bingo_game.active %></td>
         <td><%= link_to t( :show ), bingo_game %>&nbsp;|&nbsp;
         <%= link_to t( :edit ), edit_bingo_game_path(bingo_game) %>&nbsp;|&nbsp;

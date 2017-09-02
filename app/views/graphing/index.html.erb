@@ -16,13 +16,13 @@
       <fieldset class="ui-grid-b">
         <div class="ui-block-a">
           <%= hidden_field_tag( :unit_of_analysis, unit[ 0 ] ) %>
-          <%= label_tag(:assessment, t '.which' ) %>
+          <%= label_tag(:assessment, t('.which')) %>
         </div>
         <div class="ui-block-b">
-          <%= label_tag(:subject, t '.who' ) %>
+          <%= label_tag(:subject, t('.who' ))%>
         </div>
         <div class="ui-block-c">
-          <%= label_tag( :data_processing, t '.what_data' ) %>
+          <%= label_tag( :data_processing, t('.what_data')) %>
         </div>
       </fieldset>
       <fieldset class="ui-grid-b">
@@ -35,7 +35,7 @@
             :data => {:mini => true} %>
         </div>
         <div class="ui-block-b">
-          <%= select_tag :subject, options_for_select( [ [ t :not_available, -1] ] ),
+          <%= select_tag :subject, options_for_select( [ [ t(:not_available), -1] ] ),
             :data => {:mini => true}, :class => "submitting_select" %>
         </div>
         <div class="ui-block-c">

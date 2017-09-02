@@ -33,8 +33,8 @@
           </td>
         <td><em><%= t :waiting %></em></td>
         <td><%= roster.course.get_name( anonymize ) %></td>
-        <td><%= roster.course.start_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
-        <td><%= roster.course.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %></td>
+        <td><%= l roster.course.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></td>
+        <td><%= l roster.course.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></td>
         <td><%= t :n_a %></td>
       </tr>
     <% end %>

@@ -17,6 +17,75 @@ read_data.each do |factor_pack|
   g.save
 end
 
+# CIP Code seed data
+class CipCode_
+  attr_accessor :gov_code
+  attr_accessor :name_en, :name_ko
+end
+read_data = YAML.safe_load(File.open('db/cip_constants.yml'), [CipCode_])
+read_data.each do |cip_code|
+  g = CipCode.where(gov_code: cip_code.gov_code).take
+  g = CipCode.new if g.nil?
+  g.gov_code = cip_code.gov_code unless g.gov_code == cip_code.gov_code
+
+  #Capitalize and strip trailing period
+  cip_en = cip_code.name_en.chomp( '.' ).capitalize
+  g.name_en = cip_en unless
+                    g.name_en == cip_en
+  g.name_ko = cip_code.name_ko unless
+                    g.name_ko == cip_code.name_ko
+  g.save
+end
+
+# Countries
+CS.update # if CS.countries.count < 100
+CS.countries.each do |country|
+  hc = HomeCountry.where( code: country[ 0 ] ).take
+  hc = HomeCountry.new if hc.nil?
+  hc.no_response = false
+  hc.code = country[ 0 ]
+  hc.name = country[ 1 ]
+  hc.save
+end
+hc = HomeCountry.where( code: '__' ).take
+hc = HomeCountry.new if hc.nil?
+hc.code = '__' unless hc.code == '__'
+hc.no_response = true
+hc.name = 'I prefer not to specify my country' unless
+          hc.name == 'I prefer not to specify my country'
+hc.save
+
+# States
+HomeCountry.all.each do |country|
+  if CS.get( country.code ).count > 0
+    CS.get( country.code ).each do |state_code,state_name|
+      hs = HomeState.where( home_country_id: country.id, code: "#{state_code}:#{country.code}" ).take
+      hs = HomeState.new if hs.nil?
+      hs.home_country = country
+      hs.no_response = false
+      hs.code = "#{state_code}:#{country.code}"
+      hs.name = state_name
+      hs.save
+    end
+    hs = HomeState.where( home_country_id: country.id, code: "__:#{country.code}" ).take
+    hs = HomeState.new if hs.nil?
+    hs.home_country = country
+    hs.no_response = true
+    hs.code = "__:#{country.code}"
+    hs.name = 'I prefer not to specify the state'
+    hs.save
+  else
+    hs = HomeState.where( home_country_id: country.id, code: "--:#{country.code}" ).take
+    hs = HomeState.new if hs.nil?
+    hs.home_country = country
+    hs.no_response = false
+    hs.code = "--:#{country.code}"
+    hs.name = 'not applicable'
+    hs.save
+  end
+end
+
+
 # Factor seed data
 class Factor_
   attr_accessor :fp
@@ -70,27 +139,16 @@ read_data.each do |role|
   g.save
 end
 
-# AgeRange seed data
-class AgeRange_
-  attr_accessor :name_en, :name_ko
-end
-read_data = YAML.safe_load(File.open('db/age_range.yml'), [AgeRange_])
-read_data.each do |age_range|
-  g = AgeRange.where(name_en: age_range.name_en).take
-  g = AgeRange.new if g.nil?
-  g.name_en = age_range.name_en unless g.name_en == age_range.name_en
-  g.name_ko = age_range.name_ko unless g.name_ko == age_range.name_ko
-  g.save
-end
-
 # Gender seed data
 class Gender_
+  attr_accessor :code
   attr_accessor :name_en, :name_ko
 end
 read_data = YAML.safe_load(File.open('db/genders.yml'), [Gender_])
 read_data.each do |gender|
-  g = Gender.where(name_en: gender.name_en).take
+  g = Gender.where( "code = ? OR name_en = ?",  gender.code, gender.name_en ).take
   g = Gender.new if g.nil?
+  g.code = gender.code unless g.code == gender.code
   g.name_en = gender.name_en unless g.name_en == gender.name_en
   g.name_ko = gender.name_ko unless g.name_ko == gender.name_ko
   g.save
@@ -99,24 +157,17 @@ end
 School.create(name: 'Indiana University', description: 'A large, Midwestern university')
 School.create(name: 'SUNY Korea', description: 'The State University of New York, Korea')
 
-u = User.new(first_name: 'Micah',
-             last_name: 'Modell',
-             admin: true,
-             password: 'testest',
-             password_confirmation: 'testest',
-             email: 'micah.modell@gmail.com',
-             timezone: 'UTC')
-u.skip_confirmation!
-u.save
 
 # Theme seed data
 class Theme_
+  attr_accessor :code
   attr_accessor :name_en, :name_ko
 end
 read_data = YAML.safe_load(File.open('db/theme.yml'), [Theme_])
 read_data.each do |theme|
-  g = Theme.where(name_en: theme.name_en).take
+  g = Theme.where(code: theme.code).take
   g = Theme.new if g.nil?
+  g.code = theme.code unless g.code == theme.code
   g.name_en = theme.name_en unless g.name_en == theme.name_en
   g.name_ko = theme.name_ko unless g.name_ko == theme.name_ko
   g.save
@@ -263,18 +314,33 @@ quote_data.each do |cf|
   g.save
 end
 
-# Multiple language support
-class Lang_
-  attr_accessor :code
-  attr_accessor :name_en, :name_ko
-end
-quote_data = YAML.safe_load(File.open('db/language.yml'), [Lang_])
-quote_data.each do |lang|
-  g = Language.where(name_en: lang.name_en).take
+translated = [ 'en' ]
+en_langs = I18nData.languages( :en )
+ko_langs = I18nData.languages( :ko )
+
+en_langs.keys.each do |lang_key|
+  g = Language.where(code: lang_key.downcase).take
   g = Language.new if g.nil?
-  g.code = lang.code unless g.code == lang.code
-  g.name_en = lang.name_en unless g.name_en == lang.name_en
-  g.name_ko = lang.name_ko unless g.name_ko == lang.name_ko
+  g.code = lang_key.downcase unless g.code == lang_key.downcase
+  g.translated = translated.include? lang_key.downcase
+  g.name_ko = ko_langs[ lang_key ] unless g.name_ko == ko_langs[ lang_key ]
+  g.name_en = en_langs[ lang_key ] unless g.name_en == en_langs[ lang_key ]
   g.save
 end
 
+g = Language.where(code: '__').take
+g = Language.new if g.nil?
+g.code = '__' unless g.code == '__'
+g.translated = false
+g.name_en = 'I prefer not to answer' unless g.name_en == 'I prefer not to answer'
+
+g.save
+u = User.new(first_name: 'Micah',
+             last_name: 'Modell',
+             admin: true,
+             password: 'testest',
+             password_confirmation: 'testest',
+             email: 'micah.modell@gmail.com',
+             timezone: 'UTC')
+u.skip_confirmation!
+u.save

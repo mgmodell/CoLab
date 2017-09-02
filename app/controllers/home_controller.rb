@@ -23,6 +23,37 @@ class HomeController < ApplicationController
     @current_location = 'home'
   end
 
+  def states_for_country
+    country_code = params[:country_code]
+    country = HomeCountry.where(code: country_code).take
+
+    @states = country.nil? ? [] : country.home_states
+
+    # Return the retrieved data
+    respond_to do |format|
+      format.json
+    end
+  end
+
+  def check_diversity_score
+    emails = params[:emails]
+    users = User.joins(:emails).where(emails: { email: emails.split(/[\s,]+/) })
+                .includes(:gender, :primary_language,
+                          :cip_code, home_state: [:home_country],
+                                     reactions: [narrative: [:scenario]])
+    @diversity_score = Group.calc_diversity_score_for_group users: users
+    @found_users = users.collect do |u|
+      { email: u.email,
+        name: u.informal_name(false),
+        family_name: u.last_name,
+        given_name: u.first_name }
+    end
+    # Return the retrieved data
+    respond_to do |format|
+      format.json
+    end
+  end
+
   # Data transport class
   class Event_
     attr_accessor :name, :task_link, :task_name_post, :type, :status, :group_name
@@ -40,7 +71,7 @@ class HomeController < ApplicationController
     e = Event_.new
     e.name = t(:demo_group)
     e.task_link = assessment_demo_complete_path
-    e.task_name_post = '<br>' + "(#{t :project}: #{t(demo_project)})"
+    e.task_name_post = '<br>' + "(#{t :project}: #{t(:demo_project)})"
     e.type = t 'home.sapa'
     e.status = t :not_started
     e.group_name = t(:demo_group)

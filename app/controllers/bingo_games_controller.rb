@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 class BingoGamesController < ApplicationController
   before_action :set_bingo_game, only: [:show, :edit, :update, :destroy, :review_candidates, :update_review_candidates]
-  before_action :check_admin, except: [:next, :diagnose, :react, :update_review_candidates]
+  before_action :check_editor, except: [:next, :diagnose, :react, :update_review_candidates, :show, :index]
+  before_action :check_viewer, only: [:show, :index]
 
   def show
     @title = t '.title'
@@ -109,7 +110,7 @@ class BingoGamesController < ApplicationController
       bingo_game.save
     end
     @bingo_game = bingo_game
-    @title = t '.title'
+    @title = t 'bingo_games.show.title'
     render :show, notice: (t 'bingo_games.activate_success')
   end
 
@@ -138,7 +139,13 @@ class BingoGamesController < ApplicationController
     end
   end
 
-  def check_admin
+  def check_viewer
+    redirect_to root_path unless @current_user.is_admin? ||
+                                 @current_user.is_instructor? ||
+                                 @current_user.is_researcher?
+  end
+
+  def check_editor
     redirect_to root_path unless @current_user.is_admin? || @current_user.is_instructor?
   end
 

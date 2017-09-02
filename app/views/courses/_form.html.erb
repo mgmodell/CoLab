@@ -6,8 +6,8 @@
     <div data-role="navbar">
       <ul>
         <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
-        <li><a href="#participants" data-ajax="false"><%= t 'courses.participants %></a></li>
-        <li><a href="#activities" data-ajax="false"><%= t 'courses.activities %></a></li>
+        <li><a href="#participants" data-ajax="false"><%= t 'courses.participants' %></a></li>
+        <li><a href="#activities" data-ajax="false"><%= t 'courses.activities' %></a></li>
       </ul>
     </div>
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
@@ -106,7 +106,7 @@
                 <span class="error"><%= t :inactive %></span>
                 <% end %></td>
                 <td>
-                  <%= game.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
+                  <%= l game.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show ), game %>&nbsp;|&nbsp;
                 <%= link_to( t( :activate ), activate_bingo_game_path( game ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
@@ -122,7 +122,7 @@
 </p>
 <p>
   </br></br>
-  <h3><%= t :projects %></h3>
+  <h3><%= t 'projects.projects' %></h3>
   <% if @course.projects.count < 1 %>
     <%= t :no_projects %></br>
   <% else %>
@@ -151,7 +151,7 @@
                 <span class="error"><%= t :inactive %></span>
                 <% end %></td>
                 <td>
-                  <%= project.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
+                  <%= l project.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show ), project %>&nbsp;|&nbsp;
                 <%= link_to( t( :activate ), activate_project_path( project ) ) + raw("&nbsp;|&nbsp;" ) unless project.active %>
@@ -197,7 +197,7 @@
                 <% end %>
                 </td>
                 <td>
-                  <%= experience.end_date.in_time_zone( @current_user.timezone ).strftime( "%a, %b %-d at %-l:%M%P %Z") %>
+                  <%= l experience.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show ), experience %>&nbsp;|&nbsp;
                   <%= link_to( t( :activate ), activate_experience_path( experience ) ) + raw("&nbsp;|&nbsp;" ) unless experience.active %>

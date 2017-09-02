@@ -23,7 +23,7 @@
     </p>
     <p>
       <h3><%= t :description %>:</h3>
-      <%= @bingo_game.description %></br>
+      <%= raw( @bingo_game.description ) %></br>
       <%= t( 'bingo_games.attached_to', course_name: @bingo_game.course.get_name( anonymize ) ) %>
       <h4><%= t 'bingo_games.days_for_prep' %>:</h4><%= @bingo_game.lead_time %>
       <h4><%= t 'bingo_games.ind_term_count' %>:</h4><%= @bingo_game.individual_count %>
@@ -39,8 +39,8 @@
     </p>
     <p>
       <h3><%= t :dates %>:</h3>
-      <%= @bingo_game.start_date.strftime( "%a, %b %-d at %-l:%M%P %Z")%> to
-  <%= @bingo_game.end_date.strftime( "%a, %b %-d at %-l:%M%P %Z") %></br>
+      <%= l @bingo_game.start_date, format: :short_date %> to
+  <%= l @bingo_game.end_date, format: :short_date %></br>
     <em><%= t :note %>: <%= t 'bingo_games.tz_warn', time_zone: @bingo_game.course.timezone %></em>
     </p>
   <%= link_to t( 'bingo_games.edit.title' ), edit_bingo_game_path(@bingo_game) %>
@@ -93,7 +93,7 @@
                   <% cl = @bingo_game.candidate_list_for_user( student ) %>
                   <tr>
                     <td><%= student.name( anonymize ) %></td>
-                    <td><%= cl.is_group ? cl.group.name( anonymize ) : t( :n_a ) %></td>
+                    <td><%= cl.is_group ? cl.group.get_name( anonymize ) : t( :n_a ) %></td>
                     <% if cl.candidates.completed.count > 0 %>
                       <% candidate_feedbacks.each do |cf| %>
                         <td><%= 100 * cl.get_by_feedback( cf ).count / cl.candidates.completed.count %>%</td>

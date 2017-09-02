@@ -20,6 +20,10 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  time:
+    formats:
+      tz_clarity: "%a, %b %-d at %-l:%M%P %Z"
+      short_date: "%a, %b %-d"
   title: CoLab
   column_select: Show/Hide columns&hellip;
   task_name: Task Name
@@ -28,12 +32,25 @@ en:
   status: Status
   course_name: Course Name
   student: Student
+  student_names: Student names
   group: Group
   groups: Groups
+  group_names: Group names
+  history: History
+  about_you: About You
+  calc_diversity: Diversity
+  users: Users
+  diversity_score: Diversity Score
+  calc_diversity_sub: Tell me the score!
+  calc_it: Calculate a Diversity Score
+  ds_emails_lbl: Enter the emails of the proposed team members
   dates: Dates
   open_date: Open Date
   start_date: Start Date
   close_date: Close Date
+  completion_date: Completion Date
+  type: Type
+  other_info: Other information
   start_dow: Start DOW
   end_dow: End DOW
   end_date: End Date
@@ -50,6 +67,7 @@ en:
   show: Show
   edit: Edit
   save: Save
+  add: Add!
   submit: Submit
   #toolbar
   profile: Profile
@@ -113,17 +131,16 @@ en:
   instructors: Instructors
   students: Students
   student: Student
-  projects: Projects
   no_projects: No projects
   exps: Experiences
   terms_lists: Terms Lists
-  courses: Courses
   course: Course
   school: School
   active: Active
   inactive: Inactive
   details: Details
   description: Description
+  form: For
   name: Name
   family_name: Family Name
   given_name: Given Name

@@ -1,196 +1,245 @@
 ---
-- !ruby/object:Cip_
-  id: 0
-  description: I prefer not to answer.
+- !ruby/object:CipCode_
+  gov_code: 0
+  name_ko: 
+  name_en: I prefer not to answer.
 
-- !ruby/object:Cip_
-  id: 1
-  description: AGRICULTURE, AGRICULTURE OPERATIONS, AND RELATED SCIENCES.
+- !ruby/object:CipCode_
+  gov_code: 1
+  name_ko: 
+  name_en: AGRICULTURE, AGRICULTURE OPERATIONS, AND RELATED SCIENCES.
 
-- !ruby/object:Cip_
-  id: 3
-  description: NATURAL RESOURCES AND CONSERVATION.
+- !ruby/object:CipCode_
+  gov_code: 3
+  name_ko: 
+  name_en: NATURAL RESOURCES AND CONSERVATION.
 
-- !ruby/object:Cip_
-  id: 4
-  description: ARCHITECTURE AND RELATED SERVICES.
+- !ruby/object:CipCode_
+  gov_code: 4
+  name_ko: 
+  name_en: ARCHITECTURE AND RELATED SERVICES.
 
-- !ruby/object:Cip_
-  id: 5
-  description: AREA, ETHNIC, CULTURAL, GENDER, AND GROUP STUDIES.
+- !ruby/object:CipCode_
+  gov_code: 5
+  name_ko: 
+  name_en: AREA, ETHNIC, CULTURAL, GENDER, AND GROUP STUDIES.
 
-- !ruby/object:Cip_
-  id: 9
-  description: COMMUNICATION, JOURNALISM, AND RELATED PROGRAMS.
+- !ruby/object:CipCode_
+  gov_code: 9
+  name_ko: 
+  name_en: COMMUNICATION, JOURNALISM, AND RELATED PROGRAMS.
 
-- !ruby/object:Cip_
-  id: 10
-  description: COMMUNICATIONS TECHNOLOGIES/TECHNICIANS AND SUPPORT SERVICES.
+- !ruby/object:CipCode_
+  gov_code: 10
+  name_ko: 
+  name_en: COMMUNICATIONS TECHNOLOGIES/TECHNICIANS AND SUPPORT SERVICES.
 
-- !ruby/object:Cip_
-  id: 11
-  description: COMPUTER AND INFORMATION SCIENCES AND SUPPORT SERVICES.
+- !ruby/object:CipCode_
+  gov_code: 11
+  name_ko: 
+  name_en: COMPUTER AND INFORMATION SCIENCES AND SUPPORT SERVICES.
 
-- !ruby/object:Cip_
-  id: 12
-  description: PERSONAL AND CULINARY SERVICES.
+- !ruby/object:CipCode_
+  gov_code: 12
+  name_ko: 
+  name_en: PERSONAL AND CULINARY SERVICES.
 
-- !ruby/object:Cip_
-  id: 13
-  description: EDUCATION.
+- !ruby/object:CipCode_
+  gov_code: 13
+  name_ko: 
+  name_en: EDUCATION.
 
-- !ruby/object:Cip_
-  id: 14
-  description: ENGINEERING.
+- !ruby/object:CipCode_
+  gov_code: 14
+  name_ko: 
+  name_en: ENGINEERING.
 
-- !ruby/object:Cip_
-  id: 15
-  description: ENGINEERING TECHNOLOGIES AND ENGINEERING-RELATED FIELDS.
+- !ruby/object:CipCode_
+  gov_code: 15
+  name_ko: 
+  name_en: ENGINEERING TECHNOLOGIES AND ENGINEERING-RELATED FIELDS.
 
-- !ruby/object:Cip_
-  id: 16
-  description: FOREIGN LANGUAGES, LITERATURES, AND LINGUISTICS.
+- !ruby/object:CipCode_
+  gov_code: 16
+  name_ko: 
+  name_en: FOREIGN LANGUAGES, LITERATURES, AND LINGUISTICS.
 
-- !ruby/object:Cip_
-  id: 19
-  description: FAMILY AND CONSUMER SCIENCES/HUMAN SCIENCES.
+- !ruby/object:CipCode_
+  gov_code: 19
+  name_ko: 
+  name_en: FAMILY AND CONSUMER SCIENCES/HUMAN SCIENCES.
 
-- !ruby/object:Cip_
-  id: 22
-  description: LEGAL PROFESSIONS AND STUDIES.
+- !ruby/object:CipCode_
+  gov_code: 22
+  name_ko: 
+  name_en: LEGAL PROFESSIONS AND STUDIES.
 
-- !ruby/object:Cip_
-  id: 23
-  description: ENGLISH LANGUAGE AND LITERATURE/LETTERS.
+- !ruby/object:CipCode_
+  gov_code: 23
+  name_ko: 
+  name_en: ENGLISH LANGUAGE AND LITERATURE/LETTERS.
 
-- !ruby/object:Cip_
-  id: 24
-  description: LIBERAL ARTS AND SCIENCES, GENERAL STUDIES AND HUMANITIES.
+- !ruby/object:CipCode_
+  gov_code: 24
+  name_ko: 
+  name_en: LIBERAL ARTS AND SCIENCES, GENERAL STUDIES AND HUMANITIES.
 
-- !ruby/object:Cip_
-  id: 25
-  description: LIBRARY SCIENCE.
+- !ruby/object:CipCode_
+  gov_code: 25
+  name_ko: 
+  name_en: LIBRARY SCIENCE.
 
-- !ruby/object:Cip_
-  id: 26
-  description: BIOLOGICAL AND BIOMEDICAL SCIENCES.
+- !ruby/object:CipCode_
+  gov_code: 26
+  name_ko: 
+  name_en: BIOLOGICAL AND BIOMEDICAL SCIENCES.
 
-- !ruby/object:Cip_
-  id: 27
-  description: MATHEMATICS AND STATISTICS.
+- !ruby/object:CipCode_
+  gov_code: 27
+  name_ko: 
+  name_en: MATHEMATICS AND STATISTICS.
 
-- !ruby/object:Cip_
-  id: 28
-  description: MILITARY SCIENCE, LEADERSHIP AND OPERATIONAL ART.
+- !ruby/object:CipCode_
+  gov_code: 28
+  name_ko: 
+  name_en: MILITARY SCIENCE, LEADERSHIP AND OPERATIONAL ART.
 
-- !ruby/object:Cip_
-  id: 29
-  description: MILITARY TECHNOLOGIES AND APPLIED SCIENCES.
+- !ruby/object:CipCode_
+  gov_code: 29
+  name_ko: 
+  name_en: MILITARY TECHNOLOGIES AND APPLIED SCIENCES.
 
-- !ruby/object:Cip_
-  id: 30
-  description: MULTI/INTERDISCIPLINARY STUDIES.
+- !ruby/object:CipCode_
+  gov_code: 30
+  name_ko: 
+  name_en: MULTI/INTERDISCIPLINARY STUDIES.
 
-- !ruby/object:Cip_
-  id: 31
-  description: PARKS, RECREATION, LEISURE, AND FITNESS STUDIES.
+- !ruby/object:CipCode_
+  gov_code: 31
+  name_ko: 
+  name_en: PARKS, RECREATION, LEISURE, AND FITNESS STUDIES.
 
-- !ruby/object:Cip_
-  id: 32
-  description: BASIC SKILLS AND DEVELOPMENTAL/REMEDIAL EDUCATION.
+- !ruby/object:CipCode_
+  gov_code: 32
+  name_ko: 
+  name_en: BASIC SKILLS AND DEVELOPMENTAL/REMEDIAL EDUCATION.
 
-- !ruby/object:Cip_
-  id: 33
-  description: CITIZENSHIP ACTIVITIES.
+- !ruby/object:CipCode_
+  gov_code: 33
+  name_ko: 
+  name_en: CITIZENSHIP ACTIVITIES.
 
-- !ruby/object:Cip_
-  id: 34
-  description: HEALTH-RELATED KNOWLEDGE AND SKILLS.
+- !ruby/object:CipCode_
+  gov_code: 34
+  name_ko: 
+  name_en: HEALTH-RELATED KNOWLEDGE AND SKILLS.
 
-- !ruby/object:Cip_
-  id: 35
-  description: INTERPERSONAL AND SOCIAL SKILLS.
+- !ruby/object:CipCode_
+  gov_code: 35
+  name_ko: 
+  name_en: INTERPERSONAL AND SOCIAL SKILLS.
 
-- !ruby/object:Cip_
-  id: 36
-  description: LEISURE AND RECREATIONAL ACTIVITIES.
+- !ruby/object:CipCode_
+  gov_code: 36
+  name_ko: 
+  name_en: LEISURE AND RECREATIONAL ACTIVITIES.
 
-- !ruby/object:Cip_
-  id: 37
-  description: PERSONAL AWARENESS AND SELF-IMPROVEMENT.
+- !ruby/object:CipCode_
+  gov_code: 37
+  name_ko: 
+  name_en: PERSONAL AWARENESS AND SELF-IMPROVEMENT.
 
-- !ruby/object:Cip_
-  id: 38
-  description: PHILOSOPHY AND RELIGIOUS STUDIES.
+- !ruby/object:CipCode_
+  gov_code: 38
+  name_ko: 
+  name_en: PHILOSOPHY AND RELIGIOUS STUDIES.
 
-- !ruby/object:Cip_
-  id: 39
-  description: THEOLOGY AND RELIGIOUS VOCATIONS.
+- !ruby/object:CipCode_
+  gov_code: 39
+  name_ko: 
+  name_en: THEOLOGY AND RELIGIOUS VOCATIONS.
 
-- !ruby/object:Cip_
-  id: 40
-  description: PHYSICAL SCIENCES.
+- !ruby/object:CipCode_
+  gov_code: 40
+  name_ko: 
+  name_en: PHYSICAL SCIENCES.
 
-- !ruby/object:Cip_
-  id: 41
-  description: SCIENCE TECHNOLOGIES/TECHNICIANS.
+- !ruby/object:CipCode_
+  gov_code: 41
+  name_ko: 
+  name_en: SCIENCE TECHNOLOGIES/TECHNICIANS.
 
-- !ruby/object:Cip_
-  id: 42
-  description: PSYCHOLOGY.
+- !ruby/object:CipCode_
+  gov_code: 42
+  name_ko: 
+  name_en: PSYCHOLOGY.
 
-- !ruby/object:Cip_
-  id: 43
-  description: HOMELAND SECURITY, LAW ENFORCEMENT, FIREFIGHTING AND RELATED PROTECTIVE SERVICES.
+- !ruby/object:CipCode_
+  gov_code: 43
+  name_ko: 
+  name_en: HOMELAND SECURITY, LAW ENFORCEMENT, FIREFIGHTING AND RELATED PROTECTIVE SERVICES.
 
-- !ruby/object:Cip_
-  id: 44
-  description: PUBLIC ADMINISTRATION AND SOCIAL SERVICE PROFESSIONS.
+- !ruby/object:CipCode_
+  gov_code: 44
+  name_ko: 
+  name_en: PUBLIC ADMINISTRATION AND SOCIAL SERVICE PROFESSIONS.
 
-- !ruby/object:Cip_
-  id: 45
-  description: SOCIAL SCIENCES.
+- !ruby/object:CipCode_
+  gov_code: 45
+  name_ko: 
+  name_en: SOCIAL SCIENCES.
 
-- !ruby/object:Cip_
-  id: 46
-  description: CONSTRUCTION TRADES.
+- !ruby/object:CipCode_
+  gov_code: 46
+  name_ko: 
+  name_en: CONSTRUCTION TRADES.
 
-- !ruby/object:Cip_
-  id: 47
-  description: MECHANIC AND REPAIR TECHNOLOGIES/TECHNICIANS.
+- !ruby/object:CipCode_
+  gov_code: 47
+  name_ko: 
+  name_en: MECHANIC AND REPAIR TECHNOLOGIES/TECHNICIANS.
 
-- !ruby/object:Cip_
-  id: 48
-  description: PRECISION PRODUCTION.
+- !ruby/object:CipCode_
+  gov_code: 48
+  name_ko: 
+  name_en: PRECISION PRODUCTION.
 
-- !ruby/object:Cip_
-  id: 49
-  description: TRANSPORTATION AND MATERIALS MOVING.
+- !ruby/object:CipCode_
+  gov_code: 49
+  name_ko: 
+  name_en: TRANSPORTATION AND MATERIALS MOVING.
 
-- !ruby/object:Cip_
-  id: 50
-  description: VISUAL AND PERFORMING ARTS.
+- !ruby/object:CipCode_
+  gov_code: 50
+  name_ko: 
+  name_en: VISUAL AND PERFORMING ARTS.
 
-- !ruby/object:Cip_
-  id: 51
-  description: HEALTH PROFESSIONS AND RELATED PROGRAMS.
+- !ruby/object:CipCode_
+  gov_code: 51
+  name_ko: 
+  name_en: HEALTH PROFESSIONS AND RELATED PROGRAMS.
 
-- !ruby/object:Cip_
-  id: 52
-  description: BUSINESS, MANAGEMENT, MARKETING, AND RELATED SUPPORT SERVICES.
+- !ruby/object:CipCode_
+  gov_code: 52
+  name_ko: 
+  name_en: BUSINESS, MANAGEMENT, MARKETING, AND RELATED SUPPORT SERVICES.
 
-- !ruby/object:Cip_
-  id: 53
-  description: HIGH SCHOOL/SECONDARY DIPLOMAS AND CERTIFICATES.
+- !ruby/object:CipCode_
+  gov_code: 53
+  name_ko: 
+  name_en: HIGH SCHOOL/SECONDARY DIPLOMAS AND CERTIFICATES.
 
-- !ruby/object:Cip_
-  id: 54
-  description: HISTORY.
+- !ruby/object:CipCode_
+  gov_code: 54
+  name_ko: 
+  name_en: HISTORY.
 
-- !ruby/object:Cip_
-  id: 60
-  description: RESIDENCY PROGRAMS.
+- !ruby/object:CipCode_
+  gov_code: 60
+  name_ko: 
+  name_en: RESIDENCY PROGRAMS.
 
-- !ruby/object:Cip_
-  id: 100
-  description: Other.
+- !ruby/object:CipCode_
+  gov_code: 100
+  name_ko: 
+  name_en: Other.
