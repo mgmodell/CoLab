@@ -105,7 +105,7 @@ class BingoGame < ActiveRecord::Base
 
   def self.inform_instructors
     count = 0
-    BingoGame.where(instructor_notified: false).each do |bingo|
+    BingoGame.includes( :course ).where(instructor_notified: false).each do |bingo|
       next unless bingo.end_date < DateTime.current + bingo.lead_time.days
       completion_hash = {}
       bingo.course.enrolled_students.each do |student|
