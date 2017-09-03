@@ -25,10 +25,9 @@
     </thead>
     <tbody><%
       count = 0
-      concepts = Concept.all
       candidate_feedbacks = CandidateFeedback.all
       %>
-      <% @bingo_game.candidates.completed.each do |candidate| %>
+      <% @bingo_game.candidates.completed.find_each do |candidate| %>
       <tr>
         <td><%= count += 1 %></td>
         <td><%= candidate.term %></td>
@@ -42,7 +41,7 @@
         <td><%= f.input_field "concept_#{candidate.id}",
                       value: candidate.concept.blank? ? "": candidate.concept.name, 
                       class: "awesomplete",
-                      data: { list: concepts.collect{|x| x.name }.join( ", " ) },
+                      data: { list: '#concepts' },
                       label: false %>
         </td>
                       
@@ -51,6 +50,11 @@
     </tbody>
   </table>
   <%= f.input :reviewed, as: :boolean, label: "Review completed" %>
+  <ul id='concepts'>
+    <% Concept.all.each do |concept| %>
+    <li>concept.name</li>
+    <% end %>
+  </ul>
 
 <div class="form-actions">
   <%= f.button :submit, t(:save) %>
