@@ -1,6 +1,6 @@
 # README #
 
-The CoLab system provides instructor support for collaborative learning groups. In its current state, it deploys successfully to Heroku with PostMark, Scheduler and JAWS Maria DB add-ons. It should run in a paid dyno with SSL enabled or a configuration change would be required.
+The CoLab system provides instructor support for collaborative learning groups. In its current state, it deploys successfully to Heroku with Amazon SES & S3, Scheduler and JAWS Maria DB add-ons. It should run in a paid dyno with SSL enabled or a configuration change would be required.
 
 ## What is this repository for? ##
 
