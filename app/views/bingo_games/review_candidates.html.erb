@@ -7,11 +7,11 @@
       <td><%= @bingo_game.topic %>
     </tr>
     <tr>
-      <th align="right"><%= t 'bingo_games' %>:</th>
+      <th align="right"><%= t :close_date %>:</th>
       <td><%= l @bingo_game.end_date, format: :tz_clarity %>
     </tr>
   </table>
-  <h2>Terms</h2>
+  <h2><%= t 'candidate_lists.terms' %>:</h2>
   <table id="candidates_table" width="100%"
         class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
     <thead>
@@ -23,22 +23,25 @@
         <th width="20%"><%= t 'bingo_games.concept' %></th>
       </tr>
     </thead>
-    <tbody><% count = 0 %>
-      <% @bingo_game.candidates.completed.each do |candidate| %>
+    <tbody><%
+      count = 0
+      candidate_feedbacks = CandidateFeedback.all
+      %>
+      <% @bingo_game.candidates.completed.find_each do |candidate| %>
       <tr>
         <td><%= count += 1 %></td>
         <td><%= candidate.term %></td>
         <td><%= candidate.definition %></td>
         <td><%= f.input_field "candidate_feedback_#{candidate.id}",
                       selected: candidate.candidate_feedback_id, 
-                      collection: CandidateFeedback.all,
+                      collection: candidate_feedbacks,
                       prompt: true,
                       label: false %>
         </td>
         <td><%= f.input_field "concept_#{candidate.id}",
                       value: candidate.concept.blank? ? "": candidate.concept.name, 
                       class: "awesomplete",
-                      data: { list: Concept.all.collect{|x| x.name }.join( ", " ) },
+                      data: { list: '#concepts' },
                       label: false %>
         </td>
                       
@@ -47,6 +50,11 @@
     </tbody>
   </table>
   <%= f.input :reviewed, as: :boolean, label: "Review completed" %>
+  <ul id='concepts'>
+    <% Concept.all.each do |concept| %>
+    <li>concept.name</li>
+    <% end %>
+  </ul>
 
 <div class="form-actions">
   <%= f.button :submit, t(:save) %>

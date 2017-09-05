@@ -74,7 +74,7 @@
       </tr>
     </thead>
     <tbody>
-    <% @candidate_list.candidates.completed.each do |candidate| %>
+    <% @candidate_list.candidates.completed.includes( :candidate_feedback, :concept ).each do |candidate| %>
       <tr>
         <td><%= candidate.term %></td>
         <td><%= candidate.definition %></td>
