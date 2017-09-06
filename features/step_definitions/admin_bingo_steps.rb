@@ -16,6 +16,10 @@ Given /^the course has a Bingo! game$/ do
   @bingo = BingoGame.make
   @bingo.course = @course
   @bingo.save
+  if @bingo.persisted?
+    @bingo.get_topic( true ).should_not be_nil
+    @bingo.get_topic( true ).length.should be > 0
+  end
   puts @bingo.errors.full_messages unless @bingo.errors.blank?
 end
 

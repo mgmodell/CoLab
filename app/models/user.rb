@@ -200,7 +200,7 @@ class User < ActiveRecord::Base
   private
 
   def anonymize
-    anon_first_name = Forgery::Name.first_name
-    anon_last_name = Forgery::Name.last_name
+    self.anon_first_name = Forgery::Name.first_name
+    self.anon_last_name = Forgery::Name.last_name
   end
 end

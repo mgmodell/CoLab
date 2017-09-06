@@ -17,9 +17,9 @@ class Project < ActiveRecord::Base
 
   validates :name, :end_dow, :start_dow, presence: true
   validates :end_date, :start_date, presence: true
+  before_create :anonymize
 
   before_validation :timezone_adjust
-  before_create :anonymize
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
@@ -204,6 +204,6 @@ class Project < ActiveRecord::Base
   private
 
   def anonymize
-    anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"
+    self.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"
   end
 end
