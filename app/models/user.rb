@@ -146,13 +146,10 @@ class User < ActiveRecord::Base
       activities << bingo_game
     end
     # Add in the reactions
-    experiences.each do |experience|
-      activities << experience
-    end
+    activities.concat experiences.all
+
     # Add in projects
-    projects.each do |project|
-      activities << project
-    end
+    activities.concat projects.all
 
     activities.sort_by(&:end_date)
   end
@@ -203,7 +200,7 @@ class User < ActiveRecord::Base
   private
 
   def anonymize
-    anon_first_name = Forgery::Name.first_name
-    anon_last_name = Forgery::Name.last_name
+    self.anon_first_name = Forgery::Name.first_name
+    self.anon_last_name = Forgery::Name.last_name
   end
 end

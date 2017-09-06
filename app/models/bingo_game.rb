@@ -23,8 +23,8 @@ class BingoGame < ActiveRecord::Base
   validate :group_components
 
   before_validation :timezone_adjust
-  before_create :anonymize
   validate :dates_within_course
+  before_create :anonymize
 
   def status_for_user(user)
     candidate_list_for_user(user).status
@@ -204,6 +204,6 @@ class BingoGame < ActiveRecord::Base
   private
 
   def anonymize
-    anon_topic = Forgery::LoremIpsum.title.to_s
+    self.anon_topic = Forgery::LoremIpsum.title.to_s
   end
 end

@@ -24,6 +24,6 @@ class School < ActiveRecord::Base
   private
 
   def anonymize
-    anon_name = "#{rand < rand ? Forgery::Name.location : Forgery::Name.company_name} institute"
+    self.anon_name = "#{rand < rand ? Forgery::Name.location : Forgery::Name.company_name} institute"
   end
 end

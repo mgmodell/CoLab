@@ -48,6 +48,8 @@ Feature: Students review Candidate words for Bingo!
      When the user is any student in the course
      Then the user logs in
      Then user should see 0 open task
+     Then user opens their profile
+     Then user sees the Bingo! in the history
 
   Scenario: Instructor logs in and accepts all 134 candidates
     Given the user sees review items for all the expected candidates

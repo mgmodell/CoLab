@@ -181,6 +181,6 @@ class Experience < ActiveRecord::Base
   private
 
   def anonymize
-    anon_name = Forgery::Name.company_name.to_s
+    self.anon_name = Forgery::Name.company_name.to_s
   end
 end

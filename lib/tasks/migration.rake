@@ -341,8 +341,6 @@ namespace :migratify do
   desc 'Initialize existing PII objects with anonymized names'
   task anon_n_clean: :environment do
     # Make sure the DB is primed and ready!
-    return
-    Rake::Task['db:migrate'].invoke
 
     User.find_each do |user|
       user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
@@ -352,7 +350,7 @@ namespace :migratify do
     end
 
     Group.find_each do |group|
-      group.anon_name = "#{Forgery::Personal.language} #{Forgery::LoremIpsum.characters}s" if group.anon_name.blank?
+      group.anon_name = "#{rand < rand ? Forgery::Personal.language : Forgery::Name.location} #{Forgery::Name.company_name}s" if group.anon_name.blank?
       group.save
     end
 
@@ -367,12 +365,12 @@ namespace :migratify do
     end
 
     Project.find_each do |project|
-      project.anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}" if project.anon_name.blank?
+      project.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}" if project.anon_name.blank?
       project.save
     end
 
     School.find_each do |school|
-      school.anon_name = "#{Forgery::Name.location} institute" if school.anon_name.blank?
+      school.anon_name = "#{rand < rand ? Forgery::Name.location : Forgery::Name.company_name} institute" if school.anon_name.blank?
       school.save
     end
 
@@ -380,22 +378,11 @@ namespace :migratify do
                GEO IST MAT YOW GFB RSV CSV MBV)
     levels = %w(Beginning Intermediate Advanced)
     Course.find_each do |course|
-      course.anon_name = "#{levels.sample} #{Forgery::Name.industry}"
-      course.anon_number = "#{depts.sample}-#{rand(100..700)}"
+      course.anon_name = "#{levels.sample} #{Forgery::Name.industry}" if course.anon_name.blank?
+      course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
       course.save
     end
 
-    Candidate.find_each do |candidate|
-      candidate.filtered_consistent =
-        candidate.term.nil? ? '' :
-        Candidate.filter.filter(candidate.term.strip.split.map(&:downcase)).join(' ')
-      candidate.save
-    end
-
-    CandidateFeedback.create(name: 'Term: Doesn\'t match',
-                             definition: 'The term does not match the definition.')
-    CandidateFeedback.create(name: 'Term: Product Name',
-                             definition: 'Products should not be used unless they are dominant/household name.')
   end
 
   desc 'Make instructor_updated false'
