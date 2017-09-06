@@ -21,6 +21,8 @@ Feature: Users can complete 'experiences'
      And the user presses "Save and continue"
     Then the user will see "Week 1"
     Then the user will see "You must select a behavior"
+    Then user opens their profile
+    Then the user sees the experience in the history
 
   Scenario: The dropped student should not see an experience
     Then the user logs out
@@ -251,6 +253,8 @@ Feature: Users can complete 'experiences'
     Then the user will see "Your reaction to the experience was recorded"
     Then user should see 1 open task
     Then the user will see "100%"
+    Then user opens their profile
+    Then the user sees the experience in the history
     Then the user logs out
 
     #switch to the other user
