@@ -165,11 +165,14 @@
       <% activities.each do |activity| %>
       <tr>
         <% if activity.class.name == "BingoGame" && activity.reviewed %>
-          <td><%= link_to activity.get_name( false ),
-                  bingo_list_stats_path( activity.candidate_list_for_user( @current_user ) ) %>
+          <td><%= link_to activity.get_name false,
+                  bingo_list_stats_path( 
+                    activity.candidate_list_for_user( @current_user ) ) %>
           </td>
         <% else %>
-          <td><%= activity.get_name false %></td>
+          <td>
+            <%= activity.get_name false %>
+          </td>
         <% end %>
         <td><%= activity.course.pretty_name false %></td>
         <td><%= activity.type %></td>
