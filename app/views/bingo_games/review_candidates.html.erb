@@ -50,7 +50,7 @@
     </tbody>
   </table>
   <%= f.input :reviewed, as: :boolean, label: "Review completed" %>
-  <ul id='concepts'>
+  <ul id='concepts' hidden>
     <% Concept.all.each do |concept| %>
     <li><%= concept.name %></li>
     <% end %>
