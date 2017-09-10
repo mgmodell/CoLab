@@ -63,7 +63,7 @@ class BingoGamesController < ApplicationController
     existing_concepts = {}
 
     # Cache the concepts for existince checking
-    Concept.find_each do |concept|
+    Concept.all.each do |concept|
       existing_concepts[concept.name] = concept
     end
 
@@ -71,7 +71,7 @@ class BingoGamesController < ApplicationController
     CandidateFeedback.all.each do |cf|
       candidate_feedbacks[cf.id] = cf
     end
-    @bingo_game.candidates.completed.each do |candidate|
+    @bingo_game.candidates.completed.find_all do |candidate|
       code = 'candidate_feedback_' + candidate.id.to_s
       feedback_id = params_act["candidate_feedback_#{candidate.id}"]
       next if feedback_id.blank?
@@ -92,7 +92,7 @@ class BingoGamesController < ApplicationController
 
     @bingo_game.reviewed = params_act['reviewed']
     if @bingo_game.reviewed && !@bingo_game.students_notified
-      @bingo_game.course.enrolled_students.each do |student|
+      @bingo_game.course.enrolled_students.find_all do |student|
         AdministrativeMailer.notify_availability(student,
                                                  "#{@bingo_game.topic} terms list").deliver_later
       end
