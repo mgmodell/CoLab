@@ -52,7 +52,7 @@
   <%= f.input :reviewed, as: :boolean, label: "Review completed" %>
   <ul id='concepts'>
     <% Concept.all.each do |concept| %>
-    <li>concept.name</li>
+    <li><%= concept.name %></li>
     <% end %>
   </ul>
 
