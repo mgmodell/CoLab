@@ -204,6 +204,7 @@ class BingoGame < ActiveRecord::Base
   private
 
   def anonymize
-    self.anon_topic = Forgery::LoremIpsum.title.to_s
+    trans = [ 'basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the' ]
+    self.anon_topic = "#{Forgery::Name.company_name} #{trans.sample} #{Forgery::Name.job_title}"
   end
 end

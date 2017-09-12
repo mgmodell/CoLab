@@ -78,8 +78,8 @@
       <tr>
         <td><%= candidate.term %></td>
         <td><%= candidate.definition %></td>
-        <td><%= candidate.candidate_feedback.present? ? candidate.candidate_feedback.name : t :n_a %></td>
-        <td><%= candidate.concept.present? ? candidate.concept.name : t :n_a %></td>
+        <td><%= candidate.candidate_feedback.present? ? candidate.candidate_feedback.name : t( :n_a ) %></td>
+        <td><%= candidate.concept.present? ? candidate.concept.name : t( :n_a ) %></td>
       </tr>
     <% end %>
     </tbody>
