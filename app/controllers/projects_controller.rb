@@ -125,7 +125,7 @@ class ProjectsController < ApplicationController
   end
 
   def activate
-    @title = t('projects.title')
+    @title = t('projects.show.title')
     if @current_user.is_admin? ||
        @project.course.get_roster_for_user(@current_user).role.code == 'inst'
       @project.active = true
