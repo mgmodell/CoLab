@@ -357,7 +357,7 @@ namespace :migratify do
     BingoGame.find_each do |bingo_game|
       if bingo_game.anon_topic.blank? || ( bingo_game.anon_topic.starts_with? 'Lorem' )
         trans = [ 'basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the' ]
-        self.anon_topic = "#{Forgery::Name.company_name} #{trans.sample} #{Forgery::Name.job_title}"
+        bingo_game.anon_topic = "#{Forgery::Name.company_name} #{trans.sample} #{Forgery::Name.job_title}"
         bingo_game.save
       end
     end

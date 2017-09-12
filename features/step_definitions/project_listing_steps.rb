@@ -4,15 +4,15 @@ require 'chronic'
 Given /^there is a course with an assessed project$/ do
   @course = Course.make
   @course.save
-  @course.get_name( true ).should_not be_nil
-  @course.get_name( true ).length.should be > 0
+  @course.get_name(true).should_not be_nil
+  @course.get_name(true).length.should be > 0
   puts @course.errors.full_messages unless @course.errors.blank?
   @project = Project.make
   @project.style = Style.find(1)
   @project.course = @course
   @project.save
-  @project.get_name( true ).should_not be_nil
-  @project.get_name( true ).length.should be > 0
+  @project.get_name(true).should_not be_nil
+  @project.get_name(true).length.should be > 0
   puts @project.errors.full_messages unless @project.errors.blank?
 end
 
@@ -44,8 +44,8 @@ Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
   end
   @project.groups << @group
   @project.save
-  @project.get_name( true ).should_not be_nil
-  @project.get_name( true ).length.should be > 0
+  @project.get_name(true).should_not be_nil
+  @project.get_name(true).length.should be > 0
   puts @project.errors.full_messages unless @project.errors.blank?
 end
 
