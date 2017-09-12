@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy,
+  before_action :set_project, only: [:show, :edit, :update, :destroy, :activate,
                                      :rescore_group, :rescore_groups]
   before_action :check_editor, except: [:next, :diagnose, :react,
                                         :rescore_group, :rescore_groups,
@@ -126,13 +126,11 @@ class ProjectsController < ApplicationController
 
   def activate
     @title = t('.title')
-    project = Project.find(params[:project_id])
     if @current_user.is_admin? ||
-       project.course.get_roster_for_user(@current_user).role.code == 'inst'
-      project.active = true
-      project.save
+       @project.course.get_roster_for_user(@current_user).role.code == 'inst'
+      @project.active = true
+      @project.save
     end
-    @project = project
     render :show
   end
 
