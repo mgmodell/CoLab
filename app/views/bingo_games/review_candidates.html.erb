@@ -12,15 +12,21 @@
     </tr>
   </table>
   <h2><%= t 'candidate_lists.terms' %>:</h2>
-  <table id="candidates_table" width="100%"
-        class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
+  <table data-role="table"
+    id="candidates_table"
+    width="100%"
+    data-mode="columntoggle"
+    data-column-btn-theme="<%= theme_code %>"
+    data-column-btn-text="<%= t :column_select %>"
+    class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
     <thead>
       <tr>
         <th>#</th>
-        <th><%= t 'bingo_games.term' %></th>
-        <th><%= t 'bingo_games.definition' %></th>
-        <th><%= t 'bingo_games.feedback' %></th>
-        <th width="20%"><%= t 'bingo_games.concept' %></th>
+        <th data-priority="0"><%= t 'bingo_games.term' %></th>
+        <th data-priority="1"><%= t :student %></th>
+        <th data-priority="0"><%= t 'bingo_games.definition' %></th>
+        <th data-priority="0"><%= t 'bingo_games.feedback' %></th>
+        <th width="20%" data-priority="0"><%= t 'bingo_games.concept' %></th>
       </tr>
     </thead>
     <tbody><%
@@ -31,6 +37,7 @@
       <tr>
         <td><%= count += 1 %></td>
         <td><%= candidate.term %></td>
+        <td><%= candidate.user.get_name( @current_user.anonymize? ) %></td>
         <td><%= candidate.definition %></td>
         <td><%= f.input_field "candidate_feedback_#{candidate.id}",
                       selected: candidate.candidate_feedback_id, 
