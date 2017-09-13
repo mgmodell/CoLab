@@ -23,6 +23,10 @@ class Experience < ActiveRecord::Base
     reaction
   end
 
+  def get_type
+    I18n.t( :experience )
+  end
+
   def next_deadline
     end_date
   end

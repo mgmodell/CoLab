@@ -39,6 +39,10 @@ class Project < ActiveRecord::Base
     end
   end
 
+  def get_type
+    I18n.t( :project )
+  end
+
   def is_for_research?
     !consent_form.nil? && consent_form.is_active?
   end

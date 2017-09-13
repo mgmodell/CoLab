@@ -31,6 +31,13 @@ class Course < ActiveRecord::Base
     prettyName
   end
 
+  def get_activities
+    activities = self.projects.to_a
+    activities.concat self.bingo_games
+    activities.concat self.experiences
+    activities.sort_by(&:end_date)
+  end
+
   def get_name(anonymous = false)
     anonymous ? anon_name : name
   end

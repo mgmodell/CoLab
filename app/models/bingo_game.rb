@@ -30,6 +30,10 @@ class BingoGame < ActiveRecord::Base
     candidate_list_for_user(user).status
   end
 
+  def get_type
+    I18n.t( :bingo_game )
+  end
+
   def status
     completed = candidates.completed.count
     if completed > 0

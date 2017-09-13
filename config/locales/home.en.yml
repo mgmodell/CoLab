@@ -24,6 +24,7 @@ en:
     formats:
       tz_clarity: "%a, %b %-d at %-l:%M%P %Z"
       short_date: "%a, %b %-d"
+      datestamp: "%Y%m%d"
   title: CoLab
   column_select: Show/Hide columns&hellip;
   task_name: Task Name
@@ -50,6 +51,9 @@ en:
   close_date: Close Date
   completion_date: Completion Date
   type: Type
+  expired: Expired
+  bingo_game: Bingo! Game
+  experience: Group Experience
   other_info: Other information
   start_dow: Start DOW
   end_dow: End DOW
