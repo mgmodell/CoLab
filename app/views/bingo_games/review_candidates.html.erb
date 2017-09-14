@@ -37,7 +37,7 @@
       <tr>
         <td><%= count += 1 %></td>
         <td><%= candidate.term %></td>
-        <td><%= candidate.user.get_name( @current_user.anonymize? ) %></td>
+        <td><%= candidate.user.name( @current_user.anonymize? ) %></td>
         <td><%= candidate.definition %></td>
         <td><%= f.input_field "candidate_feedback_#{candidate.id}",
                       selected: candidate.candidate_feedback_id, 
