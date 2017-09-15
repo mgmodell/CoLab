@@ -166,10 +166,10 @@ class InstallmentsController < ApplicationController
     @title = t 'installments.demo_title'
     @project = ProjStub.new
     @project.style = Style.find(2)
-    @project.name = t 'installments.demo_project'
+    @project.name = t :demo_project
 
     @group = GroupStub.new
-    @group.name = t 'installments.demo_group'
+    @group.name = t :demo_group
     user_names = [%w(Doe Robert),
                   %w(Jones Roberta), %w(Kim Janice)]
     @group.users = []
