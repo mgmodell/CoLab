@@ -40,7 +40,7 @@ class Project < ActiveRecord::Base
   end
 
   def get_type
-    I18n.t( :project )
+    I18n.t(:project)
   end
 
   def is_for_research?

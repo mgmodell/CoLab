@@ -32,9 +32,9 @@ class Course < ActiveRecord::Base
   end
 
   def get_activities
-    activities = self.projects.to_a
-    activities.concat self.bingo_games
-    activities.concat self.experiences
+    activities = projects.to_a
+    activities.concat bingo_games
+    activities.concat experiences
     activities.sort_by(&:end_date)
   end
 

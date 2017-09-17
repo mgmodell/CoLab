@@ -24,7 +24,7 @@ class Experience < ActiveRecord::Base
   end
 
   def get_type
-    I18n.t( :experience )
+    I18n.t(:experience)
   end
 
   def next_deadline

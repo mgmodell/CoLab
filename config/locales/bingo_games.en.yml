@@ -2,6 +2,7 @@ en:
   bingo_games:
     review_candidates:
       title: Candidate Terms for Review
+      submitted_by: Submitted by
     index:
       title: List of Bingo! Games
     edit:

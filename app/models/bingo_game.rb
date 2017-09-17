@@ -31,7 +31,7 @@ class BingoGame < ActiveRecord::Base
   end
 
   def get_type
-    I18n.t( :bingo_game )
+    I18n.t(:bingo_game)
   end
 
   def status

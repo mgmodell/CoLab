@@ -1,10 +1,19 @@
 <%= simple_form_for update_bingo_candidates_review_path( @bingo_game ) do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-  <table>
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+     anonymous = @current_user.anonymize?
+%><table>
     <tr>
       <th align="right"><%= t 'bingo_games.topic' %>:</th>
       <td><%= @bingo_game.topic %>
+    </tr>
+    <tr>
+      <th align="right"><%= t :description %>:</th>
+      <td><%= raw( @bingo_game.description ) %></td>
+    </tr>
+    <tr>
+      <th align="right"><%= t :status %>:</th>
+      <td><%= @bingo_game.status %>%</td>
     </tr>
     <tr>
       <th align="right"><%= t :close_date %>:</th>
@@ -22,8 +31,8 @@
     <thead>
       <tr>
         <th>#</th>
-        <th data-priority="0"><%= t 'bingo_games.term' %></th>
-        <th data-priority="1"><%= t :student %></th>
+ '       <th data-priority="0"><%= t 'bingo_games.term' %></th>
+        <th data-priority="1"><%= t :submitted_by %></th>
         <th data-priority="0"><%= t 'bingo_games.definition' %></th>
         <th data-priority="0"><%= t 'bingo_games.feedback' %></th>
         <th width="20%" data-priority="0"><%= t 'bingo_games.concept' %></th>
@@ -37,7 +46,12 @@
       <tr>
         <td><%= count += 1 %></td>
         <td><%= candidate.term %></td>
-        <td><%= candidate.user.name( @current_user.anonymize? ) %></td>
+        <td>
+          <%= candidate.user.name( anonymous ) %>
+          <% if candidate.candidate_list.is_group %>
+          <br>(with group: <i><%= candidate.candidate_list.group.get_name( anonymous ) %></i>)
+          <% end %>
+        </td>
         <td><%= candidate.definition %></td>
         <td><%= f.input_field "candidate_feedback_#{candidate.id}",
                       selected: candidate.candidate_feedback_id, 

@@ -40,7 +40,7 @@
           <%= render :partial => "shared/task_link", 
                     :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
         </td>
-        <td align="center" data-priority="1">Bingo! Candidate Review</td>
+        <td align="center" data-priority="1"><%= t 'bingo_games.review_candidates.title' %></td>
         <td align="center" data-priority="1"><%= task.status %>%</td>
         <td data-priority="1"><%= task.course.get_name( anonymize ) %></td>
         <td data-priority="0">
