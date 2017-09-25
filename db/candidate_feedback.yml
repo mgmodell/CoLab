@@ -86,7 +86,7 @@
 
 
 - !ruby/object:CandidateFeedback_
-  name_en: "Term: Product Name"
+  name_en: "Term: Proper Name"
   name_ko: 
   definition_en: >
     Products should not be used unless they are dominant to the point
