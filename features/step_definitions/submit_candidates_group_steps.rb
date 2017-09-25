@@ -7,7 +7,7 @@ Given /^the Bingo! is group\-enabled with the project and a (\d+) percent group 
 end
 
 Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pending|
-  link_text = "Your teammates in #{@group.get_name( false )} want to collaborate"
+  link_text = "Your teammates in #{@group.get_name(false)} want to collaborate"
   case collaboration_pending.downcase
   when 'should'
     page.should have_content link_text
@@ -19,7 +19,7 @@ Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pe
 end
 
 When /^the user requests collaboration$/ do
-  link_text = "Invite your teammates in #{@group.get_name( false )} to help?"
+  link_text = "Invite your teammates in #{@group.get_name(false)} to help?"
   page.should have_content link_text
   click_link_or_button link_text
 end
