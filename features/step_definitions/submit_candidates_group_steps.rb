@@ -18,8 +18,9 @@ Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pe
 end
 
 When /^the user requests collaboration$/ do
-  page.should have_content 'Invite your group to help?'
-  click_link_or_button 'Invite your group to help?'
+  link_text = "Invite your teammates in #{@group.get_name( false )} to help?"
+  page.should have_content link_text
+  click_link_or_button link_text
 end
 
 When /^group user (\d+) logs in$/ do |user_count|
