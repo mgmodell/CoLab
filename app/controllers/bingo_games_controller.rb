@@ -18,7 +18,7 @@ class BingoGamesController < ApplicationController
     if @current_user.is_admin?
       @bingo_games = BingoGame.all
     else
-      rosters = @current_user.rosters.instructorships
+      rosters = @current_user.rosters.instructorships.includes(:bingo_games)
       rosters.each do |roster|
         @bingo_games.concat roster.course.bingo_games.to_a
       end
@@ -60,16 +60,30 @@ class BingoGamesController < ApplicationController
   def update_review_candidates
     # Process the data
     params_act = params["/bingo/candidates_review/#{@bingo_game.id}"]
-    @bingo_game.candidates.completed.each do |candidate|
+    existing_concepts = {}
+
+    # Cache the concepts for existince checking
+    Concept.all.each do |concept|
+      existing_concepts[concept.name] = concept
+    end
+
+    candidate_feedbacks = {}
+    CandidateFeedback.all.each do |cf|
+      candidate_feedbacks[cf.id] = cf
+    end
+    @bingo_game.candidates.completed.find_all do |candidate|
       code = 'candidate_feedback_' + candidate.id.to_s
       feedback_id = params_act["candidate_feedback_#{candidate.id}"]
       next if feedback_id.blank?
-      candidate.candidate_feedback = CandidateFeedback.find(feedback_id)
+      candidate.candidate_feedback = candidate_feedbacks[feedback_id.to_i]
       candidate.candidate_feedback_id = candidate.candidate_feedback.id
       unless candidate.candidate_feedback.name.start_with? 'Term'
         concept_name = params_act["concept_#{candidate.id}"].split.map(&:capitalize).*' '
-        concept = Concept.where(name: concept_name).take
-        concept = Concept.create(name: concept_name) if concept.nil?
+        concept = existing_concepts[concept_name]
+        if concept.nil?
+          concept = Concept.create(name: concept_name)
+          existing_concepts[concept_name] = concept
+        end
         candidate.concept = concept
       end
       candidate.save
@@ -78,7 +92,7 @@ class BingoGamesController < ApplicationController
 
     @bingo_game.reviewed = params_act['reviewed']
     if @bingo_game.reviewed && !@bingo_game.students_notified
-      @bingo_game.course.enrolled_students.each do |student|
+      @bingo_game.course.enrolled_students.find_all do |student|
         AdministrativeMailer.notify_availability(student,
                                                  "#{@bingo_game.topic} terms list").deliver_later
       end
@@ -113,6 +127,14 @@ class BingoGamesController < ApplicationController
     @title = t 'bingo_games.show.title'
     render :show, notice: (t 'bingo_games.activate_success')
   end
+
+  def get_board; end
+
+  def update_board; end
+
+  def play_board; end
+
+  def validate_win; end
 
   private
 

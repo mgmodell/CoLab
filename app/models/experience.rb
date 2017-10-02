@@ -23,6 +23,10 @@ class Experience < ActiveRecord::Base
     reaction
   end
 
+  def get_type
+    I18n.t(:experience)
+  end
+
   def next_deadline
     end_date
   end
@@ -181,6 +185,6 @@ class Experience < ActiveRecord::Base
   private
 
   def anonymize
-    anon_name = Forgery::Name.company_name.to_s
+    self.anon_name = Forgery::Name.company_name.to_s
   end
 end

@@ -135,6 +135,8 @@ end
 Given /^the user enrolls in a new course$/ do
   @course = Course.make
   @course.save
+  @course.get_name(true).should_not be_nil
+  @course.get_name(true).length.should be > 0
   puts @course.errors.full_messages unless @course.errors.blank?
   role = Role.enrolled.take
   r = Roster.create(user: @user, course: @course, role: role)

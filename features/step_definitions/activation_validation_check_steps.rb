@@ -17,6 +17,7 @@ Given /^an additional user is in each group of the project$/ do
   user = User.make
   user.skip_confirmation!
   user.save
+  user.name(true).should_not be ', '
   puts user.errors.full_messages unless user.errors.blank?
   @project.groups.each do |group|
     group.users << user

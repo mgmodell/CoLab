@@ -117,10 +117,7 @@
   <div id="activities" class="ui-body-<%= theme_code %> ui-content">
 
 <p>
-  <h3><%= t 'bingo_games.bingo_games' %></h3>
-  <% if @course.bingo_games.count < 1 %>
-    <%= t 'bingo_games.no_games' %></br>
-  <% else %>
+  <h3><%= t 'courses.activities' %></h3>
     <table data-role="table"
           id="bingo_table"
           data-mode="columntoggle"
@@ -131,133 +128,73 @@
       <tr>
         <th><%= t :name %></th>
         <th data-priority="1"><%= t :status %></th>
+        <th data-priority="0"><%= t :task_type %></th>
         <th data-priority="1"><%= t :close_date %></th>
         <th data-priority="0"><%= t :actions %></th>
       </tr>
       </thead>
       <tbody>
-          <% @course.bingo_games.each do |game| %>
+          <% @course.get_activities.each do |activity| %>
             <tr>
-                <td><%= link_to game.get_name( anonymize ), game %></td>
+                <td><%= link_to activity.get_name( anonymize ), activity %></td>
                 <td>
-                <% if game.active %>
+                <% if activity.end_date < DateTime.current %>
+                <%= t :expired %>
+                <% elsif activity.active %>
                 <%= t :active %>
                 <% else %>
                 <span class="error"><%= t :inactive %></span>
                 <% end %></td>
                 <td>
-                  <%= l game.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
+                  <%= activity.get_type %>
                 </td>
-                <td><%= link_to t( :show ), game %>&nbsp;|&nbsp;
-                <%= link_to( t( :activate ), activate_bingo_game_path( game ) ) + raw("&nbsp;|&nbsp;" ) unless game.active %>
-                <%= link_to t( :edit ), edit_bingo_game_path(game) %>&nbsp;|&nbsp;
-                <%= link_to t( :destroy ), game, method: :delete, data: { confirm: t( :confirmation) } %></td>
+                <td>
+                  <div hidden>
+                    <%= l activity.end_date.in_time_zone( @current_user.timezone ), format: :datestamp %>
+                  </div>
+                  <%= l activity.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
+                </td>
+                <td><%= link_to t( :show ), activity %>&nbsp;|&nbsp;
+                <%= link_to t( :edit ), [:edit, activity] %>&nbsp;|&nbsp;
+                <%= link_to t( :destroy ), activity, method: :delete, data: { confirm: t( :confirmation) } %></td>
             </tr>
           <% end %>
       </tbody>
     </table>
-  <% end %>
-  <%= link_to t( 'bingo_games.new.title' ), new_bingo_game_path( :course_id => @course.id ),
-      data: { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" } %>
-</p>
-<p>
-  </br></br>
-  <h3><%= t 'projects.projects' %></h3>
-  <% if @course.projects.count < 1 %>
-    <%= t :no_projects %></br>
-  <% else %>
-    <table data-role="table"
-          id="projects_table"
-          data-mode="columntoggle"
-          data-column-btn-theme="<%= theme_code %>"
-          data-column-btn-text="<%= t :column_select %>"
-          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-      <thead>
-        <tr>
-          <th><%= t :name %></th>
-          <th data-priority="1"><%= t :status %></th>
-          <th data-priority="1"><%= t :close_date %></th>
-          <th data-priority="0"><%= t :actions %></th>
-        </tr>
-      </thead>
-      <tbody>
-          <% @course.projects.each do |project| %>
-            <tr>
-                <td><%= link_to project.get_name( anonymize ), project %></td>
-                <td>
-                <% if project.active %>
-                <%= t :active %>
-                <% else %>
-                <span class="error"><%= t :inactive %></span>
-                <% end %></td>
-                <td>
-                  <%= l project.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
-                </td>
-                <td><%= link_to t( :show ), project %>&nbsp;|&nbsp;
-                <%= ( link_to( t( :activate ), activate_project_path( project ) ) + raw("&nbsp;|&nbsp;" )) unless project.active %>
-                <%= link_to t( :edit ), edit_project_path(project) %>&nbsp;|&nbsp;
-                <%= link_to t( :destroy ), project, method: :delete, data: { confirm: t( :confirmation) } %></td>
-            </tr>
-          <% end %>
-      </tbody>
-    </table>
-  <% end %>
-  <%= link_to t( 'projects.new.title'), new_project_path( :course_id => @course.id ),
-      :data => { :icon => "plus", :mini => "true", :inline => "true", :role => "button" }%>
-</p>
-<p>
-  </br></br>
-  <h3><%= t :exps %></h3>
-  <% if @course.experiences.count < 1 %>
-    <%= t 'experiences.no_experiences' %></br>
-  <% else %>
-    <table data-role="table"
-          id="experiences_table"
-          data-mode="columntoggle"
-          data-column-btn-theme="<%= theme_code %>"
-          data-column-btn-text="<%= t :column_select %>"
-          class="table-stroke ui-shadow table-stripe table-ui-responsive " >
-      <thead>
-        <tr>
-          <th><%= t :name %></th>
-          <th data-priority="1"><%= t :status %></th>
-          <th data-priority="1"><%= t :close_date %></th>
-          <th data-priority="0"><%= t :actions %></th>
-        </tr>
-      </thead>
-      <tbody>
-          <% @course.experiences.each do |experience| %>
-            <tr>
-                <td><%= link_to experience.get_name( anonymize ), experience %></td>
-                <td>
-                <% if experience.active %>
-                  <%= t :active %>
-                <% else %>
-                  <span class="error"><%= t :inactive %></span>
-                <% end %>
-                </td>
-                <td>
-                  <%= l experience.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
-                </td>
-                <td><%= link_to t( :show), experience %>&nbsp;|&nbsp;
-                  <%= link_to t(:activate ), activate_experience_path( experience )
-                                + raw("&nbsp;|&nbsp;" ) unless experience.active %>
-                  <%= link_to t( :edit), edit_experience_path(experience) %>&nbsp;|&nbsp;
-                  <%= link_to t( :destroy), experience,
-                              method: :delete,
-                              data: { confirm: t( :confirmation) } %>
-                </td>
-            </tr>
-          <% end %>
-      </tbody>
-    </table>
-  <% end %><% label = t( 'experiences.new.title' ) %>
-  <%= link_to label, new_experience_path( :course_id => @course.id ),
-                :data => { 
-                  :icon => "plus", 
-                  :inline => "true", 
-                  :mini => "true", 
-                  :role => "button" } %>
+  <table width='100%'>
+    <tr>
+      <td>
+        <center>
+          <%= link_to t( 'bingo_games.new.title' ), new_bingo_game_path( :course_id => @course.id ),
+                      :data => { 
+                        :icon => "plus", 
+                        :inline => "true", 
+                        :mini => "true", 
+                        :role => "button" } %>
+        </center>
+      </td>
+      <td>
+        <center>
+          <%= link_to t( 'projects.new.title'), new_project_path( :course_id => @course.id ),
+                      :data => { 
+                        :icon => "plus", 
+                        :inline => "true", 
+                        :mini => "true", 
+                        :role => "button" } %>
+        </center>
+      </td>
+      <td>
+        <center>
+          <%= link_to t( 'experiences.new.title' ), new_experience_path( :course_id => @course.id ),
+                      :data => { 
+                        :icon => "plus", 
+                        :inline => "true", 
+                        :mini => "true", 
+                        :role => "button" } %>
+        </center>
+      </td>
+    </tr>
+  </table>
 </p>
   </div>
   <div id="month" class="ui-body-<%= theme_code %> ui-content">

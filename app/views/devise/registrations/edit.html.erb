@@ -165,9 +165,13 @@
       <% activities.each do |activity| %>
       <tr>
         <% if activity.class.name == "BingoGame" && activity.reviewed %>
-          <td><%= link_to activity.name, bingo_list_stats_path( activity.candidate_list_for_user( @current_user ) ) %></td>
+          <td><%= link_to activity.get_name( false ),
+                  bingo_list_stats_path( activity.candidate_list_for_user( @current_user ) ) %>
+          </td>
         <% else %>
-          <td><%= activity.get_name false %></td>
+          <td>
+            <%= activity.get_name false %>
+          </td>
         <% end %>
         <td><%= activity.course.pretty_name false %></td>
         <td><%= activity.type %></td>
@@ -211,7 +215,7 @@
         <td>
           <center>
             <%= link_to t( 'devise.registrations.update_status' ), 
-                edit_consent_log_path( consent_log ) %>
+                edit_consent_log_path( consent_log.consent_form_id ) %>
           </center>
         </td>
       </tr>

@@ -2,6 +2,7 @@ en:
   bingo_games:
     review_candidates:
       title: Candidate Terms for Review
+      submitted_by: Submitted by
     index:
       title: List of Bingo! Games
     edit:
@@ -21,7 +22,7 @@ en:
     review_problems: There were problems with the review and it could not be saved
     activate_success: Bingo! Game activated!
     #Term data
-    topic: Topic
+    topic: 'Topic:'
     definition: Definition
     feedback: Feedback
     concept: Concept

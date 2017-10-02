@@ -21,6 +21,8 @@ Given /^a user has signed up$/ do
   @user = User.make
   @user.confirm
   @user.save
+  @user.name(true).should_not be ', '
+  @user.name(true).length.should be > 2
   puts @user.errors.full_messages unless @user.errors.blank?
 end
 
@@ -50,6 +52,9 @@ end
 
 Given /^a course$/ do
   @course = Course.make
+  @course.save
+  @course.get_name(true).should_not be_nil
+  @course.get_name(true).length.should be > 0
 end
 
 Then /^the users are added to the course by email address$/ do

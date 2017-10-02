@@ -25,6 +25,8 @@ Feature: Submitting Reports
     Then the user should enter values summing to 600, "evenly" across each column
     When the user submits the installment
     Then there should be 0 project save errors
+    Then user opens their profile
+    Then user sees the assessed project in the history
 
   Scenario: User should not be able to edit a completed weekly installment
     Given the project measures 4 factors

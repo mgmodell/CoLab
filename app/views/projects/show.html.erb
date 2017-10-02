@@ -115,7 +115,6 @@
       </table>
     <% end %>
   </p>
-  <%= link_to (t 'projects.edit.title'), edit_project_path(@project) %>
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
   <h2><%= t :resp_summ %></h2>
@@ -124,4 +123,5 @@
   <h2><%= t :resp_data %><h2>
 </div>
 </div>
+  <%= link_to (t 'projects.edit.title'), edit_project_path(@project) %>
 <%= link_to (t :back_to_course), @project.course %>

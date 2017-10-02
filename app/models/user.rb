@@ -77,7 +77,7 @@ class User < ActiveRecord::Base
 
   def waiting_consent_logs
     # Find those consent forms to which the user has not yet responded
-    all_consent_forms = ConsentForm.all.to_a
+    all_consent_forms = ConsentForm.all.includes(:projects).to_a
 
     # We only want to do this for currently active consent forms
     consent_forms = all_consent_forms.delete_if { |cf| !cf.is_active? }
@@ -146,13 +146,10 @@ class User < ActiveRecord::Base
       activities << bingo_game
     end
     # Add in the reactions
-    experiences.each do |experience|
-      activities << experience
-    end
+    activities.concat experiences.all
+
     # Add in projects
-    projects.each do |project|
-      activities << project
-    end
+    activities.concat projects.all
 
     activities.sort_by(&:end_date)
   end
@@ -203,7 +200,7 @@ class User < ActiveRecord::Base
   private
 
   def anonymize
-    anon_first_name = Forgery::Name.first_name
-    anon_last_name = Forgery::Name.last_name
+    self.anon_first_name = Forgery::Name.first_name
+    self.anon_last_name = Forgery::Name.last_name
   end
 end
