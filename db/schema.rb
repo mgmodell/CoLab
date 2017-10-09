@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170828054803) do
+ActiveRecord::Schema.define(version: 20171009050315) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20170828054803) do
     t.string   "name_ko",       limit: 255
     t.text     "definition_en", limit: 65535
     t.text     "definition_ko", limit: 65535
+    t.integer  "credit",        limit: 4
   end
 
   add_index "candidate_feedbacks", ["name_en"], name: "index_candidate_feedbacks_on_name_en", unique: true, using: :btree
