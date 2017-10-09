@@ -25,7 +25,7 @@ class CandidateList < ActiveRecord::Base
       candidates.each do |candidate|
         performance += candidate.candidate_feedback.credit
       end
-      performance = performance / expected_count
+      performance /= expected_count
     end
     performance
   end
