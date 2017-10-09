@@ -19,6 +19,17 @@ class CandidateList < ActiveRecord::Base
     100 * candidates.completed.count / expected_count
   end
 
+  def performance
+    performance = 0
+    if bingo_game.reviewed
+      candidates.each do |candidate|
+        performance += candidate.candidate_feedback.credit
+      end
+      performance /= expected_count
+    end
+    performance
+  end
+
   def get_by_feedback(candidate_feedback)
     candidates.where(candidate_feedback: candidate_feedback)
   end
@@ -37,10 +48,6 @@ class CandidateList < ActiveRecord::Base
     else
       bingo_game.individual_count
     end
-  end
-
-  def performance
-    100 * get_concepts.count / expected_count
   end
 
   def status
