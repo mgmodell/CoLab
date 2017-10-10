@@ -63,6 +63,7 @@ group :development, :test do
   gem 'htmlbeautifier'
   gem 'machinist'
   gem 'railroady'
+  gem 'rails-erd', require: false
   gem 'rspec'
   gem 'rubocop'
   gem 'i18n_data'

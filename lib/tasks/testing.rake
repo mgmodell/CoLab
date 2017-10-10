@@ -140,7 +140,7 @@ namespace :testing do
           if !user.errors.nil? && user.errors.count > 0
             puts user.errors.full_messages
           else
-            puts "#{user.name} <#{email}> is admin? #{admin_value}"
+            puts "#{user.name( false )} <#{email}> is admin? #{admin_value}"
           end
         end
       end
