@@ -41,8 +41,18 @@
   credit: 25
   definition_en: >
     You've identified an important term related to the stated topic,
-    but I recognize the definition provided as having been copied
-    directly from another source.
+    but I recognize the definition provided as having been substantially
+    copied directly from another source.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: 'Definition: Wrong Context'
+  name_ko: 
+  credit: 50
+  definition_en: >
+    You've identified an important term related to the stated topic,
+    but the definition you've provided, while correct for other uses,
+    is not correct for this topic.
   definition_ko:
 
 - !ruby/object:CandidateFeedback_
