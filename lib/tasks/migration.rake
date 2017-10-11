@@ -180,6 +180,7 @@ namespace :migratify do
     class CandidateFeedback_
       attr_accessor :name_en, :name_ko
       attr_accessor :definition_en, :definition_ko
+      attr_accessor :credit
     end
     quote_data = YAML.safe_load(File.open('db/candidate_feedback.yml'), [CandidateFeedback_])
     quote_data.each do |cf|
@@ -187,6 +188,7 @@ namespace :migratify do
       g = CandidateFeedback.new if g.nil?
       g.name_en = cf.name_en unless g.name_en == cf.name_en
       g.name_ko = cf.name_ko unless g.name_ko == cf.name_ko
+      g.credit = cf.credit unless g.credit == cf.credit
       g.definition_en = cf.definition_en unless g.definition_en == cf.definition_en
       g.definition_ko = cf.definition_ko unless g.definition_ko == cf.definition_ko
       g.save

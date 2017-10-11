@@ -4,17 +4,24 @@ en:
     distilled: Distilled concepts
     list_for_class: List for class on
     demo_title: Complete the term list (DEMO)
-    demo_term1: Cooperation
-    demo_def1: Two or more entitites applying their skills towards achieving a common goal
-    demo_term2: Group
-    demo_def2: ''
+    demo_term1: The group dynamics
+    demo_def1: How members of a group work together
+    demo_term2: Cooperation
+    demo_def2: Two or more entitites applying their skills towards achieving a common goal
     demo_term3: Group Dynamics
     demo_def3: The nature of how group members interact with one another
-    demo_term4: Group Process
-    demo_def4: The methods and techniques a group follows
-    demo_term5: Team
-    demo_def5: ''
+    demo_term4: Group
+    demo_def4: ''
+    demo_term5: Group Process
+    demo_def5: The methods and techniques a group follows
+    demo_term6: Team
+    demo_def6: A bunch of people working together
     demo_topic: What is collaboration?
+    demo_description: >
+      Johnson, R. T., & Johnson, D. W. (1994). An overview of
+      cooperative learning. In J. Thousand, A. Villa, & A. Nevin (Eds.),
+      Creativity and collaborative learning (pp. 1–21). Baltimore:
+      Brookes Press.
     demo_success: Your response would have been successfully saved. The demonstration is finished.
     demo_colab_success: Collaboration would have been successfully requested. The demonstration is finished.
     update_success: Your list was successfully saved.
