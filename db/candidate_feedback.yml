@@ -84,12 +84,19 @@
     The term does not match the definition.
   definition_ko:
 
+- !ruby/object:CandidateFeedback_
+  name_en: "Term: Product Name"
+  name_ko: 
+  definition_en: >
+    Products should not be used unless they are dominant to the point
+    of being a household name.
+  definition_ko:
 
 - !ruby/object:CandidateFeedback_
   name_en: "Term: Proper Name"
   name_ko: 
   definition_en: >
-    Products should not be used unless they are dominant to the point
-    of being a household name.
+    Proper names should not be used unless they are household names
+    associated with the field..
   definition_ko:
 
