@@ -128,16 +128,9 @@ class BingoGamesController < ApplicationController
     render :show, notice: (t 'bingo_games.activate_success')
   end
 
-  def get_board; end
-
-  def update_board; end
-
-  def play_board; end
-
-  def validate_win; end
+  def get_games; end
 
   private
-
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_game
     bg_test = BingoGame.find(params[:id])
