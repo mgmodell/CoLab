@@ -31,9 +31,10 @@ Rails.application.routes.draw do
         as: :update_bingo_candidates_review
     get 'list_stats/:id' => 'candidate_lists#list_stats', as: :'bingo_list_stats'
     #Gameplay functions
+    get 'get_games' => 'bingo_games#get_games', :as => 'get_games'
     get 'get_board/:id' => 'bingo_games#get_board', :as => 'get_bingo_board'
     get 'update_board/:id' => 'bingo_games#update_board', :as => 'update_bingo_board'
-    get 'play_board/:id' => 'bingo_games#play_board', :as => 'play_bingo'
+    post 'play_board/:id' => 'bingo_games#play_board', :as => 'play_bingo'
   end
 
   get 'infra/states_for_country/:country_code' => 'home#states_for_country', as: :states_for
