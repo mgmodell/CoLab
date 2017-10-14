@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171014054009) do
+ActiveRecord::Schema.define(version: 20171014135942) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -34,6 +34,30 @@ ActiveRecord::Schema.define(version: 20171014054009) do
   end
 
   add_index "behaviors", ["name_en"], name: "index_behaviors_on_name_en", unique: true, using: :btree
+
+  create_table "bingo_boards", force: :cascade do |t|
+    t.integer  "bingo_game_id", limit: 4
+    t.integer  "user_id",       limit: 4
+    t.integer  "winner",        limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "bingo_boards", ["bingo_game_id"], name: "index_bingo_boards_on_bingo_game_id", using: :btree
+  add_index "bingo_boards", ["user_id"], name: "index_bingo_boards_on_user_id", using: :btree
+
+  create_table "bingo_cells", force: :cascade do |t|
+    t.integer  "bingo_board_id", limit: 4
+    t.integer  "concept_id",     limit: 4
+    t.integer  "row",            limit: 4
+    t.integer  "column",         limit: 4
+    t.boolean  "selected"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "bingo_cells", ["bingo_board_id"], name: "index_bingo_cells_on_bingo_board_id", using: :btree
+  add_index "bingo_cells", ["concept_id"], name: "index_bingo_cells_on_concept_id", using: :btree
 
   create_table "bingo_games", force: :cascade do |t|
     t.string   "topic",               limit: 255
@@ -421,8 +445,8 @@ ActiveRecord::Schema.define(version: 20171014054009) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
@@ -525,6 +549,10 @@ ActiveRecord::Schema.define(version: 20171014054009) do
   add_index "weeks", ["week_num", "narrative_id"], name: "index_weeks_on_week_num_and_narrative_id", unique: true, using: :btree
 
   add_foreign_key "assessments", "projects"
+  add_foreign_key "bingo_boards", "bingo_games"
+  add_foreign_key "bingo_boards", "users"
+  add_foreign_key "bingo_cells", "bingo_boards"
+  add_foreign_key "bingo_cells", "concepts"
   add_foreign_key "bingo_games", "courses"
   add_foreign_key "bingo_games", "projects"
   add_foreign_key "candidate_lists", "bingo_games"
