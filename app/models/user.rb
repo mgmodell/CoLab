@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
   has_many :concepts, inverse_of: :user, dependent: :destroy
   has_many :projects, through: :groups
   has_many :candidates, inverse_of: :user
+  belongs_to :bingo_boards, inverse_of: :user, dependent: :destroy
   belongs_to :gender, inverse_of: :users
   belongs_to :theme, inverse_of: :users
   has_many :home_countries, through: :home_state
