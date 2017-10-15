@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 class BingoGamesController < ApplicationController
-  before_action :set_bingo_game, only: [:show, :edit, :update, 
+  before_action :set_bingo_game, only: [:show, :edit, :update,
                                         :destroy, :review_candidates,
-                                        :update_review_candidates ]
+                                        :update_review_candidates]
 
   before_action :check_editor, except: [:next, :diagnose, :react,
                                         :update_review_candidates,
-                                        :show, :index ]
+                                        :show, :index]
 
   before_action :check_viewer, only: [:show, :index]
 
@@ -134,7 +134,10 @@ class BingoGamesController < ApplicationController
     render :show, notice: (t 'bingo_games.activate_success')
   end
 
+  def get_concepts; end
+
   private
+
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_game
     bg_test = BingoGame.find(params[:id])

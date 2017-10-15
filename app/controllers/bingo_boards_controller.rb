@@ -8,13 +8,13 @@ class BingoBoardsController < ApplicationController
 
   def edit
     @title = t '.title'
-    #generate a new board and spit it out
+    # generate a new board and spit it out
   end
 
   # GET /admin/bingo_board
   def index
     @title = t '.title'
-    #Narrow down to those available to the user
+    # Narrow down to those available to the user
     @bingo_boards = BingoBoard.where user: @current_user
   end
 
@@ -35,7 +35,7 @@ class BingoBoardsController < ApplicationController
   end
 
   def bingo_board_params
-    params.require(:bingo_board).permit(bingo_cells: [ :id, :concept_id,
-                                                       :selected ])
+    params.require(:bingo_board).permit(bingo_cells: [:id, :concept_id,
+                                                      :selected])
   end
 end
