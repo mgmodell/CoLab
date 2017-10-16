@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class BingoBoardsController < ApplicationController
-  before_action :set_bingo_board, except: [:index ]
+  before_action :set_bingo_board, except: [:index]
 
   def show
     @title = t '.title'
@@ -14,11 +14,11 @@ class BingoBoardsController < ApplicationController
     @title = t '.title'
     # check if we've got cells yet
     if @bingo_board.bingo_cells.empty?
-      # generate a new board 
-    
+      # generate a new board
+
     end
-    
-    #...and spit it out
+
+    # ...and spit it out
     respond_to do |format|
       format.json { render json: @bingo_board }
       format.html { render :edit }
