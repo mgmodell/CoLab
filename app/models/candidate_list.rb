@@ -22,7 +22,7 @@ class CandidateList < ActiveRecord::Base
   def performance
     performance = 0
     if bingo_game.reviewed
-      candidates.each do |candidate|
+      candidates.completed.each do |candidate|
         performance += candidate.candidate_feedback.credit
       end
       performance /= expected_count
