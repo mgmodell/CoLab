@@ -61,7 +61,7 @@
         </td>
         <td><%= f.input_field "concept_#{candidate.id}",
                       value: candidate.concept.blank? ? "": candidate.concept.name, 
-                      class: "awesomplete",
+                      class: "awesomplete-ajax",
                       data: { list: '#concepts' },
                       label: false %>
         </td>
@@ -71,11 +71,6 @@
     </tbody>
   </table>
   <%= f.input :reviewed, as: :boolean, label: "Review completed" %>
-  <ul id='concepts' hidden>
-    <% Concept.all.each do |concept| %>
-    <li><%= concept.name %></li>
-    <% end %>
-  </ul>
 
 <div class="form-actions">
   <%= f.button :submit, t(:save) %>

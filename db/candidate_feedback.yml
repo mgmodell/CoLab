@@ -77,8 +77,7 @@
   name_ko: 
   credit: 20
   definition_en: >
-    The term does not represent new learning or consideration relevant
-    to the topic.
+    The term is either not a real term or is being misused.
   definition_ko:
 
 - !ruby/object:CandidateFeedback_
@@ -100,7 +99,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: "Term: Product Name"
   name_ko: 
-  credit: 50
+  credit: 30
   definition_en: >
     Products should not be used unless they are dominant to the point
     of being a household name.
@@ -109,7 +108,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: "Term: Proper Name"
   name_ko: 
-  credit: 50
+  credit: 30
   definition_en: >
     Proper names should not be used unless they are household names
     associated with the field..

@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 class BingoGamesController < ApplicationController
-  before_action :set_bingo_game, only: [:show, :edit, :update, :destroy, :review_candidates, :update_review_candidates]
-  before_action :check_editor, except: [:next, :diagnose, :react, :update_review_candidates, :show, :index]
+  before_action :set_bingo_game, only: [:show, :edit, :update,
+                                        :destroy, :review_candidates,
+                                        :update_review_candidates]
+
+  before_action :check_editor, except: [:next, :diagnose, :react,
+                                        :update_review_candidates,
+                                        :show, :index, :get_concepts]
+
   before_action :check_viewer, only: [:show, :index]
 
   def show
@@ -110,6 +116,32 @@ class BingoGamesController < ApplicationController
     end
   end
 
+  def get_concepts
+    concepts = []
+    bingo_game_id = params[:id].to_i
+    substring = params[:search_string].strip
+    criteria = 'true ?'
+    if substring.length > 2
+      criteria = 'concepts.name LIKE ?'
+      substring = "%#{substring}%"
+    else
+      substring = ''
+    end
+
+    if bingo_game_id == 0
+      concepts = Concept.where(criteria, substring).to_a if @current_user.is_instructor?
+    else
+      concepts = BingoGame.find(bingo_game_id).concepts
+                          .where(criteria, substring).to_a
+    end
+
+    respond_to do |format|
+      format.json do
+        render json: concepts.collect { |c| { id: c.id, name: c.name } }.to_json
+      end
+    end
+  end
+
   def destroy
     @course = @bingo_game.course
     @bingo_game.destroy
@@ -127,14 +159,6 @@ class BingoGamesController < ApplicationController
     @title = t 'bingo_games.show.title'
     render :show, notice: (t 'bingo_games.activate_success')
   end
-
-  def get_board; end
-
-  def update_board; end
-
-  def play_board; end
-
-  def validate_win; end
 
   private
 
