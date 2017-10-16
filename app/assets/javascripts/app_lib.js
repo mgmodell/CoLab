@@ -6,6 +6,33 @@ $(document).bind("mobileinit", function(){
 
 //Add some code to the page.
 $(document).ready(function(){
+  var concept_url = '/bingo/concepts/0.json?search_string='
+  $(".awesomplete-ajax").each( function( index, conceptField ) {
+    var ap = new Awesomplete( conceptField, {
+      minChars: 3,
+      autoFirst: true
+    } );
+    ap.list = [ ]
+    $( conceptField ).data( "ac", ap );
+  });
+
+  $(".awesomplete-ajax").on( "keyup", function(){
+    console.log( 'here!' );
+    console.log( this.value.length );
+    if( this.value.length > 2 )
+    {
+      $.getJSON( concept_url + this.value, function (data)
+      {
+        var list = [ ];
+        $.each( data, function( key, value ) {
+          list.push( value );
+        } );
+        this.data( "ac" ).list = list;
+      });
+    }
+
+  });
+
 
   $("#calc_diversity").click(function() {
     var emails;

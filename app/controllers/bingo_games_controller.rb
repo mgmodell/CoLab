@@ -119,7 +119,7 @@ class BingoGamesController < ApplicationController
   def get_concepts
     concepts = []
     bingo_game_id = params[:id].to_i
-    substring = params[:substring]
+    substring = params[:search_string]
     criteria = 'true ?'
     if substring.length > 2
       criteria = 'concepts.name LIKE ?'
@@ -135,7 +135,9 @@ class BingoGamesController < ApplicationController
                             where( criteria, substring ).to_a
     end
     respond_to do |format|
-      format.json { render json: concepts }
+      format.json do
+        render json: concepts
+      end
     end
 
   end
