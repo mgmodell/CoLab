@@ -6,7 +6,7 @@ class BingoGamesController < ApplicationController
 
   before_action :check_editor, except: [:next, :diagnose, :react,
                                         :update_review_candidates,
-                                        :show, :index]
+                                        :show, :index, :get_concepts]
 
   before_action :check_viewer, only: [:show, :index]
 
@@ -134,9 +134,10 @@ class BingoGamesController < ApplicationController
       concepts = BingoGame.find( bingo_game_id ).concepts.
                             where( criteria, substring ).to_a
     end
+
     respond_to do |format|
       format.json do
-        render json: concepts
+        render json: concepts.collect{ |c| {id: c.id, name: c.name } }.to_json
       end
     end
 
@@ -159,8 +160,6 @@ class BingoGamesController < ApplicationController
     @title = t 'bingo_games.show.title'
     render :show, notice: (t 'bingo_games.activate_success')
   end
-
-  def get_concepts; end
 
   private
 
