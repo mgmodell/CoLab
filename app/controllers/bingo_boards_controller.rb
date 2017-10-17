@@ -64,6 +64,11 @@ class BingoBoardsController < ApplicationController
     end
   end
 
+  def verify_win
+    verified = params[ :verified ]
+
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
