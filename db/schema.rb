@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171014135942) do
+ActiveRecord::Schema.define(version: 20171017020030) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 20171014135942) do
     t.integer  "winner",        limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.boolean  "win_claimed"
   end
 
   add_index "bingo_boards", ["bingo_game_id"], name: "index_bingo_boards_on_bingo_game_id", using: :btree
