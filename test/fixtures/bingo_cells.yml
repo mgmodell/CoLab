@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  BingoBoard_id: 
+  Concept_id: 
+  row: 1
+  column: 1
+  selected: false
+
+two:
+  BingoBoard_id: 
+  Concept_id: 
+  row: 1
+  column: 1
+  selected: false

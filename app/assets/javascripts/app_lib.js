@@ -6,6 +6,39 @@ $(document).bind("mobileinit", function(){
 
 //Add some code to the page.
 $(document).ready(function(){
+  var concept_url = '/bingo/concepts/0.json?search_string='
+  var apMinChars = 3;
+  $(".awesomplete-ajax").each( function( index, conceptField ) {
+    var ap = new Awesomplete( conceptField, {
+      minChars: apMinChars,
+      autoFirst: true
+    } );
+    ap.list = [ ]
+    $( conceptField ).data( "ac", ap );
+  });
+
+  $(".awesomplete-ajax").on( "keyup", function(e){
+    var code = (e.keyCode || e.which);
+    if( code === 37 || code === 38 || code === 39 || code === 40 ||
+        code === 27 || code === 13 || this.value.length < apMinChars )
+    {
+      //reserved
+    }
+    else
+    {
+      var x = this;
+      $.getJSON( concept_url + this.value, function (data)
+      {
+        var list = [ ];
+        $.each( data, function( key, value ) {
+          list.push( value.name );
+        } );
+        $(x).data( "ac" ).list = list;
+      });
+    }
+
+  });
+
 
   $("#calc_diversity").click(function() {
     var emails;
