@@ -27,10 +27,12 @@
         <td><%= l experience.start_date, format: :tz_clarity %></td>
         <td><%= l experience.end_date, format: :tz_clarity %></td>
         <td><%= experience.active %></td>
-        <td><%= link_to t :show, experience %>&nbsp;|&nbsp;
-        <%= link_to t :edit, edit_experience_path(experience) %>&nbsp;|&nbsp;
-        <%= link_to t :destroy, experience, method: :delete,
-                      data: { confirm: t( :confirmation ) } %></td>
+        <td><%= link_to( t(:show), experience_path( experience )) %>&nbsp;|&nbsp;
+        <%= link_to t(:edit), edit_experience_path(experience) %>&nbsp;|&nbsp;
+        <%= link_to t(:destroy),
+                        experience_path( experience ),
+                        method: :delete,
+                        data: { confirm: t( :confirmation ) } %></td>
       </tr>
     <% end %>
   </tbody>

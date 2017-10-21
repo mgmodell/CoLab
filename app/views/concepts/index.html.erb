@@ -12,30 +12,24 @@
   <thead>
     <tr>
       <th><%= t :name %></th>
-      <th data-priority="0"><%= t 'courses.courses' %></th>
-      <th data-priority="1"><%= t :instructors %></th>
-      <th data-priority="0"><%= t :students %></th>
-      <th data-priority="1"><%= t 'projects.projects' %></th>
-      <th data-priority="1"><%= t :exps %></th>
-      <th data-priority="1"><%= t :terms_lists %></th>
+      <th data-priority="0"><%= t 'concepts.use_count' %></th>
+      <th data-priority="0"><%= t 'concepts.courses' %></th>
+      <th data-priority="0"><%= t 'concepts.games' %></th>
       <th data-priority="1"><%= t :actions %></th>
     </tr>
   </thead>
   <tbody>
-    <% @schools.each do |school| %>
+    <% @concepts.each do |concept| %>
       <tr>
-        <td><%= link_to school.get_name( anonymize ), school %></td>
-        <td><%= school.courses.count %></td>
-        <td><%= school.instructors.count %></td>
-        <td><%= school.enrolled_students.count %></td>
-        <td><%= school.projects.count %></td>
-        <td><%= school.experiences.count %></td>
-        <td><%= school.bingo_games.count %></td>
-        <td><%= link_to t(:show), school_path( school ) %>&nbsp;|&nbsp;
-        <%= link_to t(:edit), edit_school_path(school) %>
+        <td><%= link_to concept.name, concept %></td>
+        <td><%= concept.candidates.count %></td>
+        <td><%= concept.courses.uniq.count %></td>
+        <td><%= concept.bingo_games.uniq.count %></td>
+        <td><%= link_to t(:show), concept_path( concept ) %>&nbsp;|&nbsp;
+        <%= link_to t(:edit), edit_concept_path(concept) %>
       </tr>
     <% end %>
   </tbody>
 </table>
 <br>
-<%= link_to t('schools.new.title'), new_school_path %>
+<%= link_to t('concepts.new.title'), new_concept_path %>

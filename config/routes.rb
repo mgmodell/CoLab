@@ -21,7 +21,8 @@ Rails.application.routes.draw do
     get 'verify_bingo_win/:id/:verified' => 'bingo_boards#verify_win',
         as: 'verify_bingo_win'
     resources :courses, :projects, :experiences, :bingo_games, :schools,
-              :consent_forms, :concepts
+              :consent_forms
+    resources :concepts, except: [:destroy, :create]
   end
 
   scope 'bingo' do

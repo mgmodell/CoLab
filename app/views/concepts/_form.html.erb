@@ -1,4 +1,4 @@
-<%= simple_form_for @school do |f| %>
+<%= simple_form_for @concept do |f| %>
   <%= f.error_notification %>
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
      anonymize = @current_user.anonymize? %>
@@ -6,22 +6,21 @@
     <div data-role="navbar">
       <ul>
         <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
-        <li><a href="#courses" data-ajax="false"><%= t 'courses.courses' %></a></li>
+        <li><a href="#games" data-ajax="false"><%= t 'courses.games' %></a></li>
       </ul>
     </div>
     <div id="details" class="ui-body-<%= theme_code %> ui-content">
-      <h2><%= t 'schools.show.title' %></h2>
+      <h2><%= t 'concepts.show.title' %></h2>
       <div class="form-inputs">
         <%= f.input :name %>
-        <%= f.input :description, as: :text %>
       </div>
     </div>
-    <div id="courses" class="ui-body-<%= theme_code %> ui-content">
-      <h2><%= t 'schools.courses' %></h2>
+    <div id="games" class="ui-body-<%= theme_code %> ui-content">
+      <h2><%= t 'concepts.courses' %></h2>
 <p>
-  <h3><%= t 'courses.courses' %></h3>
-  <% if @school.courses.count < 1 %>
-    <%= t 'schools.no_courses' %></br>
+  <h3><%= t 'concepts.games' %></h3>
+  <% if @concept.bingo_games.count < 1 %>
+    <%= t 'concepts.no_games' %></br>
   <% else %>
     <table data-role="table"
           id="course_table"
@@ -31,40 +30,30 @@
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
       <thead>
       <tr>
+        <th><%= t 'bingo_games.topic' %></th>
         <th><%= t :name %></th>
         <th><%= t :number %></th>
-        <th data-priority="1"><%= t :instructors %></th>
-        <th data-priority="0"><%= t :students %></th>
-        <th data-priority="1"><%= t 'projects.projects' %></th>
-        <th data-priority="1"><%= t :exps %></th>
-        <th data-priority="1"><%= t :terms_lists %></th>
         <th data-priority="0"><%= t :start_date %></th>
         <th data-priority="0"><%= t :end_date %></th>
         <th data-priority="1"><%= t :actions %></th>
       </tr>
       </thead>
       <tbody>
-          <% @school.courses.each do |course| %>
+          <% @concept.bingo_games.uniq.each do |game| %>
             <tr>
-                <td><%= link_to course.get_name( anonymize ), course %></td>
-                <td><%= course.number %></td>
-                <td><%= course.instructors.count %></td>
-                <td><%= course.enrolled_students.count %></td>
-                <td><%= course.projects.count %></td>
-                <td><%= course.experiences.count %></td>
-                <td><%= course.bingo_games.count %></td>
-                <td><%= l course.start_date, format: :tz_clarity %></td>
-                <td><%= l course.end_date, format: :tz_clarity %></td>
-                <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
-                <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
-                <%= link_to t(:destroy), course, method: :delete, data: { confirm: t(:confirmation) } %></td>
+                <td><%= link_to game.topic, game %></td>
+                <td><%= game.course.get_name( anonymize ) %></td>
+                <td><%= game.course.get_number( anonymize ) %></td>
+                <td><%= game.course.start_date %></td>
+                <td><%= game.course.end_date %></td>
+                <td><%= link_to t(:show), game %>&nbsp;|&nbsp;
+                <%= link_to t(:edit), edit_bingo_game_path(game) %>&nbsp;|&nbsp;
+                <%= link_to t(:destroy), game, method: :delete, data: { confirm: t(:confirmation) } %></td>
             </tr>
           <% end %>
       </tbody>
     </table>
   <% end %>
-  <%= link_to t( "courses.new.title"), new_course_path( :school_id => @school.id ),
-      :data => { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" }%>
 </p>
 </div>
 </div>
