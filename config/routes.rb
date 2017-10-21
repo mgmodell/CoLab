@@ -18,9 +18,10 @@ Rails.application.routes.draw do
         as: :activate_experience
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate', 
         as: :activate_bingo_game
-    resources :courses, :projects, :experiences, :bingo_games, :schools, :consent_forms
     get 'verify_bingo_win/:id/:verified' => 'bingo_boards#verify_win',
         as: 'verify_bingo_win'
+    resources :courses, :projects, :experiences, :bingo_games, :schools,
+              :consent_forms, :concepts
   end
 
   scope 'bingo' do
@@ -34,7 +35,8 @@ Rails.application.routes.draw do
     get 'list_stats/:id' => 'candidate_lists#list_stats', as: :'bingo_list_stats'
     #Gameplay functions
     resources :bingo_boards, only: [:index, :edit, :update, :show]
-    get 'concepts/:id' => 'bingo_games#get_concepts', as: :bingo_concepts,
+    get 'concepts_for_game/:id' => 'concepts#concepts_for_game',
+        as: :bingo_concepts,
         constraints: ->(req) { req.format == :json }
     post 'play_board/:id' => 'bingo_boards#play_board', as: 'play_bingo'
   end

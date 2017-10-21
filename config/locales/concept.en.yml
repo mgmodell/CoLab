@@ -1,0 +1,15 @@
+en:
+  concepts:
+    index:
+      title: List of Concepts
+    edit:
+      title: Edit Concept
+    show:
+      title: Concept Details
+      edit_string: Edit concept details
+    new:
+      title: New Concept
+    create_success: Concept was created successfully!
+    destroy_success: Concept was destroyed successfully!
+    update_success: Concept was updated successfully!
+    back: Back to the list of concepts

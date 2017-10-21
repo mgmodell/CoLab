@@ -1,32 +1,26 @@
-<p id="notice"><%= notice %></p>
-
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-   anonymize = @current_user.anonymize? %>
-<div data-role="tabs" id="tabs">
-  <div data-role="navbar">
-    <ul>
-      <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
-      <li><a href="#courses" data-ajax="false"><%= t 'courses.courses' %></a></li>
-    </ul>
-  </div>
-  <div id="details" class="ui-body-<%= theme_code %> ui-content">
-    <h3><%= t('.title')%></h3>
-    <p>
-      <h3><%= t(:name)%>:</h3>
-      <%= @school.get_name( anonymize ) %>
-    </p>
-
-    <p>
-      <h3><%= t :description %>:</h3>
-      <%= @school.description %>
-    </p>
-    <%= link_to t('.edit_string'), edit_school_path(@school) %>
-  </div>
-  <div id="courses" class="ui-body-<%= theme_code %> ui-content">
-
+<%= simple_form_for @school do |f| %>
+  <%= f.error_notification %>
+  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+     anonymize = @current_user.anonymize? %>
+  <div data-role="tabs" id="tabs">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
+        <li><a href="#courses" data-ajax="false"><%= t 'courses.courses' %></a></li>
+      </ul>
+    </div>
+    <div id="details" class="ui-body-<%= theme_code %> ui-content">
+      <h2><%= t 'schools.show.title' %></h2>
+      <div class="form-inputs">
+        <%= f.input :name %>
+        <%= f.input :description, as: :text %>
+      </div>
+    </div>
+    <div id="courses" class="ui-body-<%= theme_code %> ui-content">
+      <h2><%= t 'schools.courses' %></h2>
 <p>
   <h3><%= t 'courses.courses' %></h3>
-  <% if @school.bingo_games.count < 1 %>
+  <% if @school.courses.count < 1 %>
     <%= t 'schools.no_courses' %></br>
   <% else %>
     <table data-role="table"
@@ -44,8 +38,8 @@
         <th data-priority="1"><%= t 'projects.projects' %></th>
         <th data-priority="1"><%= t :exps %></th>
         <th data-priority="1"><%= t :terms_lists %></th>
-        <th data-priority="0">Start Date</th>
-        <th data-priority="0">End Date</th>
+        <th data-priority="0"><%= t :start_date %></th>
+        <th data-priority="0"><%= t :end_date %></th>
         <th data-priority="1"><%= t :actions %></th>
       </tr>
       </thead>
@@ -53,7 +47,7 @@
           <% @school.courses.each do |course| %>
             <tr>
                 <td><%= link_to course.get_name( anonymize ), course %></td>
-                <td><%= course.get_number( anonymize ) %></td>
+                <td><%= course.number %></td>
                 <td><%= course.instructors.count %></td>
                 <td><%= course.enrolled_students.count %></td>
                 <td><%= course.projects.count %></td>
@@ -63,18 +57,18 @@
                 <td><%= l course.end_date, format: :tz_clarity %></td>
                 <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
                 <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
-                <%= link_to t(:destroy), course, method: :delete, data:
-                              { confirm: t (:confirmation) } %></td>
+                <%= link_to t(:destroy), course, method: :delete, data: { confirm: t(:confirmation) } %></td>
             </tr>
           <% end %>
       </tbody>
     </table>
   <% end %>
-  <%= link_to t( 'schools.new.title'), new_course_path( :school_id => @school.id ),
+  <%= link_to t( "courses.new.title"), new_course_path( :school_id => @school.id ),
       :data => { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" }%>
 </p>
-  </div>
 </div>
-
-
-<%= link_to t( 'schools.back'), schools_path %>
+</div>
+<div class="form-actions">
+  <%= f.button :submit %>
+</div>
+<% end %>

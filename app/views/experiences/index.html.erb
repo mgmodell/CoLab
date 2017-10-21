@@ -29,10 +29,11 @@
         <td><%= experience.active %></td>
         <td><%= link_to t :show, experience %>&nbsp;|&nbsp;
         <%= link_to t :edit, edit_experience_path(experience) %>&nbsp;|&nbsp;
-        <%= link_to t :destroy, experience, method: :delete, data: { confirm: t :confirmation } %></td>
+        <%= link_to t :destroy, experience, method: :delete,
+                      data: { confirm: t( :confirmation ) } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 <br>
-<%= link_to t 'experiences.new.title', new_experience_path %>
+<%= link_to( t( 'experiences.new.title' ), new_experience_path ) %>

@@ -116,32 +116,6 @@ class BingoGamesController < ApplicationController
     end
   end
 
-  def get_concepts
-    concepts = []
-    bingo_game_id = params[:id].to_i
-    substring = params[:search_string].strip
-    criteria = 'true ?'
-    if substring.length > 2
-      criteria = 'concepts.name LIKE ?'
-      substring = "%#{substring}%"
-    else
-      substring = ''
-    end
-
-    if bingo_game_id == 0
-      concepts = Concept.where(criteria, substring).to_a if @current_user.is_instructor?
-    else
-      concepts = BingoGame.find(bingo_game_id).concepts
-                          .where(criteria, substring).to_a
-    end
-
-    respond_to do |format|
-      format.json do
-        render json: concepts.collect { |c| { id: c.id, name: c.name } }.to_json
-      end
-    end
-  end
-
   def destroy
     @course = @bingo_game.course
     @bingo_game.destroy
