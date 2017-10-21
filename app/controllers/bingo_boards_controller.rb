@@ -65,8 +65,7 @@ class BingoBoardsController < ApplicationController
   end
 
   def verify_win
-    verified = params[ :verified ]
-
+    verified = params[:verified]
   end
 
   private
