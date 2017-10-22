@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class ConceptsController < ApplicationController
   before_action :set_concept, only: [:show, :edit, :update, :destroy]
-  before_action :check_admin
+  before_action :check_admin, except: [:concepts_for_game]
 
   def show
     @title = t '.title'
@@ -42,7 +42,6 @@ class ConceptsController < ApplicationController
       end
     end
   end
-
 
   def new
     @title = t '.title'
