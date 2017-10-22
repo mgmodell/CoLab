@@ -2,6 +2,9 @@
 
 en:
   devise:
+    bingo_performance: Bingo! Performance
+    experience_performance: Experience Performance
+    assessment_performance: Assessment Performance
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
       send_instructions: >

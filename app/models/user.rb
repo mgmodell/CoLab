@@ -155,6 +155,62 @@ class User < ActiveRecord::Base
     activities.sort_by(&:end_date)
   end
 
+  def get_bingo_performance( course_id: 0 )
+    my_candidate_lists = []
+    if course_id > 0
+      my_candidate_lists = candidate_lists.
+        includes(candidates: :candidate_feedback).
+        joins( :bingo_game ).
+        where( bingo_games: { reviewed: true, course_id: course_id } )
+    else
+      my_candidate_lists = candidate_lists.
+        includes(candidates: :candidate_feedback).
+        joins( :bingo_game ).
+        where( bingo_games: { reviewed: true } )
+    end
+      
+    total = 0
+    my_candidate_lists.each do |candidate_list|
+      total += candidate_list.performance
+    end
+    my_candidate_lists.count == 0 ? 100 : ( total / my_candidate_lists.count )
+  end
+
+  def get_experience_performance( course_id: 0 )
+    my_reactions = []
+    if course_id > 0
+      my_reactions = reactions.joins( :experience ).
+        where( experiences: {course_id: course_id } )
+    else
+      my_reactions = reactions
+    end
+
+    total = 0
+    my_reactions.each do |reaction|
+      total += reaction.status
+    end
+    my_reactions.count == 0 ? 100 : ( total / my_reactions.count )
+
+  end
+
+  def get_assessment_performance( course_id: 0 )
+    my_projects = []
+    if course_id > 0
+      my_projects = projects.includes( :assessments ).where( course_id: course_id )
+    else
+      my_projects = projects.includes( :assessments )
+    end
+
+    total = 0
+    my_projects.each do |project|
+      project_installments = installments.joins( :assessment ).
+        where( assessments: { project_id: project.id } ).count
+      total += project_installments / project.assessments.count
+
+    end
+    my_projects.count == 0 ? 100 : ( total / my_projects.count )
+  end
+
   def waiting_student_tasks
     waiting_tasks = assessments.still_open.to_a
 
