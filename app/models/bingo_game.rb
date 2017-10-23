@@ -87,7 +87,8 @@ class BingoGame < ActiveRecord::Base
 
   def required_terms_for_group(group)
     remaining_percent = (100.0 - group_discount) / 100
-    discounted = (group.users.count * individual_count * remaining_percent).floor
+    group_user_count = group.nil? ? 1 : group.users.count
+    discounted = (group_user_count * individual_count * remaining_percent).floor
   end
 
   def get_current_lists_hash

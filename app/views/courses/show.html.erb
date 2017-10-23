@@ -106,13 +106,13 @@
           <%= mail_to roster.user.email %>
         </td>
         <td>
-          <%= @current_user.get_bingo_performance( course_id: @course.id) %>%
+          <%= roster.user.get_bingo_performance( course_id: @course.id) %>%
         </td>
         <td>
-          <%= @current_user.get_experience_performance( course_id: @course.id) %>%
+          <%= roster.user.get_experience_performance( course_id: @course.id) %>%
         </td>
         <td>
-          <%= @current_user.get_assessment_performance( course_id: @course.id) %>%
+          <%= roster.user.get_assessment_performance( course_id: @course.id) %>%
         </td>
         <td>
           <%= roster.role.name %>

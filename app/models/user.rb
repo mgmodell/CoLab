@@ -156,6 +156,7 @@ class User < ActiveRecord::Base
   end
 
   def get_bingo_performance( course_id: 0 )
+    puts "Bin Course ID: #{course_id}"
     my_candidate_lists = []
     if course_id > 0
       my_candidate_lists = candidate_lists.
@@ -168,6 +169,7 @@ class User < ActiveRecord::Base
         joins( :bingo_game ).
         where( bingo_games: { reviewed: true } )
     end
+    puts my_candidate_lists.count
       
     total = 0
     my_candidate_lists.each do |candidate_list|
@@ -177,6 +179,7 @@ class User < ActiveRecord::Base
   end
 
   def get_experience_performance( course_id: 0 )
+    puts "Exp Course ID: #{course_id}"
     my_reactions = []
     if course_id > 0
       my_reactions = reactions.joins( :experience ).
@@ -184,6 +187,7 @@ class User < ActiveRecord::Base
     else
       my_reactions = reactions
     end
+    puts my_reactions.count
 
     total = 0
     my_reactions.each do |reaction|
@@ -194,19 +198,20 @@ class User < ActiveRecord::Base
   end
 
   def get_assessment_performance( course_id: 0 )
+    puts "Ass Course ID: #{course_id}"
     my_projects = []
     if course_id > 0
       my_projects = projects.includes( :assessments ).where( course_id: course_id )
     else
       my_projects = projects.includes( :assessments )
     end
+    puts my_projects.count
 
     total = 0
     my_projects.each do |project|
       project_installments = installments.joins( :assessment ).
         where( assessments: { project_id: project.id } ).count
-      total += project_installments / project.assessments.count
-
+      total += 100 * project_installments / project.assessments.count
     end
     my_projects.count == 0 ? 100 : ( total / my_projects.count )
   end
