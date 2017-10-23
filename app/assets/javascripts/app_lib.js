@@ -4,6 +4,39 @@ $(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
 
+function init_me( obj, data ){
+  var graph = d3.select( obj );
+  var width = +graph.attr( 'width' );
+  var height = +graph.attr( 'height' );
+  // X scale will fit all values from data[] within pixels 0-w
+  var x = d3.scaleLinear().domain([0, data.length]).range([0, width]);
+  var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
+
+  var line = d3.line()
+      // assign the X function to plot our line as we wish
+      .x(function(d,i) { 
+        // verbose logging to show what's actually being done
+        console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
+        // return the X coordinate where we want to plot this datapoint
+        return x(i); 
+      })
+      .y(function(d) { 
+        // verbose logging to show what's actually being done
+        console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
+        // return the Y coordinate where we want to plot this datapoint
+        return y(d); 
+      })
+ 
+      
+        // Add the line by appending an svg:path element with the data
+        // line we created above
+      // do this AFTER the axes above so that the line is above the
+      // tick-lines
+        graph.append("svg:path").attr("d", line(data));
+      
+}
+
+
 //Add some code to the page.
 $(document).ready(function(){
   var concept_url = '/bingo/concepts_for_game/0.json?search_string='
