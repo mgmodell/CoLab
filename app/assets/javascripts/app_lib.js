@@ -6,7 +6,7 @@ $(document).bind("mobileinit", function(){
 
 //Add some code to the page.
 $(document).ready(function(){
-  var concept_url = '/bingo/concepts/0.json?search_string='
+  var concept_url = '/bingo/concepts_for_game/0.json?search_string='
   var apMinChars = 3;
   $(".awesomplete-ajax").each( function( index, conceptField ) {
     var ap = new Awesomplete( conceptField, {

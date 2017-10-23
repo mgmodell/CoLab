@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171017020030) do
+ActiveRecord::Schema.define(version: 20171022013628) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -127,6 +127,8 @@ ActiveRecord::Schema.define(version: 20171017020030) do
   add_index "candidates", ["candidate_feedback_id"], name: "index_candidates_on_candidate_feedback_id", using: :btree
   add_index "candidates", ["candidate_list_id"], name: "index_candidates_on_candidate_list_id", using: :btree
   add_index "candidates", ["concept_id"], name: "index_candidates_on_concept_id", using: :btree
+  add_index "candidates", ["definition"], name: "index_candidates_on_definition", length: {"definition"=>2}, using: :btree
+  add_index "candidates", ["term"], name: "index_candidates_on_term", length: {"term"=>2}, using: :btree
   add_index "candidates", ["user_id"], name: "index_candidates_on_user_id", using: :btree
 
   create_table "cip_codes", force: :cascade do |t|
@@ -145,6 +147,7 @@ ActiveRecord::Schema.define(version: 20171017020030) do
     t.datetime "updated_at",             null: false
   end
 
+  add_index "concepts", ["name"], name: "concept_fulltext", type: :fulltext
   add_index "concepts", ["name"], name: "index_concepts_on_name", unique: true, using: :btree
 
   create_table "consent_forms", force: :cascade do |t|
@@ -446,8 +449,8 @@ ActiveRecord::Schema.define(version: 20171017020030) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree

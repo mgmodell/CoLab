@@ -2,6 +2,9 @@
 
 en:
   devise:
+    bingo_performance: Bingo! Performance
+    experience_performance: Experience Performance
+    assessment_performance: Assessment Performance
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
       send_instructions: >
@@ -58,6 +61,11 @@ en:
       forgot_submit: Send me reset password instructions
     registrations:
       signup: Sign up
+      my_courses: My Courses
+      my_courses_count:
+        zero: You've not yet been involved in a CoLab course.
+        one: You've been involved in the following course.
+        other: You've been involved in the following %{count} courses.
       hometown: Where did you spend most of your time growing up?
       account_info: Enter your account information
       tell_about: Tell us about yourself

@@ -78,6 +78,9 @@
       <th ><%= t :family_name %></th>
       <th data-priority="0"><%= t :given_name %></th>
       <th data-priority="1"><%= t :email %></th>
+      <th data-priority="0"><%= t 'devise.bingo_performance' %></th>
+      <th data-priority="0"><%= t 'devise.experience_performance' %></th>
+      <th data-priority="0"><%= t 'devise.assessment_performance' %></th>
       <th ><%= t :status %></th>
       <th data-priority="1"><%= t :actions %></th>
     </tr>
@@ -101,6 +104,15 @@
         </td>
         <td>
           <%= mail_to roster.user.email %>
+        </td>
+        <td>
+          <%= roster.user.get_bingo_performance( course_id: @course.id) %>%
+        </td>
+        <td>
+          <%= roster.user.get_experience_performance( course_id: @course.id) %>%
+        </td>
+        <td>
+          <%= roster.user.get_assessment_performance( course_id: @course.id) %>%
         </td>
         <td>
           <%= roster.role.name %>

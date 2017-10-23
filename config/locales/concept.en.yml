@@ -1,0 +1,27 @@
+en:
+  concepts:
+    index:
+      title: List of Concepts
+    edit:
+      title: Edit Concept
+    show:
+      title: Concept Details
+      edit_string: Edit concept details
+    new:
+      title: New Concept
+    create_success: Concept was created successfully!
+    destroy_success: Concept was destroyed successfully!
+    update_success: Concept was updated successfully!
+    back: Back to the list of concepts
+    use_count: Times Suggested
+    courses: Course Appearances
+    games: Bingo! Appearances
+    course_count:
+      one: The concept was only identifed for one course.
+      other: The concept was identified for %{count} courses.
+    game_count:
+      one: The concept was only identifed for one game.
+      other: The concept was identified for %{count} games.
+    candidate_count:
+      one: The concept was only suggested once.
+      other: The concept was suggested %{count} times.
