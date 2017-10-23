@@ -5,6 +5,7 @@
       <li class="ui-state-active ui-tabs-active">
         <a href="#profile" data-ajax="false"><%= t :about_you %></a>
       </li>
+      <li><a href="#courses" data-ajax="false"><%= t 'devise.registrations.my_courses' %></a></li>
       <li><a href="#history" data-ajax="false"><%= t :history %></a></li>
       <li><a href="#consent_forms" data-ajax="false"><%= t 'consent_forms.multiple' %></a></li>
     </ul>
@@ -134,6 +135,45 @@
   </div>
 <% end %>
   </div>
+  </div>
+  <div id="courses" class="ui-body-<%= theme_code %> ui-content">
+    <h2><%= t 'devise.registrations.my_courses' %></h2>
+    <%= t 'devise.registrations.my_courses_count', count: @current_user.courses.count %>
+        <table data-role="table"
+            id="basicTable"
+            data-column-btn-theme"<%= theme_code %>" 
+            data-column-popup-theme="<%= theme_code %>" 
+            data-mode="columntoggle"
+            data-column-btn-theme="<%= theme_code %>" 
+            data-column-btn-text="<%= t :column_select %>"
+            class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+
+          <thead>
+            <th data-priority="0"><%= t :number %></th>
+            <th data-priority="0"><%= t :name %></th>
+            <th data-priority="0"><%= t 'devise.bingo_performance' %></th>
+            <th data-priority="0"><%= t 'devise.experience_performance' %></th>
+            <th data-priority="0"><%= t 'devise.assessment_performance' %></th>
+          </thead>
+          <tbody>
+          <% @current_user.courses.each do |course| %>
+          <tr>
+            <td><%= course.number %></td>
+            <td><%= course.name %></td>
+            <td>
+              <%= @current_user.get_bingo_performance( course_id: course.id ) %>%
+            </td>
+            <td>
+              <%= @current_user.get_experience_performance( course_id: course.id ) %>%
+            </td>
+            <td>
+              <%= @current_user.get_assessment_performance( course_id: course.id ) %>%
+            </td>
+          </tr>
+          <% end %>
+          <tbody>
+        </table>
+
   </div>
   <div id="history" class="ui-body-<%= theme_code %> ui-content">
     <h2><%= t 'devise.registrations.activity_history' %></h2>
