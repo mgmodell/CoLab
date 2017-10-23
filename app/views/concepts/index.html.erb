@@ -1,6 +1,7 @@
 <p id="notice"><%= notice %></p>
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
    anonymize = @current_user.anonymize? %>
+<%= paginate @concepts %>
 <table data-role="table"
   id="basicTable"
   data-column-btn-theme"<%= theme_code %>" 
@@ -31,5 +32,6 @@
     <% end %>
   </tbody>
 </table>
+<%= paginate @concepts %>
 <br>
 <%= link_to t('concepts.new.title'), new_concept_path %>
