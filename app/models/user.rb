@@ -204,7 +204,7 @@ class User < ActiveRecord::Base
     my_projects.each do |project|
       project_installments = installments.joins(:assessment)
                                          .where(assessments: { project_id: project.id }).count
-      total += 100 * project_installments / project.assessments.count
+      total += project.assessments.count == 0 ? 100 : 100 * project_installments / project.assessments.count
     end
     my_projects.count == 0 ? 100 : (total / my_projects.count)
   end
