@@ -27,7 +27,7 @@ At a minimum, you will need to install git and a text editor (I use vi, but ther
     * Create `colab_dev` and `colab_test` databases
     * Create a `test` user with `test` for the password
     * Make sure the user is enabled and has full access to the 'colab_dev' and `colab_test` databases
-* clone this repository 'git clone https://micah_gideon@bitbucket.org/_performance/colab.git'
+* clone this repository 'git clone https://<your bitbucket ID>@bitbucket.org/_performance/colab.git'
 * Enter the new `CoLab` directory
 * `gem install bundler`
 * `bundle install`
