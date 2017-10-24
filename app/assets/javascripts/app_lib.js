@@ -12,28 +12,83 @@ function init_me( obj, data ){
   var x = d3.scaleLinear().domain([0, data.length]).range([0, width]);
   var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 
-  var line = d3.line()
+  var line = d3.line().curve( d3.curveCardinal )
       // assign the X function to plot our line as we wish
       .x(function(d,i) { 
-        // verbose logging to show what's actually being done
-        console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
         // return the X coordinate where we want to plot this datapoint
         return x(i); 
       })
       .y(function(d) { 
-        // verbose logging to show what's actually being done
-        console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
         // return the Y coordinate where we want to plot this datapoint
         return y(d); 
       })
- 
-      
-        // Add the line by appending an svg:path element with the data
-        // line we created above
+      // Add the line by appending an svg:path element with the data
+      // line we created above
       // do this AFTER the axes above so that the line is above the
       // tick-lines
-        graph.append("svg:path").attr("d", line(data));
+      var path = graph.append("path")
+        .attr("d", line(data))
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", "2")
+        .attr("fill", "none");
+
+      var totalLength = path.node().getTotalLength();
+      path
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .transition()
+          .duration(2000)
+          .ease(d3.easeLinear)
+          .attr("stroke-dashoffset", totalLength);
+
+      // From http://bl.ocks.org/benvandyke/8459843
+      // get the x and y values for least squares
+      var xSeries = d3.range(1, data.length + 1);
+      var ySeries = data.map(function(d) { return d; });
+
+      var leastSquaresCoeff = leastSquares(xSeries, ySeries);
+
+      // apply the reults of the least squares regression
+      var x1 = data[0];
+      var y1 = leastSquaresCoeff[0] + leastSquaresCoeff[1];
+      var x2 = data[data.length - 1];
+      var y2 = leastSquaresCoeff[0] * xSeries.length + leastSquaresCoeff[1];
+      var trendData = [[x1,y1,x2,y2]];
+
+      var trendline = graph.selectAll(".trendline")
+        .data(trendData);
+      trendline.enter()
+        .append("line")
+        .attr("class", "trendline")
+          .attr("x1", function(d) { return x(d[0]); })
+          .attr("y1", function(d) { return y(d[1]); })
+          .attr("x2", function(d) { return x(d[2]); })
+          .attr("y2", function(d) { return y(d[3]); })
+          .attr("stroke", "black")
+          .attr("stroke-width", 1);
+}
+
+// returns slope, intercept and r-square of the line
+function leastSquares(xSeries, ySeries) {
+  var reduceSumFunc = function(prev, cur) { return prev + cur; };
+  
+  var xBar = xSeries.reduce(reduceSumFunc) * 1.0 / xSeries.length;
+  var yBar = ySeries.reduce(reduceSumFunc) * 1.0 / ySeries.length;
+
+  var ssXX = xSeries.map(function(d) { return Math.pow(d - xBar, 2); })
+    .reduce(reduceSumFunc);
+    
+  var ssYY = ySeries.map(function(d) { return Math.pow(d - yBar, 2); })
+    .reduce(reduceSumFunc);
       
+  var ssXY = xSeries.map(function(d, i) { return (d - xBar) * (ySeries[i] - yBar); })
+    .reduce(reduceSumFunc);
+      
+  var slope = ssXY / ssXX;
+  var intercept = yBar - (xBar * slope);
+  var rSquare = Math.pow(ssXY, 2) / (ssXX * ssYY);
+    
+  return [slope, intercept, rSquare];
 }
 
 
