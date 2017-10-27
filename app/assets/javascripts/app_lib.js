@@ -12,7 +12,7 @@ function init_me( obj, data ){
   var x = d3.scaleLinear().domain([0, data.length]).range([0, width]);
   var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 
-  var line = d3.line().curve( d3.curveCardinal )
+  var line = d3.line().curve( d3.curveLinear )
       // assign the X function to plot our line as we wish
       .x(function(d,i) { 
         // return the X coordinate where we want to plot this datapoint
@@ -28,9 +28,9 @@ function init_me( obj, data ){
       // tick-lines
       var path = graph.append("path")
         .attr("d", line(data))
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", "2")
-        .attr("fill", "none");
+        .attr("stroke", "red")
+        .attr("stroke-width", "5")
+	.attr("fill", "none" );
 
       var totalLength = path.node().getTotalLength();
       path
