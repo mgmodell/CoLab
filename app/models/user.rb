@@ -223,7 +223,7 @@ class User < ActiveRecord::Base
 
     total = 0
     my_projects.each do |project|
-      total += project.get_performance( self )
+      total += project.get_performance(self)
     end
     my_projects.count == 0 ? 100 : (total / my_projects.count)
   end

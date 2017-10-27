@@ -41,8 +41,8 @@ class Project < ActiveRecord::Base
   end
 
   def get_performance(user)
-    installments_count = installments.where(user:user).count
-    self.assessments.count == 0 ? 100 : 100 * installments_count / self.assessments.count
+    installments_count = installments.where(user: user).count
+    assessments.count == 0 ? 100 : 100 * installments_count / assessments.count
   end
 
   def get_type
