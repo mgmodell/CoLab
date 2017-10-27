@@ -223,9 +223,7 @@ class User < ActiveRecord::Base
 
     total = 0
     my_projects.each do |project|
-      project_installments = installments.joins(:assessment)
-                                         .where(assessments: { project_id: project.id }).count
-      total += project.assessments.count == 0 ? 100 : 100 * project_installments / project.assessments.count
+      total += project.get_performance( self )
     end
     my_projects.count == 0 ? 100 : (total / my_projects.count)
   end

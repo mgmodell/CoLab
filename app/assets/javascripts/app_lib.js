@@ -35,11 +35,7 @@ function init_me( obj, data ){
       var totalLength = path.node().getTotalLength();
       path
         .attr("stroke-dasharray", totalLength + " " + totalLength)
-        .attr("stroke-dashoffset", totalLength)
-        .transition()
-          .duration(2000)
-          .ease(d3.easeLinear)
-          .attr("stroke-dashoffset", totalLength);
+        .attr("stroke-dashoffset", totalLength);
 
       // From http://bl.ocks.org/benvandyke/8459843
       // get the x and y values for least squares

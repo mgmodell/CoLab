@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171022013628) do
+ActiveRecord::Schema.define(version: 20171026030636) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -89,7 +89,6 @@ ActiveRecord::Schema.define(version: 20171022013628) do
     t.string   "name_en",       limit: 255
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
-    t.string   "definition",    limit: 255
     t.string   "name_ko",       limit: 255
     t.text     "definition_en", limit: 65535
     t.text     "definition_ko", limit: 65535
