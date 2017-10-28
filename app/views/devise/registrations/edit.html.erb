@@ -151,7 +151,7 @@
           <thead>
             <th data-priority="0"><%= t :number %></th>
             <th data-priority="0"><%= t :name %></th>
-            <th data-priority="0">
+            <th data-priority="0" colspan="2">
               <%= t 'devise.bingo_performance' %>
               <a href="#bingo_performance" data-rel="popup"
               data-transition="pop"
@@ -183,6 +183,11 @@
               <%= @current_user.get_bingo_performance( course_id: course.id ) %>%
             </td>
             <td>
+              <svg width="50" height="50"
+                onload="init_me( this, <%= @current_user.get_bingo_data( course_id: course.id ) %>);">
+              </svg>
+            </td>
+            <td>
               <%= @current_user.get_experience_performance( course_id: course.id ) %>%
             </td>
             <td>
@@ -201,7 +206,7 @@
         <p><%= t 'devise.registrations.no_activities' %></p>
       <% else %>
         <table data-role="table"
-            id="basicTable"
+            id="history_table"
             data-column-btn-theme"<%= theme_code %>" 
             data-column-popup-theme="<%= theme_code %>" 
             data-mode="columntoggle"
@@ -235,7 +240,15 @@
         <td><%= activity.course.pretty_name false %></td>
         <td><%= activity.type %></td>
         <td><%= activity.end_date %></td>
-        <td><%= activity.status_for_user( @current_user ) %></td>
+        <td>
+          <% if activity.class.name == "BingoGame" %>
+            <%= @current_user.get_bingo_performance( course_id: activity.course.id ) %>%
+          <% elsif activity.class.name == "Project" %>
+            <%= @current_user.get_assessment_performance( course_id: activity.course.id ) %>%
+          <% elsif activity.class.name == "Experience" %>
+            <%= @current_user.get_experience_performance( course_id: activity.course.id ) %>%
+          <% end %>
+        </td>
         <td>
         <% if activity.class.name == "BingoGame" %>
           <%= activity.candidate_list_for_user( @current_user ).get_concepts.count %> unique concepts
