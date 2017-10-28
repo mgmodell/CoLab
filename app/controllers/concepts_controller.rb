@@ -14,7 +14,7 @@ class ConceptsController < ApplicationController
   # GET /admin/concept
   def index
     @title = t '.title'
-    @concepts = Concept.all
+    @concepts = Concept.order(:name).page params[:page]
   end
 
   def concepts_for_game

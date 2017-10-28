@@ -3,8 +3,8 @@
 en:
   devise:
     bingo_performance: Bingo! Performance
-    experience_performance: Experience Performance
-    assessment_performance: Assessment Performance
+    experience_performance: Experience Participation Level
+    assessment_performance: Assessment Participation Level
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
       send_instructions: >

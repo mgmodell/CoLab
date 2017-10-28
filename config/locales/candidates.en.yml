@@ -2,7 +2,15 @@ en:
   candidate_lists:
     submission: Terms list submission
     distilled: Distilled concepts
+    feedback_breakdown: >
+      Terms are evaluated using the following categories. The average is
+      then reported as your performance.
     list_for_class: List for class on
+    feedback_info_label: Information
+    credit:
+      zero: no points
+      one: 1 point
+      other: '%{count} points'
     demo_title: Complete the term list (DEMO)
     demo_term1: The group dynamics
     demo_def1: How members of a group work together

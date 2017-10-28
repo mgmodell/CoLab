@@ -25,6 +25,9 @@ en:
     react_success: Your reaction to the experience was recorded
     react_fail: There was a proglem recording your reaction, please try again.
     no_experiences: No Experiences
+    performance_explained: >
+      This value reflects your average level of completion of the
+      simulated groupwork experiences assigned to you within CoLab.
     inst_p1: >
       In this experience, you will read a weekly journal written by a student in a
       semester-long collaborative group project. The entries document the fourteen
