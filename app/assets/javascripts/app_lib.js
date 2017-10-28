@@ -6,13 +6,17 @@ $(document).bind("mobileinit", function(){
 
 function init_me( obj, data ){
   var graph = d3.select( obj );
-  var width = +graph.attr( 'width' );
-  var height = +graph.attr( 'height' );
+  var margin = {top: 10, right: 0, bottom: 10, left: 0};
+
+  var width = +graph.attr( 'width' ) - margin.left - margin.right;
+  var height = +graph.attr( 'height' ) - margin.top - margin.bottom;
   // X scale will fit all values from data[] within pixels 0-w
   var x = d3.scaleLinear().domain([0, data.length]).range([0, width]);
   var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 
-  var line = d3.line().curve( d3.curveLinear )
+  graph.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var line = d3.line().curve( d3.curveMonotoneX )
       // assign the X function to plot our line as we wish
       .x(function(d,i) { 
         // return the X coordinate where we want to plot this datapoint
@@ -28,29 +32,29 @@ function init_me( obj, data ){
       // tick-lines
       var path = graph.append("path")
         .attr("d", line(data))
-        .attr("stroke", "red")
-        .attr("stroke-width", "5")
-	.attr("fill", "none" );
-
-      var totalLength = path.node().getTotalLength();
-      path
-        .attr("stroke-dasharray", totalLength + " " + totalLength)
-        .attr("stroke-dashoffset", totalLength);
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", "1")
+        .attr("fill", "none" )
+        .style("opacity", .5);
 
       // From http://bl.ocks.org/benvandyke/8459843
       // get the x and y values for least squares
       var xSeries = d3.range(1, data.length + 1);
-      var ySeries = data.map(function(d) { return d; });
+      var ySeries = data;
 
       var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
       // apply the reults of the least squares regression
-      var x1 = data[0];
-      var y1 = leastSquaresCoeff[0] + leastSquaresCoeff[1];
-      var x2 = data[data.length - 1];
-      var y2 = leastSquaresCoeff[0] * xSeries.length + leastSquaresCoeff[1];
+      var x1 = 0;
+      var y1 = leastSquaresCoeff[1];
+      var x2 = data.length - 1;
+      var y2 = leastSquaresCoeff[1] + (data.length * leastSquaresCoeff[0]);
       var trendData = [[x1,y1,x2,y2]];
 
+      var trendLineColor = "green";
+      if( leastSquaresCoeff[ 0 ] < 0 ){
+        trendLineColor="red";
+      }
       var trendline = graph.selectAll(".trendline")
         .data(trendData);
       trendline.enter()
@@ -60,8 +64,8 @@ function init_me( obj, data ){
           .attr("y1", function(d) { return y(d[1]); })
           .attr("x2", function(d) { return x(d[2]); })
           .attr("y2", function(d) { return y(d[3]); })
-          .attr("stroke", "black")
-          .attr("stroke-width", 1);
+          .attr("stroke", trendLineColor )
+          .attr("stroke-width", 2);
 }
 
 // returns slope, intercept and r-square of the line
