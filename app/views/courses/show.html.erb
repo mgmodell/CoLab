@@ -86,7 +86,7 @@
     </tr>
     </thead>
     <tbody>
-      <% @course.rosters.students.each do |roster| %>
+      <% @course.rosters.students.includes(:role, user: [:emails]).each do |roster| %>
       <tr>
         <td>
         <% if anonymize %>

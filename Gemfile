@@ -69,6 +69,7 @@ group :development, :test do
   gem 'rspec'
   gem 'rubocop'
   gem 'i18n_data'
+  gem 'bullet'
 end
 
 group :development do

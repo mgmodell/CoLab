@@ -141,7 +141,7 @@ class Course < ActiveRecord::Base
   end
 
   def enrolled_students
-    rosters.joins(:role).where('roles.code = ? OR roles.code = ?', 'enr', 'invt').collect(&:user)
+    rosters.joins(:role).includes(user: [:emails]).where('roles.code = ? OR roles.code = ?', 'enr', 'invt').collect(&:user)
   end
 
   def instructors

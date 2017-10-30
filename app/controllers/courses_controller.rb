@@ -17,9 +17,9 @@ class CoursesController < ApplicationController
     @title = t('.title')
     @courses = []
     if @current_user.admin?
-      @courses = Course.all
+      @courses = Course.includes(:school).all
     else
-      rosters = @current_user.rosters.instructorships
+      rosters = @current_user.rosters.instructorships.includes(course: :school)
       rosters.each do |roster|
         @courses << roster.course
       end
