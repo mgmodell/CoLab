@@ -8,6 +8,7 @@ class Project < ActiveRecord::Base
   has_many :groups, inverse_of: :project, dependent: :destroy
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
+  has_many :installments, through: :assessments
   belongs_to :course, inverse_of: :projects
   belongs_to :consent_form, inverse_of: :projects
   belongs_to :factor_pack, inverse_of: :projects
@@ -37,6 +38,11 @@ class Project < ActiveRecord::Base
     else
       groups.joins(:users).where(users: { id: user.id }).take
     end
+  end
+
+  def get_performance(user)
+    installments_count = installments.where(user: user).count
+    assessments.count == 0 ? 100 : 100 * installments_count / assessments.count
   end
 
   def get_type

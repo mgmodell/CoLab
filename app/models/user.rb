@@ -176,6 +176,27 @@ class User < ActiveRecord::Base
     my_candidate_lists.count == 0 ? 100 : (total / my_candidate_lists.count)
   end
 
+  def get_bingo_data(course_id: 0)
+    my_candidate_lists = []
+    if course_id > 0
+      my_candidate_lists = candidate_lists
+                           .includes(candidates: :candidate_feedback)
+                           .joins(:bingo_game)
+                           .where(bingo_games: { reviewed: true, course_id: course_id })
+    else
+      my_candidate_lists = candidate_lists
+                           .includes(candidates: :candidate_feedback)
+                           .joins(:bingo_game)
+                           .where(bingo_games: { reviewed: true })
+    end
+
+    data = []
+    my_candidate_lists.each do |candidate_list|
+      data << candidate_list.performance
+    end
+    data
+  end
+
   def get_experience_performance(course_id: 0)
     my_reactions = []
     my_reactions = if course_id > 0
@@ -202,9 +223,7 @@ class User < ActiveRecord::Base
 
     total = 0
     my_projects.each do |project|
-      project_installments = installments.joins(:assessment)
-                                         .where(assessments: { project_id: project.id }).count
-      total += project.assessments.count == 0 ? 100 : 100 * project_installments / project.assessments.count
+      total += project.get_performance(self)
     end
     my_projects.count == 0 ? 100 : (total / my_projects.count)
   end

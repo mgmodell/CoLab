@@ -111,6 +111,15 @@
   credit: 30
   definition_en: >
     Proper names should not be used unless they are household names
-    associated with the field..
+    associated with the field.
+  definition_ko:
+
+- !ruby/object:CandidateFeedback_
+  name_en: "Term: Too specific"
+  name_ko: 
+  credit: 30
+  definition_en: >
+    Terms ought to be at a conceptual level. Terms that are specific to
+    a specific implementation should generally be avoided.
   definition_ko:
 

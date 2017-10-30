@@ -107,6 +107,9 @@
         </td>
         <td>
           <%= roster.user.get_bingo_performance( course_id: @course.id) %>%
+          <svg width="50" height="50"
+            onload="init_me( this, <%= roster.user.get_bingo_data( course_id: @course.id ) %>);">
+          </svg>
         </td>
         <td>
           <%= roster.user.get_experience_performance( course_id: @course.id) %>%

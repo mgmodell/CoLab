@@ -151,9 +151,28 @@
           <thead>
             <th data-priority="0"><%= t :number %></th>
             <th data-priority="0"><%= t :name %></th>
-            <th data-priority="0"><%= t 'devise.bingo_performance' %></th>
-            <th data-priority="0"><%= t 'devise.experience_performance' %></th>
-            <th data-priority="0"><%= t 'devise.assessment_performance' %></th>
+            <th data-priority="0" colspan="2">
+              <%= t 'devise.bingo_performance' %>
+              <a href="#bingo_performance" data-rel="popup"
+              data-transition="pop"
+              class="ui-btn ui-alt-icon ui-shadow ui-corner-all
+                      ui-btn-inline ui-icon-info ui-btn-icon-notext"
+              title="Learn more">Learn more</a>
+            </th>
+            <th data-priority="0"><%= t 'devise.experience_performance' %>
+              <a href="#experience_performance" data-rel="popup"
+              data-transition="pop"
+              class="ui-btn ui-alt-icon ui-shadow ui-corner-all
+                      ui-btn-inline ui-icon-info ui-btn-icon-notext"
+              title="Learn more">Learn more</a>
+            </th>
+            <th data-priority="0"><%= t 'devise.assessment_performance' %>
+              <a href="#assessment_performance" data-rel="popup"
+              data-transition="pop"
+              class="ui-btn ui-alt-icon ui-shadow ui-corner-all
+                      ui-btn-inline ui-icon-info ui-btn-icon-notext"
+              title="Learn more">Learn more</a>
+            </th>
           </thead>
           <tbody>
           <% @current_user.courses.each do |course| %>
@@ -162,6 +181,11 @@
             <td><%= course.name %></td>
             <td>
               <%= @current_user.get_bingo_performance( course_id: course.id ) %>%
+            </td>
+            <td>
+              <svg width="50" height="50"
+                onload="init_me( this, <%= @current_user.get_bingo_data( course_id: course.id ) %>);">
+              </svg>
             </td>
             <td>
               <%= @current_user.get_experience_performance( course_id: course.id ) %>%
@@ -182,7 +206,7 @@
         <p><%= t 'devise.registrations.no_activities' %></p>
       <% else %>
         <table data-role="table"
-            id="basicTable"
+            id="history_table"
             data-column-btn-theme"<%= theme_code %>" 
             data-column-popup-theme="<%= theme_code %>" 
             data-mode="columntoggle"
@@ -235,6 +259,8 @@
            <% else %>
              <%= t 'devise.registrations.experience_not_started' %>
            <% end %>
+        <% elsif activity.class.name == "Project" %>
+          <%= activity.get_performance(@current_user ) %>
         <% else %>
           <%= t :coming_soon %>
         <% end %>
@@ -289,6 +315,18 @@
       <%= submit_tag t( :add ) %>
     </div>
   <% end %>
+</div>
+<div data-role="popup" id="bingo_performance" class="ui-content"
+    data-theme="<%= theme_code %>" style="width:90%">
+  <%= render 'shared/candidate_feedback' %>
+</div>
+<div data-role="popup" id="experience_performance" class="ui-content"
+    data-theme="<%= theme_code %>" style="width:90%">
+  <%= t 'experiences.performance_explained' %>
+</div>
+<div data-role="popup" id="assessment_performance" class="ui-content"
+    data-theme="<%= theme_code %>" style="width:90%">
+  <%= t 'projects.performance_explained' %>
 </div>
 
 <%= link_to t( :back ), :back %>
