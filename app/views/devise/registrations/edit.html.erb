@@ -242,7 +242,7 @@
         <td><%= activity.end_date %></td>
         <td>
           <% if activity.class.name == "BingoGame" %>
-            <%= @current_user.get_bingo_performance( course_id: activity.course.id ) %>%
+            <%= activity.candidate_list_for_user( @current_user ).performance %>%
           <% elsif activity.class.name == "Project" %>
             <%= @current_user.get_assessment_performance( course_id: activity.course.id ) %>%
           <% elsif activity.class.name == "Experience" %>

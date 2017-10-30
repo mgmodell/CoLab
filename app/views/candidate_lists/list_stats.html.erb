@@ -1,5 +1,15 @@
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
      anonymize = false %>
+<table>
+    <tr>
+      <th align="right"><%= t 'bingo_games.topic' %></th>
+      <td><%= @candidate_list.bingo_game.topic %></td>
+    </tr>
+    <tr>
+      <th align="right"><%= t :description %>:</th>
+      <td><%= raw( @candidate_list.bingo_game.description ) %></td>
+    </tr>
+</table>
   <table data-role="table"
     id="stats_table"
     data-mode="columntoggle"
