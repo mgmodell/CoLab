@@ -42,7 +42,9 @@
       count = 0
       candidate_feedbacks = CandidateFeedback.all
       %>
-      <% @bingo_game.candidates.includes(:user).completed.find_each do |candidate| %>
+      <% @bingo_game.candidates.
+        includes(candidate_list:[:group],:concept,user:[:emails]).
+        completed.find_each do |candidate| %>
       <tr>
         <td><%= count += 1 %></td>
         <td><%= candidate.term %></td>
