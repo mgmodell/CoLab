@@ -68,6 +68,7 @@ class ProjectsController < ApplicationController
         end
       end
       groups_users.each do |group, users_array|
+        group.users.clear
         group.users = users_array
         group.save
         logger.debug group.errors.full_messages unless group.errors.empty?

@@ -25,7 +25,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @waiting_rosters.each do |roster| %>
+    <% @waiting_rosters.includes(:course).each do |roster| %>
       <tr>
         <td>
           <%= link_to t( :accept ), accept_roster_path( :roster_id => roster.id ) %> / 
