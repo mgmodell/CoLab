@@ -141,7 +141,7 @@ class User < ActiveRecord::Base
     activities = []
     # Add in the candidate lists
     BingoGame.joins(course: { rosters: :role })
-             .includes(:course,:project)
+             .includes(:course, :project)
              .where('rosters.user_id': id)
              .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
              .find_each do |bingo_game|
@@ -172,7 +172,7 @@ class User < ActiveRecord::Base
     end
 
     total = 0
-    my_candidate_lists.includes(:bingo_game,:group).each do |candidate_list|
+    my_candidate_lists.includes(:bingo_game, :group).each do |candidate_list|
       total += candidate_list.performance
     end
     my_candidate_lists.count == 0 ? 100 : (total / my_candidate_lists.count)
@@ -250,7 +250,7 @@ class User < ActiveRecord::Base
 
     # Add the bingo games
     waiting_games = BingoGame.joins(course: { rosters: :role })
-                             .includes(:course,:project)
+                             .includes(:course, :project)
                              .where('rosters.user_id': id, 'bingo_games.active': true)
                              .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
                              .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ?', cur_date, cur_date)
