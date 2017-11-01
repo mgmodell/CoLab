@@ -34,7 +34,7 @@
 </p>
 <p>
   <h3><%= t '.instructors' %></h3>
-  <% @course.rosters.instructorships.each do |roster| %>
+  <% @course.rosters.instructorships.includes(:user).each do |roster| %>
     <%= roster.user.name( anonymize ) %> |
     <%= link_to t( :remove) , remove_instructor_path( roster ) %></br>
   <% end %>

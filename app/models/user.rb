@@ -78,7 +78,7 @@ class User < ActiveRecord::Base
 
   def waiting_consent_logs
     # Find those consent forms to which the user has not yet responded
-    all_consent_forms = ConsentForm.all.includes(:projects).to_a
+    all_consent_forms = ConsentForm.all.to_a
 
     # We only want to do this for currently active consent forms
     consent_forms = all_consent_forms.delete_if { |cf| !cf.is_active? }
@@ -128,6 +128,7 @@ class User < ActiveRecord::Base
     waiting_tasks = []
 
     BingoGame.joins(course: { rosters: :role })
+             .includes(:course)
              .where('rosters.user_id': id, 'roles.code': 'inst')
              .find_each do |game|
       waiting_tasks << game if game.awaiting_review?
@@ -140,6 +141,7 @@ class User < ActiveRecord::Base
     activities = []
     # Add in the candidate lists
     BingoGame.joins(course: { rosters: :role })
+             .includes(:course,:project)
              .where('rosters.user_id': id)
              .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
              .find_each do |bingo_game|
@@ -147,7 +149,7 @@ class User < ActiveRecord::Base
       activities << bingo_game
     end
     # Add in the reactions
-    activities.concat experiences.all
+    activities.concat experiences.includes(:course).all
 
     # Add in projects
     activities.concat projects.all
@@ -170,7 +172,7 @@ class User < ActiveRecord::Base
     end
 
     total = 0
-    my_candidate_lists.each do |candidate_list|
+    my_candidate_lists.includes(:bingo_game,:group).each do |candidate_list|
       total += candidate_list.performance
     end
     my_candidate_lists.count == 0 ? 100 : (total / my_candidate_lists.count)
@@ -179,15 +181,18 @@ class User < ActiveRecord::Base
   def get_bingo_data(course_id: 0)
     my_candidate_lists = []
     if course_id > 0
+      # Add a sort by end data
       my_candidate_lists = candidate_lists
                            .includes(candidates: :candidate_feedback)
                            .joins(:bingo_game)
                            .where(bingo_games: { reviewed: true, course_id: course_id })
+                           .order('bingo_games.end_date')
     else
       my_candidate_lists = candidate_lists
                            .includes(candidates: :candidate_feedback)
                            .joins(:bingo_game)
                            .where(bingo_games: { reviewed: true })
+                           .order('bingo_games.end_date')
     end
 
     data = []
@@ -207,7 +212,7 @@ class User < ActiveRecord::Base
                    end
 
     total = 0
-    my_reactions.each do |reaction|
+    my_reactions.includes(:behavior).each do |reaction|
       total += reaction.status
     end
     my_reactions.count == 0 ? 100 : (total / my_reactions.count)
@@ -229,7 +234,7 @@ class User < ActiveRecord::Base
   end
 
   def waiting_student_tasks
-    waiting_tasks = assessments.still_open.to_a
+    waiting_tasks = assessments.includes(:project).still_open.to_a
 
     # Check available tasks for students
     available_rosters = rosters.enrolled
@@ -245,6 +250,7 @@ class User < ActiveRecord::Base
 
     # Add the bingo games
     waiting_games = BingoGame.joins(course: { rosters: :role })
+                             .includes(:course,:project)
                              .where('rosters.user_id': id, 'bingo_games.active': true)
                              .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
                              .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ?', cur_date, cur_date)
