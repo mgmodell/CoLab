@@ -162,23 +162,23 @@ class User < ActiveRecord::Base
     my_bingo_lists = []
     if course_id > 0
       my_bingo_lists = bingo_games
-                  .includes( :project, candidate_lists:
+                       .includes(:project, candidate_lists:
                       [candidates: :candidate_feedback])
-                  .joins( :candidate_lists )
-                  .where( reviewed: true, course_id: course_id )
-                  .order( :end_date )
+                       .joins(:candidate_lists)
+                       .where(reviewed: true, course_id: course_id)
+                       .order(:end_date)
 
     else
       my_bingo_lists = bingo_games
-                  .includes( :project, candidate_lists: 
+                       .includes(:project, candidate_lists:
                       [candidates: :candidate_feedback])
-                  .joins( :candidate_lists )
-                  .where( reviewed: true )
-                  .order( :end_date )
+                       .joins(:candidate_lists)
+                       .where(reviewed: true)
+                       .order(:end_date)
     end
 
     total = 0
-    my_bingo_lists.includes(candidate_lists:[:group]).each do |bingo|
+    my_bingo_lists.includes(candidate_lists: [:group]).each do |bingo|
       total += bingo.candidate_list_for_user(self).performance
     end
     my_bingo_lists.count == 0 ? 100 : (total / my_bingo_lists.count)
@@ -188,19 +188,19 @@ class User < ActiveRecord::Base
     my_bingo_lists = []
     if course_id > 0
       my_bingo_lists = bingo_games
-                  .includes( :project, candidate_lists:
+                       .includes(:project, candidate_lists:
                       [candidates: :candidate_feedback])
-                  .joins( :candidate_lists )
-                  .where( reviewed: true, course_id: course_id )
-                  .order( :end_date )
+                       .joins(:candidate_lists)
+                       .where(reviewed: true, course_id: course_id)
+                       .order(:end_date)
 
     else
       my_bingo_lists = bingo_games
-                  .includes( :project, candidate_lists: 
+                       .includes(:project, candidate_lists:
                       [candidates: :candidate_feedback])
-                  .joins( :candidate_lists )
-                  .where( reviewed: true )
-                  .order( :end_date )
+                       .joins(:candidate_lists)
+                       .where(reviewed: true)
+                       .order(:end_date)
     end
 
     data = []
