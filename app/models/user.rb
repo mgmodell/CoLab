@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
   has_many :candidate_lists, inverse_of: :user, dependent: :destroy
   has_many :concepts, inverse_of: :user, dependent: :destroy
   has_many :projects, through: :groups
+  has_many :bingo_games, through: :courses
   has_many :candidates, inverse_of: :user
   belongs_to :bingo_boards, inverse_of: :user, dependent: :destroy
   belongs_to :gender, inverse_of: :users
@@ -152,52 +153,59 @@ class User < ActiveRecord::Base
     activities.concat experiences.includes(:course).all
 
     # Add in projects
-    activities.concat projects.all
+    activities.concat projects.includes(:course).all
 
     activities.sort_by(&:end_date)
   end
 
   def get_bingo_performance(course_id: 0)
-    my_candidate_lists = []
+    my_bingo_lists = []
     if course_id > 0
-      my_candidate_lists = candidate_lists
-                           .includes(candidates: :candidate_feedback)
-                           .joins(:bingo_game)
-                           .where(bingo_games: { reviewed: true, course_id: course_id })
+      my_bingo_lists = bingo_games
+                  .includes( :project, candidate_lists:
+                      [candidates: :candidate_feedback])
+                  .joins( :candidate_lists )
+                  .where( reviewed: true, course_id: course_id )
+                  .order( :end_date )
+
     else
-      my_candidate_lists = candidate_lists
-                           .includes(candidates: :candidate_feedback)
-                           .joins(:bingo_game)
-                           .where(bingo_games: { reviewed: true })
+      my_bingo_lists = bingo_games
+                  .includes( :project, candidate_lists: 
+                      [candidates: :candidate_feedback])
+                  .joins( :candidate_lists )
+                  .where( reviewed: true )
+                  .order( :end_date )
     end
 
     total = 0
-    my_candidate_lists.includes(:bingo_game, :group).each do |candidate_list|
-      total += candidate_list.performance
+    my_bingo_lists.includes(candidate_lists:[:group]).each do |bingo|
+      total += bingo.candidate_list_for_user(self).performance
     end
-    my_candidate_lists.count == 0 ? 100 : (total / my_candidate_lists.count)
+    my_bingo_lists.count == 0 ? 100 : (total / my_bingo_lists.count)
   end
 
   def get_bingo_data(course_id: 0)
-    my_candidate_lists = []
+    my_bingo_lists = []
     if course_id > 0
-      # Add a sort by end data
-      my_candidate_lists = candidate_lists
-                           .includes(candidates: :candidate_feedback)
-                           .joins(:bingo_game)
-                           .where(bingo_games: { reviewed: true, course_id: course_id })
-                           .order('bingo_games.end_date')
+      my_bingo_lists = bingo_games
+                  .includes( :project, candidate_lists:
+                      [candidates: :candidate_feedback])
+                  .joins( :candidate_lists )
+                  .where( reviewed: true, course_id: course_id )
+                  .order( :end_date )
+
     else
-      my_candidate_lists = candidate_lists
-                           .includes(candidates: :candidate_feedback)
-                           .joins(:bingo_game)
-                           .where(bingo_games: { reviewed: true })
-                           .order('bingo_games.end_date')
+      my_bingo_lists = bingo_games
+                  .includes( :project, candidate_lists: 
+                      [candidates: :candidate_feedback])
+                  .joins( :candidate_lists )
+                  .where( reviewed: true )
+                  .order( :end_date )
     end
 
     data = []
-    my_candidate_lists.each do |candidate_list|
-      data << candidate_list.performance
+    my_bingo_lists.each do |bingo|
+      data << bingo.candidate_list_for_user(self).performance
     end
     data
   end
