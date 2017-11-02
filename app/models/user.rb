@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
     consent_forms = all_consent_forms.delete_if { |cf| !cf.is_active? }
 
     # Have we completed it already?
-    consent_logs.where(presented: true).each do |consent_log|
+    consent_logs.includes(:projects).where(presented: true).each do |consent_log|
       consent_forms.delete(consent_log.consent_form)
     end
 

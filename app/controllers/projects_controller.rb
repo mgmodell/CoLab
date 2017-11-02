@@ -67,7 +67,7 @@ class ProjectsController < ApplicationController
           groups_users[group] << user
         end
       end
-      groups_users.each do |group, users_array|
+      groups_users.includes(:users).each do |group, users_array|
         group.users.clear
         group.users = users_array
         group.save
