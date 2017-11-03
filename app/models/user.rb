@@ -143,7 +143,7 @@ class User < ActiveRecord::Base
     # Add in the candidate lists
     BingoGame.joins(course: { rosters: :role })
              .includes(:course, :project)
-             .where('rosters.user_id': id)
+             .where(reviewed: true, 'rosters.user_id': id)
              .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
              .find_each do |bingo_game|
 
@@ -187,25 +187,35 @@ class User < ActiveRecord::Base
   def get_bingo_data(course_id: 0)
     my_bingo_lists = []
     if course_id > 0
-      my_bingo_lists = bingo_games
-                       .includes(:project, candidate_lists:
-                      [candidates: :candidate_feedback])
-                       .joins(:candidate_lists)
-                       .where(reviewed: true, course_id: course_id)
-                       .order(:end_date)
+      my_candidate_lists = candidate_lists
+                       .includes(candidates: :candidate_feedback,
+                              bingo_game: :project )
+                       .joins(:bingo_game)
+                       .where(bingo_games:
+                              {reviewed: true, course_id: course_id} )
 
     else
-      my_bingo_lists = bingo_games
-                       .includes(:project, candidate_lists:
-                      [candidates: :candidate_feedback])
-                       .joins(:candidate_lists)
-                       .where(reviewed: true)
-                       .order(:end_date)
+      my_candidate_lists = candidate_lists
+                       .includes(candidates: :candidate_feedback,
+                              bingo_game: :project  )
+                       .joins(:bingo_game)
+                       .where(bingo_games:
+                              {reviewed: true} )
+    end
+    my_candidate_lists.each_with_index do |solo_cl,index|
+      if solo_cl.is_group
+        group_cl = solo_cl.bingo_game.candidate_lists
+          .where( group_id: solo_cl.bingo_game.project.
+                        group_for_user( self ).id )
+          .take
+        my_candidate_lists[ index ] = group_cl
+
+      end
     end
 
     data = []
-    my_bingo_lists.each do |bingo|
-      data << bingo.candidate_list_for_user(self).performance
+    my_candidate_lists.each do |candidate_list|
+      data << candidate_list.performance
     end
     data
   end

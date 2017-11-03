@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171026030636) do
+ActiveRecord::Schema.define(version: 20171103055606) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -98,13 +98,14 @@ ActiveRecord::Schema.define(version: 20171026030636) do
   add_index "candidate_feedbacks", ["name_en"], name: "index_candidate_feedbacks_on_name_en", unique: true, using: :btree
 
   create_table "candidate_lists", force: :cascade do |t|
-    t.integer  "user_id",         limit: 4
-    t.integer  "group_id",        limit: 4
+    t.integer  "user_id",            limit: 4
+    t.integer  "group_id",           limit: 4
     t.boolean  "is_group"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.integer  "bingo_game_id",   limit: 4
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.integer  "bingo_game_id",      limit: 4
     t.boolean  "group_requested"
+    t.integer  "cached_performance", limit: 4
   end
 
   add_index "candidate_lists", ["bingo_game_id"], name: "index_candidate_lists_on_bingo_game_id", using: :btree
@@ -448,8 +449,8 @@ ActiveRecord::Schema.define(version: 20171026030636) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree

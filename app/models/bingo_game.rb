@@ -31,10 +31,6 @@ class BingoGame < ActiveRecord::Base
     candidate_list_for_user(user).status
   end
 
-  def get_type
-    I18n.t(:bingo_game)
-  end
-
   def status
     completed = candidates.completed.count
     if completed > 0
@@ -57,7 +53,7 @@ class BingoGame < ActiveRecord::Base
   end
 
   def type
-    'Task List'
+    I18n.t(:terms_list)
   end
 
   def term_list_date
@@ -66,9 +62,9 @@ class BingoGame < ActiveRecord::Base
 
   def get_activity_on_date(date:, anon:)
     if date <= term_list_date
-      "Terms list (#{get_name(anon)})"
+      "#{I18n.t(:terms_list)} (#{get_name(anon)})"
     else
-      "Terms review (#{get_name(anon)})"
+      "#{I18n.t(:terms_revieew)} (#{get_name(anon)})"
     end
   end
 
