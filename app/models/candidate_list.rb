@@ -28,9 +28,9 @@ class CandidateList < ActiveRecord::Base
         end
         performance /= expected_count
         self.cached_performance = performance
-        self.save
+        save
       end
-      performance = self.cached_performance
+      performance = cached_performance
     end
     performance
   end

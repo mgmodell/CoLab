@@ -141,11 +141,11 @@ class User < ActiveRecord::Base
   def activity_history
     activities = []
     # Add in the candidate lists
-    BingoGame.joins( course: { rosters: :role } )
-              .includes( :course, :project )
-              .where( reviewed: true, 'rosters.user_id': id )
-              .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
-              .all.each do |bingo_game|
+    BingoGame.joins(course: { rosters: :role })
+             .includes(:course, :project)
+             .where(reviewed: true, 'rosters.user_id': id)
+             .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
+             .all.each do |bingo_game|
 
       activities << bingo_game
     end
@@ -162,29 +162,27 @@ class User < ActiveRecord::Base
     my_candidate_lists = []
     if course_id > 0
       my_candidate_lists = candidate_lists
-                       .includes(candidates: :candidate_feedback,
-                              bingo_game: :project )
-                       .joins(:bingo_game)
-                       .where(bingo_games:
-                              {reviewed: true, course_id: course_id} )
+                           .includes(candidates: :candidate_feedback,
+                                     bingo_game: :project)
+                           .joins(:bingo_game)
+                           .where(bingo_games:
+                              { reviewed: true, course_id: course_id })
 
     else
       my_candidate_lists = candidate_lists
-                       .includes(candidates: :candidate_feedback,
-                              bingo_game: :project  )
-                       .joins(:bingo_game)
-                       .where(bingo_games:
-                              {reviewed: true} )
+                           .includes(candidates: :candidate_feedback,
+                                     bingo_game: :project)
+                           .joins(:bingo_game)
+                           .where(bingo_games:
+                              { reviewed: true })
     end
-    my_candidate_lists.each_with_index do |solo_cl,index|
-      if solo_cl.is_group
-        group_cl = solo_cl.bingo_game.candidate_lists
-          .where( group_id: solo_cl.bingo_game.project.
-                        group_for_user( self ).id )
-          .take
-        my_candidate_lists[ index ] = group_cl
-
-      end
+    my_candidate_lists.each_with_index do |solo_cl, index|
+      next unless solo_cl.is_group
+      group_cl = solo_cl.bingo_game.candidate_lists
+                        .where(group_id: solo_cl.bingo_game.project
+                      .group_for_user(self).id)
+                        .take
+      my_candidate_lists[index] = group_cl
     end
 
     total = 0
@@ -198,29 +196,27 @@ class User < ActiveRecord::Base
     my_candidate_lists = []
     if course_id > 0
       my_candidate_lists = candidate_lists
-                       .includes(candidates: :candidate_feedback,
-                              bingo_game: :project )
-                       .joins(:bingo_game)
-                       .where(bingo_games:
-                              {reviewed: true, course_id: course_id} )
+                           .includes(candidates: :candidate_feedback,
+                                     bingo_game: :project)
+                           .joins(:bingo_game)
+                           .where(bingo_games:
+                              { reviewed: true, course_id: course_id })
 
     else
       my_candidate_lists = candidate_lists
-                       .includes(candidates: :candidate_feedback,
-                              bingo_game: :project  )
-                       .joins(:bingo_game)
-                       .where(bingo_games:
-                              {reviewed: true} )
+                           .includes(candidates: :candidate_feedback,
+                                     bingo_game: :project)
+                           .joins(:bingo_game)
+                           .where(bingo_games:
+                              { reviewed: true })
     end
-    my_candidate_lists.each_with_index do |solo_cl,index|
-      if solo_cl.is_group
-        group_cl = solo_cl.bingo_game.candidate_lists
-          .where( group_id: solo_cl.bingo_game.project.
-                        group_for_user( self ).id )
-          .take
-        my_candidate_lists[ index ] = group_cl
-
-      end
+    my_candidate_lists.each_with_index do |solo_cl, index|
+      next unless solo_cl.is_group
+      group_cl = solo_cl.bingo_game.candidate_lists
+                        .where(group_id: solo_cl.bingo_game.project
+                      .group_for_user(self).id)
+                        .take
+      my_candidate_lists[index] = group_cl
     end
 
     data = []
