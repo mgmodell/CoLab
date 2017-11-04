@@ -17,6 +17,7 @@ namespace :admin do
         .where( cached_performance: nil, bingo_games: {reviewed: true} )
         .each do |candidate_list|
       candidate_list.performance 
+      candidate_list.save
     end
 
   end
