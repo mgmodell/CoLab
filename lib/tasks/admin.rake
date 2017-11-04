@@ -11,4 +11,13 @@ namespace :admin do
     AdministrativeMailer.send_reminder_emails
     AdministrativeMailer.inform_instructors
   end
+  desc 'Cache performance numbers'
+  task update_caches: :environment do
+    CandidateList.joins( :bingo_game )
+        .where( cached_performance: nil, bingo_games: {reviewed: true} )
+        .each do |candidate_list|
+      candidate_list.performance 
+    end
+
+  end
 end

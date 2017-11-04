@@ -52,7 +52,7 @@ class BingoGame < ActiveRecord::Base
     anonymous ? anon_topic : topic
   end
 
-  def type
+  def get_type
     I18n.t(:terms_list)
   end
 

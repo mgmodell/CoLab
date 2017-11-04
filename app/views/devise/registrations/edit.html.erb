@@ -238,7 +238,7 @@
           </td>
         <% end %>
         <td><%= activity.course.pretty_name false %></td>
-        <td><%= activity.type %></td>
+        <td><%= activity.get_type %></td>
         <td><%= activity.end_date %></td>
         <td>
           <% if activity.class.name == "BingoGame" %>
