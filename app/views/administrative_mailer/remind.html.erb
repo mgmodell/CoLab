@@ -6,7 +6,7 @@
   <body>
     <h1><%= t 'home.greeting', name: @user.first_name %>.</h1>
     <p>
-      <%= t :reminder_body, site_link: link_to( t( :title ), root_url ) %>
+      <%= raw( t :reminder_body, site_link: link_to( t( :title ), root_url ) ) %>
     </P>
     <P>
       <%= link_to root_url, root_url %>
