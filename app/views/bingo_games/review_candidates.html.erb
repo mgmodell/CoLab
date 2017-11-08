@@ -44,7 +44,6 @@
       %>
       <% @bingo_game.candidates.
         includes(:user, :concept,candidate_list:[:group]).
-        where( 'candidate_lists.is_group = 0 OR candidate_lists.group_id IS NOT NULL' ).
         completed.find_each do |candidate| %>
       <tr>
         <td><%= count += 1 %></td>
