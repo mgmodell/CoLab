@@ -50,4 +50,4 @@
   </tbody>
 </table>
 <br>
-<%= link_to t( 'courses.new.title' ), new_course_path %>
+<%= link_to( t( 'courses.new.title' ), new_course_path ) if @current_user.is_admin? %>

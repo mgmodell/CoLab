@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class CoursesController < ApplicationController
   before_action :set_course, only: [:show, :edit, :update, :destroy, :add_students, :add_instructors]
+  before_action :check_admin, only: [:new, :create ]
   before_action :check_editor, except: [:next, :diagnose, :react, :accept_roster, :decline_roster, :show, :index]
   before_action :check_viewer, except: [:next, :diagnose, :react, :accept_roster, :decline_roster]
 
@@ -163,6 +164,10 @@ class CoursesController < ApplicationController
     redirect_to root_path unless @current_user.is_admin? ||
                                  @current_user.is_instructor? ||
                                  @current_user.is_researcher?
+  end
+
+  def check_admin
+    redirect_to root_path unless @current_user.is_admin?
   end
 
   def check_editor
