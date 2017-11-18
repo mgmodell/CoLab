@@ -22,7 +22,6 @@ Given(/^the experience "([^"]*)" been activated$/) do |has_or_has_not|
 end
 
 Given(/^the course has (\d+) confirmed users$/) do |user_count|
-  role = Role.enrolled.take
   @users = []
   user_count.to_i.times do
     user = User.make
@@ -31,7 +30,7 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
     r = Roster.new
     r.user = user
     r.course = @course
-    r.role = role
+    r.role = Roster.roles[:enrolled_student]
     r.save
     puts r.errors.full_messages unless r.errors.blank?
   end
@@ -82,7 +81,6 @@ Given /^the user is in a group on the project$/ do
   @group = Group.make
   @project.active = false
 
-  role = Role.enrolled.take
   @project.groups << @group
   3.times do
     u = User.make
@@ -90,7 +88,7 @@ Given /^the user is in a group on the project$/ do
     r = Roster.new
     r.user = u
     r.course = @project.course
-    r.role = role
+    r.role = Roster.roles[:enrolled_student]
     r.save
     puts r.errors.full_messages unless r.errors.blank?
     @group.users << u

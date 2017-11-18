@@ -145,7 +145,7 @@ class BingoGamesController < ApplicationController
       @bingo_game = bg_test
     else
       @course = bg_test.course
-      if bg_test.course.rosters.instructorships.where(user: @current_user).nil?
+      if bg_test.course.rosters.instructor.where(user: @current_user).nil?
         redirect_to @course if @bingo_game.nil?
       else
         @bingo_game = bg_test

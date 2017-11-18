@@ -29,7 +29,6 @@ end
 Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
   @group = Group.make
   @users = []
-  role = Role.enrolled.take
   user_count.to_i.times do
     user = User.make
     user.skip_confirmation!
@@ -38,7 +37,7 @@ Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
     r = Roster.new
     r.user = user
     r.course = @course
-    r.role = role
+    r.role = Roster.roles[:enrolled_student]
     r.save
     puts r.errors.full_messages unless r.errors.blank?
   end

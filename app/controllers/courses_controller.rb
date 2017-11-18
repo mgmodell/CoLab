@@ -19,7 +19,7 @@ class CoursesController < ApplicationController
     if @current_user.admin?
       @courses = Course.includes(:school).all
     else
-      rosters = @current_user.rosters.instructorships.includes(course: :school)
+      rosters = @current_user.rosters.instructor.includes(course: :school)
       rosters.each do |roster|
         @courses << roster.course
       end
@@ -33,15 +33,13 @@ class CoursesController < ApplicationController
     @course.school = @current_user.school unless @current_user.school.nil?
     @course.start_date = Date.tomorrow.beginning_of_day
     @course.end_date = 1.month.from_now.end_of_day
-    role = Role.instructor.take
-    @course.rosters << Roster.new(role: role, user: @current_user)
+    @course.rosters << Roster.new(role: Roster.roles[:instructor], user: @current_user)
   end
 
   def create
     @title = t('courses.new.title')
     @course = Course.new(course_params)
-    role = Role.instructor.take
-    @course.rosters << Roster.new(role: role, user: @current_user)
+    @course.rosters << Roster.new(role: Roster.roles[:instructor], user: @current_user)
 
     if @course.save
       redirect_to url: course_url(@course), notice: t('courses.create_success')
@@ -76,11 +74,11 @@ class CoursesController < ApplicationController
   end
 
   def accept_roster
-    r = Roster.student.where(id: params[:roster_id], user: @current_user).take
+    r = Roster.students.where(id: params[:roster_id], user: @current_user).take
     if r.nil?
       flash[:notice] = t('courses.accept_fail')
     else
-      r.role = Role.enrolled.take
+      r.role = Roster.roles[:enrolled_student]
       r.save
     end
     flash.keep
@@ -88,11 +86,11 @@ class CoursesController < ApplicationController
   end
 
   def decline_roster
-    r = Roster.student.where(id: params[:roster_id], user: @current_user).take
+    r = Roster.students.where(id: params[:roster_id], user: @current_user).take
     if r.nil?
       flash[:notice] = t('courses.decline_fail')
     else
-      r.role = Role.declined.take
+      r.role = Roster.roles[:declined_student]
       r.save
     end
     flash.keep
@@ -105,7 +103,7 @@ class CoursesController < ApplicationController
       flash[:notice] = t('courses.permission_fail')
       flash.keep
       redirect_to :root
-    elsif r.course.rosters.instructorships.count < 2
+    elsif r.course.rosters.instructor.count < 2
       flash[:notice] = t('courses.last_instructor')
       flash.keep
       redirect_to :root
@@ -138,7 +136,7 @@ class CoursesController < ApplicationController
         flash.keep
         redirect_to :root
       else
-        r.role = Role.dropped.take
+        r.role = Roster.roles[:dropped_student]
         r.save
         if instructor_action
           redirect_to course_path(r.course)
@@ -156,7 +154,7 @@ class CoursesController < ApplicationController
     if @current_user.is_admin?
       @course = Course.find(params[:id])
     else
-      @course = @current_user.rosters.instructorships.where(course_id: params[:id]).take.course
+      @course = @current_user.rosters.instructor.where(course_id: params[:id]).take.course
       redirect_to :show if @course.nil?
     end
   end
@@ -173,6 +171,6 @@ class CoursesController < ApplicationController
 
   def course_params
     params.require(:course).permit(:name, :number, :school_id, :start_date, :end_date,
-                                   :description, :timezone, rosters: [:role_id])
+                                   :description, :timezone, rosters: [:role])
   end
 end

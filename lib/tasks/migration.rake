@@ -158,24 +158,6 @@ namespace :migratify do
       g.save
     end
     
-    # Role seed data
-    class Role_
-      attr_accessor :code
-      attr_accessor :name_en, :name_ko
-      attr_accessor :description_en, :description_ko
-    end
-    read_data = YAML.safe_load(File.open('db/role.yml'), [Role_])
-    read_data.each do |role|
-      g = Role.where(name_en: role.name_en).take
-      g = Role.new if g.nil?
-      g.code = role.code unless g.code == role.code
-      g.name_en = role.name_en unless g.name_en == role.name_en
-      g.name_ko = role.name_ko unless g.name_ko == role.name_ko
-      g.description_en = role.description_en unless g.description_en == role.description_en
-      g.description_ko = role.description_ko unless g.description_ko == role.description_ko
-      g.save
-    end
-
     # Bingo! support
     class CandidateFeedback_
       attr_accessor :name_en, :name_ko

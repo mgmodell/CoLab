@@ -21,7 +21,7 @@ class ProjectsController < ApplicationController
     if @current_user.is_admin?
       @projects = Project.all
     else
-      rosters = @current_user.rosters.instructorships
+      rosters = @current_user.rosters.instructor
       rosters.each do |roster|
         @projects.concat roster.course.projects.to_a
       end
@@ -128,7 +128,7 @@ class ProjectsController < ApplicationController
   def activate
     @title = t('projects.show.title')
     if @current_user.is_admin? ||
-       @project.course.get_roster_for_user(@current_user).role.code == 'inst'
+       @project.course.get_roster_for_user(@current_user).role.instructor?
       @project.active = true
       @project.save
     end
@@ -143,7 +143,7 @@ class ProjectsController < ApplicationController
     if @current_user.is_admin?
       @project = p_test
     else
-      if p_test.course.rosters.instructorships.where(user: @current_user).nil?
+      if p_test.course.rosters.instructor.where(user: @current_user).nil?
         @course = @project.course
         redirect_to @course if @project.nil?
       else

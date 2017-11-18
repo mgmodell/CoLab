@@ -34,7 +34,7 @@
 </p>
 <p>
   <h3><%= t '.instructors' %></h3>
-  <% @course.rosters.instructorships.includes(:user).each do |roster| %>
+  <% @course.rosters.instructor.includes(:user).each do |roster| %>
     <%= roster.user.name( anonymize ) %> |
     <%= link_to t( :remove) , remove_instructor_path( roster ) %></br>
   <% end %>
@@ -51,7 +51,7 @@
     <%= hidden_field_tag :id, @course.id %>
     <%= submit_tag t( :add ) %>
   <% end %>
-  <% @course.rosters.instructorships.each do |roster| %>
+  <% @course.rosters.instructor.each do |roster| %>
     <%= roster.user.name( anonymize ) %></br>
   <% end %>
 
@@ -86,7 +86,7 @@
     </tr>
     </thead>
     <tbody>
-      <% @course.rosters.students.includes(:role, user: [:emails]).each do |roster| %>
+      <% @course.rosters.students.includes( user: [:emails]).each do |roster| %>
       <tr>
         <td>
         <% if anonymize %>
@@ -118,9 +118,10 @@
           <%= roster.user.get_assessment_performance( course_id: @course.id) %>%
         </td>
         <td>
-          <%= roster.role.name %>
+          <%= roster.role.humanize %>
         </td>
-        <td><%= link_to( t( 'courses.re_invite' ), re_invite_student_path( roster.user ) ) unless roster.role.code == 'enr' %>&nbsp;|&nbsp;
+        <td><%= link_to( t( 'courses.re_invite' ),
+        re_invite_student_path( roster.user ) ) unless roster.enrolled_student? %>&nbsp;|&nbsp;
         <%= link_to t( 'courses.drop' ), drop_student_path( roster.id ) %></td>
       </tr>
     <% end %>

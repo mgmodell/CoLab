@@ -100,7 +100,7 @@ class GraphingController < ApplicationController
     @detail_hash = {}
 
     # Do we have any business getting this data?
-    if current_user.is_admin? || @current_user.rosters.instructorships.count > 0
+    if current_user.is_admin? || @current_user.rosters.instructor.count > 0
 
       # Retrieve the requested data
       case unit_of_analysis
@@ -231,7 +231,7 @@ class GraphingController < ApplicationController
       if @user.is_admin?
         @current_users_projects = Project.all
       elsif @user.is_instructor?
-        Roster.instructorships.where(user_id: @user.id).each do |roster|
+        Roster.instructor.where(user_id: @user.id).each do |roster|
           @current_users_projects.concat roster.course.projects.to_a
         end
       end

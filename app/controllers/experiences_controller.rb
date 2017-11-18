@@ -18,7 +18,7 @@ class ExperiencesController < ApplicationController
     if @current_user.is_admin?
       @experiences = Experience.all
     else
-      rosters = @current_user.rosters.instructorships
+      rosters = @current_user.rosters.instructor
       rosters.each do |roster|
         @experiences.concat roster.course.experiences.to_a
       end
@@ -133,7 +133,7 @@ class ExperiencesController < ApplicationController
   def activate
     experience = Experience.find(params[:experience_id])
     if @current_user.is_admin? ||
-       experience.course.get_roster_for_user(@current_user).role.code == 'inst'
+       experience.course.get_roster_for_user(@current_user).role.instructor?
       experience.active = true
       experience.save
     end
@@ -150,7 +150,7 @@ class ExperiencesController < ApplicationController
       @experience = e_test
     else
       @course = @experience.course
-      if e_test.course.rosters.instructorships.where(user: @current_user).nil?
+      if e_test.course.rosters.instructor.where(user: @current_user).nil?
         redirect_to @course if @experience.nil?
       else
         @experience = e_test

@@ -89,7 +89,7 @@ class BingoGame < ActiveRecord::Base
 
   def get_current_lists_hash
     candidate_lists = {}
-    course.rosters.enrolled.each do |roster|
+    course.rosters.enrolled_student.each do |roster|
       student = roster.user
       candidate_list = candidate_list_for_user(student)
       if candidate_lists[candidate_list].nil?

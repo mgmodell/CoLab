@@ -10,11 +10,11 @@ class School < ActiveRecord::Base
   before_create :anonymize
 
   def instructors
-    rosters.joins(:role).where(roles: { code: 'inst' }).collect(&:user).uniq
+    rosters.instructor.collect(&:user).uniq
   end
 
   def enrolled_students
-    rosters.joins(:role).where(roles: { code: 'enr' }).collect(&:user).uniq
+    rosters.enrolled_student.collect(&:user).uniq
   end
 
   def get_name(anonymous)

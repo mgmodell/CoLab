@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171103055606) do
+ActiveRecord::Schema.define(version: 20171118140620) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -403,29 +403,16 @@ ActiveRecord::Schema.define(version: 20171103055606) do
   add_index "reactions", ["narrative_id"], name: "index_reactions_on_narrative_id", using: :btree
   add_index "reactions", ["user_id"], name: "index_reactions_on_user_id", using: :btree
 
-  create_table "roles", force: :cascade do |t|
-    t.string   "name_en",        limit: 255
-    t.string   "description_en", limit: 255
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.string   "name_ko",        limit: 255
-    t.string   "code",           limit: 255
-    t.string   "description_ko", limit: 255
-  end
-
-  add_index "roles", ["code"], name: "index_roles_on_code", unique: true, using: :btree
-  add_index "roles", ["name_en"], name: "index_roles_on_name_en", unique: true, using: :btree
-
   create_table "rosters", force: :cascade do |t|
-    t.integer  "role_id",    limit: 4, null: false
+    t.integer  "role",       limit: 4, default: 4, null: false
     t.integer  "course_id",  limit: 4
-    t.integer  "user_id",    limit: 4, null: false
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.integer  "user_id",    limit: 4,             null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   add_index "rosters", ["course_id"], name: "index_rosters_on_course_id", using: :btree
-  add_index "rosters", ["role_id"], name: "index_rosters_on_role_id", using: :btree
+  add_index "rosters", ["role"], name: "index_rosters_on_role", using: :btree
   add_index "rosters", ["user_id"], name: "index_rosters_on_user_id", using: :btree
 
   create_table "scenarios", force: :cascade do |t|
@@ -449,8 +436,8 @@ ActiveRecord::Schema.define(version: 20171103055606) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
@@ -592,7 +579,6 @@ ActiveRecord::Schema.define(version: 20171103055606) do
   add_foreign_key "reactions", "narratives"
   add_foreign_key "reactions", "users"
   add_foreign_key "rosters", "courses"
-  add_foreign_key "rosters", "roles"
   add_foreign_key "rosters", "users"
   add_foreign_key "scenarios", "behaviors"
   add_foreign_key "users", "cip_codes"

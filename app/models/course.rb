@@ -47,7 +47,6 @@ class Course < ActiveRecord::Base
   end
 
   def set_user_role(user, role)
-    role = Role.where(code: role).take if role.class == String
     roster = rosters.where(user: user).take
     roster = Roster.new(user: user, course: self) if roster.nil?
     roster.role = role
@@ -56,13 +55,13 @@ class Course < ActiveRecord::Base
 
   def drop_student(user)
     roster = Roster.where(user: user, course: self).take
-    roster.role = Role.dropped.take
+    roster.role = Roster.roles[:dropped_student]
     roster.save
   end
 
   def get_user_role(user)
     roster = rosters.where(user: user).take
-    roster.nil? ? nil : roster.role
+    roster.role
   end
 
   # Validation check code
@@ -105,8 +104,7 @@ class Course < ActiveRecord::Base
   end
 
   def add_user_by_email(user_email, instructor = false)
-    role_code = instructor ? 'inst' : 'invt'
-    role = Role.where(code: role_code).take
+    role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
     # Searching for the student and:
     user = User.joins(:emails).where(emails: { email: user_email }).take
 
@@ -141,11 +139,11 @@ class Course < ActiveRecord::Base
   end
 
   def enrolled_students
-    rosters.joins(:role).includes(user: [:emails]).where('roles.code = ? OR roles.code = ?', 'enr', 'invt').collect(&:user)
+    rosters.includes(user: [:emails]).enrolled_student.collect(&:user)
   end
 
   def instructors
-    rosters.joins(:role).where('roles.code = ?', 'inst').collect(&:user)
+    rosters.instructor.collect(&:user)
   end
 
   private

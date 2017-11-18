@@ -114,7 +114,7 @@ class User < ActiveRecord::Base
   end
 
   def is_instructor?
-    if admin || rosters.instructorships.count > 0
+    if admin || rosters.instructor.count > 0
       true
     else
       false
@@ -128,9 +128,9 @@ class User < ActiveRecord::Base
   def waiting_instructor_tasks
     waiting_tasks = []
 
-    BingoGame.joins(course: { rosters: :role })
+    BingoGame.joins(course: :rosters )
              .includes(:course)
-             .where('rosters.user_id': id, 'roles.code': 'inst')
+             .where('rosters.user_id': id, 'rosters.role': Roster.roles[:instructor] )
              .find_each do |game|
       waiting_tasks << game if game.awaiting_review?
     end
@@ -141,10 +141,11 @@ class User < ActiveRecord::Base
   def activity_history
     activities = []
     # Add in the candidate lists
-    BingoGame.joins(course: { rosters: :role })
+    BingoGame.joins(course: :rosters )
              .includes(:course, :project)
              .where(reviewed: true, 'rosters.user_id': id)
-             .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
+             .where('rosters.role = ? OR rosters.role = ?',
+                      Roster.roles[:enrolled_student], Roster.roles[:invited_student] )
              .all.each do |bingo_game|
 
       activities << bingo_game
@@ -266,17 +267,19 @@ class User < ActiveRecord::Base
     # Add the experiences
     cur_date = DateTime.current
 
-    waiting_tasks.concat Experience.joins(course: { rosters: :role })
+    waiting_tasks.concat Experience.joins(course: :rosters )
       .where('rosters.user_id': id, 'experiences.active': true)
-      .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
+      .where('rosters.role = ? OR rosters.role = ?',
+              Roster.roles[:enrolled_student], Roster.roles[:invited_student] )
       .where('experiences.end_date >= ? AND experiences.start_date <= ?', cur_date, cur_date)
       .to_a
 
     # Add the bingo games
-    waiting_games = BingoGame.joins(course: { rosters: :role })
+    waiting_games = BingoGame.joins(course: :rosters )
                              .includes(:course, :project)
                              .where('rosters.user_id': id, 'bingo_games.active': true)
-                             .where('roles.code = ? OR roles.code = ?', 'enr', 'invt')
+                             .where('rosters.role = ? OR rosters.role = ?',
+                                     Roster.roles[:enrolled_student], Roster.roles[:invited_student] )
                              .where('bingo_games.end_date >= ? AND bingo_games.start_date <= ?', cur_date, cur_date)
                              .to_a
 
