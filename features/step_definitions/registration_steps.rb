@@ -85,7 +85,7 @@ Then /^the course has (\d+) "([^"]*)" users$/ do |user_count, user_status|
   when 'Declined Student'
     status = Roster.roles[:declined_student]
   end
-  @course.rosters.where(role: status ).count.should eq user_count.to_i
+  @course.rosters.where(role: status).count.should eq user_count.to_i
 end
 
 Then /^(\d+) emails will have been sent$/  do |email_count|

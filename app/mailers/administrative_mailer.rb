@@ -62,12 +62,12 @@ class AdministrativeMailer < ActionMailer::Base
                          .where('assessments.start_date < ? AND assessments.end_date > ?',
                                 curr_date, curr_date).to_a
 
-    current_users = User.joins( :rosters, groups: { project: :assessments } )
+    current_users = User.joins(:rosters, groups: { project: :assessments })
                         .where('assessments.start_date <= ? AND assessments.end_date >= ? AND ' \
                               'projects.active = TRUE AND rosters.role IN (?)',
                                curr_date, curr_date,
                                [Roster.roles[:invited_student],
-                               Roster.roles[:enrolled_student] ]).to_a
+                                Roster.roles[:enrolled_student]]).to_a
 
     finished_users.each do |user|
       current_users.delete user
