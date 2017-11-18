@@ -23,8 +23,10 @@ class CandidateList < ActiveRecord::Base
     performance = 0
     if bingo_game.reviewed
       if cached_performance.nil?
-        candidates.completed.includes(:candidate_feedback).each do |candidate|
-          performance += candidate.candidate_feedback.credit
+         candidates.joins( :candidate_feedback, :concept ).completed.
+                    group( :concept ).maximum( 'candidate_feedbacks.credit' ).
+                    each do |concept_max|
+          performance += concept_max[ 1 ]
         end
         performance /= expected_count
         self.cached_performance = performance
