@@ -25,14 +25,20 @@ class Roster < ActiveRecord::Base
 
   # In this method, we will remove ou
   def clean_up_dropped
-    if dropped_student?
+    if self.dropped_student?
       course.projects.includes( groups: :users ).each do |project|
         project.groups.each do |group|
           next unless group.users.includes(user)
+          project = group.project
+          activation_status = project.active
           group.users.delete(user)
           group.save
-          group.project.active = true
-          group.project.save
+          puts group.errors.full_messages unless group.errors.empty?
+          project = group.project
+          project.reload
+          project.active = activation_status
+          project.save
+          puts project.errors.full_messages unless project.errors.empty?
         end
       end
     end
