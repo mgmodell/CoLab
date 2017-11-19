@@ -37,8 +37,8 @@ class Assessment < ActiveRecord::Base
     init_date = Date.today.beginning_of_day
     init_day = init_date.wday
     logger.debug "\n\t**Populating Assessments**"
-    Project.includes( :course ).where('active = true AND start_date <= ? AND end_date >= ?',
-                  init_date, init_date.end_of_day).each do |project|
+    Project.includes(:course).where('active = true AND start_date <= ? AND end_date >= ?',
+                                    init_date, init_date.end_of_day).each do |project|
 
       build_new_assessment project if project.is_available?
     end

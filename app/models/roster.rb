@@ -25,8 +25,8 @@ class Roster < ActiveRecord::Base
 
   # In this method, we will remove ou
   def clean_up_dropped
-    if self.dropped_student?
-      course.projects.includes( groups: :users ).each do |project|
+    if dropped_student?
+      course.projects.includes(groups: :users).each do |project|
         project.groups.each do |group|
           next unless group.users.includes(user)
           project = group.project
