@@ -58,19 +58,69 @@ class GraphingController < ApplicationController
     for_research = params[:for_research] == 'true' ? true : false
     anonymize = @current_user.anonymize?
 
+    dataset = { comments: {} }
+    comments = dataset[ :comments ]
     #Security checks
     if @current_user.is_admin? ||
         project.course.instructors.includes( @current_user )
       #Start pulling data
       case unit_of_analysis
       when Unit_Of_Analysis[ :individual ]
-        
+        user = User.find subject
+        values = Value.joins( installment: :assessment ).
+                          where( 'assessments.project_id': project, user: user ).
+                          includes( :factor, installment: :user ).order( 'assessments.inst_date' )
+
+        values.each do |value|
+          group_vals = dataset[ value.installment.group_id ]
+          if user_vals.nil?
+            group_vals = { target_name: value.installment.group.get_name( anonymize ),
+                          target_id: value.installment.group_id,
+                          values: Array.new }
+          end
+          group_vals[ :values ] << {
+            assessor_id: value.installment.user_id,
+            assessor_name: value.installment.user.name( anonymize ),
+            assessment_id: value.installment.assessment_id,
+            installment_id: value.installment_id,
+            date: value.installment.inst_date,
+            factor: value.factor.name,
+            value: value.value }
+          dataset[ value.installment.group_id ] = group_vals
+
+          comments[ value.installment_id ] =
+                    value.installment.prettyComment( anonymize )
+
+        end
 
       when Unit_Of_Analysis[ :group ]
+        group = Group.find subject
         values = Value.joins( installment: :assessment ).
-                          where( 'assessments.project_id': project ).
-                          includes( :installment ).order( 'assessments.inst_date' )
+                          where( 'assessments.project_id': project,
+                          'installments.group_id': group ).
+                          includes( :factor, installment: :user ).order( 'assessments.inst_date' )
 
+        values.each do |value|
+          user_vals = dataset[ value.user_id ]
+          if user_vals.nil?
+            user_vals = { target_name: value.user.name( anonymize ),
+                          target_id: value.user_id,
+                          values: Array.new }
+          end
+          user_vals[ :values ] << {
+            assessor_id: value.installment.user_id,
+            assessor_name: value.installment.user.name( anonymize ),
+            assessment_id: value.installment.assessment_id,
+            installment_id: value.installment_id,
+            date: value.installment.inst_date,
+            factor: value.factor.name,
+            value: value.value }
+          dataset[ value.user_id ] = user_vals
+
+          comments[ value.installment_id ] =
+                    value.installment.prettyComment( anonymize )
+
+        end
       end
     else
       #Return some sort of error
@@ -80,7 +130,7 @@ class GraphingController < ApplicationController
 
     # Return the retrieved data
     respond_to do |format|
-      format.json
+      format.json { render json: dataset }
     end
   end
 
