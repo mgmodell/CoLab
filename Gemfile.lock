@@ -132,8 +132,6 @@ GEM
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     hashie (3.4.6)
-    highcharts-rails (4.2.5)
-      railties (>= 3.1)
     htmlbeautifier (1.2.1)
     i18n (0.7.0)
     i18n_data (0.7.0)
@@ -352,7 +350,6 @@ DEPENDENCIES
   devise
   devise-multi_email
   forgery
-  highcharts-rails
   htmlbeautifier
   i18n_data
   jbuilder (~> 2.0)
@@ -386,4 +383,4 @@ RUBY VERSION
    ruby 2.4.2p198
 
 BUNDLED WITH
-   1.15.4
+   1.16.0

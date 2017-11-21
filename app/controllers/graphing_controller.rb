@@ -51,7 +51,7 @@ class GraphingController < ApplicationController
 
 
   def data
-    unit_of_analysis = params[:unit_of_analysis]
+    unit_of_analysis = params[:unit_of_analysis].to_i
     project = Project.find(params[:project])
     subject = params[:subject]
     for_research = params[:for_research] == 'true' ? true : false
@@ -63,16 +63,20 @@ class GraphingController < ApplicationController
     if @current_user.is_admin? ||
         project.course.instructors.includes( @current_user )
       #Start pulling data
+      puts "\n\nuoa: #{unit_of_analysis}\n\n"
+
       case unit_of_analysis
       when Unit_Of_Analysis[ :individual ]
         user = User.find subject
         values = Value.joins( installment: :assessment ).
                           where( 'assessments.project_id': project, user: user ).
-                          includes( :factor, installment: :user ).order( 'assessments.inst_date' )
+                          includes( :factor, installment: :user ).
+                          order( 'installments.inst_date' )
 
+        puts "\n\nvalue count: #{values.count}"
         values.each do |value|
           group_vals = dataset[ value.installment.group_id ]
-          if user_vals.nil?
+          if group_vals.nil?
             group_vals = { target_name: value.installment.group.get_name( anonymize ),
                           target_id: value.installment.group_id,
                           values: Array.new }
@@ -97,7 +101,8 @@ class GraphingController < ApplicationController
         values = Value.joins( installment: :assessment ).
                           where( 'assessments.project_id': project,
                           'installments.group_id': group ).
-                          includes( :factor, installment: :user ).order( 'assessments.inst_date' )
+                          includes( :factor, installment: :user ).
+                          order( 'installments.inst_date' )
 
         values.each do |value|
           user_vals = dataset[ value.user_id ]

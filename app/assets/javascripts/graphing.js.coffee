@@ -8,50 +8,6 @@ $(document).bind 'mobileinit', ->
   $.mobile.ajaxEnabled = false
   return
 
-$(document).ready ->
-  window.charts = []
-  i = 0
-  num_charts = $(".chart").length
-  while i < num_charts
-    chart = new Highcharts.Chart(
-      chart:
-        renderTo: "chart_container_" + i
-        type: "spline"
-        zoomType: "x"
-
-      tooltip:
-        backgroundColor: null
-        borderWidth: 1
-        shadow: true
-        useHTML: true
-        shared: false
-        split: false
-        style:
-          padding: 0
-
-      title:
-        text: "Individual Summary"
-
-      xAxis:
-        type: "datetime"
-        maxZoom: 14 * 24 * 3600000
-        title:
-          text: "Weeks"
-
-      legend:
-        labelFormatter: ->
-          @name
-
-      yAxis:
-        min: 0
-        title:
-          text: "Average Perceived Effort"
-
-      series: [{}]
-    )
-    window.charts[i] = chart
-    i++
-  true
 
 $ ->
   $(".project_select").change ->
@@ -128,45 +84,20 @@ $ ->
             chart.hideLoading()
   
   $(".submitting_select").change ->
-    chart_num = parseInt($(this).parents("form").find(".chart").attr("chart_num"))
-    detail_container = $(this).parents("form").find("#detail_container")
+    chart_div = $(this).parents("form").find("#graph_div")
     unit_of_analysis = $(this).parents("form").find("#unit_of_analysis").val()
     project = $(this).parents("form").find("#project").val()
     subject = $(this).parents("form").find("#subject").val()
     data_processing = $(this).parents("form").find("#data_processing").val()
     for_research = $("#for_research").val()
     if subject isnt "-1"
-      url = "data/" + unit_of_analysis + "/" + subject + "/" + project + "/" + data_processing + "/" + for_research
-      window.charts[chart_num].showLoading()
+      url = "data/" + unit_of_analysis + "/" + subject + "/" + project + "/" + for_research
+      # Maybe do some loading thing here?
       $.getJSON url, (data) ->
-        chart = window.charts[chart_num]
-        index = 0
-        #debug
-        #console.log data.series
-        chart.series[index].remove()  while index < chart.series.length
-        chart.setTitle
-          text: data.details.name
-        ,
-          text: "Individual Data"
-  
-        index = 0
-        while index < data.series.length
-          chart.addSeries
-            name: data.series[index].label
-            data: data.series[index].data
-  
-          index++
-        
-        #Now let's handle the html bits
-        key_arr = Object.keys(data.details)
-        index = 0
-        text = "<h3>Details and Statistics:</h3><UL>"
-        while index < key_arr.length
-          text += "<LI>" + key_arr[index] + ":" + data.details[key_arr[index]] + "</LI>"
-          index++
-        text += "</ul>"
-        $(detail_container).html text
-        chart.hideLoading()
+        chart = d3.select( chart_div.get( 0 ) ).append( "svg" )
+          .attr( "height", 400 ).attr( "width", 600 )
+          .attr( "viewBox", "0 0 600 400" )
+          .attr( "preserveAspectRatio", "none" )
   
   
   

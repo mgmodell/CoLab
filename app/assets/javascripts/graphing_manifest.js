@@ -14,5 +14,4 @@
 //= require jquery_ujs
 //= require graphing
 //= require jquery.mobile
-//= require highcharts
 //= require d3
