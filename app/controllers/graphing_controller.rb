@@ -24,35 +24,34 @@ class GraphingController < ApplicationController
 
   # Support the app by providing the subject instances
   def subjects
-    unit_of_analysis = params[:unit_of_analysis]
+    unit_of_analysis = params[:unit_of_analysis].to_i
     project_id = params[:project_id]
     for_research = params[:for_research] == 'true' ? true : false
     anonymize = @current_user.anonymize?
 
-    @subjects = []
+    subjects = []
     case unit_of_analysis
     when Unit_Of_Analysis[ :individual ]
       if for_research
-        @subjects = User.joins(:consent_logs, :projects)
+        subjects = User.joins(:consent_logs, :projects)
                         .where(consent_logs: { accepted: true }, projects: { id: project_id })
                         .collect { |user| [user.name(anonymize), user.id] }
       else
-        @subjects = Project.find(project_id).users.collect { |user| [user.name(anonymize), user.id] }
+        subjects = Project.find(project_id).users.collect { |user| [user.name(anonymize), user.id] }
       end
     when Unit_Of_Analysis[ :group ]
-      @subjects = Project.find(project_id).groups.collect { |group| [group.get_name(anonymize), group.id] }
+      subjects = Project.find(project_id).groups.collect { |group| [group.get_name(anonymize), group.id] }
 
     end
     # Return the retrieved data
     respond_to do |format|
-      format.json
+      format.json { render json: subjects }
     end
   end
 
 
   def data
     unit_of_analysis = params[:unit_of_analysis]
-    data_processing = params[:data_processing]
     project = Project.find(params[:project])
     subject = params[:subject]
     for_research = params[:for_research] == 'true' ? true : false

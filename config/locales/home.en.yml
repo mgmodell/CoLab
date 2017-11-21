@@ -50,6 +50,8 @@ en:
   start_date: Start Date
   close_date: Close Date
   completion_date: Completion Date
+  individual: Individual
+  group: Group
   type: Type
   expired: Expired
   bingo_game: Bingo! Game

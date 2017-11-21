@@ -67,8 +67,8 @@ $ ->
       newOption = "<option value=\"-1\">None Selected</option>"
       $(subject_select).append newOption
       i = 0
-      while i < data.subjects.length
-        newOption = "<option value=" + data.subjects[i][1] + ">" + data.subjects[i][0] + "</option>"
+      while i < data.length
+        newOption = "<option value=" + data[i][1] + ">" + data[i][0] + "</option>"
         $(subject_select).append newOption
         i++
     $(subject_select).selectmenu 'refresh', true

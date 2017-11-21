@@ -88,7 +88,7 @@ Rails.application.routes.draw do
   resources :installments, only: [:create, :update]
 
   get 'graphing/index' => 'graphing#index', as: :'graphing'
-  get 'graphing/data/:unit_of_analysis/:subject/:project/:data_processing/:for_research' => 'graphing#data',
+  get 'graphing/data/:unit_of_analysis/:subject/:project/:for_research' => 'graphing#data',
       as: :graphing_data
   get 'graphing/subjects/:unit_of_analysis/:project_id/:for_research' => 'graphing#subjects',
       as: :graphing_support
