@@ -16,11 +16,7 @@ class Installment < ActiveRecord::Base
 
   # Support inclusion of comments
   def prettyComment(anonymize = false)
-    if comments.blank?
-      user.name(anonymize) + ': <no comment>'
-    else
-      user.name(anonymize) + ': ' + comments
-    end
+    comments.blank? ? '<no comment>' : comments
   end
 
   def value_for_user_factor(user, factor)

@@ -94,10 +94,45 @@ $ ->
       url = "data/" + unit_of_analysis + "/" + subject + "/" + project + "/" + for_research
       # Maybe do some loading thing here?
       $.getJSON url, (data) ->
-        chart = d3.select( chart_div.get( 0 ) ).append( "svg" )
-          .attr( "height", 400 ).attr( "width", 600 )
-          .attr( "viewBox", "0 0 600 400" )
-          .attr( "preserveAspectRatio", "none" )
+        chart_div = d3.select( chart_div.get( 0 ) )
+        targetWidth = chart_div.node( ).offsetWidth
+
+        chart = chart_div.append( "svg" )
+          .attr( "height", 400 ).attr( "width", targetWidth )
+
+        #Create a close button
+        close_button = chart.append( 'g' )
+          .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
+          .on( 'click', () ->
+            chart.remove( )
+          )
+        close_button.append( 'circle' )
+          .attr( 'cx', 0 )
+          .attr( 'cy', 0 )
+          .attr( 'r', 17 )
+          .style( 'stroke', 'red' )
+          .style( 'fill', 'white' )
+        close_button.append( "line" )
+          .attr( 'x1', 10 )
+          .attr( 'y1', -10 )
+          .attr( 'x2', -10 )
+          .attr( 'y2', 10 )
+          .attr( 'stroke-width', 2 )
+          .attr( 'stroke', 'black' )
+        close_button.append( "line" )
+          .attr( 'x1', -10 )
+          .attr( 'y1', -10 )
+          .attr( 'x2', 10 )
+          .attr( 'y2', 10 )
+          .attr( 'stroke-width', 2 )
+          .attr( 'stroke', 'black' )
+
+        d3.select( window )
+          .on( 'resize', ()->
+            targetWidth = chart_div.node( ).offsetWidth
+            chart.attr( 'width', targetWidth )
+            close_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
+          )
   
   
   
