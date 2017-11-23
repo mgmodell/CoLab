@@ -57,23 +57,23 @@ class GraphingController < ApplicationController
     for_research = params[:for_research] == 'true' ? true : false
     anonymize = @current_user.anonymize?
 
-    dataset = { comments: {} }
+    dataset = { unitOfAnalysis: nil, comments: {} }
     comments = dataset[ :comments ]
     #Security checks
     if @current_user.is_admin? ||
         project.course.instructors.includes( @current_user )
       #Start pulling data
-      puts "\n\nuoa: #{unit_of_analysis}\n\n"
 
       case unit_of_analysis
       when Unit_Of_Analysis[ :individual ]
+        dataset[ :unitOfAnalysis ] = I18n.t( :individual )
         user = User.find subject
+        dataset[ :subject ] = user.informal_name( anonymize )
         values = Value.joins( installment: :assessment ).
                           where( 'assessments.project_id': project, user: user ).
-                          includes( :factor, installment: :user ).
+                          includes( :factor, installment: [:user, :group ]).
                           order( 'installments.inst_date' )
 
-        puts "\n\nvalue count: #{values.count}"
         values.each do |value|
           group_vals = dataset[ value.installment.group_id ]
           if group_vals.nil?
@@ -97,11 +97,13 @@ class GraphingController < ApplicationController
         end
 
       when Unit_Of_Analysis[ :group ]
+        dataset[ :unitOfAnalysis ] = I18n.t( :group )
         group = Group.find subject
+        dataset[ :subject ] = group.get_name( anonymize )
         values = Value.joins( installment: :assessment ).
                           where( 'assessments.project_id': project,
                           'installments.group_id': group ).
-                          includes( :factor, installment: :user ).
+                          includes( :user, :factor, installment: :user ).
                           order( 'installments.inst_date' )
 
         values.each do |value|

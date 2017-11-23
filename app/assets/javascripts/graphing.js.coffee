@@ -95,6 +95,7 @@ $ ->
       # Maybe do some loading thing here?
       $.getJSON url, (data) ->
         chart_div = d3.select( chart_div.get( 0 ) )
+        margin = { top: 40, bottom: 40, left: 40, right: 40 }
         targetWidth = chart_div.node( ).offsetWidth
 
         chart = chart_div.append( "svg" )
@@ -126,6 +127,14 @@ $ ->
           .attr( 'y2', 10 )
           .attr( 'stroke-width', 2 )
           .attr( 'stroke', 'black' )
+
+        chart.append( 'text' )
+          .attr( 'x', (targetWidth / 2 ) )
+          .attr( 'y', 0 + (margin.top / 2 ) )
+          .attr( 'text-anchor', 'middle' )
+          .style( 'font-size', '16px' )
+          .style( 'text-decoration', 'underline' )
+          .text( data.unitOfAnalysis + ' chart for ' + data.subject)
 
         d3.select( window )
           .on( 'resize', ()->
