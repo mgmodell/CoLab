@@ -129,7 +129,7 @@ $ ->
 
         
         for id, stream of data.streams
-          add_line stream
+          add_line stream.values
         #Create a close button
         close_button = chart.append( 'g' )
           .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')

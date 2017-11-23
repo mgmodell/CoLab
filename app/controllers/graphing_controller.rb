@@ -90,7 +90,7 @@ class GraphingController < ApplicationController
             date: value.installment.inst_date,
             factor: value.factor.name,
             value: value.value }
-          dataset[ value.installment.group_id ] = group_vals
+          streams[ value.installment.group_id ] = group_vals
 
           comments[ value.installment_id ] =
                     value.installment.prettyComment( anonymize )
@@ -122,7 +122,7 @@ class GraphingController < ApplicationController
             date: value.installment.inst_date,
             factor: value.factor.name,
             value: value.value }
-          dataset[ value.user_id ] = user_vals
+          streams[ value.user_id ] = user_vals
 
           comments[ value.installment_id ] =
                     value.installment.prettyComment( anonymize )
