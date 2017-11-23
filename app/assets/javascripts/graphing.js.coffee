@@ -157,9 +157,13 @@ $ ->
           .attr( 'stroke-width', 2 )
           .attr( 'stroke', 'black' )
 
-        chart.append( 'text' )
-          .attr( 'x', (targetWidth / 2 ) )
-          .attr( 'y', 0 + (margin.top / 2 ) )
+        titleX = targetWidth / 2
+        titleY = 0 + ( margin.top / 2 )
+        title = chart.append( "g" )
+        title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ' )')
+          .append( 'text' )
+          .attr( 'x', 0 )
+          .attr( 'y', 0 )
           .attr( 'text-anchor', 'middle' )
           .style( 'font-size', '16px' )
           .style( 'text-decoration', 'underline' )
@@ -170,6 +174,8 @@ $ ->
             targetWidth = chart_div.node( ).offsetWidth
             chart.attr( 'width', targetWidth )
             close_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
+            titleX = targetWidth / 2
+            title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
           )
   
   
