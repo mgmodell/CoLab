@@ -57,8 +57,9 @@ class GraphingController < ApplicationController
     for_research = params[:for_research] == 'true' ? true : false
     anonymize = @current_user.anonymize?
 
-    dataset = { unitOfAnalysis: nil, comments: {} }
+    dataset = { unitOfAnalysis: nil, comments: {}, streams: { } }
     comments = dataset[ :comments ]
+    streams = dataset[ :streams ]
     #Security checks
     if @current_user.is_admin? ||
         project.course.instructors.includes( @current_user )
@@ -75,7 +76,7 @@ class GraphingController < ApplicationController
                           order( 'installments.inst_date' )
 
         values.each do |value|
-          group_vals = dataset[ value.installment.group_id ]
+          group_vals = streams[ value.installment.group_id ]
           if group_vals.nil?
             group_vals = { target_name: value.installment.group.get_name( anonymize ),
                           target_id: value.installment.group_id,
@@ -107,7 +108,7 @@ class GraphingController < ApplicationController
                           order( 'installments.inst_date' )
 
         values.each do |value|
-          user_vals = dataset[ value.user_id ]
+          user_vals = streams[ value.user_id ]
           if user_vals.nil?
             user_vals = { target_name: value.user.name( anonymize ),
                           target_id: value.user_id,

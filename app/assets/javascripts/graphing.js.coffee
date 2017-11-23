@@ -96,11 +96,40 @@ $ ->
       $.getJSON url, (data) ->
         chart_div = d3.select( chart_div.get( 0 ) )
         margin = { top: 40, bottom: 40, left: 40, right: 40 }
+        height = 400
         targetWidth = chart_div.node( ).offsetWidth
 
-        chart = chart_div.append( "svg" )
-          .attr( "height", 400 ).attr( "width", targetWidth )
+        x = d3.scaleTime( )
+          .rangeRound( [ 0, ( targetWidth - margin.left - margin.right ) ] )
+        y = d3.scaleLinear( )
+          .rangeRound( [ ( height - margin.top - margin.bottom ), 0 ] )
 
+        chart = chart_div.append( "svg" )
+          .attr( "height", height ).attr( "width", targetWidth )
+        g = chart.append('g')
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
+
+        add_line = ( d )->
+          
+          line = d3.line( )
+            .x( (data)->
+              return x(d.date)
+            )
+            .y( (data)->
+              return y(d.value)
+            )
+          g.append( 'path' )
+            .datum( d )
+            .attr( 'fill', 'none' )
+            .attr( 'stroke', 'steelblue' )
+            .attr( 'stroke-linejoin', 'round' )
+            .attr( 'stroke-linecap', 'round' )
+            .attr( 'stroke-width', 1.5 )
+            .attr( 'd-width', line )
+
+        
+        for id, stream of data.streams
+          add_line stream
         #Create a close button
         close_button = chart.append( 'g' )
           .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
