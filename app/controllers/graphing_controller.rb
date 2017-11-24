@@ -57,7 +57,12 @@ class GraphingController < ApplicationController
     for_research = params[:for_research] == 'true' ? true : false
     anonymize = @current_user.anonymize?
 
-    dataset = { unitOfAnalysis: nil, comments: {}, streams: { } }
+    dataset = {
+      unitOfAnalysis: nil,
+      comments: {},
+      start_date: project.start_date,
+      end_date: project.end_date,
+      streams: { } }
     comments = dataset[ :comments ]
     streams = dataset[ :streams ]
     #Security checks

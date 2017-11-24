@@ -99,9 +99,12 @@ $ ->
         height = 400
         targetWidth = chart_div.node( ).offsetWidth
 
+        parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L%Z")
         x = d3.scaleTime( )
+          .domain( [ parseTime( data.start_date ), parseTime( data.end_date ) ])
           .rangeRound( [ 0, ( targetWidth - margin.left - margin.right ) ] )
         y = d3.scaleLinear( )
+          .domain( [0, 6000] )
           .rangeRound( [ ( height - margin.top - margin.bottom ), 0 ] )
 
         chart = chart_div.append( "svg" )
@@ -112,10 +115,10 @@ $ ->
         add_line = ( d )->
           
           line = d3.line( )
-            .x( (data)->
-              return x(d.date)
+            .x( (d)->
+              return x(parseTime( d.date) )
             )
-            .y( (data)->
+            .y( (d)->
               return y(d.value)
             )
           g.append( 'path' )
@@ -125,7 +128,7 @@ $ ->
             .attr( 'stroke-linejoin', 'round' )
             .attr( 'stroke-linecap', 'round' )
             .attr( 'stroke-width', 1.5 )
-            .attr( 'd-width', line )
+            .attr( 'd', line )
 
         
         for id, stream of data.streams
