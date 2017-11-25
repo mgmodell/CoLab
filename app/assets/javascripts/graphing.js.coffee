@@ -143,7 +143,8 @@ $ ->
 
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
-            add_line sub_stream.values
+            for factor_id, factor_stream of sub_stream.factor_streams
+              add_line factor_stream.values
 
         #Create a close button
         close_button = chart.append( 'g' )

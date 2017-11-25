@@ -91,14 +91,20 @@ class GraphingController < ApplicationController
           if user_stream.nil?
             user_stream = { assessor_id: value.installment.user_id,
                             assessor_name: value.installment.user.informal_name( anonymize),
-                            values: Array.new }
+                            factor_streams: Hash.new }
             group_vals[ :sub_streams ][ value.installment.user_id ] = user_stream
           end
-          user_stream[ :values ] << {
+          factor_stream = user_stream[ :factor_streams ][ value.factor_id ]
+          if factor_stream.nil?
+            factor_stream = { factor_name: value.factor.name,
+                              factor_id: value.factor_id,
+                              values: Array.new }
+            user_stream[ :factor_streams ][ value.factor_id ] = factor_stream
+          end
+          factor_stream[ :values ] << {
             assessment_id: value.installment.assessment_id,
             installment_id: value.installment_id,
             date: value.installment.inst_date,
-            factor: value.factor.name,
             value: value.value }
           streams[ value.installment.group_id ] = group_vals
 
@@ -128,10 +134,17 @@ class GraphingController < ApplicationController
           if user_stream.nil?
             user_stream = { assessor_id: value.installment.user_id,
                             assessor_name: value.installment.user.informal_name( anonymize),
-                            values: Array.new }
+                            factor_streams: Hash.new }
             user_vals[ :sub_streams ][ value.installment.user_id ] = user_stream
           end
-          user_stream[ :values ] << {
+          factor_stream = user_stream[ :factor_streams ][ value.factor_id ]
+          if factor_stream.nil?
+            factor_stream = { factor_name: value.factor.name,
+                              factor_id: value.factor_id,
+                              values: Array.new }
+            user_stream[ :factor_streams ][ value.factor_id ] = factor_stream
+          end
+          factor_stream[ :values ] << {
             assessment_id: value.installment.assessment_id,
             installment_id: value.installment_id,
             date: value.installment.inst_date,
