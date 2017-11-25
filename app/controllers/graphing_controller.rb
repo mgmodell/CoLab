@@ -85,11 +85,16 @@ class GraphingController < ApplicationController
           if group_vals.nil?
             group_vals = { target_name: value.installment.group.get_name( anonymize ),
                           target_id: value.installment.group_id,
-                          values: Array.new }
+                          sub_streams: Hash.new }
           end
-          group_vals[ :values ] << {
-            assessor_id: value.installment.user_id,
-            assessor_name: value.installment.user.name( anonymize ),
+          user_stream = group_vals[ :sub_streams ][ value.installment.user_id ]
+          if user_stream.nil?
+            user_stream = { assessor_id: value.installment.user_id,
+                            assessor_name: value.installment.user.informal_name( anonymize),
+                            values: Array.new }
+            group_vals[ :sub_streams ][ value.installment.user_id ] = user_stream
+          end
+          user_stream[ :values ] << {
             assessment_id: value.installment.assessment_id,
             installment_id: value.installment_id,
             date: value.installment.inst_date,
@@ -117,11 +122,16 @@ class GraphingController < ApplicationController
           if user_vals.nil?
             user_vals = { target_name: value.user.name( anonymize ),
                           target_id: value.user_id,
-                          values: Array.new }
+                          sub_streams: Hash.new }
           end
-          user_vals[ :values ] << {
-            assessor_id: value.installment.user_id,
-            assessor_name: value.installment.user.name( anonymize ),
+          user_stream = user_vals[ :sub_streams ][ value.installment.user_id ]
+          if user_stream.nil?
+            user_stream = { assessor_id: value.installment.user_id,
+                            assessor_name: value.installment.user.informal_name( anonymize),
+                            values: Array.new }
+            user_vals[ :sub_streams ][ value.installment.user_id ] = user_stream
+          end
+          user_stream[ :values ] << {
             assessment_id: value.installment.assessment_id,
             installment_id: value.installment_id,
             date: value.installment.inst_date,
