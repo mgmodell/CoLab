@@ -131,6 +131,16 @@ $ ->
             .attr( 'd', line )
 
         
+        g.append( 'g' )
+          .attr( 'class', 'axis axis--x' )
+          .attr( 'transform', 'translate(0, ' + (height - margin.top - margin.bottom ) + ')' )
+          .call( d3.axisBottom( x ) )
+        g.append( 'g' )
+          .attr( 'class', 'axis axis--y' )
+          .call( d3.axisLeft(y).ticks( 6 ).tickFormat( (d)->
+            return ''
+          ) )
+
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
             add_line sub_stream.values
