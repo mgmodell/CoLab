@@ -70,11 +70,11 @@ class Installment < ActiveRecord::Base
 
       au_hash.values.each do |v|
         prelim = (Installment::TOTAL_VAL * v.value) / total
-        if prelim.nan? || prelim.infinite?
-          puts "Obtained #{prelim.nan? ? 'NaN' : 'Infinity' } for #{_factor.name }"
-          puts au_hash.to_s
+        if !prelim.nan? 
+          v.value = ( Installment::TOTAL_VAL / v.installment.values.count ).round
+        else
+          v.value = ((Installment::TOTAL_VAL * v.value) / total).round
         end
-        v.value = ((Installment::TOTAL_VAL * v.value) / total).round
       end
 
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }
