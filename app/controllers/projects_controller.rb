@@ -54,7 +54,7 @@ class ProjectsController < ApplicationController
     @title = t('projects.edit.title')
     if @project.update(project_params)
       groups_users = {}
-      @project.groups.each do |group|
+      @project.groups.includes( :users ).each do |group|
         groups_users[group] = []
         new_name = params['group_' + group.id.to_s]
         group.name = new_name unless new_name.blank?
