@@ -167,9 +167,13 @@ class GraphingController < ApplicationController
     users = Hash.new
     dataset[ :streams ].values.each do |stream|
       stream[:sub_streams].values.each do |substream|
-        users[ substream[ :assessor_id ] ] = substream[ :assessor_name ]
+        users[ substream[ :assessor_id ] ] = {
+          name: substream[ :assessor_name ],
+          id: substream[ :assessor_id ] }
         substream[ :factor_streams ].values.each do |factor_stream|
-          factors[ factor_stream[ :factor_id ] ] = factor_stream[ :factor_name ]
+          factors[ factor_stream[ :factor_id ] ] = { 
+            name: factor_stream[ :factor_name ],
+            id: factor_stream[ :factor_id ] }
         end
       end
     end

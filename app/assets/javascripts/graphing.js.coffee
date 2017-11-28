@@ -112,7 +112,7 @@ $ ->
         g = chart.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
 
-        add_line = ( d )->
+        add_line = ( d, color, dash_length, dash_partial )->
           
           line = d3.line( )
             .x( (d)->
@@ -124,10 +124,13 @@ $ ->
           g.append( 'path' )
             .datum( d )
             .attr( 'fill', 'none' )
-            .attr( 'stroke', 'steelblue' )
+            .attr( 'stroke', color )
+            .attr( 'stroke-dasharray', (d)->
+              return ( dash_partial * 3 ) + "," + ( dash_length * 3 )
+            )
             .attr( 'stroke-linejoin', 'round' )
             .attr( 'stroke-linecap', 'round' )
-            .attr( 'stroke-width', 1.5 )
+            .attr( 'stroke-width', 1.25 )
             .attr( 'd', line )
 
         
@@ -142,15 +145,32 @@ $ ->
           ) )
 
 
-        // https://bl.ocks.org/EfratVil/903d82a7cde553fb6739fe55af6103e2
-        // http://bl.ocks.org/jfreyre/b1882159636cc9e1283a
-        // maybe use Quantize
-        console.log Object.keys( data.users ).length
-        console.log Object.keys( data.factors ).length
+        # https://bl.ocks.org/EfratVil/903d82a7cde553fb6739fe55af6103e2
+        # http://bl.ocks.org/jfreyre/b1882159636cc9e1283a
+        # maybe use Quantize
+        factorColor = d3.scaleLinear( )
+          .domain([ 0, Object.keys( data.factors ).length ] )
+          .range([ 'red', 'green', 'yellow', 'purple', 'blue' ] )
+
+        index = 0
+        for id, factor of data.factors
+          factor[ 'color' ] = factorColor( index )
+          index++
+
+        index = 0
+        for id, user of data.users
+          user[ 'index' ] = index
+          index++
+
+        user_count = index
+
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
+            user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
+            console.log user_index
             for factor_id, factor_stream of sub_stream.factor_streams
-              add_line factor_stream.values
+              color = data.factors[ factor_id ][ 'color' ]
+              add_line factor_stream.values, color, user_count, user_index
 
         #Create a close button
         close_button = chart.append( 'g' )
