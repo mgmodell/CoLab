@@ -141,6 +141,12 @@ $ ->
             return ''
           ) )
 
+
+        // https://bl.ocks.org/EfratVil/903d82a7cde553fb6739fe55af6103e2
+        // http://bl.ocks.org/jfreyre/b1882159636cc9e1283a
+        // maybe use Quantize
+        console.log Object.keys( data.users ).length
+        console.log Object.keys( data.factors ).length
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
             for factor_id, factor_stream of sub_stream.factor_streams

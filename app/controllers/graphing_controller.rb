@@ -163,6 +163,19 @@ class GraphingController < ApplicationController
     end
 
 
+    factors = Hash.new
+    users = Hash.new
+    dataset[ :streams ].values.each do |stream|
+      stream[:sub_streams].values.each do |substream|
+        users[ substream[ :assessor_id ] ] = substream[ :assessor_name ]
+        substream[ :factor_streams ].values.each do |factor_stream|
+          factors[ factor_stream[ :factor_id ] ] = factor_stream[ :factor_name ]
+        end
+      end
+    end
+    dataset[ :users ] = users
+    dataset[ :factors ] = factors
+
     # Return the retrieved data
     respond_to do |format|
       format.json { render json: dataset }
