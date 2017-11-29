@@ -60,6 +60,8 @@ class GraphingController < ApplicationController
     dataset = {
       unitOfAnalysis: nil,
       comments: {},
+      project_name: project.get_name( anonymize ),
+      project_id: project.id,
       start_date: project.start_date,
       end_date: project.end_date,
       streams: { } }
