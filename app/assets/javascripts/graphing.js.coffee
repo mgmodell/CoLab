@@ -111,6 +111,8 @@ $ ->
           .attr( "height", height ).attr( "width", targetWidth )
         g = chart.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
+          .attr('width', '90%' )
+          .attr('original_width', (targetWidth - margin.left - margin.right ) )
 
         add_line = ( d, color, dash_length, dash_partial )->
           
@@ -126,7 +128,7 @@ $ ->
             .attr( 'fill', 'none' )
             .attr( 'stroke', color )
             .attr( 'stroke-dasharray', (d)->
-              return ( dash_partial * 3 ) + "," + ( dash_length * 3 )
+              return ( dash_partial * 5 ) + "," + ( dash_length * 5 )
             )
             .attr( 'stroke-linejoin', 'round' )
             .attr( 'stroke-linecap', 'round' )
@@ -141,7 +143,14 @@ $ ->
         g.append( 'g' )
           .attr( 'class', 'axis axis--y' )
           .call( d3.axisLeft(y).ticks( 6 ).tickFormat( (d)->
-            return ''
+            label = ''
+            # if d.value == 0
+            #   label = 'Low'
+            # else if d.value == 6000
+            #   label = 'High'
+            # end
+              
+            return label
           ) )
 
 
@@ -167,7 +176,6 @@ $ ->
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
-            console.log user_index
             for factor_id, factor_stream of sub_stream.factor_streams
               color = data.factors[ factor_id ][ 'color' ]
               add_line factor_stream.values, color, user_count, user_index
@@ -210,6 +218,14 @@ $ ->
           .style( 'font-size', '16px' )
           .style( 'text-decoration', 'underline' )
           .text( data.unitOfAnalysis + ' chart for ' + data.subject)
+        title
+          .append( 'text' )
+          .attr( 'x', 0 )
+          .attr( 'y', 15 )
+          .attr( 'text-anchor', 'middle' )
+          .style( 'font-size', '10px' )
+          .style( 'text-decoration', 'underline' )
+          .text( 'for project: ' + data.project_name)
 
         d3.select( window )
           .on( 'resize', ()->
@@ -218,6 +234,9 @@ $ ->
             close_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
             titleX = targetWidth / 2
             title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
+            scaleFactor = targetWidth / g.attr( 'original_width' )
+            #g.attr( 'transform', 'scale(1 ' + scaleFactor + ')' )
+            g.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0)' )
           )
   
   
