@@ -126,6 +126,7 @@ $ ->
             .y( (d)->
               return y(d.value)
             )
+            .curve(d3.curveMonotoneX)
           xStretch.append( 'path' )
             .datum( d )
             .attr( 'fill', 'none' )
@@ -254,7 +255,7 @@ $ ->
             close_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
             titleX = targetWidth / 2
             title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
-            scaleFactor = targetWidth / xStretch.attr( 'original_width' )
+            scaleFactor = ( targetWidth - margin.right - margin.left ) / xStretch.attr( 'original_width' )
             xStretch.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
           )
   
