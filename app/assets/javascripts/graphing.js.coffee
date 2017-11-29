@@ -113,7 +113,9 @@ $ ->
         g = chart.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
           .attr('width', '90%' )
+        xStretch = g.append( 'g' )
           .attr('original_width', (targetWidth - margin.left - margin.right ) )
+
 
         add_line = ( d, color, dash_length, dash_partial )->
           
@@ -124,7 +126,7 @@ $ ->
             .y( (d)->
               return y(d.value)
             )
-          g.append( 'path' )
+          xStretch.append( 'path' )
             .datum( d )
             .attr( 'fill', 'none' )
             .attr( 'stroke', color )
@@ -137,7 +139,7 @@ $ ->
             .attr( 'd', line )
 
         
-        g.append( 'g' )
+        xStretch.append( 'g' )
           .attr( 'class', 'axis axis--x' )
           .attr( 'transform', 'translate(0, ' + (height - margin.top - margin.bottom ) + ')' )
           .call( d3.axisBottom( x ) )
@@ -242,8 +244,8 @@ $ ->
             close_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
             titleX = targetWidth / 2
             title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
-            scaleFactor = targetWidth / g.attr( 'original_width' )
-            g.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 ' + margin.left + ' ' + margin.top + ' )' )
+            scaleFactor = targetWidth / xStretch.attr( 'original_width' )
+            xStretch.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
           )
   
   
