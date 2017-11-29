@@ -108,7 +108,8 @@ $ ->
           .rangeRound( [ ( height - margin.top - margin.bottom ), 0 ] )
 
         chart = chart_div.append( "svg" )
-          .attr( "height", height ).attr( "width", targetWidth )
+          .attr( "height", height )
+          .attr( "width", targetWidth )
         g = chart.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
           .attr('width', '90%' )
@@ -142,16 +143,23 @@ $ ->
           .call( d3.axisBottom( x ) )
         g.append( 'g' )
           .attr( 'class', 'axis axis--y' )
-          .call( d3.axisLeft(y).ticks( 6 ).tickFormat( (d)->
+          .call( d3.axisLeft(y).ticks( 2 ).tickFormat( (d)->
             label = ''
-            # if d.value == 0
-            #   label = 'Low'
-            # else if d.value == 6000
-            #   label = 'High'
-            # end
+            switch d
+              when 0
+                label = 'Low'
+              when 6000
+                label = 'High'
               
             return label
           ) )
+        g.append( 'text' )
+          .attr('transform', 'rotate(-90)' )
+          .attr('y', 0 - margin.left )
+          .attr('x', 0 - ( height/2 ) )
+          .attr('dy', '1em' )
+          .style('text-anchor', 'middle' )
+          .text('Contribution Level')
 
 
         # https://bl.ocks.org/EfratVil/903d82a7cde553fb6739fe55af6103e2
@@ -235,8 +243,7 @@ $ ->
             titleX = targetWidth / 2
             title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
             scaleFactor = targetWidth / g.attr( 'original_width' )
-            #g.attr( 'transform', 'scale(1 ' + scaleFactor + ')' )
-            g.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0)' )
+            g.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 ' + margin.left + ' ' + margin.top + ' )' )
           )
   
   
