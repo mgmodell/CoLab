@@ -143,6 +143,16 @@ $ ->
           .attr( 'class', 'axis axis--x' )
           .attr( 'transform', 'translate(0, ' + (height - margin.top - margin.bottom ) + ')' )
           .call( d3.axisBottom( x ) )
+
+        xLabelWidth = ( targetWidth - margin.left ) / 2
+        xLabelHeight = height - margin.top
+
+        xStretch.append( 'text' )
+          .attr( 'transform',
+                 'translate(' + xLabelWidth + ' ,' + xLabelHeight + ')' )
+          .style( 'text-anchor', 'middle' )
+          .text( 'Date' )
+                                
         g.append( 'g' )
           .attr( 'class', 'axis axis--y' )
           .call( d3.axisLeft(y).ticks( 2 ).tickFormat( (d)->
