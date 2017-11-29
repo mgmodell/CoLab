@@ -231,7 +231,7 @@ $ ->
         print_button = chart.append( 'g' )
           .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 70)')
           .on( 'click', () ->
-            chart.remove( )
+            console.log 'export'
           )
         print_button.append( 'circle' )
           .attr( 'cx', 0 )
@@ -273,6 +273,7 @@ $ ->
           .attr( 'd', arrow_line )
 
 
+        # Let's build the chart
         titleX = targetWidth / 2
         titleY = 0 + ( margin.top / 2 )
         title = chart.append( "g" )
