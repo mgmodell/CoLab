@@ -307,28 +307,4 @@ $ ->
             xStretch.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
           )
 
-# http://bl.ocks.org/Rokotyan/0556f8facbaf344507cdc45dc3622177
-svgString2Image = ( svgString, width, height, format, callback ) ->
-  format = format ? format : 'png'
-
-  # SVG string to data URL
-  imgsrc = 'data:image/svg+xml;base64,'+ btoa( unescape( encodeURIComponent( svgString ) ) )
-
-  canvas = document.createElement("canvas")
-  context = canvas.getContext("2d")
-
-  canvas.width = width
-  canvas.height = height
-
-  image = new Image
-  image.onload = ()->
-    context.clearRect 0, 0, width, height
-    context.drawImage(image, 0, 0, width, height)
-
-    canvas.toBlob( (blob)->
-      filesize = Math.round( blob.length/1024 ) + ' KB'
-      if callback
-        callback blob, filesize
-    )
-
-  image.src = imgsrc
+# http://bl.ocks.org/deanmalmgren/22d76b9c1f487ad1dde6
