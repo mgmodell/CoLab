@@ -15,3 +15,4 @@
 //= require graphing
 //= require jquery.mobile
 //= require d3
+//= require svg-crowbar-export

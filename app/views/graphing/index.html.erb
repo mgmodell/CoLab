@@ -1,4 +1,7 @@
 <p>Please use the panels below to visualise the data available for your students.</p>
+<!-- this styling is added to the png when it is downloaded -->
+<div id='crowbar-workspace' style='display: none'>
+</div>
 <% if @current_user.admin %>
   <% anonymize = @current_user.anonymize? %>
   <div data-role="fieldcontain">

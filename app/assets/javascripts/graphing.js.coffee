@@ -113,6 +113,7 @@ $ ->
         g = chart.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
           .attr('width', '90%' )
+
         xStretch = g.append( 'g' )
           .attr('original_width', (targetWidth - margin.left - margin.right ) )
 
@@ -228,26 +229,38 @@ $ ->
           .attr( 'stroke-width', 2 )
           .attr( 'stroke', 'black' )
 
-        #Create a print button
-        print_button = chart.append( 'g' )
+        #Create a export button
+        export_button = chart.append( 'g' )
           .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 70)')
           .on( 'click', () ->
-            console.log 'export'
+            # from http://bl.ocks.org/deanmalmgren/22d76b9c1f487ad1dde6
+            svg_el = chart
+              .attr( 'version', 1.1)
+              .attr( 'xmlns', 'http://www.w3.org/2000/svg' )
+              .node( )
+
+            svg_crowbar( chart.node( ),
+              filename: data.project_name + '_' + data.subject + '.png',
+              width: targetWidth,
+              height: height,
+              crowbar_el: d3.select( '#crowbar-workspace' ).node( )
+            )
+
           )
-        print_button.append( 'circle' )
+        export_button.append( 'circle' )
           .attr( 'cx', 0 )
           .attr( 'cy', 0 )
           .attr( 'r', 17 )
           .style( 'stroke', 'red' )
           .style( 'fill', 'white' )
-        print_button.append( "rect" )
+        export_button.append( "rect" )
           .attr( 'x', -2.5 )
           .attr( 'y', -12 )
           .attr( 'width', 5 )
           .attr( 'height', 17 )
           .attr( 'stroke-width', 2 )
           .style( 'fill', 'black' )
-        print_button.append( "rect" )
+        export_button.append( "rect" )
           .attr( 'x', -9 )
           .attr( 'y', 8 )
           .attr( 'width', 18 )
@@ -264,7 +277,7 @@ $ ->
             return d.y
           )
           .curve(d3.curveLinearClosed)
-        print_button.append( 'path' )
+        export_button.append( 'path' )
           .datum( arrow_pts )
           .attr( 'fill', 'black' )
           .attr( 'stroke', 'black' )
@@ -300,7 +313,7 @@ $ ->
             targetWidth = chart_div.node( ).offsetWidth
             chart.attr( 'width', targetWidth )
             close_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
-            print_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 70)')
+            export_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 70)')
             titleX = targetWidth / 2
             title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
             scaleFactor = ( targetWidth - margin.right - margin.left ) / xStretch.attr( 'original_width' )
