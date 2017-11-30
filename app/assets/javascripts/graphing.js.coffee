@@ -228,8 +228,51 @@ $ ->
           .attr( 'stroke-width', 2 )
           .attr( 'stroke', 'black' )
 
-        # Add a print button
-        # http://bl.ocks.org/Rokotyan/0556f8facbaf344507cdc45dc3622177
+        #Create a print button
+        print_button = chart.append( 'g' )
+          .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 70)')
+          .on( 'click', () ->
+            chart.remove( )
+          )
+        print_button.append( 'circle' )
+          .attr( 'cx', 0 )
+          .attr( 'cy', 0 )
+          .attr( 'r', 17 )
+          .style( 'stroke', 'red' )
+          .style( 'fill', 'white' )
+        print_button.append( "rect" )
+          .attr( 'x', -2.5 )
+          .attr( 'y', -12 )
+          .attr( 'width', 5 )
+          .attr( 'height', 17 )
+          .attr( 'stroke-width', 2 )
+          .style( 'fill', 'black' )
+        print_button.append( "rect" )
+          .attr( 'x', -9 )
+          .attr( 'y', 8 )
+          .attr( 'width', 18 )
+          .attr( 'height', 3 )
+          .attr( 'stroke-width', 2 )
+          .style( 'fill', 'black' )
+
+        arrow_pts = [ { x: -8, y: -3 }, { x: 0, y: 6 }, { x: 8, y: -3 } ]
+        arrow_line = d3.line( )
+          .x( (d)->
+            return d.x
+          )
+          .y( (d)->
+            return d.y
+          )
+          .curve(d3.curveLinearClosed)
+        print_button.append( 'path' )
+          .datum( arrow_pts )
+          .attr( 'fill', 'black' )
+          .attr( 'stroke', 'black' )
+          .attr( 'stroke-linejoin', 'round' )
+          .attr( 'stroke-linecap', 'round' )
+          .attr( 'stroke-width', 1 )
+          .attr( 'd', arrow_line )
+
 
         titleX = targetWidth / 2
         titleY = 0 + ( margin.top / 2 )
@@ -256,6 +299,7 @@ $ ->
             targetWidth = chart_div.node( ).offsetWidth
             chart.attr( 'width', targetWidth )
             close_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
+            print_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 70)')
             titleX = targetWidth / 2
             title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
             scaleFactor = ( targetWidth - margin.right - margin.left ) / xStretch.attr( 'original_width' )
