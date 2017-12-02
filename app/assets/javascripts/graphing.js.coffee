@@ -267,6 +267,38 @@ $ ->
               add_line all_data, factor_stream.values, color, user_count, user_index
 
         #Create a close button
+        lbw = 175 #legend base width
+        lbh = 20 #legend base height
+        legend_width = if Object.keys( data.factors ).length > 1 then (2 * lbw ) else lbw
+        legend_rows = Math.round( Object.keys( data.factors ).length / 2 )
+        legend = chart.append( 'g' )
+          .attr( 'transform', 'translate( ' + ( targetWidth - 50 - legend_width ) + ', 15)')
+          .attr( 'legendWidth', legend_width )
+
+        legend.append( 'rect' )
+          .attr( 'x', 0 )
+          .attr( 'y', 0 )
+          .attr( 'width', legend_width )
+          .attr( 'height', lbh * legend_rows )
+          .attr( 'stroke', 'black' )
+          .attr( 'stroke-width', 2 )
+          .style( 'fill', 'white' )
+
+        for index, factor of data.factors
+          index_off = Number( index ) - 1
+          legend.append( 'circle' )
+            .attr( 'cx', 10 + ( index_off %2 * lbw ) )
+            .attr( 'cy', 10 + Math.floor( index_off /2 ) * lbh ) 
+            .attr( 'r', 7 )
+            .attr( 'fill', factor.color )
+          legend.append( 'text' )
+            .attr( 'x', 24 + (  index_off %2 * lbw ) )
+            .attr( 'y', 13 + Math.floor( index_off /2 ) * lbh ) 
+            .attr( 'fill', 'black' )
+            .style( 'font-size', '10px' )
+            .text( factor.name )
+
+        #build and add our close button
         close_button = chart.append( 'g' )
           .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
           .on( 'click', () ->
@@ -378,6 +410,9 @@ $ ->
             chart.attr( 'width', targetWidth )
             close_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
             export_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 70)')
+            legendWidth = legend.attr( 'legendWidth' )
+            legend.attr( 'transform', 'translate( ' + ( targetWidth - 50 - legendWidth ) + ', 20)')
+
             titleX = targetWidth / 2
             title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
             scaleFactor = ( targetWidth - margin.right - margin.left ) / xStretch.attr( 'original_width' )
