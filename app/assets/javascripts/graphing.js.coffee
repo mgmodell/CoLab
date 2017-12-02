@@ -110,15 +110,17 @@ $ ->
         chart = chart_div.append( "svg" )
           .attr( "height", height )
           .attr( "width", targetWidth )
+
         g = chart.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
           .attr('width', '90%' )
 
         xStretch = g.append( 'g' )
           .attr('original_width', (targetWidth - margin.left - margin.right ) )
+        all_data = g.append( 'g' )
 
 
-        add_line = ( d, color, dash_length, dash_partial )->
+        add_line = ( target, d, color, dash_length, dash_partial )->
           
           line = d3.line( )
             .x( (d)->
@@ -128,7 +130,7 @@ $ ->
               return y(d.value)
             )
             .curve(d3.curveMonotoneX)
-          xStretch.append( 'path' )
+          target.append( 'path' )
             .datum( d )
             .attr( 'fill', 'none' )
             .attr( 'stroke', color )
@@ -200,7 +202,7 @@ $ ->
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
             for factor_id, factor_stream of sub_stream.factor_streams
               color = data.factors[ factor_id ][ 'color' ]
-              add_line factor_stream.values, color, user_count, user_index
+              add_line all_data, factor_stream.values, color, user_count, user_index
 
         #Create a close button
         close_button = chart.append( 'g' )
