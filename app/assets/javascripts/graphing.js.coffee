@@ -85,6 +85,21 @@ $ ->
   
   $(".submitting_select").change ->
     chart_div = $(this).parents("form").find("#graph_div")
+    toolTip = d3.select '.tooltip'
+    if toolTip.size( ) < 1
+      toolTip = d3.select( 'body' ).append( 'div' )
+        .attr( 'class', 'tooltip' )
+        .style( 'position', 'absolute' )
+        .style( 'width', '150px' )
+        .style( 'height', '56' )
+        .style( 'text-align', 'center' )
+        .style( 'background', 'lightsteelblue' )
+        .style( 'font', '12px sans-serif' )
+        .style( 'border', '0px' )
+        .style( 'border-radius', '8px' )
+        .style( 'pointer-events', 'none' )
+        .style( 'opacity', 0 )
+
     unit_of_analysis = $(this).parents("form").find("#unit_of_analysis").val()
     project = $(this).parents("form").find("#project").val()
     subject = $(this).parents("form").find("#subject").val()
@@ -94,6 +109,7 @@ $ ->
       url = "data/" + unit_of_analysis + "/" + subject + "/" + project + "/" + for_research
       # Maybe do some loading thing here?
       $.getJSON url, (data) ->
+
         chart_div = d3.select( chart_div.get( 0 ) )
         margin = { top: 40, bottom: 40, left: 40, right: 40 }
         height = 400
@@ -130,17 +146,63 @@ $ ->
               return y(d.value)
             )
             .curve(d3.curveMonotoneX)
-          target.append( 'path' )
+          path = target.append( 'path' )
             .datum( d )
             .attr( 'fill', 'none' )
-            .attr( 'stroke', color )
-            .attr( 'stroke-dasharray', (d)->
-              return ( dash_partial * 5 ) + "," + ( dash_length * 5 )
-            )
+            .attr( 'stroke', 'white' )
             .attr( 'stroke-linejoin', 'round' )
             .attr( 'stroke-linecap', 'round' )
-            .attr( 'stroke-width', 1.25 )
+            .attr( 'stroke-width', 3 )
             .attr( 'd', line )
+
+          target.selectAll( 'dot' )
+            .data( d )
+            .enter().append('circle')
+            .attr( 'r', 5 )
+            .attr('cx', (d)->
+              return x(parseTime( d.date ) )
+            )
+            .attr('cy', (d)->
+              return y(d.value)
+            )
+            .attr( 'fill', color )
+            .attr( 'stroke', 'black' )
+            .attr( 'stroke-width', 2 )
+            .on( 'mouseover', (d)->
+              tip_text = data.comments[ d.installment_id ]
+              toolTip.transition()
+                .duration( 200 )
+                .style( 'opacity', .9 )
+              toolTip.html( '<strong>Value: </strong>' + d.value + '</br>' + tip_text )
+                .style( 'left', (d3.event.pageX) + 'px' )
+                .style( 'top', (d3.event.pageY - 28) + 'px' )
+            )
+            .on( 'mouseout', (d)->
+              toolTip.transition()
+                .duration( 1000 )
+                .style( 'opacity', 0 )
+            )
+            .transition( )
+              .duration( 5000 )
+              .attr( 'stroke', (d)->
+                tip_text = data.comments[ d.installment_id ]
+                pulse_color = 'yellow'
+                if tip_text == '<no comment>'
+                  pulse_color = 'black'
+                
+                return pulse_color
+              )
+
+          totalLength = path.node( ).getTotalLength( );
+          path
+            .attr('stroke-dasharray', totalLength + ' ' + totalLength )
+            .attr('stroke-dashoffset', totalLength )
+            .transition( )
+              .duration( 2000 )
+              .attr( 'stroke-dasharray', (d)->
+                return ( dash_partial * 5 ) + "," + ( dash_length * 5 )
+              )
+              .attr( 'stroke', color )
 
         
         xStretch.append( 'g' )
@@ -320,6 +382,7 @@ $ ->
             title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
             scaleFactor = ( targetWidth - margin.right - margin.left ) / xStretch.attr( 'original_width' )
             xStretch.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
+            all_data.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
           )
 
 # http://bl.ocks.org/deanmalmgren/22d76b9c1f487ad1dde6
