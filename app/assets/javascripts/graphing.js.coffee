@@ -391,6 +391,23 @@ $ ->
           .attr( 'stroke-width', 1 )
           .attr( 'd', arrow_line )
 
+        #Create a export button
+        focus_button = buttonBar.append( 'g' )
+          .attr( 'transform', 'translate( 0, 70)')
+
+        arc = d3.arc( )
+          .innerRadius( 5 )
+          .outerRadius( 200 )
+          .startAngle( 0 )
+          .endAngle( 45 )
+          
+        t = 2 * Math.PI
+        focus_button.append( 'path' )
+          .datum(
+            endAngle: (2 * Math.I )
+          )
+          .style( 'fill', 'green' )
+          .append( 'd', arc )
 
         # Let's build the chart
         titleX = targetWidth / 2
@@ -417,20 +434,20 @@ $ ->
         d3.select( window )
           .on( 'resize', ()->
             targetWidth = chart_div.node( ).offsetWidth
-            #chart.attr( 'width', targetWidth )
+            # Resize the charts
             d3.selectAll( '.chart' )
               .attr( 'width', targetWidth )
 
-            #buttonBar.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
+            # Relocate the button bar
             d3.selectAll( '.buttonBar' )
               .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)' )
 
-            # legend.attr( 'transform', 'translate( ' + ( targetWidth - 50 - legendWidth ) + ', 20)')
+            # Relocate the legend
             legendWidth = legend.attr( 'legendWidth' )
             d3.selectAll( '.legend' )
               .attr( 'transform', 'translate( ' + ( targetWidth - 50 - legendWidth ) + ', 20)')
 
-            # title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
+            # Relocate the title
             titleX = targetWidth / 2
             d3.selectAll( '.title' )
               .attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
@@ -443,11 +460,6 @@ $ ->
               obj.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
 
             )  
-              #.attr( 'width', targetWidth )
-              #.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
-              
-            #xStretch.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
-            #all_data.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
           )
 
 # http://bl.ocks.org/deanmalmgren/22d76b9c1f487ad1dde6
