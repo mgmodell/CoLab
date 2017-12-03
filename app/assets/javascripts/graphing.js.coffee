@@ -393,21 +393,74 @@ $ ->
 
         #Create a export button
         focus_button = buttonBar.append( 'g' )
-          .attr( 'transform', 'translate( 0, 70)')
+          .attr( 'transform', 'translate( 0, 90)')
 
-        arc = d3.arc( )
-          .innerRadius( 5 )
-          .outerRadius( 200 )
-          .startAngle( 0 )
-          .endAngle( 45 )
-          
-        t = 2 * Math.PI
-        focus_button.append( 'path' )
-          .datum(
-            endAngle: (2 * Math.I )
+        #Create the output beam
+        focus_button.append( "rect" )
+          .attr( 'x', -23 )
+          .attr( 'y', -1.5 )
+          .attr( 'width', 25 )
+          .attr( 'height', 3 )
+          .attr( 'stroke-width', 1 )
+          .style( 'fill', 'orange' )
+
+        #Create the rainbow coming in
+        π = Math.PI
+        τ = .35 * π
+        n = 500
+        focus_button.selectAll( 'path' )
+          .data( d3.range( 0, τ, τ / n ) )
+          .enter( ).append( 'path' )
+          .attr( 'transform', 'rotate( 45 0 0 )' )
+          .attr( 'd', d3.arc( )
+          .outerRadius(25)
+          .innerRadius(3)
+          .startAngle (d)->
+            d
+          .endAngle (d)->
+            d + τ / n * 1.1
           )
-          .style( 'fill', 'green' )
-          .append( 'd', arc )
+          .style("fill", (d)-> 
+            return d3.hsl(d * 360 / τ, 1, .5)
+          )
+        prizm_pts = [ { x: 0, y: -15 }, { x: 3, y: 18 }, { x: -18, y: 13 } ]
+        focus_line = d3.line( )
+          .x( (d)->
+            return d.x
+          )
+          .y( (d)->
+            return d.y
+          )
+          .curve(d3.curveLinearClosed)
+        focus_button.append( 'path' )
+          .datum( prizm_pts )
+          .attr( 'fill', 'steelblue' )
+          .attr( 'opacity', .6 )
+          .attr( 'stroke', 'black' )
+          .attr( 'stroke-linejoin', 'round' )
+          .attr( 'stroke-linecap', 'round' )
+          .attr( 'stroke-width', 1 )
+          .attr( 'd', focus_line )
+
+
+        prizm_pts = [ { x: 0, y: -15 }, { x: 3, y: 18 }, { x: 18, y: 13 } ]
+        focus_line = d3.line( )
+          .x( (d)->
+            return d.x
+          )
+          .y( (d)->
+            return d.y
+          )
+          .curve(d3.curveLinearClosed)
+        focus_button.append( 'path' )
+          .datum( prizm_pts )
+          .attr( 'fill', 'lightsteelblue' )
+          .attr( 'opacity', .4 )
+          .attr( 'stroke', 'black' )
+          .attr( 'stroke-linejoin', 'round' )
+          .attr( 'stroke-linecap', 'round' )
+          .attr( 'stroke-width', 1 )
+          .attr( 'd', focus_line )
 
         # Let's build the chart
         titleX = targetWidth / 2
