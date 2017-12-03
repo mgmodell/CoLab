@@ -124,16 +124,22 @@ $ ->
           .rangeRound( [ ( height - margin.top - margin.bottom ), 0 ] )
 
         chart = chart_div.append( "svg" )
+          .attr( 'class', 'chart' )
           .attr( "height", height )
           .attr( "width", targetWidth )
+          .attr( 'version', 1.1)
+          .attr( 'xmlns', 'http://www.w3.org/2000/svg' )
 
         g = chart.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
           .attr('width', '90%' )
 
         xStretch = g.append( 'g' )
+          .attr( 'class', 'hData' )
           .attr('original_width', (targetWidth - margin.left - margin.right ) )
         all_data = g.append( 'g' )
+          .attr( 'class', 'hData' )
+          .attr('original_width', (targetWidth - margin.left - margin.right ) )
 
 
         add_line = ( target, d, color, dash_length, dash_partial )->
@@ -272,8 +278,10 @@ $ ->
         legend_width = if Object.keys( data.factors ).length > 1 then (2 * lbw ) else lbw
         legend_rows = Math.round( Object.keys( data.factors ).length / 2 )
         legend = chart.append( 'g' )
+          .attr( 'class', 'legend' )
           .attr( 'transform', 'translate( ' + ( targetWidth - 50 - legend_width ) + ', 15)')
           .attr( 'legendWidth', legend_width )
+          .attr( 'opacity', .7 )
 
         legend.append( 'rect' )
           .attr( 'x', 0 )
@@ -284,23 +292,26 @@ $ ->
           .attr( 'stroke-width', 2 )
           .style( 'fill', 'white' )
 
-        for index, factor of data.factors
-          index_off = Number( index ) - 1
+        for key, index in Object.keys( data.factors )
+          index_off = Number( index )
           legend.append( 'circle' )
             .attr( 'cx', 10 + ( index_off %2 * lbw ) )
             .attr( 'cy', 10 + Math.floor( index_off /2 ) * lbh ) 
             .attr( 'r', 7 )
-            .attr( 'fill', factor.color )
+            .attr( 'fill', data.factors[ key ].color )
           legend.append( 'text' )
             .attr( 'x', 24 + (  index_off %2 * lbw ) )
             .attr( 'y', 13 + Math.floor( index_off /2 ) * lbh ) 
             .attr( 'fill', 'black' )
             .style( 'font-size', '10px' )
-            .text( factor.name )
+            .text( data.factors[ key ].name )
 
         #build and add our close button
-        close_button = chart.append( 'g' )
+        buttonBar = chart.append( 'g' )
+          .attr( 'class', 'buttonBar' )
           .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
+
+        close_button = buttonBar.append( 'g' )
           .on( 'click', () ->
             chart.remove( )
           )
@@ -326,13 +337,11 @@ $ ->
           .attr( 'stroke', 'black' )
 
         #Create a export button
-        export_button = chart.append( 'g' )
-          .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 70)')
+        export_button = buttonBar.append( 'g' )
+          .attr( 'transform', 'translate( 0, 45)')
           .on( 'click', () ->
             # from http://bl.ocks.org/deanmalmgren/22d76b9c1f487ad1dde6
             svg_el = chart
-              .attr( 'version', 1.1)
-              .attr( 'xmlns', 'http://www.w3.org/2000/svg' )
               .node( )
 
             svg_crowbar( chart.node( ),
@@ -387,6 +396,7 @@ $ ->
         titleX = targetWidth / 2
         titleY = 0 + ( margin.top / 2 )
         title = chart.append( "g" )
+          .attr( 'class', 'title' )
         title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ' )')
           .append( 'text' )
           .attr( 'x', 0 )
@@ -407,17 +417,37 @@ $ ->
         d3.select( window )
           .on( 'resize', ()->
             targetWidth = chart_div.node( ).offsetWidth
-            chart.attr( 'width', targetWidth )
-            close_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
-            export_button.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 70)')
-            legendWidth = legend.attr( 'legendWidth' )
-            legend.attr( 'transform', 'translate( ' + ( targetWidth - 50 - legendWidth ) + ', 20)')
+            #chart.attr( 'width', targetWidth )
+            d3.selectAll( '.chart' )
+              .attr( 'width', targetWidth )
 
+            #buttonBar.attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
+            d3.selectAll( '.buttonBar' )
+              .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)' )
+
+            # legend.attr( 'transform', 'translate( ' + ( targetWidth - 50 - legendWidth ) + ', 20)')
+            legendWidth = legend.attr( 'legendWidth' )
+            d3.selectAll( '.legend' )
+              .attr( 'transform', 'translate( ' + ( targetWidth - 50 - legendWidth ) + ', 20)')
+
+            # title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
             titleX = targetWidth / 2
-            title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
+            d3.selectAll( '.title' )
+              .attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
+
             scaleFactor = ( targetWidth - margin.right - margin.left ) / xStretch.attr( 'original_width' )
-            xStretch.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
-            all_data.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
+            d3.selectAll( '.hData' ).each( (d)->
+              obj = d3.select this
+              originalWidth = obj.attr( 'original_width' )
+              scaleFactor = (targetWidth - margin.right - margin.left) / originalWidth
+              obj.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
+
+            )  
+              #.attr( 'width', targetWidth )
+              #.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
+              
+            #xStretch.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
+            #all_data.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
           )
 
 # http://bl.ocks.org/deanmalmgren/22d76b9c1f487ad1dde6
