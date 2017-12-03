@@ -273,13 +273,13 @@ $ ->
               add_line all_data, factor_stream.values, color, user_count, user_index
 
         #Create a close button
-        lbw = 175 #legend base width
+        lbw = 165 #legend base width
         lbh = 20 #legend base height
         legend_width = if Object.keys( data.factors ).length > 1 then (2 * lbw ) else lbw
         legend_rows = Math.round( Object.keys( data.factors ).length / 2 )
         legend = chart.append( 'g' )
           .attr( 'class', 'legend' )
-          .attr( 'transform', 'translate( ' + ( targetWidth - 50 - legend_width ) + ', 15)')
+          .attr( 'transform', 'translate( ' + ( targetWidth - 50 - legend_width ) + ', 40)')
           .attr( 'legendWidth', legend_width )
           .attr( 'opacity', .7 )
 
@@ -411,9 +411,10 @@ $ ->
         focus_button.selectAll( 'path' )
           .data( d3.range( 0, τ, τ / n ) )
           .enter( ).append( 'path' )
+          .attr( 'rainbow', 'true' )
           .attr( 'transform', 'rotate( 45 0 0 )' )
           .attr( 'd', d3.arc( )
-          .outerRadius(25)
+          .outerRadius(40)
           .innerRadius(3)
           .startAngle (d)->
             d
@@ -423,6 +424,7 @@ $ ->
           .style("fill", (d)-> 
             return d3.hsl(d * 360 / τ, 1, .5)
           )
+
         prizm_pts = [ { x: 0, y: -15 }, { x: 3, y: 18 }, { x: -18, y: 13 } ]
         focus_line = d3.line( )
           .x( (d)->
@@ -498,7 +500,7 @@ $ ->
             # Relocate the legend
             legendWidth = legend.attr( 'legendWidth' )
             d3.selectAll( '.legend' )
-              .attr( 'transform', 'translate( ' + ( targetWidth - 50 - legendWidth ) + ', 20)')
+              .attr( 'transform', 'translate( ' + ( targetWidth - 50 - legendWidth ) + ', 40)')
 
             # Relocate the title
             titleX = targetWidth / 2
