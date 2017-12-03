@@ -175,7 +175,10 @@ $ ->
             .attr( 'stroke', 'black' )
             .attr( 'stroke-width', 2 )
             .on( 'mouseover', (d)->
-              tip_text = data.comments[ d.installment_id ]
+              tip_text = ''
+              if data.comments[ d.installment_id ][ 'comment' ] != '<no comment>'
+                tip_text = '<strong>' + data.comments[ d.installment_id ][ 'commentor' ] + ':</strong>'
+                tip_text += data.comments[ d.installment_id ][ 'comment' ]
               toolTip.transition()
                 .duration( 200 )
                 .style( 'opacity', .9 )
@@ -193,7 +196,7 @@ $ ->
               .attr( 'stroke', (d)->
                 tip_text = data.comments[ d.installment_id ]
                 pulse_color = 'yellow'
-                if tip_text == '<no comment>'
+                if data.comments[ d.installment_id ][ 'comment' ] == '<no comment>'
                   pulse_color = 'black'
                 
                 return pulse_color
@@ -269,42 +272,92 @@ $ ->
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
             for factor_id, factor_stream of sub_stream.factor_streams
+              factor_agg = data.factors[ factor_id ][ 'agg_stream' ]
+              if(!factor_agg?)then factor_agg = { }
+              for value in factor_stream.values
+                agg_val = factor_agg[ value.close_date ]
+                if(!agg_val?)then agg_val = 
+                  sum: 0
+                  count: 0
+                  date: value.close_date
+                  factor_id: factor_id
+                agg_val[ 'sum' ] = agg_val[ 'sum' ] + value.value
+                agg_val[ 'count' ] = agg_val[ 'count' ] + 1
+                factor_agg[ value.close_date ] = agg_val
+                data.factors[ factor_id ][ 'agg_stream' ] = factor_agg
+
               color = data.factors[ factor_id ][ 'color' ]
               add_line all_data, factor_stream.values, color, user_count, user_index
 
         #Create a close button
-        lbw = 165 #legend base width
+        lbw = 170 #legend base width
         lbh = 20 #legend base height
-        legend_width = if Object.keys( data.factors ).length > 1 then (2 * lbw ) else lbw
-        legend_rows = Math.round( Object.keys( data.factors ).length / 2 )
-        legend = chart.append( 'g' )
-          .attr( 'class', 'legend' )
-          .attr( 'transform', 'translate( ' + ( targetWidth - 50 - legend_width ) + ', 40)')
-          .attr( 'legendWidth', legend_width )
+        factor_legend_width = if Object.keys( data.factors ).length > 1 then (2 * lbw ) else lbw
+        factor_legend_rows = Math.round( Object.keys( data.factors ).length / 2 )
+        factor_legend = chart.append( 'g' )
+          .attr( 'class', 'factorLegend' )
+          .attr( 'transform', 'translate( ' + ( targetWidth - 50 - factor_legend_width ) + ', 40)')
+          .attr( 'factorLegendWidth', factor_legend_width )
           .attr( 'opacity', .7 )
 
-        legend.append( 'rect' )
+        factor_legend.append( 'rect' )
           .attr( 'x', 0 )
           .attr( 'y', 0 )
-          .attr( 'width', legend_width )
-          .attr( 'height', lbh * legend_rows )
+          .attr( 'width', factor_legend_width )
+          .attr( 'height', lbh * factor_legend_rows )
           .attr( 'stroke', 'black' )
           .attr( 'stroke-width', 2 )
           .style( 'fill', 'white' )
 
         for key, index in Object.keys( data.factors )
           index_off = Number( index )
-          legend.append( 'circle' )
+          factor_legend.append( 'circle' )
             .attr( 'cx', 10 + ( index_off %2 * lbw ) )
             .attr( 'cy', 10 + Math.floor( index_off /2 ) * lbh ) 
             .attr( 'r', 7 )
             .attr( 'fill', data.factors[ key ].color )
-          legend.append( 'text' )
+          factor_legend.append( 'text' )
             .attr( 'x', 24 + (  index_off %2 * lbw ) )
             .attr( 'y', 13 + Math.floor( index_off /2 ) * lbh ) 
             .attr( 'fill', 'black' )
             .style( 'font-size', '10px' )
             .text( data.factors[ key ].name )
+
+        user_legend_width = if Object.keys( data.users ).length > 1 then (2 * lbw ) else lbw
+        user_legend_rows = Math.round( Object.keys( data.users ).length / 2 )
+        user_legend = chart.append( 'g' )
+          .attr( 'class', 'userLegend' )
+          .attr( 'transform', 'translate( 50 , 40)')
+          .attr( 'userLegendWidth', user_legend_width )
+          .attr( 'opacity', .7 )
+
+        user_legend.append( 'rect' )
+          .attr( 'x', 0 )
+          .attr( 'y', 0 )
+          .attr( 'width', user_legend_width )
+          .attr( 'height', lbh * user_legend_rows )
+          .attr( 'stroke', 'black' )
+          .attr( 'stroke-width', 2 )
+          .style( 'fill', 'white' )
+
+        for key, index in Object.keys( data.users )
+          index_off = Number( index )
+          user_legend.append( 'line' )
+            .attr( 'x1', 10 + ( index_off %2 * lbw ) )
+            .attr( 'y1', 15 + Math.floor( index_off /2 ) * lbh )
+            .attr( 'x2', ( lbw + ( index_off %2 * lbw ) - 30 ) )
+            .attr( 'y2', 15 + Math.floor( index_off /2 ) * lbh )
+            .attr( 'stroke', 'black' )
+            .attr( 'stroke-width', 3 )
+            .attr( 'stroke-dasharray', ( user_index * 5 ) + ' ' + (index * 5 ))
+            .attr( 'opacity', .5 )
+
+          user_legend.append( 'text' )
+            .attr( 'x', 10 + (  index_off %2 * lbw ) )
+            .attr( 'y', 13 + Math.floor( index_off /2 ) * lbh ) 
+            .attr( 'fill', 'black' )
+            .style( 'font-size', '10px' )
+            .text( data.users[ key ].name )
 
         #build and add our close button
         buttonBar = chart.append( 'g' )
@@ -498,9 +551,9 @@ $ ->
               .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)' )
 
             # Relocate the legend
-            legendWidth = legend.attr( 'legendWidth' )
-            d3.selectAll( '.legend' )
-              .attr( 'transform', 'translate( ' + ( targetWidth - 50 - legendWidth ) + ', 40)')
+            factorLegendWidth = factor_legend.attr( 'factorLegendWidth' )
+            d3.selectAll( '.factorLegend' )
+              .attr( 'transform', 'translate( ' + ( targetWidth - 50 - factorLegendWidth ) + ', 40)')
 
             # Relocate the title
             titleX = targetWidth / 2
