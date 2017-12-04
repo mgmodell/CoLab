@@ -10,20 +10,72 @@ $(document).bind 'mobileinit', ->
 
 unitOfAnalysisOpts =
   i:
-    ad: 'All Data'
-    ab: 'Average by Behavior'
-    ao: 'Overall Average'
-    ag_g: 'Group Agreement'
-    ag_s: 'Agreement with Self'
-    ag_m: 'Agreement without Self'
+    ad: 
+      code: 'ad'
+      name: 'All Data'
+      function: ()->
+        return 'All Data'
+    ab: 
+      code: 'ab'
+      name: 'Average by Behavior'
+      function: ()->
+        return 'All Data'
+    ao: 
+      code: 'ao'
+      name: 'Overall Average'
+      function: ()->
+        return 'All Data'
+    ag_g: 
+      code: 'ag_g'
+      name: 'Group Agreement'
+      function: ()->
+        return 'All Data'
+    ag_s: 
+      code: 'ag_s'
+      name: 'Agreement with Self'
+      function: ()->
+        return 'All Data'
+    ag_m: 
+      code: 'ag_m'
+      name: 'Agreement without Self'
+      function: ()->
+        return 'All Data'
   g:
-    ad: 'All Data'
-    ab: 'Average by Behavior'
-    am: 'Average by Member'
-    vb: 'Variance by Behavior'
-    vm: 'Variance by Member'
-    ag_b: 'Agreement by Behavior'
-    ag_m: 'Agreement by Member'
+    ad: 
+      code: 'ad'
+      name: 'All Data'
+      function: ()->
+        return 'All Data'
+    ab: 
+      code: 'ab'
+      name: 'Average by Behavior'
+      function: ()->
+        return 'All Data'
+    am: 
+      code: 'am'
+      name: 'Average by Member'
+      function: ()->
+        return 'All Data'
+    vb: 
+      code: 'vb'
+      name: 'Variance by Behavior'
+      function: ()->
+        return 'All Data'
+    vm: 
+      code: 'vm'
+      name: 'Variance by Member'
+      function: ()->
+        return 'All Data'
+    ag_b: 
+      code: 'ag_b'
+      name: 'Agreement by Behavior'
+      function: ()->
+        return 'All Data'
+    ag_m: 
+      code: 'ag_m'
+      name: 'Agreement by Member'
+      function: ()->
+        return 'All Data'
 
 $ ->
   $(".project_select").change ->
@@ -290,19 +342,19 @@ $ ->
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
             for factor_id, factor_stream of sub_stream.factor_streams
-              factor_agg = data.factors[ factor_id ][ 'agg_stream' ]
-              if(!factor_agg?)then factor_agg = { }
+              factor_avg = data.factors[ factor_id ][ 'avg_stream' ]
+              if(!factor_avg?)then factor_avg = { }
               for value in factor_stream.values
-                agg_val = factor_agg[ value.close_date ]
-                if(!agg_val?)then agg_val = 
+                avg_val = factor_avg[ value.close_date ]
+                if(!avg_val?)then avg_val = 
                   sum: 0
                   count: 0
                   date: value.close_date
                   factor_id: factor_id
-                agg_val[ 'sum' ] = agg_val[ 'sum' ] + value.value
-                agg_val[ 'count' ] = agg_val[ 'count' ] + 1
-                factor_agg[ value.close_date ] = agg_val
-                data.factors[ factor_id ][ 'agg_stream' ] = factor_agg
+                avg_val[ 'sum' ] = avg_val[ 'sum' ] + value.value
+                avg_val[ 'count' ] = avg_val[ 'count' ] + 1
+                factor_avg[ value.close_date ] = avg_val
+                data.factors[ factor_id ][ 'avg_stream' ] = factor_avg
 
               color = data.factors[ factor_id ][ 'color' ]
               add_line all_data, factor_stream.values, color, user_count, user_index, 'ad'
@@ -536,7 +588,7 @@ $ ->
           .attr( 'd', focus_line )
 
         index = 0
-        for a_code, a_name of unitOfAnalysisOpts[ data.unitOfAnalysisCode ]
+        for a_code, a_method of unitOfAnalysisOpts[ data.unitOfAnalysisCode ]
           index++
           focus_button.append( 'text' )
             .attr( 'class', a_code )
@@ -544,7 +596,7 @@ $ ->
             .attr( 'x', -60 )
             .attr( 'y', 20 + (10 * index ) )
             .attr( 'font-size', '8px' )
-            .text( a_name )
+            .text( a_method.name )
             .on( 'click', (d)->
               spec_code = d3.select( this ).attr( 'data_code' )
               spec_opacity = d3.select( this ).attr( 'opacity' )
@@ -561,7 +613,6 @@ $ ->
               
             )
 
-          console.log a_code + ': ' + a_name
 
         # Let's build the chart
         titleX = targetWidth / 2
