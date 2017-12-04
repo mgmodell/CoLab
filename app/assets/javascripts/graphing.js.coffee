@@ -210,11 +210,11 @@ $ ->
           .domain( [0, 6000] )
           .rangeRound( [ ( height - margin.top - margin.bottom ), 0 ] )
 
+        identifier = data.unitOfAnalysisCode + '_' + data.project_id + '_' + data.subject_id
         chart = chart_div.append( "svg" )
-          .attr( 'class', 'chart' )
+          .attr( 'class', 'chart ' + identifier )
           .attr( "height", height )
           .attr( "width", targetWidth )
-          .attr( 'subject', data.unitOfAnalysisCode + '_' + data.project_id + '_' + data.subject_id )
           .attr( 'version', 1.1)
           .attr( 'xmlns', 'http://www.w3.org/2000/svg' )
 
@@ -600,12 +600,14 @@ $ ->
           index++
           focus_button.append( 'text' )
             .attr( 'class', a_code )
+            .attr( 'parent_chart', identifier )
             .attr( 'data_code', a_code )
             .attr( 'x', -60 )
             .attr( 'y', 20 + (10 * index ) )
             .attr( 'font-size', '8px' )
             .text( a_method.name )
             .on( 'click', (d)->
+              id = d3.select( this ).attr( 'parent_chart' )
               spec_code = d3.select( this ).attr( 'data_code' )
               spec_opacity = d3.select( this ).attr( 'opacity' )
 
@@ -614,7 +616,7 @@ $ ->
               else
                 spec_opacity = .1
 
-              d3.selectAll( '.' + spec_code )
+              d3.select( '.' + id ).selectAll( '.' + spec_code )
                 .attr( 'opacity', spec_opacity )
               d3.select( this )
                 .attr( 'opacity', spec_opacity )
