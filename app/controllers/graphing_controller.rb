@@ -77,6 +77,7 @@ class GraphingController < ApplicationController
         dataset[ :unitOfAnalysis ] = I18n.t( :individual )
         dataset[ :unitOfAnalysisCode ] = 'i'
         user = User.find subject
+        dataset[ :subject_id ] = user.id
         dataset[ :subject ] = user.informal_name( anonymize )
         values = Value.joins( installment: :assessment ).
                           where( 'assessments.project_id': project, user: user ).

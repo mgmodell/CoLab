@@ -13,68 +13,87 @@ unitOfAnalysisOpts =
     ad: 
       code: 'ad'
       name: 'All Data'
-      function: ()->
-        return 'All Data'
+      fcn: (data, line_func, chart_elem, user_count, class_id )->
+        for id, stream of data.streams
+          for sub_id, sub_stream of stream.sub_streams
+            user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
+            for factor_id, factor_stream of sub_stream.factor_streams
+              factor_avg = data.factors[ factor_id ][ 'avg_stream' ]
+              if(!factor_avg?)then factor_avg = { }
+              for value in factor_stream.values
+                avg_val = factor_avg[ value.close_date ]
+                if(!avg_val?)then avg_val = 
+                  sum: 0
+                  count: 0
+                  date: value.close_date
+                  factor_id: factor_id
+                avg_val[ 'sum' ] = avg_val[ 'sum' ] + value.value
+                avg_val[ 'count' ] = avg_val[ 'count' ] + 1
+                factor_avg[ value.close_date ] = avg_val
+                data.factors[ factor_id ][ 'avg_stream' ] = factor_avg
+
+              color = data.factors[ factor_id ][ 'color' ]
+              line_func chart_elem, factor_stream.values, color, user_count, user_index, class_id
     ab: 
       code: 'ab'
       name: 'Average by Behavior'
-      function: ()->
+      fcn: ()->
         return 'All Data'
     ao: 
       code: 'ao'
       name: 'Overall Average'
-      function: ()->
+      fcn: ()->
         return 'All Data'
     ag_g: 
       code: 'ag_g'
       name: 'Group Agreement'
-      function: ()->
+      fcn: ()->
         return 'All Data'
     ag_s: 
       code: 'ag_s'
       name: 'Agreement with Self'
-      function: ()->
+      fcn: ()->
         return 'All Data'
     ag_m: 
       code: 'ag_m'
       name: 'Agreement without Self'
-      function: ()->
+      fcn: ()->
         return 'All Data'
   g:
     ad: 
       code: 'ad'
       name: 'All Data'
-      function: ()->
+      fcn: ()->
         return 'All Data'
     ab: 
       code: 'ab'
       name: 'Average by Behavior'
-      function: ()->
+      fcn: ()->
         return 'All Data'
     am: 
       code: 'am'
       name: 'Average by Member'
-      function: ()->
+      fcn: ()->
         return 'All Data'
     vb: 
       code: 'vb'
       name: 'Variance by Behavior'
-      function: ()->
+      fcn: ()->
         return 'All Data'
     vm: 
       code: 'vm'
       name: 'Variance by Member'
-      function: ()->
+      fcn: ()->
         return 'All Data'
     ag_b: 
       code: 'ag_b'
       name: 'Agreement by Behavior'
-      function: ()->
+      fcn: ()->
         return 'All Data'
     ag_m: 
       code: 'ag_m'
       name: 'Agreement by Member'
-      function: ()->
+      fcn: ()->
         return 'All Data'
 
 $ ->
@@ -195,6 +214,7 @@ $ ->
           .attr( 'class', 'chart' )
           .attr( "height", height )
           .attr( "width", targetWidth )
+          .attr( 'subject', data.unitOfAnalysisCode + '_' + data.project_id + '_' + data.subject_id )
           .attr( 'version', 1.1)
           .attr( 'xmlns', 'http://www.w3.org/2000/svg' )
 
@@ -341,23 +361,11 @@ $ ->
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
-            for factor_id, factor_stream of sub_stream.factor_streams
-              factor_avg = data.factors[ factor_id ][ 'avg_stream' ]
-              if(!factor_avg?)then factor_avg = { }
-              for value in factor_stream.values
-                avg_val = factor_avg[ value.close_date ]
-                if(!avg_val?)then avg_val = 
-                  sum: 0
-                  count: 0
-                  date: value.close_date
-                  factor_id: factor_id
-                avg_val[ 'sum' ] = avg_val[ 'sum' ] + value.value
-                avg_val[ 'count' ] = avg_val[ 'count' ] + 1
-                factor_avg[ value.close_date ] = avg_val
-                data.factors[ factor_id ][ 'avg_stream' ] = factor_avg
 
-              color = data.factors[ factor_id ][ 'color' ]
-              add_line all_data, factor_stream.values, color, user_count, user_index, 'ad'
+        #add analysis processing here
+        fcn = unitOfAnalysisOpts[ data.unitOfAnalysisCode ]['ad'].fcn
+        fcn( data, add_line, all_data, user_count, 'ad' )
+        unitOfAnalysisOpts[ data.unitOfAnalysisCode ].processed = true
 
         #Create a close button
         lbw = 170 #legend base width
