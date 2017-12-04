@@ -9,7 +9,46 @@ $(document).bind 'mobileinit', ->
   return
 
 #Line dotted line rendering function
-add_dotted_line = ( target, d, color, dash_length, dash_partial, class_list, x, y, parseTime, comments )->
+add_avg_line = ( target, d, color, dash_length, dash_partial,
+                  class_list, x, y, parseTime, comments, toolTipDiv )->
+  console.log d
+  dateStream = [ ]
+  for date in Object.keys( d.avg_stream ).sort()
+    dateStream.push d.avg_stream[ date ]
+
+  line = d3.line( )
+    .x( (d)->
+      return x(parseTime( d.date ) )
+    )
+    .y( (d)->
+      return y(d.sum / d.count )
+    )
+    .curve( d3.curveMonotoneX )
+  path = target.append( 'path' )
+    .datum( dateStream )
+    .attr( 'fill', 'none' )
+    .attr( 'class', class_list )
+    .attr( 'stroke', 'white' )
+    .attr( 'stroke-linejoin', 'round' )
+    .attr( 'stroke-linecap', 'round' )
+    .attr( 'stroke-width', 3 )
+    .attr( 'd', line )
+  totalLength = path.node( ).getTotalLength( );
+  path
+    .attr('stroke-dasharray', totalLength + ' ' + totalLength )
+    .attr('stroke-dashoffset', totalLength )
+    .transition( )
+      .duration( 2000 )
+      .attr( 'stroke-dasharray', (d)->
+        return ( dash_partial * 5 ) + "," + ( dash_length * 5 )
+      )
+      .attr( 'stroke', color )
+
+
+# Render an averaged line
+add_dotted_line = ( target, d, color, dash_length, dash_partial,
+                    class_list, x, y, parseTime, comments, 
+                    toolTipDiv )->
   
   line = d3.line( )
     .x( (d)->
@@ -46,17 +85,17 @@ add_dotted_line = ( target, d, color, dash_length, dash_partial, class_list, x, 
     .on( 'mouseover', (d)->
       tip_text = ''
       if comments[ d.installment_id ][ 'comment' ] != '<no comment>'
-        tip_text = '<strong>' + data.comments[ d.installment_id ][ 'commentor' ] + ':</strong>'
+        tip_text = '<strong>' + comments[ d.installment_id ][ 'commentor' ] + ':</strong>'
         tip_text += comments[ d.installment_id ][ 'comment' ]
-      toolTip.transition()
+      toolTipDiv.transition()
         .duration( 200 )
         .style( 'opacity', .9 )
-      toolTip.html( '<strong>Value: </strong>' + d.value + '</br>' + tip_text )
+      toolTipDiv.html( '<strong>Value: </strong>' + d.value + '</br>' + tip_text )
         .style( 'left', (d3.event.pageX) + 'px' )
         .style( 'top', (d3.event.pageY - 28) + 'px' )
     )
     .on( 'mouseout', (d)->
-      toolTip.transition()
+      toolTipDiv.transition()
         .duration( 1000 )
         .style( 'opacity', 0 )
     )
@@ -87,7 +126,9 @@ unitOfAnalysisOpts =
     ad: 
       code: 'ad'
       name: 'All Data'
-      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, yFcn, parseTimeFcn, comments )->
+      line_proc: add_dotted_line
+      fcn: (data, line_func, chart_elem, user_count, class_id, 
+            xFcn, yFcn, parseTimeFcn, comments, toolTipDiv )->
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
@@ -107,12 +148,38 @@ unitOfAnalysisOpts =
                 data.factors[ factor_id ][ 'avg_stream' ] = factor_avg
 
               color = data.factors[ factor_id ][ 'color' ]
-              line_func chart_elem, factor_stream.values, color, user_count, user_index, class_id, xFcn, yFcn, parseTimeFcn, comments
+              line_func chart_elem, factor_stream.values, color, 
+                        user_count, user_index, class_id, xFcn, 
+                        yFcn, parseTimeFcn, comments, toolTipDiv
     ab: 
       code: 'ab'
       name: 'Average by Behavior'
-      fcn: (data, line_func, chart_elem, user_count, class_id )->
-        return 'All Data'
+      line_proc: add_avg_line
+      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
+            yFcn, parseTimeFcn, comments, toolTipDiv )->
+        for id, stream of data.streams
+          for sub_id, sub_stream of stream.sub_streams
+            user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
+            for factor_id, factor_stream of sub_stream.factor_streams
+              factor_avg = data.factors[ factor_id ][ 'avg_stream' ]
+              if(!factor_avg?)then factor_avg = { }
+              for value in factor_stream.values
+                avg_val = factor_avg[ value.close_date ]
+                if(!avg_val?)then avg_val = 
+                  sum: 0
+                  count: 0
+                  date: value.close_date
+                  factor_id: factor_id
+                avg_val[ 'sum' ] = avg_val[ 'sum' ] + value.value
+                avg_val[ 'count' ] = avg_val[ 'count' ] + 1
+                factor_avg[ value.close_date ] = avg_val
+                data.factors[ factor_id ][ 'avg_stream' ] = factor_avg
+
+        for factor_id, factor_coll of data.factors
+          color = data.factors[ factor_id ][ 'color' ]
+          line_func chart_elem, factor_coll, color, user_count, user_index, 
+                    class_id, xFcn, yFcn, parseTimeFcn, comments, toolTipDiv
+
     ao: 
       code: 'ao'
       name: 'Overall Average'
@@ -137,38 +204,23 @@ unitOfAnalysisOpts =
     ad: 
       code: 'ad'
       name: 'All Data'
-      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, yFcn, parseTimeFcn, comments )->
+      line_proc: add_dotted_line
+      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
+            yFcn, parseTimeFcn, comments, toolTipDiv )->
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
             for factor_id, factor_stream of sub_stream.factor_streams
               color = data.factors[ factor_id ][ 'color' ]
-              line_func chart_elem, factor_stream.values, color, user_count, user_index, class_id, xFcn, yFcn, parseTimeFcn, comments
+              line_func chart_elem, factor_stream.values, color, user_count, 
+                        user_index, class_id, xFcn, yFcn, parseTimeFcn, 
+                        comments, toolTipDiv
     ab: 
       code: 'ab'
       name: 'Average by Behavior'
-      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, yFcn, parseTimeFcn, comments )->
-        for id, stream of data.streams
-          for sub_id, sub_stream of stream.sub_streams
-            user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
-            for factor_id, factor_stream of sub_stream.factor_streams
-              factor_avg = data.factors[ factor_id ][ 'avg_stream' ]
-              if(!factor_avg?)then factor_avg = { }
-              for value in factor_stream.values
-                avg_val = factor_avg[ value.close_date ]
-                if(!avg_val?)then avg_val = 
-                  sum: 0
-                  count: 0
-                  date: value.close_date
-                  factor_id: factor_id
-                avg_val[ 'sum' ] = avg_val[ 'sum' ] + value.value
-                avg_val[ 'count' ] = avg_val[ 'count' ] + 1
-                factor_avg[ value.close_date ] = avg_val
-                data.factors[ factor_id ][ 'avg_stream' ] = factor_avg
-
-        for factor_id, factor_coll of data.factors
-          color = data.factors[ factor_id ][ 'color' ]
-          line_func chart_elem, factor_coll, color, user_count, user_index, class_id
+      line_proc: add_avg_line
+      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
+            yFcn, parseTimeFcn, comments, toolTipDiv )->
             
     am: 
       code: 'am'
@@ -386,11 +438,6 @@ $ ->
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
-
-        #add analysis processing here
-        fcn = unitOfAnalysisOpts[ data.unitOfAnalysisCode ]['ad'].fcn
-        fcn( data, add_dotted_line, all_data, user_count, 'ad', x, y, parseTime, data.comments )
-        unitOfAnalysisOpts[ data.unitOfAnalysisCode ].processed = true
 
         #Create a close button
         lbw = 170 #legend base width
@@ -635,6 +682,13 @@ $ ->
               id = d3.select( this ).attr( 'parent_chart' )
               spec_code = d3.select( this ).attr( 'data_code' )
               spec_opacity = d3.select( this ).attr( 'opacity' )
+              processed = d3.select( this ).attr( 'processed' )
+
+              block = unitOfAnalysisOpts[ data.unitOfAnalysisCode ][spec_code]
+              if !processed? || !processed
+                block.fcn( data, block.line_proc, all_data, user_count, 
+                           block.code, x, y, parseTime, data.comments, toolTip )
+                d3.select( this ).attr( 'processed', true )
 
               if Number( spec_opacity ) == .1
                 spec_opacity = 1
@@ -643,13 +697,11 @@ $ ->
 
               d3.select( '.' + id ).selectAll( '.' + spec_code )
                 .attr( 'opacity', spec_opacity )
-              d3.select( this )
-                .attr( 'opacity', spec_opacity )
               
             )
 
 
-        # Let's build the chart
+        # Let's build the text
         titleX = targetWidth / 2
         titleY = 0 + ( margin.top / 2 )
         title = chart.append( "g" )
@@ -670,6 +722,13 @@ $ ->
           .style( 'font-size', '10px' )
           .style( 'text-decoration', 'underline' )
           .text( 'for project: ' + data.project_name)
+
+        #add analysis processing here
+        block = unitOfAnalysisOpts[ data.unitOfAnalysisCode ]['ad']
+        block.fcn( data, block.line_proc, all_data, user_count, 
+                   block.code, x, y, parseTime, data.comments, toolTip )
+        d3.selectAll( '.ad' ).attr( 'processed', true )
+
 
         d3.select( window )
           .on( 'resize', ()->
