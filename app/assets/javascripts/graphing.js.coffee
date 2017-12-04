@@ -158,7 +158,7 @@ $ ->
           .attr('original_width', (targetWidth - margin.left - margin.right ) )
 
 
-        add_line = ( target, d, color, dash_length, dash_partial )->
+        add_line = ( target, d, color, dash_length, dash_partial, class_list )->
           
           line = d3.line( )
             .x( (d)->
@@ -171,6 +171,7 @@ $ ->
           path = target.append( 'path' )
             .datum( d )
             .attr( 'fill', 'none' )
+            .attr( 'class', class_list )
             .attr( 'stroke', 'white' )
             .attr( 'stroke-linejoin', 'round' )
             .attr( 'stroke-linecap', 'round' )
@@ -180,6 +181,7 @@ $ ->
           target.selectAll( 'dot' )
             .data( d )
             .enter().append('circle')
+            .attr( 'class', class_list )
             .attr( 'r', 5 )
             .attr('cx', (d)->
               return x(parseTime( d.date ) )
@@ -303,7 +305,7 @@ $ ->
                 data.factors[ factor_id ][ 'agg_stream' ] = factor_agg
 
               color = data.factors[ factor_id ][ 'color' ]
-              add_line all_data, factor_stream.values, color, user_count, user_index
+              add_line all_data, factor_stream.values, color, user_count, user_index, 'ad'
 
         #Create a close button
         lbw = 170 #legend base width
@@ -538,10 +540,26 @@ $ ->
           index++
           focus_button.append( 'text' )
             .attr( 'class', a_code )
+            .attr( 'data_code', a_code )
             .attr( 'x', -60 )
             .attr( 'y', 20 + (10 * index ) )
             .attr( 'font-size', '8px' )
             .text( a_name )
+            .on( 'click', (d)->
+              spec_code = d3.select( this ).attr( 'data_code' )
+              spec_opacity = d3.select( this ).attr( 'opacity' )
+
+              if Number( spec_opacity ) == .1
+                spec_opacity = 1
+              else
+                spec_opacity = .1
+
+              d3.selectAll( '.' + spec_code )
+                .attr( 'opacity', spec_opacity )
+              d3.select( this )
+                .attr( 'opacity', spec_opacity )
+              
+            )
 
           console.log a_code + ': ' + a_name
 
