@@ -129,28 +129,16 @@ unitOfAnalysisOpts =
       line_proc: add_dotted_line
       fcn: (data, line_func, chart_elem, user_count, class_id, 
             xFcn, yFcn, parseTimeFcn, comments, toolTipDiv )->
+      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
+            yFcn, parseTimeFcn, comments, toolTipDiv )->
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
             for factor_id, factor_stream of sub_stream.factor_streams
-              factor_avg = data.factors[ factor_id ][ 'avg_stream' ]
-              if(!factor_avg?)then factor_avg = { }
-              for value in factor_stream.values
-                avg_val = factor_avg[ value.close_date ]
-                if(!avg_val?)then avg_val = 
-                  sum: 0
-                  count: 0
-                  date: value.close_date
-                  factor_id: factor_id
-                avg_val[ 'sum' ] = avg_val[ 'sum' ] + value.value
-                avg_val[ 'count' ] = avg_val[ 'count' ] + 1
-                factor_avg[ value.close_date ] = avg_val
-                data.factors[ factor_id ][ 'avg_stream' ] = factor_avg
-
               color = data.factors[ factor_id ][ 'color' ]
-              line_func chart_elem, factor_stream.values, color, 
-                        user_count, user_index, class_id, xFcn, 
-                        yFcn, parseTimeFcn, comments, toolTipDiv
+              line_func chart_elem, factor_stream.values, color, user_count, 
+                        user_index, class_id, xFcn, yFcn, parseTimeFcn, 
+                        comments, toolTipDiv
     ab: 
       code: 'ab'
       name: 'Average by Behavior'
