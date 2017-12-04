@@ -8,12 +8,86 @@ $(document).bind 'mobileinit', ->
   $.mobile.ajaxEnabled = false
   return
 
+#Line dotted line rendering function
+add_dotted_line = ( target, d, color, dash_length, dash_partial, class_list, x, y, parseTime, comments )->
+  
+  line = d3.line( )
+    .x( (d)->
+      return x(parseTime( d.date) )
+    )
+    .y( (d)->
+      return y(d.value)
+    )
+    .curve(d3.curveMonotoneX)
+  path = target.append( 'path' )
+    .datum( d )
+    .attr( 'fill', 'none' )
+    .attr( 'class', class_list )
+    .attr( 'stroke', 'white' )
+    .attr( 'stroke-linejoin', 'round' )
+    .attr( 'stroke-linecap', 'round' )
+    .attr( 'stroke-width', 3 )
+    .attr( 'd', line )
+
+  target.selectAll( 'dot' )
+    .data( d )
+    .enter().append('circle')
+    .attr( 'class', class_list )
+    .attr( 'r', 5 )
+    .attr('cx', (d)->
+      return x(parseTime( d.date ) )
+    )
+    .attr('cy', (d)->
+      return y(d.value)
+    )
+    .attr( 'fill', color )
+    .attr( 'stroke', 'black' )
+    .attr( 'stroke-width', 2 )
+    .on( 'mouseover', (d)->
+      tip_text = ''
+      if comments[ d.installment_id ][ 'comment' ] != '<no comment>'
+        tip_text = '<strong>' + data.comments[ d.installment_id ][ 'commentor' ] + ':</strong>'
+        tip_text += comments[ d.installment_id ][ 'comment' ]
+      toolTip.transition()
+        .duration( 200 )
+        .style( 'opacity', .9 )
+      toolTip.html( '<strong>Value: </strong>' + d.value + '</br>' + tip_text )
+        .style( 'left', (d3.event.pageX) + 'px' )
+        .style( 'top', (d3.event.pageY - 28) + 'px' )
+    )
+    .on( 'mouseout', (d)->
+      toolTip.transition()
+        .duration( 1000 )
+        .style( 'opacity', 0 )
+    )
+    .transition( )
+      .duration( 5000 )
+      .attr( 'stroke', (d)->
+        tip_text = comments[ d.installment_id ]
+        pulse_color = 'yellow'
+        if comments[ d.installment_id ][ 'comment' ] == '<no comment>'
+          pulse_color = 'black'
+        
+        return pulse_color
+      )
+  totalLength = path.node( ).getTotalLength( );
+  path
+    .attr('stroke-dasharray', totalLength + ' ' + totalLength )
+    .attr('stroke-dashoffset', totalLength )
+    .transition( )
+      .duration( 2000 )
+      .attr( 'stroke-dasharray', (d)->
+        return ( dash_partial * 5 ) + "," + ( dash_length * 5 )
+      )
+      .attr( 'stroke', color )
+
+#Structuring Unit of Analysis
 unitOfAnalysisOpts =
   i:
     ad: 
       code: 'ad'
       name: 'All Data'
-      fcn: (data, line_func, chart_elem, user_count, class_id )->
+      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, yFcn, parseTimeFcn, comments )->
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
@@ -33,11 +107,11 @@ unitOfAnalysisOpts =
                 data.factors[ factor_id ][ 'avg_stream' ] = factor_avg
 
               color = data.factors[ factor_id ][ 'color' ]
-              line_func chart_elem, factor_stream.values, color, user_count, user_index, class_id
+              line_func chart_elem, factor_stream.values, color, user_count, user_index, class_id, xFcn, yFcn, parseTimeFcn, comments
     ab: 
       code: 'ab'
       name: 'Average by Behavior'
-      fcn: ()->
+      fcn: (data, line_func, chart_elem, user_count, class_id )->
         return 'All Data'
     ao: 
       code: 'ao'
@@ -63,13 +137,39 @@ unitOfAnalysisOpts =
     ad: 
       code: 'ad'
       name: 'All Data'
-      fcn: ()->
-        return 'All Data'
+      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, yFcn, parseTimeFcn, comments )->
+        for id, stream of data.streams
+          for sub_id, sub_stream of stream.sub_streams
+            user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
+            for factor_id, factor_stream of sub_stream.factor_streams
+              color = data.factors[ factor_id ][ 'color' ]
+              line_func chart_elem, factor_stream.values, color, user_count, user_index, class_id, xFcn, yFcn, parseTimeFcn, comments
     ab: 
       code: 'ab'
       name: 'Average by Behavior'
-      fcn: ()->
-        return 'All Data'
+      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, yFcn, parseTimeFcn, comments )->
+        for id, stream of data.streams
+          for sub_id, sub_stream of stream.sub_streams
+            user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
+            for factor_id, factor_stream of sub_stream.factor_streams
+              factor_avg = data.factors[ factor_id ][ 'avg_stream' ]
+              if(!factor_avg?)then factor_avg = { }
+              for value in factor_stream.values
+                avg_val = factor_avg[ value.close_date ]
+                if(!avg_val?)then avg_val = 
+                  sum: 0
+                  count: 0
+                  date: value.close_date
+                  factor_id: factor_id
+                avg_val[ 'sum' ] = avg_val[ 'sum' ] + value.value
+                avg_val[ 'count' ] = avg_val[ 'count' ] + 1
+                factor_avg[ value.close_date ] = avg_val
+                data.factors[ factor_id ][ 'avg_stream' ] = factor_avg
+
+        for factor_id, factor_coll of data.factors
+          color = data.factors[ factor_id ][ 'color' ]
+          line_func chart_elem, factor_coll, color, user_count, user_index, class_id
+            
     am: 
       code: 'am'
       name: 'Average by Member'
@@ -228,81 +328,6 @@ $ ->
         all_data = g.append( 'g' )
           .attr( 'class', 'hData' )
           .attr('original_width', (targetWidth - margin.left - margin.right ) )
-
-
-        add_line = ( target, d, color, dash_length, dash_partial, class_list )->
-          
-          line = d3.line( )
-            .x( (d)->
-              return x(parseTime( d.date) )
-            )
-            .y( (d)->
-              return y(d.value)
-            )
-            .curve(d3.curveMonotoneX)
-          path = target.append( 'path' )
-            .datum( d )
-            .attr( 'fill', 'none' )
-            .attr( 'class', class_list )
-            .attr( 'stroke', 'white' )
-            .attr( 'stroke-linejoin', 'round' )
-            .attr( 'stroke-linecap', 'round' )
-            .attr( 'stroke-width', 3 )
-            .attr( 'd', line )
-
-          target.selectAll( 'dot' )
-            .data( d )
-            .enter().append('circle')
-            .attr( 'class', class_list )
-            .attr( 'r', 5 )
-            .attr('cx', (d)->
-              return x(parseTime( d.date ) )
-            )
-            .attr('cy', (d)->
-              return y(d.value)
-            )
-            .attr( 'fill', color )
-            .attr( 'stroke', 'black' )
-            .attr( 'stroke-width', 2 )
-            .on( 'mouseover', (d)->
-              tip_text = ''
-              if data.comments[ d.installment_id ][ 'comment' ] != '<no comment>'
-                tip_text = '<strong>' + data.comments[ d.installment_id ][ 'commentor' ] + ':</strong>'
-                tip_text += data.comments[ d.installment_id ][ 'comment' ]
-              toolTip.transition()
-                .duration( 200 )
-                .style( 'opacity', .9 )
-              toolTip.html( '<strong>Value: </strong>' + d.value + '</br>' + tip_text )
-                .style( 'left', (d3.event.pageX) + 'px' )
-                .style( 'top', (d3.event.pageY - 28) + 'px' )
-            )
-            .on( 'mouseout', (d)->
-              toolTip.transition()
-                .duration( 1000 )
-                .style( 'opacity', 0 )
-            )
-            .transition( )
-              .duration( 5000 )
-              .attr( 'stroke', (d)->
-                tip_text = data.comments[ d.installment_id ]
-                pulse_color = 'yellow'
-                if data.comments[ d.installment_id ][ 'comment' ] == '<no comment>'
-                  pulse_color = 'black'
-                
-                return pulse_color
-              )
-
-          totalLength = path.node( ).getTotalLength( );
-          path
-            .attr('stroke-dasharray', totalLength + ' ' + totalLength )
-            .attr('stroke-dashoffset', totalLength )
-            .transition( )
-              .duration( 2000 )
-              .attr( 'stroke-dasharray', (d)->
-                return ( dash_partial * 5 ) + "," + ( dash_length * 5 )
-              )
-              .attr( 'stroke', color )
-
         
         xStretch.append( 'g' )
           .attr( 'class', 'axis axis--x' )
@@ -364,7 +389,7 @@ $ ->
 
         #add analysis processing here
         fcn = unitOfAnalysisOpts[ data.unitOfAnalysisCode ]['ad'].fcn
-        fcn( data, add_line, all_data, user_count, 'ad' )
+        fcn( data, add_dotted_line, all_data, user_count, 'ad', x, y, parseTime, data.comments )
         unitOfAnalysisOpts[ data.unitOfAnalysisCode ].processed = true
 
         #Create a close button
