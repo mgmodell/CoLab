@@ -8,6 +8,22 @@ $(document).bind 'mobileinit', ->
   $.mobile.ajaxEnabled = false
   return
 
+unitOfAnalysisOpts =
+  i:
+    ad: 'All Data'
+    ab: 'Average by Behavior'
+    ao: 'Overall Average'
+    ag_g: 'Group Agreement'
+    ag_s: 'Agreement with Self'
+    ag_m: 'Agreement without Self'
+  g:
+    ad: 'All Data'
+    ab: 'Average by Behavior'
+    am: 'Average by Member'
+    vb: 'Variance by Behavior'
+    vm: 'Variance by Member'
+    ag_b: 'Agreement by Behavior'
+    ag_m: 'Agreement by Member'
 
 $ ->
   $(".project_select").change ->
@@ -446,7 +462,7 @@ $ ->
 
         #Create a export button
         focus_button = buttonBar.append( 'g' )
-          .attr( 'transform', 'translate( 0, 90)')
+          .attr( 'transform', 'translate( 0, 100)')
 
         #Create the output beam
         focus_button.append( "rect" )
@@ -516,6 +532,18 @@ $ ->
           .attr( 'stroke-linecap', 'round' )
           .attr( 'stroke-width', 1 )
           .attr( 'd', focus_line )
+
+        index = 0
+        for a_code, a_name of unitOfAnalysisOpts[ data.unitOfAnalysisCode ]
+          index++
+          focus_button.append( 'text' )
+            .attr( 'class', a_code )
+            .attr( 'x', -60 )
+            .attr( 'y', 20 + (10 * index ) )
+            .attr( 'font-size', '8px' )
+            .text( a_name )
+
+          console.log a_code + ': ' + a_name
 
         # Let's build the chart
         titleX = targetWidth / 2

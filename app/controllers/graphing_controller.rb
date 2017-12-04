@@ -75,6 +75,7 @@ class GraphingController < ApplicationController
       case unit_of_analysis
       when Unit_Of_Analysis[ :individual ]
         dataset[ :unitOfAnalysis ] = I18n.t( :individual )
+        dataset[ :unitOfAnalysisCode ] = 'i'
         user = User.find subject
         dataset[ :subject ] = user.informal_name( anonymize )
         values = Value.joins( installment: :assessment ).
@@ -119,6 +120,7 @@ class GraphingController < ApplicationController
 
       when Unit_Of_Analysis[ :group ]
         dataset[ :unitOfAnalysis ] = I18n.t( :group )
+        dataset[ :unitOfAnalysisCode ] = 'g'
         group = Group.find subject
         dataset[ :subject ] = group.get_name( anonymize )
         values = Value.joins( installment: :assessment ).
