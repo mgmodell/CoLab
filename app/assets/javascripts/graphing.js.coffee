@@ -40,7 +40,7 @@ add_avg_line = ( target, d, color, dash_length, dash_partial,
     .transition( )
       .duration( 2000 )
       .attr( 'stroke-dasharray', (d)->
-        return ( dash_partial * 5 ) + "," + ( dash_length * 5 )
+        return '50, 1'#( dash_partial * 5 ) + "," + ( dash_length * 5 )
       )
       .attr( 'stroke', color )
 
@@ -678,13 +678,14 @@ $ ->
                            block.code, x, y, parseTime, data.comments, toolTip )
                 d3.select( this ).attr( 'processed', true )
 
-              if Number( spec_opacity ) == .1
-                spec_opacity = 1
               else
-                spec_opacity = .1
+                if Number( spec_opacity ) == .1
+                  spec_opacity = 1
+                else
+                  spec_opacity = .1
 
-              d3.select( '.' + id ).selectAll( '.' + spec_code )
-                .attr( 'opacity', spec_opacity )
+                d3.select( '.' + id ).selectAll( '.' + spec_code )
+                  .attr( 'opacity', spec_opacity )
               
             )
 

@@ -15,7 +15,7 @@ class Installment < ActiveRecord::Base
   TOTAL_VAL = 6000.0
 
   # Support inclusion of comments
-  def prettyComment(anonymize = false)
+  def prettyComment(_anonymize = false)
     comments.blank? ? '<no comment>' : comments
   end
 
@@ -66,8 +66,8 @@ class Installment < ActiveRecord::Base
 
       au_hash.values.each do |v|
         prelim = (Installment::TOTAL_VAL * v.value) / total
-        if !prelim.nan? 
-          v.value = ( Installment::TOTAL_VAL / v.installment.values.count ).round
+        if !prelim.nan?
+          v.value = (Installment::TOTAL_VAL / v.installment.values.count).round
         else
           v.value = ((Installment::TOTAL_VAL * v.value) / total).round
         end
