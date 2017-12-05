@@ -11,7 +11,6 @@ $(document).bind 'mobileinit', ->
 #Line dotted line rendering function
 add_avg_line = ( target, d, color, dash_length, dash_partial,
                   class_list, x, y, parseTime, comments, toolTipDiv )->
-  console.log d
   dateStream = [ ]
   for date in Object.keys( d.avg_stream ).sort()
     dateStream.push d.avg_stream[ date ]
@@ -258,57 +257,12 @@ $ ->
 
   $("#for_research").change ->
     for_research = $("#for_research").val( )
-    $("[id$='_panel']").each ->
-      subject_select = $(this).parents("form").find("#subject")
-      chart_num = parseInt($(this).find(".chart").attr("chart_num"))
-      detail_container = $(this).find("#detail_container")
-      unit_of_analysis = $(this).find("#unit_of_analysis").val()
-      assessment = $(this).find("#assessment").val()
-      subject = $(this).find("#subject").val()
-      data_processing = $(this).find("#data_processing").val()
-      if assessment isnt "-1"
-        url = "subjects/" + unit_of_analysis + "/" + assessment + "/" + for_research
-        $.getJSON url, (data) ->
-          i = undefined
-          newOption = undefined
-          $(subject_select).empty()
-          $(subject_select).refresh
-          i = 0
-          while i < data.subjects.length
-            newOption = "<option value=" + data.subjects[i][1] + ">" + data.subjects[i][0] + "</option>"
-            $(subject_select).append newOption
-            i++
-          $(subject_select).selectmenu 'refresh', true
-        if subject isnt "-1"
-          url = "data/" + unit_of_analysis + "/" + subject + "/" + assessment + "/" + data_processing + "/" + for_research
-          window.charts[chart_num].showLoading()
-          $.getJSON url, (data) ->
-            chart = window.charts[chart_num]
-            index = 0
-            chart.series[index].remove()  while index < chart.series.length
-            chart.setTitle
-              text: data.details.name
-            ,
-              text: "Individual Data"
-  
-            index = 0
-            while index < data.series.length
-              chart.addSeries
-                name: data.series[index].label
-                data: data.series[index].data
-  
-              index++
-            
-            #Now let's handle the html bits
-            key_arr = Object.keys(data.details)
-            index = 0
-            text = "<h3>Details and Statistics:</h3><UL>"
-            while index < key_arr.length
-              text += "<LI>" + key_arr[index] + ":" + data.details[key_arr[index]] + "</LI>"
-              index++
-            text += "</ul>"
-            $(detail_container).html text
-            chart.hideLoading()
+    if for_research
+      if confirm 'Setting this will remove all existing charts.'
+        d3.selectAll( 'svg' ).remove
+        
+      else
+        $("#for_research").val( true )
   
   $(".submitting_select").change ->
     chart_div = $(this).parents("form").find("#graph_div")

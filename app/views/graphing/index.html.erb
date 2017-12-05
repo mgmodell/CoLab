@@ -6,7 +6,8 @@
   <% anonymize = @current_user.anonymize? %>
   <div data-role="fieldcontain">
     <label for="for_research" style="align:right">Consenting users only?</label>
-    <select name="for_research" id="for_research" data-role="slider" data-mini="true" >
+    <select name="for_research" id="for_research" data-role="slider"
+            data-mini="true" <%= anonymize ? 'disabled' : '' %> >
       <option value="true"><%= t 'simple_form.yes' %></option>
       <option value="false" selected><%= t 'simple_form.no' %></option>
     </select>
