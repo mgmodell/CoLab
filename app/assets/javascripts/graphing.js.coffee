@@ -156,11 +156,11 @@ unitOfAnalysisOpts =
                 if(!avg_val?)then avg_val = 
                   sum: 0
                   count: 0
-                  date: value.close_date
+                  date: value.date
                   factor_id: factor_id
                 avg_val[ 'sum' ] = avg_val[ 'sum' ] + value.value
                 avg_val[ 'count' ] = avg_val[ 'count' ] + 1
-                factor_avg[ value.close_date ] = avg_val
+                factor_avg[ value.date ] = avg_val
                 data.factors[ factor_id ][ 'avg_stream' ] = factor_avg
 
         for factor_id, factor_coll of data.factors
