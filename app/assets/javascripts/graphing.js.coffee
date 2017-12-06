@@ -257,12 +257,13 @@ $ ->
 
   $("#for_research").change ->
     for_research = $("#for_research").val( )
+    console.log for_research
     if for_research
       if confirm 'Setting this will remove all existing charts.'
         d3.selectAll( 'svg' ).remove
         
-      else
-        $("#for_research").val( true )
+    else
+      $("#for_research").val( true )
   
   $(".submitting_select").change ->
     chart_div = $(this).parents("form").find("#graph_div")
