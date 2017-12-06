@@ -28,18 +28,17 @@ class GraphingController < ApplicationController
     anonymize = @current_user.anonymize? || @current_user.is_researcher? || anon_req
     projects = []
     if @current_user.admin || @current_user.is_researcher?
-      project_list = Project.all( ).to_a
+      project_list = Project.all.to_a
     else
-      project_list = Project.joins( course: :rosters )
-                    .where( 'rosters.user': @current_user,
-                           'rosters.role': Roster.roles[ :instructor ])
-                    .uniq.to_a
+      project_list = Project.joins(course: :rosters)
+                            .where('rosters.user': @current_user,
+                                   'rosters.role': Roster.roles[:instructor])
+                            .uniq.to_a
     end
-    project_list.collect! {|project| {id: project.id, name: project.get_name( anonymize ) } }
+    project_list.collect! { |project| { id: project.id, name: project.get_name(anonymize) } }
     respond_to do |format|
       format.json { render json: project_list }
     end
-
   end
 
   # Support the app by providing the subject instances
