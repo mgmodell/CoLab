@@ -22,12 +22,33 @@ class GraphingController < ApplicationController
     end
   end
 
+  def projects
+    for_research = params[:for_research] == 'true' ? true : false
+    anon_req = params[:anonymous] == 'true' ? true : false
+    anonymize = @current_user.anonymize? || @current_user.is_researcher? || anon_req
+    projects = []
+    if @current_user.admin || @current_user.is_researcher?
+      project_list = Project.all( ).to_a
+    else
+      project_list = Project.joins( course: :rosters )
+                    .where( 'rosters.user': @current_user,
+                           'rosters.role': Roster.roles[ :instructor ])
+                    .uniq.to_a
+    end
+    project_list.collect! {|project| {id: project.id, name: project.get_name( anonymize ) } }
+    respond_to do |format|
+      format.json { render json: project_list }
+    end
+
+  end
+
   # Support the app by providing the subject instances
   def subjects
     unit_of_analysis = params[:unit_of_analysis].to_i
     project_id = params[:project_id]
     for_research = params[:for_research] == 'true' ? true : false
-    anonymize = @current_user.anonymize?
+    anon_req = params[:anonymous] == 'true' ? true : false
+    anonymize = @current_user.anonymize? || anon_req
 
     subjects = []
     case unit_of_analysis
@@ -54,7 +75,8 @@ class GraphingController < ApplicationController
     project = Project.find(params[:project])
     subject = params[:subject]
     for_research = params[:for_research] == 'true' ? true : false
-    anonymize = @current_user.anonymize?
+    anon_req = params[:anonymous] == 'true' ? true : false
+    anonymize = @current_user.anonymize? || anon_req
 
     dataset = {
       unitOfAnalysis: nil,

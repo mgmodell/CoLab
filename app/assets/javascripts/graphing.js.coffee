@@ -8,6 +8,28 @@ $(document).bind 'mobileinit', ->
   $.mobile.ajaxEnabled = false
   return
 
+refreshProjects = ()->
+  for_research = $("#for_research").val( )
+  anonymous = $("#anonymous").val( )
+  url = "projects/" + for_research + '/' + anonymous
+  # Maybe do some loading thing here?
+  $.getJSON url, (data) ->
+    $( '#project' ).children('option:not(:first)').remove()
+    d3.selectAll( '#project' )
+      .append( 'option' )
+      .text( 'None selected' )
+      .attr( 'value',  -1 )
+    for option in data
+      d3.selectAll( '#project' )
+        .append( 'option' )
+        .text( option.name )
+        .attr( 'value', option.id )
+    $( '#subject' ).children('option:not(:first)').remove()
+    d3.selectAll( '#project' )
+      .append( 'option' )
+      .text( 'None selected' )
+      .attr( 'value',  -1 )
+
 #Line dotted line rendering function
 add_avg_line = ( target, d, color, dash_length, dash_partial,
                   class_list, x, y, parseTime, comments, toolTipDiv )->
@@ -241,7 +263,8 @@ $ ->
     unit_of_analysis = $(this).parents("form").find("#unit_of_analysis").val()
     project_id = $(this).val()
     for_research = $("#for_research").val()
-    url = "subjects/" + unit_of_analysis + "/" + project_id + "/" + for_research
+    anonymous = $("#anonymous").val()
+    url = "subjects/" + unit_of_analysis + "/" + project_id + "/" + for_research + '/' + anonymous
     $.getJSON url, (data) ->
       i = undefined
       newOption = undefined
@@ -255,16 +278,33 @@ $ ->
         i++
     $(subject_select).selectmenu 'refresh', true
 
-  $("#for_research").change ->
+  $("#for_research").on( 'slidestop', ->
     for_research = $("#for_research").val( )
-    console.log for_research
     if for_research
-      if confirm 'Setting this will remove all existing charts.'
-        d3.selectAll( 'svg' ).remove
-        
+      d3.selectAll( 'svg' ).remove( )
+      $( '.project_select' ).children( ).remove( )
+      option = document.createElement( 'option' )
+      option.text = 'Not Available'
+      $( '.project_select' ).add option
+      refreshProjects( )
     else
       $("#for_research").val( true )
+      refreshProjects( )
+
+  )
+  $("#anonymous").on( 'slidestop', ->
+    anonymous = $("#anonymous").val( )
+    if anonymous
+      d3.selectAll( 'svg' ).remove( )
+      $( '.project_select' ).children( ).remove( )
+      option = document.createElement( 'option' )
+      option.text = 'Not Available'
+      refreshProjects( )
+    else
+      $("#for_research").val( true )
+      refreshProjects( )
   
+  )
   $(".submitting_select").change ->
     chart_div = $(this).parents("form").find("#graph_div")
     toolTip = d3.select '.tooltip'
@@ -287,8 +327,9 @@ $ ->
     subject = $(this).parents("form").find("#subject").val()
     data_processing = $(this).parents("form").find("#data_processing").val()
     for_research = $("#for_research").val()
+    anonymous = $("#anonymous").val()
     if subject isnt "-1"
-      url = "data/" + unit_of_analysis + "/" + subject + "/" + project + "/" + for_research
+      url = "data/" + unit_of_analysis + "/" + subject + "/" + project + "/" + for_research + '/' + anonymous
       # Maybe do some loading thing here?
       $.getJSON url, (data) ->
 
