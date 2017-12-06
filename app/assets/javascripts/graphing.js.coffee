@@ -24,11 +24,10 @@ refreshProjects = ()->
         .append( 'option' )
         .text( option.name )
         .attr( 'value', option.id )
+    $( '#project' ).selectmenu( 'refresh' )
     $( '#subject' ).children('option:not(:first)').remove()
-    d3.selectAll( '#project' )
-      .append( 'option' )
-      .text( 'None selected' )
-      .attr( 'value',  -1 )
+    d3.selectAll( '#subject' )
+    $( '#subject' ).selectmenu( 'refresh' )
 
 #Line dotted line rendering function
 add_avg_line = ( target, d, color, dash_length, dash_partial,
