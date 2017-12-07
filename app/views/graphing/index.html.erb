@@ -1,33 +1,45 @@
 <p>Please use the panels below to visualise the data available for your students.</p>
-<% if @current_user.admin %>
+<!-- this styling is added to the png when it is downloaded -->
+<div id='crowbar-workspace' style='display: none'>
+</div>
+<% if @current_user.admin || @current_user.is_researcher? %>
   <% anonymize = @current_user.anonymize? %>
-  <div data-role="fieldcontain">
-    <label for="for_research" style="align:right">Consenting users only?</label>
-    <select name="for_research" id="for_research" data-role="slider" data-mini="true" >
-      <option value="true"><%= t 'simple_form.yes' %></option>
-      <option value="false" selected><%= t 'simple_form.no' %></option>
-    </select>
+  <div class="ui-grid-a">
+    <div class='ui-block-a'>
+      <label for="for_research" style="align:right">Consenting users only?</label>
+      <select name="for_research" id="for_research" data-role="slider"
+              data-mini="true" <%= ( anonymize || @current_user.is_researcher? ) ? 'disabled' : '' %> >
+        <option value="true" <%= (@current_user.is_researcher?) ?  'selected' : '' %> ><%= t 'simple_form.yes' %></option>
+        <option value="false"<%= (!@current_user.is_researcher?) ?  'selected' : '' %>><%= t 'simple_form.no' %></option>
+      </select>
+    </div>
+    <div class='ui-block-b'>
+      <label for="anonymous" style="align:right">Anonymize the results?</label>
+      <select name="anonymous" id="anonymous" data-role="slider"
+              data-mini="true" <%= ( anonymize || @current_user.is_researcher? ) ? 'disabled' : '' %> >
+        <option value="true" <%= (anonymize || @current_user.is_researcher?) ? 'selected' : '' %> ><%= t 'simple_form.yes' %></option>
+        <option value="false"<%= !(anonymize || @current_user.is_researcher?) ? 'selected' : '' %>><%= t 'simple_form.no' %></option>
+      </select>
+    </div>
   </div>
 <% end %>
-<% GraphingController::Unit_To_Processing.each_with_index do |unit,index| %>
-  <div name="<%= unit %>_panel" id="<%= unit %>_panel" data-role="collapsible" data-mini="true" data-inset="false">
-    <h3><%= unit[ 0 ] %></h3>
+<% GraphingController::Unit_Of_Analysis.each do |unit| %>
+  <div name="<%= t unit[ 0 ] %>_panel" id="<%= unit[ 1 ] %>_panel" data-role="collapsible" data-mini="true" data-inset="false">
+    <h3><%= t unit[ 0 ] %></h3>
     <%= form_tag do %>
-      <fieldset class="ui-grid-b">
+      <fieldset class="ui-grid-a">
         <div class="ui-block-a">
-          <%= hidden_field_tag( :unit_of_analysis, unit[ 0 ] ) %>
+          <%= hidden_field_tag( :unit_of_analysis, unit[ 1 ] ) %>
+          <%= hidden_field_tag( :local_chart,  "#{unit[ 0 ]}_graph" ) %>
           <%= label_tag(:assessment, t('.which')) %>
         </div>
         <div class="ui-block-b">
           <%= label_tag(:subject, t('.who' ))%>
         </div>
-        <div class="ui-block-c">
-          <%= label_tag( :data_processing, t('.what_data')) %>
-        </div>
       </fieldset>
-      <fieldset class="ui-grid-b">
+      <fieldset class="ui-grid-a">
         <div class="ui-block-a">
-	<% projects = @current_users_projects.collect{ |project| [project.get_name( anonymize ), project.id] }
+	<% projects = @current_users_projects.collect{ |project| [project.get_name( anonymize || @current_user.is_researcher? ), project.id] }
 	projects.insert( 0, [ t( :none_selected ), -1] ) %>
           <%= select_tag :project, 
             options_for_select( projects ) ,
@@ -38,14 +50,8 @@
           <%= select_tag :subject, options_for_select( [ [ t(:not_available), -1] ] ),
             :data => {:mini => true}, :class => "submitting_select" %>
         </div>
-        <div class="ui-block-c">
-          <%= select_tag :data_processing, options_for_select( unit[ 1 ] ),
-            :data => {:mini => true}, :class => "submitting_select" %>
-        </div>
       </fieldset>
-      <div id="chart_container_<%= index %>" name="chart_container_<%= index %>"
-        class="chart" style="width: 100%; height: 400px" chart_num="<%= index %>"></div>
-      <div id="detail_container"></div>
+      <div id="graph_div"></div>
     <% end %>
   </div>
 <% end %>

@@ -50,6 +50,8 @@ en:
   start_date: Start Date
   close_date: Close Date
   completion_date: Completion Date
+  individual: Individual
+  group: Group
   type: Type
   expired: Expired
   bingo_game: Bingo! Game
@@ -110,7 +112,7 @@ en:
   summary_body: >
     Below is your students' completion report from the task %{task_name} in the
     course %{course_name} which recently completed at %{site_link}.
-  enrolled_student:
+  enrolled_students:
     one: There is only one student enrolled in the course.
     other: There are %{count} students enrolled in the course.
   email_close: Thank you!
@@ -135,6 +137,13 @@ en:
   instructors: Instructors
   students: Students
   student: Student
+  #roles
+  instructor: instructor
+  assistant: assistant
+  enrolled_student: enrolled student
+  invited_student: invited student
+  declined_student: declined student
+  dropped_student: dropped student
   no_projects: No projects
   exps: Experiences
   terms_lists: Terms Lists

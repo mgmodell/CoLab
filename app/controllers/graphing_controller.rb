@@ -1,225 +1,6 @@
 # frozen_string_literal: true
 class GraphingController < ApplicationController
-  Unit_To_Processing = [['Individual', ['Summary', 'Summary By Behavior', 'All Data']],
-                        ['Group', ['Summary']],
-                        ['Raw Data', ['Comments']]].freeze
-
-  # Support the app by providing the subject instances
-  def subjects
-    unit_of_analysis = params[:unit_of_analysis]
-    project_id = params[:project_id]
-    for_research = params[:for_research] == 'true' ? true : false
-    anonymize = @current_user.anonymize?
-
-    @subjects = []
-    case unit_of_analysis
-    when 'Individual', 'Raw Data'
-      if for_research
-        @subjects = User.joins(:consent_logs, :projects)
-                        .where(consent_logs: { accepted: true }, projects: { id: project_id })
-                        .collect { |user| [user.name(anonymize), user.id] }
-      else
-        @subjects = Project.find(project_id).users.collect { |user| [user.name(anonymize), user.id] }
-      end
-    when 'Group'
-      @subjects = Project.find(project_id).groups.collect { |group| [group.get_name(anonymize), group.id] }
-
-    end
-    # Return the retrieved data
-    respond_to do |format|
-      format.json
-    end
-  end
-
-  # Retrieve all the reported values relating to the
-  # specified user and hash them up by Installment.
-  def pull_and_organise_user_data(user_id, project_id, for_research = false)
-    # for_research = @current_user.anonymize?
-    values = []
-    if for_research
-      values = Value.includes(:user, :factor, installment: [:assessment, :user])
-                    .joins(user: { consent_logs: { consent_form: :project } },
-                           installment:  :assessment)
-                    .where(consent_logs: { accepted: true },
-                           user_id: user_id,
-                           installments: { user_id: User.consented_to_project(project_id) },
-                           projects: { id: project_id })
-                    .order('installments.inst_date DESC')
-    else
-      values = Value.includes(:user, :factor, installment: [:assessment, :user])
-                    .joins(installment: :assessment)
-                    .where(user_id: user_id, assessments: { project_id: project_id })
-                    .order('installments.inst_date DESC')
-    end
-
-    assessment_to_values = {}
-    values.each do |value|
-      if assessment_to_values[value.installment.assessment].nil?
-        assessment_to_values[value.installment.assessment] = [value]
-      else
-        assessment_to_values[value.installment.assessment] << value
-      end
-    end
-    assessment_to_values
-  end
-
-  def individual_summary_data(user, project_id, for_research = false)
-    anonymize = @current_user.anonymize?
-    assessment_to_values = pull_and_organise_user_data(user.id, project_id, for_research)
-    data = []
-    sequential = assessment_to_values.keys.sort_by(&:start_date)
-    sequential.each do |assessment|
-      values = assessment_to_values[assessment]
-      data << { x: values[0].created_at.to_i * 1000,
-                y: values.inject(0) { |sum, value| sum + value.value }.to_f / values.size,
-                name: values.map { |x| x.installment.prettyComment(anonymize) }.join("</br>\n") }
-    end
-    series = {}
-    series.store('data', data)
-    series.store('label', user.name(anonymize))
-    series
-  end
-
-  #
-  # The graphing data is provided as a JSON object containing:
-  # data_series
-  #   data - an array of [date, value] arrays.
-  #   label - name for the series represented by 'data'
-  # detail_hash - any relevant data to be dispayed with the set
-  # of series.
-  def data
-    unit_of_analysis = params[:unit_of_analysis]
-    data_processing = params[:data_processing]
-    project = Project.find(params[:project])
-    subject = params[:subject]
-    for_research = params[:for_research] == 'true' ? true : false
-    anonymize = @current_user.anonymize?
-
-    # TODO: - validate that the user has access to the requested data
-    @data_series = []
-    @detail_hash = {}
-
-    # Do we have any business getting this data?
-    if current_user.is_admin? || @current_user.rosters.instructor.count > 0
-
-      # Retrieve the requested data
-      case unit_of_analysis
-      when 'Individual'
-        user = User.find(subject.to_i)
-        @detail_hash.store('name', user.name(anonymize))
-
-        case data_processing
-        when 'Summary'
-          series = individual_summary_data(user, project.id)
-          @data_series << series
-        when 'All Data'
-          assessment_to_values = pull_and_organise_user_data(user.id, project.id, for_research)
-          data_hash = {}
-          sequential = assessment_to_values.keys.sort_by(&:start_date)
-          sequential.each do |assessment|
-            values = assessment_to_values[assessment]
-            values.each do |value|
-              series = data_hash[value.factor.id.to_s + '_' + value.installment.user_id.to_s]
-              if series.nil?
-                series = {}
-                series.store('label', value.factor.name + ' by ' + value.installment.user.name(anonymize))
-              end
-              series_data = series['data']
-              series_data = [] if series_data.nil?
-              series_data << { x: value.created_at.to_i * 1000,
-                               y: value.value,
-                               name: value.installment.prettyComment(anonymize) }
-              series.store('data', series_data)
-              data_hash.store(value.factor.id.to_s + '_' + value.installment.user_id.to_s, series)
-            end
-          end
-          @data_series = data_hash.values
-        when 'Summary By Behavior'
-          assessment_to_values = pull_and_organise_user_data(user.id, project.id, for_research)
-          data_hash = {}
-          # Begin by sorting by date to group all the categories properly
-          sequential = assessment_to_values.keys.sort_by(&:start_date)
-          sequential.each do |assessment|
-            values = assessment_to_values[assessment]
-            values.each do |value|
-              series = data_hash[value.factor.id.to_s]
-              if series.nil?
-                series = {}
-                series.store('label', value.factor.name)
-              end
-              series_data = series['data']
-              series_data = [] if series_data.nil?
-              series_data << { x: value.installment.assessment.start_date.to_time.to_i * 1000,
-                               y: value.value,
-                               name: value.installment.prettyComment(anonymize) }
-
-              # collapsed_series_data << [ date, tmp.inject{|sum,el| sum + el[1] }.to_f / tmp.size ]
-              series.store('data', series_data)
-              data_hash.store(value.factor.id.to_s, series)
-            end
-          end
-          data_hash.each_pair do |_key, value|
-            tmp = []
-            date = value['data'][0][:x]
-            new_collapsed_data = []
-            value['data'].each do |v|
-              if v[:x] != date
-                comments = value['data'].uniq.collect { |datum| datum[:name] + "\n" }.join('</br>')
-                new_collapsed_data << { x: date,
-                                        y: tmp.inject { |sum, el| sum + el }.to_f / tmp.size,
-                                        name: comments }
-                date = v[:x]
-                tmp = []
-               end
-              tmp << v[:y]
-            end
-            value['data'] = new_collapsed_data
-          end
-          @data_series = data_hash.values
-        end
-      when 'Group'
-        group = Group.find(subject.to_i)
-        @detail_hash.store('name', group.get_name(anonymize))
-
-        case data_processing
-        when 'Summary'
-          group.users.each do |user|
-            @data_series << individual_summary_data(user, project.id)
-          end
-        end
-      when 'Raw Data'
-        user = User.confirmed.find(subject.to_i)
-        @detail_hash.store('name', user.name(anonymize))
-
-        case data_processing
-        when 'Comments'
-          installments = Installment.joins(:assessment)
-                                    .where(user_id: subject.to_i, assessment: assessment)
-          @data = installments
-          respond_to do |format|
-            format.csv do
-              if anonymize
-                headers['Content-Disposition'] = "attachment; filename=\"#{user.anon_last_name}_#{user.anon_first_name}.csv\""
-              else
-                headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
-              end
-              headers['Content-Type'] ||= 'text/csv'
-            end
-          end
-        end
-      end
-    else
-      @data_series = { 'label' => 'Restricted', 'data' => [] }
-      @detail_hash.store('name', 'Restricted: You do not have permission to access this data')
-    end
-
-    # Other stuff here
-
-    # Return the retrieved data
-    respond_to do |format|
-      format.json
-    end
-  end
+  Unit_Of_Analysis = { individual: 1, group: 2 }.freeze
 
   def index
     @title = 'Reports'
@@ -238,6 +19,199 @@ class GraphingController < ApplicationController
       return @current_users_projects
     else
       redirect_to root_url
+    end
+  end
+
+  def projects
+    for_research = params[:for_research] == 'true' ? true : false
+    anon_req = params[:anonymous] == 'true' ? true : false
+    anonymize = @current_user.anonymize? || @current_user.is_researcher? || anon_req
+    projects = []
+    if @current_user.admin || @current_user.is_researcher?
+      project_list = Project.all.to_a
+    else
+      project_list = Project.joins(course: :rosters)
+                            .where('rosters.user': @current_user,
+                                   'rosters.role': Roster.roles[:instructor])
+                            .uniq.to_a
+    end
+    project_list.collect! { |project| { id: project.id, name: project.get_name(anonymize) } }
+    respond_to do |format|
+      format.json { render json: project_list }
+    end
+  end
+
+  # Support the app by providing the subject instances
+  def subjects
+    unit_of_analysis = params[:unit_of_analysis].to_i
+    project_id = params[:project_id]
+    for_research = params[:for_research] == 'true' ? true : false
+    anon_req = params[:anonymous] == 'true' ? true : false
+    anonymize = @current_user.anonymize? || anon_req
+
+    subjects = []
+    case unit_of_analysis
+    when Unit_Of_Analysis[:individual]
+      if for_research
+        subjects = User.joins(:consent_logs, :projects)
+                       .where(consent_logs: { accepted: true }, projects: { id: project_id })
+                       .collect { |user| [user.name(anonymize), user.id] }
+      else
+        subjects = Project.find(project_id).users.collect { |user| [user.name(anonymize), user.id] }
+      end
+    when Unit_Of_Analysis[:group]
+      subjects = Project.find(project_id).groups.collect { |group| [group.get_name(anonymize), group.id] }
+
+    end
+    # Return the retrieved data
+    respond_to do |format|
+      format.json { render json: subjects }
+    end
+  end
+
+  def data
+    unit_of_analysis = params[:unit_of_analysis].to_i
+    project = Project.find(params[:project])
+    subject = params[:subject]
+    for_research = params[:for_research] == 'true' ? true : false
+    anon_req = params[:anonymous] == 'true' ? true : false
+    anonymize = @current_user.anonymize? || anon_req
+
+    dataset = {
+      unitOfAnalysis: nil,
+      comments: {},
+      project_name: project.get_name(anonymize),
+      project_id: project.id,
+      start_date: project.start_date,
+      end_date: project.end_date,
+      streams: {}
+    }
+    comments = dataset[:comments]
+    streams = dataset[:streams]
+    # Security checks
+    if @current_user.is_admin? ||
+       project.course.instructors.includes(@current_user)
+      # Start pulling data
+
+      case unit_of_analysis
+      when Unit_Of_Analysis[:individual]
+        dataset[:unitOfAnalysis] = I18n.t(:individual)
+        dataset[:unitOfAnalysisCode] = 'i'
+        user = User.find subject
+        dataset[:subject_id] = user.id
+        dataset[:subject] = user.informal_name(anonymize)
+        values = Value.joins(installment: :assessment)
+                      .where('assessments.project_id': project, user: user)
+                      .includes(:factor, installment: [:user, :group])
+                      .order('installments.inst_date')
+
+        values.each do |value|
+          group_vals = streams[value.installment.group_id]
+          if group_vals.nil?
+            group_vals = { target_name: value.installment.group.get_name(anonymize),
+                           target_id: value.installment.group_id,
+                           sub_streams: {} }
+          end
+          user_stream = group_vals[:sub_streams][value.installment.user_id]
+          if user_stream.nil?
+            user_stream = { assessor_id: value.installment.user_id,
+                            assessor_name: value.installment.user.informal_name(anonymize),
+                            factor_streams: {} }
+            group_vals[:sub_streams][value.installment.user_id] = user_stream
+          end
+          factor_stream = user_stream[:factor_streams][value.factor_id]
+          if factor_stream.nil?
+            factor_stream = { factor_name: value.factor.name,
+                              factor_id: value.factor_id,
+                              values: [] }
+            user_stream[:factor_streams][value.factor_id] = factor_stream
+          end
+          factor_stream[:values] << {
+            assessment_id: value.installment.assessment_id,
+            installment_id: value.installment_id,
+            date: value.installment.inst_date,
+            value: value.value
+          }
+          streams[value.installment.group_id] = group_vals
+
+          comments[value.installment_id] = {
+            comment: value.installment.prettyComment(anonymize),
+            commentor: value.installment.user.name(anonymize)
+          }
+        end
+
+      when Unit_Of_Analysis[:group]
+        dataset[:unitOfAnalysis] = I18n.t(:group)
+        dataset[:unitOfAnalysisCode] = 'g'
+        group = Group.find subject
+        dataset[:subject] = group.get_name(anonymize)
+        values = Value.joins(installment: :assessment)
+                      .where('assessments.project_id': project,
+                             'installments.group_id': group)
+                      .includes(:user, :factor, installment: :user)
+                      .order('installments.inst_date')
+
+        values.each do |value|
+          user_vals = streams[value.user_id]
+          if user_vals.nil?
+            user_vals = { target_name: value.user.name(anonymize),
+                          target_id: value.user_id,
+                          sub_streams: {} }
+          end
+          user_stream = user_vals[:sub_streams][value.installment.user_id]
+          if user_stream.nil?
+            user_stream = { assessor_id: value.installment.user_id,
+                            assessor_name: value.installment.user.informal_name(anonymize),
+                            factor_streams: {} }
+            user_vals[:sub_streams][value.installment.user_id] = user_stream
+          end
+          factor_stream = user_stream[:factor_streams][value.factor_id]
+          if factor_stream.nil?
+            factor_stream = { factor_name: value.factor.name,
+                              factor_id: value.factor_id,
+                              values: [] }
+            user_stream[:factor_streams][value.factor_id] = factor_stream
+          end
+          factor_stream[:values] << {
+            assessment_id: value.installment.assessment_id,
+            installment_id: value.installment_id,
+            date: value.installment.inst_date,
+            close_date: value.installment.assessment.end_date,
+            factor: value.factor.name,
+            value: value.value
+          }
+          streams[value.user_id] = user_vals
+
+          comments[value.installment_id] = {
+            comment: value.installment.prettyComment(anonymize),
+            commentor: value.installment.user.name(anonymize)
+          }
+        end
+      end
+    end
+
+    factors = {}
+    users = {}
+    dataset[:streams].values.each do |stream|
+      stream[:sub_streams].values.each do |substream|
+        users[substream[:assessor_id]] = {
+          name: substream[:assessor_name],
+          id: substream[:assessor_id]
+        }
+        substream[:factor_streams].values.each do |factor_stream|
+          factors[factor_stream[:factor_id]] = {
+            name: factor_stream[:factor_name],
+            id: factor_stream[:factor_id]
+          }
+        end
+      end
+    end
+    dataset[:users] = users
+    dataset[:factors] = factors
+
+    # Return the retrieved data
+    respond_to do |format|
+      format.json { render json: dataset }
     end
   end
 

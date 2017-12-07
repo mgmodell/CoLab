@@ -25,9 +25,9 @@
     <div id="participants" class="ui-body-<%= theme_code %> ui-content">
       <h2>Rosters</h2>
       <% @course.rosters.students.each do |roster| %>
-        <%= roster.user.name( anonymize ) %> <i><%= mail_to
-        roster.user.email unless anonymize %></i> (<%=
-        roster.role.humanize %> )<br>
+        <%= roster.user.name( anonymize ) %>
+        <i><%= mail_to roster.user.email unless anonymize %></i>
+        (<%= t roster.role.humanize %> )<br>
       <% end %>
         <table data-role="table"
           id="basicTable"
@@ -78,7 +78,7 @@
           <%= roster.user.get_assessment_performance( course_id: @course.id) %>%
         </td>
         <td>
-          <%= roster.role.humanize %>
+          <%= t roster.role.humanize %>
         </td>
         <td><%= link_to( t( 'courses.re_invite' ),
               re_invite_student_path( roster.user ) ) unless roster.role.enrolled_student? %>&nbsp;|&nbsp;

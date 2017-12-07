@@ -15,12 +15,8 @@ class Installment < ActiveRecord::Base
   TOTAL_VAL = 6000.0
 
   # Support inclusion of comments
-  def prettyComment(anonymize = false)
-    if comments.blank?
-      user.name(anonymize) + ': <no comment>'
-    else
-      user.name(anonymize) + ': ' + comments
-    end
+  def prettyComment(_anonymize = false)
+    comments.blank? ? '<no comment>' : comments
   end
 
   def value_for_user_factor(user, factor)
@@ -73,7 +69,7 @@ class Installment < ActiveRecord::Base
         if prelim.nan? 
           v.value = ( Installment::TOTAL_VAL / v.installment.values.count ).round
         else
-          v.value = ((Installment::TOTAL_VAL * v.value) / total).round
+          v.value = prelim.round
         end
       end
 

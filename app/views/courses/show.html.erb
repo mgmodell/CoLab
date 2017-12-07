@@ -118,7 +118,7 @@
           <%= roster.user.get_assessment_performance( course_id: @course.id) %>%
         </td>
         <td>
-          <%= roster.role.humanize %>
+          <%= t roster.role.humanize %>
         </td>
         <td><%= link_to( t( 'courses.re_invite' ),
         re_invite_student_path( roster.user ) ) unless roster.enrolled_student? %>&nbsp;|&nbsp;
