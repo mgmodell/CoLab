@@ -279,28 +279,37 @@ $ ->
 
   $("#for_research").on( 'slidestop', ->
     for_research = $("#for_research").val( )
-    if for_research
-      d3.selectAll( 'svg' ).remove( )
-      $( '.project_select' ).children( ).remove( )
-      option = document.createElement( 'option' )
-      option.text = 'Not Available'
-      $( '.project_select' ).add option
-      refreshProjects( )
+    if for_research is 'true'
+      if confirm ( 'This will remove all the charts below. Are you sure?' )
+        d3.selectAll( 'svg' ).remove( )
+        $( '.project_select' ).children( ).remove( )
+        option = document.createElement( 'option' )
+        option.text = 'Not Available'
+        $( '.project_select' ).add option
+        refreshProjects( )
+      else
+        $("#for_research").val( 'false' )
+        $("#for_research").slider( 'refresh' )
     else
-      $("#for_research").val( true )
+      $("#for_research").val( 'false' )
       refreshProjects( )
 
   )
   $("#anonymous").on( 'slidestop', ->
     anonymous = $("#anonymous").val( )
-    if anonymous
-      d3.selectAll( 'svg' ).remove( )
-      $( '.project_select' ).children( ).remove( )
-      option = document.createElement( 'option' )
-      option.text = 'Not Available'
-      refreshProjects( )
+    if anonymous is 'true'
+      if confirm ( 'This will remove all the charts below. Are you sure?' )
+        d3.selectAll( 'svg' ).remove( )
+        $( '.project_select' ).children( ).remove( )
+        option = document.createElement( 'option' )
+        option.text = 'Not Available'
+        refreshProjects( )
+      else
+        $("#anonymous").val( 'false' )
+        $("#anonymous").slider( 'refresh' )
+        
     else
-      $("#for_research").val( true )
+      $("#anonymous").val( 'false' )
       refreshProjects( )
   
   )
