@@ -45,7 +45,7 @@ rect_it = (element, outline, fill, x1, y1, x2, y2)->
     )
     .curve(d3.curveLinearClosed)
 
-  element.append( 'path' )
+  rect = element.append( 'path' )
     .datum( coords )
     .attr( 'fill', fill )
     .attr( 'stroke', outline )
@@ -53,6 +53,7 @@ rect_it = (element, outline, fill, x1, y1, x2, y2)->
     .attr( 'stroke-linecap', 'round' )
     .attr( 'stroke-width', 1 )
     .attr( 'd', raw_line )
+  return rect
 
 #Line dotted line rendering function
 add_avg_line = ( target, d, color, dash_length, dash_partial,
@@ -249,13 +250,6 @@ unitOfAnalysisOpts =
               line_func chart_elem, factor_stream.values, color, user_count, 
                         user_index, class_id, xFcn, yFcn, parseTimeFcn, 
                         comments, toolTipDiv
-    ab: 
-      code: 'ab'
-      name: 'Average by Behavior'
-      line_proc: add_avg_line
-      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
-            yFcn, parseTimeFcn, comments, toolTipDiv )->
-            
     am: 
       code: 'am'
       name: 'Average by Member'
@@ -388,7 +382,9 @@ $ ->
           .attr( 'version', 1.1)
           .attr( 'xmlns', 'http://www.w3.org/2000/svg' )
 
-        rect_it( chart, 'white', 'white', 0, 0, targetWidth, height )
+
+        bg_color = rect_it( chart, 'white', 'white', 0, 0, targetWidth, height )
+
         g = chart.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
           .attr('width', '90%' )
@@ -763,6 +759,9 @@ $ ->
               .attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
 
             scaleFactor = ( targetWidth - margin.right - margin.left ) / xStretch.attr( 'original_width' )
+            bg_color
+              .attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0)')
+
             d3.selectAll( '.hData' ).each( (d)->
               obj = d3.select this
               originalWidth = obj.attr( 'original_width' )
