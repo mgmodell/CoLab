@@ -148,7 +148,7 @@ class GraphingController < ApplicationController
         values = Value.joins(installment: :assessment)
                       .where('assessments.project_id': project,
                              'installments.group_id': group)
-                      .includes(:user, :factor, installment: :user)
+                      .includes(:user, :factor, installment: [:user, :assessment] )
                       .order('installments.inst_date')
 
         values.each do |value|

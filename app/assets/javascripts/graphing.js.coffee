@@ -29,6 +29,31 @@ refreshProjects = ()->
     d3.selectAll( '#subject' )
     $( '#subject' ).selectmenu( 'refresh' )
 
+# Hack to transform a rectangles coordinates to a line
+rect_it = (element, outline, fill, x1, y1, x2, y2)->
+  coords = [ ]
+  coords.push( { x: x1, y: y1 } )
+  coords.push( { x: x1, y: y2 } )
+  coords.push( { x: x2, y: y2 } )
+  coords.push( { x: x2, y: y1 } )
+  raw_line = d3.line( )
+    .x( (d)->
+       d.x
+    )
+    .y( (d)->
+       d.y
+    )
+    .curve(d3.curveLinearClosed)
+
+  element.append( 'path' )
+    .datum( coords )
+    .attr( 'fill', fill )
+    .attr( 'stroke', outline )
+    .attr( 'stroke-linejoin', 'round' )
+    .attr( 'stroke-linecap', 'round' )
+    .attr( 'stroke-width', 1 )
+    .attr( 'd', raw_line )
+
 #Line dotted line rendering function
 add_avg_line = ( target, d, color, dash_length, dash_partial,
                   class_list, x, y, parseTime, comments, toolTipDiv )->
@@ -104,6 +129,7 @@ add_dotted_line = ( target, d, color, dash_length, dash_partial,
     .attr( 'stroke-width', 2 )
     .on( 'mouseover', (d)->
       tip_text = ''
+      #TODO: Move comments to their own, centered panel
       if comments[ d.installment_id ][ 'comment' ] != '<no comment>'
         tip_text = '<strong>' + comments[ d.installment_id ][ 'commentor' ] + ':</strong>'
         tip_text += comments[ d.installment_id ][ 'comment' ]
@@ -362,6 +388,7 @@ $ ->
           .attr( 'version', 1.1)
           .attr( 'xmlns', 'http://www.w3.org/2000/svg' )
 
+        rect_it( chart, 'white', 'white', 0, 0, targetWidth, height )
         g = chart.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
           .attr('width', '90%' )
@@ -442,14 +469,10 @@ $ ->
           .attr( 'factorLegendWidth', factor_legend_width )
           .attr( 'opacity', .7 )
 
-        factor_legend.append( 'rect' )
-          .attr( 'x', 0 )
-          .attr( 'y', 0 )
-          .attr( 'width', factor_legend_width )
-          .attr( 'height', lbh * factor_legend_rows )
-          .attr( 'stroke', 'black' )
-          .attr( 'stroke-width', 2 )
-          .style( 'fill', 'white' )
+        # below is a hack for rectangles because crowbar (svg export) seems
+        # not to like them.
+        rect_it( factor_legend, 'black', 'oldlace', 0, 0, factor_legend_width, ( factor_legend_rows * lbh ) )
+
 
         for key, index in Object.keys( data.factors )
           index_off = Number( index )
@@ -473,14 +496,7 @@ $ ->
           .attr( 'userLegendWidth', user_legend_width )
           .attr( 'opacity', .7 )
 
-        user_legend.append( 'rect' )
-          .attr( 'x', 0 )
-          .attr( 'y', 0 )
-          .attr( 'width', user_legend_width )
-          .attr( 'height', lbh * user_legend_rows )
-          .attr( 'stroke', 'black' )
-          .attr( 'stroke-width', 2 )
-          .style( 'fill', 'white' )
+        rect_it( user_legend, 'black', 'oldlace', 0, 0, user_legend_width, ( user_legend_rows * lbh ) )
 
         for key, index in Object.keys( data.users )
           index_off = Number( index )
@@ -536,16 +552,19 @@ $ ->
           .attr( 'transform', 'translate( 0, 45)')
           .on( 'click', () ->
             # from http://bl.ocks.org/deanmalmgren/22d76b9c1f487ad1dde6
-            svg_el = chart
-              .node( )
+            # Add a warning because of crowbar strangeness
+            warning_msg = 'This chart download function is experimental.'
+            warning_msg += 'You may need to reload the chart afterwards. Proceed?'
+            if confirm( warning_msg )
+              svg_el = chart
+                .node( )
 
-            svg_crowbar( chart.node( ),
-              filename: data.project_name + '_' + data.subject + '.png',
-              width: targetWidth,
-              height: height,
-              crowbar_el: d3.select( '#crowbar-workspace' ).node( )
-            )
-
+              svg_crowbar( chart.node( ),
+                filename: data.project_name + '_' + data.subject + '.png',
+                width: targetWidth,
+                height: height,
+                crowbar_el: d3.select( '#crowbar-workspace' ).node( )
+              )
           )
         export_button.append( 'circle' )
           .attr( 'cx', 0 )
@@ -553,20 +572,9 @@ $ ->
           .attr( 'r', 17 )
           .style( 'stroke', 'red' )
           .style( 'fill', 'white' )
-        export_button.append( "rect" )
-          .attr( 'x', -2.5 )
-          .attr( 'y', -12 )
-          .attr( 'width', 5 )
-          .attr( 'height', 17 )
-          .attr( 'stroke-width', 2 )
-          .style( 'fill', 'black' )
-        export_button.append( "rect" )
-          .attr( 'x', -9 )
-          .attr( 'y', 8 )
-          .attr( 'width', 18 )
-          .attr( 'height', 3 )
-          .attr( 'stroke-width', 2 )
-          .style( 'fill', 'black' )
+        rect_it( export_button, 'black', 'black', -2.5, -12, 2.5, 2 )
+
+        rect_it( export_button, 'black', 'black', -9, 8, 9, 11 )
 
         arrow_pts = [ { x: -8, y: -3 }, { x: 0, y: 6 }, { x: 8, y: -3 } ]
         arrow_line = d3.line( )
@@ -591,13 +599,23 @@ $ ->
           .attr( 'transform', 'translate( 0, 100)')
 
         #Create the output beam
-        focus_button.append( "rect" )
-          .attr( 'x', -23 )
-          .attr( 'y', -1.5 )
-          .attr( 'width', 25 )
-          .attr( 'height', 3 )
+        arrow_pts = [ { x: -40, y: 0 }, { x: 0, y: -1.5 }, { x: 0, y: 1.5 } ]
+        arrow_line = d3.line( )
+          .x( (d)->
+            return d.x
+          )
+          .y( (d)->
+            return d.y
+          )
+          .curve(d3.curveLinearClosed)
+        focus_button.append( 'path' )
+          .datum( arrow_pts )
+          .attr( 'fill', 'orange' )
+          .attr( 'stroke-linejoin', 'round' )
+          .attr( 'stroke-linecap', 'round' )
           .attr( 'stroke-width', 1 )
-          .style( 'fill', 'orange' )
+          .attr( 'd', arrow_line )
+
 
         #Create the rainbow coming in
         π = Math.PI
