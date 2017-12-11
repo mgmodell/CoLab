@@ -4,7 +4,7 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <h1><%= t :greeting_unknown %><h1>
+    <h1><%= t :greeting_unknown %> </h1>
     <p>
       <%= t :course_invite_body, count: @user.rosters.count %>
     </P>
@@ -16,8 +16,7 @@
     <P>
       <%= raw( t :course_invite_close, link_to( t( :title ), root_url ) ) %>
     </p>
-          
     <P><%= t :email_close %></p>
     <P><%= t :support_formal %></p>
-    </body>
-  </html>
+  </body>
+</html>

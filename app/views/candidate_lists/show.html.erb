@@ -1,13 +1,13 @@
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
      anonymize = false %>
-  <table>
-    <tr>
-      <th align="right"><%= t 'bingo_games.topic' %>:</th>
-      <td><%= @candidate_list.bingo_game.get_topic( anonymize ) %></td>
-    </tr>
-    <tr>
-      <th align="right"><%= t 'bingo_games.date' %>:</th>
-      <td><%= l @candidate_list.bingo_game.end_date, format: :tz_clarity %>
+<table>
+  <tr>
+    <th align="right"><%= t 'bingo_games.topic' %>:</th>
+    <td><%= @candidate_list.bingo_game.get_topic( anonymize ) %></td>
+  </tr>
+  <tr>
+    <th align="right"><%= t 'bingo_games.date' %>:</th>
+    <td><%= l @candidate_list.bingo_game.end_date, format: :tz_clarity %>
     </tr>
   </table>
   <h2><%= t 'candidate_lists.terms' %></h2>
@@ -21,10 +21,10 @@
     </thead>
     <tbody>
       <% @candidate_list.bingo_game.concepts.uniq.each_with_index do |concept,index| %>
-      <tr id="concept">
-        <td><%= index %></td>
-        <td id="term"><%= concept.name %></td>
-      </tr>
+        <tr id="concept">
+          <td><%= index %></td>
+          <td id="term"><%= concept.name %></td>
+        </tr>
       <% end %>
     </tbody>
   </table>

@@ -29,10 +29,10 @@
         <td><%= concept.bingo_games.uniq.count %></td>
         <td><%= link_to t(:show), concept_path( concept ) %>&nbsp;|&nbsp;
         <%= link_to t(:edit), edit_concept_path(concept) %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<%= paginate @concepts %>
-<br>
-<%= link_to t('concepts.new.title'), new_concept_path %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= paginate @concepts %>
+  <br>
+  <%= link_to t('concepts.new.title'), new_concept_path %>

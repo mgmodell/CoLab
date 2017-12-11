@@ -17,30 +17,30 @@
     </div>
     <div id="games" class="ui-body-<%= theme_code %> ui-content">
       <h2><%= t 'concepts.courses' %></h2>
-<p>
-  <h3><%= t 'concepts.games' %></h3>
-  <% if @concept.bingo_games.count < 1 %>
-    <%= t 'concepts.no_games' %></br>
-  <% else %>
-    <table data-role="table"
+      <p>
+        <h3><%= t 'concepts.games' %></h3>
+        <% if @concept.bingo_games.count < 1 %>
+          <%= t 'concepts.no_games' %></br>
+      <% else %>
+        <table data-role="table"
           id="course_table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>"
           data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-      <thead>
-      <tr>
-        <th><%= t 'bingo_games.topic' %></th>
-        <th><%= t :name %></th>
-        <th><%= t :number %></th>
-        <th data-priority="0"><%= t :start_date %></th>
-        <th data-priority="0"><%= t :end_date %></th>
-        <th data-priority="1"><%= t :actions %></th>
-      </tr>
-      </thead>
-      <tbody>
-          <% @concept.bingo_games.uniq.each do |game| %>
+          <thead>
             <tr>
+              <th><%= t 'bingo_games.topic' %></th>
+              <th><%= t :name %></th>
+              <th><%= t :number %></th>
+              <th data-priority="0"><%= t :start_date %></th>
+              <th data-priority="0"><%= t :end_date %></th>
+              <th data-priority="1"><%= t :actions %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @concept.bingo_games.uniq.each do |game| %>
+              <tr>
                 <td><%= link_to game.topic, game %></td>
                 <td><%= game.course.get_name( anonymize ) %></td>
                 <td><%= game.course.get_number( anonymize ) %></td>
@@ -49,13 +49,13 @@
                 <td><%= link_to t(:show), game %>&nbsp;|&nbsp;
                 <%= link_to t(:edit), edit_bingo_game_path(game) %>&nbsp;|&nbsp;
                 <%= link_to t(:destroy), game, method: :delete, data: { confirm: t(:confirmation) } %></td>
-            </tr>
-          <% end %>
-      </tbody>
-    </table>
-  <% end %>
-</p>
-</div>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </p>
+  </div>
 </div>
 <div class="form-actions">
   <%= f.button :submit %>

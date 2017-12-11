@@ -15,52 +15,53 @@
       <h2><%= t '.projects.show.title' %></h2>
       <div class="form-inputs">
         <strong><%= t :course %>: </strong> <%= @project.course.get_name( anonymize ) %></br></br>
-        <%= f.input :course_id, as: :hidden %>
-        <%= f.input :name %>
-        <%= f.input :active %>
-        <table width="100%">
-          <tr>
-            <td width="45%">
-              <%= f.input :start_date, as: :date_time_local, label: "Project start date" %>
-            </td>
-            <td width="10%" align="center" valign="center">&nbsp;</td>
-            <td width="45%">
-              <%= f.input :end_date, as: :date_time_local, label: "Project end date" %>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              <em><%= t :note %>: <%= t 'projects.tz_warn', time_zone: @project.course.timezone %></em>
-            </br>
-          </br>
+    <%= f.input :course_id, as: :hidden %>
+    <%= f.input :name %>
+    <%= f.input :active %>
+    <table width="100%">
+      <tr>
+        <td width="45%">
+          <%= f.input :start_date, as: :date_time_local, label: "Project start date" %>
+        </td>
+        <td width="10%" align="center" valign="center">&nbsp;</td>
+        <td width="45%">
+          <%= f.input :end_date, as: :date_time_local, label: "Project end date" %>
         </td>
       </tr>
       <tr>
-        <td>
-          <%= f.input :start_dow,
+        <td colspan="3">
+          <em><%= t :note %>: <%= t 'projects.tz_warn', time_zone: @project.course.timezone %></em>
+        </br>
+      </br>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= f.input :start_dow,
                           collection: Date::DAYNAMES.each_with_index.to_a,
                           prompt: true,
                           label: t( 'projects.opens' )  %>
-        </td>
-        <td width="10%" align="center" valign="center">&nbsp;</td>
-        <td>
-          <%= f.input :end_dow,
+    </td>
+    <td width="10%" align="center" valign="center">&nbsp;</td>
+    <td>
+      <%= f.input :end_dow,
                           collection: Date::DAYNAMES.each_with_index.to_a,
                           prompt: true,
                           label: t( 'projects.closes' )  %>
-        </td>
-      </tr>
-    </table>
-    <%= f.association :factor_pack, prompt: true %>
-    <%= f.association :style, prompt: true %>
-    <%= f.input :description, as: :text %>
-  </div>
+    </td>
+  </tr>
+</table>
+<%= f.association :factor_pack, prompt: true %>
+<%= f.association :style, prompt: true %>
+<%= f.input :description, as: :text %>
+</div>
 </div>
 <div id="details" class="ui-body-<%= theme_code %> ui-content">
 </div>
 <div id="groups" class="ui-body-<%= theme_code %> ui-content">
   <h2>Group memberships</h2>
-    <%= t 'projects.groups_intro', group_count: @project.groups.count %><br><br>
+  <%= t 'projects.groups_intro', group_count: @project.groups.count %><br>
+  <br>
   <% if @project.groups.any? || @project.enrolled_user_rosters.any? %>
     <table id="project_table" width="90%" data-role="table"
           data-column-btn-theme"<%= theme_code %>" 
@@ -78,20 +79,20 @@
           <% end %>
           <th data-priority="0">[<%= t 'projects.no_group' %>]</th>
         </tr>
-          <tr>
-            <th>
-              <%= t 'projects.diversity_scores' %><hr>
-              <%= t :student_names %>
-            </th>
-            <% groups = @project.groups %>
-            <% groups.each do |group| %>
-              <td align="center">
-                <center>
-                  <%= group.diversity_score.nil? ? '--' : group.diversity_score %><br>
-                </center>
-              </td>
-            <% end %>
-          </tr>
+        <tr>
+          <th>
+            <%= t 'projects.diversity_scores' %><hr>
+            <%= t :student_names %>
+          </th>
+          <% groups = @project.groups %>
+          <% groups.each do |group| %>
+            <td align="center">
+              <center>
+                <%= group.diversity_score.nil? ? '--' : group.diversity_score %><br>
+              </center>
+            </td>
+          <% end %>
+        </tr>
       </thead>
       <tbody>
         <% @project.course.enrolled_students.each do |user| %>

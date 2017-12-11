@@ -39,7 +39,7 @@
       </fieldset>
       <fieldset class="ui-grid-a">
         <div class="ui-block-a">
-	<% projects = @current_users_projects.collect{ |project| [project.get_name( anonymize || @current_user.is_researcher? ), project.id] }
+          <% projects = @current_users_projects.collect{ |project| [project.get_name( anonymize || @current_user.is_researcher? ), project.id] }
 	projects.insert( 0, [ t( :none_selected ), -1] ) %>
           <%= select_tag :project, 
             options_for_select( projects ) ,
@@ -55,6 +55,3 @@
     <% end %>
   </div>
 <% end %>
-
-
-
