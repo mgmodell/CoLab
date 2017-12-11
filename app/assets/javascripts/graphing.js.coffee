@@ -387,15 +387,22 @@ $ ->
         g = chart.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
           .attr('width', '90%' )
-          .on( 'click', ()->
-            console.log d3.mouse( this )
+          
+
+        zoom = d3.zoom( )
+          .scaleExtent( [ 0.9, 8 ] )
+          .on( 'zoom', ->
+            g.attr( 'zoomed', 'true' )
+            g.attr( 'transform', d3.event.transform )
+          )
+
+        g.call( zoom )
+        g.on( 'click', ()->
             if g.attr( 'zoomed' ) is 'true'
               g.attr( 'zoomed', 'false' )
-              console.log 'reset'
-            else
-              g.attr( 'zoomed', 'true' )
-              console.log 'zoom! zoom!'
-          )
+              g.attr( 'transform', d3.zoomIdentity )
+        )
+
         chart_bg = rect_it( g, 'white', 'white', 0, 0, ( targetWidth - margin.right - margin.left ), (height - margin.top -
         margin.bottom ) )
 
