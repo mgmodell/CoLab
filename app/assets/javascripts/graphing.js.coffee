@@ -382,16 +382,27 @@ $ ->
           .attr( 'version', 1.1)
           .attr( 'xmlns', 'http://www.w3.org/2000/svg' )
 
-
         bg_color = rect_it( chart, 'white', 'white', 0, 0, targetWidth, height )
 
         g = chart.append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
           .attr('width', '90%' )
+          .on( 'click', ()->
+            console.log d3.mouse( this )
+            if g.attr( 'zoomed' ) is 'true'
+              g.attr( 'zoomed', 'false' )
+              console.log 'reset'
+            else
+              g.attr( 'zoomed', 'true' )
+              console.log 'zoom! zoom!'
+          )
+        chart_bg = rect_it( g, 'white', 'white', 0, 0, ( targetWidth - margin.right - margin.left ), (height - margin.top -
+        margin.bottom ) )
 
         xStretch = g.append( 'g' )
           .attr( 'class', 'hData' )
           .attr('original_width', (targetWidth - margin.left - margin.right ) )
+
         all_data = g.append( 'g' )
           .attr( 'class', 'hData' )
           .attr('original_width', (targetWidth - margin.left - margin.right ) )
