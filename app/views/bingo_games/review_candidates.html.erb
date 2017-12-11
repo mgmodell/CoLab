@@ -2,10 +2,11 @@
   <%= f.error_notification %>
   <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
      anonymous = @current_user.anonymize?
-%><table>
+%>
+  <table>
     <tr>
       <th align="right"><%= t 'bingo_games.topic' %>:</th>
-      <td><%= @bingo_game.topic %>
+      <td><%= @bingo_game.topic %></td>
     </tr>
     <tr>
       <th align="right"><%= t :description %>:</th>
@@ -17,7 +18,7 @@
     </tr>
     <tr>
       <th align="right"><%= t :close_date %>:</th>
-      <td><%= l @bingo_game.end_date, format: :tz_clarity %>
+      <td><%= l @bingo_game.end_date, format: :tz_clarity %></td>
     </tr>
   </table>
   <h2><%= t 'candidate_lists.terms' %>:</h2>
@@ -45,36 +46,35 @@
       <% @bingo_game.candidates.
         includes(:user, :concept,candidate_list:[:group]).
         completed.find_each do |candidate| %>
-      <tr>
-        <td><%= count += 1 %></td>
-        <td><%= candidate.term %></td>
-        <td>
-          <%= candidate.user.name( anonymous ) %>
-          <% if candidate.candidate_list.is_group %>
-          <br>(with group: <i><%= candidate.candidate_list.group.get_name( anonymous ) %></i>)
+        <tr>
+          <td><%= count += 1 %></td>
+          <td><%= candidate.term %></td>
+          <td>
+            <%= candidate.user.name( anonymous ) %>
+            <% if candidate.candidate_list.is_group %>
+              <br>
+              (with group: <i><%= candidate.candidate_list.group.get_name( anonymous ) %></i>)
           <% end %>
-        </td>
-        <td><%= candidate.definition %></td>
-        <td><%= f.input_field "candidate_feedback_#{candidate.id}",
+          </td>
+          <td><%= candidate.definition %></td>
+          <td><%= f.input_field "candidate_feedback_#{candidate.id}",
                       selected: candidate.candidate_feedback_id, 
                       collection: candidate_feedbacks,
                       prompt: true,
                       label: false %>
-        </td>
-        <td><%= f.input_field "concept_#{candidate.id}",
+          </td>
+          <td><%= f.input_field "concept_#{candidate.id}",
                       value: candidate.concept.blank? ? "": candidate.concept.name, 
                       class: "awesomplete-ajax",
                       data: { list: '#concepts' },
                       label: false %>
-        </td>
-                      
-      </tr>
+          </td>
+        </tr>
       <% end %>
     </tbody>
   </table>
   <%= f.input :reviewed, as: :boolean, label: "Review completed" %>
-
-<div class="form-actions">
-  <%= f.button :submit, t(:save) %>
-</div>
+  <div class="form-actions">
+    <%= f.button :submit, t(:save) %>
+  </div>
 <% end %>

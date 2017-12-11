@@ -16,7 +16,7 @@
       <%= @experience.get_name( anonymize ) %>
       (<% if @experience.active %>
         <%= t :active %>
-  <% else %>
+      <% else %>
         <span class="error"><%= t :inactive %></span> &mdash;
         <%= link_to t(:activate ), activate_experience_path( @experience ) %>
       <% end %>)
@@ -38,6 +38,7 @@
   <%= @experience.reactions.count %> of <%= @experience.course.enrolled_students.count %> students have completed the experience.
       
     
+  
   <table width="90%" data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -78,7 +79,7 @@
                 <td>
                   <% if reaction.improvements.blank? %>
                     <%= t :n_a %>
-          <% else %>
+                  <% else %>
                     <a href="#imp_<%= reaction.id %>"
                         class="ui-btn ui-corner-all ui-shadow ui-btn-inline"
                         data-rel="popup"
