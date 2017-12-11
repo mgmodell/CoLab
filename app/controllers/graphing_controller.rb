@@ -144,6 +144,7 @@ class GraphingController < ApplicationController
         dataset[:unitOfAnalysis] = I18n.t(:group)
         dataset[:unitOfAnalysisCode] = 'g'
         group = Group.find subject
+        dataset[:subject_id] = group.id
         dataset[:subject] = group.get_name(anonymize)
         values = Value.joins(installment: :assessment)
                       .where('assessments.project_id': project,
