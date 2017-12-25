@@ -113,8 +113,8 @@ class Installment < ActiveRecord::Base
 
       au_hash.values.each do |v|
         prelim = (Installment::TOTAL_VAL * v.value) / total
-        if prelim.nan? 
-          v.value = ( Installment::TOTAL_VAL / v.installment.values.count ).round
+        if prelim.nan?
+          v.value = (Installment::TOTAL_VAL / v.installment.values.count).round
         else
           v.value = prelim.round
         end
