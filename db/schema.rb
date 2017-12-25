@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171118140620) do
+ActiveRecord::Schema.define(version: 20171225131145) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -331,6 +331,7 @@ ActiveRecord::Schema.define(version: 20171118140620) do
     t.integer  "group_id",      limit: 4
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+    t.text     "anon_comments", limit: 65535
   end
 
   add_index "installments", ["assessment_id"], name: "index_installments_on_assessment_id", using: :btree
@@ -436,8 +437,8 @@ ActiveRecord::Schema.define(version: 20171118140620) do
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", limit: 255,   null: false
     t.text     "data",       limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
