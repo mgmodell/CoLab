@@ -14,59 +14,59 @@
       <h2><%= t '.title' %></h2>
       <div class="form-inputs">
         <strong>Course:</strong> <%= @bingo_game.course.get_name( anonymize ) %></br></br>
-        <%= f.input :course_id, as: :hidden %>
-        <%= f.input :topic %>
-        <%= f.input :description %>
-        <table width="100%">
-          <tr>
-            <td>
-              <%= f.input :individual_count, :label => (t 'bingo_games.ind_term_count' ) %>
-            </td>
-            <td></td>
-            <td>
-              <%= f.input :lead_time, :label => ( t 'bingo_games.days_for_prep')  %>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              <%= f.input :group_option, :label => ( t 'bingo_games.group_option') %>
-            </td>
-          </tr>
-          <tr id="group_options" style="<%= @bingo_game.group_option ? '' : 'display:none' %>">
-            <td>
-              <%= f.input :group_discount, :label => ( t 'bingo_games.group_discount') %>
-            </td>
-            <td width="10%" align="center" valign="center">&nbsp;</td>
-            <td>
-              <%= f.input :project_id,
+    <%= f.input :course_id, as: :hidden %>
+    <%= f.input :topic %>
+    <%= f.input :description %>
+    <table width="100%">
+      <tr>
+        <td>
+          <%= f.input :individual_count, :label => (t 'bingo_games.ind_term_count' ) %>
+        </td>
+        <td></td>
+        <td>
+          <%= f.input :lead_time, :label => ( t 'bingo_games.days_for_prep')  %>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <%= f.input :group_option, :label => ( t 'bingo_games.group_option') %>
+        </td>
+      </tr>
+      <tr id="group_options" style="<%= @bingo_game.group_option ? '' : 'display:none' %>">
+        <td>
+          <%= f.input :group_discount, :label => ( t 'bingo_games.group_discount') %>
+        </td>
+        <td width="10%" align="center" valign="center">&nbsp;</td>
+        <td>
+          <%= f.input :project_id,
                 collection: @bingo_game.course.projects.each.to_a,
                 prompt: true,
                 label: (t 'bingo_games.group_source') %>
-            </td>
-          </tr>
-          <tr>
-            <td >
-              <%= f.input :start_date, as: :date_time_local %>
-            </td>
-            <td width="10%" align="center" valign="center">&nbsp;</td>
-            <td >
-              <%= f.input :end_date, as: :date_time_local %>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              <em><%= t :note %>: <%= t 'bingo_games.tz_warn', time_zone: @bingo_game.course.timezone %></em>
-              </br>
-              </br>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              <%= f.input :active %>
-            </td>
-          </tr>
-    </table>
-  </div>
+        </td>
+      </tr>
+      <tr>
+        <td >
+          <%= f.input :start_date, as: :date_time_local %>
+        </td>
+        <td width="10%" align="center" valign="center">&nbsp;</td>
+        <td >
+          <%= f.input :end_date, as: :date_time_local %>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <em><%= t :note %>: <%= t 'bingo_games.tz_warn', time_zone: @bingo_game.course.timezone %></em>
+        </br>
+      </br>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <%= f.input :active %>
+    </td>
+  </tr>
+</table>
+</div>
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
   <h2><%= t :resp_summary %></h2>
@@ -74,99 +74,97 @@
 </div>
 <div id="responses" class="ui-body-<%= theme_code %> ui-content">
   <h2><%= t :resp_data %></h2>
-          <p>
-            <% if @bingo_game.reviewed %>
-              <% candidate_feedbacks = CandidateFeedback.all %>
-              <table data-role="table"
+  <p>
+    <% if @bingo_game.reviewed %>
+      <% candidate_feedbacks = CandidateFeedback.all %>
+      <table data-role="table"
                 id="basicTable"
                 data-mode="columntoggle"
                 data-column-btn-theme="<%= theme_code %>"
                 data-column-btn-text="<%= t :column_select %>"
                 class="table-stroke ui-shadow table-stripe table-ui-responsive">
-                <thead>
-                  <tr>
-                    <th><%= :student %></th>
-                    <th><%= :group %></th>
-                    <th colspan="<%= candidate_feedbacks.count%>" data-priority="1">
-                      <%= t 'bingo_games.resp_challenged' %>
-                    </th>
-                    <th data-priority="0">
-                      <%= t 'bingo_games.resp_con_expct' %>
-                    </th>
-                    <th data-priority="0">
-                      <%= t 'bingo_games.resp_term_count' %>
-                    </th>
-                    <th data-priority="0">
-                      <%= t 'bingo_games.resp_con_count' %>
-                    </th>
-                    <th>
-                      <%= t 'bingo_games.resp_perf' %>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th></th>
-                    <th></th>
-                    <% candidate_feedbacks.each do |cf| %>
-                    <th><%= cf.name %></th>
-                    <% end %>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                <% @bingo_game.course.enrolled_students.each do |student| %>
-                  <% cl = @bingo_game.candidate_list_for_user( student ) %>
-                  <tr>
-                    <td><%= student.name( anonymize ) %></td>
-                    <td><%= cl.is_group ? cl.group.get_name( anonymize ) : "N/A" %></td>
-                    <% if cl.candidates.completed.count > 0 %>
-                      <% candidate_feedbacks.each do |cf| %>
-                        <td><%= 100 * cl.get_by_feedback( cf ).count / cl.candidates.completed.count %>%</td>
-                      <% end %>
-                    <% else %>
-                      <% candidate_feedbacks.each do |cf| %>
-                        <td>N/A</td>
-                      <% end %>
-                    <% end %>
-                    <td><%= cl.expected_count %></td>
-                    <td><%= cl.candidates.completed.count %></td>
-                    <td><%= cl.get_concepts.count %></td>
-                    <td><%= cl.performance %></td>
-                  </tr>
+        <thead>
+          <tr>
+            <th><%= :student %></th>
+            <th><%= :group %></th>
+            <th colspan="<%= candidate_feedbacks.count%>" data-priority="1">
+              <%= t 'bingo_games.resp_challenged' %>
+            </th>
+            <th data-priority="0">
+              <%= t 'bingo_games.resp_con_expct' %>
+            </th>
+            <th data-priority="0">
+              <%= t 'bingo_games.resp_term_count' %>
+            </th>
+            <th data-priority="0">
+              <%= t 'bingo_games.resp_con_count' %>
+            </th>
+            <th>
+              <%= t 'bingo_games.resp_perf' %>
+            </th>
+          </tr>
+          <tr>
+            <th></th>
+            <th></th>
+            <% candidate_feedbacks.each do |cf| %>
+              <th><%= cf.name %></th>
+            <% end %>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @bingo_game.course.enrolled_students.each do |student| %>
+            <% cl = @bingo_game.candidate_list_for_user( student ) %>
+            <tr>
+              <td><%= student.name( anonymize ) %></td>
+              <td><%= cl.is_group ? cl.group.get_name( anonymize ) : "N/A" %></td>
+              <% if cl.candidates.completed.count > 0 %>
+                <% candidate_feedbacks.each do |cf| %>
+                  <td><%= 100 * cl.get_by_feedback( cf ).count / cl.candidates.completed.count %>%</td>
                 <% end %>
-                </tbody>
-              </table>
-          </p>
-          <p>
-          <%= t 'bingo_games.game_summary', con_count: @bingo_game.get_concepts.count %>
-            <table data-role="table"
+              <% else %>
+                <% candidate_feedbacks.each do |cf| %>
+                  <td>N/A</td>
+                <% end %>
+              <% end %>
+              <td><%= cl.expected_count %></td>
+              <td><%= cl.candidates.completed.count %></td>
+              <td><%= cl.get_concepts.count %></td>
+              <td><%= cl.performance %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </p>
+    <p>
+      <%= t 'bingo_games.game_summary', con_count: @bingo_game.get_concepts.count %>
+      <table data-role="table"
               id="basicTable"
               data-mode="columntoggle"
               data-column-btn-theme="<%= theme_code %>"
               data-column-btn-text="<%= t :column_select %>"
               class="table-stroke ui-shadow table-stripe table-ui-responsive">
-              <thead>
-                <tr>
-                  <th><%= t 'bingo_games.concept' %></th>
-                </tr>
-              </thead>
-              <% @bingo_game.get_concepts.each do |concept| %>
-              <tr>
-                <td><%= concept.name %></td>
-              </tr>
-              <% end %>
-            </table>
-
-              
-            <% else %>
-              <%= t 'bingo_games.not_reviewed' %>
-            <% end %>
-          <p>
-</div>
-</div>
-<div class="form-actions">
-  <%= f.button :submit %>
-</div>
+        <thead>
+          <tr>
+            <th><%= t 'bingo_games.concept' %></th>
+          </tr>
+        </thead>
+        <% @bingo_game.get_concepts.each do |concept| %>
+          <tr>
+            <td><%= concept.name %></td>
+          </tr>
+        <% end %>
+      </table>
+    <% else %>
+      <%= t 'bingo_games.not_reviewed' %>
+    <% end %>
+    <p>
+    </div>
+  </div>
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
 <% end %>

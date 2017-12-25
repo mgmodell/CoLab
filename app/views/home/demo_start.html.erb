@@ -1,7 +1,7 @@
-<h1><%= t( :your_tasks ) %></h1><% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<h1><%= t( :your_tasks ) %></h1>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 <p><%= t 'home.greeting', name: @current_user.nil? ? "John" : @current_user.first_name %>,</br>
-  <%= t 'home.tasks', count: 2 %>
-   
+<%= t 'home.tasks', count: 2 %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -12,8 +12,7 @@
   </div>
   <div id="tasks" class="ui-body-<%= theme_code %> ui-content">
     <h3><%= t :task_view %></h3>
-
-  <table data-role="table"
+    <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>"
           data-column-popup-theme="<%= theme_code %>"
@@ -21,39 +20,38 @@
           data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-    <thead>
-      <tr>
-        <th><%= t :task_name %></th>
-        <th data-priority="1">Type</th>
-        <th><%= t :status %></th>
-        <th data-priority="1">Group</th>
-        <th data-priority="0"><%= t :course_name %></th>
-        <th data-priority="1"><%= t :open_date %></th>
-        <th data-priority="0"><%= t :close_date %></th>
-        <th data-priority="1"><%= t :consent_form %></th>
-      </tr>
-    </thead>
-    <tbody>
-    <% @events.each do |event| %>
-    <tr>
-      <td>
-        <%= link_to event.name, event.task_link %><%= raw event.task_name_post %>
-      </td>
-      <td><%= event.type %></td>
-      <td>
-        <em><%= event.status %></em>
-      </td>
-      <td><%= event.group_name %></td>
-      <td><%= event.course_name %></td>
-      <td> <%= l event.start_time, format: :tz_clarity %> </td>
-      <td> <%= l event.close_date, format: :tz_clarity %> </td>
-      <td>N/A</td>
-    </tr>
-    <% end %>
-
-    </tbody>
-  </table>
-</div>
+      <thead>
+        <tr>
+          <th><%= t :task_name %></th>
+          <th data-priority="1">Type</th>
+          <th><%= t :status %></th>
+          <th data-priority="1">Group</th>
+          <th data-priority="0"><%= t :course_name %></th>
+          <th data-priority="1"><%= t :open_date %></th>
+          <th data-priority="0"><%= t :close_date %></th>
+          <th data-priority="1"><%= t :consent_form %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @events.each do |event| %>
+          <tr>
+            <td>
+              <%= link_to event.name, event.task_link %><%= raw event.task_name_post %>
+            </td>
+            <td><%= event.type %></td>
+            <td>
+              <em><%= event.status %></em>
+            </td>
+            <td><%= event.group_name %></td>
+            <td><%= event.course_name %></td>
+            <td> <%= l event.start_time, format: :tz_clarity %> </td>
+            <td> <%= l event.close_date, format: :tz_clarity %> </td>
+            <td>N/A</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
   <div id="weekly" class="ui-body-<%= theme_code %> ui-content">
     <h3><%= t :week_view %></h3>
     <%= week_calendar attribute: :close_date, events: @events,  number_of_weeks: 2 do |date,meetings| %>
@@ -61,11 +59,11 @@
         <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
       </h4>
       <ul>
-      <% meetings.each do |meeting| %>
-        <li>
-          <%= link_to meeting.name, meeting.task_link %><small><%= raw meeting.task_name_post %></small>
-        </li>
-      <% end %>
+        <% meetings.each do |meeting| %>
+          <li>
+            <%= link_to meeting.name, meeting.task_link %><small><%= raw meeting.task_name_post %></small>
+          </li>
+        <% end %>
       </ul>
     <% end %>
   </div>
@@ -76,13 +74,12 @@
         <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
       </h4>
       <ul>
-      <% meetings.each do |meeting| %>
-        <li>
-          <%= link_to meeting.name, meeting.task_link %><small><%= raw meeting.task_name_post %></small>
-        </li>
-      <% end %>
+        <% meetings.each do |meeting| %>
+          <li>
+            <%= link_to meeting.name, meeting.task_link %><small><%= raw meeting.task_name_post %></small>
+          </li>
+        <% end %>
       </ul>
     <% end %>
   </div>
 </div>
-

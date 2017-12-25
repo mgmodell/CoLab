@@ -1,4 +1,5 @@
-<h2><%= t 'installments.subtitle' %></h2><% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<h2><%= t 'installments.subtitle' %></h2>
+<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 <% anonymize = false %>
 <% if flash[:notice] %>
   <p class="notice"><%= flash[:notice] %></p>
@@ -13,7 +14,6 @@
           member_count: @members.count,
           factor_count: @factors.count %></p>
   <p><%= t raw 'installments.slider.instructions' %></p>
-          
 </div>
 <% if @installment.id.nil?
      url_params = { :action => "create" }

@@ -14,28 +14,28 @@
       <h2><%= t 'experiences.show.title' %></h2>
       <div class="form-inputs">
         <strong><%= t :course %>: </strong> <%= @experience.course.name %></br></br>
-        <%= f.input :course_id, as: :hidden %>
-        <%= f.input :name %>
-        <%= f.input :active %>
-        <table width="100%">
-          <tr>
-            <td width="45%">
-              <%= f.input :start_date, as: :date_time_local, label: t( 'experiences.start_date_lbl') %>
-            </td>
-            <td width="10%" align="center" valign="center">&nbsp;</td>
-            <td width="45%">
-              <%= f.input :end_date, as: :date_time_local, label: t( 'experiences.end_date_lbl' )%>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              <em><%= t :note %>: <%= t 'experiences.tz_warn', time_zone: @experience.course.timezone %></em>
-            </br>
-          </br>
+    <%= f.input :course_id, as: :hidden %>
+    <%= f.input :name %>
+    <%= f.input :active %>
+    <table width="100%">
+      <tr>
+        <td width="45%">
+          <%= f.input :start_date, as: :date_time_local, label: t( 'experiences.start_date_lbl') %>
+        </td>
+        <td width="10%" align="center" valign="center">&nbsp;</td>
+        <td width="45%">
+          <%= f.input :end_date, as: :date_time_local, label: t( 'experiences.end_date_lbl' )%>
         </td>
       </tr>
-    </table>
-  </div>
+      <tr>
+        <td colspan="3">
+          <em><%= t :note %>: <%= t 'experiences.tz_warn', time_zone: @experience.course.timezone %></em>
+        </br>
+      </br>
+    </td>
+  </tr>
+</table>
+</div>
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
   <h2><%= t 'bingo_games.response_summary' %></h2>
