@@ -56,7 +56,8 @@ rect_it = (element, outline, fill, x1, y1, x2, y2)->
   return rect
 
 #Line dotted line rendering function
-add_avg_line = ( chart_elem, target_id, factor_id, d, color, dash_length, dash_partial,
+add_avg_line = ( chart_elem, target_id, target_name, factor_id,
+                  factor_name, d, color, dash_length, dash_partial,
                   class_list, x, y, parseTime, comments, toolTipDiv )->
   target_class_id = 'u_' + target_id
   factor_class_id = 'f_' + factor_id
@@ -94,9 +95,9 @@ add_avg_line = ( chart_elem, target_id, factor_id, d, color, dash_length, dash_p
 
 
 # Render an averaged line
-add_dotted_line = ( chart_elem, target_id, factor_id, d, color, dash_length, dash_partial,
-                    class_list, x, y, parseTime, comments, 
-                    toolTipDiv )->
+add_dotted_line = ( chart_elem, target_id, target_name, factor_id, factor_name,
+                    d, color, dash_length, dash_partial, class_list, x, y,
+                    parseTime, comments, toolTipDiv )->
   
   target_class_id = 'u_' + target_id
   factor_class_id = 'f_' + factor_id
@@ -132,16 +133,20 @@ add_dotted_line = ( chart_elem, target_id, factor_id, d, color, dash_length, das
     .attr( 'fill', color )
     .attr( 'stroke', 'black' )
     .attr( 'stroke-width', 2 )
+    .attr( 'factor', factor_name )
+    .attr( 'user', target_name )
     .on( 'mouseover', (d)->
       tip_text = ''
       #TODO: Move comments to their own, centered panel
+      tip_text = '<strong>' + d3.select( this ).attr( 'user' ) + '</strong> reported</br>'
+      tip_text += '<strong>' + d3.select( this ).attr( 'factor' ) + ' Value:</strong>' + d.value + '</br>'
       if comments[ d.installment_id ][ 'comment' ] != '<no comment>'
-        tip_text = '<strong>' + comments[ d.installment_id ][ 'commentor' ] + ':</strong>'
         tip_text += comments[ d.installment_id ][ 'comment' ]
+
       toolTipDiv.transition()
         .duration( 200 )
         .style( 'opacity', .9 )
-      toolTipDiv.html( '<strong>Value: </strong>' + d.value + '</br>' + tip_text )
+      toolTipDiv.html( tip_text )
         .style( 'left', (d3.event.pageX) + 'px' )
         .style( 'top', (d3.event.pageY - 28) + 'px' )
     )
@@ -187,8 +192,10 @@ unitOfAnalysisOpts =
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
             for factor_id, factor_stream of sub_stream.factor_streams
               color = data.factors[ factor_id ][ 'color' ]
-              line_func chart_elem, assessor_id, factor_id, factor_stream.values, color, user_count, 
-                        user_index, class_id, xFcn, yFcn, parseTimeFcn, 
+              line_func chart_elem, assessor_id,
+                        data[ 'users'][ assessor_id ][ 'name' ], factor_id, 
+                        data[ 'factors' ][ factor_id ][ 'name' ], factor_stream.values,
+                        color, user_count, user_index, class_id, xFcn, yFcn, parseTimeFcn, 
                         comments, toolTipDiv
     ab: 
       code: 'ab'
@@ -218,8 +225,11 @@ unitOfAnalysisOpts =
         for factor_id, factor_coll of data.factors
           color = data.factors[ factor_id ][ 'color' ]
           target_id = factor_id
-          line_func chart_elem, assessor_id, factor_id, factor_coll, color, user_count, user_index, 
-                    class_id, xFcn, yFcn, parseTimeFcn, comments, toolTipDiv
+          line_func chart_elem, assessor_id, 
+                    data[ 'users' ][ assessor_id ][ 'name' ], factor_id,
+                    data[ 'factors' ][factor_id ][ 'name' ], factor_coll, color,
+                    user_count, user_index, class_id, xFcn, yFcn, parseTimeFcn,
+                    comments, toolTipDiv
 
     ao: 
       code: 'ao'
@@ -254,7 +264,10 @@ unitOfAnalysisOpts =
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
             for factor_id, factor_stream of sub_stream.factor_streams
               color = data.factors[ factor_id ][ 'color' ]
-              line_func chart_elem, target_id, factor_id, factor_stream.values, color, user_count, 
+              line_func chart_elem, target_id,
+                        data[ 'users' ][ target_id ][ 'name' ], factor_id,
+                        data[ 'factors' ][ factor_id ][ 'name' ], 
+                        factor_stream.values, color, user_count, 
                         user_index, class_id, xFcn, yFcn, parseTimeFcn, 
                         comments, toolTipDiv
     am: 
