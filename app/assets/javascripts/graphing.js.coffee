@@ -56,8 +56,10 @@ rect_it = (element, outline, fill, x1, y1, x2, y2)->
   return rect
 
 #Line dotted line rendering function
-add_avg_line = ( target, d, color, dash_length, dash_partial,
+add_avg_line = ( chart_elem, target_id, factor_id, d, color, dash_length, dash_partial,
                   class_list, x, y, parseTime, comments, toolTipDiv )->
+  target_class_id = 'u_' + target_id
+  factor_class_id = 'f_' + factor_id
   dateStream = [ ]
   for date in Object.keys( d.avg_stream ).sort()
     dateStream.push d.avg_stream[ date ]
@@ -70,10 +72,10 @@ add_avg_line = ( target, d, color, dash_length, dash_partial,
       return y(d.sum / d.count )
     )
     .curve( d3.curveMonotoneX )
-  path = target.append( 'path' )
+  path = chart_elem.append( 'path' )
     .datum( dateStream )
     .attr( 'fill', 'none' )
-    .attr( 'class', class_list )
+    .attr( 'class', class_list + ' ' + target_class_id + ' ' + factor_class_id )
     .attr( 'stroke', 'white' )
     .attr( 'stroke-linejoin', 'round' )
     .attr( 'stroke-linecap', 'round' )
@@ -92,10 +94,12 @@ add_avg_line = ( target, d, color, dash_length, dash_partial,
 
 
 # Render an averaged line
-add_dotted_line = ( target, d, color, dash_length, dash_partial,
+add_dotted_line = ( chart_elem, target_id, factor_id, d, color, dash_length, dash_partial,
                     class_list, x, y, parseTime, comments, 
                     toolTipDiv )->
   
+  target_class_id = 'u_' + target_id
+  factor_class_id = 'f_' + factor_id
   line = d3.line( )
     .x( (d)->
       return x(parseTime( d.date) )
@@ -104,20 +108,20 @@ add_dotted_line = ( target, d, color, dash_length, dash_partial,
       return y(d.value)
     )
     .curve(d3.curveMonotoneX)
-  path = target.append( 'path' )
+  path = chart_elem.append( 'path' )
     .datum( d )
     .attr( 'fill', 'none' )
-    .attr( 'class', class_list )
+    .attr( 'class', class_list + ' ' + target_class_id + ' ' + factor_class_id )
     .attr( 'stroke', 'white' )
     .attr( 'stroke-linejoin', 'round' )
     .attr( 'stroke-linecap', 'round' )
     .attr( 'stroke-width', 3 )
     .attr( 'd', line )
 
-  target.selectAll( 'dot' )
+  chart_elem.selectAll( 'dot' )
     .data( d )
     .enter().append('circle')
-    .attr( 'class', class_list )
+    .attr( 'class', class_list + ' ' + target_class_id + ' ' + factor_class_id )
     .attr( 'r', 5 )
     .attr('cx', (d)->
       return x(parseTime( d.date ) )
@@ -174,16 +178,16 @@ unitOfAnalysisOpts =
       code: 'ad'
       name: 'All Data'
       line_proc: add_dotted_line
-      fcn: (data, line_func, chart_elem, user_count, class_id, 
-            xFcn, yFcn, parseTimeFcn, comments, toolTipDiv )->
       fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
             yFcn, parseTimeFcn, comments, toolTipDiv )->
         for id, stream of data.streams
+          target_id = id
           for sub_id, sub_stream of stream.sub_streams
+            assessor_id = sub_stream.assessor_id
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
             for factor_id, factor_stream of sub_stream.factor_streams
               color = data.factors[ factor_id ][ 'color' ]
-              line_func chart_elem, factor_stream.values, color, user_count, 
+              line_func chart_elem, assessor_id, factor_id, factor_stream.values, color, user_count, 
                         user_index, class_id, xFcn, yFcn, parseTimeFcn, 
                         comments, toolTipDiv
     ab: 
@@ -195,6 +199,7 @@ unitOfAnalysisOpts =
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
+            assessor_id = sub_stream.assessor_id
             for factor_id, factor_stream of sub_stream.factor_streams
               factor_avg = data.factors[ factor_id ][ 'avg_stream' ]
               if(!factor_avg?)then factor_avg = { }
@@ -212,7 +217,8 @@ unitOfAnalysisOpts =
 
         for factor_id, factor_coll of data.factors
           color = data.factors[ factor_id ][ 'color' ]
-          line_func chart_elem, factor_coll, color, user_count, user_index, 
+          target_id = factor_id
+          line_func chart_elem, assessor_id, factor_id, factor_coll, color, user_count, user_index, 
                     class_id, xFcn, yFcn, parseTimeFcn, comments, toolTipDiv
 
     ao: 
@@ -243,11 +249,12 @@ unitOfAnalysisOpts =
       fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
             yFcn, parseTimeFcn, comments, toolTipDiv )->
         for id, stream of data.streams
+          target_id = id
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
             for factor_id, factor_stream of sub_stream.factor_streams
               color = data.factors[ factor_id ][ 'color' ]
-              line_func chart_elem, factor_stream.values, color, user_count, 
+              line_func chart_elem, target_id, factor_id, factor_stream.values, color, user_count, 
                         user_index, class_id, xFcn, yFcn, parseTimeFcn, 
                         comments, toolTipDiv
     am: 
@@ -495,12 +502,46 @@ $ ->
             .attr( 'cy', 10 + Math.floor( index_off /2 ) * lbh ) 
             .attr( 'r', 7 )
             .attr( 'fill', data.factors[ key ].color )
+            .attr( 'parent_chart', identifier )
+            .attr( 'class', 'f_' + key )
+            .attr( 'factor_tag', 'f_' + key )
+            .on( 'click', (d)->
+              id = d3.select( this ).attr( 'parent_chart' )
+              factor_tag = d3.select( this ).attr( 'factor_tag' )
+              spec_opacity = d3.select( this ).attr( 'opacity' )
+
+              if Number( spec_opacity ) == .1
+                spec_opacity = 1
+              else
+                spec_opacity = .1
+
+              d3.select( '.' + id ).selectAll( '.' + factor_tag )
+                .attr( 'opacity', spec_opacity )
+              
+            )
           factor_legend.append( 'text' )
             .attr( 'x', 24 + (  index_off %2 * lbw ) )
             .attr( 'y', 13 + Math.floor( index_off /2 ) * lbh ) 
             .attr( 'fill', 'black' )
             .style( 'font-size', '10px' )
             .text( data.factors[ key ].name )
+            .attr( 'parent_chart', identifier )
+            .attr( 'class', 'f_' + key )
+            .attr( 'factor_tag', 'f_' + key )
+            .on( 'click', (d)->
+              id = d3.select( this ).attr( 'parent_chart' )
+              factor_tag = d3.select( this ).attr( 'factor_tag' )
+              spec_opacity = d3.select( this ).attr( 'opacity' )
+
+              if Number( spec_opacity ) == .1
+                spec_opacity = 1
+              else
+                spec_opacity = .1
+
+              d3.select( '.' + id ).selectAll( '.' + factor_tag )
+                .attr( 'opacity', spec_opacity )
+              
+            )
 
         user_legend_width = if Object.keys( data.users ).length > 1 then (2 * lbw ) else lbw
         user_legend_rows = Math.round( Object.keys( data.users ).length / 2 )
@@ -522,14 +563,48 @@ $ ->
             .attr( 'stroke', 'black' )
             .attr( 'stroke-width', 3 )
             .attr( 'stroke-dasharray', ( user_index * 5 ) + ' ' + (index * 5 ))
+            .attr( 'parent_chart', identifier )
             .attr( 'opacity', .5 )
+            .attr( 'class', 'u_' + key )
+            .attr( 'user_tag', 'u_' + key )
+            .on( 'click', (d)->
+              id = d3.select( this ).attr( 'parent_chart' )
+              user_tag = d3.select( this ).attr( 'user_tag' )
+              spec_opacity = d3.select( this ).attr( 'opacity' )
+
+              if Number( spec_opacity ) == .1
+                spec_opacity = 1
+              else
+                spec_opacity = .1
+
+              d3.select( '.' + id ).selectAll( '.' + user_tag )
+                .attr( 'opacity', spec_opacity )
+              
+            )
 
           user_legend.append( 'text' )
             .attr( 'x', 10 + (  index_off %2 * lbw ) )
             .attr( 'y', 13 + Math.floor( index_off /2 ) * lbh ) 
             .attr( 'fill', 'black' )
+            .attr( 'parent_chart', identifier )
+            .attr( 'class', 'u_' + key )
+            .attr( 'user_tag', 'u_' + key )
             .style( 'font-size', '10px' )
             .text( data.users[ key ].name )
+            .on( 'click', (d)->
+              id = d3.select( this ).attr( 'parent_chart' )
+              user_tag = d3.select( this ).attr( 'user_tag' )
+              spec_opacity = d3.select( this ).attr( 'opacity' )
+
+              if Number( spec_opacity ) == .1
+                spec_opacity = 1
+              else
+                spec_opacity = .1
+
+              d3.select( '.' + id ).selectAll( '.' + user_tag )
+                .attr( 'opacity', spec_opacity )
+              
+            )
 
         #build and add our close button
         buttonBar = chart.append( 'g' )
