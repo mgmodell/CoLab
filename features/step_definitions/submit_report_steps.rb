@@ -46,6 +46,7 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
   task = @user.waiting_student_tasks[0]
 
   @value_ratio = distribution
+  @installment_values = {}
   if column_points.to_i <= 0
     page.all(:xpath, '//input[starts-with(@id,"installment_values_attributes_")]').each do |element|
       element.set 0 if element[:id].end_with? 'value'
@@ -56,7 +57,8 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
       element.set cell_value if element[:id].end_with? 'value'
     end
   else
-    @assessment.factors.each do |factor|
+    @project.factors.each do |factor|
+      factor_vals = []
       elements = page.all(:xpath, "//input[contains(@class,\"#{factor.name.delete(' ')}\")]")
       index = 0
       total = 0
@@ -65,9 +67,12 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
         value = Random.rand(what_is_left)
         elements[index].set value
         total += value
+        factor_vals << value
         index += 1
       end
       elements[index].set (column_points.to_i - total)
+      factor_vals << column_points.to_i - total
+      @installment_values[ factor.id ] = factor_vals
     end
   end
 end
@@ -122,7 +127,29 @@ Then /^the installment values will match the submit ratio$/  do
       value.value.should eq baseline
     end
   else
-    pending
+    recorded_vals = {}
+    installment.values.each do |value|
+      factor_vals = recorded_vals[ value.factor.id ]
+      factor_vals = [] if factor_vals.nil?
+      factor_vals << value.value
+      recorded_vals[ value.factor.id ] = factor_vals
+    end
+
+    recorded_vals.keys.each do |factor_id|
+      set_vals = @installment_values[ factor_id ]
+      set_tot = set_vals.inject{|sum,x| sum + x }
+      set_vals.collect!{ |x| x.to_f / set_tot }
+
+      rec_vals = recorded_vals[ factor_id ]
+      rec_tot = rec_vals.inject{|sum,x| sum + x }
+      rec_vals.collect!{ |x| x.to_f / rec_tot }
+
+      set_vals.should eq rec_vals
+
+
+    end
+
+      
   end
 end
 
