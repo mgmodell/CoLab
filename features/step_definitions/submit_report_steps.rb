@@ -45,13 +45,13 @@ end
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points, distribution|
   task = @user.waiting_student_tasks[0]
 
+  @value_ratio = distribution
   if column_points.to_i <= 0
     page.all(:xpath, '//input[starts-with(@id,"installment_values_attributes_")]').each do |element|
-      element.set Random.rand(3200).abs if element[:id].end_with? 'value'
+      element.set 0 if element[:id].end_with? 'value'
     end
   elsif distribution == 'evenly'
     cell_value = column_points.to_i / task.group_for_user(@user).users.count
-
     page.all(:xpath, '//input[starts-with(@id,"installment_values_attributes_")]').each do |element|
       element.set cell_value if element[:id].end_with? 'value'
     end
@@ -113,3 +113,71 @@ end
 Then /^there should be an error$/ do
   page.should have_content('The factors in each category must equal 6000.')
 end
+
+Then /^the installment values will match the submit ratio$/  do
+  installment = Installment.last
+  if @value_ratio == 'evenly'
+    baseline = installment.values[ 0 ].value
+    installment.values.each do |value|
+      value.value.should eq baseline
+    end
+  else
+    pending
+  end
+end
+
+Then /^the user enters a comment "([^"]*)" personally identifiable information$/  do |anonymized|
+  @comment = "A nice, bland, comment"
+  @anon_comment = @comment
+  
+  if anonymized == 'with'
+    group =  @project.group_for_user(@user)
+    user_one = group.users.last
+    user_two = group.users.first
+    user_three = group.users.sample
+    @comment = "#{group.get_name(false)} was awesome! "
+    @comment += "#{user_one.first_name} and "
+    @comment += "#{user_two.first_name} flew through the their "
+    @comment += "work. #{@project.get_name( false )} is fun and I think "
+    @comment += "#{user_three.last_name} likes the "
+    @comment += "#{@project.course.get_name( false )} course here at "
+    @comment += "#{@project.course.school.get_name( false )}. Not bad."
+
+    @anon_comment = "#{group.get_name(true)} was awesome! "
+    @anon_comment += "#{user_one.anon_first_name} and "
+    @anon_comment += "#{user_two.anon_first_name} flew through the their "
+    @anon_comment += "work. #{@project.get_name( true )} is fun and I think "
+    @anon_comment += "#{user_three.anon_last_name} likes the "
+    @anon_comment += "#{@project.course.get_name( true )} course here at "
+    @anon_comment += "#{@project.course.school.get_name( true )}. Not bad."
+
+  end
+
+
+  page.fill_in( 'Comments', with: @comment, visible: :all, disabled: :all )
+end
+
+Then /^the comment matches what was entered$/  do
+  Installment.last.comments.should eq @comment
+end
+
+Then /^the anonymous comment "([^"]*)"$/  do |comment_status|
+  
+  installment = Installment.last
+  case comment_status
+  when 'is empty'
+    installment.anon_comments.blank?.should eq true
+
+  when 'matches'
+    installment.anon_comments.should eq @comment
+    installment.anon_comments.should eq @anon_comment
+
+  when 'is anonymized'
+    installment.anon_comments.should_not eq @comment
+    installment.anon_comments.should eq @anon_comment
+
+  else
+    pending 
+  end
+end
+

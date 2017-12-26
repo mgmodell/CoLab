@@ -71,7 +71,7 @@ class Installment < ActiveRecord::Base
   end
 
   def anonymize_comments
-    working_space = comments
+    working_space = comments.dup
 
     # Phase 1 - convert to codes
     this_course = assessment.project.course
@@ -90,21 +90,20 @@ class Installment < ActiveRecord::Base
       working_space.gsub! /#{user.last_name}/i, "[uln_#{user.id}]"
     end
     # Phase 2 - convert from codes
-    working_space.gsub! /"[s_#{this_school.id}]"/i, this_school.anon_name
-    working_space.gsub! /"[c_#{this_course.id}]"/i, this_course.anon_name
+    working_space.gsub! "[s_#{this_school.id}]", this_school.anon_name
+    working_space.gsub! "[c_#{this_course.id}]", this_course.anon_name
     this_course.projects.each do |project|
-      working_space.gsub! /"[p_#{project.id}]"/i, project.anon_name
+      working_space.gsub! "[p_#{project.id}]", project.anon_name
       project.groups.each do |group|
-        working_space.gsub! /"[g_#{group.id}]"/i, group.anon_name
+        working_space.gsub! "[g_#{group.id}]", group.anon_name
       end
     end
     this_course.users.each do |user|
-      working_space.gsub! /"[ufn_#{user.id}]"/i, user.anon_first_name
-      working_space.gsub! /"[uln_#{user.id}]"/i, user.anon_last_name
+      working_space.gsub! "[ufn_#{user.id}]", user.anon_first_name
+      working_space.gsub! "[uln_#{user.id}]", user.anon_last_name
     end
 
     self.anon_comments = working_space
-    save
   end
 
   def normalize_sums

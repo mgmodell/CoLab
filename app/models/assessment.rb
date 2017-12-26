@@ -56,6 +56,8 @@ class Assessment < ActiveRecord::Base
       assessment.installments.each do |inst|
         completion_hash[inst.user.email] = { name: inst.user.name(false), status: inst.inst_date.to_s }
         inst.anonymize_comments
+        inst.save validate: false
+        puts inst.errors.full_messages unless inst.errors.empty?
       end
 
       assessment.project.course.enrolled_students.each do |student|
