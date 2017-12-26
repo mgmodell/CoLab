@@ -93,6 +93,7 @@ class GraphingController < ApplicationController
        project.course.instructors.includes(@current_user)
       # Start pulling data
 
+      groups = {}
       case unit_of_analysis
       when Unit_Of_Analysis[:individual]
         dataset[:unitOfAnalysis] = I18n.t(:individual)
@@ -108,6 +109,10 @@ class GraphingController < ApplicationController
         values.each do |value|
           group_vals = streams[value.installment.group_id]
           if group_vals.nil?
+            group = value.installment.group
+
+            groups[ group.id ] = { group_name: group.get_name( anonymize ),
+                                   group_id: group.id }
             group_vals = { target_name: value.installment.group.get_name(anonymize),
                            target_id: value.installment.group_id,
                            sub_streams: {} }
@@ -144,6 +149,8 @@ class GraphingController < ApplicationController
         dataset[:unitOfAnalysis] = I18n.t(:group)
         dataset[:unitOfAnalysisCode] = 'g'
         group = Group.find subject
+        groups[ group.id ] = { group_name: group.get_name( anonymize ),
+                               group_id: group.id }
         dataset[:subject_id] = group.id
         dataset[:subject] = group.get_name(anonymize)
         values = Value.joins(installment: :assessment)
@@ -209,6 +216,7 @@ class GraphingController < ApplicationController
     end
     dataset[:users] = users
     dataset[:factors] = factors
+    dataset[:groups] = groups
 
     # Return the retrieved data
     respond_to do |format|

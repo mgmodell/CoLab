@@ -138,9 +138,10 @@ add_dotted_line = ( chart_elem, target_id, target_name, factor_id, factor_name,
     .on( 'mouseover', (d)->
       tip_text = ''
       #TODO: Move comments to their own, centered panel
-      tip_text = '<strong>' + d3.select( this ).attr( 'user' ) + '</strong> reported</br>'
+      tip_text = '<strong>' + d3.select( this ).attr( 'user' ) + '</strong></br>'
       tip_text += '<strong>' + d3.select( this ).attr( 'factor' ) + ' Value:</strong>' + d.value + '</br>'
       if comments[ d.installment_id ][ 'comment' ] != '<no comment>'
+        tip_text += "<strong>#{comments[d.installment_id][ 'commentor' ]} wrote:</strong>"
         tip_text += comments[ d.installment_id ][ 'comment' ]
 
       toolTipDiv.transition()
@@ -409,20 +410,6 @@ $ ->
           .attr('width', '90%' )
           
 
-        zoom = d3.zoom( )
-          .scaleExtent( [ 0.9, 8 ] )
-          .on( 'zoom', ->
-            g.attr( 'zoomed', 'true' )
-            g.attr( 'transform', d3.event.transform )
-          )
-
-        g.call( zoom )
-        g.on( 'click', ()->
-            if g.attr( 'zoomed' ) is 'true'
-              g.attr( 'zoomed', 'false' )
-              g.attr( 'transform', d3.zoomIdentity )
-        )
-
         chart_bg = rect_it( g, 'white', 'white', 0, 0, ( targetWidth - margin.right - margin.left ), (height - margin.top -
         margin.bottom ) )
 
@@ -468,6 +455,20 @@ $ ->
           .style('text-anchor', 'middle' )
           .text('Contribution Level')
 
+
+        zoom = d3.zoom( )
+          .scaleExtent( [ 0.9, 8 ] )
+          .on( 'zoom', ->
+            g.attr( 'zoomed', 'true' )
+            g.attr( 'transform', d3.event.transform )
+          )
+
+        g.call( zoom )
+        g.on( 'click', ()->
+            if g.attr( 'zoomed' ) is 'true'
+              g.attr( 'zoomed', 'false' )
+              g.attr( 'transform', d3.zoomIdentity )
+        )
 
         # https://bl.ocks.org/EfratVil/903d82a7cde553fb6739fe55af6103e2
         # http://bl.ocks.org/jfreyre/b1882159636cc9e1283a
@@ -835,6 +836,22 @@ $ ->
           .style( 'font-size', '10px' )
           .style( 'text-decoration', 'underline' )
           .text( 'for project: ' + data.project_name)
+
+        unless data.unitOfAnalysisCode == 'g'
+          group_text = 'Group ' + data.groups[ Object.keys(data.groups)[ 0 ] ].group_name
+          index = 1
+          while( index < Object.keys( data.groups ).length )
+            group_text+= ' and Group ' + data.groups[ Object.keys(data.groups)[ index ] ].group_name
+            index++
+
+          title
+            .append( 'text' )
+            .attr( 'x', 0 )
+            .attr( 'y', 30 )
+            .attr( 'text-anchor', 'middle' )
+            .style( 'font-size', '10px' )
+            .style( 'text-decoration', 'underline' )
+            .text( group_text )
 
         #add analysis processing here
         block = unitOfAnalysisOpts[ data.unitOfAnalysisCode ]['ad']
