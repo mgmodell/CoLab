@@ -81,17 +81,23 @@ class Installment < ActiveRecord::Base
                           .find(assessment.project.course_id)
 
       this_school = this_course.school
-      working_space.gsub! /\b#{this_school.name}\b/i, "[s_#{this_school.id}]" unless this_school.name.blank?
-      working_space.gsub! /\b#{this_course.name}\b/i, "[cnam_#{this_course.id}]" unless this_course.name.blank?
-      working_space.gsub! /\b#{this_course.number}\b/i, "[cnum_#{this_course.id}]" unless this_course.number.blank?
+      unless this_school.name.blank?
+        working_space.gsub!(/\b#{this_school.name}\b/i, "[s_#{this_school.id}]")
+      end
+      unless this_course.name.blank?
+        working_space.gsub!(/\b#{this_course.name}\b/i, "[cnam_#{this_course.id}]")
+      end
+      unless this_course.number.blank?
+        working_space.gsub!(/\b#{this_course.number}\b/i, "[cnum_#{this_course.id}]")
+      end
 
       this_course.projects.each do |project|
         unless project.name.blank?
-          working_space.gsub! /\b#{project.name}\b/i, "[p_#{project.id}]"
+          working_space.gsub!(/\b#{project.name}\b/i, "[p_#{project.id}]")
         end
         project.groups.each do |group|
           unless group.name.blank?
-            working_space.gsub! /\b#{group.name}\b/i, "[g_#{group.id}]"
+            working_space.gsub!(/\b#{group.name}\b/i, "[g_#{group.id}]")
           end
         end
       end
@@ -106,20 +112,20 @@ class Installment < ActiveRecord::Base
       end
 
       # Phase 2 - convert from codes
-      working_space.gsub! "[s_#{this_school.id}]", this_school.anon_name
-      working_space.gsub! "[cnam_#{this_course.id}]", this_course.anon_name
-      working_space.gsub! "[cnum_#{this_course.id}]", this_course.anon_number
+      working_space.gsub!("[s_#{this_school.id}]", this_school.anon_name)
+      working_space.gsub!("[cnam_#{this_course.id}]", this_course.anon_name)
+      working_space.gsub!("[cnum_#{this_course.id}]", this_course.anon_number)
 
       this_course.projects.each do |project|
-        working_space.gsub! "[p_#{project.id}]", project.anon_name
+        working_space.gsub!("[p_#{project.id}]", project.anon_name)
         project.groups.each do |group|
-          working_space.gsub! "[g_#{group.id}]", group.anon_name
+          working_space.gsub!("[g_#{group.id}]", group.anon_name)
         end
       end
 
       this_course.users.each do |user|
-        working_space.gsub! "[ufn_#{user.id}]", user.anon_first_name
-        working_space.gsub! "[uln_#{user.id}]", user.anon_last_name
+        working_space.gsub!("[ufn_#{user.id}]", user.anon_first_name)
+        working_space.gsub!("[uln_#{user.id}]", user.anon_last_name)
       end
 
       self.anon_comments = working_space
