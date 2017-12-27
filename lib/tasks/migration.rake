@@ -372,15 +372,6 @@ namespace :migratify do
 
   end
 
-  desc 'Anonymize installment comments'
-  task inst_anon: :environment do
-    Installment.find_each do |installment|
-      installment.anonymize_comments
-      installment.save validate: false
-      puts installment.errors.full_messages unless installment.errors.empty?
-    end
-  end
-
   desc 'Make instructor_updated false'
   task falsify: :environment do
     # We should not need this one any longer.

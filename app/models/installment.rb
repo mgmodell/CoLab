@@ -15,13 +15,15 @@ class Installment < ActiveRecord::Base
   TOTAL_VAL = 6000.0
 
   # Support inclusion of comments
-  def prettyComment(anonymize)
+  def pretty_comment(anonymize)
     pretty_comments = '<no comment>'
     if comments.present?
       pretty_comments = if anonymize && anon_comments.present?
                           anon_comments
                         elsif anonymize && anon_comments.blank?
-                          'Comments not yet available'
+                          self.anonymize_comments
+                          self.save validate: false
+                          self.anon_comments
                         else
                           comments
                         end
@@ -70,35 +72,52 @@ class Installment < ActiveRecord::Base
     errors
   end
 
-  def anonymize_comments
+  def anonymize_comments 
+    
     unless comments.blank?
       working_space = comments.dup
 
       # Phase 1 - convert to codes
-      this_course = assessment.project.course
+      this_course = Course.readonly.includes( :school, :users, projects: :users )
+        .find( self.assessment.project.course_id )
+
       this_school = this_course.school
-      working_space.gsub! /#{this_school.name}/i, "[s_#{this_school.id}]"
-      working_space.gsub! /#{this_course.name}/i, "[c_#{this_course.id}]"
+      working_space.gsub! /\b#{this_school.name}\b/i, "[s_#{this_school.id}]" unless this_school.name.blank?
+      working_space.gsub! /\b#{this_course.name}\b/i, "[cnam_#{this_course.id}]" unless this_course.name.blank?
+      working_space.gsub! /\b#{this_course.number}\b/i, "[cnum_#{this_course.id}]" unless this_course.number.blank?
 
       this_course.projects.each do |project|
-        working_space.gsub! /#{project.name}/i, "[p_#{project.id}]"
+        unless project.name.blank?
+          working_space.gsub! /\b#{project.name}\b/i, "[p_#{project.id}]"
+        end
         project.groups.each do |group|
-          working_space.gsub! /#{group.name}/i, "[g_#{group.id}]"
+          unless group.name.blank?
+            working_space.gsub! /\b#{group.name}\b/i, "[g_#{group.id}]"
+          end
         end
       end
+
       this_course.users.each do |user|
-        working_space.gsub! /#{user.first_name}/i, "[ufn_#{user.id}]"
-        working_space.gsub! /#{user.last_name}/i, "[uln_#{user.id}]"
+        unless user.first_name.blank?
+          working_space.gsub! /\b#{user.first_name}\b/i, "[ufn_#{user.id}]"
+        end
+        unless user.last_name.blank?
+          working_space.gsub! /\b#{user.last_name}\b/i, "[uln_#{user.id}]"
+        end
       end
+
       # Phase 2 - convert from codes
       working_space.gsub! "[s_#{this_school.id}]", this_school.anon_name
-      working_space.gsub! "[c_#{this_course.id}]", this_course.anon_name
+      working_space.gsub! "[cnam_#{this_course.id}]", this_course.anon_name
+      working_space.gsub! "[cnum_#{this_course.id}]", this_course.anon_number
+
       this_course.projects.each do |project|
         working_space.gsub! "[p_#{project.id}]", project.anon_name
         project.groups.each do |group|
           working_space.gsub! "[g_#{group.id}]", group.anon_name
         end
       end
+
       this_course.users.each do |user|
         working_space.gsub! "[ufn_#{user.id}]", user.anon_first_name
         working_space.gsub! "[uln_#{user.id}]", user.anon_last_name

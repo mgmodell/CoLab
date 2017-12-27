@@ -168,7 +168,10 @@ Then /^the user enters a comment "([^"]*)" personally identifiable information$/
     @comment += "work. #{@project.get_name( false )} is fun and I think "
     @comment += "#{user_three.last_name} likes the "
     @comment += "#{@project.course.get_name( false )} course here at "
-    @comment += "#{@project.course.school.get_name( false )}. Not bad."
+    @comment += "#{@project.course.school.get_name( false )}. Not bad. "
+    @comment += "I don't regret taking "
+    @comment += "#{@project.course.get_number(false)}. "
+    @comment += "#{user_three.first_name}'s nice."
 
     @anon_comment = "#{group.get_name(true)} was awesome! "
     @anon_comment += "#{user_one.anon_first_name} and "
@@ -176,7 +179,10 @@ Then /^the user enters a comment "([^"]*)" personally identifiable information$/
     @anon_comment += "work. #{@project.get_name( true )} is fun and I think "
     @anon_comment += "#{user_three.anon_last_name} likes the "
     @anon_comment += "#{@project.course.get_name( true )} course here at "
-    @anon_comment += "#{@project.course.school.get_name( true )}. Not bad."
+    @anon_comment += "#{@project.course.school.get_name( true )}. Not bad. "
+    @anon_comment += "I don't regret taking "
+    @anon_comment += "#{@project.course.get_number(true)}. "
+    @anon_comment += "#{user_three.anon_first_name}'s nice."
 
   end
 
@@ -196,12 +202,13 @@ Then /^the anonymous comment "([^"]*)"$/  do |comment_status|
     installment.anon_comments.blank?.should eq true
 
   when 'matches'
-    installment.anon_comments.should eq @comment
-    installment.anon_comments.should eq @anon_comment
+    installment.pretty_comment( false ).should eq @comment
+    installment.pretty_comment( true ).should eq @anon_comment
 
   when 'is anonymized'
-    installment.anon_comments.should_not eq @comment
-    installment.anon_comments.should eq @anon_comment
+    installment.pretty_comment( true ).should_not eq @comment
+    installment.pretty_comment( false ).should eq @comment
+    installment.pretty_comment( true ).should eq @anon_comment
 
   else
     pending 

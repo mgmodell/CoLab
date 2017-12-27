@@ -47,16 +47,17 @@ class Assessment < ActiveRecord::Base
   # Here we'll give instructors a little status update at the close of each assessment period
   def self.inform_instructors
     count = 0
+    date_now = DateTime.current
+
     Assessment.joins(:project)
-              .includes(:installments, project: [course: [:users, :school, projects: :groups]])
+              .includes(:installments, :project )
               .where('instructor_updated = false AND assessments.end_date < ? AND projects.active = TRUE',
-                     DateTime.current).each do |assessment|
+                     date_now).each do |assessment|
       completion_hash = {}
       # Collect data for notification and anonymize comments
       assessment.installments.each do |inst|
         completion_hash[inst.user.email] = { name: inst.user.name(false), status: inst.inst_date.to_s }
         inst.anonymize_comments
-        inst.save validate: false
         puts inst.errors.full_messages unless inst.errors.empty?
       end
 

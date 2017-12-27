@@ -140,7 +140,7 @@ class GraphingController < ApplicationController
           streams[value.installment.group_id] = group_vals
 
           comments[value.installment_id] = {
-            comment: value.installment.prettyComment(anonymize),
+            comment: value.installment.pretty_comment(anonymize),
             commentor: value.installment.user.name(anonymize)
           }
         end
@@ -191,7 +191,7 @@ class GraphingController < ApplicationController
           streams[value.user_id] = user_vals
 
           comments[value.installment_id] = {
-            comment: value.installment.prettyComment(anonymize),
+            comment: value.installment.pretty_comment(anonymize),
             commentor: value.installment.user.name(anonymize)
           }
         end
