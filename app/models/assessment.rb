@@ -50,7 +50,7 @@ class Assessment < ActiveRecord::Base
     date_now = DateTime.current
 
     Assessment.joins(:project)
-              .includes(:installments, :project )
+              .includes(:installments, :project)
               .where('instructor_updated = false AND assessments.end_date < ? AND projects.active = TRUE',
                      date_now).each do |assessment|
       completion_hash = {}

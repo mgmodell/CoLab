@@ -72,7 +72,7 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
       end
       elements[index].set (column_points.to_i - total)
       factor_vals << column_points.to_i - total
-      @installment_values[ factor.id ] = factor_vals
+      @installment_values[factor.id] = factor_vals
     end
   end
 end
@@ -119,44 +119,41 @@ Then /^there should be an error$/ do
   page.should have_content('The factors in each category must equal 6000.')
 end
 
-Then /^the installment values will match the submit ratio$/  do
+Then /^the installment values will match the submit ratio$/ do
   installment = Installment.last
   if @value_ratio == 'evenly'
-    baseline = installment.values[ 0 ].value
+    baseline = installment.values[0].value
     installment.values.each do |value|
       value.value.should eq baseline
     end
   else
     recorded_vals = {}
     installment.values.each do |value|
-      factor_vals = recorded_vals[ value.factor.id ]
+      factor_vals = recorded_vals[value.factor.id]
       factor_vals = [] if factor_vals.nil?
       factor_vals << value.value
-      recorded_vals[ value.factor.id ] = factor_vals
+      recorded_vals[value.factor.id] = factor_vals
     end
 
     recorded_vals.keys.each do |factor_id|
-      set_vals = @installment_values[ factor_id ]
-      set_tot = set_vals.inject{|sum,x| sum + x }
-      set_vals.collect!{ |x| x.to_f / set_tot }
+      set_vals = @installment_values[factor_id]
+      set_tot = set_vals.inject { |sum, x| sum + x }
+      set_vals.collect! { |x| x.to_f / set_tot }
 
-      rec_vals = recorded_vals[ factor_id ]
-      rec_tot = rec_vals.inject{|sum,x| sum + x }
-      rec_vals.collect!{ |x| x.to_f / rec_tot }
+      rec_vals = recorded_vals[factor_id]
+      rec_tot = rec_vals.inject { |sum, x| sum + x }
+      rec_vals.collect! { |x| x.to_f / rec_tot }
 
       set_vals.should eq rec_vals
-
-
     end
 
-      
   end
 end
 
-Then /^the user enters a comment "([^"]*)" personally identifiable information$/  do |anonymized|
-  @comment = "A nice, bland, comment"
+Then /^the user enters a comment "([^"]*)" personally identifiable information$/ do |anonymized|
+  @comment = 'A nice, bland, comment'
   @anon_comment = @comment
-  
+
   if anonymized == 'with'
     group =  @project.group_for_user(@user)
     user_one = group.users.last
@@ -165,10 +162,10 @@ Then /^the user enters a comment "([^"]*)" personally identifiable information$/
     @comment = "#{group.get_name(false)} was awesome! "
     @comment += "#{user_one.first_name} and "
     @comment += "#{user_two.first_name} flew through the their "
-    @comment += "work. #{@project.get_name( false )} is fun and I think "
+    @comment += "work. #{@project.get_name(false)} is fun and I think "
     @comment += "#{user_three.last_name} likes the "
-    @comment += "#{@project.course.get_name( false )} course here at "
-    @comment += "#{@project.course.school.get_name( false )}. Not bad. "
+    @comment += "#{@project.course.get_name(false)} course here at "
+    @comment += "#{@project.course.school.get_name(false)}. Not bad. "
     @comment += "I don't regret taking "
     @comment += "#{@project.course.get_number(false)}. "
     @comment += "#{user_three.first_name}'s nice."
@@ -176,42 +173,39 @@ Then /^the user enters a comment "([^"]*)" personally identifiable information$/
     @anon_comment = "#{group.get_name(true)} was awesome! "
     @anon_comment += "#{user_one.anon_first_name} and "
     @anon_comment += "#{user_two.anon_first_name} flew through the their "
-    @anon_comment += "work. #{@project.get_name( true )} is fun and I think "
+    @anon_comment += "work. #{@project.get_name(true)} is fun and I think "
     @anon_comment += "#{user_three.anon_last_name} likes the "
-    @anon_comment += "#{@project.course.get_name( true )} course here at "
-    @anon_comment += "#{@project.course.school.get_name( true )}. Not bad. "
+    @anon_comment += "#{@project.course.get_name(true)} course here at "
+    @anon_comment += "#{@project.course.school.get_name(true)}. Not bad. "
     @anon_comment += "I don't regret taking "
     @anon_comment += "#{@project.course.get_number(true)}. "
     @anon_comment += "#{user_three.anon_first_name}'s nice."
 
   end
 
-
-  page.fill_in( 'Comments', with: @comment, visible: :all, disabled: :all )
+  page.fill_in('Comments', with: @comment, visible: :all, disabled: :all)
 end
 
-Then /^the comment matches what was entered$/  do
+Then /^the comment matches what was entered$/ do
   Installment.last.comments.should eq @comment
 end
 
-Then /^the anonymous comment "([^"]*)"$/  do |comment_status|
-  
+Then /^the anonymous comment "([^"]*)"$/ do |comment_status|
   installment = Installment.last
   case comment_status
   when 'is empty'
     installment.anon_comments.blank?.should eq true
 
   when 'matches'
-    installment.pretty_comment( false ).should eq @comment
-    installment.pretty_comment( true ).should eq @anon_comment
+    installment.pretty_comment(false).should eq @comment
+    installment.pretty_comment(true).should eq @anon_comment
 
   when 'is anonymized'
-    installment.pretty_comment( true ).should_not eq @comment
-    installment.pretty_comment( false ).should eq @comment
-    installment.pretty_comment( true ).should eq @anon_comment
+    installment.pretty_comment(true).should_not eq @comment
+    installment.pretty_comment(false).should eq @comment
+    installment.pretty_comment(true).should eq @anon_comment
 
   else
-    pending 
+    pending
   end
 end
-

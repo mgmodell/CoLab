@@ -21,9 +21,9 @@ class Installment < ActiveRecord::Base
       pretty_comments = if anonymize && anon_comments.present?
                           anon_comments
                         elsif anonymize && anon_comments.blank?
-                          self.anonymize_comments
-                          self.save validate: false
-                          self.anon_comments
+                          anonymize_comments
+                          save validate: false
+                          anon_comments
                         else
                           comments
                         end
@@ -72,14 +72,13 @@ class Installment < ActiveRecord::Base
     errors
   end
 
-  def anonymize_comments 
-    
+  def anonymize_comments
     unless comments.blank?
       working_space = comments.dup
 
       # Phase 1 - convert to codes
-      this_course = Course.readonly.includes( :school, :users, projects: :users )
-        .find( self.assessment.project.course_id )
+      this_course = Course.readonly.includes(:school, :users, projects: :users)
+                          .find(assessment.project.course_id)
 
       this_school = this_course.school
       working_space.gsub! /\b#{this_school.name}\b/i, "[s_#{this_school.id}]" unless this_school.name.blank?
