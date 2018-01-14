@@ -5,7 +5,7 @@
     <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= javascript_tag do %>
-      var chrtCtx = new Object( );
+      const chrtCtx = new Object( );
       chrtCtx.anonConfirm = '<%= t 'graphing.anon_confirm' %>';
       chrtCtx.date = '<%= t 'graphing.date' %>';
       chrtCtx.contributionLvl = '<%= t 'graphing.contribution_lvl' %>';

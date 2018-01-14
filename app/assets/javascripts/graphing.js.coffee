@@ -1,6 +1,8 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
+chrtCtx.margin = { top: 40, bottom: 40, left: 40, right: 40 }
+chrtCtx.height = 400
 
 $(document).bind 'mobileinit', ->
   $.mobile.ajaxLinksEnabled = false
@@ -384,52 +386,53 @@ $ ->
       # Maybe do some loading thing here?
       $.getJSON url, (data) ->
 
+        ctx = Object.assign( {}, chrtCtx )
         chart_div = d3.select( chart_div.get( 0 ) )
-        margin = { top: 40, bottom: 40, left: 40, right: 40 }
-        height = 400
-        targetWidth = chart_div.node( ).offsetWidth
+        # ctx will be the specific chart context
+        ctx.targetWidth = chart_div.node( ).offsetWidth
 
         parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L%Z")
         x = d3.scaleTime( )
           .domain( [ parseTime( data.start_date ), parseTime( data.end_date ) ])
-          .rangeRound( [ 0, ( targetWidth - margin.left - margin.right ) ] )
+          .rangeRound( [ 0, ( ctx.targetWidth - ctx.margin.left - ctx.margin.right ) ] )
         y = d3.scaleLinear( )
           .domain( [0, 6000] )
-          .rangeRound( [ ( height - margin.top - margin.bottom ), 0 ] )
+          .rangeRound( [ ( ctx.height - ctx.margin.top - ctx.margin.bottom ), 0 ] )
 
         identifier = data.unitOfAnalysisCode + '_' + data.project_id + '_' + data.subject_id
         chart = chart_div.append( "svg" )
           .attr( 'class', 'chart ' + identifier )
-          .attr( "height", height )
-          .attr( "width", targetWidth )
+          .attr( "height", ctx.height )
+          .attr( "width", ctx.targetWidth )
           .attr( 'version', 1.1)
           .attr( 'xmlns', 'http://www.w3.org/2000/svg' )
 
-        bg_color = rect_it( chart, 'white', 'white', 0, 0, targetWidth, height )
+        bg_color = rect_it( chart, 'white', 'white', 0, 0, ctx.targetWidth, ctx.height )
 
         g = chart.append('g')
-          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' )
+          .attr('transform', 'translate(' + ctx.margin.left + ',' + ctx.margin.top + ')' )
           .attr('width', '90%' )
           
 
-        chart_bg = rect_it( g, 'white', 'white', 0, 0, ( targetWidth - margin.right - margin.left ), (height - margin.top -
-        margin.bottom ) )
+        chrtBgW = ctx.targetWidth - ctx.margin.right - ctx.margin.left
+        chrtBgH = ctx.height - ctx.margin.top - ctx.margin.bottom
+        chart_bg = rect_it( g, 'white', 'white', 0, 0, ( chrtBgW ), ( chrtBgH ) )
 
         xStretch = g.append( 'g' )
           .attr( 'class', 'hData' )
-          .attr('original_width', (targetWidth - margin.left - margin.right ) )
+          .attr('original_width', ( chrtBgW ) )
 
         all_data = g.append( 'g' )
           .attr( 'class', 'hData' )
-          .attr('original_width', (targetWidth - margin.left - margin.right ) )
+          .attr('original_width', ( chrtBgW ) )
         
         xStretch.append( 'g' )
           .attr( 'class', 'axis axis--x' )
-          .attr( 'transform', 'translate(0, ' + (height - margin.top - margin.bottom ) + ')' )
+          .attr( 'transform', 'translate(0, ' + ( chrtBgH ) + ')' )
           .call( d3.axisBottom( x ) )
 
-        xLabelWidth = ( targetWidth - margin.left ) / 2
-        xLabelHeight = height - margin.top
+        xLabelWidth = ( ctx.targetWidth - ctx.margin.left ) / 2
+        xLabelHeight = ctx.height - ctx.margin.top
 
         xStretch.append( 'text' )
           .attr( 'transform',
@@ -451,8 +454,8 @@ $ ->
           ) )
         g.append( 'text' )
           .attr('transform', 'rotate(-90)' )
-          .attr('y', 0 - margin.left )
-          .attr('x', 0 - ( height/2 ) )
+          .attr('y', 0 - ctx.margin.left )
+          .attr('x', 0 - ( ctx.height/2 ) )
           .attr('dy', '1em' )
           .style('text-anchor', 'middle' )
           .text( chrtCtx.contributionLvl )
@@ -502,7 +505,7 @@ $ ->
         factor_legend_rows = Math.round( Object.keys( data.factors ).length / 2 )
         factor_legend = chart.append( 'g' )
           .attr( 'class', 'factorLegend' )
-          .attr( 'transform', 'translate( ' + ( targetWidth - 50 - factor_legend_width ) + ', 40)')
+          .attr( 'transform', 'translate( ' + ( ctx.targetWidth - 50 - factor_legend_width ) + ', 40)')
           .attr( 'factorLegendWidth', factor_legend_width )
           .attr( 'opacity', .7 )
 
@@ -625,7 +628,7 @@ $ ->
         #build and add our close button
         buttonBar = chart.append( 'g' )
           .attr( 'class', 'buttonBar' )
-          .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)')
+          .attr( 'transform', 'translate( ' + ( ctx.targetWidth - 25 ) + ', 25)')
 
         close_button = buttonBar.append( 'g' )
           .on( 'click', () ->
@@ -665,8 +668,8 @@ $ ->
 
               svg_crowbar( chart.node( ),
                 filename: data.project_name + '_' + data.subject + '.png',
-                width: targetWidth,
-                height: height,
+                width: ctx.targetWidth,
+                height: ctx.height,
                 crowbar_el: d3.select( '#crowbar-workspace' ).node( )
               )
           )
@@ -817,8 +820,8 @@ $ ->
 
 
         # Let's build the text
-        titleX = targetWidth / 2
-        titleY = 0 + ( margin.top / 2 )
+        titleX = ctx.targetWidth / 2
+        titleY = 0 + ( ctx.margin.top / 2 )
         title = chart.append( "g" )
           .attr( 'class', 'title' )
         title.attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ' )')
@@ -863,33 +866,33 @@ $ ->
 
         d3.select( window )
           .on( 'resize', ()->
-            targetWidth = chart_div.node( ).offsetWidth
+            ctx.targetWidth = chart_div.node( ).offsetWidth
             # Resize the charts
             d3.selectAll( '.chart' )
-              .attr( 'width', targetWidth )
+              .attr( 'width', ctx.targetWidth )
 
             # Relocate the button bar
             d3.selectAll( '.buttonBar' )
-              .attr( 'transform', 'translate( ' + ( targetWidth - 25 ) + ', 25)' )
+              .attr( 'transform', 'translate( ' + ( ctx.targetWidth - 25 ) + ', 25)' )
 
             # Relocate the legend
             factorLegendWidth = factor_legend.attr( 'factorLegendWidth' )
             d3.selectAll( '.factorLegend' )
-              .attr( 'transform', 'translate( ' + ( targetWidth - 50 - factorLegendWidth ) + ', 40)')
+              .attr( 'transform', 'translate( ' + ( ctx.targetWidth - 50 - factorLegendWidth ) + ', 40)')
 
             # Relocate the title
-            titleX = targetWidth / 2
+            titleX = ctx.targetWidth / 2
             d3.selectAll( '.title' )
               .attr( 'transform', 'translate( ' + titleX + ', ' + titleY + ')')
 
-            scaleFactor = ( targetWidth - margin.right - margin.left ) / xStretch.attr( 'original_width' )
+            scaleFactor = ( chrtBgW ) / xStretch.attr( 'original_width' )
             bg_color
               .attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0)')
 
             d3.selectAll( '.hData' ).each( (d)->
               obj = d3.select this
               originalWidth = obj.attr( 'original_width' )
-              scaleFactor = (targetWidth - margin.right - margin.left) / originalWidth
+              scaleFactor = ( chrtBgW ) / originalWidth
               obj.attr( 'transform', 'matrix(' + scaleFactor + ' 0 0 1 0 0 )' )
 
             )  
