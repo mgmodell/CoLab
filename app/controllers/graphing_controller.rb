@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class GraphingController < ApplicationController
-  Unit_Of_Analysis = { individual: 1, group: 2 }.freeze
+  Unit_Of_Analysis = { group: 2, individual: 1 }.freeze
 
   def index
     @title = 'Reports'
