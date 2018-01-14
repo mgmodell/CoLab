@@ -139,9 +139,11 @@ add_dotted_line = ( chart_elem, target_id, target_name, factor_id, factor_name,
       tip_text = ''
       #TODO: Move comments to their own, centered panel
       tip_text = '<strong>' + d3.select( this ).attr( 'user' ) + '</strong></br>'
-      tip_text += '<strong>' + d3.select( this ).attr( 'factor' ) + ' Value:</strong>' + d.value + '</br>'
+      tip_text += '<strong>' + d3.select( this ).attr( 'factor' ) + ' '
+      tip_text += chrtCtx.value + ':</strong>' + d.value + '</br>'
       if comments[ d.installment_id ][ 'comment' ] != '<no comment>'
-        tip_text += "<strong>#{comments[d.installment_id][ 'commentor' ]} wrote:</strong>"
+        tip_text += "<strong>" + comments[d.installment_id][ 'commentor' ]
+        tip_text += chrtCtx.wrote + ":</strong>"
         tip_text += comments[ d.installment_id ][ 'comment' ]
 
       toolTipDiv.transition()
@@ -182,7 +184,7 @@ unitOfAnalysisOpts =
   i:
     ad: 
       code: 'ad'
-      name: 'All Data'
+      name: chrtCtx.indAd
       line_proc: add_dotted_line
       fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
             yFcn, parseTimeFcn, comments, toolTipDiv )->
@@ -200,7 +202,7 @@ unitOfAnalysisOpts =
                         comments, toolTipDiv
     ab: 
       code: 'ab'
-      name: 'Average by Behavior'
+      name: chrtCtx.indAb
       line_proc: add_avg_line
       fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
             yFcn, parseTimeFcn, comments, toolTipDiv )->
@@ -234,28 +236,28 @@ unitOfAnalysisOpts =
 
     ao: 
       code: 'ao'
-      name: 'Overall Average'
+      name: chrtCtx.indAb
       fcn: ()->
         return 'All Data'
     ag_g: 
       code: 'ag_g'
-      name: 'Group Agreement'
+      name: chrtCtx.indAgG
       fcn: ()->
         return 'All Data'
     ag_s: 
       code: 'ag_s'
-      name: 'Agreement with Self'
+      name: chrtCtx.indAgS
       fcn: ()->
         return 'All Data'
     ag_m: 
       code: 'ag_m'
-      name: 'Agreement without Self'
+      name: chrtCtx.indAgM
       fcn: ()->
         return 'All Data'
   g:
     ad: 
       code: 'ad'
-      name: 'All Data'
+      name: chrtCtx.gAd
       line_proc: add_dotted_line
       fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
             yFcn, parseTimeFcn, comments, toolTipDiv )->
@@ -273,27 +275,27 @@ unitOfAnalysisOpts =
                         comments, toolTipDiv
     am: 
       code: 'am'
-      name: 'Average by Member'
+      name: chrtCtx.gAm
       fcn: ()->
         return 'All Data'
     vb: 
       code: 'vb'
-      name: 'Variance by Behavior'
+      name: chrtCtx.gVb
       fcn: ()->
         return 'All Data'
     vm: 
       code: 'vm'
-      name: 'Variance by Member'
+      name: chrtCtx.gVm
       fcn: ()->
         return 'All Data'
     ag_b: 
       code: 'ag_b'
-      name: 'Agreement by Behavior'
+      name: chrtCtx.gAgB
       fcn: ()->
         return 'All Data'
     ag_m: 
       code: 'ag_m'
-      name: 'Agreement by Member'
+      name: chrtCtx.gAgM
       fcn: ()->
         return 'All Data'
 
@@ -321,7 +323,7 @@ $ ->
   $("#for_research").on( 'slidestop', ->
     for_research = $("#for_research").val( )
     if for_research is 'true'
-      if confirm ( 'This will remove all the charts below. Are you sure?' )
+      if confirm ( chrtCtx.anonConfirm )
         d3.selectAll( 'svg' ).remove( )
         $( '.project_select' ).children( ).remove( )
         option = document.createElement( 'option' )
@@ -339,7 +341,7 @@ $ ->
   $("#anonymous").on( 'slidestop', ->
     anonymous = $("#anonymous").val( )
     if anonymous is 'true'
-      if confirm ( 'This will remove all the charts below. Are you sure?' )
+      if confirm ( chrtCtx.anonConfirm )
         d3.selectAll( 'svg' ).remove( )
         $( '.project_select' ).children( ).remove( )
         option = document.createElement( 'option' )
@@ -433,7 +435,7 @@ $ ->
           .attr( 'transform',
                  'translate(' + xLabelWidth + ' ,' + xLabelHeight + ')' )
           .style( 'text-anchor', 'middle' )
-          .text( 'Date' )
+          .text( chrtCtx.date )
                                 
         g.append( 'g' )
           .attr( 'class', 'axis axis--y' )
@@ -441,9 +443,9 @@ $ ->
             label = ''
             switch d
               when 0
-                label = 'Low'
+                label = chrtCtx.low
               when 6000
-                label = 'High'
+                label = chrtCtx.high
               
             return label
           ) )
@@ -453,7 +455,7 @@ $ ->
           .attr('x', 0 - ( height/2 ) )
           .attr('dy', '1em' )
           .style('text-anchor', 'middle' )
-          .text('Contribution Level')
+          .text( chrtCtx.contributionLvl )
 
 
         zoom = d3.zoom( )
@@ -656,8 +658,7 @@ $ ->
           .on( 'click', () ->
             # from http://bl.ocks.org/deanmalmgren/22d76b9c1f487ad1dde6
             # Add a warning because of crowbar strangeness
-            warning_msg = 'This chart download function is experimental.'
-            warning_msg += 'You may need to reload the chart afterwards. Proceed?'
+            warning_msg = chrtCtx.chartDwnWrn
             if confirm( warning_msg )
               svg_el = chart
                 .node( )
@@ -827,7 +828,7 @@ $ ->
           .attr( 'text-anchor', 'middle' )
           .style( 'font-size', '16px' )
           .style( 'text-decoration', 'underline' )
-          .text( data.unitOfAnalysis + ' chart for ' + data.subject)
+          .text( data.unitOfAnalysis + chrtCtx.chrtFor + data.subject)
         title
           .append( 'text' )
           .attr( 'x', 0 )
@@ -838,10 +839,10 @@ $ ->
           .text( 'for project: ' + data.project_name)
 
         unless data.unitOfAnalysisCode == 'g'
-          group_text = 'Group ' + data.groups[ Object.keys(data.groups)[ 0 ] ].group_name
+          group_text = chrtCtx.group + data.groups[ Object.keys(data.groups)[ 0 ] ].group_name
           index = 1
           while( index < Object.keys( data.groups ).length )
-            group_text+= ' and Group ' + data.groups[ Object.keys(data.groups)[ index ] ].group_name
+            group_text+= chrtCtx.andGroup + data.groups[ Object.keys(data.groups)[ index ] ].group_name
             index++
 
           title

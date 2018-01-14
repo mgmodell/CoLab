@@ -1,6 +1,35 @@
 en:
   graphing:
+    # Reporting terms
+    anon_confirm: This will remove all the charts below. Are you sure?
+    date: Date
+    contribution_lvl: Contribution Level
+    chart_dwn_warn: >
+      This chart download function is experimental and only works in
+      Chrome. Additionally, you may need to reload the chart afterwards.
+      Proceed?
+    chart_for: " chart for "
+    for_project: for project
+    group: "Group "
+    and_group: " and Group "
+    wrote: " wrote"
+    value: Value
+    ind_ad: All data
+    ind_ab: Average by Behavior
+    ind_ao: Overall Average
+    ind_ag_g: Group Agreement
+    ind_ag_s: Agreement with Self
+    ind_ag_m: Agreement without Self
+    g_ad: All Data
+    g_am: Average by Member
+    g_vb: Variance by Behavior
+    g_vm: Variance by Member
+    g_ag_b: Agreement by Behavior
+    g_ag_m: Agreement by Member
+    low: Low
+    high: High
     index:
       who: Who would you like to see?
       what_data: What data would you like to see?
       which: Which project?
+
