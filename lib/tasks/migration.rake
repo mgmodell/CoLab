@@ -53,7 +53,7 @@ namespace :migratify do
     end
     
     # Countries
-    CS.update
+    CS.update # if CS.countries.count < 100
     CS.countries.each do |country|
       hc = HomeCountry.where( code: country[ 0 ] ).take
       hc = HomeCountry.new if hc.nil?
@@ -72,13 +72,13 @@ namespace :migratify do
     # States
     HomeCountry.all.each do |country|
       if CS.get( country.code ).count > 0
-        CS.get( country.code ).each do |state|
-          hs = HomeState.where( home_country_id: country.id, code: "#{state[ 0 ]}:#{country.code}" ).take
+        CS.get( country.code ).each do |state_code,state_name|
+          hs = HomeState.where( home_country_id: country.id, code: "#{state_code}:#{country.code}" ).take
           hs = HomeState.new if hs.nil?
           hs.no_response = false
           hs.home_country = country
-          hs.code = "#{state[ 0 ]}:#{country.code}"
-          hs.name = state[ 1 ]
+          hs.code = "#{state_code}:#{country.code}"
+          hs.name = state_name
           hs.save
         end
         if CS.get( country.code ).count > 1
@@ -158,28 +158,11 @@ namespace :migratify do
       g.save
     end
     
-    # Role seed data
-    class Role_
-      attr_accessor :code
-      attr_accessor :name_en, :name_ko
-      attr_accessor :description_en, :description_ko
-    end
-    read_data = YAML.safe_load(File.open('db/role.yml'), [Role_])
-    read_data.each do |role|
-      g = Role.where(name_en: role.name_en).take
-      g = Role.new if g.nil?
-      g.code = role.code unless g.code == role.code
-      g.name_en = role.name_en unless g.name_en == role.name_en
-      g.name_ko = role.name_ko unless g.name_ko == role.name_ko
-      g.description_en = role.description_en unless g.description_en == role.description_en
-      g.description_ko = role.description_ko unless g.description_ko == role.description_ko
-      g.save
-    end
-
     # Bingo! support
     class CandidateFeedback_
       attr_accessor :name_en, :name_ko
       attr_accessor :definition_en, :definition_ko
+      attr_accessor :credit
     end
     quote_data = YAML.safe_load(File.open('db/candidate_feedback.yml'), [CandidateFeedback_])
     quote_data.each do |cf|
@@ -187,6 +170,7 @@ namespace :migratify do
       g = CandidateFeedback.new if g.nil?
       g.name_en = cf.name_en unless g.name_en == cf.name_en
       g.name_ko = cf.name_ko unless g.name_ko == cf.name_ko
+      g.credit = cf.credit unless g.credit == cf.credit
       g.definition_en = cf.definition_en unless g.definition_en == cf.definition_en
       g.definition_ko = cf.definition_ko unless g.definition_ko == cf.definition_ko
       g.save
@@ -194,12 +178,14 @@ namespace :migratify do
     
     # Theme seed data
     class Theme_
+      attr_accessor :code
       attr_accessor :name_en, :name_ko
     end
     read_data = YAML.safe_load(File.open('db/theme.yml'), [Theme_])
     read_data.each do |theme|
-      g = Theme.where(name_en: theme.name_en).take
+      g = Theme.where(code: theme.code).take
       g = Theme.new if g.nil?
+      g.code = theme.code unless g.code == theme.code
       g.name_en = theme.name_en unless g.name_en == theme.name_en
       g.name_ko = theme.name_ko unless g.name_ko == theme.name_ko
       g.save
@@ -224,7 +210,7 @@ namespace :migratify do
     ko_langs = I18nData.languages( :ko )
     
     en_langs.keys.each do |lang_key|
-      g = Language.where(name_en: lang_key.downcase).take
+      g = Language.where(code: lang_key.downcase).take
       g = Language.new if g.nil?
       g.code = lang_key.downcase unless g.code == lang_key.downcase
       g.name_en = en_langs[ lang_key ] unless g.name_en == en_langs[ lang_key ]
@@ -339,8 +325,6 @@ namespace :migratify do
   desc 'Initialize existing PII objects with anonymized names'
   task anon_n_clean: :environment do
     # Make sure the DB is primed and ready!
-    return
-    Rake::Task['db:migrate'].invoke
 
     User.find_each do |user|
       user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
@@ -350,13 +334,16 @@ namespace :migratify do
     end
 
     Group.find_each do |group|
-      group.anon_name = "#{Forgery::Personal.language} #{Forgery::LoremIpsum.characters}s" if group.anon_name.blank?
+      group.anon_name = "#{rand < rand ? Forgery::Personal.language : Forgery::Name.location} #{Forgery::Name.company_name}s" if group.anon_name.blank?
       group.save
     end
 
     BingoGame.find_each do |bingo_game|
-      bingo_game.anon_topic = Forgery::LoremIpsum.title.to_s if bingo_game.anon_topic.blank?
-      bingo_game.save
+      if bingo_game.anon_topic.blank? || ( bingo_game.anon_topic.starts_with? 'Lorem' )
+        trans = [ 'basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the' ]
+        bingo_game.anon_topic = "#{Forgery::Name.company_name} #{trans.sample} #{Forgery::Name.job_title}"
+        bingo_game.save
+      end
     end
 
     Experience.find_each do |experience|
@@ -365,12 +352,12 @@ namespace :migratify do
     end
 
     Project.find_each do |project|
-      project.anon_name = "#{Forgery::Address.country} #{Forgery::Name.job_title}" if project.anon_name.blank?
+      project.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}" if project.anon_name.blank?
       project.save
     end
 
     School.find_each do |school|
-      school.anon_name = "#{Forgery::Name.location} institute" if school.anon_name.blank?
+      school.anon_name = "#{rand < rand ? Forgery::Name.location : Forgery::Name.company_name} institute" if school.anon_name.blank?
       school.save
     end
 
@@ -378,22 +365,11 @@ namespace :migratify do
                GEO IST MAT YOW GFB RSV CSV MBV)
     levels = %w(Beginning Intermediate Advanced)
     Course.find_each do |course|
-      course.anon_name = "#{levels.sample} #{Forgery::Name.industry}"
-      course.anon_number = "#{depts.sample}-#{rand(100..700)}"
+      course.anon_name = "#{levels.sample} #{Forgery::Name.industry}" if course.anon_name.blank?
+      course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
       course.save
     end
 
-    Candidate.find_each do |candidate|
-      candidate.filtered_consistent =
-        candidate.term.nil? ? '' :
-        Candidate.filter.filter(candidate.term.strip.split.map(&:downcase)).join(' ')
-      candidate.save
-    end
-
-    CandidateFeedback.create(name: 'Term: Doesn\'t match',
-                             definition: 'The term does not match the definition.')
-    CandidateFeedback.create(name: 'Term: Product Name',
-                             definition: 'Products should not be used unless they are dominant/household name.')
   end
 
   desc 'Make instructor_updated false'

@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  BingoGame_id: 
+  User_id: 
+  winner: 1
+
+two:
+  BingoGame_id: 
+  User_id: 
+  winner: 1

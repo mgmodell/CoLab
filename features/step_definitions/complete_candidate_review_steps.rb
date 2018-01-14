@@ -83,7 +83,7 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
     concepts << 'concept ' + counter.to_s
   end
 
-  feedbacks = CandidateFeedback.where('name_en like ?', feedback_type + '%')
+  feedbacks = CandidateFeedback.unscoped.where('name_en like ?', feedback_type + '%')
   @feedback_list = {}
   @bingo.candidates.completed.each do |candidate|
     feedback = feedbacks.sample

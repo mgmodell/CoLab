@@ -25,12 +25,12 @@
     </tr>
   </thead>
   <tbody>
-    <% @waiting_rosters.each do |roster| %>
+    <% @waiting_rosters.includes(:course).each do |roster| %>
       <tr>
         <td>
           <%= link_to t( :accept ), accept_roster_path( :roster_id => roster.id ) %> / 
             <%= link_to t( :decline ), decline_roster_path( :roster_id => roster.id ) %>
-          </td>
+        </td>
         <td><em><%= t :waiting %></em></td>
         <td><%= roster.course.get_name( anonymize ) %></td>
         <td><%= l roster.course.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></td>

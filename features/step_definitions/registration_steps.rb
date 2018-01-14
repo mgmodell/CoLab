@@ -21,6 +21,8 @@ Given /^a user has signed up$/ do
   @user = User.make
   @user.confirm
   @user.save
+  @user.name(true).should_not be ', '
+  @user.name(true).length.should be > 2
   puts @user.errors.full_messages unless @user.errors.blank?
 end
 
@@ -50,6 +52,9 @@ end
 
 Given /^a course$/ do
   @course = Course.make
+  @course.save
+  @course.get_name(true).should_not be_nil
+  @course.get_name(true).length.should be > 0
 end
 
 Then /^the users are added to the course by email address$/ do
@@ -69,7 +74,18 @@ Then /^the users are added to the course as instructors by email address$/ do
 end
 
 Then /^the course has (\d+) "([^"]*)" users$/ do |user_count, user_status|
-  @course.rosters.joins(:role).where(roles: { name_en: user_status }).count.should eq user_count.to_i
+  status = 0
+  case user_status
+  when 'Invited Student'
+    status = Roster.roles[:invited_student]
+  when 'Instructor'
+    status = Roster.roles[:instructor]
+  when 'Enrolled Student'
+    status = Roster.roles[:enrolled_student]
+  when 'Declined Student'
+    status = Roster.roles[:declined_student]
+  end
+  @course.rosters.where(role: status).count.should eq user_count.to_i
 end
 
 Then /^(\d+) emails will have been sent$/  do |email_count|

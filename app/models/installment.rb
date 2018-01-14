@@ -15,12 +15,20 @@ class Installment < ActiveRecord::Base
   TOTAL_VAL = 6000.0
 
   # Support inclusion of comments
-  def prettyComment(anonymize = false)
-    if comments.blank?
-      user.name(anonymize) + ': <no comment>'
-    else
-      user.name(anonymize) + ': ' + comments
+  def pretty_comment(anonymize)
+    pretty_comments = '<no comment>'
+    if comments.present?
+      pretty_comments = if anonymize && anon_comments.present?
+                          anon_comments
+                        elsif anonymize && anon_comments.blank?
+                          anonymize_comments
+                          save validate: false
+                          anon_comments
+                        else
+                          comments
+                        end
     end
+    pretty_comments
   end
 
   def value_for_user_factor(user, factor)
@@ -36,7 +44,7 @@ class Installment < ActiveRecord::Base
   def values_by_factor
     hash_hash = {}
 
-    values.each do |v|
+    values.includes(:factor).each do |v|
       au_hash = hash_hash[v.factor]
       au_hash = {} if au_hash.nil?
       au_hash.store(v.user, v)
@@ -47,7 +55,7 @@ class Installment < ActiveRecord::Base
 
   def values_by_user
     hash_hash = {}
-    values.each do |v|
+    values.includes(:factor).each do |v|
       b_hash = hash_hash[v.user]
       b_hash = {} if b_hash.nil?
       b_hash.store(v.factor, v)
@@ -64,12 +72,77 @@ class Installment < ActiveRecord::Base
     errors
   end
 
+  def anonymize_comments
+    unless comments.blank?
+      working_space = comments.dup
+
+      # Phase 1 - convert to codes
+      this_course = Course.readonly.includes(:school, :users, projects: :users)
+                          .find(assessment.project.course_id)
+
+      this_school = this_course.school
+      unless this_school.name.blank?
+        working_space.gsub!(/\b#{this_school.name}\b/i, "[s_#{this_school.id}]")
+      end
+      unless this_course.name.blank?
+        working_space.gsub!(/\b#{this_course.name}\b/i, "[cnam_#{this_course.id}]")
+      end
+      unless this_course.number.blank?
+        working_space.gsub!(/\b#{this_course.number}\b/i, "[cnum_#{this_course.id}]")
+      end
+
+      this_course.projects.each do |project|
+        unless project.name.blank?
+          working_space.gsub!(/\b#{project.name}\b/i, "[p_#{project.id}]")
+        end
+        project.groups.each do |group|
+          unless group.name.blank?
+            working_space.gsub!(/\b#{group.name}\b/i, "[g_#{group.id}]")
+          end
+        end
+      end
+
+      this_course.users.each do |user|
+        unless user.first_name.blank?
+          working_space.gsub! /\b#{user.first_name}\b/i, "[ufn_#{user.id}]"
+        end
+        unless user.last_name.blank?
+          working_space.gsub! /\b#{user.last_name}\b/i, "[uln_#{user.id}]"
+        end
+      end
+
+      # Phase 2 - convert from codes
+      working_space.gsub!("[s_#{this_school.id}]", this_school.anon_name)
+      working_space.gsub!("[cnam_#{this_course.id}]", this_course.anon_name)
+      working_space.gsub!("[cnum_#{this_course.id}]", this_course.anon_number)
+
+      this_course.projects.each do |project|
+        working_space.gsub!("[p_#{project.id}]", project.anon_name)
+        project.groups.each do |group|
+          working_space.gsub!("[g_#{group.id}]", group.anon_name)
+        end
+      end
+
+      this_course.users.each do |user|
+        working_space.gsub!("[ufn_#{user.id}]", user.anon_first_name)
+        working_space.gsub!("[uln_#{user.id}]", user.anon_last_name)
+      end
+
+      self.anon_comments = working_space
+    end
+  end
+
   def normalize_sums
     values_by_factor.each do |_factor, au_hash|
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }
 
       au_hash.values.each do |v|
-        v.value = ((Installment::TOTAL_VAL * v.value) / total).round
+        prelim = (Installment::TOTAL_VAL * v.value) / total
+        if prelim.nan?
+          v.value = (Installment::TOTAL_VAL / v.installment.values.count).round
+        else
+          v.value = prelim.round
+        end
       end
 
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }

@@ -37,8 +37,8 @@ class Assessment < ActiveRecord::Base
     init_date = Date.today.beginning_of_day
     init_day = init_date.wday
     logger.debug "\n\t**Populating Assessments**"
-    Project.where('active = true AND start_date <= ? AND end_date >= ?',
-                  init_date, init_date.end_of_day).each do |project|
+    Project.includes(:course).where('active = true AND start_date <= ? AND end_date >= ?',
+                                    init_date, init_date.end_of_day).each do |project|
 
       build_new_assessment project if project.is_available?
     end
@@ -47,12 +47,18 @@ class Assessment < ActiveRecord::Base
   # Here we'll give instructors a little status update at the close of each assessment period
   def self.inform_instructors
     count = 0
+    date_now = DateTime.current
+
     Assessment.joins(:project)
+              .includes(:installments, :project)
               .where('instructor_updated = false AND assessments.end_date < ? AND projects.active = TRUE',
-                     DateTime.current).each do |assessment|
+                     date_now).each do |assessment|
       completion_hash = {}
+      # Collect data for notification and anonymize comments
       assessment.installments.each do |inst|
         completion_hash[inst.user.email] = { name: inst.user.name(false), status: inst.inst_date.to_s }
+        inst.anonymize_comments
+        puts inst.errors.full_messages unless inst.errors.empty?
       end
 
       assessment.project.course.enrolled_students.each do |student|

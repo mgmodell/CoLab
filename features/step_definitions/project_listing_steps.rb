@@ -4,11 +4,15 @@ require 'chronic'
 Given /^there is a course with an assessed project$/ do
   @course = Course.make
   @course.save
+  @course.get_name(true).should_not be_nil
+  @course.get_name(true).length.should be > 0
   puts @course.errors.full_messages unless @course.errors.blank?
   @project = Project.make
   @project.style = Style.find(1)
   @project.course = @course
   @project.save
+  @project.get_name(true).should_not be_nil
+  @project.get_name(true).length.should be > 0
   puts @project.errors.full_messages unless @project.errors.blank?
 end
 
@@ -25,7 +29,6 @@ end
 Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
   @group = Group.make
   @users = []
-  role = Role.enrolled.take
   user_count.to_i.times do
     user = User.make
     user.skip_confirmation!
@@ -34,12 +37,14 @@ Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
     r = Roster.new
     r.user = user
     r.course = @course
-    r.role = role
+    r.role = Roster.roles[:enrolled_student]
     r.save
     puts r.errors.full_messages unless r.errors.blank?
   end
   @project.groups << @group
   @project.save
+  @project.get_name(true).should_not be_nil
+  @project.get_name(true).length.should be > 0
   puts @project.errors.full_messages unless @project.errors.blank?
 end
 

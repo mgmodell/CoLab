@@ -31,6 +31,13 @@ class Course < ActiveRecord::Base
     prettyName
   end
 
+  def get_activities
+    activities = projects.to_a
+    activities.concat bingo_games
+    activities.concat experiences
+    activities.sort_by(&:end_date)
+  end
+
   def get_name(anonymous = false)
     anonymous ? anon_name : name
   end
@@ -40,7 +47,6 @@ class Course < ActiveRecord::Base
   end
 
   def set_user_role(user, role)
-    role = Role.where(code: role).take if role.class == String
     roster = rosters.where(user: user).take
     roster = Roster.new(user: user, course: self) if roster.nil?
     roster.role = role
@@ -49,13 +55,13 @@ class Course < ActiveRecord::Base
 
   def drop_student(user)
     roster = Roster.where(user: user, course: self).take
-    roster.role = Role.dropped.take
+    roster.role = Roster.roles[:dropped_student]
     roster.save
   end
 
   def get_user_role(user)
     roster = rosters.where(user: user).take
-    roster.nil? ? nil : roster.role
+    roster.role
   end
 
   # Validation check code
@@ -98,8 +104,7 @@ class Course < ActiveRecord::Base
   end
 
   def add_user_by_email(user_email, instructor = false)
-    role_code = instructor ? 'inst' : 'invt'
-    role = Role.where(code: role_code).take
+    role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
     # Searching for the student and:
     user = User.joins(:emails).where(emails: { email: user_email }).take
 
@@ -107,16 +112,18 @@ class Course < ActiveRecord::Base
 
     if user.nil?
       user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
-    end
+      end
 
-    existing_roster = Roster.where(course: self, user: user).take
-    if existing_roster.nil?
-      Roster.create(user: user, course: self, role: role)
-    else
-      existing_roster.role = role
-      existing_roster.save
-    end
+    unless user.nil?
+      existing_roster = Roster.where(course: self, user: user).take
+      if existing_roster.nil?
+        Roster.create(user: user, course: self, role: role)
+      else
+        existing_roster.role = role
+        existing_roster.save
+      end
     # TODO: Let's add course invitation emails here in the future
+  end
   end
 
   def add_students_by_email(student_emails)
@@ -132,20 +139,20 @@ class Course < ActiveRecord::Base
   end
 
   def enrolled_students
-    rosters.joins(:role).where('roles.code = ? OR roles.code = ?', 'enr', 'invt').collect(&:user)
+    rosters.includes(user: [:emails]).enrolled_student.collect(&:user)
   end
 
   def instructors
-    rosters.joins(:role).where('roles.code = ?', 'inst').collect(&:user)
+    rosters.instructor.collect(&:user)
   end
 
   private
 
   def anonymize
     levels = %w(Beginning Intermediate Advanced)
-    anon_name = "#{levels.sample} #{Forgery::Name.industry}"
+    self.anon_name = "#{levels.sample} #{Forgery::Name.industry}"
     dpts = %w(BUS MED ENG RTG MSM LEH EDP
               GEO IST MAT YOW GFB RSV CSV MBV)
-    anon_number = "#{dpts.sample}-#{rand(100..700)}"
+    self.anon_number = "#{dpts.sample}-#{rand(100..700)}"
   end
 end

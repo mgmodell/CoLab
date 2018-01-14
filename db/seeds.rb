@@ -38,7 +38,7 @@ read_data.each do |cip_code|
 end
 
 # Countries
-CS.update
+CS.update # if CS.countries.count < 100
 CS.countries.each do |country|
   hc = HomeCountry.where( code: country[ 0 ] ).take
   hc = HomeCountry.new if hc.nil?
@@ -58,13 +58,13 @@ hc.save
 # States
 HomeCountry.all.each do |country|
   if CS.get( country.code ).count > 0
-    CS.get( country.code ).each do |state|
-      hs = HomeState.where( home_country_id: country.id, code: "#{state[ 0 ]}:#{country.code}" ).take
+    CS.get( country.code ).each do |state_code,state_name|
+      hs = HomeState.where( home_country_id: country.id, code: "#{state_code}:#{country.code}" ).take
       hs = HomeState.new if hs.nil?
       hs.home_country = country
       hs.no_response = false
-      hs.code = "#{state[ 0 ]}:#{country.code}"
-      hs.name = state[ 1 ]
+      hs.code = "#{state_code}:#{country.code}"
+      hs.name = state_name
       hs.save
     end
     hs = HomeState.where( home_country_id: country.id, code: "__:#{country.code}" ).take
@@ -121,24 +121,6 @@ read_data.each do |behavior|
   g.save
 end
 
-# Role seed data
-class Role_
-  attr_accessor :code
-  attr_accessor :name_en, :name_ko
-  attr_accessor :description_en, :description_ko
-end
-read_data = YAML.safe_load(File.open('db/role.yml'), [Role_])
-read_data.each do |role|
-  g = Role.where(name_en: role.name_en).take
-  g = Role.new if g.nil?
-  g.code = role.code unless g.code == role.code
-  g.name_en = role.name_en unless g.name_en == role.name_en
-  g.name_ko = role.name_ko unless g.name_ko == role.name_ko
-  g.description_en = role.description_en unless g.description_en == role.description_en
-  g.description_ko = role.description_ko unless g.description_ko == role.description_ko
-  g.save
-end
-
 # Gender seed data
 class Gender_
   attr_accessor :code
@@ -157,24 +139,17 @@ end
 School.create(name: 'Indiana University', description: 'A large, Midwestern university')
 School.create(name: 'SUNY Korea', description: 'The State University of New York, Korea')
 
-u = User.new(first_name: 'Micah',
-             last_name: 'Modell',
-             admin: true,
-             password: 'testest',
-             password_confirmation: 'testest',
-             email: 'micah.modell@gmail.com',
-             timezone: 'UTC')
-u.skip_confirmation!
-u.save
 
 # Theme seed data
 class Theme_
+  attr_accessor :code
   attr_accessor :name_en, :name_ko
 end
 read_data = YAML.safe_load(File.open('db/theme.yml'), [Theme_])
 read_data.each do |theme|
-  g = Theme.where(name_en: theme.name_en).take
+  g = Theme.where(code: theme.code).take
   g = Theme.new if g.nil?
+  g.code = theme.code unless g.code == theme.code
   g.name_en = theme.name_en unless g.name_en == theme.name_en
   g.name_ko = theme.name_ko unless g.name_ko == theme.name_ko
   g.save
@@ -309,6 +284,7 @@ end
 class CandidateFeedback_
   attr_accessor :name_en, :name_ko
   attr_accessor :definition_en, :definition_ko
+  attr_accessor :credit
 end
 quote_data = YAML.safe_load(File.open('db/candidate_feedback.yml'), [CandidateFeedback_])
 quote_data.each do |cf|
@@ -316,6 +292,7 @@ quote_data.each do |cf|
   g = CandidateFeedback.new if g.nil?
   g.name_en = cf.name_en unless g.name_en == cf.name_en
   g.name_ko = cf.name_ko unless g.name_ko == cf.name_ko
+  g.credit = cf.credit unless g.credit == cf.credit
   g.definition_en = cf.definition_en unless g.definition_en == cf.definition_en
   g.definition_ko = cf.definition_ko unless g.definition_ko == cf.definition_ko
   g.save
@@ -340,4 +317,14 @@ g = Language.new if g.nil?
 g.code = '__' unless g.code == '__'
 g.translated = false
 g.name_en = 'I prefer not to answer' unless g.name_en == 'I prefer not to answer'
+
 g.save
+u = User.new(first_name: 'Micah',
+             last_name: 'Modell',
+             admin: true,
+             password: 'testest',
+             password_confirmation: 'testest',
+             email: 'micah.modell@gmail.com',
+             timezone: 'UTC')
+u.skip_confirmation!
+u.save

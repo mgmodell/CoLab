@@ -23,6 +23,9 @@ en:
     diversities_calculated: Diversity scores calculated based on current data.
     recalculate_diversities: Calculate all diversity scores!
     wrong_group: The specified group is not in this project.
+    performance_explained: >
+      This value reflects your rate of response to CoLab's weekly self-
+      and peer assessment requests.
     show:
       title: Project Details
     edit:

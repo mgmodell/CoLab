@@ -2,5 +2,4 @@
 <%= CSV.generate_line headers %>
 <%- @data.each do |datum| -%>
   <%= CSV.generate_line( [datum.report_date, "\"#{datum.report_date}\"" ] ) %>
-
 <%- end -%>

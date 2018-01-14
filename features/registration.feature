@@ -11,6 +11,8 @@ Feature: User registration
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
     Given the project has a consent form
+    Given the consent form started "1 month ago" and ends "1 month from now"
+    Given the consent form "is" active
     Given the user is the "last" user in the group
     Given the user "has not" had demographics requested
     When the user logs in
@@ -25,6 +27,8 @@ Feature: User registration
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
     Given the project has a consent form
+    Given the consent form started "1 month ago" and ends "1 month from now"
+    Given the consent form "is" active
     Given the user is the "last" user in the group
     Given the user "has not" had demographics requested
     When the user logs in

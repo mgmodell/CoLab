@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 source 'https://rubygems.org'
-ruby '2.3.3'
+ruby '2.4.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.5'
+gem 'rails', '4.2.8'
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.3.13', '< 0.5'
 # Use SCSS for stylesheets
@@ -30,7 +30,6 @@ gem 'country_select'
 gem 'devise'
 gem 'devise-multi_email'
 gem 'forgery'
-gem 'highcharts-rails'
 gem 'jquery-tablesorter'
 gem 'jquery_mobile_rails'
 gem 'omniauth-google-oauth2'
@@ -44,7 +43,8 @@ gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
 gem 'city-state'
 gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
-gem 'bitcoin_payable', git: 'https://github.com/Sailias/bitcoin_payable', branch: 'master'
+gem 'd3-rails'
+gem 'kaminari'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -64,9 +64,11 @@ group :development, :test do
   gem 'htmlbeautifier'
   gem 'machinist'
   gem 'railroady'
+  gem 'rails-erd', require: false
   gem 'rspec'
   gem 'rubocop'
   gem 'i18n_data'
+  gem 'bullet'
 end
 
 group :development do

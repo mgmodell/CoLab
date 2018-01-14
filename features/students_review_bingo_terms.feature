@@ -41,13 +41,23 @@ Feature: Students review Candidate words for Bingo!
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
 
-  Scenario: Instructor logs in and assigns feedback to 134 candidates
+  Scenario: Instructor completes the review and the user checks their account
     Given the user assigns "Accept" feedback to all candidates
+    Given the user checks "Review completed"
      Then the user clicks "Save"
      Then the user logs out
      When the user is any student in the course
      Then the user logs in
+     Then user should see 1 open task
+     Then user opens their profile
+     Then user sees the Bingo! in the history
+     Given today is "4 days from now"
+     Then the user logs out
+     When the user is any student in the course
+     Then the user logs in
      Then user should see 0 open task
+     Then user opens their profile
+     Then user sees the Bingo! in the history
 
   Scenario: Instructor logs in and accepts all 134 candidates
     Given the user sees review items for all the expected candidates

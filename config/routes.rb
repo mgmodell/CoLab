@@ -18,7 +18,11 @@ Rails.application.routes.draw do
         as: :activate_experience
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate', 
         as: :activate_bingo_game
-    resources :courses, :projects, :experiences, :bingo_games, :schools, :consent_forms
+    get 'verify_bingo_win/:id/:verified' => 'bingo_boards#verify_win',
+        as: 'verify_bingo_win'
+    resources :courses, :projects, :experiences, :bingo_games, :schools,
+              :consent_forms
+    resources :concepts, except: [:destroy, :create]
   end
 
   scope 'bingo' do
@@ -30,6 +34,12 @@ Rails.application.routes.draw do
     post 'candidates_review/:id' => 'bingo_games#update_review_candidates',
         as: :update_bingo_candidates_review
     get 'list_stats/:id' => 'candidate_lists#list_stats', as: :'bingo_list_stats'
+    #Gameplay functions
+    resources :bingo_boards, only: [:index, :edit, :update, :show]
+    get 'concepts_for_game/:id' => 'concepts#concepts_for_game',
+        as: :bingo_concepts,
+        constraints: ->(req) { req.format == :json }
+    post 'play_board/:id' => 'bingo_boards#play_board', as: 'play_bingo'
   end
 
   get 'infra/states_for_country/:country_code' => 'home#states_for_country', as: :states_for
@@ -78,9 +88,11 @@ Rails.application.routes.draw do
   resources :installments, only: [:create, :update]
 
   get 'graphing/index' => 'graphing#index', as: :'graphing'
-  get 'graphing/data/:unit_of_analysis/:subject/:project/:data_processing/:for_research' => 'graphing#data',
-      as: :graphing_data
-  get 'graphing/subjects/:unit_of_analysis/:project_id/:for_research' => 'graphing#subjects',
-      as: :graphing_support
+  get 'graphing/data/:unit_of_analysis/:subject/:project/:for_research/:anonymous' =>
+          'graphing#data', as: :graphing_data
+  get 'graphing/projects/:for_research/:anonymous' =>
+          'graphing#projects', as: :graphing_projects
+  get 'graphing/subjects/:unit_of_analysis/:project_id/:for_research/:anonymous' =>
+          'graphing#subjects', as: :graphing_subjects
 
 end

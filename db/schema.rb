@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20170817082817) do
+=======
+ActiveRecord::Schema.define(version: 20171225131145) do
+>>>>>>> master
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -34,6 +38,31 @@ ActiveRecord::Schema.define(version: 20170817082817) do
   end
 
   add_index "behaviors", ["name_en"], name: "index_behaviors_on_name_en", unique: true, using: :btree
+
+  create_table "bingo_boards", force: :cascade do |t|
+    t.integer  "bingo_game_id", limit: 4
+    t.integer  "user_id",       limit: 4
+    t.integer  "winner",        limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.boolean  "win_claimed"
+  end
+
+  add_index "bingo_boards", ["bingo_game_id"], name: "index_bingo_boards_on_bingo_game_id", using: :btree
+  add_index "bingo_boards", ["user_id"], name: "index_bingo_boards_on_user_id", using: :btree
+
+  create_table "bingo_cells", force: :cascade do |t|
+    t.integer  "bingo_board_id", limit: 4
+    t.integer  "concept_id",     limit: 4
+    t.integer  "row",            limit: 4
+    t.integer  "column",         limit: 4
+    t.boolean  "selected"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "bingo_cells", ["bingo_board_id"], name: "index_bingo_cells_on_bingo_board_id", using: :btree
+  add_index "bingo_cells", ["concept_id"], name: "index_bingo_cells_on_concept_id", using: :btree
 
   create_table "bingo_games", force: :cascade do |t|
     t.string   "topic",               limit: 255
@@ -92,22 +121,23 @@ ActiveRecord::Schema.define(version: 20170817082817) do
     t.string   "name_en",       limit: 255
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
-    t.string   "definition",    limit: 255
     t.string   "name_ko",       limit: 255
     t.text     "definition_en", limit: 65535
     t.text     "definition_ko", limit: 65535
+    t.integer  "credit",        limit: 4
   end
 
   add_index "candidate_feedbacks", ["name_en"], name: "index_candidate_feedbacks_on_name_en", unique: true, using: :btree
 
   create_table "candidate_lists", force: :cascade do |t|
-    t.integer  "user_id",         limit: 4
-    t.integer  "group_id",        limit: 4
+    t.integer  "user_id",            limit: 4
+    t.integer  "group_id",           limit: 4
     t.boolean  "is_group"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.integer  "bingo_game_id",   limit: 4
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.integer  "bingo_game_id",      limit: 4
     t.boolean  "group_requested"
+    t.integer  "cached_performance", limit: 4
   end
 
   add_index "candidate_lists", ["bingo_game_id"], name: "index_candidate_lists_on_bingo_game_id", using: :btree
@@ -129,6 +159,8 @@ ActiveRecord::Schema.define(version: 20170817082817) do
   add_index "candidates", ["candidate_feedback_id"], name: "index_candidates_on_candidate_feedback_id", using: :btree
   add_index "candidates", ["candidate_list_id"], name: "index_candidates_on_candidate_list_id", using: :btree
   add_index "candidates", ["concept_id"], name: "index_candidates_on_concept_id", using: :btree
+  add_index "candidates", ["definition"], name: "index_candidates_on_definition", length: {"definition"=>2}, using: :btree
+  add_index "candidates", ["term"], name: "index_candidates_on_term", length: {"term"=>2}, using: :btree
   add_index "candidates", ["user_id"], name: "index_candidates_on_user_id", using: :btree
 
   create_table "cip_codes", force: :cascade do |t|
@@ -147,18 +179,23 @@ ActiveRecord::Schema.define(version: 20170817082817) do
     t.datetime "updated_at",             null: false
   end
 
+  add_index "concepts", ["name"], name: "concept_fulltext", type: :fulltext
   add_index "concepts", ["name"], name: "index_concepts_on_name", unique: true, using: :btree
 
   create_table "consent_forms", force: :cascade do |t|
     t.string   "name",             limit: 255
     t.integer  "user_id",          limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.string   "pdf_file_name",    limit: 255
     t.string   "pdf_content_type", limit: 255
     t.integer  "pdf_file_size",    limit: 4
     t.datetime "pdf_updated_at"
-    t.text     "form_text",        limit: 65535
+    t.text     "form_text_en",     limit: 65535
+    t.date     "start_date"
+    t.date     "end_date"
+    t.boolean  "active",                         default: false, null: false
+    t.text     "form_text_ko",     limit: 65535
   end
 
   add_index "consent_forms", ["user_id"], name: "index_consent_forms_on_user_id", using: :btree
@@ -333,6 +370,7 @@ ActiveRecord::Schema.define(version: 20170817082817) do
     t.integer  "group_id",      limit: 4
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+    t.text     "anon_comments", limit: 65535
   end
 
   add_index "installments", ["assessment_id"], name: "index_installments_on_assessment_id", using: :btree
@@ -405,29 +443,16 @@ ActiveRecord::Schema.define(version: 20170817082817) do
   add_index "reactions", ["narrative_id"], name: "index_reactions_on_narrative_id", using: :btree
   add_index "reactions", ["user_id"], name: "index_reactions_on_user_id", using: :btree
 
-  create_table "roles", force: :cascade do |t|
-    t.string   "name_en",        limit: 255
-    t.string   "description_en", limit: 255
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.string   "name_ko",        limit: 255
-    t.string   "code",           limit: 255
-    t.string   "description_ko", limit: 255
-  end
-
-  add_index "roles", ["code"], name: "index_roles_on_code", unique: true, using: :btree
-  add_index "roles", ["name_en"], name: "index_roles_on_name_en", unique: true, using: :btree
-
   create_table "rosters", force: :cascade do |t|
-    t.integer  "role_id",    limit: 4
+    t.integer  "role",       limit: 4, default: 4, null: false
     t.integer  "course_id",  limit: 4
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.integer  "user_id",    limit: 4,             null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   add_index "rosters", ["course_id"], name: "index_rosters_on_course_id", using: :btree
-  add_index "rosters", ["role_id"], name: "index_rosters_on_role_id", using: :btree
+  add_index "rosters", ["role"], name: "index_rosters_on_role", using: :btree
   add_index "rosters", ["user_id"], name: "index_rosters_on_user_id", using: :btree
 
   create_table "scenarios", force: :cascade do |t|
@@ -555,6 +580,10 @@ ActiveRecord::Schema.define(version: 20170817082817) do
   add_index "weeks", ["week_num", "narrative_id"], name: "index_weeks_on_week_num_and_narrative_id", unique: true, using: :btree
 
   add_foreign_key "assessments", "projects"
+  add_foreign_key "bingo_boards", "bingo_games"
+  add_foreign_key "bingo_boards", "users"
+  add_foreign_key "bingo_cells", "bingo_boards"
+  add_foreign_key "bingo_cells", "concepts"
   add_foreign_key "bingo_games", "courses"
   add_foreign_key "bingo_games", "projects"
   add_foreign_key "candidate_lists", "bingo_games"
@@ -590,7 +619,6 @@ ActiveRecord::Schema.define(version: 20170817082817) do
   add_foreign_key "reactions", "narratives"
   add_foreign_key "reactions", "users"
   add_foreign_key "rosters", "courses"
-  add_foreign_key "rosters", "roles"
   add_foreign_key "rosters", "users"
   add_foreign_key "scenarios", "behaviors"
   add_foreign_key "users", "cip_codes"

@@ -5,6 +5,7 @@
       <li class="ui-state-active ui-tabs-active">
         <a href="#profile" data-ajax="false"><%= t :about_you %></a>
       </li>
+      <li><a href="#courses" data-ajax="false"><%= t 'devise.registrations.my_courses' %></a></li>
       <li><a href="#history" data-ajax="false"><%= t :history %></a></li>
       <li><a href="#consent_forms" data-ajax="false"><%= t 'consent_forms.multiple' %></a></li>
     </ul>
@@ -135,6 +136,69 @@
 <% end %>
   </div>
   </div>
+  <div id="courses" class="ui-body-<%= theme_code %> ui-content">
+    <h2><%= t 'devise.registrations.my_courses' %></h2>
+    <%= t 'devise.registrations.my_courses_count', count: @current_user.courses.count %>
+        <table data-role="table"
+            id="basicTable"
+            data-column-btn-theme"<%= theme_code %>" 
+            data-column-popup-theme="<%= theme_code %>" 
+            data-mode="columntoggle"
+            data-column-btn-theme="<%= theme_code %>" 
+            data-column-btn-text="<%= t :column_select %>"
+            class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+
+          <thead>
+            <th data-priority="0"><%= t :number %></th>
+            <th data-priority="0"><%= t :name %></th>
+            <th data-priority="0" colspan="2">
+              <%= t 'devise.bingo_performance' %>
+              <a href="#bingo_performance" data-rel="popup"
+              data-transition="pop"
+              class="ui-btn ui-alt-icon ui-shadow ui-corner-all
+                      ui-btn-inline ui-icon-info ui-btn-icon-notext"
+              title="Learn more">Learn more</a>
+            </th>
+            <th data-priority="0"><%= t 'devise.experience_performance' %>
+              <a href="#experience_performance" data-rel="popup"
+              data-transition="pop"
+              class="ui-btn ui-alt-icon ui-shadow ui-corner-all
+                      ui-btn-inline ui-icon-info ui-btn-icon-notext"
+              title="Learn more">Learn more</a>
+            </th>
+            <th data-priority="0"><%= t 'devise.assessment_performance' %>
+              <a href="#assessment_performance" data-rel="popup"
+              data-transition="pop"
+              class="ui-btn ui-alt-icon ui-shadow ui-corner-all
+                      ui-btn-inline ui-icon-info ui-btn-icon-notext"
+              title="Learn more">Learn more</a>
+            </th>
+          </thead>
+          <tbody>
+          <% @current_user.courses.uniq.each do |course| %>
+          <tr>
+            <td><%= course.number %></td>
+            <td><%= course.name %></td>
+            <td>
+              <%= @current_user.get_bingo_performance( course_id: course.id ) %>%
+            </td>
+            <td>
+              <svg width="50" height="50"
+                onload="init_me( this, <%= @current_user.get_bingo_data( course_id: course.id ) %>);">
+              </svg>
+            </td>
+            <td>
+              <%= @current_user.get_experience_performance( course_id: course.id ) %>%
+            </td>
+            <td>
+              <%= @current_user.get_assessment_performance( course_id: course.id ) %>%
+            </td>
+          </tr>
+          <% end %>
+          <tbody>
+        </table>
+
+  </div>
   <div id="history" class="ui-body-<%= theme_code %> ui-content">
     <h2><%= t 'devise.registrations.activity_history' %></h2>
       <% activities = @current_user.activity_history
@@ -142,7 +206,7 @@
         <p><%= t 'devise.registrations.no_activities' %></p>
       <% else %>
         <table data-role="table"
-            id="basicTable"
+            id="history_table"
             data-column-btn-theme"<%= theme_code %>" 
             data-column-popup-theme="<%= theme_code %>" 
             data-mode="columntoggle"
@@ -165,14 +229,26 @@
       <% activities.each do |activity| %>
       <tr>
         <% if activity.class.name == "BingoGame" && activity.reviewed %>
-          <td><%= link_to activity.name, bingo_list_stats_path( activity.candidate_list_for_user( @current_user ) ) %></td>
+          <td><%= link_to activity.get_name( false ),
+                  bingo_list_stats_path( activity.candidate_list_for_user( @current_user ) ) %>
+          </td>
         <% else %>
-          <td><%= activity.get_name false %></td>
+          <td>
+            <%= activity.get_name false %>
+          </td>
         <% end %>
         <td><%= activity.course.pretty_name false %></td>
-        <td><%= activity.type %></td>
+        <td><%= activity.get_type %></td>
         <td><%= activity.end_date %></td>
-        <td><%= activity.status_for_user( @current_user ) %></td>
+        <td>
+          <% if activity.class.name == "BingoGame" %>
+            <%= activity.candidate_list_for_user( @current_user ).performance %>%
+          <% elsif activity.class.name == "Project" %>
+            <%= @current_user.get_assessment_performance( course_id: activity.course.id ) %>%
+          <% elsif activity.class.name == "Experience" %>
+            <%= @current_user.get_experience_performance( course_id: activity.course.id ) %>%
+          <% end %>
+        </td>
         <td>
         <% if activity.class.name == "BingoGame" %>
           <%= activity.candidate_list_for_user( @current_user ).get_concepts.count %> unique concepts
@@ -183,6 +259,8 @@
            <% else %>
              <%= t 'devise.registrations.experience_not_started' %>
            <% end %>
+        <% elsif activity.class.name == "Project" %>
+          <%= activity.get_performance(@current_user ) %>
         <% else %>
           <%= t :coming_soon %>
         <% end %>
@@ -211,7 +289,7 @@
         <td>
           <center>
             <%= link_to t( 'devise.registrations.update_status' ), 
-                edit_consent_log_path( consent_log ) %>
+                edit_consent_log_path( consent_log.consent_form_id ) %>
           </center>
         </td>
       </tr>
@@ -237,6 +315,18 @@
       <%= submit_tag t( :add ) %>
     </div>
   <% end %>
+</div>
+<div data-role="popup" id="bingo_performance" class="ui-content"
+    data-theme="<%= theme_code %>" style="width:90%">
+  <%= render 'shared/candidate_feedback' %>
+</div>
+<div data-role="popup" id="experience_performance" class="ui-content"
+    data-theme="<%= theme_code %>" style="width:90%">
+  <%= t 'experiences.performance_explained' %>
+</div>
+<div data-role="popup" id="assessment_performance" class="ui-content"
+    data-theme="<%= theme_code %>" style="width:90%">
+  <%= t 'projects.performance_explained' %>
 </div>
 
 <%= link_to t( :back ), :back %>

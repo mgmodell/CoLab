@@ -1,5 +1,4 @@
 <p id="notice"><%= notice %></p>
-
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
    anonymize = @current_user.anonymize? %>
 <div data-role="tabs" id="tabs">
@@ -15,7 +14,6 @@
       <h3><%= t(:name)%>:</h3>
       <%= @school.get_name( anonymize ) %>
     </p>
-
     <p>
       <h3><%= t :description %>:</h3>
       <%= @school.description %>
@@ -23,57 +21,54 @@
     <%= link_to t('.edit_string'), edit_school_path(@school) %>
   </div>
   <div id="courses" class="ui-body-<%= theme_code %> ui-content">
-
-<p>
-  <h3><%= t 'courses.courses' %></h3>
-  <% if @school.bingo_games.count < 1 %>
-    <%= t 'schools.no_courses' %></br>
-  <% else %>
-    <table data-role="table"
+    <p>
+      <h3><%= t 'courses.courses' %></h3>
+      <% if @school.bingo_games.count < 1 %>
+        <%= t 'schools.no_courses' %></br>
+    <% else %>
+      <table data-role="table"
           id="course_table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>"
           data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-      <thead>
-      <tr>
-        <th><%= t :name %></th>
-        <th><%= t :number %></th>
-        <th data-priority="1"><%= t :instructors %></th>
-        <th data-priority="0"><%= t :students %></th>
-        <th data-priority="1"><%= t 'projects.projects' %></th>
-        <th data-priority="1"><%= t :exps %></th>
-        <th data-priority="1"><%= t :terms_lists %></th>
-        <th data-priority="0">Start Date</th>
-        <th data-priority="0">End Date</th>
-        <th data-priority="1"><%= t :actions %></th>
-      </tr>
-      </thead>
-      <tbody>
+        <thead>
+          <tr>
+            <th><%= t :name %></th>
+            <th><%= t :number %></th>
+            <th data-priority="1"><%= t :instructors %></th>
+            <th data-priority="0"><%= t :students %></th>
+            <th data-priority="1"><%= t 'projects.projects' %></th>
+            <th data-priority="1"><%= t :exps %></th>
+            <th data-priority="1"><%= t :terms_lists %></th>
+            <th data-priority="0">Start Date</th>
+            <th data-priority="0">End Date</th>
+            <th data-priority="1"><%= t :actions %></th>
+          </tr>
+        </thead>
+        <tbody>
           <% @school.courses.each do |course| %>
             <tr>
-                <td><%= link_to course.get_name( anonymize ), course %></td>
-                <td><%= course.get_number( anonymize ) %></td>
-                <td><%= course.instructors.count %></td>
-                <td><%= course.enrolled_students.count %></td>
-                <td><%= course.projects.count %></td>
-                <td><%= course.experiences.count %></td>
-                <td><%= course.bingo_games.count %></td>
-                <td><%= l course.start_date, format: :tz_clarity %></td>
-                <td><%= l course.end_date, format: :tz_clarity %></td>
-                <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
+              <td><%= link_to course.get_name( anonymize ), course %></td>
+              <td><%= course.get_number( anonymize ) %></td>
+              <td><%= course.instructors.count %></td>
+              <td><%= course.enrolled_students.count %></td>
+              <td><%= course.projects.count %></td>
+              <td><%= course.experiences.count %></td>
+              <td><%= course.bingo_games.count %></td>
+              <td><%= l course.start_date, format: :tz_clarity %></td>
+              <td><%= l course.end_date, format: :tz_clarity %></td>
+              <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
                 <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
-                <%= link_to t(:destroy), course, method: :delete, data: { confirm: t :confirmation } %></td>
+                <%= link_to t( :destroy ), course, method: :delete, data: { confirm: t( :confirmation) } %></td>
             </tr>
           <% end %>
-      </tbody>
-    </table>
-  <% end %>
-  <%= link_to t( 'schools.new.title'), new_course_path( :school_id => @school.id ),
+        </tbody>
+      </table>
+    <% end %>
+    <%= link_to t( 'schools.new.title'), new_course_path( :school_id => @school.id ),
       :data => { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" }%>
-</p>
-  </div>
+  </p>
 </div>
-
-
+</div>
 <%= link_to t( 'schools.back'), schools_path %>

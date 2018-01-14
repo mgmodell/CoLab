@@ -2,8 +2,8 @@
 <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
 <% anonymize = false %>
 <p><%= t 'home.greeting', name: @first_name %>,</br>
-  <% tasks = @waiting_student_tasks + @waiting_instructor_tasks %>
-  <%= t 'home.tasks', count: tasks.count %></p>
+<% tasks = @waiting_student_tasks + @waiting_instructor_tasks %>
+<%= t 'home.tasks', count: tasks.count %></p>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -14,9 +14,9 @@
   </div>
   <div id="tasks" class="ui-body-<%= theme_code %> ui-content">
     <h3><%= t :task_view %></h3>
-<% if @waiting_instructor_tasks.any? %>
-<h4><%= t :instructor_tasks %></h4>
-  <table data-role="table"
+    <% if @waiting_instructor_tasks.any? %>
+      <h4><%= t :instructor_tasks %></h4>
+      <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
           data-column-popup-theme="<%= theme_code %>" 
@@ -24,109 +24,114 @@
           data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-    <thead>
-      <tr>
-        <th><%= t :task_name %></th>
-        <th data-priority="1"><%= t 'home.task_type' %></th>
-        <th data-priority="0"><%= t :status %></th>
-        <th data-priority="1"><%= t :course_name %></th>
-        <th data-priority="0"><%= t :close_date %></th>
-      </tr>
-    </thead>
-    <tbody>
-    <% @waiting_instructor_tasks.each do |task| %>
-      <tr>
-        <td data-priority="0">
-          <%= render :partial => "shared/task_link", 
-                    :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
-        </td>
-        <td align="center" data-priority="1">Bingo! Candidate Review</td>
-        <td align="center" data-priority="1"><%= task.status %>%</td>
-        <td data-priority="1"><%= task.course.get_name( anonymize ) %></td>
-        <td data-priority="0">
-          <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
-        </td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
-<% end %>
-</br>
-<% if @waiting_student_tasks.any? %>
-<h4><%= t :student_tasks %></h4>
-  <table data-role="table"
-          id="basicTable"
-          data-column-btn-theme"<%= theme_code %>" 
-          data-column-popup-theme="<%= theme_code %>" 
-          data-mode="columntoggle"
-          data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="<%= t :column_select %>"
-          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-    <thead>
-      <tr>
-        <th><%= t :task_name %></th>
-        <th data-priority="1"><%= t 'home.task_type' %></th>
-        <th><%= t :status %></th>
-        <th data-priority="1"><%= t :group %></th>
-        <th data-priority="0"><%= t :course_name %></th>
-        <th data-priority="1"><%= t :open_date %></th>
-        <th data-priority="0"><%= t :close_date %></th>
-        <th data-priority="1"><%= t :consent_form %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @waiting_student_tasks.each do |task| %>
-        <% if task.class == Assessment %>
-          <% group = task.group_for_user( @current_user )%>
+        <thead>
           <tr>
-            <td data-priority="0">
-              <%= render :partial => "shared/task_link", 
-                        :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
-            </td>
-            <td><%= t 'home.sapa' %></td>
-            <td>
-              <% if(task.is_completed_by_user @current_user) %>
-                <em><%= t :complete %></em>
-              <% else %>
-                <em><%= t :not_started %></em>
-              <% end %>
-            </td>
-            <td> <%= group.get_name( anonymize ) %></td>
-            <td> <%= task.project.course.get_name( anonymize ) %></td>
-            <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
-            <td> <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
-            <td>
-              <%= render :partial => "shared/consent", :locals => { :project => task.project } %>
-            </td>
+            <th><%= t :task_name %></th>
+            <th data-priority="1"><%= t 'home.task_type' %></th>
+            <th data-priority="0"><%= t :status %></th>
+            <th data-priority="1"><%= t :course_name %></th>
+            <th data-priority="0"><%= t :close_date %></th>
           </tr>
-        <% elsif task.class == BingoGame %>
-          <tr><% candidate_list = task.candidate_list_for_user( @current_user ) %>
-            <td data-priority="0">
-              <%= render :partial => "shared/task_link", 
+        </thead>
+        <tbody>
+          <% @waiting_instructor_tasks.each do |task| %>
+            <tr>
+              <td data-priority="0">
+                <%= render :partial => "shared/task_link", 
+                    :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
+              </td>
+              <td align="center" data-priority="1"><%= t 'bingo_games.review_candidates.title' %></td>
+              <td align="center" data-priority="1"><%= task.status %>%</td>
+              <td data-priority="1"><%= task.course.get_name( anonymize ) %></td>
+              <td data-priority="0">
+                <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </br>
+  <% if @waiting_student_tasks.any? %>
+    <h4><%= t :student_tasks %></h4>
+    <table data-role="table"
+          id="basicTable"
+          data-column-btn-theme"<%= theme_code %>" 
+          data-column-popup-theme="<%= theme_code %>" 
+          data-mode="columntoggle"
+          data-column-btn-theme="<%= theme_code %>" 
+          data-column-btn-text="<%= t :column_select %>"
+          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
+      <thead>
+        <tr>
+          <th><%= t :task_name %></th>
+          <th data-priority="1"><%= t 'home.task_type' %></th>
+          <th><%= t :status %></th>
+          <th data-priority="1"><%= t :group %></th>
+          <th data-priority="0"><%= t :course_name %></th>
+          <th data-priority="1"><%= t :open_date %></th>
+          <th data-priority="0"><%= t :close_date %></th>
+          <th data-priority="1"><%= t :consent_form %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @waiting_student_tasks.each do |task| %>
+          <% if task.class == Assessment %>
+            <% group = task.group_for_user( @current_user )%>
+            <tr>
+              <td data-priority="0">
+                <%= render :partial => "shared/task_link", 
                         :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
-            </td>
-            <% if task.is_open? %>
-              <td><%= t 'candidates.submission' %></td>
-              <td>
-                <%= candidate_list.percent_completed %>%
               </td>
-            <% elsif task.reviewed %>
-              <td><%= t 'candidates.distilled' %></td>
+              <td><%= t 'home.sapa' %></td>
               <td>
-                <%= task.concepts.count %> concepts
+                <% if(task.is_completed_by_user @current_user) %>
+                  <em><%= t :complete %></em>
+                <% else %>
+                  <em><%= t :not_started %></em>
+                <% end %>
               </td>
-            <% end %>
-            <td>
-              <% if task.project.present? && task.project.group_for_user( @current_user ) %>
-                <%= task.project.group_for_user( @current_user ).get_name( anonymize ) %>
-              <% else %>
-                N/A
+              <td> <%= group.get_name( anonymize ) %></td>
+              <td> <%= task.project.course.get_name( anonymize ) %></td>
+              <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
+              <td>
+                <div hidden>
+                  <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :datestamp %>
+                </div>
+                <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
+              </td>
+              <td>
+                <%= render :partial => "shared/consent", :locals => { :project => task.project } %>
+              </td>
+            </tr>
+          <% elsif task.class == BingoGame %>
+            <tr><% candidate_list = task.candidate_list_for_user( @current_user ) %>
+              <td data-priority="0">
+                <%= render :partial => "shared/task_link", 
+                        :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
+              </td>
+              <% if task.is_open? %>
+                <td><%= t 'candidates.submission' %></td>
+                <td>
+                  <%= candidate_list.percent_completed %>%
+              </td>
+              <% elsif task.reviewed %>
+                <td><%= t 'candidates.distilled' %></td>
+                <td>
+                  <%= task.concepts.count %> concepts
+              </td>
               <% end %>
-            </td>
-            <td> <%= task.course.get_name( anonymize ) %></td>
-            <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
-            <td>
-              <%= l task.term_list_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></br>
+              <td>
+                <% if task.project.present? && task.project.group_for_user( @current_user ) %>
+                  <%= task.project.group_for_user( @current_user ).get_name( anonymize ) %>
+                <% else %>
+                  N/A
+              <% end %>
+              </td>
+              <td> <%= task.course.get_name( anonymize ) %></td>
+              <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
+              <td>
+                <%= l task.term_list_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></br>
               <small><i>(<%= t 'candidates.list_for_class' %> <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :short_date %></i></small>)
             </td>
             <td>N/A</td>
@@ -141,7 +146,7 @@
             <td><%= t 'experience.simulation' %></td>
             <td>
               <em>
-                <%= reaction.status %>
+                <%= reaction.status %>% 
               </em>
             </td>
             <td> N/A</td>
@@ -150,7 +155,7 @@
             <td> <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
             <td>
               <%= t :n_a %>
-                </td>
+            </td>
           </tr>
         <% end %>
       <% end %>
@@ -158,36 +163,36 @@
   </table>
 <% end %>
 </div>
-  <div id="weekly" class="ui-body-<%= theme_code %> ui-content">
-    <h3><%= t :week_view %></h3>
-    <%= week_calendar attribute: :next_deadline, events: tasks,  number_of_weeks: 2 do |date,meetings| %>
-      <h4 style="font-weight:300;font-size:10px;text-align:center">
-        <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
-      </h4>
-      <ul>
+<div id="weekly" class="ui-body-<%= theme_code %> ui-content">
+  <h3><%= t :week_view %></h3>
+  <%= week_calendar attribute: :next_deadline, events: tasks,  number_of_weeks: 2 do |date,meetings| %>
+    <h4 style="font-weight:300;font-size:10px;text-align:center">
+      <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
+    </h4>
+    <ul>
       <% meetings.each do |meeting| %>
         <li>
           <%= render :partial => "shared/task_link", 
                     :locals => { :task => meeting, :anonymize => anonymize, :user => @current_user } %>
         </li>
       <% end %>
-      </ul>
-    <% end %>
-  </div>
-  <div id="monthly" class="ui-body-<%= theme_code %> ui-content">
-    <h3><%= t :month_view %></h3>
-    <%= month_calendar attribute: :next_deadline, events: tasks  do |date,meetings| %>
-      <h4 style="font-weight:300;font-size:10px;text-align:center">
-        <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
-      </h4>
-      <ul>
+    </ul>
+  <% end %>
+</div>
+<div id="monthly" class="ui-body-<%= theme_code %> ui-content">
+  <h3><%= t :month_view %></h3>
+  <%= month_calendar attribute: :next_deadline, events: tasks  do |date,meetings| %>
+    <h4 style="font-weight:300;font-size:10px;text-align:center">
+      <%= t('date.abbr_month_names' )[date.month] %> <%= date.day %>
+    </h4>
+    <ul>
       <% meetings.each do |meeting| %>
         <li>
           <%= render :partial => "shared/task_link", 
                     :locals => { :task => meeting, :anonymize => anonymize, :user => @current_user } %>
         </li>
       <% end %>
-      </ul>
-    <% end %>
-  </div>
+    </ul>
+  <% end %>
+</div>
 </div>

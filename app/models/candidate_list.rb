@@ -19,6 +19,24 @@ class CandidateList < ActiveRecord::Base
     100 * candidates.completed.count / expected_count
   end
 
+  def performance
+    performance = 0
+    if bingo_game.reviewed
+      if cached_performance.nil?
+        candidates.joins(:candidate_feedback, :concept).completed
+                  .group(:concept).maximum('candidate_feedbacks.credit')
+                  .each do |concept_max|
+          performance += concept_max[1]
+        end
+        performance /= expected_count
+        self.cached_performance = performance
+        save
+      end
+      performance = cached_performance
+    end
+    performance
+  end
+
   def get_by_feedback(candidate_feedback)
     candidates.where(candidate_feedback: candidate_feedback)
   end
@@ -37,10 +55,6 @@ class CandidateList < ActiveRecord::Base
     else
       bingo_game.individual_count
     end
-  end
-
-  def performance
-    100 * get_concepts.count / expected_count
   end
 
   def status

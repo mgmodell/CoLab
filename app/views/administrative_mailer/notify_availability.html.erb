@@ -6,9 +6,9 @@
   <body>
     <h1><%= t 'home.greeting', name: @user.first_name %>.</h1>
     <p>
-      <%= t :avail_body, activity_name: @activity,
+      <%= raw( t :avail_body, activity_name: @activity,
           site_link: link_to( t( :title ), root_url ),
-          login_link: link_to( t( :login ), root_url ) %>
+          login_link: link_to( t( :login ), root_url ) ) %>
     </P>
     <P>
       <%= link_to root_url, root_url %>

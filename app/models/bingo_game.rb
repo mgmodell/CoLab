@@ -3,6 +3,7 @@ require 'forgery'
 class BingoGame < ActiveRecord::Base
   belongs_to :course, inverse_of: :bingo_games
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
+  has_many :bingo_boards, inverse_of: :bingo_game, dependent: :destroy
   belongs_to :project, inverse_of: :bingo_games
 
   has_many :candidates, through: :candidate_lists
@@ -23,8 +24,8 @@ class BingoGame < ActiveRecord::Base
   validate :group_components
 
   before_validation :timezone_adjust
-  before_create :anonymize
   validate :dates_within_course
+  before_create :anonymize
 
   def status_for_user(user)
     candidate_list_for_user(user).status
@@ -51,8 +52,8 @@ class BingoGame < ActiveRecord::Base
     anonymous ? anon_topic : topic
   end
 
-  def type
-    'Task List'
+  def get_type
+    I18n.t(:terms_list)
   end
 
   def term_list_date
@@ -61,9 +62,9 @@ class BingoGame < ActiveRecord::Base
 
   def get_activity_on_date(date:, anon:)
     if date <= term_list_date
-      "Terms list (#{get_name(anon)})"
+      "#{I18n.t(:terms_list)} (#{get_name(anon)})"
     else
-      "Terms review (#{get_name(anon)})"
+      "#{I18n.t(:terms_revieew)} (#{get_name(anon)})"
     end
   end
 
@@ -76,17 +77,19 @@ class BingoGame < ActiveRecord::Base
   end
 
   def is_open?
-    start_date <= DateTime.current && end_date >= (DateTime.current + lead_time.days)
+    cur_date = DateTime.current
+    start_date <= cur_date && end_date >= (cur_date + lead_time.days)
   end
 
   def required_terms_for_group(group)
     remaining_percent = (100.0 - group_discount) / 100
-    discounted = (group.users.count * individual_count * remaining_percent).floor
+    group_user_count = group.nil? ? 1 : group.users.count
+    discounted = (group_user_count * individual_count * remaining_percent).floor
   end
 
   def get_current_lists_hash
     candidate_lists = {}
-    course.rosters.enrolled.each do |roster|
+    course.rosters.enrolled_student.each do |roster|
       student = roster.user
       candidate_list = candidate_list_for_user(student)
       if candidate_lists[candidate_list].nil?
@@ -104,7 +107,7 @@ class BingoGame < ActiveRecord::Base
 
   def self.inform_instructors
     count = 0
-    BingoGame.where(instructor_notified: false).each do |bingo|
+    BingoGame.includes(:course).where(instructor_notified: false).each do |bingo|
       next unless bingo.end_date < DateTime.current + bingo.lead_time.days
       completion_hash = {}
       bingo.course.enrolled_students.each do |student|
@@ -203,6 +206,7 @@ class BingoGame < ActiveRecord::Base
   private
 
   def anonymize
-    anon_topic = Forgery::LoremIpsum.title.to_s
+    trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
+    self.anon_topic = "#{Forgery::Name.company_name} #{trans.sample} #{Forgery::Name.job_title}"
   end
 end

@@ -33,9 +33,9 @@
         <td><%= school.bingo_games.count %></td>
         <td><%= link_to t(:show), school_path( school ) %>&nbsp;|&nbsp;
         <%= link_to t(:edit), edit_school_path(school) %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<br>
-<%= link_to t('schools.new.title'), new_school_path %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+  <%= link_to t('schools.new.title'), new_school_path %>

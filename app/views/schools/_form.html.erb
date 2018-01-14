@@ -18,34 +18,34 @@
     </div>
     <div id="courses" class="ui-body-<%= theme_code %> ui-content">
       <h2><%= t 'schools.courses' %></h2>
-<p>
-  <h3><%= t 'courses.courses' %></h3>
-  <% if @school.courses.count < 1 %>
-    <%= t 'schools.no_courses' %></br>
-  <% else %>
-    <table data-role="table"
+      <p>
+        <h3><%= t 'courses.courses' %></h3>
+        <% if @school.courses.count < 1 %>
+          <%= t 'schools.no_courses' %></br>
+      <% else %>
+        <table data-role="table"
           id="course_table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>"
           data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-      <thead>
-      <tr>
-        <th><%= t :name %></th>
-        <th><%= t :number %></th>
-        <th data-priority="1"><%= t :instructors %></th>
-        <th data-priority="0"><%= t :students %></th>
-        <th data-priority="1"><%= t 'projects.projects' %></th>
-        <th data-priority="1"><%= t :exps %></th>
-        <th data-priority="1"><%= t :terms_lists %></th>
-        <th data-priority="0"><%= t :start_date %></th>
-        <th data-priority="0"><%= t :end_date %></th>
-        <th data-priority="1"><%= t :actions %></th>
-      </tr>
-      </thead>
-      <tbody>
-          <% @school.courses.each do |course| %>
+          <thead>
             <tr>
+              <th><%= t :name %></th>
+              <th><%= t :number %></th>
+              <th data-priority="1"><%= t :instructors %></th>
+              <th data-priority="0"><%= t :students %></th>
+              <th data-priority="1"><%= t 'projects.projects' %></th>
+              <th data-priority="1"><%= t :exps %></th>
+              <th data-priority="1"><%= t :terms_lists %></th>
+              <th data-priority="0"><%= t :start_date %></th>
+              <th data-priority="0"><%= t :end_date %></th>
+              <th data-priority="1"><%= t :actions %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @school.courses.each do |course| %>
+              <tr>
                 <td><%= link_to course.get_name( anonymize ), course %></td>
                 <td><%= course.number %></td>
                 <td><%= course.instructors.count %></td>
@@ -58,15 +58,15 @@
                 <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
                 <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
                 <%= link_to t(:destroy), course, method: :delete, data: { confirm: t(:confirmation) } %></td>
-            </tr>
-          <% end %>
-      </tbody>
-    </table>
-  <% end %>
-  <%= link_to t( "courses.new.title"), new_course_path( :school_id => @school.id ),
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+      <%= link_to t( "courses.new.title"), new_course_path( :school_id => @school.id ),
       :data => { :icon => "plus", :inline => "true",:mini => "true",  :role => "button" }%>
-</p>
-</div>
+    </p>
+  </div>
 </div>
 <div class="form-actions">
   <%= f.button :submit %>

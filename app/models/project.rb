@@ -8,6 +8,7 @@ class Project < ActiveRecord::Base
   has_many :groups, inverse_of: :project, dependent: :destroy
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
+  has_many :installments, through: :assessments
   belongs_to :course, inverse_of: :projects
   belongs_to :consent_form, inverse_of: :projects
   belongs_to :factor_pack, inverse_of: :projects
@@ -17,9 +18,9 @@ class Project < ActiveRecord::Base
 
   validates :name, :end_dow, :start_dow, presence: true
   validates :end_date, :start_date, presence: true
+  before_create :anonymize
 
   before_validation :timezone_adjust
-  before_create :anonymize
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
@@ -39,8 +40,17 @@ class Project < ActiveRecord::Base
     end
   end
 
+  def get_performance(user)
+    installments_count = installments.where(user: user).count
+    assessments.count == 0 ? 100 : 100 * installments_count / assessments.count
+  end
+
+  def get_type
+    I18n.t(:project)
+  end
+
   def is_for_research?
-    !consent_form.nil?
+    !consent_form.nil? && consent_form.is_active?
   end
 
   def enrolled_user_rosters
@@ -204,6 +214,6 @@ class Project < ActiveRecord::Base
   private
 
   def anonymize
-    anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"
+    self.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"
   end
 end

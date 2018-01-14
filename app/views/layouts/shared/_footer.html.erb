@@ -10,10 +10,12 @@
             <% unless @current_user.nil? || @current_location == "profile"  %>
                       <%= link_to t(:profile), edit_user_registration_path(@current_user),
                           :data => { :icon => 'user', :role => 'button' } %>
+                      <% unless working %>
                       <a href="#diversityPop" data-rel="popup" data-position-to="window"
                           data-transition='flip' data-role="button" data-icon="check">
                         <%= raw t(:calc_diversity) %>
                       </a>
+                      <% end %>
                       <div data-role="popup" id="diversityPop" data-theme="<%= theme_code %>" class="ui-corner-all">
                         <form>
                           <div style="padding:10px 20px;">
@@ -75,7 +77,7 @@
             <%= mail_to "support@CoLab.onlin", t(:support),
                   :subject => "SAPA Support Request",
                   :data => { :icon => "mail", :role => "button" } %>
-            <%= link_to t(:about), "https://www.PeerAssess.info",
+            <%= link_to t(:about), "http://www.PeerAssess.info",
                   :data => { :icon => "info", :role => "button" } %>
           </div>
         </div>

@@ -97,6 +97,7 @@ class CandidateListsController < ApplicationController
 
     @candidate_list.bingo_game = BingoGame.new(id: -1,
                                                topic: (t 'candidate_lists.demo_topic'),
+                                               description: (t 'candidate_lists.demo_description'),
                                                end_date: 2.day.from_now.end_of_day,
                                                group_option: true,
                                                project: demo_project,
@@ -105,7 +106,7 @@ class CandidateListsController < ApplicationController
 
     @candidate_list.candidates = []
 
-    5.times do |index|
+    6.times do |index|
       @candidate_list.candidates << Candidate.new(id: 0, term: (t "candidate_lists.demo_term#{index + 1}"),
                                                   definition: (t "candidate_lists.demo_def#{index + 1}"),
                                                   candidate_list: @candidate_list)

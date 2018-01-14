@@ -42,11 +42,10 @@ end
 
 Given /^the user is in a group on the project with (\d+) other users$/ do |user_count|
   @group = Group.make
-  role = Role.enrolled.take
   r = Roster.new
   r.user = @user
   r.course = @course
-  r.role = role
+  r.role = Roster.roles[:enrolled_student]
   r.save
   puts r.errors.full_messages unless r.errors.blank?
   @group.users << @user
@@ -57,7 +56,7 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
     r = Roster.new
     r.user = user
     r.course = @course
-    r.role = role
+    r.role = Roster.roles[:enrolled_student]
     r.save
     puts r.errors.full_messages unless r.errors.blank?
   end

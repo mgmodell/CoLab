@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy,
+  before_action :set_project, only: [:show, :edit, :update, :destroy, :activate,
                                      :rescore_group, :rescore_groups]
   before_action :check_editor, except: [:next, :diagnose, :react,
                                         :rescore_group, :rescore_groups,
@@ -21,7 +21,7 @@ class ProjectsController < ApplicationController
     if @current_user.is_admin?
       @projects = Project.all
     else
-      rosters = @current_user.rosters.instructorships
+      rosters = @current_user.rosters.instructor
       rosters.each do |roster|
         @projects.concat roster.course.projects.to_a
       end
@@ -54,7 +54,7 @@ class ProjectsController < ApplicationController
     @title = t('projects.edit.title')
     if @project.update(project_params)
       groups_users = {}
-      @project.groups.each do |group|
+      @project.groups.includes(:users).each do |group|
         groups_users[group] = []
         new_name = params['group_' + group.id.to_s]
         group.name = new_name unless new_name.blank?
@@ -63,11 +63,12 @@ class ProjectsController < ApplicationController
       @project.course.enrolled_students.each do |user|
         gid = params['user_group_' + user.id.to_s]
         unless gid.blank? || gid.to_i == -1
-          group = Group.find(gid)
+          group = Group.includes(:users).find(gid)
           groups_users[group] << user
         end
       end
       groups_users.each do |group, users_array|
+        group.users.clear
         group.users = users_array
         group.save
         logger.debug group.errors.full_messages unless group.errors.empty?
@@ -125,14 +126,12 @@ class ProjectsController < ApplicationController
   end
 
   def activate
-    @title = t('.title')
-    project = Project.find(params[:project_id])
+    @title = t('projects.show.title')
     if @current_user.is_admin? ||
-       project.course.get_roster_for_user(@current_user).role.code == 'inst'
-      project.active = true
-      project.save
+       @project.course.get_roster_for_user(@current_user).role.instructor?
+      @project.active = true
+      @project.save
     end
-    @project = project
     render :show
   end
 
@@ -144,7 +143,7 @@ class ProjectsController < ApplicationController
     if @current_user.is_admin?
       @project = p_test
     else
-      if p_test.course.rosters.instructorships.where(user: @current_user).nil?
+      if p_test.course.rosters.instructor.where(user: @current_user).nil?
         @course = @project.course
         redirect_to @course if @project.nil?
       else

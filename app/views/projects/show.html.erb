@@ -24,7 +24,7 @@
     </p>
     <p>
       <h3><%= t :dates %>:</h3>
-      <%= t( '.date_summ',
+      <%= raw t( 'projects.edit.date_summ',
             start_date: @project.start_date,
             end_date: @project.end_date,
             start_dow: ( Date::DAYNAMES.at @project.start_dow ),
@@ -52,7 +52,8 @@
 <div id="groups" class="ui-body-<%= theme_code %> ui-content">
   <h2><%= t :groups %></h2>
   <p>
-    <%= t 'projects.groups_intro', group_count: @project.groups.count %><br><br>
+    <%= t 'projects.groups_intro', group_count: @project.groups.count %><br>
+    <br>
     <%= link_to t('projects.recalculate_diversities'),
         rescore_groups_path( id: @project.id ) %>
     <%= form_tag add_group_path, method: :get do %>
@@ -82,7 +83,8 @@
           </tr>
           <tr>
             <th>
-              <%= t 'projects.diversity_scores' %><br><br>
+              <%= t 'projects.diversity_scores' %><br>
+              <br>
               <%= t :student_names %>
             </th>
             <% groups = @project.groups %>
@@ -115,13 +117,14 @@
       </table>
     <% end %>
   </p>
-  <%= link_to (t 'projects.edit.title'), edit_project_path(@project) %>
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
   <h2><%= t :resp_summ %></h2>
 </div>
 <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-  <h2><%= t :resp_data %>h2>
-</div>
-</div>
-<%= link_to (t :back_to_course), @project.course %>
+  <h2><%= t :resp_data %>
+    <h2>
+    </div>
+  </div>
+  <%= link_to (t 'projects.edit.title'), edit_project_path(@project) %>
+  <%= link_to (t :back_to_course), @project.course %>

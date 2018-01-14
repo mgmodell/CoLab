@@ -1,0 +1,15 @@
+<p>
+  <%= t 'candidate_lists.feedback_breakdown' %>
+  <% CandidateFeedback.all.each do |cf| %>
+  <div data-role="collapsible">
+    <h4>
+      <%= cf.name %><%
+      credit = 0
+      if cf.credit > 0
+        credit = cf.credit.to_f / 100
+      end%>
+      (<%= t( 'candidate_lists.credit', count: credit)%>)</h4>
+    <p><%= cf.definition.html_safe %></p>
+  </div>
+  <% end %>
+</p>
