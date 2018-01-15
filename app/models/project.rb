@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 class Project < ActiveRecord::Base
   after_save :build_assessment

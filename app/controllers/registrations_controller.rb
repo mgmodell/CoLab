@@ -1,6 +1,7 @@
 # frozen_string_literal: true
+
 class RegistrationsController < Devise::RegistrationsController
-  before_action :set_email, only: [:set_primary_email, :remove_email]
+  before_action :set_email, only: %i[set_primary_email remove_email]
 
   def set_primary_email
     @current_user.primary_email = @email

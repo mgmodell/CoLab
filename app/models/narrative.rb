@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Narrative < ActiveRecord::Base
   translates :member
   belongs_to :scenario, inverse_of: :narratives

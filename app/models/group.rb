@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 class Group < ActiveRecord::Base
   around_update :track_history
@@ -87,9 +88,9 @@ class Group < ActiveRecord::Base
         impairments += user.impairment_motor ? 'm' : ''
         impairments += user.impairment_cognitive ? 'c' : ''
         impairments += user.impairment_other ? 'o' : ''
-        #if there are no impairments, set it to 'u'
+        # if there are no impairments, set it to 'u'
         impairments += impairments.blank? ? 'u' : ''
-        impairment_hash[ impairments ] = true
+        impairment_hash[impairments] = true
       end
 
       now = Date.current
@@ -110,7 +111,7 @@ class Group < ActiveRecord::Base
            scenario_hash.keys.count +
            (2 * (gender_hash.keys.count + cip_hash.keys.count + primary_lang_hash.keys.count)) +
            (age_sd + uni_years_sd).round +
-           (impairment_hash.keys.count > 1 ? impairment_hash.keys.count : 0 )
+           (impairment_hash.keys.count > 1 ? impairment_hash.keys.count : 0)
     end
     ds
   end

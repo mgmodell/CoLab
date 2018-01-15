@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class BingoBoard < ActiveRecord::Base
   belongs_to :bingo_game, inverse_of: :bingo_boards
   belongs_to :user, inverse_of: :bingo_boards

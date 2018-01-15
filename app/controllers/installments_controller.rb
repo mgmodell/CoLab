@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class InstallmentsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:demo_complete]
 
@@ -20,7 +21,7 @@ class InstallmentsController < ApplicationController
       # validate that current_user is in the
       user_id = current_user.id
 
-      @installment = Installment.includes(values: [:factor, :user], assessment: :project)
+      @installment = Installment.includes(values: %i[factor user], assessment: :project)
                                 .where(assessment_id: assessment_id,
                                        user_id: user_id,
                                        group_id: group_id).first
@@ -170,18 +171,18 @@ class InstallmentsController < ApplicationController
 
     @group = GroupStub.new
     @group.name = t :demo_group
-    user_names = [%w(Doe Robert),
-                  %w(Jones Roberta), %w(Kim Janice)]
+    user_names = [%w[Doe Robert],
+                  %w[Jones Roberta], %w[Kim Janice]]
     @group.users = []
     @group.project = @project
 
-    if @current_user.nil?
-      @group.users << User.new(first_name: 'John', last_name: 'Smith')
-    else
-      @group.users << @current_user
-    end
+    @group.users << if @current_user.nil?
+                      User.new(first_name: 'John', last_name: 'Smith')
+                    else
+                      @current_user
+                    end
 
-    user_names.each_with_index do |name|
+    user_names.each do |name|
       u = User.new(last_name: name[0], first_name: name[1])
       @group.users << u
     end
@@ -205,6 +206,6 @@ class InstallmentsController < ApplicationController
 
   def i_params
     params.require(:installment).permit(:inst_date, :comments, :group_id, :user_id, :assessment_id, :group_id,
-                                        values_attributes: [:factor_id, :user_id, :value])
+                                        values_attributes: %i[factor_id user_id value])
   end
 end

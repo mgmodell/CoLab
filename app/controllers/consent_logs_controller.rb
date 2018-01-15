@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ConsentLogsController < ApplicationController
   def update
     @title = t('consent_logs.title')

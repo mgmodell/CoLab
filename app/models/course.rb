@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 class Course < ActiveRecord::Base
   belongs_to :school, inverse_of: :courses
@@ -108,7 +109,7 @@ class Course < ActiveRecord::Base
     # Searching for the student and:
     user = User.joins(:emails).where(emails: { email: user_email }).take
 
-    passwd = (0...8).map { (65 + rand(26)).chr }.join
+    passwd = (0...8).map { rand(65..90).chr }.join
 
     if user.nil?
       user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
@@ -149,10 +150,10 @@ class Course < ActiveRecord::Base
   private
 
   def anonymize
-    levels = %w(Beginning Intermediate Advanced)
+    levels = %w[Beginning Intermediate Advanced]
     self.anon_name = "#{levels.sample} #{Forgery::Name.industry}"
-    dpts = %w(BUS MED ENG RTG MSM LEH EDP
-              GEO IST MAT YOW GFB RSV CSV MBV)
+    dpts = %w[BUS MED ENG RTG MSM LEH EDP
+              GEO IST MAT YOW GFB RSV CSV MBV]
     self.anon_number = "#{dpts.sample}-#{rand(100..700)}"
   end
 end

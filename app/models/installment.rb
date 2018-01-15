@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Installment < ActiveRecord::Base
   belongs_to :assessment, inverse_of: :installments
   belongs_to :user, inverse_of: :installments
@@ -138,11 +139,11 @@ class Installment < ActiveRecord::Base
 
       au_hash.values.each do |v|
         prelim = (Installment::TOTAL_VAL * v.value) / total
-        if prelim.nan?
-          v.value = (Installment::TOTAL_VAL / v.installment.values.count).round
-        else
-          v.value = prelim.round
-        end
+        v.value = if prelim.nan?
+                    (Installment::TOTAL_VAL / v.installment.values.count).round
+                  else
+                    prelim.round
+                  end
       end
 
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }

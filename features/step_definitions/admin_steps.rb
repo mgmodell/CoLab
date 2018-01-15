@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Given /^there is a course$/ do
   @course = Course.make
   @course.save

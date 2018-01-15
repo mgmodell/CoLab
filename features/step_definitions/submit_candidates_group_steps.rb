@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Given /^the Bingo! is group\-enabled with the project and a (\d+) percent group discount$/ do |group_discount|
   @bingo.group_option = true
   @project.should_not be_nil

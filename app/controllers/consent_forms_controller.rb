@@ -1,6 +1,7 @@
 # frozen_string_literal: true
+
 class ConsentFormsController < ApplicationController
-  before_action :set_consent_form, only: [:show, :edit, :update, :destroy]
+  before_action :set_consent_form, only: %i[show edit update destroy]
 
   # GET /consent_forms
   # GET /consent_forms.json

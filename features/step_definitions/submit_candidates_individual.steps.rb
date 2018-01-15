@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 
 Given /^the Bingo! game required (\d+) day of lead time$/ do |lead_time|

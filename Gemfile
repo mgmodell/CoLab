@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 source 'https://rubygems.org'
 ruby '2.4.2'
 
@@ -25,26 +26,26 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'activerecord-session_store'
+gem 'aws-sdk', '~> 2.3.0'
 gem 'bourbon'
+gem 'city-state'
 gem 'country_select'
+gem 'd3-rails'
+gem 'descriptive_statistics', '~> 2.4.0', require: 'descriptive_statistics/safe'
 gem 'devise'
 gem 'devise-multi_email'
 gem 'forgery'
 gem 'jquery-tablesorter'
 gem 'jquery_mobile_rails'
+gem 'kaminari'
 gem 'omniauth-google-oauth2'
 gem 'paperclip', '~> 5.0.0'
 gem 'puma'
 gem 'rails_12factor', group: :production
 gem 'simple_calendar', '~> 2.0'
 gem 'simple_form'
-gem 'aws-sdk', '~> 2.3.0'
 gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
-gem 'city-state'
-gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
-gem 'd3-rails'
-gem 'kaminari'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -57,18 +58,18 @@ gem 'kaminari'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'bullet'
   gem 'byebug'
   gem 'chronic'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'htmlbeautifier'
+  gem 'i18n_data'
   gem 'machinist'
   gem 'railroady'
   gem 'rails-erd', require: false
   gem 'rspec'
   gem 'rubocop'
-  gem 'i18n_data'
-  gem 'bullet'
 end
 
 group :development do

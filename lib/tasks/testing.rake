@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 namespace :testing do
   desc 'Set up some simple, current objects for testing'
@@ -140,7 +141,7 @@ namespace :testing do
           if !user.errors.nil? && user.errors.count > 0
             puts user.errors.full_messages
           else
-            puts "#{user.name( false )} <#{email}> is admin? #{admin_value}"
+            puts "#{user.name(false)} <#{email}> is admin? #{admin_value}"
           end
         end
       end

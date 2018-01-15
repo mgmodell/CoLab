@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%Y-%m-%dT%T')
   page.find('#bingo_game_' + date_field_prefix + '_date').set(new_date)

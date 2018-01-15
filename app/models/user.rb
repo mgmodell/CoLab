@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 
 class User < ActiveRecord::Base
@@ -245,11 +246,11 @@ class User < ActiveRecord::Base
 
   def get_assessment_performance(course_id: 0)
     my_projects = []
-    if course_id > 0
-      my_projects = projects.includes(:assessments).where(course_id: course_id)
-    else
-      my_projects = projects.includes(:assessments)
-    end
+    my_projects = if course_id > 0
+                    projects.includes(:assessments).where(course_id: course_id)
+                  else
+                    projects.includes(:assessments)
+                  end
 
     total = 0
     my_projects.each do |project|
@@ -259,7 +260,7 @@ class User < ActiveRecord::Base
   end
 
   def waiting_student_tasks
-    waiting_tasks = assessments.includes(project: [:course, :consent_form]).still_open.to_a
+    waiting_tasks = assessments.includes(project: %i[course consent_form]).still_open.to_a
 
     # Check available tasks for students
     available_rosters = rosters.enrolled
@@ -271,8 +272,8 @@ class User < ActiveRecord::Base
       .where('rosters.user_id': id, 'experiences.active': true)
       .where('rosters.role = ? OR rosters.role = ?',
              Roster.roles[:enrolled_student], Roster.roles[:invited_student])
-      .where('experiences.end_date >= ? AND experiences.start_date <= ?', cur_date, cur_date)
-      .to_a
+                                   .where('experiences.end_date >= ? AND experiences.start_date <= ?', cur_date, cur_date)
+                                   .to_a
 
     # Add the bingo games
     waiting_games = BingoGame.joins(course: :rosters)
@@ -293,13 +294,11 @@ class User < ActiveRecord::Base
     data = access_token.info
     user = User.joins(:emails).where(emails: { email: data['email'] }).first
 
-    unless user
-      user = User.create(
-        email: data['email'],
-        password: Devise.friendly_token[0, 20],
-        timezone: 'UTC'
-      )
-    end
+    user ||= User.create(
+      email: data['email'],
+      password: Devise.friendly_token[0, 20],
+      timezone: 'UTC'
+    )
     user.confirm
     user
   end

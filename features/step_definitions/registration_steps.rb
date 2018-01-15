@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Then /^the user will see the task listing page$/ do
   page.should have_content 'Your Tasks'
 end

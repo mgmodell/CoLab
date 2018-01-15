@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 class BingoGame < ActiveRecord::Base
   belongs_to :course, inverse_of: :bingo_games

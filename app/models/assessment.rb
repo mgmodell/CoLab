@@ -14,7 +14,7 @@ class Assessment < ActiveRecord::Base
   scope :still_open, -> { where('assessments.end_date >= ?', DateTime.current) }
 
   def is_completed_by_user(user)
-    0 != user.installments.where(assessment: self).count
+    user.installments.where(assessment: self).count != 0
   end
 
   def next_deadline

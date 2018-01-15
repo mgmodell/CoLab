@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 namespace :admin do
   desc 'Set up the infrastructure for currently open assessments'
   task populate_assessments: :environment do
@@ -13,12 +14,11 @@ namespace :admin do
   end
   desc 'Cache performance numbers'
   task update_caches: :environment do
-    CandidateList.joins( :bingo_game )
-        .where( cached_performance: nil, bingo_games: {reviewed: true} )
-        .each do |candidate_list|
-      candidate_list.performance 
+    CandidateList.joins(:bingo_game)
+                 .where(cached_performance: nil, bingo_games: { reviewed: true })
+                 .each do |candidate_list|
+      candidate_list.performance
       candidate_list.save
     end
-
   end
 end

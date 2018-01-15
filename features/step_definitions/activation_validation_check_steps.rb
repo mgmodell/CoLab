@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 When /^the project is activated$/ do
   @project.active = true
   @project.save

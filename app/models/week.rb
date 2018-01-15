@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Week < ActiveRecord::Base
   translates :text
   belongs_to :narrative, inverse_of: :weeks

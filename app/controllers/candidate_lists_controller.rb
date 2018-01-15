@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+
 class CandidateListsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:demo_complete]
-  before_action :set_candidate_list, only: [:edit, :show, :update, :request_collaboration, :list_stats]
+  before_action :set_candidate_list, only: %i[edit show update request_collaboration list_stats]
 
   def list_stats
     @title = t '.title'
@@ -180,6 +181,6 @@ class CandidateListsController < ApplicationController
   end
 
   def candidate_list_params
-    params.require(:candidate_list).permit(:is_group, candidates_attributes: [:id, :term, :definition, :user_id])
+    params.require(:candidate_list).permit(:is_group, candidates_attributes: %i[id term definition user_id])
   end
 end

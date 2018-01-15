@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 namespace :migratify do
   desc 'Create the underpinnings for language support'
   task db_updates: :environment do
@@ -24,7 +25,7 @@ namespace :migratify do
     end
     read_data = YAML.safe_load(File.open('db/genders.yml'), [Gender_])
     read_data.each do |gender|
-      g = Gender.where( "code = ? OR name_en = ?",  gender.code, gender.name_en ).take
+      g = Gender.where('code = ? OR name_en = ?', gender.code, gender.name_en).take
       g = Gender.new if g.nil?
       g.code = gender.code unless g.code == gender.code
       g.name_en = gender.name_en unless g.name_en == gender.name_en
@@ -43,37 +44,37 @@ namespace :migratify do
       g = CipCode.new if g.nil?
       g.gov_code = cip_code.gov_code unless g.gov_code == cip_code.gov_code
 
-      #Capitalize and strip trailing period
-      cip_en = cip_code.name_en.chomp( '.' ).capitalize
+      # Capitalize and strip trailing period
+      cip_en = cip_code.name_en.chomp('.').capitalize
       g.name_en = cip_en unless
                     g.name_en == cip_en
       g.name_ko = cip_code.name_ko unless
                         g.name_ko == cip_code.name_ko
       g.save
     end
-    
+
     # Countries
     CS.update # if CS.countries.count < 100
     CS.countries.each do |country|
-      hc = HomeCountry.where( code: country[ 0 ] ).take
+      hc = HomeCountry.where(code: country[0]).take
       hc = HomeCountry.new if hc.nil?
       hc.no_response = false
-      hc.code = country[ 0 ]
-      hc.name = country[ 1 ]
+      hc.code = country[0]
+      hc.name = country[1]
       hc.save
     end
-    hc = HomeCountry.where( code: '__' ).take
+    hc = HomeCountry.where(code: '__').take
     hc = HomeCountry.new if hc.nil?
     hc.no_response = true
     hc.code = '__'
-    hc.name = "I prefer not to specify my country"
+    hc.name = 'I prefer not to specify my country'
     hc.save
-    
+
     # States
     HomeCountry.all.each do |country|
-      if CS.get( country.code ).count > 0
-        CS.get( country.code ).each do |state_code,state_name|
-          hs = HomeState.where( home_country_id: country.id, code: "#{state_code}:#{country.code}" ).take
+      if CS.get(country.code).count > 0
+        CS.get(country.code).each do |state_code, state_name|
+          hs = HomeState.where(home_country_id: country.id, code: "#{state_code}:#{country.code}").take
           hs = HomeState.new if hs.nil?
           hs.no_response = false
           hs.home_country = country
@@ -81,8 +82,8 @@ namespace :migratify do
           hs.name = state_name
           hs.save
         end
-        if CS.get( country.code ).count > 1
-          hs = HomeState.where( home_country_id: country.id, code: "__:#{country.code}" ).take
+        if CS.get(country.code).count > 1
+          hs = HomeState.where(home_country_id: country.id, code: "__:#{country.code}").take
           hs = HomeState.new if hs.nil?
           hs.no_response = true
           hs.home_country = country
@@ -91,7 +92,7 @@ namespace :migratify do
           hs.save
         end
       else
-        hs = HomeState.where( home_country_id: country.id, code: "--:#{country.code}" ).take
+        hs = HomeState.where(home_country_id: country.id, code: "--:#{country.code}").take
         hs = HomeState.new if hs.nil?
         hs.no_response = false
         hs.home_country = country
@@ -102,7 +103,7 @@ namespace :migratify do
     end
 
     User.find_each do |user|
-      country = HomeCountry.where( name: user.country ).take
+      country = HomeCountry.where(name: user.country).take
       user.home_state = country.states.last unless country.nil?
       user.save
     end
@@ -141,7 +142,7 @@ namespace :migratify do
       g.factor_pack = fp
       g.save
     end
-  
+
     # Behavior seed data
     class Behavior_
       attr_accessor :name_en, :name_ko
@@ -157,7 +158,7 @@ namespace :migratify do
       g.description_ko = behavior.description_ko unless g.description_ko == behavior.description_ko
       g.save
     end
-    
+
     # Bingo! support
     class CandidateFeedback_
       attr_accessor :name_en, :name_ko
@@ -175,7 +176,7 @@ namespace :migratify do
       g.definition_ko = cf.definition_ko unless g.definition_ko == cf.definition_ko
       g.save
     end
-    
+
     # Theme seed data
     class Theme_
       attr_accessor :code
@@ -205,16 +206,16 @@ namespace :migratify do
       g.save
     end
 
-    translated = [ 'en' ]
-    en_langs = I18nData.languages( :en )
-    ko_langs = I18nData.languages( :ko )
-    
+    translated = ['en']
+    en_langs = I18nData.languages(:en)
+    ko_langs = I18nData.languages(:ko)
+
     en_langs.keys.each do |lang_key|
       g = Language.where(code: lang_key.downcase).take
       g = Language.new if g.nil?
       g.code = lang_key.downcase unless g.code == lang_key.downcase
-      g.name_en = en_langs[ lang_key ] unless g.name_en == en_langs[ lang_key ]
-      g.name_ko = ko_langs[ lang_key ] unless g.name_ko == ko_langs[ lang_key ]
+      g.name_en = en_langs[lang_key] unless g.name_en == en_langs[lang_key]
+      g.name_ko = ko_langs[lang_key] unless g.name_ko == ko_langs[lang_key]
       g.translated = translated.include? lang_key.downcase
       g.save
     end
@@ -229,11 +230,11 @@ namespace :migratify do
       attr_accessor :name_en, :name_ko
       attr_accessor :name_en, :name_ko
     end
-    read_data = YAML.safe_load(File.open('db/scenario.yml'),[Scenario_])
+    read_data = YAML.safe_load(File.open('db/scenario.yml'), [Scenario_])
     read_data.each do |scenario|
-      g = Scenario.where( name_en: scenario.name_en ).take
+      g = Scenario.where(name_en: scenario.name_en).take
       g = Scenario.new if g.nil?
-      b = Behavior.where( name_en: scenario.name_en ).take
+      b = Behavior.where(name_en: scenario.name_en).take
       if b.nil?
         puts "Could not find #{scenario.name_en} <Behavior>"
       else
@@ -243,7 +244,7 @@ namespace :migratify do
         g.save
       end
     end
-    
+
     class Narrative_
       attr_accessor :scenario
       attr_accessor :member_en, :member_ko
@@ -252,7 +253,7 @@ namespace :migratify do
     read_data.each do |narrative|
       g = Narrative.where(member_en: narrative.member_en).take
       g = Narrative.new if g.nil?
-      s = Scenario.where( name_en: narrative.scenario ).take
+      s = Scenario.where(name_en: narrative.scenario).take
       if s.nil?
         puts "Could not find #{scenario.name_en} <Scenario>"
       else
@@ -262,58 +263,58 @@ namespace :migratify do
         g.save
       end
     end
-    
+
     # Scenario 1 (EC)
-    narrative_names = ['Alex','Natasha','Anika','Lionel']
+    narrative_names = %w[Alex Natasha Anika Lionel]
     class Week_
       attr_accessor :week_num
       attr_accessor :text_en, :text_ko
     end
     narrative_names.each do |name|
-      narrative = Narrative.where( member_en: name ).take
+      narrative = Narrative.where(member_en: name).take
       if narrative.nil?
         puts "Could not find #{name} <Narrative>"
       else
         week_data = YAML.safe_load(File.open("db/narratives/ec_#{name.downcase}.yml"), [Week_])
         week_data.each do |week|
-          w = Week.where( narrative: narrative, week_num: week.week_num ).take
-          w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+          w = Week.where(narrative: narrative, week_num: week.week_num).take
+          w = Week.create(narrative: narrative, week_num: week.week_num) if w.nil?
           w.text_en = week.text_en unless w.text_en == week.text_en
           w.text_ko = week.text_ko unless w.text_ko == week.text_ko
           w.save
         end
       end
     end
-    
+
     # Scenario 2 (GD)
-    narrative_names = ['Anna','Jose','Sam','Kim']
+    narrative_names = %w[Anna Jose Sam Kim]
     narrative_names.each do |name|
-      narrative = Narrative.where( member_en: name ).take
+      narrative = Narrative.where(member_en: name).take
       if narrative.nil?
         puts "Could not find #{name} <Narrative>"
       else
         week_data = YAML.safe_load(File.open("db/narratives/gd_#{name.downcase}.yml"), [Week_])
         week_data.each do |week|
-          w = Week.where( narrative: narrative, week_num: week.week_num ).take
-          w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+          w = Week.where(narrative: narrative, week_num: week.week_num).take
+          w = Week.create(narrative: narrative, week_num: week.week_num) if w.nil?
           w.text_en = week.text_en unless w.text_en == week.text_en
           w.text_ko = week.text_ko unless w.text_ko == week.text_ko
           w.save
         end
       end
     end
-    
+
     # Scenario 3 (SL)
-    narrative_names = ['John','Marie','Hannah','Iain']
+    narrative_names = %w[John Marie Hannah Iain]
     narrative_names.each do |name|
-      narrative = Narrative.where( member_en: name ).take
+      narrative = Narrative.where(member_en: name).take
       if narrative.nil?
         puts "Could not find #{name} <Narrative>"
       else
         week_data = YAML.safe_load(File.open("db/narratives/sl_#{name.downcase}.yml"), [Week_])
         week_data.each do |week|
-          w = Week.where( narrative: narrative, week_num: week.week_num ).take
-          w = Week.create( narrative: narrative, week_num: week.week_num ) if w.nil?
+          w = Week.where(narrative: narrative, week_num: week.week_num).take
+          w = Week.create(narrative: narrative, week_num: week.week_num) if w.nil?
           w.text_en = week.text_en unless w.text_en == week.text_en
           w.text_ko = week.text_ko unless w.text_ko == week.text_ko
           w.save
@@ -321,7 +322,7 @@ namespace :migratify do
       end
     end
   end
-  
+
   desc 'Initialize existing PII objects with anonymized names'
   task anon_n_clean: :environment do
     # Make sure the DB is primed and ready!
@@ -339,8 +340,8 @@ namespace :migratify do
     end
 
     BingoGame.find_each do |bingo_game|
-      if bingo_game.anon_topic.blank? || ( bingo_game.anon_topic.starts_with? 'Lorem' )
-        trans = [ 'basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the' ]
+      if bingo_game.anon_topic.blank? || (bingo_game.anon_topic.starts_with? 'Lorem')
+        trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
         bingo_game.anon_topic = "#{Forgery::Name.company_name} #{trans.sample} #{Forgery::Name.job_title}"
         bingo_game.save
       end
@@ -361,15 +362,14 @@ namespace :migratify do
       school.save
     end
 
-    depts = %w(BUS MED ENG RTG MSM LEH EDP
-               GEO IST MAT YOW GFB RSV CSV MBV)
-    levels = %w(Beginning Intermediate Advanced)
+    depts = %w[BUS MED ENG RTG MSM LEH EDP
+               GEO IST MAT YOW GFB RSV CSV MBV]
+    levels = %w[Beginning Intermediate Advanced]
     Course.find_each do |course|
       course.anon_name = "#{levels.sample} #{Forgery::Name.industry}" if course.anon_name.blank?
       course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
       course.save
     end
-
   end
 
   desc 'Make instructor_updated false'

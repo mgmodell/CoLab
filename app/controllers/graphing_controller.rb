@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class GraphingController < ApplicationController
   Unit_Of_Analysis = { group: 2, individual: 1 }.freeze
 
@@ -23,8 +24,8 @@ class GraphingController < ApplicationController
   end
 
   def projects
-    for_research = params[:for_research] == 'true' ? true : false
-    anon_req = params[:anonymous] == 'true' ? true : false
+    for_research = params[:for_research] == 'true'
+    anon_req = params[:anonymous] == 'true'
     anonymize = @current_user.anonymize? || @current_user.is_researcher? || anon_req
     projects = []
     if @current_user.admin || @current_user.is_researcher?
@@ -45,8 +46,8 @@ class GraphingController < ApplicationController
   def subjects
     unit_of_analysis = params[:unit_of_analysis].to_i
     project_id = params[:project_id]
-    for_research = params[:for_research] == 'true' ? true : false
-    anon_req = params[:anonymous] == 'true' ? true : false
+    for_research = params[:for_research] == 'true'
+    anon_req = params[:anonymous] == 'true'
     anonymize = @current_user.anonymize? || anon_req
 
     subjects = []
@@ -73,8 +74,8 @@ class GraphingController < ApplicationController
     unit_of_analysis = params[:unit_of_analysis].to_i
     project = Project.find(params[:project])
     subject = params[:subject]
-    for_research = params[:for_research] == 'true' ? true : false
-    anon_req = params[:anonymous] == 'true' ? true : false
+    for_research = params[:for_research] == 'true'
+    anon_req = params[:anonymous] == 'true'
     anonymize = @current_user.anonymize? || anon_req
 
     dataset = {
@@ -103,7 +104,7 @@ class GraphingController < ApplicationController
         dataset[:subject] = user.informal_name(anonymize)
         values = Value.joins(installment: :assessment)
                       .where('assessments.project_id': project, user: user)
-                      .includes(:factor, installment: [:user, :group])
+                      .includes(:factor, installment: %i[user group])
                       .order('installments.inst_date')
 
         values.each do |value|
@@ -156,7 +157,7 @@ class GraphingController < ApplicationController
         values = Value.joins(installment: :assessment)
                       .where('assessments.project_id': project,
                              'installments.group_id': group)
-                      .includes(:user, :factor, installment: [:user, :assessment])
+                      .includes(:user, :factor, installment: %i[user assessment])
                       .order('installments.inst_date')
 
         values.each do |value|

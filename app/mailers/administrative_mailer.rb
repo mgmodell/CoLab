@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class AdministrativeMailer < ActionMailer::Base
   default from: 'support@CoLab.online'
 

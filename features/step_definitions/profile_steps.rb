@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Then /^user opens their profile$/ do
   click_link_or_button('Profile')
   page.should have_content('Edit your profile')

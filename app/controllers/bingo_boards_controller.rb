@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class BingoBoardsController < ApplicationController
   before_action :set_bingo_board, except: [:index]
 
@@ -76,7 +77,7 @@ class BingoBoardsController < ApplicationController
   end
 
   def bingo_board_params
-    params.require(:bingo_board).permit(bingo_cells: [:id, :concept_id,
-                                                      :selected])
+    params.require(:bingo_board).permit(bingo_cells: %i[id concept_id
+                                                        selected])
   end
 end

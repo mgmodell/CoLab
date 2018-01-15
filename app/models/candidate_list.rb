@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class CandidateList < ActiveRecord::Base
   belongs_to :user, inverse_of: :candidate_lists
   belongs_to :group, inverse_of: :candidate_lists

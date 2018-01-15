@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 class Experience < ActiveRecord::Base
   belongs_to :course, inverse_of: :experiences
@@ -68,7 +69,7 @@ class Experience < ActiveRecord::Base
           possible = include_ids - narrative_counts.keys
           narrative = Narrative.find(possible.sample)
         else
-          sorted =  narrative_counts.sort { |x, y| x[1] <=> y[1] }
+          sorted =  narrative_counts.sort_by { |a| a[1] }
           narrative = Narrative.find ( sorted[0][0])
         end
         # narrative = Narrative.where( id: include_ids).take
@@ -105,7 +106,7 @@ class Experience < ActiveRecord::Base
         narrative = Narrative.where('id NOT IN (?)', narrative_counts.keys).sample
       end
     else
-      narrative = Narrative.find(narrative_counts.sort { |x, y| x[1] <=> y[1] }[0][0])
+      narrative = Narrative.find(narrative_counts.sort_by { |a| a[1] }[0][0])
     end
     narrative
   end

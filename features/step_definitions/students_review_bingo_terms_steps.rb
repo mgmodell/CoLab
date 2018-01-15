@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Given /^the user is any student in the course$/ do
   @user = @course.rosters.enrolled.sample.user
 end

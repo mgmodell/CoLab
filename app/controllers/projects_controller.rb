@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy, :activate,
-                                     :rescore_group, :rescore_groups]
-  before_action :check_editor, except: [:next, :diagnose, :react,
-                                        :rescore_group, :rescore_groups,
-                                        :show, :index]
-  before_action :check_viewer, only: [:show, :index]
+  before_action :set_project, only: %i[show edit update destroy activate
+                                       rescore_group rescore_groups]
+  before_action :check_editor, except: %i[next diagnose react
+                                          rescore_group rescore_groups
+                                          show index]
+  before_action :check_viewer, only: %i[show index]
 
   def show
     @title = t('.title')

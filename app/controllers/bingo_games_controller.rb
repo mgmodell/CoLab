@@ -1,14 +1,15 @@
 # frozen_string_literal: true
+
 class BingoGamesController < ApplicationController
-  before_action :set_bingo_game, only: [:show, :edit, :update,
-                                        :destroy, :review_candidates,
-                                        :update_review_candidates]
+  before_action :set_bingo_game, only: %i[show edit update
+                                          destroy review_candidates
+                                          update_review_candidates]
 
-  before_action :check_editor, except: [:next, :diagnose, :react,
-                                        :update_review_candidates,
-                                        :show, :index, :get_concepts]
+  before_action :check_editor, except: %i[next diagnose react
+                                          update_review_candidates
+                                          show index get_concepts]
 
-  before_action :check_viewer, only: [:show, :index]
+  before_action :check_viewer, only: %i[show index]
 
   def show
     @title = t '.title'

@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 class ExperiencesController < ApplicationController
-  before_action :set_experience, only: [:show, :edit, :update, :destroy]
-  before_action :check_viewer, only: [:show, :index]
-  before_action :check_editor, only: [:edit, :update, :destroy]
+  before_action :set_experience, only: %i[show edit update destroy]
+  before_action :check_viewer, only: %i[show index]
+  before_action :check_editor, only: %i[edit update destroy]
 
   def show
     @title = t('.title')

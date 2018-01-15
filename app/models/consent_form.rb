@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ConsentForm < ActiveRecord::Base
   belongs_to :user
   has_many :projects, inverse_of: :consent_form

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Given /^the email queue is empty$/ do
   ActionMailer::Base.deliveries = []
   ActionMailer::Base.deliveries.count.should eq 0

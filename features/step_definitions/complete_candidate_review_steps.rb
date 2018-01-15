@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo|
   # Store the previous user (do no harm)
   temp_user = @user

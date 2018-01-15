@@ -1,6 +1,7 @@
 # frozen_string_literal: true
+
 class SchoolsController < ApplicationController
-  before_action :set_school, only: [:show, :edit, :update, :destroy]
+  before_action :set_school, only: %i[show edit update destroy]
   before_action :check_admin
 
   def show

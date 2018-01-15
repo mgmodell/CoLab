@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Email < ActiveRecord::Base
   belongs_to :user, inverse_of: :emails
 
