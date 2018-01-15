@@ -4,6 +4,35 @@
   <head>
     <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= javascript_tag do %>
+      const chrtCtx = new Object( );
+      chrtCtx.anonConfirm = '<%= t 'graphing.anon_confirm' %>';
+      chrtCtx.date = '<%= t 'graphing.date' %>';
+      chrtCtx.contributionLvl = '<%= t 'graphing.contribution_lvl' %>';
+      chrtCtx.chrtDwnWrn = "<%= raw( t('graphing.chart_dwn_warn') ).chop %>";
+      chrtCtx.chrtFor = '<%= t 'graphing.chart_for' %>';
+      chrtCtx.forProject = '<%= t 'graphing.for_project' %>';
+      chrtCtx.group = '<%= t 'graphing.group' %>';
+      chrtCtx.low = '<%= t 'graphing.low' %>';
+      chrtCtx.high = '<%= t 'graphing.high' %>';
+      chrtCtx.andGroup = '<%= t 'graphing.and_group' %>';
+      chrtCtx.wrote = '<%= t 'graphing.wrote' %>';
+      chrtCtx.value = '<%= t 'graphing.value' %>';
+      chrtCtx.indAd = '<%= t 'graphing.ind_ad' %>';
+      chrtCtx.indAb = '<%= t 'graphing.ind_ab' %>';
+      chrtCtx.indAo = '<%= t 'graphing.ind_ao' %>';
+      chrtCtx.indAgG = '<%= t 'graphing.ind_ag_g' %>';
+      chrtCtx.indAgS = '<%= t 'graphing.ind_ag_s' %>';
+      chrtCtx.indAgS = '<%= t 'graphing.ind_ag_s' %>';
+      chrtCtx.indAgM = '<%= t 'graphing.ind_ag_m' %>';
+      chrtCtx.gAd = '<%= t 'graphing.g_ad' %>';
+      chrtCtx.gAm = '<%= t 'graphing.g_am' %>';
+      chrtCtx.gVb = '<%= t 'graphing.g_vb' %>';
+      chrtCtx.gVm = '<%= t 'graphing.g_vm' %>';
+      chrtCtx.gAgB = '<%= t 'graphing.g_ag_b' %>';
+      chrtCtx.gAgM = '<%= t 'graphing.g_ag_m' %>';
+      chrtCtx.clickForMore = '<%= t 'graphing.click_for_more' %>';
+    <% end -%>
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "graphing_manifest" %>
     <%= csrf_meta_tags %>
