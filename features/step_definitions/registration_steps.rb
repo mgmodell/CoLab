@@ -109,7 +109,7 @@ Then /^the user sees (\d+) invitation$/ do |invitation_count|
   if invitation_count.to_i == 1
     page.should have_content 'the course listed below'
   else
-    page.should have_content invitation_count + ' courses listed below'
+    page.should have_content invitation_count.to_s + ' courses listed below'
   end
 end
 

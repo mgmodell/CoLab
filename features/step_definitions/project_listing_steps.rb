@@ -71,7 +71,7 @@ Then /^user should see (\d+) open task$/ do |open_project_count|
   when 1
     page.should have_content  'one task at the moment'
   else
-    page.should have_content ( open_project_count + ' tasks today')
+    page.should have_content ( open_project_count.to_s + ' tasks today')
   end
 end
 
