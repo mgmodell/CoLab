@@ -145,6 +145,7 @@ add_dotted_line = ( target_id, target_name, factor_id, factor_name,
         tip_text += "<strong>" + comments[d.installment_id][ 'commentor' ]
         tip_text += ctx.wrote + ":</strong>"
         tip_text += comments[ d.installment_id ][ 'comment' ]
+        tip_text += '</br><strong>' + ctx.clickForMore + '</strong>'
 
       ctx.toolTip.transition()
         .duration( 200 )
@@ -153,10 +154,36 @@ add_dotted_line = ( target_id, target_name, factor_id, factor_name,
         .style( 'left', (d3.event.pageX) + 'px' )
         .style( 'top', (d3.event.pageY - 28) + 'px' )
     )
+    .on( 'click', (d)->
+      tip_text = ''
+      #TODO: Move comments to their own, centered panel
+      tip_text = '<strong>' + d3.select( this ).attr( 'user' ) + '</strong></br>'
+      tip_text += '<strong>' + d3.select( this ).attr( 'factor' ) + ' '
+      tip_text += ctx.value + ':</strong>' + d.value + '</br>'
+      if comments[ d.installment_id ][ 'comment' ] != '<no comment>'
+        tip_text += "<strong>" + comments[d.installment_id][ 'commentor' ]
+        tip_text += ctx.wrote + ":</strong>"
+        tip_text += comments[ d.installment_id ][ 'comment' ]
+
+      ctx.toolTip.transition()
+        .duration( 200 )
+        .style( 'opacity', .9 )
+      parent = this.parentNode.getBoundingClientRect()
+      console.log parent.x
+      console.log parent.y
+      console.log 'hello'
+      ctx.toolTip.html( tip_text )
+        .style( 'left', (parent.x + 25) + 'px' )
+        .style( 'top', (window.scrollY + parent.y + 15) + 'px' )
+        .style( 'width', '300px' )
+        .style( 'height', '156' )
+    )
     .on( 'mouseout', (d)->
       ctx.toolTip.transition()
         .duration( 1000 )
         .style( 'opacity', 0 )
+        .style( 'width', '150px' )
+        .style( 'height', '56' )
     )
     .transition( )
       .duration( 5000 )
