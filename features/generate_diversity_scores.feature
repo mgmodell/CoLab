@@ -475,13 +475,13 @@ Feature: Generate diversity scores (DS)
   Scenario: A proposed group from 4 users with 1 impaired user gives a ds of 2
     Given the course has 4 confirmed users
     Given the "impairment" of the "last" "loose" user is "cognitive"
-     Then the score calculated from the users is 3
+     Then the score calculated from the users is 2
 
   Scenario: A proposed group from 4 users with 2 different like impairments gives a ds of 2
     Given the course has 4 confirmed users
     Given the "impairment" of the "first" "loose" user is "cognitive"
     Given the "impairment" of the "last" "loose" user is "cognitive"
-     Then the score calculated from the users is 3
+     Then the score calculated from the users is 2
 
   Scenario: A proposed group from 4 users with 2 different combo impairments gives a ds of 3
     Given the course has 4 confirmed users

@@ -63,6 +63,7 @@ class Group < ActiveRecord::Base
       primary_lang_hash = Hash.new(0)
       country_hash = Hash.new(0)
       scenario_hash = Hash.new(0)
+      impairment_hash = Hash.new(0)
 
       users.each do |user|
         if user.home_state.present?
@@ -80,6 +81,15 @@ class Group < ActiveRecord::Base
         user.reactions.each do |reaction|
           scenario_hash[reaction.narrative.member] += 1
         end
+        impairments = ''
+        impairments += user.impairment_visual ? 'v' : ''
+        impairments += user.impairment_auditory ? 'a' : ''
+        impairments += user.impairment_motor ? 'm' : ''
+        impairments += user.impairment_cognitive ? 'c' : ''
+        impairments += user.impairment_other ? 'o' : ''
+        #if there are no impairments, set it to 'u'
+        impairments += impairments.blank? ? 'u' : ''
+        impairment_hash[ impairments ] = true
       end
 
       now = Date.current
@@ -97,7 +107,7 @@ class Group < ActiveRecord::Base
 
       ds = state_hash.keys.count + country_hash.keys.count + scenario_hash.keys.count +
            (2 * (gender_hash.keys.count + cip_hash.keys.count + primary_lang_hash.keys.count)) +
-           (age_sd + uni_years_sd).round
+           (age_sd + uni_years_sd).round + impairment_hash.keys.count
     end
     ds
   end
