@@ -105,9 +105,12 @@ class Group < ActiveRecord::Base
       end
       uni_years_sd = values.empty? ? 0 : values.standard_deviation
 
-      ds = state_hash.keys.count + country_hash.keys.count + scenario_hash.keys.count +
+      ds = state_hash.keys.count +
+           country_hash.keys.count +
+           scenario_hash.keys.count +
            (2 * (gender_hash.keys.count + cip_hash.keys.count + primary_lang_hash.keys.count)) +
-           (age_sd + uni_years_sd).round + impairment_hash.keys.count
+           (age_sd + uni_years_sd).round +
+           (impairment_hash.keys.count > 1 ? impairment_hash.keys.count : 0 )
     end
     ds
   end
