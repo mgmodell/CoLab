@@ -58,9 +58,8 @@ rect_it = (element, outline, fill, x1, y1, x2, y2)->
   return rect
 
 #Line dotted line rendering function
-add_avg_line = ( chart_elem, target_id, target_name, factor_id,
-                  factor_name, d, color, dash_length, dash_partial,
-                  class_list, x, y, parseTime, comments, toolTipDiv )->
+add_avg_line = ( target_id, target_name, factor_id,
+                  factor_name, d, color, class_list, dash_partial, comments, ctx ) -> 
   target_class_id = 'u_' + target_id
   factor_class_id = 'f_' + factor_id
   dateStream = [ ]
@@ -69,13 +68,13 @@ add_avg_line = ( chart_elem, target_id, target_name, factor_id,
 
   line = d3.line( )
     .x( (d)->
-      return x(parseTime( d.date ) )
+      return ctx.x(ctx.parseTime( d.date ) )
     )
     .y( (d)->
-      return y(d.sum / d.count )
+      return ctx.y(d.sum / d.count )
     )
     .curve( d3.curveMonotoneX )
-  path = chart_elem.append( 'path' )
+  path = ctx.all_data.append( 'path' )
     .datum( dateStream )
     .attr( 'fill', 'none' )
     .attr( 'class', class_list + ' ' + target_class_id + ' ' + factor_class_id )
@@ -91,27 +90,26 @@ add_avg_line = ( chart_elem, target_id, target_name, factor_id,
     .transition( )
       .duration( 2000 )
       .attr( 'stroke-dasharray', (d)->
-        return '50, 1'#( dash_partial * 5 ) + "," + ( dash_length * 5 )
+        return '50, 1'#( dash_partial * 5 ) + "," + ( ctx.user_count * 5 )
       )
       .attr( 'stroke', color )
 
 
 # Render an averaged line
-add_dotted_line = ( chart_elem, target_id, target_name, factor_id, factor_name,
-                    d, color, dash_length, dash_partial, class_list, x, y,
-                    parseTime, comments, toolTipDiv )->
+add_dotted_line = ( target_id, target_name, factor_id, factor_name,
+                    d, color, class_list, dash_partial, comments, ctx ) ->
   
   target_class_id = 'u_' + target_id
   factor_class_id = 'f_' + factor_id
   line = d3.line( )
     .x( (d)->
-      return x(parseTime( d.date) )
+      return ctx.x(ctx.parseTime( d.date) )
     )
     .y( (d)->
-      return y(d.value)
+      return ctx.y(d.value)
     )
     .curve(d3.curveMonotoneX)
-  path = chart_elem.append( 'path' )
+  path = ctx.all_data.append( 'path' )
     .datum( d )
     .attr( 'fill', 'none' )
     .attr( 'class', class_list + ' ' + target_class_id + ' ' + factor_class_id )
@@ -121,16 +119,16 @@ add_dotted_line = ( chart_elem, target_id, target_name, factor_id, factor_name,
     .attr( 'stroke-width', 3 )
     .attr( 'd', line )
 
-  chart_elem.selectAll( 'dot' )
+  ctx.all_data.selectAll( 'dot' )
     .data( d )
     .enter().append('circle')
     .attr( 'class', class_list + ' ' + target_class_id + ' ' + factor_class_id )
     .attr( 'r', 5 )
     .attr('cx', (d)->
-      return x(parseTime( d.date ) )
+      return ctx.x(ctx.parseTime( d.date ) )
     )
     .attr('cy', (d)->
-      return y(d.value)
+      return ctx.y(d.value)
     )
     .attr( 'fill', color )
     .attr( 'stroke', 'black' )
@@ -142,21 +140,21 @@ add_dotted_line = ( chart_elem, target_id, target_name, factor_id, factor_name,
       #TODO: Move comments to their own, centered panel
       tip_text = '<strong>' + d3.select( this ).attr( 'user' ) + '</strong></br>'
       tip_text += '<strong>' + d3.select( this ).attr( 'factor' ) + ' '
-      tip_text += chrtCtx.value + ':</strong>' + d.value + '</br>'
+      tip_text += ctx.value + ':</strong>' + d.value + '</br>'
       if comments[ d.installment_id ][ 'comment' ] != '<no comment>'
         tip_text += "<strong>" + comments[d.installment_id][ 'commentor' ]
-        tip_text += chrtCtx.wrote + ":</strong>"
+        tip_text += ctx.wrote + ":</strong>"
         tip_text += comments[ d.installment_id ][ 'comment' ]
 
-      toolTipDiv.transition()
+      ctx.toolTip.transition()
         .duration( 200 )
         .style( 'opacity', .9 )
-      toolTipDiv.html( tip_text )
+      ctx.toolTip.html( tip_text )
         .style( 'left', (d3.event.pageX) + 'px' )
         .style( 'top', (d3.event.pageY - 28) + 'px' )
     )
     .on( 'mouseout', (d)->
-      toolTipDiv.transition()
+      ctx.toolTip.transition()
         .duration( 1000 )
         .style( 'opacity', 0 )
     )
@@ -177,7 +175,7 @@ add_dotted_line = ( chart_elem, target_id, target_name, factor_id, factor_name,
     .transition( )
       .duration( 2000 )
       .attr( 'stroke-dasharray', (d)->
-        return ( dash_partial * 5 ) + "," + ( dash_length * 5 )
+        return ( dash_partial * 5 ) + "," + ( ctx.user_count * 5 )
       )
       .attr( 'stroke', color )
 
@@ -188,8 +186,7 @@ unitOfAnalysisOpts =
       code: 'ad'
       name: chrtCtx.indAd
       line_proc: add_dotted_line
-      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
-            yFcn, parseTimeFcn, comments, toolTipDiv )->
+      fcn: (data, line_func, ctx, class_id, comments ) ->
         for id, stream of data.streams
           target_id = id
           for sub_id, sub_stream of stream.sub_streams
@@ -197,17 +194,14 @@ unitOfAnalysisOpts =
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
             for factor_id, factor_stream of sub_stream.factor_streams
               color = data.factors[ factor_id ][ 'color' ]
-              line_func chart_elem, assessor_id,
-                        data[ 'users'][ assessor_id ][ 'name' ], factor_id, 
+              line_func assessor_id, data[ 'users'][ assessor_id ][ 'name' ], factor_id, 
                         data[ 'factors' ][ factor_id ][ 'name' ], factor_stream.values,
-                        color, user_count, user_index, class_id, xFcn, yFcn, parseTimeFcn, 
-                        comments, toolTipDiv
+                        color, class_id, user_index, comments, ctx
     ab: 
       code: 'ab'
       name: chrtCtx.indAb
       line_proc: add_avg_line
-      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
-            yFcn, parseTimeFcn, comments, toolTipDiv )->
+      fcn: (data, line_func, ctx, class_id, comments ) ->
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
@@ -230,11 +224,9 @@ unitOfAnalysisOpts =
         for factor_id, factor_coll of data.factors
           color = data.factors[ factor_id ][ 'color' ]
           target_id = factor_id
-          line_func chart_elem, assessor_id, 
-                    data[ 'users' ][ assessor_id ][ 'name' ], factor_id,
+          line_func assessor_id, data[ 'users' ][ assessor_id ][ 'name' ], factor_id,
                     data[ 'factors' ][factor_id ][ 'name' ], factor_coll, color,
-                    user_count, user_index, class_id, xFcn, yFcn, parseTimeFcn,
-                    comments, toolTipDiv
+                    class_id, user_index, comments, ctx
 
     ao: 
       code: 'ao'
@@ -261,20 +253,17 @@ unitOfAnalysisOpts =
       code: 'ad'
       name: chrtCtx.gAd
       line_proc: add_dotted_line
-      fcn: (data, line_func, chart_elem, user_count, class_id, xFcn, 
-            yFcn, parseTimeFcn, comments, toolTipDiv )->
+      fcn: (data, line_func, ctx, class_id, comments ) ->
         for id, stream of data.streams
           target_id = id
           for sub_id, sub_stream of stream.sub_streams
             user_index = data.users[ sub_stream[ 'assessor_id' ] ][ 'index' ]
             for factor_id, factor_stream of sub_stream.factor_streams
               color = data.factors[ factor_id ][ 'color' ]
-              line_func chart_elem, target_id,
-                        data[ 'users' ][ target_id ][ 'name' ], factor_id,
+              line_func target_id, data[ 'users' ][ target_id ][ 'name' ], factor_id,
                         data[ 'factors' ][ factor_id ][ 'name' ], 
-                        factor_stream.values, color, user_count, 
-                        user_index, class_id, xFcn, yFcn, parseTimeFcn, 
-                        comments, toolTipDiv
+                        factor_stream.values, color, class_id, user_index,
+                        comments, ctx
     am: 
       code: 'am'
       name: chrtCtx.gAm
@@ -360,9 +349,9 @@ $ ->
   )
   $(".submitting_select").change ->
     chart_div = $(this).parents("form").find("#graph_div")
-    toolTip = d3.select '.tooltip'
-    if toolTip.size( ) < 1
-      toolTip = d3.select( 'body' ).append( 'div' )
+    chrtCtx.toolTip = d3.select '.tooltip'
+    if chrtCtx.toolTip.size( ) < 1
+      chrtCtx.toolTip = d3.select( 'body' ).append( 'div' )
         .attr( 'class', 'tooltip' )
         .style( 'position', 'absolute' )
         .style( 'width', '150px' )
@@ -391,11 +380,11 @@ $ ->
         # ctx will be the specific chart context
         ctx.targetWidth = chart_div.node( ).offsetWidth
 
-        parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L%Z")
-        x = d3.scaleTime( )
-          .domain( [ parseTime( data.start_date ), parseTime( data.end_date ) ])
+        ctx.parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L%Z")
+        ctx.x = d3.scaleTime( )
+          .domain( [ ctx.parseTime( data.start_date ), ctx.parseTime( data.end_date ) ])
           .rangeRound( [ 0, ( ctx.targetWidth - ctx.margin.left - ctx.margin.right ) ] )
-        y = d3.scaleLinear( )
+        ctx.y = d3.scaleLinear( )
           .domain( [0, 6000] )
           .rangeRound( [ ( ctx.height - ctx.margin.top - ctx.margin.bottom ), 0 ] )
 
@@ -422,14 +411,14 @@ $ ->
           .attr( 'class', 'hData' )
           .attr('original_width', ( chrtBgW ) )
 
-        all_data = g.append( 'g' )
+        ctx.all_data = g.append( 'g' )
           .attr( 'class', 'hData' )
           .attr('original_width', ( chrtBgW ) )
         
         xStretch.append( 'g' )
           .attr( 'class', 'axis axis--x' )
           .attr( 'transform', 'translate(0, ' + ( chrtBgH ) + ')' )
-          .call( d3.axisBottom( x ) )
+          .call( d3.axisBottom( ctx.x ) )
 
         xLabelWidth = ( ctx.targetWidth - ctx.margin.left ) / 2
         xLabelHeight = ctx.height - ctx.margin.top
@@ -442,7 +431,7 @@ $ ->
                                 
         g.append( 'g' )
           .attr( 'class', 'axis axis--y' )
-          .call( d3.axisLeft(y).ticks( 2 ).tickFormat( (d)->
+          .call( d3.axisLeft(ctx.y).ticks( 2 ).tickFormat( (d)->
             label = ''
             switch d
               when 0
@@ -492,7 +481,7 @@ $ ->
           user[ 'index' ] = index
           index++
 
-        user_count = index
+        ctx.user_count = index
 
         for id, stream of data.streams
           for sub_id, sub_stream of stream.sub_streams
@@ -803,8 +792,7 @@ $ ->
 
               block = unitOfAnalysisOpts[ data.unitOfAnalysisCode ][spec_code]
               if !processed? || !processed
-                block.fcn( data, block.line_proc, all_data, user_count, 
-                           block.code, x, y, parseTime, data.comments, toolTip )
+                block.fcn( data, block.line_proc, ctx, block.code, data.comments )
                 d3.select( this ).attr( 'processed', true )
 
               else
@@ -859,8 +847,7 @@ $ ->
 
         #add analysis processing here
         block = unitOfAnalysisOpts[ data.unitOfAnalysisCode ]['ad']
-        block.fcn( data, block.line_proc, all_data, user_count, 
-                   block.code, x, y, parseTime, data.comments, toolTip )
+        block.fcn( data, block.line_proc, ctx, block.code, data.comments )
         d3.selectAll( '.ad' ).attr( 'processed', true )
 
 
