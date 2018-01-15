@@ -127,6 +127,20 @@
                 </tr>
               </table>
               <%= f.association :primary_language %>
+
+      
+              <legend>
+                <%= t( 'devise.registrations.impairments' ) %>
+              </legend>
+              <center>
+                <fieldset data-role='controlgroup' data-type='horizontal'>
+                  <%= f.input_field :impairment_visual, as: :boolean, inline_label: t('devise.registrations.impairment_visual')%>
+                  <%= f.input_field :impairment_auditory, as: :boolean, inline_label: t('devise.registrations.impairment_auditory')%>
+                  <%= f.input_field :impairment_motor, as: :boolean, inline_label: t('devise.registrations.impairment_motor')%>
+                  <%= f.input_field :impairment_cognitive, as: :boolean, inline_label: t('devise.registrations.impairment_cognitive')%>
+                  <%= f.input_field :impairment_other, as: :boolean, inline_label: t('devise.registrations.impairment_other')%>
+                </fieldset>
+              </center>
             </div>
             </div>
           </div>

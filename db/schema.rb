@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171225131145) do
+ActiveRecord::Schema.define(version: 20180115065402) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -503,6 +503,11 @@ ActiveRecord::Schema.define(version: 20171225131145) do
     t.integer  "cip_code_id",            limit: 4
     t.integer  "primary_language_id",    limit: 4
     t.date     "started_school"
+    t.boolean  "impairment_visual"
+    t.boolean  "impairment_auditory"
+    t.boolean  "impairment_motor"
+    t.boolean  "impairment_cognitive"
+    t.boolean  "impairment_other"
   end
 
   add_index "users", ["cip_code_id"], name: "index_users_on_cip_code_id", using: :btree

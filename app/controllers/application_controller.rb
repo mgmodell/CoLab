@@ -14,12 +14,18 @@ class ApplicationController < ActionController::Base
               [:first_name, :last_name, :email, :password, :language_id,
                :current_password, :timezone, :gender_id, :cip_code_id,
                :welcomed, :theme_id, :school_id, :date_of_birth,
-               :started_school, :primary_language_id, :home_state_id])
+               :started_school, :primary_language_id, :home_state_id, 
+               :impairment_visual, :impairment_auditory,
+               :impairment_motor, :impairment_cognitive,
+               :impairment_other])
     devise_parameter_sanitizer.permit(:account_update, keys:
               [:first_name, :last_name, :email, :password, :language_id,
                :current_password, :timezone, :gender_id, :cip_code_id,
                :welcomed, :theme_id, :school_id, :researcher, :date_of_birth,
-               :started_school, :primary_language_id, :home_state_id])
+               :started_school, :primary_language_id, :home_state_id, 
+               :impairment_visual, :impairment_auditory,
+               :impairment_motor, :impairment_cognitive,
+               :impairment_other])
   end
 
   def set_locale
