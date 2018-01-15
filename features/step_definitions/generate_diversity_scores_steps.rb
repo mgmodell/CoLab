@@ -62,6 +62,22 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
     u.started_school = Chronic.parse code
   when 'dob'
     u.date_of_birth = Chronic.parse code
+  when 'impairment'
+    case code
+    when 'visual'
+      u.impairment_visual = true
+    when 'auditory'
+      u.impairment_auditory = true
+    when 'motor'
+      u.impairment_motor = true
+    when 'cognitive'
+      u.impairment_cognitive = true
+    when 'other'
+      u.impairment_other = true
+    else
+      puts "Impariment (#{code}) is not an available demographic"
+      pending
+    end
   else
     puts "#{demographic} is not an available demographic"
     pending

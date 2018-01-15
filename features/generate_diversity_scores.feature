@@ -466,6 +466,30 @@ Feature: Generate diversity scores (DS)
     Given the "gender" of the "random" "loose" user is "m"
      Then the score calculated from the users is 0
 
+  Scenario: A proposed group from 4 users with 2 different impairments gives a ds of 3
+    Given the course has 4 confirmed users
+    Given the "impairment" of the "first" "loose" user is "visual"
+    Given the "impairment" of the "last" "loose" user is "motor"
+     Then the score calculated from the users is 3
+
+  Scenario: A proposed group from 4 users with 1 impaired user gives a ds of 2
+    Given the course has 4 confirmed users
+    Given the "impairment" of the "last" "loose" user is "cognitive"
+     Then the score calculated from the users is 3
+
+  Scenario: A proposed group from 4 users with 2 different like impairments gives a ds of 2
+    Given the course has 4 confirmed users
+    Given the "impairment" of the "first" "loose" user is "cognitive"
+    Given the "impairment" of the "last" "loose" user is "cognitive"
+     Then the score calculated from the users is 3
+
+  Scenario: A proposed group from 4 users with 2 different combo impairments gives a ds of 3
+    Given the course has 4 confirmed users
+    Given the "impairment" of the "first" "loose" user is "visual"
+    Given the "impairment" of the "last" "loose" user is "visual"
+    Given the "impairment" of the "last" "loose" user is "motor"
+     Then the score calculated from the users is 3
+
   Scenario: A proposed group from 4 users with 2 genders gives a ds of 2
     Given the course has 4 confirmed users
     Given the "gender" of the "first" "loose" user is "m"
