@@ -329,9 +329,6 @@ GEM
     tilt (2.0.8)
     traco (3.2.1)
       activerecord (>= 3.0)
-    turbolinks (5.1.0)
-      turbolinks-source (~> 5.1)
-    turbolinks-source (5.1.0)
     tzinfo (1.2.4)
       thread_safe (~> 0.1)
     uglifier (4.1.3)
@@ -394,7 +391,6 @@ DEPENDENCIES
   spring
   stopwords-filter
   traco
-  turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
 
