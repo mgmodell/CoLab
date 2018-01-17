@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ConsentForm < ActiveRecord::Base
+class ConsentForm < ApplicationRecord
   belongs_to :user
   has_many :projects, inverse_of: :consent_form
   translates :form_text

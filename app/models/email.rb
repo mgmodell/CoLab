@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Email < ActiveRecord::Base
+class Email < ApplicationRecord
   belongs_to :user, inverse_of: :emails
 
   def send_devise_notification(notification, *args)

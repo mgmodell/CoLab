@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Installment < ActiveRecord::Base
+class Installment < ApplicationRecord
   belongs_to :assessment, inverse_of: :installments
   belongs_to :user, inverse_of: :installments
   belongs_to :group, inverse_of: :installments

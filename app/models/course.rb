@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'forgery'
-class Course < ActiveRecord::Base
+class Course < ApplicationRecord
   belongs_to :school, inverse_of: :courses
   has_many :projects, inverse_of: :course, dependent: :destroy
   has_many :rosters, inverse_of: :course, dependent: :destroy

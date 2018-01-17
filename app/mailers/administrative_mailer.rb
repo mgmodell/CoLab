@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AdministrativeMailer < ActionMailer::Base
+class AdministrativeMailer < ApplicationMailer
   default from: 'support@CoLab.online'
 
   def remind(user)

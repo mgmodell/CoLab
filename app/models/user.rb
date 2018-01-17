@@ -2,7 +2,7 @@
 
 require 'forgery'
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   has_many :emails, inverse_of: :user, dependent: :destroy
 
   devise :multi_email_authenticatable, :registerable,

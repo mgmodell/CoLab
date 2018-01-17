@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BingoBoard < ActiveRecord::Base
+class BingoBoard < ApplicationRecord
   belongs_to :bingo_game, inverse_of: :bingo_boards
   belongs_to :user, inverse_of: :bingo_boards
   has_many :bingo_cells, inverse_of: :bingo_board, dependent: :destroy

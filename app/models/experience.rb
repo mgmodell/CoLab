@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'forgery'
-class Experience < ActiveRecord::Base
+class Experience < ApplicationRecord
   belongs_to :course, inverse_of: :experiences
   has_many :reactions, inverse_of: :experience
 

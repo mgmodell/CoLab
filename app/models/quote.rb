@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Quote < ActiveRecord::Base
+class Quote < ApplicationRecord
   translates :text
 
   @@reloaded_at = DateTime.current

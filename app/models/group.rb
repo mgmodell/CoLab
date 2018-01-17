@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'forgery'
-class Group < ActiveRecord::Base
+class Group < ApplicationRecord
   around_update :track_history
   after_initialize :store_load_state
 

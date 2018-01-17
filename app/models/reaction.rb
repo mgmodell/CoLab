@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Reaction < ActiveRecord::Base
+class Reaction < ApplicationRecord
   belongs_to :behavior, inverse_of: :reactions
   belongs_to :narrative
   belongs_to :user

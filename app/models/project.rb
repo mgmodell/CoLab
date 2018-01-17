@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'forgery'
-class Project < ActiveRecord::Base
+class Project < ApplicationRecord
   after_save :build_assessment
 
   belongs_to :course, inverse_of: :projects

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CandidateList < ActiveRecord::Base
+class CandidateList < ApplicationRecord
   belongs_to :user, inverse_of: :candidate_lists
   belongs_to :group, inverse_of: :candidate_lists
   belongs_to :bingo_game, inverse_of: :candidate_lists
