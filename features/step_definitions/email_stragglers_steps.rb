@@ -74,7 +74,7 @@ Then /^the members of "([^"]*)" group go to other groups$/ do |ordinal|
     when 'the last' then to_disperse = @project.groups.last
     end
 
-    groups = @project.groups
+    groups = @project.groups.to_a
     to_disperse.users.each do |user|
       group = groups.first
       unless group == to_disperse

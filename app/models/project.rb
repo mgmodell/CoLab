@@ -6,13 +6,12 @@ class Project < ApplicationRecord
 
   belongs_to :course, inverse_of: :projects
   belongs_to :style, inverse_of: :projects
+  belongs_to :factor_pack, inverse_of: :projects
   has_many :groups, inverse_of: :project, dependent: :destroy
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
   has_many :installments, through: :assessments
-  belongs_to :course, inverse_of: :projects
-  belongs_to :consent_form, inverse_of: :projects
-  belongs_to :factor_pack, inverse_of: :projects
+  belongs_to :consent_form, inverse_of: :projects, optional: true
 
   has_many :users, through: :groups
   has_many :factors, through: :factor_pack
