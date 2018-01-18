@@ -58,9 +58,11 @@ Then "the course {string} field is {string}"  do |field_name, value|
 end
 
 Then "the course start date is {string} and the end date to {string}" do |start_date, end_date|
-  test_date = start_date.blank? ? '' : Chronic.parse( start_date ).strftime('%Y-%m-%dT%T')
+  test_date = Chronic.parse( start_date ).strftime('%Y-%m-%dT%T')
+  test_date = Chronic.parse( start_date )
   @course.start_date.should eq test_date
-  test_date = end_date.blank? ? '' : Chronic.parse( end_date ).strftime('%Y-%m-%dT%T')
+  test_date = Chronic.parse( end_date ).strftime('%Y-%m-%dT%T')
+  test_date = Chronic.parse( end_date )
   @course.end_date.should eq test_date
 
 end

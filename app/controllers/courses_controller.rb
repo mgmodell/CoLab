@@ -120,7 +120,7 @@ class CoursesController < ApplicationController
   end
 
   def update
-    @title = t('.title')
+    @title = t('courses.edit.title')
     if @course.update(course_params)
       @course.school = School.find(@course.school_id)
       redirect_to course_path(@course), notice: t('courses.update_success')

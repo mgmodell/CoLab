@@ -104,7 +104,7 @@ Feature: Course Administration
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to "099"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
-     And the user sets the start date to "tomorrow" and the end date to "next month"
+     And the user sets the start date to "5/11/1976" and the end date to "next month"
      And the timezone "is" "Mexico City"
      And the user sets the course timezone to "Nairobi"
     Then the user clicks "Update Course"
@@ -113,7 +113,7 @@ Feature: Course Administration
      And the course "Name" field is "Off"
      And the course "Number" field is "099"
      And the course "Description" field is "I love to eat peas and carrots all day long"
-     And the course start date is "tomorrow" and the end date to "next month"
+     And the course start date is "5/11/1976" and the end date to "next month"
      And the course "timezone" is "Nairobi"
 
   Scenario: Admin duplicates an existing course
