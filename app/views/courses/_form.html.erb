@@ -81,7 +81,7 @@
           <%= t roster.role.humanize %>
         </td>
         <td><%= link_to( t( 'courses.re_invite' ),
-              re_invite_student_path( roster.user ) ) unless roster.role.enrolled_student? %>&nbsp;|&nbsp;
+              re_invite_student_path( roster.user ) ) unless roster.enrolled_student? %>&nbsp;|&nbsp;
         <%= link_to t( 'courses.drop' ), drop_student_path( roster.id ) %></td>
       </tr>
     <% end %>

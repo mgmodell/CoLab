@@ -67,7 +67,10 @@ class Course < ActiveRecord::Base
 
   # Validation check code
   def date_sanity
-    if start_date > end_date
+    if start_date.blank? || end_date.blank?
+      errors.add(:start_dow, 'The start date is required' ) if start_date.blank?
+      errors.add(:end_dow, 'The end date is required' ) if end_date.blank?
+    elsif start_date > end_date
       errors.add(:start_dow, 'The start date must come before the end date')
     end
     errors
@@ -94,14 +97,16 @@ class Course < ActiveRecord::Base
   end
 
   def timezone_adjust
-    course_tz = ActiveSupport::TimeZone.new(timezone)
-    user_tz = Time.zone
+    unless start_date.blank? || end_date.blank?
+      course_tz = ActiveSupport::TimeZone.new(timezone)
+      user_tz = Time.zone
 
-    # TZ corrections
-    new_date = start_date - user_tz.utc_offset + course_tz.utc_offset
-    self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day if start_date_changed?
-    new_date = end_date - user_tz.utc_offset + course_tz.utc_offset
-    self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day if end_date_changed?
+      # TZ corrections
+      new_date = start_date - user_tz.utc_offset + course_tz.utc_offset
+      self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day if start_date_changed?
+      new_date = end_date - user_tz.utc_offset + course_tz.utc_offset
+      self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day if end_date_changed?
+    end
   end
 
   def add_user_by_email(user_email, instructor = false)

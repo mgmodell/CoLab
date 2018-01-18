@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CoursesController < ApplicationController
-  before_action :set_course, only: %i[show edit update destroy add_students add_instructors]
+  before_action :set_course, only: %i[show edit update destroy add_students add_instructors, new_from_template]
   before_action :check_admin, only: %i[new create]
   before_action :check_editor, except: %i[next diagnose react accept_roster decline_roster show index]
   before_action :check_viewer, except: %i[next diagnose react accept_roster decline_roster]
@@ -38,13 +38,77 @@ class CoursesController < ApplicationController
     @course.rosters << Roster.new(role: Roster.roles[:instructor], user: @current_user)
   end
 
+  def new_from_template
+    start_date = params[:start_date]
+    #We will probably need to add timezone checking here
+    date_difference = Chronic.parse( start_date ) - @course.start_date
+
+    #create the course
+    new_course = Course.new
+    new_course.name = "Copy of #{@course.name}"
+    new_course.number = "Copy of #{@course.number}"
+    new_course.description = @course.description
+    new_course.start_date = @course.start_date + date_difference
+    new_course.end_date = @course.end_date + date_difference
+
+    #copy the rosters
+    @course.rosters.faculty.each do |roster|
+      new_obj = Roster.new
+      new_obj.role = roster.role
+      new_obj.user = roster.user
+      new_course.rosters << new_obj
+    end
+
+    #copy the projects
+    proj_hash = {}
+    @course.projects.each do |project|
+      new_obj = Project.new
+      new_obj.name = project.name
+      new_obj.style = project.style
+      new_obj.factor_pack = project.factor_pack
+      new_obj.start_date = project.start_date + date_difference
+      new_obj.end_date = project.end_date + date_difference
+      new_course.projects << new_obj
+      proj_hash[ project ] = new_obj
+    end
+
+    #copy the experiences
+    @course.experiences.each do |experience|
+      new_obj = Experience.new
+      new_obj.name = experience.name
+      new_obj.start_date = experience.start_date + date_difference
+      new_obj.end_date = experience.end_date + date_difference
+      new_course.experiences << new_obj
+    end
+
+    #copy the bingo! games
+    @course.bingo_games.each do |bingo_game|
+      new_obj = BingoGame.new
+      new_obj.topic = bingo_game.topic
+      new_obj.description = bingo_game.description
+      new_obj.link = bingo_game.link
+      new_obj.source = bingo_game.source
+      new_obj.group_option = bingo_game.group_option
+      new_obj.individual_count = bingo_game.individual_count
+      new_obj.lead_time = bingo_game.lead_time
+      new_obj.group_discount = bingo_game.group_discount
+      new_obj.project = bingo_game.project.nil? ?
+        nil : proj_hash[ bingo_game.project ]
+      new_obj.start_date = bingo_game.start_date + date_difference
+      new_obj.end_date = bingo_game.end_date + date_difference
+      new_course.bingo_games << new_obj
+    end
+
+    new_course.save
+  end
+
   def create
     @title = t('courses.new.title')
     @course = Course.new(course_params)
     @course.rosters << Roster.new(role: Roster.roles[:instructor], user: @current_user)
 
     if @course.save
-      redirect_to url: course_url(@course), notice: t('courses.create_success')
+      redirect_to courses_url, notice: t('courses.create_success')
     else
       render :new
     end
@@ -154,9 +218,11 @@ class CoursesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_course
     if @current_user.is_admin?
-      @course = Course.find(params[:id])
+      @course = Course.includes( :users ).find(params[:id])
     else
-      @course = @current_user.rosters.instructor.where(course_id: params[:id]).take.course
+      @course = @current_user
+        .rosters.instructor
+        .where(course_id: params[:id]).take.course
       redirect_to :show if @course.nil?
     end
   end

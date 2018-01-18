@@ -5,6 +5,7 @@ Feature: Course Administration
   Background:
     Given a user has signed up
     Given the user "has" had demographics requested
+      And the user's school is "SUNY Korea"
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
     Given the course has 8 confirmed users
@@ -24,9 +25,10 @@ Feature: Course Administration
      And the user sets the "Number" field to "099"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
      And the user sets the start date to "tomorrow" and the end date to "next month"
-     And the timezone is "Nairobi"
+     And the timezone "is" "Nairobi"
+     And the timezone "isn't" "Mexico City"
     Then the user clicks "Create Course"
-     And the user will see "success"
+     And the user will see "successfully"
     Then retrieve the latest course from the db
      And the course "Name" field is "Off"
      And the course "Number" field is "099"
@@ -46,30 +48,36 @@ Feature: Course Administration
      And the user sets the "Number" field to "099"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
      And the user sets the start date to "tomorrow" and the end date to "next month"
-     And the timezone is "Nairobi"
+     And the timezone "is" "Nairobi"
+     And the timezone "isn't" "Mexico City"
     Then the user clicks "Create Course"
-     And the user will see "Error"
+     And the user will see "Please review the problems below"
+     #no start date
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to "099"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
      And the user sets the start date to "" and the end date to "next month"
     Then the user clicks "Create Course"
-     And the user will see "Error"
+     And the user will see "Please review the problems below"
+     #no end date
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to "099"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
      And the user sets the start date to "tomorrow" and the end date to ""
-     And the timezone is "Nairobi"
+     And the timezone "is" "Nairobi"
+     And the timezone "isn't" "Mexico City"
     Then the user clicks "Create Course"
-     And the user will see "Error"
+     And the user will see "Please review the problems below"
      #no number or description
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to ""
      And the user sets the "Description" field to ""
      And the user sets the start date to "tomorrow" and the end date to "next month"
-     And the timezone is "Nairobi"
+     And the timezone "is" "Nairobi"
+     And the timezone "isn't" "Mexico City"
     Then the user clicks "Create Course"
-     And the user will see "success"
+     #We should have success now
+     And the user will see "successfully"
     Then retrieve the latest course from the db
      And the course "Name" field is "Off"
      And the course "Number" field is ""
@@ -83,7 +91,7 @@ Feature: Course Administration
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user sees 1 course
-    Then the user does not see a "New Course" button
+    Then the user does not see a "New Course" link
 
   Scenario: Admin edits an existing course
     Given the user is an admin
@@ -92,13 +100,15 @@ Feature: Course Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
+    Then the user clicks "Edit Course Details"
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to "099"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
      And the user sets the start date to "tomorrow" and the end date to "next month"
-     And the timezone is "Nairobi"
-    Then the user clicks "Create Course"
-     And the user will see "success"
+     And the timezone "is" "Mexico City"
+     And the user sets the course timezone to "Nairobi"
+    Then the user clicks "Update Course"
+     And the user will see "successfully"
     Then retrieve the latest course from the db
      And the course "Name" field is "Off"
      And the course "Number" field is "099"
@@ -108,12 +118,12 @@ Feature: Course Administration
 
   Scenario: Admin duplicates an existing course
     Given the course started "5/10/1976" and ended "11/01/2012"
-    Given the course 'name' is 'to dup'
-    Given the course 'number' is 'd6'
-    Given the course 'description' is 'ohla!'
-    Given the course has an Experience
-    Given the Experience started "6/20/1976" and ends "8/20/1976"
-    Given the Experience "name" is "cup"
+    Given the course 'Name' is 'to dup'
+    Given the course 'Number' is 'd6'
+    Given the course 'Description' is 'ohla!'
+    Given the course has an experience
+    Given the experience started "6/20/1976" and ends "8/20/1976"
+    Given the experience "name" is "cup"
     Given the course has a Bingo! game
     Given the Bingo! started "5/20/1976" and ends "7/20/1976"
     Given the Bingo! "Topic" field is "Private"
@@ -135,7 +145,7 @@ Feature: Course Administration
     #Let's check what we've got
     Then retrieve the latest course from the db
      And the course "Name" field is "Copy of to dup"
-     And the course "Number" field is "d6"
+     And the course "Number" field is "Copy of d6"
      And the course "Description" field is "ohla!"
      And the course start date is "5/20/1976" and the end date to "11/11/2012"
      And the course "timezone" is "Mexico City"

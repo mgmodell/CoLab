@@ -231,7 +231,7 @@ class User < ActiveRecord::Base
   def get_experience_performance(course_id: 0)
     my_reactions = []
     my_reactions = if course_id > 0
-                     reactions.joins(:experience)
+                     reactions.includes( :narrative ).joins(:experience)
                               .where(experiences: { course_id: course_id })
                    else
                      reactions
