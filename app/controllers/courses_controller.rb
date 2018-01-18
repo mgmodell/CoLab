@@ -99,7 +99,12 @@ class CoursesController < ApplicationController
       new_course.bingo_games << new_obj
     end
 
-    new_course.save
+    if new_course.save
+      redirect_to courses_url, notice: t('courses.copy_success')
+    else
+      redirect_to courses_url, notice: t('courses.copy_fail')
+    end
+      
   end
 
   def create

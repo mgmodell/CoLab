@@ -123,10 +123,10 @@ Feature: Course Administration
     Given the course 'Description' is 'ohla!'
     Given the course has an experience
     Given the experience started "6/20/1976" and ends "8/20/1976"
-    Given the experience "name" is "cup"
+    Given the experience "Name" is "cup"
     Given the course has a Bingo! game
     Given the Bingo! started "5/20/1976" and ends "7/20/1976"
-    Given the Bingo! "Topic" field is "Private"
+    Given the Bingo! "Topic" is "Private"
     Given the Bingo! "Description" is "this is neat"
     Given the Bingo! "Terms count" is 20
     Given the Bingo! prep days is 2

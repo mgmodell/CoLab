@@ -2,11 +2,13 @@ require 'chronic'
 Given "the project started {string} and ends {string}"  do |start_date, end_date|
   @project.start_date = Chronic.parse( start_date )
   @project.end_date = Chronic.parse( end_date )
+  @project.save
 end
 
 Given "the user's school is {string}" do |school_name|
   school = School.find_by_name school_name
   @user.school = school
+  @user.save
 
 end
 
@@ -51,6 +53,7 @@ Then "the course {string} field is {string}"  do |field_name, value|
   else
     puts "Not testing anything"
   end
+  @course.save
 
 end
 
@@ -74,6 +77,7 @@ Then "the course {string} is {string}"  do |field_name, value|
     puts "Not setting anything: #{value}"
     pending
   end
+  @course.save
 end
 
 Then "the user does not see a {string} link"  do |link_name|
@@ -89,40 +93,57 @@ Given "the experience {string} is {string}"  do |field_name, value|
     puts "Not setting anything: #{value}"
     pending
   end
+  @course.save
 end
 
-Given "the Bingo! {string} field is {string}"  do |string, string2|
-  pending # Write code here that turns the phrase above into concrete
+Given "the Bingo! {string} is {string}"  do |field_name, value|
+  case field_name
+  when 'Description'
+    @bingo.description = value
+  when 'Topic'
+    @bingo.topic = value
+  when 'Terms count'
+    @bingo.individual_count = value
+  else
+    puts "Not setting anything: #{value}"
+    pending
+  end
+  @bingo.save
 
 end
 
-Given "the Bingo! {string} is {string}"  do |string, string2|
-  pending # Write code here that turns the phrase above into concrete
+Given "the Bingo! {string} is {int}"  do |field_name, value|
+  case field_name
+  when 'Terms count'
+    @bingo.individual_count = value
+  else
+    puts "Not setting anything: #{value}"
+    pending
+  end
+  @bingo.save
 
 end
 
-Given "the Bingo! {string} is {int}"  do |string, int|
-  pending # Write code here that turns the phrase above into concrete
-
-end
-
-Given "the Bingo! prep days is {int}"  do |int|
-  pending # Write code here that turns the phrase above into concrete
+Given "the Bingo! prep days is {int}"  do |prep_days|
+  @bingo.lead_time = prep_days
+  @bingo.save
 
 end
 
 Given "the Bingo! project is the course's project"  do
-  pending # Write code here that turns the phrase above into concrete
+  @bingo.project = @course.projects.take
+  @bingo.save
 
 end
 
-Given "the Bingo! percent discount is {int}"  do |int|
-  pending # Write code here that turns the phrase above into concrete
+Given "the Bingo! percent discount is {int}"  do |group_discount|
+  @bingo.group_discount = group_discount
 
 end
 
 Given "the Bingo! is active"  do
-  pending # Write code here that turns the phrase above into concrete
+  @bingo.active = true
+  @bingo.save
 
 end
 
