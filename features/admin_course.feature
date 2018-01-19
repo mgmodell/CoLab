@@ -139,7 +139,7 @@ Feature: Course Administration
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user sees 1 course
-    Then the user clicks the "Make another"
+    Then the user clicks "Copy"
      And set the new course start date to "5/20/1976"
     Then the user sees 2 course
     #Let's check what we've got
