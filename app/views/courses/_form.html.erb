@@ -17,7 +17,8 @@
         <%= f.input :number %>
         <%= f.association :school %>
         <%= f.time_zone_select :timezone %>
-        <%= f.input :start_date, as: :date_time_local %>
+        <%= label_tag :start_date, t( :start_date ) %>
+        <%= f.date_field :start_date %>
         <%= f.input :end_date, as: :date_time_local %>
         <%= f.input :description, as: :text %>
       </div>
