@@ -120,6 +120,7 @@ en:
   demo_surname_1: John
   demo_fam_name_1: Smith
   demo_user_tz: Seoul
+  copy: Copy
   destroy: Destroy
   remove: Remove
   confirmation: Are you sure?

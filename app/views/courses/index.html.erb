@@ -41,7 +41,8 @@
           <%= link_to t( :show ), course_path( course ) %>&nbsp;|&nbsp;
           <%= link_to t( :edit ), edit_course_path(course) %>&nbsp;|&nbsp;
           <%= link_to t( :copy ), "#", onclick:
-            "alert('#{course.start_date}')" %>&nbsp;|&nbsp;
+            "popCopyPop('#{course.number}', #{course.id},
+            '#{course.start_date.strftime( '%Y-%m-%d' )}')" %>&nbsp;|&nbsp;
           <%= link_to t( :destroy ),
                         course_path( course ),
                         method: :delete,
@@ -53,16 +54,18 @@
 </table>
 <br>
 <%= link_to( t( 'courses.new.title' ), new_course_path ) if @current_user.is_admin? %>
+
 <div data-role="popup" id="copyPop" data-theme="<%= theme_code %>" class="ui-corner-all">
-  <form>
+  <form action='copy' method='get'>
     <div style="padding:10px 20px;">
-      <h1><%= t '.copy_new_start' %></h1>
+      <h1><%= t '.copy_new_start' %><span id='number'></span></h1>
       <strong><%= t '.original_date' %>:</strong>
       <span id='orig_date'>REPLACE</span></br>
+      </br>
       <label for='start_date'><%= t '.copy_new_start_lbl' %></label>
       <input type='hidden' id='id' value='xxx'/>
-      <input type='date' id='start_date'>
-      <input type="submit" id="copy_course"/>
+      <input type='date' id='start_date' value='1976-05-10'/>
+      <input type="submit" id="copy_course" value="<%= raw( t '.submit_copy' ) %>" />
     </div>
   </form>
 </div>

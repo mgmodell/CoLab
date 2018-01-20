@@ -4,6 +4,17 @@ $(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
 
+// This function enables copy course functionality
+function popCopyPop( courseNumber, courseId, courseStartDate )
+{
+  $('#copyPop #number').val( courseNumber );
+  $('#copyPop #id').val( courseId );
+  $('#copyPop #orig_date').text( courseStartDate );
+  $('#copyPop #start_date').val( courseStartDate );
+  $('#copyPop').popup( 'open' );
+
+}
+// This function builds the trend graphs for student data responses
 function init_me( obj, data ){
   var graph = d3.select( obj );
   var margin = {top: 10, right: 0, bottom: 10, left: 0};
