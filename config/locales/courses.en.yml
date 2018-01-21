@@ -23,6 +23,9 @@ en:
     create_success: Course created successfully!
     destroy_success: Course destroyed successfully!
     update_success: Course updated successfully!
+    copy_success: Course successfully copied!
+    copy_success: >
+      The course was not successfully copied. Contact Support.
     instructor_invited: Instructor(s) have been invited.
     students_invited: Student(s) have been invited.
     accept_fail: You can only accept your own enrollments

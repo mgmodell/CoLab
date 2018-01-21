@@ -38,6 +38,8 @@ en:
         running through <strong>%{end_dow}</strong>.
     index:
       title: List of Projects
+    create:
+      title: New Project
     new:
       title: New Project
     projects: Projects

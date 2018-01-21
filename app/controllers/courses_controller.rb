@@ -39,6 +39,7 @@ class CoursesController < ApplicationController
   end
 
   def new_from_template
+    puts "\t\t****W00T!"
     start_date = params[:start_date]
     #Timezone checking here
     course_tz = ActiveSupport::TimeZone.new( @course.timezone )

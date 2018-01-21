@@ -143,6 +143,7 @@ Feature: Course Administration
      And set the new course start date to "5/20/1976"
     Then the user sees 2 course
     #Let's check what we've got
+     And the user will see "successfully"
     Then retrieve the latest course from the db
      And the course "Name" field is "Copy of to dup"
      And the course "Number" field is "Copy of d6"

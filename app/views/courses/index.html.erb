@@ -56,16 +56,16 @@
 <%= link_to( t( 'courses.new.title' ), new_course_path ) if @current_user.is_admin? %>
 
 <div data-role="popup" id="copyPop" data-theme="<%= theme_code %>" class="ui-corner-all">
-  <form action='copy' method='get'>
+  <%= form_tag copy_course_path, method: :get do %>
     <div style="padding:10px 20px;">
       <h1><%= t '.copy_new_start' %><span id='number'></span></h1>
       <strong><%= t '.original_date' %>:</strong>
       <span id='orig_date'>REPLACE</span></br>
       </br>
       <label for='start_date'><%= t '.copy_new_start_lbl' %></label>
-      <input type='hidden' id='id' value='xxx'/>
-      <input type='date' id='start_date' value='1976-05-10'/>
-      <input type="submit" id="copy_course" value="<%= raw( t '.submit_copy' ) %>" />
+      <%= hidden_field_tag :id %>
+      <%= date_field_tag :start_date %>
+      <%= submit_tag :copy_course, value: raw( t '.submit_copy' ) %>
     </div>
-  </form>
+  <% end %>
 </div>
