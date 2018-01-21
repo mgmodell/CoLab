@@ -140,6 +140,7 @@ end
 
 Given "the Bingo! percent discount is {int}"  do |group_discount|
   @bingo.group_discount = group_discount
+  @bingo.save
 
 end
 
@@ -149,18 +150,13 @@ Given "the Bingo! is active"  do
 
 end
 
-Then "the user clicks the {string}"  do |string|
-  pending # Write code here that turns the phrase above into concrete
+Then "set the new course start date to {string}"  do |new_date|
+  fill_in 'New course start date?', with: new_date
 
 end
 
-Then "set the new course start date to {string}"  do |string|
-  pending # Write code here that turns the phrase above into concrete
-
-end
-
-Then "the course has {int} instructor user"  do |int|
-  pending # Write code here that turns the phrase above into concrete
+Then "the course has {int} instructor user"  do |instructor_count|
+  @course.rosters.instructor.count.eq instructor_count
 
 end
 

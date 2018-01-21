@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+Then /^the group's diversity score is greater than (\d+)$/ do |ds|
+  @group.diversity_score.should > ds.to_i
+end
+
 Then /^the group's diversity score is (\d+)$/ do |ds|
   @group.diversity_score.should eq ds.to_i
 end

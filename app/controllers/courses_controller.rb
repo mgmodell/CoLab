@@ -40,14 +40,16 @@ class CoursesController < ApplicationController
 
   def new_from_template
     start_date = params[:start_date]
-    #We will probably need to add timezone checking here
-    date_difference = Chronic.parse( start_date ) - @course.start_date
-
+    #Timezone checking here
+    course_tz = ActiveSupport::TimeZone.new( @course.timezone )
+    date_difference = Chronic.parse( start_date ) - @course.start_date + course_tz.utc_offset
+    
     #create the course
     new_course = Course.new
     new_course.name = "Copy of #{@course.name}"
     new_course.number = "Copy of #{@course.number}"
     new_course.description = @course.description
+    new_course.timezone = @course.timezone
     new_course.start_date = @course.start_date + date_difference
     new_course.end_date = @course.end_date + date_difference
 
