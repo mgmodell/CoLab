@@ -4,16 +4,15 @@ require 'chronic'
 
 Given(/^there is a course with an experience$/) do
   @course = Course.make
-  @course.save
-  @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
-  puts @course.errors.full_messages unless @course.errors.blank?
   @experience = Experience.make
   @experience.course = @course
   @experience.save
+  puts @experience.errors.full_messages unless @experience.errors.blank?
+
+  @course.get_name(true).should_not be_nil
+  @course.get_name(true).length.should be > 0
   @experience.get_name(true).should_not be_nil
   @experience.get_name(true).length.should be > 0
-  puts @experience.errors.full_messages unless @experience.errors.blank?
 end
 
 Given(/^the experience "([^"]*)" been activated$/) do |has_or_has_not|

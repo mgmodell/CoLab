@@ -41,8 +41,10 @@
           <%= link_to t( :show ), course_path( course ) %>&nbsp;|&nbsp;
           <%= link_to t( :edit ), edit_course_path(course) %>&nbsp;|&nbsp;
           <%= link_to t( :copy ), "#", onclick:
-            "popCopyPop('#{course.number}', #{course.id},
-            '#{course.start_date.strftime( '%Y-%m-%d' )}')" %>&nbsp;|&nbsp;
+            raw( "popCopyPop('#{course.number}',
+            #{course.id},
+            '#{course.start_date.strftime( '%A, %b %-d, %Y')}',
+            '#{course.start_date.strftime( '%Y-%m-%d' )}')" ) %>&nbsp;|&nbsp;
           <%= link_to t( :destroy ),
                         course_path( course ),
                         method: :delete,

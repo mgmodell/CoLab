@@ -39,72 +39,13 @@ class CoursesController < ApplicationController
   end
 
   def new_from_template
-    puts "\t\t****W00T!"
-    start_date = params[:start_date]
-    #Timezone checking here
-    course_tz = ActiveSupport::TimeZone.new( @course.timezone )
-    date_difference = Chronic.parse( start_date ) - @course.start_date + course_tz.utc_offset
-    
-    #create the course
-    new_course = Course.new
-    new_course.name = "Copy of #{@course.name}"
-    new_course.number = "Copy of #{@course.number}"
-    new_course.description = @course.description
-    new_course.timezone = @course.timezone
-    new_course.start_date = @course.start_date + date_difference
-    new_course.end_date = @course.end_date + date_difference
+    new_start = Chronic.parse( params[ :start_date ] )
 
-    #copy the rosters
-    @course.rosters.faculty.each do |roster|
-      new_obj = Roster.new
-      new_obj.role = roster.role
-      new_obj.user = roster.user
-      new_course.rosters << new_obj
-    end
-
-    #copy the projects
-    proj_hash = {}
-    @course.projects.each do |project|
-      new_obj = Project.new
-      new_obj.name = project.name
-      new_obj.style = project.style
-      new_obj.factor_pack = project.factor_pack
-      new_obj.start_date = project.start_date + date_difference
-      new_obj.end_date = project.end_date + date_difference
-      new_course.projects << new_obj
-      proj_hash[ project ] = new_obj
-    end
-
-    #copy the experiences
-    @course.experiences.each do |experience|
-      new_obj = Experience.new
-      new_obj.name = experience.name
-      new_obj.start_date = experience.start_date + date_difference
-      new_obj.end_date = experience.end_date + date_difference
-      new_course.experiences << new_obj
-    end
-
-    #copy the bingo! games
-    @course.bingo_games.each do |bingo_game|
-      new_obj = BingoGame.new
-      new_obj.topic = bingo_game.topic
-      new_obj.description = bingo_game.description
-      new_obj.link = bingo_game.link
-      new_obj.source = bingo_game.source
-      new_obj.group_option = bingo_game.group_option
-      new_obj.individual_count = bingo_game.individual_count
-      new_obj.lead_time = bingo_game.lead_time
-      new_obj.group_discount = bingo_game.group_discount
-      new_obj.project = bingo_game.project.nil? ?
-        nil : proj_hash[ bingo_game.project ]
-      new_obj.start_date = bingo_game.start_date + date_difference
-      new_obj.end_date = bingo_game.end_date + date_difference
-      new_course.bingo_games << new_obj
-    end
-
-    if new_course.save
+    copied_course = @course.copy_from_template new_start: new_start
+    if copied_course.errors.empty?
       redirect_to courses_url, notice: t('courses.copy_success')
     else
+      puts copied_course.errors.full_messages
       redirect_to courses_url, notice: t('courses.copy_fail')
     end
       

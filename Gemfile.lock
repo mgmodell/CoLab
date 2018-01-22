@@ -70,6 +70,8 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (>= 2.0, < 4.0)
+    childprocess (0.8.0)
+      ffi (~> 1.0, >= 1.0.11)
     choice (0.2.0)
     chronic (0.10.2)
     city-state (0.0.13)
@@ -133,6 +135,7 @@ GEM
     execjs (2.7.0)
     faraday (0.10.1)
       multipart-post (>= 1.2, < 3)
+    ffi (1.9.18)
     forgery (0.6.0)
     gherkin (5.0.0)
     globalid (0.4.1)
@@ -296,6 +299,9 @@ GEM
     sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    selenium-webdriver (3.8.0)
+      childprocess (~> 0.5)
+      rubyzip (~> 1.0)
     simple_calendar (2.2.5)
       rails (>= 3.0)
     simple_form (3.4.0)
@@ -379,6 +385,7 @@ DEPENDENCIES
   rubocop
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
+  selenium-webdriver
   simple_calendar (~> 2.0)
   simple_form
   spring

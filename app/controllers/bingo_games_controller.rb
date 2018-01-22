@@ -42,7 +42,7 @@ class BingoGamesController < ApplicationController
   end
 
   def create
-    @title = t '.title'
+    @title = t 'bingo_games.new.title'
     @bingo_game = BingoGame.new(bingo_game_params)
     if @bingo_game.save
       redirect_to @bingo_game, notice: t('bingo_games.create_success')

@@ -4,17 +4,18 @@ require 'chronic'
 
 Given /^there is a course with an assessed project$/ do
   @course = Course.make
-  @course.save
-  @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
-  puts @course.errors.full_messages unless @course.errors.blank?
   @project = Project.make
   @project.style = Style.find(1)
   @project.course = @course
+
   @project.save
+  puts @project.errors.full_messages unless @project.errors.blank?
+
+  #Check that the anonymous stuff got built
+  @course.get_name(true).should_not be_nil
+  @course.get_name(true).length.should be > 0
   @project.get_name(true).should_not be_nil
   @project.get_name(true).length.should be > 0
-  puts @project.errors.full_messages unless @project.errors.blank?
 end
 
 Given /^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes "(.*?)"$/ do |start_date, end_date, start_dow, end_dow|

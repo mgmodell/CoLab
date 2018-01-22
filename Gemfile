@@ -70,6 +70,7 @@ group :development, :test do
   gem 'rails-erd', require: false
   gem 'rspec'
   gem 'rubocop'
+  gem 'selenium-webdriver'
 end
 
 group :development do

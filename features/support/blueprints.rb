@@ -11,6 +11,9 @@ User.blueprint do
   password_confirmation { 'password' }
   email { Forgery::Internet.email_address }
   timezone { 'UTC' }
+  theme_id { 1 }
+  anon_first_name { Forgery::Name.first_name }
+  anon_last_name { Forgery::Name.last_name }
 end
 
 Project.blueprint do
@@ -20,6 +23,8 @@ Project.blueprint do
   active { false }
   start_date { DateTime.yesterday }
   end_date { DateTime.tomorrow }
+  anon_name { "#{rand < rand ? Forgery::Address.country :
+    Forgery::Name.location} #{Forgery::Name.job_title}" }
 end
 
 Course.blueprint do
@@ -29,10 +34,13 @@ Course.blueprint do
   timezone { 'UTC' }
   start_date { 4.months.ago }
   end_date { 2.months.from_now }
+  anon_name { "TESTING #{Forgery::Name.industry}" }
+  anon_number { "GEO-#{rand(100..700)}" }
 end
 
 Group.blueprint do
   name { Forgery::Basic.text + ' Group' }
+  anon_name { "#{Forgery::Personal.language} Group" }
 end
 
 Factor.blueprint do
@@ -54,6 +62,7 @@ Experience.blueprint do
   start_date { DateTime.yesterday }
   end_date { DateTime.tomorrow }
   active { false }
+  anon_name { Forgery::Name.company_name.to_s }
 end
 
 BingoGame.blueprint do
@@ -66,4 +75,5 @@ BingoGame.blueprint do
   group_discount { 0 }
   group_option { false }
   active { false }
+  anon_topic { "#{Forgery::Name.company_name} #{Forgery::Name.job_title}" }
 end

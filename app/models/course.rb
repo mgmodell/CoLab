@@ -109,6 +109,82 @@ class Course < ActiveRecord::Base
     end
   end
 
+  def copy_from_template( new_start: )
+    #Timezone checking here
+    course_tz = ActiveSupport::TimeZone.new(self.timezone)
+    date_difference = new_start - self.start_date + course_tz.utc_offset
+    new_course = nil
+
+    Course.transaction do
+      #create the course
+      new_course = Course.create(
+        name: "Copy of #{self.name}",
+        number: "Copy of #{self.number}",
+        description: self.description,
+        timezone: self.timezone,
+        school: self.school,
+        start_date: self.start_date + date_difference,
+        end_date: self.end_date + date_difference
+      )
+
+      #copy the rosters
+      self.rosters.faculty.each do |roster|
+        new_obj = Roster.create(
+          role: roster.role,
+          user: roster.user,
+          course: new_course
+        )
+      end
+
+      #copy the projects
+      proj_hash = {}
+      self.projects.each do |project|
+        new_obj = Project.create(
+          name: project.name,
+          style: project.style,
+          factor_pack: project.factor_pack,
+          start_date: project.start_date + date_difference,
+          end_date: project.end_date + date_difference,
+          start_dow: project.start_dow,
+          end_dow: project.end_dow,
+          course: new_course
+        )
+        proj_hash[ project ] = new_obj
+      end
+
+      #copy the experiences
+      self.experiences.each do |experience|
+        new_obj = Experience.create(
+          name: experience.name,
+          start_date: experience.start_date + date_difference,
+          end_date: experience.end_date + date_difference,
+          course: new_course
+        )
+      end
+
+      #copy the bingo! games
+      self.bingo_games.each do |bingo_game|
+        new_obj = BingoGame.create(
+          topic: bingo_game.topic,
+          description: bingo_game.description,
+          link: bingo_game.link,
+          source: bingo_game.source,
+          group_option: bingo_game.group_option,
+          individual_count: bingo_game.individual_count,
+          lead_time: bingo_game.lead_time,
+          group_discount: bingo_game.group_discount,
+          project: proj_hash[ bingo_game.project ],
+          start_date: bingo_game.start_date + date_difference,
+          end_date: bingo_game.end_date + date_difference,
+          course: new_course
+        )
+      end
+
+      new_course.save
+    end
+    new_course
+  end
+
   def add_user_by_email(user_email, instructor = false)
     role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
     # Searching for the student and:

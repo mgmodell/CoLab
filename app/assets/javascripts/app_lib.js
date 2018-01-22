@@ -5,12 +5,12 @@ $(document).bind("mobileinit", function(){
 });
 
 // This function enables copy course functionality
-function popCopyPop( courseNumber, courseId, courseStartDate )
+function popCopyPop( courseNumber, courseId, prettyStartDate, uglyStartDate )
 {
   $('#copyPop #number').val( courseNumber );
   $('#copyPop #id').val( courseId );
-  $('#copyPop #orig_date').text( courseStartDate );
-  $('#copyPop #start_date').val( courseStartDate );
+  $('#copyPop #orig_date').text( prettyStartDate );
+  $('#copyPop #start_date').val( uglyStartDate );
   $('#copyPop').popup( 'open' );
 
 }
