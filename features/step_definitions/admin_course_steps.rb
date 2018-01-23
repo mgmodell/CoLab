@@ -78,6 +78,8 @@ Then "the course {string} is {string}"  do |field_name, value|
     @course.number = value
   when 'Description'
     @course.description = value
+  when 'timezone'
+    @course.timezone = value
   else
     puts "Not setting anything: #{value}"
     pending

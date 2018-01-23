@@ -25,6 +25,7 @@ en:
       tz_clarity: "%a, %b %-d at %-l:%M%P %Z"
       short_date: "%a, %b %-d"
       datestamp: "%Y%m%d"
+      date_field: "%Y-%m-%d"
   title: CoLab
   column_select: Show/Hide columns&hellip;
   task_name: Task Name

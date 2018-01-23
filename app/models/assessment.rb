@@ -8,7 +8,7 @@ class Assessment < ActiveRecord::Base
   has_many :users, through: :project
   has_many :groups, through: :project
 
-  after_validation :timezone_adjust
+  #after_validation :timezone_adjust
 
   # Helpful scope
   scope :still_open, -> { where('assessments.end_date >= ?', DateTime.current) }

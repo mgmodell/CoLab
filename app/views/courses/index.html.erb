@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-   anonymize = @current_user.anonymize? %>
+<% theme_code = get_theme_code
+   anonymize = get_anonymous %>
 <table data-role="table"
   id="basicTable"
   data-column-btn-theme"<%= theme_code %>" 
@@ -30,8 +30,8 @@
         <td><%= course.get_number( anonymize ) %></td>
         <td><%= link_to course.get_name( anonymize ), course %></td>
         <td><%= course.school.get_name( anonymize ) %></td>
-        <td><%= l course.start_date, format: :tz_clarity %></td>
-        <td><%= l course.end_date, format: :tz_clarity %></td>
+        <td><%= l in_tz( date: course.start_date, tz: course.timezone ), format: :tz_clarity %></td>
+        <td><%= l in_tz( date: course.end_date, tz: course.timezone ), format: :tz_clarity %></td>
         <td><%= course.rosters.instructor.count %></td>
         <td><%= course.rosters.students.count %></td>
         <td><%= course.projects.count %></td>
@@ -43,8 +43,8 @@
           <%= link_to t( :copy ), "#", onclick:
             raw( "popCopyPop('#{course.number}',
             #{course.id},
-            '#{course.start_date.strftime( '%A, %b %-d, %Y')}',
-            '#{course.start_date.strftime( '%Y-%m-%d' )}')" ) %>&nbsp;|&nbsp;
+            '#{in_tz( date: course.start_date ).strftime( '%A, %b %-d, %Y')}',
+            '#{in_tz( date: course.start_date ).strftime( '%Y-%m-%d' )}')" ) %>&nbsp;|&nbsp;
           <%= link_to t( :destroy ),
                         course_path( course ),
                         method: :delete,

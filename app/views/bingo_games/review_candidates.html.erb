@@ -1,7 +1,7 @@
 <%= simple_form_for update_bingo_candidates_review_path( @bingo_game ) do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-     anonymous = @current_user.anonymize?
+  <% theme_code = get_theme_code
+     anonymous = get_anonymous
 %>
   <table>
     <tr>
@@ -18,7 +18,7 @@
     </tr>
     <tr>
       <th align="right"><%= t :close_date %>:</th>
-      <td><%= l @bingo_game.end_date, format: :tz_clarity %></td>
+      <td><%= l in_tz( date: @bingo_game.end_date ), format: :tz_clarity %></td>
     </tr>
   </table>
   <h2><%= t 'candidate_lists.terms' %>:</h2>

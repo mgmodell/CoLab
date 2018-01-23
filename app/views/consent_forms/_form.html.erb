@@ -1,4 +1,4 @@
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = get_theme_code %>
 <%= simple_form_for(@consent_form) do |f| %>
   <%= f.error_notification %>
   <div class="form-inputs">

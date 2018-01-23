@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code
-   anonymize = @current_user.anonymize? %>
+<% theme_code = get_theme_code
+   anonymize = get_anonymous %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -29,8 +29,8 @@
 </p>
 <p>
   <h3><%= t :dates %>:</h3>
-  <%= l @course.start_date, format: :short_date %> to
-  <%= l @course.end_date, format: :short_date %>
+  <%= l in_tz( date: @course.start_date, tz: course.timezone ), format: :short_date %>
+  to <%= l in_tz( date: @course.end_date, tz: course.timezone ), format: :short_date %>
 </p>
 <p>
   <h3><%= t '.instructors' %></h3>
@@ -166,9 +166,9 @@
                 </td>
                 <td>
                   <div hidden>
-                    <%= l activity.end_date.in_time_zone( @current_user.timezone ), format: :datestamp %>
+                    <%= l in_tz( date: activity ), format: :datestamp %>
                   </div>
-                  <%= l activity.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
+                  <%= l in_tz( date: activity ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show ), activity %>&nbsp;|&nbsp;
                 <%= link_to t( :edit ), [:edit, activity] %>&nbsp;|&nbsp;

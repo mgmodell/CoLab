@@ -24,7 +24,7 @@ class BingoGame < ActiveRecord::Base
 
   validate :group_components
 
-  before_validation :timezone_adjust
+  #before_validation :timezone_adjust
   validate :dates_within_course
   before_create :anonymize
 

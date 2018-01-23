@@ -1,4 +1,4 @@
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = get_theme_code %>
 <p id="notice"><%= notice %></p>
 <h1><%= t 'consent_forms.show.name' %>:</h1>
 <p><%= @consent_form.name %></p>
@@ -9,8 +9,8 @@
 <h2><%= t :dates %>:</h2>
 <p>
   <%= raw( t( '.date_summ',
-            start_date: @consent_form.start_date,
-            end_date: @consent_form.end_date ) ) %>
+            start_date: in_tz( @consent_form.start_date ),
+            end_date: in_tz( @consent_form.end_date ) ) ) %>
 </p>
 <h2><%= t 'consent_forms.show.applicable_lbl' %>:</h2>
 <% if @consent_form.projects.empty? %>

@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-   anonymize = @current_user.anonymize? %>
+<% theme_code = get_theme_code
+   anonymize = get_anonymous %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -43,8 +43,8 @@
   </p>
   <p>
     <h3><%= t :dates %>:</h3>
-    <%= l @bingo_game.start_date, format: :short_date %> to
-  <%= l @bingo_game.end_date, format: :short_date %></br>
+    <%= l in_tz( date: @bingo_game.start_date ), format: :short_date %> to
+  <%= l in_tz( date: @bingo_game.end_date ), format: :short_date %></br>
   <em><%= t :note %>: <%= t 'bingo_games.tz_warn', time_zone: @bingo_game.course.timezone %></em>
 </p>
 <%= link_to t( 'bingo_games.edit.title' ), edit_bingo_game_path(@bingo_game) %>

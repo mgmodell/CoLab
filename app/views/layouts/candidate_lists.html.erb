@@ -1,4 +1,4 @@
-<% theme_code = @current_user.nil? ? 'a' : @current_user.theme.code %>
+<% theme_code = get_theme_code %>
 <!DOCTYPE html>
 <html>
   <%= favicon_link_tag %>

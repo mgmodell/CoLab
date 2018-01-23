@@ -15,7 +15,7 @@ class Course < ActiveRecord::Base
   validate :date_sanity
   validate :activity_date_check
 
-  before_validation :timezone_adjust
+  #before_validation :timezone_adjust
   before_create :anonymize
 
   def pretty_name(anonymous = false)

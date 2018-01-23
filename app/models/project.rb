@@ -21,7 +21,7 @@ class Project < ActiveRecord::Base
   validates :end_date, :start_date, presence: true
   before_create :anonymize
 
-  before_validation :timezone_adjust
+  #before_validation :timezone_adjust
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,

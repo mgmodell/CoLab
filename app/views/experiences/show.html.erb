@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-   anonymize = @current_user.anonymize? %>
+<% theme_code = get_theme_code
+   anonymize = get_anonymous %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -27,8 +27,8 @@
     </p>
     <p>
       <h3><%= t :dates %>:</h3>
-      <%= l @experience.start_date, format: :short_date %> to
-  <%= l @experience.end_date, format: :short_date %></br>
+      <%= l in_tz( date: @experience.start_date ), format: :short_date %> to
+  <%= l in_tz( date: @experience.end_date ), format: :short_date %></br>
     <em><%= t :note %>: <%= t 'experiences.tz_warn', time_zone: @experience.course.timezone %></em>
   </p>
   <%= link_to 'Edit experience details', edit_experience_path(@experience) %>
