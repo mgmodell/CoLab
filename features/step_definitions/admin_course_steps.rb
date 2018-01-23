@@ -38,6 +38,7 @@ end
 
 
 Then "retrieve the latest course from the db"  do
+  @orig_course = @course
   @course = Course.last
 
 end
@@ -50,6 +51,8 @@ Then "the course {string} field is {string}"  do |field_name, value|
     @course.number.should eq value
   when 'Description'
     @course.description.should eq value
+  when 'timezone'
+    @course.timezone.should eq value
   else
     puts "Not testing anything"
   end
@@ -90,7 +93,7 @@ end
 Given "the experience {string} is {string}"  do |field_name, value|
   case field_name
   when 'Name'
-    @course.name = value
+    @experience.name = value
   else
     puts "Not setting anything: #{value}"
     pending
@@ -151,22 +154,38 @@ Given "the Bingo! is active"  do
 end
 
 Then "set the new course start date to {string}"  do |new_date|
-  fill_in 'New course start date?', with: new_date
+  @new_date = new_date
+  fill_in 'New course start date?', with: @new_date
 
 end
 
 Then "the course has {int} instructor user"  do |instructor_count|
   @course.rosters.instructor.count.eq instructor_count
+end
 
+Then "the user executes the copy"  do
+ url = copy_course_path + '?' 
+ url += { start_date: @new_date, id: @course.id }.to_param
+ visit url
 end
 
 Then "the course instructor is the user"  do
-  pending # Write code here that turns the phrase above into concrete
+  @course.rosters.instructor.take.user.eq @current_user
 
 end
 
-Then "retrieve the {int} course {string}"  do |int, string|
-  pending # Write code here that turns the phrase above into concrete
+Then "retrieve the {int} course {string}"  do |index, activity|
+  case activity
+  when 'experience'
+    @orig_experience = @experience
+    @experience = @course.experiences[ index - 1 ]
+  when 'project'
+    @orig_project = @project
+    @project = @course.projects[ index - 1 ]
+  when 'bingo'
+    @orig_bingo = @bingo
+    @bingo = @course.bingo_games[ index - 1 ]
+  end
 
 end
 

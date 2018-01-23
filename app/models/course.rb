@@ -154,7 +154,7 @@ class Course < ActiveRecord::Base
 
       #copy the experiences
       self.experiences.each do |experience|
-        new_obj = Experience.create(
+        Experience.create(
           name: experience.name,
           start_date: experience.start_date + date_difference,
           end_date: experience.end_date + date_difference,
@@ -164,7 +164,7 @@ class Course < ActiveRecord::Base
 
       #copy the bingo! games
       self.bingo_games.each do |bingo_game|
-        new_obj = BingoGame.create(
+        BingoGame.create(
           topic: bingo_game.topic,
           description: bingo_game.description,
           link: bingo_game.link,

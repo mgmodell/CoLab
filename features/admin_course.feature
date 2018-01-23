@@ -141,9 +141,10 @@ Feature: Course Administration
     Then the user sees 1 course
     Then the user clicks "Copy"
      And set the new course start date to "5/20/1976"
-    Then the user sees 2 course
+     And the user executes the copy
     #Let's check what we've got
      And the user will see "successfully"
+    Then the user sees 2 course
     Then retrieve the latest course from the db
      And the course "Name" field is "Copy of to dup"
      And the course "Number" field is "Copy of d6"
