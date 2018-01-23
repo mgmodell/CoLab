@@ -172,7 +172,7 @@
     <ul>
       <% meetings.each do |meeting| %>
         <li>
-          <%= task_link task: task, anonymize: anonymize, user: @current_user  %>
+          <%= task_link task: meeting, anonymize: anonymize, user: @current_user  %>
         </li>
       <% end %>
     </ul>
@@ -187,7 +187,7 @@
     <ul>
       <% meetings.each do |meeting| %>
         <li>
-          <%= task_link task: task, anonymize: anonymize, user: @current_user  %>
+          <%= task_link task: meeting, anonymize: anonymize, user: @current_user  %>
         </li>
       <% end %>
     </ul>
