@@ -15,7 +15,7 @@ class Course < ActiveRecord::Base
   validate :date_sanity
   validate :activity_date_check
 
-  #before_validation :timezone_adjust
+  before_validation :timezone_adjust
   before_create :anonymize
 
   def pretty_name(anonymous = false)
@@ -99,13 +99,12 @@ class Course < ActiveRecord::Base
   def timezone_adjust
     unless start_date.blank? || end_date.blank?
       course_tz = ActiveSupport::TimeZone.new(timezone)
-      user_tz = Time.zone
 
       # TZ corrections
-      new_date = start_date - user_tz.utc_offset + course_tz.utc_offset
-      self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day if start_date_changed?
-      new_date = end_date - user_tz.utc_offset + course_tz.utc_offset
-      self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day if end_date_changed?
+      new_date = start_date + course_tz.utc_offset
+      self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day
+      new_date = end_date + course_tz.utc_offset
+      self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day
     end
   end
 

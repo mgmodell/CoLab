@@ -29,8 +29,8 @@
 </p>
 <p>
   <h3><%= t :dates %>:</h3>
-  <%= l in_tz( date: @course.start_date, tz: course.timezone ), format: :short_date %>
-  to <%= l in_tz( date: @course.end_date, tz: course.timezone ), format: :short_date %>
+  <%= l in_tz( date: @course.start_date, tz: @course.timezone ), format: :short_date %>
+  to <%= l in_tz( date: @course.end_date, tz: @course.timezone ), format: :short_date %>
 </p>
 <p>
   <h3><%= t '.instructors' %></h3>
@@ -166,9 +166,9 @@
                 </td>
                 <td>
                   <div hidden>
-                    <%= l in_tz( date: activity ), format: :datestamp %>
+                    <%= l in_tz( date: activity.start_date ), format: :datestamp %>
                   </div>
-                  <%= l in_tz( date: activity ), format: :tz_clarity %>
+                  <%= l in_tz( date: activity.end_date ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show ), activity %>&nbsp;|&nbsp;
                 <%= link_to t( :edit ), [:edit, activity] %>&nbsp;|&nbsp;

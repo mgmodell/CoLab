@@ -21,7 +21,7 @@ class Project < ActiveRecord::Base
   validates :end_date, :start_date, presence: true
   before_create :anonymize
 
-  #before_validation :timezone_adjust
+  before_validation :timezone_adjust
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
@@ -201,14 +201,13 @@ class Project < ActiveRecord::Base
 
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
-    user_tz = Time.zone
 
     unless start_date == course.start_date && new_record?
       # TZ corrections
-      new_date = start_date - user_tz.utc_offset + course_tz.utc_offset
-      self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day if start_date_changed?
-      new_date = end_date - user_tz.utc_offset + course_tz.utc_offset
-      self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day if end_date_changed?
+      new_date = start_date + course_tz.utc_offset
+      self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day
+      new_date = end_date + course_tz.utc_offset
+      self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day
     end
   end
 
