@@ -11,7 +11,7 @@ function popCopyPop( courseNumber, courseId, prettyStartDate, uglyStartDate )
   $('#copyPop #id').val( courseId );
   $('#copyPop #orig_date').text( prettyStartDate );
   $('#copyPop #start_date').val( uglyStartDate );
-  $('#copyPop').popup( 'open' );
+  $('#copyPop').popup( 'open', { transition: 'flip' } );
 
 }
 // This function builds the trend graphs for student data responses
