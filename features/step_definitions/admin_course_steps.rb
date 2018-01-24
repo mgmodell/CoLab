@@ -60,7 +60,7 @@ Then "the course {string} field is {string}"  do |field_name, value|
 
 end
 
-Then "the course start date is {string} and the end date to {string}" do |start_date, end_date|
+Then "the course start date is {string} and the end date is {string}" do |start_date, end_date|
   course_tz = ActiveSupport::TimeZone.new( @course.timezone )
 
   test_date = Chronic.parse( start_date )

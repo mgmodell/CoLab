@@ -33,7 +33,7 @@ Feature: Course Administration
      And the course "Name" field is "Off"
      And the course "Number" field is "099"
      And the course "Description" field is "I love to eat peas and carrots all day long"
-     And the course start date is "tomorrow" and the end date to "next month"
+     And the course start date is "tomorrow" and the end date is "next month"
      And the course "timezone" is "Nairobi"
 
   Scenario: Admin cannot creates an incomplete new course
@@ -82,7 +82,7 @@ Feature: Course Administration
      And the course "Name" field is "Off"
      And the course "Number" field is ""
      And the course "Description" field is ""
-     And the course start date is "tomorrow" and the end date to "next month"
+     And the course start date is "tomorrow" and the end date is "next month"
      And the course "timezone" is "Nairobi"
 
   Scenario: Instructor cannot create a new course
@@ -113,22 +113,22 @@ Feature: Course Administration
      And the course "Name" field is "Off"
      And the course "Number" field is "099"
      And the course "Description" field is "I love to eat peas and carrots all day long"
-     And the course start date is "5/11/1976" and the end date to "next month"
+     And the course start date is "5/11/1976" and the end date is "next month"
      And the course "timezone" is "Nairobi"
 
   Scenario: Admin duplicates an existing course
     Given the course started "5/10/1976" and ended "11/01/2012"
-     And the course start date is "5/10/1976" and the end date to "11/01/2012"
+     And the course start date is "5/10/1976" and the end date is "11/01/2012"
     Given the course 'Name' is 'to dup'
     Given the course 'Number' is 'd6'
     Given the course 'Description' is 'ohla!'
     Given the course has an experience
     Given the experience started "6/20/1976" and ends "8/20/1976"
-     And the course start date is "5/10/1976" and the end date to "11/01/2012"
+     And the course start date is "5/10/1976" and the end date is "11/01/2012"
     Given the experience "Name" is "cup"
     Given the course has a Bingo! game
     Given the Bingo! started "5/20/1976" and ends "7/20/1976"
-     And the course start date is "5/10/1976" and the end date to "11/01/2012"
+     And the course start date is "5/10/1976" and the end date is "11/01/2012"
     Given the Bingo! "Topic" is "Private"
     Given the Bingo! "Description" is "this is neat"
     Given the Bingo! "Terms count" is 20
@@ -136,7 +136,7 @@ Feature: Course Administration
     Given the Bingo! project is the course's project
     Given the Bingo! percent discount is 30
     Given the Bingo! is active
-     And the course start date is "5/10/1976" and the end date to "11/01/2012"
+     And the course start date is "5/10/1976" and the end date is "11/01/2012"
     Given the user is the instructor for the course
     Given the user is an admin
     Given the user logs in
@@ -153,7 +153,7 @@ Feature: Course Administration
      And the course "Name" field is "Copy of to dup"
      And the course "Number" field is "Copy of d6"
      And the course "Description" field is "ohla!"
-     And the course start date is "5/20/1976" and the end date to "11/11/2012"
+     And the course start date is "5/20/1976" and the end date is "11/11/2012"
      And the course "timezone" is "Mexico City"
      And the course has 1 instructor user
      And the course instructor is the user
