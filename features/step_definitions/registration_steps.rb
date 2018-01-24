@@ -75,14 +75,14 @@ end
 
 Then /^the course has (\d+) "([^"]*)" users$/ do |user_count, user_status|
   status = 0
-  case user_status
-  when 'Invited Student'
+  case user_status.downcase
+  when 'invited student'
     status = Roster.roles[:invited_student]
-  when 'Instructor'
+  when 'instructor'
     status = Roster.roles[:instructor]
-  when 'Enrolled Student'
+  when 'enrolled student'
     status = Roster.roles[:enrolled_student]
-  when 'Declined Student'
+  when 'declined student'
     status = Roster.roles[:declined_student]
   end
   @course.rosters.where(role: status).count.should eq user_count.to_i

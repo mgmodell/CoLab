@@ -150,6 +150,7 @@ class ExperiencesController < ApplicationController
     if @current_user.is_admin?
       @experience = e_test
     else
+      @experience = e_test
       @course = @experience.course
       if e_test.course.rosters.instructor.where(user: @current_user).nil?
         redirect_to @course if @experience.nil?

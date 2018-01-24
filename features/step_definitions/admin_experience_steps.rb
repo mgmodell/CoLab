@@ -2,13 +2,9 @@ Then "retrieve the latest Experience from the db"  do
   @experience = Experience.last
 end
 
-Then "the experience start date is {string} and the end date is {string}" do |string, string2|
-  pending # Write code here that turns the phrase above into concrete
-end
-
 Then "the user sets the experience {string} date to {string}" do |ordinal, date|
   new_date = date.blank? ? '' : Chronic.parse( date ).strftime('%Y-%m-%dT%T')
-  case ordinal
+  case ordinal.downcase
   when 'start'
     page.find('#experience_start_date').set(new_date)
   when 'end'

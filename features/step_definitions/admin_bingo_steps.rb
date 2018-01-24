@@ -49,7 +49,7 @@ end
 Then /^the bingo "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value|
   course_tz = ActiveSupport::TimeZone.new(@bingo.course.timezone)
 
-  case date_field_prefix
+  case date_field_prefix.downcase
   when 'start'
     date = Chronic.parse(date_value)
       .getlocal( course_tz.utc_offset )

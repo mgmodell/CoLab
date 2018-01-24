@@ -53,7 +53,7 @@ Given /^the users "(.*?)" had demographics requested$/ do |with_demographics|
 end
 
 Given /^the user is "(.*?)" user$/ do |which|
-  case which
+  case which.downcase
   when 'a random' then @user = @users.sample
   when 'the first' then @user = @users.first
   when 'the second' then @user = @users[1]

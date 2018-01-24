@@ -27,7 +27,7 @@ end
 
 Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demographic, ordinal, type, code|
   users = []
-  case type
+  case type.downcase
   when 'group'
     users = @group.users
   when 'loose'
@@ -38,7 +38,7 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
   end
 
   u = nil
-  case ordinal
+  case ordinal.downcase
   when 'first'
     u = users.first
   when 'second'
@@ -56,7 +56,7 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
     pending
   end
 
-  case demographic
+  case demographic.downcase
   when 'cip'
     u.cip_code = CipCode.where(gov_code: code).take
   when 'gender'
@@ -68,7 +68,7 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
   when 'dob'
     u.date_of_birth = Chronic.parse code
   when 'impairment'
-    case code
+    case code.downcase
     when 'visual'
       u.impairment_visual = true
     when 'auditory'
@@ -92,7 +92,7 @@ end
 
 Given /^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/ do |ordinal, type, state, country|
   users = []
-  case type
+  case type.downcase
   when 'group'
     users = @group.users
   when 'loose'
@@ -103,7 +103,7 @@ Given /^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/ do |ordina
   end
 
   u = nil
-  case ordinal
+  case ordinal.downcase
   when 'first'
     u = users.first
   when 'second'
@@ -127,7 +127,7 @@ Given /^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/ do |ordina
 end
 
 Then /^we remove the "([^"]*)" user$/ do |ordinal|
-  case ordinal
+  case ordinal.downcase
   when 'first'
     @group.users.delete(@group.users[0])
   when 'second'
@@ -148,7 +148,7 @@ Then /^we remove the "([^"]*)" user$/ do |ordinal|
 end
 
 Then /^the "([^"]*)" "([^"]*)" user is added to the group$/ do |ordinal, _type|
-  case ordinal
+  case ordinal.downcase
   when 'first'
     @group.users << @users[0]
   when 'second'

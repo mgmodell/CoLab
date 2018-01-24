@@ -38,7 +38,7 @@ end
 
 Then /^the latest Diagnosis will show "([^"]*)" in the field "([^"]*)"$/ do |_value, fld|
   diagnosis = Diagnosis.last
-  case fld
+  case fld.downcase
   when 'comment'
     diagnosis.comment.should eq fld
   when 'other_text'

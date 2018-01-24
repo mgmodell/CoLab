@@ -58,7 +58,7 @@ end
 Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value|
   course_tz = ActiveSupport::TimeZone.new(@course.timezone)
 
-  case date_field_prefix
+  case date_field_prefix.downcase
   when 'start'
     date = Chronic.parse(date_value)
       .getlocal( course_tz.utc_offset )
@@ -77,7 +77,7 @@ Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_val
 end
 
 Then /^the project "([^"]*)" is "([^"]*)"$/ do |field, value|
-  case field.downcase
+  case field.downcase.downcase
   when 'name'
     @project.name.should eq value
   when 'description'

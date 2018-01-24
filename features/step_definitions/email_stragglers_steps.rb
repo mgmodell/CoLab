@@ -68,7 +68,7 @@ end
 
 Then /^the members of "([^"]*)" group go to other groups$/ do |ordinal|
   if @project.groups.count > 1
-    case ordinal
+    case ordinal.downcase
     when 'a random' then to_disperse = @project.groups.sample
     when 'the first' then to_disperse = @project.groups.first
     when 'the last' then to_disperse = @project.groups.last

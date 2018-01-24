@@ -44,12 +44,12 @@ Then "retrieve the latest course from the db"  do
 end
 
 Then "the course {string} field is {string}"  do |field_name, value|
-  case field_name
-  when 'Name'
+  case field_name.downcase
+  when 'name'
     @course.name.should eq value
-  when 'Number'
+  when 'number'
     @course.number.should eq value
-  when 'Description'
+  when 'description'
     @course.description.should eq value
   when 'timezone'
     @course.timezone.should eq value
@@ -96,12 +96,12 @@ Then "the course start date is {string} and the end date is {string}" do |start_
 end
 
 Then "the course {string} is {string}"  do |field_name, value|
-  case field_name
-  when 'Name'
+  case field_name.downcase
+  when 'name'
     @course.name = value
-  when 'Number'
+  when 'number'
     @course.number = value
-  when 'Description'
+  when 'description'
     @course.description = value
   when 'timezone'
     @course.timezone = value
@@ -118,8 +118,8 @@ Then "the user does not see a {string} link"  do |link_name|
 end
 
 Given "the experience {string} is {string}"  do |field_name, value|
-  case field_name
-  when 'Name'
+  case field_name.downcase
+  when 'name'
     @experience.name = value
   else
     puts "Not setting anything: #{value}"
@@ -129,12 +129,12 @@ Given "the experience {string} is {string}"  do |field_name, value|
 end
 
 Given "the Bingo! {string} is {string}"  do |field_name, value|
-  case field_name
-  when 'Description'
+  case field_name.downcase
+  when 'description'
     @bingo.description = value
-  when 'Topic'
+  when 'topic'
     @bingo.topic = value
-  when 'Terms count'
+  when 'terms count'
     @bingo.individual_count = value
   else
     puts "Not setting anything: #{value}"
@@ -145,8 +145,8 @@ Given "the Bingo! {string} is {string}"  do |field_name, value|
 end
 
 Given "the Bingo! {string} is {int}"  do |field_name, value|
-  case field_name
-  when 'Terms count'
+  case field_name.downcase
+  when 'terms count'
     @bingo.individual_count = value
   else
     puts "Not setting anything: #{value}"
@@ -202,7 +202,7 @@ Then "the course instructor is the user"  do
 end
 
 Then "retrieve the {int} course {string}"  do |index, activity|
-  case activity
+  case activity.downcase
   when 'experience'
     @orig_experience = @experience
     @experience = @course.experiences[ index - 1 ]

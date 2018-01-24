@@ -193,7 +193,7 @@ end
 
 Then /^the anonymous comment "([^"]*)"$/ do |comment_status|
   installment = Installment.last
-  case comment_status
+  case comment_status.downcase
   when 'is empty'
     installment.anon_comments.blank?.should eq true
 
