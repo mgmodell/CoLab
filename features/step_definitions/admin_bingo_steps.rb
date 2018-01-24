@@ -47,20 +47,19 @@ Then /^the bingo project is the course's project$/ do
 end
 
 Then /^the bingo "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value|
-  tz = ActiveSupport::TimeZone.new(@course.timezone)
+  course_tz = ActiveSupport::TimeZone.new(@bingo.course.timezone)
 
   case date_field_prefix
   when 'start'
     date = Chronic.parse(date_value)
-    date -= date.utc_offset
-    date += tz.utc_offset
-    date = date.getlocal(tz.utc_offset).beginning_of_day
+      .getlocal( course_tz.utc_offset )
+      .beginning_of_day
     @bingo.start_date.should eq date
 
   when 'end'
     date = Chronic.parse(date_value)
-    date += tz.utc_offset
-    date = date.getlocal(tz.utc_offset).end_of_day
+      .getlocal( course_tz.utc_offset )
+      .end_of_day
     @bingo.end_date.change(sec: 0).should eq date.change(sec: 0)
   else
     puts "We didn't test anything there: " + date_field_prefix + ' not found'

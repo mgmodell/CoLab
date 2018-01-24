@@ -61,11 +61,36 @@ Then "the course {string} field is {string}"  do |field_name, value|
 end
 
 Then "the course start date is {string} and the end date to {string}" do |start_date, end_date|
-  test_date = Chronic.parse( start_date ).strftime('%Y-%m-%dT%T')
+  course_tz = ActiveSupport::TimeZone.new( @course.timezone )
+
   test_date = Chronic.parse( start_date )
+  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
+  test_date -= course_tz.utc_offset
+  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
+  test_date = test_date.getlocal( course_tz.utc_offset )
+  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
+  test_date = test_date.beginning_of_day
+  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
+  puts "\t\t++++ saved: #{@course.start_date.strftime('%Y-%m-%d %T')}}"
+
+  test_date = Chronic.parse( start_date )
+    .getlocal( course_tz.utc_offset )
+    .beginning_of_day
   @course.start_date.should eq test_date
-  test_date = Chronic.parse( end_date ).strftime('%Y-%m-%dT%T')
+
   test_date = Chronic.parse( end_date )
+  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
+  test_date -= course_tz.utc_offset
+  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
+  test_date = test_date.getlocal( course_tz.utc_offset )
+  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
+  test_date = test_date.beginning_of_day
+  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
+  puts "\t\t++++ saved: #{@course.end_date.strftime('%Y-%m-%d %T')}}"
+
+  test_date = Chronic.parse( end_date )
+    .getlocal( course_tz.utc_offset )
+    .end_of_day
   @course.end_date.should eq test_date
 
 end

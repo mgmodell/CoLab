@@ -97,13 +97,18 @@ class Course < ActiveRecord::Base
   end
 
   def timezone_adjust
-    unless start_date.blank? || end_date.blank?
-      course_tz = ActiveSupport::TimeZone.new(timezone)
+    course_tz = ActiveSupport::TimeZone.new(timezone)
+    #TODO: must handle changing timezones at some point
 
-      # TZ corrections
-      new_date = start_date + course_tz.utc_offset
+    # TZ corrections
+    if start_date_changed? && start_date.present?
+      new_date = start_date - course_tz.utc_offset
       self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day
-      new_date = end_date + course_tz.utc_offset
+    end
+
+    if end_date_changed? && end_date.present?
+      puts "\t\t\tcourse: end_date_change}"
+      new_date = end_date.beginning_of_day + course_tz.utc_offset
       self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day
     end
   end
@@ -111,11 +116,14 @@ class Course < ActiveRecord::Base
   def copy_from_template( new_start: )
     #Timezone checking here
     course_tz = ActiveSupport::TimeZone.new(self.timezone)
-    date_difference = new_start - self.start_date + course_tz.utc_offset
+    new_start = course_tz.utc_to_local( new_start.getlocal )
+    date_difference = new_start - self.start_date.time
+    puts "\t date difference: #{date_difference} #{new_start.class} #{self.start_date.class}"
     new_course = nil
 
     Course.transaction do
       #create the course
+      puts "new date: #{self.start_date + date_difference}"
       new_course = Course.create(
         name: "Copy of #{self.name}",
         number: "Copy of #{self.number}",
@@ -125,6 +133,7 @@ class Course < ActiveRecord::Base
         start_date: self.start_date + date_difference,
         end_date: self.end_date + date_difference
       )
+      puts "#{new_course.start_date}"
 
       #copy the rosters
       self.rosters.faculty.each do |roster|

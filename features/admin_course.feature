@@ -118,14 +118,17 @@ Feature: Course Administration
 
   Scenario: Admin duplicates an existing course
     Given the course started "5/10/1976" and ended "11/01/2012"
+     And the course start date is "5/10/1976" and the end date to "11/01/2012"
     Given the course 'Name' is 'to dup'
     Given the course 'Number' is 'd6'
     Given the course 'Description' is 'ohla!'
     Given the course has an experience
     Given the experience started "6/20/1976" and ends "8/20/1976"
+     And the course start date is "5/10/1976" and the end date to "11/01/2012"
     Given the experience "Name" is "cup"
     Given the course has a Bingo! game
     Given the Bingo! started "5/20/1976" and ends "7/20/1976"
+     And the course start date is "5/10/1976" and the end date to "11/01/2012"
     Given the Bingo! "Topic" is "Private"
     Given the Bingo! "Description" is "this is neat"
     Given the Bingo! "Terms count" is 20
@@ -133,6 +136,7 @@ Feature: Course Administration
     Given the Bingo! project is the course's project
     Given the Bingo! percent discount is 30
     Given the Bingo! is active
+     And the course start date is "5/10/1976" and the end date to "11/01/2012"
     Given the user is the instructor for the course
     Given the user is an admin
     Given the user logs in
