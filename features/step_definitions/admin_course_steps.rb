@@ -63,32 +63,22 @@ end
 Then "the course start date is {string} and the end date is {string}" do |start_date, end_date|
   course_tz = ActiveSupport::TimeZone.new( @course.timezone )
 
-  test_date = Chronic.parse( start_date )
-  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
-  test_date -= course_tz.utc_offset
-  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
-  test_date = test_date.getlocal( course_tz.utc_offset )
-  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
-  test_date = test_date.beginning_of_day
-  puts "\n\t\t++++ calcd: #{test_date.strftime('%Y-%m-%d %T')}"
-  puts "\n\t\t++++ calcd: #{test_date.getlocal.strftime('%Y-%m-%d %T')}"
-  puts "\t\t++++ saved: #{@course.start_date.strftime('%Y-%m-%d %T')}}"
+  d = Chronic.parse( start_date )
+  test_date = course_tz.local( d.year, d.month, d.day )
+  puts "\n\t\t++++ calcd: #{test_date.strftime('%Y-%m-%d %T %Z')}"
+  puts "\n\t\t++++ calcd: #{test_date.utc.strftime('%Y-%m-%d %T %Z')}"
+  puts "\t\t++++ saved: #{@course.start_date.strftime('%Y-%m-%d %T %Z')}"
 
   test_date = Chronic.parse( start_date )
     .getlocal( course_tz.utc_offset )
     .beginning_of_day
   @course.start_date.change(sec: 0).should eq test_date.change(sec: 0)
 
-  test_date = Chronic.parse( end_date )
-  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
-  test_date -= course_tz.utc_offset
-  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
-  test_date = test_date.getlocal( course_tz.utc_offset )
-  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
-  test_date = test_date.beginning_of_day
-  puts "\n\t\t++++ calcd: #{test_date.getlocal.strftime('%Y-%m-%d %T')}"
-  puts "\n\t\t++++ calcd: #{test_date.strftime('%Y-%m-%d %T')}"
-  puts "\t\t++++ saved: #{@course.end_date.strftime('%Y-%m-%d %T')}}"
+  d = Chronic.parse( end_date )
+  test_date = course_tz.local( d.year, d.month, d.day ).end_of_day
+  puts "\n\t\t++++ calcd: #{test_date.strftime('%Y-%m-%d %T %Z')}"
+  puts "\n\t\t++++ calcd: #{test_date.utc.strftime('%Y-%m-%d %T %Z')}"
+  puts "\t\t++++ saved: #{@course.end_date.strftime('%Y-%m-%d %T %Z')}"
 
   test_date = Chronic.parse( end_date )
     .getlocal( course_tz.utc_offset )

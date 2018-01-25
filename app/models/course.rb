@@ -236,7 +236,7 @@ class Course < ActiveRecord::Base
     # TZ corrections
     if start_date_changed? && start_date.present?
       new_date = course_tz.local( start_date.year, start_date.month, start_date.day )
-      self.start_date = new_date.beginning_of_day
+      self.start_date = new_date
     end
 
     if end_date_changed? && end_date.present?
