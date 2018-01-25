@@ -70,13 +70,14 @@ Then "the course start date is {string} and the end date is {string}" do |start_
   test_date = test_date.getlocal( course_tz.utc_offset )
   puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
   test_date = test_date.beginning_of_day
-  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
+  puts "\n\t\t++++ calcd: #{test_date.strftime('%Y-%m-%d %T')}"
+  puts "\n\t\t++++ calcd: #{test_date.getlocal.strftime('%Y-%m-%d %T')}"
   puts "\t\t++++ saved: #{@course.start_date.strftime('%Y-%m-%d %T')}}"
 
   test_date = Chronic.parse( start_date )
     .getlocal( course_tz.utc_offset )
     .beginning_of_day
-  @course.start_date.should eq test_date
+  @course.start_date.change(sec: 0).should eq test_date.change(sec: 0)
 
   test_date = Chronic.parse( end_date )
   puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
@@ -85,13 +86,14 @@ Then "the course start date is {string} and the end date is {string}" do |start_
   test_date = test_date.getlocal( course_tz.utc_offset )
   puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
   test_date = test_date.beginning_of_day
-  puts "\n\t\t++++ #{test_date.strftime('%Y-%m-%d %T')}"
+  puts "\n\t\t++++ calcd: #{test_date.getlocal.strftime('%Y-%m-%d %T')}"
+  puts "\n\t\t++++ calcd: #{test_date.strftime('%Y-%m-%d %T')}"
   puts "\t\t++++ saved: #{@course.end_date.strftime('%Y-%m-%d %T')}}"
 
   test_date = Chronic.parse( end_date )
     .getlocal( course_tz.utc_offset )
     .end_of_day
-  @course.end_date.should eq test_date
+  @course.end_date.change(sec: 0).should eq test_date.change(sec: 0)
 
 end
 

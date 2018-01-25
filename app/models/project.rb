@@ -154,9 +154,15 @@ class Project < ActiveRecord::Base
   def dates_within_course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date
+        puts "++++++ start "
+        puts " course: #{course.start_date}"
+        puts "project: #{start_date}"
         errors.add(:start_date, "The project cannot begin before the course has begun (#{course.start_date})")
       end
       if end_date > course.end_date
+        puts "++++++ end "
+        puts " course: #{course.end_date}"
+        puts "project: #{end_date}"
         errors.add(:end_date, "The project cannot continue after the course has ended (#{course.end_date})")
       end
     end
@@ -199,23 +205,23 @@ class Project < ActiveRecord::Base
     Assessment.build_new_assessment self if active? && is_available?
   end
 
+  private
+
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
 
-      if start_date_changed?
+      if start_date_changed? && start_date.present?
       # TZ corrections
-      new_date = start_date - course_tz.utc_offset
-      self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day
+      new_date = course_tz.local(start_date.year, start_date.month, start_date.day)
+      self.start_date = new_date.beginning_of_day
       end
 
-      if end_date_changed?
+      if end_date_changed? && end_date.present?
       puts "\t\tproject #{end_date_change}"
-      new_date = end_date + course_tz.utc_offset
-      self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day
+      new_date = course_tz.local( end_date.year, end_date.month, end_date.day )
+      self.end_date = new_date.end_of_day
       end
   end
-
-  private
 
   def anonymize
     self.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"

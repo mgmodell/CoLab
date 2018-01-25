@@ -9,6 +9,9 @@ module PersonalizationHelper
   end
 
   def in_tz( date:, tz: @current_user.timezone )
+    puts "**********"
+    puts "\t\t\tinput #{date}"
+    puts "\t\t\toutput #{ date.in_time_zone( tz ) }"
     date.in_time_zone( tz )
   end
 

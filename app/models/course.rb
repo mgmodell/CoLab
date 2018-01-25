@@ -65,54 +65,6 @@ class Course < ActiveRecord::Base
     roster.role
   end
 
-  # Validation check code
-  def date_sanity
-    if start_date.blank? || end_date.blank?
-      errors.add(:start_dow, 'The start date is required' ) if start_date.blank?
-      errors.add(:end_dow, 'The end date is required' ) if end_date.blank?
-    elsif start_date > end_date
-      errors.add(:start_dow, 'The start date must come before the end date')
-    end
-    errors
-  end
-
-  # TODO: - check for date sanity of experiences and projects
-  def activity_date_check
-    experiences.each do |experience|
-      if experience.start_date < start_date
-        errors.add(:start_date, 'Experience "' + experience.name + '" currently starts before this course does.')
-      end
-      if experience.end_date > end_date
-        errors.add(:start_date, 'Experience "' + experience.name + '" currently ends after this course does.')
-      end
-    end
-    projects.each do |project|
-      if project.start_date < start_date
-        errors.add(:start_date, 'Project "' + project.name + '" currently starts before this course does.')
-      end
-      if project.end_date > end_date
-        errors.add(:start_date, 'Project "' + project.name + '" currently ends after this course does.')
-      end
-    end
-  end
-
-  def timezone_adjust
-    course_tz = ActiveSupport::TimeZone.new(timezone)
-    #TODO: must handle changing timezones at some point
-
-    # TZ corrections
-    if start_date_changed? && start_date.present?
-      new_date = start_date - course_tz.utc_offset
-      self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day
-    end
-
-    if end_date_changed? && end_date.present?
-      puts "\t\t\tcourse: end_date_change}"
-      new_date = end_date.beginning_of_day + course_tz.utc_offset
-      self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day
-    end
-  end
-
   def copy_from_template( new_start: )
     #Timezone checking here
     course_tz = ActiveSupport::TimeZone.new(self.timezone)
@@ -238,6 +190,37 @@ class Course < ActiveRecord::Base
 
   private
 
+  # Validation check code
+  def date_sanity
+    if start_date.blank? || end_date.blank?
+      errors.add(:start_dow, 'The start date is required' ) if start_date.blank?
+      errors.add(:end_dow, 'The end date is required' ) if end_date.blank?
+    elsif start_date > end_date
+      errors.add(:start_dow, 'The start date must come before the end date')
+    end
+    errors
+  end
+
+  # TODO: - check for date sanity of experiences and projects
+  def activity_date_check
+    experiences.each do |experience|
+      if experience.start_date < start_date
+        errors.add(:start_date, 'Experience "' + experience.name + '" currently starts before this course does.')
+      end
+      if experience.end_date > end_date
+        errors.add(:start_date, 'Experience "' + experience.name + '" currently ends after this course does.')
+      end
+    end
+    projects.each do |project|
+      if project.start_date < start_date
+        errors.add(:start_date, 'Project "' + project.name + '" currently starts before this course does.')
+      end
+      if project.end_date > end_date
+        errors.add(:start_date, 'Project "' + project.name + '" currently ends after this course does.')
+      end
+    end
+  end
+
   def anonymize
     levels = %w[Beginning Intermediate Advanced]
     self.anon_name = "#{levels.sample} #{Forgery::Name.industry}"
@@ -245,4 +228,21 @@ class Course < ActiveRecord::Base
               GEO IST MAT YOW GFB RSV CSV MBV]
     self.anon_number = "#{dpts.sample}-#{rand(100..700)}"
   end
+
+  def timezone_adjust
+    course_tz = ActiveSupport::TimeZone.new(timezone)
+    #TODO: must handle changing timezones at some point
+
+    # TZ corrections
+    if start_date_changed? && start_date.present?
+      new_date = course_tz.local( start_date.year, start_date.month, start_date.day )
+      self.start_date = new_date.beginning_of_day
+    end
+
+    if end_date_changed? && end_date.present?
+      new_date = course_tz.local( end_date.year, end_date.month, end_date.day )
+      self.end_date = new_date.end_of_day
+    end
+  end
+
 end

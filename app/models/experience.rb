@@ -127,41 +127,6 @@ class Experience < ActiveRecord::Base
     reactions.joins(narrative: :scenario).group(:scenario_id).count.to_a.sort! { |x, y| x[1] <=> y[1] }
   end
 
-  def date_sanity
-    unless start_date.nil? || end_date.nil?
-      if start_date > end_date
-        errors.add(:start_date, 'The start date must come before the end date')
-      end
-      errors
-    end
-  end
-
-  def timezone_adjust
-    course_tz = ActiveSupport::TimeZone.new(course.timezone)
-
-    if start_date_changed?
-      # TZ corrections
-      new_date = start_date - course_tz.utc_offset
-      self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day 
-    end
-    if end_date_changed?
-      new_date = end_date + course_tz.utc_offset
-      self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day
-    end
-  end
-
-  def dates_within_course
-    unless start_date.nil? || end_date.nil?
-      if start_date < course.start_date
-        errors.add(:start_date, "The experience cannot begin before the course has begun (#{course.start_date})")
-      end
-      if end_date > course.end_date
-        errors.add(:end_date, "The experience cannot continue after the course has ended (#{course.end_date})")
-      end
-    end
-    errors
-  end
-
   def self.inform_instructors
     count = 0
     Experience.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |experience|
@@ -185,6 +150,41 @@ class Experience < ActiveRecord::Base
   end
 
   private
+
+  def date_sanity
+    unless start_date.nil? || end_date.nil?
+      if start_date > end_date
+        errors.add(:start_date, 'The start date must come before the end date')
+      end
+      errors
+    end
+  end
+
+  def timezone_adjust
+    course_tz = ActiveSupport::TimeZone.new(course.timezone)
+
+    if start_date_changed? && start_date.present?
+      # TZ corrections
+      new_date = course_tz.local(start_date.year, start_date.month, start_date.day )
+      self.start_date = new_date.beginning_of_day
+    end
+    if end_date_changed? && end_date.present?
+      new_date = course_tz.local(end_date.year, end_date.month, end_date.day )
+      self.end_date = new_date.end_of_day
+    end
+  end
+
+  def dates_within_course
+    unless start_date.nil? || end_date.nil?
+      if start_date < course.start_date
+        errors.add(:start_date, "The experience cannot begin before the course has begun (#{course.start_date})")
+      end
+      if end_date > course.end_date
+        errors.add(:end_date, "The experience cannot continue after the course has ended (#{course.end_date})")
+      end
+    end
+    errors
+  end
 
   def anonymize
     self.anon_name = Forgery::Name.company_name.to_s

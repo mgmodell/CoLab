@@ -163,15 +163,14 @@ class BingoGame < ActiveRecord::Base
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
 
     # TZ corrections
-    if start_date_changed?
-    new_date = start_date - course_tz.utc_offset
-    self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day
+    if start_date_changed? && start_date.present?
+    new_date = course_tz.local(start_date.year, start_date.month, start_date.day )
+    self.start_date = new_date.beginning_of_day
     end
 
-    if end_date_changed?
-    puts "\t\tbingo: #{end_date_change}"
-    new_date = end_date + course_tz.utc_offset
-    self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day
+    if end_date_changed? && end_date.present?
+    new_date = course_tz.local(end_date.year, end_date.month, end_date.day)
+    self.end_date = new_date.end_of_day
     end
   end
 
