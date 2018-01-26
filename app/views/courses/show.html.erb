@@ -29,8 +29,8 @@
 </p>
 <p>
   <h3><%= t :dates %>:</h3>
-  <%= l in_tz( date: @course.start_date, tz: @course.timezone ), format: :short_date %>
-  to <%= l in_tz( date: @course.end_date, tz: @course.timezone ), format: :short_date %>
+  <%= l in_tz( date: @course.start_date, tz_str: @course.timezone ), format: :short_date %>
+  to <%= l in_tz( date: @course.end_date, tz_str: @course.timezone ), format: :short_date %>
 </p>
 <p>
   <h3><%= t '.instructors' %></h3>

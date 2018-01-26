@@ -210,16 +210,21 @@ class Project < ActiveRecord::Base
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
 
-      if start_date_changed? && start_date.present?
       # TZ corrections
-      new_date = course_tz.local(start_date.year, start_date.month, start_date.day)
-      self.start_date = new_date.beginning_of_day
+      if start_date_changed? && start_date.present?
+        new_date = course_tz.local(start_date.year, start_date.month, start_date.day)
+        self.start_date = new_date.beginning_of_day
       end
 
       if end_date_changed? && end_date.present?
-      puts "\t\tproject #{end_date_change}"
-      new_date = course_tz.local( end_date.year, end_date.month, end_date.day )
-      self.end_date = new_date.end_of_day
+        puts "\t\tproject #{end_date_change}"
+        new_date = course_tz.local( end_date.year, end_date.month, end_date.day )
+        puts "\t\tproject #{new_date}"
+        #new_date = new_date .end_of_day
+        puts "\t\tproject #{new_date}"
+        puts "\t\tproject #{new_date.utc}"
+
+        self.end_date = new_date
       end
   end
 

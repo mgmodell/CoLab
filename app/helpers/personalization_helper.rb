@@ -8,11 +8,13 @@ module PersonalizationHelper
     @current_research || @current_user.anonymize?
   end
 
-  def in_tz( date:, tz: @current_user.timezone )
+  def in_tz( date:, tz_str: @current_user.timezone )
     puts "**********"
     puts "\t\t\tinput #{date}"
-    puts "\t\t\toutput #{ date.in_time_zone( tz ) }"
-    date.in_time_zone( tz )
+    tz = ActiveSupport::TimeZone.new( tz_str )
+    pd = tz.local( date.year, date.month, date.day, date.hour, date.min )
+    puts "\t\t\toutput #{ pd }"
+    pd
   end
 
 end
