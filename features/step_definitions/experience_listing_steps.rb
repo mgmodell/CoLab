@@ -4,6 +4,7 @@ require 'chronic'
 
 Given(/^there is a course with an experience$/) do
   @course = Course.make
+  @course.save
   @experience = Experience.make
   @experience.course = @course
   @experience.save

@@ -10,6 +10,8 @@ en:
     factor_pack: Factor Pack
     group_create_success: Group successfully created.
     tz_warn: This project occurs in the %{time_zone} time zone and all dates reflect this.
+    start_date_lbl: Project start date
+    end_date_lbl: Project end date
     opens: Opens every
     no_group: unassigned
     rescore: rescore

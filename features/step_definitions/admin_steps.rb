@@ -2,6 +2,7 @@
 
 Given /^there is a course$/ do
   @course = Course.make
+  @course.save
   @course.get_name(true).should_not be_nil
   @course.get_name(true).length.should be > 0
 end

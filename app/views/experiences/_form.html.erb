@@ -20,11 +20,14 @@
     <table width="100%">
       <tr>
         <td width="45%">
-          <%= f.input :start_date, as: :date, html5: true, label: t( 'experiences.start_date_lbl') %>
+          <% ctz = f.object.course.timezone %>
+          <%= f.input :start_date, as: :date, html5: true, label: t( 'experiences.start_date_lbl' ),
+            input_html: { value: in_tz( date: f.object.start_date, tz_str: ctz )} %>
         </td>
         <td width="10%" align="center" valign="center">&nbsp;</td>
         <td width="45%">
-          <%= f.input :end_date, as: :date, html5: true, label: t( 'experiences.end_date_lbl' )%>
+          <%= f.input :end_date, as: :date, html5: true, label: t('experiences.end_date_bl'),
+            input_html: { value: in_tz( date: f.object.end_date, tz_str: ctz )} %>
         </td>
       </tr>
       <tr>

@@ -2,7 +2,7 @@
 
 require 'forgery'
 class Experience < ActiveRecord::Base
-  belongs_to :course, inverse_of: :experiences
+  belongs_to :course, inverse_of: :experiences, required: true
   has_many :reactions, inverse_of: :experience
 
   # validations

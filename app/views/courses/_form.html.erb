@@ -17,11 +17,10 @@
         <%= f.input :number %>
         <%= f.association :school %>
         <%= f.time_zone_select :timezone %>
-        <s course_tz = ActiveSupport::TimeZone.new( f.object.timezone ) %>
         <%= f.input :start_date, as: :date, html5: true,
-          input_html: { value: f.object.start_date + course_tz.utc_offset} %>
+          input_html: { value: in_tz( date: f.object.start_date, tz_str: f.object.timezone ) } %>
         <%= f.input :end_date, as: :date, html5: true,
-          input_html: { value: f.object.end_date + course_tz.utc_offset } %>
+          input_html: { value: in_tz( date: f.object.end_date, tz_str: f.object.timezone ) } %>
         <%= f.input :description, as: :text %>
       </div>
     </div>

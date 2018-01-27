@@ -9,6 +9,8 @@ Feature: Project Administration
     Given the course has 8 confirmed users
     Given the course timezone is "Mexico City"
     Given the user timezone is "Nairobi"
+    Given the course started "5/10/1976" and ended "tomorrow"
+    Given the project started "5/10/1978" and ends "10/29/2012", opened "Saturday" and closes "Monday"
     Given the course started "5/10/1976" and ended "11/01/2012"
 
   Scenario: Instructor creates a new project

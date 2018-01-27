@@ -11,8 +11,9 @@ Feature: Course Administration
     Given the course has 8 confirmed users
     Given the course timezone is "Mexico City"
     Given the user timezone is "Nairobi"
-    Given the course started "5/10/1976" and ended "11/01/2012"
+    Given the course started "5/10/1970" and ended "tomorrow"
     Given the project started '5/12/1976' and ends '10/01/2012'
+    Given the course started "5/10/1976" and ended "11/01/2012"
 
   Scenario: Admin creates a new course
     Given the user is an admin

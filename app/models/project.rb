@@ -4,7 +4,7 @@ require 'forgery'
 class Project < ActiveRecord::Base
   after_save :build_assessment
 
-  belongs_to :course, inverse_of: :projects
+  belongs_to :course, inverse_of: :projects, required: true
   belongs_to :style, inverse_of: :projects
   has_many :groups, inverse_of: :project, dependent: :destroy
   has_many :bingo_games, inverse_of: :project, dependent: :destroy

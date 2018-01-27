@@ -135,6 +135,7 @@ end
 
 Given /^the user enrolls in a new course$/ do
   @course = Course.make
+  @course.save
   @course.get_name(true).should_not be_nil
   @course.get_name(true).length.should be > 0
   Roster.create(user: @user, course: @course, role: Roster.roles[:enrolled_student])
@@ -142,6 +143,7 @@ end
 
 Given /^the course has an experience$/ do
   @experience = Experience.make
+  @experience.save
   @experience.course = @course
   @experience.save
   puts @experience.errors.full_messages unless @experience.errors.blank?
