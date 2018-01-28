@@ -31,14 +31,14 @@ class ProjectsController < ApplicationController
 
   def new
     @title = t('.title')
-    @project = Course.find params[:course_id].projects.new
+    @project = Course.find( params[:course_id] ).projects.new
     @project.start_date = @project.course.start_date
     @project.end_date = @project.course.end_date
   end
 
   def create
     @title = t('.title')
-    @project = Course.find(@project.course_id).projects.new
+    @project = Project.new( project_params )
     if @project.save
       notice = @project.active ?
             t('projects.create_success') :

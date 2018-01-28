@@ -45,12 +45,12 @@ Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
   )
   @users = []
   user_count.to_i.times do
-    @group.users.new(
+    user = @group.users.new(
       first_name: Forgery::Name.first_name,
       last_name: Forgery::Name.last_name,
       password: 'password',
       password_confirmation: 'password',
-      email: Forger::Internet.email_address,
+      email: Forgery::Internet.email_address,
       timezone: 'UTC',
       theme_id: 1
     )
@@ -60,6 +60,8 @@ Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
       course: @course,
       role: Roster.roles[:enrolled_student]
     )
+    user.save
+    puts user.errors.full_messages unless user.errors.blank?
     r.save
     puts r.errors.full_messages unless r.errors.blank?
   end

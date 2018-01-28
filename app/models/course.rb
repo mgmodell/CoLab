@@ -213,7 +213,7 @@ class Course < ActiveRecord::Base
       end
       if experience.end_date > end_date
         msg = errors[ :end_date ].blank? ? '' : errors[ :end_date ]
-        msg = "Experience '#{experience.name}' currently ends before this course does"
+        msg = "Experience '#{experience.name}' currently ends after this course does"
         msg += " (#{experience.end_date} > #{end_date})."
         errors.add(:end_date, msg )
       end
@@ -227,7 +227,7 @@ class Course < ActiveRecord::Base
       end
       if project.end_date > end_date
         msg = errors[ :end_date ].blank? ? '' : errors[ :end_date ]
-        msg = "Project '#{project.name}' currently ends before this course does"
+        msg = "Project '#{project.name}' currently ends after this course does"
         msg += " (#{project.end_date} > #{end_date})."
         errors.add(:end_date, msg )
       end
@@ -235,13 +235,13 @@ class Course < ActiveRecord::Base
     bingo_games.reload.each do |bingo_game|
       if bingo_game.start_date < start_date
         msg = errors[ :start_date ].blank? ? '' : errors[ :start_date ]
-        msg = "Bingo! '#{bingo_game.name}' currently starts before this course does "
+        msg = "Bingo! '#{bingo_game.topic}' currently starts before this course does "
         msg += " (#{bingo_game.start_date} < #{start_date})."
         errors.add(:start_date, msg )
       end
       if bingo_game.end_date > end_date
         msg = errors[ :end_date ].blank? ? '' : errors[ :end_date ]
-        msg = "Bingo! '#{bingo_game.name}' currently ends before this course does "
+        msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
         msg += " (#{bingo_game.end_date} > #{end_date})."
         errors.add(:end_date, msg )
       end
@@ -261,39 +261,38 @@ class Course < ActiveRecord::Base
     #TODO: must handle changing timezones at some point
 
     # TZ corrections
-    if start_date_changed? && start_date.present?
+    if (start_date_changed? || timezone_changed? ) && start_date.present?
+      puts "tz: #{course_tz}"
       new_date = course_tz.local( start_date.year, start_date.month, start_date.day )
+      puts "sd: #{new_date}"
       self.start_date = new_date
     end
 
-    if end_date_changed? && end_date.present?
+    if (end_date_changed? || timezone_changed? ) && end_date.present?
       new_date = course_tz.local( end_date.year, end_date.month, end_date.day )
       self.end_date = new_date.end_of_day
     end
-    puts "\tcourse: #{start_date} and #{end_date}"
+    puts "\tcourse start: #{start_date} end: #{end_date}"
 
     if timezone_changed? && timezone_was.present?
       puts 'update timezones'
-      puts " we have #{projects.count} projects"
-      puts " we have #{experiences.count} experiences"
-      puts " we have #{bingo_games.count} bingo_games"
       Course.transaction do
         offset_delta = course_tz.utc_offset - ActiveSupport::TimeZone.new( timezone_was ).utc_offset
         projects.reload.each do |project|
           puts "\t\twas #{project.start_date} and #{project.end_date}"
-          project.start_date = project.start_date + offset_delta
-          project.end_date = project.end_date + offset_delta
+          project.start_date = project.start_date - offset_delta
+          project.end_date = project.end_date - offset_delta
           project.save( validate: false )
           puts "\t\tis  #{project.start_date} and #{project.end_date}"
         end
         experiences.reload.each do |experience|
-          experience.start_date = experience.start_date + offset_delta
-          experience.end_date = experience.end_date + offset_delta
+          experience.start_date = experience.start_date - offset_delta
+          experience.end_date = experience.end_date - offset_delta
           experience.save( validate: false )
         end
         bingo_games.each do |bingo_game|
-          bingo_game.reload.start_date = bingo_game.start_date + offset_delta
-          bingo_game.end_date = bingo_game.end_date + offset_delta
+          bingo_game.reload.start_date = bingo_game.start_date - offset_delta
+          bingo_game.end_date = bingo_game.end_date - offset_delta
           bingo_game.save( validate: false )
         end
       end

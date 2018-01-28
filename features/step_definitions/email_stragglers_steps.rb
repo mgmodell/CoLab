@@ -54,7 +54,7 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
   puts r.errors.full_messages unless r.errors.blank?
   @group.users << @user
   user_count.to_i.times do
-    @group.users.new(
+    user = @group.users.new(
       first_name: Forgery::Name.first_name,
       last_name: Forgery::Name.last_name,
       password: 'password',

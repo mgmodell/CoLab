@@ -2,17 +2,17 @@
 require 'forgery'
 
 Given /^the project measures (\d+) factors$/ do |num_factors|
-  bp = @project.factor_pack.new(
+  bp = FactorPack.new(
     name: "#{Forgery::Name.industry}-#{Forgery::Basic.color} Factor Pack",
-    description: Forgery::Basic.text
+    description: Forgery::Basic.text,
   )
   num_factors.to_i.times do
-    factor << bp.factors.new(
+    factor = bp.factors.new(
       name: "#{Forgery::Address.street_number}-#{Forgery::Name.industry} Factor",
       description: Forgery::Basic.text
     )
     factor.save
-    puts @factor.errors.full_messages unless @factor.errors.blank?
+    puts factor.errors.full_messages unless factor.errors.blank?
   end
   bp.save
   puts bp.errors.full_messages unless bp.errors.blank?

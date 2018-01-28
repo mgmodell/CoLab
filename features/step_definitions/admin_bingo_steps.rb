@@ -60,15 +60,13 @@ Then /^the bingo "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value
 
   case date_field_prefix.downcase
   when 'start'
-    date = Chronic.parse(date_value)
-      .getlocal( course_tz.utc_offset )
-      .beginning_of_day
+    d = Chronic.parse(date_value)
+    date = course_tz.local( d.year, d.month, d.day ).beginning_of_day
     @bingo.start_date.should eq date
 
   when 'end'
-    date = Chronic.parse(date_value)
-      .getlocal( course_tz.utc_offset )
-      .end_of_day
+    d = Chronic.parse(date_value)
+    date = course_tz.local( d.year, d.month, d.day ).end_of_day
     @bingo.end_date.change(sec: 0).should eq date.change(sec: 0)
   else
     puts "We didn't test anything there: " + date_field_prefix + ' not found'

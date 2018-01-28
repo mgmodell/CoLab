@@ -10,7 +10,7 @@ Feature: Bingo Administration
     Given the course timezone is "Mexico City"
     Given the user timezone is "Nairobi"
     Given the course has a Bingo! game
-    Given the course started "5/10/1976" and ended "tomorrow"
+    Given the course started "5/10/1976" and ended "5 months from now"
     Given the project started "5/10/1976" and ends "11/01/2012", opened "Saturday" and closes "Monday"
     Given the Bingo! started "2/29/1980" and ends "7/10/2008"
     Given the course started "5/10/1976" and ended "11/01/2012"
