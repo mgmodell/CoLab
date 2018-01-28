@@ -163,6 +163,7 @@ class BingoGame < ActiveRecord::Base
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
 
     puts "=====bingo"
+    puts "tz: #{course_tz}"
     puts "start: #{start_date_change}"
     puts "end  : #{end_date_change}"
     if start_date_changed?

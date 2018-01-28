@@ -65,8 +65,11 @@ Then /^the bingo "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value
     @bingo.start_date.should eq date
 
   when 'end'
+    puts "input: #{date_value}"
     d = Chronic.parse(date_value)
+    puts "procd: #{d}"
     date = course_tz.local( d.year, d.month, d.day ).end_of_day
+    puts "adjus: #{date}"
     @bingo.end_date.change(sec: 0).should eq date.change(sec: 0)
   else
     puts "We didn't test anything there: " + date_field_prefix + ' not found'
