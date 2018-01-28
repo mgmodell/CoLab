@@ -34,9 +34,7 @@ class BingoGamesController < ApplicationController
 
   def new
     @title = t '.title'
-    @bingo_game = BingoGame.new
-    @bingo_game.course_id = params[:course_id]
-    @bingo_game.course = Course.find(params[:course_id])
+    @bingo_game = Course.find( params[:course_id] ).new
     @bingo_game.start_date = @bingo_game.course.start_date
     @bingo_game.end_date = @bingo_game.course.end_date
   end

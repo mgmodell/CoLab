@@ -30,12 +30,16 @@ class CoursesController < ApplicationController
 
   def new
     @title = t('.title')
-    @course = Course.new
+    @course = nil
+    if @current_user.school.nil?
+      @course = Course.new
+    else
+      @course = @current_user.school.courses.new
+    end
     @course.timezone = @current_user.timezone
-    @course.school = @current_user.school unless @current_user.school.nil?
     @course.start_date = Date.tomorrow.beginning_of_day
     @course.end_date = 1.month.from_now.end_of_day
-    @course.rosters << Roster.new(role: Roster.roles[:instructor], user: @current_user)
+    @course.rosters.new(role: Roster.roles[:instructor], user: @current_user)
   end
 
   def new_from_template

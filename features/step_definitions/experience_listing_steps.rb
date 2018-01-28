@@ -1,12 +1,21 @@
 # frozen_string_literal: true
-
 require 'chronic'
+require 'forgery'
 
 Given(/^there is a course with an experience$/) do
-  @course = Course.make
+  @course = School.find( 1 ).courses.new(
+    name: "#{Forgery::Name.industry} Course",
+    number: Forgery::Basic.number,
+    timezone: 'UTC',
+    start_date: 4.months.ago,
+    end_date: 2.months.from_now
+  )
   @course.save
-  @experience = Experience.make
-  @experience.course = @course
+  @experience = @course.experiences.new(
+    name: "#{Forgery::Name.industry} Experience",
+    start_date: DateTime.yesterday,
+    end_date: DateTime.tomorrow,
+  )
   @experience.save
   puts @experience.errors.full_messages unless @experience.errors.blank?
 
@@ -25,13 +34,22 @@ end
 Given(/^the course has (\d+) confirmed users$/) do |user_count|
   @users = []
   user_count.to_i.times do
-    user = User.make
+    user = User.new(
+      first_name: Forgery::Name.first_name,
+      last_name: Forgery::Name.last_name,
+      password: 'password',
+      password_confirmation: 'password',
+      email: Forgery::Internet.email_address,
+      timezone: 'UTC',
+      theme_id: 1
+    )
     user.skip_confirmation!
+    user.save
     @users << user
-    r = Roster.new
-    r.user = user
-    r.course = @course
-    r.role = Roster.roles[:enrolled_student]
+    r = user.rosters.new(
+      course: @course,
+      role: Roster.roles[:enrolled_student]
+    )
     r.save
     puts r.errors.full_messages unless r.errors.blank?
   end
@@ -67,9 +85,14 @@ Given /^the user is "(.*?)" user$/ do |which|
 end
 
 Given /^the course has an assessed project$/ do
-  @project = Project.make
-  @project.style = Style.find(1)
-  @project.course = @course
+  @project = @course.projects.new(
+    name: "#{Forgery::Name.industry} Project",
+    start_dow: 1,
+    end_dow: 2,
+    start_date: DateTime.yesterday,
+    end_date: DateTime.tomorrow,
+    style: Style.find(1)
+  )
   @project.save
   if @project.persisted?
     @project.get_name(true).should_not be_nil
@@ -79,20 +102,30 @@ Given /^the course has an assessed project$/ do
 end
 
 Given /^the user is in a group on the project$/ do
-  @group = Group.make
+  @group = @project.groups.new(
+    name: "#{Forgery::Basic.text} Group"
+  )
   @project.active = false
 
-  @project.groups << @group
   3.times do
-    u = User.make
+    u = @group.users.new(
+      first_name: Forgery::Name.first_name,
+      last_name: Forgery::Name.last_name,
+      password: 'password',
+      password_confirmation: 'password',
+      email: Forgery::Internet.email_address,
+      timezone: 'UTC',
+      theme_id: 1
+    )
     u.skip_confirmation!
-    r = Roster.new
-    r.user = u
-    r.course = @project.course
-    r.role = Roster.roles[:enrolled_student]
+    u.save
+    u.rosters.new(
+      course: @project.course,
+      role: Roster.roles[:enrolled_student]
+    )
+    u.save
     r.save
     puts r.errors.full_messages unless r.errors.blank?
-    @group.users << u
   end
   @group.users << @user
   @group.save

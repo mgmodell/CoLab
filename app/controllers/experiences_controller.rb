@@ -28,9 +28,7 @@ class ExperiencesController < ApplicationController
 
   def new
     @title = t('.title')
-    @experience = Experience.new
-    @experience.course_id = params[:course_id]
-    @experience.course = Course.find(params[:course_id])
+    @experience = Course.find( params[:course_id] ).experiences.new
     @experience.start_date = @experience.course.start_date
     @experience.end_date = @experience.course.end_date
   end
@@ -86,7 +84,7 @@ class ExperiencesController < ApplicationController
           @title = t('experiences.react_title')
           render :reaction
         else
-          @diagnosis = Diagnosis.new(reaction: reaction, week: week)
+          @diagnosis = reaction.diagnoses.new(week: week)
         end
       end
     end
@@ -102,7 +100,7 @@ class ExperiencesController < ApplicationController
       @diagnosis = received_diagnosis
     else
       reaction = received_diagnosis.reaction
-      @diagnosis = Diagnosis.new(reaction: reaction, week: week)
+      @diagnosis = reaction.diagnoses.new(week: week)
     end
     if week.nil?
       # we just finished the last week

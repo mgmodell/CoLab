@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'forgery'
 
 Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%Y-%m-%dT%T')
@@ -14,8 +15,16 @@ Then /^retrieve the latest Bingo! game from the db$/ do
 end
 
 Given /^the course has a Bingo! game$/ do
-  @bingo = BingoGame.make
-  @bingo.course = @course
+  @bingo = @course.bingo_games.new(
+    topic: Forgery::Name.industry + ' Topic',
+    description: Forgery::Basic.text,
+    start_date: DateTime.yesterday,
+    end_date: DateTime.tomorrow,
+    lead_time: 2,
+    individual_count: 20,
+    group_discount: 0,
+    group_option: false
+  )
   @bingo.save
   if @bingo.persisted?
     @bingo.get_topic(true).should_not be_nil

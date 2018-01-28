@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'forgery'
 
 Then /^the user will see the task listing page$/ do
   page.should have_content 'Your Tasks'
@@ -19,7 +20,15 @@ Then /^the user will see a request for demographics$/ do
 end
 
 Given /^a user has signed up$/ do
-  @user = User.make
+  @user = User.new(
+    first_name: Forgery::Name.first_name,
+    last_name: Forgery::Name.last_name,
+    password: 'password',
+    password_confirmation: 'password',
+    email: Forgery::Internet.email_address,
+    timezone: 'UTC',
+    theme_id: 1
+  )
   @user.confirm
   @user.save
   puts @user.errors.full_messages unless @user.errors.blank?
@@ -46,13 +55,27 @@ end
 Given /^(\d+) users$/ do |user_count|
   @users = []
   user_count.to_i.times do
-    u = User.make
+    u = User.new(
+      first_name: Forgery::Name.first_name,
+      last_name: Forgery::Name.last_name,
+      password: 'password',
+      password_confirmation: 'password',
+      email: Forgery::Internet.email_address,
+      timezone: 'UTC',
+      theme_id: 1
+    )
     @users << u
   end
 end
 
 Given /^a course$/ do
-  @course = Course.make
+  @course = School.find( 1 ).courses.new(
+    name: "#{Forgery::Name.industry} Course",
+    number: Forgery::Basic.number,
+    timezone: 'UTC',
+    start_date: 4.months.ago,
+    end_date: 2.months.from_now
+  )
   @course.save
   @course.get_name(true).should_not be_nil
   @course.get_name(true).length.should be > 0

@@ -65,7 +65,6 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'htmlbeautifier'
   gem 'i18n_data'
-  gem 'machinist', git: 'https://github.com/mgmodell/machinist'
   gem 'railroady'
   gem 'rails-erd', require: false
   gem 'rspec'

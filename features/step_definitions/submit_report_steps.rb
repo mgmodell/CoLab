@@ -1,11 +1,18 @@
 # frozen_string_literal: true
-
 require 'forgery'
 
 Given /^the project measures (\d+) factors$/ do |num_factors|
-  bp = FactorPack.make
+  bp = @project.factor_pack.new(
+    name: "#{Forgery::Name.industry}-#{Forgery::Basic.color} Factor Pack",
+    description: Forgery::Basic.text
+  )
   num_factors.to_i.times do
-    bp.factors << Factor.make
+    factor << bp.factors.new(
+      name: "#{Forgery::Address.street_number}-#{Forgery::Name.industry} Factor",
+      description: Forgery::Basic.text
+    )
+    factor.save
+    puts @factor.errors.full_messages unless @factor.errors.blank?
   end
   bp.save
   puts bp.errors.full_messages unless bp.errors.blank?

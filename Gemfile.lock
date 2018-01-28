@@ -1,9 +1,3 @@
-GIT
-  remote: https://github.com/mgmodell/machinist
-  revision: 69215b08d975c13493284bcab6fd0ab66a3e0c6b
-  specs:
-    machinist (2.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -381,7 +375,6 @@ DEPENDENCIES
   jquery-tablesorter
   jquery_mobile_rails
   kaminari
-  machinist!
   mysql2 (>= 0.3.13, < 0.5)
   omniauth-google-oauth2
   paperclip (~> 5.0.0)
