@@ -65,7 +65,7 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
     )
     user.skip_confirmation!
     user.save
-    user.rosters.new(
+    r = user.rosters.new(
       course: @course,
       role: Roster.roles[:enrolled_student]
     )

@@ -45,6 +45,7 @@ class ProjectsController < ApplicationController
             t('projects.create_success_inactive')
       redirect_to @project, notice: notice
     else
+      puts @project.errors.full_messages unless @project.errors.empty?
       render :new
     end
   end

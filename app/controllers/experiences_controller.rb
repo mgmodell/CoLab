@@ -39,6 +39,7 @@ class ExperiencesController < ApplicationController
     if @experience.save
       redirect_to @experience, notice: t('experiences.create_success')
     else
+      puts @experience.errors.full_messages unless @experience.errors.empty?
       @title = t('experiences.new.title')
       render :new
     end

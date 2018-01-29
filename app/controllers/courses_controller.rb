@@ -63,6 +63,7 @@ class CoursesController < ApplicationController
     if @course.save
       redirect_to courses_url, notice: t('courses.create_success')
     else
+      puts @course.errors.full_messages unless @course.errors.empty?
       render :new
     end
   end

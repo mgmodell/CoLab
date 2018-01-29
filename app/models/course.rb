@@ -68,38 +68,42 @@ class Course < ActiveRecord::Base
   def copy_from_template( new_start: )
     #Timezone checking here
     course_tz = ActiveSupport::TimeZone.new(self.timezone)
-    new_start = course_tz.utc_to_local( new_start.getlocal )
-    date_difference = new_start - self.start_date.time
-    puts "\t date difference: #{date_difference} #{new_start.class} #{self.start_date.class}"
+    new_start = course_tz.utc_to_local( new_start ).beginning_of_day
+    d = self.start_date
+    date_difference = new_start - course_tz.local( d.year, d.month, d.day ).beginning_of_day
+    puts "\t date difference: #{date_difference}"
+    puts "\t ##### #{course_tz.utc_offset}"
     new_course = nil
 
     Course.transaction do
       #create the course
-      puts "new date: #{self.start_date + date_difference}"
-      new_course = Course.create(
+      puts "\t\t\ :::new start date: #{self.start_date + date_difference}"
+      puts "\t\t\ :::new end date  : #{self.end_date + date_difference}"
+
+      new_course = self.school.courses.new(
         name: "Copy of #{self.name}",
         number: "Copy of #{self.number}",
         description: self.description,
         timezone: self.timezone,
-        school: self.school,
         start_date: self.start_date + date_difference,
         end_date: self.end_date + date_difference
       )
-      puts "#{new_course.start_date}"
+      puts "Copied course start: #{new_course.start_date} end: #{new_course.end_date}"
 
       #copy the rosters
       self.rosters.faculty.each do |roster|
-        new_obj = Roster.create(
+        puts "here with: #{roster}"
+        new_obj = new_course.rosters.new(
           role: roster.role,
           user: roster.user,
-          course: new_course
         )
+        new_obj.save
       end
 
       #copy the projects
       proj_hash = {}
       self.projects.each do |project|
-        new_obj = Project.create(
+        new_obj = new_course.projects.new(
           name: project.name,
           style: project.style,
           factor_pack: project.factor_pack,
@@ -107,24 +111,24 @@ class Course < ActiveRecord::Base
           end_date: project.end_date + date_difference,
           start_dow: project.start_dow,
           end_dow: project.end_dow,
-          course: new_course
         )
+        new_obj.save
         proj_hash[ project ] = new_obj
       end
 
       #copy the experiences
       self.experiences.each do |experience|
-        Experience.create(
+        new_obj = new_course.experiences.new(
           name: experience.name,
           start_date: experience.start_date + date_difference,
           end_date: experience.end_date + date_difference,
-          course: new_course
         )
+        new_obj.save
       end
 
       #copy the bingo! games
       self.bingo_games.each do |bingo_game|
-        BingoGame.create(
+        new_obj = new_course.bingo_games.new(
           topic: bingo_game.topic,
           description: bingo_game.description,
           link: bingo_game.link,
@@ -136,8 +140,8 @@ class Course < ActiveRecord::Base
           project: proj_hash[ bingo_game.project ],
           start_date: bingo_game.start_date + date_difference,
           end_date: bingo_game.end_date + date_difference,
-          course: new_course
         )
+        new_obj.save
       end
 
       new_course.save
@@ -212,6 +216,7 @@ class Course < ActiveRecord::Base
         errors.add(:start_date, msg )
       end
       if experience.end_date > end_date
+        puts "Experience end date: #{experience.end_date} course: #{end_date}"
         msg = errors[ :end_date ].blank? ? '' : errors[ :end_date ]
         msg = "Experience '#{experience.name}' currently ends after this course does"
         msg += " (#{experience.end_date} > #{end_date})."
@@ -226,6 +231,7 @@ class Course < ActiveRecord::Base
         errors.add(:start_date, msg )
       end
       if project.end_date > end_date
+        puts "Project end date: #{project.end_date} course: #{end_date}"
         msg = errors[ :end_date ].blank? ? '' : errors[ :end_date ]
         msg = "Project '#{project.name}' currently ends after this course does"
         msg += " (#{project.end_date} > #{end_date})."
@@ -240,6 +246,7 @@ class Course < ActiveRecord::Base
         errors.add(:start_date, msg )
       end
       if bingo_game.end_date > end_date
+        puts "Bingo end date: #{bingo_game.end_date} course: #{end_date}"
         msg = errors[ :end_date ].blank? ? '' : errors[ :end_date ]
         msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
         msg += " (#{bingo_game.end_date} > #{end_date})."
@@ -263,14 +270,15 @@ class Course < ActiveRecord::Base
     # TZ corrections
     if (start_date_changed? || timezone_changed? ) && start_date.present?
       puts "tz: #{course_tz}"
-      new_date = course_tz.local( start_date.year, start_date.month, start_date.day )
+      d = start_date.utc
+      new_date = course_tz.local( d.year, d.month, d.day).beginning_of_day
       puts "sd: #{new_date}"
       self.start_date = new_date
     end
 
     if (end_date_changed? || timezone_changed? ) && end_date.present?
       new_date = course_tz.local( end_date.year, end_date.month, end_date.day )
-      self.end_date = new_date.end_of_day
+      self.end_date = new_date.end_of_day.change( sec: 0 )
     end
     puts "\tcourse start: #{start_date} end: #{end_date}"
 

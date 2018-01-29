@@ -220,7 +220,7 @@ class Project < ActiveRecord::Base
     end
 
     if end_date_changed?
-      self.end_date = course_tz.local(end_date.year, end_date.month, end_date.day).end_of_day
+      self.end_date = course_tz.local(end_date.year, end_date.month, end_date.day).end_of_day.change( sec: 0 )
     elsif end_date.nil?
       self.end_date = course.end_date
     end

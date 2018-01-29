@@ -11,7 +11,7 @@ Feature: Course Administration
     Given the course has 8 confirmed users
     Given the course timezone is "Mexico City"
     Given the user timezone is "Nairobi"
-    Given the course started "5/10/1970" and ended "tomorrow"
+    Given the course started "5/10/1970" and ended "4 months hence"
     Given the project started '5/12/1976' and ends '10/01/2012'
     Given the course started "5/10/1976" and ended "11/01/2012"
 
@@ -145,6 +145,7 @@ Feature: Course Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user clicks "Copy"
+     And the course start date is "5/10/1976" and the end date is "11/01/2012"
      And set the new course start date to "5/20/1976"
      And the user executes the copy
     #Let's check what we've got
@@ -161,16 +162,16 @@ Feature: Course Administration
     #check the experience
     Then retrieve the 1 course 'experience'
     Then the Experience 'name' is 'cup'
-    Then the new 'Experience' dates are "6/30/1976" and "8/30/1976"
-     And the new 'Experience' is 'not' active
+    Then the 'Experience' dates are "6/30/1976" and "8/30/1976"
+     And the 'Experience' is 'not' active
     #check the project
     Then retrieve the 1 course 'project'
     Then the new project metadata is the same as the old
-    Then the new 'project' started '5/22/1976' and ends '10/11/2012'
-    Then the new project has 0 groups
-     And the new 'project' is 'not' active
+    Then the 'project' dates are '5/22/1976' and '10/11/2012'
+    Then the project has 0 groups
+     And the 'project' is 'not' active
     #check the bingo
     Then retrieve the 1 course 'bingo'
     Then the new bingo metadata is the same as the old
-    Then the new 'bingo' started '5/30/1976' and ends '7/30/2012'
-     And the new 'bingo' is 'not' active
+     And the 'bingo' is 'not' active
+    Then the 'bingo' dates are '5/30/1976' and '7/30/1976'

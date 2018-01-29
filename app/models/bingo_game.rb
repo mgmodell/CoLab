@@ -162,10 +162,10 @@ class BingoGame < ActiveRecord::Base
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
 
-    puts "=====bingo"
-    puts "tz: #{course_tz}"
-    puts "start: #{start_date_change}"
-    puts "end  : #{end_date_change}"
+    #puts "=====bingo"
+    #puts "tz: #{course_tz}"
+    #puts "start: #{start_date_change}"
+    #puts "end  : #{end_date_change}"
     if start_date_changed?
       self.start_date = course_tz.local(start_date.year, start_date.month, start_date.day).beginning_of_day
     elsif start_date.nil?
@@ -173,7 +173,7 @@ class BingoGame < ActiveRecord::Base
     end
 
     if end_date_changed?
-      self.end_date = course_tz.local(end_date.year, end_date.month, end_date.day).end_of_day
+      self.end_date = course_tz.local(end_date.year, end_date.month, end_date.day).end_of_day.change( sec: 0 )
     elsif end_date.nil?
       self.end_date = course.end_date
     end
@@ -183,10 +183,11 @@ class BingoGame < ActiveRecord::Base
   def dates_within_course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date
-        errors.add(:start_date, "The bingo game cannot begin before the course has begun (#{course.start_date.strftime '%F'})")
+        errors.add(:start_date, "The bingo game cannot begin before the course has begun (#{course.start_date})")
       end
-      if end_date > course.end_date
-        errors.add(:end_date, "The bingo game cannot occur after the course has ended (#{course.end_date.strftime '%F'})")
+      if end_date.change( sec: 0 ) > course.end_date.change( sec: 0 )
+        puts "\nMyData:\t#{end_date}\n\t#{course.end_date}\n\n\n"
+        errors.add(:end_date, "The bingo game cannot occur after the course has ended (#{course.end_date})")
       end
     end
     errors

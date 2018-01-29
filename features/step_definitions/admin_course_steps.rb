@@ -56,33 +56,25 @@ Then "the course {string} field is {string}"  do |field_name, value|
   else
     puts "Not testing anything"
   end
-  @course.save
 
 end
 
 Then "the course start date is {string} and the end date is {string}" do |start_date, end_date|
   course_tz = ActiveSupport::TimeZone.new( @course.timezone )
 
-  d = Chronic.parse( start_date )
-  test_date = course_tz.local( d.year, d.month, d.day )
-  puts "\n\t\t++++ calcd: #{test_date.strftime('%Y-%m-%d %T %Z')}"
-  puts "\n\t\t++++ calcd: #{test_date.utc.strftime('%Y-%m-%d %T %Z')}"
-  puts "\t\t++++ saved: #{@course.start_date.strftime('%Y-%m-%d %T %Z')}"
+  puts "\n\tTimezone: #{course_tz}"
 
+  puts "start"
   test_date = Chronic.parse( start_date )
     .getlocal( course_tz.utc_offset )
     .beginning_of_day
   @course.start_date.change(sec: 0).should eq test_date.change(sec: 0)
 
-  d = Chronic.parse( end_date )
-  test_date = course_tz.local( d.year, d.month, d.day ).end_of_day
-  puts "\n\t\t++++ calcd: #{test_date.strftime('%Y-%m-%d %T %Z')}"
-  puts "\n\t\t++++ calcd: #{test_date.utc.strftime('%Y-%m-%d %T %Z')}"
-  puts "\t\t++++ saved: #{@course.end_date.strftime('%Y-%m-%d %T %Z')}"
-
+  puts "end"
   test_date = Chronic.parse( end_date )
     .getlocal( course_tz.utc_offset )
     .end_of_day
+  puts "end date: #{test_date.utc}"
   @course.end_date.change(sec: 0).should eq test_date.change(sec: 0)
 
 end
@@ -117,7 +109,7 @@ Given "the experience {string} is {string}"  do |field_name, value|
     puts "Not setting anything: #{value}"
     pending
   end
-  @course.save
+  @experience.save
 end
 
 Given "the Bingo! {string} is {string}"  do |field_name, value|
@@ -179,17 +171,19 @@ Then "set the new course start date to {string}"  do |new_date|
 end
 
 Then "the course has {int} instructor user"  do |instructor_count|
-  @course.rosters.instructor.count.eq instructor_count
+  @course.rosters.reload.instructor.count.should eq instructor_count
 end
 
 Then "the user executes the copy"  do
  url = copy_course_path + '?' 
  url += { start_date: @new_date, id: @course.id }.to_param
  visit url
+ @orig_course = @course
+ @course = Course.last
 end
 
 Then "the course instructor is the user"  do
-  @course.rosters.instructor.take.user.eq @current_user
+  @course.rosters.instructor.take.user.should eq @user
 
 end
 
@@ -197,48 +191,97 @@ Then "retrieve the {int} course {string}"  do |index, activity|
   case activity.downcase
   when 'experience'
     @orig_experience = @experience
-    @experience = @course.experiences[ index - 1 ]
+    @experience = @course.reload.experiences[ index - 1 ]
   when 'project'
     @orig_project = @project
-    @project = @course.projects[ index - 1 ]
+    @project = @course.reload.projects[ index - 1 ]
   when 'bingo'
     @orig_bingo = @bingo
-    @bingo = @course.bingo_games[ index - 1 ]
+    @bingo = @course.reload.bingo_games[ index - 1 ]
   end
 
 end
 
-Then "the Experience {string} is {string}"  do |string, string2|
-  pending # Write code here that turns the phrase above into concrete
+Then "the Experience {string} is {string}"  do |field, value|
+  case field.downcase
+  when 'name'
+    @experience.name.should eq value
+  else
+    puts "no test for '#{field}'"
+    pending # Write code here that turns the phrase above into concrete
+  end
 
 end
 
-Then "the new {string} dates are {string} and {string}"  do |string, string2, string3|
-  pending # Write code here that turns the phrase above into concrete
+Then "the {string} dates are {string} and {string}"  do |activity, start_date_str, end_date_str|
+  course_tz = ActiveSupport::TimeZone.new(@course.timezone)
+  d = Chronic.parse( start_date_str )
+  start_date = course_tz.local( d.year, d.month, d.day ).beginning_of_day
+  d = Chronic.parse( end_date_str )
+  end_date = course_tz.local( d.year, d.month, d.day).end_of_day.change( sec: 0 )
+  puts "|||| #{start_date.utc} and #{end_date.utc} in #{course_tz}"
+
+  case activity.downcase
+  when 'experience'
+    @experience.start_date.should eq start_date
+    @experience.end_date.should eq end_date.change( sec: 0 )
+
+  when 'project'
+    @project.start_date.should eq start_date
+    @project.end_date.should eq end_date.change( sec: 0 )
+
+  when 'bingo'
+    @bingo.start_date.should eq start_date
+    @bingo.end_date.should eq end_date.change( sec: 0 )
+
+  else
+    pending # Write code here that turns the phrase above into concrete
+  end
 
 end
 
-Then "the new {string} is {string} active"  do |string, string2|
-  pending # Write code here that turns the phrase above into concrete
+Then "the {string} is {string} active"  do |activity, active_bool|
+
+  is_active = active_bool == 'is'
+
+  case activity.downcase
+  when 'experience'
+    @experience.active.should eq is_active
+
+  when 'project'
+    @project.active.should eq is_active
+
+  when 'bingo'
+    @bingo.active.should eq is_active
+
+  else
+    pending # Write code here that turns the phrase above into concrete
+  end
 
 end
 
 Then "the new project metadata is the same as the old"  do
-  pending # Write code here that turns the phrase above into concrete
+  @project.name.should eq @orig_project.name
+  @project.style.should eq @orig_project.style
+  @project.factor_pack.should eq @orig_project.factor_pack
+  @project.end_dow.should eq @orig_project.end_dow
+  @project.start_dow.should eq @orig_project.start_dow
 
 end
 
-Then "the new {string} started {string} and ends {string}"  do |string, string2, string3|
-  pending # Write code here that turns the phrase above into concrete
-
-end
-
-Then "the new project has {int} groups"  do |int|
-  pending # Write code here that turns the phrase above into concrete
+Then "the project has {int} groups"  do |group_count|
+  @project.groups.count.should eq group_count
 
 end
 
 Then "the new bingo metadata is the same as the old"  do
-  pending # Write code here that turns the phrase above into concrete
+  @bingo.topic.should eq @orig_bingo.topic
+  @bingo.description.should eq @orig_bingo.description
+  @bingo.link.should eq @orig_bingo.link
+  @bingo.source.should eq @orig_bingo.source
+  @bingo.group_option.should eq @orig_bingo.group_option
+  @bingo.individual_count.should eq @orig_bingo.individual_count
+  @bingo.lead_time.should eq @orig_bingo.lead_time
+  @bingo.group_discount.should eq @orig_bingo.group_discount
 
 end

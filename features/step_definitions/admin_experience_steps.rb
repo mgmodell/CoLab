@@ -46,7 +46,7 @@ Then "the experience start date is {string} and the end date is {string}" do |st
   test_date = Chronic.parse( end_date )
     .getlocal( course_tz.utc_offset )
     .end_of_day
-  @experience.end_date.should eq test_date
+  @experience.end_date.change(sec: 0 ).should eq test_date.change(sec:0)
 end
 
 Then "the user clicks {string} on the existing experience"  do |action|

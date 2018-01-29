@@ -29,6 +29,7 @@ class SchoolsController < ApplicationController
     if @school.save
       redirect_to url: school_url(@school), notice: t('schools.create_success')
     else
+      puts @school.errors.full_messages unless @school.errors.empty?
       render :new
     end
   end

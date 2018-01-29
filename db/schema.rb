@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180115065402) do
+ActiveRecord::Schema.define(version: 20180129083336) do
 
   create_table "assessments", force: :cascade do |t|
     t.datetime "end_date"
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 20180115065402) do
     t.datetime "end_date"
     t.datetime "created_at",                                        null: false
     t.datetime "updated_at",                                        null: false
-    t.boolean  "active"
+    t.boolean  "active",                            default: false
     t.integer  "course_id",           limit: 4
     t.integer  "project_id",          limit: 4
     t.integer  "lead_time",           limit: 4
@@ -232,7 +232,7 @@ ActiveRecord::Schema.define(version: 20180115065402) do
     t.datetime "end_date"
     t.datetime "created_at",                                     null: false
     t.datetime "updated_at",                                     null: false
-    t.boolean  "active"
+    t.boolean  "active",                         default: false
     t.boolean  "instructor_updated",             default: false, null: false
     t.string   "anon_name",          limit: 255
   end
@@ -362,11 +362,11 @@ ActiveRecord::Schema.define(version: 20180115065402) do
     t.string   "name",            limit: 255
     t.string   "description",     limit: 255
     t.integer  "course_id",       limit: 4
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
     t.integer  "start_dow",       limit: 4
     t.integer  "end_dow",         limit: 4
-    t.boolean  "active"
+    t.boolean  "active",                      default: false
     t.datetime "start_date"
     t.datetime "end_date"
     t.integer  "consent_form_id", limit: 4

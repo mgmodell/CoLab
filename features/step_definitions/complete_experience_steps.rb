@@ -154,8 +154,6 @@ end
 Given /^the course has an experience$/ do
   @experience = @course.experiences.new(
     name: Forgery::Name.industry + ' Experience',
-    start_date: DateTime.yesterday,
-    end_date: DateTime.tomorrow
   )
 
   @experience.course = @course
