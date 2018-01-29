@@ -289,28 +289,34 @@ class Course < ActiveRecord::Base
       Course.transaction do
         #offset_delta = course_tz.utc_offset - ActiveSupport::TimeZone.new( timezone_was ).utc_offset
         projects.reload.each do |project|
-          puts "\t\twas #{project.start_date} and #{project.end_date}"
           d = orig_tz.parse( project.start_date.to_s )
-          puts "\tproc'd: #{d}"
           d = course_tz.parse( d.to_s )
-          puts "\tproc'd: #{d}"
-
           project.start_date = d
+
           d = orig_tz.parse( project.end_date.to_s )
-          puts "\tproc'd: #{d}"
           d = course_tz.parse( d.to_s )
-          project.end_date = project.end_date - offset_delta
+          project.end_date = d
           project.save( validate: false )
           puts "\t\tis  #{project.start_date} and #{project.end_date}"
         end
         experiences.reload.each do |experience|
-          experience.start_date = experience.start_date - offset_delta
-          experience.end_date = experience.end_date - offset_delta
+          d = orig_tz.parse( experience.start_date.to_s )
+          d = course_tz.parse( d.to_s )
+          experience.start_date = d
+
+          d = orig_tz.parse( experience.end_date.to_s )
+          d = course_tz.parse( d.to_s )
+          experience.end_date = d
           experience.save( validate: false )
         end
         bingo_games.each do |bingo_game|
-          bingo_game.reload.start_date = bingo_game.start_date - offset_delta
-          bingo_game.end_date = bingo_game.end_date - offset_delta
+          d = orig_tz.parse( bingo_game.start_date.to_s )
+          d = course_tz.parse( d.to_s )
+          bingo_game.start_date = d
+
+          d = orig_tz.parse( bingo_game.end_date.to_s )
+          d = course_tz.parse( d.to_s )
+          bingo_game.end_date = d
           bingo_game.save( validate: false )
         end
       end
