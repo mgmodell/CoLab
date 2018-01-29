@@ -53,11 +53,13 @@ end
 
 Then /^retrieve the latest project from the db$/ do
   @project = Project.last
+  puts "\n\t saved: #{@project.start_date} --- #{@project.end_date}"
 end
 
 Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value|
   course_tz = ActiveSupport::TimeZone.new(@course.timezone)
 
+  puts "\n\tproject: #{@project.start_date} --- #{@project.end_date}"
   case date_field_prefix.downcase
   when 'start'
     d = Chronic.parse(date_value)

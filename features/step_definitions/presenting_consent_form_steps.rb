@@ -17,6 +17,7 @@ Given /^the project has a consent form$/ do
 end
 
 Then /^user should see a consent form listed for the open project$/ do
+  puts page.html
   page.should have_content 'Research Consent Form'
   page.should have_content @project.name
 end

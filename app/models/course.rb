@@ -283,12 +283,22 @@ class Course < ActiveRecord::Base
     puts "\tcourse start: #{start_date} end: #{end_date}"
 
     if timezone_changed? && timezone_was.present?
-      puts 'update timezones'
+      orig_tz = ActiveSupport::TimeZone.new( timezone_was )
+      puts "update to #{course_tz} from #{orig_tz}"
+
       Course.transaction do
-        offset_delta = course_tz.utc_offset - ActiveSupport::TimeZone.new( timezone_was ).utc_offset
+        #offset_delta = course_tz.utc_offset - ActiveSupport::TimeZone.new( timezone_was ).utc_offset
         projects.reload.each do |project|
           puts "\t\twas #{project.start_date} and #{project.end_date}"
-          project.start_date = project.start_date - offset_delta
+          d = orig_tz.parse( project.start_date.to_s )
+          puts "\tproc'd: #{d}"
+          d = course_tz.parse( d.to_s )
+          puts "\tproc'd: #{d}"
+
+          project.start_date = d
+          d = orig_tz.parse( project.end_date.to_s )
+          puts "\tproc'd: #{d}"
+          d = course_tz.parse( d.to_s )
           project.end_date = project.end_date - offset_delta
           project.save( validate: false )
           puts "\t\tis  #{project.start_date} and #{project.end_date}"
