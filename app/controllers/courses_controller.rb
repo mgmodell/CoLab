@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CoursesController < ApplicationController
-  before_action :set_course, only: %i[show edit update destroy add_students add_instructors, new_from_template]
+  before_action :set_course, only: %i[show edit update destroy add_students add_instructors new_from_template]
   before_action :check_admin, only: %i[new create]
   before_action :check_editor, except: %i[next diagnose react accept_roster decline_roster show index]
   before_action :check_viewer, except: %i[next diagnose react accept_roster decline_roster]
@@ -89,6 +89,9 @@ class CoursesController < ApplicationController
   end
 
   def add_instructors
+    puts params
+    puts params[:id]
+    puts @course
     count = @course.add_instructors_by_email params[:addresses]
     redirect_to @course, notice: t('courses.instructor_invited', count: count)
   end
@@ -171,6 +174,7 @@ class CoursesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_course
+    puts "set course admin: #{@current_user.is_admin?}"
     if @current_user.is_admin?
       @course = Course.includes( :users ).find(params[:id])
     else
@@ -178,6 +182,7 @@ class CoursesController < ApplicationController
         .rosters.instructor
         .where(course_id: params[:id]).take.course
       redirect_to :show if @course.nil?
+      puts "course #{@course}"
     end
   end
 

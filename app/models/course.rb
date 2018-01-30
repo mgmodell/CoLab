@@ -27,7 +27,7 @@ class Course < ActiveRecord::Base
                      "#{name} (#{number})"
                    else
                      name
-                                end
+                   end
                  end
     prettyName
   end
@@ -52,6 +52,7 @@ class Course < ActiveRecord::Base
     roster = Roster.new(user: user, course: self) if roster.nil?
     roster.role = role
     roster.save
+    puts roster.errors.full_messages unless roster.errors.empty?
   end
 
   def drop_student(user)
@@ -150,6 +151,7 @@ class Course < ActiveRecord::Base
   end
 
   def add_user_by_email(user_email, instructor = false)
+    puts " \n\n\t@@@ addy: #{user_email} valid: #{EmailValidator.valid?  user_email}"
     if EmailValidator.valid? user_email
       role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
       # Searching for the student and:

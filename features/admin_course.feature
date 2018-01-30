@@ -170,20 +170,23 @@ Feature: Course Administration
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'instructor' users 'me@mailinator.com<'
-    Then there are 12 students in the course
-     And the user will see "successfully"
+    Then there are 1 instructors in the course
+     And the user will see "Was there a typo?"
     Then the user adds the 'instructor' users 'me@mailinator.com>'
-    Then there are 12 students in the course
-     And the user will see "successfully"
-    Then the user adds the 'instructor' users '>me@mailinator.com'
-    Then there are 12 students in the course
-     And the user will see "successfully"
+    Then there are 1 instructors in the course
+     And the user will see "Was there a typo?"
+    Then the user adds the 'instructor' users 'me@12221.341.24412.2412211'
+    Then there are 1 instructors in the course
+     And the user will see "Was there a typo?"
+    Then the user adds the 'instructor' users 'me@mailinator'
+    Then there are 1 instructors in the course
+     And the user will see "Was there a typo?"
     Then the user adds the 'instructor' users 'lme@mailinator.com eweq.wer'
-    Then there are 13 students in the course
-     And the user will see "successfully"
+    Then there are 2 instructors in the course
+     And the user will see "One instructor has been invited"
     Then the user adds the 'instructor' users 'memailinator.com<'
-    Then there are 13 students in the course
-     And the user will see "successfully"
+    Then there are 2 instructors in the course
+     And the user will see "Was there a typo?"
 
   Scenario: Admin adds an instructor to a course
     Given the user is the instructor for the course

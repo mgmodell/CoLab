@@ -27,9 +27,11 @@ en:
     copy_fail: >
       The course was not successfully copied. Contact Support.
     instructor_invited:
+      zero: No instructors invited. Was there a typo?
       one: One instructor has been invited.
       other: "%{count} instructors have been invited."
     students_invited:
+      zero: No students invited. Was there a typo?
       one: One student has been invited.
       other: "%{count} students have been invited."
     accept_fail: You can only accept your own enrollments

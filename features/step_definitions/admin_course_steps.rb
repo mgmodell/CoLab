@@ -295,7 +295,6 @@ Then "the user adds the {string} users {string}"  do |type, addresses|
   end
   if addresses == 'user_list'
     addresses = @users.map{ |x| x.email }.join( ', ' )
-    puts addresses
   end
 
   url += { addresses: addresses, id: @course.id }.to_param
