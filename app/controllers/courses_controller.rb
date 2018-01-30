@@ -84,13 +84,13 @@ class CoursesController < ApplicationController
   end
 
   def add_students
-    @course.add_students_by_email params[:addresses]
-    redirect_to @course, notice: t('courses.students_invited')
+    count = @course.add_students_by_email params[:addresses]
+    redirect_to @course, notice: t('courses.students_invited', count: count)
   end
 
   def add_instructors
-    @course.add_instructors_by_email params[:addresses]
-    redirect_to @course, notice: t('courses.instructor_invited')
+    count = @course.add_instructors_by_email params[:addresses]
+    redirect_to @course, notice: t('courses.instructor_invited', count: count)
   end
 
   def accept_roster

@@ -117,6 +117,96 @@ Feature: Course Administration
      And the course start date is "5/11/1976" and the end date is "next month"
      And the course "timezone" is "Nairobi"
 
+  Scenario: Admin adds an existing student to a course
+    Given the user is an admin
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then there are 1 'loose' users in the system
+    Then the user adds the 'student' users 'user_list'
+    Then there are 9 students in the course
+    Then the last student is in the user_list
+
+  Scenario: Admin adds a new student to a course
+    Given the user is an admin
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user adds the 'student' users 'me@mailinator.com'
+    Then there are 9 students in the course
+
+  Scenario: Admin adds existing students to a course
+    Given the user is an admin
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then there are 5 'loose' users in the system
+    Then the user adds the 'student' users 'user_list'
+    Then there are 13 students in the course
+    Then the last student is in the user_list
+
+  Scenario: Admin adds new students to a course
+    Given the user is an admin
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user adds the 'student' users 'me@mailinator.com, you@mailinator.com, myself@mailinator.com'
+    Then there are 11 students in the course
+    Then the last student is in the user_list
+
+  Scenario: Malformed email address returns an error
+    Given the user is an admin
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user adds the 'instructor' users 'me@mailinator.com<'
+    Then there are 11 students in the course
+     And the user will see "successfully"
+    Then the user adds the 'instructor' users 'me@mailinator.com>'
+    Then there are 11 students in the course
+     And the user will see "successfully"
+    Then the user adds the 'instructor' users '>me@mailinator.com'
+    Then there are 11 students in the course
+     And the user will see "successfully"
+    Then the user adds the 'instructor' users 'lme@mailinator.com eweq.wer'
+    Then there are 12 students in the course
+     And the user will see "successfully"
+    Then the user adds the 'instructor' users 'memailinator.com<'
+    Then there are 12 students in the course
+     And the user will see "successfully"
+
+  Scenario: Admin adds an instructor to a course
+    Given the user is an admin
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user adds the 'instructor' users 'me@mailinator.com'
+    Then there are 2 instructors in the course
+
+  Scenario: Admin adds 5 existing instructors to a course
+    Given the user is an admin
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then there are 5 'loose' users in the system
+    Then the user adds the 'instructor' users 'user_list'
+    Then there are 13 instructors in the course
+    Then the last instructor is in the user_list
+
   Scenario: Admin duplicates an existing course
     Given the course started "5/10/1976" and ended "11/01/2012"
      And the course start date is "5/10/1976" and the end date is "11/01/2012"

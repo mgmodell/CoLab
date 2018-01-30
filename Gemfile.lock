@@ -130,6 +130,8 @@ GEM
     devise-multi_email (2.0.1)
       devise
     diff-lcs (1.3)
+    email_validator (1.6.0)
+      activemodel
     erubis (2.7.0)
     execjs (2.7.0)
     faraday (0.12.2)
@@ -367,6 +369,7 @@ DEPENDENCIES
   descriptive_statistics (~> 2.4.0)
   devise
   devise-multi_email
+  email_validator
   forgery
   htmlbeautifier
   i18n_data

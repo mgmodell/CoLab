@@ -150,38 +150,47 @@ class Course < ActiveRecord::Base
   end
 
   def add_user_by_email(user_email, instructor = false)
-    role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
-    # Searching for the student and:
-    user = User.joins(:emails).where(emails: { email: user_email }).take
+    if EmailValidator.valid? user_email
+      role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
+      # Searching for the student and:
+      user = User.joins(:emails).where(emails: { email: user_email }).take
 
-    passwd = (0...8).map { rand(65..90).chr }.join
+      passwd = (0...8).map { rand(65..90).chr }.join
 
-    if user.nil?
-      user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
+      if user.nil?
+        user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
+        end
+
+      unless user.nil?
+        existing_roster = Roster.where(course: self, user: user).take
+        if existing_roster.nil?
+          Roster.create(user: user, course: self, role: role)
+        else
+          existing_roster.role = role
+          existing_roster.save
+        end
+      # TODO: Let's add course invitation emails here in the future
       end
-
-    unless user.nil?
-      existing_roster = Roster.where(course: self, user: user).take
-      if existing_roster.nil?
-        Roster.create(user: user, course: self, role: role)
-      else
-        existing_roster.role = role
-        existing_roster.save
-      end
-    # TODO: Let's add course invitation emails here in the future
-  end
+      true
+    else
+      false
+    end
   end
 
   def add_students_by_email(student_emails)
+    count = 0
     student_emails.split(/[\s,]+/).each do |email|
-      add_user_by_email email
+      count += 1 if add_user_by_email email
     end
+    count
   end
 
   def add_instructors_by_email(instructor_emails)
+    count = 0
     instructor_emails.split(/[\s,]+/).each do |email|
-      add_user_by_email(email, true)
+      count += 1 if add_user_by_email(email, true)
     end
+    count
   end
 
   def enrolled_students
