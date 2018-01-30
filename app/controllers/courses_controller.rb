@@ -49,7 +49,6 @@ class CoursesController < ApplicationController
     if copied_course.errors.empty?
       redirect_to courses_url, notice: t('courses.copy_success')
     else
-      puts copied_course.errors.full_messages
       redirect_to courses_url, notice: t('courses.copy_fail')
     end
       
@@ -63,7 +62,6 @@ class CoursesController < ApplicationController
     if @course.save
       redirect_to courses_url, notice: t('courses.create_success')
     else
-      puts @course.errors.full_messages unless @course.errors.empty?
       render :new
     end
   end
@@ -89,9 +87,6 @@ class CoursesController < ApplicationController
   end
 
   def add_instructors
-    puts params
-    puts params[:id]
-    puts @course
     count = @course.add_instructors_by_email params[:addresses]
     redirect_to @course, notice: t('courses.instructor_invited', count: count)
   end
@@ -174,7 +169,6 @@ class CoursesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_course
-    puts "set course admin: #{@current_user.is_admin?}"
     if @current_user.is_admin?
       @course = Course.includes( :users ).find(params[:id])
     else
@@ -182,7 +176,6 @@ class CoursesController < ApplicationController
         .rosters.instructor
         .where(course_id: params[:id]).take.course
       redirect_to :show if @course.nil?
-      puts "course #{@course}"
     end
   end
 
