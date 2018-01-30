@@ -249,6 +249,7 @@ Feature: Project Administration
     Then the project Style is "Sliders (simple)"
 
   Scenario: Instructor assigns a course's students to groups
+    Given the course started "5/10/1976" and ended "4 months hence"
     Given the project started "last month" and ends "next month", opened "Saturday" and closes "Monday"
     Given the course started "last month" and ended "next month"
     Given the user is the instructor for the course
