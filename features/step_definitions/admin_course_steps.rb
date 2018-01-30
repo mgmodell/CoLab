@@ -1,4 +1,5 @@
 require 'chronic'
+require 'forgery'
 Given "the project started {string} and ends {string}"  do |start_date, end_date|
   @project.start_date = Chronic.parse( start_date )
   @project.end_date = Chronic.parse( end_date )
@@ -285,3 +286,43 @@ Then "the new bingo metadata is the same as the old"  do
   @bingo.group_discount.should eq @orig_bingo.group_discount
 
 end
+
+Then "the user adds the {string} users {string}"  do |type, addresses|
+  if type == 'student'
+    url = add_students_path + '?' 
+  else
+    url = add_instructors_path + '?' 
+  end
+  if addresses == 'user_list'
+    addresses = @users.map{ |x| x.email }.join( ', ' )
+    puts addresses
+  end
+
+  url += { addresses: addresses, id: @course.id }.to_param
+  visit url
+end
+
+Then "there are {int} students in the course"  do |count|
+  @course.rosters.students.count.should eq count
+end
+
+Then "there are {int} instructors in the course"  do |count|
+  @course.rosters.faculty.count.should eq count
+end
+
+Then "the users are students"  do
+  @users.each do |user|
+    @course.rosters.students.where( user_id: user.id )
+      .count.should eq 1
+
+  end
+end
+
+Then "the users are instructors"  do
+  @users.each do |user|
+    @course.rosters.faculty.where( user_id: user.id )
+      .count.should eq 1
+
+  end
+end
+

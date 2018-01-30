@@ -64,6 +64,7 @@ Given /^(\d+) users$/ do |user_count|
       timezone: 'UTC',
       theme_id: 1
     )
+    u.save
     @users << u
   end
 end
