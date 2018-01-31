@@ -51,7 +51,7 @@ class Project < ActiveRecord::Base
   end
 
   def is_for_research?
-    !consent_form.nil? && consent_form.is_active?
+    consent_form.present? && consent_form.is_active?
   end
 
   def enrolled_user_rosters

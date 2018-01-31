@@ -21,4 +21,9 @@ class ConsentForm < ActiveRecord::Base
     projects.count == 0
   end
 
+  def is_active?
+    now = Date.today
+    active && start_date <= now && (end_date.nil? || end_date >= now )
+  end
+
 end

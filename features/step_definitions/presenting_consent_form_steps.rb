@@ -13,11 +13,13 @@ Given /^the project has a consent form$/ do
     name: Forgery::Name.location
   )
   @consent_form.save
-  puts @consent_form.errors.full_messages unless @project.errors.blank?
+  puts @consent_form.errors.full_messages unless @consent_form.errors.blank?
+  @project.consent_form = @consent_form
+  @project.save
+  puts @project.errors.full_messages unless @project.errors.blank?
 end
 
 Then /^user should see a consent form listed for the open project$/ do
-  puts page.html
   page.should have_content 'Research Consent Form'
   page.should have_content @project.name
 end
