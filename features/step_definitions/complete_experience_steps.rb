@@ -156,7 +156,6 @@ Given /^the course has an experience$/ do
     name: Forgery::Name.industry + ' Experience',
   )
 
-  @experience.course = @course
   @experience.save
   puts @experience.errors.full_messages unless @experience.errors.blank?
 end

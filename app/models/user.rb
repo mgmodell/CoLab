@@ -83,11 +83,12 @@ class User < ActiveRecord::Base
     # Find those consent forms to which the user has not yet responded
     # We only want to do this for currently active consent forms
     consent_forms = ConsentForm.active_at( now )
-      .joins( :consent_logs ).includes(:projects)
-      .where( consent_logs: {presented: false } )
+      .includes(:projects)
       .to_a
 
-
+    consent_logs.where( presented: true ).each do |consent_log|
+      consent_forms.delete_if{|consent_form| consent_form.id == consent_log.consent_form_id}
+    end
     # Is it from a project that we're not in?
     projects_array = projects.to_a
     consent_forms.each do |consent_form|
@@ -268,12 +269,33 @@ class User < ActiveRecord::Base
     # Add the experiences
     cur_date = DateTime.current
 
+    puts "\n\t\t #{waiting_tasks.count} at: #{cur_date}"
+
     waiting_tasks.concat Experience.joins(course: :rosters)
       .where('rosters.user_id': id, 'experiences.active': true)
-      .where('rosters.role = ? OR rosters.role = ?',
-             Roster.roles[:enrolled_student], Roster.roles[:invited_student])
-                                   .where('experiences.end_date >= ? AND experiences.start_date <= ?', cur_date, cur_date)
-                                   .to_a
+      .where('rosters.role IN (?)',
+        [Roster.roles[:enrolled_student], Roster.roles[:invited_student] ])
+      .where('experiences.end_date >= ? AND experiences.start_date <= ?', cur_date, cur_date)
+      .to_a
+
+    wts =  Experience.joins(course: :rosters)
+      .where('rosters.user_id': id, 'experiences.active': true)
+      .where('rosters.role IN (?)',
+        [Roster.roles[:enrolled_student], Roster.roles[:invited_student] ])
+      .to_a
+
+    puts "\n\t\t post #{wts.count} at: #{cur_date}"
+    puts "\t%%% #{Experience.count}"
+    puts "debug 1"
+    wts.each do |wt|
+      puts "\t\t\t#{wt.start_date} -- #{wt.end_date}"
+      puts "\t\t\t#{wt.start_date <= cur_date} -- #{wt.end_date >= cur_date}"
+    end
+
+    Experience.all.each do |e|
+      puts "\n\t #{e.id}: #{e.start_date} - #{e.end_date}"
+
+    end
 
     # Add the bingo games
     waiting_games = BingoGame.joins(course: :rosters)
@@ -286,6 +308,13 @@ class User < ActiveRecord::Base
 
     waiting_games.delete_if { |game| !game.is_open? && !game.reviewed }
     waiting_tasks.concat waiting_games
+    # Another debug
+    puts "debug 2"
+    waiting_tasks.each do |wt|
+      puts "\t\t\t#{wt.class}"
+      puts "\t\t\t#{wt.start_date} -- #{wt.end_date}"
+      puts "\t\t\t#{wt.start_date <= cur_date} -- #{wt.end_date >= cur_date}"
+    end
 
     waiting_tasks.sort_by(&:end_date)
   end
