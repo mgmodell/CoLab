@@ -30,8 +30,8 @@
         <td><%= course.get_number( anonymize ) %></td>
         <td><%= link_to course.get_name( anonymize ), course %></td>
         <td><%= course.school.get_name( anonymize ) %></td>
-        <td><%= l in_tz( date: course.start_date, tz_str: course.timezone ), format: :tz_clarity %></td>
-        <td><%= l in_tz( date: course.end_date, tz_str: course.timezone ), format: :tz_clarity %></td>
+        <td><%= l to_tz( date: course.start_date, tz_str: course.timezone ), format: :tz_clarity %></td>
+        <td><%= l to_tz( date: course.end_date, tz_str: course.timezone ), format: :tz_clarity %></td>
         <td><%= course.rosters.instructor.count %></td>
         <td><%= course.rosters.students.count %></td>
         <td><%= course.projects.count %></td>
