@@ -74,7 +74,7 @@ class AdministrativeMailer < ActionMailer::Base
       current_users.delete user
     end
 
-    Experience.still_open.each do |experience|
+    Experience.active_at( curr_date ).each do |experience|
       experience.course.enrolled_students.each do |user|
         reaction = experience.get_user_reaction user
         unless reaction.persisted? && reaction.behavior.present?

@@ -261,21 +261,19 @@ class User < ActiveRecord::Base
   end
 
   def waiting_student_tasks
-    waiting_tasks = assessments.includes(project: %i[course consent_form]).still_open.to_a
+    cur_date = DateTime.current
+    waiting_tasks = assessments.includes(project: %i[course consent_form]).active_at( cur_date ).to_a
 
     # Check available tasks for students
     available_rosters = rosters.enrolled
 
     # Add the experiences
-    cur_date = DateTime.current
-
     puts "\n\t\t #{waiting_tasks.count} at: #{cur_date}"
 
-    waiting_tasks.concat Experience.joins(course: :rosters)
-      .where('rosters.user_id': id, 'experiences.active': true)
+    waiting_tasks.concat Experience.active_at( cur_date ).joins(course: :rosters)
+      .where('rosters.user_id': id )
       .where('rosters.role IN (?)',
         [Roster.roles[:enrolled_student], Roster.roles[:invited_student] ])
-      .where('experiences.end_date >= ? AND experiences.start_date <= ?', cur_date, cur_date)
       .to_a
 
     wts =  Experience.joins(course: :rosters)

@@ -12,10 +12,9 @@ class Experience < ActiveRecord::Base
   before_create :anonymize
   validate :dates_within_course
 
-  scope :still_open, -> {
-    where('experiences.start_date <= ? AND experiences.end_date >= ?',
-          DateTime.current, DateTime.current)
-  }
+  scope :active_at, -> (date) { where( active: true )
+     .where( 'experiences.start_date <= ? AND experiences.end_date >= ?',
+     date, date ) }
 
   def get_user_reaction(user)
     reaction = reactions.where(user: user).take

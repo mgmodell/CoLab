@@ -11,7 +11,9 @@ class Assessment < ActiveRecord::Base
   #after_validation :timezone_adjust
 
   # Helpful scope
-  scope :still_open, -> { where('assessments.end_date >= ?', DateTime.current) }
+  scope :active_at, -> (date) { joins(:project)
+                              .where('assessments.end_date >= ?', date)
+                              .where(projects: { active: true } ) }
 
   def is_completed_by_user(user)
     user.installments.where(assessment: self).count != 0
