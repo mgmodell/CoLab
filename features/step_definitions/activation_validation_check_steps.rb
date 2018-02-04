@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 
 When /^the project is activated$/ do

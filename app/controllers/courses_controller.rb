@@ -31,11 +31,11 @@ class CoursesController < ApplicationController
   def new
     @title = t('.title')
     @course = nil
-    if @current_user.school.nil?
-      @course = Course.new
-    else
-      @course = @current_user.school.courses.new
-    end
+    @course = if @current_user.school.nil?
+                Course.new
+              else
+                @current_user.school.courses.new
+              end
     @course.timezone = @current_user.timezone
     @course.start_date = Date.tomorrow.beginning_of_day
     @course.end_date = 1.month.from_now.end_of_day
@@ -43,7 +43,7 @@ class CoursesController < ApplicationController
   end
 
   def new_from_template
-    new_start = Chronic.parse( params[ :start_date ] )
+    new_start = Chronic.parse(params[:start_date])
 
     copied_course = @course.copy_from_template new_start: new_start
     if copied_course.errors.empty?
@@ -51,7 +51,6 @@ class CoursesController < ApplicationController
     else
       redirect_to courses_url, notice: t('courses.copy_fail')
     end
-      
   end
 
   def create
@@ -170,11 +169,11 @@ class CoursesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_course
     if @current_user.is_admin?
-      @course = Course.includes( :users ).find(params[:id])
+      @course = Course.includes(:users).find(params[:id])
     else
       @course = @current_user
-        .rosters.instructor
-        .where(course_id: params[:id]).take.course
+                .rosters.instructor
+                .where(course_id: params[:id]).take.course
       redirect_to :show if @course.nil?
     end
   end

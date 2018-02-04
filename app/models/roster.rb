@@ -14,7 +14,7 @@ class Roster < ActiveRecord::Base
 
   scope :faculty, -> {
     where(role: [roles[:instructor],
-                 roles[:assistant] ] )
+                 roles[:assistant]])
   }
   scope :students, -> {
     where(role: [roles[:enrolled_student],

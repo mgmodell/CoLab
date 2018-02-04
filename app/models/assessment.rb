@@ -8,12 +8,13 @@ class Assessment < ActiveRecord::Base
   has_many :users, through: :project
   has_many :groups, through: :project
 
-  #after_validation :timezone_adjust
+  # after_validation :timezone_adjust
 
   # Helpful scope
-  scope :active_at, -> (date) { joins(:project)
-                              .where('assessments.end_date >= ?', date)
-                              .where(projects: { active: true } ) }
+  scope :active_at, ->(date) { 
+                      joins(:project)
+    .where('assessments.end_date >= ?', date)
+    .where(projects: { active: true }) }
 
   def is_completed_by_user(user)
     user.installments.where(assessment: self).count != 0

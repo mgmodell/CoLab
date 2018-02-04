@@ -82,22 +82,21 @@ class User < ActiveRecord::Base
     now = Date.today
     # Find those consent forms to which the user has not yet responded
     # We only want to do this for currently active consent forms
-    consent_forms = ConsentForm.active_at( now )
-      .includes(:projects)
-      .to_a
+    consent_forms = ConsentForm.active_at(now)
+                               .includes(:projects)
+                               .to_a
 
-    consent_logs.where( presented: true ).each do |consent_log|
-      consent_forms.delete_if{|consent_form| consent_form.id == consent_log.consent_form_id}
+    consent_logs.where(presented: true).each do |consent_log|
+      consent_forms.delete_if { |consent_form| consent_form.id == consent_log.consent_form_id }
     end
     # Is it from a project that we're not in?
     projects_array = projects.to_a
     consent_forms.each do |consent_form|
-      unless consent_form.global?
-        consent_form.projects.each do |cf_project|
-          unless projects_array.include?(cf_project)
-            consent_forms.delete(consent_form)
-            break
-          end
+      next if consent_form.global?
+      consent_form.projects.each do |cf_project|
+        unless projects_array.include?(cf_project)
+          consent_forms.delete(consent_form)
+          break
         end
       end
     end
@@ -232,7 +231,7 @@ class User < ActiveRecord::Base
   def get_experience_performance(course_id: 0)
     my_reactions = []
     my_reactions = if course_id > 0
-                     reactions.includes( :narrative ).joins(:experience)
+                     reactions.includes(:narrative).joins(:experience)
                               .where(experiences: { course_id: course_id })
                    else
                      reactions
@@ -262,7 +261,7 @@ class User < ActiveRecord::Base
 
   def waiting_student_tasks
     cur_date = DateTime.current
-    waiting_tasks = assessments.includes(project: %i[course consent_form]).active_at( cur_date ).to_a
+    waiting_tasks = assessments.includes(project: %i[course consent_form]).active_at(cur_date).to_a
 
     # Check available tasks for students
     available_rosters = rosters.enrolled
@@ -270,21 +269,21 @@ class User < ActiveRecord::Base
     # Add the experiences
     puts "\n\t\t #{waiting_tasks.count} at: #{cur_date}"
 
-    waiting_tasks.concat Experience.active_at( cur_date ).joins(course: :rosters)
-      .where('rosters.user_id': id )
-      .where('rosters.role IN (?)',
-        [Roster.roles[:enrolled_student], Roster.roles[:invited_student] ])
-      .to_a
+    waiting_tasks.concat Experience.active_at(cur_date).joins(course: :rosters)
+      .where('rosters.user_id': id)
+                                   .where('rosters.role IN (?)',
+                                          [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
+                                   .to_a
 
-    wts =  Experience.joins(course: :rosters)
-      .where('rosters.user_id': id, 'experiences.active': true)
-      .where('rosters.role IN (?)',
-        [Roster.roles[:enrolled_student], Roster.roles[:invited_student] ])
-      .to_a
+    wts = Experience.joins(course: :rosters)
+                    .where('rosters.user_id': id, 'experiences.active': true)
+                    .where('rosters.role IN (?)',
+                           [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
+                    .to_a
 
     puts "\n\t\t post #{wts.count} at: #{cur_date}"
     puts "\t%%% #{Experience.count}"
-    puts "debug 1"
+    puts 'debug 1'
     wts.each do |wt|
       puts "\t\t\t#{wt.start_date} -- #{wt.end_date}"
       puts "\t\t\t#{wt.start_date <= cur_date} -- #{wt.end_date >= cur_date}"
@@ -292,7 +291,6 @@ class User < ActiveRecord::Base
 
     Experience.all.each do |e|
       puts "\n\t #{e.id}: #{e.start_date} - #{e.end_date}"
-
     end
 
     # Add the bingo games
@@ -307,7 +305,7 @@ class User < ActiveRecord::Base
     waiting_games.delete_if { |game| !game.is_open? && !game.reviewed }
     waiting_tasks.concat waiting_games
     # Another debug
-    puts "debug 2"
+    puts 'debug 2'
     waiting_tasks.each do |wt|
       puts "\t\t\t#{wt.class}"
       puts "\t\t\t#{wt.start_date} -- #{wt.end_date}"

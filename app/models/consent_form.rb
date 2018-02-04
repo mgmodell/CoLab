@@ -13,9 +13,10 @@ class ConsentForm < ActiveRecord::Base
   has_many :consent_logs, inverse_of: :consent_form
   has_many :projects, inverse_of: :consent_form
 
-  scope :active_at, -> (date) { where( active: true )
-     .where( 'consent_forms.start_date <= ?', date )
-     .where( 'consent_forms.end_date IS NULL OR consent_forms.end_date >= ?', date ) }
+  scope :active_at, ->(date) { 
+                      where(active: true)
+    .where('consent_forms.start_date <= ?', date)
+    .where('consent_forms.end_date IS NULL OR consent_forms.end_date >= ?', date) }
 
   def global?
     projects.count == 0
@@ -23,7 +24,6 @@ class ConsentForm < ActiveRecord::Base
 
   def is_active?
     now = Date.today
-    active && start_date <= now && (end_date.nil? || end_date >= now )
+    active && start_date <= now && (end_date.nil? || end_date >= now)
   end
-
 end

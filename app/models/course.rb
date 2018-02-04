@@ -66,44 +66,44 @@ class Course < ActiveRecord::Base
     roster.role
   end
 
-  def copy_from_template( new_start: )
-    #Timezone checking here
-    course_tz = ActiveSupport::TimeZone.new(self.timezone)
-    new_start = course_tz.utc_to_local( new_start ).beginning_of_day
-    d = self.start_date
-    date_difference = new_start - course_tz.local( d.year, d.month, d.day ).beginning_of_day
+  def copy_from_template(new_start:)
+    # Timezone checking here
+    course_tz = ActiveSupport::TimeZone.new(timezone)
+    new_start = course_tz.utc_to_local(new_start).beginning_of_day
+    d = start_date
+    date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
     puts "\t date difference: #{date_difference}"
     puts "\t ##### #{course_tz.utc_offset}"
     new_course = nil
 
     Course.transaction do
-      #create the course
-      puts "\t\t\ :::new start date: #{self.start_date + date_difference}"
-      puts "\t\t\ :::new end date  : #{self.end_date + date_difference}"
+      # create the course
+      puts "\t\t\ :::new start date: #{start_date + date_difference}"
+      puts "\t\t\ :::new end date  : #{end_date + date_difference}"
 
-      new_course = self.school.courses.new(
-        name: "Copy of #{self.name}",
-        number: "Copy of #{self.number}",
-        description: self.description,
-        timezone: self.timezone,
-        start_date: self.start_date + date_difference,
-        end_date: self.end_date + date_difference
+      new_course = school.courses.new(
+        name: "Copy of #{name}",
+        number: "Copy of #{number}",
+        description: description,
+        timezone: timezone,
+        start_date: start_date + date_difference,
+        end_date: end_date + date_difference
       )
       puts "Copied course start: #{new_course.start_date} end: #{new_course.end_date}"
 
-      #copy the rosters
-      self.rosters.faculty.each do |roster|
+      # copy the rosters
+      rosters.faculty.each do |roster|
         puts "here with: #{roster}"
         new_obj = new_course.rosters.new(
           role: roster.role,
-          user: roster.user,
+          user: roster.user
         )
         new_obj.save
       end
 
-      #copy the projects
+      # copy the projects
       proj_hash = {}
-      self.projects.each do |project|
+      projects.each do |project|
         new_obj = new_course.projects.new(
           name: project.name,
           style: project.style,
@@ -111,24 +111,24 @@ class Course < ActiveRecord::Base
           start_date: project.start_date + date_difference,
           end_date: project.end_date + date_difference,
           start_dow: project.start_dow,
-          end_dow: project.end_dow,
+          end_dow: project.end_dow
         )
         new_obj.save
-        proj_hash[ project ] = new_obj
+        proj_hash[project] = new_obj
       end
 
-      #copy the experiences
-      self.experiences.each do |experience|
+      # copy the experiences
+      experiences.each do |experience|
         new_obj = new_course.experiences.new(
           name: experience.name,
           start_date: experience.start_date + date_difference,
-          end_date: experience.end_date + date_difference,
+          end_date: experience.end_date + date_difference
         )
         new_obj.save
       end
 
-      #copy the bingo! games
-      self.bingo_games.each do |bingo_game|
+      # copy the bingo! games
+      bingo_games.each do |bingo_game|
         new_obj = new_course.bingo_games.new(
           topic: bingo_game.topic,
           description: bingo_game.description,
@@ -138,9 +138,9 @@ class Course < ActiveRecord::Base
           individual_count: bingo_game.individual_count,
           lead_time: bingo_game.lead_time,
           group_discount: bingo_game.group_discount,
-          project: proj_hash[ bingo_game.project ],
+          project: proj_hash[bingo_game.project],
           start_date: bingo_game.start_date + date_difference,
-          end_date: bingo_game.end_date + date_difference,
+          end_date: bingo_game.end_date + date_difference
         )
         new_obj.save
       end
@@ -151,7 +151,7 @@ class Course < ActiveRecord::Base
   end
 
   def add_user_by_email(user_email, instructor = false)
-    puts " \n\n\t@@@ addy: #{user_email} valid: #{EmailValidator.valid?  user_email}"
+    puts " \n\n\t@@@ addy: #{user_email} valid: #{EmailValidator.valid? user_email}"
     if EmailValidator.valid? user_email
       role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
       # Searching for the student and:
@@ -171,7 +171,7 @@ class Course < ActiveRecord::Base
           existing_roster.role = role
           existing_roster.save
         end
-      # TODO: Let's add course invitation emails here in the future
+        # TODO: Let's add course invitation emails here in the future
       end
       true
     else
@@ -208,8 +208,8 @@ class Course < ActiveRecord::Base
   # Validation check code
   def date_sanity
     if start_date.blank? || end_date.blank?
-      errors.add(:start_dow, 'The start date is required' ) if start_date.blank?
-      errors.add(:end_dow, 'The end date is required' ) if end_date.blank?
+      errors.add(:start_dow, 'The start date is required') if start_date.blank?
+      errors.add(:end_dow, 'The end date is required') if end_date.blank?
     elsif start_date > end_date
       errors.add(:start_dow, 'The start date must come before the end date')
     end
@@ -221,48 +221,45 @@ class Course < ActiveRecord::Base
     puts '========= date check'
     experiences.reload.each do |experience|
       if experience.start_date < start_date
-        msg = errors[ :start_date ].blank? ? '' : errors[ :start_date ]
+        msg = errors[:start_date].blank? ? '' : errors[:start_date]
         msg = "Experience '#{experience.name}' currently starts before this course does"
         msg += " (#{experience.start_date} < #{start_date})."
-        errors.add(:start_date, msg )
+        errors.add(:start_date, msg)
       end
-      if experience.end_date > end_date
-        puts "Experience end date: #{experience.end_date} course: #{end_date}"
-        msg = errors[ :end_date ].blank? ? '' : errors[ :end_date ]
-        msg = "Experience '#{experience.name}' currently ends after this course does"
-        msg += " (#{experience.end_date} > #{end_date})."
-        errors.add(:end_date, msg )
-      end
+      next unless experience.end_date > end_date
+      puts "Experience end date: #{experience.end_date} course: #{end_date}"
+      msg = errors[:end_date].blank? ? '' : errors[:end_date]
+      msg = "Experience '#{experience.name}' currently ends after this course does"
+      msg += " (#{experience.end_date} > #{end_date})."
+      errors.add(:end_date, msg)
     end
     projects.reload.each do |project|
       if project.start_date < start_date
-        msg = errors[ :start_date ].blank? ? '' : errors[ :start_date ]
+        msg = errors[:start_date].blank? ? '' : errors[:start_date]
         msg += "Project '#{project.name}' currently starts before this course does"
         msg += " (#{project.start_date} < #{start_date})."
-        errors.add(:start_date, msg )
+        errors.add(:start_date, msg)
       end
-      if project.end_date > end_date
-        puts "Project end date: #{project.end_date} course: #{end_date}"
-        msg = errors[ :end_date ].blank? ? '' : errors[ :end_date ]
-        msg = "Project '#{project.name}' currently ends after this course does"
-        msg += " (#{project.end_date} > #{end_date})."
-        errors.add(:end_date, msg )
-      end
+      next unless project.end_date > end_date
+      puts "Project end date: #{project.end_date} course: #{end_date}"
+      msg = errors[:end_date].blank? ? '' : errors[:end_date]
+      msg = "Project '#{project.name}' currently ends after this course does"
+      msg += " (#{project.end_date} > #{end_date})."
+      errors.add(:end_date, msg)
     end
     bingo_games.reload.each do |bingo_game|
       if bingo_game.start_date < start_date
-        msg = errors[ :start_date ].blank? ? '' : errors[ :start_date ]
+        msg = errors[:start_date].blank? ? '' : errors[:start_date]
         msg = "Bingo! '#{bingo_game.topic}' currently starts before this course does "
         msg += " (#{bingo_game.start_date} < #{start_date})."
-        errors.add(:start_date, msg )
+        errors.add(:start_date, msg)
       end
-      if bingo_game.end_date > end_date
-        puts "Bingo end date: #{bingo_game.end_date} course: #{end_date}"
-        msg = errors[ :end_date ].blank? ? '' : errors[ :end_date ]
-        msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
-        msg += " (#{bingo_game.end_date} > #{end_date})."
-        errors.add(:end_date, msg )
-      end
+      next unless bingo_game.end_date > end_date
+      puts "Bingo end date: #{bingo_game.end_date} course: #{end_date}"
+      msg = errors[:end_date].blank? ? '' : errors[:end_date]
+      msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
+      msg += " (#{bingo_game.end_date} > #{end_date})."
+      errors.add(:end_date, msg)
     end
   end
 
@@ -276,62 +273,61 @@ class Course < ActiveRecord::Base
 
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(timezone)
-    #TODO: must handle changing timezones at some point
+    # TODO: must handle changing timezones at some point
 
     # TZ corrections
-    if (start_date_changed? || timezone_changed? ) && start_date.present?
+    if (start_date_changed? || timezone_changed?) && start_date.present?
       puts "tz: #{course_tz}"
       d = start_date.utc
-      new_date = course_tz.local( d.year, d.month, d.day).beginning_of_day
+      new_date = course_tz.local(d.year, d.month, d.day).beginning_of_day
       puts "sd: #{new_date}"
       self.start_date = new_date
     end
 
-    if (end_date_changed? || timezone_changed? ) && end_date.present?
-      new_date = course_tz.local( end_date.year, end_date.month, end_date.day )
-      self.end_date = new_date.end_of_day.change( sec: 0 )
+    if (end_date_changed? || timezone_changed?) && end_date.present?
+      new_date = course_tz.local(end_date.year, end_date.month, end_date.day)
+      self.end_date = new_date.end_of_day.change(sec: 0)
     end
     puts "\tcourse start: #{start_date} end: #{end_date}"
 
     if timezone_changed? && timezone_was.present?
-      orig_tz = ActiveSupport::TimeZone.new( timezone_was )
+      orig_tz = ActiveSupport::TimeZone.new(timezone_was)
       puts "\n\tupdate to #{course_tz} from #{orig_tz}"
 
       Course.transaction do
-        #offset_delta = course_tz.utc_offset - ActiveSupport::TimeZone.new( timezone_was ).utc_offset
+        # offset_delta = course_tz.utc_offset - ActiveSupport::TimeZone.new( timezone_was ).utc_offset
         projects.reload.each do |project|
-          d = orig_tz.parse( project.start_date.to_s )
-          d = course_tz.local( d.year, d.month, d.day )
+          d = orig_tz.parse(project.start_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
           project.start_date = d
 
-          d = orig_tz.parse( project.end_date.to_s )
-          d = course_tz.local( d.year, d.month, d.day )
+          d = orig_tz.parse(project.end_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
           project.end_date = d
-          #{project.end_date}\n\n"
-          project.save( validate: false )
+          # {project.end_date}\n\n"
+          project.save(validate: false)
         end
         experiences.reload.each do |experience|
-          d = orig_tz.parse( experience.start_date.to_s )
-          d = course_tz.local( d.year, d.month, d.day )
+          d = orig_tz.parse(experience.start_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
           experience.start_date = d
 
-          d = orig_tz.parse( experience.end_date.to_s )
-          d = course_tz.local( d.year, d.month, d.day )
+          d = orig_tz.parse(experience.end_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
           experience.end_date = d
-          experience.save( validate: false )
+          experience.save(validate: false)
         end
         bingo_games.each do |bingo_game|
-          d = orig_tz.parse( bingo_game.start_date.to_s )
-          d = course_tz.local( d.year, d.month, d.day )
+          d = orig_tz.parse(bingo_game.start_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
           bingo_game.start_date = d
 
-          d = orig_tz.parse( bingo_game.end_date.to_s )
-          d = course_tz.local( d.year, d.month, d.day )
+          d = orig_tz.parse(bingo_game.end_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
           bingo_game.end_date = d
-          bingo_game.save( validate: false )
+          bingo_game.save(validate: false)
         end
       end
     end
   end
-
 end

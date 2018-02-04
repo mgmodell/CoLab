@@ -1,14 +1,15 @@
 # frozen_string_literal: true
+
 require 'forgery'
 require 'chronic'
 
 Given /^there is a course with an assessed project$/ do
-  @course = School.find( 1 ).courses.new(
+  @course = School.find(1).courses.new(
     name: "#{Forgery::Name.industry} Course",
     number: Forgery::Basic.number,
     timezone: 'UTC',
     start_date: 4.months.ago,
-    end_date: 2.months.from_now,
+    end_date: 2.months.from_now
   )
   @course.save
   puts @course.errors.full_messages unless @course.errors.blank?
@@ -16,13 +17,13 @@ Given /^there is a course with an assessed project$/ do
     name: "#{Forgery::Name.industry} Project",
     start_dow: 1,
     end_dow: 2,
-    style: Style.find( 1 )
+    style: Style.find(1)
   )
 
   @project.save
   puts @project.errors.full_messages unless @project.errors.blank?
 
-  #Check that the anonymous stuff got built
+  # Check that the anonymous stuff got built
   @course.get_name(true).should_not be_nil
   @course.get_name(true).length.should be > 0
   @project.get_name(true).should_not be_nil

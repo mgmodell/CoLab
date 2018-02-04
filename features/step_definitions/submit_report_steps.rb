@@ -1,10 +1,11 @@
 # frozen_string_literal: true
+
 require 'forgery'
 
 Given /^the project measures (\d+) factors$/ do |num_factors|
   bp = FactorPack.new(
     name: "#{Forgery::Name.industry}-#{Forgery::Basic.color} Factor Pack",
-    description: Forgery::Basic.text,
+    description: Forgery::Basic.text
   )
   num_factors.to_i.times do
     factor = bp.factors.new(

@@ -28,7 +28,7 @@ class ExperiencesController < ApplicationController
 
   def new
     @title = t('.title')
-    @experience = Course.find( params[:course_id] ).experiences.new
+    @experience = Course.find(params[:course_id]).experiences.new
     @experience.start_date = @experience.course.start_date
     @experience.end_date = @experience.course.end_date
   end

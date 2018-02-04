@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 require 'chronic'
 require 'forgery'
 
 Given(/^there is a course with an experience$/) do
-  @course = School.find( 1 ).courses.new(
+  @course = School.find(1).courses.new(
     name: "#{Forgery::Name.industry} Course",
     number: Forgery::Basic.number,
     timezone: 'UTC',
@@ -14,7 +15,7 @@ Given(/^there is a course with an experience$/) do
   @experience = @course.experiences.new(
     name: "#{Forgery::Name.industry} Experience",
     start_date: DateTime.yesterday,
-    end_date: DateTime.tomorrow,
+    end_date: DateTime.tomorrow
   )
   @experience.save
   puts @experience.errors.full_messages unless @experience.errors.blank?
@@ -56,11 +57,11 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
 end
 
 Given /^the experience started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_date|
-  course_tz = ActiveSupport::TimeZone.new( @experience.course.timezone )
+  course_tz = ActiveSupport::TimeZone.new(@experience.course.timezone)
   d = Chronic.parse(start_date)
-  @experience.start_date = course_tz.local( d.year, d.month, d.day )
+  @experience.start_date = course_tz.local(d.year, d.month, d.day)
   d = Chronic.parse(end_date)
-  @experience.end_date = course_tz.local( d.year, d.month, d.day )
+  @experience.end_date = course_tz.local(d.year, d.month, d.day)
   @experience.save
   puts @experience.errors.full_messages unless @experience.errors.blank?
   puts " input: #{start_date} -- #{end_date}"

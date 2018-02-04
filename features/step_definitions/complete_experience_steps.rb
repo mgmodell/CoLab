@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 
 Then /^the user clicks the link to the experience$/ do
@@ -135,7 +136,7 @@ Then /^all users complete the course successfully$/ do
 end
 
 Given /^the user enrolls in a new course$/ do
-  @course = School.find( 1 ).courses.new(
+  @course = School.find(1).courses.new(
     name: "#{Forgery::Name.industry} Course",
     number: Forgery::Basic.number,
     timezone: 'UTC',
@@ -153,7 +154,7 @@ end
 
 Given /^the course has an experience$/ do
   @experience = @course.experiences.new(
-    name: Forgery::Name.industry + ' Experience',
+    name: Forgery::Name.industry + ' Experience'
   )
 
   @experience.save

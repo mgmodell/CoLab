@@ -63,12 +63,12 @@ Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_val
   case date_field_prefix.downcase
   when 'start'
     d = Chronic.parse(date_value)
-    date = course_tz.local( d.year, d.month, d.day )
+    date = course_tz.local(d.year, d.month, d.day)
     @project.start_date.should eq date
 
   when 'end'
     d = Chronic.parse(date_value)
-    date = course_tz.local( d.year, d.month, d.day ).end_of_day
+    date = course_tz.local(d.year, d.month, d.day).end_of_day
     puts "\t\t---input-#{d.utc}"
     puts "\t\t--parse--#{date.utc}"
     puts "\t\t--recd-  #{@project.end_date}"

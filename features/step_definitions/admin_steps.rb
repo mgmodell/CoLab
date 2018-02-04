@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Given /^there is a course$/ do
-  @course = School.find( 1 ).courses.new(
+  @course = School.find(1).courses.new(
     name: "#{Forgery::Name.industry} Course",
     number: Forgery::Basic.number,
     timezone: 'UTC',

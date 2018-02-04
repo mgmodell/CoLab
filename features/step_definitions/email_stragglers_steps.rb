@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 
 Given /^the email queue is empty$/ do
@@ -44,7 +45,7 @@ end
 
 Given /^the user is in a group on the project with (\d+) other users$/ do |user_count|
   @group = Group.new(
-    name: "#{Forgery::Basic.text} Group",
+    name: "#{Forgery::Basic.text} Group"
   )
   r = Roster.new
   r.user = @user

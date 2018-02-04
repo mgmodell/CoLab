@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 
 Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
@@ -59,14 +60,14 @@ Then /^the bingo "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value
   case date_field_prefix.downcase
   when 'start'
     d = Chronic.parse(date_value)
-    date = course_tz.local( d.year, d.month, d.day ).beginning_of_day
+    date = course_tz.local(d.year, d.month, d.day).beginning_of_day
     @bingo.start_date.should eq date
 
   when 'end'
     puts "input: #{date_value}"
     d = Chronic.parse(date_value)
     puts "procd: #{d}"
-    date = course_tz.local( d.year, d.month, d.day ).end_of_day
+    date = course_tz.local(d.year, d.month, d.day).end_of_day
     puts "adjus: #{date}"
     @bingo.end_date.change(sec: 0).should eq date.change(sec: 0)
   else

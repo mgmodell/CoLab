@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forgery'
 
 Then /^the user will see the task listing page$/ do
@@ -70,7 +71,7 @@ Given /^(\d+) users$/ do |user_count|
 end
 
 Given /^a course$/ do
-  @course = School.find( 1 ).courses.new(
+  @course = School.find(1).courses.new(
     name: "#{Forgery::Name.industry} Course",
     number: Forgery::Basic.number,
     timezone: 'UTC',

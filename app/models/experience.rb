@@ -12,9 +12,9 @@ class Experience < ActiveRecord::Base
   before_create :anonymize
   validate :dates_within_course
 
-  scope :active_at, -> (date) { where( active: true )
-     .where( 'experiences.start_date <= ? AND experiences.end_date >= ?',
-     date, date ) }
+  scope :active_at, ->(date) { 
+                      where(active: true)
+    .where('experiences.start_date <= ? AND experiences.end_date >= ?', date, date) }
 
   def get_user_reaction(user)
     reaction = reactions.where(user: user).take
@@ -169,7 +169,7 @@ class Experience < ActiveRecord::Base
     end
 
     if end_date_changed?
-      self.end_date = course_tz.local(end_date.year, end_date.month, end_date.day).end_of_day.change( sec: 0 )
+      self.end_date = course_tz.local(end_date.year, end_date.month, end_date.day).end_of_day.change(sec: 0)
     elsif end_date.nil?
       self.end_date = course.end_date
     end
@@ -180,7 +180,7 @@ class Experience < ActiveRecord::Base
       if start_date < course.start_date
         errors.add(:start_date, "The experience cannot begin before the course has begun (#{course.start_date})")
       end
-      if end_date.change( sec: 0 ) > course.end_date.change( sec: 0 )
+      if end_date.change(sec: 0) > course.end_date.change(sec: 0)
         puts "\n\n)))))Bingo ends: #{end_date} Course ends: #{course.end_date}\n\n"
         errors.add(:end_date, "The experience cannot continue after the course has ended (#{course.end_date})")
       end
