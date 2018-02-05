@@ -11,13 +11,10 @@ module PersonalizationHelper
 
   def in_tz(date:)
     pd = nil
-    puts 'me'
-    puts "\t\tunProc: #{date}"
     unless date.nil?
       tz = ActiveSupport::TimeZone.new(@current_user.timezone)
-      pd = tz.local(date.year, date.month, date.day, date.hour, date.min)
+      pd = tz.parse( date.to_s )
     end
-    puts "\t\tProc: #{pd}"
     pd
   end
 

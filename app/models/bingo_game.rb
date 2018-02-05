@@ -162,22 +162,17 @@ class BingoGame < ActiveRecord::Base
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
 
-    # puts "=====bingo"
-    # puts "tz: #{course_tz}"
-    # puts "start: #{start_date_change}"
-    # puts "end  : #{end_date_change}"
     if start_date_changed?
-      self.start_date = course_tz.local(start_date.year, start_date.month, start_date.day).beginning_of_day
+      self.start_date = course_tz.parse(start_date.to_s).beginning_of_day
     elsif start_date.nil?
       self.start_date = course.start_date
     end
 
     if end_date_changed?
-      self.end_date = course_tz.local(end_date.year, end_date.month, end_date.day).end_of_day.change(sec: 0)
+      self.end_date = course_tz.parse(end_date.to_s).end_of_day.change(sec: 0)
     elsif end_date.nil?
       self.end_date = course.end_date
     end
-    puts "Bingo start: #{start_date} end: #{end_date}"
   end
 
   def dates_within_course

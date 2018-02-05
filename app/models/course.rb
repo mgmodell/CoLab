@@ -295,36 +295,35 @@ class Course < ActiveRecord::Base
       puts "\n\tupdate to #{course_tz} from #{orig_tz}"
 
       Course.transaction do
-        # offset_delta = course_tz.utc_offset - ActiveSupport::TimeZone.new( timezone_was ).utc_offset
         projects.reload.each do |project|
           d = orig_tz.parse(project.start_date.to_s)
           d = course_tz.local(d.year, d.month, d.day)
-          project.start_date = d
+          project.start_date = d.beginning_of_day
 
           d = orig_tz.parse(project.end_date.to_s)
           d = course_tz.local(d.year, d.month, d.day)
-          project.end_date = d
+          project.end_date = d.end_of_day
           # {project.end_date}\n\n"
           project.save(validate: false)
         end
         experiences.reload.each do |experience|
           d = orig_tz.parse(experience.start_date.to_s)
           d = course_tz.local(d.year, d.month, d.day)
-          experience.start_date = d
+          experience.start_date = d.beginning_of_day
 
           d = orig_tz.parse(experience.end_date.to_s)
           d = course_tz.local(d.year, d.month, d.day)
-          experience.end_date = d
+          experience.end_date = d.end_of_day
           experience.save(validate: false)
         end
         bingo_games.each do |bingo_game|
           d = orig_tz.parse(bingo_game.start_date.to_s)
           d = course_tz.local(d.year, d.month, d.day)
-          bingo_game.start_date = d
+          bingo_game.start_date = d.beginning_of_day
 
           d = orig_tz.parse(bingo_game.end_date.to_s)
           d = course_tz.local(d.year, d.month, d.day)
-          bingo_game.end_date = d
+          bingo_game.end_date = d.end_of_day
           bingo_game.save(validate: false)
         end
       end
