@@ -267,31 +267,12 @@ class User < ActiveRecord::Base
     available_rosters = rosters.enrolled
 
     # Add the experiences
-    puts "\n\t\t #{waiting_tasks.count} at: #{cur_date}"
 
     waiting_tasks.concat Experience.active_at(cur_date).joins(course: :rosters)
       .where('rosters.user_id': id)
                                    .where('rosters.role IN (?)',
                                           [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
                                    .to_a
-
-    wts = Experience.joins(course: :rosters)
-                    .where('rosters.user_id': id, 'experiences.active': true)
-                    .where('rosters.role IN (?)',
-                           [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
-                    .to_a
-
-    puts "\n\t\t post #{wts.count} at: #{cur_date}"
-    puts "\t%%% #{Experience.count}"
-    puts 'debug 1'
-    wts.each do |wt|
-      puts "\t\t\t#{wt.start_date} -- #{wt.end_date}"
-      puts "\t\t\t#{wt.start_date <= cur_date} -- #{wt.end_date >= cur_date}"
-    end
-
-    Experience.all.each do |e|
-      puts "\n\t #{e.id}: #{e.start_date} - #{e.end_date}"
-    end
 
     # Add the bingo games
     waiting_games = BingoGame.joins(course: :rosters)
@@ -305,12 +286,6 @@ class User < ActiveRecord::Base
     waiting_games.delete_if { |game| !game.is_open? && !game.reviewed }
     waiting_tasks.concat waiting_games
     # Another debug
-    puts 'debug 2'
-    waiting_tasks.each do |wt|
-      puts "\t\t\t#{wt.class}"
-      puts "\t\t\t#{wt.start_date} -- #{wt.end_date}"
-      puts "\t\t\t#{wt.start_date <= cur_date} -- #{wt.end_date >= cur_date}"
-    end
 
     waiting_tasks.sort_by(&:end_date)
   end

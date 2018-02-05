@@ -150,6 +150,8 @@ Given /^the user enrolls in a new course$/ do
     user: @user,
     role: Roster.roles[:enrolled_student]
   )
+  @course.save
+  puts @course.errors.full_messages unless @course.errors.blank?
 end
 
 Given /^the course has an experience$/ do
