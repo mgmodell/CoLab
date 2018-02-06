@@ -263,6 +263,9 @@ class User < ActiveRecord::Base
     cur_date = DateTime.current
     waiting_tasks = assessments.includes(project: %i[course consent_form]).active_at(cur_date).to_a
 
+    puts "\t\tProject assessments info:"
+    waiting_tasks.each{|a| puts "#{a.id} : #{a.start_date} -- #{a.end_date}" }
+
     # Check available tasks for students
     available_rosters = rosters.enrolled
 

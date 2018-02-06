@@ -49,6 +49,18 @@ Then /^the bingo "([^"]*)" is "([^"]*)"$/ do |field, value|
   end
 end
 
+Given /^the bingo started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_date|
+  course_tz = ActiveSupport::TimeZone.new(@bingo.course.timezone)
+  d = Chronic.parse(start_date)
+  @bingo.start_date = course_tz.local(d.year, d.month, d.day)
+  d = Chronic.parse(end_date)
+  @bingo.end_date = course_tz.local(d.year, d.month, d.day)
+  @bingo.save
+  puts @bingo.errors.full_messages unless @bingo.errors.blank?
+  puts " input: #{start_date} -- #{end_date}"
+  puts "output: #{@bingo.start_date} -- #{@bingo.end_date}"
+end
+
 Then /^the bingo project is the course's project$/ do
   @bingo.project_id.should eq @project.id
   @bingo.project.should eq @project

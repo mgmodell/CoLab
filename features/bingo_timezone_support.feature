@@ -8,8 +8,7 @@ Feature: Timezone Support for Bingo!
     Given today is "March 8, 1980"
     Given there is a course with an assessed project
     Given the course has a Bingo! game
-    Given the bingo "start" date is "February 15, 1980"
-    Given the bingo "end" date is "April 15, 1980"
+    Given the bingo started "February 15, 1980" and ends "April 15, 1980"
     Given the Bingo! "has" been activated
     Given the course has 4 confirmed users
     Given the users "have" had demographics requested
