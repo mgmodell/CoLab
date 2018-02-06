@@ -61,6 +61,11 @@ Then /^the bingo "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value
   when 'start'
     d = Chronic.parse(date_value)
     date = course_tz.local(d.year, d.month, d.day).beginning_of_day
+    puts "#{course_tz.utc_to_local( @bingo.start_date ) }"
+    puts "#{course_tz.parse(d.to_s)}"
+    puts "#{date}"
+    puts "#{d} == #{@bingo.start_date}"
+    puts "#{date.utc} == #{@bingo.start_date.utc}"
     @bingo.start_date.should eq date
 
   when 'end'
