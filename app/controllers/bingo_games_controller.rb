@@ -55,6 +55,7 @@ class BingoGamesController < ApplicationController
     if @bingo_game.update(bingo_game_params)
       redirect_to @bingo_game, notice: t('bingo_games.update_success')
     else
+      puts @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
       render :edit
     end
   end

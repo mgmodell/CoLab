@@ -49,6 +49,7 @@ class ExperiencesController < ApplicationController
     if @experience.update(experience_params)
       redirect_to @experience, notice: t('experiences.update_success')
     else
+      puts @experience.errors.full_messages unless @experience.errors.empty?
       @title = t('experiences.edit.title')
       render :edit
     end

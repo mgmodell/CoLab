@@ -162,27 +162,37 @@ class BingoGame < ActiveRecord::Base
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
 
-    if start_date_changed?
-      self.start_date = course_tz.parse(start_date.to_s).beginning_of_day
-    elsif start_date.nil?
+    puts "\n\tpre-adjustment"
+    puts "\tstart: #{start_date_change}"
+    puts "\tend: #{end_date_change}"
+    puts "\tbingo  start: #{start_date} -- end: #{end_date}"
+    puts "\tcourse start: #{course.start_date} -- end: #{course.end_date}"
+    if start_date.nil? || start_date.change(hour:0) == course.start_date.change(hour:0)
       self.start_date = course.start_date
+    elsif start_date_changed?
+      self.start_date = course_tz.parse(start_date.to_s).beginning_of_day
     end
 
-    if end_date_changed?
-      self.end_date = course_tz.parse(end_date.to_s).end_of_day.change(sec: 0)
-    elsif end_date.nil?
+    if end_date.nil? || end_date.change(hour:0) == course.end_date.change(hour:0)
       self.end_date = course.end_date
+    elsif end_date_changed?
+      self.end_date = course_tz.parse(end_date.to_s).end_of_day.change(sec: 0)
     end
+    puts "\n\tpost-adjustment"
+    puts "\tstart: #{start_date} -- end: #{end_date}\n\n"
   end
 
   def dates_within_course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date
-        errors.add(:start_date, "The bingo game cannot begin before the course has begun (#{course.start_date})")
+        msg = "The bingo game cannot begin before the course has begun "
+        msg += "(#{start_date} < #{course.start_date})"
+        errors.add(:start_date, msg )
       end
       if end_date.change(sec: 0) > course.end_date.change(sec: 0)
-        puts "\nMyData:\t#{end_date}\n\t#{course.end_date}\n\n\n"
-        errors.add(:end_date, "The bingo game cannot occur after the course has ended (#{course.end_date})")
+        msg = "The bingo game cannot begin after the course has ended "
+        msg += "(#{end_date} > #{course.end_date})"
+        errors.add(:end_date, msg )
       end
     end
     errors

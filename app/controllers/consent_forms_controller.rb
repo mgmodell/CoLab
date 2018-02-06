@@ -46,6 +46,7 @@ class ConsentFormsController < ApplicationController
         format.html { redirect_to @consent_form, notice: 'Consent form was successfully updated.' }
         format.json { render :show, status: :ok, location: @consent_form }
       else
+        puts @consent_form.errors.full_messages unless @consent_form.errors.empty?
         format.html { render :edit }
         format.json { render json: @consent_form.errors, status: :unprocessable_entity }
       end

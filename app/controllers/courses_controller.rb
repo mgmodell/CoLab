@@ -71,6 +71,7 @@ class CoursesController < ApplicationController
       @course.school = School.find(@course.school_id)
       redirect_to course_path(@course), notice: t('courses.update_success')
     else
+      puts @course.errors.full_messages unless @course.errors.empty?
       render :edit
     end
   end

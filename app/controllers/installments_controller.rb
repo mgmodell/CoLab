@@ -43,6 +43,7 @@ class InstallmentsController < ApplicationController
       notice = t('installments.success')
       redirect_to root_url, notice: notice
     else
+      puts @installment.errors.full_messages unless @installment.errors.empty?
       @group = Group.find(@installment.group)
       @project = @installment.assessment.project
       @factors = @installment.assessment.project.factors

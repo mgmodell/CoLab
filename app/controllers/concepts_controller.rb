@@ -65,6 +65,7 @@ class ConceptsController < ApplicationController
     if @concept.update(concept_params)
       redirect_to concept_path(@concept), notice: t('concepts.update_success')
     else
+      puts @concept.errors.full_messages unless @concept.errors.empty?
       render :edit
     end
   end
