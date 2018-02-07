@@ -12,9 +12,9 @@ class Experience < ActiveRecord::Base
   before_create :anonymize
   validate :dates_within_course
 
-  scope :active_at, ->(date) { 
+  scope :active_at, ->(date) {
                       where(active: true)
-    .where('experiences.start_date <= ? AND experiences.end_date >= ?', date, date) }
+                        .where('experiences.start_date <= ? AND experiences.end_date >= ?', date, date) }
 
   def get_user_reaction(user)
     reaction = reactions.where(user: user).take
@@ -162,17 +162,17 @@ class Experience < ActiveRecord::Base
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
 
-    if start_date.nil? || start_date.change(hour:0) == course.start_date.change(hour:0)
+    if start_date.nil? || start_date.change(hour: 0) == course.start_date.change(hour: 0)
       self.start_date = course.start_date
     elsif start_date_changed?
-      proc_date = course_tz.local( start_date.year, start_date.month, start_date.day  )
+      proc_date = course_tz.local(start_date.year, start_date.month, start_date.day)
       self.start_date = proc_date.beginning_of_day
     end
 
-    if end_date.nil? || end_date.change(hour:0) == course.end_date.change(hour:0)
+    if end_date.nil? || end_date.change(hour: 0) == course.end_date.change(hour: 0)
       self.end_date = course.end_date
     elsif end_date_changed?
-      proc_date = course_tz.local( end_date.year, end_date.month, end_date.day  )
+      proc_date = course_tz.local(end_date.year, end_date.month, end_date.day)
       self.end_date = proc_date.end_of_day.change(sec: 0)
     end
   end
@@ -183,9 +183,9 @@ class Experience < ActiveRecord::Base
         errors.add(:start_date, "The experience cannot begin before the course has begun (#{course.start_date})")
       end
       if end_date.change(sec: 0) > course.end_date.change(sec: 0)
-        msg = "The experience cannot continue after the course has ended "
+        msg = 'The experience cannot continue after the course has ended '
         msg += "(#{end_date} > #{course.end_date})"
-        errors.add(:end_date, msg )
+        errors.add(:end_date, msg)
       end
     end
     errors

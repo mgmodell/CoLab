@@ -218,7 +218,7 @@ class Course < ActiveRecord::Base
         msg += " (#{experience.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
-      next unless experience.end_date.change(sec: 0 ) > end_date
+      next unless experience.end_date.change(sec: 0) > end_date
       msg = errors[:end_date].blank? ? '' : errors[:end_date]
       msg = "Experience '#{experience.name}' currently ends after this course does"
       msg += " (#{experience.end_date} > #{end_date})."
@@ -231,7 +231,7 @@ class Course < ActiveRecord::Base
         msg += " (#{project.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
-      next unless project.end_date.change(sec: 0 ) > end_date
+      next unless project.end_date.change(sec: 0) > end_date
       msg = errors[:end_date].blank? ? '' : errors[:end_date]
       msg = "Project '#{project.name}' currently ends after this course does"
       msg += " (#{project.end_date} > #{end_date})."
@@ -244,7 +244,7 @@ class Course < ActiveRecord::Base
         msg += " (#{bingo_game.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
-      next unless bingo_game.end_date.change(sec: 0 ) > end_date
+      next unless bingo_game.end_date.change(sec: 0) > end_date
       msg = errors[:end_date].blank? ? '' : errors[:end_date]
       msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
       msg += " (#{bingo_game.end_date} > #{end_date})."
