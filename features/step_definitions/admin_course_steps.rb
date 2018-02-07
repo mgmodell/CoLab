@@ -59,19 +59,14 @@ end
 Then 'the course start date is {string} and the end date is {string}' do |start_date, end_date|
   course_tz = ActiveSupport::TimeZone.new(@course.timezone)
 
-  puts "\n\tTimezone: #{course_tz}"
-
-  puts 'start'
   test_date = Chronic.parse(start_date)
                      .getlocal(course_tz.utc_offset)
                      .beginning_of_day
   @course.start_date.change(sec: 0).should eq test_date.change(sec: 0)
 
-  puts 'end'
   test_date = Chronic.parse(end_date)
                      .getlocal(course_tz.utc_offset)
                      .end_of_day
-  puts "end date: #{test_date.utc}"
   @course.end_date.change(sec: 0).should eq test_date.change(sec: 0)
 end
 
@@ -204,7 +199,6 @@ Then 'the {string} dates are {string} and {string}' do |activity, start_date_str
   start_date = course_tz.local(d.year, d.month, d.day).beginning_of_day
   d = Chronic.parse(end_date_str)
   end_date = course_tz.local(d.year, d.month, d.day).end_of_day.change(sec: 0)
-  puts "|||| #{start_date.utc} and #{end_date.utc} in #{course_tz}"
 
   case activity.downcase
   when 'experience'

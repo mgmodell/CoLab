@@ -99,7 +99,7 @@ class Assessment < ActiveRecord::Base
       day_delta = 7 + day_delta if day_delta < 0
       assessment.start_date = init_date - day_delta.days
     end
-    assessment.start_date = assessment.start_date.beginning_of_day
+    assessment.start_date = tz.parse( assessment.start_date.to_s ).beginning_of_day
 
     # calc period
     period = project.end_dow > project.start_dow ?
@@ -107,12 +107,12 @@ class Assessment < ActiveRecord::Base
       7 - project.start_dow + project.end_dow
 
     assessment.end_date = assessment.start_date + period.days
-    assessment.end_date = assessment.end_date.end_of_day
+    assessment.end_date = tz.parse( assessment.end_date.to_s ).end_of_day.change(sec:0)
 
     existing_assessment_count = project.assessments.where(
       'start_date = ? AND end_date = ?',
-      (assessment.start_date - tz.utc_offset).change(usec: 0),
-      (assessment.end_date - tz.utc_offset).change(usec: 0)
+      (assessment.start_date).change(sec: 0),
+      (assessment.end_date).change(sec: 0)
     ).count
 
     if existing_assessment_count == 0

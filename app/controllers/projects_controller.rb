@@ -32,12 +32,9 @@ class ProjectsController < ApplicationController
   def new
     @title = t('.title')
     course = Course.find(params[:course_id])
-    puts "\n\n\tCourse: #{course.start_date} --- #{course.end_date}"
     @project = course.projects.new
     @project.start_date = course.start_date
     @project.end_date = course.end_date
-    puts "\n\n\tProject: #{@project.start_date} --- #{@project.end_date}"
-    puts "\n\n\tCourse,: #{@project.course.start_date} --- #{@project.course.end_date}"
   end
 
   def create

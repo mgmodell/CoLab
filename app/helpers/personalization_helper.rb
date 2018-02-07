@@ -15,6 +15,7 @@ module PersonalizationHelper
       tz = ActiveSupport::TimeZone.new(@current_user.timezone)
       pd = tz.parse( date.to_s )
     end
+    puts "--- helper\n #{date}\n #{pd}"
     pd
   end
 
