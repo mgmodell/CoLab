@@ -154,23 +154,24 @@ class Project < ActiveRecord::Base
   def dates_within_course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date
-        puts '++++++ start '
-        puts " course: #{course.start_date}"
-        puts "project: #{start_date}"
-        errors.add(:start_date, "The project cannot begin before the course has begun (#{course.start_date})")
+        msg = "The project cannot begin before the course has begun "
+        msg += "(#{start_date} < #{course.start_date})"
+        errors.add(:start_date, msg )
       end
       if end_date > course.end_date
-        puts '++++++ end '
-        puts " course: #{course.end_date}"
-        puts "project: #{end_date}"
-        errors.add(:end_date, "The project cannot continue after the course has ended (#{course.end_date})")
+        msg = "The project cannot continue after the course has ended "
+        msg += "(#{end_date} > #{course.end_date})"
+        errors.add(:end_date, msg )
       end
     end
     errors
   end
 
   def activation_status
-    if active_was && active && changed?
+    if active_was && active &&
+      (start_dow_changed? || end_dow_changed? ||
+       start_date_changed? || end_date_changed? ||
+       factor_pack_id_changed? || style_id_changed? )
       self.active = false
     elsif !active_was && active
 
@@ -211,8 +212,6 @@ class Project < ActiveRecord::Base
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
 
     # TZ corrections
-    puts "start: #{start_date_change}"
-    puts "end  : #{end_date_change}"
     if start_date.nil? || start_date.change(hour:0) == course.start_date.change(hour:0)
       self.start_date = course.start_date
     elsif start_date_changed?
@@ -226,7 +225,6 @@ class Project < ActiveRecord::Base
       proc_date = course_tz.local( end_date.year, end_date.month, end_date.day  )
       self.end_date = proc_date.end_of_day.change(sec: 0)
     end
-    puts "Project start: #{start_date} end: #{end_date}"
   end
 
   def anonymize

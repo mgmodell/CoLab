@@ -72,14 +72,10 @@ class Course < ActiveRecord::Base
     new_start = course_tz.utc_to_local(new_start).beginning_of_day
     d = start_date
     date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
-    puts "\t date difference: #{date_difference}"
-    puts "\t ##### #{course_tz.utc_offset}"
     new_course = nil
 
     Course.transaction do
       # create the course
-      puts "\t\t\ :::new start date: #{start_date + date_difference}"
-      puts "\t\t\ :::new end date  : #{end_date + date_difference}"
 
       new_course = school.courses.new(
         name: "Copy of #{name}",
@@ -89,11 +85,9 @@ class Course < ActiveRecord::Base
         start_date: start_date + date_difference,
         end_date: end_date + date_difference
       )
-      puts "Copied course start: #{new_course.start_date} end: #{new_course.end_date}"
 
       # copy the rosters
       rosters.faculty.each do |roster|
-        puts "here with: #{roster}"
         new_obj = new_course.rosters.new(
           role: roster.role,
           user: roster.user
@@ -151,7 +145,6 @@ class Course < ActiveRecord::Base
   end
 
   def add_user_by_email(user_email, instructor = false)
-    puts " \n\n\t@@@ addy: #{user_email} valid: #{EmailValidator.valid? user_email}"
     if EmailValidator.valid? user_email
       role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
       # Searching for the student and:
@@ -218,7 +211,6 @@ class Course < ActiveRecord::Base
 
   # TODO: - check for date sanity of experiences and projects
   def activity_date_check
-    puts '========= date check'
     experiences.reload.each do |experience|
       if experience.start_date < start_date
         msg = errors[:start_date].blank? ? '' : errors[:start_date]
@@ -227,7 +219,6 @@ class Course < ActiveRecord::Base
         errors.add(:start_date, msg)
       end
       next unless experience.end_date.change(sec: 0 ) > end_date
-      puts "Experience end date: #{experience.end_date} course: #{end_date}"
       msg = errors[:end_date].blank? ? '' : errors[:end_date]
       msg = "Experience '#{experience.name}' currently ends after this course does"
       msg += " (#{experience.end_date} > #{end_date})."
@@ -241,7 +232,6 @@ class Course < ActiveRecord::Base
         errors.add(:start_date, msg)
       end
       next unless project.end_date.change(sec: 0 ) > end_date
-      puts "Project end date: #{project.end_date} course: #{end_date}"
       msg = errors[:end_date].blank? ? '' : errors[:end_date]
       msg = "Project '#{project.name}' currently ends after this course does"
       msg += " (#{project.end_date} > #{end_date})."
@@ -255,7 +245,6 @@ class Course < ActiveRecord::Base
         errors.add(:start_date, msg)
       end
       next unless bingo_game.end_date.change(sec: 0 ) > end_date
-      puts "Bingo end date: #{bingo_game.end_date} course: #{end_date}"
       msg = errors[:end_date].blank? ? '' : errors[:end_date]
       msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
       msg += " (#{bingo_game.end_date} > #{end_date})."
@@ -277,10 +266,8 @@ class Course < ActiveRecord::Base
 
     # TZ corrections
     if (start_date_changed? || timezone_changed?) && start_date.present?
-      puts "tz: #{course_tz}"
       d = start_date.utc
       new_date = course_tz.local(d.year, d.month, d.day).beginning_of_day
-      puts "sd: #{new_date}"
       self.start_date = new_date
     end
 
@@ -288,11 +275,9 @@ class Course < ActiveRecord::Base
       new_date = course_tz.local(end_date.year, end_date.month, end_date.day)
       self.end_date = new_date.end_of_day.change(sec: 0)
     end
-    puts "\tcourse start: #{start_date} end: #{end_date}"
 
     if timezone_changed? && timezone_was.present?
       orig_tz = ActiveSupport::TimeZone.new(timezone_was)
-      puts "\n\tupdate to #{course_tz} from #{orig_tz}"
 
       Course.transaction do
         projects.reload.each do |project|

@@ -64,8 +64,6 @@ Given /^the experience started "([^"]*)" and ends "([^"]*)"$/ do |start_date, en
   @experience.end_date = course_tz.local(d.year, d.month, d.day)
   @experience.save
   puts @experience.errors.full_messages unless @experience.errors.blank?
-  puts " input: #{start_date} -- #{end_date}"
-  puts "output: #{@experience.start_date} -- #{@experience.end_date}"
 end
 
 Given /^the users "(.*?)" had demographics requested$/ do |with_demographics|

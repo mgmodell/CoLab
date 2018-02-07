@@ -263,8 +263,6 @@ class User < ActiveRecord::Base
     cur_date = DateTime.current
     waiting_tasks = assessments.includes(project: %i[course consent_form]).active_at(cur_date).to_a
 
-    puts "\tProject assessments info:"
-    waiting_tasks.each{|a| puts "\t\t#{a.id} : #{a.start_date} -- #{a.end_date}" }
 
     # Check available tasks for students
     available_rosters = rosters.enrolled
@@ -276,6 +274,9 @@ class User < ActiveRecord::Base
                                    .where('rosters.role IN (?)',
                                           [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
                                    .to_a
+    # Another debug
+    puts "\t+ experiences:"
+    waiting_tasks.each{|a| puts "\t\t#{a.class} : #{a.start_date} -- #{a.end_date}" }
 
     # Add the bingo games
     waiting_games = BingoGame.joins(course: :rosters)
@@ -288,7 +289,6 @@ class User < ActiveRecord::Base
 
     waiting_games.delete_if { |game| !game.is_open? && !game.reviewed }
     waiting_tasks.concat waiting_games
-    # Another debug
 
     waiting_tasks.sort_by(&:end_date)
   end
