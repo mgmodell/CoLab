@@ -80,7 +80,7 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
     when 'other'
       u.impairment_other = true
     else
-      puts "Impariment (#{code}) is not an available demographic"
+      puts "Impairment (#{code}) is not an available demographic"
       pending
     end
   else

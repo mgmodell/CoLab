@@ -88,7 +88,7 @@ class Assessment < ActiveRecord::Base
   def self.build_new_assessment(project)
     tz = ActiveSupport::TimeZone.new(project.course.timezone)
 
-    init_date = Date.today
+    init_date = DateTime.current
     init_day = init_date.wday
     assessment = Assessment.new
 

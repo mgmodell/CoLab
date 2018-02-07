@@ -274,10 +274,6 @@ class User < ActiveRecord::Base
                                    .where('rosters.role IN (?)',
                                           [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
                                    .to_a
-    # Another debug
-    puts "\t+ experiences:"
-    waiting_tasks.each{|a| puts "\t\t#{a.class} : #{a.start_date} -- #{a.end_date}" }
-
     # Add the bingo games
     waiting_games = BingoGame.joins(course: :rosters)
                              .includes(:course, :project)

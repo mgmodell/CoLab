@@ -183,8 +183,9 @@ class Experience < ActiveRecord::Base
         errors.add(:start_date, "The experience cannot begin before the course has begun (#{course.start_date})")
       end
       if end_date.change(sec: 0) > course.end_date.change(sec: 0)
-        puts "\n\n)))))Bingo ends: #{end_date} Course ends: #{course.end_date}\n\n"
-        errors.add(:end_date, "The experience cannot continue after the course has ended (#{course.end_date})")
+        msg = "The experience cannot continue after the course has ended "
+        msg += "(#{end_date} > #{course.end_date})"
+        errors.add(:end_date, msg )
       end
     end
     errors

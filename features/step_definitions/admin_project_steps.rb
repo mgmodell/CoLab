@@ -53,13 +53,11 @@ end
 
 Then /^retrieve the latest project from the db$/ do
   @project = Project.last
-  puts "\n\t saved: #{@project.start_date} --- #{@project.end_date}"
 end
 
 Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value|
   course_tz = ActiveSupport::TimeZone.new(@course.timezone)
 
-  puts "\n\tproject: #{@project.start_date} --- #{@project.end_date}"
   case date_field_prefix.downcase
   when 'start'
     d = Chronic.parse(date_value)
@@ -69,10 +67,6 @@ Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_val
   when 'end'
     d = Chronic.parse(date_value)
     date = course_tz.local(d.year, d.month, d.day).end_of_day
-    puts "\t\t---input-#{d.utc}"
-    puts "\t\t--parse--#{date.utc}"
-    puts "\t\t--recd-  #{@project.end_date}"
-    puts "\t\t-rec-off #{@project.end_date + course_tz.utc_offset}"
     @project.end_date.change(sec: 0).should eq date.change(sec: 0)
   else
     puts "We didn't test anything there: " + date_field_prefix + ' not found'

@@ -162,21 +162,11 @@ class BingoGame < ActiveRecord::Base
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
 
-    puts "\n\tpre-adjustment"
-    puts "\tstart: #{start_date_change}"
-    puts "\tend: #{end_date_change}"
-    puts "\tcourse start: #{course.start_date} -- end: #{course.end_date}"
-    puts "\n\tbingo  start: #{start_date} -- end: #{end_date}"
-
     if start_date.nil? || start_date.change(hour:0) == course.start_date.change(hour:0)
       self.start_date = course.start_date
     elsif start_date_changed?
       proc_date = course_tz.local( start_date.year, start_date.month, start_date.day )
       self.start_date = proc_date.beginning_of_day
-      #puts "tzd #{course_tz.parse( start_date.to_s )}"
-      #puts "tzd #{course_tz.parse( start_date.to_s ).beginning_of_day}"
-      #puts "tzd #{course_tz.parse( start_date.to_s ).change(hour:0).utc}"
-      #self.start_date = course_tz.parse(start_date.to_s).beginning_of_day
     end
 
     if end_date.nil? || end_date.change(hour:0) == course.end_date.change(hour:0)
@@ -185,8 +175,6 @@ class BingoGame < ActiveRecord::Base
       proc_date = course_tz.local( end_date.year, end_date.month, end_date.day  )
       self.end_date = proc_date.end_of_day.change(sec: 0)
     end
-    puts "\n\tpost-adjustment"
-    puts "\tstart: #{start_date} -- end: #{end_date}\n\n"
   end
 
   def dates_within_course
