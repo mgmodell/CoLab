@@ -13,7 +13,7 @@ module PersonalizationHelper
     pd = nil
     unless date.nil?
       tz = ActiveSupport::TimeZone.new(@current_user.timezone)
-      pd = tz.parse( date.to_s )
+      pd = tz.parse(date.to_s)
     end
     pd
   end
