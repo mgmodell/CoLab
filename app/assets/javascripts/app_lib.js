@@ -53,30 +53,32 @@ function init_me( obj, data ){
       var xSeries = d3.range(1, data.length + 1);
       var ySeries = data;
 
-      var leastSquaresCoeff = leastSquares(xSeries, ySeries);
+      if( data.length > 1 ){
+        var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
-      // apply the reults of the least squares regression
-      var x1 = 0;
-      var y1 = leastSquaresCoeff[1];
-      var x2 = data.length - 1;
-      var y2 = leastSquaresCoeff[1] + (data.length * leastSquaresCoeff[0]);
-      var trendData = [[x1,y1,x2,y2]];
+        // apply the reults of the least squares regression
+        var x1 = 0;
+        var y1 = leastSquaresCoeff[1];
+        var x2 = data.length - 1;
+        var y2 = leastSquaresCoeff[1] + (data.length * leastSquaresCoeff[0]);
+        var trendData = [[x1,y1,x2,y2]];
 
-      var trendLineColor = "green";
-      if( leastSquaresCoeff[ 0 ] < 0 ){
-        trendLineColor="red";
+        var trendLineColor = "green";
+        if( leastSquaresCoeff[ 0 ] < 0 ){
+          trendLineColor="red";
+        }
+        var trendline = graph.selectAll(".trendline")
+          .data(trendData);
+        trendline.enter()
+          .append("line")
+          .attr("class", "trendline")
+            .attr("x1", function(d) { return x(d[0]); })
+            .attr("y1", function(d) { return y(d[1]); })
+            .attr("x2", function(d) { return x(d[2]); })
+            .attr("y2", function(d) { return y(d[3]); })
+            .attr("stroke", trendLineColor )
+            .attr("stroke-width", 2);
       }
-      var trendline = graph.selectAll(".trendline")
-        .data(trendData);
-      trendline.enter()
-        .append("line")
-        .attr("class", "trendline")
-          .attr("x1", function(d) { return x(d[0]); })
-          .attr("y1", function(d) { return y(d[1]); })
-          .attr("x2", function(d) { return x(d[2]); })
-          .attr("y2", function(d) { return y(d[3]); })
-          .attr("stroke", trendLineColor )
-          .attr("stroke-width", 2);
 }
 
 // returns slope, intercept and r-square of the line
@@ -258,6 +260,7 @@ $(document).ready(function(){
   });
 
   $("#basicTable").tablesorter( {sortList: [[0,0],[1,0]]} );
+  $("#responsesTable").tablesorter( {sortList: [[3,0]]});
   $("#groups_table").tablesorter( {sortList: [[0,0],[1,0]]} );
   $("#bingo_table").tablesorter( {sortList: [[0,0]]} );
   $("#projects_table").tablesorter( {sortList: [[0,0]]} );

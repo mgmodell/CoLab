@@ -18,9 +18,9 @@
         <%= f.association :school %>
         <%= f.time_zone_select :timezone %>
         <%= f.input :start_date, as: :date, html5: true,
-          input_html: { value: to_tz( date: f.object.start_date, tz_str: f.object.timezone ) } %>
+          input_html: { value: date_field_in_tz( date: f.object.start_date, tz_str: f.object.timezone ) } %>
         <%= f.input :end_date, as: :date, html5: true,
-          input_html: { value: to_tz( date: f.object.end_date, tz_str: f.object.timezone ) } %>
+          input_html: { value: date_field_in_tz( date: f.object.end_date, tz_str: f.object.timezone ) } %>
         <%= f.input :description, as: :text %>
       </div>
     </div>

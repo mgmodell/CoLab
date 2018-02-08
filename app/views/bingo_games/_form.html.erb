@@ -48,12 +48,12 @@
         <td >
           <% ctz = f.object.course.timezone %>
           <%= f.input :start_date, as: :date, html5: true, 
-            input_html: { value: to_tz( date: f.object.start_date, tz_str: ctz )} %>
+            input_html: { value: date_field_in_tz( date: f.object.start_date, tz_str: ctz )} %>
         </td>
         <td width="10%" align="center" valign="center">&nbsp;</td>
         <td >
           <%= f.input :end_date, as: :date, html5: true, 
-            input_html: { value: to_tz( date: f.object.end_date, tz_str: ctz )} %>
+            input_html: { value: date_field_in_tz( date: f.object.end_date, tz_str: ctz )} %>
         </td>
       </tr>
       <tr>

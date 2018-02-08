@@ -9,20 +9,20 @@ module PersonalizationHelper
     @current_research || @current_user.anonymize?
   end
 
-  def in_tz(date:)
+  def in_tz(date:, tz_str: @current_user.timezone)
     pd = nil
     unless date.nil?
-      tz = ActiveSupport::TimeZone.new(@current_user.timezone)
+      tz = ActiveSupport::TimeZone.new(tz_str)
       pd = tz.parse(date.to_s)
     end
     pd
   end
 
-  def to_tz(date:, tz_str:)
+  def date_field_in_tz(date:, tz_str:)
     pd = nil
     unless date.nil?
       tz = ActiveSupport::TimeZone.new(tz_str)
-      pd = date + tz.utc_offset
+      pd = (date + tz.utc_offset).strftime "%F"
     end
     pd
   end
