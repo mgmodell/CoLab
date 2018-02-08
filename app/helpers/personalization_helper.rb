@@ -22,7 +22,7 @@ module PersonalizationHelper
     pd = nil
     unless date.nil?
       tz = ActiveSupport::TimeZone.new(tz_str)
-      pd = (date + tz.utc_offset).strftime "%F"
+      pd = (date + tz.utc_offset).strftime '%F'
     end
     pd
   end

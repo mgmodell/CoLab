@@ -17,7 +17,7 @@ class Experience < ActiveRecord::Base
                         .where('experiences.start_date <= ? AND experiences.end_date >= ?', date, date) }
 
   def get_user_reaction(user)
-    reaction = reactions.includes( narrative: {scenario: :behavior } ).where(user: user).take
+    reaction = reactions.includes(narrative: { scenario: :behavior }).where(user: user).take
 
     reaction = Reaction.create(user: user, experience: self, instructed: false) if reaction.nil?
     reaction
@@ -59,22 +59,22 @@ class Experience < ActiveRecord::Base
     narrative = nil
     if narrative_counts.empty?
       if include_ids.empty?
-        narrative = Narrative.includes( scenario: :behavior ).all.sample
+        narrative = Narrative.includes(scenario: :behavior).all.sample
       else
         narrative_counts = Reaction.includes(:narrative)
                                    .where(narrative_id: include_ids)
                                    .group(:narrative_id).count
         if narrative_counts.count < include_ids.count
           possible = include_ids - narrative_counts.keys
-          narrative = Narrative.includes( scenario: :behavior ).find(possible.sample)
+          narrative = Narrative.includes(scenario: :behavior).find(possible.sample)
         else
           sorted =  narrative_counts.sort_by { |a| a[1] }
-          narrative = Narrative.includes( scenario: :behavior ).find ( sorted[0][0])
+          narrative = Narrative.includes(scenario: :behavior).find ( sorted[0][0])
         end
         # narrative = Narrative.where( id: include_ids).take
       end
-    elsif narrative_counts.count < Narrative.includes( scenario:
-    :behavior ).all.count
+    elsif narrative_counts.count < Narrative.includes(scenario:
+    :behavior).all.count
 
       scenario_counts = reactions.joins(:narrative).group(:scenario_id).count
 
@@ -83,30 +83,30 @@ class Experience < ActiveRecord::Base
         exp = include_ids - narrative_counts.keys
         world = exp - Reaction.group(:narrative_id).count.keys
 
-        i = Narrative.includes( scenario: :behavior ).joins(:reactions).where('scenario_id NOT IN (?)', scenario_counts.keys)
+        i = Narrative.includes(scenario: :behavior).joins(:reactions).where('scenario_id NOT IN (?)', scenario_counts.keys)
                      .where(reactions: { narrative_id: exp })
                      .group(:narrative_id).count
         if include_ids.empty?
-          narrative = Narrative.includes( scenario: :behavior ).where('scenario_id NOT IN (?)', scenario_counts.keys)
+          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where('id NOT IN (?)', narrative_counts.keys).sample
         elsif world.count > 0
-          narrative = Narrative.includes( scenario: :behavior ).where('scenario_id NOT IN (?)', scenario_counts.keys)
+          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: world).sample
 
         elsif exp.count > 0
-          narrative = Narrative.includes( scenario: :behavior ).where('scenario_id NOT IN (?)', scenario_counts.keys)
+          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: world).sample
         else
-          narrative = Narrative.includes( scenario: :behavior ).where('scenario_id NOT IN (?)', scenario_counts.keys)
+          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: include_ids).sample
         end
       end
 
       if narrative.nil?
-        narrative = Narrative.includes( scenario: :behavior ).where('id NOT IN (?)', narrative_counts.keys).sample
+        narrative = Narrative.includes(scenario: :behavior).where('id NOT IN (?)', narrative_counts.keys).sample
       end
     else
-      narrative = Narrative.includes( scenario: :behavior ).find(narrative_counts.sort_by { |a| a[1] }[0][0])
+      narrative = Narrative.includes(scenario: :behavior).find(narrative_counts.sort_by { |a| a[1] }[0][0])
     end
     narrative
   end
