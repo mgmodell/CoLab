@@ -95,7 +95,7 @@ class AdministrativeMailer < ApplicationMailer
       next if !u.last_emailed.nil? && u.last_emailed.today?
 
       AdministrativeMailer.remind(u).deliver_later
-      
+
       u.last_emailed = curr_date
       u.save
       logger.debug "Email sent to: #{u.name false} <#{u.email}>"

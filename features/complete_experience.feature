@@ -848,5 +848,5 @@ Feature: Users can complete 'experiences'
      Then the user logs out
 
 
-    Then there will be 16 reactions from 12 different narratives recorded
+    Then there will be 16 reactions from at least 10 different narratives recorded
     Then there will be 16 reactions from 3 different scenarios recorded

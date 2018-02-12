@@ -164,21 +164,21 @@ class User < ApplicationRecord
     my_candidate_lists = []
     if course_id > 0
       my_candidate_lists.concat candidate_lists
-                           .includes(candidates: :candidate_feedback,
-                                     bingo_game: :project)
-                           .joins(:bingo_game)
-                           .where(bingo_games:
+        .includes(candidates: :candidate_feedback,
+                  bingo_game: :project)
+        .joins(:bingo_game)
+        .where(bingo_games:
                               { reviewed: true, course_id: course_id })
-                           .to_a
+        .to_a
 
     else
       my_candidate_lists.concat candidate_lists
-                           .includes(candidates: :candidate_feedback,
-                                     bingo_game: :project)
-                           .joins(:bingo_game)
-                           .where(bingo_games:
+        .includes(candidates: :candidate_feedback,
+                  bingo_game: :project)
+        .joins(:bingo_game)
+        .where(bingo_games:
                               { reviewed: true })
-                           .to_a
+        .to_a
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
       next unless solo_cl.is_group
@@ -189,8 +189,10 @@ class User < ApplicationRecord
       my_candidate_lists[index] = group_cl
     end
 
-    total = my_candidate_lists
-      .inject(my_candidate_lists[0].performance) {|sum,cl| sum + cl.performance} unless my_candidate_lists.empty?
+    unless my_candidate_lists.empty?
+      total = my_candidate_lists
+              .inject(my_candidate_lists[0].performance) { |sum, cl| sum + cl.performance }
+    end
     my_candidate_lists.count == 0 ? 100 : (total / my_candidate_lists.count)
   end
 
@@ -198,21 +200,21 @@ class User < ApplicationRecord
     my_candidate_lists = []
     if course_id > 0
       my_candidate_lists.concat candidate_lists
-                           .includes(candidates: :candidate_feedback,
-                                     bingo_game: :project)
-                           .joins(:bingo_game)
-                           .where(bingo_games:
+        .includes(candidates: :candidate_feedback,
+                  bingo_game: :project)
+        .joins(:bingo_game)
+        .where(bingo_games:
                               { reviewed: true, course_id: course_id })
-                           .to_a
+        .to_a
 
     else
       my_candidate_lists.concat candidate_lists
-                           .includes(candidates: :candidate_feedback,
-                                     bingo_game: :project)
-                           .joins(:bingo_game)
-                           .where(bingo_games:
+        .includes(candidates: :candidate_feedback,
+                  bingo_game: :project)
+        .joins(:bingo_game)
+        .where(bingo_games:
                               { reviewed: true })
-                           .to_a
+        .to_a
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
       next unless solo_cl.is_group

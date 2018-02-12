@@ -89,6 +89,11 @@ Then(/^the database will show a reaction for the user with improvements of "([^"
   Reaction.where(user: @user, improvements: improvements).count.should be >= 1
 end
 
+Then(/^there will be (\d+) reactions from at least (\d+) different narratives recorded$/) do |reaction_count, narrative_diversity|
+  Reaction.all.count.should eq reaction_count.to_i
+  Reaction.group(:narrative_id).count.count.should >= narrative_diversity.to_i
+end
+
 Then(/^there will be (\d+) reactions from (\d+) different narratives recorded$/) do |reaction_count, narrative_diversity|
   Reaction.all.count.should eq reaction_count.to_i
   Reaction.group(:narrative_id).count.count.should eq narrative_diversity.to_i
