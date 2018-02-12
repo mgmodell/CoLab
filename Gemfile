@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '2.4.2'
+ruby '2.5.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.0.6'
@@ -32,7 +32,7 @@ gem 'city-state'
 gem 'country_select'
 gem 'd3-rails'
 gem 'descriptive_statistics', '~> 2.4.0', require: 'descriptive_statistics/safe'
-gem 'devise', '4.3.0'
+gem 'devise', '4.4.0'
 gem 'devise-multi_email'
 gem 'email_validator'
 gem 'forgery'
