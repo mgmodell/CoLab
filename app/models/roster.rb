@@ -11,6 +11,10 @@ class Roster < ApplicationRecord
                dropped_student: 6 }
   validates_uniqueness_of :user_id, scope: :course_id
 
+  scope :faculty, -> {
+    where(role: [roles[:instructor],
+                 roles[:assistant]])
+  }
   scope :students, -> {
     where(role: [roles[:enrolled_student],
                  roles[:invited_student],

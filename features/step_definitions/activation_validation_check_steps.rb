@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'forgery'
+
 When /^the project is activated$/ do
   @project.active = true
   @project.save
@@ -15,7 +17,15 @@ Then /^there should be (\d+) project save errors$/ do |expected_error_count|
 end
 
 Given /^an additional user is in each group of the project$/ do
-  user = User.make
+  user = User.new(
+    first_name: Forgery::Name.first_name,
+    last_name: Forgery::Name.last_name,
+    password: 'password',
+    password_confirmation: 'password',
+    email: Forgery::Internet.email_address,
+    timezone: 'UTC',
+    theme_id: 1
+  )
   user.skip_confirmation!
   user.save
   user.name(true).should_not be ', '

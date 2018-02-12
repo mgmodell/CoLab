@@ -3,8 +3,8 @@ Feature: Students review Candidate words for Bingo!
 
   Background:
     Given there is a course with an assessed project
-    Given the course started "two months ago" and ended "two months from now"
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
+    Given the course started "two months ago" and ended "two months from now"
     Given the course has a Bingo! game
     Given the Bingo! game individual count is 10
     Given the Bingo! started "last month" and ends "2 days from now"

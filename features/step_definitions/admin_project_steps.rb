@@ -56,20 +56,17 @@ Then /^retrieve the latest project from the db$/ do
 end
 
 Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value|
-  tz = ActiveSupport::TimeZone.new(@course.timezone)
+  course_tz = ActiveSupport::TimeZone.new(@course.timezone)
 
-  case date_field_prefix
+  case date_field_prefix.downcase
   when 'start'
-    date = Chronic.parse(date_value)
-    date -= date.utc_offset
-    date += tz.utc_offset
-    date = date.getlocal(tz.utc_offset).beginning_of_day
+    d = Chronic.parse(date_value)
+    date = course_tz.local(d.year, d.month, d.day)
     @project.start_date.should eq date
 
   when 'end'
-    date = Chronic.parse(date_value)
-    date += tz.utc_offset
-    date = date.getlocal(tz.utc_offset).end_of_day
+    d = Chronic.parse(date_value)
+    date = course_tz.local(d.year, d.month, d.day).end_of_day
     @project.end_date.change(sec: 0).should eq date.change(sec: 0)
   else
     puts "We didn't test anything there: " + date_field_prefix + ' not found'
@@ -77,7 +74,7 @@ Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_val
 end
 
 Then /^the project "([^"]*)" is "([^"]*)"$/ do |field, value|
-  case field.downcase
+  case field.downcase.downcase
   when 'name'
     @project.name.should eq value
   when 'description'

@@ -7,6 +7,7 @@ en:
     narrative_lbl: Narrative
     behavior_lbl: Behavior
     overall_diagnosis: Overall Diagnosis
+    reaction_diagnosis: Reaction Diagnosis
     reaction_suggestions: Reaction Suggestions
     start_date_lbl: Experience start date
     end_date_lbl: Experience end date

@@ -74,7 +74,7 @@ class AdministrativeMailer < ApplicationMailer
       current_users.delete user
     end
 
-    Experience.still_open.each do |experience|
+    Experience.active_at(curr_date).each do |experience|
       experience.course.enrolled_students.each do |user|
         reaction = experience.get_user_reaction user
         unless reaction.persisted? && reaction.behavior.present?
@@ -94,12 +94,7 @@ class AdministrativeMailer < ApplicationMailer
     uniqued.each do |u|
       next if !u.last_emailed.nil? && u.last_emailed.today?
 
-      puts "pre: #{ActionMailer::Base.deliveries.count}"
-      puts "pre: #{ActionMailer::Base.deliveries.size}"
       AdministrativeMailer.remind(u).deliver_later
-      puts "post: #{ActionMailer::Base.deliveries.count}"
-      puts "post: #{ActionMailer::Base.deliveries.size}"
-      puts "\t\t********"
       
       u.last_emailed = curr_date
       u.save

@@ -28,9 +28,7 @@ class ExperiencesController < ApplicationController
 
   def new
     @title = t('.title')
-    @experience = Experience.new
-    @experience.course_id = params[:course_id]
-    @experience.course = Course.find(params[:course_id])
+    @experience = Course.find(params[:course_id]).experiences.new
     @experience.start_date = @experience.course.start_date
     @experience.end_date = @experience.course.end_date
   end
@@ -41,6 +39,7 @@ class ExperiencesController < ApplicationController
     if @experience.save
       redirect_to @experience, notice: t('experiences.create_success')
     else
+      puts @experience.errors.full_messages unless @experience.errors.empty?
       @title = t('experiences.new.title')
       render :new
     end
@@ -50,6 +49,7 @@ class ExperiencesController < ApplicationController
     if @experience.update(experience_params)
       redirect_to @experience, notice: t('experiences.update_success')
     else
+      puts @experience.errors.full_messages unless @experience.errors.empty?
       @title = t('experiences.edit.title')
       render :edit
     end
@@ -86,7 +86,7 @@ class ExperiencesController < ApplicationController
           @title = t('experiences.react_title')
           render :reaction
         else
-          @diagnosis = Diagnosis.new(reaction: reaction, week: week)
+          @diagnosis = reaction.diagnoses.new(week: week)
         end
       end
     end
@@ -102,7 +102,7 @@ class ExperiencesController < ApplicationController
       @diagnosis = received_diagnosis
     else
       reaction = received_diagnosis.reaction
-      @diagnosis = Diagnosis.new(reaction: reaction, week: week)
+      @diagnosis = reaction.diagnoses.new(week: week)
     end
     if week.nil?
       # we just finished the last week
@@ -150,6 +150,7 @@ class ExperiencesController < ApplicationController
     if @current_user.is_admin?
       @experience = e_test
     else
+      @experience = e_test
       @course = @experience.course
       if e_test.course.rosters.instructor.where(user: @current_user).nil?
         redirect_to @course if @experience.nil?

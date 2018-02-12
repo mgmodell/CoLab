@@ -1,8 +1,9 @@
-<% theme_code = @current_user.nil? ? 'a' : @current_user.theme.code %>
+<% theme_code = get_theme_code %>
 <!DOCTYPE html>
 <html>
   <%= favicon_link_tag %>
   <head>
+    <%= render 'layouts/shared/google_analytics' %>
     <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag    "application", :media => "all" %>

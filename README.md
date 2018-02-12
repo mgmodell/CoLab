@@ -22,7 +22,7 @@ At a minimum, you will need to install git and a text editor (I use vi, but ther
 
 ### Testing ###
 * [rvm (does not work in regular Windows)](http://rvm.io/)
-* [ruby 2.3.3 (use rvm to install if not on Windows)](https://www.ruby-lang.org/en/downloads/)
+* [ruby 2.4.2 (use rvm to install if not on Windows)](https://www.ruby-lang.org/en/downloads/)
 * [MariaDB](https://mariadb.org/download/)
     * Create `colab_dev` and `colab_test` databases
     * Create a `test` user with `test` for the password

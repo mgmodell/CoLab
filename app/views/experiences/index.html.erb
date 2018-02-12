@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-   anonymize = @current_user.anonymize? %>
+<% theme_code = get_theme_code
+   anonymize = get_anonymous %>
 <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -24,8 +24,8 @@
       <tr>
         <td><%= link_to experience.get_name( anonymize ), experience %></td>
         <td><%= experience.course.get_name( anonymize ) %></td>
-        <td><%= l experience.start_date, format: :tz_clarity %></td>
-        <td><%= l experience.end_date, format: :tz_clarity %></td>
+        <td><%= l in_tz( date: experience.start_date ), format: :tz_clarity %></td>
+        <td><%= l in_tz( date: experience.end_date ), format: :tz_clarity %></td>
         <td><%= experience.active %></td>
         <td><%= link_to( t(:show), experience_path( experience )) %>&nbsp;|&nbsp;
         <%= link_to t(:edit), edit_experience_path(experience) %>&nbsp;|&nbsp;

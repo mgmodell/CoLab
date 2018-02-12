@@ -1,7 +1,7 @@
 <%= simple_form_for @project do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-     anonymize = @current_user.anonymize? %>
+  <% theme_code = get_theme_code
+     anonymize = get_anonymous %>
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
@@ -21,11 +21,14 @@
     <table width="100%">
       <tr>
         <td width="45%">
-          <%= f.input :start_date, as: :date_time_local, label: "Project start date" %>
+          <% ctz = f.object.course.timezone %>
+          <%= f.input :start_date, as: :date, html5: true, label: t('projects.start_date_lbl'),
+            input_html: { value: date_field_in_tz( date: f.object.start_date, tz_str: ctz )} %>
         </td>
         <td width="10%" align="center" valign="center">&nbsp;</td>
         <td width="45%">
-          <%= f.input :end_date, as: :date_time_local, label: "Project end date" %>
+          <%= f.input :end_date, as: :date, html5: true, label: t('projects.end_date_bl'),
+            input_html: { value: date_field_in_tz( date: f.object.end_date, tz_str: ctz )} %>
         </td>
       </tr>
       <tr>

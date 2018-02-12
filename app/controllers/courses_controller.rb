@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CoursesController < ApplicationController
-  before_action :set_course, only: %i[show edit update destroy add_students add_instructors]
+  before_action :set_course, only: %i[show edit update destroy add_students add_instructors new_from_template]
   before_action :check_admin, only: %i[new create]
   before_action :check_editor, except: %i[next diagnose react accept_roster decline_roster show index]
   before_action :check_viewer, except: %i[next diagnose react accept_roster decline_roster]
@@ -30,12 +30,27 @@ class CoursesController < ApplicationController
 
   def new
     @title = t('.title')
-    @course = Course.new
+    @course = nil
+    @course = if @current_user.school.nil?
+                Course.new
+              else
+                @current_user.school.courses.new
+              end
     @course.timezone = @current_user.timezone
-    @course.school = @current_user.school unless @current_user.school.nil?
     @course.start_date = Date.tomorrow.beginning_of_day
     @course.end_date = 1.month.from_now.end_of_day
-    @course.rosters << Roster.new(role: Roster.roles[:instructor], user: @current_user)
+    @course.rosters.new(role: Roster.roles[:instructor], user: @current_user)
+  end
+
+  def new_from_template
+    new_start = Chronic.parse(params[:start_date])
+
+    copied_course = @course.copy_from_template new_start: new_start
+    if copied_course.errors.empty?
+      redirect_to courses_url, notice: t('courses.copy_success')
+    else
+      redirect_to courses_url, notice: t('courses.copy_fail')
+    end
   end
 
   def create
@@ -44,18 +59,19 @@ class CoursesController < ApplicationController
     @course.rosters << Roster.new(role: Roster.roles[:instructor], user: @current_user)
 
     if @course.save
-      redirect_to url: course_url(@course), notice: t('courses.create_success')
+      redirect_to courses_url, notice: t('courses.create_success')
     else
       render :new
     end
   end
 
   def update
-    @title = t('.title')
+    @title = t('courses.edit.title')
     if @course.update(course_params)
       @course.school = School.find(@course.school_id)
       redirect_to course_path(@course), notice: t('courses.update_success')
     else
+      puts @course.errors.full_messages unless @course.errors.empty?
       render :edit
     end
   end
@@ -66,13 +82,13 @@ class CoursesController < ApplicationController
   end
 
   def add_students
-    @course.add_students_by_email params[:addresses]
-    redirect_to @course, notice: t('courses.students_invited')
+    count = @course.add_students_by_email params[:addresses]
+    redirect_to @course, notice: t('courses.students_invited', count: count)
   end
 
   def add_instructors
-    @course.add_instructors_by_email params[:addresses]
-    redirect_to @course, notice: t('courses.instructor_invited')
+    count = @course.add_instructors_by_email params[:addresses]
+    redirect_to @course, notice: t('courses.instructor_invited', count: count)
   end
 
   def accept_roster
@@ -154,9 +170,11 @@ class CoursesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_course
     if @current_user.is_admin?
-      @course = Course.find(params[:id])
+      @course = Course.includes(:users).find(params[:id])
     else
-      @course = @current_user.rosters.instructor.where(course_id: params[:id]).take.course
+      @course = @current_user
+                .rosters.instructor
+                .where(course_id: params[:id]).take.course
       redirect_to :show if @course.nil?
     end
   end
