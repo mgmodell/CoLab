@@ -1,5 +1,5 @@
 <h1><%= t( :your_tasks ) %></h1>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
+<% theme_code = get_theme_code %>
 <p><%= t 'home.greeting', name: @current_user.nil? ? "John" : @current_user.first_name %>,</br>
 <%= t 'home.tasks', count: 2 %>
 <div data-role="tabs" id="tabs">
@@ -44,8 +44,8 @@
             </td>
             <td><%= event.group_name %></td>
             <td><%= event.course_name %></td>
-            <td> <%= l event.start_time, format: :tz_clarity %> </td>
-            <td> <%= l event.close_date, format: :tz_clarity %> </td>
+            <td> <%= l in_tz( date: event.start_time ), format: :tz_clarity %> </td>
+            <td> <%= l in_tz( date: event.close_date ), format: :tz_clarity %> </td>
             <td>N/A</td>
           </tr>
         <% end %>

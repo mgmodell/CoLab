@@ -11,7 +11,7 @@ class Project < ApplicationRecord
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
   has_many :installments, through: :assessments
-  belongs_to :consent_form, inverse_of: :projects, optional: true
+  belongs_to :consent_form, inverse_of: :projects, required: false
 
   has_many :users, through: :groups
   has_many :factors, through: :factor_pack
@@ -50,7 +50,7 @@ class Project < ApplicationRecord
   end
 
   def is_for_research?
-    !consent_form.nil? && consent_form.is_active?
+    consent_form.present? && consent_form.is_active?
   end
 
   def enrolled_user_rosters
@@ -153,17 +153,24 @@ class Project < ApplicationRecord
   def dates_within_course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date
-        errors.add(:start_date, "The project cannot begin before the course has begun (#{course.start_date})")
+        msg = 'The project cannot begin before the course has begun '
+        msg += "(#{start_date} < #{course.start_date})"
+        errors.add(:start_date, msg)
       end
       if end_date > course.end_date
-        errors.add(:end_date, "The project cannot continue after the course has ended (#{course.end_date})")
+        msg = 'The project cannot continue after the course has ended '
+        msg += "(#{end_date} > #{course.end_date})"
+        errors.add(:end_date, msg)
       end
     end
     errors
   end
 
   def activation_status
-    if active_was && active && changed?
+    if active_was && active &&
+       (start_dow_changed? || end_dow_changed? ||
+        start_date_changed? || end_date_changed? ||
+        factor_pack_id_changed? || style_id_changed?)
       self.active = false
     elsif !active_was && active
 
@@ -198,20 +205,26 @@ class Project < ApplicationRecord
     Assessment.build_new_assessment self if active? && is_available?
   end
 
+  private
+
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
-    user_tz = Time.zone
 
-    unless start_date == course.start_date && new_record?
-      # TZ corrections
-      new_date = start_date - user_tz.utc_offset + course_tz.utc_offset
-      self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day if start_date_changed?
-      new_date = end_date - user_tz.utc_offset + course_tz.utc_offset
-      self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day if end_date_changed?
+    # TZ corrections
+    if start_date.nil? || start_date.change(hour: 0) == course.start_date.change(hour: 0)
+      self.start_date = course.start_date
+    elsif start_date_changed?
+      proc_date = course_tz.local(start_date.year, start_date.month, start_date.day)
+      self.start_date = proc_date.beginning_of_day
+    end
+
+    if end_date.nil? || end_date.change(hour: 0) == course.end_date.change(hour: 0)
+      self.end_date = course.end_date
+    elsif end_date_changed?
+      proc_date = course_tz.local(end_date.year, end_date.month, end_date.day)
+      self.end_date = proc_date.end_of_day.change(sec: 0)
     end
   end
-
-  private
 
   def anonymize
     self.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"

@@ -62,6 +62,7 @@ class CandidateListsController < ApplicationController
                         notice: (t 'candidate_lists.update_success')
           end
         else
+          puts @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
           format.html { render :edit }
         end
       end

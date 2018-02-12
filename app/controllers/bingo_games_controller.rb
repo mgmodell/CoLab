@@ -34,19 +34,18 @@ class BingoGamesController < ApplicationController
 
   def new
     @title = t '.title'
-    @bingo_game = BingoGame.new
-    @bingo_game.course_id = params[:course_id]
-    @bingo_game.course = Course.find(params[:course_id])
+    @bingo_game = Course.find(params[:course_id]).bingo_games.new
     @bingo_game.start_date = @bingo_game.course.start_date
     @bingo_game.end_date = @bingo_game.course.end_date
   end
 
   def create
-    @title = t '.title'
+    @title = t 'bingo_games.new.title'
     @bingo_game = BingoGame.new(bingo_game_params)
     if @bingo_game.save
       redirect_to @bingo_game, notice: t('bingo_games.create_success')
     else
+      puts @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
       render :new
     end
   end
@@ -56,6 +55,7 @@ class BingoGamesController < ApplicationController
     if @bingo_game.update(bingo_game_params)
       redirect_to @bingo_game, notice: t('bingo_games.update_success')
     else
+      puts @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
       render :edit
     end
   end

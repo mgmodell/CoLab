@@ -77,7 +77,7 @@ end
 
 scenario_times = {}
 
-World( ActiveJob::TestHelper)
+World( ActiveJob::TestHelper )
 Around() do |scenario, block|
   start = Time.now
   perform_enqueued_jobs do

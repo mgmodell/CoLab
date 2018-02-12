@@ -1,6 +1,6 @@
 <%= simple_form_for @candidate_list do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+  <% theme_code = get_theme_code
      anonymize = false %>
   <table>
     <tr>

@@ -1,7 +1,7 @@
 <%= simple_form_for @course do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-     anonymize = @current_user.anonymize? %>
+  <% theme_code = get_theme_code
+     anonymize = get_anonymous %>
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
@@ -17,8 +17,10 @@
         <%= f.input :number %>
         <%= f.association :school %>
         <%= f.time_zone_select :timezone %>
-        <%= f.input :start_date, as: :date_time_local %>
-        <%= f.input :end_date, as: :date_time_local %>
+        <%= f.input :start_date, as: :date, html5: true,
+          input_html: { value: date_field_in_tz( date: f.object.start_date, tz_str: f.object.timezone ) } %>
+        <%= f.input :end_date, as: :date, html5: true,
+          input_html: { value: date_field_in_tz( date: f.object.end_date, tz_str: f.object.timezone ) } %>
         <%= f.input :description, as: :text %>
       </div>
     </div>
@@ -81,7 +83,7 @@
           <%= t roster.role.humanize %>
         </td>
         <td><%= link_to( t( 'courses.re_invite' ),
-              re_invite_student_path( roster.user ) ) unless roster.role.enrolled_student? %>&nbsp;|&nbsp;
+              re_invite_student_path( roster.user ) ) unless roster.enrolled_student? %>&nbsp;|&nbsp;
         <%= link_to t( 'courses.drop' ), drop_student_path( roster.id ) %></td>
       </tr>
     <% end %>
@@ -124,9 +126,9 @@
                 </td>
                 <td>
                   <div hidden>
-                    <%= l activity.end_date.in_time_zone( @current_user.timezone ), format: :datestamp %>
+                    <%= l in_tz( date: activity.end_date ), format: :datestamp %>
                   </div>
-                  <%= l activity.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
+                  <%= l in_tz( date: activity.end_date ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show ), activity %>&nbsp;|&nbsp;
                 <%= link_to t( :edit ), [:edit, activity] %>&nbsp;|&nbsp;

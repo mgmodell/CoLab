@@ -35,7 +35,7 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
   step 'the user logs out'
 
   # set up how much we want to complete
-  case completion_level
+  case completion_level.downcase
   when 'finish'
     fields_to_complete = fields
   when 'incomplete'

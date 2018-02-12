@@ -8,10 +8,13 @@ class Assessment < ApplicationRecord
   has_many :users, through: :project
   has_many :groups, through: :project
 
-  after_validation :timezone_adjust
+  # after_validation :timezone_adjust
 
   # Helpful scope
-  scope :still_open, -> { where('assessments.end_date >= ?', DateTime.current) }
+  scope :active_at, ->(date) {
+                      joins(:project)
+                        .where('assessments.end_date >= ?', date)
+                        .where(projects: { active: true }) }
 
   def is_completed_by_user(user)
     user.installments.where(assessment: self).count != 0
@@ -85,7 +88,7 @@ class Assessment < ApplicationRecord
   def self.build_new_assessment(project)
     tz = ActiveSupport::TimeZone.new(project.course.timezone)
 
-    init_date = Date.today
+    init_date = DateTime.current
     init_day = init_date.wday
     assessment = Assessment.new
 
@@ -96,7 +99,7 @@ class Assessment < ApplicationRecord
       day_delta = 7 + day_delta if day_delta < 0
       assessment.start_date = init_date - day_delta.days
     end
-    assessment.start_date = assessment.start_date.beginning_of_day
+    assessment.start_date = tz.parse(assessment.start_date.to_s).beginning_of_day
 
     # calc period
     period = project.end_dow > project.start_dow ?
@@ -104,12 +107,12 @@ class Assessment < ApplicationRecord
       7 - project.start_dow + project.end_dow
 
     assessment.end_date = assessment.start_date + period.days
-    assessment.end_date = assessment.end_date.end_of_day
+    assessment.end_date = tz.parse(assessment.end_date.to_s).end_of_day.change(sec: 0)
 
     existing_assessment_count = project.assessments.where(
       'start_date = ? AND end_date = ?',
-      (assessment.start_date - tz.utc_offset).change(usec: 0),
-      (assessment.end_date - tz.utc_offset).change(usec: 0)
+      assessment.start_date.change(sec: 0),
+      assessment.end_date.change(sec: 0)
     ).count
 
     if existing_assessment_count == 0

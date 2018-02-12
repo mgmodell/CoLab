@@ -3,8 +3,12 @@ Rails.application.routes.draw do
   get 'admin' => 'courses#index'
 
   scope 'admin' do
-    get 'courses/add_students' => 'courses#add_students', as: :add_students
-    get 'courses/add_instructors' => 'courses#add_instructors', as: :add_instructors
+    get 'courses/copy' => 'courses#new_from_template',
+        as: :copy_course
+    get 'courses/add_students' => 'courses#add_students',
+        as: :add_students
+    get 'courses/add_instructors' => 'courses#add_instructors',
+        as: :add_instructors
     get 'courses/re_invite_student/:user_id' => 'courses#re_invite_student',
         as: :re_invite_student
     get 'projects/add_group' => 'projects#add_group', as: :add_group

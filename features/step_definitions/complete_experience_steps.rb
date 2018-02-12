@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'forgery'
+
 Then /^the user clicks the link to the experience$/ do
   first(:link, @experience.name).click
   # click_link_or_button @experience.name
@@ -38,7 +40,7 @@ end
 
 Then /^the latest Diagnosis will show "([^"]*)" in the field "([^"]*)"$/ do |_value, fld|
   diagnosis = Diagnosis.last
-  case fld
+  case fld.downcase
   when 'comment'
     diagnosis.comment.should eq fld
   when 'other_text'
@@ -134,23 +136,35 @@ Then /^all users complete the course successfully$/ do
 end
 
 Given /^the user enrolls in a new course$/ do
-  @course = Course.make
+  @course = School.find(1).courses.new(
+    name: "#{Forgery::Name.industry} Course",
+    number: Forgery::Basic.number,
+    timezone: 'UTC',
+    start_date: 4.months.ago,
+    end_date: 2.months.from_now
+  )
   @course.save
   @course.get_name(true).should_not be_nil
   @course.get_name(true).length.should be > 0
+  @course.rosters.new(
+    user: @user,
+    role: Roster.roles[:enrolled_student]
+  )
+  @course.save
   puts @course.errors.full_messages unless @course.errors.blank?
-  r = Roster.create(user: @user, course: @course, role: Roster.roles[:enrolled_student])
 end
 
 Given /^the course has an experience$/ do
-  @experience = Experience.make
-  @experience.course = @course
+  @experience = @course.experiences.new(
+    name: Forgery::Name.industry + ' Experience'
+  )
+
   @experience.save
   puts @experience.errors.full_messages unless @experience.errors.blank?
 end
 
 Given /^the user enrolls in the course$/ do
-  r = Roster.create(user: @user, course: @course, role: Roster.roles[:enrolled_student])
+  Roster.create(user: @user, course: @course, role: Roster.roles[:enrolled_student])
 end
 
 Then /^the user is dropped from the course$/ do

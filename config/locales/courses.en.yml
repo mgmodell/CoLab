@@ -2,6 +2,10 @@ en:
   courses:
     index:
       title: List of Courses
+      submit_copy: Copy this Course
+      copy_new_start: When will this new course start?
+      original_date: Existing course date
+      copy_new_start_lbl: New course start date?
     edit:
       title: Edit Course Details
     show:
@@ -19,8 +23,17 @@ en:
     create_success: Course created successfully!
     destroy_success: Course destroyed successfully!
     update_success: Course updated successfully!
-    instructor_invited: Instructor(s) have been invited.
-    students_invited: Student(s) have been invited.
+    copy_success: Course successfully copied!
+    copy_fail: >
+      The course was not successfully copied. Contact Support.
+    instructor_invited:
+      zero: No instructors invited. Was there a typo?
+      one: One instructor has been invited.
+      other: "%{count} instructors have been invited."
+    students_invited:
+      zero: No students invited. Was there a typo?
+      one: One student has been invited.
+      other: "%{count} students have been invited."
     accept_fail: You can only accept your own enrollments
     decline_fail: You can only decline your own enrollments
     permission_fail: You are not permitted to make that sort of change.

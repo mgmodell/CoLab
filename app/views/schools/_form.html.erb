@@ -1,7 +1,7 @@
 <%= simple_form_for @school do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-     anonymize = @current_user.anonymize? %>
+  <% theme_code = get_theme_code
+     anonymize = get_anonymous %>
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>

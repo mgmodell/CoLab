@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'forgery'
+
 Then /^the user will see the task listing page$/ do
   page.should have_content 'Your Tasks'
 end
@@ -19,12 +21,20 @@ Then /^the user will see a request for demographics$/ do
 end
 
 Given /^a user has signed up$/ do
-  @user = User.make
+  @user = User.new(
+    first_name: Forgery::Name.first_name,
+    last_name: Forgery::Name.last_name,
+    password: 'password',
+    password_confirmation: 'password',
+    email: Forgery::Internet.email_address,
+    timezone: 'UTC',
+    theme_id: 1
+  )
   @user.confirm
   @user.save
+  puts @user.errors.full_messages unless @user.errors.blank?
   @user.name(true).should_not be ', '
   @user.name(true).length.should be > 2
-  puts @user.errors.full_messages unless @user.errors.blank?
 end
 
 When /^the user "(.*?)" fill in demographics data$/ do |does_or_does_not|
@@ -46,13 +56,29 @@ end
 Given /^(\d+) users$/ do |user_count|
   @users = []
   user_count.to_i.times do
-    u = User.make
+    u = User.new(
+      first_name: Forgery::Name.first_name,
+      last_name: Forgery::Name.last_name,
+      password: 'password',
+      password_confirmation: 'password',
+      email: Forgery::Internet.email_address,
+      timezone: 'UTC',
+      theme_id: 1
+    )
+    u.skip_confirmation!
+    u.save
     @users << u
   end
 end
 
 Given /^a course$/ do
-  @course = Course.make
+  @course = School.find(1).courses.new(
+    name: "#{Forgery::Name.industry} Course",
+    number: Forgery::Basic.number,
+    timezone: 'UTC',
+    start_date: 4.months.ago,
+    end_date: 2.months.from_now
+  )
   @course.save
   @course.get_name(true).should_not be_nil
   @course.get_name(true).length.should be > 0
@@ -76,14 +102,14 @@ end
 
 Then /^the course has (\d+) "([^"]*)" users$/ do |user_count, user_status|
   status = 0
-  case user_status
-  when 'Invited Student'
+  case user_status.downcase
+  when 'invited student'
     status = Roster.roles[:invited_student]
-  when 'Instructor'
+  when 'instructor'
     status = Roster.roles[:instructor]
-  when 'Enrolled Student'
+  when 'enrolled student'
     status = Roster.roles[:enrolled_student]
-  when 'Declined Student'
+  when 'declined student'
     status = Roster.roles[:declined_student]
   end
   @course.rosters.where(role: status).count.should eq user_count.to_i

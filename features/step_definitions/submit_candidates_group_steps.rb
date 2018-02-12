@@ -96,7 +96,6 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
     @entries_list[index] = {} if @entries_list[index].blank?
     @entries_list.each do |entry|
       next unless entry['term'] == existing_term
-      puts "found #{existing_term}"
       entry[field] = new_val
       page.fill_in("candidate_list_candidates_attributes_#{index}_#{field}",
                    with: @entries_list[index][field])

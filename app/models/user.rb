@@ -79,22 +79,22 @@ class User < ApplicationRecord
   end
 
   def waiting_consent_logs
+    now = Date.today
     # Find those consent forms to which the user has not yet responded
-    all_consent_forms = ConsentForm.includes(:projects).all.to_a
-
     # We only want to do this for currently active consent forms
-    consent_forms = all_consent_forms.delete_if { |cf| !cf.is_active? }
+    consent_forms = ConsentForm.active_at(now)
+                               .includes(:projects)
+                               .to_a
 
-    # Have we completed it already?
     consent_logs.where(presented: true).each do |consent_log|
-      consent_forms.delete(consent_log.consent_form)
+      consent_forms.delete_if { |consent_form| consent_form.id == consent_log.consent_form_id }
     end
-
     # Is it from a project that we're not in?
     projects_array = projects.to_a
     consent_forms.each do |consent_form|
+      next if consent_form.global?
       consent_form.projects.each do |cf_project|
-        if !consent_form.global? && !projects_array.include?(cf_project)
+        unless projects_array.include?(cf_project)
           consent_forms.delete(consent_form)
           break
         end
@@ -163,20 +163,22 @@ class User < ApplicationRecord
   def get_bingo_performance(course_id: 0)
     my_candidate_lists = []
     if course_id > 0
-      my_candidate_lists = candidate_lists
+      my_candidate_lists.concat candidate_lists
                            .includes(candidates: :candidate_feedback,
                                      bingo_game: :project)
                            .joins(:bingo_game)
                            .where(bingo_games:
                               { reviewed: true, course_id: course_id })
+                           .to_a
 
     else
-      my_candidate_lists = candidate_lists
+      my_candidate_lists.concat candidate_lists
                            .includes(candidates: :candidate_feedback,
                                      bingo_game: :project)
                            .joins(:bingo_game)
                            .where(bingo_games:
                               { reviewed: true })
+                           .to_a
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
       next unless solo_cl.is_group
@@ -187,30 +189,30 @@ class User < ApplicationRecord
       my_candidate_lists[index] = group_cl
     end
 
-    total = 0
-    my_candidate_lists.each do |candidate_list|
-      total += candidate_list.performance
-    end
+    total = my_candidate_lists
+      .inject(my_candidate_lists[0].performance) {|sum,cl| sum + cl.performance} unless my_candidate_lists.empty?
     my_candidate_lists.count == 0 ? 100 : (total / my_candidate_lists.count)
   end
 
   def get_bingo_data(course_id: 0)
     my_candidate_lists = []
     if course_id > 0
-      my_candidate_lists = candidate_lists
+      my_candidate_lists.concat candidate_lists
                            .includes(candidates: :candidate_feedback,
                                      bingo_game: :project)
                            .joins(:bingo_game)
                            .where(bingo_games:
                               { reviewed: true, course_id: course_id })
+                           .to_a
 
     else
-      my_candidate_lists = candidate_lists
+      my_candidate_lists.concat candidate_lists
                            .includes(candidates: :candidate_feedback,
                                      bingo_game: :project)
                            .joins(:bingo_game)
                            .where(bingo_games:
                               { reviewed: true })
+                           .to_a
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
       next unless solo_cl.is_group
@@ -231,7 +233,7 @@ class User < ApplicationRecord
   def get_experience_performance(course_id: 0)
     my_reactions = []
     my_reactions = if course_id > 0
-                     reactions.joins(:experience)
+                     reactions.includes(:narrative).joins(:experience)
                               .where(experiences: { course_id: course_id })
                    else
                      reactions
@@ -260,21 +262,19 @@ class User < ApplicationRecord
   end
 
   def waiting_student_tasks
-    waiting_tasks = assessments.includes(project: %i[course consent_form]).still_open.to_a
+    cur_date = DateTime.current
+    waiting_tasks = assessments.includes(project: %i[course consent_form]).active_at(cur_date).to_a
 
     # Check available tasks for students
     available_rosters = rosters.enrolled
 
     # Add the experiences
-    cur_date = DateTime.current
 
-    waiting_tasks.concat Experience.joins(course: :rosters)
-      .where('rosters.user_id': id, 'experiences.active': true)
-      .where('rosters.role = ? OR rosters.role = ?',
-             Roster.roles[:enrolled_student], Roster.roles[:invited_student])
-                                   .where('experiences.end_date >= ? AND experiences.start_date <= ?', cur_date, cur_date)
+    waiting_tasks.concat Experience.active_at(cur_date).joins(course: :rosters)
+      .where('rosters.user_id': id)
+                                   .where('rosters.role IN (?)',
+                                          [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
                                    .to_a
-
     # Add the bingo games
     waiting_games = BingoGame.joins(course: :rosters)
                              .includes(:course, :project)

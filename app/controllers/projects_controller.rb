@@ -31,22 +31,22 @@ class ProjectsController < ApplicationController
 
   def new
     @title = t('.title')
-    @project = Project.new
-    @project.course = Course.find params[:course_id]
-    @project.start_date = @project.course.start_date
-    @project.end_date = @project.course.end_date
+    course = Course.find(params[:course_id])
+    @project = course.projects.new
+    @project.start_date = course.start_date
+    @project.end_date = course.end_date
   end
 
   def create
     @title = t('.title')
     @project = Project.new(project_params)
-    @project.course = Course.find(@project.course_id)
     if @project.save
       notice = @project.active ?
             t('projects.create_success') :
             t('projects.create_success_inactive')
       redirect_to @project, notice: notice
     else
+      puts @project.errors.full_messages unless @project.errors.empty?
       render :new
     end
   end
@@ -79,6 +79,7 @@ class ProjectsController < ApplicationController
             t('projects.update_success_inactive')
       redirect_to @project, notice: notice
     else
+      puts @project.errors.full_messages unless @project.errors.empty?
       render :edit
     end
   end
