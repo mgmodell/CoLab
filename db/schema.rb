@@ -66,19 +66,11 @@ ActiveRecord::Schema.define(version: 20180129083336) do
     t.datetime "end_date"
     t.datetime "created_at",                                        null: false
     t.datetime "updated_at",                                        null: false
-<<<<<<< HEAD
-    t.boolean  "active"
+    t.boolean  "active",                            default: false
     t.integer  "course_id"
     t.integer  "project_id"
     t.integer  "lead_time"
     t.integer  "group_discount"
-=======
-    t.boolean  "active",                            default: false
-    t.integer  "course_id",           limit: 4
-    t.integer  "project_id",          limit: 4
-    t.integer  "lead_time",           limit: 4
-    t.integer  "group_discount",      limit: 4
->>>>>>> staging
     t.boolean  "reviewed"
     t.boolean  "instructor_notified",               default: false, null: false
     t.boolean  "students_notified",                 default: false, null: false
@@ -222,20 +214,12 @@ ActiveRecord::Schema.define(version: 20180129083336) do
     t.string   "name"
     t.datetime "start_date"
     t.datetime "end_date"
-<<<<<<< HEAD
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
-    t.boolean  "active"
+    t.boolean  "active",             default: false
     t.boolean  "instructor_updated", default: false, null: false
     t.string   "anon_name"
     t.index ["course_id"], name: "index_experiences_on_course_id", using: :btree
-=======
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
-    t.boolean  "active",                         default: false
-    t.boolean  "instructor_updated",             default: false, null: false
-    t.string   "anon_name",          limit: 255
->>>>>>> staging
   end
 
   create_table "factor_packs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -333,7 +317,6 @@ ActiveRecord::Schema.define(version: 20180129083336) do
     t.string  "name_en"
     t.string  "name_ko"
     t.boolean "translated"
-<<<<<<< HEAD
     t.index ["code"], name: "index_languages_on_code", unique: true, using: :btree
     t.index ["name_en"], name: "index_languages_on_name_en", unique: true, using: :btree
   end
@@ -351,37 +334,11 @@ ActiveRecord::Schema.define(version: 20180129083336) do
     t.string   "name"
     t.string   "description"
     t.integer  "course_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.integer  "start_dow"
     t.integer  "end_dow"
-    t.boolean  "active"
-=======
-  end
-
-  add_index "languages", ["code"], name: "index_languages_on_code", unique: true, using: :btree
-  add_index "languages", ["name_en"], name: "index_languages_on_name_en", unique: true, using: :btree
-
-  create_table "narratives", force: :cascade do |t|
-    t.string   "member_en",   limit: 255
-    t.integer  "scenario_id", limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.string   "member_ko",   limit: 255
-  end
-
-  add_index "narratives", ["scenario_id"], name: "index_narratives_on_scenario_id", using: :btree
-
-  create_table "projects", force: :cascade do |t|
-    t.string   "name",            limit: 255
-    t.string   "description",     limit: 255
-    t.integer  "course_id",       limit: 4
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.integer  "start_dow",       limit: 4
-    t.integer  "end_dow",         limit: 4
-    t.boolean  "active",                      default: false
->>>>>>> staging
+    t.boolean  "active",          default: false
     t.datetime "start_date"
     t.datetime "end_date"
     t.integer  "consent_form_id"
