@@ -69,6 +69,7 @@ en:
       hometown: Where did you spend most of your time growing up?
       impairments: >
         Do you have any impairments which alter your perspective?
+        (optional)
       impairment_visual: Visual
       impairment_auditory: Auditory
       impairment_motor: Motor

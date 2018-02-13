@@ -58,56 +58,60 @@
         <th><%= t 'experiences.overall_diagnosis' %></th>
         <th data-priority="0"><%= t 'experiences.reaction_suggestions' %></th>
         <tr>
-        </thead>
-        <tbody>
-          <% @experience.course.enrolled_students.each do |student| %>
-            <tr><% reaction = @experience.get_user_reaction( student ) %>
-              <% if anonymize %>
-                <td><%= student.anon_last_name %></td>
-                <td><%= student.anon_first_name %></td>
-                <td><%= t :email_redacted %></td>
-              <% else %>
-                <td><%= student.last_name.nil? ? t( :not_given ): student.last_name %></td>
-                <td><%= student.first_name.nil? ? t( :not_given ) : student.first_name %></td>
-                <td><%= mail_to student.email %></td>
-              <% end %>
-              <% if reaction.behavior.present? #completed %>
-                <td>Completed</td>
-                <td><%= reaction.narrative.scenario.behavior.name %></td>
-                <td><%= reaction.narrative.member %></td>
-                <td><span class="<%= reaction.behavior == reaction.narrative.scenario.behavior ? "connected" : "disconnect" %>"%><%= reaction.behavior.name %></span></td>
-                <td>
-                  <% if reaction.improvements.blank? %>
-                    <%= t :n_a %>
-                  <% else %>
-                    <a href="#imp_<%= reaction.id %>"
+    </thead>
+    <tbody>
+    <% @experience.course.enrolled_students.each do |student| %>
+      <tr><% reaction = @experience.get_user_reaction( student ) %>
+      <% if anonymize %>
+        <td><%= student.anon_last_name %></td>
+        <td><%= student.anon_first_name %></td>
+        <td><%= t :email_redacted %></td>
+      <% else %>
+        <td><%= student.last_name.nil? ? t( :not_given ): student.last_name %></td>
+        <td><%= student.first_name.nil? ? t( :not_given ) : student.first_name %></td>
+        <td><%= mail_to student.email %></td>
+      <% end %>
+      <% if reaction.behavior.present? #completed %>
+        <td>Completed</td>
+        <td><%= reaction.narrative.scenario.behavior.name %></td>
+        <td><%= reaction.narrative.member %></td>
+        <td>
+          <span class="<%= reaction.behavior == reaction.narrative.scenario.behavior ? "connected" : "disconnect" %>"%>
+            <%= reaction.behavior.name %>
+          </span>
+        </td>
+        <td>
+        <% if reaction.improvements.blank? %>
+          <%= t :n_a %>
+        <% else %>
+          <a href="#imp_<%= reaction.id %>"
                         class="ui-btn ui-corner-all ui-shadow ui-btn-inline"
                         data-rel="popup"
                         data-position-to="origin"><%= t 'experiences.improvements' %></a>
-                  <% end %>
-                </td>
-              <% elsif reaction.next_week.nil? #all but the conclusions %>
-                <td>97%</td>
-                <td><%= reaction.narrative.scenario.behavior.name %></td>
-                <td><%= reaction.narrative.member %></td>
-                <td><%= t 'experiences.not_completed' %></td>
-                <td><%= t 'experiences.not_completed' %></td>
-              <% elsif reaction.status == '0%' %>
-                <td>0%</td>
-                <td><%= t 'experiences.not_started' %></td>
-                <td><%= t 'experiences.not_started' %></td>
-                <td><%= t 'experiences.not_started' %></td>
-                <td><%= t 'experiences.not_started' %></td>
-              <% else #in progress %>
-                <td><%= reaction.status %>%</td>
-                <td><%= reaction.narrative.scenario.behavior.name %></td>
-                <td><%= reaction.narrative.member %></td>
-                <td><%= t :n_a %></td>
-              <% end %>
-              <tr>
-              <% end %>
-            </tbody>
-          </table>
+        <% end %>
+        </td>
+        <% elsif reaction.next_week.nil? #all but the conclusions %>
+          <td>97%</td>
+          <td><%= reaction.narrative.scenario.behavior.name %></td>
+          <td><%= reaction.narrative.member %></td>
+          <td><%= t 'experiences.not_completed' %></td>
+          <td><%= t 'experiences.not_completed' %></td>
+        <% elsif reaction.status == '0%' %>
+          <td>0%</td>
+          <td><%= t 'experiences.not_started' %></td>
+          <td><%= t 'experiences.not_started' %></td>
+          <td><%= t 'experiences.not_started' %></td>
+          <td><%= t 'experiences.not_started' %></td>
+        <% else #in progress %>
+          <td><%= reaction.status %>%</td>
+          <td><%= reaction.narrative.scenario.behavior.name %></td>
+          <td><%= reaction.narrative.member %></td>
+          <td><%= t :n_a %></td>
+        <% end %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
           <% @experience.course.enrolled_students.each do |student| %>
             <% reaction = @experience.get_user_reaction( student ) %>
             <div data-role="popup" id="imp_<%= reaction.id %>" class="ui-content" data-theme="<%= theme_code %>">

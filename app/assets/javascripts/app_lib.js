@@ -35,7 +35,7 @@ function init_me( obj, data ){
       })
       .y(function(d) { 
         // return the Y coordinate where we want to plot this datapoint
-        return y(d); 
+        return y(d < 100 ? d : 100); 
       })
       // Add the line by appending an svg:path element with the data
       // line we created above
