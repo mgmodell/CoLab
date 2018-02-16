@@ -54,8 +54,8 @@ class Assessment < ApplicationRecord
 
     Assessment.joins(:project)
               .includes(:installments, :project)
-              .where('instructor_updated = false AND assessments.end_date < ? AND projects.active = TRUE',
-                     date_now).each do |assessment|
+              .where('instructor_updated = false AND assessments.end_date < ? AND projects.active = TRUE', date_now)
+              .each do |assessment|
       completion_hash = {}
       # Collect data for notification and anonymize comments
       assessment.installments.each do |inst|
@@ -124,8 +124,8 @@ class Assessment < ApplicationRecord
 
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(project.course.timezone)
-    self.start_date -= course_tz.utc_offset if start_date_changed?
+    self.start_date -= course_tz.utc_offset if saved_change_to_start_date?
 
-    self.end_date -= course_tz.utc_offset if end_date_changed?
+    self.end_date -= course_tz.utc_offset if saved_change_to_end_date?
   end
 end

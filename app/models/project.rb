@@ -168,9 +168,9 @@ class Project < ApplicationRecord
 
   def activation_status
     if active_was && active &&
-       (start_dow_changed? || end_dow_changed? ||
-        start_date_changed? || end_date_changed? ||
-        factor_pack_id_changed? || style_id_changed?)
+       (saved_change_to_start_dow? || saved_change_to_end_dow? ||
+        saved_change_to_start_date? || saved_change_to_end_date? ||
+        saved_change_to_factor_pack_id? || saved_change_to_style_id?)
       self.active = false
     elsif !active_was && active
 
@@ -213,14 +213,14 @@ class Project < ApplicationRecord
     # TZ corrections
     if start_date.nil? || start_date.change(hour: 0) == course.start_date.change(hour: 0)
       self.start_date = course.start_date
-    elsif start_date_changed?
+    elsif saved_change_to_start_date?
       proc_date = course_tz.local(start_date.year, start_date.month, start_date.day)
       self.start_date = proc_date.beginning_of_day
     end
 
     if end_date.nil? || end_date.change(hour: 0) == course.end_date.change(hour: 0)
       self.end_date = course.end_date
-    elsif end_date_changed?
+    elsif saved_change_to_end_date?
       proc_date = course_tz.local(end_date.year, end_date.month, end_date.day)
       self.end_date = proc_date.end_of_day.change(sec: 0)
     end

@@ -42,10 +42,12 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
       password_confirmation: 'password',
       email: Forgery::Internet.email_address,
       timezone: 'UTC',
+      school: School.find( 1 ),
       theme_id: 1
     )
     user.skip_confirmation!
     user.save
+    puts user.errors.full_messages unless user.errors.empty?
     @users << user
     r = user.rosters.new(
       course: @course,

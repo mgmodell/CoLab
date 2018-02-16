@@ -18,15 +18,15 @@ class User < ApplicationRecord
   has_many :projects, through: :groups
   has_many :bingo_games, through: :courses
   has_many :candidates, inverse_of: :user
-  belongs_to :bingo_boards, inverse_of: :user, dependent: :destroy
-  belongs_to :gender, inverse_of: :users
-  belongs_to :theme, inverse_of: :users
-  has_many :home_countries, through: :home_state
-  belongs_to :home_state, inverse_of: :users
-  belongs_to :cip_code, inverse_of: :users
+  belongs_to :gender, inverse_of: :users, optional: true
+  belongs_to :theme, inverse_of: :users, optional: true
+  has_one :home_country, through: :home_state
+  belongs_to :home_state, inverse_of: :users, optional: true
+  belongs_to :cip_code, inverse_of: :users, optional: true
 
-  belongs_to :language, inverse_of: :users
-  belongs_to :primary_language, inverse_of: :home_users, class_name: 'Language'
+  belongs_to :language, inverse_of: :users, optional: true
+  belongs_to :primary_language, inverse_of: :home_users,
+    class_name: 'Language', optional: true
 
   belongs_to :school
   has_many :installments, inverse_of: :user, dependent: :destroy

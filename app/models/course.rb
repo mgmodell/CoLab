@@ -265,18 +265,18 @@ class Course < ApplicationRecord
     # TODO: must handle changing timezones at some point
 
     # TZ corrections
-    if (start_date_changed? || timezone_changed?) && start_date.present?
+    if (saved_change_to_start_date? || saved_change_to_timezone?) && start_date.present?
       d = start_date.utc
       new_date = course_tz.local(d.year, d.month, d.day).beginning_of_day
       self.start_date = new_date
     end
 
-    if (end_date_changed? || timezone_changed?) && end_date.present?
+    if (saved_change_to_end_date? || saved_change_to_timezone?) && end_date.present?
       new_date = course_tz.local(end_date.year, end_date.month, end_date.day)
       self.end_date = new_date.end_of_day.change(sec: 0)
     end
 
-    if timezone_changed? && timezone_was.present?
+    if saved_change_to_timezone? && timezone_was.present?
       orig_tz = ActiveSupport::TimeZone.new(timezone_was)
 
       Course.transaction do

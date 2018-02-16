@@ -22,6 +22,7 @@ Given /^the course has a Bingo! game$/ do
     lead_time: 2,
     individual_count: 20,
     group_discount: 0,
+    project: @project,
     group_option: false
   )
   @bingo.save

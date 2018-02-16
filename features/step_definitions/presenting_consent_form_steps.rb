@@ -11,6 +11,7 @@ end
 
 Given /^the project has a consent form$/ do
   @consent_form = ConsentForm.new(
+    user: User.find( 1 ),
     name: Forgery::Name.location
   )
   @consent_form.save
