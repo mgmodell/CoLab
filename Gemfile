@@ -5,23 +5,27 @@ ruby '2.5.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.0.6'
+gem 'puma', '~> 3.7'
 # Use mysql as the database for Active Record
-gem 'mysql2', '>= 0.3.13', '< 0.5'
+gem 'mysql2', '>= 0.3.18', '< 0.5'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
+# Transpile app-like JavaScript. Read more:
+# https://github.com/rails/webpacker
+gem 'webpacker'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 # gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder', '~> 2.5'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
@@ -32,7 +36,7 @@ gem 'city-state'
 gem 'country_select'
 gem 'd3-rails'
 gem 'descriptive_statistics', '~> 2.4.0', require: 'descriptive_statistics/safe'
-gem 'devise', '4.4.0'
+gem 'devise'
 gem 'devise-multi_email'
 gem 'email_validator'
 gem 'forgery'
@@ -40,8 +44,7 @@ gem 'jquery-tablesorter'
 gem 'jquery_mobile_rails'
 gem 'kaminari'
 gem 'omniauth-google-oauth2'
-gem 'paperclip', '~> 5.0.0'
-gem 'puma'
+gem 'paperclip', '~> 5.2.1'
 gem 'rails_12factor', group: :production
 gem 'simple_calendar', '~> 2.0'
 gem 'simple_form'
