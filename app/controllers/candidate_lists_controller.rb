@@ -36,12 +36,14 @@ class CandidateListsController < ApplicationController
     if desired
       @candidate_list.group_requested = true
       @candidate_list.save
+      puts @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
       @candidate_list = merge_to_group_list(@candidate_list) if @candidate_list.others_requested_help == 1
     else
       @candidate_list.bingo_game.project.group_for_user(@current_user).users.each do |user|
         cl = @candidate_list.bingo_game.candidate_list_for_user(user)
         cl.group_requested = false
         cl.save
+        puts cl.errors.full_messages unless cl.errors.empty?
       end
     end
     @term_counts = {}
@@ -151,6 +153,7 @@ class CandidateListsController < ApplicationController
         merged_list << candidate if candidate.term.present? || candidate.definition.present?
       end
       cl.save
+      puts cl.errors.full_messages unless cl.errors.empty?
     end
     if merged_list.count < (required_terms - 1)
       merged_list.count.upto ( required_terms - 1) do
@@ -164,6 +167,7 @@ class CandidateListsController < ApplicationController
     cl.is_group = true
     cl.bingo_game = candidate_list.bingo_game
     cl.save
+    puts cl.errors.full_messages unless cl.errors.empty?
     cl
   end
 
