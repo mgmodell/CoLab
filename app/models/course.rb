@@ -276,8 +276,8 @@ class Course < ApplicationRecord
       self.end_date = new_date.end_of_day.change(sec: 0)
     end
 
-    if saved_change_to_timezone? && timezone_was.present?
-      orig_tz = ActiveSupport::TimeZone.new(timezone_was)
+    if saved_change_to_timezone? && timezone_before_last_save.present?
+      orig_tz = ActiveSupport::TimeZone.new(timezone_before_last_save)
 
       Course.transaction do
         projects.reload.each do |project|

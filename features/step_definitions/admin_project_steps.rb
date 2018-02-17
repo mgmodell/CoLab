@@ -101,6 +101,7 @@ Given /^the course started "([^"]*)" and ended "([^"]*)"$/ do |start_date, end_d
   @course.end_date = Chronic.parse(end_date)
   @course.save
   puts @course.errors.full_messages unless @course.errors.blank?
+  puts "course dates: #{@course.start_date} - #{@course.end_date}"
 end
 
 Then /^set user (\d+) to group "([^"]*)"$/ do |user_number, group_name|

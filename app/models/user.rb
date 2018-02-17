@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many :concepts, inverse_of: :user, dependent: :destroy
   has_many :projects, through: :groups
   has_many :bingo_games, through: :courses
+  has_many :bingo_boards, inverse_of: :user
   has_many :candidates, inverse_of: :user
   belongs_to :gender, inverse_of: :users, optional: true
   belongs_to :theme, inverse_of: :users, optional: true
@@ -28,7 +29,7 @@ class User < ApplicationRecord
   belongs_to :primary_language, inverse_of: :home_users,
     class_name: 'Language', optional: true
 
-  belongs_to :school
+  belongs_to :school, optional: true
   has_many :installments, inverse_of: :user, dependent: :destroy
   has_many :rosters, inverse_of: :user, dependent: :destroy
   has_many :courses, through: :projects

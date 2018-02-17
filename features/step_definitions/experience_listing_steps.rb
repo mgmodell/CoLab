@@ -121,10 +121,12 @@ Given /^the user is in a group on the project$/ do
       password_confirmation: 'password',
       email: Forgery::Internet.email_address,
       timezone: 'UTC',
+      school: School.find( 1 ),
       theme_id: 1
     )
     u.skip_confirmation!
     u.save
+    puts u.errors.full_messages unless u.errors.blank?
     r = u.rosters.new(
       course: @project.course,
       role: Roster.roles[:enrolled_student]

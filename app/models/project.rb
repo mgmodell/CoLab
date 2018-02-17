@@ -6,12 +6,12 @@ class Project < ApplicationRecord
 
   belongs_to :course, inverse_of: :projects
   belongs_to :style, inverse_of: :projects
-  belongs_to :factor_pack, inverse_of: :projects
+  belongs_to :factor_pack, inverse_of: :projects, optional: true
   has_many :groups, inverse_of: :project, dependent: :destroy
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
   has_many :installments, through: :assessments
-  belongs_to :consent_form, inverse_of: :projects, required: false
+  belongs_to :consent_form, inverse_of: :projects, optional: true
 
   has_many :users, through: :groups
   has_many :factors, through: :factor_pack
@@ -167,12 +167,12 @@ class Project < ApplicationRecord
   end
 
   def activation_status
-    if active_was && active &&
+    if active_before_last_save && active &&
        (saved_change_to_start_dow? || saved_change_to_end_dow? ||
         saved_change_to_start_date? || saved_change_to_end_date? ||
         saved_change_to_factor_pack_id? || saved_change_to_style_id?)
       self.active = false
-    elsif !active_was && active
+    elsif !active_before_last_save && active
 
       get_user_appearance_counts.each do |user_id, count|
         # Check the users

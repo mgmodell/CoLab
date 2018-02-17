@@ -147,7 +147,7 @@ class CandidateListsController < ApplicationController
     merger_group.users.each do |group_member|
       cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
       cl.is_group = true
-      cl.candidates.each do |candidate|
+      cl.candidates.includes(:user).each do |candidate|
         merged_list << candidate if candidate.term.present? || candidate.definition.present?
       end
       cl.save

@@ -2,8 +2,8 @@
 
 class Candidate < ApplicationRecord
   belongs_to :candidate_list, inverse_of: :candidates
-  belongs_to :candidate_feedback, inverse_of: :candidates
-  belongs_to :concept, inverse_of: :candidates, required: false
+  belongs_to :candidate_feedback, inverse_of: :candidates, optional: true
+  belongs_to :concept, inverse_of: :candidates, optional: true
   belongs_to :user, inverse_of: :candidates
 
   default_scope { order(:filtered_consistent) }

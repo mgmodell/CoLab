@@ -128,7 +128,7 @@ class Group < ApplicationRecord
   # Maintain a history of what has changed
   def track_history
     gr = GroupRevision.new(group: self, members: '')
-    gr.name = name_was
+    gr.name = name_before_last_save
     user_ids.sort.each do |user_id|
       gr.members += user_id.to_s + ' '
     end
@@ -141,7 +141,7 @@ class Group < ApplicationRecord
   end
 
   def validate_activation_status
-    if persisted? && project_id_was != project_id
+    if persisted? && project_id_before_last_save != project_id
       errors.add(:project,
                  'It is not possible to move a group from one project to another.')
     end
