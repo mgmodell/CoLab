@@ -145,6 +145,7 @@ class Experience < ApplicationRecord
       end
       experience.instructor_updated = true
       experience.save
+      puts experiences.errors.full_messages unless experiences.errors.empty?
     end
     logger.debug "\n\t**#{count} Experience Reports sent to Instructors**"
   end
