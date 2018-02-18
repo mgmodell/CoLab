@@ -145,7 +145,7 @@ class Experience < ApplicationRecord
       end
       experience.instructor_updated = true
       experience.save
-      puts experiences.errors.full_messages unless experiences.errors.empty?
+      puts experience.errors.full_messages unless experience.errors.empty?
     end
     logger.debug "\n\t**#{count} Experience Reports sent to Instructors**"
   end
@@ -166,14 +166,14 @@ class Experience < ApplicationRecord
 
     if start_date.nil? || start_date.change(hour: 0) == course.start_date.change(hour: 0)
       self.start_date = course.start_date
-    elsif saved_change_to_start_date?
+    elsif start_date_changed?
       proc_date = course_tz.local(start_date.year, start_date.month, start_date.day)
       self.start_date = proc_date.beginning_of_day
     end
 
     if end_date.nil? || end_date.change(hour: 0) == course.end_date.change(hour: 0)
       self.end_date = course.end_date
-    elsif saved_change_to_end_date?
+    elsif end_date_changed?
       proc_date = course_tz.local(end_date.year, end_date.month, end_date.day)
       self.end_date = proc_date.end_of_day.change(sec: 0)
     end

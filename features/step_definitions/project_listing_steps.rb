@@ -36,11 +36,7 @@ Given /^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes 
   @project.start_dow = Chronic.parse(start_dow).wday
   @project.end_dow = Chronic.parse(end_dow).wday
 
-  puts "p.course dates: #{@project.course.start_date} - #{@project.course.end_date}"
-  puts "p dates: #{@project.start_date} - #{@project.end_date}"
   @project.save
-  puts "p.course dates: #{@project.course.start_date} - #{@project.course.end_date}"
-  puts "p dates: #{@project.start_date} - #{@project.end_date}"
   puts @project.errors.full_messages unless @project.errors.blank?
 end
 

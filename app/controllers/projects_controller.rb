@@ -53,6 +53,7 @@ class ProjectsController < ApplicationController
 
   def update
     @title = t('projects.edit.title')
+    puts project_params
     if @project.update(project_params)
       groups_users = {}
       @project.groups.includes(:users).each do |group|

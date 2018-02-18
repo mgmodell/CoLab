@@ -62,7 +62,7 @@ Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_val
   when 'start'
     d = Chronic.parse(date_value)
     date = course_tz.local(d.year, d.month, d.day)
-    @project.start_date.should eq date
+    @project.start_date.utc.should eq date.utc
 
   when 'end'
     d = Chronic.parse(date_value)
@@ -101,7 +101,6 @@ Given /^the course started "([^"]*)" and ended "([^"]*)"$/ do |start_date, end_d
   @course.end_date = Chronic.parse(end_date)
   @course.save
   puts @course.errors.full_messages unless @course.errors.blank?
-  puts "course dates: #{@course.start_date} - #{@course.end_date}"
 end
 
 Then /^set user (\d+) to group "([^"]*)"$/ do |user_number, group_name|
