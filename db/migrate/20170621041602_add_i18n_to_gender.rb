@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class AddI18nToGender < ActiveRecord::Migration
+class AddI18nToGender < ActiveRecord::Migration[4.2]
   def change
     rename_column :genders, :name, :name_en
     add_column :genders, :name_ko, :string

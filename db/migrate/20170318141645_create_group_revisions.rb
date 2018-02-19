@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateGroupRevisions < ActiveRecord::Migration
+class CreateGroupRevisions < ActiveRecord::Migration[4.2]
   def change
     create_table :group_revisions do |t|
       t.references :group, index: true, foreign_key: true

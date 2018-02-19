@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateUserJoinTable < ActiveRecord::Migration
+class CreateUserJoinTable < ActiveRecord::Migration[4.2]
   def change
     create_join_table :users, :groups do |t|
       # t.index [:user_id, :group_id]

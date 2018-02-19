@@ -1,4 +1,4 @@
-class AddMoreDemographicsToUser < ActiveRecord::Migration
+class AddMoreDemographicsToUser < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :date_of_birth, :date
     add_reference :users, :home_state, index: true, foreign_key: true

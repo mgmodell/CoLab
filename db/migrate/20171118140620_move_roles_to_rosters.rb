@@ -1,4 +1,4 @@
-class MoveRolesToRosters < ActiveRecord::Migration
+class MoveRolesToRosters < ActiveRecord::Migration[4.2]
   def change
     remove_foreign_key :rosters, :roles
     drop_table :roles

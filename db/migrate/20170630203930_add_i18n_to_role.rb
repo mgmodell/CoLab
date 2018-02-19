@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class AddI18nToRole < ActiveRecord::Migration
+class AddI18nToRole < ActiveRecord::Migration[4.2]
   def change
     rename_column :roles, :name, :name_en
     add_column :roles, :name_ko, :string

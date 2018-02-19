@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class AddI18nToTheme < ActiveRecord::Migration
+class AddI18nToTheme < ActiveRecord::Migration[4.2]
   def change
     rename_column :themes, :name, :name_en
     add_column :themes, :name_ko, :string

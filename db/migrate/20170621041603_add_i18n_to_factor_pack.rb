@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class AddI18nToFactorPack < ActiveRecord::Migration
+class AddI18nToFactorPack < ActiveRecord::Migration[4.2]
   def change
     rename_column :factor_packs, :name, :name_en
     add_column :factor_packs, :name_ko, :string

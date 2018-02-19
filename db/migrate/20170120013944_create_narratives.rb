@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateNarratives < ActiveRecord::Migration
+class CreateNarratives < ActiveRecord::Migration[4.2]
   def change
     create_table :narratives do |t|
       t.string :member

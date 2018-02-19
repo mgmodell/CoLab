@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateExperiences < ActiveRecord::Migration
+class CreateExperiences < ActiveRecord::Migration[4.2]
   def change
     create_table :experiences do |t|
       t.references :course, index: true, foreign_key: true

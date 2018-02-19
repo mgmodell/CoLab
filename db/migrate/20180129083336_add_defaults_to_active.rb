@@ -1,4 +1,4 @@
-class AddDefaultsToActive < ActiveRecord::Migration
+class AddDefaultsToActive < ActiveRecord::Migration[4.2]
   def change
     change_column_default( :bingo_games, :active, 0 )
     change_column_null( :bingo_games, :active, true )

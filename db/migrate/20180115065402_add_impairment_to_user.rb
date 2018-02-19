@@ -1,4 +1,4 @@
-class AddImpairmentToUser < ActiveRecord::Migration
+class AddImpairmentToUser < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :impairment_visual, :boolean
     add_column :users, :impairment_auditory, :boolean
