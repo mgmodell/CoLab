@@ -2,7 +2,7 @@
 
 require 'forgery'
 class Group < ApplicationRecord
-  around_update :track_history
+  around_update :update_history
   after_initialize :store_load_state
 
   belongs_to :project, inverse_of: :groups
@@ -126,22 +126,25 @@ class Group < ApplicationRecord
   end
 
   # Maintain a history of what has changed
-  def track_history
-    gr = GroupRevision.new(group: self, members: '')
-    gr.name = name_before_last_save
+  def update_history
+    member_string = ''
     user_ids.sort.each do |user_id|
-      gr.members += user_id.to_s + ' '
+      member_string += user_id.to_s + ' '
     end
-    i_changed = (changed? || @initial_member_state != gr.members)
+    if changed? || @initial_member_state != member_string
+      gr = group_revisions.new(name: name_was, group: self, members: member_string )
+      calc_diversity_score if @initial_member_state != gr.members
+    end
 
-    calc_diversity_score if @initial_member_state != gr.members
+    #i_changed = (changed? || @initial_member_state != gr.members)
+
     yield # Do that save thing
 
-    gr.save if persisted? && i_changed
+    #gr.save if persisted? && i_changed
   end
 
   def validate_activation_status
-    if persisted? && project_id_before_last_save != project_id
+    if persisted? && project_id_was != project_id
       errors.add(:project,
                  'It is not possible to move a group from one project to another.')
     end
