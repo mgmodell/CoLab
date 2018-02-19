@@ -7,8 +7,6 @@ class Diagnosis < ApplicationRecord
 
   has_one :user, through: :reaction
 
-  validates :behavior, presence: { message: 'You must select a behavior.' }
-
   validate :validate_other_name
   validate :validate_unique
 
@@ -17,14 +15,13 @@ class Diagnosis < ApplicationRecord
        Behavior.find(behavior_id).name == 'Other' &&
        (other_name.nil? || other_name.empty?)
 
-      errors.add(:other_name, 'Please indicate the name of the behavior you identify in this narrative.')
+      errors.add(:other_name, I18n.t( 'diagnosis.other_name_rqrd' ) )
     end
   end
 
   def validate_unique
     if Diagnosis.where(reaction: reaction, week_id: week_id).exists?
-      errors[:base] << "Please do not use either the 'back' or 'reload' buttons." \
-                        'You are being returned to correct week.'
+      errors[:base] << I18n.t( 'diagnosis.duplicate_entry' )
     end
   end
 end

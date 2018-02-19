@@ -1,0 +1,8 @@
+en:
+  diagnosis:
+    other_name_rqrd: >
+      Please indicate the name of the behavior you identify in this
+      narrative.
+    duplicate_entry: >
+      Please do not use either the 'back' or 'reload' buttons. You are
+      being returned to correct week.

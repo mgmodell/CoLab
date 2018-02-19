@@ -9,7 +9,6 @@ class Reaction < ApplicationRecord
 
   has_many :diagnoses, inverse_of: :reaction, dependent: :destroy
 
-  validates :narrative, presence: true
   validate :thorough_completion
 
   def next_week

@@ -22,9 +22,11 @@
           <div data-role="controlgroup" data-type="horizontal" data-mini="true"
                                         class="ui-btn-right">
             <a data-role="button" href="#instructions" id="instr_btn" data-icon="info"
-                class="ui-btn ui-btn-corner-all ui-icon-info ui-btn-icon-left" ><%= t 'experience.instruction_lbl' %></a>
+                class="ui-btn ui-btn-corner-all ui-icon-info
+                ui-btn-icon-left" ><%= t 'experiences.instructions_lbl' %></a>
             <a data-role="button" href="#glossary" id="instr_btn" data-icon="help"
-                class="ui-btn ui-btn-corner-all ui-icon-tag ui-btn-icon-right" ><%= t 'experience.glossary_lbl' %></a>
+                class="ui-btn ui-btn-corner-all ui-icon-tag
+                ui-btn-icon-right" ><%= t 'experiences.glossary_lbl' %></a>
           </div>
         <% end %>
       </div>
@@ -53,19 +55,21 @@
       </div>
       <% if working %>
         <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="instructions">
-          <a href="#instr_btn" class="ui-btn ui-icon-delete" data-rel="close"> <%= t 'experience.close_pnl' %></a>
+          <a href="#instr_btn" class="ui-btn ui-icon-delete"
+          data-rel="close"> <%= t 'experiences.close_pnl' %></a>
           <div data-role="collapsible">
-            <h4><%= t 'experience.scenario_lbl' %></h4>
+            <h4><%= t 'experiences.scenario_lbl' %></h4>
             <%= render "shared/instructions" %>
           </div>
           <div data-role="collapsible">
-            <h4><%= t 'experience.instructions_lbl' %></h4>
+            <h4><%= t 'experiences.instructions_lbl' %></h4>
             <%= render "shared/scenario" %>
           </div>
         </div>
         <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="glossary">
-          <a href="#instr_btn" class="ui-btn ui-icon-delete" data-rel="close"> <%= t 'experience.close_pnl' %></a>
-          <h4><%= t 'experience.behavior_lbl' %></h4>
+          <a href="#instr_btn" class="ui-btn ui-icon-delete"
+          data-rel="close"> <%= t 'experiences.close_pnl' %></a>
+          <h4><%= t 'experiences.behavior_lbl' %></h4>
           <%= render "shared/behaviors" %>
         </div>
       <% end %>

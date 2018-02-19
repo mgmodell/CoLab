@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    errors:
+      models:
+        diagnosis:
+          attributes:
+            behavior:
+              required: You must select a behavior.
+        group:
+          attributes:
+            project:
+              required: A group must be attached to a project.
+        project:
+          attributes:
+            style:
+              required: Assessment style must be set.

@@ -20,7 +20,7 @@ class Group < ApplicationRecord
   has_many :genders, through: :users
   has_many :primary_languages, through: :users
 
-  validates :name, :project_id, presence: true
+  validates :name, presence: true
   validate :validate_activation_status
 
   before_create :anonymize

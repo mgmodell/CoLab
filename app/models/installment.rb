@@ -8,7 +8,7 @@ class Installment < ApplicationRecord
   has_many :values, inverse_of: :installment, dependent: :destroy
   accepts_nested_attributes_for :values
 
-  validates :inst_date, :assessment_id, :user_id, presence: true
+  validates :inst_date, :user_id, presence: true
   validate :check_dates
 
   before_save :normalize_sums

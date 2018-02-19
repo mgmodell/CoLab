@@ -5,7 +5,8 @@ require 'forgery'
 
 Given /^there is a global consent form$/ do
   @consent_form = ConsentForm.new(
-    name: Forgery::Name.location
+    name: Forgery::Name.location,
+    user: User.find( 1 )
   )
 end
 
@@ -65,9 +66,11 @@ Given /^the consent form started "([^"]*)" and ends "([^"]*)"$/ do |start_date, 
   @consent_form.start_date = Chronic.parse(start_date)
   @consent_form.end_date = end_date.casecmp('null').zero? ? nil : Chronic.parse(end_date)
   @consent_form.save
+  puts @consent_form.errors.full_messages unless @consent_form.errors.empty?
 end
 
 Given /^the consent form "([^"]*)" active$/ do |is_active|
   @consent_form.active = is_active == 'is'
   @consent_form.save
+  puts @consent_form.errors.full_messages unless @consent_form.errors.empty?
 end
