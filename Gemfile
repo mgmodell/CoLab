@@ -43,6 +43,7 @@ gem 'forgery'
 gem 'jquery-tablesorter'
 gem 'jquery_mobile_rails'
 gem 'kaminari'
+gem 'listen'
 gem 'omniauth-google-oauth2'
 gem 'paperclip', '~> 5.2.1'
 gem 'rails_12factor', group: :production
