@@ -5,7 +5,7 @@ class BingoGame < ApplicationRecord
   belongs_to :course, inverse_of: :bingo_games
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
   has_many :bingo_boards, inverse_of: :bingo_game, dependent: :destroy
-  belongs_to :project, inverse_of: :bingo_games
+  belongs_to :project, inverse_of: :bingo_games, optional: true
 
   has_many :candidates, through: :candidate_lists
 

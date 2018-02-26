@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180129083336) do
+ActiveRecord::Schema.define(version: 20180226064814) do
 
   create_table "assessments", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "end_date"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20180129083336) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name_ko"
-    t.string "description_ko"
+    t.text "description_ko"
     t.index ["name_en"], name: "index_behaviors_on_name_en", unique: true
   end
 
@@ -169,7 +169,7 @@ ActiveRecord::Schema.define(version: 20180129083336) do
 
   create_table "courses", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
-    t.string "description"
+    t.text "description"
     t.string "timezone"
     t.integer "school_id"
     t.datetime "start_date"
@@ -228,17 +228,17 @@ ActiveRecord::Schema.define(version: 20180129083336) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name_ko"
-    t.string "description_ko"
+    t.text "description_ko"
     t.index ["name_en"], name: "index_factor_packs_on_name_en", unique: true
   end
 
   create_table "factors", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "description_en"
+    t.text "description_en"
     t.string "name_en"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name_ko"
-    t.string "description_ko"
+    t.text "description_ko"
     t.integer "factor_pack_id"
     t.index ["factor_pack_id"], name: "index_factors_on_factor_pack_id"
     t.index ["name_en"], name: "index_factors_on_name_en", unique: true
@@ -332,7 +332,7 @@ ActiveRecord::Schema.define(version: 20180129083336) do
 
   create_table "projects", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
-    t.string "description"
+    t.text "description"
     t.integer "course_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -395,7 +395,7 @@ ActiveRecord::Schema.define(version: 20180129083336) do
   end
 
   create_table "schools", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "description"
+    t.text "description"
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
