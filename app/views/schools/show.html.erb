@@ -16,7 +16,7 @@
     </p>
     <p>
       <h3><%= t :description %>:</h3>
-      <%= @school.description %>
+      <%= raw( @school.description ) %>
     </p>
     <%= link_to t('.edit_string'), edit_school_path(@school) %>
   </div>

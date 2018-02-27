@@ -33,7 +33,7 @@
   </p>
   <p>
     <h3><%= t :description %>:</h3>
-    <%= @project.description %>
+    <%= raw( @project.description ) %>
   </p>
   <p>
     <h3><%= t :factor_pack %>:</h3>
