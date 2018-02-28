@@ -21,3 +21,4 @@ rerun.txt
 yarn-debug.log*
 yarn-error.log*
 .yarn-integrity
+yarn-error.log

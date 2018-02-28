@@ -25,7 +25,7 @@
 
 <p>
   <h3><%= t :description %>:</h3>
-  <%= @course.description %>
+  <%= raw( @course.description ) %>
 </p>
 <p>
   <h3><%= t :dates %>:</h3>
