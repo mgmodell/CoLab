@@ -38,6 +38,8 @@ class User < ApplicationRecord
   has_many :experiences, through: :reactions
   has_many :narratives, through: :experiences
 
+  has_many :messages, class_name: "Ahoy::Message"
+
   validates :timezone, :theme, presence: true
 
   has_many :assessments, through: :projects

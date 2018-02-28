@@ -44,7 +44,7 @@ Feature: Timezone Support
     Then user should see 0 open task
     When the system emails stragglers
     When the system emails stragglers
-    Then no emails will be sent
+    Then 0 emails will be sent
     
   Scenario: Projects times should reflect course timezones - New York
     Given the course timezone is "America/New_York"

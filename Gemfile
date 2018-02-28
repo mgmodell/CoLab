@@ -30,6 +30,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'activerecord-session_store'
+gem 'ahoy_email'
 gem 'aws-sdk', '~> 2.3.0'
 gem 'bourbon'
 gem 'city-state'
