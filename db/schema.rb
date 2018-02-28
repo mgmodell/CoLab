@@ -10,7 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180226064814) do
+ActiveRecord::Schema.define(version: 20180228001942) do
+
+  create_table "ahoy_messages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "token"
+    t.text "to"
+    t.integer "user_id"
+    t.string "user_type"
+    t.string "mailer"
+    t.text "subject"
+    t.timestamp "sent_at"
+    t.timestamp "opened_at"
+    t.timestamp "clicked_at"
+    t.index ["token"], name: "index_ahoy_messages_on_token"
+    t.index ["user_id", "user_type"], name: "index_ahoy_messages_on_user_id_and_user_type"
+  end
 
   create_table "assessments", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "end_date"

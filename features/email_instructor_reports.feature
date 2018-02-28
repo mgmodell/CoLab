@@ -53,6 +53,7 @@ Feature: Email experience stragglers
     Given the email queue is empty
     When the system emails instructor reports
     Then 1 emails will be sent
+    Then 1 emails will be tracked
 
   Scenario: Course Instructor will be emailed when experience closes
     Given the course has an experience
@@ -61,10 +62,12 @@ Feature: Email experience stragglers
     Given the email queue is empty
     When the system emails stragglers
     Then 4 emails will be sent
+    Then 4 emails will be tracked
     Given today is "4 days from now"
     Given the email queue is empty
     When the system emails instructor reports
     Then 1 emails will be sent
+    Then 5 emails will be tracked
 
   Scenario: Both Course Instructors will be emailed when experience closes
     Given the course has an experience
@@ -77,10 +80,12 @@ Feature: Email experience stragglers
     Given the email queue is empty
     When the system emails stragglers
     Then 4 emails will be sent
+    Then 4 emails will be tracked
     Given today is "32 days from now"
     Given the email queue is empty
     When the system emails instructor reports
     Then 2 emails will be sent
+    Then 6 emails will be tracked
 
   Scenario: Check project reports
     Given the course has an assessed project
@@ -92,10 +97,12 @@ Feature: Email experience stragglers
     Then the system emails stragglers
     When the system emails stragglers
     Then 4 emails will be sent
+    Then 4 emails will be tracked
     Given today is "4 days from now"
     Given the email queue is empty
     When the system emails instructor reports
     Then 1 emails will be sent
+    Then 5 emails will be tracked
 
   Scenario: Check project reports when a student has completed an assessment
     Given the course has an assessed project
@@ -109,10 +116,12 @@ Feature: Email experience stragglers
     Then the system emails stragglers
     When the system emails stragglers
     Then 3 emails will be sent
+    Then 3 emails will be tracked
     Given today is "4 days from now"
     Given the email queue is empty
     When the system emails instructor reports
     Then 1 emails will be sent
+    Then 4 emails will be tracked
 
   Scenario: Both Course Instructors will be emailed when the project assessment closes
     Given the course has 1 confirmed users
@@ -128,10 +137,12 @@ Feature: Email experience stragglers
     Then the system emails stragglers
     When the system emails stragglers
     Then 4 emails will be sent
+    Then 4 emails will be tracked
     Given today is "4 days from now"
     Given the email queue is empty
     When the system emails instructor reports
     Then 2 emails will be sent
+    Then 6 emails will be tracked
 
   Scenario: Course Instructor will be emailed when bingo closes
     Given the course has a Bingo! game
@@ -148,4 +159,5 @@ Feature: Email experience stragglers
     Given the email queue is empty
     When the system emails instructor reports
     Then 1 emails will be sent
+    Then 1 emails will be tracked
 

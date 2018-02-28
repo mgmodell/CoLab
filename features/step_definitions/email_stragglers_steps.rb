@@ -29,8 +29,8 @@ Then /^an email will be sent to each member of the group but one$/ do
   ActionMailer::Base.deliveries.count.should eq group_count_minus_one
 end
 
-Then /^no emails will be sent$/ do
-  ActionMailer::Base.deliveries.count.should eq 0
+Then /^(\d+) emails will be tracked$/ do |email_count|
+  Ahoy::Message.count.should eq email_count.to_i
 end
 
 Then /^(\d+) emails will be sent$/ do |email_count|

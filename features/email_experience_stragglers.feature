@@ -13,6 +13,7 @@ Feature: Email experience stragglers
     Given the email queue is empty
     When the system emails stragglers
     Then 4 emails will be sent
+    Then 4 emails will be tracked
 
   Scenario: 4 students are invited and one student drops - 3 emails are sent
     Given the email queue is empty
@@ -20,13 +21,15 @@ Feature: Email experience stragglers
     Then the user is dropped from the course
     When the system emails stragglers
     Then 3 emails will be sent
+    Then 3 emails will be tracked
 
   Scenario: Four students have incomplete experiences that ended yesterday - no emails are sent
     Given the experience started "last month" and ends "yesterday"
     Given the experience "has" been activated
     Given the email queue is empty
     When the system emails stragglers
-    Then no emails will be sent
+    Then 0 emails will be sent
+    Then 0 emails will be tracked
 
   Scenario: 1 student completes an experience
     Given the user is "a random" user
@@ -35,6 +38,7 @@ Feature: Email experience stragglers
     Given the email queue is empty
     When the system emails stragglers
     Then 3 emails will be sent
+    Then 3 emails will be tracked
 
   Scenario: 1 user is in an experience and a project they receive only one email
     Given the user is "a random" user
@@ -46,6 +50,7 @@ Feature: Email experience stragglers
     Given the email queue is empty
     When the system emails stragglers
     Then 7 emails will be sent
+    Then 7 emails will be tracked
 
   Scenario: 4 users is in an experience and 4 in a project they each receive only one email
     Given the user is "a random" user
@@ -57,6 +62,7 @@ Feature: Email experience stragglers
     Given the email queue is empty
     When the system emails stragglers
     Then 8 emails will be sent
+    Then 8 emails will be tracked
 
   Scenario: 1 user is in an experience and a project they receive only one email
     Given the user is "a random" user
@@ -71,6 +77,7 @@ Feature: Email experience stragglers
     Given the email queue is empty
     When the system emails stragglers
     Then 7 emails will be sent
+    Then 7 emails will be tracked
 
   Scenario: 1 user is in an experience and a project they receive only one email
     Given the user is "a random" user
@@ -86,3 +93,4 @@ Feature: Email experience stragglers
     Given the email queue is empty
     When the system emails stragglers
     Then 6 emails will be sent
+    Then 6 emails will be tracked
