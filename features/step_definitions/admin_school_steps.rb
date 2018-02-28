@@ -24,6 +24,7 @@ Then "the user sees {int} school"  do |course_count|
 end
 
 Then "the user opens the school"  do
-  click_link_or_button 'Show'
+  @school = School.last
+  click_link_or_button @school.name
 end
 

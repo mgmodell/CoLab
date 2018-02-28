@@ -57,7 +57,7 @@ Feature: School Administration
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
      And the user clicks "Edit schools"
-    Then the user sees 1 school
+    Then the user sees 2 school
     Then the user opens the school
     Then the user clicks "Edit school details"
      And the user sets the "Name" field to "Off"
