@@ -53,8 +53,18 @@
                 <td><%= course.projects.count %></td>
                 <td><%= course.experiences.count %></td>
                 <td><%= course.bingo_games.count %></td>
-                <td><%= l course.start_date, format: :tz_clarity %></td>
-                <td><%= l course.end_date, format: :tz_clarity %></td>
+                <td>
+                  <div hidden>
+                    <%= l in_tz( date: course.start_date ), format: :datestamp %>
+                  </div>
+                  <%= l course.start_date, format: :tz_clarity %>
+                </td>
+                <td>
+                  <div hidden>
+                    <%= l in_tz( date: course.end_date ), format: :datestamp %>
+                  </div>
+                  <%= l course.end_date, format: :tz_clarity %>
+                </td>
                 <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
                 <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
                 <%= link_to t(:destroy), course, method: :delete, data: { confirm: t(:confirmation) } %></td>

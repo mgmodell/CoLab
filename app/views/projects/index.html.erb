@@ -24,8 +24,18 @@
     <% @projects.each do |project| %>
       <tr>
         <td><%= link_to project.get_name( anonymize ), project %></td>
-        <td><%= l in_tz( date: project.start_date ), format: :tz_clarity %></td>
-        <td><%= l in_tz( date: project.end_date ), format: :tz_clarity %></td>
+        <td>
+          <div hidden>
+            <%= l in_tz( date: project.start_date ), format: :datestamp %>
+          </div>
+          <%= l in_tz( date: project.start_date ), format: :tz_clarity %>
+        </td>
+        <td>
+          <div hidden>
+            <%= l in_tz( date: project.end_date ), format: :datestamp %>
+          </div>
+          <%= l in_tz( date: project.end_date ), format: :tz_clarity %>
+        </td>
         <td><%= Date::DAYNAMES.at project.start_dow %></td>
         <td><%= Date::DAYNAMES.at project.end_dow %></td>
         <td><%= project.groups.count %></td>

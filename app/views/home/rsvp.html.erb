@@ -33,8 +33,18 @@
         </td>
         <td><em><%= t :waiting %></em></td>
         <td><%= roster.course.get_name( anonymize ) %></td>
-        <td><%= l in_tz( date: roster.course.start_date ), format: :tz_clarity %></td>
-        <td><%= l in_tz( date: roster.course.end_date ), format: :tz_clarity %></td>
+        <td>
+          <div hidden>
+            <%= l in_tz( date: roster.course.start_date ), format: :datestamp %>
+          </div>
+          <%= l in_tz( date: roster.course.start_date ), format: :tz_clarity %>
+        </td>
+        <td>
+          <div hidden>
+            <%= l in_tz( date: roster.course.end_date ), format: :datestamp %>
+          </div>
+          <%= l in_tz( date: roster.course.end_date ), format: :tz_clarity %>
+        </td>
         <td><%= t :n_a %></td>
       </tr>
     <% end %>

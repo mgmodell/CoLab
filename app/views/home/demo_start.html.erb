@@ -44,8 +44,18 @@
             </td>
             <td><%= event.group_name %></td>
             <td><%= event.course_name %></td>
-            <td> <%= l in_tz( date: event.start_time ), format: :tz_clarity %> </td>
-            <td> <%= l in_tz( date: event.close_date ), format: :tz_clarity %> </td>
+            <td>
+              <div hidden>
+                <%= l in_tz( date: event.start_time ), format: :datestamp %>
+              </div>
+              <%= l in_tz( date: event.start_time ), format: :tz_clarity %>
+            </td>
+            <td>
+              <div hidden>
+                <%= l in_tz( date: event.close_time ), format: :datestamp %>
+              </div>
+              <%= l in_tz( date: event.close_date ), format: :tz_clarity %>
+            </td>
             <td>N/A</td>
           </tr>
         <% end %>

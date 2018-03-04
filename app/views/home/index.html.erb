@@ -43,6 +43,9 @@
               <td align="center" data-priority="1"><%= task.status %>%</td>
               <td data-priority="1"><%= task.course.get_name( anonymize ) %></td>
               <td data-priority="0">
+                <div hidden>
+                  <%= l in_tz( date: task.end_date ), format: :datestamp %>
+                </div>
                 <%= l in_tz( date: task.end_date ), format: :tz_clarity %>
               </td>
             </tr>
@@ -91,7 +94,12 @@
               </td>
               <td> <%= group.get_name( anonymize ) %></td>
               <td> <%= task.project.course.get_name( anonymize ) %></td>
-              <td> <%= l in_tz( date: task.start_date ), format: :tz_clarity %> </td>
+              <td>
+                <div hidden>
+                  <%= l in_tz( date: task.start_date ), format: :datestamp %>
+                </div>
+                <%= l in_tz( date: task.start_date ), format: :tz_clarity %>
+              </td>
               <td>
                 <div hidden>
                   <%= l in_tz( date: task.end_date ), format: :datestamp %>
@@ -126,8 +134,16 @@
               <% end %>
               </td>
               <td> <%= task.course.get_name( anonymize ) %></td>
-              <td> <%= l in_tz( date: task.start_date ), format: :tz_clarity %> </td>
               <td>
+                <div hidden>
+                  <%= l in_tz( date: task.start_date ), format: :datestamp %>
+                </div>
+                <%= l in_tz( date: task.start_date ), format: :tz_clarity %>
+              </td>
+              <td>
+                <div hidden>
+                  <%= l in_tz( date: task.term_list_date ), format: :datestamp %>
+                </div>
                 <%= l in_tz( date: task.term_list_date ), format: :tz_clarity %></br>
               <small><i>
                 (<%= t 'candidates.list_for_class' %> 
@@ -151,8 +167,18 @@
             </td>
             <td> N/A</td>
             <td> <%= task.course.get_name( anonymize ) %></td>
-            <td> <%= l in_tz( date: task.start_date ), format: :tz_clarity %> </td>
-            <td> <%= l in_tz( date: task.end_date ), format: :tz_clarity %> </td>
+            <td>
+              <div hidden>
+                <%= l in_tz( date: task.start_date ), format: :datestamp %>
+              </div>
+              <%= l in_tz( date: task.start_date ), format: :tz_clarity %>
+            </td>
+            <td>
+              <div hidden>
+                <%= l in_tz( date: task.end_date ), format: :datestamp %>
+              </div>
+              <%= l in_tz( date: task.end_date ), format: :tz_clarity %>
+            </td>
             <td>
               <%= t :n_a %>
             </td>
