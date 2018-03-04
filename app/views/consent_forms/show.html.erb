@@ -19,7 +19,7 @@
   <ul>
     <% @consent_form.projects.each do |project|%>
       <li><%= project.course.pretty_name( false ) %> : 
-      <%= project.get_name( false ) %></li>
+        <%= project.get_name( false ) %></li>
     <% end %>
   </ul>
 <% end %>

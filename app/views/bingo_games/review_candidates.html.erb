@@ -54,7 +54,7 @@
             <% if candidate.candidate_list.is_group %>
               <br>
               (with group: <i><%= candidate.candidate_list.group.get_name( anonymous ) %></i>)
-          <% end %>
+            <% end %>
           </td>
           <td><%= candidate.definition %></td>
           <td><%= f.input_field "candidate_feedback_#{candidate.id}",

@@ -28,7 +28,7 @@
         <td><%= concept.courses.uniq.count %></td>
         <td><%= concept.bingo_games.uniq.count %></td>
         <td><%= link_to t(:show), concept_path( concept ) %>&nbsp;|&nbsp;
-        <%= link_to t(:edit), edit_concept_path(concept) %>
+          <%= link_to t(:edit), edit_concept_path(concept) %>
         </tr>
       <% end %>
     </tbody>

@@ -119,19 +119,19 @@
                 <td><%= t 'candidates.submission' %></td>
                 <td>
                   <%= candidate_list.percent_completed %>%
-              </td>
+                </td>
               <% elsif task.reviewed %>
                 <td><%= t 'candidates.distilled' %></td>
                 <td>
                   <%= task.concepts.count %> concepts
-              </td>
+                </td>
               <% end %>
               <td>
                 <% if task.project.present? && task.project.group_for_user( @current_user ) %>
                   <%= task.project.group_for_user( @current_user ).get_name( anonymize ) %>
                 <% else %>
                   N/A
-              <% end %>
+                <% end %>
               </td>
               <td> <%= task.course.get_name( anonymize ) %></td>
               <td>
@@ -146,10 +146,10 @@
                 </div>
                 <%= l in_tz( date: task.term_list_date ), format: :tz_clarity %></br>
               <small><i>
-                (<%= t 'candidates.list_for_class' %> 
+                  (<%= t 'candidates.list_for_class' %>
                   <%= l in_tz( date: task.end_date ), format:
                   :short_date %>)
-              </i></small>
+                </i></small>
             </td>
             <td>N/A</td>
           </tr>

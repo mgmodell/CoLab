@@ -2,10 +2,10 @@
 <% theme_code = get_theme_code
    anonymize = get_anonymous %>
 <p><%= t 'home.greeting', name: @current_user.nil? ? "John" : @current_user.first_name %>,
-    <%= t 'home.course_confirm', 
+  <%= t 'home.course_confirm', 
           course_list_text: t( 'home.courses', count: @waiting_rosters.count),
           proper_course_list: t( 'home.courses_proper', count: @waiting_rosters.count ) %>:
-  </p>
+</p>
 <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -29,7 +29,7 @@
       <tr>
         <td>
           <%= link_to t( :accept ), accept_roster_path( :roster_id => roster.id ) %> / 
-            <%= link_to t( :decline ), decline_roster_path( :roster_id => roster.id ) %>
+          <%= link_to t( :decline ), decline_roster_path( :roster_id => roster.id ) %>
         </td>
         <td><em><%= t :waiting %></em></td>
         <td><%= roster.course.get_name( anonymize ) %></td>

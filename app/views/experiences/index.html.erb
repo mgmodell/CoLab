@@ -38,8 +38,8 @@
         </td>
         <td><%= experience.active %></td>
         <td><%= link_to( t(:show), experience_path( experience )) %>&nbsp;|&nbsp;
-        <%= link_to t(:edit), edit_experience_path(experience) %>&nbsp;|&nbsp;
-        <%= link_to t(:destroy),
+          <%= link_to t(:edit), edit_experience_path(experience) %>&nbsp;|&nbsp;
+          <%= link_to t(:destroy),
                         experience_path( experience ),
                         method: :delete,
                         data: { confirm: t( :confirmation ) } %></td>

@@ -33,96 +33,96 @@
       <tr>
         <td colspan="3">
           <em><%= t :note %>: <%= t 'experiences.tz_warn', time_zone: @experience.course.timezone %></em>
-          </br>
-          </br>
-       </td>
-     </tr>
-    </table>
-  </div>
-  </div>
-  <div id="summary" class="ui-body-<%= theme_code %> ui-content">
-    <h2><%= t 'bingo_games.response_summary' %></h2>
-    <table width="90%" data-role="table"
+        </br>
+      </br>
+    </td>
+  </tr>
+</table>
+</div>
+</div>
+<div id="summary" class="ui-body-<%= theme_code %> ui-content">
+  <h2><%= t 'bingo_games.response_summary' %></h2>
+  <table width="90%" data-role="table"
           id="responsesTable"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
           data-column-btn-text="<%= t :column_select %>"
           class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-      <thead>
-        <tr>
-          <th ><%= t :family_name %></th>
-          <th data-priority="0"><%= t :given_name %></th>
-          <th data-priority="1"><%= t :email %></th>
-          <th data-priority="0"><%= t :status %></th>
-          <th data-priority="1"><%= t 'experiences.scenario_lbl' %></th>
-          <th data-priority="1"><%= t 'experiences.narrative_lbl' %></th>
-          <th ><%= t 'experiences.overall_diagnosis' %></th>
-          <th data-priority="0"><%= t 'experiences.reaction_diagnosis' %></th>
-        </tr>
-      </thead>
-      <tbody>
+    <thead>
+      <tr>
+        <th ><%= t :family_name %></th>
+        <th data-priority="0"><%= t :given_name %></th>
+        <th data-priority="1"><%= t :email %></th>
+        <th data-priority="0"><%= t :status %></th>
+        <th data-priority="1"><%= t 'experiences.scenario_lbl' %></th>
+        <th data-priority="1"><%= t 'experiences.narrative_lbl' %></th>
+        <th ><%= t 'experiences.overall_diagnosis' %></th>
+        <th data-priority="0"><%= t 'experiences.reaction_diagnosis' %></th>
+      </tr>
+    </thead>
+    <tbody>
       <% @experience.course.enrolled_students.each do |student| %>
         <tr><% reaction = @experience.get_user_reaction( student ) %>
-        <% if anonymize %>
-          <td><%= student.anon_last_name %></td>
-          <td><%= student.anon_first_name %></td>
-        <% else %>
-          <td><%= student.last_name.nil? ? t( :not_given ): student.last_name %></td>
-          <td><%= student.first_name.nil? ? t( :not_given ): student.first_name %></td>
-        <% end %>
-          <td><%= mail_to student.email %></td>
-        <% if reaction.behavior.present? #completed %>
-          <td>Completed</td>
-          <td><%= reaction.narrative.scenario.behavior.name %></td>
-          <td><%= reaction.narrative.member %></td>
-          <td><%= reaction.behavior.name %></td>
-          <td>
-          <% if reaction.improvements.blank? %>
-            N/A
+          <% if anonymize %>
+            <td><%= student.anon_last_name %></td>
+            <td><%= student.anon_first_name %></td>
           <% else %>
-            <a href="#imp_<%= reaction.id %>"
+            <td><%= student.last_name.nil? ? t( :not_given ): student.last_name %></td>
+            <td><%= student.first_name.nil? ? t( :not_given ): student.first_name %></td>
+          <% end %>
+          <td><%= mail_to student.email %></td>
+          <% if reaction.behavior.present? #completed %>
+            <td>Completed</td>
+            <td><%= reaction.narrative.scenario.behavior.name %></td>
+            <td><%= reaction.narrative.member %></td>
+            <td><%= reaction.behavior.name %></td>
+            <td>
+              <% if reaction.improvements.blank? %>
+                N/A
+              <% else %>
+                <a href="#imp_<%= reaction.id %>"
                       class="ui-btn ui-corner-all ui-shadow ui-btn-inline"
                       data-rel="popup"
                       data-position-to="origin"><%= t 'experiences.improvements' %></a>
+              <% end %>
+            </td>
+          <% elsif reaction.next_week.nil? #all but the conclusions %>
+            <td>97%</td>
+            <td><%= reaction.narrative.scenario.behavior.name %></td>
+            <td><%= reaction.narrative.member %></td>
+            <td><%= t 'experiences.not_completed' %></td>
+            <td><%= t 'experiences.not_completed' %></td>
+          <% elsif reaction.status == '0%' %>
+            <td>0%</td>
+            <td><%= t 'experiences.not_started' %></td>
+            <td><%= t 'experiences.not_started' %></td>
+            <td><%= t 'experiences.not_started' %></td>
+            <td><%= t 'experiences.not_started' %></td>
+          <% else #in progress %>
+            <td><%= reaction.status %>%</td>
+            <td><%= reaction.narrative.scenario.behavior.name %></td>
+            <td><%= reaction.narrative.member %></td>
+            <td><%= reaction.narrative.scenario.behavior.name %></td>
+            <td>
+              N/A
+            </td>
           <% end %>
-          </td>
-        <% elsif reaction.next_week.nil? #all but the conclusions %>
-          <td>97%</td>
-          <td><%= reaction.narrative.scenario.behavior.name %></td>
-          <td><%= reaction.narrative.member %></td>
-          <td><%= t 'experiences.not_completed' %></td>
-          <td><%= t 'experiences.not_completed' %></td>
-        <% elsif reaction.status == '0%' %>
-          <td>0%</td>
-          <td><%= t 'experiences.not_started' %></td>
-          <td><%= t 'experiences.not_started' %></td>
-          <td><%= t 'experiences.not_started' %></td>
-          <td><%= t 'experiences.not_started' %></td>
-        <% else #in progress %>
-          <td><%= reaction.status %>%</td>
-          <td><%= reaction.narrative.scenario.behavior.name %></td>
-          <td><%= reaction.narrative.member %></td>
-          <td><%= reaction.narrative.scenario.behavior.name %></td>
-          <td>
-            N/A
-          </td>
-        <% end %>
         </tr>
       <% end %>
-      </tbody>
-    </table>
-    <% @experience.course.enrolled_students.each do |student| %>
-      <% reaction = @experience.get_user_reaction( student ) %>
-      <div data-role="popup" id="imp_<%= reaction.id %>" class="ui-content" data-theme="<%= theme_code %>">
-        <p><%= simple_format(reaction.improvements) %></p>
-      </div>
-    <% end %>
-  </div>
-  <div id="responses" class="ui-body-<%= theme_code %> ui-content">
-    <h2><%= t :resp_data %></h2>
-    <p><%= t :coming_soon %></p>
-  </div>
-  <div class="form-actions">
-    <%= f.button :submit %>
-  </div>
+    </tbody>
+  </table>
+  <% @experience.course.enrolled_students.each do |student| %>
+    <% reaction = @experience.get_user_reaction( student ) %>
+    <div data-role="popup" id="imp_<%= reaction.id %>" class="ui-content" data-theme="<%= theme_code %>">
+      <p><%= simple_format(reaction.improvements) %></p>
+    </div>
+  <% end %>
+</div>
+<div id="responses" class="ui-body-<%= theme_code %> ui-content">
+  <h2><%= t :resp_data %></h2>
+  <p><%= t :coming_soon %></p>
+</div>
+<div class="form-actions">
+  <%= f.button :submit %>
+</div>
 <% end %>

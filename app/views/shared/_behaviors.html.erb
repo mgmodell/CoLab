@@ -1,6 +1,6 @@
 <dl>
   <% Behavior.find_each do |b| %>
-  <dt><%= b.name %></dt>
+    <dt><%= b.name %></dt>
     <dd><%= b.description.html_safe %></dd>
   <% end %>
 </dl>

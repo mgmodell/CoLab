@@ -66,8 +66,8 @@
                   <%= l course.end_date, format: :tz_clarity %>
                 </td>
                 <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
-                <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
-                <%= link_to t(:destroy), course, method: :delete, data: { confirm: t(:confirmation) } %></td>
+                  <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
+                  <%= link_to t(:destroy), course, method: :delete, data: { confirm: t(:confirmation) } %></td>
               </tr>
             <% end %>
           </tbody>

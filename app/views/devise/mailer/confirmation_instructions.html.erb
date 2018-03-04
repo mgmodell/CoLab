@@ -1,16 +1,13 @@
 <p>Welcome to CoLab, <%= @email %>!</p>
-
 <p><%= link_to 'CoLab', root_url %> is a web-based system for helping
-instructors to make sure students engaged in group work get the most
-out of the experience.</p>
+  instructors to make sure students engaged in group work get the most
+  out of the experience.</p>
 <p>You are receiving this either because:
-<ul>
-<li>You've registered with CoLab, or</li>
-<li>One of your instructors is requesting that you use <%= link_to 'CoLab', root_url %> in their class, or</li>
-<li>You are an instructor in a course that's using <%= link_to 'CoLab', root_url %></li>
-</ul>
-Please confirm your account email by clicking the link below and completing the registration process:</p>
-
+  <ul>
+    <li>You've registered with CoLab, or</li>
+    <li>One of your instructors is requesting that you use <%= link_to 'CoLab', root_url %> in their class, or</li>
+    <li>You are an instructor in a course that's using <%= link_to 'CoLab', root_url %></li>
+  </ul>
+  Please confirm your account email by clicking the link below and completing the registration process:</p>
 <p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
-
 <p>CoLab Support</p>

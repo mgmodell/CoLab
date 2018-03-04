@@ -44,7 +44,7 @@
   <p>
     <h3><%= t :dates %>:</h3>
     <%= l in_tz( date: @bingo_game.start_date ), format: :short_date %> to
-  <%= l in_tz( date: @bingo_game.end_date ), format: :short_date %></br>
+    <%= l in_tz( date: @bingo_game.end_date ), format: :short_date %></br>
   <em><%= t :note %>: <%= t 'bingo_games.tz_warn', time_zone: @bingo_game.course.timezone %></em>
 </p>
 <%= link_to t( 'bingo_games.edit.title' ), edit_bingo_game_path(@bingo_game) %>

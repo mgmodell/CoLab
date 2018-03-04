@@ -47,8 +47,8 @@
                 <td><%= game.course.start_date %></td>
                 <td><%= game.course.end_date %></td>
                 <td><%= link_to t(:show), game %>&nbsp;|&nbsp;
-                <%= link_to t(:edit), edit_bingo_game_path(game) %>&nbsp;|&nbsp;
-                <%= link_to t(:destroy), game, method: :delete, data: { confirm: t(:confirmation) } %></td>
+                  <%= link_to t(:edit), edit_bingo_game_path(game) %>&nbsp;|&nbsp;
+                  <%= link_to t(:destroy), game, method: :delete, data: { confirm: t(:confirmation) } %></td>
               </tr>
             <% end %>
           </tbody>
