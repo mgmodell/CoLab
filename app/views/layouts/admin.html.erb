@@ -1,0 +1,36 @@
+<% theme_code = get_theme_code %>
+<!DOCTYPE html>
+<html>
+  <%= favicon_link_tag %>
+  <head>
+    <%= render 'layouts/shared/google_analytics' %>
+    <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= stylesheet_link_tag    "application", :media => "all" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <div data-role="page" data-theme="<%= theme_code %>">
+      <div data-role="header" data-position="fixed" style="overflow:hidden;" >
+        <h1 id="title_head"><%= t :title %> <%= " : " + @title unless @title.nil? %></h1>
+        <p style="font-weight:300;font-size:10px;text-align:center"><% q = Quote.get_quote %><%= raw( q.get_local_quote) %>
+              (<%= q.get_local_attribution %>)
+        </p>
+      <%= render 'shared/admin_menu' %>
+      </div>
+      <div data-role="content">
+        <%= link_to t( :concepts_edit ), concepts_path,
+          data: { inline: true, mini: true, role: 'button' } if @current_user.is_admin?%>
+        <% if flash[:error] -%>
+          <p class='error'><%=h flash[:error] %></p>
+        <% end -%>
+        <% if flash[:notice] -%>
+          <p class='notice'><%=h flash[:notice] %></p>
+        <% end -%>
+        <%= yield %>
+      </div>
+    </div>
+    <%= render 'layouts/shared/footer', working: false %>
+  </body>
+</html>

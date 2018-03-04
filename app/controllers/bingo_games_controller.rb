@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class BingoGamesController < ApplicationController
+  layout 'admin', except: [ :review_candidates, :update_review_candidates ]
   before_action :set_bingo_game, only: %i[show edit update
                                           destroy review_candidates
                                           update_review_candidates]

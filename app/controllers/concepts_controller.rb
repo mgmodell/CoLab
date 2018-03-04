@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ConceptsController < ApplicationController
+  layout 'admin', except: [ :review_candidates, :update_review_candidates ]
   before_action :set_concept, only: %i[show edit update destroy]
   before_action :check_admin, except: [:concepts_for_game]
 

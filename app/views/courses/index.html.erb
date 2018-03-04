@@ -1,8 +1,6 @@
 <p id="notice"><%= notice %></p>
 <% theme_code = get_theme_code
    anonymize = get_anonymous %>
-<%= link_to t( :schools_edit ), schools_path,
-  data: { inline: true, mini: true, role: 'button' } if @current_user.is_admin?%>
 <table data-role="table"
   id="basicTable"
   data-column-btn-theme"<%= theme_code %>" 

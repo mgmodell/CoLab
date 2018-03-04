@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SchoolsController < ApplicationController
+  layout 'admin'
   before_action :set_school, only: %i[show edit update destroy]
   before_action :check_admin
 

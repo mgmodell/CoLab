@@ -12,7 +12,7 @@ Feature: School Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
-     And the user clicks "Edit schools"
+     And the user clicks "Schools"
      And the user clicks "New School"
      And the user sets the "Name" field to "hard knocks"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
@@ -27,7 +27,7 @@ Feature: School Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
-     And the user clicks "Edit schools"
+     And the user clicks "Schools"
      And the user clicks "New School"
      #no name
      And the user sets the "Name" field to ""
@@ -49,14 +49,14 @@ Feature: School Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
-    Then the user does not see a "Edit schools" link
+    Then the user does not see a "Schools" link
 
   Scenario: Admin edits an existing school
     Given the user is an admin
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
-     And the user clicks "Edit schools"
+     And the user clicks "Schools"
     Then the user sees 2 school
     Then the user opens the school
     Then the user clicks "Edit school details"

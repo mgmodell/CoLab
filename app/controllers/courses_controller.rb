@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CoursesController < ApplicationController
+  layout 'admin'
   before_action :set_course, only: %i[show edit update destroy add_students add_instructors new_from_template]
   before_action :check_admin, only: %i[new create]
   before_action :check_editor, except: %i[next diagnose react accept_roster decline_roster show index]

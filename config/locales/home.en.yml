@@ -153,7 +153,12 @@ en:
   terms_review: Terms Review
   course: Course
   school: School
-  schools_edit: Edit schools
+  schools_edit: Schools
+  courses_edit: Courses
+  experiences_edit: Experiences
+  bingo_games_edit: Terms lists
+  projects_edit: Projects
+  concepts_edit: Concepts
   active: Active
   inactive: Inactive
   details: Details

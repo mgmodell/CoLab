@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
+  layout 'admin'
   before_action :set_project, only: %i[show edit update destroy activate
                                        rescore_group rescore_groups]
   before_action :check_editor, except: %i[next diagnose react
