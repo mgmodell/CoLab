@@ -38,4 +38,4 @@
     </tbody>
   </table>
   <br>
-  <%= link_to t('schools.new.title'), new_school_path %>
+  <%= link_to t('schools.new.title'), new_school_path if @current_user.is_admin? %>
