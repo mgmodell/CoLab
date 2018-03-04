@@ -27,7 +27,7 @@ class User < ApplicationRecord
 
   belongs_to :language, inverse_of: :users, optional: true
   belongs_to :primary_language, inverse_of: :home_users,
-    class_name: 'Language', optional: true
+                                class_name: 'Language', optional: true
 
   belongs_to :school, optional: true
   has_many :installments, inverse_of: :user, dependent: :destroy
@@ -38,7 +38,7 @@ class User < ApplicationRecord
   has_many :experiences, through: :reactions
   has_many :narratives, through: :experiences
 
-  has_many :messages, class_name: "Ahoy::Message"
+  has_many :messages, class_name: 'Ahoy::Message'
 
   validates :timezone, :theme, presence: true
 
@@ -89,7 +89,6 @@ class User < ApplicationRecord
                                .includes(:projects)
                                .to_a
 
-    
     consent_logs.where(presented: true).each do |consent_log|
       consent_forms.delete_if { |consent_form| consent_form.id == consent_log.consent_form_id }
     end
@@ -109,7 +108,7 @@ class User < ApplicationRecord
     # Create consent logs for waiting consent forms
     waiting_consent_logs = []
     consent_forms.each do |w_consent_form|
-      consent_log = self.consent_logs.new(consent_form: w_consent_form)
+      consent_log = consent_logs.new(consent_form: w_consent_form)
       waiting_consent_logs << consent_log
     end
     waiting_consent_logs

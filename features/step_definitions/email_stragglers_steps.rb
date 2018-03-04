@@ -62,7 +62,7 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
       password_confirmation: 'password',
       email: Forgery::Internet.email_address,
       timezone: 'UTC',
-      school: School.find( 1 ),
+      school: School.find(1),
       theme_id: 1
     )
     user.skip_confirmation!

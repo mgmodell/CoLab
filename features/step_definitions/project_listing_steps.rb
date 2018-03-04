@@ -53,7 +53,7 @@ Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
       password_confirmation: 'password',
       email: Forgery::Internet.email_address,
       timezone: 'UTC',
-      school: School.find( 1 ),
+      school: School.find(1),
       theme_id: 1
     )
     user.skip_confirmation!

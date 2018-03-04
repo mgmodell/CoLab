@@ -6,13 +6,13 @@ require 'forgery'
 Given /^there is a global consent form$/ do
   @consent_form = ConsentForm.new(
     name: Forgery::Name.location,
-    user: User.find( 1 )
+    user: User.find(1)
   )
 end
 
 Given /^the project has a consent form$/ do
   @consent_form = ConsentForm.new(
-    user: User.find( 1 ),
+    user: User.find(1),
     name: Forgery::Name.location
   )
   @consent_form.save

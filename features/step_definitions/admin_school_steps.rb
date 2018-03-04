@@ -19,12 +19,11 @@ Then 'the school {string} field is {string}' do |field_name, value|
   end
 end
 
-Then "the user sees {int} school"  do |course_count|
+Then 'the user sees {int} school' do |course_count|
   page.all('tr').count == course_count.to_i + 1
 end
 
-Then "the user opens the school"  do
+Then 'the user opens the school' do
   @school = School.last
   click_link_or_button @school.name
 end
-

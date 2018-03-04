@@ -53,9 +53,9 @@ class Assessment < ApplicationRecord
     date_now = DateTime.current
 
     Assessment.joins(:project)
-              .includes(:installments )
-              .where(instructor_updated: false, projects: { active: true } )
-              .where( 'assessments.end_date < ?', date_now)
+              .includes(:installments)
+              .where(instructor_updated: false, projects: { active: true })
+              .where('assessments.end_date < ?', date_now)
               .each do |assessment|
       completion_hash = {}
       # Collect data for notification and anonymize comments

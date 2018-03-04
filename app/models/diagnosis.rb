@@ -15,13 +15,13 @@ class Diagnosis < ApplicationRecord
        Behavior.find(behavior_id).name == 'Other' &&
        (other_name.nil? || other_name.empty?)
 
-      errors.add(:other_name, I18n.t( 'diagnosis.other_name_rqrd' ) )
+      errors.add(:other_name, I18n.t('diagnosis.other_name_rqrd'))
     end
   end
 
   def validate_unique
     if Diagnosis.where(reaction: reaction, week_id: week_id).exists?
-      errors[:base] << I18n.t( 'diagnosis.duplicate_entry' )
+      errors[:base] << I18n.t('diagnosis.duplicate_entry')
     end
   end
 end

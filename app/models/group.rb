@@ -132,15 +132,15 @@ class Group < ApplicationRecord
       member_string += user_id.to_s + ' '
     end
     if changed? || @initial_member_state != member_string
-      gr = group_revisions.new(name: name_was, group: self, members: member_string )
+      gr = group_revisions.new(name: name_was, group: self, members: member_string)
       calc_diversity_score if @initial_member_state != gr.members
     end
 
-    #i_changed = (changed? || @initial_member_state != gr.members)
+    # i_changed = (changed? || @initial_member_state != gr.members)
 
     yield # Do that save thing
 
-    #gr.save if persisted? && i_changed
+    # gr.save if persisted? && i_changed
   end
 
   def validate_activation_status

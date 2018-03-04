@@ -26,5 +26,4 @@ module PersonalizationHelper
     end
     pd
   end
-
 end

@@ -180,15 +180,15 @@ class BingoGame < ApplicationRecord
   def dates_within_course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date
-        msg = I18n.t( 'bingo_games.start_date_err',
-          start_date: start_date,
-          course_start_date: course.start_date )
+        msg = I18n.t('bingo_games.start_date_err',
+                     start_date: start_date,
+                     course_start_date: course.start_date)
         errors.add(:start_date, msg)
       end
       if end_date.change(sec: 0) > course.end_date.change(sec: 0)
-        msg = I18n.t( 'bingo_games.end_date_err',
-          end_date: end_date,
-          course_end_date: course.end_date )
+        msg = I18n.t('bingo_games.end_date_err',
+                     end_date: end_date,
+                     course_end_date: course.end_date)
         errors.add(:end_date, msg)
       end
     end
@@ -197,7 +197,7 @@ class BingoGame < ApplicationRecord
 
   def review_completed
     if reviewed && candidates.reviewed.count < candidates.completed.count
-      errors.add(:reviewed, I18n.t( 'bingo_games.reviewed_err' ) )
+      errors.add(:reviewed, I18n.t('bingo_games.reviewed_err'))
     end
   end
 
@@ -205,10 +205,10 @@ class BingoGame < ApplicationRecord
   def group_components
     if group_option
       if project.nil?
-        errors.add(:project_id, I18n.t( 'bingo_games.group_requires_project' ) )
+        errors.add(:project_id, I18n.t('bingo_games.group_requires_project'))
       end
       if group_discount.nil?
-        errors.add(:group_discount, I18n.t( 'bingo_games.group_requires_discount' ) )
+        errors.add(:group_discount, I18n.t('bingo_games.group_requires_discount'))
       end
     end
   end

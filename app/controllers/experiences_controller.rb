@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ExperiencesController < ApplicationController
-  layout 'admin', except: [ :next, :diagnose, :react ]
+  layout 'admin', except: %i[next diagnose react]
   before_action :set_experience, only: %i[show edit update destroy]
   before_action :check_viewer, only: %i[show index]
   before_action :check_editor, only: %i[edit update destroy]
