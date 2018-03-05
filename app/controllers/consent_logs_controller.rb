@@ -7,7 +7,7 @@ class ConsentLogsController < ApplicationController
     if @consent_log.update!(cl_params)
       redirect_to controller: 'home', action: 'index'
     else
-      puts @consent_log.errors.full_messages unless @consent_log.errors.empty?
+      logger.debug @consent_log.errors.full_messages unless @consent_log.errors.empty?
       render action: 'edit'
     end
   end

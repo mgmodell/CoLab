@@ -62,7 +62,7 @@ class Assessment < ApplicationRecord
       assessment.installments.each do |inst|
         completion_hash[inst.user.email] = { name: inst.user.name(false), status: inst.inst_date.to_s }
         inst.anonymize_comments
-        puts inst.errors.full_messages unless inst.errors.empty?
+        logger.debug inst.errors.full_messages unless inst.errors.empty?
       end
 
       assessment.project.course.enrolled_students.each do |student|
@@ -119,7 +119,7 @@ class Assessment < ApplicationRecord
     if existing_assessment_count == 0
       assessment.project = project
       assessment.save
-      puts assessment.errors.full_messages unless assessment.errors.empty?
+      logger.debug assessment.errors.full_messages unless assessment.errors.empty?
     end
   end
 
