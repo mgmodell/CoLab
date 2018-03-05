@@ -46,14 +46,13 @@ class ProjectsController < ApplicationController
             t('projects.create_success_inactive')
       redirect_to @project, notice: notice
     else
-      puts @project.errors.full_messages unless @project.errors.empty?
+      logger.debug @project.errors.full_messages unless @project.errors.empty?
       render :new
     end
   end
 
   def update
     @title = t('projects.edit.title')
-    puts project_params
     if @project.update(project_params)
       groups_users = {}
       @project.groups.includes(:users).each do |group|
@@ -73,7 +72,6 @@ class ProjectsController < ApplicationController
         group.users.clear
         group.users = users_array
         group.save
-        puts group.errors.full_messages unless group.errors.empty?
         logger.debug group.errors.full_messages unless group.errors.empty?
       end
       notice = @project.active ?
@@ -81,7 +79,7 @@ class ProjectsController < ApplicationController
             t('projects.update_success_inactive')
       redirect_to @project, notice: notice
     else
-      puts @project.errors.full_messages unless @project.errors.empty?
+      logger.debug @project.errors.full_messages unless @project.errors.empty?
       render :edit
     end
   end
@@ -112,7 +110,7 @@ class ProjectsController < ApplicationController
     if group.present?
       group.calc_diversity_score
       group.save
-      puts group.errors.full_messages unless group.errors.empty?
+      logger.debug group.errors.full_messages unless group.errors.empty?
 
       redirect_to @project, notice: t('projects.diversity_calculated')
     else
@@ -125,7 +123,7 @@ class ProjectsController < ApplicationController
     @project.groups.each do |group|
       group.calc_diversity_score
       group.save
-      puts group.errors.full_messages unless group.errors.empty?
+      logger.debug group.errors.full_messages unless group.errors.empty?
     end
 
     redirect_to @project, notice: t('projects.diversities_calculated')
@@ -137,7 +135,7 @@ class ProjectsController < ApplicationController
        @project.course.get_roster_for_user(@current_user).role.instructor?
       @project.active = true
       @project.save
-      puts @project.errors.full_messages unless @project.errors.empty?
+      logger.debug @project.errors.full_messages unless @project.errors.empty?
     end
     render :show
   end

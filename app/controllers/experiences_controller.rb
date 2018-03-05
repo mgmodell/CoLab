@@ -39,7 +39,7 @@ class ExperiencesController < ApplicationController
     if @experience.save
       redirect_to @experience, notice: t('experiences.create_success')
     else
-      puts @experience.errors.full_messages unless @experience.errors.empty?
+      logger.debug @experience.errors.full_messages unless @experience.errors.empty?
       @title = t('experiences.new.title')
       render :new
     end
@@ -49,7 +49,7 @@ class ExperiencesController < ApplicationController
     if @experience.update(experience_params)
       redirect_to @experience, notice: t('experiences.update_success')
     else
-      puts @experience.errors.full_messages unless @experience.errors.empty?
+      logger.debug @experience.errors.full_messages unless @experience.errors.empty?
       @title = t('experiences.edit.title')
       render :edit
     end
@@ -76,7 +76,7 @@ class ExperiencesController < ApplicationController
       if !reaction.instructed?
         reaction.instructed = true
         reaction.save
-        puts reaction.errors.full_messages unless reaction.errors.empty?
+        logger.debug reaction.errors.full_messages unless reaction.errors.empty?
         @experience = experience
         @title = t('experiences.instr_title')
         render :instructions
@@ -97,7 +97,7 @@ class ExperiencesController < ApplicationController
     received_diagnosis = Diagnosis.new(diagnosis_params)
     received_diagnosis.reaction = Reaction.find(received_diagnosis.reaction_id)
     received_diagnosis.save
-    puts received_diagnosis.errors.full_messages unless received_diagnosis.errors.empty?
+    logger.debug received_diagnosis.errors.full_messages unless received_diagnosis.errors.empty?
 
     week = received_diagnosis.reaction.next_week
     if received_diagnosis.errors.any?
@@ -139,7 +139,7 @@ class ExperiencesController < ApplicationController
        experience.course.get_roster_for_user(@current_user).role.instructor?
       experience.active = true
       experience.save
-      puts experience.errors.full_messages unless experience.errors.empty?
+      logger.debug experience.errors.full_messages unless experience.errors.empty?
     end
     @experience = experience
     render :show

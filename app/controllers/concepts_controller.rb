@@ -55,7 +55,7 @@ class ConceptsController < ApplicationController
     if @concept.save
       redirect_to url: concept_url(@concept), notice: t('concepts.create_success')
     else
-      puts @concepts.errors.full_messages unless @concepts.errors.empty?
+      logger.debug @concepts.errors.full_messages unless @concepts.errors.empty?
       render :new
     end
   end
@@ -65,7 +65,7 @@ class ConceptsController < ApplicationController
     if @concept.update(concept_params)
       redirect_to concept_path(@concept), notice: t('concepts.update_success')
     else
-      puts @concept.errors.full_messages unless @concept.errors.empty?
+      logger.debug @concept.errors.full_messages unless @concept.errors.empty?
       render :edit
     end
   end

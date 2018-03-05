@@ -61,7 +61,7 @@ class CoursesController < ApplicationController
     if @course.save
       redirect_to courses_url, notice: t('courses.create_success')
     else
-      puts @course.errors.full_messages unless @course.errors.empty?
+      logger.debug @course.errors.full_messages unless @course.errors.empty?
       render :new
     end
   end
@@ -72,7 +72,7 @@ class CoursesController < ApplicationController
       @course.school = School.find(@course.school_id)
       redirect_to course_path(@course), notice: t('courses.update_success')
     else
-      puts @course.errors.full_messages unless @course.errors.empty?
+      logger.debug @course.errors.full_messages unless @course.errors.empty?
       render :edit
     end
   end

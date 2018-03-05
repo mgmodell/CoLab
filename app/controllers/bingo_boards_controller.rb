@@ -45,7 +45,7 @@ class BingoBoardsController < ApplicationController
     if @bingo_board.update(bingo_board_params)
       redirect_to bingo_board_path(@bingo_board), notice: t('bingo_boards.update_success')
     else
-      puts @bingo_board.errors.full_messages unless @bingo_board.errors.empty?
+      logger.debug @bingo_board.errors.full_messages unless @bingo_board.errors.empty?
       respond_to do |format|
         format.json { render json: @bingo_board }
         format.html { render :edit }

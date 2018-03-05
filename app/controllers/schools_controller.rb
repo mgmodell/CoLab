@@ -29,7 +29,7 @@ class SchoolsController < ApplicationController
     if @school.save
       redirect_to schools_url, notice: t('schools.create_success')
     else
-      puts @school.errors.full_messages unless @school.errors.empty?
+      logger.debug @school.errors.full_messages unless @school.errors.empty?
       render :new
     end
   end
@@ -39,7 +39,7 @@ class SchoolsController < ApplicationController
     if @school.update(school_params)
       redirect_to school_path(@school), notice: t('schools.update_success')
     else
-      puts @school.errors.full_messages unless @school.errors.empty?
+      logger.debug @school.errors.full_messages unless @school.errors.empty?
       render :edit
     end
   end

@@ -52,7 +52,7 @@ class Course < ApplicationRecord
     roster = Roster.new(user: user, course: self) if roster.nil?
     roster.role = role
     roster.save
-    puts roster.errors.full_messages unless roster.errors.empty?
+    logger.debug roster.errors.full_messages unless roster.errors.empty?
   end
 
   def drop_student(user)
