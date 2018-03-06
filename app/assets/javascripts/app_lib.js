@@ -260,6 +260,7 @@ $(document).ready(function(){
   });
 
   $("#basicTable").tablesorter( {sortList: [[0,0],[1,0]]} );
+  $("#activities_table").tablesorter( {sortList: [[3,0],[2,0]]} );
   $("#responsesTable").tablesorter( {sortList: [[3,0]]});
   $("#groups_table").tablesorter( {sortList: [[0,0],[1,0]]} );
   $("#bingo_table").tablesorter( {sortList: [[0,0]]} );

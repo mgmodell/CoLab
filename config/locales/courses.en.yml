@@ -46,3 +46,5 @@ en:
     re_invite: Re-Invite
     drop: Drop
     courses: Courses
+    drop_student_confirm: >
+      Are you sure you want to drop this student from the class?

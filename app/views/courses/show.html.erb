@@ -122,7 +122,8 @@
         </td>
         <td><%= link_to( t( 'courses.re_invite' ),
         re_invite_student_path( roster.user ) ) unless roster.enrolled_student? %>&nbsp;|&nbsp;
-        <%= link_to t( 'courses.drop' ), drop_student_path( roster.id ) %></td>
+        <%= link_to t( 'courses.drop' ), drop_student_path( roster.id ),
+        data: { confirm: t( 'courses.drop_student_confirm') } %></td>
       </tr>
     <% end %>
     </tbody>
@@ -135,7 +136,7 @@
 <p>
   <h3><%= t 'courses.activities' %></h3>
     <table data-role="table"
-          id="bingo_table"
+          id="activities_table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>"
           data-column-btn-text="<%= t :column_select %>"
