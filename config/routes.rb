@@ -46,6 +46,7 @@ Rails.application.routes.draw do
     post 'play_board/:id' => 'bingo_boards#play_board', as: 'play_bingo'
   end
 
+  get 'infra/quote' => 'home#get_quote', as: :get_quote
   get 'infra/states_for_country/:country_code' => 'home#states_for_country', as: :states_for
   get 'infra/diversity_score_for' => 'home#check_diversity_score',
       as: :check_diversity_score
