@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
-    <%= javascript_pack_tag 'quote' %>
+    <%= javascript_pack_tag 'application' %>
     <%= csrf_meta_tags %>
   </head>
   <body>
@@ -16,7 +16,9 @@
       <div data-role="header" data-position="fixed" style="overflow:hidden;" >
 
         <h1 id="title_head"><%= t :title %> <%= " : " + @title unless @title.nil? %></h1>
-        <div id='quote'></div>
+        <%= react_component "Quote", {
+          url: get_quote_path,
+          token: form_authenticity_token } %>
 
       </div>
       <div data-role="content">

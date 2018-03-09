@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
+  protect_from_forgery with: :null_session, only: %i[ get_quote states_for_country ]
   skip_before_action :authenticate_user!, only: [:demo_start]
 
   def index
@@ -25,9 +26,12 @@ class HomeController < ApplicationController
   end
 
   def get_quote
-    @quote = Quote.get_quote
+    quote = Quote.get_quote
+    puts quote.text
+    puts quote.attribution
+
     respond_to do |format|
-      format.json
+      format.json { render json: quote }
     end
   end
 
