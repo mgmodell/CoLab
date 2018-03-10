@@ -147,7 +147,7 @@ class User < ApplicationRecord
     activities = []
     # Add in the candidate lists
     BingoGame.joins(course: :rosters)
-             .includes(:course, :project)
+             .includes(:project)
              .where(reviewed: true, 'rosters.user_id': id)
              .where('rosters.role = ? OR rosters.role = ?',
                     Roster.roles[:enrolled_student], Roster.roles[:invited_student])

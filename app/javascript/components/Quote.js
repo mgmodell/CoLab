@@ -6,7 +6,8 @@ class Quote extends React.Component {
     super( props );
     this.state = {
       quote: {
-        text: 'loading...'
+        text: '',
+        attribution: '...'
       }
     }
   }
