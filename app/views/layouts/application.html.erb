@@ -17,7 +17,6 @@
 
         <h1 id="title_head"><%= t :title %> <%= " : " + @title unless @title.nil? %></h1>
         <%= react_component "Quote", {
-          url: get_quote_path,
           token: form_authenticity_token } %>
 
       </div>

@@ -3,6 +3,7 @@
     "@rails/webpacker": "^3.2.2",
     "babel-preset-react": "^6.24.1",
     "prop-types": "^15.6.1",
+    "rails-erb-loader": "^5.4.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react_ujs": "^2.4.4"

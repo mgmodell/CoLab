@@ -1,5 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
+import getURL from "../util.js"
+
 class Quote extends React.Component {
 
   constructor( props ){
@@ -13,7 +15,7 @@ class Quote extends React.Component {
   }
 
   updateQuote(){
-    fetch( this.props.url + '.json', {
+    fetch( getURL( 'quote' ), {
       method: 'POST',
       credentials: 'include',
       headers: {
