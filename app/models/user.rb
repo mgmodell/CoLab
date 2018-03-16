@@ -32,7 +32,7 @@ class User < ApplicationRecord
   belongs_to :school, optional: true
   has_many :installments, inverse_of: :user, dependent: :destroy
   has_many :rosters, inverse_of: :user, dependent: :destroy
-  has_many :courses, through: :projects
+  has_many :courses, through: :rosters
 
   has_many :reactions, inverse_of: :user, dependent: :destroy
   has_many :experiences, through: :reactions
@@ -147,7 +147,7 @@ class User < ApplicationRecord
     activities = []
     # Add in the candidate lists
     BingoGame.joins(course: :rosters)
-             .includes(:project)
+             .includes(:course, :project)
              .where(reviewed: true, 'rosters.user_id': id)
              .where('rosters.role = ? OR rosters.role = ?',
                     Roster.roles[:enrolled_student], Roster.roles[:invited_student])

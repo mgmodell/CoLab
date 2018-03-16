@@ -188,7 +188,8 @@
             </th>
           </thead>
           <tbody>
-          <% @current_user.courses.uniq.each do |course| %>
+          <% @current_user.rosters.enrolled.includes( :course ).each do |roster| %>
+          <% course = roster.course %>
           <tr>
             <td><%= course.number %></td>
             <td><%= course.name %></td>
