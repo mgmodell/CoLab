@@ -27,8 +27,6 @@ class HomeController < ApplicationController
 
   def get_quote
     quote = Quote.get_quote
-    puts quote.text
-    puts quote.attribution
 
     respond_to do |format|
       format.json { render json: quote }

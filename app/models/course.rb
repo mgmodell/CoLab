@@ -161,8 +161,10 @@ class Course < ApplicationRecord
         if existing_roster.nil?
           Roster.create(user: user, course: self, role: role)
         else
-          existing_roster.role = role
-          existing_roster.save
+          unless !instructor && Roster.roles[ :enrolled_student ]
+            existing_roster.role = role unless !instructor && Roster.roles[ :enrolled_student ]
+            existing_roster.save
+          end
         end
         # TODO: Let's add course invitation emails here in the future
       end
