@@ -193,11 +193,11 @@ class User < ApplicationRecord
       my_candidate_lists[index] = group_cl
     end
 
-    unless my_candidate_lists.empty?
-      total = my_candidate_lists
-              .inject(my_candidate_lists[0].performance) { |sum, cl| sum + cl.performance }
+    total = 0
+    my_candidate_lists.each do |candidate_list|
+      total += candidate_list.performance
     end
-    my_candidate_lists.count == 0 ? 100 : (total / my_candidate_lists.count)
+    my_candidate_lists.empty? ? 100 : (total / my_candidate_lists.count)
   end
 
   def get_bingo_data(course_id: 0)
