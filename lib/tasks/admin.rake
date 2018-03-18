@@ -8,10 +8,13 @@ namespace :admin do
 
   desc 'Set up infrastructure and send reminders and summaries'
   task remind: :environment do
+    config.active_job.queue_adapter = :inline
     Assessment.set_up_assessments
     AdministrativeMailer.send_reminder_emails
     AdministrativeMailer.inform_instructors
+    config.active_job.queue_adapter = :async
   end
+
   desc 'Cache performance numbers'
   task update_caches: :environment do
     CandidateList.joins(:bingo_game)

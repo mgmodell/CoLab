@@ -145,6 +145,7 @@ class Course < ApplicationRecord
   end
 
   def add_user_by_email(user_email, instructor = false)
+    ret_val = false
     if EmailValidator.valid? user_email
       role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
       # Searching for the student and:
@@ -153,25 +154,29 @@ class Course < ApplicationRecord
       passwd = (0...8).map { rand(65..90).chr }.join
 
       if user.nil?
-        user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
-        end
+        user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school)
+      end
 
       unless user.nil?
         existing_roster = Roster.where(course: self, user: user).take
         if existing_roster.nil?
           Roster.create(user: user, course: self, role: role)
+          ret_val = true
         else
           unless !instructor && Roster.roles[ :enrolled_student ]
             existing_roster.role = role unless !instructor && Roster.roles[ :enrolled_student ]
             existing_roster.save
+            unless existing_roster.errors.empty?
+              logger.debug existing_roster.errors.full_messages
+            else
+              ret_val = true
+            end
           end
         end
         # TODO: Let's add course invitation emails here in the future
       end
-      true
-    else
-      false
     end
+    ret_val
   end
 
   def add_students_by_email(student_emails)
