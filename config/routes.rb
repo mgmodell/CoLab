@@ -40,7 +40,7 @@ Rails.application.routes.draw do
     get 'list_stats/:id' => 'candidate_lists#list_stats', as: :'bingo_list_stats'
     #Gameplay functions
     resources :bingo_boards, only: [:index, :edit, :update, :show]
-    get 'concepts_for_game/:id' => 'concepts#concepts_for_game',
+    post 'concepts_for_game/:id' => 'concepts#concepts_for_game',
         as: :bingo_concepts,
         constraints: ->(req) { req.format == :json }
     post 'play_board/:id' => 'bingo_boards#play_board', as: 'play_bingo'

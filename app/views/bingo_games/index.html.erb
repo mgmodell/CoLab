@@ -20,7 +20,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @bingo_games.each do |bingo_game| %>
+    <% @bingo_games.includes( :course ).each do |bingo_game| %>
       <tr>
         <td><%= link_to bingo_game.get_name( anonymize ), bingo_game %></td>
         <td><%= bingo_game.course.get_name( anonymize ) %></td>

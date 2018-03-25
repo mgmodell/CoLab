@@ -22,20 +22,18 @@ class ConceptsController < ApplicationController
   def concepts_for_game
     concepts = []
     bingo_game_id = params[:id].to_i
-    substring = params[:search_string].strip
-    criteria = 'true ?'
-    if substring.length > 2
-      criteria = 'concepts.name LIKE ?'
-      substring = "%#{substring}%"
+    if bingo_game_id > 0
+      concepts = BingoGame.find(bingo_game_id).concepts.uniq.to_a
     else
-      substring = ''
-    end
-
-    if bingo_game_id == 0
+      substring = params[:search_string].strip
+      criteria = 'true ?'
+      if substring.length > 2
+        criteria = 'concepts.name LIKE ?'
+        substring = "%#{substring}%"
+      else
+        substring = ''
+      end
       concepts = Concept.where(criteria, substring).to_a if @current_user.is_instructor?
-    else
-      concepts = BingoGame.find(bingo_game_id).concepts
-                          .where(criteria, substring).to_a
     end
 
     respond_to do |format|
