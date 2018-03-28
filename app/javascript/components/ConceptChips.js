@@ -1,8 +1,12 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { withStyles } from 'material-ui/styles';
+import { withTheme } from 'material-ui/styles';
+import {createMuiTheme} from 'material-ui/styles';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Chip from 'material-ui/Chip';
 import Paper from 'material-ui/Paper';
+
+const styles = createMuiTheme( );
 
 class ConceptChips extends React.Component {
 
@@ -46,6 +50,7 @@ class ConceptChips extends React.Component {
     var c = [ { id: 1, name: 'nothing' } ];
 
     return (
+      <MuiThemeProvider theme={styles}>
       <Paper>
         {this.state.concepts.map( chip => {
           return (
@@ -56,6 +61,7 @@ class ConceptChips extends React.Component {
           );
         })}
       </Paper>
+      </MuiThemeProvider>
     );
   }
 }
@@ -64,4 +70,4 @@ ConceptChips.propTypes = {
   token: PropTypes.string,
   utl: PropTypes.string
 };
-export default ConceptChips
+export default withTheme()(ConceptChips);

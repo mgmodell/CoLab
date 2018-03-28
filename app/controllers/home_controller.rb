@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:demo_start]
+  protect_from_forgery except: [:get_quote]
+  skip_before_action :authenticate_user!, only: [:demo_start, :get_quote]
 
   def index
     @current_user = current_user
