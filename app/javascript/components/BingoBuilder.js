@@ -17,23 +17,35 @@ class BingoBuilder extends React.Component {
     this.state = {
       concepts: [ ],
       selectedConcepts: [ ],
+      boardSize: 5,
     }
   }
 
   randomizeTiles( ){
     var localConcepts = this.state.concepts;
     var selectedConcepts = {};
+    var tileCount = ( this.state.boardSize * this.state.boardSize ) - 1
+    var midpoint = 0;
 
     var counter = 0
-    while( Object.keys( selectedConcepts ).length < 25 && counter < 75 ){
+    while(
+      Object.keys( selectedConcepts ).length < tileCount
+      && counter < 75 ){
       counter++;
       var sample = localConcepts[
         Math.floor( Math.random( ) * localConcepts.length ) ];
       selectedConcepts[ sample.id ] = sample;
 
     }
+    //Repurpose localConcepts
+    localConcepts = Object.values( selectedConcepts );
+    midpoint = localConcepts.length / 2;
+    localConcepts.splice( midpoint, 0, {
+      id: 0,
+      name: '*',
+    } );
     this.setState( {
-      selectedConcepts: Object.values( selectedConcepts ),
+      selectedConcepts: localConcepts,
     } );
 
   }
@@ -69,8 +81,6 @@ class BingoBuilder extends React.Component {
     this.getConcepts();
   }
   render () {
-    var c = [ { id: 1, name: 'nothing' } ];
-
     return (
       <MuiThemeProvider theme={styles}>
         <Paper square={false}>
@@ -90,7 +100,7 @@ class BingoBuilder extends React.Component {
             Refresh
           </Button>
           <Paper>
-            <GridList cols={5}>
+            <GridList cols={this.state.boardSize}>
               {this.state.selectedConcepts.map( concept => {
                 return(
                   <GridListTile key={concept.id}>
