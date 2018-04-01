@@ -1,13 +1,39 @@
 # frozen_string_literal: true
 
 class BingoBoardsController < ApplicationController
-  before_action :set_bingo_board, except: [:index]
+  before_action :set_bingo_board, except: [:index, :board_for_game]
 
   def show
     @title = t '.title'
     respond_to do |format|
       format.json { render json: @bingo_board }
       format.html { render :show }
+    end
+  end
+
+  def board_for_game
+    bingo_game = BingoGame
+      .includes( bingo_boards: { bingo_cells: :concept } )
+      .find( params[:bingo_game_id] )
+    bingo_board = bingo_game.bingo_boards
+      .where( user_id: @current_user.id ).take
+
+    if bingo_board.nil?
+      bingo_board = BingoBoard.new( )
+      bingo_board.bingo_game = bingo_game
+    end
+
+    respond_to do |format|
+      format.json {
+        render json: bingo_board.to_json(
+               include:
+                { bingo_game: { only: [ :size, :topic ] },
+                  bingo_cells: { only: [ :id, :row, :column, :selected,
+                    concept: { only: [ :id, :name ] } ]  }
+                
+                }
+        )
+      }
     end
   end
 

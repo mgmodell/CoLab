@@ -16,21 +16,28 @@ class BingoBuilder extends React.Component {
     super( props );
     this.state = {
       concepts: [ ],
-      selectedConcepts: [ ],
-      boardSize: 5,
+      board: {
+        bingo_cells: [ ],
+        iteration: 0,
+        bingo_game: {
+          size: 5,
+          topic: 'no game',
+        },
+      }
     }
   }
 
   randomizeTiles( ){
     var localConcepts = this.state.concepts;
     var selectedConcepts = {};
-    var tileCount = ( this.state.boardSize * this.state.boardSize ) - 1
+    var size = this.state.board.bingo_game.size;
+    var tileCount = ( size * size ) - 1;
     var midpoint = 0;
 
     var counter = 0
     while(
-      Object.keys( selectedConcepts ).length < tileCount
-      && counter < 75 ){
+        Object.keys( selectedConcepts ).length < tileCount
+        && counter < 75 ){
       counter++;
       var sample = localConcepts[
         Math.floor( Math.random( ) * localConcepts.length ) ];
@@ -44,14 +51,29 @@ class BingoBuilder extends React.Component {
       id: 0,
       name: '*',
     } );
+    var cells = [ ]
+    for( var row = 0; row < size; row++ ){
+      for( var col = 0; col < size; col++ ){
+        var i = ( row * 5 ) + col;
+        var concept = localConcepts[ i ];
+        cells[ i ] = {
+          row: row,
+          column: col,
+          selected: ('*' == concept.name ? true : false ),
+          concept: concept,
+        }
+      }
+    }
+    var board = this.state.board;
+    board.bingo_cells = cells;
     this.setState( {
-      selectedConcepts: localConcepts,
+      board: board,
     } );
 
   }
 
   getConcepts(){
-    fetch( this.props.url + '.json' , {
+    fetch( this.props.conceptsUrl + '.json', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -72,14 +94,41 @@ class BingoBuilder extends React.Component {
         this.setState( {
           concepts: data
         });
-        this.randomizeTiles( );
       } );
 
   }
 
   componentDidMount( ){
     this.getConcepts();
+    //Let's retrieve any existing board
+    fetch( this.props.boardUrl + '.json', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accepts': 'application/json',
+        'X-CSRF-Token': this.props.token }
+      } )
+      .then( (response) => {
+        if( response.ok ){
+          return response.json( );
+        } else {
+          console.log( 'error' );
+          return [
+            { id: -1, name: 'no data' }
+          ];
+        }
+      } )
+      .then( (data) => {
+        this.setState( {
+          board: data,
+        })
+        if( data.bingo_cells.length < 1 ){
+          this.randomizeTiles( );
+        }
+      } );
   }
+
   render () {
     return (
       <MuiThemeProvider theme={styles}>
@@ -100,11 +149,14 @@ class BingoBuilder extends React.Component {
             Refresh
           </Button>
           <Paper>
-            <GridList cols={this.state.boardSize}>
-              {this.state.selectedConcepts.map( concept => {
+            <hr/>
+            <center>{this.state.board.bingo_game.topic}</center>
+            <hr/>
+            <GridList cols={this.state.board.bingo_game.size}>
+              {this.state.board.bingo_cells.map( cell => {
                 return(
-                  <GridListTile key={concept.id}>
-                    {concept.name}
+                  <GridListTile key={cell.concept.id}>
+                    <center>{cell.concept.name}</center>
                   </GridListTile>
                 );
               } ) }
@@ -118,6 +170,7 @@ class BingoBuilder extends React.Component {
 
 BingoBuilder.propTypes = {
   token: PropTypes.string,
-  utl: PropTypes.string
+  boardUrl: PropTypes.string,
+  conceptsUrl: PropTypes.string
 };
 export default withTheme()(BingoBuilder);

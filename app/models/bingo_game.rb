@@ -28,7 +28,6 @@ class BingoGame < ApplicationRecord
   validate :dates_within_course
   before_create :anonymize
 
-  enum size: { medium: 5 }
 
   def status_for_user(user)
     candidate_list_for_user(user).status
