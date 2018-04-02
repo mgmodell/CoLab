@@ -16,7 +16,7 @@ At a minimum, you will need to install git and a text editor (I use vi, but ther
 ### Contributing ###
 
 * [Official git page](https://git-scm.com/) [Windows](https://git-for-windows.github.io/) (other platforms are easy and I can help, but they're not worth listing here).
-* [Notepad++](https://notepad-plus-plus.org/download/v7.3.3.html)
+* A text editor ([Notepad++](https://notepad-plus-plus.org/download/v7.3.3.html) is decent on Windows)
 * [Learn Cucumber](https://cucumber.io/docs)
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
