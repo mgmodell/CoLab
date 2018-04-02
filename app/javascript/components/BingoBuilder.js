@@ -1,4 +1,5 @@
 import React from "react"
+import BingoBoard from './BingoBoard'
 import PropTypes from "prop-types"
 import { withTheme } from 'material-ui/styles';
 import {createMuiTheme} from 'material-ui/styles';
@@ -15,6 +16,7 @@ class BingoBuilder extends React.Component {
   constructor( props ){
     super( props );
     this.state = {
+      iteration: 0,
       concepts: [ ],
       board: {
         bingo_cells: [ ],
@@ -67,6 +69,7 @@ class BingoBuilder extends React.Component {
     var board = this.state.board;
     board.bingo_cells = cells;
     this.setState( {
+      iteration: this.state.iteration ++,
       board: board,
     } );
 
@@ -143,25 +146,18 @@ class BingoBuilder extends React.Component {
               );
             })}
           </Paper>
+          <br/>
           <Button
             variant="raised"
             onClick={() => this.randomizeTiles()}>
             Refresh
+          </Button>&nbsp;
+          <Button
+            variant="raised"
+            onClick={() => this.saveBoard()}>
+            Save
           </Button>
-          <Paper>
-            <hr/>
-            <center>{this.state.board.bingo_game.topic}</center>
-            <hr/>
-            <GridList cols={this.state.board.bingo_game.size}>
-              {this.state.board.bingo_cells.map( cell => {
-                return(
-                  <GridListTile key={cell.concept.id}>
-                    <center>{cell.concept.name}</center>
-                  </GridListTile>
-                );
-              } ) }
-            </GridList>
-          </Paper>
+          <BingoBoard board={this.state.board} />
         </Paper>
       </MuiThemeProvider>
     );

@@ -13,7 +13,6 @@ class BingoBoardsController < ApplicationController
 
   def board_for_game
     bingo_game = BingoGame
-      .includes( bingo_boards: { bingo_cells: :concept } )
       .find( params[:bingo_game_id] )
     bingo_board = bingo_game.bingo_boards
       .where( user_id: @current_user.id ).take
