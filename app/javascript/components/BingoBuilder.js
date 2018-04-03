@@ -48,7 +48,7 @@ class BingoBuilder extends React.Component {
     //Repurpose localConcepts
     var localConcepts = Object.values( selectedConcepts );
     var size = this.state.board.bingo_game.size;
-    var cells = [ ]
+    var cells = this.state.board.bingo_cells;
     for( var row = 0; row < size; row++ ){
       for( var col = 0; col < size; col++ ){
         var i = ( row * 5 ) + col;
@@ -61,13 +61,11 @@ class BingoBuilder extends React.Component {
 
         concept = midSquare ? {id: 0, name: '*'} : concept;
 
-        cells[ i ] = {
-          row: row,
-          column: col,
-          selected: midSquare ? true : false,
-          concept_id: concept.id,
-          concept: concept,
-        }
+        cells[ i ].row= row;
+        cells[ i ].column =  col;
+        cells[ i ].selected = midSquare ? true : false;
+        cells[ i ].concept_id = concept.id;
+        cells[ i ].concept = concept;
       }
     }
     var board = this.state.board;
