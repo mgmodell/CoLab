@@ -14,17 +14,11 @@ class BingoBoard extends React.Component {
   }
 
   render () {
-    return (
-      <Paper>
-        <hr/>
-        <center>{this.props.board.bingo_game.topic}</center>
-        <hr/>
-        <GridList
-          cols={this.props.board.bingo_game.size}
-          cellHeight="auto">
-          {this.props.board.bingo_cells.map( cell => {
+    const grid = this.props.board.initialised ? (
+          this.props.board.bingo_cells.map( cell => {
             return(
-              <GridListTile key={cell.concept.id}>
+              <GridListTile
+                key={cell.row + '-' + cell.column + '-' + cell.concept_id}>
                 <center>
                 <br/><br/>
                 {cell.concept.name}
@@ -32,7 +26,25 @@ class BingoBoard extends React.Component {
                 </center>
               </GridListTile>
             );
-          } ) }
+          } ) 
+    ) : (
+      <GridListTile></GridListTile>
+    );
+      
+      
+    const gameDate = new Date( this.props.board.bingo_game.end_date );
+    return (
+      <Paper>
+        <hr/>
+        <center>
+          {this.props.board.bingo_game.topic}&nbsp; 
+          ({gameDate.toDateString( )})
+        </center>
+        <hr/>
+        <GridList
+          cols={this.props.board.bingo_game.size}
+          cellHeight="auto">
+          {grid}
         </GridList>
       </Paper>
     );

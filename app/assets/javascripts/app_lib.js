@@ -136,7 +136,7 @@ $(document).ready(function(){
       var list = [];
 
       fetch( concept_url, {
-        method: 'POST',
+        method: 'GET',
         credentials: 'include',
         body: JSON.stringify( data ),
         headers: {

@@ -16,9 +16,10 @@ class BingoBuilder extends React.Component {
   constructor( props ){
     super( props );
     this.state = {
-      iteration: 0,
+      saveStatus: '',
       concepts: [ ],
       board: {
+        initialised: false,
         bingo_cells: [ ],
         iteration: 0,
         bingo_game: {
@@ -30,54 +31,58 @@ class BingoBuilder extends React.Component {
   }
 
   randomizeTiles( ){
-    var localConcepts = this.state.concepts;
     var selectedConcepts = {};
-    var size = this.state.board.bingo_game.size;
-    var tileCount = ( size * size ) - 1;
-    var midpoint = 0;
+    var iteration = this.state.board.iteration + 1;
+    var counter = 0;
+    
+    while( Object.keys( selectedConcepts ).length <
+              this.state.board.bingo_cells.length &&
+              counter < 100 ){
+      counter ++;
+      var sample = this.state.concepts[
+        Math.floor( Math.random( ) * this.state.concepts.length ) ];
 
-    var counter = 0
-    while(
-        Object.keys( selectedConcepts ).length < tileCount
-        && counter < 75 ){
-      counter++;
-      var sample = localConcepts[
-        Math.floor( Math.random( ) * localConcepts.length ) ];
       selectedConcepts[ sample.id ] = sample;
 
     }
     //Repurpose localConcepts
-    localConcepts = Object.values( selectedConcepts );
-    midpoint = localConcepts.length / 2;
-    localConcepts.splice( midpoint, 0, {
-      id: 0,
-      name: '*',
-    } );
+    var localConcepts = Object.values( selectedConcepts );
+    var size = this.state.board.bingo_game.size;
     var cells = [ ]
     for( var row = 0; row < size; row++ ){
       for( var col = 0; col < size; col++ ){
         var i = ( row * 5 ) + col;
         var concept = localConcepts[ i ];
+
+        var mid = Math.round( size / 2 ) - 1;
+        var midSquare = row == mid &&
+                        col == mid &&
+                        mid != size / 2;
+
+        concept = midSquare ? {id: 0, name: '*'} : concept;
+
         cells[ i ] = {
           row: row,
           column: col,
-          selected: ('*' == concept.name ? true : false ),
+          selected: midSquare ? true : false,
+          concept_id: concept.id,
           concept: concept,
         }
       }
     }
     var board = this.state.board;
     board.bingo_cells = cells;
+    board.iteration = iteration;
+    board.initialised = true;
     this.setState( {
-      iteration: this.state.iteration ++,
       board: board,
     } );
 
   }
 
-  getConcepts(){
+  getConcepts( callbackFunc ){
     fetch( this.props.conceptsUrl + '.json', {
-      method: 'POST',
+      method: 'GET',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
@@ -96,16 +101,14 @@ class BingoBuilder extends React.Component {
       .then( (data) => {
         this.setState( {
           concepts: data
-        });
+        }, callbackFunc );
       } );
 
   }
 
-  componentDidMount( ){
-    this.getConcepts();
-    //Let's retrieve any existing board
+  getBoard( ){
     fetch( this.props.boardUrl + '.json', {
-      method: 'POST',
+      method: 'GET',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
@@ -123,16 +126,70 @@ class BingoBuilder extends React.Component {
         }
       } )
       .then( (data) => {
+        data.initialised = data.id != null;
+        data.iteration = 0;
         this.setState( {
           board: data,
-        })
-        if( data.bingo_cells.length < 1 ){
-          this.randomizeTiles( );
+        } );
+        //}, this.randomizeTiles );
+      } );
+
+  }
+
+  saveBoard( ){
+    var board = this.state.board;
+    board.bingo_cells_attributes = board.bingo_cells;
+    delete board.bingo_cells;
+    fetch( this.props.boardSaveUrl + '.json', {
+      method: 'PATCH',
+      credentials: 'include',
+      body: JSON.stringify( { bingo_board: this.state.board } ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accepts': 'application/json',
+        'X-CSRF-Token': this.props.token },
+      } )
+      .then( (response) => {
+        if( response.ok ){
+          return response.json( );
+        } else {
+          console.log( 'error' );
+          return { };
+        }
+      } )
+      .then( (data) => {
+        data.initialised = true;
+        data.iteration = 0;
+
+        if( data.id != null ){
+          this.setState( {
+            saveStatus: 'Your board has been saved',
+            board: data,
+          } );
+        } else {
+          this.setState( {
+            saveStatus: 'Save failed. Please try again or contact support',
+          } );
+
         }
       } );
   }
 
+
+  componentDidMount( ){
+    this.getConcepts( this.getBoard );
+    //Let's retrieve any existing board
+  }
+
   render () {
+    const saveBtn = this.state.board.initialised ? (
+          <Button
+            variant="raised"
+            onClick={() => this.saveBoard()}>
+            Save
+          </Button>
+    ) : null;
+
     return (
       <MuiThemeProvider theme={styles}>
         <Paper square={false}>
@@ -150,13 +207,9 @@ class BingoBuilder extends React.Component {
           <Button
             variant="raised"
             onClick={() => this.randomizeTiles()}>
-            Refresh
+            Generate New Board
           </Button>&nbsp;
-          <Button
-            variant="raised"
-            onClick={() => this.saveBoard()}>
-            Save
-          </Button>
+          {saveBtn}
           <BingoBoard board={this.state.board} />
         </Paper>
       </MuiThemeProvider>
