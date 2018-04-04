@@ -46,6 +46,7 @@ class BingoBoard extends React.Component {
           cellHeight="auto">
           {grid}
         </GridList>
+        <hr/>
       </Paper>
     );
   }
