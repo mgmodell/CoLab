@@ -8,6 +8,8 @@ import Chip from 'material-ui/Chip';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import GridList, {GridListTile} from 'material-ui/GridList'
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const styles = createMuiTheme( );
 
@@ -173,6 +175,19 @@ class BingoBuilder extends React.Component {
       } );
   }
 
+  printBoard( ){
+
+    const input = document.getElementById( 'bingoBoard' );
+    html2canvas( input )
+      .then( (canvas) => {
+        const imgData = canvas.toDataURL( 'image/png' );
+        const pdf = new jsPDF( );
+        pdf.addImage( imgData, 'JPEG', 0, 0 );
+        pdf.save( 'bingoBoard.pdf' );
+      } )
+    ;
+
+  }
 
   componentDidMount( ){
     this.getConcepts( this.getBoard );
@@ -180,11 +195,20 @@ class BingoBuilder extends React.Component {
   }
 
   render () {
-    const saveBtn = this.state.board.initialised ? (
+    const saveBtn = this.state.board.initialised &&
+    (this.state.board.iteration > 0 ) ? (
           <Button
             variant="raised"
             onClick={() => this.saveBoard()}>
             Save
+          </Button>
+    ) : null;
+
+    const printBtn = this.state.board.id != null ? (
+          <Button
+            variant="raised"
+            onClick={() => this.printBoard()}>
+            Print
           </Button>
     ) : null;
 
@@ -208,7 +232,10 @@ class BingoBuilder extends React.Component {
             Generate New Board
           </Button>&nbsp;
           {saveBtn}
-          <BingoBoard board={this.state.board} />
+          {printBtn}
+          <div id='bingoBoard' className="mt4">
+            <BingoBoard board={this.state.board} />
+          </div>
         </Paper>
       </MuiThemeProvider>
     );
