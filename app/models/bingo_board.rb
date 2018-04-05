@@ -8,5 +8,4 @@ class BingoBoard < ApplicationRecord
   has_many :concepts, through: :bingo_cells
 
   accepts_nested_attributes_for :bingo_cells
-
 end

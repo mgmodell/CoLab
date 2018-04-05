@@ -14,7 +14,8 @@ class Assessment < ApplicationRecord
   scope :active_at, ->(date) {
                       joins(:project)
                         .where('assessments.end_date >= ?', date)
-                        .where(projects: { active: true }) }
+                        .where(projects: { active: true })
+                    }
 
   def is_completed_by_user(user)
     user.installments.where(assessment: self).count != 0

@@ -2,7 +2,7 @@
 
 class HomeController < ApplicationController
   protect_from_forgery except: [:get_quote]
-  skip_before_action :authenticate_user!, only: [:demo_start, :get_quote]
+  skip_before_action :authenticate_user!, only: %i[demo_start get_quote]
 
   def index
     @current_user = current_user

@@ -16,6 +16,11 @@ end
 
 Then /^the user should see (\d+) concepts$/ do |concept_count|
   page.should have_content 'Terms list for review'
+  x = page.find(:xpath, "//div[@data-react-class='BingoBuilder']" )
+  props_string = x[ 'data-react-props' ]
+  props = JSON.parse( HTMLEntities.new.decode x[ 'data-react-props' ] )
+
+  byebug
   page.all(:xpath, "//tr[@id='concept']").count.should eq concept_count.to_i
 end
 

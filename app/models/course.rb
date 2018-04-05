@@ -163,13 +163,13 @@ class Course < ApplicationRecord
           Roster.create(user: user, course: self, role: role)
           ret_val = true
         else
-          unless !instructor && Roster.roles[ :enrolled_student ]
-            existing_roster.role = role unless !instructor && Roster.roles[ :enrolled_student ]
+          unless !instructor && Roster.roles[:enrolled_student]
+            existing_roster.role = role unless !instructor && Roster.roles[:enrolled_student]
             existing_roster.save
-            unless existing_roster.errors.empty?
-              logger.debug existing_roster.errors.full_messages
-            else
+            if existing_roster.errors.empty?
               ret_val = true
+            else
+              logger.debug existing_roster.errors.full_messages
             end
           end
         end

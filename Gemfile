@@ -73,6 +73,7 @@ group :development, :test do
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'htmlbeautifier'
+  gem 'htmlentities'
   gem 'i18n_data'
   gem 'railroady'
   gem 'rails-erd', require: false

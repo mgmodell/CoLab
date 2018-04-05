@@ -126,5 +126,6 @@ When /^the user clicks the link to the candidate review$/ do
 end
 
 Then /^there will be (\d+) concepts$/ do |concept_count|
-  Concept.count.should eq concept_count.to_i
+  # Adjusting for an entry for the seeded '*' concept
+  Concept.count.should eq ( concept_count.to_i + 1 )
 end

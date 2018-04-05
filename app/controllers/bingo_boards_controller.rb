@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BingoBoardsController < ApplicationController
-  before_action :set_bingo_board, except: [:index, :update, :board_for_game]
+  before_action :set_bingo_board, except: %i[index update board_for_game]
 
   def show
     @title = t '.title'
@@ -13,46 +13,45 @@ class BingoBoardsController < ApplicationController
 
   def board_for_game
     bingo_game = BingoGame
-      .find( params[:bingo_game_id] )
+                 .find(params[:bingo_game_id])
     bingo_board = bingo_game.bingo_boards
-      .includes( :bingo_game, bingo_cells: :concept )
-      .where( user_id: @current_user.id ).take
+                            .includes(:bingo_game, bingo_cells: :concept)
+                            .where(user_id: @current_user.id).take
 
     if bingo_board.nil?
-      bingo_board = BingoBoard.new( )
+      bingo_board = BingoBoard.new
       bingo_board.bingo_game = bingo_game
       bingo_board.iteration = 0
     end
 
     cells = bingo_board.bingo_cells
-      .order( row: :asc, column: :asc ).to_a
-    #Let's init those cells
+                       .order(row: :asc, column: :asc).to_a
+    # Let's init those cells
     size = bingo_board.bingo_game.size
     mid = (size / 2.0).round
     size.times do |row|
       size.times do |column|
-        i = size * row + column;
-        cell = cells[ i ]
-        if( cells[ i ].nil? )
-          cell = bingo_board.bingo_cells.build
-          cell.selected = ( row == mid ) && column == mid
-          cell.row = row
-          cell.column = column
-        end
+        i = size * row + column
+        cell = cells[i]
+        next unless cells[i].nil?
+        cell = bingo_board.bingo_cells.build
+        cell.selected = (row == mid) && column == mid
+        cell.row = row
+        cell.column = column
       end
     end
 
     respond_to do |format|
-      format.json {
+      format.json do
         render json: bingo_board.to_json(
-          { only: [ :id, :size, :topic, :bingo_game_id ], include:
-                [ :bingo_game, bingo_cells:
-                { only: [ :id, :bingo_board_id, 
-                      :row, :column, :selected, "concept_id" ],
-                include:
-                  [ concept: { only: [ :id, :name ] }  ] } ]
-        } )
-      }
+          only: %i[id size topic bingo_game_id], include:
+               [:bingo_game, bingo_cells:
+               { only: [:id, :bingo_board_id,
+                        :row, :column, :selected, 'concept_id'],
+                 include:
+                 [concept: { only: %i[id name] }] }]
+        )
+      end
     end
   end
 
@@ -72,35 +71,36 @@ class BingoBoardsController < ApplicationController
 
   def update
     @board = BingoBoard.where(
-                  user_id: @current_user.id,
-                  bingo_game_id: params[:bingo_game_id] ).take
+      user_id: @current_user.id,
+      bingo_game_id: params[:bingo_game_id]
+    ).take
     @board = BingoBoard.new if @board.nil?
 
     iteration = @board.iteration
-    @board.assign_attributes( bingo_board_params )
+    @board.assign_attributes(bingo_board_params)
     puts @board.bingo_cells.inspect
     @board.user_id = @current_user.id
     @board.iteration += iteration
     if @board.save
       @board = BingoBoard
-        .includes( :bingo_game, bingo_cells: :concept )
-        .find( @board.id )
+               .includes(:bingo_game, bingo_cells: :concept)
+               .find(@board.id)
 
       respond_to do |format|
         format.json do
           render json: @board.to_json(
-            { only: [ :id, :size, :topic, :bingo_game_id ], include:
-                  [ :bingo_game, bingo_cells:
-                  { only: [ :id, :bingo_board_id, 
-                        :row, :column, :selected, "concept_id" ],
-                  include:
-                    [ concept: { only: [ :id, :name ] }  ] } ]
-          } )
+            only: %i[id size topic bingo_game_id], include:
+                 [:bingo_game, bingo_cells:
+                 { only: [:id, :bingo_board_id,
+                          :row, :column, :selected, 'concept_id'],
+                   include:
+                   [concept: { only: %i[id name] }] }]
+          )
         end
       end
     else
       logger.debug @board.errors.full_messages
-      
+
       respond to do |format|
         format.json do
           render json: { message: @board.errors.full_messages }
@@ -135,14 +135,14 @@ class BingoBoardsController < ApplicationController
   end
 
   def bingo_board_params
-    params.require(:bingo_board).permit( :id, :iteration, :bingo_game_id,
-                                          bingo_cells_attributes:
-                                                  [:id, :concept_id,
-                                                        :selected, :row,
-                                                        :column])
+    params.require(:bingo_board).permit(:id, :iteration, :bingo_game_id,
+                                        bingo_cells_attributes:
+                                                %i[idconcept_id
+                                                   selected row
+                                                   column])
   end
 
   def play_bingo_board_params
-    params.require(:bingo_board).permit(bingo_cells: %i[id selected ])
+    params.require(:bingo_board).permit(bingo_cells: %i[id selected])
   end
 end

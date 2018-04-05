@@ -287,7 +287,7 @@ end
 
 concept_data = YAML.safe_load(File.open('db/concept.yml'), [Concept_] )
 concept_data.each do |c|
-  g = Concept.find c.id
+  g = Concept.where( id: c.id ).take
   g = Concept.new if g.nil?
   g.id = c.id
   g.name = c.name
