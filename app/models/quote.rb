@@ -13,5 +13,4 @@ class Quote < ApplicationRecord
     end
     Quote.offset(rand(@@quote_count)).take
   end
-
 end

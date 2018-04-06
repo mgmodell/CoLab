@@ -16,7 +16,8 @@ class ConsentForm < ApplicationRecord
   scope :active_at, ->(date) {
                       where(active: true)
                         .where('consent_forms.start_date <= ?', date)
-                        .where('consent_forms.end_date IS NULL OR consent_forms.end_date >= ?', date) }
+                        .where('consent_forms.end_date IS NULL OR consent_forms.end_date >= ?', date)
+                    }
 
   def global?
     projects.count == 0

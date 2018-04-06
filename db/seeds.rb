@@ -280,6 +280,20 @@ quote_data.each do |quote|
   q.save
 end
 
+# Concept init
+class Concept_
+  attr_accessor :id, :name
+end
+
+concept_data = YAML.safe_load(File.open('db/concept.yml'), [Concept_] )
+concept_data.each do |c|
+  g = Concept.where( id: c.id ).take
+  g = Concept.new if g.nil?
+  g.id = c.id
+  g.name = c.name
+  g.save
+end
+
 # Bingo! support
 class CandidateFeedback_
   attr_accessor :name_en, :name_ko

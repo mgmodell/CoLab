@@ -6,6 +6,7 @@
     <%= render 'layouts/shared/google_analytics' %>
     <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Roboto:300,400,500' %>
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
     <%= javascript_pack_tag 'application' %>
@@ -17,6 +18,7 @@
 
         <h1 id="title_head"><%= t :title %> <%= " : " + @title unless @title.nil? %></h1>
         <%= react_component "Quote", {
+          url: get_quote_path,
           token: form_authenticity_token } %>
 
       </div>

@@ -107,7 +107,7 @@ function leastSquares(xSeries, ySeries) {
 
 //Add some code to the page.
 $(document).ready(function(){
-  var concept_url = '/bingo/concepts_for_game/0.json?search_string='
+  var concept_url = '/bingo/concepts_for_game/0.json'
   var apMinChars = 3;
   $(".awesomplete-ajax").each( function( index, conceptField ) {
     var ap = new Awesomplete( conceptField, {
@@ -128,14 +128,38 @@ $(document).ready(function(){
     else
     {
       var x = this;
-      $.getJSON( concept_url + this.value, function (data)
-      {
-        var list = [ ];
-        $.each( data, function( key, value ) {
-          list.push( value.name );
+      //TODO: switch to 'POST'
+      let data = {
+        id: 0,
+        search_string: this.value
+      }
+      var list = [];
+
+      fetch( concept_url, {
+        method: 'GET',
+        credentials: 'include',
+        body: JSON.stringify( data ),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accepts': 'application/json',
+          'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')
+        } } )
+        .then( (response ) => {
+          if( response.ok ){
+            return response.json( );
+          } else {
+            console.log( 'error' );
+            return [ ];
+          }
+        } )
+        .then( (data) => {
+          data.map( item => {
+            console.log( item );
+            list.push( item.name );
+          } )
+          $(x).data( 'ac' ).list = list;
         } );
-        $(x).data( "ac" ).list = list;
-      });
+
     }
 
   });

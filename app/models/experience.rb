@@ -14,7 +14,8 @@ class Experience < ApplicationRecord
 
   scope :active_at, ->(date) {
                       where(active: true)
-                        .where('experiences.start_date <= ? AND experiences.end_date >= ?', date, date) }
+                        .where('experiences.start_date <= ? AND experiences.end_date >= ?', date, date)
+                    }
 
   def get_user_reaction(user)
     reaction = reactions.includes(narrative: { scenario: :behavior }).where(user: user).take

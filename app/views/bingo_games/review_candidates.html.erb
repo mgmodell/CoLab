@@ -48,7 +48,10 @@
         completed.find_each do |candidate| %>
         <tr>
           <td><%= count += 1 %></td>
-          <td><%= candidate.term %></td>
+          <td>
+            <div hidden><%= candidate.filtered_consistent %></div>
+            <%= candidate.term %>
+          </td>
           <td>
             <%= candidate.user.name( anonymous ) %>
             <% if candidate.candidate_list.is_group %>

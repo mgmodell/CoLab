@@ -58,7 +58,12 @@
   <td><%= @candidate_list.get_concepts.count %></td>
   <td><%= @candidate_list.performance %></td>
 </tbody>
-<table>
+</table>
+  <h3><%= t 'candidate_lists.concepts_for_game' %>:</h3>
+      <%= react_component "ConceptChips", {
+        url: bingo_concepts_path( id: @candidate_list.bingo_game.id ),
+        token: form_authenticity_token } %>
+  </br>
   <p>
     <%= @candidate_list.is_group ? 
     (t 'candidate_lists.grp_sum_msg',

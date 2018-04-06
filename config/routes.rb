@@ -39,7 +39,11 @@ Rails.application.routes.draw do
         as: :update_bingo_candidates_review
     get 'list_stats/:id' => 'candidate_lists#list_stats', as: :'bingo_list_stats'
     #Gameplay functions
-    resources :bingo_boards, only: [:index, :edit, :update, :show]
+    resources :bingo_boards, only: [:index, :show]
+    patch 'bingo_board/:bingo_game_id' => 'bingo_boards#update',
+        as: 'update_board'
+    get 'bingo_board/:bingo_game_id' => 'bingo_boards#board_for_game',
+        as: 'board_for_game'
     get 'concepts_for_game/:id' => 'concepts#concepts_for_game',
         as: :bingo_concepts,
         constraints: ->(req) { req.format == :json }

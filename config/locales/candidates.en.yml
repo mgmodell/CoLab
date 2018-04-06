@@ -35,6 +35,7 @@ en:
     update_success: Your list was successfully saved.
     not_ready_for_review: This list is not yet ready for review.
     no_longer_available: This list is no longer available for editing.
+    concepts_for_game: All identified viable concepts
     ind_sum_msg: You identified the following terms, resulting in %{con_count} unique concepts
     term: Term
     terms: Terms

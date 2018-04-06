@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
-  protect_from_forgery with: :null_session, only: %i[ get_quote states_for_country ]
-  skip_before_action :authenticate_user!, only: [:demo_start]
+  protect_from_forgery except: [:get_quote]
+  skip_before_action :authenticate_user!, only: %i[demo_start get_quote]
 
   def index
     @current_user = current_user

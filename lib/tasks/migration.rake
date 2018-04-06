@@ -53,54 +53,56 @@ namespace :migratify do
       g.save
     end
 
-    # Countries
-    CS.update # if CS.countries.count < 100
-    CS.countries.each do |country|
-      hc = HomeCountry.where(code: country[0]).take
-      hc = HomeCountry.new if hc.nil?
-      hc.no_response = false
-      hc.code = country[0]
-      hc.name = country[1]
-      hc.save
-    end
-    hc = HomeCountry.where(code: '__').take
-    hc = HomeCountry.new if hc.nil?
-    hc.no_response = true
-    hc.code = '__'
-    hc.name = 'I prefer not to specify my country'
-    hc.save
+    #Commenting out this code because the Countries data is problematic
+    ## Countries
+    #CS.update # if CS.countries.count < 100
+    #CS.countries.each do |country|
+    #  hc = HomeCountry.where(code: country[0]).take
+    #  hc = HomeCountry.new if hc.nil?
+    #  hc.no_response = false
+    #  hc.code = country[0]
+    #  hc.name = country[1]
+    #  hc.save
+    #end
+    #hc = HomeCountry.where(code: '__').take
+    #hc = HomeCountry.new if hc.nil?
+    #hc.no_response = true
+    #hc.code = '__'
+    #hc.name = 'I prefer not to specify my country'
+    #hc.save
 
-    # States
-    HomeCountry.all.each do |country|
-      if CS.get(country.code).count > 0
-        CS.get(country.code).each do |state_code, state_name|
-          hs = HomeState.where(home_country_id: country.id, code: "#{state_code}:#{country.code}").take
-          hs = HomeState.new if hs.nil?
-          hs.no_response = false
-          hs.home_country = country
-          hs.code = "#{state_code}:#{country.code}"
-          hs.name = state_name
-          hs.save
-        end
-        if CS.get(country.code).count > 1
-          hs = HomeState.where(home_country_id: country.id, code: "__:#{country.code}").take
-          hs = HomeState.new if hs.nil?
-          hs.no_response = true
-          hs.home_country = country
-          hs.code = "__:#{country.code}"
-          hs.name = 'I prefer not to specify the state'
-          hs.save
-        end
-      else
-        hs = HomeState.where(home_country_id: country.id, code: "--:#{country.code}").take
-        hs = HomeState.new if hs.nil?
-        hs.no_response = false
-        hs.home_country = country
-        hs.code = "--:#{country.code}"
-        hs.name = 'not applicable'
-        hs.save
-      end
-    end
+    ## States
+    #HomeCountry.all.each do |country|
+
+    #  if CS.get(country.code).count > 0
+    #    CS.get(country.code).each do |state_code, state_name|
+    #      hs = HomeState.where(home_country_id: country.id ).where( "code LIKE '%:#{country.code}").take
+    #      hs = HomeState.new if hs.nil?
+    #      hs.no_response = false
+    #      hs.home_country = country
+    #      hs.code = "#{state_code}:#{country.code}"
+    #      hs.name = state_name
+    #      hs.save
+    #    end
+    #    if CS.get(country.code).count > 1
+    #      hs = HomeState.where(home_country_id: country.id, code: "__:#{country.code}").take
+    #      hs = HomeState.new if hs.nil?
+    #      hs.no_response = true
+    #      hs.home_country = country
+    #      hs.code = "__:#{country.code}"
+    #      hs.name = 'I prefer not to specify the state'
+    #      hs.save
+    #    end
+    #  else
+    #    hs = HomeState.where(home_country_id: country.id, code: "--:#{country.code}").take
+    #    hs = HomeState.new if hs.nil?
+    #    hs.no_response = false
+    #    hs.home_country = country
+    #    hs.code = "--:#{country.code}"
+    #    hs.name = 'not applicable'
+    #    hs.save
+    #  end
+    #end
 
     User.find_each do |user|
       country = HomeCountry.where(name: user.country).take
@@ -156,6 +158,20 @@ namespace :migratify do
       g.name_ko = behavior.name_ko unless g.name_ko == behavior.name_ko
       g.description_en = behavior.description_en unless g.description_en == behavior.description_en
       g.description_ko = behavior.description_ko unless g.description_ko == behavior.description_ko
+      g.save
+    end
+
+    # Concept init
+    class Concept_
+      attr_accessor :id, :name
+    end
+
+    concept_data = YAML.safe_load(File.open('db/concept.yml'), [Concept_])
+    concept_data.each do |c|
+      g = Concept.where( id: c.id ).take
+      g = Concept.new if g.nil?
+      g.id = c.id
+      g.name = c.name
       g.save
     end
 

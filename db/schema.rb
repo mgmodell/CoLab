@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180318021636) do
+ActiveRecord::Schema.define(version: 20180401054814) do
 
   create_table "ahoy_messages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "token"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 20180318021636) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "win_claimed"
+    t.integer "iteration", default: 0
     t.index ["bingo_game_id"], name: "index_bingo_boards_on_bingo_game_id"
     t.index ["user_id"], name: "index_bingo_boards_on_user_id"
   end
@@ -89,6 +90,7 @@ ActiveRecord::Schema.define(version: 20180318021636) do
     t.boolean "instructor_notified", default: false, null: false
     t.boolean "students_notified", default: false, null: false
     t.string "anon_topic"
+    t.integer "size", default: 5
     t.index ["course_id"], name: "index_bingo_games_on_course_id"
     t.index ["project_id"], name: "index_bingo_games_on_project_id"
   end
@@ -196,7 +198,7 @@ ActiveRecord::Schema.define(version: 20180318021636) do
     t.index ["school_id"], name: "index_courses_on_school_id"
   end
 
-  create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
