@@ -204,7 +204,8 @@ class BingoBuilder extends React.Component {
           </Button>
     ) : null;
 
-    const printBtn = this.state.board.id != null ? (
+    const printBtn = this.state.board.id != null &&
+      (this.state.board.iteration == 0 )? (
           <Button
             variant="raised"
             onClick={() => this.printBoard()}>

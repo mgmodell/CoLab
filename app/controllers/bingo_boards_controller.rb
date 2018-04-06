@@ -137,7 +137,7 @@ class BingoBoardsController < ApplicationController
   def bingo_board_params
     params.require(:bingo_board).permit(:id, :iteration, :bingo_game_id,
                                         bingo_cells_attributes:
-                                                %i[idconcept_id
+                                                %i[id concept_id
                                                    selected row
                                                    column])
   end
