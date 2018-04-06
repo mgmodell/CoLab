@@ -101,7 +101,7 @@ class BingoBoardsController < ApplicationController
     else
       logger.debug @board.errors.full_messages
 
-      respond to do |format|
+      respond_to do |format|
         format.json do
           render json: { message: @board.errors.full_messages }
         end
