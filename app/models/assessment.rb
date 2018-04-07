@@ -111,16 +111,25 @@ class Assessment < ApplicationRecord
     assessment.end_date = assessment.start_date + period.days
     assessment.end_date = tz.parse(assessment.end_date.to_s).end_of_day.change(sec: 0)
 
-    existing_assessment_count = project.assessments.where(
-      'start_date = ? AND end_date = ?',
-      assessment.start_date.change(sec: 0),
-      assessment.end_date.change(sec: 0)
-    ).count
+    existing_assessments = project.assessments.where(
+      'start_date < ? AND end_date > ?',
+      init_date,
+      init_date
+    )
 
-    if existing_assessment_count == 0
+    if existing_assessments.empty?
       assessment.project = project
       assessment.save
       logger.debug assessment.errors.full_messages unless assessment.errors.empty?
+    elsif existing_assessments.count == 1
+      existing_assessment = existing_assessments[ 0 ]
+      existing_assessment.start_date = assessment.start_date
+      existing_assessment.end_date = assessment.end_date
+      existing_assessment.save
+    else
+      msg "\n\tToo many current assessments for this project: "
+      msg += "#{existing_assessments.count} #{existing_assessments.collect(&:id)}"
+      logger.debug( "\n\tToo many current assessments for this project: #{existing_assessments.count}" )
     end
   end
 
