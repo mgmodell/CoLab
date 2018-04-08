@@ -194,7 +194,8 @@ class Project < ApplicationRecord
         errors.add(:factor_pack, 'Factor Pack must be set before a project can be activated')
       end
       # If this is an activation, we need to set up any necessary weeklies
-      Assessment.set_up_assessments
+      Assessment.configure_current_assessment self
+      # Assessment.set_up_assessments
     end
     errors
   end
@@ -202,7 +203,7 @@ class Project < ApplicationRecord
   # Handler for building an assessment, if necessary
   def build_assessment
     # Nothing needs to be done unless we're active
-    Assessment.build_new_assessment self if active? && is_available?
+    Assessment.configure_current_assessment self if active?
   end
 
   private

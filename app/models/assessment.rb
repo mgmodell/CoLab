@@ -14,6 +14,7 @@ class Assessment < ApplicationRecord
   scope :active_at, ->(date) {
                       joins(:project)
                         .where('assessments.end_date >= ?', date)
+                        .where( assessments: {active: true } )
                         .where(projects: { active: true })
                     }
 
@@ -44,7 +45,7 @@ class Assessment < ApplicationRecord
     Project.includes(:course).where('active = true AND start_date <= ? AND end_date >= ?',
                                     init_date, init_date.end_of_day).each do |project|
 
-      build_new_assessment project if project.is_available?
+      configure_current_assessment project if project.is_available?
     end
   end
 
@@ -55,7 +56,7 @@ class Assessment < ApplicationRecord
 
     Assessment.joins(:project)
               .includes(:installments)
-              .where(instructor_updated: false, projects: { active: true })
+              .where(assessments: {active: true }, instructor_updated: false, projects: { active: true })
               .where('assessments.end_date < ?', date_now)
               .each do |assessment|
       completion_hash = {}
@@ -87,12 +88,13 @@ class Assessment < ApplicationRecord
   end
 
   # Create an assessment for a project if warranted
-  def self.build_new_assessment(project)
+  def self.configure_current_assessment(project)
     tz = ActiveSupport::TimeZone.new(project.course.timezone)
 
     init_date = DateTime.current
     init_day = init_date.wday
     assessment = Assessment.new
+    assessment.active = true
 
     day_delta = init_day - project.start_dow
     if day_delta == 0
@@ -123,8 +125,15 @@ class Assessment < ApplicationRecord
       logger.debug assessment.errors.full_messages unless assessment.errors.empty?
     elsif existing_assessments.count == 1
       existing_assessment = existing_assessments[ 0 ]
-      existing_assessment.start_date = assessment.start_date
-      existing_assessment.end_date = assessment.end_date
+      if project.is_available?
+        existing_assessment.start_date = assessment.start_date
+        existing_assessment.end_date = assessment.end_date
+
+      #if the project is not available, but there's a current assessment,
+      # then we should deactivate it.
+      else
+        existing_assessment.active = false
+      end
       existing_assessment.save
     else
       msg "\n\tToo many current assessments for this project: "
