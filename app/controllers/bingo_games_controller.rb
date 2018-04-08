@@ -80,7 +80,7 @@ class BingoGamesController < ApplicationController
       candidate_feedbacks[cf.id] = cf
     end
     @bingo_game.candidates.completed
-               .includes(:candidate_feedback, :concept, candidate_list: [:bingo_game])
+               .includes(:user, :candidate_feedback, :concept, candidate_list: [:bingo_game])
                .find_all do |candidate|
       code = 'candidate_feedback_' + candidate.id.to_s
       feedback_id = params_act["candidate_feedback_#{candidate.id}"]
