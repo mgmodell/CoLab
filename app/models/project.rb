@@ -110,12 +110,16 @@ class Project < ApplicationRecord
   # within the day range.
   def is_available?
     is_available = false
-    init_time = DateTime.current.in_time_zone
-    init_day = init_time.wday
-    init_date = init_time.to_date
+    #init_time = DateTime.current.in_time_zone
+    init_date = DateTime.current
+    init_day = init_date.wday
+
+    puts "now  : #{init_date}"
+    puts "start: #{start_date} - #{start_date <= init_date}"
+    puts "end  : #{end_date} - #{end_date >= init_date}"
 
     if active &&
-       start_date < init_date && end_date > init_date
+       start_date <= init_date && end_date >= init_date
       if has_inside_date_range?
         is_available = true if start_dow <= init_day && end_dow >= init_day
       else
@@ -123,7 +127,7 @@ class Project < ApplicationRecord
         is_available = true unless init_day < start_dow && end_dow < init_day
        end
     end
-    logger.debug is_available
+    puts is_available
     is_available
   end
 

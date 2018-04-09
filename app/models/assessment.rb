@@ -39,12 +39,12 @@ class Assessment < ApplicationRecord
 
   # Utility method for populating Assessments when they are needed
   def self.set_up_assessments
-    init_date = Date.today.beginning_of_day
-    init_day = init_date.wday
+    init_date = DateTime.current
     logger.debug "\n\t**Populating Assessments**"
     Project.includes(:course).where('active = true AND start_date <= ? AND end_date >= ?',
                                     init_date, init_date.end_of_day).each do |project|
 
+      puts "project found: #{project.is_available?}"
       configure_current_assessment project if project.is_available?
     end
   end
@@ -113,33 +113,45 @@ class Assessment < ApplicationRecord
     assessment.end_date = assessment.start_date + period.days
     assessment.end_date = tz.parse(assessment.end_date.to_s).end_of_day.change(sec: 0)
 
-    existing_assessments = project.assessments.where(
-      'start_date < ? AND end_date > ?',
-      init_date,
-      init_date
-    )
+    puts "now:   #{init_date}"
+    puts "start: #{assessment.start_date} #{assessment.start_date <= init_date}"
+    puts "end:   #{assessment.end_date} #{assessment.end_date >= init_date}"
 
-    if existing_assessments.empty?
-      assessment.project = project
-      assessment.save
-      logger.debug assessment.errors.full_messages unless assessment.errors.empty?
-    elsif existing_assessments.count == 1
-      existing_assessment = existing_assessments[ 0 ]
-      if project.is_available?
-        existing_assessment.start_date = assessment.start_date
-        existing_assessment.end_date = assessment.end_date
+    if( assessment.start_date <= init_date &&
+        assessment.end_date >= init_date )
 
-      #if the project is not available, but there's a current assessment,
-      # then we should deactivate it.
+      existing_assessments = project.assessments.where(
+        'start_date <= ? AND end_date >= ?',
+        init_date,
+        init_date
+      )
+
+      puts "pre-count:  #{Assessment.count}"
+      if existing_assessments.empty?
+        puts "none yet"
+        assessment.project = project
+        assessment.save
+        logger.debug assessment.errors.full_messages unless assessment.errors.empty?
+      elsif existing_assessments.count == 1
+        puts "pre-existing"
+        existing_assessment = existing_assessments[ 0 ]
+        if project.is_available?
+          existing_assessment.start_date = assessment.start_date
+          existing_assessment.end_date = assessment.end_date
+
+        #if the project is not available, but there's a current assessment,
+        # then we should deactivate it.
+        else
+          existing_assessment.active = false
+        end
+        existing_assessment.save
       else
-        existing_assessment.active = false
+        msg "\n\tToo many current assessments for this project: "
+        msg += "#{existing_assessments.count} #{existing_assessments.collect(&:id)}"
+        logger.debug( "\n\tToo many current assessments for this project: #{existing_assessments.count}" )
       end
-      existing_assessment.save
-    else
-      msg "\n\tToo many current assessments for this project: "
-      msg += "#{existing_assessments.count} #{existing_assessments.collect(&:id)}"
-      logger.debug( "\n\tToo many current assessments for this project: #{existing_assessments.count}" )
     end
+    puts "post-count: #{Assessment.count}"
   end
 
   def timezone_adjust
