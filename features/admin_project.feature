@@ -332,7 +332,7 @@ Feature: Project Administration
     Given the user is the "a random" user in the group
     Given the user "has" had demographics requested
     Given the user timezone is "Mexico City"
-    Given today is "10/14/1979"
+    Given today is "10/14/1979 at 4:00pm"
     Given the factor pack is set to "Simple"
     Given the project has been activated
      When the system emails stragglers

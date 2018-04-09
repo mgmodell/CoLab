@@ -90,6 +90,7 @@ Then /^the user should see a successful login message$/ do
 end
 
 Then /^user should see (\d+) open task$/ do |open_project_count|
+  puts "a count: #{Assessment.count}"
   case open_project_count.to_i
   when 0
     page.should have_content  'You do not currently have any tasks due.'

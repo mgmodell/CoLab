@@ -14,6 +14,7 @@ class Assessment < ApplicationRecord
   scope :active_at, ->(date) {
                       joins(:project)
                         .where('assessments.end_date >= ?', date)
+                        .where('assessments.start_date <= ?', date )
                         .where( assessments: {active: true } )
                         .where(projects: { active: true })
                     }
@@ -68,7 +69,9 @@ class Assessment < ApplicationRecord
       end
 
       assessment.project.course.enrolled_students.each do |student|
-        completion_hash[student.email] = { name: student.name(false), status: 'Incomplete' } unless completion_hash[student.email].present?
+        unless completion_hash[student.email].present?
+          completion_hash[student.email] = { name: student.name(false), status: 'Incomplete' }
+        end
       end
       # Retrieve the course instructors
       # Retrieve names of those who did not complete their assessments
