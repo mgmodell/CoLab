@@ -327,12 +327,14 @@ Feature: Project Administration
      Then user should see 0 open task
 
   Scenario: Existing Sat-Mon proj=> Fri-Sat on Sun=> no emails, no access
+    Given the course timezone is "UTC"
+    Given the user timezone is "UTC"
     Given the email queue is empty
     Given the project has a group with 4 confirmed users
     Given the user is the "a random" user in the group
     Given the user "has" had demographics requested
-    Given the user timezone is "Mexico City"
-    Given today is "10/14/1979 at 4:00pm"
+    Given the user timezone is "UTC"
+    Given today is "10/14/1979"
     Given the factor pack is set to "Simple"
     Given the project has been activated
      When the system emails stragglers

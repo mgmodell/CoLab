@@ -114,10 +114,6 @@ class Project < ApplicationRecord
     init_date = DateTime.current
     init_day = init_date.wday
 
-    puts "now  : #{init_date}"
-    puts "start: #{start_date} - #{start_date <= init_date}"
-    puts "end  : #{end_date} - #{end_date >= init_date}"
-
     if active &&
        start_date <= init_date && end_date >= init_date
       if has_inside_date_range?
@@ -127,7 +123,6 @@ class Project < ApplicationRecord
         is_available = true unless init_day < start_dow && end_dow < init_day
        end
     end
-    puts is_available
     is_available
   end
 

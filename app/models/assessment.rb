@@ -99,6 +99,9 @@ class Assessment < ApplicationRecord
     assessment = Assessment.new
     assessment.active = true
 
+    puts "today: #{init_day}"
+    puts "start: #{project.start_dow}"
+    puts "  end: #{project.end_dow}"
     day_delta = init_day - project.start_dow
     if day_delta == 0
       assessment.start_date = init_date
@@ -113,15 +116,13 @@ class Assessment < ApplicationRecord
       project.end_dow - project.start_dow :
       7 - project.start_dow + project.end_dow
 
+    puts "\t*** period: #{period}"
     assessment.end_date = assessment.start_date + period.days
     assessment.end_date = tz.parse(assessment.end_date.to_s).end_of_day.change(sec: 0)
 
-    puts "now:   #{init_date}"
+    puts "now:   #{init_date.utc}"
     puts "start: #{assessment.start_date} #{assessment.start_date <= init_date}"
     puts "end:   #{assessment.end_date} #{assessment.end_date >= init_date}"
-
-    if( assessment.start_date <= init_date &&
-        assessment.end_date >= init_date )
 
       existing_assessments = project.assessments.where(
         'start_date <= ? AND end_date >= ?',
@@ -148,12 +149,12 @@ class Assessment < ApplicationRecord
           existing_assessment.active = false
         end
         existing_assessment.save
+        puts existing_assessment.errors.full_messages unless existing_assessment.errors.empty?
       else
         msg "\n\tToo many current assessments for this project: "
         msg += "#{existing_assessments.count} #{existing_assessments.collect(&:id)}"
-        logger.debug( "\n\tToo many current assessments for this project: #{existing_assessments.count}" )
+        logger.debug msg
       end
-    end
     puts "post-count: #{Assessment.count}"
   end
 
