@@ -45,7 +45,6 @@ class Assessment < ApplicationRecord
     Project.includes(:course).where('active = true AND start_date <= ? AND end_date >= ?',
                                     init_date, init_date.end_of_day).each do |project|
 
-      puts "project found: #{project.is_available?}"
       configure_current_assessment project if project.is_available?
     end
   end
