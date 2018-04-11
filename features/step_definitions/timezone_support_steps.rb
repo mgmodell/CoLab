@@ -18,6 +18,7 @@ end
 
 Given /^the user sees (\d+) assessment every hour of the day$/ do |assessment_count|
   24.times do |index|
+    #puts "test: a_count: #{Assessment.count}"
     step "that the system's set_up_assessments process runs"
     # puts "date: #{DateTime.current}"
     visit '/'

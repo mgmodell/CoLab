@@ -33,10 +33,8 @@ end
 Given /^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes "(.*?)"$/ do |start_date, end_date, start_dow, end_dow|
   @project.start_date = Chronic.parse(start_date)
   @project.end_date = Chronic.parse(end_date)
-  puts "----\nbefore #{@project.start_dow} - #{@project.end_dow}"
   @project.start_dow = Chronic.parse(start_dow).wday
   @project.end_dow = Chronic.parse(end_dow).wday
-  puts "after #{@project.start_dow} - #{@project.end_dow}"
 
   @project.save
   puts @project.errors.full_messages unless @project.errors.blank?
@@ -92,11 +90,11 @@ Then /^the user should see a successful login message$/ do
 end
 
 Then /^user should see (\d+) open task$/ do |open_project_count|
-  puts "-- Assessment data --"
-  Assessment.all.each do |assmt|
-    puts "\t#{assmt.start_date.utc} - #{assmt.end_date.utc}"
-  end
-  puts "*********************"
+  #puts "-- Assessment data --"
+  #Assessment.all.each do |assmt|
+  #  puts "\t#{assmt.start_date.utc} - #{assmt.end_date.utc}"
+  #end
+  #puts "*********************"
   case open_project_count.to_i
   when 0
     page.should have_content  'You do not currently have any tasks due.'

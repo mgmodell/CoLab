@@ -194,7 +194,6 @@ class Project < ApplicationRecord
       end
       # If this is an activation, we need to set up any necessary weeklies
       Assessment.configure_current_assessment self
-      # Assessment.set_up_assessments
     end
     errors
   end
