@@ -122,19 +122,21 @@ Feature: Timezone Support
     Then an email will be sent to each member of the group
     
   Scenario: Only one assessment per project per week
-    Given today is "March 6, 1980 at 12:00am"
     Given the course timezone is "Seoul"
     Given the user timezone is "Seoul"
     Given the project has a group with 4 confirmed users
     Given the user is the "a random" user in the group
     Given the user "has" had demographics requested
 
-    Given the project started "February 15, 1980" and ends "April 15, 1980", opened "Friday" and closes "Sunday"
+    Given the project started "February 15, 1980" and ends "April 15, 1980", opened "Friday" and closes "Monday"
     Given the project has been activated
 
     #Loop - every hour for 5 days
     When the user logs in
+    Given today is "March 5, 1980 at 3:00pm"
     Given the user sees 0 assessment every hour of the day
+    Given today is "March 6, 1980 at 3:00pm"
+    Given the user sees 1 assessment every hour of the day
     Given today is "March 7, 1980 at 3:00pm"
     Given the user sees 1 assessment every hour of the day
     Given today is "March 8, 1980 at 3:00pm"
@@ -148,7 +150,7 @@ Feature: Timezone Support
     Given today is "March 12, 1980 at 3:00pm"
     Given the user sees 0 assessment every hour of the day
     Given today is "March 13, 1980 at 3:00pm"
-    Given the user sees 0 assessment every hour of the day
+    Given the user sees 1 assessment every hour of the day
     Given today is "March 14, 1980 at 3:00pm"
     Given the user sees 1 assessment every hour of the day
     

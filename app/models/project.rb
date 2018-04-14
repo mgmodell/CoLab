@@ -109,9 +109,10 @@ class Project < ApplicationRecord
   # Check if the assessment is active, if we're in the date range and
   # within the day range.
   def is_available?
+    tz = ActiveSupport::TimeZone.new( course.timezone)
     is_available = false
     #init_time = DateTime.current.in_time_zone
-    init_date = DateTime.current
+    init_date = tz.parse( DateTime.current.to_s )
     init_day = init_date.wday
 
     if active &&

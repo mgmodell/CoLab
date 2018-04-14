@@ -271,11 +271,6 @@ class User < ApplicationRecord
     cur_date = DateTime.current
     waiting_tasks = assessments.includes(project: %i[course consent_form]).active_at(cur_date).to_a
 
-    # if !waiting_tasks.empty?
-    #   puts "u: cur_date: #{cur_date.utc}"
-    #   puts "u: start   : #{waiting_tasks[0].start_date}"
-    #   puts "u: end     : #{waiting_tasks[0].end_date}"
-    # end
     # Check available tasks for students
     available_rosters = rosters.enrolled
 

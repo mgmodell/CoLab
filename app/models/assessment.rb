@@ -94,58 +94,48 @@ class Assessment < ApplicationRecord
     tz = ActiveSupport::TimeZone.new(project.course.timezone)
 
     init_date = DateTime.current
-    init_day = init_date.wday
+    init_date_in_tz = tz.parse( init_date.to_s ).beginning_of_day
+    init_day = init_date_in_tz.wday
     assessment = Assessment.new
     assessment.active = true
 
-    dbg_msg = "\ntoday: #{init_date.utc}"
-    dbg_msg += "\n project: #{project.id}"
     day_delta = init_day - project.start_dow
     if day_delta == 0
-      assessment.start_date = init_date
+      assessment.start_date = init_date_in_tz.beginning_of_day
     else
       day_delta = 7 + day_delta if day_delta < 0
-      assessment.start_date = init_date - day_delta.days
+      assessment.start_date = (init_date_in_tz - day_delta.days)
     end
-    dbg_msg += "\n\t#{init_date.utc} : #{day_delta} -> #{assessment.start_date}"
     assessment.start_date = tz.parse(assessment.start_date.to_s).beginning_of_day
     
-    dbg_msg += "\n calc_start: #{assessment.start_date}"
-
     # calc period
     period = project.end_dow > project.start_dow ?
       project.end_dow - project.start_dow :
       7 - project.start_dow + project.end_dow
 
-    dbg_msg += "\t*** period: #{period}"
     assessment.end_date = assessment.start_date + period.days
     assessment.end_date = tz.parse(assessment.end_date.to_s).end_of_day.change(sec: 0)
 
-    dbg_msg += "\nnow:   #{init_date.utc}"
-    dbg_msg += "\nstart: #{assessment.start_date} #{assessment.start_date <= init_date}"
-    dbg_msg += "\nend:   #{assessment.end_date} #{assessment.end_date >= init_date}"
 
     existing_assessments = project.assessments.where(
       'start_date <= ? AND end_date >= ?',
-      init_date,
-      init_date
+      init_date_in_tz,
+      init_date_in_tz
     )
 
-    pre_count = Assessment.count
     if existing_assessments.empty? &&
        assessment.start_date <= init_date &&
        assessment.end_date >= init_date
-      dbg_msg += "\nnone yet"
       assessment.project = project
       assessment.save
       logger.debug assessment.errors.full_messages unless assessment.errors.empty?
 
     elsif existing_assessments.count == 1
-      dbg_msg += "\npre-existing"
       existing_assessment = existing_assessments[ 0 ]
       if project.is_available?
         existing_assessment.start_date = assessment.start_date
         existing_assessment.end_date = assessment.end_date
+        existing_assessment.active = true
 
       #if the project is not available, but there's a current assessment,
       # then we should deactivate it.
@@ -153,17 +143,10 @@ class Assessment < ApplicationRecord
         existing_assessment.active = false
       end
       existing_assessment.save
-      puts existing_assessment.errors.full_messages unless existing_assessment.errors.empty?
     else
       msg = "\n\tToo many current assessments for this project: "
       msg += "#{existing_assessments.count} #{existing_assessments.collect(&:id)}"
       logger.debug msg
-    end
-    unless pre_count == Assessment.count
-      puts dbg_msg + "\ncount: #{pre_count} -> #{Assessment.count}" 
-      Assessment.all.each do |asmt|
-        puts "\t\t#{asmt.id}: #{asmt.start_date} -> #{asmt.end_date}"
-      end
     end
   end
 
