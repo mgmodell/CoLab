@@ -14,8 +14,8 @@ class Assessment < ApplicationRecord
   scope :active_at, ->(date) {
                       joins(:project)
                         .where('assessments.end_date >= ?', date)
-                        .where('assessments.start_date <= ?', date )
-                        .where( assessments: {active: true } )
+                        .where('assessments.start_date <= ?', date)
+                        .where(assessments: { active: true })
                         .where(projects: { active: true })
                     }
 
@@ -56,7 +56,7 @@ class Assessment < ApplicationRecord
 
     Assessment.joins(:project)
               .includes(:installments)
-              .where(assessments: {active: true }, instructor_updated: false, projects: { active: true })
+              .where(assessments: { active: true }, instructor_updated: false, projects: { active: true })
               .where('assessments.end_date < ?', date_now)
               .each do |assessment|
       completion_hash = {}
@@ -94,7 +94,7 @@ class Assessment < ApplicationRecord
     tz = ActiveSupport::TimeZone.new(project.course.timezone)
 
     init_date = DateTime.current
-    init_date_in_tz = tz.parse( init_date.to_s ).beginning_of_day
+    init_date_in_tz = tz.parse(init_date.to_s).beginning_of_day
     init_day = init_date_in_tz.wday
     assessment = Assessment.new
     assessment.active = true
@@ -107,7 +107,7 @@ class Assessment < ApplicationRecord
       assessment.start_date = (init_date_in_tz - day_delta.days)
     end
     assessment.start_date = tz.parse(assessment.start_date.to_s).beginning_of_day
-    
+
     # calc period
     period = project.end_dow > project.start_dow ?
       project.end_dow - project.start_dow :
@@ -115,7 +115,6 @@ class Assessment < ApplicationRecord
 
     assessment.end_date = assessment.start_date + period.days
     assessment.end_date = tz.parse(assessment.end_date.to_s).end_of_day.change(sec: 0)
-
 
     existing_assessments = project.assessments.where(
       'start_date <= ? AND end_date >= ?',
@@ -131,13 +130,13 @@ class Assessment < ApplicationRecord
       logger.debug assessment.errors.full_messages unless assessment.errors.empty?
 
     elsif existing_assessments.count == 1
-      existing_assessment = existing_assessments[ 0 ]
+      existing_assessment = existing_assessments[0]
       if project.is_available?
         existing_assessment.start_date = assessment.start_date
         existing_assessment.end_date = assessment.end_date
         existing_assessment.active = true
 
-      #if the project is not available, but there's a current assessment,
+      # if the project is not available, but there's a current assessment,
       # then we should deactivate it.
       else
         existing_assessment.active = false

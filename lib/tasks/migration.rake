@@ -53,26 +53,26 @@ namespace :migratify do
       g.save
     end
 
-    #Commenting out this code because the Countries data is problematic
+    # Commenting out this code because the Countries data is problematic
     ## Countries
-    #CS.update # if CS.countries.count < 100
-    #CS.countries.each do |country|
+    # CS.update # if CS.countries.count < 100
+    # CS.countries.each do |country|
     #  hc = HomeCountry.where(code: country[0]).take
     #  hc = HomeCountry.new if hc.nil?
     #  hc.no_response = false
     #  hc.code = country[0]
     #  hc.name = country[1]
     #  hc.save
-    #end
-    #hc = HomeCountry.where(code: '__').take
-    #hc = HomeCountry.new if hc.nil?
-    #hc.no_response = true
-    #hc.code = '__'
-    #hc.name = 'I prefer not to specify my country'
-    #hc.save
+    # end
+    # hc = HomeCountry.where(code: '__').take
+    # hc = HomeCountry.new if hc.nil?
+    # hc.no_response = true
+    # hc.code = '__'
+    # hc.name = 'I prefer not to specify my country'
+    # hc.save
 
     ## States
-    #HomeCountry.all.each do |country|
+    # HomeCountry.all.each do |country|
 
     #  if CS.get(country.code).count > 0
     #    CS.get(country.code).each do |state_code, state_name|
@@ -102,7 +102,7 @@ namespace :migratify do
     #    hs.name = 'not applicable'
     #    hs.save
     #  end
-    #end
+    # end
 
     User.find_each do |user|
       country = HomeCountry.where(name: user.country).take
@@ -168,7 +168,7 @@ namespace :migratify do
 
     concept_data = YAML.safe_load(File.open('db/concept.yml'), [Concept_])
     concept_data.each do |c|
-      g = Concept.where( id: c.id ).take
+      g = Concept.where(id: c.id).take
       g = Concept.new if g.nil?
       g.id = c.id
       g.name = c.name
