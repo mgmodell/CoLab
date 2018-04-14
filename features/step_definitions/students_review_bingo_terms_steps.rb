@@ -18,7 +18,6 @@ Then /^the user clicks the link to the concept list$/ do
   visit url
 
   @concepts = JSON.parse( page.text )
-  puts @concepts
 
   visit current_path
 

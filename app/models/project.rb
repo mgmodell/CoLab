@@ -109,13 +109,13 @@ class Project < ApplicationRecord
   # Check if the assessment is active, if we're in the date range and
   # within the day range.
   def is_available?
+    tz = ActiveSupport::TimeZone.new(course.timezone)
     is_available = false
-    init_time = DateTime.current.in_time_zone
-    init_day = init_time.wday
-    init_date = init_time.to_date
+    init_date = tz.parse(DateTime.current.to_s)
+    init_day = init_date.wday
 
     if active &&
-       start_date < init_date && end_date > init_date
+       start_date <= init_date && end_date >= init_date
       if has_inside_date_range?
         is_available = true if start_dow <= init_day && end_dow >= init_day
       else
@@ -123,7 +123,6 @@ class Project < ApplicationRecord
         is_available = true unless init_day < start_dow && end_dow < init_day
        end
     end
-    logger.debug is_available
     is_available
   end
 
@@ -194,7 +193,7 @@ class Project < ApplicationRecord
         errors.add(:factor_pack, 'Factor Pack must be set before a project can be activated')
       end
       # If this is an activation, we need to set up any necessary weeklies
-      Assessment.set_up_assessments
+      Assessment.configure_current_assessment self
     end
     errors
   end
@@ -202,7 +201,7 @@ class Project < ApplicationRecord
   # Handler for building an assessment, if necessary
   def build_assessment
     # Nothing needs to be done unless we're active
-    Assessment.build_new_assessment self if active? && is_available?
+    Assessment.configure_current_assessment self if active?
   end
 
   private

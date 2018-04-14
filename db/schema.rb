@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180401054814) do
+ActiveRecord::Schema.define(version: 20180407212714) do
 
   create_table "ahoy_messages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "token"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20180401054814) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "instructor_updated", default: false, null: false
+    t.boolean "active", default: true, null: false
     t.index ["project_id"], name: "index_assessments_on_project_id"
   end
 
