@@ -135,10 +135,10 @@ $(document).ready(function(){
       }
       var list = [];
 
-      fetch( concept_url, {
+      fetch_url = concept_url + '?' + Object.entries(data).map(e => e.join('=')).join('&');
+      fetch( fetch_url, {
         method: 'GET',
         credentials: 'include',
-        body: JSON.stringify( data ),
         headers: {
           'Content-Type': 'application/json',
           'Accepts': 'application/json',
