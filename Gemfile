@@ -32,7 +32,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'activerecord-session_store'
 gem 'ahoy_email'
-gem 'aws-sdk', '~> 2.3.0'
+gem 'aws-sdk-s3'
 gem 'bourbon'
 gem 'city-state'
 gem 'country_select'
@@ -48,7 +48,7 @@ gem 'jquery_mobile_rails'
 gem 'kaminari'
 gem 'listen'
 gem 'omniauth-google-oauth2'
-gem 'paperclip', '~> 5.2.1'
+gem 'paperclip', '~> 6.0.0'
 gem 'rails_12factor', group: :production
 gem 'react-rails'
 gem 'simple_calendar', '~> 2.0'
