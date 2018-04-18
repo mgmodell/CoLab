@@ -19,7 +19,7 @@ class ConceptChips extends React.Component {
 
   getConcepts(){
     fetch( this.props.url + '.json' , {
-      method: 'POST',
+      method: 'GET',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
