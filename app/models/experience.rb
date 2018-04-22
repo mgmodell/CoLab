@@ -10,6 +10,7 @@ class Experience < ApplicationRecord
   validate :date_sanity
   before_validation :timezone_adjust
   before_create :anonymize
+  before_save :reset_notification
   validate :dates_within_course
 
   scope :active_at, ->(date) {
@@ -152,6 +153,12 @@ class Experience < ApplicationRecord
   end
 
   private
+
+  def reset_notification
+    if ( DateTime.current <= end_date )
+      instructor_updated = false
+    end
+  end
 
   def date_sanity
     unless start_date.nil? || end_date.nil?
