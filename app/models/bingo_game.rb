@@ -27,6 +27,7 @@ class BingoGame < ApplicationRecord
   before_validation :timezone_adjust
   validate :dates_within_course
   before_create :anonymize
+  before_save :reset_notification
 
   def status_for_user(user)
     candidate_list_for_user(user).status
@@ -149,6 +150,14 @@ class BingoGame < ApplicationRecord
     cl
   end
 
+  private
+
+  def reset_notification
+    if ( (DateTime.current + lead_time.days) <= end_date )
+      instructor_notified = false
+    end
+  end
+
   # validation methods
   def date_sanity
     unless start_date.nil? || end_date.nil?
@@ -212,8 +221,6 @@ class BingoGame < ApplicationRecord
       end
     end
   end
-
-  private
 
   def anonymize
     trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
