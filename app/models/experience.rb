@@ -10,6 +10,7 @@ class Experience < ApplicationRecord
   validate :date_sanity
   before_validation :timezone_adjust
   before_create :anonymize
+  before_save :reset_notification
   validate :dates_within_course
 
   scope :active_at, ->(date) {
@@ -131,6 +132,7 @@ class Experience < ApplicationRecord
   def self.inform_instructors
     count = 0
     Experience.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |experience|
+      puts "\t#{DateTime.current} - #{experience.inspect}"
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
         reaction = experience.get_user_reaction student
@@ -152,6 +154,13 @@ class Experience < ApplicationRecord
   end
 
   private
+
+  def reset_notification
+    if ( DateTime.current <= end_date )
+      puts 'setting false'
+      self.instructor_updated = false
+    end
+  end
 
   def date_sanity
     unless start_date.nil? || end_date.nil?
