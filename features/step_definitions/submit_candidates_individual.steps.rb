@@ -9,6 +9,7 @@ Given /^the Bingo! game required (\d+) day of lead time$/ do |lead_time|
 end
 
 Given /^the Bingo! started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_date|
+  @bingo.reload
   @bingo.start_date = Chronic.parse(start_date)
   @bingo.end_date = Chronic.parse(end_date)
   @bingo.save

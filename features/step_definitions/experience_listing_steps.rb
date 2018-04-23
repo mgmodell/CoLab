@@ -61,6 +61,7 @@ end
 Given /^the experience started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_date|
   course_tz = ActiveSupport::TimeZone.new(@experience.course.timezone)
   d = Chronic.parse(start_date)
+  @experience.reload
   @experience.start_date = course_tz.local(d.year, d.month, d.day)
   d = Chronic.parse(end_date)
   @experience.end_date = course_tz.local(d.year, d.month, d.day)
