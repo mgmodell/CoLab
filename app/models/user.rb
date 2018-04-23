@@ -313,7 +313,6 @@ class User < ApplicationRecord
 
   def anonymize
     if self.gender.present? && self.gender.changed?
-      puts 'gender change'
       case self.gender.code
         when 'm'
           self.anon_first_name = Forgery::Name.male_first_name
@@ -326,7 +325,6 @@ class User < ApplicationRecord
           self.anon_last_name = Forgery::Name.last_name
         end
     elsif !persisted?
-      puts 'initial setting'
       self.anon_first_name = Forgery::Name.first_name
       self.anon_last_name = Forgery::Name.last_name
     end

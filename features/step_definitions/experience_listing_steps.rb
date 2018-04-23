@@ -64,12 +64,9 @@ Given /^the experience started "([^"]*)" and ends "([^"]*)"$/ do |start_date, en
   @experience.start_date = course_tz.local(d.year, d.month, d.day)
   d = Chronic.parse(end_date)
   @experience.end_date = course_tz.local(d.year, d.month, d.day)
-  puts "#{@experience.inspect}"
+  # byebug
   @experience.save
-  byebug
   puts @experience.errors.full_messages unless @experience.errors.blank?
-  @experience.reload
-  puts "#{@experience.inspect}"
 end
 
 Given /^the users "(.*?)" had demographics requested$/ do |with_demographics|
