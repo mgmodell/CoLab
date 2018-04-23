@@ -101,12 +101,12 @@ Feature: Email experience stragglers
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 5 emails will be tracked
-    Then the experience started "last month" and ends "5 days from now"
+    Then the experience started "last month" and ends "15 days from now"
     Given the email queue is empty
     When the system emails instructor reports
     Then 0 emails will be sent
     Then 5 emails will be tracked
-    Given today is "15 days from now"
+    Given today is "30 days from now"
     Given the email queue is empty
     When the system emails instructor reports
     Then 1 emails will be sent

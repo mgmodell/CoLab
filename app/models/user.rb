@@ -44,7 +44,7 @@ class User < ApplicationRecord
 
   has_many :assessments, through: :projects
 
-  before_create :anonymize
+  before_save :anonymize
 
   # Give us a standard form of the name
   def name(anonymous)
@@ -312,7 +312,23 @@ class User < ApplicationRecord
   private
 
   def anonymize
-    self.anon_first_name = Forgery::Name.first_name
-    self.anon_last_name = Forgery::Name.last_name
+    if self.gender.present? && self.gender.changed?
+      puts 'gender change'
+      case self.gender.code
+        when 'm'
+          self.anon_first_name = Forgery::Name.male_first_name
+          self.anon_last_name = Forgery::Name.male_last_name
+        when 'f'
+          self.anon_first_name = Forgery::Name.female_first_name
+          self.anon_last_name = Forgery::Name.female_last_name
+        else
+          self.anon_first_name = Forgery::Name.first_name
+          self.anon_last_name = Forgery::Name.last_name
+        end
+    elsif !persisted?
+      puts 'initial setting'
+      self.anon_first_name = Forgery::Name.first_name
+      self.anon_last_name = Forgery::Name.last_name
+    end
   end
 end

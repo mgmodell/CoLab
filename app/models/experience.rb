@@ -132,6 +132,7 @@ class Experience < ApplicationRecord
   def self.inform_instructors
     count = 0
     Experience.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |experience|
+      puts "\t#{DateTime.current} - #{experience.inspect}"
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
         reaction = experience.get_user_reaction student
@@ -156,7 +157,8 @@ class Experience < ApplicationRecord
 
   def reset_notification
     if ( DateTime.current <= end_date )
-      instructor_updated = false
+      puts 'setting false'
+      self.instructor_updated = false
     end
   end
 

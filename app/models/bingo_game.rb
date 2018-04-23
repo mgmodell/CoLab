@@ -154,7 +154,8 @@ class BingoGame < ApplicationRecord
 
   def reset_notification
     if ( (DateTime.current + lead_time.days) <= end_date )
-      instructor_notified = false
+      puts 'setting false'
+      self.instructor_notified = false
     end
   end
 
