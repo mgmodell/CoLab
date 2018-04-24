@@ -108,7 +108,7 @@ class Experience < ApplicationRecord
         narrative = Narrative.includes(scenario: :behavior).where('id NOT IN (?)', narrative_counts.keys).sample
       end
     else
-      narrative = Narrative.includes(scenario: :behavior).find(narrative_counts.sort_by { |a| a[1] }[0][0])
+      narrative = Narrative.includes(scenario: :behavior).find(narrative_counts.min_by { |a| a[1] }[0])
     end
     narrative
   end
@@ -155,7 +155,7 @@ class Experience < ApplicationRecord
   private
 
   def reset_notification
-    if ( end_date_changed? && self.instructor_updated && DateTime.current <= end_date )
+    if end_date_changed? && instructor_updated && DateTime.current <= end_date
       self.instructor_updated = false
     end
   end

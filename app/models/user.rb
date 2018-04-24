@@ -312,17 +312,17 @@ class User < ApplicationRecord
   private
 
   def anonymize
-    if self.gender.present? && self.gender.changed?
-      case self.gender.code
-        when 'm'
-          self.anon_first_name = Forgery::Name.male_first_name
-          self.anon_last_name = Forgery::Name.male_last_name
-        when 'f'
-          self.anon_first_name = Forgery::Name.female_first_name
-          self.anon_last_name = Forgery::Name.female_last_name
-        else
-          self.anon_first_name = Forgery::Name.first_name
-          self.anon_last_name = Forgery::Name.last_name
+    if gender.present? && gender.changed?
+      case gender.code
+      when 'm'
+        self.anon_first_name = Forgery::Name.male_first_name
+        self.anon_last_name = Forgery::Name.male_last_name
+      when 'f'
+        self.anon_first_name = Forgery::Name.female_first_name
+        self.anon_last_name = Forgery::Name.female_last_name
+      else
+        self.anon_first_name = Forgery::Name.first_name
+        self.anon_last_name = Forgery::Name.last_name
         end
     elsif !persisted?
       self.anon_first_name = Forgery::Name.first_name

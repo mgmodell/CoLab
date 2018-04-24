@@ -17,7 +17,7 @@ Given(/^the user timezone is "([^"]*)"$/) do |timezone|
 end
 
 Given /^the user sees (\d+) assessment every hour of the day$/ do |assessment_count|
-  24.times do |index|
+  24.times do |_index|
     step "that the system's set_up_assessments process runs"
     visit '/'
     step "user should see #{assessment_count} open task"
