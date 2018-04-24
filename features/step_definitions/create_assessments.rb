@@ -20,4 +20,6 @@ end
 Given /^the course started "(.*?)" and ends "(.*?)"$/ do |start_date, end_date|
   @course.start_date = Chronic.parse(start_date)
   @course.end_date = Chronic.parse(end_date)
+  @course.save
+  puts @course.errors.full_messages unless @course.errors.empty?
 end

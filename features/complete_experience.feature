@@ -318,7 +318,7 @@ Feature: Users can complete 'experiences'
 
   Scenario: 1 student completes 2 experiences for 1 course
      Then the user logs out
-    Given the course started "January 1, 2015" and ends "January 1, 2018"
+    Given the course started "January 1, 2015" and ends "1 year hence"
     Given today is "March 2, 2017"
     Given the experience started "March 1, 2017" and ends "March 3, 2017"
     Given the experience "has" been activated
@@ -343,7 +343,7 @@ Feature: Users can complete 'experiences'
 
   Scenario: 1 student completes 13 experiences
      Then the user logs out
-    Given the course started "January 1, 2015" and ends "January 1, 2018"
+    Given the course started "January 1, 2015" and ends "1 year hence"
     Given the experience started "February 1, 2017" and ends "February 4, 2017"
     Given today is "February 2, 2017"
     Given the experience "has" been activated
@@ -498,7 +498,7 @@ Feature: Users can complete 'experiences'
   Scenario: More than 2 students complete 13 experiences between them
      Then the user logs out
     Given the user is "the first" user
-    Given the course started "January 1, 2015" and ends "January 1, 2018"
+    Given the course started "January 1, 2015" and ends "1 year hence"
     Given the experience started "February 1, 2017" and ends "February 4, 2017"
     Given today is "February 2, 2017"
     Given the experience "has" been activated
