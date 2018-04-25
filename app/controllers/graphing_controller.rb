@@ -121,8 +121,9 @@ class GraphingController < ApplicationController
           end
           user_stream = group_vals[:sub_streams][value.installment.user_id]
           users[value.installment.user_id] = {
-            name: value.installment.user.name( anonymize ),
-            id: value.installment.user_id }
+            name: value.installment.user.name(anonymize),
+            id: value.installment.user_id
+          }
           if user_stream.nil?
             user_stream = { assessor_id: value.installment.user_id,
                             assessor_name: value.installment.user.informal_name(anonymize),
@@ -167,8 +168,9 @@ class GraphingController < ApplicationController
         values.each do |value|
           user_vals = streams[value.user_id]
           users[value.user_id] = {
-            name: value.user.name( anonymize ),
-            id: value.user_id }
+            name: value.user.name(anonymize),
+            id: value.user_id
+          }
           if user_vals.nil?
             user_vals = { target_name: value.user.name(anonymize),
                           target_id: value.user_id,
