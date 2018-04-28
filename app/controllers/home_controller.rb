@@ -87,7 +87,7 @@ class HomeController < ApplicationController
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
     e.start_time = 1.day.ago
-    e.close_date = 1.day.from_now.end_of_day
+    e.close_date = 3.day.from_now.end_of_day
 
     @events = [e]
     e = Event_.new
@@ -99,7 +99,7 @@ class HomeController < ApplicationController
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
     e.start_time = 1.week.ago
-    e.close_date = 2.day.from_now.end_of_day
+    e.close_date = 1.day.from_now.end_of_day
     @events << e
   end
 end
