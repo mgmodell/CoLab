@@ -89,6 +89,7 @@ class GraphingController < ApplicationController
     }
     comments = dataset[:comments]
     streams = dataset[:streams]
+    users = {}
     # Security checks
     if @current_user.is_admin? ||
        project.course.instructors.includes(@current_user)
@@ -119,6 +120,10 @@ class GraphingController < ApplicationController
                            sub_streams: {} }
           end
           user_stream = group_vals[:sub_streams][value.installment.user_id]
+          users[value.installment.user_id] = {
+            name: value.installment.user.name(anonymize),
+            id: value.installment.user_id
+          }
           if user_stream.nil?
             user_stream = { assessor_id: value.installment.user_id,
                             assessor_name: value.installment.user.informal_name(anonymize),
@@ -162,6 +167,10 @@ class GraphingController < ApplicationController
 
         values.each do |value|
           user_vals = streams[value.user_id]
+          users[value.user_id] = {
+            name: value.user.name(anonymize),
+            id: value.user_id
+          }
           if user_vals.nil?
             user_vals = { target_name: value.user.name(anonymize),
                           target_id: value.user_id,
@@ -200,13 +209,8 @@ class GraphingController < ApplicationController
     end
 
     factors = {}
-    users = {}
     dataset[:streams].values.each do |stream|
       stream[:sub_streams].values.each do |substream|
-        users[substream[:assessor_id]] = {
-          name: substream[:assessor_name],
-          id: substream[:assessor_id]
-        }
         substream[:factor_streams].values.each do |factor_stream|
           factors[factor_stream[:factor_id]] = {
             name: factor_stream[:factor_name],
