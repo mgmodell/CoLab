@@ -2,6 +2,7 @@
   "dependencies": {
     "@rails/webpacker": "^3.2.2",
     "babel-preset-react": "^6.24.1",
+    "fetch-rails": "^0.6.0",
     "html2canvas": "^1.0.0-alpha.11",
     "jspdf": "^1.3.5",
     "material-ui": "^1.0.0-beta.38",

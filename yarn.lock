@@ -2300,6 +2300,10 @@ fbjs@^0.8.1, fbjs@^0.8.16:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.9"
 
+fetch-rails@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/fetch-rails/-/fetch-rails-0.6.0.tgz#7b43e235e0c3736dd74b95b9f57f8f3a8a7aaadc"
+
 file-loader@^1.1.6:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-1.1.7.tgz#0a3ad0fe81695feeed6f2dac324fce500c30f0a0"
