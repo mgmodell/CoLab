@@ -135,7 +135,7 @@ $(document).ready(function(){
       }
       var list = [];
 
-      fetch_url = concept_url + '?' + Object.entries(data).map(e => e.join('=')).join('&');
+      fetch_url = concept_url + '?' + Object.entries(data).map( function(e){e.join('=');}).join('&');
       fetch( fetch_url, {
         method: 'GET',
         credentials: 'include',
@@ -144,7 +144,7 @@ $(document).ready(function(){
           'Accepts': 'application/json',
           'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')
         } } )
-        .then( (response ) => {
+        .then( function(response ){
           if( response.ok ){
             return response.json( );
           } else {
@@ -152,8 +152,8 @@ $(document).ready(function(){
             return [ ];
           }
         } )
-        .then( (data) => {
-          data.map( item => {
+        .then( function(data){
+          data.map( function(item) {
             console.log( item );
             list.push( item.name );
           } )
