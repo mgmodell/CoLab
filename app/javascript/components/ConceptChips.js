@@ -1,12 +1,11 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { withTheme } from 'material-ui/styles';
-import {createMuiTheme} from 'material-ui/styles';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Chip from 'material-ui/Chip';
-import Paper from 'material-ui/Paper';
+import { withTheme } from '@material-ui/core/styles';
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
 
-const styles = createMuiTheme( );
+const theme = createMuiTheme( );
 
 class ConceptChips extends React.Component {
 
@@ -50,7 +49,7 @@ class ConceptChips extends React.Component {
     var c = [ { id: 1, name: 'nothing' } ];
 
     return (
-      <MuiThemeProvider theme={styles}>
+      <MuiThemeProvider theme={theme}>
       <Paper>
         {this.state.concepts.map( chip => {
           return (
