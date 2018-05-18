@@ -97,6 +97,9 @@ GEM
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
       xpath (~> 3.0)
+    capybara-webkit (1.15.0)
+      capybara (>= 2.3, < 4.0)
+      json
     choice (0.2.0)
     chronic (0.10.2)
     city-state (0.0.13)
@@ -419,6 +422,7 @@ DEPENDENCIES
   bourbon
   bullet
   byebug
+  capybara-webkit
   chronic
   city-state
   coffee-rails (~> 4.2)
