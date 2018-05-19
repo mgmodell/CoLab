@@ -70,7 +70,6 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  gem 'capybara-webkit'
   gem 'chronic'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
@@ -81,6 +80,7 @@ group :development, :test do
   gem 'rails-erd', require: false
   gem 'rspec'
   gem 'rubocop'
+  gem 'selenium-webdriver'
 end
 
 group :development do

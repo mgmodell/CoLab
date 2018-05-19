@@ -97,9 +97,8 @@ GEM
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
       xpath (~> 3.0)
-    capybara-webkit (1.15.0)
-      capybara (>= 2.3, < 4.0)
-      json
+    childprocess (0.9.0)
+      ffi (~> 1.0, >= 1.0.11)
     choice (0.2.0)
     chronic (0.10.2)
     city-state (0.0.13)
@@ -362,6 +361,9 @@ GEM
     sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    selenium-webdriver (3.12.0)
+      childprocess (~> 0.5)
+      rubyzip (~> 1.2)
     simple_calendar (2.2.7)
       rails (>= 3.0)
     simple_form (4.0.0)
@@ -422,7 +424,6 @@ DEPENDENCIES
   bourbon
   bullet
   byebug
-  capybara-webkit
   chronic
   city-state
   coffee-rails (~> 4.2)
@@ -458,6 +459,7 @@ DEPENDENCIES
   rubocop
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
+  selenium-webdriver
   simple_calendar (~> 2.0)
   simple_form
   spring
