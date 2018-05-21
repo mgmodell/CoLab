@@ -25,6 +25,7 @@ Feature: Assessment Listing
     Then the user should see a successful login message
     Then user should see 0 open task
 
+  @javascript
   Scenario: Checking for projects with opening and closing today
     Given the project started "last month" and ends "next month", opened "today" and closes "today"
     Given the project has been activated

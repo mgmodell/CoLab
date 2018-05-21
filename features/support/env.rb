@@ -9,7 +9,7 @@
 require 'cucumber/rails'
 
 Capybara.javascript_driver = :selenium
-# Capybara.default_driver = :selenium
+Capybara.default_driver = :rack_test
 
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any
@@ -36,7 +36,7 @@ ActionController::Base.allow_rescue = false
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
-  DatabaseCleaner.strategy = :transaction
+  DatabaseCleaner.strategy = :truncation
 rescue NameError
   raise 'You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it.'
 end
@@ -56,10 +56,14 @@ end
 #   end
 #
 
+Before '@javascript' do
+  page.driver.browser.manage.window.resize_to(1024, 768)
+end
+
 # Possible values are :truncation and :transaction
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
-Cucumber::Rails::Database.javascript_strategy = :transaction
+Cucumber::Rails::Database.javascript_strategy = :truncation
 
 # Before do
 #  $dunit ||= false
@@ -69,6 +73,14 @@ Cucumber::Rails::Database.javascript_strategy = :transaction
 #  $dunit = true
 # end
 Before do
+  sql = File.read('db/test_db.sql')
+  statements = sql.split(/;$/)
+  statements.pop # remote empty line
+  ActiveRecord::Base.transaction do
+    statements.each do |statement|
+      ActiveRecord::Base.connection.execute(statement)
+    end
+  end
   Chronic.time_class = Time.zone
   travel_to DateTime.now.beginning_of_day
   @anon = false
