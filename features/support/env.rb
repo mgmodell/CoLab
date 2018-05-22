@@ -10,6 +10,7 @@ require 'cucumber/rails'
 
 Capybara.javascript_driver = :selenium
 Capybara.default_driver = :rack_test
+Cucumber::Rails::Database.autorun_database_cleaner = false
 
 def loadData
   sql = File.read('db/test_db.sql')
@@ -85,12 +86,19 @@ Cucumber::Rails::Database.javascript_strategy = :truncation
 # end
 Before do
   loadData
+  DatabaseCleaner.start
   Chronic.time_class = Time.zone
   travel_to DateTime.now.beginning_of_day
   @anon = false
 end
 
-After do |_scenario|
+After ('@javascript') do |_scenario|
+  DatabaseCleaner.clean
+  travel_back
+end
+
+After ('not @javascript') do |_scenario|
+  DatabaseCleaner.clean
   travel_back
 end
 
