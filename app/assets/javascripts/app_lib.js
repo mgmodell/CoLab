@@ -135,7 +135,7 @@ $(document).ready(function(){
       }
       var list = [];
 
-      fetch_url = concept_url + '?' + Object.entries(data).map( function(e){e.join('=');}).join('&');
+      fetch_url = concept_url + '?' + Object.entries(data).map( function(e){return e.join('=');}).join('&');
       fetch( fetch_url, {
         method: 'GET',
         credentials: 'include',

@@ -8,12 +8,19 @@
 
 require 'cucumber/rails'
 
-Capybara.default_driver = :webkit
-Capybara::Webkit.configure do |config|
+Capybara.javascript_driver = :selenium
+Capybara.default_driver = :rack_test
+Cucumber::Rails::Database.autorun_database_cleaner = false
 
-  config.debug = true
-  config.allow_url( 'fonts.googleapis.com' )
-  # config.raise_javascript_errors = true
+def loadData
+  sql = File.read('db/test_db.sql')
+  statements = sql.split(/;$/)
+  statements.pop # remote empty line
+  ActiveRecord::Base.transaction do
+    statements.each do |statement|
+      ActiveRecord::Base.connection.execute(statement)
+    end
+  end
 
 end
 # Capybara defaults to CSS3 selectors rather than XPath.
@@ -61,6 +68,11 @@ end
 #   end
 #
 
+Before '@javascript' do
+  page.driver.browser.manage.window.resize_to(1024, 768)
+  DatabaseCleaner.strategy = :truncation
+end
+
 # Possible values are :truncation and :transaction
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
@@ -74,12 +86,21 @@ Cucumber::Rails::Database.javascript_strategy = :truncation
 #  $dunit = true
 # end
 Before do
+  loadData
+  DatabaseCleaner.start
   Chronic.time_class = Time.zone
   travel_to DateTime.now.beginning_of_day
   @anon = false
 end
 
-After do |_scenario|
+After ('@javascript') do |_scenario|
+  DatabaseCleaner.clean
+  loadData
+  travel_back
+end
+
+After ('not @javascript') do |_scenario|
+  DatabaseCleaner.clean
   travel_back
 end
 
