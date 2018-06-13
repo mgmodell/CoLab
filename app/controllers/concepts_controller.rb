@@ -25,7 +25,7 @@ class ConceptsController < ApplicationController
     if bingo_game_id > 0
       concepts = BingoGame.find(bingo_game_id).concepts.where('concepts.id > 0').uniq.to_a
     else
-      if @current_user.is_admin? or @current_user.is_instructor?
+      if @current_user.is_admin? || @current_user.is_instructor?
         substring = params[:search_string].strip
         criteria = 'true ?'
         if substring.length > 2
