@@ -10,56 +10,70 @@
   fp: Simple
   name_en: Understanding requirements
   name_ko: 요구 사항 이해
-  description_en: Understanding what was required of the group and of the individual group members.
+  description_en: >
+    Understanding what was required of the group and of the individual
+    group members.
   description_ko: 
 
 - !ruby/object:Factor_
   fp: Simple
   name_en: Suggesting ideas
   name_ko: 아이디어 제안
-  description_en: Suggesting ideas upon which the group could act or continue to build productively.
+  description_en: >
+    Suggesting ideas upon which the group could act or continue to build
+    productively.
   description_ko: 
 
 - !ruby/object:Factor_
   fp: Simple
   name_en: Producing
   name_ko: 생산
-  description_en: Coming up with something useful to contribute to the group's efforts.
+  description_en: >
+    Coming up with something useful to contribute to the group's efforts.
   description_ko: 
 
 - !ruby/object:Factor_
   fp: Simple
   name_en: Performing tasks
   name_ko: 작업 수행
-  description_en: Performing tasks allocated by the group within the specified timeframe.
+  description_en: >
+    Performing tasks allocated by the group within the specified timeframe.
   description_ko: 
 
 - !ruby/object:Factor_
   fp: Original
   name_en: Work
   name_ko: 일
-  description_en: Performing tasks allocated by the group within the specified timeframe.
+  description_en: >
+    Performing tasks allocated by the group within the specified
+    timeframe.
   description_ko: 
 
 - !ruby/object:Factor_
   fp: Original
   name_en: Creativity
   name_ko: 독창성
-  description_en: Performing tasks allocated by the group within the specified timeframe.
+  description_en: Suggesting ideas and alternative approaches.
   description_ko: 
 
 - !ruby/object:Factor_
   fp: Original
   name_en: Group Dynamics
   name_ko: 집단 역학
-  description_en: Performing tasks allocated by the group within the specified timeframe.
+  description_en: >
+    Helping teammates to get along with one another effectively.
+    Including (but not limited to) negotiating solutions to
+    disagreements, introducing humour at appropriate times. Taking a
+    personal interest in teammates' wellbeing.
   description_ko: 
 
 - !ruby/object:Factor_
   fp: Distilled I
   name_en: Standards
   name_ko: 표준
-  description_en: Establishing standards for quality and evaluating group performance and decisions in relation to these standards.
+  description_en: >
+    Establishing standards for quality and evaluating group performance
+    and decisions in relation to these standards.
   description_ko: 
 
 - !ruby/object:Factor_
@@ -73,14 +87,18 @@
   fp: Distilled I
   name_en: Valuing teammates
   name_ko: 팀원을 가치있게 여기다
-  description_en: Valuing the contributions of teammates; maintaining a positive attitude and encouraging a positive attitude in teammates.
+  description_en: >
+    Valuing the contributions of teammates; maintaining a positive
+    attitude and encouraging a positive attitude in teammates.
   description_ko: 
 
 - !ruby/object:Factor_
   fp: Distilled I
   name_en: Facilitating communications
   name_ko: 통신 촉진
-  description_en: Facilitating communications between teammates; helping members understand one another.
+  description_en: >
+    Facilitating communications between teammates; helping members
+    understand one another.
   description_ko: 
 
 - !ruby/object:Factor_
@@ -101,14 +119,17 @@
   fp: Distilled I
   name_en: Integrating ideas
   name_ko: 아이디어 통합
-  description_en: Interpreting, consolidating and integrating ideas and information into a useful result.
+  description_en: >
+    Interpreting, consolidating and integrating ideas and information
+    into a useful result.
   description_ko: 
 
 - !ruby/object:Factor_
   fp: Distilled I
   name_en: Accepting tasks
   name_ko: 과제 수락
-  description_en: Accepting suggested tasks and/or volunteering for new ones.
+  description_en: >
+    Accepting suggested tasks and/or volunteering for new ones.
   description_ko: 
 
 - !ruby/object:Factor_
@@ -144,12 +165,16 @@
   fp: Distilled I
   name_en: Timeline management
   name_ko: 타임 라인 관리
-  description_en: Managing the development of, adherence to and revision of the group's specific timeline.
+  description_en: >
+    Managing the development of, adherence to and revision of the
+    group's specific timeline.
   description_ko: 
 
 - !ruby/object:Factor_
   fp: Distilled I
   name_en: Allocating resources
   name_ko: 자원 할당
-  description_en: Suggesting allocation of resources (team members, materials, etc.) to individual task completions.
+  description_en: >
+    Suggesting allocation of resources (team members, materials, etc.)
+    to individual task completions.
   description_ko: 
