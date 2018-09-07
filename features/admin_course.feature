@@ -139,6 +139,20 @@ Feature: Course Administration
     Then the user adds the 'student' users 'me@mailinator.com'
     Then there are 13 students in the course
 
+  Scenario: Admin adds a new student, then drops and re-adds them
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user adds the 'student' users 'me@mailinator.com'
+    Then there are 13 students in the course
+    Then the user drops the 'student' users 'me@mailinator.com'
+    Then there are 12 enrolled students in the course
+    Then the user adds the 'student' users 'me@mailinator.com'
+    Then there are 13 enrolled students in the course
+
   Scenario: Admin adds existing students to a course
     Given the user is the instructor for the course
     Given the user logs in
@@ -149,6 +163,23 @@ Feature: Course Administration
     Given 5 users
     Then the user adds the 'student' users 'user_list'
     Then there are 17 students in the course
+    Then the users are students
+
+  Scenario: Admin adds existing students, then drops and re-adds them
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Given 5 users
+    Then the user adds the 'student' users 'user_list'
+    Then there are 17 students in the course
+    Then the users are students
+    Then the user drops the 'student' users 'user_list'
+    Then there are 12 enrolled students in the course
+    Then the user adds the 'student' users 'user_list'
+    Then there are 17 enrolled students in the course
     Then the users are students
 
   Scenario: Admin adds new students to a course
