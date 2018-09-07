@@ -280,12 +280,12 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
   if addresses == 'user_list'
     @users.each do |address|
       elem = find(:xpath,
-        "//tr[td[contains(.,'#{address.email}')]]/td/a", text: 'Drop')
+                  "//tr[td[contains(.,'#{address.email}')]]/td/a", text: 'Drop')
       elem.click
     end
   else
     elem = find(:xpath,
-      "//tr[td[contains(.,'#{addresses}')]]/td/a", text: 'Drop')
+                "//tr[td[contains(.,'#{addresses}')]]/td/a", text: 'Drop')
     elem.click
   end
 end

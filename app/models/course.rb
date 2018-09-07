@@ -163,7 +163,7 @@ class Course < ApplicationRecord
           Roster.create(user: user, course: self, role: role)
           ret_val = true
         else
-          if instructor || ( existing_roster.enrolled_student! )
+          if instructor || existing_roster.enrolled_student!
             existing_roster.role = role
             existing_roster.save
             if existing_roster.errors.empty?
