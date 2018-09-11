@@ -1,17 +1,30 @@
 # README #
 
-The CoLab system provides instructor support for collaborative learning groups. In its current state, it deploys successfully to Heroku with Amazon SES & S3, Scheduler and JAWS Maria DB add-ons. It should run in a paid dyno with SSL enabled or a configuration change would be required.
+The CoLab system provides instructor support for collaborative learning
+groups. In its current state, it deploys successfully to Heroku with
+Amazon SES & S3, Scheduler and JAWS Maria DB add-ons. It should run in a
+paid dyno with SSL enabled or a configuration change would be required.
 
 ## What is this repository for? ##
 
-* The CoLab system which is based upon and supports the continued research of Micah Gideon Modell, Ph.D.
-* Version: 3
+* The CoLab system which is based upon and supports the continued
+* research of Micah Gideon Modell, Ph.D.  Version: 3
 
 ## How do I get set up? ##
 
-This system can be set up for development and testing on any modern desktop OS. I am using both [Linux Mint](https://www.linuxmint.com/download.php) and [Bash on Ubuntu on Windows](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide) because I'm comfortable using the command line. That's just for context - GUIs can be powerful too and I can help you set them up if you run into difficulty.
+This system can be set up for development and testing on any modern
+desktop OS. I am using both [Linux
+Mint](https://www.linuxmint.com/download.php) and [Bash on Ubuntu on
+Windows](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide)
+because I'm comfortable using the command line. That's just for context
+- GUIs can be powerful too and I can help you set them up if you run
+into difficulty.
 
-At a minimum, you will need to install git and a text editor (I use vi, but there are tons of GUI editors like Notepad++ -- which is good and fee) to contribute. However, to do actual testing, you'll want ruby, ruby on rails, mariadb (mysql would also work). Deployment will require the Heroku toolbelt. Follow the installation instructions for your OS:
+At a minimum, you will need to install git and a text editor (I use vi,
+but there are tons of GUI editors like Notepad++ -- which is good and
+fee) to contribute. However, to do actual testing, you'll want ruby,
+ruby on rails, mariadb (mysql would also work). Deployment will require
+the Heroku toolbelt. Follow the installation instructions for your OS:
 
 ### Contributing ###
 
@@ -19,6 +32,7 @@ At a minimum, you will need to install git and a text editor (I use vi, but ther
 * [Notepad++](https://notepad-plus-plus.org/download/v7.3.3.html)
 * [Learn Cucumber](https://cucumber.io/docs)
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* [Xcode &mdash; if you're using Mac](https://developer.apple.com/xcode/)
 
 ### Testing ###
 * [rvm (does not work in regular Windows)](http://rvm.io/)
