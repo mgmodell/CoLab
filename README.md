@@ -32,7 +32,7 @@ the Heroku toolbelt. Follow the installation instructions for your OS:
 * [Notepad++](https://notepad-plus-plus.org/download/v7.3.3.html)
 * [Learn Cucumber](https://cucumber.io/docs)
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-* [Xcode &mdash; if you're using Mac](https://developer.apple.com/xcode/)
+* [Xcode -- if you're using Mac](https://developer.apple.com/xcode/)
 
 ### Testing ###
 * [rvm (does not work in regular Windows)](http://rvm.io/)
