@@ -78,6 +78,7 @@ group :development, :test do
   gem 'i18n_data'
   gem 'railroady'
   gem 'rails-erd', require: false
+  gem 'rb-readline'
   gem 'rspec'
   gem 'rubocop'
 end
