@@ -62,7 +62,7 @@
       <%= hidden_field_tag :project_id, @project.id %>
       <%= submit_tag "Add!" %>
     <% end %>
-    <% if @project.groups.any? || @project.course.enrolled_students.any? %>
+    <% if @project.groups.any? || @project.course.rosters.enrolled.any? %>
       <table id="groups_table" width="90%" data-role="table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
@@ -100,7 +100,8 @@
           </tr>
         </thead>
         <tbody>
-          <% @project.course.enrolled_students.each do |user| %>
+          <% @project.course.rosters.enrolled.each do |roster| 
+             user = roster.user %>
             <tr>
               <td><%= mail_to user.email, user.name( anonymize ) %></td>
               <% @project.groups.each do |group| %>
