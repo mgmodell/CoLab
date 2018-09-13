@@ -14,6 +14,7 @@
       <div class="form-inputs">
         <%= f.input :name %>
         <%= f.input :description, as: :text %>
+        <%= f.input :timezone, as: :time_zone, priority: /US|Seo/ %>
       </div>
     </div>
     <div id="courses" class="ui-body-<%= theme_code %> ui-content">

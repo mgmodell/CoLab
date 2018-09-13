@@ -9,7 +9,7 @@ class School < ApplicationRecord
   has_many :rosters, through: :courses
 
   before_create :anonymize
-  validates :name, presence: true
+  validates :name, :timezone, presence: true
 
   def instructors
     rosters.instructor.collect(&:user).uniq

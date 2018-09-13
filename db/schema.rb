@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_07_212714) do
+ActiveRecord::Schema.define(version: 2018_09_13_021018) do
 
   create_table "ahoy_messages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "token"
@@ -432,6 +432,7 @@ ActiveRecord::Schema.define(version: 2018_04_07_212714) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "anon_name"
+    t.string "timezone", default: "UTC", null: false
   end
 
   create_table "sessions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|

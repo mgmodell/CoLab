@@ -20,6 +20,7 @@ Feature: School Administration
      And the user will see "successfully"
     Then retrieve the latest school from the db
      And the school "Name" field is "hard knocks"
+     And the school "Timezone" field is "UTC"
      And the school "Description" field is "I love to eat peas and carrots all day long"
 
   Scenario: Admin cannot creates an incomplete new school
@@ -32,6 +33,7 @@ Feature: School Administration
      #no name
      And the user sets the "Name" field to ""
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
+     And the user selects "Seoul" as the "Timezone"
     Then the user clicks "Create School"
      And the user will see "Please review the problems below"
      #Now we complete it
@@ -42,6 +44,7 @@ Feature: School Administration
     Then retrieve the latest school from the db
      And the school "Name" field is "life"
      And the school "Description" field is "I love to eat peas and carrots all day long"
+     And the school "Timezone" field is "Seoul"
 
   Scenario: Instructor cannot create a new school
     Given there is a course

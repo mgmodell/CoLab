@@ -18,6 +18,10 @@
       <h3><%= t :description %>:</h3>
       <%= raw( @school.description ) %>
     </p>
+    <p>
+      <h3><%= t :timezone %>:</h3>
+      <%= raw( @school.timezone ) %>
+    </p>
     <%= link_to t('.edit_string'), edit_school_path(@school) %>
   </div>
   <div id="courses" class="ui-body-<%= theme_code %> ui-content">
