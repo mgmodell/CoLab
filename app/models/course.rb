@@ -196,7 +196,7 @@ class Course < ApplicationRecord
   end
 
   def enrolled_students
-    rosters.includes(user: [:emails]).enrolled_student.collect(&:user)
+    rosters.includes(user: [:emails]).enrolled.collect(&:user)
   end
 
   def instructors
