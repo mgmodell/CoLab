@@ -81,6 +81,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'rspec'
   gem 'rubocop'
+  gem 'webdrivers'
 end
 
 group :development do
