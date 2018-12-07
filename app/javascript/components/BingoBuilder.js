@@ -1,13 +1,13 @@
 import React from "react"
 import BingoBoard from './BingoBoard'
 import PropTypes from "prop-types"
-import { withTheme } from 'material-ui/styles';
-import {createMuiTheme} from 'material-ui/styles';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Chip from 'material-ui/Chip';
-import Paper from 'material-ui/Paper';
-import Button from 'material-ui/Button';
-import GridList, {GridListTile} from 'material-ui/GridList'
+import { withTheme } from '@material-ui/core/styles';
+import {createMuiTheme} from '@material-ui/core/styles';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import GridList, {GridListTile} from '@material-ui/core/GridList'
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 

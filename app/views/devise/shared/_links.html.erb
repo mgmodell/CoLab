@@ -17,7 +17,6 @@
   <%- resource_class.omniauth_providers.each do |provider| %>
     <%= link_to omniauth_authorize_path(resource_name, provider) do %>
       <%= image_tag "google_signin.png",
-          alt: t( 'devise.omniauth_callbacks.google_auth' ) %>
-    <% end %><br />
+          alt: t( 'devise.omniauth_callbacks.google_auth' ) %><% end %><br />
   <% end -%>
 <% end -%>

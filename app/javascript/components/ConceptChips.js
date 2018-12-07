@@ -1,10 +1,10 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { withTheme } from 'material-ui/styles';
-import {createMuiTheme} from 'material-ui/styles';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Chip from 'material-ui/Chip';
-import Paper from 'material-ui/Paper';
+import { withTheme } from '@material-ui/core/styles';
+import {createMuiTheme} from '@material-ui/core/styles';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
 
 const styles = createMuiTheme( );
 
