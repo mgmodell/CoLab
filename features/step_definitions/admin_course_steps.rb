@@ -271,8 +271,31 @@ Then 'the user adds the {string} users {string}' do |type, addresses|
   visit url
 end
 
+Then 'the user drops the {string} users {string}' do |type, addresses|
+  url = if type == 'student'
+          add_students_path + '?'
+        else
+          add_instructors_path + '?'
+        end
+  if addresses == 'user_list'
+    @users.each do |address|
+      elem = find(:xpath,
+                  "//tr[td[contains(.,'#{address.email}')]]/td/a", text: 'Drop')
+      elem.click
+    end
+  else
+    elem = find(:xpath,
+                "//tr[td[contains(.,'#{addresses}')]]/td/a", text: 'Drop')
+    elem.click
+  end
+end
+
 Then 'there are {int} students in the course' do |count|
   @course.rosters.students.count.should eq count
+end
+
+Then 'there are {int} enrolled students in the course' do |count|
+  @course.rosters.enrolled.count.should eq count
 end
 
 Then 'there are {int} instructors in the course' do |count|

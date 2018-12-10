@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '2.5.1'
+ruby '2.5.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 5.2.2'
 
 gem 'puma', '~> 3.7'
 # Use mysql as the database for Active Record
@@ -35,6 +35,7 @@ gem 'ahoy_email'
 gem 'aws-sdk-s3'
 gem 'bootsnap'
 gem 'bourbon'
+gem 'chronic'
 gem 'city-state'
 gem 'country_select'
 gem 'd3-rails'
@@ -70,7 +71,6 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  gem 'chronic'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'htmlbeautifier'
@@ -78,6 +78,7 @@ group :development, :test do
   gem 'i18n_data'
   gem 'railroady'
   gem 'rails-erd', require: false
+  gem 'rb-readline'
   gem 'rspec'
   gem 'rubocop'
   gem 'selenium-webdriver'

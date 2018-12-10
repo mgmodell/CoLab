@@ -136,8 +136,12 @@ read_data.each do |gender|
   g.save
 end
 
-School.create(name: 'Indiana University', description: 'A large, Midwestern university')
-School.create(name: 'SUNY Korea', description: 'The State University of New York, Korea')
+School.create(name: 'Indiana University',
+              description: 'A large, Midwestern university',
+              timezone: 'UTC')
+School.create(name: 'SUNY Korea',
+              description: 'The State University of New York, Korea',
+              timezone: 'Seoul')
 
 
 # Theme seed data

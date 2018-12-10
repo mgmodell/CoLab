@@ -3,7 +3,7 @@
 require 'forgery'
 class Experience < ApplicationRecord
   belongs_to :course, inverse_of: :experiences
-  has_many :reactions, inverse_of: :experience
+  has_many :reactions, inverse_of: :experience, dependent: :destroy
 
   # validations
   validates :name, :end_date, :start_date, presence: true

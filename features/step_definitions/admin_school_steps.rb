@@ -14,6 +14,8 @@ Then 'the school {string} field is {string}' do |field_name, value|
     @school.name.should eq value
   when 'description'
     @school.description.should eq value
+  when 'timezone'
+    @school.timezone.should eq value
   else
     puts 'Not testing anything'
   end
@@ -26,4 +28,9 @@ end
 Then 'the user opens the school' do
   @school = School.last
   click_link_or_button @school.name
+end
+
+Then 'the user selects {string} as the {string}' do |value, field|
+  select( value, from: field )
+
 end

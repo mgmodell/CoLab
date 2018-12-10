@@ -9,8 +9,8 @@
 <h2><%= t :dates %>:</h2>
 <p>
   <%= raw( t( '.date_summ',
-            start_date: in_tz( @consent_form.start_date ),
-            end_date: in_tz( @consent_form.end_date ) ) ) %>
+            start_date: in_tz( date: @consent_form.start_date ),
+            end_date: in_tz( date: @consent_form.end_date ) ) ) %>
 </p>
 <h2><%= t 'consent_forms.show.applicable_lbl' %>:</h2>
 <% if @consent_form.projects.empty? %>

@@ -8,7 +8,7 @@
                 required: true, autofocus: true,
                 hint: ( t( 'devise.passwords.hint',
                   min: @minimum_password_length ) if @minimum_password_length) %>
-    <%= f.input :password_confirmation, label: t ('devise.passwords.confirm' ),
+    <%= f.input :password_confirmation, label: t('devise.passwords.confirm' ),
                 required: true %>
   </div>
   <div class="form-actions">

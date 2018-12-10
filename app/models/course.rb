@@ -163,8 +163,8 @@ class Course < ApplicationRecord
           Roster.create(user: user, course: self, role: role)
           ret_val = true
         else
-          unless !instructor && Roster.roles[:enrolled_student]
-            existing_roster.role = role unless !instructor && Roster.roles[:enrolled_student]
+          if instructor || existing_roster.enrolled_student!
+            existing_roster.role = role
             existing_roster.save
             if existing_roster.errors.empty?
               ret_val = true
@@ -196,7 +196,7 @@ class Course < ApplicationRecord
   end
 
   def enrolled_students
-    rosters.includes(user: [:emails]).enrolled_student.collect(&:user)
+    rosters.includes(user: [:emails]).enrolled.collect(&:user)
   end
 
   def instructors

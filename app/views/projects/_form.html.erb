@@ -98,7 +98,8 @@
         </tr>
       </thead>
       <tbody>
-        <% @project.course.enrolled_students.each do |user| %>
+        <% @project.course.rosters.enrolled.each do |roster| 
+           user = roster.user %>
           <tr>
             <td><%= mail_to user.email, user.name( anonymize ) %></td>
             <% groups.each do |group| %>
