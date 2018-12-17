@@ -55,6 +55,8 @@ GEM
       addressable (>= 2.3.2)
       nokogiri
       safely_block (>= 0.1.1)
+    archive-zip (0.11.0)
+      io-like (~> 0.3.0)
     arel (9.0.0)
     ast (2.4.0)
     aws-eventstream (1.0.1)
@@ -101,6 +103,9 @@ GEM
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
     choice (0.2.0)
+    chromedriver-helper (2.1.0)
+      archive-zip (~> 0.10)
+      nokogiri (~> 1.8)
     chronic (0.10.2)
     city-state (0.0.13)
       rubyzip (~> 1.1)
@@ -182,6 +187,7 @@ GEM
     i18n (1.1.1)
       concurrent-ruby (~> 1.0)
     i18n_data (0.8.0)
+    io-like (0.3.0)
     jaro_winkler (1.5.1)
     jbuilder (2.8.0)
       activesupport (>= 4.2.0)
@@ -357,12 +363,6 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    sass-rails (5.0.7)
-      railties (>= 4.0.0, < 6)
-      sass (~> 3.1)
-      sprockets (>= 2.8, < 4.0)
-      sprockets-rails (>= 2.0, < 4.0)
-      tilt (>= 1.1, < 3)
     sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
@@ -429,6 +429,7 @@ DEPENDENCIES
   bourbon
   bullet
   byebug
+  chromedriver-helper
   chronic
   city-state
   coffee-rails (~> 4.2)
@@ -463,7 +464,6 @@ DEPENDENCIES
   react-rails
   rspec
   rubocop
-  sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   selenium-webdriver
   simple_calendar (~> 2.0)
