@@ -91,15 +91,28 @@ class HomeController < ApplicationController
 
     @events = [e]
     e = Event_.new
-    e.name = t('candidate_lists.demo_topic')
-    e.task_link = bingo_demo_complete_path
+    e.name = t('candidate_lists.enter', task: t('candidate_lists.demo_topic') )
+    e.task_link = terms_demo_entry_path
     e.task_name_post = ''
-    e.type = t 'home.terms_list'
+    e.type = t 'candidate_lists.submission'
     e.status = '50%'
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
     e.start_time = 1.week.ago
-    e.close_date = 1.day.from_now.end_of_day
+    e.close_date = 4.days.from_now.end_of_day
     @events << e
+
+    e = Event_.new
+    e.name = t('candidate_lists.play', task:
+      t('candidate_lists.demo_bingo_topic') )
+    e.task_link = bingo_demo_play_path
+    e.task_name_post = ''
+    e.type = t 'candidate_lists.distilled'
+    e.status = '42 concepts'
+    e.group_name = t(:demo_group)
+    e.course_name = t(:demo_course_name)
+    e.start_time = 2.weeks.ago
+    e.close_date = 1.days.from_now.end_of_day
+    # @events << e
   end
 end

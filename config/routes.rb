@@ -90,7 +90,8 @@ Rails.application.routes.draw do
 
   # Demo paths
   get 'installments/demo_complete' => 'installments#demo_complete', as: :assessment_demo_complete
-  get 'candidate_lists/demo_complete' => 'candidate_lists#demo_complete', as: :bingo_demo_complete
+  get 'candidate_lists/demo_entry' => 'candidate_lists#demo_entry', as: :terms_demo_entry
+  get 'candidate_lists/demo_play' => 'candidate_lists#demo_play', as: :bingo_demo_play
 
   get 'installments/new/:assessment_id/:group_id' => 'installments#new', as: :new_installment
   get 'installments/edit/:assessment_id/:group_id' => 'installments#edit', as: :edit_installment

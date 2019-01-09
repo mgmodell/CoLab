@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CandidateListsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:demo_complete]
+  skip_before_action :authenticate_user!, only: [:demo_play, :demo_entry]
   before_action :set_candidate_list, only: %i[edit show update request_collaboration list_stats]
 
   def list_stats
@@ -78,8 +78,17 @@ class CandidateListsController < ApplicationController
     end
   end
 
-  def demo_complete
-    @title = t 'candidate_lists.demo_title'
+  def demo_play
+    @title = t 'candidate_lists.demo_title',
+      orig: ( t 'candidate_lists.show.title' ) 
+
+    
+    render :show
+  end
+
+  def demo_entry
+    @title = t 'candidate_lists.demo_title',
+      orig: (t 'candidate_lists.edit.title')
     if @current_user.nil?
       @current_user = User.new(
         first_name: (t :demo_surname_1),

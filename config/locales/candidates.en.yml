@@ -11,7 +11,10 @@ en:
       zero: no points
       one: 1 point
       other: '%{count} points'
-    demo_title: Complete the term list (DEMO)
+    review: 'Review: %{task}'
+    enter: 'Enter terms: %{task}'
+    play: 'Play Bingo: %{task}'
+    demo_title: '%{orig} (DEMO)'
     demo_term1: The group dynamics
     demo_def1: How members of a group work together
     demo_term2: Cooperation
@@ -24,6 +27,13 @@ en:
     demo_def5: The methods and techniques a group follows
     demo_term6: Team
     demo_def6: A bunch of people working together
+    demo_bingo_topic: Gamification and Education
+    demo_bingo_description: >
+      Dichev, C., & Dicheva, D. (2017). Gamifying education: what is
+      known, what is believed and what remains uncertain: a critical
+      review. International Journal of Educational Technology in Higher
+      Education (Vol. 14). International Journal of Educational
+      Technology in Higher Education.
     demo_topic: What is collaboration?
     demo_description: >
       Johnson, R. T., & Johnson, D. W. (1994). An overview of
