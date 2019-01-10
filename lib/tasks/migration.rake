@@ -9,6 +9,7 @@ namespace :migratify do
     end
     read_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
     read_data.each do |quote|
+      quote.text_en = quote.text_en.strip
       q = Quote.where(text_en: quote.text_en).take
       q = Quote.new if q.nil?
       q.text_en = quote.text_en unless q.text_en == quote.text_en
