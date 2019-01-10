@@ -38,7 +38,7 @@ read_data.each do |cip_code|
 end
 
 # Countries
-CS.update # if CS.countries.count < 100
+CS.update if CS.countries.count < 100
 CS.countries.each do |country|
   hc = HomeCountry.where( code: country[ 0 ] ).take
   hc = HomeCountry.new if hc.nil?
@@ -136,8 +136,12 @@ read_data.each do |gender|
   g.save
 end
 
-School.create(name: 'Indiana University', description: 'A large, Midwestern university')
-School.create(name: 'SUNY Korea', description: 'The State University of New York, Korea')
+School.create(name: 'Indiana University',
+              description: 'A large, Midwestern university',
+              timezone: 'UTC')
+School.create(name: 'SUNY Korea',
+              description: 'The State University of New York, Korea',
+              timezone: 'Seoul')
 
 
 # Theme seed data

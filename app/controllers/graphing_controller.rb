@@ -92,7 +92,7 @@ class GraphingController < ApplicationController
     users = {}
     # Security checks
     if @current_user.is_admin? ||
-       project.course.instructors.includes(@current_user)
+       project.course.instructors.include?(@current_user)
       # Start pulling data
 
       groups = {}

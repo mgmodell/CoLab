@@ -24,9 +24,9 @@ class BingoGamesController < ApplicationController
     @title = t '.title'
     @bingo_games = []
     if @current_user.is_admin?
-      @bingo_games = BingoGame.all
+      @bingo_games = BingoGame.includes(:course).all
     else
-      rosters = @current_user.rosters.instructorships.includes(:bingo_games)
+      rosters = @current_user.rosters.includes(course: :bingo_games).instructor
       rosters.each do |roster|
         @bingo_games.concat roster.course.bingo_games.to_a
       end

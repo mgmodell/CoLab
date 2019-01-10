@@ -133,7 +133,7 @@ class ProjectsController < ApplicationController
   def activate
     @title = t('projects.show.title')
     if @current_user.is_admin? ||
-       @project.course.get_roster_for_user(@current_user).role.instructor?
+       @project.course.get_user_role(@current_user) == 'instructor'
       @project.active = true
       @project.save
       logger.debug @project.errors.full_messages unless @project.errors.empty?

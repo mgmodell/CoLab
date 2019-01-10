@@ -15,7 +15,10 @@
   <body>
     <div data-role="page" data-theme="<%= @current_user.nil? ? "a" : @current_user.theme.code %>">
       <div data-role="header" data-position="fixed" style="overflow:hidden;" >
-        <h1 id="title_head"><%= t :title %> <%= " : " + @title unless @title.nil? %></h1>
+        <h1 id="title_head">
+          <%= t :title %> <%= " : " + @title unless @title.nil? %>
+          <%= image_tag 'CoLab_small.png', size: '32x32', alt: 'CoLab Logo' %>
+        </h1>
         <%= react_component "Quote", {
           url: get_quote_path,
           token: form_authenticity_token } %>
