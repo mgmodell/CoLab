@@ -4,7 +4,8 @@
   attribution: Helen Keller
 
 - !ruby/object:Quote_
-  text_en: If I have seen further, it is by standing on the shoulders of giants.
+  text_en: >
+    If I have seen further, it is by standing on the shoulders of giants.
   attribution: Isaac Newton
 
 - !ruby/object:Quote_
@@ -12,7 +13,9 @@
   attribution: H.E. Luccock
 
 - !ruby/object:Quote_
-  text_en: Coming together is a beginning, staying together is progress, and working together is success.
+  text_en: >
+    Coming together is a beginning, staying together is progress, and
+    working together is success.
   attribution: Henry Ford
 
 - !ruby/object:Quote_
@@ -20,15 +23,21 @@
   attribution: Michael Jordan
 
 - !ruby/object:Quote_
-  text_en: The strength of the team is each individual member. The strength of each member is the team.
+  text_en: >
+    The strength of the team is each individual member. The strength of
+    each member is the team.
   attribution: Phil Jackson
 
 - !ruby/object:Quote_
-  text_en: There is no such thing as a self-made man. You will reach your goals only with the help of others.
+  text_en: >
+    There is no such thing as a self-made man. You will reach your goals
+    only with the help of others.
   attribution: George Shinn
 
 - !ruby/object:Quote_
-  text_en: "It is literally true that you can succeed best and quickest by helping others to succeed."
+  text_en: >
+    It is literally true that you can succeed best and quickest by
+    helping others to succeed.
   attribution: Napolean Hill
 
 - !ruby/object:Quote_
@@ -36,7 +45,9 @@
   attribution: Kurt Koffka
 
 - !ruby/object:Quote_
-  text_en: "The ratio of 'We's to 'I's is the best indicator of the development of a team."
+  text_en: 
+    The ratio of 'We's to 'I's is the best indicator of the development
+    of a team.
   attribution: Lewis B. Ergen
 
 - !ruby/object:Quote_
@@ -44,7 +55,9 @@
   attribution: Booker T. Washington
 
 - !ruby/object:Quote_
-  text_en: "Great things in business are never done by one person; they're done by a team of people."
+  text_en: >
+    Great things in business are never done by one person; they're done
+    by a team of people.
   attribution: Steve Jobs
 
 - !ruby/object:Quote_
@@ -52,15 +65,21 @@
   attribution: Ryunosuke Satoro
 
 - !ruby/object:Quote_
-  text_en: Cooperation is the thorough conviction that nobody can get there unless everybody gets there.
+  text_en: >
+    Cooperation is the thorough conviction that nobody can get there
+    unless everybody gets there.
   attribution: Virginia Burden
 
 - !ruby/object:Quote_
-  text_en: "Dialogue isn't a competition to be the smartest or the most correct person in the room; it is a collaboration to find the truth."
+  text_en: >
+    Dialogue isn't a competition to be the smartest or the most correct
+    person in the room; it is a collaboration to find the truth.
   attribution: Oli Anderson
 
 - !ruby/object:Quote_
-  text_en: When people challenge your ideas, they help you (whether they know it or not).
+  text_en: >
+    When people challenge your ideas, they help you (whether they know
+    it or not).
   attribution: Oli Anderson
 
 - !ruby/object:Quote_
@@ -84,11 +103,15 @@
   attribution: Dr. Allan Fromme
 
 - !ruby/object:Quote_
-  text_en: "Teamwork: A few harmless flakes working together can unleash an avalanche of destruction."
+  text_en: >
+    Teamwork: A few harmless flakes working together can unleash an
+    avalanche of destruction.
   attribution: Justin Sewell
 
 - !ruby/object:Quote_
-  text_en: The nice thing about teamwork is that you always have others on your side.
+  text_en: >
+    The nice thing about teamwork is that you always have others on your
+    side.
   attribution: Margaret Carty
 
 - !ruby/object:Quote_
@@ -100,7 +123,9 @@
   attribution: Ethiopian Proverb
 
 - !ruby/object:Quote_
-  text_en: "It's a very important thing to learn to talk to people you disagree with."
+  text_en: >
+    It's a very important thing to learn to talk to people you disagree
+    with.
   attribution: Pete Seeger
 
 - !ruby/object:Quote_
@@ -116,7 +141,9 @@
   attribution: Mark Sanborn
 
 - !ruby/object:Quote_
-  text_en: "If you try and we lose, then it isn't your fault. But if you don't try and we lose, then it's all your fault."
+  text_en: >
+    If you try and we lose, then it isn't your fault. But if you don't
+    try and we lose, then it's all your fault."
   attribution: Orson Scott Card
 
 - !ruby/object:Quote_
@@ -124,7 +151,9 @@
   attribution: Andrew Carnegie
 
 - !ruby/object:Quote_
-  text_en: "A major reason capable people fail to advance is that they don't work well with their colleagues."
+  text_en: >
+    A major reason capable people fail to advance is that they don't
+    work well with their colleagues.
   attribution: Lee Iacocca
 
 - !ruby/object:Quote_
@@ -136,7 +165,9 @@
   attribution: John Wooden
 
 - !ruby/object:Quote_
-  text_en: Disruption isnt about what happens to you. Its about how you respond to what happens to you.
+  text_en: >
+    Disruption isnt about what happens to you. Its about how you respond
+    to what happens to you.
   attribution: Jay Samit
 
 - !ruby/object:Quote_
@@ -144,9 +175,84 @@
   attribution: Knute Rockne
 
 - !ruby/object:Quote_
-  text_en: I suppose leadership at one time meant muscles, but today it means getting along with people.
+  text_en: >
+    I suppose leadership at one time meant muscles, but today it means
+    getting along with people.
   attribution: Mohandas Ghandi
 
 - !ruby/object:Quote_
-  text_en: "I'm not the smartest fellow in the world, but I sure can pick smart colleagues."
+  text_en: >
+    I'm not the smartest fellow in the world, but I sure can pick smart
+    colleagues.
   attribution: Franklin D. Roosevelt
+
+- !ruby/object:Quote_
+  text_en: >
+    Sometimes the most ordinary things could be made
+    extraordinary simply by doing them with the right people.
+  attribution: Nicholas Sparks
+
+- !ruby/object:Quote_
+  text_en: >
+    Collaborate with people you can learn from.
+  attribution: Pharrell
+
+- !ruby/object:Quote_
+  text_en: >
+    When we learn how to work together versus against each other things
+    might start getting better.
+  attribution: Alex Elle
+
+- !ruby/object:Quote_
+  text_en: >
+    It takes both sides to build a bridge.
+  attribution: Fredrik Nael
+
+- !ruby/object:Quote_
+  text_en: >
+    A group becomes a team when each member is sure enough of himself to
+    praise the skills of others.
+  attribution: Norman Shidle
+
+- !ruby/object:Quote_
+  text_en: >
+    It's better to have a great team than a team of greats.
+  attribution: Simon Sinek
+
+- !ruby/object:Quote_
+  text_en: >
+    The chain is only as strong as the weakest link  
+  attribution: Thomas Reid
+
+- !ruby/object:Quote_
+  text_en: >
+    A single leaf working alone provides no shade.
+  attribution: Chuck Page
+
+- !ruby/object:Quote_
+  text_en: >
+    The way to achieve your own success is to be willing to help
+    somebody else get it first.
+  attribution: Iyanla Vanzant
+
+- !ruby/object:Quote_
+  text_en: >
+    We rise by lifting others.
+  attribution: Robert Ingersoll
+
+- !ruby/object:Quote_
+  text_en: >
+    If you take out the team in teamwork, it’s just work. Now who wants
+    that?
+  attribution: Matthew Woodring Stover
+
+- !ruby/object:Quote_
+  text_en: >
+    I don’t like that man. I must get to know him better.
+  attribution: Abraham Lincoln
+
+- !ruby/object:Quote_
+  text_en: >
+    It is amazing what you can accomplish if you do not care who gets
+    the credit.
+  attribution: Harry S. Truman
