@@ -10,7 +10,12 @@ import GridList, {GridListTile} from '@material-ui/core/GridList'
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-const styles = createMuiTheme( );
+const styles = createMuiTheme( {
+  typography: {
+    useNextVariants: true,
+  }
+
+});
 
 class BingoBuilder extends React.Component {
 
@@ -160,14 +165,25 @@ class BingoBuilder extends React.Component {
         data.initialised = true;
         data.iteration = 0;
 
-        if( data.id != null ){
+        if( data.id > 0 ){
           this.setState( {
             saveStatus: 'Your board has been saved',
             board: data,
           } );
+        } else if( data.id = -42 ){
+          board.bingo_cells = board.bingo_cells_attributes;
+          board.id = -42
+          board.iteration = 0
+          this.setState( {
+            saveStatus: 'DEMO: Your board would have been saved',
+            board: board,
+          } );
+
         } else {
+          board.bingo_cells = board.bingo_cells_attributes;
           this.setState( {
             saveStatus: 'Save failed. Please try again or contact support',
+            board: board,
           } );
 
         }
@@ -197,7 +213,7 @@ class BingoBuilder extends React.Component {
     const saveBtn = this.state.board.initialised &&
     (this.state.board.iteration > 0 ) ? (
           <Button
-            variant="raised"
+            variant="contained"
             onClick={() => this.saveBoard()}>
             Save
           </Button>
@@ -206,7 +222,7 @@ class BingoBuilder extends React.Component {
     const printBtn = this.state.board.id != null &&
       (this.state.board.iteration == 0 )? (
           <Button
-            variant="raised"
+            variant="contained"
             onClick={() => this.printBoard()}>
             Print
           </Button>
@@ -227,7 +243,7 @@ class BingoBuilder extends React.Component {
           </Paper>
           <br/>
           <Button
-            variant="raised"
+            variant="contained"
             onClick={() => this.randomizeTiles()}>
             Generate New Board
           </Button>&nbsp;

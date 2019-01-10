@@ -2,7 +2,8 @@ import React from "react"
 import PropTypes from "prop-types"
 import { withTheme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import GridList, {GridListTile} from '@material-ui/core/GridList'
+import GridList from '@material-ui/core/GridList'
+import GridListTile from '@material-ui/core/GridListTile'
 
 class BingoBoard extends React.Component {
 

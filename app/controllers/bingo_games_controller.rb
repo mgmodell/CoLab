@@ -70,6 +70,7 @@ class BingoGamesController < ApplicationController
     params_act = params["/bingo/candidates_review/#{@bingo_game.id}"]
     existing_concepts = {}
 
+    #TODO: Must fix this - sub-optimal by a long shot
     # Cache the concepts for existince checking
     Concept.all.each do |concept|
       existing_concepts[concept.name] = concept

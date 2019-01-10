@@ -12,24 +12,40 @@ class BingoBoardsController < ApplicationController
   end
 
   def board_for_game
-    bingo_game = BingoGame
-                 .find(params[:bingo_game_id])
-    bingo_board = bingo_game.bingo_boards
-                            .includes(:bingo_game, bingo_cells: :concept)
-                            .where(user_id: @current_user.id).take
+    bingo_game_id = params[:bingo_game_id]
+    if bingo_game_id = -42
+      demo_project = Project.new(
+                      id: -1,
+                      name: (t :demo_project),
+                      course_id: -1 )
+      bingo_game = BingoGame.new(
+                      id: -42,
+                      topic: (t 'candidate_lists.demo_bingo_topic' ),
+                      description: (t 'candidate_lists.demo_bingo_description' ),
+                      end_date: 1.days.from_now.end_of_day,
+                      group_option: false,
+                      project: demo_project,
+                      size: 5 )
+    else
+      bingo_game = BingoGame .find(params[:bingo_game_id])
+      bingo_board = bingo_game.bingo_boards
+                              .includes(:bingo_game, bingo_cells: :concept)
+                              .where(user_id: @current_user.id).take
+    end
 
-    if bingo_board.nil?
+      #TODO: Maybe this can be simplified?
+      if bingo_board.nil?
       bingo_board = BingoBoard.new
       bingo_board.bingo_game = bingo_game
       bingo_board.iteration = 0
-    end
+      end
 
-    cells = bingo_board.bingo_cells
+      cells = bingo_board.bingo_cells
                        .order(row: :asc, column: :asc).to_a
-    # Let's init those cells
-    size = bingo_board.bingo_game.size
-    mid = (size / 2.0).round
-    size.times do |row|
+      # Let's init those cells
+      size = bingo_board.bingo_game.size
+      mid = (size / 2.0).round
+      size.times do |row|
       size.times do |column|
         i = size * row + column
         cell = cells[i]
@@ -70,21 +86,28 @@ class BingoBoardsController < ApplicationController
   end
 
   def update
+    bingo_game_id = params[:bingo_game_id]
     @board = BingoBoard.where(
       user_id: @current_user.id,
-      bingo_game_id: params[:bingo_game_id]
+      bingo_game_id: :bingo_game_id
     ).take
     @board = BingoBoard.new if @board.nil?
 
     iteration = @board.iteration
     @board.assign_attributes(bingo_board_params)
-    puts @board.bingo_cells.inspect
     @board.user_id = @current_user.id
     @board.iteration += iteration
-    if @board.save
+
+    if bingo_game_id = -42 || @board.save
+      if bingo_game_id = -42
+        #Demo is running nothing needs done
+        @board.id = -42
+        
+      else
       @board = BingoBoard
                .includes(:bingo_game, bingo_cells: :concept)
                .find(@board.id)
+      end
 
       respond_to do |format|
         format.json do

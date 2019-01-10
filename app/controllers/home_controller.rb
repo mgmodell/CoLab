@@ -113,6 +113,6 @@ class HomeController < ApplicationController
     e.course_name = t(:demo_course_name)
     e.start_time = 2.weeks.ago
     e.close_date = 1.days.from_now.end_of_day
-    # @events << e
+    @events << e
   end
 end

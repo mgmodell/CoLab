@@ -81,6 +81,18 @@ class CandidateListsController < ApplicationController
   def demo_play
     @title = t 'candidate_lists.demo_title',
       orig: ( t 'candidate_lists.show.title' ) 
+    @candidate_list = CandidateList.new(id: -1,
+                                        is_group: false)
+    @candidate_list.user = @current_user
+    demo_project = Project.new(id: -1,
+                               name: (t :demo_project),
+                               course_id: -1)
+
+    @candidate_list.bingo_game = BingoGame.new(id: -42,
+                                               topic: (t 'candidate_lists.demo_bingo_topic'),
+                                               description: (t 'candidate_lists.demo_bingo_description'),
+                                               end_date: 2.day.from_now.end_of_day,
+                                               individual_count: 10)
 
     
     render :show
@@ -111,7 +123,7 @@ class CandidateListsController < ApplicationController
     @candidate_list.bingo_game = BingoGame.new(id: -1,
                                                topic: (t 'candidate_lists.demo_topic'),
                                                description: (t 'candidate_lists.demo_description'),
-                                               end_date: 2.day.from_now.end_of_day,
+                                               end_date: 4.day.from_now.end_of_day,
                                                group_option: true,
                                                project: demo_project,
                                                group_discount: 33,

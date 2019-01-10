@@ -24,6 +24,25 @@ class ConceptsController < ApplicationController
     bingo_game_id = params[:id].to_i
     if bingo_game_id > 0
       concepts = BingoGame.find(bingo_game_id).concepts.where('concepts.id > 0').uniq.to_a
+    elsif bingo_game_id == -42
+      index = 0
+      ['Fun','Play','Challenge','Game Mechanics','Game Elements',
+      'Game-based','Points','Badges','Leaderboards', 'Motivation',
+      'Feedback', 'Progress Tracking', 'Story', 'Rewards',
+      'Avatars', 'Theme', 'Autonomy', 'Levels', 'Gartner\'s Hype Cycle',
+      'Game Dynamics', 'Social Interaction', 'Learning Gains',
+      'Learning Analytics', 'Game Design Principles', 'Learning Design',
+      'Gamified Learning', 'Gameful', 'Behavior Change', 'Simulation',
+      'Chance', 'Surprise', 'Reliability', 'Validity',
+      'Gamified Platform', 'Learner Characteristics',
+      'Educational Context', 'Learning Environment', 'Evidence-based',
+      'Experience Design', 'Competition', 'Learner Engagement',
+      'Active Learning'].each do |concept_name|
+        index -= 1
+        concepts << Concept.new( id: index, name: concept_name )
+      end
+      
+      
     else
       if @current_user.is_admin? || @current_user.is_instructor?
         substring = params[:search_string].strip
