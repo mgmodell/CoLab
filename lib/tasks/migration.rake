@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 namespace :migratify do
+  desc 'Update the quotes'
+  task quote_updates: :environment do
+    # Quote seed data
+    class Quote_
+      attr_accessor :text_en, :attribution
+    end
+    read_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
+    read_data.each do |quote|
+      quote.text_en = quote.text_en.strip
+      q = Quote.where(text_en: quote.text_en).take
+      q = Quote.new if q.nil?
+      q.text_en = quote.text_en unless q.text_en == quote.text_en
+      q.attribution = quote.attribution unless q.attribution == quote.attribution
+      q.save
+    end
+  end
+
+    
   desc 'Create the underpinnings for language support'
   task db_updates: :environment do
     Rake::Task['db:migrate'].invoke
