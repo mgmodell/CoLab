@@ -59,45 +59,45 @@
   <td><%= @candidate_list.performance %></td>
 </tbody>
 </table>
-  <h3><%= t 'candidate_lists.concepts_for_game' %>:</h3>
-      <%= react_component "ConceptChips", {
+<h3><%= t 'candidate_lists.concepts_for_game' %>:</h3>
+<%= react_component "ConceptChips", {
         url: bingo_concepts_path( id: @candidate_list.bingo_game.id ),
         token: form_authenticity_token } %>
-  </br>
-  <p>
-    <%= @candidate_list.is_group ? 
+</br>
+<p>
+  <%= @candidate_list.is_group ? 
     (t 'candidate_lists.grp_sum_msg',
         grp_name: @candidate_list.group.get_name( anonymize ),
         con_count: @candidate_list.get_concepts.count ) :
     (t 'candidate_lists.ind_sum_msg',
         con_count: @candidate_list.get_concepts.count ) %>:
-    <table data-role="table"
+  <table data-role="table"
     id="candidates_table"
     data-mode="columntoggle"
     data-column-btn-theme="<%= theme_code %>"
     data-column-btn-text="<%= t :column_select %>"
     class="table-stroke ui-shadow table-stripe table-ui-responsive">
-      <thead>
+    <thead>
+      <tr>
+        <th><%= t 'candidate_lists.term' %></th>
+        <th data-priority="0"><%= t '.def' %></th>
+        <th data-priority="0">
+          <%= t 'bingo_games.feedback' %>
+        </th>
+        <th>
+          <%= t 'bingo_games.concept' %>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @candidate_list.candidates.completed.includes( :candidate_feedback, :concept ).each do |candidate| %>
         <tr>
-          <th><%= t 'candidate_lists.term' %></th>
-          <th data-priority="0"><%= t '.def' %></th>
-          <th data-priority="0">
-            <%= t 'bingo_games.feedback' %>
-          </th>
-          <th>
-            <%= t 'bingo_games.concept' %>
-          </th>
+          <td><%= candidate.term %></td>
+          <td><%= candidate.definition %></td>
+          <td><%= candidate.candidate_feedback.present? ? candidate.candidate_feedback.name : t( :n_a ) %></td>
+          <td><%= candidate.concept.present? ? candidate.concept.name : t( :n_a ) %></td>
         </tr>
-      </thead>
-      <tbody>
-        <% @candidate_list.candidates.completed.includes( :candidate_feedback, :concept ).each do |candidate| %>
-          <tr>
-            <td><%= candidate.term %></td>
-            <td><%= candidate.definition %></td>
-            <td><%= candidate.candidate_feedback.present? ? candidate.candidate_feedback.name : t( :n_a ) %></td>
-            <td><%= candidate.concept.present? ? candidate.concept.name : t( :n_a ) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </p>
+      <% end %>
+    </tbody>
+  </table>
+</p>
