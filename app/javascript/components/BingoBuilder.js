@@ -21,9 +21,11 @@ class BingoBuilder extends React.Component {
 
   constructor( props ){
     super( props );
+    var endDate = new Date( this.props.endDateStr );
     this.state = {
       saveStatus: '',
       concepts: [ ],
+      endDate: endDate,
       board: {
         initialised: false,
         bingo_cells: [ ],
@@ -205,13 +207,14 @@ class BingoBuilder extends React.Component {
   }
 
   componentDidMount( ){
-    this.getConcepts( this.getBoard );
     //Let's retrieve any existing board
+    this.getConcepts( this.getBoard );
   }
 
   render () {
     const saveBtn = this.state.board.initialised &&
-    (this.state.board.iteration > 0 ) ? (
+    (this.state.board.iteration > 0 ) &&
+    (this.state.endDate > new Date( ) ) ? (
           <Button
             variant="contained"
             onClick={() => this.saveBoard()}>
@@ -259,8 +262,10 @@ class BingoBuilder extends React.Component {
 }
 
 BingoBuilder.propTypes = {
+  endDateStr: PropTypes.string,
   token: PropTypes.string,
   boardUrl: PropTypes.string,
-  conceptsUrl: PropTypes.string
+  conceptsUrl: PropTypes.string,
+  boardSaveUrl: PropTypes.string
 };
 export default withTheme()(BingoBuilder);

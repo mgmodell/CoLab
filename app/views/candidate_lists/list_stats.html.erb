@@ -60,8 +60,11 @@
 </tbody>
 </table>
 <h3><%= t 'candidate_lists.concepts_for_game' %>:</h3>
-<%= react_component "ConceptChips", {
-        url: bingo_concepts_path( id: @candidate_list.bingo_game.id ),
+<%= react_component "BingoBuilder", {
+        endDateStr: @candidate_list.bingo_game.end_date,
+        conceptsUrl: bingo_concepts_path( @candidate_list.bingo_game_id ),
+        boardUrl: board_for_game_path( @candidate_list.bingo_game_id ),
+        boardSaveUrl: update_board_path( @candidate_list.bingo_game_id ),
         token: form_authenticity_token } %>
 </br>
 <p>
