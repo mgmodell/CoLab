@@ -11,7 +11,7 @@
     </tr>
   </table>
   <h2><%= t 'candidate_lists.terms' %></h2>
-  <% if @candidate_list.bingo_game_id = -42 %>
+  <% if -42 == @candidate_list.bingo_game_id %>
   <%= react_component "BingoBuilder", {
     conceptsUrl: bingo_concepts_demo_path( -42 ),
     boardUrl: board_for_game_demo_path( -42 ),
