@@ -70,7 +70,7 @@ class BingoGamesController < ApplicationController
     params_act = params["/bingo/candidates_review/#{@bingo_game.id}"]
     existing_concepts = {}
 
-    #TODO: Must fix this - sub-optimal by a long shot
+    # TODO: Must fix this - sub-optimal by a long shot
     # Cache the concepts for existince checking
     Concept.all.each do |concept|
       existing_concepts[concept.name] = concept
@@ -86,6 +86,7 @@ class BingoGamesController < ApplicationController
       code = 'candidate_feedback_' + candidate.id.to_s
       feedback_id = params_act["candidate_feedback_#{candidate.id}"]
       next if feedback_id.blank?
+
       candidate.candidate_feedback = candidate_feedbacks[feedback_id.to_i]
       candidate.candidate_feedback_id = candidate.candidate_feedback.id
       unless candidate.candidate_feedback.name.start_with? 'Term'

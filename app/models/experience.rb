@@ -13,7 +13,7 @@ class Experience < ApplicationRecord
   before_save :reset_notification
   validate :dates_within_course
 
-  scope :active_at, ->(date) {
+  scope :active_at, lambda { |date|
                       where(active: true)
                         .where('experiences.start_date <= ? AND experiences.end_date >= ?', date, date)
                     }

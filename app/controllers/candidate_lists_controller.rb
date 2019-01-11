@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CandidateListsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:demo_play, :demo_entry]
+  skip_before_action :authenticate_user!, only: %i[demo_play demo_entry]
   before_action :set_candidate_list, only: %i[edit show update request_collaboration list_stats]
 
   def list_stats
@@ -80,7 +80,7 @@ class CandidateListsController < ApplicationController
 
   def demo_play
     @title = t 'candidate_lists.demo_title',
-      orig: ( t 'candidate_lists.show.title' ) 
+               orig: (t 'candidate_lists.show.title')
     @candidate_list = CandidateList.new(id: -1,
                                         is_group: false)
     @candidate_list.user = @current_user
@@ -94,13 +94,12 @@ class CandidateListsController < ApplicationController
                                                end_date: 2.day.from_now.end_of_day,
                                                individual_count: 10)
 
-    
     render :show
   end
 
   def demo_entry
     @title = t 'candidate_lists.demo_title',
-      orig: (t 'candidate_lists.edit.title')
+               orig: (t 'candidate_lists.edit.title')
     if @current_user.nil?
       @current_user = User.new(
         first_name: (t :demo_surname_1),

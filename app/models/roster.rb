@@ -11,16 +11,16 @@ class Roster < ApplicationRecord
                dropped_student: 6 }
   validates_uniqueness_of :user_id, scope: :course_id
 
-  scope :faculty, -> {
+  scope :faculty, lambda {
     where(role: [roles[:instructor],
                  roles[:assistant]])
   }
-  scope :students, -> {
+  scope :students, lambda {
     where(role: [roles[:enrolled_student],
                  roles[:invited_student],
                  roles[:declined_student]])
   }
-  scope :enrolled, -> {
+  scope :enrolled, lambda {
     where(role: [roles[:enrolled_student],
                  roles[:invited_student]])
   }
@@ -33,6 +33,7 @@ class Roster < ApplicationRecord
       course.projects.includes(groups: :users).each do |project|
         project.groups.each do |group|
           next unless group.users.includes(user)
+
           project = group.project
           activation_status = project.active
           group.users.delete(user)

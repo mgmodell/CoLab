@@ -13,7 +13,7 @@ class ConsentForm < ApplicationRecord
   has_many :consent_logs, inverse_of: :consent_form
   has_many :projects, inverse_of: :consent_form
 
-  scope :active_at, ->(date) {
+  scope :active_at, lambda { |date|
                       where(active: true)
                         .where('consent_forms.start_date <= ?', date)
                         .where('consent_forms.end_date IS NULL OR consent_forms.end_date >= ?', date)

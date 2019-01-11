@@ -7,7 +7,7 @@ class Candidate < ApplicationRecord
   belongs_to :user, inverse_of: :candidates
 
   default_scope { order(:filtered_consistent) }
-  scope :completed, -> {
+  scope :completed, lambda {
     joins(:candidate_list)
       .where("term != '' AND definition != ''")
       .where('candidate_lists.is_group = 0 OR candidate_lists.group_id IS NOT NULL')

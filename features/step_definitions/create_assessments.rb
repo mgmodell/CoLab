@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 Given /^today is "(.*?)"$/ do |destination_time|

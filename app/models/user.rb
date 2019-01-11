@@ -97,6 +97,7 @@ class User < ApplicationRecord
     projects_array = projects.to_a
     consent_forms.each do |consent_form|
       next if consent_form.global?
+
       consent_form.projects.each do |cf_project|
         unless projects_array.include?(cf_project)
           consent_forms.delete(consent_form)
@@ -186,6 +187,7 @@ class User < ApplicationRecord
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
       next unless solo_cl.is_group
+
       group_cl = solo_cl.bingo_game.candidate_lists
                         .where(group_id: solo_cl.bingo_game.project
                       .group_for_user(self).id)
@@ -222,6 +224,7 @@ class User < ApplicationRecord
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
       next unless solo_cl.is_group
+
       group_cl = solo_cl.bingo_game.candidate_lists
                         .where(group_id: solo_cl.bingo_game.project
                       .group_for_user(self).id)

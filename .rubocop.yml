@@ -2,6 +2,7 @@ AllCops:
   Include:
     - '**/Rakefile'
     - '**/config.ru'
+    - '**/*.rb'
   Exclude:
     - 'db/**/*'
     - 'config/**/*'

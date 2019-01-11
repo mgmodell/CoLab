@@ -11,7 +11,7 @@ class Assessment < ApplicationRecord
   # after_validation :timezone_adjust
 
   # Helpful scope
-  scope :active_at, ->(date) {
+  scope :active_at, lambda { |date|
                       joins(:project)
                         .where('assessments.end_date >= ?', date)
                         .where('assessments.start_date <= ?', date)

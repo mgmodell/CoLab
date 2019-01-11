@@ -91,7 +91,7 @@ class HomeController < ApplicationController
 
     @events = [e]
     e = Event_.new
-    e.name = t('candidate_lists.enter', task: t('candidate_lists.demo_topic') )
+    e.name = t('candidate_lists.enter', task: t('candidate_lists.demo_topic'))
     e.task_link = terms_demo_entry_path
     e.task_name_post = ''
     e.type = t 'candidate_lists.submission'
@@ -104,7 +104,7 @@ class HomeController < ApplicationController
 
     e = Event_.new
     e.name = t('candidate_lists.play', task:
-      t('candidate_lists.demo_bingo_topic') )
+      t('candidate_lists.demo_bingo_topic'))
     e.task_link = bingo_demo_play_path
     e.task_name_post = ''
     e.type = t 'candidate_lists.distilled'

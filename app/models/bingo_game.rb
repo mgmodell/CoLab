@@ -111,6 +111,7 @@ class BingoGame < ApplicationRecord
     count = 0
     BingoGame.includes(:course).where(instructor_notified: false).each do |bingo|
       next unless bingo.end_date < DateTime.current + bingo.lead_time.days
+
       completion_hash = {}
       bingo.course.enrolled_students.each do |student|
         candidate_list = bingo.candidate_list_for_user(student)

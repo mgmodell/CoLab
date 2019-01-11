@@ -4,11 +4,11 @@ class ConceptsController < ApplicationController
   layout 'admin', except: %i[review_candidates update_review_candidates]
   before_action :set_concept, only: %i[show edit update destroy]
   before_action :check_admin,
-    except: %i[concepts_for_game concepts_for_game_demo ]
+                except: %i[concepts_for_game concepts_for_game_demo]
   skip_before_action :authenticate_user!,
-    only: %i[concepts_for_game_demo]
+                     only: %i[concepts_for_game_demo]
   before_action :demo_user,
-    only: %i[concepts_for_game_demo]
+                only: %i[concepts_for_game_demo]
 
   def show
     @title = t '.title'
@@ -24,28 +24,28 @@ class ConceptsController < ApplicationController
     @concepts = Concept.order(:name).page params[:page]
   end
 
-  @@demo_concepts = 
-      ['Fun','Play','Challenge','Game Mechanics','Game Elements',
-      'Game-based','Points','Badges','Leaderboards', 'Motivation',
-      'Feedback', 'Progress Tracking', 'Story', 'Rewards',
-      'Avatars', 'Theme', 'Autonomy', 'Levels', 'Gartner\'s Hype Cycle',
-      'Game Dynamics', 'Social Interaction', 'Learning Gains',
-      'Learning Analytics', 'Game Design Principles', 'Learning Design',
-      'Gamified Learning', 'Gameful', 'Behavior Change', 'Simulation',
-      'Chance', 'Surprise', 'Reliability', 'Validity',
-      'Gamified Platform', 'Learner Characteristics',
-      'Educational Context', 'Learning Environment', 'Evidence-based',
-      'Experience Design', 'Competition', 'Learner Engagement',
-      'Active Learning']
+  @@demo_concepts =
+    ['Fun', 'Play', 'Challenge', 'Game Mechanics', 'Game Elements',
+     'Game-based', 'Points', 'Badges', 'Leaderboards', 'Motivation',
+     'Feedback', 'Progress Tracking', 'Story', 'Rewards',
+     'Avatars', 'Theme', 'Autonomy', 'Levels', 'Gartner\'s Hype Cycle',
+     'Game Dynamics', 'Social Interaction', 'Learning Gains',
+     'Learning Analytics', 'Game Design Principles', 'Learning Design',
+     'Gamified Learning', 'Gameful', 'Behavior Change', 'Simulation',
+     'Chance', 'Surprise', 'Reliability', 'Validity',
+     'Gamified Platform', 'Learner Characteristics',
+     'Educational Context', 'Learning Environment', 'Evidence-based',
+     'Experience Design', 'Competition', 'Learner Engagement',
+     'Active Learning']
   def concepts_for_game_demo
     concepts = []
     bingo_game_id = params[:id].to_i
 
-      index = 0
-      @@demo_concepts.each do |concept_name|
-        index -= 1
-        concepts << Concept.new( id: index, name: concept_name )
-      end
+    index = 0
+    @@demo_concepts.each do |concept_name|
+      index -= 1
+      concepts << Concept.new(id: index, name: concept_name)
+    end
     respond_to do |format|
       format.json do
         render json: concepts.collect { |c| { id: c.id, name: c.name } }.to_json
@@ -125,7 +125,7 @@ class ConceptsController < ApplicationController
     params.require(:concept).permit(:name)
   end
 
-  #TODO Perhaps refactor into demo-able?
+  # TODO: Perhaps refactor into demo-able?
   def demo_user
     if @current_user.nil?
       @current_user = User.new(first_name: t(:demo_surname_1),
