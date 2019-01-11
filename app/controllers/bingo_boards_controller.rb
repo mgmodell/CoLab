@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 class BingoBoardsController < ApplicationController
-  before_action :set_bingo_board, except: %i[index update board_for_game]
+  before_action :set_bingo_board,
+    except: %i[index update board_for_game board_for_game_demo
+    update_demo]
+  skip_before_action :authenticate_user!,
+    only: %i[board_for_game_demo update_demo]
+  before_action :demo_user,
+    only: %i[board_for_game_demo update_demo]
 
   def show
     @title = t '.title'
@@ -11,9 +17,8 @@ class BingoBoardsController < ApplicationController
     end
   end
 
-  def board_for_game
+  def board_for_game_demo
     bingo_game_id = params[:bingo_game_id]
-    if bingo_game_id = -42
       demo_project = Project.new(
                       id: -1,
                       name: (t :demo_project),
@@ -26,12 +31,22 @@ class BingoBoardsController < ApplicationController
                       group_option: false,
                       project: demo_project,
                       size: 5 )
-    else
-      bingo_game = BingoGame .find(params[:bingo_game_id])
-      bingo_board = bingo_game.bingo_boards
-                              .includes(:bingo_game, bingo_cells: :concept)
-                              .where(user_id: @current_user.id).take
-    end
+    board_for_game_helper bingo_game: bingo_game
+
+  end
+
+  def board_for_game
+    bingo_game_id = params[:bingo_game_id]
+    bingo_game = BingoGame .find(params[:bingo_game_id])
+    bingo_board = bingo_game.bingo_boards
+                      .includes(:bingo_game, bingo_cells: :concept)
+                      .where(user_id: @current_user.id).take
+    board_for_game_helper bingo_board: bingo_board,
+                          bingo_game: bingo_game
+
+  end
+
+  def board_for_game_helper bingo_board: nil, bingo_game: 
 
       #TODO: Maybe this can be simplified?
       if bingo_board.nil?
@@ -85,6 +100,19 @@ class BingoBoardsController < ApplicationController
     end
   end
 
+  def update_demo
+    bingo_game_id = params[:bingo_game_id]
+    @board = BingoBoard.new(
+      id: -42,
+      iteration: 0,
+      user_id: @current_user.id,
+      user: @current_user
+    )
+    @board.assign_attributes(bingo_board_params)
+
+    update_responder
+  end
+
   def update
     bingo_game_id = params[:bingo_game_id]
     @board = BingoBoard.where(
@@ -98,16 +126,26 @@ class BingoBoardsController < ApplicationController
     @board.user_id = @current_user.id
     @board.iteration += iteration
 
-    if bingo_game_id = -42 || @board.save
-      if bingo_game_id = -42
-        #Demo is running nothing needs done
-        @board.id = -42
-        
-      else
+    if @board.save
       @board = BingoBoard
                .includes(:bingo_game, bingo_cells: :concept)
                .find(@board.id)
+
+      update_responder
+    else
+      logger.debug @board.errors.full_messages
+
+      respond_to do |format|
+        format.json do
+          render json: { message: @board.errors.full_messages }
+        end
       end
+
+    end
+  end
+
+  def update_responder
+
 
       respond_to do |format|
         format.json do
@@ -121,16 +159,6 @@ class BingoBoardsController < ApplicationController
           )
         end
       end
-    else
-      logger.debug @board.errors.full_messages
-
-      respond_to do |format|
-        format.json do
-          render json: { message: @board.errors.full_messages }
-        end
-      end
-
-    end
   end
 
   def play_board
@@ -167,5 +195,14 @@ class BingoBoardsController < ApplicationController
 
   def play_bingo_board_params
     params.require(:bingo_board).permit(bingo_cells: %i[id selected])
+  end
+
+  #TODO Perhaps refactor into demo-able?
+  def demo_user
+    if @current_user.nil?
+      @current_user = User.new(first_name: t(:demo_surname_1),
+                               last_name: t(:demo_fam_name_1),
+                               timezone: t(:demo_user_tz))
+    end
   end
 end

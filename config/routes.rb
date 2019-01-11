@@ -48,6 +48,14 @@ Rails.application.routes.draw do
         as: :bingo_concepts,
         constraints: ->(req) { req.format == :json }
     post 'play_board/:id' => 'bingo_boards#play_board', as: 'play_bingo'
+    #Demo support functions
+    get 'bingo_board_demo/:bingo_game_id' => 'bingo_boards#board_for_game_demo',
+        as: 'board_for_game_demo'
+    patch 'update_board_demo/:bingo_game_id' => 'bingo_boards#update_demo',
+        as: 'update_board_demo'
+    get 'concepts_for_game_demo/:id' => 'concepts#concepts_for_game_demo',
+        as: :bingo_concepts_demo,
+        constraints: ->(req) { req.format == :json }
   end
 
   post 'infra/quote' => 'home#get_quote', as: :get_quote
