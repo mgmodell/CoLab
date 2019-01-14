@@ -27,14 +27,16 @@ class ConceptsController < ApplicationController
         render :index
       end
       format.json do
-        render json: @concepts.collect { |c| {
-          id: c.id,
-          name: c.name,
-          cap_name: c.name.upcase,
-          times: c.candidates_count,
-          bingos: c.bingo_games_count,
-          courses: c.courses_count
-        } }.to_json
+        render json: @concepts.collect { |c|
+                       {
+                         id: c.id,
+                         name: c.name,
+                         cap_name: c.name.upcase,
+                         times: c.candidates_count,
+                         bingos: c.bingo_games_count,
+                         courses: c.courses_count
+                       }
+                     } .to_json
       end
     end
   end

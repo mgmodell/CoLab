@@ -117,7 +117,7 @@ class HomeController < ApplicationController
     e.start_time = 3.weeks.ago
     e.close_date = Date.today.end_of_day
     e.instructor_task = true
-    #TODO: Enable the candidate review demo
+    # TODO: Enable the candidate review demo
     # @events << e
 
     e = Event_.new
@@ -133,6 +133,5 @@ class HomeController < ApplicationController
     e.close_date = 1.days.from_now.end_of_day
     e.instructor_task = false
     @events << e
-
   end
 end
