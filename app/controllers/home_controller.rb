@@ -68,6 +68,7 @@ class HomeController < ApplicationController
   class Event_
     attr_accessor :name, :task_link, :task_name_post, :type, :status, :group_name
     attr_accessor :course_name, :start_time, :close_date
+    attr_accessor :instructor_task
   end
 
   def demo_start
@@ -88,6 +89,7 @@ class HomeController < ApplicationController
     e.course_name = t(:demo_course_name)
     e.start_time = 1.day.ago
     e.close_date = 3.day.from_now.end_of_day
+    e.instructor_task = false
 
     @events = [e]
     e = Event_.new
@@ -100,7 +102,23 @@ class HomeController < ApplicationController
     e.course_name = t(:demo_course_name)
     e.start_time = 1.week.ago
     e.close_date = 4.days.from_now.end_of_day
+    e.instructor_task = false
     @events << e
+
+    e = Event_.new
+    e.name = t('candidate_lists.review', task:
+      t('candidate_lists.demo_review_topic'))
+    e.task_link = bingo_demo_review_path
+    e.task_name_post = ''
+    e.type = t 'candidate_lists.review'
+    e.status = '85'
+    e.group_name = t(:demo_group)
+    e.course_name = t(:demo_course_name)
+    e.start_time = 3.weeks.ago
+    e.close_date = Date.today.end_of_day
+    e.instructor_task = true
+    #TODO: Enable the candidate review demo
+    # @events << e
 
     e = Event_.new
     e.name = t('candidate_lists.play', task:
@@ -113,6 +131,8 @@ class HomeController < ApplicationController
     e.course_name = t(:demo_course_name)
     e.start_time = 2.weeks.ago
     e.close_date = 1.days.from_now.end_of_day
+    e.instructor_task = false
     @events << e
+
   end
 end

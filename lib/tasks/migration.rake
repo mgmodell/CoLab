@@ -2,7 +2,7 @@
 
 namespace :migratify do
   desc 'Update the quotes'
-  task quote_updates: :environment do
+  task jan_2019: :environment do
     # Quote seed data
     class Quote_
       attr_accessor :text_en, :attribution
@@ -16,6 +16,14 @@ namespace :migratify do
       q.attribution = quote.attribution unless q.attribution == quote.attribution
       q.save
     end
+
+    Concept.all.each do |concept|
+      Concept.reset_counters( concept.id, :candidate_lists )
+      concept.bingo_games_count = concept.bingo_games.uniq.size
+      concept.courses_count = concept.courses.uniq.size
+      concept.save
+    end
+    
   end
 
     

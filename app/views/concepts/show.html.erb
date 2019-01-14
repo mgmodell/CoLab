@@ -17,11 +17,11 @@
     <p>
       <h3><%= t 'concepts.stats' %></h3>
       <%= t( 'concepts.candidate_count', count:
-              @concept.candidates.count ) %><br>
+              @concept.candidates_count ) %><br>
       <%= t( 'concepts.game_count', count:
-              @concept.bingo_games.uniq.count ) %><br>
+              @concept.bingo_games_count ) %><br>
       <%= t( 'concepts.course_count', count:
-              @concept.courses.count ) %><br>
+              @concept.courses_count ) %><br>
     </p>
     <%= link_to t('.edit_string'), edit_concept_path(@concept) %>
   </div>

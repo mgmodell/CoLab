@@ -61,6 +61,19 @@ class BingoGamesController < ApplicationController
     end
   end
 
+  def review_candidates_demo
+    @title = t '.title'
+    @bingo_game = BingoGame.new(id: -11,
+                       topic: (t 'candidate_lists.demo_review_topic'),
+                       description: (t 'candidate_lists.demo_review_description'),
+                       end_date: Date.today.end_of_day,
+                       individual_count: 10)
+
+    @course
+
+    render :review_candidates
+  end
+
   def review_candidates
     @title = t '.title'
   end

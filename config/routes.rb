@@ -56,6 +56,8 @@ Rails.application.routes.draw do
     get 'concepts_for_game_demo/:id' => 'concepts#concepts_for_game_demo',
         as: :bingo_concepts_demo,
         constraints: ->(req) { req.format == :json }
+    get 'candidates_review_demo/-11' => 'bingo_games#review_candidates_demo',
+        as: :bingo_demo_review
   end
 
   post 'infra/quote' => 'home#get_quote', as: :get_quote
