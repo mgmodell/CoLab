@@ -79,7 +79,7 @@ class CandidateListsController < ApplicationController
   end
 
   def demo_play
-    @title = t 'candidate_lists.demo_title',
+    @title = t 'demo_title',
                orig: (t 'candidate_lists.show.title')
     @candidate_list = CandidateList.new(id: -1,
                                         is_group: false)
@@ -98,7 +98,7 @@ class CandidateListsController < ApplicationController
   end
 
   def demo_entry
-    @title = t 'candidate_lists.demo_title',
+    @title = t 'demo_title',
                orig: (t 'candidate_lists.edit.title')
     if @current_user.nil?
       @current_user = User.new(

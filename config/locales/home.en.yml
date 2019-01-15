@@ -89,6 +89,7 @@ en:
   none_selected: None selected
   not_available: Not Available
   #demo materials
+  demo_title: '%{orig} (DEMO)'
   demo: Demo
   demo_group: SuperStars
   demo_project: Research Paper

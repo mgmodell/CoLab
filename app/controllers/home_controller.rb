@@ -118,7 +118,7 @@ class HomeController < ApplicationController
     e.close_date = Date.today.end_of_day
     e.instructor_task = true
     # TODO: Enable the candidate review demo
-    # @events << e
+     @events << e
 
     e = Event_.new
     e.name = t('candidate_lists.play', task:

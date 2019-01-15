@@ -21,12 +21,12 @@ class ConceptsController < ApplicationController
   # GET /admin/concept
   def index
     @title = t '.title'
-    @concepts = Concept.all.order(:name)
     respond_to do |format|
       format.html do
         render :index
       end
       format.json do
+        @concepts = Concept.all.order(:name)
         render json: @concepts.collect { |c|
                        {
                          id: c.id,

@@ -165,7 +165,7 @@ class InstallmentsController < ApplicationController
   end
 
   def demo_complete
-    @title = t 'installments.demo_title'
+    @title = t 'demo_title', orig: t( 'installments.title' )
     @project = ProjStub.new
     @project.style = Style.find(2)
     @project.name = t :demo_project

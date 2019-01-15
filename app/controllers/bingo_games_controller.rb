@@ -62,7 +62,8 @@ class BingoGamesController < ApplicationController
   end
 
   def review_candidates_demo
-    @title = t '.title'
+    @title = t('demo_title', orig:
+      t('bingo_games.review_candidates.title'))
     @bingo_game = BingoGame.new(id: -11,
                                 topic: (t 'candidate_lists.demo_review_topic'),
                                 description: (t 'candidate_lists.demo_review_description'),
