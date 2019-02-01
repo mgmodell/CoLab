@@ -23,7 +23,8 @@ Capybara.register_driver :headless_chrome do |app|
                                  desired_capabilities: capabilities
 end
 
-Capybara.javascript_driver = :headless_chrome
+#Capybara.javascript_driver = :headless_chrome
+Capybara.javascript_driver = :selenium
 Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false
 

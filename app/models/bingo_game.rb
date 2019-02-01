@@ -8,6 +8,8 @@ class BingoGame < ApplicationRecord
   belongs_to :project, inverse_of: :bingo_games, optional: true
 
   has_many :candidates, through: :candidate_lists
+  has_many :users, through: :course
+  has_many :groups, through: :project
 
   has_many :concepts, through: :candidates
 

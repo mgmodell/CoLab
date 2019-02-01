@@ -319,10 +319,10 @@ class User < ApplicationRecord
       case gender.code
       when 'm'
         self.anon_first_name = Forgery::Name.male_first_name
-        self.anon_last_name = Forgery::Name.male_last_name
+        self.anon_last_name = Forgery::Name.last_name
       when 'f'
         self.anon_first_name = Forgery::Name.female_first_name
-        self.anon_last_name = Forgery::Name.female_last_name
+        self.anon_last_name = Forgery::Name.last_name
       else
         self.anon_first_name = Forgery::Name.first_name
         self.anon_last_name = Forgery::Name.last_name

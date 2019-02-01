@@ -35,8 +35,9 @@ Rails.application.routes.draw do
         as: :request_bingo_collaboration
     get 'candidates_review/:id' => 'bingo_games#review_candidates',
         as: :review_bingo_candidates
-    post 'candidates_review/:id' => 'bingo_games#update_review_candidates',
-        as: :update_bingo_candidates_review
+    patch 'candidates_review/:id' => 'bingo_games#update_review_candidates',
+        as: :update_bingo_candidates_review,
+        constraints: ->(req) { req.format == :json }
     get 'list_stats/:id' => 'candidate_lists#list_stats', as: :'bingo_list_stats'
     #Gameplay functions
     resources :bingo_boards, only: [:index, :show]
@@ -49,15 +50,6 @@ Rails.application.routes.draw do
         constraints: ->(req) { req.format == :json }
     post 'play_board/:id' => 'bingo_boards#play_board', as: 'play_bingo'
     #Demo support functions
-    get 'bingo_board_demo/:bingo_game_id' => 'bingo_boards#board_for_game_demo',
-        as: 'board_for_game_demo'
-    patch 'update_board_demo/:bingo_game_id' => 'bingo_boards#update_demo',
-        as: 'update_board_demo'
-    get 'concepts_for_game_demo/:id' => 'concepts#concepts_for_game_demo',
-        as: :bingo_concepts_demo,
-        constraints: ->(req) { req.format == :json }
-    get 'candidates_review_demo/-11' => 'bingo_games#review_candidates_demo',
-        as: :bingo_demo_review
   end
 
   post 'infra/quote' => 'home#get_quote', as: :get_quote
@@ -92,16 +84,30 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
   root to: 'home#index'
-  get 'home/demo_start' => 'home#demo_start', as: :demo_start
 
   # Consent log paths
   get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', as: :edit_consent_log
   patch 'consent_logs/:id' => 'consent_logs#update', as: :consent_log
 
+  scope 'demo' do
   # Demo paths
-  get 'installments/demo_complete' => 'installments#demo_complete', as: :assessment_demo_complete
-  get 'candidate_lists/demo_entry' => 'candidate_lists#demo_entry', as: :terms_demo_entry
-  get 'candidate_lists/demo_play' => 'candidate_lists#demo_play', as: :bingo_demo_play
+    get 'installments/complete' => 'installments#demo_complete', as: :assessment_demo_complete
+    get 'candidate_lists/entry' => 'candidate_lists#demo_entry', as: :terms_demo_entry
+    get 'candidate_lists/play' => 'candidate_lists#demo_play', as: :bingo_demo_play
+    get 'home/start' => 'home#demo_start', as: :demo_start
+    get 'bingo_board_demo/:bingo_game_id' => 'bingo_boards#board_for_game_demo',
+        as: 'board_for_game_demo'
+    patch 'update_board_demo/:bingo_game_id' => 'bingo_boards#update_demo',
+        as: 'update_board_demo'
+    get 'concepts_for_game_demo/:id' => 'concepts#concepts_for_game_demo',
+        as: :bingo_concepts_demo,
+        constraints: ->(req) { req.format == :json }
+    get 'candidates_review_demo/-11' => 'bingo_games#review_candidates_demo',
+        as: :bingo_demo_review
+    patch 'candidates_review/-11' => 'bingo_games#demo_update_review_candidates',
+        as: :demo_update_bingo_candidates_review,
+        constraints: ->(req) { req.format == :json }
+  end
 
   get 'installments/new/:assessment_id/:group_id' => 'installments#new', as: :new_installment
   get 'installments/edit/:assessment_id/:group_id' => 'installments#edit', as: :edit_installment

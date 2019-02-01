@@ -110,8 +110,8 @@ class HomeController < ApplicationController
       t('candidate_lists.demo_review_topic'))
     e.task_link = bingo_demo_review_path
     e.task_name_post = ''
-    e.type = t 'candidate_lists.review'
-    e.status = '85'
+    e.type = t :terms_list
+    e.status = '0'
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
     e.start_time = 3.weeks.ago

@@ -10,6 +10,8 @@ class ConceptsController < ApplicationController
   before_action :demo_user,
                 only: %i[concepts_for_game_demo]
 
+  include Demoable
+
   def show
     @title = t '.title'
   end
@@ -41,28 +43,25 @@ class ConceptsController < ApplicationController
     end
   end
 
-  @@demo_concepts =
-    ['Fun', 'Play', 'Challenge', 'Game Mechanics', 'Game Elements',
-     'Game-based', 'Points', 'Badges', 'Leaderboards', 'Motivation',
-     'Feedback', 'Progress Tracking', 'Story', 'Rewards',
-     'Avatars', 'Theme', 'Autonomy', 'Levels', 'Gartner\'s Hype Cycle',
-     'Game Dynamics', 'Social Interaction', 'Learning Gains',
-     'Learning Analytics', 'Game Design Principles', 'Learning Design',
-     'Gamified Learning', 'Gameful', 'Behavior Change', 'Simulation',
-     'Chance', 'Surprise', 'Reliability', 'Validity',
-     'Gamified Platform', 'Learner Characteristics',
-     'Educational Context', 'Learning Environment', 'Evidence-based',
-     'Experience Design', 'Competition', 'Learner Engagement',
-     'Active Learning']
   def concepts_for_game_demo
     concepts = []
     bingo_game_id = params[:id].to_i
+    search_string = params[:search_string].present? ?
+                      params[:search_string].strip.downcase :
+                      ''
 
-    index = 0
-    @@demo_concepts.each do |concept_name|
-      index -= 1
-      concepts << Concept.new(id: index, name: concept_name)
+    if 0 != bingo_game_id || search_string.length > 2
+      index = 0
+      demo_concepts = Concept.get_concepts_for_game_demo
+      demo_concepts.each do |concept|
+        index -= 1
+        concepts << Concept.new(id: index, name: concept[0])
+      end
+      if 0 == bingo_game_id
+        concepts.reject! {|c| ! c.name.downcase.include? search_string }
+      end
     end
+
     respond_to do |format|
       format.json do
         render json: concepts.collect { |c| { id: c.id, name: c.name } }.to_json
@@ -79,13 +78,12 @@ class ConceptsController < ApplicationController
       if @current_user.is_admin? || @current_user.is_instructor?
         substring = params[:search_string].strip
         criteria = 'true ?'
+        concepts = [ ]
         if substring.length > 2
           criteria = 'concepts.name LIKE ?'
           substring = "%#{substring}%"
-        else
-          substring = ''
+          concepts = Concept.where('concepts.id > 0').where(criteria, substring).to_a if @current_user.is_instructor?
         end
-        concepts = Concept.where('concepts.id > 0').where(criteria, substring).to_a if @current_user.is_instructor?
       end
     end
 
@@ -142,12 +140,4 @@ class ConceptsController < ApplicationController
     params.require(:concept).permit(:name)
   end
 
-  # TODO: Perhaps refactor into demo-able?
-  def demo_user
-    if @current_user.nil?
-      @current_user = User.new(first_name: t(:demo_surname_1),
-                               last_name: t(:demo_fam_name_1),
-                               timezone: t(:demo_user_tz))
-    end
-  end
 end

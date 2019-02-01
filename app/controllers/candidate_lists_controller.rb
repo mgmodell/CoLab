@@ -2,7 +2,11 @@
 
 class CandidateListsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[demo_play demo_entry]
+  before_action :demo_user, only: %i[demo_play demo_entry]
+
   before_action :set_candidate_list, only: %i[edit show update request_collaboration list_stats]
+
+  include Demoable
 
   def list_stats
     @title = t '.title'
@@ -100,13 +104,6 @@ class CandidateListsController < ApplicationController
   def demo_entry
     @title = t 'demo_title',
                orig: (t 'candidate_lists.edit.title')
-    if @current_user.nil?
-      @current_user = User.new(
-        first_name: (t :demo_surname_1),
-        last_name: (t :demo_fam_name_1),
-        timezone: (t :demo_user_tz)
-      )
-    end
     demo_group = Group.new
     demo_group.name = t :demo_group
     demo_group.users = [@current_user]

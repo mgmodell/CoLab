@@ -11,6 +11,7 @@ Feature: Email experience stragglers
     Given the user "has" had demographics requested
     Given the user is the instructor for the course
 
+  @javascript
   Scenario: Instructor emailed when bingo closes and students responded
     Given there is a course with an assessed project
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"

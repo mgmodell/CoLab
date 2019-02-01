@@ -16,12 +16,15 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
       step 'the user clicks the link to the candidate list'
       step 'the user should see the Bingo candidate list'
 
-      if !collab_requested
-        step 'the user requests collaboration'
-        collab_requested = true
-      else
-        step 'the user "accepts" the collaboration request'
+      accept_alert do
+        if !collab_requested
+          step 'the user requests collaboration'
+          collab_requested = true
+        else
+          step 'the user "accepts" the collaboration request'
+        end
       end
+
       step 'the user logs out'
     end
     user_group = [@users.sample]
@@ -63,25 +66,41 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
 end
 
 Then /^the user sees (\d+) candidate items for review$/  do |candidate_count|
-  page.all(:xpath, "//select[contains(@id, 'candidate_feedback')]")
+  page.all(:xpath, "//select[contains(@id, 'feedback_4_')]")
       .count.should eq candidate_count.to_i
-  page.all(:xpath, "//input[contains(@id, 'concept')]")
+  page.all(:xpath, "//input[contains(@id, 'concept_4_')]")
       .count.should eq candidate_count.to_i
 end
 
 Given /^the user sees review items for all the expected candidates$/ do
+
   @bingo.candidates.completed.each do |candidate|
-    page.all(:xpath, "//select[@id='_bingo_candidates_review_#{@bingo.id}_candidate_feedback_#{candidate.id}']").count.should eq 1
-    page.all(:xpath, "//input[@id='_bingo_candidates_review_#{@bingo.id}_concept_#{candidate.id}']").count.should eq 1
+    page.all(:xpath, "//input[@id='concept_4_#{candidate.id}']").count.should eq 1
+    page.all(:xpath,
+            "//select[@id='feedback_4_#{candidate.id}']",
+            visible: false).count.should eq 1
   end
+end
+
+Then /^the user waits while seeing "([^"]*)"$/ do |wait_msg|
+  counter = 0
+  while page.has_text? wait_msg
+    sleep 1
+    counter += 1
+    break if counter > 60
+  end
+  puts "Slept #{counter} seconds"
+
 end
 
 Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_type|
   concept_count = Concept.count
-  concepts = []
-  concepts << Concept.last.name unless concept_count < 1
+  concepts = concept_count < 2 ? [ ] :
+              Concept.where( 'id > 0').collect(&:name)
+
   concept_count.upto (concept_count + 3) do |counter|
     concepts << 'concept ' + counter.to_s
+    puts "concepts: #{concepts.inspect}"
   end
 
   feedbacks = CandidateFeedback.unscoped.where('name_en like ?', feedback_type + '%')
@@ -97,23 +116,28 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       @feedback_list[candidate.id][:concept] = concept.split.map(&:capitalize).*' '
     end
     unless concept.blank?
-      page.find(:xpath, "//input[@id='_bingo_candidates_review_#{@bingo.id}_concept_#{candidate.id}']")
+      page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
           .set(concept)
     end
-    page.find(:xpath, "//select[@id='_bingo_candidates_review_#{@bingo.id}_candidate_feedback_#{candidate.id}']")
-        .find(:xpath, "option[@value='#{feedback.id}']").select_option
+    page.find(:xpath,
+        "//select[@id='feedback_4_#{candidate.id}']",
+        visible: :all).click
+    page.find(:xpath,
+        "//select[@id='feedback_4_#{candidate.id}']//option[@value='#{feedback.id}']",
+        visible: :all).click
   end
 end
 
 Given /^the saved reviews match the list$/ do
   @feedback_list.each do |key, value|
+    puts "listed: #{value[:concept]}"
     Candidate.find(key).candidate_feedback_id.should eq value[:feedback][:id]
     Candidate.find(key).concept.name.should eq value[:concept] unless value[:concept].blank?
   end
 end
 
 Given /^the user checks "([^"]*)"$/ do |checkbox_name|
-  check(checkbox_name)
+  all(:xpath, "//div[contains(.,'#{checkbox_name}')]" ).last.click
 end
 
 Given /^the user is the most recently created user$/ do
@@ -127,5 +151,14 @@ end
 
 Then /^there will be (\d+) concepts$/ do |concept_count|
   # Adjusting for an entry for the seeded '*' concept
+  Concept.all.each do |c|
+    puts "\tid: #{c.id} #{c.name}"
+  end
+  puts '----'
   Concept.count.should eq ( concept_count.to_i + 1)
 end
+
+Then("the user navigates to {string}") do |location|
+  click_link_or_button location
+end
+

@@ -1,16 +1,28 @@
 # frozen_string_literal: true
+require 'forgery'
 
 class BingoGamesController < ApplicationController
-  layout 'admin', except: %i[review_candidates update_review_candidates]
+  layout 'admin', except: %i[review_candidates update_review_candidates
+                                          review_candidates_demo]
+  skip_before_action :authenticate_user!,
+                     only: %i[review_candidates_demo
+                                      demo_update_review_candidates ]
+  before_action :demo_user, only: %i[ review_candidates_demo
+                                      demo_update_review_candidates ]
+
   before_action :set_bingo_game, only: %i[show edit update
-                                          destroy review_candidates
-                                          update_review_candidates]
+                                          destroy review_candidates 
+                                          update_review_candidates ]
 
   before_action :check_editor, except: %i[next diagnose react
                                           update_review_candidates
+                                          review_candidates_demo
+                                          demo_update_review_candidates
                                           show index get_concepts]
 
   before_action :check_viewer, only: %i[show index]
+
+  include Demoable
 
   def show
     @title = t '.title'
@@ -70,70 +82,251 @@ class BingoGamesController < ApplicationController
                                 end_date: Date.today.end_of_day,
                                 individual_count: 10)
 
-    @course
+    groups = 
+      [ Group.new(
+        id: -1,
+        name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
+        anon_name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
+        project_id: -1 ),
+        Group.new(
+        id: -2,
+        name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
+        anon_name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
+        project_id: -1 ),
+      ]
 
-    render :review_candidates
+
+    cl_map = {}
+    candidate_lists = [ ]
+    #working as a group
+    cl = CandidateList.new ( )
+    cl.id = -1
+    cl.is_group = true
+    cl.group_id = -1
+    cl.group = groups[ 0 ]
+    cl.bingo_game_id = @bingo_game.id
+    cl.bingo_game = @bingo_game
+    candidate_lists << cl
+    @bingo_game.candidate_lists << cl
+
+    0.downto(-3) do |index|
+      u = User.new ()
+      u.id = index
+      u.first_name = Forgery::Name.first_name
+      u.anon_first_name = Forgery::Name.first_name
+      u.last_name = Forgery::Name.last_name
+      u.anon_last_name = Forgery::Name.last_name
+      u.email = 'test@mailinator.com'
+
+      groups[0].users << u
+      cl_map[ u ] = cl
+    end
+    #Working on their own
+    -4.downto(-7) do |index|
+      u = User.new( )
+      u.id = index
+      u.first_name = Forgery::Name.first_name
+      u.anon_first_name = Forgery::Name.first_name
+      u.last_name = Forgery::Name.last_name
+      u.anon_last_name = Forgery::Name.last_name
+      u.email = 'test@mailinator.com'
+
+      cl = CandidateList.new( )
+      cl.id = index
+      cl.is_group = false
+      cl.user_id = u.id
+      cl.user = u
+      cl.bingo_game_id = @bingo_game.id
+      cl.bingo_game = @bingo_game
+      candidate_lists << cl
+      @bingo_game.candidate_lists << cl
+      groups[1].users << u
+      cl_map[ u ] = cl
+    end
+
+    demo_concepts = Concept.get_concepts_for_game_demo
+    demo_concepts.rotate!( Random.rand( demo_concepts.count ) )
+    users = cl_map.keys
+
+    candidates = [ ]
+    0.downto(-66) do |index|
+      c = demo_concepts.rotate![ 0 ]
+      acceptable = Random.rand( ) < 0.5
+      users.rotate!
+      u = users[ 0 ]
+      candidate = Candidate.new(
+        id: index,
+        term: c[ 0 ],
+        definition: acceptable ? c[ 1 ] :
+          demo_concepts[ Random.rand( demo_concepts.count ) ][1 ],
+        user: u,
+        user_id: u.id
+      )
+      cl_map[ u ].candidates << candidate
+      candidates << candidate
+    end
+
+    respond_to do |format|
+      format.json {
+        review_helper( 
+          bingo_game: @bingo_game,
+          users: users,
+          groups: groups,
+          candidate_lists: candidate_lists,
+          candidates: candidates
+        )
+      }
+      format.html { render :review_candidates }
+    end
+
   end
 
   def review_candidates
     @title = t '.title'
+    respond_to do |format|
+      format.json {
+        review_helper( 
+          bingo_game: @bingo_game,
+          users: @bingo_game.users,
+          groups: @bingo_game.groups,
+          candidate_lists: @bingo_game.candidate_lists,
+          candidates: @bingo_game.candidates
+        )
+        
+      }
+      format.html { render :review_candidates }
+    end
+
+  end
+
+  def review_helper bingo_game:, users:, groups:,
+                    candidate_lists:, candidates:
+    render json: {
+      bingo_game: bingo_game.as_json( only:
+        [:id, :topic, :description, :status, :close_date]), 
+      users: users.as_json( only:
+        [:id, :first_name, :last_name, :email] ),
+      feedback_opts: CandidateFeedback.all.as_json( only:
+        [ :id, :name_en, :definition_en, :credit ] ),
+      groups: groups.as_json( only:
+        [ :id, :name ] ),
+      candidate_lists: candidate_lists.as_json( only:
+        [ :id, :is_group, :group_id ] ),
+      candidates: candidates.as_json(
+        include: {concept: { only: :name } },
+        only: [ :id, :term, :definition, :concept_id, 
+          :candidate_feedback_id, :candidate_list_id,
+          :filtered_consistent, :user_id ]
+          ) 
+    }
+  end
+
+  def demo_update_review_candidates
+    response = {
+     notice: 'demo done!',
+      reviewed: params[:reviewed]
+    }
+    respond_to do |format|
+      format.json {render json: response}
+    end
   end
 
   def update_review_candidates
-    # Process the data
-    params_act = params["/bingo/candidates_review/#{@bingo_game.id}"]
-    existing_concepts = {}
+    bingo_id = params[:id].to_i
+    response = {}
+    unless bingo_id < 1
+      @bingo_game = BingoGame.find( bingo_id )
+      #Security check to support demos
+      redirect_to root_path unless @current_user.present? &&
+                            @bingo_game.course.instructors.include?( @current_user )
 
-    # TODO: Must fix this - sub-optimal by a long shot
-    # Cache the concepts for existince checking
-    Concept.all.each do |concept|
-      existing_concepts[concept.name] = concept
-    end
-
-    candidate_feedbacks = {}
-    CandidateFeedback.all.each do |cf|
-      candidate_feedbacks[cf.id] = cf
-    end
-    @bingo_game.candidates.completed
-               .includes(:user, :candidate_feedback, :concept, candidate_list: [:bingo_game])
-               .find_all do |candidate|
-      code = 'candidate_feedback_' + candidate.id.to_s
-      feedback_id = params_act["candidate_feedback_#{candidate.id}"]
-      next if feedback_id.blank?
-
-      candidate.candidate_feedback = candidate_feedbacks[feedback_id.to_i]
-      candidate.candidate_feedback_id = candidate.candidate_feedback.id
-      unless candidate.candidate_feedback.name.start_with? 'Term'
-        concept_name = params_act["concept_#{candidate.id}"].split.map(&:capitalize).*' '
-        concept = existing_concepts[concept_name]
-        if concept.nil?
-          concept = Concept.create(name: concept_name)
-          existing_concepts[concept_name] = concept
+      candidates = params[ :candidates ]
+      entered_concepts = []
+      candidates.each do |candidate|
+        if candidate[:concept].present? && candidate[:concept][:name].present?
+          concept_name = candidate[:concept][:name]
+          concept_name = concept_name.split.map(&:capitalize).*' '
+          entered_concepts << concept_name
         end
-        candidate.concept = concept
       end
-      candidate.save
-      logger.debug candidate.errors.full_messages unless candidate.errors.empty?
-    end
 
-    @bingo_game.reviewed = params_act['reviewed']
-    if @bingo_game.reviewed && !@bingo_game.students_notified
-      @bingo_game.course.enrolled_students.find_all do |student|
-        AdministrativeMailer.notify_availability(student,
-                                                 "#{@bingo_game.topic} terms list").deliver_later
+      concept_map = {}
+      Concept.where( name: entered_concepts ).each do |c|
+        concept_map[c.name] = c
       end
-      @bingo_game.students_notified = true
-    end
-    @bingo_game.save
-    logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
 
-    if @bingo_game.errors.empty? && @bingo_game.reviewed
-      redirect_to root_url, notice: (t 'bingo_games.review_success')
-    elsif !@bingo_game.errors.empty?
-      redirect_to :review_bingo_candidates, notice: (t 'bingo_games.review_problems')
+      feedback_map = {}
+      CandidateFeedback.all.each do |cf|
+        feedback_map[ cf.id ] = cf
+      end
+
+      candidate_map = {}
+      candidates.each do |c|
+        candidate_map[ c[:id ] ] = c
+      end
+
+      # Process the data
+      existing_concepts = {}
+
+      @bingo_game.candidates.completed
+                 .includes(:candidate_feedback,:concept )
+                 .find_all do |candidate|
+        entered_candidate = candidate_map[ candidate.id ]
+
+        unless entered_candidate.nil? or entered_candidate[:candidate_feedback_id].nil?
+
+          candidate.candidate_feedback =
+            feedback_map[ entered_candidate[:candidate_feedback_id ]]
+          
+          feedback_name = candidate.candidate_feedback.name_en
+          if (!feedback_name.start_with? 'Term:') &&
+              entered_candidate[:concept][:name].present?
+            concept_name = entered_candidate[:concept][:name]
+            concept_name = concept_name.split.map(&:capitalize).*' '
+
+            concept = concept_map[ concept_name ]
+            if concept.nil?
+              concept = Concept.create( name: concept_name )
+              concept_map[ concept_name ] = concept
+            end
+            candidate.concept = concept
+          else
+            candidate.concept = nil
+          end
+          candidate.save
+          logger.debug candidate.errors.full_messages unless candidate.errors.empty?
+
+        end
+      end
+
+      #Send notifications to students
+      @bingo_game.reviewed = params['reviewed']
+      if @bingo_game.reviewed && !@bingo_game.students_notified
+        @bingo_game.course.enrolled_students.find_all do |student|
+          AdministrativeMailer.notify_availability(student,
+                                                   "#{@bingo_game.topic} terms list").deliver_later
+        end
+        @bingo_game.students_notified = true
+      end
+      @bingo_game.save
+      logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
+
+      if @bingo_game.errors.empty?
+        response[:notice] = (t 'bingo_games.review_success')
+        response[:reviewed] = @bingo_game.reviewed
+      elsif !@bingo_game.errors.empty?
+        response[:notice] = (t 'bingo_games.review_problems')
+        response[:reviewed] = false
+      end
     else
-      redirect_to :review_bingo_candidates, notice: (t 'bingo_games.review_success')
+      response[:notice] = 'Error!'
+      response[:reviewed] = params[:reviewed]
+      
     end
+    respond_to do |format|
+      format.json {render json: response}
+    end
+
   end
 
   def destroy

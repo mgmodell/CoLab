@@ -9,6 +9,8 @@ class BingoBoardsController < ApplicationController
   before_action :demo_user,
                 only: %i[board_for_game_demo update_demo]
 
+  include Demoable
+
   def show
     @title = t '.title'
     respond_to do |format|
@@ -195,12 +197,4 @@ class BingoBoardsController < ApplicationController
     params.require(:bingo_board).permit(bingo_cells: %i[id selected])
   end
 
-  # TODO: Perhaps refactor into demo-able?
-  def demo_user
-    if @current_user.nil?
-      @current_user = User.new(first_name: t(:demo_surname_1),
-                               last_name: t(:demo_fam_name_1),
-                               timezone: t(:demo_user_tz))
-    end
-  end
 end

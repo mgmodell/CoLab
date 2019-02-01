@@ -8,7 +8,7 @@ Then /^the user clicks the link to the experience$/ do
 end
 
 Then /^the user will see "([^"]*)"$/ do |checkText|
-  page.should have_content(checkText)
+  page.should have_content( :all, checkText)
 end
 
 Then /^the user presses hidden "([^"]*)"$/ do |linkOrButtonName|

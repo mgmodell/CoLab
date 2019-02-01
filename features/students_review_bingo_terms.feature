@@ -41,10 +41,12 @@ Feature: Students review Candidate words for Bingo!
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
 
+  @javascript
   Scenario: Instructor completes the review and the user checks their account
     Given the user assigns "Accept" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
      Then the user logs out
      When the user is any student in the course
      Then the user logs in
@@ -59,11 +61,13 @@ Feature: Students review Candidate words for Bingo!
      Then user opens their profile
      Then user sees the Bingo! in the history
 
+  @javascript
   Scenario: Instructor logs in and accepts all 134 candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Accept" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
      Then the user logs out
      When the user is any student in the course
      Then the user logs in
@@ -72,11 +76,13 @@ Feature: Students review Candidate words for Bingo!
      Then the user should see 4 concepts
      Then the concept list should match the list
      
+  @javascript
   Scenario: Instructor logs in and assigns term feedback to 134 candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Term" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
      Then the user logs out
      When the user is any student in the course
      Then the user logs in
@@ -85,11 +91,13 @@ Feature: Students review Candidate words for Bingo!
      Then the user should see 0 concepts
      Then the concept list should match the list
 
+  @javascript
   Scenario: Instructor logs in and assigns definition feedback to 134 candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Definition" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
      Then the user logs out
      When the user is any student in the course
      Then the user logs in
@@ -98,12 +106,14 @@ Feature: Students review Candidate words for Bingo!
      Then the user should see 4 concepts
      Then the concept list should match the list
 
+  @javascript
   Scenario: Instructor logs in and assigns mixed feedback to 134 candidates
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
     Given the user assigns "" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
      Then the user logs out
      When the user is any student in the course
      Then the user logs in
@@ -117,12 +127,14 @@ Feature: Students review Candidate words for Bingo!
      Then the user logs in
      Then user should see 0 open task
 
+  @javascript
   Scenario: Instructor assigns mixed feedback to 2 courses successively
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
     Given the user assigns "" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
      Then the user logs out
      When the user is any student in the course
      Then the user logs in
@@ -160,6 +172,7 @@ Feature: Students review Candidate words for Bingo!
     Given the user assigns "" feedback to all candidates
     Given the user checks "Review completed"
      Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
      Then the user logs out
      When the user is any student in the course
      Then the user logs in

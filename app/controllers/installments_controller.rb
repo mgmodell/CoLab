@@ -2,6 +2,9 @@
 
 class InstallmentsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:demo_complete]
+  before_action :demo_user, only: %i[ demo_complete ]
+
+  include Demoable
 
   def edit
     @title = t 'installments.title'
@@ -177,11 +180,7 @@ class InstallmentsController < ApplicationController
     @group.users = []
     @group.project = @project
 
-    @group.users << if @current_user.nil?
-                      User.new(first_name: 'John', last_name: 'Smith')
-                    else
-                      @current_user
-                    end
+    @group.users << @current_user
 
     user_names.each do |name|
       u = User.new(last_name: name[0], first_name: name[1])
