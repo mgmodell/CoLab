@@ -9,22 +9,32 @@
 require 'cucumber/rails'
 require 'selenium/webdriver'
 
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
+
+Capybara.register_driver :headless_firefox do |app|
+  browser_options = Selenium::WebDriver::Firefox::Options.new()
+  browser_options.args << '--headless'
+Capybara::Selenium::Driver.new(
+    app,
+    browser: :firefox,
+    options: browser_options
+  )
 end
 
-Capybara.register_driver :headless_chrome do |app|
+Capybara.register_driver(:headless_chrome) do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     chromeOptions: { args: %w[headless disable-gpu] }
   )
 
-  Capybara::Selenium::Driver.new app,
-                                 browser: :chrome,
-                                 desired_capabilities: capabilities
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    desired_capabilities: capabilities
+  )
 end
 
-#Capybara.javascript_driver = :headless_chrome
-Capybara.javascript_driver = :selenium
+Capybara.javascript_driver = :headless_chrome
+#Capybara.javascript_driver = :headless_firefox
+#Capybara.javascript_driver = :selenium
 Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false
 
@@ -93,13 +103,6 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
-# Before do
-#  $dunit ||= false
-#  return $dunit if $dunit
-#  seed_file = File.join( Rails.root, "db", "seeds.rb" )
-#  load( seed_file )
-#  $dunit = true
-# end
 Before do
   loadData
   DatabaseCleaner.start
@@ -132,6 +135,8 @@ end
 
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
+  total_time = scenario_times.values.inject(0){|sum,x| sum + x }
+  puts "Aggregate Testing Time: #{total_time}"
   puts "------------- Top #{max_scenarios} slowest scenarios -------------"
   sorted_times = scenario_times.sort { |a, b| b[1] <=> a[1] }
   sorted_times[0..max_scenarios - 1].each do |key, value|

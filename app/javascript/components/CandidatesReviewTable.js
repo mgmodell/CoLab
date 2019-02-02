@@ -207,6 +207,7 @@ class CandidatesReviewTable  extends React.Component {
         candidate_lists: candidate_lists,
         candidates_map: candidates_map,
         candidates: data.candidates,
+        candidates_raw: data.candidates,
         feedback_opts: feedback_opts,
       })
     } )
@@ -260,11 +261,15 @@ class CandidatesReviewTable  extends React.Component {
   }
 
   filter = function( event ){
+    console.log( this.state.candidates_raw.length )
     var filtered = this.state.candidates_raw.filter(
-      concept => concept.term.includes (
-        event.target.value.toUpperCase() )
+      candidate => 
+        candidate.definition.toUpperCase().includes ( event.target.value.toUpperCase() )
     )
-    this.setState( { concepts: filtered } )
+    this.setState( {
+      candidates: filtered,
+      page: 1,
+    } )
   }
 
   conceptSet = function( id, value ){
@@ -354,7 +359,7 @@ class CandidatesReviewTable  extends React.Component {
           alignItems="stretch"
         >
         <Grid item>
-        <InputBase placeholder="Search concepts" onChange={this.filter} />
+        <InputBase placeholder="Search definitions" onChange={this.filter} />
         <SearchIcon />
         </Grid>
         <Grid item>

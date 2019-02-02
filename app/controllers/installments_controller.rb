@@ -142,56 +142,18 @@ class InstallmentsController < ApplicationController
     end
   end
 
-  class UserStub
-    attr_accessor :id
-    attr_accessor :first_name
-    attr_accessor :last_name
-    def name
-      last_name + ', ' + first_name
-    end
-  end
-  class ProjStub
-    attr_accessor :style, :name
-
-    def get_name(_anon)
-      name
-    end
-  end
-  class GroupStub
-    attr_accessor :name
-    attr_accessor :users
-    attr_accessor :project
-
-    def get_name(_anon)
-      name
-    end
-  end
 
   def demo_complete
     @title = t 'demo_title', orig: t( 'installments.title' )
-    @project = ProjStub.new
-    @project.style = Style.find(2)
-    @project.name = t :demo_project
+    @project = get_demo_project
+    @group = get_demo_group
 
-    @group = GroupStub.new
-    @group.name = t :demo_group
-    user_names = [%w[Doe Robert],
-                  %w[Jones Roberta], %w[Kim Janice]]
-    @group.users = []
-    @group.project = @project
 
-    @group.users << @current_user
-
-    user_names.each do |name|
-      u = User.new(last_name: name[0], first_name: name[1])
-      @group.users << u
-    end
-
-    @installment = Installment.new(user_id: -1, assessment_id: -1, group_id: -1)
-
-    @factors = FactorPack.find(1).factors
-
+    @installment = Installment.new(user_id: -1, assessment_id: -1,
+                                    group_id: @group.id)
+    @factors = @project.factor_pack
     @members = @group.users
+
     cell_value = Installment::TOTAL_VAL / @members.size
     @members.each do |_u|
       @factors.each do |b|

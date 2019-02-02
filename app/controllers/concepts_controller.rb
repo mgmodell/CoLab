@@ -52,7 +52,7 @@ class ConceptsController < ApplicationController
 
     if 0 != bingo_game_id || search_string.length > 2
       index = 0
-      demo_concepts = Concept.get_concepts_for_game_demo
+      demo_concepts = get_demo_game_concepts
       demo_concepts.each do |concept|
         index -= 1
         concepts << Concept.new(id: index, name: concept[0])

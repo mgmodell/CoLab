@@ -61,7 +61,6 @@ function getSuggestionValue(suggestion) {
 
 const styles = theme => ({
   root: {
-    height: 250,
     flexGrow: 1,
   },
   container: {

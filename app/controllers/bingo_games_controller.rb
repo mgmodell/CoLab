@@ -144,7 +144,7 @@ class BingoGamesController < ApplicationController
       cl_map[ u ] = cl
     end
 
-    demo_concepts = Concept.get_concepts_for_game_demo
+    demo_concepts = get_demo_game_concepts
     demo_concepts.rotate!( Random.rand( demo_concepts.count ) )
     users = cl_map.keys
 

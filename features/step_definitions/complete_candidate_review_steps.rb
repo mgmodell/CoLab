@@ -89,7 +89,6 @@ Then /^the user waits while seeing "([^"]*)"$/ do |wait_msg|
     counter += 1
     break if counter > 60
   end
-  puts "Slept #{counter} seconds"
 
 end
 
@@ -100,7 +99,6 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
 
   concept_count.upto (concept_count + 3) do |counter|
     concepts << 'concept ' + counter.to_s
-    puts "concepts: #{concepts.inspect}"
   end
 
   feedbacks = CandidateFeedback.unscoped.where('name_en like ?', feedback_type + '%')
@@ -130,7 +128,6 @@ end
 
 Given /^the saved reviews match the list$/ do
   @feedback_list.each do |key, value|
-    puts "listed: #{value[:concept]}"
     Candidate.find(key).candidate_feedback_id.should eq value[:feedback][:id]
     Candidate.find(key).concept.name.should eq value[:concept] unless value[:concept].blank?
   end
@@ -151,10 +148,6 @@ end
 
 Then /^there will be (\d+) concepts$/ do |concept_count|
   # Adjusting for an entry for the seeded '*' concept
-  Concept.all.each do |c|
-    puts "\tid: #{c.id} #{c.name}"
-  end
-  puts '----'
   Concept.count.should eq ( concept_count.to_i + 1)
 end
 
