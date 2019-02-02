@@ -2,7 +2,7 @@
 
 class InstallmentsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:demo_complete]
-  before_action :demo_user, only: %i[ demo_complete ]
+  before_action :demo_user, only: %i[demo_complete]
 
   include Demoable
 
@@ -142,15 +142,13 @@ class InstallmentsController < ApplicationController
     end
   end
 
-
   def demo_complete
-    @title = t 'demo_title', orig: t( 'installments.title' )
+    @title = t 'demo_title', orig: t('installments.title')
     @project = get_demo_project
     @group = get_demo_group
 
-
     @installment = Installment.new(user_id: -1, assessment_id: -1,
-                                    group_id: @group.id)
+                                   group_id: @group.id)
     @factors = @project.factor_pack
     @members = @group.users
 

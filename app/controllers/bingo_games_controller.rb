@@ -1,17 +1,18 @@
 # frozen_string_literal: true
+
 require 'forgery'
 
 class BingoGamesController < ApplicationController
   layout 'admin', except: %i[review_candidates update_review_candidates
-                                          review_candidates_demo]
+                             review_candidates_demo]
   skip_before_action :authenticate_user!,
                      only: %i[review_candidates_demo
-                                      demo_update_review_candidates ]
+                              demo_update_review_candidates ]
   before_action :demo_user, only: %i[ review_candidates_demo
                                       demo_update_review_candidates ]
 
   before_action :set_bingo_game, only: %i[show edit update
-                                          destroy review_candidates 
+                                          destroy review_candidates
                                           update_review_candidates ]
 
   before_action :check_editor, except: %i[next diagnose react
@@ -82,28 +83,28 @@ class BingoGamesController < ApplicationController
                                 end_date: Date.today.end_of_day,
                                 individual_count: 10)
 
-    groups = 
-      [ Group.new(
+    groups =
+      [Group.new(
         id: -1,
         name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
         anon_name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
-        project_id: -1 ),
-        Group.new(
-        id: -2,
-        name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
-        anon_name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
-        project_id: -1 ),
-      ]
-
+        project_id: -1
+      ),
+       Group.new(
+         id: -2,
+         name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
+         anon_name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
+         project_id: -1
+       )]
 
     cl_map = {}
-    candidate_lists = [ ]
-    #working as a group
-    cl = CandidateList.new ( )
+    candidate_lists = []
+    # working as a group
+    cl = CandidateList.new ()
     cl.id = -1
     cl.is_group = true
     cl.group_id = -1
-    cl.group = groups[ 0 ]
+    cl.group = groups[0]
     cl.bingo_game_id = @bingo_game.id
     cl.bingo_game = @bingo_game
     candidate_lists << cl
@@ -119,11 +120,11 @@ class BingoGamesController < ApplicationController
       u.email = 'test@mailinator.com'
 
       groups[0].users << u
-      cl_map[ u ] = cl
+      cl_map[u] = cl
     end
-    #Working on their own
+    # Working on their own
     -4.downto(-7) do |index|
-      u = User.new( )
+      u = User.new
       u.id = index
       u.first_name = Forgery::Name.first_name
       u.anon_first_name = Forgery::Name.first_name
@@ -131,7 +132,7 @@ class BingoGamesController < ApplicationController
       u.anon_last_name = Forgery::Name.last_name
       u.email = 'test@mailinator.com'
 
-      cl = CandidateList.new( )
+      cl = CandidateList.new
       cl.id = index
       cl.is_group = false
       cl.user_id = u.id
@@ -141,165 +142,164 @@ class BingoGamesController < ApplicationController
       candidate_lists << cl
       @bingo_game.candidate_lists << cl
       groups[1].users << u
-      cl_map[ u ] = cl
+      cl_map[u] = cl
     end
 
     demo_concepts = get_demo_game_concepts
-    demo_concepts.rotate!( Random.rand( demo_concepts.count ) )
+    demo_concepts.rotate!(Random.rand(demo_concepts.count))
     users = cl_map.keys
 
-    candidates = [ ]
+    candidates = []
     0.downto(-66) do |index|
-      c = demo_concepts.rotate![ 0 ]
-      acceptable = Random.rand( ) < 0.5
+      c = demo_concepts.rotate![0]
+      acceptable = Random.rand < 0.5
       users.rotate!
-      u = users[ 0 ]
+      u = users[0]
       candidate = Candidate.new(
         id: index,
-        term: c[ 0 ],
-        definition: acceptable ? c[ 1 ] :
-          demo_concepts[ Random.rand( demo_concepts.count ) ][1 ],
+        term: c[0],
+        definition: acceptable ? c[1] :
+          demo_concepts[Random.rand(demo_concepts.count)][1],
         user: u,
         user_id: u.id
       )
-      cl_map[ u ].candidates << candidate
+      cl_map[u].candidates << candidate
       candidates << candidate
     end
 
     respond_to do |format|
-      format.json {
-        review_helper( 
+      format.json do
+        review_helper(
           bingo_game: @bingo_game,
           users: users,
           groups: groups,
           candidate_lists: candidate_lists,
           candidates: candidates
         )
-      }
+      end
       format.html { render :review_candidates }
     end
-
   end
 
   def review_candidates
     @title = t '.title'
     respond_to do |format|
-      format.json {
-        review_helper( 
+      format.json do
+        review_helper(
           bingo_game: @bingo_game,
           users: @bingo_game.users,
           groups: @bingo_game.groups,
           candidate_lists: @bingo_game.candidate_lists,
           candidates: @bingo_game.candidates
         )
-        
-      }
+      end
       format.html { render :review_candidates }
     end
-
   end
 
-  def review_helper bingo_game:, users:, groups:,
-                    candidate_lists:, candidates:
+  def review_helper(bingo_game:, users:, groups:,
+                    candidate_lists:, candidates:)
     render json: {
-      bingo_game: bingo_game.as_json( only:
-        [:id, :topic, :description, :status, :close_date]), 
-      users: users.as_json( only:
-        [:id, :first_name, :last_name, :email] ),
-      feedback_opts: CandidateFeedback.all.as_json( only:
-        [ :id, :name_en, :definition_en, :credit ] ),
-      groups: groups.as_json( only:
-        [ :id, :name ] ),
-      candidate_lists: candidate_lists.as_json( only:
-        [ :id, :is_group, :group_id ] ),
+      bingo_game: bingo_game.as_json(only:
+        %i[id topic description status close_date]),
+      users: users.as_json(only:
+        %i[id first_name last_name email]),
+      feedback_opts: CandidateFeedback.all.as_json(only:
+        %i[id name_en definition_en credit]),
+      groups: groups.as_json(only:
+        %i[id name]),
+      candidate_lists: candidate_lists.as_json(only:
+        %i[id is_group group_id]),
       candidates: candidates.as_json(
-        include: {concept: { only: :name } },
-        only: [ :id, :term, :definition, :concept_id, 
-          :candidate_feedback_id, :candidate_list_id,
-          :filtered_consistent, :user_id ]
-          ) 
+        include: { concept: { only: :name } },
+        only: %i[id term definition concept_id
+                 candidate_feedback_id candidate_list_id
+                 filtered_consistent user_id]
+      )
     }
   end
 
   def demo_update_review_candidates
     response = {
-     notice: 'demo done!',
+      notice: 'demo done!',
       reviewed: params[:reviewed]
     }
     respond_to do |format|
-      format.json {render json: response}
+      format.json { render json: response }
     end
   end
 
   def update_review_candidates
     bingo_id = params[:id].to_i
     response = {}
-    unless bingo_id < 1
-      @bingo_game = BingoGame.find( bingo_id )
-      #Security check to support demos
-      redirect_to root_path unless @current_user.present? &&
-                            @bingo_game.course.instructors.include?( @current_user )
+    if bingo_id < 1
+      response[:notice] = 'Error!'
+      response[:reviewed] = params[:reviewed]
 
-      candidates = params[ :candidates ]
+    else
+      @bingo_game = BingoGame.find(bingo_id)
+      # Security check to support demos
+      redirect_to root_path unless @current_user.present? &&
+                                   @bingo_game.course.instructors.include?(@current_user)
+
+      candidates = params[:candidates]
       entered_concepts = []
       candidates.each do |candidate|
-        if candidate[:concept].present? && candidate[:concept][:name].present?
-          concept_name = candidate[:concept][:name]
-          concept_name = concept_name.split.map(&:capitalize).*' '
-          entered_concepts << concept_name
-        end
+        next unless candidate[:concept].present? && candidate[:concept][:name].present?
+
+        concept_name = candidate[:concept][:name]
+        concept_name = concept_name.split.map(&:capitalize).*' '
+        entered_concepts << concept_name
       end
 
       concept_map = {}
-      Concept.where( name: entered_concepts ).each do |c|
+      Concept.where(name: entered_concepts).each do |c|
         concept_map[c.name] = c
       end
 
       feedback_map = {}
       CandidateFeedback.all.each do |cf|
-        feedback_map[ cf.id ] = cf
+        feedback_map[cf.id] = cf
       end
 
       candidate_map = {}
       candidates.each do |c|
-        candidate_map[ c[:id ] ] = c
+        candidate_map[c[:id]] = c
       end
 
       # Process the data
       existing_concepts = {}
 
       @bingo_game.candidates.completed
-                 .includes(:candidate_feedback,:concept )
+                 .includes(:candidate_feedback, :concept)
                  .find_all do |candidate|
-        entered_candidate = candidate_map[ candidate.id ]
+        entered_candidate = candidate_map[candidate.id]
 
-        unless entered_candidate.nil? or entered_candidate[:candidate_feedback_id].nil?
+        next if entered_candidate.nil? || entered_candidate[:candidate_feedback_id].nil?
 
-          candidate.candidate_feedback =
-            feedback_map[ entered_candidate[:candidate_feedback_id ]]
-          
-          feedback_name = candidate.candidate_feedback.name_en
-          if (!feedback_name.start_with? 'Term:') &&
-              entered_candidate[:concept][:name].present?
-            concept_name = entered_candidate[:concept][:name]
-            concept_name = concept_name.split.map(&:capitalize).*' '
+        candidate.candidate_feedback =
+          feedback_map[entered_candidate[:candidate_feedback_id]]
 
-            concept = concept_map[ concept_name ]
-            if concept.nil?
-              concept = Concept.create( name: concept_name )
-              concept_map[ concept_name ] = concept
-            end
-            candidate.concept = concept
-          else
-            candidate.concept = nil
+        feedback_name = candidate.candidate_feedback.name_en
+        if (!feedback_name.start_with? 'Term:') &&
+           entered_candidate[:concept][:name].present?
+          concept_name = entered_candidate[:concept][:name]
+          concept_name = concept_name.split.map(&:capitalize).*' '
+
+          concept = concept_map[concept_name]
+          if concept.nil?
+            concept = Concept.create(name: concept_name)
+            concept_map[concept_name] = concept
           end
-          candidate.save
-          logger.debug candidate.errors.full_messages unless candidate.errors.empty?
-
+          candidate.concept = concept
+        else
+          candidate.concept = nil
         end
+        candidate.save
+        logger.debug candidate.errors.full_messages unless candidate.errors.empty?
       end
 
-      #Send notifications to students
+      # Send notifications to students
       @bingo_game.reviewed = params['reviewed']
       if @bingo_game.reviewed && !@bingo_game.students_notified
         @bingo_game.course.enrolled_students.find_all do |student|
@@ -318,15 +318,10 @@ class BingoGamesController < ApplicationController
         response[:notice] = (t 'bingo_games.review_problems')
         response[:reviewed] = false
       end
-    else
-      response[:notice] = 'Error!'
-      response[:reviewed] = params[:reviewed]
-      
     end
     respond_to do |format|
-      format.json {render json: response}
+      format.json { render json: response }
     end
-
   end
 
   def destroy

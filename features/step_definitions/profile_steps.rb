@@ -14,7 +14,7 @@ Then /^the user sees the experience in the history$/ do
 end
 
 Then /^user sees the Bingo! in the history$/ do
-  click_link_or_button "History"
+  click_link_or_button 'History'
   page.should have_content(@bingo.get_name(false))
 end
 

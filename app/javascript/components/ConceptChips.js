@@ -4,69 +4,61 @@ import { withTheme } from '@material-ui/core/styles';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
-
 const theme = createMuiTheme( );
-
 class ConceptChips extends React.Component {
-
-  constructor( props ){
-    super( props );
-    this.state = {
-      concepts: [ ],
-    }
-  }
-
-  getConcepts(){
-    fetch( this.props.url + '.json' , {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accepts': 'application/json',
-        'X-CSRF-Token': this.props.token } })
-      .then( (response) => {
-        if( response.ok ){
-          return response.json( );
-        } else {
-          console.log( 'error' );
-          return [
-            { id: -1, name: 'no data' }
-          ];
-        }
-      } )
-      .then( (data) => {
-        this.setState( {
-          concepts: data
-        });
-      } );
-
-  }
-
-  componentDidMount( ){
-    this.getConcepts();
-  }
-  render () {
-    var c = [ { id: 1, name: 'nothing' } ];
-
+constructor( props ){
+super( props );
+this.state = {
+concepts: [ ],
+}
+}
+getConcepts(){
+fetch( this.props.url + '.json' , {
+method: 'GET',
+credentials: 'include',
+headers: {
+'Content-Type': 'application/json',
+'Accepts': 'application/json',
+'X-CSRF-Token': this.props.token } })
+.then( (response) => {
+if( response.ok ){
+return response.json( );
+} else {
+console.log( 'error' );
+return [
+{ id: -1, name: 'no data' }
+];
+}
+} )
+.then( (data) => {
+this.setState( {
+concepts: data
+});
+} );
+}
+componentDidMount( ){
+this.getConcepts();
+}
+render () {
+var c = [ { id: 1, name: 'nothing' } ];
+return (
+<MuiThemeProvider theme={theme}>
+  <Paper>
+    {this.state.concepts.map( chip => {
     return (
-      <MuiThemeProvider theme={theme}>
-      <Paper>
-        {this.state.concepts.map( chip => {
-          return (
-          <Chip
+    <Chip
             key={chip.id}
             label={chip.name}
           />
-          );
-        })}
-      </Paper>
-      </MuiThemeProvider>
-    );
+      );
+      })}
+    </Paper>
+  </MuiThemeProvider>
+  );
   }
-}
-
-ConceptChips.propTypes = {
+  }
+  ConceptChips.propTypes = {
   token: PropTypes.string,
   utl: PropTypes.string
-};
-export default withTheme()(ConceptChips);
+  };
+  export default withTheme()(ConceptChips);

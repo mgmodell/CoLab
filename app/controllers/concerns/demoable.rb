@@ -1,4 +1,6 @@
-module Demoable 
+# frozen_string_literal: true
+
+module Demoable
   extend ActiveSupport::Concern
 
   def demo_user
@@ -32,7 +34,6 @@ module Demoable
       @group.users << u
     end
     @group
-
   end
 
   class UserStub
@@ -58,7 +59,7 @@ module Demoable
 
   def get_demo_game_concepts
     [['Fun', 'Enjoying an activity'],
-     ['Play',  'engaging in an activity for fun'],
+     ['Play', 'engaging in an activity for fun'],
      ['Challenge', 'a task to test abilities'],
      ['Game Mechanics', 'methods to interact with activity state'],
      ['Game Elements', 'mechanisms for interacting with a game'],
@@ -104,7 +105,6 @@ module Demoable
      ['Experience Design', 'focusing on the user rather than the technology'],
      ['Competition', 'a contest between two or more people'],
      ['Learner Engagement', 'student involvement in education activies'],
-     ['Active Learning', 'when students are involved in the process']
-     ]
+     ['Active Learning', 'when students are involved in the process']]
   end
 end

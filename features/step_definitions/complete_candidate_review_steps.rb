@@ -65,7 +65,7 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
   @user = temp_user
 end
 
-Then /^the user sees (\d+) candidate items for review$/  do |candidate_count|
+Then /^the user sees (\d+) candidate items for review$/ do |candidate_count|
   page.all(:xpath, "//select[contains(@id, 'feedback_4_')]")
       .count.should eq candidate_count.to_i
   page.all(:xpath, "//input[contains(@id, 'concept_4_')]")
@@ -73,12 +73,11 @@ Then /^the user sees (\d+) candidate items for review$/  do |candidate_count|
 end
 
 Given /^the user sees review items for all the expected candidates$/ do
-
   @bingo.candidates.completed.each do |candidate|
     page.all(:xpath, "//input[@id='concept_4_#{candidate.id}']").count.should eq 1
     page.all(:xpath,
-            "//select[@id='feedback_4_#{candidate.id}']",
-            visible: false).count.should eq 1
+             "//select[@id='feedback_4_#{candidate.id}']",
+             visible: false).count.should eq 1
   end
 end
 
@@ -89,13 +88,12 @@ Then /^the user waits while seeing "([^"]*)"$/ do |wait_msg|
     counter += 1
     break if counter > 60
   end
-
 end
 
 Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_type|
   concept_count = Concept.count
-  concepts = concept_count < 2 ? [ ] :
-              Concept.where( 'id > 0').collect(&:name)
+  concepts = concept_count < 2 ? [] :
+              Concept.where('id > 0').collect(&:name)
 
   concept_count.upto (concept_count + 3) do |counter|
     concepts << 'concept ' + counter.to_s
@@ -118,11 +116,11 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
           .set(concept)
     end
     page.find(:xpath,
-        "//select[@id='feedback_4_#{candidate.id}']",
-        visible: :all).click
+              "//select[@id='feedback_4_#{candidate.id}']",
+              visible: :all).click
     page.find(:xpath,
-        "//select[@id='feedback_4_#{candidate.id}']//option[@value='#{feedback.id}']",
-        visible: :all).click
+              "//select[@id='feedback_4_#{candidate.id}']//option[@value='#{feedback.id}']",
+              visible: :all).click
   end
 end
 
@@ -134,7 +132,7 @@ Given /^the saved reviews match the list$/ do
 end
 
 Given /^the user checks "([^"]*)"$/ do |checkbox_name|
-  all(:xpath, "//div[contains(.,'#{checkbox_name}')]" ).last.click
+  all(:xpath, "//div[contains(.,'#{checkbox_name}')]").last.click
 end
 
 Given /^the user is the most recently created user$/ do
@@ -151,7 +149,6 @@ Then /^there will be (\d+) concepts$/ do |concept_count|
   Concept.count.should eq ( concept_count.to_i + 1)
 end
 
-Then("the user navigates to {string}") do |location|
+Then('the user navigates to {string}') do |location|
   click_link_or_button location
 end
-

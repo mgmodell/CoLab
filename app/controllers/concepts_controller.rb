@@ -50,15 +50,15 @@ class ConceptsController < ApplicationController
                       params[:search_string].strip.downcase :
                       ''
 
-    if 0 != bingo_game_id || search_string.length > 2
+    if bingo_game_id != 0 || search_string.length > 2
       index = 0
       demo_concepts = get_demo_game_concepts
       demo_concepts.each do |concept|
         index -= 1
         concepts << Concept.new(id: index, name: concept[0])
       end
-      if 0 == bingo_game_id
-        concepts.reject! {|c| ! c.name.downcase.include? search_string }
+      if bingo_game_id == 0
+        concepts.select! { |c| c.name.downcase.include? search_string }
       end
     end
 
@@ -78,7 +78,7 @@ class ConceptsController < ApplicationController
       if @current_user.is_admin? || @current_user.is_instructor?
         substring = params[:search_string].strip
         criteria = 'true ?'
-        concepts = [ ]
+        concepts = []
         if substring.length > 2
           criteria = 'concepts.name LIKE ?'
           substring = "%#{substring}%"
@@ -139,5 +139,4 @@ class ConceptsController < ApplicationController
   def concept_params
     params.require(:concept).permit(:name)
   end
-
 end

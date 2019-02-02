@@ -9,41 +9,35 @@ import Button from '@material-ui/core/Button';
 import GridList, {GridListTile} from '@material-ui/core/GridList'
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-
 const styles = createMuiTheme( {
-  typography: {
-    useNextVariants: true,
-  }
-
+typography: {
+useNextVariants: true,
+}
 });
-
 class BingoBuilder extends React.Component {
-
-  constructor( props ){
-    super( props );
-    var endDate = new Date( this.props.endDateStr );
-    this.state = {
-      saveStatus: '',
-      concepts: [ ],
-      endDate: endDate,
-      board: {
-        initialised: false,
-        bingo_cells: [ ],
-        iteration: 0,
-        bingo_game: {
-          size: 5,
-          topic: 'no game',
-        },
-      }
-    }
-  }
-
-  randomizeTiles( ){
-    var selectedConcepts = {};
-    var iteration = this.state.board.iteration + 1;
-    var counter = 0;
-    
-    while( Object.keys( selectedConcepts ).length <
+constructor( props ){
+super( props );
+var endDate = new Date( this.props.endDateStr );
+this.state = {
+saveStatus: '',
+concepts: [ ],
+endDate: endDate,
+board: {
+initialised: false,
+bingo_cells: [ ],
+iteration: 0,
+bingo_game: {
+size: 5,
+topic: 'no game',
+},
+}
+}
+}
+randomizeTiles( ){
+var selectedConcepts = {};
+var iteration = this.state.board.iteration + 1;
+var counter = 0;
+while( Object.keys( selectedConcepts ).length <
               this.state.board.bingo_cells.length &&
               counter < 100 ){
       counter ++;
@@ -95,177 +89,162 @@ class BingoBuilder extends React.Component {
         'Accepts': 'application/json',
         'X-CSRF-Token': this.props.token } })
       .then( (response) => {
-        if( response.ok ){
-          return response.json( );
-        } else {
-          console.log( 'error' );
-          return [
-            { id: -1, name: 'no data' }
-          ];
-        }
-      } )
-      .then( (data) => {
-        this.setState( {
-          concepts: data
-        }, callbackFunc );
-      } );
-
+  if( response.ok ){
+  return response.json( );
+  } else {
+  console.log( 'error' );
+  return [
+  { id: -1, name: 'no data' }
+  ];
   }
-
+  } )
+  .then( (data) => {
+  this.setState( {
+  concepts: data
+  }, callbackFunc );
+  } );
+  }
   getBoard( ){
-    fetch( this.props.boardUrl + '.json', {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accepts': 'application/json',
-        'X-CSRF-Token': this.props.token }
-      } )
-      .then( (response) => {
-        if( response.ok ){
-          return response.json( );
-        } else {
-          console.log( 'error' );
-          return [
-            { id: -1, name: 'no data' }
-          ];
-        }
-      } )
-      .then( (data) => {
-        data.initialised = data.id != null;
-        data.iteration = 0;
-        this.setState( {
-          board: data,
-        } );
-        //}, this.randomizeTiles );
-      } );
-
+  fetch( this.props.boardUrl + '.json', {
+  method: 'GET',
+  credentials: 'include',
+  headers: {
+  'Content-Type': 'application/json',
+  'Accepts': 'application/json',
+  'X-CSRF-Token': this.props.token }
+  } )
+  .then( (response) => {
+  if( response.ok ){
+  return response.json( );
+  } else {
+  console.log( 'error' );
+  return [
+  { id: -1, name: 'no data' }
+  ];
   }
-
+  } )
+  .then( (data) => {
+  data.initialised = data.id != null;
+  data.iteration = 0;
+  this.setState( {
+  board: data,
+  } );
+  //}, this.randomizeTiles );
+  } );
+  }
   saveBoard( ){
-    var board = this.state.board;
-    board.bingo_cells_attributes = board.bingo_cells;
-    delete board.bingo_cells;
-    fetch( this.props.boardSaveUrl + '.json', {
-      method: 'PATCH',
-      credentials: 'include',
-      body: JSON.stringify( { bingo_board: this.state.board } ),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accepts': 'application/json',
-        'X-CSRF-Token': this.props.token },
-      } )
-      .then( (response) => {
-        if( response.ok ){
-          return response.json( );
-        } else {
-          console.log( 'error' );
-          return { };
-        }
-      } )
-      .then( (data) => {
-        data.initialised = true;
-        data.iteration = 0;
-
-        if( data.id > 0 ){
-          this.setState( {
-            saveStatus: 'Your board has been saved',
-            board: data,
-          } );
-        } else if( data.id = -42 ){
-          board.bingo_cells = board.bingo_cells_attributes;
-          board.id = -42
-          board.iteration = 0
-          this.setState( {
-            saveStatus: 'DEMO: Your board would have been saved',
-            board: board,
-          } );
-
-        } else {
-          board.bingo_cells = board.bingo_cells_attributes;
-          this.setState( {
-            saveStatus: 'Save failed. Please try again or contact support',
-            board: board,
-          } );
-
-        }
-      } );
+  var board = this.state.board;
+  board.bingo_cells_attributes = board.bingo_cells;
+  delete board.bingo_cells;
+  fetch( this.props.boardSaveUrl + '.json', {
+  method: 'PATCH',
+  credentials: 'include',
+  body: JSON.stringify( { bingo_board: this.state.board } ),
+  headers: {
+  'Content-Type': 'application/json',
+  'Accepts': 'application/json',
+  'X-CSRF-Token': this.props.token },
+  } )
+  .then( (response) => {
+  if( response.ok ){
+  return response.json( );
+  } else {
+  console.log( 'error' );
+  return { };
   }
-
+  } )
+  .then( (data) => {
+  data.initialised = true;
+  data.iteration = 0;
+  if( data.id > 0 ){
+  this.setState( {
+  saveStatus: 'Your board has been saved',
+  board: data,
+  } );
+  } else if( data.id = -42 ){
+  board.bingo_cells = board.bingo_cells_attributes;
+  board.id = -42
+  board.iteration = 0
+  this.setState( {
+  saveStatus: 'DEMO: Your board would have been saved',
+  board: board,
+  } );
+  } else {
+  board.bingo_cells = board.bingo_cells_attributes;
+  this.setState( {
+  saveStatus: 'Save failed. Please try again or contact support',
+  board: board,
+  } );
+  }
+  } );
+  }
   printBoard( ){
-
-    const input = document.getElementById( 'bingoBoard' );
-    html2canvas( input )
-      .then( (canvas) => {
-        const imgData = canvas.toDataURL( 'image/png' );
-        const pdf = new jsPDF( );
-        pdf.addImage( imgData, 'JPEG', 0, 0 );
-        pdf.save( 'bingoBoard.pdf' );
-      } )
-    ;
-
+  const input = document.getElementById( 'bingoBoard' );
+  html2canvas( input )
+  .then( (canvas) => {
+  const imgData = canvas.toDataURL( 'image/png' );
+  const pdf = new jsPDF( );
+  pdf.addImage( imgData, 'JPEG', 0, 0 );
+  pdf.save( 'bingoBoard.pdf' );
+  } )
+  ;
   }
-
   componentDidMount( ){
-    //Let's retrieve any existing board
-    this.getConcepts( this.getBoard );
+  //Let's retrieve any existing board
+  this.getConcepts( this.getBoard );
   }
-
   render () {
-    const saveBtn = this.state.board.initialised &&
-    (this.state.board.iteration > 0 ) &&
-    (this.state.endDate > new Date( ) ) ? (
-          <Button
+  const saveBtn = this.state.board.initialised &&
+  (this.state.board.iteration > 0 ) &&
+  (this.state.endDate > new Date( ) ) ? (
+  <Button
             variant="contained"
             onClick={() => this.saveBoard()}>
-            Save
-          </Button>
-    ) : null;
-
-    const printBtn = this.state.board.id != null &&
-      (this.state.board.iteration == 0 )? (
-          <Button
+    Save
+  </Button>
+  ) : null;
+  const printBtn = this.state.board.id != null &&
+  (this.state.board.iteration == 0 )? (
+  <Button
             variant="contained"
             onClick={() => this.printBoard()}>
-            Print
-          </Button>
-    ) : null;
-
-    return (
-      <MuiThemeProvider theme={styles}>
-        <Paper square={false}>
-          <Paper>
-            {this.state.concepts.map( chip => {
-              return (
-                <Chip
+    Print
+  </Button>
+  ) : null;
+  return (
+  <MuiThemeProvider theme={styles}>
+    <Paper square={false}>
+      <Paper>
+        {this.state.concepts.map( chip => {
+        return (
+        <Chip
                   key={chip.id}
                   label={chip.name}
                 />
-              );
-            })}
-          </Paper>
-          <br/>
-          <Button
+          );
+          })}
+        </Paper>
+        <br/>
+        <Button
             variant="contained"
             onClick={() => this.randomizeTiles()}>
-            Generate New Board
-          </Button>&nbsp;
-          {saveBtn}
-          {printBtn}
-          <div id='bingoBoard' className="mt4">
-            <BingoBoard board={this.state.board} />
-          </div>
-        </Paper>
-      </MuiThemeProvider>
+          Generate New Board
+        </Button>&nbsp;
+        {saveBtn}
+        {printBtn}
+        <div id='bingoBoard' className="mt4">
+          <BingoBoard board={this.state.board} />
+        </div>
+      </Paper>
+    </MuiThemeProvider>
     );
-  }
-}
-
-BingoBuilder.propTypes = {
-  endDateStr: PropTypes.string,
-  token: PropTypes.string,
-  boardUrl: PropTypes.string,
-  conceptsUrl: PropTypes.string,
-  boardSaveUrl: PropTypes.string
-};
-export default withTheme()(BingoBuilder);
+    }
+    }
+    BingoBuilder.propTypes = {
+    endDateStr: PropTypes.string,
+    token: PropTypes.string,
+    boardUrl: PropTypes.string,
+    conceptsUrl: PropTypes.string,
+    boardSaveUrl: PropTypes.string
+    };
+    export default withTheme()(BingoBuilder);

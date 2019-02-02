@@ -196,5 +196,4 @@ class BingoBoardsController < ApplicationController
   def play_bingo_board_params
     params.require(:bingo_board).permit(bingo_cells: %i[id selected])
   end
-
 end

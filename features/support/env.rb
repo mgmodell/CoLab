@@ -9,11 +9,10 @@
 require 'cucumber/rails'
 require 'selenium/webdriver'
 
-
 Capybara.register_driver :headless_firefox do |app|
-  browser_options = Selenium::WebDriver::Firefox::Options.new()
+  browser_options = Selenium::WebDriver::Firefox::Options.new
   browser_options.args << '--headless'
-Capybara::Selenium::Driver.new(
+  Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
     options: browser_options
@@ -33,8 +32,8 @@ Capybara.register_driver(:headless_chrome) do |app|
 end
 
 Capybara.javascript_driver = :headless_chrome
-#Capybara.javascript_driver = :headless_firefox
-#Capybara.javascript_driver = :selenium
+# Capybara.javascript_driver = :headless_firefox
+# Capybara.javascript_driver = :selenium
 Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false
 
@@ -135,7 +134,7 @@ end
 
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
-  total_time = scenario_times.values.inject(0){|sum,x| sum + x }
+  total_time = scenario_times.values.inject(0) { |sum, x| sum + x }
   puts "Aggregate Testing Time: #{total_time}"
   puts "------------- Top #{max_scenarios} slowest scenarios -------------"
   sorted_times = scenario_times.sort { |a, b| b[1] <=> a[1] }
