@@ -22,8 +22,6 @@ Rails.application.routes.draw do
         as: :activate_experience
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate', 
         as: :activate_bingo_game
-    get 'verify_bingo_win/:id/:verified' => 'bingo_boards#verify_win',
-        as: 'verify_bingo_win'
     resources :courses, :projects, :experiences, :bingo_games, :schools,
               :consent_forms
     resources :concepts, except: [:destroy, :create]
@@ -48,8 +46,8 @@ Rails.application.routes.draw do
     get 'concepts_for_game/:id' => 'concepts#concepts_for_game',
         as: :bingo_concepts,
         constraints: ->(req) { req.format == :json }
-    post 'play_board/:id' => 'bingo_boards#play_board', as: 'play_bingo'
-    #Demo support functions
+    get 'worksheet/:bingo_game_id' => 'bingo_boards#worksheet_for_game',
+        as: :worksheet_for_bingo
   end
 
   post 'infra/quote' => 'home#get_quote', as: :get_quote

@@ -6,6 +6,7 @@ class BingoBoard < ApplicationRecord
   has_many :bingo_cells, inverse_of: :bingo_board, dependent: :destroy
 
   has_many :concepts, through: :bingo_cells
+  enum board_type: [ :playable, :worksheet ]
 
   accepts_nested_attributes_for :bingo_cells
 end

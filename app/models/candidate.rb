@@ -14,6 +14,8 @@ class Candidate < ApplicationRecord
       .where('candidate_lists.is_group = 0 OR candidate_lists.group_id IS NOT NULL')
   }
   scope :reviewed, -> { where('candidate_feedback_id > 0 ') }
+  scope :acceptable, -> { where( candidate_feedback_id: 1) }
+
   before_save :clean_data, :update_counts
   validate :concept_assigned
 

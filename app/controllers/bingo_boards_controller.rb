@@ -15,7 +15,6 @@ class BingoBoardsController < ApplicationController
     @title = t '.title'
     respond_to do |format|
       format.json { render json: @bingo_board }
-      format.html { render :show }
     end
   end
 
@@ -41,7 +40,7 @@ class BingoBoardsController < ApplicationController
   def board_for_game
     bingo_game_id = params[:bingo_game_id]
     bingo_game = BingoGame .find(params[:bingo_game_id])
-    bingo_board = bingo_game.bingo_boards
+    bingo_board = bingo_game.bingo_boards.playable
                             .includes(:bingo_game, bingo_cells: :concept)
                             .where(user_id: @current_user.id).take
     board_for_game_helper bingo_board: bingo_board,
@@ -88,6 +87,54 @@ class BingoBoardsController < ApplicationController
     end
   end
 
+  def worksheet_for_game
+    bingo_game_id = params[:bingo_game_id]
+    bingo_game = BingoGame .find(params[:bingo_game_id])
+    bingo_board = bingo_game.bingo_boards.worksheet
+                            .includes(:bingo_game, bingo_cells: :concept)
+                            .where(user_id: @current_user.id).take
+
+    candidates = bingo_game.candidates.acceptable.to_a
+    #Assuming 10 items
+    items = {}
+
+    while items.length < 10 && !candidates.empty? do
+      candidate = candidates.sample
+      items[ candidate.concept ] = candidate
+      candidates.delete( candidate )
+    end
+
+    board = BingoBoard.new(
+      iteration: 0,
+      user_id: @current_user.id,
+      user: @current_user,
+      board_type: :worksheet
+    )
+
+    concepts = bingo_game.concepts.to_a
+    if items.length == 10 && concepts.size > 25
+      cells = items.values
+      while cells.length <= 24 do
+        c = concepts.delete( concepts.sample )
+        if items[ c ].nil?
+          cells << c
+        end
+      end
+      0.upto(bingo_game.size-1) do |row|
+        0.upto(bingo_game.size-1) do |column|
+          c = cells[ sample ]
+          board.build_bingo_cell(
+            row: row,
+            column: column,
+            concept: c.class == Concept ? c : c.concept,
+            candidate: c.class == Concept ? nil : c
+          )
+        end
+      end
+    end
+    
+  end
+
   # GET /admin/bingo_board
   def index
     @title = t '.title'
@@ -108,7 +155,8 @@ class BingoBoardsController < ApplicationController
       id: -42,
       iteration: 0,
       user_id: @current_user.id,
-      user: @current_user
+      user: @current_user,
+      board_type: :playable
     )
     @board.assign_attributes(bingo_board_params)
 
@@ -146,6 +194,8 @@ class BingoBoardsController < ApplicationController
     end
   end
 
+  private
+
   def update_responder
     respond_to do |format|
       format.json do
@@ -160,25 +210,6 @@ class BingoBoardsController < ApplicationController
       end
     end
   end
-
-  def play_board
-    @title = t '.title'
-    # Build game play
-    if @bingo_board.update(play_bingo_board_params)
-      redirect_to bingo_board_path(@bingo_board), notice: t('bingo_boards.update_success')
-    else
-      respond_to do |format|
-        format.json { render json: @bingo_board }
-        format.html { render :edit }
-      end
-    end
-  end
-
-  def verify_win
-    verified = params[:verified]
-  end
-
-  private
 
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_board
