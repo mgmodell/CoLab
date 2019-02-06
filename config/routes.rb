@@ -105,6 +105,9 @@ Rails.application.routes.draw do
     patch 'candidates_review/-11' => 'bingo_games#demo_update_review_candidates',
         as: :demo_update_bingo_candidates_review,
         constraints: ->(req) { req.format == :json }
+    get 'worksheet/-42' => 'bingo_boards#demo_worksheet_for_game',
+        as: :worksheet_for_bingo_demo,
+        constraints: ->(req) { req.format == :pdf }
   end
 
   get 'installments/new/:assessment_id/:group_id' => 'installments#new', as: :new_installment

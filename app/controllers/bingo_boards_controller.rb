@@ -3,11 +3,12 @@
 class BingoBoardsController < ApplicationController
   before_action :set_bingo_board,
                 except: %i[index update board_for_game board_for_game_demo
-                           update_demo]
+                           update_demo demo_worksheet_for_game]
   skip_before_action :authenticate_user!,
-                     only: %i[board_for_game_demo update_demo]
+                     only: %i[board_for_game_demo update_demo
+                     demo_worksheet_for_game]
   before_action :demo_user,
-                only: %i[board_for_game_demo update_demo]
+                only: %i[board_for_game_demo update_demo demo_worksheet_for_game]
 
   include Demoable
 
@@ -87,11 +88,57 @@ class BingoBoardsController < ApplicationController
     end
   end
 
+  def demo_worksheet_for_game
+    bingo_game = get_demo_bingo_game
+    concepts = get_demo_game_concepts
+
+    wksheet = BingoBoard.new(
+      iteration: 0,
+      user_id: @current_user.id,
+      user: @current_user,
+      bingo_cells: [],
+      bingo_game: bingo_game,
+      board_type: :worksheet
+    )
+
+    index = 0
+    star = ['*', 'free space']
+    0.upto(bingo_game.size-1) do |row|
+      0.upto(bingo_game.size-1) do |column|
+        c = star
+        is_answer = false
+        unless 3 == row && 3 == column
+          c = concepts.delete( concepts.sample )
+          is_answer = ( row == column ) ||
+                      ( 5 == ( row + column ) ) ||
+                      ( 1 == ( row + column ) ) 
+        end
+        wksheet.bingo_cells << BingoCell.new(
+          row: row,
+          column: column,
+          concept: Concept.new( name: c[ 0 ] )
+        )
+        if is_answer
+          cell = wksheet.bingo_cells.last
+          cell.candidate = Candidate.new( definition: c[ 1 ] )
+          cell.indeks = index+=1
+        end
+      end
+    end
+
+    respond_to do |format|
+      format.pdf do
+        pdf = WorksheetPdf.new( wksheet )
+        send_data pdf.render, filename: 'demo_bingo_worksheet.pdf', type: 'application/pdf'
+      end
+    end
+  end
+
   def worksheet_for_game
     bingo_game_id = params[:bingo_game_id]
     bingo_game = BingoGame .find(params[:bingo_game_id])
     bingo_board = bingo_game.bingo_boards.worksheet
-                            .includes(:bingo_game, bingo_cells: :concept)
+                            .includes(:bingo_game, bingo_cells: [ :concept, :candidate ] )
                             .where(user_id: @current_user.id).take
 
     candidates = bingo_game.candidates.acceptable.to_a
@@ -104,7 +151,7 @@ class BingoBoardsController < ApplicationController
       candidates.delete( candidate )
     end
 
-    board = BingoBoard.new(
+    wksheet = BingoBoard.new(
       iteration: 0,
       user_id: @current_user.id,
       user: @current_user,
@@ -114,25 +161,39 @@ class BingoBoardsController < ApplicationController
     concepts = bingo_game.concepts.to_a
     if items.length == 10 && concepts.size > 25
       cells = items.values
-      while cells.length <= 24 do
+      while cells.length < 24 do
         c = concepts.delete( concepts.sample )
         if items[ c ].nil?
           cells << c
         end
       end
+      index = 0
+      star = Concept.new( id: 0, name: '*' )
       0.upto(bingo_game.size-1) do |row|
         0.upto(bingo_game.size-1) do |column|
-          c = cells[ sample ]
-          board.build_bingo_cell(
+          c = star
+          unless 3 == row && 3 == column
+            c = cells.delete( cells.sample )
+          end
+          wksheet.build_bingo_cell(
             row: row,
             column: column,
             concept: c.class == Concept ? c : c.concept,
-            candidate: c.class == Concept ? nil : c
+            candidate: c.class == Concept ? nil : c,
+            indeks: c.class == Concept ? nil : index+=1
           )
         end
       end
     end
-    
+    wksheet.save
+    logger.debug wksheet.errors.full_messages unless wksheet.errors.empty?
+
+    respond_to do |format|
+      format.pdf do
+        pdf = Prawn::Document.new
+        send_data pdf.render, filename: 'bingo_wksheet.pdf', type: 'application/pdf'
+      end
+    end
   end
 
   # GET /admin/bingo_board

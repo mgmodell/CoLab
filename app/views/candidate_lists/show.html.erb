@@ -17,6 +17,7 @@
     conceptsUrl: bingo_concepts_demo_path( -42 ),
     boardUrl: board_for_game_demo_path( -42 ),
     boardSaveUrl: update_board_demo_path( -42 ),
+    worksheetUrl: worksheet_for_bingo_demo_path,
     token: form_authenticity_token } %>
   <% else %>
     <%= react_component "BingoBuilder", {
@@ -24,6 +25,7 @@
     conceptsUrl: bingo_concepts_path( @candidate_list.bingo_game_id ),
     boardUrl: board_for_game_path( @candidate_list.bingo_game_id ),
     boardSaveUrl: update_board_path( @candidate_list.bingo_game_id ),
+    worksheetUrl: worksheet_for_bingo_path( @candidate_list.bingo_game_id ),
     token: form_authenticity_token } %>
   <% end %>
   <br>

@@ -6,6 +6,7 @@ class Candidate < ApplicationRecord
   belongs_to :concept, inverse_of: :candidates,
                        optional: true, counter_cache: true
   belongs_to :user, inverse_of: :candidates
+  has_many :bingo_cells, inverse_of: :candidate
 
   default_scope { order(:filtered_consistent) }
   scope :completed, lambda {

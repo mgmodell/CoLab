@@ -4,6 +4,7 @@ import PropTypes from "prop-types"
 import { withTheme } from '@material-ui/core/styles';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
+import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import GridList, {GridListTile} from '@material-ui/core/GridList'
@@ -32,6 +33,7 @@ topic: 'no game',
 },
 }
 }
+this.getWorksheet = this.getWorksheet.bind( this )
 }
 randomizeTiles( ){
 var selectedConcepts = {};
@@ -178,6 +180,9 @@ while( Object.keys( selectedConcepts ).length <
   }
   } );
   }
+  getWorksheet( ){
+    open( this.props.worksheetUrl + '.pdf' );
+  }
   printBoard( ){
   const input = document.getElementById( 'bingoBoard' );
   html2canvas( input )
@@ -232,6 +237,9 @@ while( Object.keys( selectedConcepts ).length <
         </Button>&nbsp;
         {saveBtn}
         {printBtn}
+        <Link onClick={() => this.getWorksheet()}>
+          Worksheet
+        </Link>
         <div id='bingoBoard' className="mt4">
           <BingoBoard board={this.state.board} />
         </div>

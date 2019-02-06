@@ -36,6 +36,15 @@ module Demoable
     @group
   end
 
+  def get_demo_bingo_game
+    BingoGame.new(id: -11,
+                  topic: (t 'candidate_lists.demo_review_topic'),
+                  description: (t 'candidate_lists.demo_review_description'),
+                  end_date: Date.today.end_of_day,
+                  size: 5,
+                  individual_count: 10)
+  end
+
   class UserStub
     attr_accessor :id, :first_name, :last_name
     def name
@@ -80,25 +89,25 @@ module Demoable
      ['Game Dynamics', 'The behaviors that emerge from play'],
      ['Social Interaction', 'working with others'],
      ['Learning Gains', 'knowledge or skills gained from an experience'],
-     ['Learning Analytics', 'working with data about instructional
-     activity'],
-     ['Game Design Principles', 'guidelines for crafting playable
-     experiences'],
-     ['Learning Design', 'organizing content and activities to
-     facilitate understanding'],
+     ['Learning Analytics', 'working with data about instructional '\
+     'activity'],
+     ['Game Design Principles', 'guidelines for crafting playable '\
+     'experiences'],
+     ['Learning Design', 'organizing content and activities to '\
+     'facilitate understanding'],
      ['Gamified Learning', 'using game elements to enhance instruction'],
      ['Gameful', 'supporting game activities'],
-     ['Behavior Change', 'when knowledge and skills changes the way we
-     live'],
+     ['Behavior Change', 'when knowledge and skills changes the way '\
+     'we live'],
      ['Simulation', 'pretending to be an item or experience'],
      ['Chance', 'likelhood that an event will occur'],
      ['Surprise', 'an event that was unexpected'],
-     ['Reliability', 'when an action consistently achieves the same
-     outcome'],
+     ['Reliability', 'when an action consistently achieves the same '\
+     'outcome'],
      ['Validity', 'accurate interpretation of data'],
      ['Gamified Platform', 'performs a task enhanced by game elements'],
-     ['Learner Characteristics', 'knowing what your students know and
-     how they\'ll respond'],
+     ['Learner Characteristics', 'knowing what your students know and '\
+     'how they\'ll respond'],
      ['Educational Context', 'the environment in which students learn'],
      ['Learning Environment', 'the environment in which students learn'],
      ['Evidence-based', 'relying on collected data'],

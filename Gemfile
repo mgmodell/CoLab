@@ -50,6 +50,8 @@ gem 'kaminari'
 gem 'listen'
 gem 'omniauth-google-oauth2'
 gem 'paperclip', '~> 6.0.0'
+gem 'prawn'
+gem 'prawn-table'
 gem 'rails_12factor', group: :production
 gem 'react-rails'
 gem 'simple_calendar', '~> 2.0'
