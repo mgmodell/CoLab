@@ -5,7 +5,6 @@
   <div data-role="navbar">
     <ul>
       <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
-      <li><a href="#summary" data-ajax="false"><%= t :resp_summ %></a></li>
       <li><a href="#responses" data-ajax="false"><%= t :resp_data %></a></li>
     </ul>
   </div>
@@ -52,9 +51,6 @@
         url: bingo_concepts_path( id: @bingo_game.id ),
         token: form_authenticity_token } %>
 <%= link_to t( 'bingo_games.edit.title' ), edit_bingo_game_path(@bingo_game) %>
-</div>
-<div id="summary" class="ui-body-<%= theme_code %> ui-content">
-  <h2><%= t :resp_data %></h2>
 </div>
 <div id="responses" class="ui-body-<%= theme_code %> ui-content">
   <h2><%= t :resp_data %></h2>

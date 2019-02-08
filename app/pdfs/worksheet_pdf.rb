@@ -6,7 +6,7 @@ class WorksheetPdf
     @bingo_board = bingo_board
     header
     gen_bingo_board
-    definitions
+    render_clues if @bingo_board.worksheet?
   end
 
   def header
@@ -23,7 +23,7 @@ class WorksheetPdf
 
   end
 
-  def definitions
+  def render_clues
     items = [ ]
     @bingo_board.bingo_cells.each do |bc|
       items << [ bc.indeks, bc.candidate.definition ] unless bc.candidate.nil?

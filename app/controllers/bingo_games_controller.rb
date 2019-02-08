@@ -77,11 +77,7 @@ class BingoGamesController < ApplicationController
   def review_candidates_demo
     @title = t('demo_title', orig:
       t('bingo_games.review_candidates.title'))
-    @bingo_game = BingoGame.new(id: -11,
-                                topic: (t 'candidate_lists.demo_review_topic'),
-                                description: (t 'candidate_lists.demo_review_description'),
-                                end_date: Date.today.end_of_day,
-                                individual_count: 10)
+    @bingo_game = get_demo_bingo_game
 
     groups =
       [Group.new(
