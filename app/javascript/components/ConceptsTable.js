@@ -119,7 +119,7 @@ class ConceptsTable extends React.Component {
   };
 
   colSort = function( event ) {
-    let tmp = this.state.concepts_raw
+    let tmpArray = this.state.concepts_raw
     let direction = SortDirection.DESC
     let mod = 1
     if( ( event.sortBy == this.state.sortBy ) &&
@@ -127,11 +127,11 @@ class ConceptsTable extends React.Component {
         direction = SortDirection.ASC
         mod = -1
     }
-    tmp.sort( (a,b) => {
+    tmpArray.sort( (a,b) => {
       return mod * a[event.sortBy].localeCompare( b[event.sortBy] )
     })
     this.setState({
-      concepts: tmp,
+      concepts: tmpArray,
       sortDirection: direction,
       sortBy: event.sortBy,
     })

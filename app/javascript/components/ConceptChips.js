@@ -4,7 +4,12 @@ import { withTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
-const theme = createMuiTheme();
+
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+});
 class ConceptChips extends React.Component {
   constructor(props) {
     super(props);

@@ -20,9 +20,11 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TablePagination from "@material-ui/core/TablePagination";
 import Typography from "@material-ui/core/Typography";
 import ViewColumnRounded from "@material-ui/icons/ViewColumnRounded";
+import { SortDirection } from "react-virtualized";
 import ColumnMenu from "../components/ColumnMenu";
 import SelectFrom from "../components/SelectFrom";
 import RemoteAutosuggest from "../components/RemoteAutosuggest";
@@ -64,6 +66,8 @@ class CandidatesReviewTable extends React.Component {
       review_complete_lbl: "Review completed",
       review_complete: false,
       reviewStatus: "",
+      sortBy: 'number',
+      sortDirection: SortDirection.DESC,
       columns: [
         {
           width: 20,
@@ -118,7 +122,7 @@ class CandidatesReviewTable extends React.Component {
           dataKey: "feedback",
           numeric: false,
           visible: true,
-          sortable: true,
+          sortable: false,
           render_func: c => {
             return this.feedbackRender(c);
           }
@@ -130,7 +134,7 @@ class CandidatesReviewTable extends React.Component {
           dataKey: "concept",
           numeric: false,
           visible: true,
-          sortable: true,
+          sortable: false,
           render_func: c => {
             return this.conceptRender(c);
           }
@@ -151,6 +155,42 @@ class CandidatesReviewTable extends React.Component {
   componentDidMount() {
     //Retrieve concepts
     this.getData();
+  }
+
+  sortTable( event, dataKey ){
+    let tmpArray = this.state.candidates
+    let direction = SortDirection.DESC
+    let mod = 1
+    if( ( dataKey == this.state.sortBy ) &&
+      ( direction == this.state.sortDirection ) ){
+        direction = SortDirection.ASC
+        mod = -1
+    }
+    if( 'feedback' == dataKey ){
+      tmpArray.sort( (a,b) => {
+        let a_val = !a['candidate_feedback_id'] ? 0 : a['candidate_feedback_id']
+        let b_val = !b['candidate_feedback_id'] ? 0 : b['candidate_feedback_id']
+        let comparison = a_val - b_val
+        return mod * (a_val - b_val )
+      })
+
+    } else if ( 'number' == dataKey ){
+      tmpArray.sort( (a,b) => {
+        return mod * ( a[dataKey] -  b[dataKey] )
+      })
+      
+    } else {
+      tmpArray.sort( (a,b) => {
+        return mod * a[dataKey].localeCompare( b[dataKey] )
+      })
+
+    }
+    this.setState({
+      concepts: tmpArray,
+      sortDirection: direction,
+      sortBy: dataKey,
+    })
+
   }
   getData() {
     fetch(this.props.dataUrl + ".json", {
@@ -340,6 +380,10 @@ class CandidatesReviewTable extends React.Component {
     );
   };
   render() {
+    const direction = {
+      [SortDirection.ASC]: "asc",
+      [SortDirection.DESC]: "desc"
+    };
     const {
       columns,
       candidates,
@@ -409,9 +453,20 @@ class CandidatesReviewTable extends React.Component {
               <TableRow>
                 {columns.map(cell => {
                   if (cell.visible) {
+                    const header = cell.sortable ?
+                      (
+                      <TableSortLabel
+                        active={cell.dataKey == this.state.sortBy}
+                        direction={direction[this.state.sortDirection]}
+                        onClick={() => this.sortTable(event, cell.dataKey)}
+                      >
+                        {cell.label}
+                      </TableSortLabel>
+                      ) : (
+                      cell.label )
                     return (
                       <TableCell key={"h_" + cell.dataKey}>
-                        {cell.label}
+                        {header}
                       </TableCell>
                     );
                   }
