@@ -47,8 +47,16 @@
   <em><%= t :note %>: <%= t 'bingo_games.tz_warn', time_zone: @bingo_game.course.timezone %></em>
 </p>
 </br>
+<%= react_component "BingoGameDataAdmin", {
+        bingoGameUrl: bingo_game_path( @bingo_game ),
+        conceptUrl: bingo_concepts_path( id: @bingo_game.id ),
+        gameResultsUrl: game_results_path( id: @bingo_game.id ),
+        token: form_authenticity_token } %>
 <%= react_component "ConceptChips", {
         url: bingo_concepts_path( id: @bingo_game.id ),
+        token: form_authenticity_token } %>
+<%= react_component "BingoGameDataAdminTable", {
+        gameResultsUrl: game_results_path( id: @bingo_game.id ),
         token: form_authenticity_token } %>
 <%= link_to t( 'bingo_games.edit.title' ), edit_bingo_game_path(@bingo_game) %>
 </div>

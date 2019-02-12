@@ -65,6 +65,7 @@
         conceptsUrl: bingo_concepts_path( @candidate_list.bingo_game_id ),
         boardUrl: board_for_game_path( @candidate_list.bingo_game_id ),
         boardSaveUrl: update_board_path( @candidate_list.bingo_game_id ),
+        worksheetUrl: worksheet_for_bingo_path( @candidate_list.bingo_game_id ),
         token: form_authenticity_token } %>
 </br>
 <p>

@@ -16,36 +16,39 @@ class WorksheetPdf
     image "#{Rails.root}/app/assets/images/CoLab.png",
               width: 120, height: 120,
               at: [450, top + 20]
-    bounding_box([0, top], :width => 470, :height => 30) do
+    bounding_box([0, top], :width => 210) do
       text "Player: #{@bingo_board.user.first_name} #{@bingo_board.user.last_name}"
-      text "Game Date: #{@bingo_board.bingo_game.end_date}"
+      text "Game Date: #{@bingo_board.bingo_game.end_date.strftime( "%b %e, %Y" )}"
     end
+    bounding_box([220, top], :width => 240) do
+      text "Class: #{@bingo_board.bingo_game.course.name}"
+      text "Number: #{@bingo_board.bingo_game.course.number}"
+    end
+    move_down 5
+    text "<b>Topic: #{@bingo_board.bingo_game.topic}</b>",
+      align: :center, inline_format: true
 
   end
 
   def render_clues
     items = [ ]
     @bingo_board.bingo_cells.each do |bc|
-      items << [ bc.indeks, bc.candidate.definition ] unless bc.candidate.nil?
+      items << [ bc.indeks_as_letter, bc.candidate.definition, bc.concept ] unless bc.candidate.nil?
     end
     items.sort!{|a,b| a[0] <=> b[0]}
 
-        
-    # The cursor for inserting content starts on the top left of the
-    # page. Here we move it down a little to create more space between
-    # the text and the image inserted above
-    y_position = cursor - 10
-
+    move_down 10
     # The bounding_box takes the x and y coordinates for positioning its content and some options to style it
-    bounding_box([0, y_position], :width => 500, :height => 300) do
       text "<b>Clues:</b>", inline_format: true
       stroke_horizontal_rule
       move_down 5
       items.each do |item|
-        text "<b>#{(item[0] + 64).chr}.</b>  #{item[1]}",
+        item[2].name.split(/\W+/).each do |w|
+          item[1].gsub!( /\b#{w}/, ('*'*w.length) )
+        end
+        text "<b>#{item[0]}.</b>  #{item[1]}",
             inline_format: true
       end
-    end
 
 
   end
@@ -66,8 +69,8 @@ class WorksheetPdf
       cell_style: {
         valign: :center,
         align: :center,
-        width: 100,
-        height: 100,
+        width: 90,
+        height: 90,
         inline_format: true
       }
 

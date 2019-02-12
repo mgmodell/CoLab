@@ -166,4 +166,9 @@ class ConceptsTable extends React.Component {
     );
   }
 }
+ConceptsTable.propTypes = {
+  conceptsUrl: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired,
+}
+
 export default ConceptsTable;

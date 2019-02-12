@@ -148,6 +148,7 @@ class BingoGame < ApplicationRecord
       end
       cl.save unless id == -1 # This unless supports the demonstration only
     elsif  cl.is_group
+      #TODO I think I can fix this
       cl = candidate_lists.where(group_id: project.group_for_user(user).id).take
     end
     cl

@@ -3,7 +3,7 @@
 class BingoBoardsController < ApplicationController
   before_action :set_bingo_board,
                 except: %i[index update board_for_game board_for_game_demo
-                           update_demo demo_worksheet_for_game]
+                           update_demo demo_worksheet_for_game worksheet_for_game]
   skip_before_action :authenticate_user!,
                      only: %i[board_for_game_demo update_demo
                      demo_worksheet_for_game]
@@ -45,10 +45,13 @@ class BingoBoardsController < ApplicationController
                             .includes(:bingo_game, bingo_cells: :concept)
                             .where(user_id: @current_user.id).take
     board_for_game_helper bingo_board: bingo_board,
-                          bingo_game: bingo_game
+                          bingo_game: bingo_game,
+                          acceptable_count: bingo_game.candidates
+                            .where( candidate_feedback_id: 1 )
+                            .group( :concept_id ).length
   end
 
-  def board_for_game_helper(bingo_board: nil, bingo_game:)
+  def board_for_game_helper(bingo_board: nil, bingo_game:, acceptable_count: 42)
     # TODO: Maybe this can be simplified?
     if bingo_board.nil?
       bingo_board = BingoBoard.new
@@ -76,14 +79,16 @@ class BingoBoardsController < ApplicationController
 
     respond_to do |format|
       format.json do
-        render json: bingo_board.to_json(
+        resp = bingo_board.as_json(
           only: %i[id size topic bingo_game_id], include:
                [:bingo_game, bingo_cells:
-               { only: [:id, :bingo_board_id,
-                        :row, :column, :selected, 'concept_id'],
+               { only: %i[id bingo_board_id row column selected concept_id],
                  include:
                  [concept: { only: %i[id name] }] }]
         )
+        resp[:acceptable] = acceptable_count
+        puts resp.inspect
+        render json: resp
       end
     end
   end
@@ -129,7 +134,7 @@ class BingoBoardsController < ApplicationController
     respond_to do |format|
       format.pdf do
         pdf = WorksheetPdf.new( wksheet )
-        send_data pdf.render, filename: 'demo_bingo_worksheet.pdf', type: 'application/pdf'
+        send_data pdf.render, filename: 'demo_bingo_practice.pdf', type: 'application/pdf'
       end
     end
   end
@@ -137,61 +142,64 @@ class BingoBoardsController < ApplicationController
   def worksheet_for_game
     bingo_game_id = params[:bingo_game_id]
     bingo_game = BingoGame .find(params[:bingo_game_id])
-    bingo_board = bingo_game.bingo_boards.worksheet
+    wksheet = bingo_game.bingo_boards.worksheet
                             .includes(:bingo_game, bingo_cells: [ :concept, :candidate ] )
                             .where(user_id: @current_user.id).take
 
-    candidates = bingo_game.candidates.acceptable.to_a
-    #Assuming 10 items
-    items = {}
-
-    while items.length < 10 && !candidates.empty? do
-      candidate = candidates.sample
-      items[ candidate.concept ] = candidate
-      candidates.delete( candidate )
-    end
-
-    wksheet = BingoBoard.new(
-      iteration: 0,
-      user_id: @current_user.id,
-      user: @current_user,
-      board_type: :worksheet
-    )
-
-    concepts = bingo_game.concepts.to_a
-    if items.length == 10 && concepts.size > 25
-      cells = items.values
-      while cells.length < 24 do
-        c = concepts.delete( concepts.sample )
-        if items[ c ].nil?
-          cells << c
-        end
+    unless wksheet.present?
+      candidates = bingo_game.candidates.acceptable.to_a
+      #Assuming 10 items
+      items = {}
+  
+      while items.length < 10 && !candidates.empty? do
+        candidate = candidates.sample
+        items[ candidate.concept ] = candidate
+        candidates.delete( candidate )
       end
-      index = 0
-      star = Concept.new( id: 0, name: '*' )
-      0.upto(bingo_game.size-1) do |row|
-        0.upto(bingo_game.size-1) do |column|
-          c = star
-          unless 3 == row && 3 == column
-            c = cells.delete( cells.sample )
+  
+      wksheet = BingoBoard.new(
+        iteration: 0,
+        user_id: @current_user.id,
+        user: @current_user,
+        bingo_game: bingo_game,
+        board_type: :worksheet
+      )
+  
+      concepts = bingo_game.concepts.to_a
+      if items.length == 10 && concepts.size > 25
+        cells = items.values
+        while cells.length < 24 do
+          c = concepts.delete( concepts.sample )
+          if items[ c ].nil?
+            cells << c
           end
-          wksheet.build_bingo_cell(
-            row: row,
-            column: column,
-            concept: c.class == Concept ? c : c.concept,
-            candidate: c.class == Concept ? nil : c,
-            indeks: c.class == Concept ? nil : index+=1
-          )
+        end
+        index = 0
+        star = Concept.find 0
+        0.upto(bingo_game.size-1) do |row|
+          0.upto(bingo_game.size-1) do |column|
+            c = star
+            unless 3 == row && 3 == column
+              c = cells.delete( cells.sample )
+            end
+            wksheet.bingo_cells.build(
+              row: row,
+              column: column,
+              concept: c.class == Concept ? c : c.concept,
+              candidate: c.class == Concept ? nil : c,
+              indeks: c.class == Concept ? nil : index+=1
+            )
+          end
         end
       end
+      wksheet.save
+      logger.debug wksheet.errors.full_messages unless wksheet.errors.empty?
     end
-    wksheet.save
-    logger.debug wksheet.errors.full_messages unless wksheet.errors.empty?
-
+  
     respond_to do |format|
       format.pdf do
-        pdf = Prawn::Document.new
-        send_data pdf.render, filename: 'bingo_wksheet.pdf', type: 'application/pdf'
+        pdf = WorksheetPdf.new( wksheet )
+        send_data pdf.render, filename: 'bingo_practice.pdf', type: 'application/pdf'
       end
     end
   end
