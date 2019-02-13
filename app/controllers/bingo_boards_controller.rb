@@ -6,7 +6,7 @@ class BingoBoardsController < ApplicationController
                            update_demo demo_worksheet_for_game worksheet_for_game]
   skip_before_action :authenticate_user!,
                      only: %i[board_for_game_demo update_demo
-                     demo_worksheet_for_game]
+                              demo_worksheet_for_game]
   before_action :demo_user,
                 only: %i[board_for_game_demo update_demo demo_worksheet_for_game]
 
@@ -47,8 +47,8 @@ class BingoBoardsController < ApplicationController
     board_for_game_helper bingo_board: bingo_board,
                           bingo_game: bingo_game,
                           acceptable_count: bingo_game.candidates
-                            .where( candidate_feedback_id: 1 )
-                            .group( :concept_id ).length
+                            .where(candidate_feedback_id: 1)
+                                                      .group(:concept_id).length
   end
 
   def board_for_game_helper(bingo_board: nil, bingo_game:, acceptable_count: 42)
@@ -107,32 +107,32 @@ class BingoBoardsController < ApplicationController
 
     index = 0
     star = ['*', 'free space']
-    0.upto(bingo_game.size-1) do |row|
-      0.upto(bingo_game.size-1) do |column|
+    0.upto(bingo_game.size - 1) do |row|
+      0.upto(bingo_game.size - 1) do |column|
         c = star
         is_answer = false
-        unless 2 == row && 2 == column
-          c = concepts.delete( concepts.sample )
-          is_answer = ( row == column ) ||
-                      ( 5 == ( row + column ) ) ||
-                      ( 1 == ( row + column ) ) 
+        unless row == 2 && column == 2
+          c = concepts.delete(concepts.sample)
+          is_answer = (row == column) ||
+                      ((row + column) == 5) ||
+                      ((row + column) == 1)
         end
         wksheet.bingo_cells << BingoCell.new(
           row: row,
           column: column,
-          concept: Concept.new( name: c[ 0 ] )
+          concept: Concept.new(name: c[0])
         )
-        if is_answer
-          cell = wksheet.bingo_cells.last
-          cell.candidate = Candidate.new( definition: c[ 1 ] )
-          cell.indeks = index+=1
-        end
+        next unless is_answer
+
+        cell = wksheet.bingo_cells.last
+        cell.candidate = Candidate.new(definition: c[1])
+        cell.indeks = index += 1
       end
     end
 
     respond_to do |format|
       format.pdf do
-        pdf = WorksheetPdf.new( wksheet )
+        pdf = WorksheetPdf.new(wksheet)
         send_data pdf.render, filename: 'demo_bingo_practice.pdf', type: 'application/pdf'
       end
     end
@@ -142,20 +142,20 @@ class BingoBoardsController < ApplicationController
     bingo_game_id = params[:bingo_game_id]
     bingo_game = BingoGame .find(params[:bingo_game_id])
     wksheet = bingo_game.bingo_boards.worksheet
-                            .includes(:bingo_game, bingo_cells: [ :concept, :candidate ] )
-                            .where(user_id: @current_user.id).take
+                        .includes(:bingo_game, bingo_cells: %i[concept candidate])
+                        .where(user_id: @current_user.id).take
 
     unless wksheet.present?
       candidates = bingo_game.candidates.acceptable.to_a
-      #Assuming 10 items
+      # Assuming 10 items
       items = {}
-  
-      while items.length < 10 && !candidates.empty? do
+
+      while items.length < 10 && !candidates.empty?
         candidate = candidates.sample
-        items[ candidate.concept ] = candidate
-        candidates.delete( candidate )
+        items[candidate.concept] = candidate
+        candidates.delete(candidate)
       end
-  
+
       wksheet = BingoBoard.new(
         iteration: 0,
         user_id: @current_user.id,
@@ -163,30 +163,26 @@ class BingoBoardsController < ApplicationController
         bingo_game: bingo_game,
         board_type: :worksheet
       )
-  
+
       concepts = bingo_game.concepts.to_a
       if items.length == 10 && concepts.size > 25
         cells = items.values
-        while cells.length < 24 do
-          c = concepts.delete( concepts.sample )
-          if items[ c ].nil?
-            cells << c
-          end
+        while cells.length < 24
+          c = concepts.delete(concepts.sample)
+          cells << c if items[c].nil?
         end
         index = 0
         star = Concept.find 0
-        0.upto(bingo_game.size-1) do |row|
-          0.upto(bingo_game.size-1) do |column|
+        0.upto(bingo_game.size - 1) do |row|
+          0.upto(bingo_game.size - 1) do |column|
             c = star
-            unless 2 == row && 2 == column
-              c = cells.delete( cells.sample )
-            end
+            c = cells.delete(cells.sample) unless row == 2 && column == 2
             wksheet.bingo_cells.build(
               row: row,
               column: column,
               concept: c.class == Concept ? c : c.concept,
               candidate: c.class == Concept ? nil : c,
-              indeks: c.class == Concept ? nil : index+=1
+              indeks: c.class == Concept ? nil : index += 1
             )
           end
         end
@@ -194,10 +190,10 @@ class BingoBoardsController < ApplicationController
       wksheet.save
       logger.debug wksheet.errors.full_messages unless wksheet.errors.empty?
     end
-  
+
     respond_to do |format|
       format.pdf do
-        pdf = WorksheetPdf.new( wksheet )
+        pdf = WorksheetPdf.new(wksheet)
         send_data pdf.render, filename: 'bingo_practice.pdf', type: 'application/pdf'
       end
     end
