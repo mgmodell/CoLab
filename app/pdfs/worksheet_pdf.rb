@@ -3,6 +3,14 @@ class WorksheetPdf
 
   def initialize(bingo_board)
     super()
+    font_families.update( "OpenSans" => {
+      :normal => Rails.root.join("app/assets/fonts/OpenSans-Regular.ttf"),
+      :italic => Rails.root.join("app/assets/fonts/OpenSans-Italic.ttf"),
+      :bold => Rails.root.join("app/assets/fonts/OpenSans-Bold.ttf"),
+      :bold_italic => Rails.root.join("app/assets/fonts/OpenSans-BoldItalic.ttf")
+    } )
+      
+    font "OpenSans"
     @bingo_board = bingo_board
     header
     gen_bingo_board
@@ -58,12 +66,13 @@ class WorksheetPdf
     data = Array.new(size){Array.new(size)}
     @bingo_board.bingo_cells.each do |bc|
       if '*' == bc.concept.name
-        data[ bc.row - 1 ][ bc.column - 1 ] = 
-          '<color rgb=\'FF00FF\'><font size=\'96\'>*</font></color>'
+        data[ bc.row ][ bc.column ] = 
+          '<color rgb=\'FF00FF\'><font size=\'48\'>*</font></color>'
       else
-        data[ bc.row - 1 ][ bc.column - 1 ] = bc.concept.name
+        data[ bc.row ][ bc.column ] = bc.concept.name
       end
     end
+
 
     table data, position: :center,
       cell_style: {

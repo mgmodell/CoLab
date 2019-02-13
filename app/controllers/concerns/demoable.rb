@@ -42,6 +42,10 @@ module Demoable
                   description: (t 'candidate_lists.demo_review_description'),
                   end_date: Date.today.end_of_day,
                   size: 5,
+                  course: Course.new(
+                    name: (t 'demo_course_name' ),
+                    number: 'xxx-673'
+                  ),
                   individual_count: 10)
   end
 

@@ -87,7 +87,6 @@ class BingoBoardsController < ApplicationController
                  [concept: { only: %i[id name] }] }]
         )
         resp[:acceptable] = acceptable_count
-        puts resp.inspect
         render json: resp
       end
     end
@@ -112,7 +111,7 @@ class BingoBoardsController < ApplicationController
       0.upto(bingo_game.size-1) do |column|
         c = star
         is_answer = false
-        unless 3 == row && 3 == column
+        unless 2 == row && 2 == column
           c = concepts.delete( concepts.sample )
           is_answer = ( row == column ) ||
                       ( 5 == ( row + column ) ) ||
@@ -179,7 +178,7 @@ class BingoBoardsController < ApplicationController
         0.upto(bingo_game.size-1) do |row|
           0.upto(bingo_game.size-1) do |column|
             c = star
-            unless 3 == row && 3 == column
+            unless 2 == row && 2 == column
               c = cells.delete( cells.sample )
             end
             wksheet.bingo_cells.build(
