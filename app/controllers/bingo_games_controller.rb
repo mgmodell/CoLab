@@ -43,8 +43,8 @@ class BingoGamesController < ApplicationController
 
   def game_results
     bingo_game = BingoGame.includes(
-      [course: {rosters: :user}, candidate_lists: [ :user,
-      {candidates: :candidate_feedback}, group: :users ],
+      [course: {rosters: {user: :emails}}, candidate_lists: [ :user,
+      {candidates: [:concept, :candidate_feedback]}, group: :users ],
         bingo_boards: { bingo_cells: :candidate } ] ).find( params[:id] )
     anon = @current_user.anonymize?
     resp = {}
