@@ -31,7 +31,6 @@ const styles = theme => ({
   }
 });
 class MuiVirtualizedTable extends React.PureComponent {
-
   getRowClassName = ({ index }) => {
     const { classes, rowClassName, onRowClick } = this.props;
     return classNames(classes.tableRow, classes.flexContainer, rowClassName, {
@@ -69,7 +68,7 @@ class MuiVirtualizedTable extends React.PureComponent {
         <TableSortLabel
           active={dataKey === sortBy}
           direction={direction[sortDirection]}
-          onClick={ () => this.props.sort}
+          onClick={() => this.props.sort}
         >
           {label}
         </TableSortLabel>

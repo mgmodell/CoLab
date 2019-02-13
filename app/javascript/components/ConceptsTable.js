@@ -41,7 +41,7 @@ class ConceptsTable extends React.Component {
       concepts_raw: [],
       concepts: [],
       search: "",
-      sortBy: 'name',
+      sortBy: "name",
       sortDirection: SortDirection.DESC,
       columns: [
         {
@@ -118,24 +118,25 @@ class ConceptsTable extends React.Component {
     this.setState({ concepts: filtered });
   };
 
-  colSort = function( event ) {
-    let tmpArray = this.state.concepts_raw
-    let direction = SortDirection.DESC
-    let mod = 1
-    if( ( event.sortBy == this.state.sortBy ) &&
-      ( direction == this.state.sortDirection ) ){
-        direction = SortDirection.ASC
-        mod = -1
+  colSort = function(event) {
+    let tmpArray = this.state.concepts_raw;
+    let direction = SortDirection.DESC;
+    let mod = 1;
+    if (
+      event.sortBy == this.state.sortBy &&
+      direction == this.state.sortDirection
+    ) {
+      direction = SortDirection.ASC;
+      mod = -1;
     }
-    tmpArray.sort( (a,b) => {
-      return mod * a[event.sortBy].localeCompare( b[event.sortBy] )
-    })
+    tmpArray.sort((a, b) => {
+      return mod * a[event.sortBy].localeCompare(b[event.sortBy]);
+    });
     this.setState({
       concepts: tmpArray,
       sortDirection: direction,
-      sortBy: event.sortBy,
-    })
-
+      sortBy: event.sortBy
+    });
   };
   render() {
     return (
@@ -168,7 +169,7 @@ class ConceptsTable extends React.Component {
 }
 ConceptsTable.propTypes = {
   conceptsUrl: PropTypes.string.isRequired,
-  token: PropTypes.string.isRequired,
-}
+  token: PropTypes.string.isRequired
+};
 
 export default ConceptsTable;

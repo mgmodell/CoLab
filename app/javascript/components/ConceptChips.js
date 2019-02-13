@@ -7,8 +7,8 @@ import Paper from "@material-ui/core/Paper";
 
 const theme = createMuiTheme({
   typography: {
-    useNextVariants: true,
-  },
+    useNextVariants: true
+  }
 });
 class ConceptChips extends React.Component {
   constructor(props) {
