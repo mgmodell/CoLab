@@ -99,7 +99,7 @@ class MuiVirtualizedTable extends React.PureComponent {
         {({ height, width }) => (
           <Table
             className={classes.table}
-            height={height}
+            height={height - 100}
             width={width}
             {...tableProps}
             rowClassName={this.getRowClassName}

@@ -206,7 +206,7 @@ class BingoGameDataAdminTable extends React.Component {
   };
   render() {
     return (
-      <Paper style={{ height: 450, width: "100%" }}>
+      <Paper style={{ height: "100%", width: "100%" }}>
         <Toolbar>
           <InputBase placeholder="Search results" onChange={this.filter} />
           <SearchIcon />

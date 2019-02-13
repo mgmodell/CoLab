@@ -61,7 +61,14 @@ class BingoGameResults extends React.Component{
           Results for {this.props.student}
         </DialogTitle>
         <DialogContent>
-          {this.renderBoard( this.props.board )}
+          <Grid container spacing={8}>
+            <Grid item xs={5}>
+              {this.renderBoard( this.props.board )}
+            </Grid>
+            <Grid item xs={5}>
+              Candidates will go here
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.close}>
