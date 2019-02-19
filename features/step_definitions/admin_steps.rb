@@ -14,5 +14,12 @@ Given /^there is a course$/ do
 end
 
 Then /^the user sets the project to the course's project$/ do
-  page.select(@project.name, from: 'Source of project groups', visible: :all)
+  if( has_select? 'Source of project groups', visible: :all  )
+    page.select(@project.name, from: 'Source of project groups', visible: :all)
+  else
+    find( 'div', id: 'select-bingo_game_project' ).click
+    find( 'li', text: @project.name ).click
+
+  end
+
 end

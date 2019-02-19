@@ -32,7 +32,20 @@ Then /^the user opens the course$/ do
 end
 
 Then /^the user clicks "([^"]*)"$/ do |link_or_button|
-  click_link_or_button link_or_button
+  if has_xpath?( "//button[contains(.,'#{link_or_button}')]")
+    btn = find( :xpath, "//button[contains(.,'#{link_or_button}')]")
+  elsif has_xpath? "//a[contains(.,'#{link_or_button}')]"
+    btn = find( :xpath, "//a[contains(.,'#{link_or_button}')]")
+  elsif has_xpath? "//input[@value='#{link_or_button}']"
+    btn = find( :xpath, "//input[@value='#{link_or_button}']" )
+  end
+  btn.click
+  #click_link_or_button link_or_button
+end
+
+Then /^the user switches to the "([^"]*)" tab$/ do |tab|
+  click_link tab
+
 end
 
 Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/ do |field, value|
@@ -40,7 +53,8 @@ Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/ do |field, va
 end
 
 Then /^the user sets the "([^"]*)" field to "([^"]*)"$/ do |field, value|
-  page.fill_in(field, with: value, visible: :all, disabled: :all)
+  find_field( field ).click
+  find_field( field ).set( value )
 end
 
 Then /^the user sets the project "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|

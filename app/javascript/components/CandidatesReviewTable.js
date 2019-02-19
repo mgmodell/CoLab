@@ -281,8 +281,6 @@ class CandidatesReviewTable extends React.Component {
         this.setState({
           reviewStatus: data.notice
         });
-        //window.location.href = data.next_stop
-        //      open( data.next_stop, '_self' )
       });
   }
   handleChange = function(name) {
