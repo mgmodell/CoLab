@@ -216,9 +216,9 @@ class BingoBuilder extends React.Component {
 
     const workSheet =
       this.state.board.acceptable <
-        ( this.state.board.size * this.state.board.size ) ?
-        null :
-        (<Link onClick={() => this.getWorksheet()}>Worksheet</Link>)
+      this.state.board.size * this.state.board.size ? null : (
+        <Link onClick={() => this.getWorksheet()}>Worksheet</Link>
+      );
 
     return (
       <MuiThemeProvider theme={styles}>

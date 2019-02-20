@@ -43,7 +43,7 @@ module Demoable
                   end_date: Date.today.end_of_day,
                   size: 5,
                   course: Course.new(
-                    name: (t 'demo_course_name' ),
+                    name: (t 'demo_course_name'),
                     number: 'xxx-673'
                   ),
                   individual_count: 10)

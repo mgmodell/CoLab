@@ -66,7 +66,7 @@ class CandidatesReviewTable extends React.Component {
       review_complete_lbl: "Review completed",
       review_complete: false,
       reviewStatus: "",
-      sortBy: 'number',
+      sortBy: "number",
       sortDirection: SortDirection.DESC,
       columns: [
         {
@@ -157,40 +157,39 @@ class CandidatesReviewTable extends React.Component {
     this.getData();
   }
 
-  sortTable( event, dataKey ){
-    let tmpArray = this.state.candidates
-    let direction = SortDirection.DESC
-    let mod = 1
-    if( ( dataKey == this.state.sortBy ) &&
-      ( direction == this.state.sortDirection ) ){
-        direction = SortDirection.ASC
-        mod = -1
+  sortTable(event, dataKey) {
+    let tmpArray = this.state.candidates;
+    let direction = SortDirection.DESC;
+    let mod = 1;
+    if (dataKey == this.state.sortBy && direction == this.state.sortDirection) {
+      direction = SortDirection.ASC;
+      mod = -1;
     }
-    if( 'feedback' == dataKey ){
-      tmpArray.sort( (a,b) => {
-        let a_val = !a['candidate_feedback_id'] ? 0 : a['candidate_feedback_id']
-        let b_val = !b['candidate_feedback_id'] ? 0 : b['candidate_feedback_id']
-        let comparison = a_val - b_val
-        return mod * (a_val - b_val )
-      })
-
-    } else if ( 'number' == dataKey ){
-      tmpArray.sort( (a,b) => {
-        return mod * ( a[dataKey] -  b[dataKey] )
-      })
-      
+    if ("feedback" == dataKey) {
+      tmpArray.sort((a, b) => {
+        let a_val = !a["candidate_feedback_id"]
+          ? 0
+          : a["candidate_feedback_id"];
+        let b_val = !b["candidate_feedback_id"]
+          ? 0
+          : b["candidate_feedback_id"];
+        let comparison = a_val - b_val;
+        return mod * (a_val - b_val);
+      });
+    } else if ("number" == dataKey) {
+      tmpArray.sort((a, b) => {
+        return mod * (a[dataKey] - b[dataKey]);
+      });
     } else {
-      tmpArray.sort( (a,b) => {
-        return mod * a[dataKey].localeCompare( b[dataKey] )
-      })
-
+      tmpArray.sort((a, b) => {
+        return mod * a[dataKey].localeCompare(b[dataKey]);
+      });
     }
     this.setState({
       concepts: tmpArray,
       sortDirection: direction,
-      sortBy: dataKey,
-    })
-
+      sortBy: dataKey
+    });
   }
   getData() {
     fetch(this.props.dataUrl + ".json", {
@@ -451,8 +450,7 @@ class CandidatesReviewTable extends React.Component {
               <TableRow>
                 {columns.map(cell => {
                   if (cell.visible) {
-                    const header = cell.sortable ?
-                      (
+                    const header = cell.sortable ? (
                       <TableSortLabel
                         active={cell.dataKey == this.state.sortBy}
                         direction={direction[this.state.sortDirection]}
@@ -460,12 +458,11 @@ class CandidatesReviewTable extends React.Component {
                       >
                         {cell.label}
                       </TableSortLabel>
-                      ) : (
-                      cell.label )
+                    ) : (
+                      cell.label
+                    );
                     return (
-                      <TableCell key={"h_" + cell.dataKey}>
-                        {header}
-                      </TableCell>
+                      <TableCell key={"h_" + cell.dataKey}>{header}</TableCell>
                     );
                   }
                 })}

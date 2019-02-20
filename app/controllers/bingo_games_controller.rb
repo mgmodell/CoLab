@@ -28,20 +28,21 @@ class BingoGamesController < ApplicationController
   def show
     @title = t '.title'
     respond_to do |format|
-      format.html {render :show }
+      format.html { render :show }
       format.json do
-        resp = @bingo_game.as_json( only:
+        resp = @bingo_game.as_json(only:
           %i[ id topic description source group_option individual_count
               start_date end_date active lead_time group_discount
-              reviewed project_id ]
-          )
-        resp[:topic] = @bingo_game.get_topic( @current_user.anonymize? )
+              reviewed project_id ])
+        resp[:topic] = @bingo_game.get_topic(@current_user.anonymize?)
         resp[:reviewed] = @bingo_game.reviewed?
         resp[:projects] = @bingo_game.course.projects
-          .collect{|p| {
+                                     .collect do |p|
+          {
             id: p.id,
-            name: p.get_name( @current_user.anonymize? )
-        } }.as_json
+            name: p.get_name(@current_user.anonymize?)
+          }
+        end .as_json
         render json: resp
       end
     end
@@ -49,58 +50,64 @@ class BingoGamesController < ApplicationController
 
   def game_results
     bingo_game = BingoGame.includes(
-      [course: {rosters: {user: :emails}}, candidate_lists: [ :user,
-      {candidates: [:concept, :candidate_feedback]}, group: :users ],
-        bingo_boards: { bingo_cells: :candidate } ] ).find( params[:id] )
+      [course: { rosters: { user: :emails } }, candidate_lists: [:user,
+                                                                 { candidates: %i[concept candidate_feedback] }, group: :users],
+       bingo_boards: { bingo_cells: :candidate }]
+    ).find(params[:id])
     anon = @current_user.anonymize?
     resp = {}
     bingo_game.course.rosters.each do |r|
-      if r.enrolled_student? || r.invited_student?
-        resp[ r.user.id ] = {
-          student: r.user.informal_name( anon ),
-          last_name: anon ? r.user.anon_last_name : r.user.last_name,
-          email: anon ? 'phony@mailinator.com' : r.user.email,
-          group: 'N/A',
-          concepts_expected: bingo_game.individual_count,
-          concepts_entered: 0,
-          concepts_credited: 0,
-          term_problems: 0,
-          performance: 0,
-          candidates: [],
-          practice_answers: [] }
-      end
+      next unless r.enrolled_student? || r.invited_student?
+
+      resp[ r.user.id ] = {
+        student: r.user.informal_name(anon),
+        last_name: anon ? r.user.anon_last_name : r.user.last_name,
+        email: anon ? 'phony@mailinator.com' : r.user.email,
+        group: 'N/A',
+        concepts_expected: bingo_game.individual_count,
+        concepts_entered: 0,
+        concepts_credited: 0,
+        term_problems: 0,
+        performance: 0,
+        candidates: [],
+        practice_answers: []
+      }
     end
-    #Get the worksheets
+    # Get the worksheets
     bingo_game.bingo_boards.each do |bb|
-      if bb.worksheet?
-        practice_answers = Array.new bingo_game.size
-        bingo_game.size.times do |index|
-          practice_answers[ index ] = Array.new bingo_game.size
-        end
-        bb.bingo_cells.each do |bc|
-          if bc.candidate.present?
-            practice_answers[bc.row][bc.column] =
-              bc.indeks_as_letter
-          end
-        end
-        resp[ bb.user.id ][:practice_answers] = practice_answers
+      next unless bb.worksheet?
+
+      practice_answers = Array.new bingo_game.size
+      bingo_game.size.times do |index|
+        practice_answers[index] = Array.new bingo_game.size
       end
+      bb.bingo_cells.each do |bc|
+        if bc.candidate.present?
+          practice_answers[bc.row][bc.column] =
+            bc.indeks_as_letter
+        end
+      end
+      resp[bb.user.id][:practice_answers] = practice_answers
     end
 
     bingo_game.candidate_lists.each do |cl|
       if !cl.is_group
         user_id = cl.user_id
-        if resp[ user_id ].present?
-          resp[ user_id ][:concepts_expected] = cl.candidates.size
-          resp[ user_id ][:concepts_entered] = cl.candidates
-            .reject {|c| (c.definition.empty? || c.term.empty?) }.count
-          resp[ user_id ][:concepts_credited] = cl.candidates
-            .reject {|c| c.candidate_feedback.present? &&
-                    c.candidate_feedback.name.start_with?( 'Term' ) }.count
-          resp[ user_id ][:term_problems] = cl.candidates
-            .reject {|c| c.candidate_feedback.present? &&
-                    !c.candidate_feedback.name.start_with?( 'Term' ) }.count
-          resp[ user_id ][:performance] = cl.performance
+        if resp[user_id].present?
+          resp[user_id][:concepts_expected] = cl.candidates.size
+          resp[user_id][:concepts_entered] = cl.candidates
+                                               .reject { |c| (c.definition.empty? || c.term.empty?) }.count
+          resp[user_id][:concepts_credited] = cl.candidates
+                                                .reject do |c|
+            c.candidate_feedback.present? &&
+              c.candidate_feedback.name.start_with?('Term')
+          end .count
+          resp[user_id][:term_problems] = cl.candidates
+                                            .reject do |c|
+            c.candidate_feedback.present? &&
+              !c.candidate_feedback.name.start_with?('Term')
+          end .count
+          resp[user_id][:performance] = cl.performance
           candidates = []
           cl.candidates.completed.each do |c|
             candidates << {
@@ -111,18 +118,22 @@ class BingoGamesController < ApplicationController
               feedback_id: c.candidate_feedback_id
             }
           end
-          resp[ user_id ][:candidates] = candidates
+          resp[user_id][:candidates] = candidates
         end
       elsif cl.is_group && cl.group.present?
         concepts_expected = cl.candidates.size
         concepts_entered = cl.candidates
-          .reject {|c| c.definition.empty? || c.term.empty? }.count
+                             .reject { |c| c.definition.empty? || c.term.empty? }.count
         concepts_credited = cl.candidates
-          .reject {|c| c.candidate_feedback.present? &&
-                  c.candidate_feedback.name.start_with?( 'Term' ) }.count
+                              .reject do |c|
+          c.candidate_feedback.present? &&
+            c.candidate_feedback.name.start_with?('Term')
+        end .count
         term_problems = cl.candidates
-          .reject {|c| c.candidate_feedback.present? &&
-                  !c.candidate_feedback.name.start_with?( 'Term' ) }.count
+                          .reject do |c|
+          c.candidate_feedback.present? &&
+            !c.candidate_feedback.name.start_with?('Term')
+        end .count
         performance = cl.performance
         candidates = []
         cl.candidates.completed.each do |c|
@@ -135,13 +146,13 @@ class BingoGamesController < ApplicationController
           }
         end
         cl.group.users.each do |u|
-          resp[ u.id ][:group] = cl.group.get_name( anon )
-          resp[ u.id ][:concepts_expected] = concepts_expected
-          resp[ u.id ][:concepts_credited] = concepts_credited
-          resp[ u.id ][:concepts_entered] = concepts_entered
-          resp[ u.id ][:term_problems] = term_problems
-          resp[ u.id ][:performance] = performance
-          resp[ u.id ][:candidates] = candidates
+          resp[u.id][:group] = cl.group.get_name(anon)
+          resp[u.id][:concepts_expected] = concepts_expected
+          resp[u.id][:concepts_credited] = concepts_credited
+          resp[u.id][:concepts_entered] = concepts_entered
+          resp[u.id][:term_problems] = term_problems
+          resp[u.id][:performance] = performance
+          resp[u.id][:candidates] = candidates
         end
 
       end
@@ -149,7 +160,7 @@ class BingoGamesController < ApplicationController
     resp_array = []
     resp.keys.each do |key|
       resp[key][:id] = key
-      resp_array << resp[ key ]
+      resp_array << resp[key]
     end
     render json: resp_array
   end
@@ -198,15 +209,14 @@ class BingoGamesController < ApplicationController
         if @bingo_game.errors.empty?
           render json: {
             notice: 'Game saved successfully!',
-            messages: {},
+            messages: {}
           }
         else
           render json: {
             notice: 'Unable to save',
-            messages: @bingo_game.errors,
+            messages: @bingo_game.errors
           }
         end
-
       end
       format.html { render :edit }
     end
@@ -480,7 +490,7 @@ class BingoGamesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_game
-    bg_test = BingoGame.joins( course: :projects ).includes(course: :projects).find(params[:id])
+    bg_test = BingoGame.joins(course: :projects).includes(course: :projects).find(params[:id])
     if @current_user.is_admin?
       @bingo_game = bg_test
     else

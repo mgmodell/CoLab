@@ -1,56 +1,54 @@
-import React from 'react'
-import Draggable from 'react-draggable'
+import React from "react";
+import Draggable from "react-draggable";
 import PropTypes from "prop-types";
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Paper from '@material-ui/core/Paper'
-import Grid from '@material-ui/core/Grid'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableRow from '@material-ui/core/TableRow'
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
 
-function PaperComponent(props){
-  return(
+function PaperComponent(props) {
+  return (
     <Draggable>
       <Paper {...props} />
     </Draggable>
-  )
+  );
 }
 
-class BingoGameResults extends React.Component{
-  constructor(props){
-    super(props)
+class BingoGameResults extends React.Component {
+  constructor(props) {
+    super(props);
   }
 
-  renderBoard( board ){
-    if( board == null || board.length == 0){
-      return (
-        <p>No board available</p>
-      )
+  renderBoard(board) {
+    if (board == null || board.length == 0) {
+      return <p>No board available</p>;
     } else {
-      return(
+      return (
         <Table>
           <TableBody>
             {this.props.board.map((row, r_ind) => (
-            <TableRow key={r_ind}>
-              {row.map((col,c_ind) => (
-                <TableCell key={r_ind + '_' + c_ind} >{col}</TableCell>
-              ) ) }
-            </TableRow>
-            ) ) }
+              <TableRow key={r_ind}>
+                {row.map((col, c_ind) => (
+                  <TableCell key={r_ind + "_" + c_ind}>{col}</TableCell>
+                ))}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
-      )
+      );
     }
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <Dialog
         open={this.props.open}
         onClose={this.props.close}
@@ -63,7 +61,7 @@ class BingoGameResults extends React.Component{
         <DialogContent>
           <Grid container spacing={8}>
             <Grid item xs={5}>
-              {this.renderBoard( this.props.board )}
+              {this.renderBoard(this.props.board)}
             </Grid>
             <Grid item xs={5}>
               Candidates will go here
@@ -71,18 +69,12 @@ class BingoGameResults extends React.Component{
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.close}>
-            Done
-          </Button>
-
+          <Button onClick={this.props.close}>Done</Button>
         </DialogActions>
-
       </Dialog>
-    )
+    );
   }
-
 }
-
 
 BingoGameResults.propTypes = {
   open: PropTypes.bool.isRequired,
@@ -90,14 +82,14 @@ BingoGameResults.propTypes = {
   board: PropTypes.array,
   close: PropTypes.func,
   candidates: PropTypes.arrayOf(
-    PropTypes.shape( {
+    PropTypes.shape({
       concept: PropTypes.string,
       definition: PropTypes.string,
       term: PropTypes.string,
       feedback: PropTypes.string,
-      feedback_id: PropTypes.number,
-    } )
+      feedback_id: PropTypes.number
+    })
   )
-}
+};
 
-export default BingoGameResults
+export default BingoGameResults;

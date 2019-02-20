@@ -18,8 +18,7 @@ Then /^retrieve the latest Bingo! game from the db$/ do
 end
 
 Then /^the user clicks by label "([^"]*)"$/ do |checkbox|
-  find( 'label', text: checkbox ).click
-
+  find('label', text: checkbox).click
 end
 
 Given /^the course has a Bingo! game$/ do

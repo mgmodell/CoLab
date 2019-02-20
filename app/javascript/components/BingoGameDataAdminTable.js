@@ -2,7 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import BingoGameResults from "./BingoGameResults"
+import BingoGameResults from "./BingoGameResults";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
@@ -44,12 +44,12 @@ class BingoGameDataAdminTable extends React.Component {
       results_raw: [],
       results: [],
       search: "",
-      sortBy: 'student',
+      sortBy: "student",
       sortDirection: SortDirection.DESC,
       individual: {
         open: false,
-        student: '',
-        board: [ ],
+        student: "",
+        board: [],
         close: this.closeDialog,
         candidates: []
       },
@@ -123,22 +123,22 @@ class BingoGameDataAdminTable extends React.Component {
     this.getResults();
   }
   openDialog(event) {
-    const index = event.index
+    const index = event.index;
     this.setState({
       individual: {
         open: true,
-        student: this.state.results[ index ].student,
-        board: this.state.results[ index ].practice_answers,
-        candidates: this.state.results[ index ].candidates,
+        student: this.state.results[index].student,
+        board: this.state.results[index].practice_answers,
+        candidates: this.state.results[index].candidates
       }
-    })
+    });
   }
   closeDialog() {
     this.setState({
       individual: {
-        open: false,
+        open: false
       }
-    })
+    });
   }
   getResults() {
     fetch(this.props.gameResultsUrl + ".json", {
@@ -172,37 +172,38 @@ class BingoGameDataAdminTable extends React.Component {
     this.setState({ concepts: filtered });
   };
 
-  colSort = function( event ) {
-    let tmpArray = this.state.results_raw
-    let direction = SortDirection.DESC
-    let mod = 1
-    if( ( event.sortBy == this.state.sortBy ) &&
-      ( direction == this.state.sortDirection ) ){
-        direction = SortDirection.ASC
-        mod = -1
+  colSort = function(event) {
+    let tmpArray = this.state.results_raw;
+    let direction = SortDirection.DESC;
+    let mod = 1;
+    if (
+      event.sortBy == this.state.sortBy &&
+      direction == this.state.sortDirection
+    ) {
+      direction = SortDirection.ASC;
+      mod = -1;
     }
-    let index = 0
-    for( index = 0; index < this.state.columns.length; ++index ){
-      if( this.state.columns[ index ].dataKey == event.sortBy ){
-        break
+    let index = 0;
+    for (index = 0; index < this.state.columns.length; ++index) {
+      if (this.state.columns[index].dataKey == event.sortBy) {
+        break;
       }
     }
 
-    if( this.state.columns[ index ].numeric ){
-      tmpArray.sort( (a,b) => {
-        return mod * a[event.sortBy] -  b[event.sortBy] 
-      } )
+    if (this.state.columns[index].numeric) {
+      tmpArray.sort((a, b) => {
+        return mod * a[event.sortBy] - b[event.sortBy];
+      });
     } else {
-      tmpArray.sort( (a,b) => {
-        return mod * a[event.sortBy].localeCompare( b[event.sortBy] )
-      })
+      tmpArray.sort((a, b) => {
+        return mod * a[event.sortBy].localeCompare(b[event.sortBy]);
+      });
     }
     this.setState({
       results: tmpArray,
       sortDirection: direction,
-      sortBy: event.sortBy,
-    })
-
+      sortBy: event.sortBy
+    });
   };
   render() {
     return (
@@ -221,7 +222,7 @@ class BingoGameDataAdminTable extends React.Component {
           sort={this.colSort}
           sortBy={this.state.sortBy}
           sortDirection={this.state.sortDirection}
-          onRowClick={(event)=> this.openDialog(event)}
+          onRowClick={event => this.openDialog(event)}
           columns={this.state.columns}
         />
         <BingoGameResults
@@ -237,6 +238,6 @@ class BingoGameDataAdminTable extends React.Component {
 }
 BingoGameDataAdminTable.propTypes = {
   gameResultsUrl: PropTypes.string.isRequired,
-  token: PropTypes.string.isRequired,
-}
+  token: PropTypes.string.isRequired
+};
 export default BingoGameDataAdminTable;
