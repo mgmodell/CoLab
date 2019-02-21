@@ -27,7 +27,7 @@ Feature: Bingo Administration
     Then the user clicks "New Bingo! Game"
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor prep" field to "2"
-    Then the user sets the "Terms per individual" field to "15"
+    Then the user sets the "Entries per student" field to "15"
     Then the user checks "Group submissions allowed?"
     Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
@@ -60,7 +60,7 @@ Feature: Bingo Administration
     Then the user clicks "New Bingo! Game"
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor prep" field to "2"
-    Then the user sets the "Terms per individual" field to "15"
+    Then the user sets the "Entries per student" field to "15"
     Then the user checks "Group submissions allowed?"
     Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
