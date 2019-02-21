@@ -16,6 +16,7 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import get_i18n from "./i18n"
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
@@ -23,6 +24,8 @@ import { withStyles } from "@material-ui/core/styles";
 
 import ConceptChips from "./ConceptChips";
 import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
+
+const t = get_i18n( 'bingo_games' )
 
 const styles = theme => ({
   container: {
@@ -83,7 +86,7 @@ class BingoGameDataAdmin extends React.Component {
     bingo_game.start_date = bingo_game.start_date + this.state.tz_extra_start;
     bingo_game.end_date = bingo_game.end_date + this.state.tz_extra_end;
     this.setState({
-      saveStatus: "Saving game"
+      saveStatus: t("save_status")
     });
     fetch(this.props.bingoGameUrl + ".json", {
       method: "PATCH",
@@ -179,7 +182,7 @@ class BingoGameDataAdmin extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const saveBtn = this.state.dirty ? (
+    const save_btn = this.state.dirty ? (
       <React.Fragment>
         <Button
           variant="contained"
@@ -189,17 +192,18 @@ class BingoGameDataAdmin extends React.Component {
           id="save_bingo_game"
           value="save_bingo_game"
         >
-          Update Bingo Game
+          {t("update_bingo_btn")}
         </Button>
         <Typography>{this.state.saveStatus}</Typography>
       </React.Fragment>
     ) : null;
+
     const group_options = this.state.bingo_game.group_option ? (
       <React.Fragment>
         <Grid item>
           <TextField
             id="bingo-name"
-            label="Discount for collaboration"
+            label={t( 'group_discount' ) }
             type="number"
             className={classes.textField}
             value={this.state.bingo_game.group_discount}
@@ -210,7 +214,7 @@ class BingoGameDataAdmin extends React.Component {
         <Grid item>
           <FormControl className={classes.formControl}>
             <InputLabel shrink htmlFor="bingo_game_project_id">
-              Source project
+              {t( 'group_source' )}
             </InputLabel>
             <Select
               value={this.state.bingo_game.project_id}
@@ -238,14 +242,14 @@ class BingoGameDataAdmin extends React.Component {
       <Paper>
         <ExpansionPanel defaultExpanded={true}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            Game details:
+            {t('game_details_pnl')}:
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container spacing={16}>
               <Grid item>
                 <TextField
                   id="topic"
-                  label="Topic"
+                  label={t("topic") }
                   className={classes.textField}
                   value={this.state.bingo_game.topic}
                   onChange={this.handleChange("topic")}
@@ -255,7 +259,7 @@ class BingoGameDataAdmin extends React.Component {
               <Grid item>
                 <TextField
                   id="description"
-                  label="Description"
+                  label={t("definition")}
                   className={classes.textField}
                   value={this.state.bingo_game.description}
                   onChange={this.handleChange("description")}
@@ -265,7 +269,7 @@ class BingoGameDataAdmin extends React.Component {
               <Grid item>
                 <TextField
                   id="bingo-lead-time"
-                  label="Days for instructor review"
+                  label={t( "lead_time" )}
                   className={classes.lead_time}
                   value={this.state.bingo_game.lead_time}
                   type="number"
@@ -279,7 +283,7 @@ class BingoGameDataAdmin extends React.Component {
               <Grid item>
                 <TextField
                   id="bingo-individual_count"
-                  label="Entries per student"
+                  label={t( 'ind_term_count' )}
                   className={classes.textField}
                   value={this.state.bingo_game.individual_count}
                   type="number"
@@ -293,7 +297,7 @@ class BingoGameDataAdmin extends React.Component {
               <Grid item>
                 <TextField
                   id="bingo-start_date"
-                  label="Open date"
+                  label={t( 'open_date' )}
                   className={classes.textField}
                   value={this.state.bingo_game.start_date}
                   type="date"
@@ -308,7 +312,7 @@ class BingoGameDataAdmin extends React.Component {
               <Grid item>
                 <TextField
                   id="bingo-close_date"
-                  label="Game date"
+                  label={t( 'close_date' )}
                   className={classes.textField}
                   value={this.state.bingo_game.end_date}
                   type="date"
@@ -328,7 +332,7 @@ class BingoGameDataAdmin extends React.Component {
                       onChange={this.handleCheckChange("active")}
                     />
                   }
-                  label="Active"
+                  label={t('active')}
                 />
               </Grid>
               <Grid item>
@@ -338,18 +342,18 @@ class BingoGameDataAdmin extends React.Component {
                   onChange={this.handleCheckChange("group_option")}
                 />
                 <InputLabel htmlFor="group_option">
-                  Make groups available?
+                  {t( 'group_option' )}
                 </InputLabel>
               </Grid>
               {group_options}
             </Grid>
-            {saveBtn}
+            {save_btn}
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
         <ExpansionPanel disabled={!this.state.bingo_game.reviewed}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            Response data:
+            {t('response_pnl')}:
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container>

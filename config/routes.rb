@@ -53,10 +53,14 @@ Rails.application.routes.draw do
         as: :worksheet_for_bingo
   end
 
-  post 'infra/quote' => 'home#get_quote', as: :get_quote
-  get 'infra/states_for_country/:country_code' => 'home#states_for_country', as: :states_for
-  get 'infra/diversity_score_for' => 'home#check_diversity_score',
-      as: :check_diversity_score
+  scope 'infra' do
+    post 'quote' => 'home#get_quote', as: :get_quote
+    get 'states_for_country/:country_code' => 'home#states_for_country', as: :states_for
+    get 'diversity_score_for' => 'home#check_diversity_score',
+        as: :check_diversity_score
+    get 'locales/:lang/:ns' => 'locales#get_resources', as: :i18n,
+        constraints: ->(req) { req.format == :json }
+  end
 
   get 'experiences/next/:experience_id:' => 'experiences#next', as: :next_experience
   get 'exeriences/diagnose' => 'experiences#diagnose', as: :diagnose
