@@ -17,7 +17,7 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
-import get_i18n from "./i18n"
+import get_i18n from "./i18n";
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
@@ -26,7 +26,7 @@ import { withStyles } from "@material-ui/core/styles";
 import ConceptChips from "./ConceptChips";
 import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
 
-const t = get_i18n( 'bingo_games' )
+const t = get_i18n("bingo_games");
 
 const styles = theme => ({
   container: {
@@ -204,7 +204,7 @@ class BingoGameDataAdmin extends React.Component {
         <Grid item>
           <TextField
             id="bingo-name"
-            label={t( 'group_discount' ) }
+            label={t("group_discount")}
             type="number"
             className={classes.textField}
             value={this.state.bingo_game.group_discount}
@@ -215,7 +215,7 @@ class BingoGameDataAdmin extends React.Component {
         <Grid item>
           <FormControl className={classes.formControl}>
             <InputLabel shrink htmlFor="bingo_game_project_id">
-              {t( 'group_source' )}
+              {t("group_source")}
             </InputLabel>
             <Select
               value={this.state.bingo_game.project_id}
@@ -243,14 +243,14 @@ class BingoGameDataAdmin extends React.Component {
       <Paper>
         <ExpansionPanel defaultExpanded={true}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            {t('game_details_pnl')}:
+            {t("game_details_pnl")}:
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container spacing={16}>
               <Grid item>
                 <TextField
                   id="topic"
-                  label={t("topic") }
+                  label={t("topic")}
                   className={classes.textField}
                   value={this.state.bingo_game.topic}
                   onChange={this.handleChange("topic")}
@@ -270,7 +270,7 @@ class BingoGameDataAdmin extends React.Component {
               <Grid item>
                 <TextField
                   id="bingo-lead-time"
-                  label={t( "lead_time" )}
+                  label={t("lead_time")}
                   className={classes.lead_time}
                   value={this.state.bingo_game.lead_time}
                   type="number"
@@ -284,7 +284,7 @@ class BingoGameDataAdmin extends React.Component {
               <Grid item>
                 <TextField
                   id="bingo-individual_count"
-                  label={t( 'ind_term_count' )}
+                  label={t("ind_term_count")}
                   className={classes.textField}
                   value={this.state.bingo_game.individual_count}
                   type="number"
@@ -298,7 +298,7 @@ class BingoGameDataAdmin extends React.Component {
               <Grid item>
                 <TextField
                   id="bingo-start_date"
-                  label={t( 'open_date' )}
+                  label={t("open_date")}
                   className={classes.textField}
                   value={this.state.bingo_game.start_date}
                   type="date"
@@ -313,7 +313,7 @@ class BingoGameDataAdmin extends React.Component {
               <Grid item>
                 <TextField
                   id="bingo-close_date"
-                  label={t( 'close_date' )}
+                  label={t("close_date")}
                   className={classes.textField}
                   value={this.state.bingo_game.end_date}
                   type="date"
@@ -333,7 +333,7 @@ class BingoGameDataAdmin extends React.Component {
                       onChange={this.handleCheckChange("active")}
                     />
                   }
-                  label={t('active')}
+                  label={t("active")}
                 />
               </Grid>
               <Grid item>
@@ -343,7 +343,7 @@ class BingoGameDataAdmin extends React.Component {
                   onChange={this.handleCheckChange("group_option")}
                 />
                 <InputLabel htmlFor="group_option">
-                  {t( 'group_option' )}
+                  {t("group_option")}
                 </InputLabel>
               </Grid>
               {group_options}
@@ -354,7 +354,7 @@ class BingoGameDataAdmin extends React.Component {
 
         <ExpansionPanel disabled={!this.state.bingo_game.reviewed}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            {t('response_pnl')}:
+            {t("response_pnl")}:
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container>
