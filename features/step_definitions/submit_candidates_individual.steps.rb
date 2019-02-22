@@ -28,7 +28,7 @@ When /^the user clicks the link to the candidate list$/ do
 end
 
 Then /^the user should see the Bingo candidate list$/ do
-  page.should have_content('Topic:')
+  page.should have_content('Topic')
   page.should have_content(@bingo.topic)
   page.should have_content('For:')
   page.should have_content(@user.name(@anon))

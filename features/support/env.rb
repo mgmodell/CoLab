@@ -19,6 +19,18 @@ Capybara.register_driver :headless_firefox do |app|
   )
 end
 
+Capybara.register_driver(:chrome) do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w[disable-gpu] }
+  )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    desired_capabilities: capabilities
+  )
+end
+
 Capybara.register_driver(:headless_chrome) do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     chromeOptions: { args: %w[headless disable-gpu] }
@@ -32,6 +44,7 @@ Capybara.register_driver(:headless_chrome) do |app|
 end
 
 Capybara.javascript_driver = :headless_chrome
+# Capybara.javascript_driver = :chrome
 # Capybara.javascript_driver = :headless_firefox
 # Capybara.javascript_driver = :selenium
 Capybara.default_driver = :rack_test

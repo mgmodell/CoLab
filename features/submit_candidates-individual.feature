@@ -59,6 +59,7 @@ Feature: Submitting Candidate words for Bingo!
     Then retrieve the latest Bingo! game from the db
     Then the candidate list properties will match the list
 
+  @javascript
   Scenario: User should be able to open update and then re-edit a list of candidates
     Given the user logs in
     Then user should see 1 open task

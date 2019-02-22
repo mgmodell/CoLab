@@ -32,9 +32,17 @@ class BingoGamesController < ApplicationController
       format.json do
         resp = @bingo_game.as_json(only:
           %i[ id topic description source group_option individual_count
-              start_date end_date active lead_time group_discount reviewed ])
-        resp[:topic] = @bingo_game.anon_topic if @current_user.anonymize?
+              start_date end_date active lead_time group_discount
+              reviewed project_id ])
+        resp[:topic] = @bingo_game.get_topic(@current_user.anonymize?)
         resp[:reviewed] = @bingo_game.reviewed?
+        resp[:projects] = @bingo_game.course.projects
+                                     .collect do |p|
+          {
+            id: p.id,
+            name: p.get_name(@current_user.anonymize?)
+          }
+        end .as_json
         render json: resp
       end
     end
@@ -79,7 +87,6 @@ class BingoGamesController < ApplicationController
             bc.indeks_as_letter
         end
       end
-      puts "#{bb.user.id} : #{practice_answers.inspect}"
       resp[bb.user.id][:practice_answers] = practice_answers
     end
 
@@ -195,11 +202,23 @@ class BingoGamesController < ApplicationController
 
   def update
     @title = t '.title'
-    if @bingo_game.update(bingo_game_params)
-      redirect_to @bingo_game, notice: t('bingo_games.update_success')
-    else
-      logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
-      render :edit
+    @bingo_game.update(bingo_game_params)
+
+    respond_to do |format|
+      format.json do
+        if @bingo_game.errors.empty?
+          render json: {
+            notice: 'Game saved successfully!',
+            messages: {}
+          }
+        else
+          render json: {
+            notice: 'Unable to save',
+            messages: @bingo_game.errors
+          }
+        end
+      end
+      format.html { render :edit }
     end
   end
 
@@ -471,7 +490,7 @@ class BingoGamesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_game
-    bg_test = BingoGame.find(params[:id])
+    bg_test = BingoGame.joins(course: :projects).includes(course: :projects).find(params[:id])
     if @current_user.is_admin?
       @bingo_game = bg_test
     else
@@ -496,7 +515,8 @@ class BingoGamesController < ApplicationController
 
   def bingo_game_params
     params.require(:bingo_game).permit(:course_id, :topic, :description, :link, :source,
-                                       :group_option, :individual_count, :group_discount,
-                                       :lead_time, :project_id, :start_date, :end_date)
+                                       :active, :group_option, :individual_count,
+                                       :group_discount, :lead_time, :project_id,
+                                       :start_date, :end_date)
   end
 end

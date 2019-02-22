@@ -3,16 +3,22 @@
 require 'forgery'
 
 Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
-  new_date = Chronic.parse(date_value).strftime('%Y-%m-%dT%T')
+  new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
+  page.find('#bingo_game_' + date_field_prefix + '_date').click
   page.find('#bingo_game_' + date_field_prefix + '_date').set(new_date)
 end
 
 Then /^the user clicks "([^"]*)" on the existing bingo game$/ do |action|
+  click_link_or_button 'Activities'
   find(:xpath, "//tr[td[contains(.,'#{@bingo.get_name(@anon)}')]]/td/a", text: action).click
 end
 
 Then /^retrieve the latest Bingo! game from the db$/ do
   @bingo = BingoGame.last
+end
+
+Then /^the user clicks by label "([^"]*)"$/ do |checkbox|
+  find('label', text: checkbox).click
 end
 
 Given /^the course has a Bingo! game$/ do

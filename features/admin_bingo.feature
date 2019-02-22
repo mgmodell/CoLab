@@ -15,6 +15,7 @@ Feature: Bingo Administration
     Given the Bingo! started "2/29/1980" and ends "7/10/2008"
     Given the course started "5/10/1976" and ended "11/01/2012"
 
+  @javascript
   Scenario: Instructor creates a new Bingo! game
     Given the user is the instructor for the course
     Given the user logs in
@@ -22,11 +23,13 @@ Feature: Bingo Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
+    Then the user switches to the "Activities" tab
     Then the user clicks "New Bingo! Game"
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor prep" field to "2"
-    Then the user sets the "Terms per individual" field to "15"
-    Then the user sets the "Percent fewer terms if working in a group" field to "30"
+    Then the user sets the "Entries per student" field to "15"
+    Then the user checks "Make groups available?"
+    Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
     Then the user sets the bingo "start" date to "02/29/1980"
     Then the user sets the bingo "end" date to "07/10/2008"
@@ -45,6 +48,7 @@ Feature: Bingo Administration
     Then the bingo "start" date is "02/29/1980"
     Then the bingo "end" date is "07/10/2008"
 
+  @javascript
   Scenario: Instructor creates a new Bingo! game but leaves the dates untouched
     Given the user is the instructor for the course
     Given the user logs in
@@ -52,11 +56,13 @@ Feature: Bingo Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
+    Then the user switches to the "Activities" tab
     Then the user clicks "New Bingo! Game"
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor prep" field to "2"
-    Then the user sets the "Terms per individual" field to "15"
-    Then the user sets the "Percent fewer terms if working in a group" field to "30"
+    Then the user sets the "Entries per student" field to "15"
+    Then the user checks "Make groups available?"
+    Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Bingo game"
@@ -70,6 +76,7 @@ Feature: Bingo Administration
     Then the bingo "end" date is "11/01/2012"
     #check the selects
 
+  @javascript
   Scenario: Instructor edits an existing Bingo!
     Given the user is the instructor for the course
     Given the user logs in
@@ -77,14 +84,16 @@ Feature: Bingo Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Edit" on the existing bingo game
+    Then the user clicks "Show" on the existing bingo game
     Then the user sets the "Topic" field to "Privacy"
-    Then the user sets the "Days for instructor prep" field to "2"
-    Then the user sets the "Terms per individual" field to "15"
-    Then the user sets the "Percent fewer terms if working in a group" field to "30"
+    Then the user sets the "Days for instructor review" field to "2"
+    Then the user sets the "Entries per student" field to "15"
+    Then the user clicks by label "Make groups available?"
+    Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
     Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Bingo game"
+    Then the user clicks "Update Bingo Game"
+    Then the user waits while seeing "Saving game"
     Then the user will see "success"
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
