@@ -259,7 +259,7 @@ class BingoGameDataAdmin extends React.Component {
               <Grid item>
                 <TextField
                   id="description"
-                  label={t("definition")}
+                  label={t("description")}
                   className={classes.textField}
                   value={this.state.bingo_game.description}
                   onChange={this.handleChange("description")}

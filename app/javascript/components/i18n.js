@@ -3,9 +3,9 @@ import LngDetector from 'i18next-browser-languagedetector';
 import Fetch from 'i18next-fetch-backend';
 
 const backend_opts = {
-  loadPath: '/infra/locales/{{lng}}/{{ns}}.json',
+  loadPath: '/infra/locales/{{ns}}.json',
   // path to post missing resources
-  addPath: 'locales/add/{{lng}}/{{ns}}',
+  addPath: 'locales/add/{{ns}}',
   // define how to stringify the data when adding missing resources
   stringify: JSON.stringify,
 }

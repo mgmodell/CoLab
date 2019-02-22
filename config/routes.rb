@@ -58,7 +58,7 @@ Rails.application.routes.draw do
     get 'states_for_country/:country_code' => 'home#states_for_country', as: :states_for
     get 'diversity_score_for' => 'home#check_diversity_score',
         as: :check_diversity_score
-    get 'locales/:lang/:ns' => 'locales#get_resources', as: :i18n,
+    get 'locales/:ns' => 'locales#get_resources', as: :i18n,
         constraints: ->(req) { req.format == :json }
   end
 
