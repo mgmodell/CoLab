@@ -139,6 +139,22 @@ Feature: Course Administration
     Then the user adds the 'student' users 'me@mailinator.com'
     Then there are 13 students in the course
 
+  Scenario: Admin adds a the same student multiple times with different
+      capitalization student to a course
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user adds the 'student' users 'me@mailinator.com'
+    Then the user adds the 'student' users 'ME@MAILINATOR.COM'
+    Then the user adds the 'student' users 'me@mAiliNator.Com'
+    Then the user adds the 'student' users 'me@mailinator.com'
+    Then the user adds the 'student' users 'mE@mAILinator.com'
+    Then the user adds the 'student' users 'mE@mAILinaTor.com'
+    Then there are 13 students in the course
+
   Scenario: Admin adds a new student, then drops and re-adds them
     Given the user is the instructor for the course
     Given the user logs in
