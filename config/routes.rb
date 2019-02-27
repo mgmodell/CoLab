@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     resources :courses, :projects, :experiences, :bingo_games, :schools,
               :consent_forms
     resources :concepts, except: [:destroy, :create]
+    resources :bingo_games, except: [:edit ]
   end
 
   scope 'bingo' do

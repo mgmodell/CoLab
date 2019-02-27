@@ -122,7 +122,7 @@ class CandidatesReviewTable extends React.Component {
           dataKey: "feedback",
           numeric: false,
           visible: true,
-          sortable: false,
+          sortable: true,
           render_func: c => {
             return this.feedbackRender(c);
           }
@@ -134,7 +134,7 @@ class CandidatesReviewTable extends React.Component {
           dataKey: "concept",
           numeric: false,
           visible: true,
-          sortable: false,
+          sortable: true,
           render_func: c => {
             return this.conceptRender(c);
           }
@@ -175,6 +175,10 @@ class CandidatesReviewTable extends React.Component {
           : b["candidate_feedback_id"];
         let comparison = a_val - b_val;
         return mod * (a_val - b_val);
+      });
+    } else if ("concept" == dataKey ) {
+      tmpArray.sort((a, b) => {
+        return mod * a[dataKey].name.localeCompare(b[dataKey].name);
       });
     } else if ("number" == dataKey) {
       tmpArray.sort((a, b) => {
