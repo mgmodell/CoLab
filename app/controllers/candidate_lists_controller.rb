@@ -134,7 +134,7 @@ class CandidateListsController < ApplicationController
     end
 
     # Add in the remainder elements
-    5.times do
+    4.times do
       @candidate_list.candidates.build(term: '', definition: '',
                                        user_id: @current_user.id)
     end
