@@ -207,7 +207,7 @@ class BingoBuilder extends React.Component {
         <React.Fragment>
         <Link onClick={() => this.getPrintableBoard()}>
           Download Playble Bingo Board
-        </Link> | 
+        </Link>&nbsp;|&nbsp;
         </React.Fragment>
       ) : null;
 

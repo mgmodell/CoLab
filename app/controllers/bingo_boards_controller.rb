@@ -38,7 +38,17 @@ class BingoBoardsController < ApplicationController
       iteration: 0,
     )
     if 'pdf' ==  params[:format]
-      bingo_board.bingo_cells = session[:demo_cells]
+      bingo_board.bingo_cells = []
+      #reconstitue saved items
+      cells_array = JSON.parse( session[:demo_cells])
+      cells_array.each do |c|
+        bingo_board.bingo_cells <<
+          BingoCell.new(
+            row: c['row'],
+            column: c['column'],
+            concept: Concept.new( name: c['concept']['name'] )
+          )
+      end
     end
     board_for_game_helper bingo_board: bingo_board, bingo_game: bingo_game
   end
@@ -66,9 +76,10 @@ class BingoBoardsController < ApplicationController
     end
 
     cells = bingo_board.bingo_cells
-                       .order(row: :asc, column: :asc).to_a
-    # Let's init those cells
+    #                   .order(row: :asc, column: :asc).to_a
     size = bingo_board.bingo_game.size
+    cells.sort{ |a,b| ((size*a.row)+a.column)<=>((size*b.row)+b.column) }
+    # Let's init those cells
     mid = (size / 2.0).round
     size.times do |row|
       size.times do |column|
@@ -244,29 +255,30 @@ class BingoBoardsController < ApplicationController
             name: bc_hash[:concept][:name]
           )
       )
-      puts bc.inspect
-      puts bc.concept.inspect
       cells << bc
     end
-    puts cells.inspect
-    session[:demo_cells] = cells
+    session[:demo_cells] = cells.to_json(only:[:row, :column], include: [concept: {only: :name} ]  )
 
     update_responder
   end
 
   def update
     bingo_game_id = params[:bingo_game_id]
-    @board = BingoBoard.where(
+    @board = BingoBoard.playable.where(
       user_id: @current_user.id,
       bingo_game_id: bingo_game_id
     ).take
     if @board.nil?
-      @board = BingoBoard.new
+      @board = BingoBoard.new(
+        user_id: @current_user.id,
+        user: @current_user,
+        bingo_game_id: bingo_game_id
+      )
     end
 
     iteration = @board.iteration
-    @board.user_id = @current_user.id
-    @board.bingo_game_id = bingo_game_id
+    # @board.user_id = @current_user.id
+    # @board.bingo_game_id = bingo_game_id
     @board.iteration += iteration
 
     cells = []
