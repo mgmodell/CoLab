@@ -34,6 +34,7 @@ class BingoBuilder extends React.Component {
       }
     };
     this.getWorksheet = this.getWorksheet.bind(this);
+    this.getPrintableBoard = this.getPrintableBoard.bind(this);
   }
   randomizeTiles() {
     var selectedConcepts = {};
@@ -185,14 +186,8 @@ class BingoBuilder extends React.Component {
   getWorksheet() {
     open(this.props.worksheetUrl + ".pdf");
   }
-  printBoard() {
-    const input = document.getElementById("bingoBoard");
-    html2canvas(input).then(canvas => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, "JPEG", 0, 0);
-      pdf.save("bingoBoard.pdf");
-    });
+  getPrintableBoard() {
+    open(this.props.boardUrl + ".pdf");
   }
   componentDidMount() {
     //Let's retrieve any existing board
@@ -209,15 +204,19 @@ class BingoBuilder extends React.Component {
       ) : null;
     const printBtn =
       this.state.board.id != null && this.state.board.iteration == 0 ? (
-        <Button variant="contained" onClick={() => this.printBoard()}>
-          Print
-        </Button>
+        <React.Fragment>
+        <Link onClick={() => this.getPrintableBoard()}>
+          Download Playble Bingo Board
+        </Link> | 
+        </React.Fragment>
       ) : null;
 
     const workSheet =
       this.state.board.acceptable <
       this.state.board.size * this.state.board.size ? null : (
-        <Link onClick={() => this.getWorksheet()}>Practice</Link>
+        <Link onClick={() => this.getWorksheet()}>
+          Download Practice Bingo Board
+        </Link>
       );
 
     return (

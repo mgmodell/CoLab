@@ -26,16 +26,21 @@ class BingoBoardsController < ApplicationController
       name: (t :demo_project),
       course_id: -1
     )
-    bingo_game = BingoGame.new(
-      id: -42,
-      topic: (t 'candidate_lists.demo_bingo_topic'),
-      description: (t 'candidate_lists.demo_bingo_description'),
-      end_date: 1.days.from_now.end_of_day,
-      group_option: false,
-      project: demo_project,
-      size: 5
+    bingo_game = get_demo_bingo_game
+    bingo_game.project = demo_project
+    bingo_game.topic = t 'candidate_lists.demo_bingo_topic'
+    bingo_game.description = t 'candidate_lists.demo_bingo_description'
+    bingo_game.end_date = 1.days.from_now.end_of_day
+
+    bingo_board = BingoBoard.new(
+      bingo_game: bingo_game,
+      user: @current_user,
+      iteration: 0,
     )
-    board_for_game_helper bingo_game: bingo_game
+    if 'pdf' ==  params[:format]
+      bingo_board.bingo_cells = session[:demo_cells]
+    end
+    board_for_game_helper bingo_board: bingo_board, bingo_game: bingo_game
   end
 
   def board_for_game
@@ -56,6 +61,7 @@ class BingoBoardsController < ApplicationController
     if bingo_board.nil?
       bingo_board = BingoBoard.new
       bingo_board.bingo_game = bingo_game
+      bingo_board.user = @current_user
       bingo_board.iteration = 0
     end
 
@@ -88,6 +94,10 @@ class BingoBoardsController < ApplicationController
         )
         resp[:acceptable] = acceptable_count
         render json: resp
+      end
+      format.pdf do
+        pdf = WorksheetPdf.new(bingo_board)
+        send_data pdf.render, filename: 'bingo_game.pdf', type: 'application/pdf'
       end
     end
   end
@@ -222,7 +232,24 @@ class BingoBoardsController < ApplicationController
       user: @current_user,
       board_type: :playable
     )
-    @board.assign_attributes(bingo_board_params)
+    #@board.assign_attributes(bingo_board_params)
+
+    cells = []
+    params[:bingo_board][:bingo_cells_attributes].each do |bc_hash|
+      bc = BingoCell.new(
+          row: bc_hash[:row],
+          column: bc_hash[:column],
+          concept_id: bc_hash[:concept][:id],
+          concept: Concept.new(
+            name: bc_hash[:concept][:name]
+          )
+      )
+      puts bc.inspect
+      puts bc.concept.inspect
+      cells << bc
+    end
+    puts cells.inspect
+    session[:demo_cells] = cells
 
     update_responder
   end
@@ -231,14 +258,31 @@ class BingoBoardsController < ApplicationController
     bingo_game_id = params[:bingo_game_id]
     @board = BingoBoard.where(
       user_id: @current_user.id,
-      bingo_game_id: :bingo_game_id
+      bingo_game_id: bingo_game_id
     ).take
-    @board = BingoBoard.new if @board.nil?
+    if @board.nil?
+      @board = BingoBoard.new
+    end
 
     iteration = @board.iteration
-    @board.assign_attributes(bingo_board_params)
     @board.user_id = @current_user.id
+    @board.bingo_game_id = bingo_game_id
     @board.iteration += iteration
+
+    cells = []
+    params[:bingo_board][:bingo_cells_attributes].each do |bc_hash|
+      bc = BingoCell.where( id: bc_hash[:id] ).take
+      if bc.nil?
+        bc = @board.bingo_cells.build(
+          row: bc_hash[:row],
+          column: bc_hash[:column]
+        )
+      end
+      bc.concept_id = bc_hash[:concept_id]
+      bc.save
+      cells << bc
+    end
+    @board.bingo_cells = cells
 
     if @board.save
       @board = BingoBoard
