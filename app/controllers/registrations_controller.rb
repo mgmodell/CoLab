@@ -10,12 +10,18 @@ class RegistrationsController < Devise::RegistrationsController
 
   def add_email
     address = params[:email_address]
-    email = Email.create(email: address, user: @current_user)
-    logger.debug email.errors.full_messages unless email.errors.empty?
-    notice = email.errors.empty? ?
-      t('devise.registrations.email_added') :
-      t('devise.registrations.email_not_added')
-    redirect_to edit_user_registration_path, notice: notice
+    email = Email.where( email: address ).take
+    if email.nil?
+      email = Email.create(email: address, user: @current_user)
+      logger.debug email.errors.full_messages unless email.errors.empty?
+      notice = email.errors.empty? ?
+        t('devise.registrations.email_added') :
+        t('devise.registrations.email_not_added')
+      redirect_to edit_user_registration_path, notice: notice
+    else
+      #TODO complete merge
+
+    end
   end
 
   def remove_email
