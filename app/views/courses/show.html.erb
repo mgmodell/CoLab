@@ -172,7 +172,9 @@
                   <%= l in_tz( date: activity.end_date ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show ), activity %>&nbsp;|&nbsp;
-                <%= link_to t( :edit ), [:edit, activity] %>&nbsp;|&nbsp;
+                <% unless activity.get_type == 'Terms List' %>
+                  <%= link_to t( :edit ), [:edit, activity] %>&nbsp;|&nbsp;
+                <% end %>
                 <%= link_to t( :destroy ), activity, method: :delete, data: { confirm: t( :confirmation) } %></td>
             </tr>
           <% end %>

@@ -11,7 +11,7 @@ class BingoGamesController < ApplicationController
   before_action :demo_user, only: %i[ review_candidates_demo
                                       demo_update_review_candidates ]
 
-  before_action :set_bingo_game, only: %i[show edit update
+  before_action :set_bingo_game, only: %i[show update
                                           destroy review_candidates
                                           update_review_candidates ]
 
@@ -165,10 +165,6 @@ class BingoGamesController < ApplicationController
     render json: resp_array
   end
 
-  def edit
-    @title = t '.title'
-  end
-
   def index
     @title = t '.title'
     @bingo_games = []
@@ -218,7 +214,6 @@ class BingoGamesController < ApplicationController
           }
         end
       end
-      format.html { render :edit }
     end
   end
 
