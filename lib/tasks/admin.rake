@@ -22,4 +22,21 @@ namespace :admin do
       candidate_list.save
     end
   end
+
+
+  desc 'Merge two users into one'
+  task :merge_users, [:predator,:prey] => [:environment] do |_t, args|
+    pred_e = args[:predator]
+    prey_e = args[:prey]
+    if prey_e.empty? or pred_e.empty?
+      puts '  This task merges two users given their email addresses.'
+      puts '   Usage:   rake admin:merge_users[<consumer email>,<consumed email>]'
+      puts '   Example: rake admin:examples[\'john_smith@gmail.com\',\'john.smith@example.com\']'
+      puts '   The above would absorb the example user into the gmail user'
+    else
+      #TODO Execute the code
+      puts "#{pred_e} will consume #{prey_e}"
+      User.merge_users predator: pred_e , prey: prey_e
+    end
+  end
 end

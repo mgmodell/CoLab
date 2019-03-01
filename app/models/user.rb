@@ -312,6 +312,69 @@ class User < ApplicationRecord
     user
   end
 
+  def self.merge_users( predator:,  prey: )
+    pred_u = User.find_by_email( predator )
+    prey_u = User.find_by_email( prey )
+
+    if pred_u.present? && prey_u.present?
+      #copy the demographic data
+      User.transaction do
+        pred_u.first_name = pred_u.first_name || prey_u.first_name
+        pred_u.last_name = pred_u.last_name || prey_u.last_name
+        pred_u.gender_id = pred_u.gender_id || prey_u.gender_id
+        pred_u.country = pred_u.country || prey_u.country
+        pred_u.timezone = pred_u.timezone || prey_u.timezone
+        pred_u.theme_id = pred_u.theme_id || prey_u.theme_id
+        pred_u.school_id = pred_u.school_id || prey_u.school_id
+        pred_u.language_id = pred_u.language_id || prey_u.language_id
+        pred_u.date_of_birth = pred_u.date_of_birth || prey_u.date_of_birth
+        pred_u.home_state_id = pred_u.home_state_id || prey_u.home_state_id
+        pred_u.cip_code_id = pred_u.cip_code_id || prey_u.cip_code_id
+        pred_u.primary_language_id = pred_u.primary_language_id || prey_u.primary_language_id
+        pred_u.started_school = pred_u.started_school || prey_u.started_school
+        pred_u.impairment_visual = pred_u.impairment_visual || prey_u.impairment_visual
+        pred_u.impairment_auditory = pred_u.impairment_auditory || prey_u.impairment_auditory
+        pred_u.impairment_motor = pred_u.impairment_motor || prey_u.impairment_motor
+        pred_u.impairment_cognitive = pred_u.impairment_cognitive || prey_u.impairment_cognitive
+        pred_u.impairment_other = pred_u.impairment_other || prey_u.impairment_other
+        #Capabilities/permissions setting
+        pred_u.admin = pred_u.admin || prey_u.admin
+        pred_u.researcher = pred_u.researcher || prey_u.researcher
+        pred_u.welcomed = pred_u.welcomed || prey_u.welcomed
+        pred_u.last_emailed = pred_u.last_emailed || prey_u.last_emailed
+  
+        prey_u.emails.each do |e|
+          e.user_id = pred_u.id
+          e.save!
+        end
+        #Remap all user_ids
+        prey_u.groups.each do |g|
+          groups.users.delete prey_u
+          groups.users << pred_u
+        end
+        prey_u.bingo_boards.update_all user_id: pred_u.id
+        prey_u.candidate_lists.update_all user_id: pred_u.id
+        prey_u.candidates.update_all user_id: pred_u.id
+        ConsentForm.where( user_id: prey_u.id ).update_all user_id: pred_u.id
+        prey_u.consent_logs.update_all user_id: pred_u.id
+        prey_u.installments.update_all user_id: pred_u.id
+        prey_u.reactions.update_all user_id: pred_u.id
+        prey_u.rosters.update_all user_id: pred_u.id
+        Value.where( user_id: prey_u.id ).update_all user_id: pred_u.id
+
+        #Ahoy email message tracking
+        Ahoy::Message.where( user_id: prey_u.id ).update_all user_id: pred_u
+  
+        pred_u.save!
+        prey_u.save!
+        # prey_u.destroy!
+
+      end
+    else
+      puts "One or more user were not found. No work done."
+    end
+  end
+
   private
 
   def anonymize
