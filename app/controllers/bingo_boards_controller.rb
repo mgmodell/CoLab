@@ -35,18 +35,18 @@ class BingoBoardsController < ApplicationController
     bingo_board = BingoBoard.new(
       bingo_game: bingo_game,
       user: @current_user,
-      iteration: 0,
+      iteration: 0
     )
-    if 'pdf' ==  params[:format]
+    if params[:format] == 'pdf'
       bingo_board.bingo_cells = []
-      #reconstitue saved items
-      cells_array = JSON.parse( session[:demo_cells])
+      # reconstitue saved items
+      cells_array = JSON.parse(session[:demo_cells])
       cells_array.each do |c|
         bingo_board.bingo_cells <<
           BingoCell.new(
             row: c['row'],
             column: c['column'],
-            concept: Concept.new( name: c['concept']['name'] )
+            concept: Concept.new(name: c['concept']['name'])
           )
       end
     end
@@ -78,7 +78,7 @@ class BingoBoardsController < ApplicationController
     cells = bingo_board.bingo_cells
     #                   .order(row: :asc, column: :asc).to_a
     size = bingo_board.bingo_game.size
-    cells.sort{ |a,b| ((size*a.row)+a.column)<=>((size*b.row)+b.column) }
+    cells.sort { |a, b| ((size * a.row) + a.column) <=> ((size * b.row) + b.column) }
     # Let's init those cells
     mid = (size / 2.0).round
     size.times do |row|
@@ -243,21 +243,21 @@ class BingoBoardsController < ApplicationController
       user: @current_user,
       board_type: :playable
     )
-    #@board.assign_attributes(bingo_board_params)
+    # @board.assign_attributes(bingo_board_params)
 
     cells = []
     params[:bingo_board][:bingo_cells_attributes].each do |bc_hash|
       bc = BingoCell.new(
-          row: bc_hash[:row],
-          column: bc_hash[:column],
-          concept_id: bc_hash[:concept][:id],
-          concept: Concept.new(
-            name: bc_hash[:concept][:name]
-          )
+        row: bc_hash[:row],
+        column: bc_hash[:column],
+        concept_id: bc_hash[:concept][:id],
+        concept: Concept.new(
+          name: bc_hash[:concept][:name]
+        )
       )
       cells << bc
     end
-    session[:demo_cells] = cells.to_json(only:[:row, :column], include: [concept: {only: :name} ]  )
+    session[:demo_cells] = cells.to_json(only: %i[row column], include: [concept: { only: :name }])
 
     update_responder
   end
@@ -283,7 +283,7 @@ class BingoBoardsController < ApplicationController
 
     cells = []
     params[:bingo_board][:bingo_cells_attributes].each do |bc_hash|
-      bc = BingoCell.where( id: bc_hash[:id] ).take
+      bc = BingoCell.where(id: bc_hash[:id]).take
       if bc.nil?
         bc = @board.bingo_cells.build(
           row: bc_hash[:row],

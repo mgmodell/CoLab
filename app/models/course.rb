@@ -145,33 +145,33 @@ class Course < ApplicationRecord
   end
 
   def diversity_analysis
-    students = rosters.enrolled.collect{|r| r.user }
+    students = rosters.enrolled.collect(&:user)
     combinations = students.combination(4).size
     max_actual = 1000
     results = {
       student_count: students.size,
       combinations: combinations,
-      actual: max_actual >= combinations,
+      actual: max_actual >= combinations
     }
-      
+
     options = []
     if results[:actual]
-      students.combination( 4 ).each do |members|
-        group_score = Group.calc_diversity_score_for_group( users: members )
+      students.combination(4).each do |members|
+        group_score = Group.calc_diversity_score_for_group(users: members)
         options << group_score
       end
     else
       max_actual.times do
         members = students.sample 4
-        group_score = Group.calc_diversity_score_for_group( users: members )
+        group_score = Group.calc_diversity_score_for_group(users: members)
         options << group_score
       end
     end
     options.sort
     results[:min] = options.last
     results[:max] = options.first
-    results[:average] = options.inject(0.0){|sum,el|sum + el} / options.size
-    results[:class_score] = Group.calc_diversity_score_for_group( users: students )
+    results[:average] = options.inject(0.0) { |sum, el| sum + el } / options.size
+    results[:class_score] = Group.calc_diversity_score_for_group(users: students)
 
     results
   end

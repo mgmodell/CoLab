@@ -205,9 +205,10 @@ class BingoBuilder extends React.Component {
     const printBtn =
       this.state.board.id != null && this.state.board.iteration == 0 ? (
         <React.Fragment>
-        <Link onClick={() => this.getPrintableBoard()}>
-          Download Playble Bingo Board
-        </Link>&nbsp;|&nbsp;
+          <Link onClick={() => this.getPrintableBoard()}>
+            Download Playble Bingo Board
+          </Link>
+          &nbsp;|&nbsp;
         </React.Fragment>
       ) : null;
 

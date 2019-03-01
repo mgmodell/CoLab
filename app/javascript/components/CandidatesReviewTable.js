@@ -176,7 +176,7 @@ class CandidatesReviewTable extends React.Component {
         let comparison = a_val - b_val;
         return mod * (a_val - b_val);
       });
-    } else if ("concept" == dataKey ) {
+    } else if ("concept" == dataKey) {
       tmpArray.sort((a, b) => {
         return mod * a[dataKey].name.localeCompare(b[dataKey].name);
       });

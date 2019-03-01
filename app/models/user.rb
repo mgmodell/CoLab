@@ -312,12 +312,12 @@ class User < ApplicationRecord
     user
   end
 
-  def self.merge_users( predator:,  prey: )
-    pred_u = User.find_by_email( predator )
-    prey_u = User.find_by_email( prey )
+  def self.merge_users(predator:, prey:)
+    pred_u = User.find_by_email(predator)
+    prey_u = User.find_by_email(prey)
 
     if pred_u.present? && prey_u.present?
-      #copy the demographic data
+      # copy the demographic data
       User.transaction do
         pred_u.first_name = pred_u.first_name || prey_u.first_name
         pred_u.last_name = pred_u.last_name || prey_u.last_name
@@ -337,41 +337,40 @@ class User < ApplicationRecord
         pred_u.impairment_motor = pred_u.impairment_motor || prey_u.impairment_motor
         pred_u.impairment_cognitive = pred_u.impairment_cognitive || prey_u.impairment_cognitive
         pred_u.impairment_other = pred_u.impairment_other || prey_u.impairment_other
-        #Capabilities/permissions setting
+        # Capabilities/permissions setting
         pred_u.admin = pred_u.admin || prey_u.admin
         pred_u.researcher = pred_u.researcher || prey_u.researcher
         pred_u.welcomed = pred_u.welcomed || prey_u.welcomed
         pred_u.last_emailed = pred_u.last_emailed || prey_u.last_emailed
-  
+
         prey_u.emails.each do |e|
           e.user_id = pred_u.id
           e.save!
         end
-        #Remap all user_ids
-        prey_u.groups.each do |g|
+        # Remap all user_ids
+        prey_u.groups.each do |_g|
           groups.users.delete prey_u
           groups.users << pred_u
         end
         prey_u.bingo_boards.update_all user_id: pred_u.id
         prey_u.candidate_lists.update_all user_id: pred_u.id
         prey_u.candidates.update_all user_id: pred_u.id
-        ConsentForm.where( user_id: prey_u.id ).update_all user_id: pred_u.id
+        ConsentForm.where(user_id: prey_u.id).update_all user_id: pred_u.id
         prey_u.consent_logs.update_all user_id: pred_u.id
         prey_u.installments.update_all user_id: pred_u.id
         prey_u.reactions.update_all user_id: pred_u.id
         prey_u.rosters.update_all user_id: pred_u.id
-        Value.where( user_id: prey_u.id ).update_all user_id: pred_u.id
+        Value.where(user_id: prey_u.id).update_all user_id: pred_u.id
 
-        #Ahoy email message tracking
-        Ahoy::Message.where( user_id: prey_u.id ).update_all user_id: pred_u
-  
+        # Ahoy email message tracking
+        Ahoy::Message.where(user_id: prey_u.id).update_all user_id: pred_u
+
         pred_u.save!
         prey_u.save!
         # prey_u.destroy!
-
       end
     else
-      puts "One or more user were not found. No work done."
+      puts 'One or more user were not found. No work done.'
     end
   end
 
