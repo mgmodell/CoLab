@@ -8,9 +8,6 @@ class RegistrationsController < Devise::RegistrationsController
     redirect_to edit_user_registration_path, notice: t('.set_primary')
   end
 
-
-  end
-
   def add_email
     address = params[:email_address]
     email = Email.create(email: address, user: @current_user)

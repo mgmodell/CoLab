@@ -23,6 +23,19 @@ namespace :admin do
     end
   end
 
+  desc 'Get diversity information for a class'
+  task :diversanal, [:course_id] => [:environment] do |_t, args| 
+    course = Course.where( id: args[:course_id].to_i ).take
+    if course.nil? 
+      puts '  This task analyses the student diversity in a class and '
+      puts ' offers related analysis and data.'
+      puts '   Usage:   rake admin:diversanal[<course_id>]'
+      puts '   Example: rake admin:examples[7]'
+    else
+      puts "Diversity Analysis for #{course.name} (#{course.number})"
+      puts course.diversity_analysis.inspect
+    end
+  end
 
   desc 'Merge two users into one'
   task :merge_users, [:predator,:prey] => [:environment] do |_t, args|
