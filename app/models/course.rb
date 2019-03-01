@@ -144,6 +144,37 @@ class Course < ApplicationRecord
     new_course
   end
 
+  def diversity_analysis
+    students = rosters.enrolled.collect{|r| r.user }
+    combinations = students.combination(4).size
+    results = {
+      student_count: students.size,
+      combinations: combinations,
+      actual: 500 <= combinations,
+    }
+      
+    options = []
+    if results[:actual]
+      students.combination( 4 ).each do |members|
+        group_score = Group.calc_diversity_score_for_group( users: members )
+        options << group_score
+      end
+    else
+      500.times do
+        members = students.sample 4
+        group_score = Group.calc_diversity_score_for_group( users: members )
+        options << group_score
+      end
+    end
+    options.sort
+    results[:min] = options.first
+    results[:max] = options.last
+    results[:average] = options.inject(0.0){|sum,el|sum + el} / options.size
+    results[:class_score] = Group.calc_diversity_score_for_group( users: students )
+
+    results
+  end
+
   def add_user_by_email(user_email, instructor = false)
     ret_val = false
     if EmailValidator.valid? user_email
