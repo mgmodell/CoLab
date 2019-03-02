@@ -93,7 +93,7 @@ class CandidatesReviewTable extends React.Component {
         },
         {
           width: 100,
-          flexGrow: 0.0,
+          flexGrow: 1.0,
           label: "Term",
           dataKey: "term",
           numeric: false,
@@ -105,7 +105,7 @@ class CandidatesReviewTable extends React.Component {
         },
         {
           width: 200,
-          flexGrow: 2.0,
+          flexGrow: 1.5,
           label: "Definition",
           dataKey: "definition",
           numeric: false,
