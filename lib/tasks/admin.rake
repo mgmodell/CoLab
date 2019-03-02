@@ -41,7 +41,7 @@ namespace :admin do
   task :merge_users, [:predator,:prey] => [:environment] do |_t, args|
     pred_e = args[:predator]
     prey_e = args[:prey]
-    if prey_e.empty? or pred_e.empty?
+    if prey_e.nil? || prey_e.empty? || pred_e.nil? || pred_e.empty?
       puts '  This task merges two users given their email addresses.'
       puts '   Usage:   rake admin:merge_users[<consumer email>,<consumed email>]'
       puts '   Example: rake admin:examples[\'john_smith@gmail.com\',\'john.smith@example.com\']'
