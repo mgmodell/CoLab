@@ -3,8 +3,12 @@ Rails.application.routes.draw do
   get 'admin' => 'courses#index'
 
   scope 'admin' do
-    get 'courses/add_students' => 'courses#add_students', as: :add_students
-    get 'courses/add_instructors' => 'courses#add_instructors', as: :add_instructors
+    get 'courses/copy' => 'courses#new_from_template',
+        as: :copy_course
+    get 'courses/add_students' => 'courses#add_students',
+        as: :add_students
+    get 'courses/add_instructors' => 'courses#add_instructors',
+        as: :add_instructors
     get 'courses/re_invite_student/:user_id' => 'courses#re_invite_student',
         as: :re_invite_student
     get 'projects/add_group' => 'projects#add_group', as: :add_group
@@ -18,11 +22,10 @@ Rails.application.routes.draw do
         as: :activate_experience
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate', 
         as: :activate_bingo_game
-    get 'verify_bingo_win/:id/:verified' => 'bingo_boards#verify_win',
-        as: 'verify_bingo_win'
     resources :courses, :projects, :experiences, :bingo_games, :schools,
               :consent_forms
     resources :concepts, except: [:destroy, :create]
+    resources :bingo_games, except: [:edit ]
   end
 
   scope 'bingo' do
@@ -31,20 +34,34 @@ Rails.application.routes.draw do
         as: :request_bingo_collaboration
     get 'candidates_review/:id' => 'bingo_games#review_candidates',
         as: :review_bingo_candidates
-    post 'candidates_review/:id' => 'bingo_games#update_review_candidates',
-        as: :update_bingo_candidates_review
+    patch 'candidates_review/:id' => 'bingo_games#update_review_candidates',
+        as: :update_bingo_candidates_review,
+        constraints: ->(req) { req.format == :json }
     get 'list_stats/:id' => 'candidate_lists#list_stats', as: :'bingo_list_stats'
+    get 'results/:id' => 'bingo_games#game_results', as: 'game_results',
+        constraints: ->(req) { req.format == :json }
+
     #Gameplay functions
-    resources :bingo_boards, only: [:index, :edit, :update, :show]
+    resources :bingo_boards, only: [:index, :show]
+    patch 'bingo_board/:bingo_game_id' => 'bingo_boards#update',
+        as: 'update_board'
+    get 'bingo_board/:bingo_game_id' => 'bingo_boards#board_for_game',
+        as: 'board_for_game'
     get 'concepts_for_game/:id' => 'concepts#concepts_for_game',
         as: :bingo_concepts,
         constraints: ->(req) { req.format == :json }
-    post 'play_board/:id' => 'bingo_boards#play_board', as: 'play_bingo'
+    get 'worksheet/:bingo_game_id' => 'bingo_boards#worksheet_for_game',
+        as: :worksheet_for_bingo
   end
 
-  get 'infra/states_for_country/:country_code' => 'home#states_for_country', as: :states_for
-  get 'infra/diversity_score_for' => 'home#check_diversity_score',
-      as: :check_diversity_score
+  scope 'infra' do
+    post 'quote' => 'home#get_quote', as: :get_quote
+    get 'states_for_country/:country_code' => 'home#states_for_country', as: :states_for
+    get 'diversity_score_for' => 'home#check_diversity_score',
+        as: :check_diversity_score
+    get 'locales/:ns' => 'locales#get_resources', as: :i18n,
+        constraints: ->(req) { req.format == :json }
+  end
 
   get 'experiences/next/:experience_id:' => 'experiences#next', as: :next_experience
   get 'exeriences/diagnose' => 'experiences#diagnose', as: :diagnose
@@ -73,15 +90,33 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
   root to: 'home#index'
-  get 'home/demo_start' => 'home#demo_start', as: :demo_start
 
   # Consent log paths
   get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', as: :edit_consent_log
   patch 'consent_logs/:id' => 'consent_logs#update', as: :consent_log
 
+  scope 'demo' do
   # Demo paths
-  get 'installments/demo_complete' => 'installments#demo_complete', as: :assessment_demo_complete
-  get 'candidate_lists/demo_complete' => 'candidate_lists#demo_complete', as: :bingo_demo_complete
+    get 'installments/complete' => 'installments#demo_complete', as: :assessment_demo_complete
+    get 'candidate_lists/entry' => 'candidate_lists#demo_entry', as: :terms_demo_entry
+    get 'candidate_lists/play' => 'candidate_lists#demo_play', as: :bingo_demo_play
+    get 'home/start' => 'home#demo_start', as: :demo_start
+    get 'bingo_board_demo/:bingo_game_id' => 'bingo_boards#board_for_game_demo',
+        as: 'board_for_game_demo'
+    patch 'update_board_demo/:bingo_game_id' => 'bingo_boards#update_demo',
+        as: 'update_board_demo'
+    get 'concepts_for_game_demo/:id' => 'concepts#concepts_for_game_demo',
+        as: :bingo_concepts_demo,
+        constraints: ->(req) { req.format == :json }
+    get 'candidates_review_demo/-11' => 'bingo_games#review_candidates_demo',
+        as: :bingo_demo_review
+    patch 'candidates_review/-11' => 'bingo_games#demo_update_review_candidates',
+        as: :demo_update_bingo_candidates_review,
+        constraints: ->(req) { req.format == :json }
+    get 'worksheet/-42' => 'bingo_boards#demo_worksheet_for_game',
+        as: :worksheet_for_bingo_demo,
+        constraints: ->(req) { req.format == :pdf }
+  end
 
   get 'installments/new/:assessment_id/:group_id' => 'installments#new', as: :new_installment
   get 'installments/edit/:assessment_id/:group_id' => 'installments#edit', as: :edit_installment

@@ -1,11 +1,11 @@
 <h1><%= t :invited %></h2>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-<% anonymize = @current_user.nil? ? false : @current_user.anonymize? %>
+<% theme_code = get_theme_code
+   anonymize = get_anonymous %>
 <p><%= t 'home.greeting', name: @current_user.nil? ? "John" : @current_user.first_name %>,
-    <%= t 'home.course_confirm', 
+  <%= t 'home.course_confirm', 
           course_list_text: t( 'home.courses', count: @waiting_rosters.count),
           proper_course_list: t( 'home.courses_proper', count: @waiting_rosters.count ) %>:
-  </p>
+</p>
 <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -29,12 +29,22 @@
       <tr>
         <td>
           <%= link_to t( :accept ), accept_roster_path( :roster_id => roster.id ) %> / 
-            <%= link_to t( :decline ), decline_roster_path( :roster_id => roster.id ) %>
+          <%= link_to t( :decline ), decline_roster_path( :roster_id => roster.id ) %>
         </td>
         <td><em><%= t :waiting %></em></td>
         <td><%= roster.course.get_name( anonymize ) %></td>
-        <td><%= l roster.course.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></td>
-        <td><%= l roster.course.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></td>
+        <td>
+          <div hidden>
+            <%= l in_tz( date: roster.course.start_date ), format: :datestamp %>
+          </div>
+          <%= l in_tz( date: roster.course.start_date ), format: :tz_clarity %>
+        </td>
+        <td>
+          <div hidden>
+            <%= l in_tz( date: roster.course.end_date ), format: :datestamp %>
+          </div>
+          <%= l in_tz( date: roster.course.end_date ), format: :tz_clarity %>
+        </td>
         <td><%= t :n_a %></td>
       </tr>
     <% end %>

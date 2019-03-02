@@ -38,7 +38,7 @@ read_data.each do |cip_code|
 end
 
 # Countries
-CS.update # if CS.countries.count < 100
+CS.update if CS.countries.count < 100
 CS.countries.each do |country|
   hc = HomeCountry.where( code: country[ 0 ] ).take
   hc = HomeCountry.new if hc.nil?
@@ -136,8 +136,12 @@ read_data.each do |gender|
   g.save
 end
 
-School.create(name: 'Indiana University', description: 'A large, Midwestern university')
-School.create(name: 'SUNY Korea', description: 'The State University of New York, Korea')
+School.create(name: 'Indiana University',
+              description: 'A large, Midwestern university',
+              timezone: 'UTC')
+School.create(name: 'SUNY Korea',
+              description: 'The State University of New York, Korea',
+              timezone: 'Seoul')
 
 
 # Theme seed data
@@ -278,6 +282,20 @@ quote_data.each do |quote|
   q.text_en = quote.text_en
   q.attribution = quote.attribution
   q.save
+end
+
+# Concept init
+class Concept_
+  attr_accessor :id, :name
+end
+
+concept_data = YAML.safe_load(File.open('db/concept.yml'), [Concept_] )
+concept_data.each do |c|
+  g = Concept.where( id: c.id ).take
+  g = Concept.new if g.nil?
+  g.id = c.id
+  g.name = c.name
+  g.save
 end
 
 # Bingo! support

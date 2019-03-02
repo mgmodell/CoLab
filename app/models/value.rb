@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Value < ActiveRecord::Base
+class Value < ApplicationRecord
   belongs_to :user
   belongs_to :installment, inverse_of: :values
   belongs_to :factor

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateConsentLogs < ActiveRecord::Migration
+class CreateConsentLogs < ActiveRecord::Migration[4.2]
   def change
     create_table :consent_logs do |t|
       t.boolean :accepted

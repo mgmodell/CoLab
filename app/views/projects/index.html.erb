@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-   anonymize = @current_user.anonymize? %>
+<% theme_code = get_theme_code
+   anonymize = get_anonymous %>
 <table data-role="table"
           id="basicTable"
           data-column-btn-theme"<%= theme_code %>" 
@@ -24,17 +24,26 @@
     <% @projects.each do |project| %>
       <tr>
         <td><%= link_to project.get_name( anonymize ), project %></td>
-        <td><%= l project.start_date, format: :tz_clarity %></td>
-        <td><%= l project.end_date, format: :tz_clarity %></td>
+        <td>
+          <div hidden>
+            <%= l in_tz( date: project.start_date ), format: :datestamp %>
+          </div>
+          <%= l in_tz( date: project.start_date ), format: :tz_clarity %>
+        </td>
+        <td>
+          <div hidden>
+            <%= l in_tz( date: project.end_date ), format: :datestamp %>
+          </div>
+          <%= l in_tz( date: project.end_date ), format: :tz_clarity %>
+        </td>
         <td><%= Date::DAYNAMES.at project.start_dow %></td>
         <td><%= Date::DAYNAMES.at project.end_dow %></td>
         <td><%= project.groups.count %></td>
         <td><%= link_to( t( :show ), project) %>&nbsp;|&nbsp;
-        <%= link_to( t( :edit ), edit_project_path(project) ) %>&nbsp;|&nbsp;
-        <%= link_to( t( :destroy ), project, method: :delete, data: { confirm: t( :confirmation ) }  )%></td>
+          <%= link_to( t( :edit ), edit_project_path(project) ) %>&nbsp;|&nbsp;
+          <%= link_to( t( :destroy ), project, method: :delete, data: { confirm: t( :confirmation ) }  )%></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 <br>
-<%= link_to t( 'projects.new.title' ), new_project_path %>

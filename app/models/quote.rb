@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Quote < ActiveRecord::Base
+class Quote < ApplicationRecord
   translates :text
 
   @@reloaded_at = DateTime.current
@@ -12,15 +12,5 @@ class Quote < ActiveRecord::Base
       @@quote_count = Quote.count
     end
     Quote.offset(rand(@@quote_count)).take
-  end
-
-  def get_local_quote
-    # localize here
-    text
-  end
-
-  def get_local_attribution
-    # localize here
-    attribution
   end
 end

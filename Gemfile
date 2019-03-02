@@ -1,47 +1,59 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '2.4.2'
+ruby '2.6.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.8'
+gem 'rails', '~> 5.2.2'
+
+gem 'puma', '~> 3.7'
 # Use mysql as the database for Active Record
-gem 'mysql2', '>= 0.3.13', '< 0.5'
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'mysql2', '>= 0.3.18', '< 0.5'
+
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
+# Transpile app-like JavaScript. Read more:
+# https://github.com/rails/webpacker
+gem 'webpacker'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+# gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder', '~> 2.5'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'activerecord-session_store'
-gem 'aws-sdk', '~> 2.3.0'
+gem 'ahoy_email'
+gem 'aws-sdk-s3'
+gem 'bootsnap'
 gem 'bourbon'
+gem 'chronic'
 gem 'city-state'
 gem 'country_select'
 gem 'd3-rails'
+gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.4.0', require: 'descriptive_statistics/safe'
 gem 'devise'
 gem 'devise-multi_email'
+gem 'email_validator'
 gem 'forgery'
 gem 'jquery-tablesorter'
 gem 'jquery_mobile_rails'
 gem 'kaminari'
+gem 'listen'
 gem 'omniauth-google-oauth2'
-gem 'paperclip', '~> 5.0.0'
-gem 'puma'
+gem 'paperclip', '~> 6.0.0'
+gem 'prawn'
+gem 'prawn-table'
 gem 'rails_12factor', group: :production
+gem 'react-rails'
 gem 'simple_calendar', '~> 2.0'
 gem 'simple_form'
 gem 'stopwords-filter', require: 'stopwords'
@@ -60,16 +72,19 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  gem 'chronic'
+  gem 'chromedriver-helper'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'htmlbeautifier'
+  gem 'htmlentities'
   gem 'i18n_data'
-  gem 'machinist'
   gem 'railroady'
   gem 'rails-erd', require: false
+  gem 'rb-readline'
   gem 'rspec'
   gem 'rubocop'
+  gem 'rubocop-thread_safety'
+  gem 'selenium-webdriver'
 end
 
 group :development do

@@ -3,8 +3,8 @@ Feature: Submitting Candidate words for Bingo!
 
   Background:
     Given there is a course with an assessed project
-    Given the course started "two months ago" and ended "two months from now"
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
+    Given the course started "two months ago" and ended "two months from now"
     Given the project has a group with 4 confirmed users
     Given the project has a group with 4 confirmed users
     Given the project has a group with 4 confirmed users
@@ -59,6 +59,7 @@ Feature: Submitting Candidate words for Bingo!
     Then retrieve the latest Bingo! game from the db
     Then the candidate list properties will match the list
 
+  @javascript
   Scenario: User should be able to open update and then re-edit a list of candidates
     Given the user logs in
     Then user should see 1 open task

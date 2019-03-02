@@ -1,6 +1,6 @@
-<h1>Your Tasks</h1>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code %>
-<% anonymize = false %>
+<h1><%= t( :your_tasks ) %></h1>
+<% theme_code = get_theme_code
+   anonymize = false %>
 <p><%= t 'home.greeting', name: @first_name %>,</br>
 <% tasks = @waiting_student_tasks + @waiting_instructor_tasks %>
 <%= t 'home.tasks', count: tasks.count %></p>
@@ -37,14 +37,16 @@
           <% @waiting_instructor_tasks.each do |task| %>
             <tr>
               <td data-priority="0">
-                <%= render :partial => "shared/task_link", 
-                    :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
+                <%= task_link task: task, anonymize: anonymize, user: @current_user  %>
               </td>
               <td align="center" data-priority="1"><%= t 'bingo_games.review_candidates.title' %></td>
               <td align="center" data-priority="1"><%= task.status %>%</td>
               <td data-priority="1"><%= task.course.get_name( anonymize ) %></td>
               <td data-priority="0">
-                <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
+                <div hidden>
+                  <%= l in_tz( date: task.end_date ), format: :datestamp %>
+                </div>
+                <%= l in_tz( date: task.end_date ), format: :tz_clarity %>
               </td>
             </tr>
           <% end %>
@@ -80,8 +82,7 @@
             <% group = task.group_for_user( @current_user )%>
             <tr>
               <td data-priority="0">
-                <%= render :partial => "shared/task_link", 
-                        :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
+                <%= task_link task: task, anonymize: anonymize, user: @current_user  %>
               </td>
               <td><%= t 'home.sapa' %></td>
               <td>
@@ -93,12 +94,17 @@
               </td>
               <td> <%= group.get_name( anonymize ) %></td>
               <td> <%= task.project.course.get_name( anonymize ) %></td>
-              <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
               <td>
                 <div hidden>
-                  <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :datestamp %>
+                  <%= l in_tz( date: task.start_date ), format: :datestamp %>
                 </div>
-                <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
+                <%= l in_tz( date: task.start_date ), format: :tz_clarity %>
+              </td>
+              <td>
+                <div hidden>
+                  <%= l in_tz( date: task.end_date ), format: :datestamp %>
+                </div>
+                <%= l in_tz( date: task.end_date ), format: :tz_clarity %>
               </td>
               <td>
                 <%= render :partial => "shared/consent", :locals => { :project => task.project } %>
@@ -107,32 +113,43 @@
           <% elsif task.class == BingoGame %>
             <tr><% candidate_list = task.candidate_list_for_user( @current_user ) %>
               <td data-priority="0">
-                <%= render :partial => "shared/task_link", 
-                        :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
+                <%= task_link task: task, anonymize: anonymize, user: @current_user  %>
               </td>
               <% if task.is_open? %>
                 <td><%= t 'candidates.submission' %></td>
                 <td>
                   <%= candidate_list.percent_completed %>%
-              </td>
+                </td>
               <% elsif task.reviewed %>
                 <td><%= t 'candidates.distilled' %></td>
                 <td>
                   <%= task.concepts.count %> concepts
-              </td>
+                </td>
               <% end %>
               <td>
                 <% if task.project.present? && task.project.group_for_user( @current_user ) %>
                   <%= task.project.group_for_user( @current_user ).get_name( anonymize ) %>
                 <% else %>
                   N/A
-              <% end %>
+                <% end %>
               </td>
               <td> <%= task.course.get_name( anonymize ) %></td>
-              <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
               <td>
-                <%= l task.term_list_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %></br>
-              <small><i>(<%= t 'candidates.list_for_class' %> <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :short_date %></i></small>)
+                <div hidden>
+                  <%= l in_tz( date: task.start_date ), format: :datestamp %>
+                </div>
+                <%= l in_tz( date: task.start_date ), format: :tz_clarity %>
+              </td>
+              <td>
+                <div hidden>
+                  <%= l in_tz( date: task.term_list_date ), format: :datestamp %>
+                </div>
+                <%= l in_tz( date: task.term_list_date ), format: :tz_clarity %></br>
+              <small><i>
+                  (<%= t 'candidates.list_for_class' %>
+                  <%= l in_tz( date: task.end_date ), format:
+                  :short_date %>)
+                </i></small>
             </td>
             <td>N/A</td>
           </tr>
@@ -140,8 +157,7 @@
           <% reaction = task.get_user_reaction( @current_user ) %>
           <tr>
             <td data-priority="0">
-              <%= render :partial => "shared/task_link", 
-                        :locals => { :task => task, :anonymize => anonymize, :user => @current_user } %>
+              <%= task_link task: task, anonymize: anonymize, user: @current_user  %>
             </td>
             <td><%= t 'experience.simulation' %></td>
             <td>
@@ -151,8 +167,18 @@
             </td>
             <td> N/A</td>
             <td> <%= task.course.get_name( anonymize ) %></td>
-            <td> <%= l task.start_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
-            <td> <%= l task.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %> </td>
+            <td>
+              <div hidden>
+                <%= l in_tz( date: task.start_date ), format: :datestamp %>
+              </div>
+              <%= l in_tz( date: task.start_date ), format: :tz_clarity %>
+            </td>
+            <td>
+              <div hidden>
+                <%= l in_tz( date: task.end_date ), format: :datestamp %>
+              </div>
+              <%= l in_tz( date: task.end_date ), format: :tz_clarity %>
+            </td>
             <td>
               <%= t :n_a %>
             </td>
@@ -172,8 +198,7 @@
     <ul>
       <% meetings.each do |meeting| %>
         <li>
-          <%= render :partial => "shared/task_link", 
-                    :locals => { :task => meeting, :anonymize => anonymize, :user => @current_user } %>
+          <%= task_link task: meeting, anonymize: anonymize, user: @current_user  %>
         </li>
       <% end %>
     </ul>
@@ -188,8 +213,7 @@
     <ul>
       <% meetings.each do |meeting| %>
         <li>
-          <%= render :partial => "shared/task_link", 
-                    :locals => { :task => meeting, :anonymize => anonymize, :user => @current_user } %>
+          <%= task_link task: meeting, anonymize: anonymize, user: @current_user  %>
         </li>
       <% end %>
     </ul>

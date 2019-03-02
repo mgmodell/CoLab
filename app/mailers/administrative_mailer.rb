@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AdministrativeMailer < ActionMailer::Base
+class AdministrativeMailer < ApplicationMailer
   default from: 'support@CoLab.online'
 
   def remind(user)
@@ -9,6 +9,7 @@ class AdministrativeMailer < ActionMailer::Base
       category: ['reminder']
     }.to_json
 
+    track user: user
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
          subject: 'CoLab Assessment reminder email')
   end
@@ -22,6 +23,7 @@ class AdministrativeMailer < ActionMailer::Base
       category: ['reporting']
     }.to_json
 
+    track user: user
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
          subject: "CoLab: #{@name}")
   end
@@ -32,6 +34,7 @@ class AdministrativeMailer < ActionMailer::Base
       category: ['re-invite']
     }.to_json
 
+    track user: user
     mail(to: user.email.to_s,
          subject: 'Invitation to CoLab')
   end
@@ -43,6 +46,7 @@ class AdministrativeMailer < ActionMailer::Base
       category: ['availability']
     }.to_json
 
+    track user: user
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
          subject: "CoLab: #{activity} is available")
   end
@@ -74,7 +78,7 @@ class AdministrativeMailer < ActionMailer::Base
       current_users.delete user
     end
 
-    Experience.still_open.each do |experience|
+    Experience.active_at(curr_date).each do |experience|
       experience.course.enrolled_students.each do |user|
         reaction = experience.get_user_reaction user
         unless reaction.persisted? && reaction.behavior.present?
@@ -93,7 +97,9 @@ class AdministrativeMailer < ActionMailer::Base
 
     uniqued.each do |u|
       next if !u.last_emailed.nil? && u.last_emailed.today?
+
       AdministrativeMailer.remind(u).deliver_later
+
       u.last_emailed = curr_date
       u.save
       logger.debug "Email sent to: #{u.name false} <#{u.email}>"

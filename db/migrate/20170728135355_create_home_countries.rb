@@ -1,4 +1,4 @@
-class CreateHomeCountries < ActiveRecord::Migration
+class CreateHomeCountries < ActiveRecord::Migration[4.2]
   def change
     create_table :home_countries do |t|
       t.string :name

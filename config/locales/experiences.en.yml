@@ -1,12 +1,15 @@
 en:
   experiences:
     simulation: Collaboration experience simulation
+    available: 'Simulation: %{task}'
+    completed: 'Completed Sim: %{task]'
     instructions_lbl: Instructions
     glossary_lbl: Glossary
     scenario_lbl: Scenario
     narrative_lbl: Narrative
     behavior_lbl: Behavior
     overall_diagnosis: Overall Diagnosis
+    reaction_diagnosis: Reaction Diagnosis
     reaction_suggestions: Reaction Suggestions
     start_date_lbl: Experience start date
     end_date_lbl: Experience end date

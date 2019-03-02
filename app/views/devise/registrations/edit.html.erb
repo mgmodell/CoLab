@@ -54,15 +54,14 @@
               <%= link_to t( 'devise.registrations.email_add' ), '#add_address_popup', 
                     data: { rel: 'popup', transition: 'flip', position: { to: 'window' } },
                     class: 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left' %><br />
-              <br />
-              <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-                <p><%= t 'devise.registrations.waiting_confirmations' %> <%= resource.unconfirmed_email %></p>
-              <% end %>
-
-              <%= link_to t( 'devise.registrations.password_change' ), initiate_password_reset_path %><br />
-            </div>
-          <div class="form-inputs ui-corner-all custom-corners">
-            <div class="ui-bar ui-bar-<%= theme_code %>">
+  <br />
+  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+    <p><%= t 'devise.registrations.waiting_confirmations' %> <%= resource.unconfirmed_email %></p>
+  <% end %>
+  <%= link_to t( 'devise.registrations.password_change' ), initiate_password_reset_path %><br />
+</div>
+<div class="form-inputs ui-corner-all custom-corners">
+  <div class="ui-bar ui-bar-<%= theme_code %>">
               <h3><%= t('devise.registrations.disp_stgs')%></h3>
             </div>
             <div class="ui-body ui-body-<%= theme_code %>">
@@ -189,7 +188,8 @@
             </th>
           </thead>
           <tbody>
-          <% @current_user.courses.uniq.each do |course| %>
+          <% @current_user.rosters.enrolled.includes( :course ).each do |roster| %>
+          <% course = roster.course %>
           <tr>
             <td><%= course.number %></td>
             <td><%= course.name %></td>
@@ -326,9 +326,9 @@
     <div style="padding:10px 20px;">
       <%= label_tag :email_address, t( 'devise.registrations.new_address_lbl' ) %>
       <%= email_field_tag :email_address %><br />
-      <%= submit_tag t( :add ) %>
-    </div>
-  <% end %>
+  <%= submit_tag t( :add ) %>
+</div>
+<% end %>
 </div>
 <div data-role="popup" id="bingo_performance" class="ui-content"
     data-theme="<%= theme_code %>" style="width:90%">
@@ -342,5 +342,4 @@
     data-theme="<%= theme_code %>" style="width:90%">
   <%= t 'projects.performance_explained' %>
 </div>
-
 <%= link_to t( :back ), :back %>

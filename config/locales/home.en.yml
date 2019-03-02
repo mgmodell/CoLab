@@ -25,6 +25,7 @@ en:
       tz_clarity: "%a, %b %-d at %-l:%M%P %Z"
       short_date: "%a, %b %-d"
       datestamp: "%Y%m%d"
+      date_field: "%Y-%m-%d"
   title: CoLab
   column_select: Show/Hide columns&hellip;
   task_name: Task Name
@@ -88,6 +89,7 @@ en:
   none_selected: None selected
   not_available: Not Available
   #demo materials
+  demo_title: '%{orig} (DEMO)'
   demo: Demo
   demo_group: SuperStars
   demo_project: Research Paper
@@ -120,6 +122,7 @@ en:
   demo_surname_1: John
   demo_fam_name_1: Smith
   demo_user_tz: Seoul
+  copy: Copy
   destroy: Destroy
   remove: Remove
   confirmation: Are you sure?
@@ -151,6 +154,12 @@ en:
   terms_review: Terms Review
   course: Course
   school: School
+  schools_edit: Schools
+  courses_edit: Courses
+  experiences_edit: Experiences
+  bingo_games_edit: Terms lists
+  projects_edit: Projects
+  concepts_edit: Concepts
   active: Active
   inactive: Inactive
   details: Details

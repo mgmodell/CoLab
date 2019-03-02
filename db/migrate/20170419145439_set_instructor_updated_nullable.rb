@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class SetInstructorUpdatedNullable < ActiveRecord::Migration
+class SetInstructorUpdatedNullable < ActiveRecord::Migration[4.2]
   def change
     change_column_default :assessments, :instructor_updated, false
     change_column_null :assessments, :instructor_updated, false

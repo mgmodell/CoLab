@@ -4,6 +4,17 @@ $(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
 
+// This function enables copy course functionality
+function popCopyPop( courseNumber, courseId, prettyStartDate, uglyStartDate )
+{
+  $('#copyPop #number').val( courseNumber );
+  $('#copyPop #id').val( courseId );
+  $('#copyPop #orig_date').text( prettyStartDate );
+  $('#copyPop #start_date').val( uglyStartDate );
+  $('#copyPop').popup( 'open', { transition: 'flip' } );
+
+}
+// This function builds the trend graphs for student data responses
 function init_me( obj, data ){
   var graph = d3.select( obj );
   var margin = {top: 10, right: 0, bottom: 10, left: 0};
@@ -24,7 +35,7 @@ function init_me( obj, data ){
       })
       .y(function(d) { 
         // return the Y coordinate where we want to plot this datapoint
-        return y(d); 
+        return y(d < 100 ? d : 100); 
       })
       // Add the line by appending an svg:path element with the data
       // line we created above
@@ -42,30 +53,32 @@ function init_me( obj, data ){
       var xSeries = d3.range(1, data.length + 1);
       var ySeries = data;
 
-      var leastSquaresCoeff = leastSquares(xSeries, ySeries);
+      if( data.length > 1 ){
+        var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
-      // apply the reults of the least squares regression
-      var x1 = 0;
-      var y1 = leastSquaresCoeff[1];
-      var x2 = data.length - 1;
-      var y2 = leastSquaresCoeff[1] + (data.length * leastSquaresCoeff[0]);
-      var trendData = [[x1,y1,x2,y2]];
+        // apply the reults of the least squares regression
+        var x1 = 0;
+        var y1 = leastSquaresCoeff[1];
+        var x2 = data.length - 1;
+        var y2 = leastSquaresCoeff[1] + (data.length * leastSquaresCoeff[0]);
+        var trendData = [[x1,y1,x2,y2]];
 
-      var trendLineColor = "green";
-      if( leastSquaresCoeff[ 0 ] < 0 ){
-        trendLineColor="red";
+        var trendLineColor = "green";
+        if( leastSquaresCoeff[ 0 ] < 0 ){
+          trendLineColor="red";
+        }
+        var trendline = graph.selectAll(".trendline")
+          .data(trendData);
+        trendline.enter()
+          .append("line")
+          .attr("class", "trendline")
+            .attr("x1", function(d) { return x(d[0]); })
+            .attr("y1", function(d) { return y(d[1]); })
+            .attr("x2", function(d) { return x(d[2]); })
+            .attr("y2", function(d) { return y(d[3]); })
+            .attr("stroke", trendLineColor )
+            .attr("stroke-width", 2);
       }
-      var trendline = graph.selectAll(".trendline")
-        .data(trendData);
-      trendline.enter()
-        .append("line")
-        .attr("class", "trendline")
-          .attr("x1", function(d) { return x(d[0]); })
-          .attr("y1", function(d) { return y(d[1]); })
-          .attr("x2", function(d) { return x(d[2]); })
-          .attr("y2", function(d) { return y(d[3]); })
-          .attr("stroke", trendLineColor )
-          .attr("stroke-width", 2);
 }
 
 // returns slope, intercept and r-square of the line
@@ -94,7 +107,7 @@ function leastSquares(xSeries, ySeries) {
 
 //Add some code to the page.
 $(document).ready(function(){
-  var concept_url = '/bingo/concepts_for_game/0.json?search_string='
+  var concept_url = '/bingo/concepts_for_game/0.json'
   var apMinChars = 3;
   $(".awesomplete-ajax").each( function( index, conceptField ) {
     var ap = new Awesomplete( conceptField, {
@@ -115,14 +128,38 @@ $(document).ready(function(){
     else
     {
       var x = this;
-      $.getJSON( concept_url + this.value, function (data)
-      {
-        var list = [ ];
-        $.each( data, function( key, value ) {
-          list.push( value.name );
+      //TODO: switch to 'POST'
+      let data = {
+        id: 0,
+        search_string: this.value
+      }
+      var list = [];
+
+      fetch_url = concept_url + '?' + Object.entries(data).map( function(e){return e.join('=');}).join('&');
+      fetch( fetch_url, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accepts': 'application/json',
+          'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')
+        } } )
+        .then( function(response ){
+          if( response.ok ){
+            return response.json( );
+          } else {
+            console.log( 'error' );
+            return [ ];
+          }
+        } )
+        .then( function(data){
+          data.map( function(item) {
+            console.log( item );
+            list.push( item.name );
+          } )
+          $(x).data( 'ac' ).list = list;
         } );
-        $(x).data( "ac" ).list = list;
-      });
+
     }
 
   });
@@ -247,6 +284,9 @@ $(document).ready(function(){
   });
 
   $("#basicTable").tablesorter( {sortList: [[0,0],[1,0]]} );
+  $("#activities_table").tablesorter( {sortList: [[3,0],[2,0]]} );
+  $("#courseListingTable").tablesorter( {sortList: [[4,1],[1,0]]} );
+  $("#responsesTable").tablesorter( {sortList: [[3,0]]});
   $("#groups_table").tablesorter( {sortList: [[0,0],[1,0]]} );
   $("#bingo_table").tablesorter( {sortList: [[0,0]]} );
   $("#projects_table").tablesorter( {sortList: [[0,0]]} );

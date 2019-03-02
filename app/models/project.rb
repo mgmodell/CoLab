@@ -1,18 +1,17 @@
 # frozen_string_literal: true
 
 require 'forgery'
-class Project < ActiveRecord::Base
+class Project < ApplicationRecord
   after_save :build_assessment
 
   belongs_to :course, inverse_of: :projects
   belongs_to :style, inverse_of: :projects
+  belongs_to :factor_pack, inverse_of: :projects, optional: true
   has_many :groups, inverse_of: :project, dependent: :destroy
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
   has_many :installments, through: :assessments
-  belongs_to :course, inverse_of: :projects
-  belongs_to :consent_form, inverse_of: :projects
-  belongs_to :factor_pack, inverse_of: :projects
+  belongs_to :consent_form, inverse_of: :projects, optional: true
 
   has_many :users, through: :groups
   has_many :factors, through: :factor_pack
@@ -51,7 +50,7 @@ class Project < ActiveRecord::Base
   end
 
   def is_for_research?
-    !consent_form.nil? && consent_form.is_active?
+    consent_form.present? && consent_form.is_active?
   end
 
   def enrolled_user_rosters
@@ -110,13 +109,13 @@ class Project < ActiveRecord::Base
   # Check if the assessment is active, if we're in the date range and
   # within the day range.
   def is_available?
+    tz = ActiveSupport::TimeZone.new(course.timezone)
     is_available = false
-    init_time = DateTime.current.in_time_zone
-    init_day = init_time.wday
-    init_date = init_time.to_date
+    init_date = tz.parse(DateTime.current.to_s)
+    init_day = init_date.wday
 
     if active &&
-       start_date < init_date && end_date > init_date
+       start_date <= init_date && end_date >= init_date
       if has_inside_date_range?
         is_available = true if start_dow <= init_day && end_dow >= init_day
       else
@@ -124,7 +123,6 @@ class Project < ActiveRecord::Base
         is_available = true unless init_day < start_dow && end_dow < init_day
        end
     end
-    logger.debug is_available
     is_available
   end
 
@@ -154,19 +152,26 @@ class Project < ActiveRecord::Base
   def dates_within_course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date
-        errors.add(:start_date, "The project cannot begin before the course has begun (#{course.start_date})")
+        msg = 'The project cannot begin before the course has begun '
+        msg += "(#{start_date} < #{course.start_date})"
+        errors.add(:start_date, msg)
       end
       if end_date > course.end_date
-        errors.add(:end_date, "The project cannot continue after the course has ended (#{course.end_date})")
+        msg = 'The project cannot continue after the course has ended '
+        msg += "(#{end_date} > #{course.end_date})"
+        errors.add(:end_date, msg)
       end
     end
     errors
   end
 
   def activation_status
-    if active_was && active && changed?
+    if active_before_last_save && active &&
+       (start_dow_changed? || end_dow_changed? ||
+        start_date_changed? || end_date_changed? ||
+        factor_pack_id_changed? || style_id_changed?)
       self.active = false
-    elsif !active_was && active
+    elsif !active_before_last_save && active
 
       get_user_appearance_counts.each do |user_id, count|
         # Check the users
@@ -188,7 +193,7 @@ class Project < ActiveRecord::Base
         errors.add(:factor_pack, 'Factor Pack must be set before a project can be activated')
       end
       # If this is an activation, we need to set up any necessary weeklies
-      Assessment.set_up_assessments
+      Assessment.configure_current_assessment self
     end
     errors
   end
@@ -196,23 +201,29 @@ class Project < ActiveRecord::Base
   # Handler for building an assessment, if necessary
   def build_assessment
     # Nothing needs to be done unless we're active
-    Assessment.build_new_assessment self if active? && is_available?
-  end
-
-  def timezone_adjust
-    course_tz = ActiveSupport::TimeZone.new(course.timezone)
-    user_tz = Time.zone
-
-    unless start_date == course.start_date && new_record?
-      # TZ corrections
-      new_date = start_date - user_tz.utc_offset + course_tz.utc_offset
-      self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day if start_date_changed?
-      new_date = end_date - user_tz.utc_offset + course_tz.utc_offset
-      self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day if end_date_changed?
-    end
+    Assessment.configure_current_assessment self if active?
   end
 
   private
+
+  def timezone_adjust
+    course_tz = ActiveSupport::TimeZone.new(course.timezone)
+
+    # TZ corrections
+    if start_date.nil? || start_date.change(hour: 0) == course.start_date.change(hour: 0)
+      self.start_date = course.start_date
+    elsif start_date_change_to_be_saved
+      proc_date = course_tz.local(start_date.year, start_date.month, start_date.day)
+      self.start_date = proc_date.beginning_of_day
+    end
+
+    if end_date.nil? || end_date.change(hour: 0) == course.end_date.change(hour: 0)
+      self.end_date = course.end_date
+    elsif end_date_change_to_be_saved
+      proc_date = course_tz.local(end_date.year, end_date.month, end_date.day)
+      self.end_date = proc_date.end_of_day.change(sec: 0)
+    end
+  end
 
   def anonymize
     self.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"

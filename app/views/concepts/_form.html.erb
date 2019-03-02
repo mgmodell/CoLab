@@ -1,7 +1,7 @@
 <%= simple_form_for @concept do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-     anonymize = @current_user.anonymize? %>
+  <% theme_code = get_theme_code
+     anonymize = get_anonymous %>
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
@@ -47,8 +47,8 @@
                 <td><%= game.course.start_date %></td>
                 <td><%= game.course.end_date %></td>
                 <td><%= link_to t(:show), game %>&nbsp;|&nbsp;
-                <%= link_to t(:edit), edit_bingo_game_path(game) %>&nbsp;|&nbsp;
-                <%= link_to t(:destroy), game, method: :delete, data: { confirm: t(:confirmation) } %></td>
+                  <%= link_to t(:edit), edit_bingo_game_path(game) %>&nbsp;|&nbsp;
+                  <%= link_to t(:destroy), game, method: :delete, data: { confirm: t(:confirmation) } %></td>
               </tr>
             <% end %>
           </tbody>

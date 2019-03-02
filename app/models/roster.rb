@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-class Roster < ActiveRecord::Base
-  # belongs_to :role, inverse_of: :rosters
+class Roster < ApplicationRecord
   belongs_to :course, inverse_of: :rosters
   belongs_to :user, inverse_of: :rosters
 
@@ -12,12 +11,16 @@ class Roster < ActiveRecord::Base
                dropped_student: 6 }
   validates_uniqueness_of :user_id, scope: :course_id
 
-  scope :students, -> {
+  scope :faculty, lambda {
+    where(role: [roles[:instructor],
+                 roles[:assistant]])
+  }
+  scope :students, lambda {
     where(role: [roles[:enrolled_student],
                  roles[:invited_student],
                  roles[:declined_student]])
   }
-  scope :enrolled, -> {
+  scope :enrolled, lambda {
     where(role: [roles[:enrolled_student],
                  roles[:invited_student]])
   }
@@ -30,16 +33,17 @@ class Roster < ActiveRecord::Base
       course.projects.includes(groups: :users).each do |project|
         project.groups.each do |group|
           next unless group.users.includes(user)
+
           project = group.project
           activation_status = project.active
           group.users.delete(user)
           group.save
-          puts group.errors.full_messages unless group.errors.empty?
+          logger.debug group.errors.full_messages unless group.errors.empty?
           project = group.project
           project.reload
           project.active = activation_status
           project.save
-          puts project.errors.full_messages unless project.errors.empty?
+          logger.debug project.errors.full_messages unless project.errors.empty?
         end
       end
     end

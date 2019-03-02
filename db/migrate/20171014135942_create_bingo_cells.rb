@@ -1,4 +1,4 @@
-class CreateBingoCells < ActiveRecord::Migration
+class CreateBingoCells < ActiveRecord::Migration[4.2]
   def change
     create_table :bingo_cells do |t|
       t.references :bingo_board, index: true, foreign_key: true

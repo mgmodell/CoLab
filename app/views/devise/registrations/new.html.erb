@@ -2,90 +2,82 @@
 <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= f.error_notification %>
   <%= f.input :welcomed, as: :hidden, input_html: { value: true } %>
-<div data-role="tabs" id="tabs">
-  <div data-role="navbar">
-    <ul>
-      <li class="ui-state-active ui-tabs-active">
-        <a href="#profile" data-ajax="false"><%= t :about_you %></a>
-      </li>
-      <li><a href="#history" data-ajax="false"><%= t :history %></a></li>
-    </ul>
-  </div>
-  <div id="profile" class="ui-body-<%= theme_code %> ui-content">
-
-<h2><%= t 'devise.registrations.signup' %></h2>
-
-
-  <div class="form-inputs ui-corner-all custom-corners">
-    <div class="ui-bar ui-bar-a">
-      <h3><%= t 'devise.registrations.account_info' %></h3>
+  <div data-role="tabs" id="tabs">
+    <div data-role="navbar">
+      <ul>
+        <li class="ui-state-active ui-tabs-active">
+          <a href="#profile" data-ajax="false"><%= t :about_you %></a>
+        </li>
+        <li><a href="#history" data-ajax="false"><%= t :history %></a></li>
+      </ul>
     </div>
-    <div class="ui-body ui-body-<%= theme_code %>">
-      <%= f.input :email, required: true, autofocus: true %>
-      <%= f.input :first_name, required: true, autofocus: true %>
-      <%= f.input :last_name, required: true, autofocus: true %>
-      <%= f.input :password, required: true, autofocus: true %>
-    </div>
-
-    <div class='form-inputs ui-corner-all custom-corners'>
-      <div class='ui-bar ui-bar-<%= theme_code %>'>
-        <h3><%= t 'devise.registrations.disp_stgs' %></h3>
-      </div>
-      <%= f.association :theme %>
-      <%= f.association :language,
+    <div id="profile" class="ui-body-<%= theme_code %> ui-content">
+      <h2><%= t 'devise.registrations.signup' %></h2>
+      <div class="form-inputs ui-corner-all custom-corners">
+        <div class="ui-bar ui-bar-a">
+          <h3><%= t 'devise.registrations.account_info' %></h3>
+        </div>
+        <div class="ui-body ui-body-<%= theme_code %>">
+          <%= f.input :email, required: true, autofocus: true %>
+          <%= f.input :first_name, required: true, autofocus: true %>
+          <%= f.input :last_name, required: true, autofocus: true %>
+          <%= f.input :password, required: true, autofocus: true %>
+        </div>
+        <div class='form-inputs ui-corner-all custom-corners'>
+          <div class='ui-bar ui-bar-<%= theme_code %>'>
+            <h3><%= t 'devise.registrations.disp_stgs' %></h3>
+          </div>
+          <%= f.association :theme %>
+          <%= f.association :language,
                   collection: Language.supported %>
-      <%= f.input :timezone, as: :time_zone,
+          <%= f.input :timezone, as: :time_zone,
                   priority: /US|Seo/ %>
-    </div>
-
-    <div class='ui-corner-all custom-corners'>
-      <div class="ui-bar ui-bar-<%= theme_code %>">
-        <h3><%= t 'devise.registrations.tell_about' %></h3>
-        <p><%= t 'devise.registrations.optional_demo' %></p>
-      </div>
-
-
-      <div class="ui-body ui-body-<%= theme_code %>">
-        <%= f.association :school %>
-        <%= f.association :gender %>
-        <%= f.input :date_of_birth, as: :date, html5: true %>
-        <%= f.input :started_school, as: :date, html5: true %>
-        <%= f.input :cip_code %>
-        <table width='100%'>
-          <tr colspan='2'>
-            <td><%= label_tag :country, t( 'devise.registrations.hometown' ) %><td>
-          </tr>
-          <tr>
-            <td width='50%'>
-              <% init_country = f.object.home_state.nil? ?
+        </div>
+        <div class='ui-corner-all custom-corners'>
+          <div class="ui-bar ui-bar-<%= theme_code %>">
+            <h3><%= t 'devise.registrations.tell_about' %></h3>
+            <p><%= t 'devise.registrations.optional_demo' %></p>
+          </div>
+          <div class="ui-body ui-body-<%= theme_code %>">
+            <%= f.association :school %>
+            <%= f.association :gender %>
+            <%= f.input :date_of_birth, as: :date, html5: true %>
+            <%= f.input :started_school, as: :date, html5: true %>
+            <%= f.input :cip_code %>
+            <table width='100%'>
+              <tr colspan='2'>
+                <td><%= label_tag :country, t( 'devise.registrations.hometown' ) %>
+                  <td>
+                  </tr>
+                  <tr>
+                    <td width='50%'>
+                      <% init_country = f.object.home_state.nil? ?
                 HomeCountry.where( no_response: true ).take :
                 f.object.home_state.home_country %>
-              <%= select_tag :country,
+                      <%= select_tag :country,
                    options_from_collection_for_select( HomeCountry.all,
                               :code, :name, init_country.code  ),
                    :class => 'country_select' %>
-            </td>
-            <td width='50%'>
-                <%= f.association :home_state,
+                    </td>
+                    <td width='50%'>
+                      <%= f.association :home_state,
                     collection: init_country.home_states,
                     label: false %>
-            </td>
-          </tr>
-        </table>
-         <%= f.association :primary_language %>
+                    </td>
+                  </tr>
+                </table>
+                <%= f.association :primary_language %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="history" class="ui-body-<%= theme_code %> ui-content">
+          <h2><%= t 'devise.registrations.activity_history' %></h2>
+          <p><%= t 'devise.registrations.no_activities' %></p>
+        </div>
       </div>
-    </div>
-  </div>
-  </div>
-  <div id="history" class="ui-body-<%= theme_code %> ui-content">
-    <h2><%= t 'devise.registrations.activity_history' %></h2>
-    <p><%= t 'devise.registrations.no_activities' %></p>
-  </div>
-</div>
-
-<div class="form-actions">
-<%= f.button :submit, t( 'devise.registrations.new_profile_submit' ) %>
-</div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+      <div class="form-actions">
+        <%= f.button :submit, t( 'devise.registrations.new_profile_submit' ) %>
+      </div>
+    <% end %>
+    <%= render "devise/shared/links" %>

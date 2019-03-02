@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-   anonymize = @current_user.anonymize? %>
+<% theme_code = get_theme_code
+   anonymize = get_anonymous %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -16,7 +16,11 @@
     </p>
     <p>
       <h3><%= t :description %>:</h3>
-      <%= @school.description %>
+      <%= raw( @school.description ) %>
+    </p>
+    <p>
+      <h3><%= t :timezone %>:</h3>
+      <%= raw( @school.timezone ) %>
     </p>
     <%= link_to t('.edit_string'), edit_school_path(@school) %>
   </div>
@@ -56,8 +60,18 @@
               <td><%= course.projects.count %></td>
               <td><%= course.experiences.count %></td>
               <td><%= course.bingo_games.count %></td>
-              <td><%= l course.start_date, format: :tz_clarity %></td>
-              <td><%= l course.end_date, format: :tz_clarity %></td>
+              <td>
+                <div hidden>
+                  <%= l in_tz( date: course.start_date ), format: :datestamp %>
+                </div>
+                <%= l course.start_date, format: :tz_clarity %>
+              </td>
+              <td>
+                <div hidden>
+                  <%= l in_tz( date: course.end_date ), format: :datestamp %>
+                </div>
+                <%= l course.end_date, format: :tz_clarity %>
+              </td>
               <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
                 <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
                 <%= link_to t( :destroy ), course, method: :delete, data: { confirm: t( :confirmation) } %></td>

@@ -1,4 +1,4 @@
-class CreateBingoBoards < ActiveRecord::Migration
+class CreateBingoBoards < ActiveRecord::Migration[4.2]
   def change
     create_table :bingo_boards do |t|
       t.references :bingo_game, index: true, foreign_key: true

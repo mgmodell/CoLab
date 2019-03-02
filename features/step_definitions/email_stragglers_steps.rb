@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'forgery'
+
 Given /^the email queue is empty$/ do
   ActionMailer::Base.deliveries = []
   ActionMailer::Base.deliveries.count.should eq 0
@@ -27,8 +29,8 @@ Then /^an email will be sent to each member of the group but one$/ do
   ActionMailer::Base.deliveries.count.should eq group_count_minus_one
 end
 
-Then /^no emails will be sent$/ do
-  ActionMailer::Base.deliveries.count.should eq 0
+Then /^(\d+) emails will be tracked$/ do |email_count|
+  Ahoy::Message.count.should eq email_count.to_i
 end
 
 Then /^(\d+) emails will be sent$/ do |email_count|
@@ -42,7 +44,9 @@ Then /^show the email queue$/ do
 end
 
 Given /^the user is in a group on the project with (\d+) other users$/ do |user_count|
-  @group = Group.make
+  @group = Group.new(
+    name: "#{Forgery::Basic.text} Group"
+  )
   r = Roster.new
   r.user = @user
   r.course = @course
@@ -51,13 +55,23 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
   puts r.errors.full_messages unless r.errors.blank?
   @group.users << @user
   user_count.to_i.times do
-    user = User.make
+    user = @group.users.new(
+      first_name: Forgery::Name.first_name,
+      last_name: Forgery::Name.last_name,
+      password: 'password',
+      password_confirmation: 'password',
+      email: Forgery::Internet.email_address,
+      timezone: 'UTC',
+      school: School.find(1),
+      theme_id: 1
+    )
     user.skip_confirmation!
-    @group.users << user
-    r = Roster.new
-    r.user = user
-    r.course = @course
-    r.role = Roster.roles[:enrolled_student]
+    user.save
+    puts user.errors.full_messages unless user.errors.blank?
+    r = user.rosters.new(
+      course: @course,
+      role: Roster.roles[:enrolled_student]
+    )
     r.save
     puts r.errors.full_messages unless r.errors.blank?
   end
@@ -68,13 +82,13 @@ end
 
 Then /^the members of "([^"]*)" group go to other groups$/ do |ordinal|
   if @project.groups.count > 1
-    case ordinal
+    case ordinal.downcase
     when 'a random' then to_disperse = @project.groups.sample
     when 'the first' then to_disperse = @project.groups.first
     when 'the last' then to_disperse = @project.groups.last
     end
 
-    groups = @project.groups
+    groups = @project.groups.to_a
     to_disperse.users.each do |user|
       group = groups.first
       unless group == to_disperse

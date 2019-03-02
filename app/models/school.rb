@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'forgery'
-class School < ActiveRecord::Base
+class School < ApplicationRecord
   has_many :courses, inverse_of: :school, dependent: :destroy
   has_many :bingo_games, through: :courses
   has_many :projects, through: :courses
@@ -9,6 +9,7 @@ class School < ActiveRecord::Base
   has_many :rosters, through: :courses
 
   before_create :anonymize
+  validates :name, :timezone, presence: true
 
   def instructors
     rosters.instructor.collect(&:user).uniq

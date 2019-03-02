@@ -12,6 +12,7 @@ namespace :admin do
     AdministrativeMailer.send_reminder_emails
     AdministrativeMailer.inform_instructors
   end
+
   desc 'Cache performance numbers'
   task update_caches: :environment do
     CandidateList.joins(:bingo_game)
@@ -19,6 +20,36 @@ namespace :admin do
                  .each do |candidate_list|
       candidate_list.performance
       candidate_list.save
+    end
+  end
+
+  desc 'Get diversity information for a class'
+  task :diversanal, [:course_id] => [:environment] do |_t, args| 
+    course = Course.where( id: args[:course_id].to_i ).take
+    if course.nil? 
+      puts '  This task analyses the student diversity in a class and '
+      puts ' offers related analysis and data.'
+      puts '   Usage:   rake admin:diversanal[<course_id>]'
+      puts '   Example: rake admin:examples[7]'
+    else
+      puts "Diversity Analysis for #{course.name} (#{course.number})"
+      puts course.diversity_analysis.inspect
+    end
+  end
+
+  desc 'Merge two users into one'
+  task :merge_users, [:predator,:prey] => [:environment] do |_t, args|
+    pred_e = args[:predator]
+    prey_e = args[:prey]
+    if prey_e.nil? || prey_e.empty? || pred_e.nil? || pred_e.empty?
+      puts '  This task merges two users given their email addresses.'
+      puts '   Usage:   rake admin:merge_users[<consumer email>,<consumed email>]'
+      puts '   Example: rake admin:examples[\'john_smith@gmail.com\',\'john.smith@example.com\']'
+      puts '   The above would absorb the example user into the gmail user'
+    else
+      #TODO Execute the code
+      puts "#{pred_e} will consume #{prey_e}"
+      User.merge_users predator: pred_e , prey: prey_e
     end
   end
 end

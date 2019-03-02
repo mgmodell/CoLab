@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateConsentForms < ActiveRecord::Migration
+class CreateConsentForms < ActiveRecord::Migration[4.2]
   def change
     create_table :consent_forms do |t|
       t.string :name

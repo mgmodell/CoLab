@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class AddI18nToWeek < ActiveRecord::Migration
+class AddI18nToWeek < ActiveRecord::Migration[4.2]
   def change
     rename_column :weeks, :text, :text_en
     add_column :weeks, :text_ko, :text

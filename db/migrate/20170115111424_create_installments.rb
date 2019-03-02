@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateInstallments < ActiveRecord::Migration
+class CreateInstallments < ActiveRecord::Migration[4.2]
   def change
     create_table :installments do |t|
       t.datetime :inst_date

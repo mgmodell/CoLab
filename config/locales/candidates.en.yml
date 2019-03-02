@@ -11,7 +11,9 @@ en:
       zero: no points
       one: 1 point
       other: '%{count} points'
-    demo_title: Complete the term list (DEMO)
+    review: 'Review: %{task}'
+    enter: 'Enter terms: %{task}'
+    play: 'Play Bingo: %{task}'
     demo_term1: The group dynamics
     demo_def1: How members of a group work together
     demo_term2: Cooperation
@@ -24,6 +26,19 @@ en:
     demo_def5: The methods and techniques a group follows
     demo_term6: Team
     demo_def6: A bunch of people working together
+    demo_review_topic: Simulations and Gaming
+    demo_review_description: >
+      Lara, M., Myers, R., Frick, T. W., Aslan, S., & Michaelidou, T.
+      (2010). A Design Case : Creating an Enhanced Version of the
+      Diffusion Simulation Game. International Journal of Designs for
+      Learning, 1(1), 301–310.
+    demo_bingo_topic: Gamification and Education
+    demo_bingo_description: >
+      Dichev, C., & Dicheva, D. (2017). Gamifying education: what is
+      known, what is believed and what remains uncertain: a critical
+      review. International Journal of Educational Technology in Higher
+      Education (Vol. 14). International Journal of Educational
+      Technology in Higher Education.
     demo_topic: What is collaboration?
     demo_description: >
       Johnson, R. T., & Johnson, D. W. (1994). An overview of
@@ -35,6 +50,7 @@ en:
     update_success: Your list was successfully saved.
     not_ready_for_review: This list is not yet ready for review.
     no_longer_available: This list is no longer available for editing.
+    concepts_for_game: All identified viable concepts
     ind_sum_msg: You identified the following terms, resulting in %{con_count} unique concepts
     term: Term
     terms: Terms

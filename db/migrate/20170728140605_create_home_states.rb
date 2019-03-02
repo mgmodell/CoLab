@@ -1,4 +1,4 @@
-class CreateHomeStates < ActiveRecord::Migration
+class CreateHomeStates < ActiveRecord::Migration[4.2]
   def change
     create_table :home_states do |t|
       t.references :home_country, index: true, foreign_key: true

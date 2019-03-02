@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Week < ActiveRecord::Base
+class Week < ApplicationRecord
   translates :text
   belongs_to :narrative, inverse_of: :weeks
   has_one :behavior, through: :narrative

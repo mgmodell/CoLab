@@ -1,7 +1,7 @@
 <%= simple_form_for @school do |f| %>
   <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-     anonymize = @current_user.anonymize? %>
+  <% theme_code = get_theme_code
+     anonymize = get_anonymous %>
   <div data-role="tabs" id="tabs">
     <div data-role="navbar">
       <ul>
@@ -14,6 +14,7 @@
       <div class="form-inputs">
         <%= f.input :name %>
         <%= f.input :description, as: :text %>
+        <%= f.input :timezone, as: :time_zone, priority: /US|Seo/ %>
       </div>
     </div>
     <div id="courses" class="ui-body-<%= theme_code %> ui-content">
@@ -53,11 +54,21 @@
                 <td><%= course.projects.count %></td>
                 <td><%= course.experiences.count %></td>
                 <td><%= course.bingo_games.count %></td>
-                <td><%= l course.start_date, format: :tz_clarity %></td>
-                <td><%= l course.end_date, format: :tz_clarity %></td>
+                <td>
+                  <div hidden>
+                    <%= l in_tz( date: course.start_date ), format: :datestamp %>
+                  </div>
+                  <%= l course.start_date, format: :tz_clarity %>
+                </td>
+                <td>
+                  <div hidden>
+                    <%= l in_tz( date: course.end_date ), format: :datestamp %>
+                  </div>
+                  <%= l course.end_date, format: :tz_clarity %>
+                </td>
                 <td><%= link_to t(:show), course %>&nbsp;|&nbsp;
-                <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
-                <%= link_to t(:destroy), course, method: :delete, data: { confirm: t(:confirmation) } %></td>
+                  <%= link_to t(:edit), edit_course_path(course) %>&nbsp;|&nbsp;
+                  <%= link_to t(:destroy), course, method: :delete, data: { confirm: t(:confirmation) } %></td>
               </tr>
             <% end %>
           </tbody>

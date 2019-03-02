@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-   anonymize = @current_user.anonymize? %>
+<% theme_code = get_theme_code
+   anonymize = get_anonymous %>
 <table data-role="table"
   id="basicTable"
   data-column-btn-theme"<%= theme_code %>" 
@@ -32,10 +32,10 @@
         <td><%= school.experiences.count %></td>
         <td><%= school.bingo_games.count %></td>
         <td><%= link_to t(:show), school_path( school ) %>&nbsp;|&nbsp;
-        <%= link_to t(:edit), edit_school_path(school) %>
+          <%= link_to t(:edit), edit_school_path(school) %>
         </tr>
       <% end %>
     </tbody>
   </table>
   <br>
-  <%= link_to t('schools.new.title'), new_school_path %>
+  <%= link_to t('schools.new.title'), new_school_path if @current_user.is_admin? %>

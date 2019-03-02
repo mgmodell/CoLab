@@ -20,7 +20,8 @@ class RegistrationsController < Devise::RegistrationsController
 
   def remove_email
     @email.destroy
-    redirect_to edit_user_registration_path, notice: t('.email_destroyed')
+    redirect_to edit_user_registration_path, notice:
+    t('devise.registrations.email_destroyed')
   end
 
   def initiate_password_reset

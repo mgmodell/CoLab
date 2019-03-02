@@ -69,14 +69,16 @@ en:
       hometown: Where did you spend most of your time growing up?
       impairments: >
         Do you have any impairments which alter your perspective?
+        (optional)
       impairment_visual: Visual
       impairment_auditory: Auditory
       impairment_motor: Motor
       impairment_cognitive: Cognitive
       impairment_other: Other
       account_info: Enter your account information
-      tell_about: Tell us about yourself
-      tell_about_personalized: "Tell us about yourself, %{name}"
+      tell_about: Tell us about yourself (optional)
+      tell_about_personalized: >
+        Tell us about yourself, %{name} (optional)
       activity_history: History of Activities in Which You've Taken Part
       no_activities: No activities yet
       disp_stgs: Display Settings

@@ -4,6 +4,7 @@ en:
     title: Update Consent Response
     multiple: Research Participation
     not_for_research: Not for Research
+    consent_form: Research Consent Form
     edit:
       title: Consent Form
     index:

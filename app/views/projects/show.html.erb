@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-   anonymize = @current_user.anonymize? %>
+<% theme_code = get_theme_code
+   anonymize = get_anonymous %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -25,15 +25,15 @@
     <p>
       <h3><%= t :dates %>:</h3>
       <%= raw t( 'projects.edit.date_summ',
-            start_date: @project.start_date,
-            end_date: @project.end_date,
+            start_date: in_tz( date: @project.start_date ),
+            end_date: in_tz( date: @project.end_date ),
             start_dow: ( Date::DAYNAMES.at @project.start_dow ),
             end_dow: ( Date::DAYNAMES.at @project.end_dow ) ) %><br>
       <em><%= t :note %>: <%= t 'projects.tz_warn', time_zone: @project.course.timezone %></em></br>
   </p>
   <p>
     <h3><%= t :description %>:</h3>
-    <%= @project.description %>
+    <%= raw( @project.description ) %>
   </p>
   <p>
     <h3><%= t :factor_pack %>:</h3>
@@ -46,7 +46,7 @@
     </ul>
   <% else %>
     [<%= t :not_set %>]
-      <% end %>
+  <% end %>
 </p>
 </div>
 <div id="groups" class="ui-body-<%= theme_code %> ui-content">
@@ -62,7 +62,7 @@
       <%= hidden_field_tag :project_id, @project.id %>
       <%= submit_tag "Add!" %>
     <% end %>
-    <% if @project.groups.any? || @project.course.enrolled_students.any? %>
+    <% if @project.groups.any? || @project.course.rosters.enrolled.any? %>
       <table id="groups_table" width="90%" data-role="table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>" 
@@ -100,7 +100,8 @@
           </tr>
         </thead>
         <tbody>
-          <% @project.course.enrolled_students.each do |user| %>
+          <% @project.course.rosters.enrolled.each do |roster| 
+             user = roster.user %>
             <tr>
               <td><%= mail_to user.email, user.name( anonymize ) %></td>
               <% @project.groups.each do |group| %>

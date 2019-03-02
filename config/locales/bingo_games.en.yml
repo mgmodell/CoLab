@@ -1,5 +1,12 @@
 en:
   bingo_games:
+    update_bingo_btn: Update Bingo Game
+    game_details_pnl: Game details
+    response_pnl: Response data
+    save_status: Saving game
+    open_date: Open date
+    close_date: Game date
+    lead_time: Days for instructor review
     review_candidates:
       title: Candidate Terms for Review
       submitted_by: Submitted by
@@ -20,9 +27,12 @@ en:
     update_success: Bingo! Game updated successfully!
     review_success: Review data successfully saved
     review_problems: There were problems with the review and it could not be saved
+    active: Active
+    group_option: Make groups available?
     activate_success: Bingo! Game activated!
     #Term data
-    topic: 'Topic:'
+    topic: Topic
+    description: Description
     definition: Definition
     feedback: Feedback
     concept: Concept
@@ -30,14 +40,15 @@ en:
     bingo_games: Bingo! Games
     no_games: No Bingo! games
     group_opts: Group options
-    ind_term_count: Terms per individual
+    ind_term_count: Entries per student
     days_for_prep: Days for instructor prep
     attached_to: Attached to %{course_name} course.
-    group_option: Group submissions allowed?
-    group_discount: Percent fewer terms if working in a group
-    group_source: Source of project groups
+    group_discount: Discount for collaboration
+    group_source: Source of groups
     no_group: No group options set.
-    tz_warn: This game occurs in the %{time_zone} time zone and all dates reflect this.
+    tz_warn: >
+      This game occurs in the %{time_zone} time zone and all dates
+      reflect this.
     response_summary: Student Response Summary
     resp_challenged: Challenged responses
     resp_con_expct: Concepts expected
@@ -46,3 +57,19 @@ en:
     resp_perf: Performance
     game_summary: This class identified %{con_count} unique concepts.
     not_reviewed: This has not yet been reviewed.
+    reviewed_err: >
+      You must review all candidates to mark the review
+      'completed'
+    group_requires_discount: >
+      The group option requires that a discount be
+      entered.
+    group_requires_project: >
+      The group option requires that a project be
+      selected
+    start_date_err: >
+      The bingo game cannot begin after the course has started
+      (%{start_date} > %{course_start_date})
+    end_date_err: >
+      The bingo game cannot begin after the course has ended
+      (%{end_date} > %{course_end_date})
+

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateSchools < ActiveRecord::Migration
+class CreateSchools < ActiveRecord::Migration[4.2]
   def change
     create_table :schools do |t|
       t.string :description

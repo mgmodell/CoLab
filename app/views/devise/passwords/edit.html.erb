@@ -1,23 +1,18 @@
 <h2><%= t 'devise.passwords.change_title' %></h2>
-
 <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
   <%= f.error_notification %>
-
   <%= f.input :reset_password_token, as: :hidden %>
   <%= f.full_error :reset_password_token %>
-
   <div class="form-inputs">
     <%= f.input :password, label: t( 'devise.passwords.new' ),
                 required: true, autofocus: true,
                 hint: ( t( 'devise.passwords.hint',
                   min: @minimum_password_length ) if @minimum_password_length) %>
-    <%= f.input :password_confirmation, label: t ('devise.passwords.confirm' ),
+    <%= f.input :password_confirmation, label: t('devise.passwords.confirm' ),
                 required: true %>
   </div>
-
   <div class="form-actions">
     <%= f.button :submit, t( 'devise.passwords.change_submit' ) %>
   </div>
 <% end %>
-
 <%= render "devise/shared/links" %>

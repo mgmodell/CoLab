@@ -2,9 +2,9 @@ require 'chronic'
 # frozen_string_literal: true
 Then /^the user "([^"]*)" see an Admin button$/ do |admin|
   if admin == 'does'
-    page.should have_content('Administration')
+    page.should have_content('Admin…')
   else
-    page.should_not have_content('Administration')
+    page.should_not have_content('Admin…')
   end
 end
 
@@ -15,6 +15,7 @@ Given /^the user is an admin$/ do
 end
 
 Then /^the user clicks the Admin button$/ do
+  click_link_or_button 'Admin…'
   click_link_or_button 'Administration'
 end
 
@@ -31,7 +32,19 @@ Then /^the user opens the course$/ do
 end
 
 Then /^the user clicks "([^"]*)"$/ do |link_or_button|
-  click_link_or_button link_or_button
+  if has_xpath?("//button[contains(.,'#{link_or_button}')]")
+    btn = find(:xpath, "//button[contains(.,'#{link_or_button}')]")
+  elsif has_xpath? "//a[contains(.,'#{link_or_button}')]"
+    btn = find(:xpath, "//a[contains(.,'#{link_or_button}')]")
+  elsif has_xpath? "//input[@value='#{link_or_button}']"
+    btn = find(:xpath, "//input[@value='#{link_or_button}']")
+  end
+  btn.click
+  # click_link_or_button link_or_button
+end
+
+Then /^the user switches to the "([^"]*)" tab$/ do |tab|
+  click_link tab
 end
 
 Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/ do |field, value|
@@ -39,7 +52,8 @@ Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/ do |field, va
 end
 
 Then /^the user sets the "([^"]*)" field to "([^"]*)"$/ do |field, value|
-  page.fill_in(field, with: value, visible: :all, disabled: :all)
+  find_field(field).click
+  find_field(field).set(value)
 end
 
 Then /^the user sets the project "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
@@ -56,20 +70,17 @@ Then /^retrieve the latest project from the db$/ do
 end
 
 Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value|
-  tz = ActiveSupport::TimeZone.new(@course.timezone)
+  course_tz = ActiveSupport::TimeZone.new(@course.timezone)
 
-  case date_field_prefix
+  case date_field_prefix.downcase
   when 'start'
-    date = Chronic.parse(date_value)
-    date -= date.utc_offset
-    date += tz.utc_offset
-    date = date.getlocal(tz.utc_offset).beginning_of_day
-    @project.start_date.should eq date
+    d = Chronic.parse(date_value)
+    date = course_tz.local(d.year, d.month, d.day)
+    @project.start_date.utc.should eq date.utc
 
   when 'end'
-    date = Chronic.parse(date_value)
-    date += tz.utc_offset
-    date = date.getlocal(tz.utc_offset).end_of_day
+    d = Chronic.parse(date_value)
+    date = course_tz.local(d.year, d.month, d.day).end_of_day
     @project.end_date.change(sec: 0).should eq date.change(sec: 0)
   else
     puts "We didn't test anything there: " + date_field_prefix + ' not found'
@@ -77,7 +88,7 @@ Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_val
 end
 
 Then /^the project "([^"]*)" is "([^"]*)"$/ do |field, value|
-  case field.downcase
+  case field.downcase.downcase
   when 'name'
     @project.name.should eq value
   when 'description'

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class HomeCountry < ActiveRecord::Base
+class HomeCountry < ApplicationRecord
   has_many :users, through: :home_state
   has_many :home_states, inverse_of: :home_country
 

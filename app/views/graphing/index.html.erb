@@ -3,7 +3,8 @@
 <div id='crowbar-workspace' style='display: none'>
 </div>
 <% if @current_user.admin || @current_user.is_researcher? %>
-  <% anonymize = @current_user.anonymize? %>
+  <% theme_code = get_theme_code
+     anonymize = get_anonymous %>
   <div class="ui-grid-a">
     <div class='ui-block-a'>
       <label for="for_research" style="align:right">Consenting users only?</label>

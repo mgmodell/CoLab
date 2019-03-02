@@ -1,4 +1,4 @@
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
+  <% theme_code = get_theme_code
      anonymize = false %>
 <table>
   <tr>
@@ -11,20 +11,21 @@
     </tr>
   </table>
   <h2><%= t 'candidate_lists.terms' %></h2>
-  <table id="concept_table" width="100%"
-        class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
-    <thead>
-      <tr>
-        <th width="5%">#</th>
-        <th width="30%"><%= t 'bingo_games.term' %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @candidate_list.bingo_game.concepts.uniq.each_with_index do |concept,index| %>
-        <tr id="concept">
-          <td><%= index %></td>
-          <td id="term"><%= concept.name %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <% if -42 == @candidate_list.bingo_game_id %>
+    <%= react_component "BingoBuilder", {
+    endDateStr: @candidate_list.bingo_game.end_date,
+    conceptsUrl: bingo_concepts_demo_path( -42 ),
+    boardUrl: board_for_game_demo_path( -42 ),
+    boardSaveUrl: update_board_demo_path( -42 ),
+    worksheetUrl: worksheet_for_bingo_demo_path,
+    token: form_authenticity_token } %>
+  <% else %>
+    <%= react_component "BingoBuilder", {
+    endDateStr: @candidate_list.bingo_game.end_date,
+    conceptsUrl: bingo_concepts_path( @candidate_list.bingo_game_id ),
+    boardUrl: board_for_game_path( @candidate_list.bingo_game_id ),
+    boardSaveUrl: update_board_path( @candidate_list.bingo_game_id ),
+    worksheetUrl: worksheet_for_bingo_path( @candidate_list.bingo_game_id ),
+    token: form_authenticity_token } %>
+  <% end %>
+  <br>

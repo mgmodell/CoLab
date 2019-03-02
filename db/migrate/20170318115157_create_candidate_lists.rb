@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateCandidateLists < ActiveRecord::Migration
+class CreateCandidateLists < ActiveRecord::Migration[4.2]
   def change
     create_table :candidate_lists do |t|
       t.references :user, index: true, foreign_key: true

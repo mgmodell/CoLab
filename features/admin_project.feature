@@ -9,6 +9,8 @@ Feature: Project Administration
     Given the course has 8 confirmed users
     Given the course timezone is "Mexico City"
     Given the user timezone is "Nairobi"
+    Given the course started "5/10/1976" and ended "4 months hence"
+    Given the project started "5/10/1978" and ends "10/29/2012", opened "Saturday" and closes "Monday"
     Given the course started "5/10/1976" and ended "11/01/2012"
 
   Scenario: Instructor creates a new project
@@ -247,6 +249,8 @@ Feature: Project Administration
     Then the project Style is "Sliders (simple)"
 
   Scenario: Instructor assigns a course's students to groups
+    Given the course started "5/10/1976" and ended "4 months hence"
+    Given the project started "last month" and ends "next month", opened "Saturday" and closes "Monday"
     Given the course started "last month" and ended "next month"
     Given the user is the instructor for the course
     Given the user logs in
@@ -289,3 +293,105 @@ Feature: Project Administration
     Then group "your group" has 2 user
     Then group "your group" has 1 revision
 
+  Scenario: Existing Sat-Mon proj=> Fri-Sat on Sat => tomorrow no emails, no access
+    Given the email queue is empty
+    Given the project has a group with 4 confirmed users
+    Given the user is the "a random" user in the group
+    Given the user "has" had demographics requested
+    Given the user timezone is "Mexico City"
+    Given today is "10/13/1979"
+    Given the factor pack is set to "Simple"
+    Given the project has been activated
+     When the system emails stragglers
+     When the system emails stragglers
+     When the system emails stragglers
+     Then 4 emails will be sent
+     Then 4 emails will be tracked
+     When the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+    Given the user logs out
+
+    # Change the project
+    Given the email queue is empty
+     When the project started "5/10/1978" and ends "10/29/2012", opened "Friday" and closes "Saturday"
+    Given the project has been activated
+    Given today is "10/14/1979"
+     When the system emails stragglers
+     When the system emails stragglers
+     When the system emails stragglers
+     Then 0 emails will be sent
+     Then 4 emails will be tracked
+     When the user logs in
+     Then the user should see a successful login message
+     Then user should see 0 open task
+
+  Scenario: Existing Sat-Mon proj=> Fri-Sat on Sun=> no emails, no access
+    Given the course timezone is "UTC"
+    Given the user timezone is "UTC"
+    Given the email queue is empty
+    Given the project has a group with 4 confirmed users
+    Given the user is the "a random" user in the group
+    Given the user "has" had demographics requested
+    Given the user timezone is "UTC"
+    Given today is "10/14/1979"
+    Given the factor pack is set to "Simple"
+    Given the project has been activated
+     When the system emails stragglers
+     When the system emails stragglers
+     When the system emails stragglers
+     Then 4 emails will be sent
+     Then 4 emails will be tracked
+     When the user logs in
+     Then the user should see a successful login message
+     Then user should see 1 open task
+    Given the user logs out
+
+    # Change the project
+    Given the email queue is empty
+     When the project started "5/10/1978" and ends "10/29/2012", opened "Friday" and closes "Saturday"
+    Given the project has been activated
+     When the system emails stragglers
+     When the system emails stragglers
+     When the system emails stragglers
+     Then 0 emails will be sent
+     Then 4 emails will be tracked
+     When the user logs in
+     Then the user should see a successful login message
+     Then user should see 0 open task
+
+  Scenario: End date=> 10/10/1979 on 11/10/1979=> no emails, no access
+    # Change the project
+    Given today is "11/10/1979"
+    Given the email queue is empty
+    Given the project has a group with 4 confirmed users
+    Given the user is the "a random" user in the group
+    Given the user "has" had demographics requested
+    Given the user timezone is "Mexico City"
+     When the project started "5/10/1978" and ends "10/10/1979", opened "Friday" and closes "Saturday"
+    Given the project has been activated
+     When the system emails stragglers
+     When the system emails stragglers
+     When the system emails stragglers
+     Then 0 emails will be sent
+     Then 0 emails will be tracked
+     When the user logs in
+     Then the user should see a successful login message
+     Then user should see 0 open task
+
+  Scenario: A deactivated project incurs no emails and is not listed
+    Given the email queue is empty
+    Given the project has a group with 4 confirmed users
+    Given the user is the "a random" user in the group
+    Given the user "has" had demographics requested
+    Given the user timezone is "Mexico City"
+    Given today is "10/14/1979"
+     When the project has been deactivated
+     When the system emails stragglers
+     When the system emails stragglers
+     When the system emails stragglers
+     Then 0 emails will be sent
+     Then 0 emails will be tracked
+     When the user logs in
+     Then the user should see a successful login message
+     Then user should see 0 open task

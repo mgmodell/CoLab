@@ -3,9 +3,17 @@
 require 'forgery'
 
 Given /^the project measures (\d+) factors$/ do |num_factors|
-  bp = FactorPack.make
+  bp = FactorPack.new(
+    name: "#{Forgery::Name.industry}-#{Forgery::Basic.color} Factor Pack",
+    description: Forgery::Basic.text
+  )
   num_factors.to_i.times do
-    bp.factors << Factor.make
+    factor = bp.factors.new(
+      name: "#{Forgery::Address.street_number}-#{Forgery::Name.industry} Factor",
+      description: Forgery::Basic.text
+    )
+    factor.save
+    puts factor.errors.full_messages unless factor.errors.blank?
   end
   bp.save
   puts bp.errors.full_messages unless bp.errors.blank?
@@ -193,7 +201,7 @@ end
 
 Then /^the anonymous comment "([^"]*)"$/ do |comment_status|
   installment = Installment.last
-  case comment_status
+  case comment_status.downcase
   when 'is empty'
     installment.anon_comments.blank?.should eq true
 

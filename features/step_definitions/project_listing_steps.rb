@@ -1,20 +1,33 @@
 # frozen_string_literal: true
 
+require 'forgery'
 require 'chronic'
 
 Given /^there is a course with an assessed project$/ do
-  @course = Course.make
+  @course = School.find(1).courses.new(
+    name: "#{Forgery::Name.industry} Course",
+    number: Forgery::Basic.number,
+    timezone: 'UTC',
+    start_date: 4.months.ago,
+    end_date: 2.months.from_now
+  )
   @course.save
+  puts @course.errors.full_messages unless @course.errors.blank?
+  @project = @course.projects.new(
+    name: "#{Forgery::Name.industry} Project",
+    start_dow: 1,
+    end_dow: 2,
+    style: Style.find(1)
+  )
+
+  @project.save
+  puts @project.errors.full_messages unless @project.errors.blank?
+
+  # Check that the anonymous stuff got built
   @course.get_name(true).should_not be_nil
   @course.get_name(true).length.should be > 0
-  puts @course.errors.full_messages unless @course.errors.blank?
-  @project = Project.make
-  @project.style = Style.find(1)
-  @project.course = @course
-  @project.save
   @project.get_name(true).should_not be_nil
   @project.get_name(true).length.should be > 0
-  puts @project.errors.full_messages unless @project.errors.blank?
 end
 
 Given /^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes "(.*?)"$/ do |start_date, end_date, start_dow, end_dow|
@@ -28,25 +41,36 @@ Given /^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes 
 end
 
 Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
-  @group = Group.make
+  @group = @project.groups.new(
+    name: "#{Forgery::Basic.text} Group"
+  )
   @users = []
   user_count.to_i.times do
-    user = User.make
+    user = @group.users.new(
+      first_name: Forgery::Name.first_name,
+      last_name: Forgery::Name.last_name,
+      password: 'password',
+      password_confirmation: 'password',
+      email: Forgery::Internet.email_address,
+      timezone: 'UTC',
+      school: School.find(1),
+      theme_id: 1
+    )
     user.skip_confirmation!
-    @group.users << user
     @users << user
-    r = Roster.new
-    r.user = user
-    r.course = @course
-    r.role = Roster.roles[:enrolled_student]
+    r = user.rosters.new(
+      course: @course,
+      role: Roster.roles[:enrolled_student]
+    )
+    user.save
+    puts user.errors.full_messages unless user.errors.blank?
     r.save
     puts r.errors.full_messages unless r.errors.blank?
   end
-  @project.groups << @group
-  @project.save
-  @project.get_name(true).should_not be_nil
-  @project.get_name(true).length.should be > 0
-  puts @project.errors.full_messages unless @project.errors.blank?
+  @group.save
+  @group.get_name(true).should_not be_nil
+  @group.get_name(true).length.should be > 0
+  puts @group.errors.full_messages unless @group.errors.blank?
 end
 
 Given /^the project has been deactivated$/ do

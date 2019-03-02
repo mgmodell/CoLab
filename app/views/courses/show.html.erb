@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
-<% theme_code = @current_user.nil? ? "a" : @current_user.theme.code
-   anonymize = @current_user.anonymize? %>
+<% theme_code = get_theme_code
+   anonymize = get_anonymous %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -25,12 +25,12 @@
 
 <p>
   <h3><%= t :description %>:</h3>
-  <%= @course.description %>
+  <%= raw( @course.description ) %>
 </p>
 <p>
   <h3><%= t :dates %>:</h3>
-  <%= l @course.start_date, format: :short_date %> to
-  <%= l @course.end_date, format: :short_date %>
+  <%= l in_tz( date: @course.start_date ), format: :short_date %>
+  to <%= l in_tz( date: @course.end_date ), format: :short_date %>
 </p>
 <p>
   <h3><%= t '.instructors' %></h3>
@@ -122,7 +122,8 @@
         </td>
         <td><%= link_to( t( 'courses.re_invite' ),
         re_invite_student_path( roster.user ) ) unless roster.enrolled_student? %>&nbsp;|&nbsp;
-        <%= link_to t( 'courses.drop' ), drop_student_path( roster.id ) %></td>
+        <%= link_to t( 'courses.drop' ), drop_student_path( roster.id ),
+        data: { confirm: t( 'courses.drop_student_confirm') } %></td>
       </tr>
     <% end %>
     </tbody>
@@ -135,7 +136,7 @@
 <p>
   <h3><%= t 'courses.activities' %></h3>
     <table data-role="table"
-          id="bingo_table"
+          id="activities_table"
           data-mode="columntoggle"
           data-column-btn-theme="<%= theme_code %>"
           data-column-btn-text="<%= t :column_select %>"
@@ -166,12 +167,14 @@
                 </td>
                 <td>
                   <div hidden>
-                    <%= l activity.end_date.in_time_zone( @current_user.timezone ), format: :datestamp %>
+                    <%= l in_tz( date: activity.end_date ), format: :datestamp %>
                   </div>
-                  <%= l activity.end_date.in_time_zone( @current_user.timezone ), format: :tz_clarity %>
+                  <%= l in_tz( date: activity.end_date ), format: :tz_clarity %>
                 </td>
                 <td><%= link_to t( :show ), activity %>&nbsp;|&nbsp;
-                <%= link_to t( :edit ), [:edit, activity] %>&nbsp;|&nbsp;
+                <% unless activity.get_type == 'Terms List' %>
+                  <%= link_to t( :edit ), [:edit, activity] %>&nbsp;|&nbsp;
+                <% end %>
                 <%= link_to t( :destroy ), activity, method: :delete, data: { confirm: t( :confirmation) } %></td>
             </tr>
           <% end %>

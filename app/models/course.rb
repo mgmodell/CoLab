@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'forgery'
-class Course < ActiveRecord::Base
+class Course < ApplicationRecord
   belongs_to :school, inverse_of: :courses
   has_many :projects, inverse_of: :course, dependent: :destroy
   has_many :rosters, inverse_of: :course, dependent: :destroy
@@ -10,7 +10,7 @@ class Course < ActiveRecord::Base
 
   has_many :experiences, inverse_of: :course, dependent: :destroy
 
-  validates :timezone, :school, :start_date, :end_date, presence: true
+  validates :timezone, :start_date, :end_date, presence: true
   validates :name, presence: true
   validate :date_sanity
   validate :activity_date_check
@@ -27,7 +27,7 @@ class Course < ActiveRecord::Base
                      "#{name} (#{number})"
                    else
                      name
-                                end
+                   end
                  end
     prettyName
   end
@@ -52,6 +52,7 @@ class Course < ActiveRecord::Base
     roster = Roster.new(user: user, course: self) if roster.nil?
     roster.role = role
     roster.save
+    logger.debug roster.errors.full_messages unless roster.errors.empty?
   end
 
   def drop_student(user)
@@ -65,82 +66,169 @@ class Course < ActiveRecord::Base
     roster.role
   end
 
-  # Validation check code
-  def date_sanity
-    if start_date > end_date
-      errors.add(:start_dow, 'The start date must come before the end date')
-    end
-    errors
-  end
-
-  # TODO: - check for date sanity of experiences and projects
-  def activity_date_check
-    experiences.each do |experience|
-      if experience.start_date < start_date
-        errors.add(:start_date, 'Experience "' + experience.name + '" currently starts before this course does.')
-      end
-      if experience.end_date > end_date
-        errors.add(:start_date, 'Experience "' + experience.name + '" currently ends after this course does.')
-      end
-    end
-    projects.each do |project|
-      if project.start_date < start_date
-        errors.add(:start_date, 'Project "' + project.name + '" currently starts before this course does.')
-      end
-      if project.end_date > end_date
-        errors.add(:start_date, 'Project "' + project.name + '" currently ends after this course does.')
-      end
-    end
-  end
-
-  def timezone_adjust
+  def copy_from_template(new_start:)
+    # Timezone checking here
     course_tz = ActiveSupport::TimeZone.new(timezone)
-    user_tz = Time.zone
+    new_start = course_tz.utc_to_local(new_start).beginning_of_day
+    d = start_date
+    date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
+    new_course = nil
 
-    # TZ corrections
-    new_date = start_date - user_tz.utc_offset + course_tz.utc_offset
-    self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day if start_date_changed?
-    new_date = end_date - user_tz.utc_offset + course_tz.utc_offset
-    self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day if end_date_changed?
+    Course.transaction do
+      # create the course
+
+      new_course = school.courses.new(
+        name: "Copy of #{name}",
+        number: "Copy of #{number}",
+        description: description,
+        timezone: timezone,
+        start_date: start_date + date_difference,
+        end_date: end_date + date_difference
+      )
+
+      # copy the rosters
+      rosters.faculty.each do |roster|
+        new_obj = new_course.rosters.new(
+          role: roster.role,
+          user: roster.user
+        )
+        new_obj.save
+      end
+
+      # copy the projects
+      proj_hash = {}
+      projects.each do |project|
+        new_obj = new_course.projects.new(
+          name: project.name,
+          style: project.style,
+          factor_pack: project.factor_pack,
+          start_date: project.start_date + date_difference,
+          end_date: project.end_date + date_difference,
+          start_dow: project.start_dow,
+          end_dow: project.end_dow
+        )
+        new_obj.save
+        proj_hash[project] = new_obj
+      end
+
+      # copy the experiences
+      experiences.each do |experience|
+        new_obj = new_course.experiences.new(
+          name: experience.name,
+          start_date: experience.start_date + date_difference,
+          end_date: experience.end_date + date_difference
+        )
+        new_obj.save
+      end
+
+      # copy the bingo! games
+      bingo_games.each do |bingo_game|
+        new_obj = new_course.bingo_games.new(
+          topic: bingo_game.topic,
+          description: bingo_game.description,
+          link: bingo_game.link,
+          source: bingo_game.source,
+          group_option: bingo_game.group_option,
+          individual_count: bingo_game.individual_count,
+          lead_time: bingo_game.lead_time,
+          group_discount: bingo_game.group_discount,
+          project: proj_hash[bingo_game.project],
+          start_date: bingo_game.start_date + date_difference,
+          end_date: bingo_game.end_date + date_difference
+        )
+        new_obj.save
+      end
+
+      new_course.save
+    end
+    new_course
+  end
+
+  def diversity_analysis
+    students = rosters.enrolled.collect(&:user)
+    combinations = students.combination(4).size
+    max_actual = 1000
+    results = {
+      student_count: students.size,
+      combinations: combinations,
+      actual: max_actual >= combinations
+    }
+
+    options = []
+    if results[:actual]
+      students.combination(4).each do |members|
+        group_score = Group.calc_diversity_score_for_group(users: members)
+        options << group_score
+      end
+    else
+      max_actual.times do
+        members = students.sample 4
+        group_score = Group.calc_diversity_score_for_group(users: members)
+        options << group_score
+      end
+    end
+    options.sort
+    results[:min] = options.last
+    results[:max] = options.first
+    results[:average] = options.inject(0.0) { |sum, el| sum + el } / options.size
+    results[:class_score] = Group.calc_diversity_score_for_group(users: students)
+
+    results
   end
 
   def add_user_by_email(user_email, instructor = false)
-    role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
-    # Searching for the student and:
-    user = User.joins(:emails).where(emails: { email: user_email }).take
+    ret_val = false
+    if EmailValidator.valid? user_email
+      role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
+      # Searching for the student and:
+      user = User.joins(:emails).where(emails: { email: user_email }).take
 
-    passwd = (0...8).map { rand(65..90).chr }.join
+      passwd = (0...8).map { rand(65..90).chr }.join
 
-    if user.nil?
-      user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school) if user.nil?
+      if user.nil?
+        user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school)
       end
 
-    unless user.nil?
-      existing_roster = Roster.where(course: self, user: user).take
-      if existing_roster.nil?
-        Roster.create(user: user, course: self, role: role)
-      else
-        existing_roster.role = role
-        existing_roster.save
+      unless user.nil?
+        existing_roster = Roster.where(course: self, user: user).take
+        if existing_roster.nil?
+          Roster.create(user: user, course: self, role: role)
+          ret_val = true
+        else
+          if instructor || existing_roster.enrolled_student!
+            existing_roster.role = role
+            existing_roster.save
+            if existing_roster.errors.empty?
+              ret_val = true
+            else
+              logger.debug existing_roster.errors.full_messages
+            end
+          end
+        end
+        # TODO: Let's add course invitation emails here in the future
       end
-    # TODO: Let's add course invitation emails here in the future
-  end
+    end
+    ret_val
   end
 
   def add_students_by_email(student_emails)
+    count = 0
     student_emails.split(/[\s,]+/).each do |email|
-      add_user_by_email email
+      count += 1 if add_user_by_email email
     end
+    count
   end
 
   def add_instructors_by_email(instructor_emails)
+    count = 0
     instructor_emails.split(/[\s,]+/).each do |email|
-      add_user_by_email(email, true)
+      count += 1 if add_user_by_email(email, true)
     end
+    count
   end
 
   def enrolled_students
-    rosters.includes(user: [:emails]).enrolled_student.collect(&:user)
+    rosters.includes(user: [:emails]).enrolled.collect(&:user)
   end
 
   def instructors
@@ -149,11 +237,123 @@ class Course < ActiveRecord::Base
 
   private
 
+  # Validation check code
+  def date_sanity
+    if start_date.blank? || end_date.blank?
+      errors.add(:start_dow, 'The start date is required') if start_date.blank?
+      errors.add(:end_dow, 'The end date is required') if end_date.blank?
+    elsif start_date > end_date
+      errors.add(:start_dow, 'The start date must come before the end date')
+    end
+    errors
+  end
+
+  # TODO: - check for date sanity of experiences and projects
+  def activity_date_check
+    experiences.reload.each do |experience|
+      if experience.start_date < start_date
+        msg = errors[:start_date].blank? ? '' : errors[:start_date]
+        msg = "Experience '#{experience.name}' currently starts before this course does"
+        msg += " (#{experience.start_date} < #{start_date})."
+        errors.add(:start_date, msg)
+      end
+      next unless experience.end_date.change(sec: 0) > end_date
+
+      msg = errors[:end_date].blank? ? '' : errors[:end_date]
+      msg = "Experience '#{experience.name}' currently ends after this course does"
+      msg += " (#{experience.end_date} > #{end_date})."
+      errors.add(:end_date, msg)
+    end
+    projects.reload.each do |project|
+      if project.start_date < start_date
+        msg = errors[:start_date].blank? ? '' : errors[:start_date]
+        msg += "Project '#{project.name}' currently starts before this course does"
+        msg += " (#{project.start_date} < #{start_date})."
+        errors.add(:start_date, msg)
+      end
+      next unless project.end_date.change(sec: 0) > end_date
+
+      msg = errors[:end_date].blank? ? '' : errors[:end_date]
+      msg = "Project '#{project.name}' currently ends after this course does"
+      msg += " (#{project.end_date} > #{end_date})."
+      errors.add(:end_date, msg)
+    end
+    bingo_games.reload.each do |bingo_game|
+      if bingo_game.start_date < start_date
+        msg = errors[:start_date].blank? ? '' : errors[:start_date]
+        msg = "Bingo! '#{bingo_game.topic}' currently starts before this course does "
+        msg += " (#{bingo_game.start_date} < #{start_date})."
+        errors.add(:start_date, msg)
+      end
+      next unless bingo_game.end_date.change(sec: 0) > end_date
+
+      msg = errors[:end_date].blank? ? '' : errors[:end_date]
+      msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
+      msg += " (#{bingo_game.end_date} > #{end_date})."
+      errors.add(:end_date, msg)
+    end
+  end
+
   def anonymize
     levels = %w[Beginning Intermediate Advanced]
     self.anon_name = "#{levels.sample} #{Forgery::Name.industry}"
     dpts = %w[BUS MED ENG RTG MSM LEH EDP
               GEO IST MAT YOW GFB RSV CSV MBV]
     self.anon_number = "#{dpts.sample}-#{rand(100..700)}"
+  end
+
+  def timezone_adjust
+    course_tz = ActiveSupport::TimeZone.new(timezone)
+    # TODO: must handle changing timezones at some point
+
+    # TZ corrections
+    if (start_date_changed? || timezone_changed?) && start_date.present?
+      d = start_date.utc
+      new_date = course_tz.local(d.year, d.month, d.day).beginning_of_day
+      self.start_date = new_date
+    end
+
+    if (end_date_changed? || timezone_changed?) && end_date.present?
+      new_date = course_tz.local(end_date.year, end_date.month, end_date.day)
+      self.end_date = new_date.end_of_day.change(sec: 0)
+    end
+
+    if timezone_changed? && timezone_was.present?
+      orig_tz = ActiveSupport::TimeZone.new(timezone_was)
+
+      Course.transaction do
+        projects.reload.each do |project|
+          d = orig_tz.parse(project.start_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
+          project.start_date = d.beginning_of_day
+
+          d = orig_tz.parse(project.end_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
+          project.end_date = d.end_of_day
+          # {project.end_date}\n\n"
+          project.save(validate: false)
+        end
+        experiences.reload.each do |experience|
+          d = orig_tz.parse(experience.start_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
+          experience.start_date = d.beginning_of_day
+
+          d = orig_tz.parse(experience.end_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
+          experience.end_date = d.end_of_day
+          experience.save(validate: false)
+        end
+        bingo_games.each do |bingo_game|
+          d = orig_tz.parse(bingo_game.start_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
+          bingo_game.start_date = d.beginning_of_day
+
+          d = orig_tz.parse(bingo_game.end_date.to_s)
+          d = course_tz.local(d.year, d.month, d.day)
+          bingo_game.end_date = d.end_of_day
+          bingo_game.save(validate: false)
+        end
+      end
+    end
   end
 end

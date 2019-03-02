@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 class CandidateListsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:demo_complete]
+  skip_before_action :authenticate_user!, only: %i[demo_play demo_entry]
+  before_action :demo_user, only: %i[demo_play demo_entry]
+
   before_action :set_candidate_list, only: %i[edit show update request_collaboration list_stats]
+
+  include Demoable
 
   def list_stats
     @title = t '.title'
@@ -36,12 +40,14 @@ class CandidateListsController < ApplicationController
     if desired
       @candidate_list.group_requested = true
       @candidate_list.save
+      logger.debug @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
       @candidate_list = merge_to_group_list(@candidate_list) if @candidate_list.others_requested_help == 1
     else
       @candidate_list.bingo_game.project.group_for_user(@current_user).users.each do |user|
         cl = @candidate_list.bingo_game.candidate_list_for_user(user)
         cl.group_requested = false
         cl.save
+        logger.debug cl.errors.full_messages unless cl.errors.empty?
       end
     end
     @term_counts = {}
@@ -53,7 +59,7 @@ class CandidateListsController < ApplicationController
 
   def update
     if !@candidate_list.bingo_game.is_open?
-      redirect_to :show
+      redirect_to show_candidate_list_path
     else
       respond_to do |format|
         if @candidate_list.update(candidate_list_params)
@@ -62,6 +68,7 @@ class CandidateListsController < ApplicationController
                         notice: (t 'candidate_lists.update_success')
           end
         else
+          logger.debug @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
           format.html { render :edit }
         end
       end
@@ -75,15 +82,28 @@ class CandidateListsController < ApplicationController
     end
   end
 
-  def demo_complete
-    @title = t 'candidate_lists.demo_title'
-    if @current_user.nil?
-      @current_user = User.new(
-        first_name: (t :demo_surname_1),
-        last_name: (t :demo_fam_name_1),
-        timezone: (t :demo_user_tz)
-      )
-    end
+  def demo_play
+    @title = t 'demo_title',
+               orig: (t 'candidate_lists.show.title')
+    @candidate_list = CandidateList.new(id: -1,
+                                        is_group: false)
+    @candidate_list.user = @current_user
+    demo_project = Project.new(id: -1,
+                               name: (t :demo_project),
+                               course_id: -1)
+
+    @candidate_list.bingo_game = BingoGame.new(id: -42,
+                                               topic: (t 'candidate_lists.demo_bingo_topic'),
+                                               description: (t 'candidate_lists.demo_bingo_description'),
+                                               end_date: 2.day.from_now.end_of_day,
+                                               individual_count: 10)
+
+    render :show
+  end
+
+  def demo_entry
+    @title = t 'demo_title',
+               orig: (t 'candidate_lists.edit.title')
     demo_group = Group.new
     demo_group.name = t :demo_group
     demo_group.users = [@current_user]
@@ -99,7 +119,7 @@ class CandidateListsController < ApplicationController
     @candidate_list.bingo_game = BingoGame.new(id: -1,
                                                topic: (t 'candidate_lists.demo_topic'),
                                                description: (t 'candidate_lists.demo_description'),
-                                               end_date: 2.day.from_now.end_of_day,
+                                               end_date: 4.day.from_now.end_of_day,
                                                group_option: true,
                                                project: demo_project,
                                                group_discount: 33,
@@ -114,7 +134,7 @@ class CandidateListsController < ApplicationController
     end
 
     # Add in the remainder elements
-    5.times do
+    4.times do
       @candidate_list.candidates.build(term: '', definition: '',
                                        user_id: @current_user.id)
     end
@@ -146,10 +166,11 @@ class CandidateListsController < ApplicationController
     merger_group.users.each do |group_member|
       cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
       cl.is_group = true
-      cl.candidates.each do |candidate|
+      cl.candidates.includes(:user).each do |candidate|
         merged_list << candidate if candidate.term.present? || candidate.definition.present?
       end
       cl.save
+      logger.debug cl.errors.full_messages unless cl.errors.empty?
     end
     if merged_list.count < (required_terms - 1)
       merged_list.count.upto ( required_terms - 1) do
@@ -163,6 +184,7 @@ class CandidateListsController < ApplicationController
     cl.is_group = true
     cl.bingo_game = candidate_list.bingo_game
     cl.save
+    logger.debug cl.errors.full_messages unless cl.errors.empty?
     cl
   end
 

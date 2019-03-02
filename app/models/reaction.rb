@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class Reaction < ActiveRecord::Base
-  belongs_to :behavior, inverse_of: :reactions
+class Reaction < ApplicationRecord
+  belongs_to :behavior, inverse_of: :reactions, optional: true
   belongs_to :narrative
   belongs_to :user
   belongs_to :experience, inverse_of: :reactions
@@ -9,7 +9,6 @@ class Reaction < ActiveRecord::Base
 
   has_many :diagnoses, inverse_of: :reaction, dependent: :destroy
 
-  validates :narrative, presence: true
   validate :thorough_completion
 
   def next_week

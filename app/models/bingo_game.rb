@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 require 'forgery'
-class BingoGame < ActiveRecord::Base
+class BingoGame < ApplicationRecord
   belongs_to :course, inverse_of: :bingo_games
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
   has_many :bingo_boards, inverse_of: :bingo_game, dependent: :destroy
-  belongs_to :project, inverse_of: :bingo_games
+  belongs_to :project, inverse_of: :bingo_games, optional: true
 
   has_many :candidates, through: :candidate_lists
+  has_many :users, through: :course
+  has_many :groups, through: :project
 
   has_many :concepts, through: :candidates
 
@@ -27,6 +29,7 @@ class BingoGame < ActiveRecord::Base
   before_validation :timezone_adjust
   validate :dates_within_course
   before_create :anonymize
+  before_save :reset_notification
 
   def status_for_user(user)
     candidate_list_for_user(user).status
@@ -110,6 +113,7 @@ class BingoGame < ActiveRecord::Base
     count = 0
     BingoGame.includes(:course).where(instructor_notified: false).each do |bingo|
       next unless bingo.end_date < DateTime.current + bingo.lead_time.days
+
       completion_hash = {}
       bingo.course.enrolled_students.each do |student|
         candidate_list = bingo.candidate_list_for_user(student)
@@ -144,9 +148,18 @@ class BingoGame < ActiveRecord::Base
       end
       cl.save unless id == -1 # This unless supports the demonstration only
     elsif  cl.is_group
+      # TODO: I think I can fix this
       cl = candidate_lists.where(group_id: project.group_for_user(user).id).take
     end
     cl
+  end
+
+  private
+
+  def reset_notification
+    if end_date_changed? && instructor_notified && ((DateTime.current + lead_time.days) <= end_date)
+      self.instructor_notified = false
+    end
   end
 
   # validation methods
@@ -161,24 +174,35 @@ class BingoGame < ActiveRecord::Base
 
   def timezone_adjust
     course_tz = ActiveSupport::TimeZone.new(course.timezone)
-    user_tz = Time.zone
 
-    unless start_date == course.start_date && new_record?
-      # TZ corrections
-      new_date = start_date - user_tz.utc_offset + course_tz.utc_offset
-      self.start_date = new_date.getlocal(course_tz.utc_offset).beginning_of_day if start_date_changed?
-      new_date = end_date - user_tz.utc_offset + course_tz.utc_offset
-      self.end_date = new_date.getlocal(course_tz.utc_offset).end_of_day if end_date_changed?
+    if start_date.nil? || start_date.change(hour: 0) == course.start_date.change(hour: 0)
+      self.start_date = course.start_date
+    elsif start_date_changed?
+      proc_date = course_tz.local(start_date.year, start_date.month, start_date.day)
+      self.start_date = proc_date.beginning_of_day
+    end
+
+    if end_date.nil? || end_date.change(hour: 0) == course.end_date.change(hour: 0)
+      self.end_date = course.end_date
+    elsif end_date_changed?
+      proc_date = course_tz.local(end_date.year, end_date.month, end_date.day)
+      self.end_date = proc_date.end_of_day.change(sec: 0)
     end
   end
 
   def dates_within_course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date
-        errors.add(:start_date, "The bingo game cannot begin before the course has begun (#{course.start_date.strftime '%F'})")
+        msg = I18n.t('bingo_games.start_date_err',
+                     start_date: start_date,
+                     course_start_date: course.start_date)
+        errors.add(:start_date, msg)
       end
-      if end_date > course.end_date
-        errors.add(:end_date, "The bingo game cannot occur after the course has ended (#{course.end_date.strftime '%F'})")
+      if end_date.change(sec: 0) > course.end_date.change(sec: 0)
+        msg = I18n.t('bingo_games.end_date_err',
+                     end_date: end_date,
+                     course_end_date: course.end_date)
+        errors.add(:end_date, msg)
       end
     end
     errors
@@ -186,7 +210,7 @@ class BingoGame < ActiveRecord::Base
 
   def review_completed
     if reviewed && candidates.reviewed.count < candidates.completed.count
-      errors.add(:reviewed, "You must review all candidates to mark the review 'completed'")
+      errors.add(:reviewed, I18n.t('bingo_games.reviewed_err'))
     end
   end
 
@@ -194,17 +218,13 @@ class BingoGame < ActiveRecord::Base
   def group_components
     if group_option
       if project.nil?
-        errors.add(:project_id,
-                   'The group option requires that a project be selected')
+        errors.add(:project_id, I18n.t('bingo_games.group_requires_project'))
       end
       if group_discount.nil?
-        errors.add(:group_discount,
-                   'The group option requires that a group discount be entered')
+        errors.add(:group_discount, I18n.t('bingo_games.group_requires_discount'))
       end
     end
   end
-
-  private
 
   def anonymize
     trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']

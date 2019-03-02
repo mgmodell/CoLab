@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SchoolsController < ApplicationController
+  layout 'admin'
   before_action :set_school, only: %i[show edit update destroy]
   before_action :check_admin
 
@@ -27,8 +28,9 @@ class SchoolsController < ApplicationController
     @title = t '.title'
     @school = School.new(school_params)
     if @school.save
-      redirect_to url: school_url(@school), notice: t('schools.create_success')
+      redirect_to schools_url, notice: t('schools.create_success')
     else
+      logger.debug @school.errors.full_messages unless @school.errors.empty?
       render :new
     end
   end
@@ -38,6 +40,7 @@ class SchoolsController < ApplicationController
     if @school.update(school_params)
       redirect_to school_path(@school), notice: t('schools.update_success')
     else
+      logger.debug @school.errors.full_messages unless @school.errors.empty?
       render :edit
     end
   end
@@ -59,6 +62,6 @@ class SchoolsController < ApplicationController
   end
 
   def school_params
-    params.require(:school).permit(:name, :description)
+    params.require(:school).permit(:name, :description, :timezone)
   end
 end

@@ -7,7 +7,59 @@
 # files.
 
 require 'cucumber/rails'
+require 'selenium/webdriver'
 
+Capybara.register_driver :headless_firefox do |app|
+  browser_options = Selenium::WebDriver::Firefox::Options.new
+  browser_options.args << '--headless'
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :firefox,
+    options: browser_options
+  )
+end
+
+Capybara.register_driver(:chrome) do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w[disable-gpu] }
+  )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    desired_capabilities: capabilities
+  )
+end
+
+Capybara.register_driver(:headless_chrome) do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w[headless disable-gpu] }
+  )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    desired_capabilities: capabilities
+  )
+end
+
+Capybara.javascript_driver = :headless_chrome
+# Capybara.javascript_driver = :chrome
+# Capybara.javascript_driver = :headless_firefox
+# Capybara.javascript_driver = :selenium
+Capybara.default_driver = :rack_test
+Cucumber::Rails::Database.autorun_database_cleaner = false
+
+def loadData
+  sql = File.read('db/test_db.sql')
+  statements = sql.split(/;$/)
+  statements.pop # remote empty line
+  ActiveRecord::Base.transaction do
+    statements.each do |statement|
+      ActiveRecord::Base.connection.execute(statement)
+    end
+  end
+end
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any
 # selectors in your step definitions to use the XPath syntax.
@@ -53,38 +105,50 @@ end
 #   end
 #
 
+Before '@javascript' do
+  page.driver.browser.manage.window.resize_to(1024, 768)
+  DatabaseCleaner.strategy = :truncation
+end
+
 # Possible values are :truncation and :transaction
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
-# Before do
-#  $dunit ||= false
-#  return $dunit if $dunit
-#  seed_file = File.join( Rails.root, "db", "seeds.rb" )
-#  load( seed_file )
-#  $dunit = true
-# end
 Before do
+  loadData
+  DatabaseCleaner.start
   Chronic.time_class = Time.zone
   travel_to DateTime.now.beginning_of_day
   @anon = false
 end
 
-After do |_scenario|
+After ('@javascript') do |_scenario|
+  DatabaseCleaner.clean
+  loadData
+  travel_back
+end
+
+After ('not @javascript') do |_scenario|
+  DatabaseCleaner.clean
   travel_back
 end
 
 scenario_times = {}
 
+World(ActiveJob::TestHelper)
 Around() do |scenario, block|
   start = Time.now
-  block.call
+  perform_enqueued_jobs do
+    block.call
+  end
   scenario_times["#{scenario.feature.file}::#{scenario.name}"] = Time.now - start
 end
 
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
+  total_time = scenario_times.values.inject(0) { |sum, x| sum + x }
+  puts "Aggregate Testing Time: #{total_time}"
   puts "------------- Top #{max_scenarios} slowest scenarios -------------"
   sorted_times = scenario_times.sort { |a, b| b[1] <=> a[1] }
   sorted_times[0..max_scenarios - 1].each do |key, value|

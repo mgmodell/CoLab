@@ -12,8 +12,16 @@
 **/*.log
 !/log/.keep
 /tmp
+/public/assets/*
 rerun.txt
 *.swp
+*.DS_Store
 *~
 .byebug_history
 **/*.DS_Store
+yarn-error.log*
+/public/packs
+/public/packs-test
+/node_modules
+yarn-debug.log*
+.yarn-integrity

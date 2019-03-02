@@ -96,7 +96,7 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
     @entries_list[index] = {} if @entries_list[index].blank?
     @entries_list.each do |entry|
       next unless entry['term'] == existing_term
-      puts "found #{existing_term}"
+
       entry[field] = new_val
       page.fill_in("candidate_list_candidates_attributes_#{index}_#{field}",
                    with: @entries_list[index][field])
@@ -109,6 +109,7 @@ Then /^the candidate lists have been merged$/ do
   combined_list = []
   @bingo.project.group_for_user(@user).users.each do |user|
     next if @entries_lists[user].blank?
+
     @entries_lists[user].each do |list_item|
       if list_item['term'].present? || list_item['definition'].present?
         combined_list << list_item

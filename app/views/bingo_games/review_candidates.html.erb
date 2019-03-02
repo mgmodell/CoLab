@@ -1,8 +1,3 @@
-<%= simple_form_for update_bingo_candidates_review_path( @bingo_game ) do |f| %>
-  <%= f.error_notification %>
-  <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code 
-     anonymous = @current_user.anonymize?
-%>
   <table>
     <tr>
       <th align="right"><%= t 'bingo_games.topic' %>:</th>
@@ -18,63 +13,30 @@
     </tr>
     <tr>
       <th align="right"><%= t :close_date %>:</th>
-      <td><%= l @bingo_game.end_date, format: :tz_clarity %></td>
+      <td><%= l in_tz( date: @bingo_game.end_date ), format: :tz_clarity %></td>
     </tr>
   </table>
+<%= simple_form_for update_bingo_candidates_review_path( @bingo_game ) do |f| %>
+  <%= f.error_notification %>
+  <% theme_code = get_theme_code
+     anonymous = get_anonymous
+%>
   <h2><%= t 'candidate_lists.terms' %>:</h2>
-  <table data-role="table"
-    id="candidates_table"
-    width="100%"
-    data-mode="columntoggle"
-    data-column-btn-theme="<%= theme_code %>"
-    data-column-btn-text="<%= t :column_select %>"
-    class="table-stroke-ui ui-shadow table-stripe table-ui-responsive" >
-    <thead>
-      <tr>
-        <th>#</th>
-        <th data-priority="0"><%= t 'bingo_games.term' %></th>
-        <th data-priority="1"><%= t :submitted_by %></th>
-        <th data-priority="0"><%= t 'bingo_games.definition' %></th>
-        <th data-priority="0"><%= t 'bingo_games.feedback' %></th>
-        <th width="20%" data-priority="0"><%= t 'bingo_games.concept' %></th>
-      </tr>
-    </thead>
-    <tbody><%
-      count = 0
-      candidate_feedbacks = CandidateFeedback.all
-      %>
-      <% @bingo_game.candidates.
-        includes(:user, :concept,candidate_list:[:group]).
-        completed.find_each do |candidate| %>
-        <tr>
-          <td><%= count += 1 %></td>
-          <td><%= candidate.term %></td>
-          <td>
-            <%= candidate.user.name( anonymous ) %>
-            <% if candidate.candidate_list.is_group %>
-              <br>
-              (with group: <i><%= candidate.candidate_list.group.get_name( anonymous ) %></i>)
-          <% end %>
-          </td>
-          <td><%= candidate.definition %></td>
-          <td><%= f.input_field "candidate_feedback_#{candidate.id}",
-                      selected: candidate.candidate_feedback_id, 
-                      collection: candidate_feedbacks,
-                      prompt: true,
-                      label: false %>
-          </td>
-          <td><%= f.input_field "concept_#{candidate.id}",
-                      value: candidate.concept.blank? ? "": candidate.concept.name, 
-                      class: "awesomplete-ajax",
-                      data: { list: '#concepts' },
-                      label: false %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= f.input :reviewed, as: :boolean, label: "Review completed" %>
-  <div class="form-actions">
-    <%= f.button :submit, t(:save) %>
-  </div>
+  <% 
+     dataUrl = review_bingo_candidates_path(@bingo_game.id )
+     reviewSaveUrl = update_bingo_candidates_review_path( @bingo_game.id)
+     conceptUrl = bingo_concepts_path(0)
+     if @bingo_game.id < 1
+      dataUrl = bingo_demo_review_path
+      reviewSaveUrl = demo_update_bingo_candidates_review_path
+      conceptUrl = bingo_concepts_demo_path( 0 )
+     end
+  %>
+  <%= react_component "CandidatesReviewTable", {
+    dataUrl: dataUrl,
+    conceptUrl: conceptUrl,
+    token: form_authenticity_token,
+    bingo_game_id: @bingo_game.id,
+    reviewSaveUrl: reviewSaveUrl,
+  } %>
 <% end %>

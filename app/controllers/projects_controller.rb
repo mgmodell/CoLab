@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
+  layout 'admin'
   before_action :set_project, only: %i[show edit update destroy activate
                                        rescore_group rescore_groups]
   before_action :check_editor, except: %i[next diagnose react
@@ -31,22 +32,22 @@ class ProjectsController < ApplicationController
 
   def new
     @title = t('.title')
-    @project = Project.new
-    @project.course = Course.find params[:course_id]
-    @project.start_date = @project.course.start_date
-    @project.end_date = @project.course.end_date
+    course = Course.find(params[:course_id])
+    @project = course.projects.new
+    @project.start_date = course.start_date
+    @project.end_date = course.end_date
   end
 
   def create
     @title = t('.title')
     @project = Project.new(project_params)
-    @project.course = Course.find(@project.course_id)
     if @project.save
       notice = @project.active ?
             t('projects.create_success') :
             t('projects.create_success_inactive')
       redirect_to @project, notice: notice
     else
+      logger.debug @project.errors.full_messages unless @project.errors.empty?
       render :new
     end
   end
@@ -79,6 +80,7 @@ class ProjectsController < ApplicationController
             t('projects.update_success_inactive')
       redirect_to @project, notice: notice
     else
+      logger.debug @project.errors.full_messages unless @project.errors.empty?
       render :edit
     end
   end
@@ -109,6 +111,7 @@ class ProjectsController < ApplicationController
     if group.present?
       group.calc_diversity_score
       group.save
+      logger.debug group.errors.full_messages unless group.errors.empty?
 
       redirect_to @project, notice: t('projects.diversity_calculated')
     else
@@ -121,6 +124,7 @@ class ProjectsController < ApplicationController
     @project.groups.each do |group|
       group.calc_diversity_score
       group.save
+      logger.debug group.errors.full_messages unless group.errors.empty?
     end
 
     redirect_to @project, notice: t('projects.diversities_calculated')
@@ -129,9 +133,10 @@ class ProjectsController < ApplicationController
   def activate
     @title = t('projects.show.title')
     if @current_user.is_admin? ||
-       @project.course.get_roster_for_user(@current_user).role.instructor?
+       @project.course.get_user_role(@current_user) == 'instructor'
       @project.active = true
       @project.save
+      logger.debug @project.errors.full_messages unless @project.errors.empty?
     end
     render :show
   end
