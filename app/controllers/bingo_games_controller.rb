@@ -342,7 +342,7 @@ class BingoGamesController < ApplicationController
       bingo_game: bingo_game.as_json(only:
         %i[id topic description status close_date]),
       users: users.as_json(only:
-        %i[id first_name last_name email]),
+        %i[id first_name last_name ], methods: :email ),
       feedback_opts: CandidateFeedback.all.as_json(only:
         %i[id name_en definition_en credit]),
       groups: groups.as_json(only:
