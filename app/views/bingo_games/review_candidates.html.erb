@@ -2,18 +2,12 @@
     <tr>
       <th align="right"><%= t 'bingo_games.topic' %>:</th>
       <td><%= @bingo_game.topic %></td>
-    </tr>
-    <tr>
-      <th align="right"><%= t :description %>:</th>
-      <td><%= raw( @bingo_game.description ) %></td>
-    </tr>
-    <tr>
-      <th align="right"><%= t :status %>:</th>
-      <td><%= @bingo_game.status %>%</td>
-    </tr>
-    <tr>
       <th align="right"><%= t :close_date %>:</th>
       <td><%= l in_tz( date: @bingo_game.end_date ), format: :tz_clarity %></td>
+    </tr>
+    <tr>
+      <th valign="top" align="right"><%= t :description %>:</th>
+      <td colspan=3><%= raw( @bingo_game.description ) %></td>
     </tr>
   </table>
 <%= simple_form_for update_bingo_candidates_review_path( @bingo_game ) do |f| %>
