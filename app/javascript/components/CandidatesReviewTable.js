@@ -157,11 +157,9 @@ class CandidatesReviewTable extends React.Component {
     this.getData();
   }
 
-  sortTable( data, key, direction ) {
-    const dataKey = key
-    const mod = direction == SortDirection.ASC ?
-      1 : -1
-
+  sortTable(data, key, direction) {
+    const dataKey = key;
+    const mod = direction == SortDirection.ASC ? 1 : -1;
 
     if ("feedback" == dataKey) {
       data.sort((a, b) => {
@@ -188,9 +186,8 @@ class CandidatesReviewTable extends React.Component {
       });
     }
     this.setState({
-      candidates: data,
+      candidates: data
     });
-
   }
 
   sortEvent(event, dataKey) {
@@ -203,7 +200,7 @@ class CandidatesReviewTable extends React.Component {
       sortDirection: direction,
       sortBy: dataKey
     });
-    this.sortTable( tmpArray, dataKey, direction )
+    this.sortTable(tmpArray, dataKey, direction);
   }
 
   getData() {
@@ -327,7 +324,7 @@ class CandidatesReviewTable extends React.Component {
       candidates_map: candidates_map,
       candidates: candidates
     });
-    this.sortTable( candidates, this.state.sortBy, this.state.sortDirection )
+    this.sortTable(candidates, this.state.sortBy, this.state.sortDirection);
   };
   feedbackSet = function(id, value) {
     let candidates_map = this.state.candidates_map;
@@ -338,7 +335,7 @@ class CandidatesReviewTable extends React.Component {
       candidates_map: candidates_map,
       candidates: candidates
     });
-    this.sortTable( candidates, this.state.sortBy, this.state.sortDirection )
+    this.sortTable(candidates, this.state.sortBy, this.state.sortDirection);
   };
   colSel = function(event, index) {
     let cols = this.state.columns;
