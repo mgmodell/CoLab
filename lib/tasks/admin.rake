@@ -24,8 +24,9 @@ namespace :admin do
   end
 
   desc 'Get diversity information for a class'
-  task :diversanal, [:course_id] => [:environment] do |_t, args| 
+  task :diversanal, [:course_id,:member_count] => [:environment] do |_t, args| 
     course = Course.where( id: args[:course_id].to_i ).take
+    member_count = args[:member_count].to_i
     if course.nil? 
       puts '  This task analyses the student diversity in a class and '
       puts ' offers related analysis and data.'
@@ -33,7 +34,13 @@ namespace :admin do
       puts '   Example: rake admin:examples[7]'
     else
       puts "Diversity Analysis for #{course.name} (#{course.number})"
-      puts course.diversity_analysis.inspect
+      if member_count.nil? || member_count < 2
+        puts " 4 members per group"
+        puts course.diversity_analysis.inspect
+      else
+        puts " #{member_count} members per group"
+        puts course.diversity_analysis(member_count: member_count).inspect
+      end
     end
   end
 
