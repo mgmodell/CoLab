@@ -485,7 +485,7 @@ class BingoGamesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_game
-    bg_test = BingoGame.joins(course: :projects).includes(course: :projects).find(params[:id])
+    bg_test = BingoGame.joins(:course).includes(course: :projects).find(params[:id])
     if @current_user.is_admin?
       @bingo_game = bg_test
     else

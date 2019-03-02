@@ -157,16 +157,14 @@ class CandidatesReviewTable extends React.Component {
     this.getData();
   }
 
-  sortTable(event, dataKey) {
-    let tmpArray = this.state.candidates;
-    let direction = SortDirection.DESC;
-    let mod = 1;
-    if (dataKey == this.state.sortBy && direction == this.state.sortDirection) {
-      direction = SortDirection.ASC;
-      mod = -1;
-    }
+  sortTable( data, key, direction ) {
+    const dataKey = key
+    const mod = direction == SortDirection.ASC ?
+      1 : -1
+
+
     if ("feedback" == dataKey) {
-      tmpArray.sort((a, b) => {
+      data.sort((a, b) => {
         let a_val = !a["candidate_feedback_id"]
           ? 0
           : a["candidate_feedback_id"];
@@ -177,24 +175,37 @@ class CandidatesReviewTable extends React.Component {
         return mod * (a_val - b_val);
       });
     } else if ("concept" == dataKey) {
-      tmpArray.sort((a, b) => {
+      data.sort((a, b) => {
         return mod * a[dataKey].name.localeCompare(b[dataKey].name);
       });
     } else if ("number" == dataKey) {
-      tmpArray.sort((a, b) => {
+      data.sort((a, b) => {
         return mod * (a[dataKey] - b[dataKey]);
       });
     } else {
-      tmpArray.sort((a, b) => {
+      data.sort((a, b) => {
         return mod * a[dataKey].localeCompare(b[dataKey]);
       });
     }
     this.setState({
-      concepts: tmpArray,
+      candidates: data,
+    });
+
+  }
+
+  sortEvent(event, dataKey) {
+    let tmpArray = this.state.candidates;
+    let direction = SortDirection.DESC;
+    if (dataKey == this.state.sortBy && direction == this.state.sortDirection) {
+      direction = SortDirection.ASC;
+    }
+    this.setState({
       sortDirection: direction,
       sortBy: dataKey
     });
+    this.sortTable( tmpArray, dataKey, direction )
   }
+
   getData() {
     fetch(this.props.dataUrl + ".json", {
       method: "GET",
@@ -297,7 +308,6 @@ class CandidatesReviewTable extends React.Component {
     this.setState({ rowsPerPage: event.target.value });
   };
   filter = function(event) {
-    console.log(this.state.candidates_raw.length);
     var filtered = this.state.candidates_raw.filter(candidate =>
       candidate.definition
         .toUpperCase()
@@ -317,6 +327,7 @@ class CandidatesReviewTable extends React.Component {
       candidates_map: candidates_map,
       candidates: candidates
     });
+    this.sortTable( candidates, this.state.sortBy, this.state.sortDirection )
   };
   feedbackSet = function(id, value) {
     let candidates_map = this.state.candidates_map;
@@ -327,6 +338,7 @@ class CandidatesReviewTable extends React.Component {
       candidates_map: candidates_map,
       candidates: candidates
     });
+    this.sortTable( candidates, this.state.sortBy, this.state.sortDirection )
   };
   colSel = function(event, index) {
     let cols = this.state.columns;
@@ -458,7 +470,7 @@ class CandidatesReviewTable extends React.Component {
                       <TableSortLabel
                         active={cell.dataKey == this.state.sortBy}
                         direction={direction[this.state.sortDirection]}
-                        onClick={() => this.sortTable(event, cell.dataKey)}
+                        onClick={() => this.sortEvent(event, cell.dataKey)}
                       >
                         {cell.label}
                       </TableSortLabel>
