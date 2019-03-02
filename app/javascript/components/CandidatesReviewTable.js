@@ -66,6 +66,7 @@ class CandidatesReviewTable extends React.Component {
       review_complete_lbl: "Review completed",
       review_complete: false,
       reviewStatus: "",
+      progress: 0,
       sortBy: "number",
       sortDirection: SortDirection.DESC,
       columns: [
@@ -104,8 +105,8 @@ class CandidatesReviewTable extends React.Component {
           }
         },
         {
-          width: 200,
-          flexGrow: 1.5,
+          width: 125,
+          flexGrow: 1.0,
           label: "Definition",
           dataKey: "definition",
           numeric: false,
@@ -151,6 +152,7 @@ class CandidatesReviewTable extends React.Component {
     this.colSel = this.colSel.bind(this);
     this.feedbackSet = this.feedbackSet.bind(this);
     this.conceptSet = this.conceptSet.bind(this);
+    this.updateProgress = this.updateProgress.bind(this);
   }
   componentDidMount() {
     //Retrieve concepts
@@ -159,7 +161,7 @@ class CandidatesReviewTable extends React.Component {
 
   sortTable(data, key, direction) {
     const dataKey = key;
-    const mod = direction == SortDirection.ASC ? 1 : -1;
+    const mod = direction == SortDirection.ASC ? -1 : 1;
 
     if ("feedback" == dataKey) {
       data.sort((a, b) => {
@@ -185,9 +187,31 @@ class CandidatesReviewTable extends React.Component {
         return mod * a[dataKey].localeCompare(b[dataKey]);
       });
     }
+
+    //Calculate progress
+    this.updateProgress( )
+
+
     this.setState({
       candidates: data
     });
+  }
+
+  updateProgress( ){
+    const {feedback_opts, candidates} = this.state
+    let completed = 0
+    candidates.forEach( (candidate)=>{
+      const fb_id = candidate.candidate_feedback_id
+      if( fb_id != null && 
+          ( feedback_opts[ fb_id ].name_en.startsWith( 'Term' ) ||
+          candidate.concept.name.length > 0 ) )
+      {
+        completed = completed + 1
+      }
+    })
+    this.setState({
+      progress: Math.round( ( completed / candidates.length ) * 100 )
+    })
   }
 
   sortEvent(event, dataKey) {
@@ -260,6 +284,7 @@ class CandidatesReviewTable extends React.Component {
           candidates_raw: data.candidates,
           feedback_opts: feedback_opts
         });
+        this.updateProgress( )
       });
   }
   saveFeedback() {
@@ -296,6 +321,7 @@ class CandidatesReviewTable extends React.Component {
   }
   handleChange = function(name) {
     this.setState({ [name]: !this.state[name] });
+    this.updateProgress( )
     //this.setState( {[name]: event.target.checked } )
   };
   handleChangePage = function(event, page) {
@@ -324,6 +350,7 @@ class CandidatesReviewTable extends React.Component {
       candidates_map: candidates_map,
       candidates: candidates
     });
+    this.updateProgress( )
     this.sortTable(candidates, this.state.sortBy, this.state.sortDirection);
   };
   feedbackSet = function(id, value) {
@@ -335,6 +362,7 @@ class CandidatesReviewTable extends React.Component {
       candidates_map: candidates_map,
       candidates: candidates
     });
+    this.updateProgress( )
     this.sortTable(candidates, this.state.sortBy, this.state.sortDirection);
   };
   colSel = function(event, index) {
@@ -454,6 +482,7 @@ class CandidatesReviewTable extends React.Component {
             </Button>
           </Grid>
           <Grid item>
+            <Typography>{this.state.progress}%</Typography>
             <Typography>{this.state.reviewStatus}</Typography>
           </Grid>
         </Grid>
