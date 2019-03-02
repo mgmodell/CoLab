@@ -66,7 +66,7 @@ class Group < ActiveRecord::Base
       scenario_hash = Hash.new(0)
       impairment_hash = Hash.new(0)
 
-      users.each do |user|
+      users.uniq.each do |user|
         if user.home_state.present?
           state_hash[user.home_state] += 1 unless
             user.home_state.no_response == true

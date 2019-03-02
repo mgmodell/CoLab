@@ -9,9 +9,11 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*
+**/*.log
 !/log/.keep
 /tmp
 rerun.txt
 *.swp
 *~
 .byebug_history
+**/*.DS_Store
