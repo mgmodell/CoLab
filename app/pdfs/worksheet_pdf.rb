@@ -52,6 +52,7 @@ class WorksheetPdf
     stroke_horizontal_rule
     move_down 5
     items.each do |item|
+      item[2].remove!( '(', ')' )
       item[2].name.split(/\W+/).each do |w|
         item[1].gsub!(/\b#{w}/, ('*' * w.length))
       end
@@ -63,9 +64,7 @@ class WorksheetPdf
   def gen_bingo_board
     size = @bingo_board.bingo_game.size
     data = Array.new(size) { Array.new(size) }
-    puts "cells: #{@bingo_board.bingo_cells.size}"
     @bingo_board.bingo_cells.each do |bc|
-      puts bc.inspect
       if bc.concept.name == '*'
         data[bc.row][ bc.column ] =
           '<color rgb=\'FF00FF\'><font size=\'48\'>*</font></color>'

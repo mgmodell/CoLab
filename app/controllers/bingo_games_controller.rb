@@ -329,7 +329,7 @@ class BingoGamesController < ApplicationController
           users: @bingo_game.users,
           groups: @bingo_game.groups,
           candidate_lists: @bingo_game.candidate_lists,
-          candidates: @bingo_game.candidates
+          candidates: @bingo_game.candidates.completed
         )
       end
       format.html { render :review_candidates }
