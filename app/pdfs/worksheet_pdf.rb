@@ -48,11 +48,13 @@ class WorksheetPdf
 
     move_down 10
     # The bounding_box takes the x and y coordinates for positioning its content and some options to style it
+    text 'Write the letter of the clue below in the box of the ' \
+         'matching concept above.'
     text '<b>Clues:</b>', inline_format: true
     stroke_horizontal_rule
     move_down 5
     items.each do |item|
-      item[2].name.remove( '(', ')' ).split(/\W+/).each do |w|
+      Candidate.filter.filter( item[2].name.split(/\W+/) ).each do |w|
         item[1].gsub!(/\b#{w}/, ('*' * w.length))
       end
       text "<b>#{item[0]}.</b>  #{item[1]}",
