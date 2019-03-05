@@ -83,7 +83,7 @@ class CandidatesReviewTable extends React.Component {
           }
         },
         {
-          width: 100,
+          width: 75,
           flexGrow: 1.0,
           label: "Submitted by",
           dataKey: "submitter",
@@ -93,7 +93,7 @@ class CandidatesReviewTable extends React.Component {
           render_func: c => this.submitterRender(c)
         },
         {
-          width: 100,
+          width: 50,
           flexGrow: 1.0,
           label: "Term",
           dataKey: "term",
@@ -105,8 +105,8 @@ class CandidatesReviewTable extends React.Component {
           }
         },
         {
-          width: 125,
-          flexGrow: 1.0,
+          width: 200,
+          flexGrow: 1.5,
           label: "Definition",
           dataKey: "definition",
           numeric: false,
@@ -504,7 +504,7 @@ class CandidatesReviewTable extends React.Component {
                       cell.label
                     );
                     return (
-                      <TableCell key={"h_" + cell.dataKey}>{header}</TableCell>
+                      <TableCell width={cell.width} key={"h_" + cell.dataKey}>{header}</TableCell>
                     );
                   }
                 })}
