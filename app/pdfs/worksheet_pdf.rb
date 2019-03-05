@@ -48,6 +48,8 @@ class WorksheetPdf
 
     move_down 10
     # The bounding_box takes the x and y coordinates for positioning its content and some options to style it
+    text 'Write the letter of the clue below in the box of the ' \
+         'matching concept above.'
     text '<b>Clues:</b>', inline_format: true
     stroke_horizontal_rule
     move_down 5

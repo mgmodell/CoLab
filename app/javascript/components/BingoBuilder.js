@@ -198,25 +198,28 @@ class BingoBuilder extends React.Component {
       this.state.board.initialised &&
       this.state.board.iteration > 0 &&
       this.state.endDate > new Date() ? (
-        <Button variant="contained" onClick={() => this.saveBoard()}>
-          Save
-        </Button>
-      ) : null;
+        <React.Fragment>
+          <Link onClick={() => this.saveBoard()}>
+            Save
+          </Link> the board you generated&hellip;
+        </React.Fragment>
+      ) : 'Generate a board before this step';
+
     const printBtn =
-      this.state.board.id != null && this.state.board.iteration == 0 ? (
+      this.state.board.id != null &&
+      this.state.board.iteration == 0 ? (
         <React.Fragment>
           <Link onClick={() => this.getPrintableBoard()}>
-            Download Playble Bingo Board
-          </Link>
-          &nbsp;|&nbsp;
+            Download your Bingo Board
+          </Link> and play along in class!
         </React.Fragment>
-      ) : null;
+      ) : 'Save your board before this step';
 
     const workSheet =
       this.state.board.acceptable <
       this.state.board.size * this.state.board.size ? null : (
         <Link onClick={() => this.getWorksheet()}>
-          Download Practice Bingo Board
+          Practice Bingo Board
         </Link>
       );
 
@@ -229,13 +232,16 @@ class BingoBuilder extends React.Component {
             })}
           </Paper>
           <br />
-          <Button variant="contained" onClick={() => this.randomizeTiles()}>
-            Generate New Board
-          </Button>
-          &nbsp;
-          {saveBtn}
-          {printBtn}
-          {workSheet}
+          <ol>
+            <li>Print and complete this {workSheet} then turn it in before class begins.</li>
+            <li>
+              <Link onClick={() => this.randomizeTiles()}>
+                Generate a playable board
+              </Link> to get one you like and then&hellip;
+            </li>
+            <li>{saveBtn}</li>
+            <li>{printBtn}</li>
+          </ol>
           <div id="bingoBoard" className="mt4">
             <BingoBoard board={this.state.board} />
           </div>
