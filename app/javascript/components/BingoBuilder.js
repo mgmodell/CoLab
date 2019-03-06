@@ -194,6 +194,8 @@ class BingoBuilder extends React.Component {
     this.getConcepts(this.getBoard);
   }
   render() {
+    //This nested ternary operator is ugly, but it works. At some point
+    // I need to figure out the right way to do it.
     const saveBtn =
       this.state.endDate < new Date() ?
         <em>
