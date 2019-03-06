@@ -216,8 +216,9 @@ class BingoBuilder extends React.Component {
           </em>;
 
     const printBtn =
-      this.state.board.id != null &&
-      this.state.board.iteration == 0 ? (
+      ( this.state.board.id != null &&
+      this.state.board.iteration == 0 ) ||
+      this.state.endDate < new Date( ) ? (
         <React.Fragment>
           <Link onClick={() => this.getPrintableBoard()}>
             Download your Bingo Board
@@ -246,8 +247,8 @@ class BingoBuilder extends React.Component {
             <li>Print and complete this {workSheet} then turn it in before class begins.</li>
             <li>
               <Link onClick={() => this.randomizeTiles()}>
-                Generate a playable board
-              </Link> to get one you like and then&hellip;
+                (Re)Generate your playable board
+              </Link> until you get one you like and then&hellip;
             </li>
             <li>{saveBtn}</li>
             <li>{printBtn}</li>
