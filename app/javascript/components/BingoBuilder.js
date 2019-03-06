@@ -194,7 +194,14 @@ class BingoBuilder extends React.Component {
     this.getConcepts(this.getBoard);
   }
   render() {
+    //This nested ternary operator is ugly, but it works. At some point
+    // I need to figure out the right way to do it.
     const saveBtn =
+      this.state.endDate < new Date() ?
+        <em>
+          This game has already been played, so you cannot save a new
+          board.
+        </em> :
       this.state.board.initialised &&
       this.state.board.iteration > 0 &&
       this.state.endDate > new Date() ? (
@@ -203,11 +210,15 @@ class BingoBuilder extends React.Component {
             Save
           </Link> the board you generated&hellip;
         </React.Fragment>
-      ) : 'Generate a board before this step';
+      ) : <em>
+            If you generate a new board, you will be able to save it
+            here.
+          </em>;
 
     const printBtn =
-      this.state.board.id != null &&
-      this.state.board.iteration == 0 ? (
+      ( this.state.board.id != null &&
+      this.state.board.iteration == 0 ) ||
+      this.state.endDate < new Date( ) ? (
         <React.Fragment>
           <Link onClick={() => this.getPrintableBoard()}>
             Download your Bingo Board
@@ -236,8 +247,8 @@ class BingoBuilder extends React.Component {
             <li>Print and complete this {workSheet} then turn it in before class begins.</li>
             <li>
               <Link onClick={() => this.randomizeTiles()}>
-                Generate a playable board
-              </Link> to get one you like and then&hellip;
+                (Re)Generate your playable board
+              </Link> until you get one you like and then&hellip;
             </li>
             <li>{saveBtn}</li>
             <li>{printBtn}</li>
