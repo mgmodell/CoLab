@@ -195,6 +195,11 @@ class BingoBuilder extends React.Component {
   }
   render() {
     const saveBtn =
+      this.state.endDate < new Date() ?
+        <em>
+          This game has already been played, so you cannot save a new
+          board.
+        </em> :
       this.state.board.initialised &&
       this.state.board.iteration > 0 &&
       this.state.endDate > new Date() ? (
@@ -203,7 +208,10 @@ class BingoBuilder extends React.Component {
             Save
           </Link> the board you generated&hellip;
         </React.Fragment>
-      ) : 'Generate a board before this step';
+      ) : <em>
+            If you generate a new board, you will be able to save it
+            here.
+          </em>;
 
     const printBtn =
       this.state.board.id != null &&
