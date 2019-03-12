@@ -373,8 +373,15 @@ class CandidatesReviewTable extends React.Component {
     });
   };
   conceptRender = function(c) {
+    const {feedback_opts, candidates} = this.state
     const label = "Concept";
-    return (
+    const fb_id = c.candidate_feedback_id
+
+    let output = 'N/A'
+    if( fb_id != null &&
+        !feedback_opts[ fb_id ].name_en.startsWith( 'Term' ) )
+    {
+      output = (
       <RemoteAutosuggest
         inputLabel={label}
         itemId={c.id}
@@ -382,8 +389,9 @@ class CandidatesReviewTable extends React.Component {
         controlId={"concept_4_" + c.id}
         dataUrl={this.props.conceptUrl}
         setFunction={this.conceptSet}
-      />
-    );
+      /> )
+    }
+    return output;
   };
   feedbackRender = function(c) {
     const label = "Feedback";
