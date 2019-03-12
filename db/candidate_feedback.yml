@@ -123,3 +123,11 @@
     a specific implementation should generally be avoided.
   definition_ko:
 
+- !ruby/object:CandidateFeedback_
+  name_en: "Definition: Recursive"
+  name_ko: 
+  credit: 50
+  definition_en: >
+    The term was used to define itself.
+  definition_ko:
+

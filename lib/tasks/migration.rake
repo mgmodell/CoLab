@@ -1,6 +1,41 @@
-# frozen_string_literal: true
-
 namespace :migratify do
+
+  desc 'Update the quotes'
+  task mar_2019: :environment do
+    # Quote seed data
+    class Quote_
+      attr_accessor :text_en, :attribution
+    end
+    read_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
+    read_data.each do |quote|
+      quote.text_en = quote.text_en.strip
+      q = Quote.where(text_en: quote.text_en).take
+      q = Quote.new if q.nil?
+      q.text_en = quote.text_en unless q.text_en == quote.text_en
+      q.attribution = quote.attribution unless q.attribution == quote.attribution
+      q.save
+    end
+
+    # Bingo! support
+    class CandidateFeedback_
+      attr_accessor :name_en, :name_ko
+      attr_accessor :definition_en, :definition_ko
+      attr_accessor :credit
+    end
+    quote_data = YAML.safe_load(File.open('db/candidate_feedback.yml'), [CandidateFeedback_])
+    quote_data.each do |cf|
+      g = CandidateFeedback.where(name_en: cf.name_en).take
+      g = CandidateFeedback.new if g.nil?
+      g.name_en = cf.name_en unless g.name_en == cf.name_en
+      g.name_ko = cf.name_ko unless g.name_ko == cf.name_ko
+      g.credit = cf.credit unless g.credit == cf.credit
+      g.definition_en = cf.definition_en unless g.definition_en == cf.definition_en
+      g.definition_ko = cf.definition_ko unless g.definition_ko == cf.definition_ko
+      g.save
+    end
+  end
+
+
   desc 'Update the quotes'
   task jan_2019: :environment do
     # Quote seed data
