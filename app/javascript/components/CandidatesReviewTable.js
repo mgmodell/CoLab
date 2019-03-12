@@ -71,7 +71,7 @@ class CandidatesReviewTable extends React.Component {
       sortDirection: SortDirection.DESC,
       columns: [
         {
-          width: 20,
+          width: 1,
           flexGrow: 0,
           label: "#",
           dataKey: "number",
@@ -80,6 +80,18 @@ class CandidatesReviewTable extends React.Component {
           sortable: true,
           render_func: c => {
             return c.number;
+          }
+        },
+        {
+          width: 1,
+          flexGrow: 0,
+          label: "Complete",
+          dataKey: "completed",
+          numeric: true,
+          visible: true,
+          sortable: true,
+          render_func: c => {
+            return c.completed ? '*' : null;
           }
         },
         {
@@ -182,6 +194,11 @@ class CandidatesReviewTable extends React.Component {
       data.sort((a, b) => {
         return mod * (a[dataKey] - b[dataKey]);
       });
+    } else if ("completed" == dataKey ){
+      data.sort((a, b) => {
+        const retval = (a.completed === b.completed)? 0 : a.completed? -1 : 1
+        return mod * retval
+      } )
     } else {
       data.sort((a, b) => {
         return mod * a[dataKey].localeCompare(b[dataKey]);
@@ -207,6 +224,9 @@ class CandidatesReviewTable extends React.Component {
           candidate.concept.name.length > 0 ) )
       {
         completed = completed + 1
+        candidate.completed = true
+      } else {
+        candidate.completed = false
       }
     })
     this.setState({
