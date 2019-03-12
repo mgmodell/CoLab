@@ -82,7 +82,13 @@ class ConceptsController < ApplicationController
         if substring.length > 2
           criteria = 'concepts.name LIKE ?'
           substring = "%#{substring}%"
-          concepts = Concept.where('concepts.id > 0').where(criteria, substring).to_a if @current_user.is_instructor?
+          if @current_user.is_instructor?
+            concepts = Concept.where('concepts.id > 0')
+              .where(criteria, substring)
+              .order( bingo_games_count: :desc )
+              .limit( 9 )
+              .to_a
+          end
         end
       end
     end
