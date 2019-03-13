@@ -315,7 +315,7 @@ class CandidatesReviewTable extends React.Component {
       method: "PATCH",
       credentials: "include",
       body: JSON.stringify({
-        candidates: this.state.candidates,
+        candidates: this.state.candidates.filter( c => c.completed ),
         reviewed: this.state.review_complete
       }),
       headers: {
