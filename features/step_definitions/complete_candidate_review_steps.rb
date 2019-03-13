@@ -68,13 +68,15 @@ end
 Then /^the user sees (\d+) candidate items for review$/ do |candidate_count|
   page.all(:xpath, "//select[contains(@id, 'feedback_4_')]")
       .count.should eq candidate_count.to_i
-  page.all(:xpath, "//input[contains(@id, 'concept_4_')]")
-      .count.should eq candidate_count.to_i
+  # Latest UI only shows 'Concept' when relevant/available
+  #page.all(:xpath, "//input[contains(@id, 'concept_4_')]")
+  #    .count.should eq candidate_count.to_i
 end
 
 Given /^the user sees review items for all the expected candidates$/ do
   @bingo.candidates.completed.each do |candidate|
-    page.all(:xpath, "//input[@id='concept_4_#{candidate.id}']").count.should eq 1
+    # Latest UI only shows 'Concept' when relevant/available
+    # page.all(:xpath, "//input[@id='concept_4_#{candidate.id}']").count.should eq 1
     page.all(:xpath,
              "//select[@id='feedback_4_#{candidate.id}']",
              visible: false).count.should eq 1
@@ -111,16 +113,16 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       concept = concepts.rotate!(1).first
       @feedback_list[candidate.id][:concept] = concept.split.map(&:capitalize).*' '
     end
-    unless concept.blank?
-      page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
-          .set(concept)
-    end
     page.find(:xpath,
               "//select[@id='feedback_4_#{candidate.id}']",
               visible: :all).click
     page.find(:xpath,
               "//select[@id='feedback_4_#{candidate.id}']//option[@value='#{feedback.id}']",
               visible: :all).click
+    unless concept.blank?
+      page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
+          .set(concept)
+    end
   end
 end
 

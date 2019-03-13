@@ -71,7 +71,7 @@ class CandidatesReviewTable extends React.Component {
       sortDirection: SortDirection.DESC,
       columns: [
         {
-          width: 20,
+          width: 1,
           flexGrow: 0,
           label: "#",
           dataKey: "number",
@@ -80,6 +80,18 @@ class CandidatesReviewTable extends React.Component {
           sortable: true,
           render_func: c => {
             return c.number;
+          }
+        },
+        {
+          width: 1,
+          flexGrow: 0,
+          label: "Complete",
+          dataKey: "completed",
+          numeric: true,
+          visible: true,
+          sortable: true,
+          render_func: c => {
+            return c.completed ? '*' : null;
           }
         },
         {
@@ -182,6 +194,11 @@ class CandidatesReviewTable extends React.Component {
       data.sort((a, b) => {
         return mod * (a[dataKey] - b[dataKey]);
       });
+    } else if ("completed" == dataKey ){
+      data.sort((a, b) => {
+        const retval = (a.completed === b.completed)? 0 : a.completed? -1 : 1
+        return mod * retval
+      } )
     } else {
       data.sort((a, b) => {
         return mod * a[dataKey].localeCompare(b[dataKey]);
@@ -207,6 +224,9 @@ class CandidatesReviewTable extends React.Component {
           candidate.concept.name.length > 0 ) )
       {
         completed = completed + 1
+        candidate.completed = true
+      } else {
+        candidate.completed = false
       }
     })
     this.setState({
@@ -295,7 +315,7 @@ class CandidatesReviewTable extends React.Component {
       method: "PATCH",
       credentials: "include",
       body: JSON.stringify({
-        candidates: this.state.candidates,
+        candidates: this.state.candidates.filter( c => c.completed ),
         reviewed: this.state.review_complete
       }),
       headers: {
@@ -373,8 +393,15 @@ class CandidatesReviewTable extends React.Component {
     });
   };
   conceptRender = function(c) {
+    const {feedback_opts, candidates} = this.state
     const label = "Concept";
-    return (
+    const fb_id = c.candidate_feedback_id
+
+    let output = 'N/A'
+    if( fb_id != null &&
+        !feedback_opts[ fb_id ].name_en.startsWith( 'Term' ) )
+    {
+      output = (
       <RemoteAutosuggest
         inputLabel={label}
         itemId={c.id}
@@ -382,8 +409,9 @@ class CandidatesReviewTable extends React.Component {
         controlId={"concept_4_" + c.id}
         dataUrl={this.props.conceptUrl}
         setFunction={this.conceptSet}
-      />
-    );
+      /> )
+    }
+    return output;
   };
   feedbackRender = function(c) {
     const label = "Feedback";
