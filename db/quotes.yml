@@ -14,6 +14,11 @@
 
 - !ruby/object:Quote_
   text_en: >
+    If everyone is moving forward together, then success takes care of
+    itself.
+  attribution: Henry Ford
+- !ruby/object:Quote_
+  text_en: >
     Coming together is a beginning, staying together is progress, and
     working together is success.
   attribution: Henry Ford
@@ -256,3 +261,31 @@
     It is amazing what you can accomplish if you do not care who gets
     the credit.
   attribution: Harry S. Truman
+
+- !ruby/object:Quote_
+  text_en: >
+    "On this team, we're all united in a common goal: to keep my job."
+  attribution: Lou Holtz
+
+- !ruby/object:Quote_
+  text_en: >
+    Trust is knowing that when a team member does push you, they're
+    doing it because they care about the team.
+  attribution: Patrick Lencioni
+
+- !ruby/object:Quote_
+  text_en: >
+    Many hands make light work.
+  attribution: John Heywood
+
+- !ruby/object:Quote_
+  text_en: >
+    Never doubt that a small group of thoughtful, committed citizens can
+    change the world; indeed, it's the only thing that ever has.
+  attribution: Margaret Mead
+
+- !ruby/object:Quote_
+  text_en: >
+    You may have the greatest bunch of individual stars in the world,
+    but if they don't play together, the club won't be worth a dime.
+  attribution: Babe Ruth
