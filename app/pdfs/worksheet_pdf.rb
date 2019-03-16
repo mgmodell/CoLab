@@ -54,7 +54,7 @@ class WorksheetPdf
     stroke_horizontal_rule
     move_down 5
     items.each do |item|
-      Candidate.filter.filter( item[2].name.remove( '(', ')').split(/\W+/) ).each do |w|
+      Candidate.filter.filter(item[2].name.remove('(', ')').split(/\W+/)).each do |w|
         item[1].gsub!(/\b#{w}/, ('*' * w.length))
       end
       text "<b>#{item[0]}.</b>  #{item[1]}",

@@ -59,10 +59,10 @@ class CandidatesReviewTable extends React.Component {
       search: "",
       candidates: [],
       bingo_game: null,
-      field_prefix: '',
+      field_prefix: "",
       rowsPerPage: 5,
       page: 1,
-      filter_text: '',
+      filter_text: "",
       review_complete_lbl: "Review completed",
       review_complete: false,
       reviewStatus: "",
@@ -91,7 +91,7 @@ class CandidatesReviewTable extends React.Component {
           visible: true,
           sortable: true,
           render_func: c => {
-            return c.completed ? '*' : null;
+            return c.completed ? "*" : null;
           }
         },
         {
@@ -172,14 +172,12 @@ class CandidatesReviewTable extends React.Component {
   }
 
   sortTable(key, direction) {
-    const {candidates_map} = this.state
+    const { candidates_map } = this.state;
     const dataKey = key;
     const mod = direction == SortDirection.ASC ? -1 : 1;
 
-    var filtered = Object.values( candidates_map ).filter(candidate =>
-      candidate.definition
-        .toUpperCase()
-        .includes( this.state.filter_text )
+    var filtered = Object.values(candidates_map).filter(candidate =>
+      candidate.definition.toUpperCase().includes(this.state.filter_text)
     );
 
     if ("feedback" == dataKey) {
@@ -201,11 +199,11 @@ class CandidatesReviewTable extends React.Component {
       filtered.sort((a, b) => {
         return mod * (a[dataKey] - b[dataKey]);
       });
-    } else if ("completed" == dataKey ){
+    } else if ("completed" == dataKey) {
       filtered.sort((a, b) => {
-        const retval = (a.completed === b.completed)? 0 : a.completed? -1 : 1
-        return mod * retval
-      } )
+        const retval = a.completed === b.completed ? 0 : a.completed ? -1 : 1;
+        return mod * retval;
+      });
     } else {
       filtered.sort((a, b) => {
         return mod * a[dataKey].localeCompare(b[dataKey]);
@@ -213,37 +211,37 @@ class CandidatesReviewTable extends React.Component {
     }
 
     //Calculate progress
-    this.updateProgress( )
-
+    this.updateProgress();
 
     this.setState({
       candidates: filtered
     });
   }
 
-  updateProgress( ){
-    const {feedback_opts, candidates_map} = this.state
-    let completed = 0
-    const candidates = Object.values( candidates_map )
-    candidates.forEach( (candidate)=>{
-      const fb_id = candidate.candidate_feedback_id
-      if( fb_id != null && 
-          ( feedback_opts[ fb_id ].name_en.startsWith( 'Term' ) ||
-          candidate.concept.name.length > 0 ) )
-      {
-        completed = completed + 1
-        candidate.completed = true
+  updateProgress() {
+    const { feedback_opts, candidates_map } = this.state;
+    let completed = 0;
+    const candidates = Object.values(candidates_map);
+    candidates.forEach(candidate => {
+      const fb_id = candidate.candidate_feedback_id;
+      if (
+        fb_id != null &&
+        (feedback_opts[fb_id].name_en.startsWith("Term") ||
+          candidate.concept.name.length > 0)
+      ) {
+        completed = completed + 1;
+        candidate.completed = true;
       } else {
-        candidate.completed = false
+        candidate.completed = false;
       }
-    })
+    });
     this.setState({
-      progress: Math.round( ( completed / candidates.length ) * 100 )
-    })
+      progress: Math.round((completed / candidates.length) * 100)
+    });
   }
 
   sortEvent(event, dataKey) {
-    const {candidates_map, sortBy, sortDirection} = this.state
+    const { candidates_map, sortBy, sortDirection } = this.state;
 
     let direction = SortDirection.DESC;
     if (dataKey == sortBy && direction == sortDirection) {
@@ -312,7 +310,7 @@ class CandidatesReviewTable extends React.Component {
           candidates: data.candidates,
           feedback_opts: feedback_opts
         });
-        this.updateProgress( )
+        this.updateProgress();
       });
   }
   saveFeedback() {
@@ -323,7 +321,7 @@ class CandidatesReviewTable extends React.Component {
       method: "PATCH",
       credentials: "include",
       body: JSON.stringify({
-        candidates: this.state.candidates.filter( c => c.completed ),
+        candidates: this.state.candidates.filter(c => c.completed),
         reviewed: this.state.review_complete
       }),
       headers: {
@@ -349,7 +347,7 @@ class CandidatesReviewTable extends React.Component {
   }
   handleChange = function(name) {
     this.setState({ [name]: !this.state[name] });
-    this.updateProgress( )
+    this.updateProgress();
     //this.setState( {[name]: event.target.checked } )
   };
   handleChangePage = function(event, page) {
@@ -359,7 +357,7 @@ class CandidatesReviewTable extends React.Component {
     this.setState({ rowsPerPage: event.target.value });
   };
   filter = function(event) {
-    const filter_text = event.target.value.toUpperCase( )
+    const filter_text = event.target.value.toUpperCase();
     this.setState({
       filter_text: filter_text,
       page: 1
@@ -372,8 +370,8 @@ class CandidatesReviewTable extends React.Component {
     this.setState({
       candidates_map: candidates_map
     });
-    this.updateProgress( )
-    this.sortTable( this.state.sortBy, this.state.sortDirection);
+    this.updateProgress();
+    this.sortTable(this.state.sortBy, this.state.sortDirection);
   };
   feedbackSet = function(id, value) {
     const candidates_map = this.state.candidates_map;
@@ -381,7 +379,7 @@ class CandidatesReviewTable extends React.Component {
     this.setState({
       candidates_map: candidates_map
     });
-    this.updateProgress( )
+    this.updateProgress();
     this.sortTable(this.state.sortBy, this.state.sortDirection);
   };
   colSel = function(event, index) {
@@ -392,23 +390,22 @@ class CandidatesReviewTable extends React.Component {
     });
   };
   conceptRender = function(c) {
-    const {feedback_opts, candidates} = this.state
+    const { feedback_opts, candidates } = this.state;
     const label = "Concept";
-    const fb_id = c.candidate_feedback_id
+    const fb_id = c.candidate_feedback_id;
 
-    let output = 'N/A'
-    if( fb_id != null &&
-        !feedback_opts[ fb_id ].name_en.startsWith( 'Term' ) )
-    {
+    let output = "N/A";
+    if (fb_id != null && !feedback_opts[fb_id].name_en.startsWith("Term")) {
       output = (
-      <RemoteAutosuggest
-        inputLabel={label}
-        itemId={c.id}
-        enteredValue={c.concept.name}
-        controlId={"concept_4_" + c.id}
-        dataUrl={this.props.conceptUrl}
-        setFunction={this.conceptSet}
-      /> )
+        <RemoteAutosuggest
+          inputLabel={label}
+          itemId={c.id}
+          enteredValue={c.concept.name}
+          controlId={"concept_4_" + c.id}
+          dataUrl={this.props.conceptUrl}
+          setFunction={this.conceptSet}
+        />
+      );
     }
     return output;
   };
@@ -449,12 +446,7 @@ class CandidatesReviewTable extends React.Component {
       [SortDirection.ASC]: "asc",
       [SortDirection.DESC]: "desc"
     };
-    const {
-      columns,
-      candidates,
-      rowsPerPage,
-      page
-    } = this.state;
+    const { columns, candidates, rowsPerPage, page } = this.state;
     return (
       <Paper style={{ width: "100%" }}>
         <Grid
@@ -530,7 +522,9 @@ class CandidatesReviewTable extends React.Component {
                       cell.label
                     );
                     return (
-                      <TableCell width={cell.width} key={"h_" + cell.dataKey}>{header}</TableCell>
+                      <TableCell width={cell.width} key={"h_" + cell.dataKey}>
+                        {header}
+                      </TableCell>
                     );
                   }
                 })}

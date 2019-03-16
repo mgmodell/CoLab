@@ -84,10 +84,10 @@ class ConceptsController < ApplicationController
           substring = "%#{substring}%"
           if @current_user.is_instructor?
             concepts = Concept.where('concepts.id > 0')
-              .where(criteria, substring)
-              .order( bingo_games_count: :desc )
-              .limit( 9 )
-              .to_a
+                              .where(criteria, substring)
+                              .order(bingo_games_count: :desc)
+                              .limit(9)
+                              .to_a
           end
         end
       end

@@ -197,41 +197,38 @@ class BingoBuilder extends React.Component {
     //This nested ternary operator is ugly, but it works. At some point
     // I need to figure out the right way to do it.
     const saveBtn =
-      this.state.endDate < new Date() ?
+      this.state.endDate < new Date() ? (
         <em>
-          This game has already been played, so you cannot save a new
-          board.
-        </em> :
-      this.state.board.initialised &&
-      this.state.board.iteration > 0 &&
-      this.state.endDate > new Date() ? (
+          This game has already been played, so you cannot save a new board.
+        </em>
+      ) : this.state.board.initialised &&
+        this.state.board.iteration > 0 &&
+        this.state.endDate > new Date() ? (
         <React.Fragment>
-          <Link onClick={() => this.saveBoard()}>
-            Save
-          </Link> the board you generated&hellip;
+          <Link onClick={() => this.saveBoard()}>Save</Link> the board you
+          generated&hellip;
         </React.Fragment>
-      ) : <em>
-            If you generate a new board, you will be able to save it
-            here.
-          </em>;
+      ) : (
+        <em>If you generate a new board, you will be able to save it here.</em>
+      );
 
     const printBtn =
-      ( this.state.board.id != null &&
-      this.state.board.iteration == 0 ) ||
-      this.state.endDate < new Date( ) ? (
+      (this.state.board.id != null && this.state.board.iteration == 0) ||
+      this.state.endDate < new Date() ? (
         <React.Fragment>
           <Link onClick={() => this.getPrintableBoard()}>
             Download your Bingo Board
-          </Link> and play along in class!
+          </Link>{" "}
+          and play along in class!
         </React.Fragment>
-      ) : 'Save your board before this step';
+      ) : (
+        "Save your board before this step"
+      );
 
     const workSheet =
       this.state.board.acceptable <
       this.state.board.size * this.state.board.size ? null : (
-        <Link onClick={() => this.getWorksheet()}>
-          Practice Bingo Board
-        </Link>
+        <Link onClick={() => this.getWorksheet()}>Practice Bingo Board</Link>
       );
 
     return (
@@ -244,11 +241,15 @@ class BingoBuilder extends React.Component {
           </Paper>
           <br />
           <ol>
-            <li>Print and complete this {workSheet} then turn it in before class begins.</li>
+            <li>
+              Print and complete this {workSheet} then turn it in before class
+              begins.
+            </li>
             <li>
               <Link onClick={() => this.randomizeTiles()}>
                 (Re)Generate your playable board
-              </Link> until you get one you like and then&hellip;
+              </Link>{" "}
+              until you get one you like and then&hellip;
             </li>
             <li>{saveBtn}</li>
             <li>{printBtn}</li>
