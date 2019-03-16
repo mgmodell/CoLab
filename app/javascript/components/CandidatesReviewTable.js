@@ -255,6 +255,9 @@ class CandidatesReviewTable extends React.Component {
   }
 
   getData() {
+    this.setState({
+      reviewStatus: "Loading data"
+    });
     fetch(this.props.dataUrl + ".json", {
       method: "GET",
       credentials: "include",
@@ -309,6 +312,9 @@ class CandidatesReviewTable extends React.Component {
           candidates_map: candidates_map,
           candidates: data.candidates,
           feedback_opts: feedback_opts
+        });
+        this.setState({
+          reviewStatus: "Data loaded"
         });
         this.updateProgress();
       });
@@ -495,6 +501,9 @@ class CandidatesReviewTable extends React.Component {
             </div>
           </Grid>
           <Grid item>
+            <Button variant="contained" onClick={() => this.getData()}>
+              Reload
+            </Button>
             <Button variant="contained" onClick={() => this.saveFeedback()}>
               Save
             </Button>
