@@ -51,6 +51,16 @@ Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/ do |field, va
   page.fill_in(field, with: value, visible: false)
 end
 
+Then /^the user sets the rich "([^"]*)" field to "([^"]*)"$/ do |field, value|
+  field = find( :xpath, 
+    "//div[@id='rdw-wrapper-#{field}']//div[@contenteditable='true']")
+  text = field.text
+  text.length.times do
+    field.send_keys :delete
+  end
+  field.send_keys value
+end
+
 Then /^the user sets the "([^"]*)" field to "([^"]*)"$/ do |field, value|
   find_field(field).click
   find_field(field).set(value)
