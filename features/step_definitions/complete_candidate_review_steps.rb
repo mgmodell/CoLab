@@ -69,7 +69,7 @@ Then /^the user sees (\d+) candidate items for review$/ do |candidate_count|
   page.all(:xpath, "//select[contains(@id, 'feedback_4_')]")
       .count.should eq candidate_count.to_i
   # Latest UI only shows 'Concept' when relevant/available
-  #page.all(:xpath, "//input[contains(@id, 'concept_4_')]")
+  # page.all(:xpath, "//input[contains(@id, 'concept_4_')]")
   #    .count.should eq candidate_count.to_i
 end
 
