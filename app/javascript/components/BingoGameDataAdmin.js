@@ -17,10 +17,10 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
-import { EditorState, convertToRaw, ContentState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
+import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
 
 import get_i18n from "./i18n";
 
@@ -86,13 +86,15 @@ class BingoGameDataAdmin extends React.Component {
   }
 
   saveBingoGame() {
-    const {bingo_game, descriptionEditor} = this.state
+    const { bingo_game, descriptionEditor } = this.state;
     var bg_sav = Object.assign({}, bingo_game);
     delete bg_sav.projects;
     delete bg_sav.reviewed;
     bg_sav.start_date = bg_sav.start_date + this.state.tz_extra_start;
     bg_sav.end_date = bg_sav.end_date + this.state.tz_extra_end;
-    bg_sav.description = draftToHtml(convertToRaw(descriptionEditor.getCurrentContent()))
+    bg_sav.description = draftToHtml(
+      convertToRaw(descriptionEditor.getCurrentContent())
+    );
     this.setState({
       saveStatus: t("save_status")
     });
@@ -155,7 +157,9 @@ class BingoGameDataAdmin extends React.Component {
           data.project_id = data.projects[0].id;
         }
         const contentBlock = htmlToDraft(data.description);
-        const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+        const contentState = ContentState.createFromBlockArray(
+          contentBlock.contentBlocks
+        );
         const editorState = EditorState.createWithContent(contentState);
         this.setState({
           tz_extra_start: tz_extra_start,
@@ -196,7 +200,7 @@ class BingoGameDataAdmin extends React.Component {
   onEditorStateChange = editorState => {
     this.setState({
       dirty: true,
-      descriptionEditor: editorState,
+      descriptionEditor: editorState
     });
   };
 
@@ -283,7 +287,7 @@ class BingoGameDataAdmin extends React.Component {
                   onEditorStateChange={this.onEditorStateChange}
                   toolbarOnFocus
                   toolbar={{
-                    options: ['inline', 'list', 'link']
+                    options: ["inline", "list", "link"]
                   }}
                   editorState={this.state.descriptionEditor}
                 />
