@@ -42,7 +42,7 @@ end
 Then /^the bingo "([^"]*)" is "([^"]*)"$/ do |field, value|
   case field.downcase
   when 'description'
-    @bingo.description.should eq value
+    @bingo.description.strip.should eq value
   when 'topic'
     @bingo.topic.should eq value
   when 'individual_count'

@@ -58,11 +58,11 @@ class CandidatesReviewTable extends React.Component {
     this.state = {
       search: "",
       candidates: [],
-      candidates_raw: [],
       bingo_game: null,
       field_prefix: "",
       rowsPerPage: 5,
       page: 1,
+      filter_text: "",
       review_complete_lbl: "Review completed",
       review_complete: false,
       reviewStatus: "",
@@ -171,12 +171,17 @@ class CandidatesReviewTable extends React.Component {
     this.getData();
   }
 
-  sortTable(data, key, direction) {
+  sortTable(key, direction) {
+    const { candidates_map } = this.state;
     const dataKey = key;
     const mod = direction == SortDirection.ASC ? -1 : 1;
 
+    var filtered = Object.values(candidates_map).filter(candidate =>
+      candidate.definition.toUpperCase().includes(this.state.filter_text)
+    );
+
     if ("feedback" == dataKey) {
-      data.sort((a, b) => {
+      filtered.sort((a, b) => {
         let a_val = !a["candidate_feedback_id"]
           ? 0
           : a["candidate_feedback_id"];
@@ -187,20 +192,20 @@ class CandidatesReviewTable extends React.Component {
         return mod * (a_val - b_val);
       });
     } else if ("concept" == dataKey) {
-      data.sort((a, b) => {
+      filtered.sort((a, b) => {
         return mod * a[dataKey].name.localeCompare(b[dataKey].name);
       });
     } else if ("number" == dataKey) {
-      data.sort((a, b) => {
+      filtered.sort((a, b) => {
         return mod * (a[dataKey] - b[dataKey]);
       });
     } else if ("completed" == dataKey) {
-      data.sort((a, b) => {
+      filtered.sort((a, b) => {
         const retval = a.completed === b.completed ? 0 : a.completed ? -1 : 1;
         return mod * retval;
       });
     } else {
-      data.sort((a, b) => {
+      filtered.sort((a, b) => {
         return mod * a[dataKey].localeCompare(b[dataKey]);
       });
     }
@@ -209,13 +214,14 @@ class CandidatesReviewTable extends React.Component {
     this.updateProgress();
 
     this.setState({
-      candidates: data
+      candidates: filtered
     });
   }
 
   updateProgress() {
-    const { feedback_opts, candidates } = this.state;
+    const { feedback_opts, candidates_map } = this.state;
     let completed = 0;
+    const candidates = Object.values(candidates_map);
     candidates.forEach(candidate => {
       const fb_id = candidate.candidate_feedback_id;
       if (
@@ -235,19 +241,23 @@ class CandidatesReviewTable extends React.Component {
   }
 
   sortEvent(event, dataKey) {
-    let tmpArray = this.state.candidates;
+    const { candidates_map, sortBy, sortDirection } = this.state;
+
     let direction = SortDirection.DESC;
-    if (dataKey == this.state.sortBy && direction == this.state.sortDirection) {
+    if (dataKey == sortBy && direction == sortDirection) {
       direction = SortDirection.ASC;
     }
     this.setState({
       sortDirection: direction,
       sortBy: dataKey
     });
-    this.sortTable(tmpArray, dataKey, direction);
+    this.sortTable(dataKey, direction);
   }
 
   getData() {
+    this.setState({
+      reviewStatus: "Loading data"
+    });
     fetch(this.props.dataUrl + ".json", {
       method: "GET",
       credentials: "include",
@@ -301,8 +311,10 @@ class CandidatesReviewTable extends React.Component {
           candidate_lists: candidate_lists,
           candidates_map: candidates_map,
           candidates: data.candidates,
-          candidates_raw: data.candidates,
           feedback_opts: feedback_opts
+        });
+        this.setState({
+          reviewStatus: "Data loaded"
         });
         this.updateProgress();
       });
@@ -351,39 +363,30 @@ class CandidatesReviewTable extends React.Component {
     this.setState({ rowsPerPage: event.target.value });
   };
   filter = function(event) {
-    var filtered = this.state.candidates_raw.filter(candidate =>
-      candidate.definition
-        .toUpperCase()
-        .includes(event.target.value.toUpperCase())
-    );
+    const filter_text = event.target.value.toUpperCase();
     this.setState({
-      candidates: filtered,
+      filter_text: filter_text,
       page: 1
     });
+    this.sortTable(this.state.sortBy, this.state.sortDirection);
   };
   conceptSet = function(id, value) {
     let candidates_map = this.state.candidates_map;
     candidates_map[id].concept.name = value;
-    let candidates = Object.values(candidates_map);
-    //We'll sort here later
     this.setState({
-      candidates_map: candidates_map,
-      candidates: candidates
+      candidates_map: candidates_map
     });
     this.updateProgress();
-    this.sortTable(candidates, this.state.sortBy, this.state.sortDirection);
+    this.sortTable(this.state.sortBy, this.state.sortDirection);
   };
   feedbackSet = function(id, value) {
-    let candidates_map = this.state.candidates_map;
+    const candidates_map = this.state.candidates_map;
     candidates_map[id].candidate_feedback_id = parseInt(value);
-    let candidates = Object.values(candidates_map);
-    //We'll sort here later
     this.setState({
-      candidates_map: candidates_map,
-      candidates: candidates
+      candidates_map: candidates_map
     });
     this.updateProgress();
-    this.sortTable(candidates, this.state.sortBy, this.state.sortDirection);
+    this.sortTable(this.state.sortBy, this.state.sortDirection);
   };
   colSel = function(event, index) {
     let cols = this.state.columns;
@@ -449,13 +452,7 @@ class CandidatesReviewTable extends React.Component {
       [SortDirection.ASC]: "asc",
       [SortDirection.DESC]: "desc"
     };
-    const {
-      columns,
-      candidates,
-      candidates_raw,
-      rowsPerPage,
-      page
-    } = this.state;
+    const { columns, candidates, rowsPerPage, page } = this.state;
     return (
       <Paper style={{ width: "100%" }}>
         <Grid
@@ -504,6 +501,9 @@ class CandidatesReviewTable extends React.Component {
             </div>
           </Grid>
           <Grid item>
+            <Button variant="contained" onClick={() => this.getData()}>
+              Reload
+            </Button>
             <Button variant="contained" onClick={() => this.saveFeedback()}>
               Save
             </Button>

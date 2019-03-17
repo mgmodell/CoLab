@@ -17,6 +17,11 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+
 import get_i18n from "./i18n";
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -81,18 +86,20 @@ class BingoGameDataAdmin extends React.Component {
   }
 
   saveBingoGame() {
-    var bingo_game = Object.assign({}, this.state.bingo_game);
-    delete bingo_game.projects;
-    delete bingo_game.reviewed;
-    bingo_game.start_date = bingo_game.start_date + this.state.tz_extra_start;
-    bingo_game.end_date = bingo_game.end_date + this.state.tz_extra_end;
+    const {bingo_game, descriptionEditor} = this.state
+    var bg_sav = Object.assign({}, bingo_game);
+    delete bg_sav.projects;
+    delete bg_sav.reviewed;
+    bg_sav.start_date = bg_sav.start_date + this.state.tz_extra_start;
+    bg_sav.end_date = bg_sav.end_date + this.state.tz_extra_end;
+    bg_sav.description = draftToHtml(convertToRaw(descriptionEditor.getCurrentContent()))
     this.setState({
       saveStatus: t("save_status")
     });
     fetch(this.props.bingoGameUrl + ".json", {
       method: "PATCH",
       credentials: "include",
-      body: JSON.stringify({ bingo_game: bingo_game }),
+      body: JSON.stringify({ bingo_game: bg_sav }),
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
@@ -111,6 +118,7 @@ class BingoGameDataAdmin extends React.Component {
         //TODO: handle save errors
         this.setState({
           saveStatus: data.notice,
+          dirty: false,
           messages: data.messages
         });
         this.getBingoGameData();
@@ -146,9 +154,13 @@ class BingoGameDataAdmin extends React.Component {
         if (data.project_id == null) {
           data.project_id = data.projects[0].id;
         }
+        const contentBlock = htmlToDraft(data.description);
+        const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+        const editorState = EditorState.createWithContent(contentState);
         this.setState({
           tz_extra_start: tz_extra_start,
           tz_extra_end: tz_extra_end,
+          descriptionEditor: editorState,
           bingo_game: data
         });
       });
@@ -181,6 +193,13 @@ class BingoGameDataAdmin extends React.Component {
     });
   };
 
+  onEditorStateChange = editorState => {
+    this.setState({
+      dirty: true,
+      descriptionEditor: editorState,
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const save_btn = this.state.dirty ? (
@@ -195,7 +214,6 @@ class BingoGameDataAdmin extends React.Component {
         >
           {t("update_bingo_btn")}
         </Button>
-        <Typography>{this.state.saveStatus}</Typography>
       </React.Fragment>
     ) : null;
 
@@ -258,13 +276,16 @@ class BingoGameDataAdmin extends React.Component {
                 />
               </Grid>
               <Grid item>
-                <TextField
-                  id="description"
+                <Editor
+                  toolbarClassName="demo-toolbar-absolute"
+                  wrapperId="Description"
                   label={t("description")}
-                  className={classes.textField}
-                  value={this.state.bingo_game.description}
-                  onChange={this.handleChange("description")}
-                  margin="normal"
+                  onEditorStateChange={this.onEditorStateChange}
+                  toolbarOnFocus
+                  toolbar={{
+                    options: ['inline', 'list', 'link']
+                  }}
+                  editorState={this.state.descriptionEditor}
                 />
               </Grid>
               <Grid item>
@@ -349,6 +370,7 @@ class BingoGameDataAdmin extends React.Component {
               {group_options}
             </Grid>
             {save_btn}
+            <Typography>{this.state.saveStatus}</Typography>
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
