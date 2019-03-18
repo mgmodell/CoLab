@@ -44,6 +44,16 @@ class BingoGame < ApplicationRecord
     end
   end
 
+  def playable?
+    get_concepts.size > ( size * size )
+  end
+
+  def practicable?
+    playable? &&
+      (candidates.acceptable.distinct( :concept_id ).size >= 10 )
+
+  end
+
   def get_concepts
     concepts.to_a.uniq
   end

@@ -101,6 +101,7 @@ Rails.application.routes.draw do
     get 'candidate_lists/entry' => 'candidate_lists#demo_entry', as: :terms_demo_entry
     get 'candidate_lists/play' => 'candidate_lists#demo_play', as: :bingo_demo_play
     get 'home/start' => 'home#demo_start', as: :demo_start
+    get '' => 'home#demo_start'
     get 'bingo_board_demo/:bingo_game_id' => 'bingo_boards#board_for_game_demo',
         as: 'board_for_game_demo'
     patch 'update_board_demo/:bingo_game_id' => 'bingo_boards#update_demo',
