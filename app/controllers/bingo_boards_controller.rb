@@ -104,6 +104,8 @@ class BingoBoardsController < ApplicationController
                  [concept: { only: %i[id name] }] }]
         )
         resp[:acceptable] = acceptable_count
+        resp[:playable] = bingo_game.playable?
+        resp[:practicable] = bingo_game.practicable?
         render json: resp
       end
       format.pdf do

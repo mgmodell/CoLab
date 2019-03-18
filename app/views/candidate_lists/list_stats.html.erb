@@ -60,6 +60,7 @@
 </tbody>
 </table>
 <h3><%= t 'candidate_lists.concepts_for_game' %>:</h3>
+<% if @candidate_list.bingo_game.playable? %>
 <%= react_component "BingoBuilder", {
         endDateStr: @candidate_list.bingo_game.end_date,
         conceptsUrl: bingo_concepts_path( @candidate_list.bingo_game_id ),
@@ -67,6 +68,10 @@
         boardSaveUrl: update_board_path( @candidate_list.bingo_game_id ),
         worksheetUrl: worksheet_for_bingo_path( @candidate_list.bingo_game_id ),
         token: form_authenticity_token } %>
+<% else %>
+Unfortunately, there were not enough responses to build a Bingo board
+this time. Encourage your classmates to complete their work!
+<% end %>
 </br>
 <p>
   <%= @candidate_list.is_group ? 
