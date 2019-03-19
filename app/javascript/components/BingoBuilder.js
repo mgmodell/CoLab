@@ -256,6 +256,13 @@ class BingoBuilder extends React.Component {
               encourage your classmates to complete their assignments.
             </li>
 
+    const builder = 
+      this.state.board.playable ?
+          <div id="bingoBoard" className="mt4">
+            <BingoBoard board={this.state.board} />
+          </div>
+          : null
+
     return (
       <MuiThemeProvider theme={styles}>
         <Paper square={false}>
@@ -269,9 +276,7 @@ class BingoBuilder extends React.Component {
             {workSheetInstr}
             {playableInstr}
           </ol>
-          <div id="bingoBoard" className="mt4">
-            <BingoBoard board={this.state.board} />
-          </div>
+          {builder}
         </Paper>
       </MuiThemeProvider>
     );
