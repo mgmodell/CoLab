@@ -32,6 +32,15 @@ class BingoBoardsController < ApplicationController
     bingo_game.description = t 'candidate_lists.demo_bingo_description'
     bingo_game.end_date = 1.days.from_now.end_of_day
 
+    #let the monkey-patching begin!
+    def bingo_game.playable?
+      true
+    end
+
+    def bingo_game.practicable?
+      true
+    end
+
     bingo_board = BingoBoard.new(
       bingo_game: bingo_game,
       user: @current_user,
