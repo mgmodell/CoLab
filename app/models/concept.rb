@@ -5,4 +5,15 @@ class Concept < ApplicationRecord
   has_many :candidate_lists, through: :candidates
   has_many :bingo_games, through: :candidate_lists
   has_many :courses, through: :bingo_games
+
+  before_save :standardize
+
+  private
+
+  def standardize
+    if self.new_record? || self.name_changed?
+      self.name = self.name.split.map(&:capitalize).*' '
+    end
+  end
+
 end

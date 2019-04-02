@@ -423,7 +423,7 @@ class BingoGamesController < ApplicationController
         if (!feedback_name.start_with? 'Term:') &&
            entered_candidate[:concept][:name].present?
           concept_name = entered_candidate[:concept][:name]
-          concept_name = concept_name.split.map(&:capitalize).*' '
+          #concept_name = concept_name.split.map(&:capitalize).*' '
 
           concept = concept_map[concept_name]
           if concept.nil?
