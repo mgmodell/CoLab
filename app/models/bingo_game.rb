@@ -45,13 +45,12 @@ class BingoGame < ApplicationRecord
   end
 
   def playable?
-    get_concepts.size > ( size * size )
+    get_concepts.size > (size * size)
   end
 
   def practicable?
     playable? &&
-      (candidates.acceptable.distinct( :concept_id ).size >= 10 )
-
+      (candidates.acceptable.distinct(:concept_id).size >= 10)
   end
 
   def get_concepts

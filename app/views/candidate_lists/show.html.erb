@@ -19,7 +19,7 @@
     boardSaveUrl: update_board_demo_path( -42 ),
     worksheetUrl: worksheet_for_bingo_demo_path,
     token: form_authenticity_token } %>
-  <% elsif @candidate_list.bingo_game.playable? %>
+  <% elsif %>
     <%= react_component "BingoBuilder", {
     endDateStr: @candidate_list.bingo_game.end_date,
     conceptsUrl: bingo_concepts_path( @candidate_list.bingo_game_id ),
@@ -27,8 +27,5 @@
     boardSaveUrl: update_board_path( @candidate_list.bingo_game_id ),
     worksheetUrl: worksheet_for_bingo_path( @candidate_list.bingo_game_id ),
     token: form_authenticity_token } %>
-  <% else %>
-    Unfortunately, there were not enough responses to build a Bingo board
-    this time. Encourage your classmates to complete their work!
   <% end %>
   <br>

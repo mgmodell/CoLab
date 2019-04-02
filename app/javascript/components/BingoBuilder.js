@@ -225,36 +225,44 @@ class BingoBuilder extends React.Component {
         "Save your board before this step"
       );
 
-    const workSheetInstr =
-      this.state.board.practicable ?
-            <li>
-              Print and complete this&nbsp;
-                <Link onClick={() => this.getWorksheet()}>
-                  Practice Bingo Board
-                </Link> then turn it in before class begins.
-            </li>
-            : <li>
-              Not enough usable entries for a practice sheet. Encourage
-              your classmates to complete their assignments.
-            </li>
+    const workSheetInstr = this.state.board.practicable ? (
+      <li>
+        Print and complete this&nbsp;
+        <Link onClick={() => this.getWorksheet()}>
+          Practice Bingo Board
+        </Link>{" "}
+        then turn it in before class begins.
+      </li>
+    ) : (
+      <li>
+        Not enough usable entries for a practice sheet. Encourage your
+        classmates to complete their assignments.
+      </li>
+    );
 
-    const playableInstr =
-      this.state.board.playable ?
-          <React.Fragment>
-            <li>
-              <Link onClick={() => this.randomizeTiles()}>
-                (Re)Generate your playable board
-              </Link>{" "}
-              until you get one you like and then&hellip;
-            </li>
-            <li>{saveBtn}</li>
-            <li>{printBtn}</li>
-          </React.Fragment>
-            :<li>
-              Not enough usable entries to generate a playble Bingo board
-              &mdash;
-              encourage your classmates to complete their assignments.
-            </li>
+    const playableInstr = this.state.board.playable ? (
+      <React.Fragment>
+        <li>
+          <Link onClick={() => this.randomizeTiles()}>
+            (Re)Generate your playable board
+          </Link>{" "}
+          until you get one you like and then&hellip;
+        </li>
+        <li>{saveBtn}</li>
+        <li>{printBtn}</li>
+      </React.Fragment>
+    ) : (
+      <li>
+        Not enough usable entries to generate a playble Bingo board &mdash;
+        encourage your classmates to complete their assignments.
+      </li>
+    );
+
+    const builder = this.state.board.playable ? (
+      <div id="bingoBoard" className="mt4">
+        <BingoBoard board={this.state.board} />
+      </div>
+    ) : null;
 
     return (
       <MuiThemeProvider theme={styles}>
@@ -269,9 +277,7 @@ class BingoBuilder extends React.Component {
             {workSheetInstr}
             {playableInstr}
           </ol>
-          <div id="bingoBoard" className="mt4">
-            <BingoBoard board={this.state.board} />
-          </div>
+          {builder}
         </Paper>
       </MuiThemeProvider>
     );

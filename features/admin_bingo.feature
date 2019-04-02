@@ -91,14 +91,14 @@ Feature: Bingo Administration
     Then the user clicks by label "Make groups available?"
     Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
-    Then the user sets the "Description" field to "this is the coolest"
+    Then the user sets the rich "Description" field to "this is the coolest"
     Then the user clicks "Update Bingo Game"
     Then the user waits while seeing "Saving game"
     Then the user will see "success"
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
     Then the bingo "Topic" is "Privacy"
-    Then the bingo "Description" is "this is the coolest"
+    Then the bingo "Description" is "<p>this is the coolest</p>"
     #check the dates
     Then the bingo "start" date is "2/29/1980"
     Then the bingo "end" date is "7/10/2008"
