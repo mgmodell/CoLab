@@ -394,6 +394,7 @@ class CandidatesReviewTable extends React.Component {
     const label = "Concept";
     const fb_id = c.candidate_feedback_id;
 
+
     let output = "N/A";
     if (fb_id != null && !feedback_opts[fb_id].name_en.startsWith("Term")) {
       output = (
@@ -447,8 +448,16 @@ class CandidatesReviewTable extends React.Component {
       [SortDirection.DESC]: "desc"
     };
     const { columns, candidates, rowsPerPage, page } = this.state;
-    return (
-      <Paper style={{ width: "100%" }}>
+
+    const notify = this.state.progress < 100 ? null :
+              <Typography>
+                <Checkbox
+                  id="review_complete"
+                  checked={this.state.review_complete}
+                />
+                {this.state.review_complete_lbl}
+              </Typography>
+    const toolbar =
         <Grid
           container
           spacing={8}
@@ -485,13 +494,9 @@ class CandidatesReviewTable extends React.Component {
           </Grid>
           <Grid item>
             <div onClick={() => this.handleChange("review_complete")}>
-              <Typography>
-                <Checkbox
-                  id="review_complete"
-                  checked={this.state.review_complete}
-                />
-                {this.state.review_complete_lbl}
-              </Typography>
+              <Typography>{this.state.progress}%</Typography>
+              <Typography>{this.state.reviewStatus}</Typography>
+              {notify}
             </div>
           </Grid>
           <Grid item>
@@ -499,11 +504,11 @@ class CandidatesReviewTable extends React.Component {
               Save
             </Button>
           </Grid>
-          <Grid item>
-            <Typography>{this.state.progress}%</Typography>
-            <Typography>{this.state.reviewStatus}</Typography>
-          </Grid>
         </Grid>
+
+    return (
+      <Paper style={{ width: "100%" }}>
+        {toolbar}
         <div>
           <Table>
             <TableHead>
@@ -551,6 +556,7 @@ class CandidatesReviewTable extends React.Component {
             </TableBody>
           </Table>
         </div>
+        {toolbar}
       </Paper>
     );
   }
