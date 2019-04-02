@@ -33,7 +33,7 @@ end
 
 Then /^the user clicks "([^"]*)"$/ do |link_or_button|
   if has_xpath?("//button[contains(.,'#{link_or_button}')]")
-    btn = find(:xpath, "//button[contains(.,'#{link_or_button}')]")
+    btn = find(:xpath, "//button[contains(.,'#{link_or_button}')]", match: :first)
   elsif has_xpath? "//a[contains(.,'#{link_or_button}')]"
     btn = find(:xpath, "//a[contains(.,'#{link_or_button}')]")
   elsif has_xpath? "//input[@value='#{link_or_button}']"
