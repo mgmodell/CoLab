@@ -383,7 +383,6 @@ class CandidatesReviewTable extends React.Component {
       candidates_map: candidates_map
     });
     this.updateProgress();
-    this.sortTable(this.state.sortBy, this.state.sortDirection);
   };
   feedbackSet = function(id, value) {
     const candidates_map = this.state.candidates_map;
@@ -392,7 +391,6 @@ class CandidatesReviewTable extends React.Component {
       candidates_map: candidates_map
     });
     this.updateProgress();
-    this.sortTable(this.state.sortBy, this.state.sortDirection);
   };
   colSel = function(event, index) {
     let cols = this.state.columns;
