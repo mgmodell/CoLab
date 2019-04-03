@@ -165,6 +165,7 @@ class CandidatesReviewTable extends React.Component {
     this.feedbackSet = this.feedbackSet.bind(this);
     this.conceptSet = this.conceptSet.bind(this);
     this.updateProgress = this.updateProgress.bind(this);
+    this.setCompleted = this.setCompleted.bind(this);
   }
   componentDidMount() {
     //Retrieve concepts
@@ -223,24 +224,29 @@ class CandidatesReviewTable extends React.Component {
       candidates: filtered
     });
   }
+  setCompleted = function( item ){
+    const { feedback_opts } = this.state;
+    const fb_id = item.candidate_feedback_id;
+    if( fb_id != null &&
+      (feedback_opts[fb_id].name_en.startsWith("Term") ||
+        item.concept.name.length > 0 )
+    ) {
+      item.completed = true;
+    } else {
+      item.completed = false;
+    }
+
+  }
 
   updateProgress() {
-    const { feedback_opts, candidates_map } = this.state;
-    let completed = 0;
+    const { candidates_map } = this.state;
     const candidates = Object.values(candidates_map);
-    candidates.forEach(candidate => {
-      const fb_id = candidate.candidate_feedback_id;
-      if (
-        fb_id != null &&
-        (feedback_opts[fb_id].name_en.startsWith("Term") ||
-          candidate.concept.name.length > 0)
-      ) {
-        completed = completed + 1;
-        candidate.completed = true;
-      } else {
-        candidate.completed = false;
+    const completed = candidates.reduce((acc, item) => {
+      if( item.completed ){
+        acc = acc + 1;
       }
-    });
+      return acc;
+      }, 0 )
     this.setState({
       progress: Math.round((completed / candidates.length) * 100)
     });
@@ -288,24 +294,25 @@ class CandidatesReviewTable extends React.Component {
             candidate.concept = { name: "" };
           }
         });
-        let feedback_opts = {};
+        const feedback_opts = {};
         data.feedback_opts.map(item => {
           feedback_opts[item.id] = item;
         });
-        let groups = {};
+        const groups = {};
         data.groups.map(item => {
           groups[item.id] = item;
         });
-        let users = {};
+        const users = {};
         data.users.map(item => {
           users[item.id] = item;
         });
-        let candidate_lists = {};
+        const candidate_lists = {};
         data.candidate_lists.map(item => {
           candidate_lists[item.id] = item;
         });
-        let candidates_map = {};
+        const candidates_map = {};
         data.candidates.map(item => {
+          this.setCompleted( item );
           candidates_map[item.id] = item;
         });
         this.setState({
@@ -379,6 +386,7 @@ class CandidatesReviewTable extends React.Component {
   conceptSet = function(id, value) {
     let candidates_map = this.state.candidates_map;
     candidates_map[id].concept.name = value;
+    this.setCompleted( candidates_map[id] )
     this.setState({
       candidates_map: candidates_map
     });
@@ -387,6 +395,7 @@ class CandidatesReviewTable extends React.Component {
   feedbackSet = function(id, value) {
     const candidates_map = this.state.candidates_map;
     candidates_map[id].candidate_feedback_id = parseInt(value);
+    this.setCompleted( candidates_map[id] )
     this.setState({
       candidates_map: candidates_map
     });
