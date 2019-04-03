@@ -222,9 +222,9 @@ Feature: Course Administration
     Then the user adds the 'instructor' users 'me@mailinator.com>'
     Then there are 1 instructors in the course
      And the user will see "Was there a typo?"
-    Then the user adds the 'instructor' users 'me@12221.341.24412.2412211'
-    Then there are 1 instructors in the course
-     And the user will see "Was there a typo?"
+    # Then the user adds the 'instructor' users 'me@12221.341.24412.2412211'
+    # Then there are 1 instructors in the course
+    #  And the user will see "Was there a typo?"
     Then the user adds the 'instructor' users 'me@mailinator'
     Then there are 1 instructors in the course
      And the user will see "Was there a typo?"
