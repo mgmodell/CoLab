@@ -195,6 +195,12 @@ class CandidatesReviewTable extends React.Component {
       filtered.sort((a, b) => {
         return mod * a[dataKey].name.localeCompare(b[dataKey].name);
       });
+    } else if ("submitter" == dataKey) {
+      filtered.sort((a, b) => {
+        const af = this.state.users[a.user_id].last_name;
+        const bf = this.state.users[b.user_id].last_name;
+        return mod * (af.localeCompare( bf ) );
+      });
     } else if ("number" == dataKey) {
       filtered.sort((a, b) => {
         return mod * (a[dataKey] - b[dataKey]);
