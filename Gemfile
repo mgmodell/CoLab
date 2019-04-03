@@ -42,7 +42,7 @@ gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.4.0', require: 'descriptive_statistics/safe'
 gem 'devise'
 gem 'devise-multi_email'
-gem 'email_validator'
+gem 'email_address'
 gem 'forgery'
 gem 'jquery-tablesorter'
 gem 'jquery_mobile_rails'
@@ -72,7 +72,6 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  gem 'chromedriver-helper'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'htmlbeautifier'
@@ -85,6 +84,7 @@ group :development, :test do
   gem 'rubocop'
   gem 'rubocop-thread_safety'
   gem 'selenium-webdriver'
+  gem 'webdrivers', '~> 3.0'
 end
 
 group :development do
