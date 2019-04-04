@@ -172,17 +172,12 @@ class CandidatesReviewTable extends React.Component {
     this.getData();
   }
 
-  sortTable(key, direction) {
-    const { candidates_map } = this.state;
+  sortCandidates(key, direction, candidates) {
     const dataKey = key;
     const mod = direction == SortDirection.ASC ? -1 : 1;
 
-    var filtered = Object.values(candidates_map).filter(candidate =>
-      candidate.definition.toUpperCase().includes(this.state.filter_text)
-    );
-
     if ("feedback" == dataKey) {
-      filtered.sort((a, b) => {
+      candidates.sort((a, b) => {
         let a_val = !a["candidate_feedback_id"]
           ? 0
           : a["candidate_feedback_id"];
@@ -193,36 +188,32 @@ class CandidatesReviewTable extends React.Component {
         return mod * (a_val - b_val);
       });
     } else if ("concept" == dataKey) {
-      filtered.sort((a, b) => {
+      candidates.sort((a, b) => {
         return mod * a[dataKey].name.localeCompare(b[dataKey].name);
       });
     } else if ("submitter" == dataKey) {
-      filtered.sort((a, b) => {
-        const af = this.state.users[a.user_id].last_name;
-        const bf = this.state.users[b.user_id].last_name;
+      candidates.sort((a, b) => {
+        const { users } = this.state;
+        const af = users[a.user_id].last_name;
+        const bf = users[b.user_id].last_name;
         return mod * (af.localeCompare( bf ) );
       });
     } else if ("number" == dataKey) {
-      filtered.sort((a, b) => {
+      candidates.sort((a, b) => {
         return mod * (a[dataKey] - b[dataKey]);
       });
     } else if ("completed" == dataKey) {
-      filtered.sort((a, b) => {
+      candidates.sort((a, b) => {
         const retval = a.completed === b.completed ? 0 : a.completed ? -1 : 1;
         return mod * retval;
       });
     } else {
-      filtered.sort((a, b) => {
+      candidates.sort((a, b) => {
         return mod * a[dataKey].localeCompare(b[dataKey]);
       });
     }
 
-    //Calculate progress
-    this.updateProgress();
-
-    this.setState({
-      candidates: filtered
-    });
+    return candidates
   }
   setCompleted = function( item ){
     const { feedback_opts } = this.state;
@@ -253,17 +244,18 @@ class CandidatesReviewTable extends React.Component {
   }
 
   sortEvent(event, dataKey) {
-    const { candidates_map, sortBy, sortDirection } = this.state;
+    const { candidates, sortBy, sortDirection } = this.state;
 
     let direction = SortDirection.DESC;
     if (dataKey == sortBy && direction == sortDirection) {
       direction = SortDirection.ASC;
     }
+    this.sortCandidates(dataKey, direction, candidates );
     this.setState({
+      candidates: candidates,
       sortDirection: direction,
       sortBy: dataKey
     });
-    this.sortTable(dataKey, direction);
   }
 
   getData() {
@@ -367,7 +359,6 @@ class CandidatesReviewTable extends React.Component {
   handleChange = function(name) {
     this.setState({ [name]: !this.state[name] });
     this.updateProgress();
-    //this.setState( {[name]: event.target.checked } )
   };
   handleChangePage = function(event, page) {
     this.setState({ page: page });
@@ -376,12 +367,17 @@ class CandidatesReviewTable extends React.Component {
     this.setState({ rowsPerPage: event.target.value });
   };
   filter = function(event) {
-    const filter_text = event.target.value.toUpperCase();
+    const {sortBy, sortDirection, candidates_map} = this.state;
+    const filter_text = event.target.value;
+    const filtered = Object.values(candidates_map).filter(candidate =>
+      candidate.definition.toUpperCase().includes(filter_text.toUpperCase())
+    );
+    this.sortCandidates(sortBy, sortDirection, filtered);
     this.setState({
+      candidates: filtered,
       filter_text: filter_text,
       page: 1
     });
-    this.sortTable(this.state.sortBy, this.state.sortDirection);
   };
   conceptSet = function(id, value) {
     let candidates_map = this.state.candidates_map;
@@ -487,6 +483,7 @@ class CandidatesReviewTable extends React.Component {
           <Grid item>
             <InputBase
               placeholder="Search definitions"
+              value={this.state.filter_text}
               onChange={this.filter}
             />
             <SearchIcon />
