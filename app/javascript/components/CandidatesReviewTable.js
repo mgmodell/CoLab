@@ -69,6 +69,7 @@ class CandidatesReviewTable extends React.Component {
       progress: 0,
       sortBy: "number",
       sortDirection: SortDirection.DESC,
+      dirty: false,
       columns: [
         {
           width: 1,
@@ -311,6 +312,7 @@ class CandidatesReviewTable extends React.Component {
           bingo_game: data.bingo_game,
           field_prefix: "_bingo_candidates_review_" + data.bingo_game.id,
           groups: groups,
+          dirty: false,
           users: users,
           rowsPerPage: data.candidates.length,
           candidate_lists: candidate_lists,
@@ -352,6 +354,7 @@ class CandidatesReviewTable extends React.Component {
       .then(data => {
         //TODO: handle save errors
         this.setState({
+          dirty: false,
           reviewStatus: data.notice
         });
       });
@@ -384,6 +387,7 @@ class CandidatesReviewTable extends React.Component {
     candidates_map[id].concept.name = value;
     this.setCompleted( candidates_map[id] )
     this.setState({
+      dirty: true,
       candidates_map: candidates_map
     });
     this.updateProgress();
@@ -393,6 +397,7 @@ class CandidatesReviewTable extends React.Component {
     candidates_map[id].candidate_feedback_id = parseInt(value);
     this.setCompleted( candidates_map[id] )
     this.setState({
+      dirty: true,
       candidates_map: candidates_map
     });
     this.updateProgress();
@@ -472,6 +477,16 @@ class CandidatesReviewTable extends React.Component {
                 />
                 {this.state.review_complete_lbl}
               </Typography>
+    const statusMsg = this.state.dirty ? null :
+            <Typography>{this.state.reviewStatus}</Typography>
+    const saveButton = this.state.dirty ?
+            <Button variant="contained" onClick={() => this.saveFeedback()}>
+              Save
+            </Button> :
+            <Button disabled variant="contained" onClick={() => this.saveFeedback()}>
+              Save
+            </Button>
+      
     const toolbar =
         <Grid
           container
@@ -511,7 +526,7 @@ class CandidatesReviewTable extends React.Component {
           <Grid item>
             <div onClick={() => this.handleChange("review_complete")}>
               <Typography>{this.state.progress}%</Typography>
-              <Typography>{this.state.reviewStatus}</Typography>
+              {statusMsg}
               {notify}
             </div>
           </Grid>
@@ -519,9 +534,7 @@ class CandidatesReviewTable extends React.Component {
             <Button variant="contained" onClick={() => this.getData()}>
               Reload
             </Button>
-            <Button variant="contained" onClick={() => this.saveFeedback()}>
-              Save
-            </Button>
+            {saveButton}
           </Grid>
         </Grid>
 
