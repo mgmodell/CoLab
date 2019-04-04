@@ -116,7 +116,7 @@ end
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
 Before do
-  EmailAddress::Config.setting( :host_validation, :syntax )
+  EmailAddress::Config.setting(:host_validation, :syntax)
   loadData
   DatabaseCleaner.start
   Chronic.time_class = Time.zone

@@ -11,9 +11,8 @@ class Concept < ApplicationRecord
   private
 
   def standardize
-    if self.new_record? || self.name_changed?
-      self.name = self.name.split.map(&:capitalize).*' '
+    if new_record? || name_changed?
+      self.name = name.split.map(&:capitalize).*' '
     end
   end
-
 end

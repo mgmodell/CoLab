@@ -197,7 +197,7 @@ class CandidatesReviewTable extends React.Component {
         const { users } = this.state;
         const af = users[a.user_id].last_name;
         const bf = users[b.user_id].last_name;
-        return mod * (af.localeCompare( bf ) );
+        return mod * af.localeCompare(bf);
       });
     } else if ("number" == dataKey) {
       candidates.sort((a, b) => {
@@ -214,31 +214,31 @@ class CandidatesReviewTable extends React.Component {
       });
     }
 
-    return candidates
+    return candidates;
   }
-  setCompleted = function( item ){
+  setCompleted = function(item) {
     const { feedback_opts } = this.state;
     const fb_id = item.candidate_feedback_id;
-    if( fb_id != null &&
+    if (
+      fb_id != null &&
       (feedback_opts[fb_id].name_en.startsWith("Term") ||
-        item.concept.name.length > 0 )
+        item.concept.name.length > 0)
     ) {
       item.completed = true;
     } else {
       item.completed = false;
     }
-
-  }
+  };
 
   updateProgress() {
     const { candidates_map } = this.state;
     const candidates = Object.values(candidates_map);
     const completed = candidates.reduce((acc, item) => {
-      if( item.completed ){
+      if (item.completed) {
         acc = acc + 1;
       }
       return acc;
-      }, 0 )
+    }, 0);
     this.setState({
       progress: Math.round((completed / candidates.length) * 100)
     });
@@ -251,7 +251,7 @@ class CandidatesReviewTable extends React.Component {
     if (dataKey == sortBy && direction == sortDirection) {
       direction = SortDirection.ASC;
     }
-    this.sortCandidates(dataKey, direction, candidates );
+    this.sortCandidates(dataKey, direction, candidates);
     this.setState({
       candidates: candidates,
       sortDirection: direction,
@@ -305,7 +305,7 @@ class CandidatesReviewTable extends React.Component {
         });
         const candidates_map = {};
         data.candidates.map(item => {
-          this.setCompleted( item );
+          this.setCompleted(item);
           candidates_map[item.id] = item;
         });
         this.setState({
@@ -370,7 +370,7 @@ class CandidatesReviewTable extends React.Component {
     this.setState({ rowsPerPage: event.target.value });
   };
   filter = function(event) {
-    const {sortBy, sortDirection, candidates_map} = this.state;
+    const { sortBy, sortDirection, candidates_map } = this.state;
     const filter_text = event.target.value;
     const filtered = Object.values(candidates_map).filter(candidate =>
       candidate.definition.toUpperCase().includes(filter_text.toUpperCase())
@@ -385,7 +385,7 @@ class CandidatesReviewTable extends React.Component {
   conceptSet = function(id, value) {
     let candidates_map = this.state.candidates_map;
     candidates_map[id].concept.name = value;
-    this.setCompleted( candidates_map[id] )
+    this.setCompleted(candidates_map[id]);
     this.setState({
       dirty: true,
       candidates_map: candidates_map
@@ -395,7 +395,7 @@ class CandidatesReviewTable extends React.Component {
   feedbackSet = function(id, value) {
     const candidates_map = this.state.candidates_map;
     candidates_map[id].candidate_feedback_id = parseInt(value);
-    this.setCompleted( candidates_map[id] )
+    this.setCompleted(candidates_map[id]);
     this.setState({
       dirty: true,
       candidates_map: candidates_map
@@ -413,7 +413,6 @@ class CandidatesReviewTable extends React.Component {
     const { feedback_opts, candidates } = this.state;
     const label = "Concept";
     const fb_id = c.candidate_feedback_id;
-
 
     let output = "N/A";
     if (fb_id != null && !feedback_opts[fb_id].name_en.startsWith("Term")) {
@@ -469,74 +468,77 @@ class CandidatesReviewTable extends React.Component {
     };
     const { columns, candidates, rowsPerPage, page } = this.state;
 
-    const notify = this.state.progress < 100 ? null :
-              <Typography>
-                <Checkbox
-                  id="review_complete"
-                  checked={this.state.review_complete}
-                />
-                {this.state.review_complete_lbl}
-              </Typography>
-    const statusMsg = this.state.dirty ? null :
-            <Typography>{this.state.reviewStatus}</Typography>
-    const saveButton = this.state.dirty ?
-            <Button variant="contained" onClick={() => this.saveFeedback()}>
-              Save
-            </Button> :
-            <Button disabled variant="contained" onClick={() => this.saveFeedback()}>
-              Save
-            </Button>
-      
-    const toolbar =
-        <Grid
-          container
-          spacing={8}
-          direction="row"
-          justify="flex-end"
-          alignItems="stretch"
-        >
-          <Grid item>
-            <InputBase
-              placeholder="Search definitions"
-              value={this.state.filter_text}
-              onChange={this.filter}
-            />
-            <SearchIcon />
-          </Grid>
-          <Grid item>
-            <ColumnMenu columns={columns} selMethod={this.colSel} />
-          </Grid>
-          <Grid item>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, candidates.length]}
-              component="div"
-              count={candidates.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              backIconButtonProps={{
-                "aria-label": "Previous Page"
-              }}
-              nextIconButtonProps={{
-                "aria-label": "Next Page"
-              }}
-              onChangePage={this.handleChangePage}
-              onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
-          </Grid>
-          <Grid item>
-            <div onClick={() => this.handleChange("review_complete")}>
-              <Typography>{this.state.progress}%</Typography>
-              {statusMsg}
-              {notify}
-            </div>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" onClick={() => this.getData()}>
-              Reload
-            </Button>
-            {saveButton}
-          </Grid>
+    const notify =
+      this.state.progress < 100 ? null : (
+        <Typography>
+          <Checkbox id="review_complete" checked={this.state.review_complete} />
+          {this.state.review_complete_lbl}
+        </Typography>
+      );
+    const statusMsg = this.state.dirty ? null : (
+      <Typography>{this.state.reviewStatus}</Typography>
+    );
+    const saveButton = this.state.dirty ? (
+      <Button variant="contained" onClick={() => this.saveFeedback()}>
+        Save
+      </Button>
+    ) : (
+      <Button disabled variant="contained" onClick={() => this.saveFeedback()}>
+        Save
+      </Button>
+    );
+
+    const toolbar = (
+      <Grid
+        container
+        spacing={8}
+        direction="row"
+        justify="flex-end"
+        alignItems="stretch"
+      >
+        <Grid item>
+          <InputBase
+            placeholder="Search definitions"
+            value={this.state.filter_text}
+            onChange={this.filter}
+          />
+          <SearchIcon />
         </Grid>
+        <Grid item>
+          <ColumnMenu columns={columns} selMethod={this.colSel} />
+        </Grid>
+        <Grid item>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25, candidates.length]}
+            component="div"
+            count={candidates.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            backIconButtonProps={{
+              "aria-label": "Previous Page"
+            }}
+            nextIconButtonProps={{
+              "aria-label": "Next Page"
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
+        </Grid>
+        <Grid item>
+          <div onClick={() => this.handleChange("review_complete")}>
+            <Typography>{this.state.progress}%</Typography>
+            {statusMsg}
+            {notify}
+          </div>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={() => this.getData()}>
+            Reload
+          </Button>
+          {saveButton}
+        </Grid>
+      </Grid>
+    );
 
     return (
       <Paper style={{ width: "100%" }}>

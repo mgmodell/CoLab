@@ -81,7 +81,7 @@ group :development, :test do
   gem 'rails-erd', require: false
   gem 'rb-readline'
   gem 'rspec'
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.66.0', require: false
   gem 'rubocop-thread_safety'
   gem 'selenium-webdriver'
   gem 'webdrivers', '~> 3.0'

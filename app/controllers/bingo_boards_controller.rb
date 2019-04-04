@@ -32,7 +32,7 @@ class BingoBoardsController < ApplicationController
     bingo_game.description = t 'candidate_lists.demo_bingo_description'
     bingo_game.end_date = 1.days.from_now.end_of_day
 
-    #let the monkey-patching begin!
+    # let the monkey-patching begin!
     def bingo_game.playable?
       true
     end

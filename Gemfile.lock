@@ -478,7 +478,7 @@ DEPENDENCIES
   rb-readline
   react-rails
   rspec
-  rubocop
+  rubocop (~> 0.66.0)
   rubocop-thread_safety
   sdoc (~> 0.4.0)
   selenium-webdriver
