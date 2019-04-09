@@ -291,6 +291,9 @@ class CandidatesReviewTable extends React.Component {
         data.feedback_opts.map(item => {
           feedback_opts[item.id] = item;
         });
+        this.setState({
+          feedback_opts: feedback_opts
+        })
         const groups = {};
         data.groups.map(item => {
           groups[item.id] = item;
@@ -318,7 +321,6 @@ class CandidatesReviewTable extends React.Component {
           candidate_lists: candidate_lists,
           candidates_map: candidates_map,
           candidates: data.candidates,
-          feedback_opts: feedback_opts
         });
         this.setState({
           reviewStatus: "Data loaded"
