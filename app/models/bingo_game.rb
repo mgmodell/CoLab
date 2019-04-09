@@ -73,11 +73,16 @@ class BingoGame < ApplicationRecord
     end_date - lead_time.days
   end
 
+  # Let's create a true activity interface later
+  def get_activity_begin
+    term_list_date
+  end
+
   def get_activity_on_date(date:, anon:)
     if date <= term_list_date
       "#{I18n.t(:terms_list)} (#{get_name(anon)})"
     else
-      "#{I18n.t(:terms_revieew)} (#{get_name(anon)})"
+      "#{I18n.t(:terms_review)} (#{get_name(anon)})"
     end
   end
 
