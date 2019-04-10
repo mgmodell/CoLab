@@ -16,4 +16,3 @@
 //= require app_lib
 //= require jquery.mobile
 //= require jquery-tablesorter
-//= require awesomplete

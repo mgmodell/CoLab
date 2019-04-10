@@ -109,61 +109,6 @@ function leastSquares(xSeries, ySeries) {
 $(document).ready(function(){
   var concept_url = '/bingo/concepts_for_game/0.json'
   var apMinChars = 3;
-  $(".awesomplete-ajax").each( function( index, conceptField ) {
-    var ap = new Awesomplete( conceptField, {
-      minChars: apMinChars,
-      autoFirst: true
-    } );
-    ap.list = [ ]
-    $( conceptField ).data( "ac", ap );
-  });
-
-  $(".awesomplete-ajax").on( "keyup", function(e){
-    var code = (e.keyCode || e.which);
-    if( code === 37 || code === 38 || code === 39 || code === 40 ||
-        code === 27 || code === 13 || this.value.length < apMinChars )
-    {
-      //reserved
-    }
-    else
-    {
-      var x = this;
-      //TODO: switch to 'POST'
-      let data = {
-        id: 0,
-        search_string: this.value
-      }
-      var list = [];
-
-      fetch_url = concept_url + '?' + Object.entries(data).map( function(e){return e.join('=');}).join('&');
-      fetch( fetch_url, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accepts': 'application/json',
-          'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')
-        } } )
-        .then( function(response ){
-          if( response.ok ){
-            return response.json( );
-          } else {
-            console.log( 'error' );
-            return [ ];
-          }
-        } )
-        .then( function(data){
-          data.map( function(item) {
-            console.log( item );
-            list.push( item.name );
-          } )
-          $(x).data( 'ac' ).list = list;
-        } );
-
-    }
-
-  });
-
 
   $("#calc_diversity").click(function() {
     var emails;
