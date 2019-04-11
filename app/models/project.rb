@@ -45,6 +45,11 @@ class Project < ApplicationRecord
     assessments.count == 0 ? 100 : 100 * installments_count / assessments.count
   end
 
+  #TODO Not ideal structuring for UI
+  def get_activity_begin
+    start_date
+  end
+
   def get_type
     I18n.t(:project)
   end
