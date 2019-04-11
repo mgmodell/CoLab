@@ -216,6 +216,9 @@
   </table>
 </p>
   </div>
+  <%= react_component "CourseCalendar", {
+    dataUrl: 'http://www.csh.rit.edu',
+  } %>
   <div id="month" class="ui-body-<%= theme_code %> ui-content">
   <h3><%= t :month_view %></h3>
     <% activities = @course.experiences + @course.bingo_games + @course.projects %>

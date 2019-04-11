@@ -9,6 +9,28 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
+"@fullcalendar/core@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-4.0.2.tgz#59ef822ba0c4bda60609d8b2d9f71bee8875505b"
+  integrity sha512-5DBjqoQretok6L0GNpcqkr0HnCNDzRH0REWJDeTTyHGi62V+8MC3IqZkpmDrFITTkIyDrvf8GHl3WhTI0bjYPQ==
+
+"@fullcalendar/daygrid@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-4.0.1.tgz#383bfd51dd55bbec2ccc90926e9dbdf710aa3789"
+  integrity sha512-nKFFKgTm5eijOukD6pjsQSLlsBoMrKuHXc00zaHaMWSeJndGHxtseR8oeHOnclNNScMKLXLNZthzEduSqqyuRw==
+
+"@fullcalendar/moment@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/moment/-/moment-4.0.1.tgz#39df41de4f81c68b62ea06359cfdb8127ecd1e92"
+  integrity sha512-1saWNA2ITXOXiU93QxtQnXXTxUE1nSHLSiBN1fMz0rdDJBwg5t3x5dFpv0bTJ6l9/q4vVfD5U6WhAONz0UKaXQ==
+
+"@fullcalendar/react@^4.0.2-beta":
+  version "4.0.2-beta"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-4.0.2-beta.tgz#9f7e8517110fe1023a80f324f6af27d3f2b0be82"
+  integrity sha512-ZhhjsUfDxg14pluTi0pt0vvRrrTv2rISnSN8IWNqU8sWt4ctpG8KEPP1TukfHfTXYloTBuxkR44P4Fe2Y7ar6A==
+  dependencies:
+    "@fullcalendar/core" "^4.0.2"
+
 "@material-ui/core@^3.9.3":
   version "3.9.3"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-3.9.3.tgz#d378c1f4beb18df9a534ca7258c2c33fb8e0e51f"
@@ -4431,6 +4453,11 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   integrity sha1-MAV0OOrGz3+MR2fzhkjWaX11yQM=
   dependencies:
     minimist "0.0.8"
+
+moment@^2.24.0:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
 move-concurrently@^1.0.1:
   version "1.0.1"
