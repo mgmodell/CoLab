@@ -37,7 +37,7 @@ class Experience < ApplicationRecord
     get_name(anon)
   end
 
-  #TODO We should implement lead time for Experiences
+  # TODO: We should implement lead time for Experiences
   def get_activity_begin
     nil
   end
