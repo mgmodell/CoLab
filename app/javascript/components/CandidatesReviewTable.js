@@ -360,7 +360,10 @@ class CandidatesReviewTable extends React.Component {
       });
   }
   handleChange = function(name) {
-    this.setState({ [name]: !this.state[name] });
+    this.setState({ 
+      dirty: true,
+      [name]: !this.state[name]
+    });
     this.updateProgress();
   };
   handleChangePage = function(event, page) {
