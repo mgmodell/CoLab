@@ -293,7 +293,7 @@ class CandidatesReviewTable extends React.Component {
         });
         this.setState({
           feedback_opts: feedback_opts
-        })
+        });
         const groups = {};
         data.groups.map(item => {
           groups[item.id] = item;
@@ -320,7 +320,7 @@ class CandidatesReviewTable extends React.Component {
           rowsPerPage: data.candidates.length,
           candidate_lists: candidate_lists,
           candidates_map: candidates_map,
-          candidates: data.candidates,
+          candidates: data.candidates
         });
         this.setState({
           reviewStatus: "Data loaded"
@@ -362,7 +362,7 @@ class CandidatesReviewTable extends React.Component {
       });
   }
   handleChange = function(name) {
-    this.setState({ 
+    this.setState({
       dirty: true,
       [name]: !this.state[name]
     });
