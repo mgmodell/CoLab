@@ -8,11 +8,15 @@ class Concept < ApplicationRecord
 
   before_save :standardize
 
+  def self.standardize_name name:
+      name.split.map(&:capitalize).*' '
+  end
+
   private
 
   def standardize
     if new_record? || name_changed?
-      self.name = name.split.map(&:capitalize).*' '
+      Concept.standardize_name name: self.name
     end
   end
 end

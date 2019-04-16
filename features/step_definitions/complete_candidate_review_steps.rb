@@ -94,7 +94,6 @@ end
 
 Given /^the user lowercases "([^"]*)" concepts$/ do |which_concepts|
   page.all(:xpath, "//input[contains(@id,'concept_4_')]").each do |concept_field|
-    puts "Val: #{concept_field.value} lcase: #{concept_field.value.downcase}"
 
     if ( ( 'all'.eql? which_concepts ) || ( rand( 2 ) > 0 ) )
       text = concept_field.value
