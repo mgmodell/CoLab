@@ -143,6 +143,58 @@ Feature: Review Candidate words for Bingo!
      Then user should see 0 open task
 
   @javascript
+  Scenario: Instructor logs in and accepts then lowercases all concepts
+    Given today is "tomorrow"
+    Given the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    Given the user assigns "Accept" feedback to all candidates
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
+     Then the user logs out
+     Then the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    Given the user lowercases "all" concepts
+    Given the user checks "Review completed"
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
+     Then 24 emails will be sent
+     Then the saved reviews match the list
+     Then there will be 4 concepts
+     Then the user will see "success"
+     Then the user navigates to "Home"
+     Then user should see 0 open task
+
+  @javascript
+  Scenario: Instructor logs in and accepts then lowercases some concepts
+    Given today is "tomorrow"
+    Given the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    Given the user assigns "Accept" feedback to all candidates
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
+     Then the user logs out
+     Then the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    Given the user lowercases "some" concepts
+    Given the user checks "Review completed"
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
+     Then 24 emails will be sent
+     Then the saved reviews match the list
+     Then there will be 4 concepts
+     Then the user will see "success"
+     Then the user navigates to "Home"
+     Then user should see 0 open task
+
+  @javascript
   Scenario: The system handles 2 Bingo! games
     Given today is "tomorrow"
     Given the user logs in
