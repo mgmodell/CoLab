@@ -6,10 +6,6 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import listPlugin from '@fullcalendar/list'
 import momentPlugin from '@fullcalendar/moment'
 
-import '@fullcalendar/core/main.css'
-import '@fullcalendar/daygrid/main.css';
-import '@fullcalendar/list/main.css';
-
 
 class CourseCalendar extends React.Component {
   render () {

@@ -7,9 +7,6 @@
     <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag    "application", :media => "all" %>
-    <%= stylesheet_pack_tag '@fullcalendar/core/main.css' %>
-    <%= stylesheet_pack_tag '@fullcalendar/daygrid/main.css' %>
-    <%= stylesheet_pack_tag '@fullcalendar/list/main.css' %>
     <%= javascript_include_tag "application" %>
     <%= javascript_pack_tag 'application' %>
     <%= csrf_meta_tags %>
