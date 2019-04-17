@@ -350,16 +350,16 @@ class CandidatesReviewTable extends React.Component {
         if (response.ok) {
           return response.json();
         } else {
-          const fail_data = new Object()
-          fail_data.notice = "The operation failed"
-          fail_data.success = false
+          const fail_data = new Object();
+          fail_data.notice = "The operation failed";
+          fail_data.success = false;
           console.log("error");
           return fail_data;
         }
       })
       .then(data => {
         this.setState({
-          dirty: typeof data.success !== 'undefined',
+          dirty: typeof data.success !== "undefined",
           reviewStatus: data.notice
         });
       });
