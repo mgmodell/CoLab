@@ -358,7 +358,6 @@ class CandidatesReviewTable extends React.Component {
         }
       })
       .then(data => {
-        //TODO: handle save errors
         this.setState({
           dirty: typeof data.success !== 'undefined',
           reviewStatus: data.notice
