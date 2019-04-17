@@ -22,9 +22,7 @@ class CourseCalendar extends React.Component {
     }
 
     return (
-    <Paper>
       <FullCalendar
-        defaultView="dayGridMonth"
         plugins={[ dayGridPlugin, listPlugin ]}
         header={header}
         eventClick={clickedMe}
@@ -37,7 +35,6 @@ class CourseCalendar extends React.Component {
         ]}
           
       />
-    </Paper>
     );
   }
 }
