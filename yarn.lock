@@ -36,6 +36,11 @@
   dependencies:
     "@fullcalendar/core" "^4.0.2"
 
+"@fullcalendar/rrule@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/rrule/-/rrule-4.0.2.tgz#2005d11ad7288504616aaa6d6fabfab4f8eed034"
+  integrity sha512-jtlC1BiT6zSwZigX6gI0fWQtJrf9t4CxRrEUi0xU/w4MS0rmbVEIywJRc9hNxOwKpG9Fb38Yj0bKI+D5LTyxUg==
+
 "@material-ui/core@^3.9.3":
   version "3.9.3"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-3.9.3.tgz#d378c1f4beb18df9a534ca7258c2c33fb8e0e51f"

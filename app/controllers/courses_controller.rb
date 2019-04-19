@@ -2,10 +2,14 @@
 
 class CoursesController < ApplicationController
   layout 'admin'
-  before_action :set_course, only: %i[show edit update destroy add_students add_instructors new_from_template]
+  before_action :set_course, only: %i[show edit update destroy
+                                      add_students add_instructors calendar
+                                      new_from_template]
   before_action :check_admin, only: %i[new create]
-  before_action :check_editor, except: %i[next diagnose react accept_roster decline_roster show index]
-  before_action :check_viewer, except: %i[next diagnose react accept_roster decline_roster]
+  before_action :check_editor, except: %i[next diagnose react accept_roster
+                                          decline_roster show index]
+  before_action :check_viewer, except: %i[next diagnose react accept_roster
+                                          decline_roster]
 
   def show
     @title = t('.title')
@@ -13,6 +17,20 @@ class CoursesController < ApplicationController
 
   def edit
     @title = t('.title')
+  end
+
+  def calendar
+    events = @course.get_activities.reduce([]){|acc,add|acc.concat add.get_events}
+
+    puts params[:start]
+    puts params[:end]
+    puts events.as_json
+
+    respond_to do |format|
+      format.json do
+        render json: { events: events.as_json }
+      end
+    end
   end
 
   # GET /admin/coures

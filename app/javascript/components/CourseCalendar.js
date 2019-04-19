@@ -12,7 +12,7 @@ class CourseCalendar extends React.Component {
     const header = {
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth, dayGridWeek, listMonth'
+          right: 'dayGridMonth,dayGridYear,listMonth'
         }
 
     function clickedMe( event ){
@@ -26,13 +26,8 @@ class CourseCalendar extends React.Component {
         plugins={[ dayGridPlugin, listPlugin ]}
         header={header}
         eventClick={clickedMe}
-        themeSystem='standard'
-        events={[
-          { title: 'event 1', allDay: true,
-            start: '2019-04-22', end: '2019-4-22' },
-          { title: 'event 2', allDay: true,
-            start: '2019-04-25', end: '2019-4-30' }
-        ]}
+        defaultView='dayGridMonth'
+        events={this.props.dataUrl + '.json'}
           
       />
     );
@@ -40,6 +35,7 @@ class CourseCalendar extends React.Component {
 }
 
 CourseCalendar.propTypes = {
-  dataUrl: PropTypes.string
+  token: PropTypes.string.isRequired,
+  dataUrl: PropTypes.string.isRequired
 };
 export default CourseCalendar

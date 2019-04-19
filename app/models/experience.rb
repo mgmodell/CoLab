@@ -42,6 +42,20 @@ class Experience < ApplicationRecord
     nil
   end
 
+  def get_events
+    events = [
+      {
+        id: "exp_#{id}",
+        title: name,
+        start: start_date,
+        end: end_date,
+        allDay: true,
+        backgroundColor: '#99FF99'
+      }
+    ]
+
+  end
+
   def type
     'Group work simulation'
   end

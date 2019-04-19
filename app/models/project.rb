@@ -144,6 +144,51 @@ class Project < ApplicationRecord
     'Coming soon'
   end
 
+  def get_days_applicable
+    days = [ ]
+    if has_inside_date_range?
+      start_dow.upto end_dow do |day_num|
+        days << day_num
+      end
+    else
+      start_dow.upto 6 do |day_num|
+        days << day_num
+      end
+      0.upto end_dow do |day_num|
+        days << day_num
+      end
+    end
+    days
+
+  end
+
+  def get_events
+
+    events = [
+      {
+        id: "proj_#{id}",
+        title: name,
+        start: start_date,
+        end: end_date,
+        allDay: true,
+        backgroundColor: '#999999'
+      },
+      {
+        id: "asmt_#{id}",
+        title: "#{name} assessment",
+        allDay: true,
+        backgroundColor: '#FF9999',
+        rrule: {
+          freq: 'weekly',
+          byweekday: get_days_applicable,
+          dtstart: start_date,
+          until: end_date,
+        }
+      }
+    ]
+  end
+
+  private
   # Validation check code
   def date_sanity
     unless start_date.nil? || end_date.nil?
