@@ -12,12 +12,12 @@ class CourseCalendar extends React.Component {
     const header = {
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,dayGridYear,listMonth'
+          right: 'dayGridWeek,dayGridMonth,listMonth'
         }
 
     function clickedMe( event ){
+      //TODO: Must do something useful here
       console.log( event )
-      console.log( event.title )
 
     }
 
@@ -26,7 +26,7 @@ class CourseCalendar extends React.Component {
         plugins={[ dayGridPlugin, listPlugin ]}
         header={header}
         eventClick={clickedMe}
-        defaultView='dayGridMonth'
+        defaultView='dayGridWeek'
         events={this.props.dataUrl + '.json'}
           
       />

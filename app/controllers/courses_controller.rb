@@ -28,7 +28,7 @@ class CoursesController < ApplicationController
 
     respond_to do |format|
       format.json do
-        render json: { events: events.as_json }
+        render json: events.as_json
       end
     end
   end

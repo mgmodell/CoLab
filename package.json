@@ -5,10 +5,11 @@
     "@fullcalendar/list": "^4.0.1",
     "@fullcalendar/moment": "^4.0.1",
     "@fullcalendar/react": "^4.0.2-beta",
-    "@fullcalendar/rrule": "^4.0.2",
+    "@fullcalendar/timeline": "^4.0.2",
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "@rails/webpacker": "^3.2.2",
+    "add": "^2.0.6",
     "autosuggest-highlight": "^3.1.1",
     "babel-preset-react": "^6.24.1",
     "draft-js": "^0.10.5",
@@ -31,7 +32,8 @@
     "react-draggable": "^3.1.1",
     "react-virtualized": "^9.21.0",
     "react_ujs": "^2.4.4",
-    "whatwg-fetch": "^2.0.4"
+    "whatwg-fetch": "^2.0.4",
+    "yarn": "^1.15.2"
   },
   "devDependencies": {
     "webpack-dev-server": "^2.11.1"

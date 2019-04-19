@@ -164,28 +164,30 @@ class Project < ApplicationRecord
 
   def get_events
 
-    events = [
-      {
-        id: "proj_#{id}",
-        title: name,
-        start: start_date,
-        end: end_date,
-        allDay: true,
-        backgroundColor: '#999999'
-      },
-      {
-        id: "asmt_#{id}",
-        title: "#{name} assessment",
-        allDay: true,
-        backgroundColor: '#FF9999',
-        rrule: {
-          freq: 'weekly',
-          byweekday: get_days_applicable,
-          dtstart: start_date,
-          until: end_date,
-        }
-      }
-    ]
+    events = [ ]
+
+    days = get_days_applicable
+
+    events << {
+      title: "#{name} assessment",
+      id: "asmt_#{id}",
+      allDay: true,
+      backgroundColor: '#FF9999',
+      startTime: '00:00',
+      endTime: { day: days.size },
+      daysOfWeek: [ days[ 0 ] ],
+      startRecur: start_date,
+      endRecur: end_date
+    }
+
+#    events << {
+#        id: "proj_#{id}",
+#        title: name,
+#        start: start_date,
+#        end: end_date,
+#        allDay: true,
+#        backgroundColor: '#999999'
+#    }
   end
 
   private
