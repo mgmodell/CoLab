@@ -50,26 +50,3 @@ Then("the concept name is saved in standard form") do
   @concept.reload.name.should eq Concept.standardize_name name: @concept_saved
 end
 
-
-Given /^there is a course$/ do
-  @course = School.find(1).courses.new(
-    name: "#{Forgery::Name.industry} Course",
-    number: Forgery::Basic.number,
-    timezone: 'UTC',
-    start_date: 4.months.ago,
-    end_date: 2.months.from_now
-  )
-  @course.save
-  @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
-end
-
-Then /^the user sets the project to the course's project$/ do
-  if has_select? 'Source of groups', visible: :all
-    page.select(@project.name, from: 'Source of groups', visible: :all)
-  else
-    find('div', id: 'select-bingo_game_project').click
-    find('li', text: @project.name).click
-
-  end
-end
