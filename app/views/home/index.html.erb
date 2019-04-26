@@ -142,9 +142,9 @@
               </td>
               <td>
                 <div hidden>
-                  <%= l in_tz( date: task.term_list_date ), format: :datestamp %>
+                  <%= l in_tz( date: task.get_activity_begin ), format: :datestamp %>
                 </div>
-                <%= l in_tz( date: task.term_list_date ), format: :tz_clarity %></br>
+                <%= l in_tz( date: task.get_activity_begin ), format: :tz_clarity %></br>
               <small><i>
                   (<%= t 'candidates.list_for_class' %>
                   <%= l in_tz( date: task.end_date ), format:
@@ -175,9 +175,9 @@
             </td>
             <td>
               <div hidden>
-                <%= l in_tz( date: task.end_date ), format: :datestamp %>
+                <%= l in_tz( date: task.get_activity_begin ), format: :datestamp %>
               </div>
-              <%= l in_tz( date: task.end_date ), format: :tz_clarity %>
+              <%= l in_tz( date: task.get_activity_begin ), format: :tz_clarity %>
             </td>
             <td>
               <%= t :n_a %>

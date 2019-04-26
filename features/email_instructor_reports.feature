@@ -18,7 +18,7 @@ Feature: Email experience stragglers
     Given the course started "two months ago" and ended "two months from now"
     Given the course has a Bingo! game
     Given the Bingo! game individual count is 10
-    Given the Bingo! started "last month" and ends "2 days from now"
+    Given the Bingo! started "last month" and ends "3 days from now"
     Given the Bingo! is group-enabled with the project and a 10 percent group discount
     Given the Bingo! "has" been activated
 

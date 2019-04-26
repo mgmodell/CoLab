@@ -37,9 +37,10 @@ class Experience < ApplicationRecord
     get_name(anon)
   end
 
-  # TODO: We should implement lead time for Experiences
+  # TODO: We should get rid of this with new calendaring
+  # TODO this is really more of a student activity end date
   def get_activity_begin
-    nil
+    exp_completion_date
   end
 
   def type
@@ -48,6 +49,10 @@ class Experience < ApplicationRecord
 
   def get_name(anonymous)
     anonymous ? anon_name : name
+  end
+
+  def exp_completion_date
+    end_date - (1 + lead_time).days
   end
 
   def status_for_user(user)
@@ -118,12 +123,9 @@ class Experience < ApplicationRecord
     narrative
   end
 
-  def is_open
-    if start_date <= DateTime.current && end_date >= DateTime.current
-      true
-    else
-      false
-    end
+  def is_open?
+    cur_date = DateTime.current
+    start_date <= cur_date && exp_completion_date >= cur_date
   end
 
   def get_narrative_counts
@@ -137,6 +139,8 @@ class Experience < ApplicationRecord
   def self.inform_instructors
     count = 0
     Experience.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |experience|
+      next unless experience.exp_completion_date < DateTime.current
+
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
         reaction = experience.get_user_reaction student

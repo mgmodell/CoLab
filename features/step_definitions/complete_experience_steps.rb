@@ -175,3 +175,12 @@ end
 Then /^the user is dropped from the course$/ do
   @course.drop_student @user
 end
+
+Given("the experience {string} is {int}") do |field, val|
+  case field
+  when 'lead_time'
+    @experience.lead_time = val
+  else
+    false.should eq true
+  end
+end
