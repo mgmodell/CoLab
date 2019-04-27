@@ -319,8 +319,9 @@ Feature: Users can complete 'experiences'
   Scenario: 1 student completes 2 experiences for 1 course
      Then the user logs out
     Given the course started "January 1, 2015" and ends "1 year hence"
-    Given today is "March 2, 2017"
-    Given the experience started "March 1, 2017" and ends "March 3, 2017"
+    Given today is "March 1, 2017"
+    Given the experience started "January 1, 2017" and ends "March 4, 2017"
+    Given the experience 'lead_time' is 2
     Given the experience "has" been activated
     Given the users "have" had demographics requested
     Then the user logs in
@@ -332,8 +333,9 @@ Feature: Users can complete 'experiences'
     #Let's start another
     Given the course has an experience
     Given today is "March 8, 2017"
+    Given the experience started "March 7, 2017" and ends "March 10, 2017"
+    Given the experience 'lead_time' is 1
     Given the experience "has" been activated
-    Given the experience started "March 7, 2017" and ends "March 9, 2017"
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
@@ -345,7 +347,7 @@ Feature: Users can complete 'experiences'
      Then the user logs out
     Given the course started "January 1, 2015" and ends "1 year hence"
     Given the experience started "February 1, 2017" and ends "February 5, 2017"
-    Given today is "February 2, 2017"
+    Given today is "February 1, 2017"
     Given the experience "has" been activated
     Given the users "have" had demographics requested
     Then the user logs in
@@ -359,7 +361,7 @@ Feature: Users can complete 'experiences'
     Given the user enrolls in a new course
     Given the course has an experience
     Given the experience "has" been activated
-    Given the experience started "February 6, 2017" and ends "February 10, 2017"
+    Given the experience started "February 6, 2017" and ends "February 11, 2017"
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
@@ -369,7 +371,7 @@ Feature: Users can complete 'experiences'
     #Let's start another experience (3) for this class
     Given today is "February 10, 2017"
     Given the course has an experience
-    Given the experience started "February 9, 2017" and ends "February 10, 2017"
+    Given the experience started "February 9, 2017" and ends "February 14, 2017"
     Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
@@ -382,7 +384,7 @@ Feature: Users can complete 'experiences'
     Given the user enrolls in a new course
     Given the course has an experience
     Given the experience "has" been activated
-    Given the experience started "February 12, 2017" and ends "February 15, 2017"
+    Given the experience started "February 12, 2017" and ends "February 16, 2017"
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
@@ -392,7 +394,7 @@ Feature: Users can complete 'experiences'
     #Let's start another experience (5) for this class
     Given today is "February 16, 2017"
     Given the course has an experience
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "yesterday" and ends "February 20, 2017"
     Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
@@ -405,7 +407,7 @@ Feature: Users can complete 'experiences'
     Given the user enrolls in a new course
     Given the course has an experience
     Given the experience "has" been activated
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "yesterday" and ends "7 days hence"
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
@@ -413,9 +415,10 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Let's start another experience (7) for this class
-    Given today is "3 days hence"
+    Given today is "5 days hence"
     Given the course has an experience
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "yesterday" and ends "6 days hence"
+    Given the experience 'lead_time' is 2
     Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
@@ -424,11 +427,11 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Now for class 8
-    Given today is "3 days from now"
+    Given today is "5 days from now"
     Given the user enrolls in a new course
     Given the course has an experience
     Given the experience "has" been activated
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "yesterday" and ends "7 days hence"
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
@@ -436,9 +439,9 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Let's start another experience (9) for this class
-    Given today is "3 days hence"
+    Given today is "5 days hence"
     Given the course has an experience
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "yesterday" and ends "7 days hence"
     Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
@@ -447,11 +450,11 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Now for class 10
-    Given today is "3 days from now"
+    Given today is "4 days from now"
     Given the user enrolls in a new course
     Given the course has an experience
     Given the experience "has" been activated
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "yesterday" and ends "7 days hence"
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
@@ -459,9 +462,9 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Let's start another experience (11) for this class
-    Given today is "3 days hence"
+    Given today is "4 days hence"
     Given the course has an experience
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "yesterday" and ends "7 days hence"
     Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
@@ -470,11 +473,11 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Now for class 12
-    Given today is "3 days from now"
+    Given today is "4 days from now"
     Given the user enrolls in a new course
     Given the course has an experience
     Given the experience "has" been activated
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "yesterday" and ends "7 days hence"
     Then the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
@@ -482,9 +485,9 @@ Feature: Users can complete 'experiences'
     Then the user logs out
 
     #Let's start another experience (13) for this class
-    Given today is "3 days hence"
+    Given today is "4 days hence"
     Given the course has an experience
-    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience started "yesterday" and ends "7 days hence"
     Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
@@ -560,11 +563,11 @@ Feature: Users can complete 'experiences'
 
     #Now for class 6
     Given the user is "a random" user
-    Given today is "3 days from now"
+    Given today is "4 days from now"
     Given the user enrolls in a new course
     Given the course has an experience
-    #Given the experience 'lead_time' is 0
-    Given the experience started "yesterday" and ends "3 days hence"
+    Given the experience 'lead_time' is 0
+    Given the experience started "yesterday" and ends "2 days hence"
     Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
@@ -578,7 +581,7 @@ Feature: Users can complete 'experiences'
     Given today is "3 days hence"
     Given the course has an experience
     Given the experience 'lead_time' is 0
-    Given the experience started "yesterday" and ends "4 days hence"
+    Given the experience started "yesterday" and ends "3 days hence"
     Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
@@ -592,7 +595,7 @@ Feature: Users can complete 'experiences'
     Given the user enrolls in a new course
     Given the course has an experience
     Given the experience 'lead_time' is 0
-    Given the experience started "yesterday" and ends "3 days hence"
+    Given the experience started "yesterday" and ends "4 days hence"
     Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
@@ -616,11 +619,11 @@ Feature: Users can complete 'experiences'
 
     #Now for class 10
     Given the user is "the last" user
-    Given today is "5 days from now"
+    Given today is "5 days hence"
     Given the user enrolls in a new course
     Given the course has an experience
-    Given the experience 'lead_time' is 0
-    Given the experience started "yesterday" and ends "3 days hence"
+    #Given the experience 'lead_time' is 0
+    Given the experience started "yesterday" and ends "4 days hence"
     Given the experience "has" been activated
     Then the user logs in
     Then the user should see a successful login message
@@ -698,6 +701,7 @@ Feature: Users can complete 'experiences'
      Then all users complete the course successfully
 
     Given there is a course with an experience
+    Given the experience started "last month" and ends "5 days hence"
     Given the experience "has" been activated
     Given the course has 32 confirmed users
     Given the users "have" had demographics requested

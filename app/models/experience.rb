@@ -52,7 +52,7 @@ class Experience < ApplicationRecord
   end
 
   def exp_completion_date
-    end_date - (1 + lead_time).days
+    end_date - (1 + lead_time).days + 1.minute
   end
 
   def status_for_user(user)
@@ -138,8 +138,9 @@ class Experience < ApplicationRecord
 
   def self.inform_instructors
     count = 0
-    Experience.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |experience|
-      next unless experience.exp_completion_date < DateTime.current
+    cur_date = DateTime.current
+    Experience.where('instructor_updated = false AND end_date < ?', cur_date ).each do |experience|
+      next unless experience.exp_completion_date < cur_date
 
       completion_hash = {}
       experience.course.enrolled_students.each do |student|

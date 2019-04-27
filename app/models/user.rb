@@ -286,6 +286,7 @@ class User < ApplicationRecord
                                    .to_a
     
     waiting_experiences.delete_if{ |experience| !experience.is_open? }
+
     waiting_tasks.concat waiting_experiences
 
     # Add the bingo games
