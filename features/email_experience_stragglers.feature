@@ -1,6 +1,6 @@
 Feature: Email experience stragglers
   In order to make sure we get complete information,
-  Students must be reminded to complete their assessments.
+  Students must be reminded to complete their experiences.
 
   Background:
     Given there is a course with an experience

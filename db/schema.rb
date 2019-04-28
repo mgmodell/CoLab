@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_23_123022) do
+ActiveRecord::Schema.define(version: 2019_04_28_135713) do
 
   create_table "ahoy_messages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "token"
@@ -259,6 +259,7 @@ ActiveRecord::Schema.define(version: 2019_04_23_123022) do
     t.boolean "instructor_updated", default: false, null: false
     t.string "anon_name"
     t.integer "lead_time", default: 3, null: false
+    t.datetime "student_end_date"
     t.index ["course_id"], name: "index_experiences_on_course_id"
   end
 

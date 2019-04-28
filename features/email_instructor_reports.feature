@@ -58,7 +58,7 @@ Feature: Email experience stragglers
 
   Scenario: Course Instructor will be emailed when experience closes
     Given the course has an experience
-    Given the experience started "last month" and ends "3 days from now"
+    Given the experience started "last month" and ends "4 days from now"
     Given the experience "has" been activated
     Given the email queue is empty
     When the system emails stragglers
@@ -72,7 +72,7 @@ Feature: Email experience stragglers
 
   Scenario: Instructor not emailed when experience end_date changes before today
     Given the course has an experience
-    Given the experience started "last month" and ends "3 days from now"
+    Given the experience started "last month" and ends "4 days from now"
     Given the experience "has" been activated
     Given the email queue is empty
     When the system emails stragglers
@@ -83,7 +83,8 @@ Feature: Email experience stragglers
     When the system emails instructor reports
     Then 1 emails will be sent
     Then 5 emails will be tracked
-    Then the experience started "last month" and ends "2 days from now"
+    Then the experience started "last month" and ends "3 days from now"
+     And the experience 'lead_time' is 2
     Given the email queue is empty
     When the system emails instructor reports
     Then 0 emails will be sent
@@ -91,7 +92,7 @@ Feature: Email experience stragglers
 
   Scenario: Instructor emailed when experience end date changes after today
     Given the course has an experience
-    Given the experience started "last month" and ends "3 days from now"
+    Given the experience started "last month" and ends "4 days from now"
     Given the experience "has" been activated
     Given the email queue is empty
     When the system emails stragglers
@@ -115,7 +116,7 @@ Feature: Email experience stragglers
 
   Scenario: Both Course Instructors will be emailed when experience closes
     Given the course has an experience
-    Given the experience started "last month" and ends "3 days from now"
+    Given the experience started "last month" and ends "4 days from now"
     Given the experience "has" been activated
     Given the course has 1 confirmed users
     Given the user is the most recently created user
