@@ -77,6 +77,7 @@ group :development, :test do
   gem 'htmlbeautifier'
   gem 'htmlentities'
   gem 'i18n_data'
+  gem 'parallel_tests'
   gem 'railroady'
   gem 'rails-erd', require: false
   gem 'rb-readline'
