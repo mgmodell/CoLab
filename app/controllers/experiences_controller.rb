@@ -175,7 +175,8 @@ class ExperiencesController < ApplicationController
   end
 
   def experience_params
-    params.require(:experience).permit(:course_id, :name, :active, :start_date, :end_date)
+    params.require(:experience).permit(:course_id, :name, :active,
+                                       :lead_time, :start_date, :end_date)
   end
 
   def diagnosis_params
@@ -184,6 +185,7 @@ class ExperiencesController < ApplicationController
   end
 
   def reaction_params
-    params.require(:reaction).permit(:behavior_id, :improvements, :narrative_id, :other_name)
+    params.require(:reaction).permit(:behavior_id, :improvements, :narrative_id,
+                                     :other_name)
   end
 end

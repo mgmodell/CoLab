@@ -8,6 +8,7 @@ Feature: Timezone Support for Experiences
     Given today is "March 8, 1980"
     Given there is a course with an experience
     Given the experience started "February 15, 1980" and ends "April 15, 1980"
+    Given the experience 'lead_time' is 2
     Given the experience "has" been activated
     Given the course has 4 confirmed users
     Given the users "have" had demographics requested
@@ -20,7 +21,7 @@ Feature: Timezone Support for Experiences
     Then user should see 1 open task
     Then the user should see "Fri, Feb 15 at 12:00am UTC"
     #Rounding goes on here
-    Then the user should see "Tue, Apr 15 at 11:59pm UTC"
+    Then the user should see "Sat, Apr 12 at 11:59pm UTC"
     
   Scenario: Checking that open projects reflect my timezone
     Given the user timezone is "Seoul"
@@ -29,7 +30,7 @@ Feature: Timezone Support for Experiences
     Then the user should see a successful login message
     Then user should see 1 open task
     Then the user should see "Fri, Feb 15 at 9:00am KST"
-    Then the user should see "Wed, Apr 16 at 8:59am KST"
+    Then the user should see "Sun, Apr 13 at 8:59am KST"
     
   Scenario: Projects shouldn't open too soon
     Given today is "February 14, 1980 at 2:59pm"
@@ -46,5 +47,5 @@ Feature: Timezone Support for Experiences
     Then the user should see a successful login message
     Then user should see 1 open task
     Then the user should see "Fri, Feb 15 at 5:00am UTC"
-    Then the user should see "Wed, Apr 16 at 4:59am UTC"
+    Then the user should see "Sun, Apr 13 at 4:59am UTC"
     

@@ -70,10 +70,11 @@ class BingoGame < ApplicationRecord
   end
 
   def term_list_date
-    end_date - lead_time.days
+    end_date - (1 + lead_time).days
   end
 
   # Let's create a true activity interface later
+  # TODO this is really more of a student activity end date
   def get_activity_begin
     term_list_date
   end
@@ -96,7 +97,7 @@ class BingoGame < ApplicationRecord
 
   def is_open?
     cur_date = DateTime.current
-    start_date <= cur_date && end_date >= (cur_date + lead_time.days)
+    start_date <= cur_date && term_list_date >= cur_date
   end
 
   def required_terms_for_group(group)
@@ -120,13 +121,13 @@ class BingoGame < ApplicationRecord
   end
 
   def awaiting_review?
-    !reviewed && end_date <= (DateTime.current + lead_time.days) && end_date >= DateTime.current
+    !reviewed && term_list_date <= DateTime.current && end_date >= DateTime.current
   end
 
   def self.inform_instructors
     count = 0
     BingoGame.includes(:course).where(instructor_notified: false).each do |bingo|
-      next unless bingo.end_date < DateTime.current + bingo.lead_time.days
+      next unless bingo.end_date < DateTime.current + (1 + bingo.lead_time).days
 
       completion_hash = {}
       bingo.course.enrolled_students.each do |student|
@@ -171,7 +172,7 @@ class BingoGame < ApplicationRecord
   private
 
   def reset_notification
-    if end_date_changed? && instructor_notified && ((DateTime.current + lead_time.days) <= end_date)
+    if end_date_changed? && instructor_notified && term_list_date <= end_date
       self.instructor_notified = false
     end
   end
