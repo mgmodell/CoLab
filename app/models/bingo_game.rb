@@ -70,7 +70,7 @@ class BingoGame < ApplicationRecord
   end
 
   def term_list_date
-    end_date - (1 + lead_time ).days
+    end_date - (1 + lead_time).days
   end
 
   # Let's create a true activity interface later
@@ -127,7 +127,7 @@ class BingoGame < ApplicationRecord
   def self.inform_instructors
     count = 0
     BingoGame.includes(:course).where(instructor_notified: false).each do |bingo|
-      next unless bingo.end_date < DateTime.current + ( 1 + bingo.lead_time ).days
+      next unless bingo.end_date < DateTime.current + (1 + bingo.lead_time).days
 
       completion_hash = {}
       bingo.course.enrolled_students.each do |student|

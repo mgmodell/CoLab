@@ -80,6 +80,7 @@ class AdministrativeMailer < ApplicationMailer
 
     Experience.active_at(curr_date).each do |experience|
       next unless experience.is_open?
+
       experience.course.enrolled_students.each do |user|
         reaction = experience.get_user_reaction user
         unless reaction.persisted? && reaction.behavior.present?

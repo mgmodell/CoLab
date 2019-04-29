@@ -280,12 +280,12 @@ class User < ApplicationRecord
     # Add the experiences
 
     waiting_experiences = Experience.active_at(cur_date).joins(course: :rosters)
-      .where('rosters.user_id': id)
-                                   .where('rosters.role IN (?)',
-                                          [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
-                                   .to_a
-    
-    waiting_experiences.delete_if{ |experience| !experience.is_open? }
+                                    .where('rosters.user_id': id)
+                                    .where('rosters.role IN (?)',
+                                           [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
+                                    .to_a
+
+    waiting_experiences.delete_if { |experience| !experience.is_open? }
 
     waiting_tasks.concat waiting_experiences
 

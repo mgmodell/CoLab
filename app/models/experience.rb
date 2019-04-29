@@ -139,8 +139,7 @@ class Experience < ApplicationRecord
   def self.inform_instructors
     count = 0
     cur_date = DateTime.current
-    Experience.where('instructor_updated = false AND student_end_date < ?', cur_date ).each do |experience|
-
+    Experience.where('instructor_updated = false AND student_end_date < ?', cur_date).each do |experience|
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
         reaction = experience.get_user_reaction student
