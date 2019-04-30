@@ -331,6 +331,8 @@ GEM
       railties (>= 3.2)
       tilt
     regexp_parser (1.4.0)
+    report_builder (1.8)
+      json (>= 1.8.1)
     responders (2.4.1)
       actionpack (>= 4.2.0, < 6.0)
       railties (>= 4.2.0, < 6.0)
@@ -480,6 +482,7 @@ DEPENDENCIES
   rails_12factor
   rb-readline
   react-rails
+  report_builder
   rspec
   rubocop (~> 0.66.0)
   rubocop-thread_safety
