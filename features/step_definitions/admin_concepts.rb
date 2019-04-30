@@ -4,12 +4,12 @@ require 'forgery'
 
 Given('{int} multi-word concepts have been added to the system') do |word_count|
   check_uniq = {}
-  word_count.times do |count|
-    while count > check_uniq.keys.count
-      c_name = Forgery::Name.industry
-      check_uniq[c_name.downcase] = true
-    end
-    Concept.create name: Forgery::Name.industry
+  while check_uniq.keys.count <= word_count
+    c_name = Forgery::Name.industry
+    check_uniq[c_name.downcase] = true
+  end
+  check_uniq.keys.each do |c_name|
+    Concept.create name: c_name
   end
 end
 
