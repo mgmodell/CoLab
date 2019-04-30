@@ -1,4 +1,7 @@
 {
+  "name": "CoLab",
+  "version": "3.7.7",
+  "license": "UNLICENSED",
   "dependencies": {
     "@fullcalendar/core": "^4.0.2",
     "@fullcalendar/daygrid": "^4.0.1",

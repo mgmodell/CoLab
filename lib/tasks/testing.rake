@@ -152,7 +152,7 @@ namespace :testing do
   desc 'Run and report on our tests in parallel'
   task :parallel_rpt do
     options = {
-      input_path: 'tmp/',
+      input_path: 'cucumber/',
       report_path: 'test_results',
       report_title: 'CoLab BDD Test Results',
       voice_commands: true
