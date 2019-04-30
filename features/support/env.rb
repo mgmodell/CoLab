@@ -10,11 +10,7 @@ require 'cucumber/rails'
 require 'selenium/webdriver'
 
 require 'simplecov'
-SimpleCov.start :rails do
-  add_group "Cucumber", "features"
-
-end
-
+SimpleCov.start 'rails'
 
 Capybara.register_driver :headless_firefox do |app|
   browser_options = Selenium::WebDriver::Firefox::Options.new

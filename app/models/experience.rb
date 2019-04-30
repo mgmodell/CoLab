@@ -40,21 +40,30 @@ class Experience < ApplicationRecord
   # TODO: We should get rid of this with new calendaring
   # TODO this is really more of a student activity end date
   def get_activity_begin
-    exp_completion_date
+    student_end_date
   end
 
   def get_events
-    events = [
-      {
-        id: "exp_#{id}",
-        title: name,
-        start: start_date,
-        end: end_date,
-        allDay: true,
-        backgroundColor: '#99FF99'
-      }
-    ]
-
+    events = [ ]
+    #events <<
+    #{
+    #  id: "exp_#{id}",
+    #  title: "Student completion of #{name}",
+    #  start: start_date,
+    #  end: student_end_date,,
+    #  allDay: true,
+    #  backgroundColor: '#99FF99'
+    #}
+    events <<
+    {
+      id: "exp_in_#{id}",
+      title: "Instructor Review of #{name}",
+      start: student_end_date,
+      end: end_date,
+      allDay: true,
+      backgroundColor: '#99CC99'
+    }
+    events
   end
 
   def type
@@ -63,10 +72,6 @@ class Experience < ApplicationRecord
 
   def get_name(anonymous)
     anonymous ? anon_name : name
-  end
-
-  def exp_completion_date
-    student_end_date
   end
 
   def status_for_user(user)
