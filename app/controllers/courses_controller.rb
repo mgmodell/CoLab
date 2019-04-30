@@ -22,10 +22,6 @@ class CoursesController < ApplicationController
   def calendar
     events = @course.get_activities.reduce([]){|acc,add|acc.concat add.get_events}
 
-    puts params[:start]
-    puts params[:end]
-    puts events.as_json
-
     respond_to do |format|
       format.json do
         render json: events.as_json
