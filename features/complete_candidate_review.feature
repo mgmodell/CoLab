@@ -7,7 +7,7 @@ Feature: Review Candidate words for Bingo!
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
     Given the course has a Bingo! game
     Given the Bingo! game individual count is 10
-    Given the Bingo! started "last month" and ends "2 days from now"
+    Given the Bingo! started "last month" and ends "3 days from now"
     Given the Bingo! is group-enabled with the project and a 10 percent group discount
     Given the Bingo! "has" been activated
 
@@ -132,6 +132,58 @@ Feature: Review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
     Given the user assigns "" feedback to all candidates
+    Given the user checks "Review completed"
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
+     Then 24 emails will be sent
+     Then the saved reviews match the list
+     Then there will be 4 concepts
+     Then the user will see "success"
+     Then the user navigates to "Home"
+     Then user should see 0 open task
+
+  @javascript
+  Scenario: Instructor logs in and accepts then lowercases all concepts
+    Given today is "tomorrow"
+    Given the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    Given the user assigns "Accept" feedback to all candidates
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
+     Then the user logs out
+     Then the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    Given the user lowercases "all" concepts
+    Given the user checks "Review completed"
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
+     Then 24 emails will be sent
+     Then the saved reviews match the list
+     Then there will be 4 concepts
+     Then the user will see "success"
+     Then the user navigates to "Home"
+     Then user should see 0 open task
+
+  @javascript
+  Scenario: Instructor logs in and accepts then lowercases some concepts
+    Given today is "tomorrow"
+    Given the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    Given the user assigns "Accept" feedback to all candidates
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
+     Then the user logs out
+     Then the user logs in
+     Then user should see 1 open task
+    Given the user clicks the link to the candidate review
+    Given the user sees review items for all the expected candidates
+    Given the user lowercases "some" concepts
     Given the user checks "Review completed"
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."

@@ -92,6 +92,18 @@ Then /^the user waits while seeing "([^"]*)"$/ do |wait_msg|
   end
 end
 
+Given /^the user lowercases "([^"]*)" concepts$/ do |which_concepts|
+  page.all(:xpath, "//input[contains(@id,'concept_4_')]").each do |concept_field|
+    next unless ('all'.eql? which_concepts) || (rand(2) > 0)
+
+    text = concept_field.value
+    text.length.times do
+      concept_field.send_keys :delete
+    end
+    concept_field.set concept_field.value.downcase
+  end
+end
+
 Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_type|
   concept_count = Concept.count
   concepts = concept_count < 2 ? [] :

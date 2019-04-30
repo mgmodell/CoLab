@@ -10,7 +10,7 @@ class Experience < ApplicationRecord
   validate :date_sanity
   before_validation :timezone_adjust
   before_create :anonymize
-  before_save :reset_notification
+  before_save :reset_notification, :end_date_optimization
   validate :dates_within_course
 
   scope :active_at, lambda { |date|
@@ -37,9 +37,10 @@ class Experience < ApplicationRecord
     get_name(anon)
   end
 
-  #TODO We should implement lead time for Experiences
+  # TODO: We should get rid of this with new calendaring
+  # TODO this is really more of a student activity end date
   def get_activity_begin
-    nil
+    exp_completion_date
   end
 
   def get_events
@@ -62,6 +63,10 @@ class Experience < ApplicationRecord
 
   def get_name(anonymous)
     anonymous ? anon_name : name
+  end
+
+  def exp_completion_date
+    student_end_date
   end
 
   def status_for_user(user)
@@ -132,12 +137,9 @@ class Experience < ApplicationRecord
     narrative
   end
 
-  def is_open
-    if start_date <= DateTime.current && end_date >= DateTime.current
-      true
-    else
-      false
-    end
+  def is_open?
+    cur_date = DateTime.current
+    start_date <= cur_date && student_end_date >= cur_date
   end
 
   def get_narrative_counts
@@ -150,7 +152,8 @@ class Experience < ApplicationRecord
 
   def self.inform_instructors
     count = 0
-    Experience.where('instructor_updated = false AND end_date < ?', DateTime.current).each do |experience|
+    cur_date = DateTime.current
+    Experience.where('instructor_updated = false AND student_end_date < ?', cur_date).each do |experience|
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
         reaction = experience.get_user_reaction student
@@ -203,6 +206,12 @@ class Experience < ApplicationRecord
     elsif end_date_changed?
       proc_date = course_tz.local(end_date.year, end_date.month, end_date.day)
       self.end_date = proc_date.end_of_day.change(sec: 0)
+    end
+  end
+
+  def end_date_optimization
+    if student_end_date.nil? || end_date_changed? || lead_time_changed?
+      self.student_end_date = end_date - (1 + lead_time).days
     end
   end
 

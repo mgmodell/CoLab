@@ -85,6 +85,7 @@ Feature: User registration
     Given 5 users
     Given the users are confirmed
     Given there is a course with an experience
+    Given the experience started "last month" and ends "two months hence"
     Given the experience "has" been activated
     Then the users are added to the course by email address
     Then the course has 5 "Invited Student" users

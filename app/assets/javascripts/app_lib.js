@@ -107,8 +107,6 @@ function leastSquares(xSeries, ySeries) {
 
 //Add some code to the page.
 $(document).ready(function(){
-  var concept_url = '/bingo/concepts_for_game/0.json'
-  var apMinChars = 3;
 
   $("#calc_diversity").click(function() {
     var emails;

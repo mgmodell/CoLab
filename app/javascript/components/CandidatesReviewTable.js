@@ -293,7 +293,7 @@ class CandidatesReviewTable extends React.Component {
         });
         this.setState({
           feedback_opts: feedback_opts
-        })
+        });
         const groups = {};
         data.groups.map(item => {
           groups[item.id] = item;
@@ -320,7 +320,7 @@ class CandidatesReviewTable extends React.Component {
           rowsPerPage: data.candidates.length,
           candidate_lists: candidate_lists,
           candidates_map: candidates_map,
-          candidates: data.candidates,
+          candidates: data.candidates
         });
         this.setState({
           reviewStatus: "Data loaded"
@@ -330,6 +330,7 @@ class CandidatesReviewTable extends React.Component {
   }
   saveFeedback() {
     this.setState({
+      dirty: false,
       reviewStatus: "Saving feedback."
     });
     fetch(this.props.reviewSaveUrl + ".json", {
@@ -349,20 +350,22 @@ class CandidatesReviewTable extends React.Component {
         if (response.ok) {
           return response.json();
         } else {
+          const fail_data = new Object()
+          fail_data.notice = "The operation failed"
+          fail_data.success = false
           console.log("error");
-          return {};
+          return fail_data;
         }
       })
       .then(data => {
-        //TODO: handle save errors
         this.setState({
-          dirty: false,
+          dirty: typeof data.success !== 'undefined',
           reviewStatus: data.notice
         });
       });
   }
   handleChange = function(name) {
-    this.setState({ 
+    this.setState({
       dirty: true,
       [name]: !this.state[name]
     });

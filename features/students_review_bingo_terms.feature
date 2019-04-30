@@ -7,7 +7,7 @@ Feature: Students review Candidate words for Bingo!
     Given the course started "two months ago" and ended "two months from now"
     Given the course has a Bingo! game
     Given the Bingo! game individual count is 10
-    Given the Bingo! started "last month" and ends "2 days from now"
+    Given the Bingo! started "last month" and ends "3 days from now"
     Given the Bingo! is group-enabled with the project and a 10 percent group discount
     Given the Bingo! "has" been activated
 
@@ -122,7 +122,7 @@ Feature: Students review Candidate words for Bingo!
      Then the concept list should match the list
      Then the user logs out
      # Let's try again tomorrow
-     Given today is "2 days from now"
+     Given today is "3 days from now"
      When the user is any student in the course
      Then the user logs in
      Then user should see 0 open task
