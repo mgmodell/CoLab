@@ -166,19 +166,21 @@ class Project < ApplicationRecord
 
     events = [ ]
 
-    days = get_days_applicable
+    if self.active
+      days = get_days_applicable
 
-    events << {
-      title: "#{name} assessment",
-      id: "asmt_#{id}",
-      allDay: true,
-      backgroundColor: '#FF9999',
-      startTime: '00:00',
-      endTime: { day: days.size },
-      daysOfWeek: [ days[ 0 ] ],
-      startRecur: start_date,
-      endRecur: end_date
-    }
+      events << {
+        title: "#{name} assessment",
+        id: "asmt_#{id}",
+        allDay: true,
+        backgroundColor: '#FF9999',
+        startTime: '00:00',
+        endTime: { day: days.size },
+        daysOfWeek: [ days[ 0 ] ],
+        startRecur: start_date,
+        endRecur: end_date
+      }
+    end
 
 #    events << {
 #        id: "proj_#{id}",

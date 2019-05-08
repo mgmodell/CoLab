@@ -89,14 +89,16 @@ class BingoGame < ApplicationRecord
     #    allDay: true,
     #    backgroundColor: '#9999FF'
     #}
-    events << {
-        id: "bg_#{id}",
-        title: "Bingo prep for: #{topic}",
-        start: term_list_date,
-        end: end_date,
-        allDay: true,
-        backgroundColor: '#9999CC'
-    }
+    if self.active
+      events << {
+          id: "bg_#{id}",
+          title: "Bingo prep for: #{topic}",
+          start: term_list_date,
+          end: end_date,
+          allDay: true,
+          backgroundColor: '#9999CC'
+      }
+    end
     events
   end
 

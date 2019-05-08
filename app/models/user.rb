@@ -188,10 +188,11 @@ class User < ApplicationRecord
     my_candidate_lists.each_with_index do |solo_cl, index|
       next unless solo_cl.is_group
 
+      my_group = solo_cl.bingo_game.project.group_for_user( self )
+
       group_cl = solo_cl.bingo_game.candidate_lists
-                        .where(group_id: solo_cl.bingo_game.project
-                      .group_for_user(self).id)
-                        .take
+                        .where(group_id: my_group.id )
+                        .take unless my_group.nil?
       my_candidate_lists[index] = group_cl
     end
 

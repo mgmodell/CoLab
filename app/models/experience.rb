@@ -54,15 +54,17 @@ class Experience < ApplicationRecord
     #  allDay: true,
     #  backgroundColor: '#99FF99'
     #}
-    events <<
-    {
-      id: "exp_in_#{id}",
-      title: "Instructor Review of #{name}",
-      start: student_end_date,
-      end: end_date,
-      allDay: true,
-      backgroundColor: '#99CC99'
-    }
+    if self.active
+      events <<
+      {
+        id: "exp_in_#{id}",
+        title: "Instructor Review of #{name}",
+        start: student_end_date,
+        end: end_date,
+        allDay: true,
+        backgroundColor: '#99CC99'
+      }
+    end
     events
   end
 
