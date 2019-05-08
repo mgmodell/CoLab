@@ -160,31 +160,42 @@ class CandidateListsController < ApplicationController
   # set is_group on all existing lists and then return the new list
   def merge_to_group_list(candidate_list)
     merged_list = []
+    group_lists = []
     merger_group = candidate_list.bingo_game.project.group_for_user(candidate_list.user)
     required_terms = candidate_list.bingo_game.required_terms_for_group(merger_group)
 
-    merger_group.users.each do |group_member|
-      cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
-      cl.is_group = true
-      cl.candidates.includes(:user).each do |candidate|
-        merged_list << candidate if candidate.term.present? || candidate.definition.present?
+    ActiveRecord::Base.transaction do
+      merger_group.users.each do |group_member|
+        member_cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
+        member_cl.archived = true
+        member_cl.candidates.includes(:user).each do |candidate|
+          merged_list << candidate if candidate.term.present? || candidate.definition.present?
+        end
+        member_cl.save
+        logger.debug cl.errors.full_messages unless cl.errors.empty?
+        group_lists << member_cl
       end
+      if merged_list.count < (required_terms - 1)
+        merged_list.count.upto ( required_terms - 1) do
+          merged_list << Candidate.new('term' => '', 'definition' => '', user: @current_user)
+        end
+      end
+
+      cl = CandidateList.new
+      cl.group = merger_group
+      cl.candidates = merged_list
+      cl.is_group = true
+      cl.bingo_game = candidate_list.bingo_game
       cl.save
       logger.debug cl.errors.full_messages unless cl.errors.empty?
-    end
-    if merged_list.count < (required_terms - 1)
-      merged_list.count.upto ( required_terms - 1) do
-        merged_list << Candidate.new('term' => '', 'definition' => '', user: @current_user)
-      end
-    end
 
-    cl = CandidateList.new
-    cl.group = merger_group
-    cl.candidates = merged_list
-    cl.is_group = true
-    cl.bingo_game = candidate_list.bingo_game
-    cl.save
-    logger.debug cl.errors.full_messages unless cl.errors.empty?
+      group_lists.each do |member_cl|
+        member_cl.current_candidate_list
+        member_cl.save
+        logger.debug member_cl.errors.full_messages unless member_cl.errors.empty?
+      end
+
+    end
     cl
   end
 
