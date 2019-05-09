@@ -39,3 +39,24 @@ end
 Then /^the number of concepts is less than the total number of concepts$/ do
   page.all(:xpath, "//tr[@id='concept']").count.should be < Concept.count
 end
+
+Then 'remember {int} group members'  do |count|
+  @group_members = @users.sample count
+end
+
+When("the user is remembered group member {int}") do |index|
+  @user = @group_member[ index - 1 ]
+end
+
+Then("the user remembers group performance") do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+Then("the users performance matches original group performance") do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+Then("the user is added to the course") do
+  @course.add_students_by_email [ @user.email ]
+end
+

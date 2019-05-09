@@ -86,13 +86,13 @@ class Course < ApplicationRecord
         end_date: end_date + date_difference
       )
 
-      # copy the rosters
+      # copy the faculty rosters
       rosters.faculty.each do |roster|
         new_obj = new_course.rosters.new(
           role: roster.role,
           user: roster.user
         )
-        new_obj.save
+        new_obj.save!
       end
 
       # copy the projects
@@ -107,7 +107,7 @@ class Course < ApplicationRecord
           start_dow: project.start_dow,
           end_dow: project.end_dow
         )
-        new_obj.save
+        new_obj.save!
         proj_hash[project] = new_obj
       end
 
@@ -118,7 +118,7 @@ class Course < ApplicationRecord
           start_date: experience.start_date + date_difference,
           end_date: experience.end_date + date_difference
         )
-        new_obj.save
+        new_obj.save!
       end
 
       # copy the bingo! games
@@ -136,10 +136,10 @@ class Course < ApplicationRecord
           start_date: bingo_game.start_date + date_difference,
           end_date: bingo_game.end_date + date_difference
         )
-        new_obj.save
+        new_obj.save!
       end
 
-      new_course.save
+      new_course.save!
     end
     new_course
   end
@@ -333,7 +333,7 @@ class Course < ApplicationRecord
           d = course_tz.local(d.year, d.month, d.day)
           project.end_date = d.end_of_day
           # {project.end_date}\n\n"
-          project.save(validate: false)
+          project.save!(validate: false)
         end
         experiences.reload.each do |experience|
           d = orig_tz.parse(experience.start_date.to_s)
@@ -343,7 +343,7 @@ class Course < ApplicationRecord
           d = orig_tz.parse(experience.end_date.to_s)
           d = course_tz.local(d.year, d.month, d.day)
           experience.end_date = d.end_of_day
-          experience.save(validate: false)
+          experience.save!(validate: false)
         end
         bingo_games.each do |bingo_game|
           d = orig_tz.parse(bingo_game.start_date.to_s)
@@ -353,7 +353,7 @@ class Course < ApplicationRecord
           d = orig_tz.parse(bingo_game.end_date.to_s)
           d = course_tz.local(d.year, d.month, d.day)
           bingo_game.end_date = d.end_of_day
-          bingo_game.save(validate: false)
+          bingo_game.save!(validate: false)
         end
       end
     end

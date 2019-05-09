@@ -121,6 +121,7 @@ ActiveRecord::Schema.define(version: 2019_05_08_060916) do
     t.boolean "group_requested"
     t.integer "cached_performance"
     t.boolean "archived"
+    t.integer "contributor_count"
     t.integer "current_candidate_list"
     t.index ["bingo_game_id"], name: "index_candidate_lists_on_bingo_game_id"
     t.index ["current_candidate_list"], name: "fk_rails_75e11f644e"

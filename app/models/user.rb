@@ -186,20 +186,15 @@ class User < ApplicationRecord
         .to_a
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
-      next unless solo_cl.is_group
-
-      group_cl = solo_cl.bingo_game.candidate_lists
-                        .where(group_id: solo_cl.bingo_game.project
-                      .group_for_user(self).id)
-                        .take
-      my_candidate_lists[index] = group_cl
+      next unless solo_cl.archived
+      my_candidate_lists[index] = solo_cl.current_candidate_list
     end
 
     total = 0
     my_candidate_lists.each do |candidate_list|
       total += candidate_list.performance
     end
-    my_candidate_lists.empty? ? 100 : (total / my_candidate_lists.count)
+    my_candidate_lists.empty? ? 100 : (total / my_candidate_lists.size)
   end
 
   def get_bingo_data(course_id: 0)
@@ -223,13 +218,8 @@ class User < ApplicationRecord
         .to_a
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
-      next unless solo_cl.is_group
-
-      group_cl = solo_cl.bingo_game.candidate_lists
-                        .where(group_id: solo_cl.bingo_game.project
-                      .group_for_user(self).id)
-                        .take
-      my_candidate_lists[index] = group_cl
+      next unless solo_cl.archived
+      my_candidate_lists[index] = solo_cl.current_candidate_list
     end
 
     data = []

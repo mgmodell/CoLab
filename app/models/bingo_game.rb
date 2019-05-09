@@ -99,10 +99,9 @@ class BingoGame < ApplicationRecord
     start_date <= cur_date && end_date >= (cur_date + lead_time.days)
   end
 
-  def required_terms_for_group(group)
+  def required_terms_for_contributors(contributor_count)
     remaining_percent = (100.0 - group_discount) / 100
-    group_user_count = group.nil? ? 1 : group.users.count
-    discounted = (group_user_count * individual_count * remaining_percent).floor
+    discounted = (contributor_count * individual_count * remaining_percent).floor
   end
 
   def get_current_lists_hash
