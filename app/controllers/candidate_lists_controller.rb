@@ -163,13 +163,13 @@ class CandidateListsController < ApplicationController
   # Merge all the lists, add the merged whole to a new, group candidate_list,
   # set archived on all existing lists and then return the new list
   def merge_to_group_list(candidate_list)
-    merged_list = []
-    group_lists = []
     merger_group = candidate_list.bingo_game.project.group_for_user(candidate_list.user)
     required_terms = candidate_list.bingo_game.required_terms_for_contributors(merger_group.users.size)
-
     cl = nil
+
     merger_group.transaction do
+      merged_list = []
+      group_lists = []
       merger_group.users.each do |group_member|
         member_cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
         member_cl.archived = true
@@ -196,7 +196,7 @@ class CandidateListsController < ApplicationController
       logger.debug cl.errors.full_messages unless cl.errors.empty?
 
       group_lists.each do |member_cl|
-        member_cl.current_candidate_list
+        member_cl.current_candidate_list = cl
         member_cl.save!
         logger.debug member_cl.errors.full_messages unless member_cl.errors.empty?
       end
@@ -214,6 +214,9 @@ class CandidateListsController < ApplicationController
       redirect_to root_url
     else
       @candidate_list = CandidateList.find(params[:id])
+      if @candidate_list.archived
+        @candidate_list = @candidate_list.current_candidate_list
+      end
     end
   end
 

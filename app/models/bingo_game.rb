@@ -153,13 +153,17 @@ class BingoGame < ApplicationRecord
       cl = CandidateList.new
       cl.user_id = user.id
       cl.bingo_game_id = id
+      cl.contributor_count = 1
+      cl.archived = false
       cl.is_group = false
       cl.group_requested = false
+      cl.current_candidate_list = nil
 
       individual_count.times do
         cl.candidates << Candidate.new(term: '', definition: '', user: user)
       end
-      cl.save unless id == -1 # This unless supports the demonstration only
+      cl.save unless self.id == -1 # This unless supports the demonstration only
+      logger.debug cl.errors.full_messages unless cl.errors.empty?
     elsif  cl.is_group
       # TODO: I think I can fix this
       cl = candidate_lists.where(group_id: project.group_for_user(user).id).take

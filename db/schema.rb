@@ -120,11 +120,11 @@ ActiveRecord::Schema.define(version: 2019_05_08_060916) do
     t.integer "bingo_game_id"
     t.boolean "group_requested"
     t.integer "cached_performance"
-    t.boolean "archived"
-    t.integer "contributor_count"
-    t.integer "current_candidate_list"
+    t.boolean "archived", default: false, null: false
+    t.integer "contributor_count", default: 1, null: false
+    t.integer "current_candidate_list_id"
     t.index ["bingo_game_id"], name: "index_candidate_lists_on_bingo_game_id"
-    t.index ["current_candidate_list"], name: "fk_rails_75e11f644e"
+    t.index ["current_candidate_list_id"], name: "fk_rails_de17bb0877"
     t.index ["group_id"], name: "index_candidate_lists_on_group_id"
     t.index ["user_id"], name: "index_candidate_lists_on_user_id"
   end
@@ -560,7 +560,7 @@ ActiveRecord::Schema.define(version: 2019_05_08_060916) do
   add_foreign_key "bingo_games", "courses"
   add_foreign_key "bingo_games", "projects"
   add_foreign_key "candidate_lists", "bingo_games"
-  add_foreign_key "candidate_lists", "candidate_lists", column: "current_candidate_list"
+  add_foreign_key "candidate_lists", "candidate_lists", column: "current_candidate_list_id"
   add_foreign_key "candidate_lists", "groups"
   add_foreign_key "candidate_lists", "users"
   add_foreign_key "candidates", "candidate_feedbacks"
