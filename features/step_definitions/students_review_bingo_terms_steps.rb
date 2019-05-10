@@ -49,14 +49,20 @@ When 'the user is remembered group member {int}' do |index|
 end
 
 Then 'the user remembers group performance' do
-  pending # Write code here that turns the phrase above into concrete actions
+  @performance = page.find(:xpath, "//span[@id='performance']").text
 end
 
 Then 'the users performance matches original group performance' do
-  pending # Write code here that turns the phrase above into concrete actions
+  @performance.should eq page.find(:xpath, "//span[@id='performance']").text
 end
 
 Then 'the user is added to the course' do
-  @course.add_students_by_email [ @user.email ]
+  @course.add_students_by_email  @user.email
 end
 
+Then 'the cached performance is erased' do
+  cl = @bingo.candidate_list_for_user( @user )
+  cl.cached_performance = nil
+  cl.save
+  puts cl.errors.full_messages unless cl.errors.empty?
+end

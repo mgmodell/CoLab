@@ -115,8 +115,16 @@ Feature: Students review Candidate words for Bingo!
      Then the users performance matches original group performance
      Then the concept list should match the list
      Then the user logs out
+     Then the cached performance is erased
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the users performance matches original group performance
+     Then the concept list should match the list
+     Then the user logs out
      When the user is remembered group member 1
      Then the user is added to the course
+     When the user is remembered group member 2
      Then the user logs in
      Then user should see 1 open task
      Then the user clicks the link to the concept list
