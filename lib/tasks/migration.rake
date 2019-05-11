@@ -1,6 +1,30 @@
 namespace :migratify do
 
   desc 'Update the quotes'
+  task candidate_fix: :environment do
+    CandidateList.transaction do
+      CandidateList.where( 'group_id is not null' ).each do |cl|
+        cl.contributor_count = cl.group.users.size
+        cl.save!
+
+        #Archive the old ones
+        cl.group.users.each do |u|
+          cl_arch = CandidateList.where(
+            user: u,
+            bingo_game: cl.bingo_game )
+          raise "Too many lists for u:#{u.id} b:#{cl.bingo_game_id}" unless cl_arch.size == 1
+          cl_arch = cl_arch[ 0 ]
+          cl_arch.archived = true
+          cl_arch.is_group = false
+          cl_arch.current_candidate_list = cl
+          cl_arch.save!
+        end
+      end
+    end
+
+  end
+
+  desc 'Update the quotes'
   task mar_2019: :environment do
     # Quote seed data
     class Quote_
