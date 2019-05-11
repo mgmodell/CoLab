@@ -41,7 +41,7 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
   end
   begin
     btn.click
-  rescue
+  rescue StandardError
     btn.click
   end
   # click_link_or_button link_or_button
@@ -114,7 +114,7 @@ end
 
 Then /^the user clicks "([^"]*)" on the existing project$/ do |action|
   elem = find(:xpath, "//tr[td[contains(.,'#{@project.name}')]]/td/a", text: action)
-    elem.click
+  elem.click
 end
 
 Then /^the project Factor pack is "([^"]*)"$/ do |selected_factor_pack|

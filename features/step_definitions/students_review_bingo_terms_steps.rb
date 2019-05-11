@@ -45,7 +45,7 @@ Then 'remember {int} group members' do |count|
 end
 
 When 'the user is remembered group member {int}' do |index|
-  @user = @group_members[ index - 1 ]
+  @user = @group_members[index - 1]
 end
 
 Then 'the user remembers group performance' do
@@ -57,11 +57,11 @@ Then 'the users performance matches original group performance' do
 end
 
 Then 'the user is added to the course' do
-  @course.add_students_by_email  @user.email
+  @course.add_students_by_email @user.email
 end
 
 Then 'the cached performance is erased' do
-  cl = @bingo.candidate_list_for_user( @user )
+  cl = @bingo.candidate_list_for_user(@user)
   cl.cached_performance = nil
   cl.save
   puts cl.errors.full_messages unless cl.errors.empty?

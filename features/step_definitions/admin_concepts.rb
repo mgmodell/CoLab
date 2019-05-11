@@ -50,4 +50,3 @@ Then('the concept name is saved in standard form') do
   @concept.reload.name.should_not eq @concept_saved
   @concept.reload.name.should eq Concept.standardize_name name: @concept_saved
 end
-

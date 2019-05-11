@@ -126,19 +126,19 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       @feedback_list[candidate.id][:concept] = concept.split.map(&:capitalize).*' '
     end
     elem = page.find(:xpath,
-              "//select[@id='feedback_4_#{candidate.id}']",
-              visible: :all)
+                     "//select[@id='feedback_4_#{candidate.id}']",
+                     visible: :all)
     begin
       elem.click
-    rescue
+    rescue StandardError
       elem.click
     end
     elem = page.find(:xpath,
-              "//select[@id='feedback_4_#{candidate.id}']//option[@value='#{feedback.id}']",
-              visible: :all)
+                     "//select[@id='feedback_4_#{candidate.id}']//option[@value='#{feedback.id}']",
+                     visible: :all)
     begin
       elem.click
-    rescue
+    rescue StandardError
       elem.click
     end
     unless concept.blank?
@@ -159,7 +159,7 @@ Given /^the user checks "([^"]*)"$/ do |checkbox_name|
   elem = all(:xpath, "//div[contains(.,'#{checkbox_name}')]").last
   begin
     elem.click
-  rescue
+  rescue StandardError
     elem.click
   end
 end

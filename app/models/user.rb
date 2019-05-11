@@ -187,6 +187,7 @@ class User < ApplicationRecord
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
       next unless solo_cl.archived
+
       my_candidate_lists[index] = solo_cl.current_candidate_list
     end
 
@@ -219,6 +220,7 @@ class User < ApplicationRecord
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
       next unless solo_cl.archived
+
       my_candidate_lists[index] = solo_cl.current_candidate_list
     end
 

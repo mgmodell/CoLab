@@ -162,7 +162,7 @@ class BingoGame < ApplicationRecord
       individual_count.times do
         cl.candidates << Candidate.new(term: '', definition: '', user: user)
       end
-      cl.save unless self.id == -1 # This unless supports the demonstration only
+      cl.save unless id == -1 # This unless supports the demonstration only
       logger.debug cl.errors.full_messages unless cl.errors.empty?
     elsif  cl.is_group
       # TODO: I think I can fix this

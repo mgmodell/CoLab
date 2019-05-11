@@ -200,7 +200,6 @@ class CandidateListsController < ApplicationController
         member_cl.save!
         logger.debug member_cl.errors.full_messages unless member_cl.errors.empty?
       end
-
     end
     cl
   end
