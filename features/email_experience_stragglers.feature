@@ -1,12 +1,12 @@
 Feature: Email experience stragglers
   In order to make sure we get complete information,
-  Students must be reminded to complete their assessments.
+  Students must be reminded to complete their experiences.
 
   Background:
     Given there is a course with an experience
     Given the course has 4 confirmed users
     Given the users "have" had demographics requested
-    Given the experience started "last month" and ends "next month"
+    Given the experience started "last month" and ends "in two months"
     Given the experience "has" been activated
 
   Scenario: Four students have experiences waiting when we email the stragglers - four emails are sent
@@ -25,6 +25,15 @@ Feature: Email experience stragglers
 
   Scenario: Four students have incomplete experiences that ended yesterday - no emails are sent
     Given the experience started "last month" and ends "yesterday"
+    Given the experience "has" been activated
+    Given the email queue is empty
+    When the system emails stragglers
+    Then 0 emails will be sent
+    Then 0 emails will be tracked
+
+  Scenario: 4 Ss incomplete; experience ends in 2 days, 2 days lead time - no emails are sent
+    Given the experience started "last month" and ends "two days hence"
+    Given the experience 'lead_time' is 2
     Given the experience "has" been activated
     Given the email queue is empty
     When the system emails stragglers

@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(version: 2019_05_08_060916) do
     t.boolean "active", default: false
     t.integer "course_id"
     t.integer "project_id"
-    t.integer "lead_time"
+    t.integer "lead_time", default: 3
     t.integer "group_discount"
     t.boolean "reviewed"
     t.boolean "instructor_notified", default: false, null: false
@@ -262,6 +262,8 @@ ActiveRecord::Schema.define(version: 2019_05_08_060916) do
     t.boolean "active", default: false
     t.boolean "instructor_updated", default: false, null: false
     t.string "anon_name"
+    t.integer "lead_time", default: 3, null: false
+    t.datetime "student_end_date"
     t.index ["course_id"], name: "index_experiences_on_course_id"
   end
 

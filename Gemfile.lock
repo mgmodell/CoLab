@@ -264,6 +264,8 @@ GEM
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
     parallel (1.17.0)
+    parallel_tests (2.28.0)
+      parallel
     parser (2.6.2.1)
       ast (~> 2.4.0)
     pdf-core (0.7.0)
@@ -468,6 +470,7 @@ DEPENDENCIES
   mysql2 (>= 0.3.18, < 0.5)
   omniauth-google-oauth2
   paperclip (~> 6.0.0)
+  parallel_tests
   prawn
   prawn-table
   puma (~> 3.7)
@@ -493,7 +496,7 @@ DEPENDENCIES
   webpacker
 
 RUBY VERSION
-   ruby 2.6.2p47
+   ruby 2.6.3p62
 
 BUNDLED WITH
    2.0.1

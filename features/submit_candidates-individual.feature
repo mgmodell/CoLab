@@ -10,7 +10,7 @@ Feature: Submitting Candidate words for Bingo!
     Given the project has a group with 4 confirmed users
     Given the course has a Bingo! game
     Given the Bingo! game individual count is 7
-    Given the Bingo! started "last month" and ends "2 days from now"
+    Given the Bingo! started "last month" and ends "3 days from now"
     Given the Bingo! "has" been activated
     Given the user is the "random" user in the group
     Given the user "has" had demographics requested
