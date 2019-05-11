@@ -1,5 +1,24 @@
 namespace :migratify do
 
+  desc 'lead time fixes'
+  task lead_time: :environment do
+    #update the lead times for bingo games
+    BingoGame.all.each do |bg|
+      bg.lead_time = bg.lead_time - 1
+      bg.save( validate: false )
+      puts bg.errors.full_messages unless bg.errors.empty?
+    end
+    
+    #update the lead times for bingo games
+    Experience.all.each do |exp|
+      exp.lead_time = 2
+      exp.end_date = exp.end_date + exp.lead_time.days
+      exp.save( validate: false )
+      puts exp.errors.full_messages unless exp.errors.empty?
+    end
+
+  end
+
   desc 'Update the quotes'
   task candidate_fix: :environment do
     CandidateList.transaction do
