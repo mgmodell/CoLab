@@ -79,6 +79,29 @@ class BingoGame < ApplicationRecord
     term_list_date
   end
 
+  def get_events
+    events = [ ]
+    #events << {
+    #    id: "tl_#{id}",
+    #    title: "Terms List entry for: #{topic}",
+    #    start: start_date,
+    #    end: term_list_date,
+    #    allDay: true,
+    #    backgroundColor: '#9999FF'
+    #}
+    if self.active
+      events << {
+          id: "bg_#{id}",
+          title: "Bingo prep for: #{topic}",
+          start: term_list_date,
+          end: end_date,
+          allDay: true,
+          backgroundColor: '#9999CC'
+      }
+    end
+    events
+  end
+
   def get_activity_on_date(date:, anon:)
     if date <= term_list_date
       "#{I18n.t(:terms_list)} (#{get_name(anon)})"

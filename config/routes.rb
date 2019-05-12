@@ -22,6 +22,9 @@ Rails.application.routes.draw do
         as: :activate_experience
     get 'bingo_games/activate/:bingo_game_id' => 'bingo_games#activate', 
         as: :activate_bingo_game
+    get 'course/cal/:id' => 'courses#calendar',
+        as: :course_cal,
+        constraints: ->(req) { req.format == :json }
     resources :courses, :projects, :experiences, :bingo_games, :schools,
               :consent_forms
     resources :concepts, except: [:destroy, :create]

@@ -25,3 +25,6 @@ yarn-error.log*
 /node_modules
 yarn-debug.log*
 .yarn-integrity
+test_results.html
+coverage
+cucumber

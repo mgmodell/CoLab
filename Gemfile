@@ -81,11 +81,16 @@ group :development, :test do
   gem 'railroady'
   gem 'rails-erd', require: false
   gem 'rb-readline'
+  gem 'report_builder'
   gem 'rspec'
   gem 'rubocop', '~> 0.66.0', require: false
   gem 'rubocop-thread_safety'
   gem 'selenium-webdriver'
   gem 'webdrivers', '~> 3.0'
+end
+
+group :test do
+  gem 'simplecov', require: false
 end
 
 group :development do
