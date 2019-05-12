@@ -19,7 +19,7 @@ namespace :migratify do
 
   end
 
-  desc 'Update the quotes'
+  desc 'Candidates fix'
   task candidate_fix: :environment do
     CandidateList.transaction do
       CandidateList.where( 'group_id is not null' ).each do |cl|
@@ -43,7 +43,7 @@ namespace :migratify do
 
   end
 
-  desc 'Update the quotes'
+  desc 'Update the quotes again'
   task mar_2019: :environment do
     # Quote seed data
     class Quote_
