@@ -188,9 +188,9 @@ class BingoGame < ApplicationRecord
       end
       cl.save unless id == -1 # This unless supports the demonstration only
       logger.debug cl.errors.full_messages unless cl.errors.empty?
-    elsif  cl.is_group
+    elsif  cl.archived
       # TODO: I think I can fix this
-      cl = candidate_lists.where(group_id: project.group_for_user(user).id).take
+      cl = cl.current_candidate_list
     end
     cl
   end

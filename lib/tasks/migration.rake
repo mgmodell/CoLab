@@ -41,7 +41,26 @@ namespace :migratify do
       end
     end
 
+    CandidateList.where( 'user_id IS NOT NULL' ).where( is_group: true).each do |cl|
+      group = GroupRevision
+        .where( 'members LIKE "%? %" AND updated_at < ?', cl.user_id, cl.updated_at)
+        .take
+        .group
+      g_cl = CandidateList.where(
+        is_group: true,
+        group: group,
+        bingo_game: cl.bingo_game )
+      g_cl = g_cl[0]
+      g_cl.contributor_count = g_cl.contributor_count + 1
+      g_cl.cached_performance = nil
+      g_cl.save
+      cl.archived = true
+      cl.is_group = false
+      cl.current_candidate_list = g_cl
+      cl.save
+    end
   end
+
 
   desc 'Update the quotes again'
   task mar_2019: :environment do
