@@ -80,23 +80,23 @@ class BingoGame < ApplicationRecord
   end
 
   def get_events
-    events = [ ]
-    #events << {
+    events = []
+    # events << {
     #    id: "tl_#{id}",
     #    title: "Terms List entry for: #{topic}",
     #    start: start_date,
     #    end: term_list_date,
     #    allDay: true,
     #    backgroundColor: '#9999FF'
-    #}
-    if self.active
+    # }
+    if active
       events << {
-          id: "bg_#{id}",
-          title: "Bingo prep for: #{topic}",
-          start: term_list_date,
-          end: end_date,
-          allDay: true,
-          backgroundColor: '#9999CC'
+        id: "bg_#{id}",
+        title: "Bingo prep for: #{topic}",
+        start: term_list_date,
+        end: end_date,
+        allDay: true,
+        backgroundColor: '#9999CC'
       }
     end
     events

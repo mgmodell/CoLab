@@ -44,26 +44,26 @@ class Experience < ApplicationRecord
   end
 
   def get_events
-    events = [ ]
-    #events <<
-    #{
+    events = []
+    # events <<
+    # {
     #  id: "exp_#{id}",
     #  title: "Student completion of #{name}",
     #  start: start_date,
     #  end: student_end_date,,
     #  allDay: true,
     #  backgroundColor: '#99FF99'
-    #}
-    if self.active
+    # }
+    if active
       events <<
-      {
-        id: "exp_in_#{id}",
-        title: "Instructor Review of #{name}",
-        start: student_end_date,
-        end: end_date,
-        allDay: true,
-        backgroundColor: '#99CC99'
-      }
+        {
+          id: "exp_in_#{id}",
+          title: "Instructor Review of #{name}",
+          start: student_end_date,
+          end: end_date,
+          allDay: true,
+          backgroundColor: '#99CC99'
+        }
     end
     events
   end

@@ -145,7 +145,7 @@ class Project < ApplicationRecord
   end
 
   def get_days_applicable
-    days = [ ]
+    days = []
     if has_inside_date_range?
       start_dow.upto end_dow do |day_num|
         days << day_num
@@ -159,14 +159,12 @@ class Project < ApplicationRecord
       end
     end
     days
-
   end
 
   def get_events
+    events = []
 
-    events = [ ]
-
-    if self.active
+    if active
       days = get_days_applicable
 
       events << {
@@ -176,23 +174,25 @@ class Project < ApplicationRecord
         backgroundColor: '#FF9999',
         startTime: '00:00',
         endTime: { day: days.size },
-        daysOfWeek: [ days[ 0 ] ],
+        daysOfWeek: [days[0]],
         startRecur: start_date,
         endRecur: end_date
       }
     end
 
-#    events << {
-#        id: "proj_#{id}",
-#        title: name,
-#        start: start_date,
-#        end: end_date,
-#        allDay: true,
-#        backgroundColor: '#999999'
-#    }
+    #    events << {
+    #        id: "proj_#{id}",
+    #        title: name,
+    #        start: start_date,
+    #        end: end_date,
+    #        allDay: true,
+    #        backgroundColor: '#999999'
+    #    }
+    events
   end
 
   private
+
   # Validation check code
   def date_sanity
     unless start_date.nil? || end_date.nil?

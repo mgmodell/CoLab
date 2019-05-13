@@ -7,7 +7,7 @@ Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_pref
   elem = page.find('#bingo_game_' + date_field_prefix + '_date')
   begin
     elem.click
-  rescue
+  rescue StandardError
     elem.click
   end
   elem.set(new_date)
