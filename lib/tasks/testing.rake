@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'forgery'
 namespace :testing do
   desc 'Set up some simple, current objects for testing'
   task :examples, [:tester] => [:environment] do |_t, args|
+    require 'forgery'
     if args[:tester].empty?
       puts '  This task sets up example objects for testers in CoLab test environments'
       puts '   Usage:   rake testing:examples[<user email>]'
@@ -145,6 +145,20 @@ namespace :testing do
           end
         end
       end
+    end
+  end
+
+  desc 'Run and report on our tests in parallel'
+  task :parallel_rpt do
+    unless Rails.env.production?
+      require 'report_builder'
+      options = {
+        input_path: 'cucumber/',
+        report_path: 'test_results',
+        report_title: 'CoLab BDD Test Results',
+        voice_commands: true
+       }
+      ReportBuilder.build_report options
     end
   end
 end

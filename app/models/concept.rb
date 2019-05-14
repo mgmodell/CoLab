@@ -15,6 +15,8 @@ class Concept < ApplicationRecord
   private
 
   def standardize
-    Concept.standardize_name name: name if new_record? || name_changed?
+    if new_record? || name_changed?
+      self.name = Concept.standardize_name name: name
+    end
   end
 end

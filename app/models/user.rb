@@ -186,20 +186,16 @@ class User < ApplicationRecord
         .to_a
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
-      next unless solo_cl.is_group
+      next unless solo_cl.archived
 
-      group_cl = solo_cl.bingo_game.candidate_lists
-                        .where(group_id: solo_cl.bingo_game.project
-                      .group_for_user(self).id)
-                        .take
-      my_candidate_lists[index] = group_cl
+      my_candidate_lists[index] = solo_cl.current_candidate_list
     end
 
     total = 0
     my_candidate_lists.each do |candidate_list|
       total += candidate_list.performance
     end
-    my_candidate_lists.empty? ? 100 : (total / my_candidate_lists.count)
+    my_candidate_lists.empty? ? 100 : (total / my_candidate_lists.size)
   end
 
   def get_bingo_data(course_id: 0)
@@ -223,13 +219,9 @@ class User < ApplicationRecord
         .to_a
     end
     my_candidate_lists.each_with_index do |solo_cl, index|
-      next unless solo_cl.is_group
+      next unless solo_cl.archived
 
-      group_cl = solo_cl.bingo_game.candidate_lists
-                        .where(group_id: solo_cl.bingo_game.project
-                      .group_for_user(self).id)
-                        .take
-      my_candidate_lists[index] = group_cl
+      my_candidate_lists[index] = solo_cl.current_candidate_list
     end
 
     data = []
@@ -279,11 +271,16 @@ class User < ApplicationRecord
 
     # Add the experiences
 
-    waiting_tasks.concat Experience.active_at(cur_date).joins(course: :rosters)
-      .where('rosters.user_id': id)
-                                   .where('rosters.role IN (?)',
-                                          [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
-                                   .to_a
+    waiting_experiences = Experience.active_at(cur_date).joins(course: :rosters)
+                                    .where('rosters.user_id': id)
+                                    .where('rosters.role IN (?)',
+                                           [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
+                                    .to_a
+
+    waiting_experiences.delete_if { |experience| !experience.is_open? }
+
+    waiting_tasks.concat waiting_experiences
+
     # Add the bingo games
     waiting_games = BingoGame.joins(course: :rosters)
                              .includes(:course, :project)

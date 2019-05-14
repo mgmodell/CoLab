@@ -21,7 +21,7 @@ Feature: Timezone Support for Bingo!
     Then user should see 1 open task
     Then the user should see "Fri, Feb 15 at 12:00am UTC"
     #Rounding goes on here
-    Then the user should see "Sun, Apr 13 at 11:59pm UTC"
+    Then the user should see "Sat, Apr 12 at 11:59pm UTC"
     
   Scenario: Checking that open bingos reflect my timezone
     Given the user timezone is "Seoul"
@@ -30,7 +30,7 @@ Feature: Timezone Support for Bingo!
     Then the user should see a successful login message
     Then user should see 1 open task
     Then the user should see "Fri, Feb 15 at 9:00am KST"
-    Then the user should see "Mon, Apr 14 at 8:59am KST"
+    Then the user should see "Sun, Apr 13 at 8:59am KST"
     
   Scenario: Bingos shouldn't open too soon
     Given today is "February 14, 1980 at 2:59pm"
@@ -47,5 +47,5 @@ Feature: Timezone Support for Bingo!
     Then the user should see a successful login message
     Then user should see 1 open task
     Then the user should see "Fri, Feb 15 at 5:00am UTC"
-    Then the user should see "Mon, Apr 14 at 4:59am UTC"
+    Then the user should see "Sun, Apr 13 at 4:59am UTC"
     

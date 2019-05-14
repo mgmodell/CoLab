@@ -43,11 +43,13 @@ class CandidateListsController < ApplicationController
       logger.debug @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
       @candidate_list = merge_to_group_list(@candidate_list) if @candidate_list.others_requested_help == 1
     else
-      @candidate_list.bingo_game.project.group_for_user(@current_user).users.each do |user|
-        cl = @candidate_list.bingo_game.candidate_list_for_user(user)
-        cl.group_requested = false
-        cl.save
-        logger.debug cl.errors.full_messages unless cl.errors.empty?
+      @candidate_list.transaction do
+        @candidate_list.bingo_game.project.group_for_user(@current_user).users.each do |user|
+          cl = @candidate_list.bingo_game.candidate_list_for_user(user)
+          cl.group_requested = false
+          cl.save!
+          logger.debug cl.errors.full_messages unless cl.errors.empty?
+        end
       end
     end
     @term_counts = {}
@@ -86,6 +88,7 @@ class CandidateListsController < ApplicationController
     @title = t 'demo_title',
                orig: (t 'candidate_lists.show.title')
     @candidate_list = CandidateList.new(id: -1,
+                                        contributor_count: 1,
                                         is_group: false)
     @candidate_list.user = @current_user
     demo_project = Project.new(id: -1,
@@ -108,6 +111,7 @@ class CandidateListsController < ApplicationController
     demo_group.name = t :demo_group
     demo_group.users = [@current_user]
     @candidate_list = CandidateList.new(id: -1,
+                                        contributor_count: 1,
                                         is_group: false)
     @candidate_list.group = demo_group
     @candidate_list.user = @current_user
@@ -157,40 +161,50 @@ class CandidateListsController < ApplicationController
   protected
 
   # Merge all the lists, add the merged whole to a new, group candidate_list,
-  # set is_group on all existing lists and then return the new list
+  # set archived on all existing lists and then return the new list
   def merge_to_group_list(candidate_list)
-    merged_list = []
     merger_group = candidate_list.bingo_game.project.group_for_user(candidate_list.user)
-    required_terms = candidate_list.bingo_game.required_terms_for_group(merger_group)
+    required_terms = candidate_list.bingo_game.required_terms_for_contributors(merger_group.users.size)
+    cl = nil
 
-    merger_group.users.each do |group_member|
-      cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
+    merger_group.transaction do
+      merged_list = []
+      group_lists = []
+      merger_group.users.each do |group_member|
+        member_cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
+        member_cl.archived = true
+        member_cl.candidates.includes(:user).each do |candidate|
+          merged_list << candidate if candidate.term.present? || candidate.definition.present?
+        end
+        member_cl.save!
+        logger.debug member_cl.errors.full_messages unless member_cl.errors.empty?
+        group_lists << member_cl
+      end
+      if merged_list.count < (required_terms - 1)
+        merged_list.count.upto ( required_terms - 1) do
+          merged_list << Candidate.new('term' => '', 'definition' => '', user: @current_user)
+        end
+      end
+
+      cl = CandidateList.new
+      cl.group = merger_group
+      cl.contributor_count = merger_group.users.size
+      cl.candidates = merged_list
       cl.is_group = true
-      cl.candidates.includes(:user).each do |candidate|
-        merged_list << candidate if candidate.term.present? || candidate.definition.present?
-      end
-      cl.save
+      cl.bingo_game = candidate_list.bingo_game
+      cl.save!
       logger.debug cl.errors.full_messages unless cl.errors.empty?
-    end
-    if merged_list.count < (required_terms - 1)
-      merged_list.count.upto ( required_terms - 1) do
-        merged_list << Candidate.new('term' => '', 'definition' => '', user: @current_user)
+
+      group_lists.each do |member_cl|
+        member_cl.current_candidate_list = cl
+        member_cl.save!
+        logger.debug member_cl.errors.full_messages unless member_cl.errors.empty?
       end
     end
-
-    cl = CandidateList.new
-    cl.group = merger_group
-    cl.candidates = merged_list
-    cl.is_group = true
-    cl.bingo_game = candidate_list.bingo_game
-    cl.save
-    logger.debug cl.errors.full_messages unless cl.errors.empty?
     cl
   end
 
   private
-
-  def merge_individuals_to_group; end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_candidate_list
@@ -199,10 +213,13 @@ class CandidateListsController < ApplicationController
       redirect_to root_url
     else
       @candidate_list = CandidateList.find(params[:id])
+      if @candidate_list.archived
+        @candidate_list = @candidate_list.current_candidate_list
+      end
     end
   end
 
   def candidate_list_params
-    params.require(:candidate_list).permit(:is_group, candidates_attributes: %i[id term definition user_id])
+    params.require(:candidate_list).permit(candidates_attributes: %i[id term definition user_id])
   end
 end

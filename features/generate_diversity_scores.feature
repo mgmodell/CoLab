@@ -122,7 +122,7 @@ Feature: Generate diversity scores (DS)
 
   Scenario: 15 completed scenarios gives us a DS of 12
     Given the course has an experience
-    Given the experience started "last month" and ends "tomorrow"
+    Given the experience started "last month" and ends "4 days hence"
     Given the experience "has" been activated
     Given the users "have" had demographics requested
     #The first user
@@ -159,9 +159,9 @@ Feature: Generate diversity scores (DS)
 
     #experience 2
     Given the course has an experience
-    Given the experience started "3 days from now" and ends "7 days from now"
+    Given the experience started "4 days from now" and ends "10 days from now"
     Given the experience "has" been activated
-    Given today is "5 days from now"
+    Given today is "6 days from now"
 
     #The first user
     Given the user is "the first" user
@@ -189,7 +189,7 @@ Feature: Generate diversity scores (DS)
 
     #experience 3
     Given the course has an experience
-    Given the experience started "10 days from now" and ends "20 days from now"
+    Given the experience started "11 days from now" and ends "20 days from now"
     Given the experience "has" been activated
     Given today is "15 days from now"
 
@@ -219,7 +219,7 @@ Feature: Generate diversity scores (DS)
 
     #experience 4
     Given the course has an experience
-    Given the experience started "23 days from now" and ends "27 days from now"
+    Given the experience started "23 days from now" and ends "29 days from now"
     Given the experience "has" been activated
     Given today is "25 days from now"
 
@@ -260,7 +260,7 @@ Feature: Generate diversity scores (DS)
 
   Scenario: 7 different scenarios gives us a DS of 7
     Given the course has an experience
-    Given the experience started "last month" and ends "tomorrow"
+    Given the experience started "last month" and ends "4 days hence"
     Given the experience "has" been activated
     Given the users "have" had demographics requested
     #The first user
@@ -297,9 +297,9 @@ Feature: Generate diversity scores (DS)
 
     #Next experience
     Given the course has an experience
-    Given the experience started "3 days from now" and ends "7 days from now"
+    Given the experience started "4 days from now" and ends "10 days from now"
     Given the experience "has" been activated
-    Given today is "5 days from now"
+    Given today is "6 days from now"
 
     #The first user
     Given the user is "the first" user

@@ -9,7 +9,7 @@ Feature: Experience Listing
     Given the users "have" had demographics requested
 
   Scenario: Checking for open experiences
-    Given the experience started "last month" and ends "next month"
+    Given the experience started "last month" and ends "2 months hence"
     Given the experience "has" been activated
     Given the user is "a random" user
     When the user logs in
@@ -23,7 +23,7 @@ Feature: Experience Listing
     Then the user logs out
 
   Scenario: A student that drops the course won't see the experience
-    Given the experience started "last month" and ends "next month"
+    Given the experience started "last month" and ends "2 months hence"
     Given the experience "has" been activated
     Given the user is "a random" user
     Then the user is dropped from the course
@@ -33,16 +33,26 @@ Feature: Experience Listing
 
   Scenario: We shouldn't see an experience that's not active
     Given the experience "has not" been activated
-    Given the experience started "last month" and ends "next month"
+    Given the experience started "last month" and ends "2 months hence"
     Given the experience "has not" been activated
     Given the user is "a random" user
     When the user logs in
     Then the user should see a successful login message
     Then user should see 0 open task
 
+  Scenario: We shouldn't see an experience in instructor prep
+    Given the experience "has not" been activated
+    Given the experience started "last month" and ends "3 days hence"
+    Given the experience 'lead_time' is 2
+    Given the experience "has not" been activated
+    Given the user is "a random" user
+    When the user logs in
+    Then the user should see a successful login message
+    Then user should see 0 open task
 
-  Scenario: Checking for experiences with opening and closing today
-    Given the experience started "last month" and ends "next month"
+  Scenario: Checking for experiences with opening today and closing tomorrow
+    Given the experience started "today" and ends "tomorrow"
+    Given the experience 'lead_time' is 0
     Given the experience "has" been activated
     Given the user is "a random" user
     When the user logs in
@@ -57,8 +67,9 @@ Feature: Experience Listing
     Then the user should see a successful login message
     Then user should see 0 open task
     
-  Scenario: Checking for assessments with one starting yesterday and ending tomorrow
-    Given the experience started "last month" and ends "next month"
+  Scenario: Checking for assessments and projects together
+    Given the experience started "yesterday" and ends "tomorrow"
+    Given the experience 'lead_time' is 0
     Given the experience "has" been activated
     Given the user is "a random" user
     Given the course has an assessed project

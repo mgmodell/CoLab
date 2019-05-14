@@ -242,6 +242,8 @@ class BingoGamesController < ApplicationController
     cl = CandidateList.new ()
     cl.id = -1
     cl.is_group = true
+    cl.archived = false
+    cl.contributor_count = 1
     cl.group_id = -1
     cl.group = groups[0]
     cl.bingo_game_id = @bingo_game.id
@@ -273,6 +275,8 @@ class BingoGamesController < ApplicationController
 
       cl = CandidateList.new
       cl.id = index
+      cl.archived = false
+      cl.contributor_count = 1
       cl.is_group = false
       cl.user_id = u.id
       cl.user = u

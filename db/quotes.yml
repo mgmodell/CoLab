@@ -286,6 +286,11 @@
 
 - !ruby/object:Quote_
   text_en: >
+    Thoroughly to teach another is the best way to learn for yourself.
+  attribution: Tryon Edwards
+
+- !ruby/object:Quote_
+  text_en: >
     You may have the greatest bunch of individual stars in the world,
     but if they don't play together, the club won't be worth a dime.
   attribution: Babe Ruth

@@ -7,12 +7,13 @@ Feature: Students review Candidate words for Bingo!
     Given the course started "two months ago" and ended "two months from now"
     Given the course has a Bingo! game
     Given the Bingo! game individual count is 10
-    Given the Bingo! started "last month" and ends "2 days from now"
+    Given the Bingo! started "last month" and ends "3 days from now"
     Given the Bingo! is group-enabled with the project and a 10 percent group discount
     Given the Bingo! "has" been activated
 
     #set up the users and have them complete the bingo! prep assignment
     Given the project has a group with 4 confirmed users
+     Then remember 2 group members
     Given the users "finish" prep "as a group"
     # 36 terms
     Given the project has a group with 4 confirmed users
@@ -92,6 +93,45 @@ Feature: Students review Candidate words for Bingo!
      Then the concept list should match the list
 
   @javascript
+  Scenario: Instructor reviews, user is dropped and re-added
+    Given the user sees review items for all the expected candidates
+    Given the user assigns "" feedback to all candidates
+    Given the user checks "Review completed"
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
+     Then the user logs out
+     When the user is remembered group member 1
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the user remembers group performance
+     Then the concept list should match the list
+     Then the user logs out
+     Then the user is dropped from the course
+     When the user is remembered group member 2
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the users performance matches original group performance
+     Then the concept list should match the list
+     Then the user logs out
+     Then the cached performance is erased
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the users performance matches original group performance
+     Then the concept list should match the list
+     Then the user logs out
+     When the user is remembered group member 1
+     Then the user is added to the course
+     When the user is remembered group member 2
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the users performance matches original group performance
+     Then the concept list should match the list
+
+  @javascript
   Scenario: Instructor logs in and assigns definition feedback to 134 candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Definition" feedback to all candidates
@@ -122,7 +162,7 @@ Feature: Students review Candidate words for Bingo!
      Then the concept list should match the list
      Then the user logs out
      # Let's try again tomorrow
-     Given today is "2 days from now"
+     Given today is "3 days from now"
      When the user is any student in the course
      Then the user logs in
      Then user should see 0 open task

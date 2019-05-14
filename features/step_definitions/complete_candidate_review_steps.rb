@@ -125,12 +125,22 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       concept = concepts.rotate!(1).first
       @feedback_list[candidate.id][:concept] = concept.split.map(&:capitalize).*' '
     end
-    page.find(:xpath,
-              "//select[@id='feedback_4_#{candidate.id}']",
-              visible: :all).click
-    page.find(:xpath,
-              "//select[@id='feedback_4_#{candidate.id}']//option[@value='#{feedback.id}']",
-              visible: :all).click
+    elem = page.find(:xpath,
+                     "//select[@id='feedback_4_#{candidate.id}']",
+                     visible: :all)
+    begin
+      elem.click
+    rescue StandardError
+      elem.click
+    end
+    elem = page.find(:xpath,
+                     "//select[@id='feedback_4_#{candidate.id}']//option[@value='#{feedback.id}']",
+                     visible: :all)
+    begin
+      elem.click
+    rescue StandardError
+      elem.click
+    end
     unless concept.blank?
       page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
           .set(concept)
@@ -146,7 +156,12 @@ Given /^the saved reviews match the list$/ do
 end
 
 Given /^the user checks "([^"]*)"$/ do |checkbox_name|
-  all(:xpath, "//div[contains(.,'#{checkbox_name}')]").last.click
+  elem = all(:xpath, "//div[contains(.,'#{checkbox_name}')]").last
+  begin
+    elem.click
+  rescue StandardError
+    elem.click
+  end
 end
 
 Given /^the user is the most recently created user$/ do

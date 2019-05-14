@@ -218,17 +218,10 @@
   </div>
   <div id="month" class="ui-body-<%= theme_code %> ui-content">
   <h3><%= t :month_view %></h3>
-    <% activities = @course.experiences + @course.bingo_games + @course.projects %>
-    <%= month_calendar attribute: :get_activity_begin, end_attribute: :end_date, events: activities do |date,activities| %>
-      <h4 style="font-weight:300;font-size:10px;text-align:center">
-        <%= t('date.abbr_month_names')[date.month] %> <%= date.day %>
-      </h4>
-        <% activities.each do |activity| %>
-        <div style="font-weight:300;font-size:12px">
-        <%= link_to activity.get_activity_on_date( date: date, anon: anonymize ), activity %>
-        </div><br>
-        <% end %>
-    <% end %>
+  <%= react_component "CourseCalendar", {
+    dataUrl: course_cal_path( id: @course.id ),
+    token: form_authenticity_token,
+  } %>
     
   </div>
 </div>
