@@ -129,17 +129,21 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
                      "//select[@id='feedback_4_#{candidate.id}']",
                      visible: :all)
     begin
+      retries ||= 0
       elem.click
-    rescue StandardError
-      elem.click
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+      puts e.inspect
+      retry if( retries += 1 ) < 4
     end
     elem = page.find(:xpath,
                      "//select[@id='feedback_4_#{candidate.id}']//option[@value='#{feedback.id}']",
                      visible: :all)
     begin
+      retries ||= 0
       elem.click
-    rescue StandardError
-      elem.click
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+      puts e.inspect
+      retry if( retries += 1 ) < 4
     end
     unless concept.blank?
       page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
@@ -158,9 +162,11 @@ end
 Given /^the user checks "([^"]*)"$/ do |checkbox_name|
   elem = all(:xpath, "//div[contains(.,'#{checkbox_name}')]").last
   begin
+    retries ||= 0
     elem.click
-  rescue StandardError
-    elem.click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    puts e.inspect
+    retry if( retries += 1 ) < 4
   end
 end
 

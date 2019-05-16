@@ -6,9 +6,11 @@ Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_pref
   new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
   elem = page.find('#bingo_game_' + date_field_prefix + '_date')
   begin
+    retries ||= 0
     elem.click
-  rescue StandardError
-    elem.click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    puts e.inspect
+    retry if( retries += 1 ) < 4
   end
   elem.set(new_date)
 end
