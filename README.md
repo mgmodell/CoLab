@@ -7,8 +7,8 @@ paid dyno with SSL enabled or a configuration change would be required.
 
 ## What is this repository for? ##
 
-* The CoLab system which is based upon and supports the continued
-* research of Micah Gideon Modell, Ph.D.  Version: 3
+The CoLab system which is based upon and supports the continued
+research of Micah Gideon Modell, Ph.D.
 
 ## How do I get set up? ##
 
