@@ -30,6 +30,12 @@ class Candidate < ApplicationRecord
     self.term = term.nil? ? '' : term.strip.split.map(&:capitalize) * ' '
     self.filtered_consistent = term.nil? ? '' : Candidate.filter.filter(term.strip.split.map(&:downcase)).join(' ')
     definition.strip!
+
+    #Reset the performance data on the List
+    if( self.concept_id_changed? || self.candidate_feedback_id_changed?)
+      self.candidate_list.cached_performance = nil
+      self.candidate_list.save
+    end
   end
 
   private
@@ -43,7 +49,7 @@ class Candidate < ApplicationRecord
     if concept_id_changed? && concept_id_was.present?
       # Caching solution - candidate mentions are automatic
       # TODO: verify that the previous owner is updated properly.
-      old_concept = Concept.find(concept_id_was)
+      old_concept = Concept.find(concept_id_was).includes( :bingo_games, :coureses )
       old_concept.bingo_games_count = old_concept.bingo_games.uniq.size
       old_concept.courses_count = old_concept.courses.uniq.size
       old_concept.save

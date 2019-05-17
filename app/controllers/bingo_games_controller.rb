@@ -326,7 +326,7 @@ class BingoGamesController < ApplicationController
       format.json do
         review_helper(
           bingo_game: @bingo_game,
-          users: @bingo_game.users,
+          users: @bingo_game.users.includes( :emails ),
           groups: @bingo_game.groups,
           candidate_lists: @bingo_game.candidate_lists,
           candidates: @bingo_game.candidates.completed
@@ -410,7 +410,7 @@ class BingoGamesController < ApplicationController
       existing_concepts = {}
 
       @bingo_game.candidates.completed
-                 .includes(:candidate_feedback, :concept)
+                 .includes(:candidate_feedback, :concept, :user, :candidate_list )
                  .find_all do |candidate|
         entered_candidate = candidate_map[candidate.id]
 
@@ -485,7 +485,7 @@ class BingoGamesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_game
-    bg_test = BingoGame.joins(:course).includes(course: :projects).find(params[:id])
+    bg_test = BingoGame.joins(:course).includes({ candidate_lists: :candidates, course: :projects }).find(params[:id])
     if @current_user.is_admin?
       @bingo_game = bg_test
     else

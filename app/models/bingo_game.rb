@@ -79,24 +79,53 @@ class BingoGame < ApplicationRecord
     term_list_date
   end
 
-  def get_events
-    events = [ ]
-    #events << {
-    #    id: "tl_#{id}",
-    #    title: "Terms List entry for: #{topic}",
-    #    start: start_date,
-    #    end: term_list_date,
-    #    allDay: true,
-    #    backgroundColor: '#9999FF'
-    #}
-    if self.active
+  def get_events user: 
+    helpers = Rails.application.routes.url_helpers
+    events = []
+    user_role = self.course.get_user_role( user )
+
+    cl = nil
+    edit_url = nil
+    destroy_url = nil
+    if 'instructor' == user_role
+      edit_url = helpers.edit_bingo_game_path( self )
+      destroy_url = helpers.bingo_game_path( self )
+      cl = self.candidate_list_for_user( user )
+    end
+
+    if ( active && 'enrolled_student' == user_role ) ||
+       ( 'instructor' == user_role )
       events << {
-          id: "bg_#{id}",
-          title: "Bingo prep for: #{topic}",
-          start: term_list_date,
-          end: end_date,
-          allDay: true,
-          backgroundColor: '#9999CC'
+        type: 'bingo_game',
+        id: "bg_#{id}",
+        title: topic,
+        start: start_date,
+        end: end_date,
+        allDay: true,
+        backgroundColor: '#9999CC',
+        edit_url: edit_url,
+        destroy_url: destroy_url,
+        activities: [
+          {
+            type: 'terms_list_entry',
+            start: start_date,
+            end: term_list_date,
+            actor: cl.nil? ? 'instructor' :
+              ( cl.is_group? ? 'group' : 'solo' ),
+            url: (self.is_open? && user_role ) == 'enrolled_student' ?
+              helpers.edit_candidate_list_path( cl ) : nil,
+          },
+          {
+            type: 'terms_list_review',
+            start: term_list_date + 1.day,
+            end: end_date,
+            actor: ('enrolled_student' == user_role && self.reviewed ) ? 
+              'solo' : 'instructor',
+            url: self.is_open? ? nil :
+              ('instructor' == user_role ? helpers.review_bingo_candidates_path( self ) :
+                ( self.reviewed ? helpers.candidate_list_path( cl ) : nil ) ),
+          }
+        ]
       }
     end
     events

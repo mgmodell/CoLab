@@ -43,27 +43,49 @@ class Experience < ApplicationRecord
     student_end_date
   end
 
-  def get_events
-    events = [ ]
-    #events <<
-    #{
-    #  id: "exp_#{id}",
-    #  title: "Student completion of #{name}",
-    #  start: start_date,
-    #  end: student_end_date,,
-    #  allDay: true,
-    #  backgroundColor: '#99FF99'
-    #}
-    if self.active
-      events <<
-      {
-        id: "exp_in_#{id}",
-        title: "Instructor Review of #{name}",
-        start: student_end_date,
-        end: end_date,
-        allDay: true,
-        backgroundColor: '#99CC99'
-      }
+  def get_events user: 
+    helpers = Rails.application.routes.url_helpers
+    events = []
+    user_role = self.course.get_user_role( user )
+    edit_url = nil
+    destroy_url = nil
+    sim_url = helpers.next_experience_path( experience_id: self.id )
+
+    if 'instructor' == user_role
+      edit_url = helpers.edit_experience_path( self )
+      destroy_url = helpers.experience_path( self )
+      sim_url = nil
+    end
+
+    if ( active && 'enrolled_student' == user_role ) ||
+       ( 'instructor' == user_role )
+      events << {
+          type: 'experience',
+          id: "exp_in_#{id}",
+          title: name,
+          start: start_date,
+          end: end_date,
+          allDay: true,
+          backgroundColor: '#99CC99',
+          edit_url: edit_url,
+          destroy_url: destroy_url,
+          activities: [
+            {
+              type: 'sim_exp',
+              start: start_date,
+              end: student_end_date,
+              actor: 'solo',
+              url: sim_url,
+            },
+            {
+              type: 'sim_exp_review',
+              start: student_end_date + 1.day,
+              end: end_date,
+              actor: 'instructor',
+              url: nil,
+            },
+          ]
+        }
     end
     events
   end

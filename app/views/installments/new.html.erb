@@ -13,12 +13,11 @@
           factor_count: @factors.count %></p>
   <P><%= t 'installments.basic.instructions', total_val: Installment::TOTAL_VAL %></p>
 </div>
-<% if @installment.id.nil?
-     url_params = { :action => "create" }
-   else
-     url_params = { :action => "update", :id => @installment.id }
-   end %>
-<%= form_for @installment, :url => url_params do |f| %>
+<%
+     url_params = { :action => "update",
+                    :id => @installment.id.nil? ? 0 : @installment.id }
+%>
+<%= form_for @installment, method: 'PATCH', url: url_params do |f| %>
   <%= f.hidden_field :inst_date %>
   <%= f.hidden_field :assessment_id %>
   <%= f.hidden_field :user_id %>

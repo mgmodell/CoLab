@@ -122,9 +122,9 @@ Rails.application.routes.draw do
         constraints: ->(req) { req.format == :pdf }
   end
 
-  get 'installments/new/:assessment_id/:group_id' => 'installments#new', as: :new_installment
-  get 'installments/edit/:assessment_id/:group_id' => 'installments#edit', as: :edit_installment
-  resources :installments, only: [:create, :update]
+  get 'installments/edit/:assessment_id' => 'installments#submit_installment', as: :edit_installment
+
+  resources :installments, only: [:update]
 
   get 'graphing/index' => 'graphing#index', as: :'graphing'
   get 'graphing/data/:unit_of_analysis/:subject/:project/:for_research/:anonymous' =>

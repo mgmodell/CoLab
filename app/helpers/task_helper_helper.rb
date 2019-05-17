@@ -21,15 +21,10 @@ module TaskHelperHelper
                  end
     elsif task.class == Assessment
       group = task.group_for_user(user)
-      if task.is_completed_by_user user
-        o_string = link_to group.get_name(anonymize),
-                           edit_installment_path(assessment_id: task.id, group_id: group.id)
-      else
-        o_string = link_to group.get_name(anonymize),
-                           new_installment_path(assessment_id: task.id, group_id: group.id)
-      end
+      o_string = link_to group.get_name(anonymize),
+                           edit_installment_path(assessment_id: task.id)
       o_string += raw "<br><small>(#{t :project}:
-    #{task.project.get_name(anonymize)})</small>"
+        #{task.project.get_name(anonymize)})</small>"
     elsif task.class == Experience
       reaction = task.get_user_reaction(user)
       o_string = if reaction.behavior.present?

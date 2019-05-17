@@ -15,12 +15,10 @@
           factor_count: @factors.count %></p>
   <p><%= t raw 'installments.slider.instructions' %></p>
 </div>
-<% if @installment.id.nil?
-     url_params = { :action => "create" }
-   else
+<% 
      url_params = { :action => "update", :id => @installment.id }
-   end %>
-<%= form_for @installment, :url => url_params, html: {novalidate: true} do |f| %>
+%>
+<%= form_for @installment, method: 'PATCH', :url => url_params, html: {novalidate: true} do |f| %>
   <%= f.hidden_field :inst_date %>
   <%= f.hidden_field :assessment_id %>
   <%= f.hidden_field :user_id %>

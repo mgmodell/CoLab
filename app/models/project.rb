@@ -162,18 +162,33 @@ class Project < ApplicationRecord
 
   end
 
-  def get_events
+  def get_events user: 
+    helpers = Rails.application.routes.url_helpers
+    events = []
+    user_role = self.course.get_user_role( user )
 
-    events = [ ]
+    edit_url = nil
+    destroy_url = nil
+    if 'instructor' == user_role
+      edit_url = helpers.edit_project_path( self )
+      destroy_url = helpers.project_path( self )
+    end
 
-    if self.active
+    if( active && 'enrolled_student' == user_role ) ||
+      ( 'instructor' == user_role )
+
       days = get_days_applicable
 
       events << {
         title: "#{name} assessment",
         id: "asmt_#{id}",
         allDay: true,
+        start: start_date,
+        end: end_date,
         backgroundColor: '#FF9999',
+        edit_url: edit_url,
+        destroy_url: destroy_url,
+
         startTime: '00:00',
         endTime: { day: days.size },
         daysOfWeek: [ days[ 0 ] ],
@@ -182,14 +197,7 @@ class Project < ApplicationRecord
       }
     end
 
-#    events << {
-#        id: "proj_#{id}",
-#        title: name,
-#        start: start_date,
-#        end: end_date,
-#        allDay: true,
-#        backgroundColor: '#999999'
-#    }
+    events
   end
 
   private
