@@ -59,11 +59,12 @@ hc.save
 HomeCountry.all.each do |country|
   if CS.get( country.code ).count > 0
     CS.get( country.code ).each do |state_code,state_name|
-      hs = HomeState.where( home_country_id: country.id, code: "#{state_code}:#{country.code}" ).take
+      hs = HomeState.where( home_country_id: country.id, name: state_name ).take
       hs = HomeState.new if hs.nil?
       hs.home_country = country
       hs.no_response = false
-      hs.code = "#{state_code}:#{country.code}"
+      sc = state_code.to_s.encode( 'US-ASCII', invalid: :replace, undef: :replace)
+      hs.code = "#{sc}:#{country.code}"
       hs.name = state_name
       hs.save
     end

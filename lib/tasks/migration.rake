@@ -1,6 +1,68 @@
 namespace :migratify do
 
-  desc 'Update the quotes'
+  desc 'lead time fixes'
+  task lead_time: :environment do
+    #update the lead times for bingo games
+    BingoGame.all.each do |bg|
+      bg.lead_time = bg.lead_time - 1
+      bg.save( validate: false )
+      puts bg.errors.full_messages unless bg.errors.empty?
+    end
+    
+    #update the lead times for bingo games
+    Experience.all.each do |exp|
+      exp.lead_time = 2
+      exp.end_date = exp.end_date + exp.lead_time.days
+      exp.save( validate: false )
+      puts exp.errors.full_messages unless exp.errors.empty?
+    end
+
+  end
+
+  desc 'Candidates fix'
+  task candidate_fix: :environment do
+    CandidateList.transaction do
+      CandidateList.where( 'group_id is not null' ).each do |cl|
+        cl.contributor_count = cl.group.users.size
+        cl.save!
+
+        #Archive the old ones
+        cl.group.users.each do |u|
+          cl_arch = CandidateList.where(
+            user: u,
+            bingo_game: cl.bingo_game )
+          raise "Too many lists for u:#{u.id} b:#{cl.bingo_game_id}" unless cl_arch.size == 1
+          cl_arch = cl_arch[ 0 ]
+          cl_arch.archived = true
+          cl_arch.is_group = false
+          cl_arch.current_candidate_list = cl
+          cl_arch.save!
+        end
+      end
+    end
+
+    CandidateList.where( 'user_id IS NOT NULL' ).where( is_group: true).each do |cl|
+      group = GroupRevision
+        .where( 'members LIKE "%? %" AND updated_at < ?', cl.user_id, cl.updated_at)
+        .take
+        .group
+      g_cl = CandidateList.where(
+        is_group: true,
+        group: group,
+        bingo_game: cl.bingo_game )
+      g_cl = g_cl[0]
+      g_cl.contributor_count = g_cl.contributor_count + 1
+      g_cl.cached_performance = nil
+      g_cl.save
+      cl.archived = true
+      cl.is_group = false
+      cl.current_candidate_list = g_cl
+      cl.save
+    end
+  end
+
+
+  desc 'Update the quotes again'
   task mar_2019: :environment do
     # Quote seed data
     class Quote_

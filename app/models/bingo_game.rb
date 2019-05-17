@@ -152,10 +152,9 @@ class BingoGame < ApplicationRecord
     start_date <= cur_date && term_list_date >= cur_date
   end
 
-  def required_terms_for_group(group)
+  def required_terms_for_contributors(contributor_count)
     remaining_percent = (100.0 - group_discount) / 100
-    group_user_count = group.nil? ? 1 : group.users.count
-    discounted = (group_user_count * individual_count * remaining_percent).floor
+    discounted = (contributor_count * individual_count * remaining_percent).floor
   end
 
   def get_current_lists_hash
@@ -207,16 +206,20 @@ class BingoGame < ApplicationRecord
       cl = CandidateList.new
       cl.user_id = user.id
       cl.bingo_game_id = id
+      cl.contributor_count = 1
+      cl.archived = false
       cl.is_group = false
       cl.group_requested = false
+      cl.current_candidate_list = nil
 
       individual_count.times do
         cl.candidates << Candidate.new(term: '', definition: '', user: user)
       end
       cl.save unless id == -1 # This unless supports the demonstration only
-    elsif  cl.is_group
+      logger.debug cl.errors.full_messages unless cl.errors.empty?
+    elsif  cl.archived
       # TODO: I think I can fix this
-      cl = candidate_lists.where(group_id: project.group_for_user(user).id).take
+      cl = cl.current_candidate_list
     end
     cl
   end

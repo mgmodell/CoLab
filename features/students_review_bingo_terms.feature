@@ -13,6 +13,7 @@ Feature: Students review Candidate words for Bingo!
 
     #set up the users and have them complete the bingo! prep assignment
     Given the project has a group with 4 confirmed users
+     Then remember 2 group members
     Given the users "finish" prep "as a group"
     # 36 terms
     Given the project has a group with 4 confirmed users
@@ -89,6 +90,45 @@ Feature: Students review Candidate words for Bingo!
      Then user should see 1 open task
      Then the user clicks the link to the concept list
      Then the user should see 0 concepts
+     Then the concept list should match the list
+
+  @javascript
+  Scenario: Instructor reviews, user is dropped and re-added
+    Given the user sees review items for all the expected candidates
+    Given the user assigns "" feedback to all candidates
+    Given the user checks "Review completed"
+     Then the user clicks "Save"
+     Then the user waits while seeing "Saving feedback."
+     Then the user logs out
+     When the user is remembered group member 1
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the user remembers group performance
+     Then the concept list should match the list
+     Then the user logs out
+     Then the user is dropped from the course
+     When the user is remembered group member 2
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the users performance matches original group performance
+     Then the concept list should match the list
+     Then the user logs out
+     Then the cached performance is erased
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the users performance matches original group performance
+     Then the concept list should match the list
+     Then the user logs out
+     When the user is remembered group member 1
+     Then the user is added to the course
+     When the user is remembered group member 2
+     Then the user logs in
+     Then user should see 1 open task
+     Then the user clicks the link to the concept list
+     Then the users performance matches original group performance
      Then the concept list should match the list
 
   @javascript

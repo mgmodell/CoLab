@@ -145,7 +145,7 @@ class Project < ApplicationRecord
   end
 
   def get_days_applicable
-    days = [ ]
+    days = []
     if has_inside_date_range?
       start_dow.upto end_dow do |day_num|
         days << day_num
@@ -159,7 +159,6 @@ class Project < ApplicationRecord
       end
     end
     days
-
   end
 
   def get_events user: 
@@ -191,7 +190,7 @@ class Project < ApplicationRecord
 
         startTime: '00:00',
         endTime: { day: days.size },
-        daysOfWeek: [ days[ 0 ] ],
+        daysOfWeek: [days[0]],
         startRecur: start_date,
         endRecur: end_date
       }
@@ -201,6 +200,7 @@ class Project < ApplicationRecord
   end
 
   private
+
   # Validation check code
   def date_sanity
     unless start_date.nil? || end_date.nil?

@@ -4,8 +4,15 @@ require 'forgery'
 
 Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
-  page.find('#bingo_game_' + date_field_prefix + '_date').click
-  page.find('#bingo_game_' + date_field_prefix + '_date').set(new_date)
+  elem = page.find('#bingo_game_' + date_field_prefix + '_date')
+  begin
+    retries ||= 0
+    elem.click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    puts e.inspect
+    retry if( retries += 1 ) < 4
+  end
+  elem.set(new_date)
 end
 
 Then /^the user clicks "([^"]*)" on the existing bingo game$/ do |action|

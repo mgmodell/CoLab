@@ -39,7 +39,13 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
   elsif has_xpath? "//input[@value='#{link_or_button}']"
     btn = find(:xpath, "//input[@value='#{link_or_button}']")
   end
-  btn.click
+  begin
+    retries ||= 0
+    btn.click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    puts e.inspect
+    retry if( retries += 1) < 4
+  end
   # click_link_or_button link_or_button
 end
 
@@ -109,7 +115,8 @@ Then /^the project "([^"]*)" is "([^"]*)"$/ do |field, value|
 end
 
 Then /^the user clicks "([^"]*)" on the existing project$/ do |action|
-  find(:xpath, "//tr[td[contains(.,'#{@project.name}')]]/td/a", text: action).click
+  elem = find(:xpath, "//tr[td[contains(.,'#{@project.name}')]]/td/a", text: action)
+  elem.click
 end
 
 Then /^the project Factor pack is "([^"]*)"$/ do |selected_factor_pack|
