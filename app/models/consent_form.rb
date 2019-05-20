@@ -5,10 +5,11 @@ class ConsentForm < ApplicationRecord
   has_many :projects, inverse_of: :consent_form
   translates :form_text
 
-  has_attached_file :pdf
-  validates_attachment_content_type :pdf,
-                                    content_type: ['application/pdf']
-  validates_attachment_file_name :pdf, matches: [/\.pdf$/i]
+  has_one_attached :pdf
+  #TODO: Must build out the attachment validators
+  #validates_attachment_content_type :pdf,
+  #                                  content_type: ['application/pdf']
+  #validates_attachment_file_name :pdf, matches: [/\.pdf$/i]
 
   has_many :consent_logs, inverse_of: :consent_form
   has_many :projects, inverse_of: :consent_form

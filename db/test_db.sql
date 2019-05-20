@@ -1,8 +1,8 @@
--- MySQL dump 10.17  Distrib 10.3.12-MariaDB, for osx10.14 (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	10.3.12-MariaDB
+-- Server version	10.1.38-MariaDB-0ubuntu0.18.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,11 +25,11 @@ DROP TABLE IF EXISTS `ahoy_messages`;
 CREATE TABLE `ahoy_messages` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `token` varchar(255) DEFAULT NULL,
-  `to` text DEFAULT NULL,
+  `to` text,
   `user_id` int(11) DEFAULT NULL,
   `user_type` varchar(255) DEFAULT NULL,
   `mailer` varchar(255) DEFAULT NULL,
-  `subject` text DEFAULT NULL,
+  `subject` text,
   `sent_at` timestamp NULL DEFAULT NULL,
   `opened_at` timestamp NULL DEFAULT NULL,
   `clicked_at` timestamp NULL DEFAULT NULL,
@@ -88,8 +88,8 @@ CREATE TABLE `assessments` (
   `project_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `instructor_updated` tinyint(1) NOT NULL DEFAULT 0,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `instructor_updated` tinyint(1) NOT NULL DEFAULT '0',
+  `active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `index_assessments_on_project_id` (`project_id`),
   CONSTRAINT `fk_rails_1acaaff98a` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`)
@@ -115,11 +115,11 @@ DROP TABLE IF EXISTS `behaviors`;
 CREATE TABLE `behaviors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name_en` varchar(255) DEFAULT NULL,
-  `description_en` text DEFAULT NULL,
+  `description_en` text,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `name_ko` varchar(255) DEFAULT NULL,
-  `description_ko` text DEFAULT NULL,
+  `description_ko` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_behaviors_on_name_en` (`name_en`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
@@ -150,8 +150,8 @@ CREATE TABLE `bingo_boards` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `win_claimed` tinyint(1) DEFAULT NULL,
-  `iteration` int(11) DEFAULT 0,
-  `board_type` int(11) DEFAULT 0,
+  `iteration` int(11) DEFAULT '0',
+  `board_type` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `index_bingo_boards_on_bingo_game_id` (`bingo_game_id`),
   KEY `index_bingo_boards_on_user_id` (`user_id`),
@@ -216,7 +216,7 @@ DROP TABLE IF EXISTS `bingo_games`;
 CREATE TABLE `bingo_games` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
+  `description` text,
   `link` varchar(255) DEFAULT NULL,
   `source` varchar(255) DEFAULT NULL,
   `group_option` tinyint(1) DEFAULT NULL,
@@ -225,16 +225,16 @@ CREATE TABLE `bingo_games` (
   `end_date` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `active` tinyint(1) DEFAULT 0,
+  `active` tinyint(1) DEFAULT '0',
   `course_id` int(11) DEFAULT NULL,
   `project_id` int(11) DEFAULT NULL,
-  `lead_time` int(11) DEFAULT 3,
+  `lead_time` int(11) DEFAULT '3',
   `group_discount` int(11) DEFAULT NULL,
   `reviewed` tinyint(1) DEFAULT NULL,
-  `instructor_notified` tinyint(1) NOT NULL DEFAULT 0,
-  `students_notified` tinyint(1) NOT NULL DEFAULT 0,
+  `instructor_notified` tinyint(1) NOT NULL DEFAULT '0',
+  `students_notified` tinyint(1) NOT NULL DEFAULT '0',
   `anon_topic` varchar(255) DEFAULT NULL,
-  `size` int(11) DEFAULT 5,
+  `size` int(11) DEFAULT '5',
   PRIMARY KEY (`id`),
   KEY `index_bingo_games_on_course_id` (`course_id`),
   KEY `index_bingo_games_on_project_id` (`project_id`),
@@ -265,8 +265,8 @@ CREATE TABLE `candidate_feedbacks` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `name_ko` varchar(255) DEFAULT NULL,
-  `definition_en` text DEFAULT NULL,
-  `definition_ko` text DEFAULT NULL,
+  `definition_en` text,
+  `definition_ko` text,
   `credit` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_candidate_feedbacks_on_name_en` (`name_en`)
@@ -300,8 +300,8 @@ CREATE TABLE `candidate_lists` (
   `bingo_game_id` int(11) DEFAULT NULL,
   `group_requested` tinyint(1) DEFAULT NULL,
   `cached_performance` int(11) DEFAULT NULL,
-  `archived` tinyint(1) NOT NULL DEFAULT 0,
-  `contributor_count` int(11) NOT NULL DEFAULT 1,
+  `archived` tinyint(1) NOT NULL DEFAULT '0',
+  `contributor_count` int(11) NOT NULL DEFAULT '1',
   `current_candidate_list_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_candidate_lists_on_user_id` (`user_id`),
@@ -333,7 +333,7 @@ DROP TABLE IF EXISTS `candidates`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `candidates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `definition` text DEFAULT NULL,
+  `definition` text,
   `candidate_list_id` int(11) DEFAULT NULL,
   `candidate_feedback_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
@@ -406,9 +406,9 @@ CREATE TABLE `concepts` (
   `name` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `candidates_count` int(11) NOT NULL DEFAULT 0,
-  `courses_count` int(11) NOT NULL DEFAULT 0,
-  `bingo_games_count` int(11) NOT NULL DEFAULT 0,
+  `candidates_count` int(11) NOT NULL DEFAULT '0',
+  `courses_count` int(11) NOT NULL DEFAULT '0',
+  `bingo_games_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_concepts_on_name` (`name`),
   FULLTEXT KEY `concept_fulltext` (`name`)
@@ -442,11 +442,11 @@ CREATE TABLE `consent_forms` (
   `pdf_content_type` varchar(255) DEFAULT NULL,
   `pdf_file_size` int(11) DEFAULT NULL,
   `pdf_updated_at` datetime DEFAULT NULL,
-  `form_text_en` text DEFAULT NULL,
+  `form_text_en` text,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 0,
-  `form_text_ko` text DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `form_text_ko` text,
   PRIMARY KEY (`id`),
   KEY `index_consent_forms_on_user_id` (`user_id`),
   CONSTRAINT `fk_rails_c31f002e28` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
@@ -504,7 +504,7 @@ DROP TABLE IF EXISTS `courses`;
 CREATE TABLE `courses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
+  `description` text,
   `timezone` varchar(255) DEFAULT NULL,
   `school_id` int(11) DEFAULT NULL,
   `start_date` datetime DEFAULT NULL,
@@ -538,10 +538,10 @@ DROP TABLE IF EXISTS `delayed_jobs`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `delayed_jobs` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `priority` int(11) NOT NULL DEFAULT 0,
-  `attempts` int(11) NOT NULL DEFAULT 0,
+  `priority` int(11) NOT NULL DEFAULT '0',
+  `attempts` int(11) NOT NULL DEFAULT '0',
   `handler` text NOT NULL,
-  `last_error` text DEFAULT NULL,
+  `last_error` text,
   `run_at` datetime DEFAULT NULL,
   `locked_at` datetime DEFAULT NULL,
   `failed_at` datetime DEFAULT NULL,
@@ -575,7 +575,7 @@ CREATE TABLE `diagnoses` (
   `behavior_id` int(11) DEFAULT NULL,
   `reaction_id` int(11) DEFAULT NULL,
   `week_id` int(11) DEFAULT NULL,
-  `comment` text DEFAULT NULL,
+  `comment` text,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `other_name` varchar(255) DEFAULT NULL,
@@ -609,7 +609,7 @@ CREATE TABLE `emails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `primary` tinyint(1) DEFAULT 0,
+  `primary` tinyint(1) DEFAULT '0',
   `confirmation_token` varchar(255) DEFAULT NULL,
   `unconfirmed_email` varchar(255) DEFAULT NULL,
   `confirmed_at` datetime DEFAULT NULL,
@@ -648,10 +648,10 @@ CREATE TABLE `experiences` (
   `end_date` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `active` tinyint(1) DEFAULT 0,
-  `instructor_updated` tinyint(1) NOT NULL DEFAULT 0,
+  `active` tinyint(1) DEFAULT '0',
+  `instructor_updated` tinyint(1) NOT NULL DEFAULT '0',
   `anon_name` varchar(255) DEFAULT NULL,
-  `lead_time` int(11) NOT NULL DEFAULT 3,
+  `lead_time` int(11) NOT NULL DEFAULT '3',
   `student_end_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_experiences_on_course_id` (`course_id`),
@@ -678,11 +678,11 @@ DROP TABLE IF EXISTS `factor_packs`;
 CREATE TABLE `factor_packs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name_en` varchar(255) DEFAULT NULL,
-  `description_en` text DEFAULT NULL,
+  `description_en` text,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `name_ko` varchar(255) DEFAULT NULL,
-  `description_ko` text DEFAULT NULL,
+  `description_ko` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_factor_packs_on_name_en` (`name_en`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
@@ -707,12 +707,12 @@ DROP TABLE IF EXISTS `factors`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `factors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description_en` text DEFAULT NULL,
+  `description_en` text,
   `name_en` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `name_ko` varchar(255) DEFAULT NULL,
-  `description_ko` text DEFAULT NULL,
+  `description_ko` text,
   `factor_pack_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_factors_on_name_en` (`name_en`),
@@ -915,11 +915,11 @@ CREATE TABLE `installments` (
   `inst_date` datetime DEFAULT NULL,
   `assessment_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `comments` text DEFAULT NULL,
+  `comments` text,
   `group_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `anon_comments` text DEFAULT NULL,
+  `anon_comments` text,
   PRIMARY KEY (`id`),
   KEY `index_installments_on_assessment_id` (`assessment_id`),
   KEY `index_installments_on_user_id` (`user_id`),
@@ -1008,13 +1008,13 @@ DROP TABLE IF EXISTS `projects`;
 CREATE TABLE `projects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
+  `description` text,
   `course_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `start_dow` int(11) DEFAULT NULL,
   `end_dow` int(11) DEFAULT NULL,
-  `active` tinyint(1) DEFAULT 0,
+  `active` tinyint(1) DEFAULT '0',
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL,
   `consent_form_id` int(11) DEFAULT NULL,
@@ -1081,7 +1081,7 @@ CREATE TABLE `reactions` (
   `behavior_id` int(11) DEFAULT NULL,
   `narrative_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `improvements` text DEFAULT NULL,
+  `improvements` text,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `experience_id` int(11) DEFAULT NULL,
@@ -1117,7 +1117,7 @@ DROP TABLE IF EXISTS `rosters`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rosters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `role` int(11) NOT NULL DEFAULT 4,
+  `role` int(11) NOT NULL DEFAULT '4',
   `course_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
@@ -1202,7 +1202,7 @@ DROP TABLE IF EXISTS `schools`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `schools` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` text DEFAULT NULL,
+  `description` text,
   `name` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -1232,7 +1232,7 @@ DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `session_id` varchar(255) NOT NULL,
-  `data` text DEFAULT NULL,
+  `data` text,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -1322,7 +1322,7 @@ CREATE TABLE `users` (
   `reset_password_token` varchar(255) DEFAULT NULL,
   `reset_password_sent_at` datetime DEFAULT NULL,
   `remember_created_at` datetime DEFAULT NULL,
-  `sign_in_count` int(11) NOT NULL DEFAULT 0,
+  `sign_in_count` int(11) NOT NULL DEFAULT '0',
   `current_sign_in_at` datetime DEFAULT NULL,
   `last_sign_in_at` datetime DEFAULT NULL,
   `current_sign_in_ip` varchar(255) DEFAULT NULL,
@@ -1331,7 +1331,7 @@ CREATE TABLE `users` (
   `confirmed_at` datetime DEFAULT NULL,
   `confirmation_sent_at` datetime DEFAULT NULL,
   `unconfirmed_email` varchar(255) DEFAULT NULL,
-  `failed_attempts` int(11) NOT NULL DEFAULT 0,
+  `failed_attempts` int(11) NOT NULL DEFAULT '0',
   `unlock_token` varchar(255) DEFAULT NULL,
   `locked_at` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
@@ -1344,7 +1344,7 @@ CREATE TABLE `users` (
   `admin` tinyint(1) DEFAULT NULL,
   `welcomed` tinyint(1) DEFAULT NULL,
   `last_emailed` datetime DEFAULT NULL,
-  `theme_id` int(11) DEFAULT 1,
+  `theme_id` int(11) DEFAULT '1',
   `school_id` int(11) DEFAULT NULL,
   `anon_first_name` varchar(255) DEFAULT NULL,
   `anon_last_name` varchar(255) DEFAULT NULL,
@@ -1434,10 +1434,10 @@ CREATE TABLE `weeks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `narrative_id` int(11) DEFAULT NULL,
   `week_num` int(11) DEFAULT NULL,
-  `text_en` text DEFAULT NULL,
+  `text_en` text,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `text_ko` text DEFAULT NULL,
+  `text_ko` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_weeks_on_week_num_and_narrative_id` (`week_num`,`narrative_id`),
   KEY `index_weeks_on_narrative_id` (`narrative_id`),
@@ -1464,4 +1464,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-12 15:16:27
+-- Dump completed on 2019-05-20 15:18:05

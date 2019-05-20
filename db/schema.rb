@@ -10,7 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_08_060916) do
+ActiveRecord::Schema.define(version: 2019_05_20_054740) do
+
+  create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
 
   create_table "ahoy_messages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "token"
@@ -172,10 +193,6 @@ ActiveRecord::Schema.define(version: 2019_05_08_060916) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "pdf_file_name"
-    t.string "pdf_content_type"
-    t.integer "pdf_file_size"
-    t.datetime "pdf_updated_at"
     t.text "form_text_en"
     t.date "start_date"
     t.date "end_date"
@@ -207,6 +224,8 @@ ActiveRecord::Schema.define(version: 2019_05_08_060916) do
     t.string "number"
     t.string "anon_name"
     t.string "anon_number"
+    t.integer "consent_form_id"
+    t.index ["consent_form_id"], name: "fk_rails_469f90a775"
     t.index ["school_id"], name: "index_courses_on_school_id"
   end
 
@@ -386,11 +405,9 @@ ActiveRecord::Schema.define(version: 2019_05_08_060916) do
     t.boolean "active", default: false
     t.datetime "start_date"
     t.datetime "end_date"
-    t.integer "consent_form_id"
     t.integer "factor_pack_id"
     t.integer "style_id"
     t.string "anon_name"
-    t.index ["consent_form_id"], name: "index_projects_on_consent_form_id"
     t.index ["course_id"], name: "index_projects_on_course_id"
     t.index ["factor_pack_id"], name: "index_projects_on_factor_pack_id"
     t.index ["style_id"], name: "index_projects_on_style_id"
@@ -553,6 +570,7 @@ ActiveRecord::Schema.define(version: 2019_05_08_060916) do
     t.index ["week_num", "narrative_id"], name: "index_weeks_on_week_num_and_narrative_id", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "assessments", "projects"
   add_foreign_key "bingo_boards", "bingo_games"
   add_foreign_key "bingo_boards", "users"
@@ -572,6 +590,7 @@ ActiveRecord::Schema.define(version: 2019_05_08_060916) do
   add_foreign_key "consent_forms", "users"
   add_foreign_key "consent_logs", "consent_forms"
   add_foreign_key "consent_logs", "users"
+  add_foreign_key "courses", "consent_forms"
   add_foreign_key "courses", "schools"
   add_foreign_key "diagnoses", "behaviors"
   add_foreign_key "diagnoses", "reactions"
@@ -586,7 +605,6 @@ ActiveRecord::Schema.define(version: 2019_05_08_060916) do
   add_foreign_key "installments", "groups"
   add_foreign_key "installments", "users"
   add_foreign_key "narratives", "scenarios"
-  add_foreign_key "projects", "consent_forms"
   add_foreign_key "projects", "courses"
   add_foreign_key "projects", "factor_packs"
   add_foreign_key "projects", "styles"

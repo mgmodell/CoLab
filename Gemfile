@@ -31,6 +31,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'sdoc', group: :doc
 
 gem 'activerecord-session_store'
+gem 'active_storage_validations'
 gem 'ahoy_email'
 gem 'aws-sdk-s3'
 gem 'bootsnap'
@@ -50,7 +51,6 @@ gem 'jquery_mobile_rails'
 gem 'kaminari'
 gem 'listen'
 gem 'omniauth-google-oauth2'
-gem 'paperclip', '~> 6.1.0'
 gem 'prawn'
 gem 'prawn-table'
 gem 'rails_12factor', group: :production
@@ -78,6 +78,7 @@ group :development, :test do
   gem 'htmlbeautifier'
   gem 'htmlentities'
   gem 'i18n_data'
+  gem 'paperclip', '~> 6.1.0'
   gem 'parallel_tests'
   gem 'railroady'
   gem 'rails-erd', require: false
