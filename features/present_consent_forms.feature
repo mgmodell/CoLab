@@ -12,7 +12,7 @@ Feature: Presenting Consent Forms
     When the user logs in
     Then the user should see a successful login message
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
-    Given the project has a consent form
+    Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
     Given the consent form "is" active
     Given the consent form "has not" been presented to the user
@@ -51,7 +51,7 @@ Feature: Presenting Consent Forms
     When the user logs in
     Then the user should see a successful login message
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
-    Given the project has a consent form
+    Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
     Given the consent form "is" active
     Given the consent form "has not" been presented to the user
@@ -66,7 +66,7 @@ Feature: Presenting Consent Forms
 
   Scenario: User should be able to access a presented consent form, but not be redirected to it
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
-    Given the project has a consent form
+    Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
     Given the consent form "is" active
     Given the consent form "has" been presented to the user

@@ -10,7 +10,7 @@ Feature: User registration
   Scenario: Registered user provides consent and demographics.
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
-    Given the project has a consent form
+    Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
     Given the consent form "is" active
     Given the user is the "last" user in the group
@@ -26,7 +26,7 @@ Feature: User registration
   Scenario: Registered user does not provide consent
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
-    Given the project has a consent form
+    Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
     Given the consent form "is" active
     Given the user is the "last" user in the group

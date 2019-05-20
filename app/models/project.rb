@@ -11,7 +11,6 @@ class Project < ApplicationRecord
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
   has_many :installments, through: :assessments
-  belongs_to :consent_form, inverse_of: :projects, optional: true
 
   has_many :users, through: :groups
   has_many :factors, through: :factor_pack

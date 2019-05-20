@@ -13,13 +13,12 @@
             end_date: in_tz( date: @consent_form.end_date ) ) ) %>
 </p>
 <h2><%= t 'consent_forms.show.applicable_lbl' %>:</h2>
-<% if @consent_form.projects.empty? %>
+<% if @consent_form.courses.empty? %>
   <p><%= t 'consent_forms.show.applicable_txt' %></p>
 <% else %>
   <ul>
-    <% @consent_form.projects.each do |project|%>
-      <li><%= project.course.pretty_name( false ) %> : 
-        <%= project.get_name( false ) %></li>
+    <% @consent_form.courses.each do |course|%>
+      <li><%= course.pretty_name( false ) %> </li>
     <% end %>
   </ul>
 <% end %>

@@ -7,6 +7,7 @@ class Course < ApplicationRecord
   has_many :rosters, inverse_of: :course, dependent: :destroy
   has_many :bingo_games, inverse_of: :course, dependent: :destroy
   has_many :users, through: :rosters
+  belongs_to :consent_form, inverse_of: :courses, optional: true
 
   has_many :experiences, inverse_of: :course, dependent: :destroy
 
