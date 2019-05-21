@@ -1,4 +1,4 @@
-Feature: Email assessment stragglers
+Feature: Email assessment stragglers (for 2/1/2019 date)
   In order to make sure we get complete information,
   Students must be reminded to complete their assessments.
 
@@ -30,7 +30,7 @@ Feature: Email assessment stragglers
   Scenario: Three students have open assessments waiting when we email the stragglers, but one does not - three emails are sent
     Given the email queue is empty
     Given the project measures 4 factors
-    Given the project has a consent form
+    Given the course has a consent form
     Given the user is the "last" user in the group
     Given the consent form "has" been presented to the user
     Given the factor pack is set to "Original"

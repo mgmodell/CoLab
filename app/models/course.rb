@@ -46,7 +46,7 @@ class Course < ApplicationRecord
       log = self.consent_form.consent_logs
         .where( user: user ).take
       if log.nil?
-        log = user.create_consent_log(
+        log = user.consent_logs.create(
                     consent_form_id: consent_form_id,
                     presented: false )
       end

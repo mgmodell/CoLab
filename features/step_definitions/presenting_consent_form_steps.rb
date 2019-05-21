@@ -17,7 +17,7 @@ Given /^the course has a consent form$/ do
   )
   @consent_form.save
   puts @consent_form.errors.full_messages unless @consent_form.errors.blank?
-  course - @project.course
+  course = @project.course
   course.consent_form = @consent_form
   course.save
   puts course.errors.full_messages unless course.errors.blank?

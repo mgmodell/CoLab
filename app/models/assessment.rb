@@ -2,6 +2,7 @@
 
 class Assessment < ApplicationRecord
   belongs_to :project, inverse_of: :assessments
+  has_one :course, through: :project
   validates :end_date, :start_date, presence: true
   has_many :installments, inverse_of: :assessment, dependent: :destroy
   has_many :factors, through: :project

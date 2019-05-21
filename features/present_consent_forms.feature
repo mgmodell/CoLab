@@ -109,7 +109,7 @@ Feature: Presenting Consent Forms
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the project has been activated
     Given the user "has" had demographics requested
-    Given the project has a consent form
+    Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
     Given the consent form "is not" active
     Given the consent form "has not" been presented to the user
