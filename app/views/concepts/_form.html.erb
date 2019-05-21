@@ -19,7 +19,7 @@
       <h2><%= t 'concepts.courses' %></h2>
       <p>
         <h3><%= t 'concepts.games' %></h3>
-        <% if @concept.bingo_games.count < 1 %>
+        <% if @concept.bingo_games.size < 1 %>
           <%= t 'concepts.no_games' %></br>
       <% else %>
         <table data-role="table"

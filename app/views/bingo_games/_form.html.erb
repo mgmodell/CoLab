@@ -90,7 +90,7 @@
           <tr>
             <th><%= :student %></th>
             <th><%= :group %></th>
-            <th colspan="<%= candidate_feedbacks.count%>" data-priority="1">
+            <th colspan="<%= candidate_feedbacks.size%>" data-priority="1">
               <%= t 'bingo_games.resp_challenged' %>
             </th>
             <th data-priority="0">
@@ -124,9 +124,9 @@
             <tr>
               <td><%= student.name( anonymize ) %></td>
               <td><%= cl.is_group ? cl.group.get_name( anonymize ) : "N/A" %></td>
-              <% if cl.candidates.completed.count > 0 %>
+              <% if cl.candidates.completed.size > 0 %>
                 <% candidate_feedbacks.each do |cf| %>
-                  <td><%= 100 * cl.get_by_feedback( cf ).count / cl.candidates.completed.count %>%</td>
+                  <td><%= 100 * cl.get_by_feedback( cf ).size / cl.candidates.completed.size %>%</td>
                 <% end %>
               <% else %>
                 <% candidate_feedbacks.each do |cf| %>
@@ -134,8 +134,8 @@
                 <% end %>
               <% end %>
               <td><%= cl.expected_count %></td>
-              <td><%= cl.candidates.completed.count %></td>
-              <td><%= cl.get_concepts.count %></td>
+              <td><%= cl.candidates.completed.size %></td>
+              <td><%= cl.get_concepts.size %></td>
               <td><%= cl.performance %></td>
             </tr>
           <% end %>
@@ -143,7 +143,7 @@
       </table>
     </p>
     <p>
-      <%= t 'bingo_games.game_summary', con_count: @bingo_game.get_concepts.count %>
+      <%= t 'bingo_games.game_summary', con_count: @bingo_game.get_concepts.size %>
       <table data-role="table"
               id="basicTable"
               data-mode="columntoggle"

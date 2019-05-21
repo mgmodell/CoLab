@@ -9,7 +9,7 @@
       <%= raw( t :summary_body, task_name: @name,
                            course_name: @course_name,
                            site_link: (link_to t( :title ), root_url) ) %>
-      <%= t :enrolled_students, count: @completion_report.keys.count %>
+      <%= t :enrolled_students, count: @completion_report.keys.size %>
     </P>
     <table>
       <tr>

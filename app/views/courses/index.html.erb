@@ -42,11 +42,11 @@
           </div>
           <%= l in_tz( date: course.end_date, tz_str: course.timezone ), format: :tz_clarity %>
         </td>
-        <td><%= course.rosters.instructor.count %></td>
-        <td><%= course.rosters.students.count %></td>
-        <td><%= course.projects.count %></td>
-        <td><%= course.experiences.count %></td>
-        <td><%= course.bingo_games.count %></td>
+        <td><%= course.rosters.instructor.size %></td>
+        <td><%= course.rosters.students.size %></td>
+        <td><%= course.projects.size %></td>
+        <td><%= course.experiences.size %></td>
+        <td><%= course.bingo_games.size %></td>
         <td>
           <%= link_to t( :show ), course_path( course ) %>&nbsp;|&nbsp;
           <%= link_to t( :edit ), edit_course_path(course) %>&nbsp;|&nbsp;

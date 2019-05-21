@@ -53,10 +53,6 @@ class Project < ApplicationRecord
     I18n.t(:project)
   end
 
-  def is_for_research?
-    consent_form.present? && consent_form.is_active?
-  end
-
   def enrolled_user_rosters
     course.rosters.enrolled
   end

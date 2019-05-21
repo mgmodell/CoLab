@@ -62,9 +62,9 @@
     <%= hidden_field_tag :id, @course.id %>
     <%= submit_tag t( :add ) %>
   <% end %>
-  <% if @course.rosters.students.count > 0 %>
+  <% if @course.rosters.students.size > 0 %>
     <p>
-      <%= t '.enrolled_count', count: @course.rosters.students.count %>
+      <%= t '.enrolled_count', count: @course.rosters.students.size %>
     </p>
         <table data-role="table"
           id="basicTable"

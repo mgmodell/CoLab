@@ -69,7 +69,12 @@ class ExperiencesController < ApplicationController
     experience = Experience.joins(course: { rosters: :user })
                            .where(id: experience_id, users: { id: @current_user }).take
 
-    if experience.nil? && !experience.is_open
+    consent_log = experience.course.get_consent_log user: @current_user
+
+    if consent_log.present?
+      redirect_to edit_consent_log_path( consent_form_id: consent_log.consent_form_id )
+
+    elsif experience.nil? && !experience.is_open
       redirect_to '/', notice: t('experiences.wrong_course')
     else
       reaction = experience.get_user_reaction(@current_user)

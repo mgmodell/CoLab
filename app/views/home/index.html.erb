@@ -3,7 +3,7 @@
    anonymize = false %>
 <p><%= t 'home.greeting', name: @first_name %>,</br>
 <% tasks = @waiting_student_tasks + @waiting_instructor_tasks %>
-<%= t 'home.tasks', count: tasks.count %></p>
+<%= t 'home.tasks', count: tasks.size %></p>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -107,7 +107,8 @@
                 <%= l in_tz( date: task.end_date ), format: :tz_clarity %>
               </td>
               <td>
-                <%= render :partial => "shared/consent", :locals => { :project => task.project } %>
+                <%= render :partial => "shared/consent", :locals =>
+                  { log: task.course.get_consent_log( user: @current_user )} %>
               </td>
             </tr>
           <% elsif task.class == BingoGame %>
@@ -123,7 +124,7 @@
               <% elsif task.reviewed %>
                 <td><%= t 'candidates.distilled' %></td>
                 <td>
-                  <%= task.concepts.count %> concepts
+                  <%= task.concepts.size %> concepts
                 </td>
               <% end %>
               <td>

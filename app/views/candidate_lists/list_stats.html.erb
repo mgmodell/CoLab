@@ -18,7 +18,7 @@
     class="table-stroke ui-shadow table-stripe table-ui-responsive">
   <thead><% candidate_feedbacks = CandidateFeedback.all %>
     <tr>
-      <th colspan="<%= candidate_feedbacks.count %>" data-priority="1">
+      <th colspan="<%= candidate_feedbacks.size %>" data-priority="1">
         <%= t 'bingo_games.resp_challenged' %>
       </th>
       <th data-priority="0">
@@ -46,16 +46,16 @@
   </thead>
   <tbody>
     <% candidate_feedbacks.each do |cf| %>
-      <% if @candidate_list.candidates.completed.count > 0
-           completed_count = @candidate_list.candidates.completed.count %>
-      <td><%= @candidate_list.get_by_feedback( cf ).count * 100 / completed_count %></td>
+      <% if @candidate_list.candidates.completed.size > 0
+           completed_count = @candidate_list.candidates.completed.size %>
+      <td><%= @candidate_list.get_by_feedback( cf ).size * 100 / completed_count %></td>
     <% else %>
       <td>N/A</td>
     <% end %>
   <% end %>
   <td><%= @candidate_list.expected_count %></td>
-  <td><%= @candidate_list.candidates.completed.count %></td>
-  <td><%= @candidate_list.get_concepts.count %></td>
+  <td><%= @candidate_list.candidates.completed.size %></td>
+  <td><%= @candidate_list.get_concepts.size %></td>
   <td><%= @candidate_list.performance %></td>
 </tbody>
 </table>
@@ -72,9 +72,9 @@
   <%= @candidate_list.is_group ? 
     (t 'candidate_lists.grp_sum_msg',
         grp_name: @candidate_list.group.get_name( anonymize ),
-        con_count: @candidate_list.get_concepts.count ) :
+        con_count: @candidate_list.get_concepts.size ) :
     (t 'candidate_lists.ind_sum_msg',
-        con_count: @candidate_list.get_concepts.count ) %>:
+        con_count: @candidate_list.get_concepts.size ) %>:
   <table data-role="table"
     id="candidates_table"
     data-mode="columntoggle"

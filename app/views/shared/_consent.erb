@@ -1,7 +1,7 @@
-<% if( project.is_for_research? ) %>
+<% unless( log.nil? ) %>
   <%= link_to t( 'consent_forms.consent_form' ),
     :controller => "consent_logs", :action => "edit",
-    :consent_form_id => project.consent_form.id %>
+    :consent_form_id => log.consent_form_id %>
 <% else %>
   <%= t 'consent_forms.not_for_research' %>
 <% end %>

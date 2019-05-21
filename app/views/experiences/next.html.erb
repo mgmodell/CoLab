@@ -13,7 +13,7 @@
 <%= simple_form_for @diagnosis, :url => { :controller => "experiences", :action => "diagnose" }, :method => :get do |f| %>
   <%= f.hidden_field :week_id, value: @diagnosis.week_id  %>
   <%= f.hidden_field :reaction_id, value: @diagnosis.reaction.id  %>
-  <% if @diagnosis.errors.any? && @diagnosis.errors[:behavior ].count > 0 %>
+  <% if @diagnosis.errors.any? && @diagnosis.errors[:behavior ].size > 0 %>
     <p class='error'><%= @diagnosis.errors[ :behavior ].first %></p>
   <% end %>
   <div class="ui-corner-all custom-corners">
@@ -22,7 +22,7 @@
     </div>
     <div class="ui-body ui-body-a">
       <%= f.association :behavior, :collection => Behavior.all, :as => :radio_buttons, label: false, :error => false %>
-      <% if @diagnosis.errors.any? && @diagnosis.errors[ :other_name ].count > 0 %>
+      <% if @diagnosis.errors.any? && @diagnosis.errors[ :other_name ].size > 0 %>
         <div id="other_name_panel">
           <p class='error'><%= @diagnosis.errors[ :other_name ].first %></p>
         <% else %>

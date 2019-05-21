@@ -1,7 +1,7 @@
 Hello!
 
 You've been invited to participate in the following
-course<%= "s" unless @user.rosters.count < 2 %>:
+course<%= "s" unless @user.rosters.size < 2 %>:
 
 <% @user.rosters.each do |roster| %>
   - <%= roster.course.name %>

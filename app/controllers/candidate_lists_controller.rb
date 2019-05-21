@@ -14,23 +14,30 @@ class CandidateListsController < ApplicationController
 
   def edit
     @title = t '.title'
-    @term_counts = {}
-    @candidate_list.candidates.each do |candidate|
-      @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
-    end
 
-    empties = @candidate_list.expected_count - @candidate_list.candidates.count
+    consent_log = @candidate_list.course.get_consent_log user: @current_user
 
-    empties.times do
-      @candidate_list.candidates.build(term: '', definition: '',
+    if consent_log.present?
+      redirect_to edit_consent_log_path( consent_form_id: consent_log.consent_form_id )
+    else
+      @term_counts = {}
+      @candidate_list.candidates.each do |candidate|
+        @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
+      end
+
+      empties = @candidate_list.expected_count - @candidate_list.candidates.count
+
+      empties.times do
+        @candidate_list.candidates.build(term: '', definition: '',
                                        user_id: @current_user.id)
-    end
+      end
 
-    if @candidate_list.bingo_game.reviewed
-      render :show
-    elsif !@candidate_list.bingo_game.is_open?
-      notice = t('candidate_lists.no_longer_available')
-      redirect_to :root_path, notice: notice
+      if @candidate_list.bingo_game.reviewed
+        render :show
+      elsif !@candidate_list.bingo_game.is_open?
+        notice = t('candidate_lists.no_longer_available')
+        redirect_to :root_path, notice: notice
+      end
     end
   end
 

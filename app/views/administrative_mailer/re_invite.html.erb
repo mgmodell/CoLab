@@ -6,7 +6,7 @@
   <body>
     <h1><%= t :greeting_unknown %> </h1>
     <p>
-      <%= t :course_invite_body, count: @user.rosters.count %>
+      <%= t :course_invite_body, count: @user.rosters.size %>
     </P>
     <ul>
       <% @user.rosters.each do |roster| %>

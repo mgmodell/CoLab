@@ -25,12 +25,12 @@
     <% @schools.each do |school| %>
       <tr>
         <td><%= link_to school.get_name( anonymize ), school %></td>
-        <td><%= school.courses.count %></td>
-        <td><%= school.instructors.count %></td>
-        <td><%= school.enrolled_students.count %></td>
-        <td><%= school.projects.count %></td>
-        <td><%= school.experiences.count %></td>
-        <td><%= school.bingo_games.count %></td>
+        <td><%= school.courses.size %></td>
+        <td><%= school.instructors.size %></td>
+        <td><%= school.enrolled_students.size %></td>
+        <td><%= school.projects.size %></td>
+        <td><%= school.experiences.size %></td>
+        <td><%= school.bingo_games.size %></td>
         <td><%= link_to t(:show), school_path( school ) %>&nbsp;|&nbsp;
           <%= link_to t(:edit), edit_school_path(school) %>
         </tr>

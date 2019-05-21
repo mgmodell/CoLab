@@ -82,37 +82,35 @@ class User < ApplicationRecord
   end
 
   def waiting_consent_logs
-    now = Date.today
-    # Find those consent forms to which the user has not yet responded
-    # We only want to do this for currently active consent forms
-    consent_forms = ConsentForm.active_at(now)
-                               .includes(:projects)
-                               .to_a
-
-    consent_logs.where(presented: true).each do |consent_log|
-      consent_forms.delete_if { |consent_form| consent_form.id == consent_log.consent_form_id }
+    #Get logs tied to courses
+    logs = {}
+    
+    self.consent_logs.each do |consent_log|
+      logs[ consent_log.consent_form_id ] = consent_log
     end
 
-    # Is it from a project that we're not in?
-    projects_array = projects.to_a
-    consent_forms.each do |consent_form|
-      next if consent_form.global?
-
-      consent_form.projects.each do |cf_project|
-        unless projects_array.include?(cf_project)
-          consent_forms.delete(consent_form)
-          break
-        end
+    courses.each do |course|
+      if logs[ course.consent_form_id ].nil?
+        log = course.get_consent_log user: self
+        logs[ log.consent_form_id ] = log unless log.nil?
       end
     end
 
-    # Create consent logs for waiting consent forms
-    waiting_consent_logs = []
-    consent_forms.each do |w_consent_form|
-      consent_log = consent_logs.new(consent_form: w_consent_form)
-      waiting_consent_logs << consent_log
+    now = Date.today
+    # Find those consent forms to which the user has not yet responded
+    # We only want to do this for currently active consent forms
+    consent_forms = ConsentForm.global_active_at(now).to_a
+
+    
+    consent_forms.each do |consent_form|
+      if logs[ consent_form.id ].nil?
+        log = self.create_consent_log( consent_form_id: consent_form_id, presented: false )
+        logs[ consent_form.id ] = log
+
+      end
     end
-    waiting_consent_logs
+
+    logs.values.delete_if{|log| log.presented }
   end
 
   def is_admin?
@@ -264,14 +262,16 @@ class User < ApplicationRecord
 
   def waiting_student_tasks
     cur_date = DateTime.current
-    waiting_tasks = assessments.includes(project: %i[course consent_form]).active_at(cur_date).to_a
+    waiting_tasks = assessments.includes(course: :consent_form).active_at(cur_date).to_a
 
     # Check available tasks for students
     available_rosters = rosters.enrolled
 
     # Add the experiences
 
-    waiting_experiences = Experience.active_at(cur_date).joins(course: :rosters)
+    waiting_experiences = Experience.active_at(cur_date)
+                                    .includes( course: :consent_form )
+                                    .joins(course: :rosters)
                                     .where('rosters.user_id': id)
                                     .where('rosters.role IN (?)',
                                            [Roster.roles[:enrolled_student], Roster.roles[:invited_student]])
@@ -283,7 +283,7 @@ class User < ApplicationRecord
 
     # Add the bingo games
     waiting_games = BingoGame.joins(course: :rosters)
-                             .includes(:course, :project)
+                             .includes({course: :consent_form}, :project)
                              .where('rosters.user_id': id, 'bingo_games.active': true)
                              .where('rosters.role = ? OR rosters.role = ?',
                                     Roster.roles[:enrolled_student], Roster.roles[:invited_student])

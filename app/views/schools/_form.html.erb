@@ -21,7 +21,7 @@
       <h2><%= t 'schools.courses' %></h2>
       <p>
         <h3><%= t 'courses.courses' %></h3>
-        <% if @school.courses.count < 1 %>
+        <% if @school.courses.size < 1 %>
           <%= t 'schools.no_courses' %></br>
       <% else %>
         <table data-role="table"
@@ -49,11 +49,11 @@
               <tr>
                 <td><%= link_to course.get_name( anonymize ), course %></td>
                 <td><%= course.number %></td>
-                <td><%= course.instructors.count %></td>
-                <td><%= course.enrolled_students.count %></td>
-                <td><%= course.projects.count %></td>
-                <td><%= course.experiences.count %></td>
-                <td><%= course.bingo_games.count %></td>
+                <td><%= course.instructors.size %></td>
+                <td><%= course.enrolled_students.size %></td>
+                <td><%= course.projects.size %></td>
+                <td><%= course.experiences.size %></td>
+                <td><%= course.bingo_games.size %></td>
                 <td>
                   <div hidden>
                     <%= l in_tz( date: course.start_date ), format: :datestamp %>

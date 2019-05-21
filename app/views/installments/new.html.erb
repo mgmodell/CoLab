@@ -9,8 +9,8 @@
   <p><%= t 'installments.instructions',
           group_name: @group.name,
           project_name: @group.project.get_name( false ),
-          member_count: @members.count,
-          factor_count: @factors.count %></p>
+          member_count: @members.size,
+          factor_count: @factors.size %></p>
   <P><%= t 'installments.basic.instructions', total_val: Installment::TOTAL_VAL %></p>
 </div>
 <%

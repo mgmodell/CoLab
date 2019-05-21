@@ -7,7 +7,7 @@ class Course < ApplicationRecord
   has_many :rosters, inverse_of: :course, dependent: :destroy
   has_many :bingo_games, inverse_of: :course, dependent: :destroy
   has_many :users, through: :rosters
-  belongs_to :consent_form, inverse_of: :courses, optional: true
+  belongs_to :consent_form, counter_cache: true, inverse_of: :courses, optional: true
 
   has_many :experiences, inverse_of: :course, dependent: :destroy
 
@@ -38,6 +38,20 @@ class Course < ApplicationRecord
     activities.concat bingo_games
     activities.concat experiences
     activities.sort_by(&:end_date)
+  end
+
+  def get_consent_log user:
+    log = nil
+    unless consent_form_id.nil? || !consent_form.is_active?
+      log = self.consent_form.consent_logs
+        .where( user: user ).take
+      if log.nil?
+        log = user.create_consent_log(
+                    consent_form_id: consent_form_id,
+                    presented: false )
+      end
+    end
+    log
   end
 
   def get_name(anonymous = false)

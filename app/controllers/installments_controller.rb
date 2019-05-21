@@ -10,12 +10,10 @@ class InstallmentsController < ApplicationController
     @assessment = Assessment.find( params[ :assessment_id ] )
     @title = t 'installments.title'
     @project = @assessment.project
-    if @project.present? && @project.consent_form &&
-        @project.consent_form.active &&
-        ConsentLog.where( user_id: current_user.id,
-                          consent_form_id: @project.consent_form.id,
-                          presented: true ).empty?
-      redirect_to edit_consent_log_path( consent_form_id: @project.consent_form.id )
+    consent_log = @project.course.get_consent_log user: @current_user
+
+    if consent_log.present?
+      redirect_to edit_consent_log_path( consent_form_id: consent_log.consent_form_id )
     else
       @group = @assessment.group_for_user current_user
       @members = @group.users

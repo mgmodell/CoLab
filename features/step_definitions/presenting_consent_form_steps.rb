@@ -10,16 +10,17 @@ Given /^there is a global consent form$/ do
   )
 end
 
-Given /^the project has a consent form$/ do
+Given /^the course has a consent form$/ do
   @consent_form = ConsentForm.new(
     user: User.find(1),
     name: Forgery::Name.location
   )
   @consent_form.save
   puts @consent_form.errors.full_messages unless @consent_form.errors.blank?
-  @project.consent_form = @consent_form
-  @project.save
-  puts @project.errors.full_messages unless @project.errors.blank?
+  course - @project.course
+  course.consent_form = @consent_form
+  course.save
+  puts course.errors.full_messages unless course.errors.blank?
 end
 
 Then /^user should see a consent form listed for the open project$/ do

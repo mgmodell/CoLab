@@ -63,7 +63,7 @@
 </div>
 <div id="groups" class="ui-body-<%= theme_code %> ui-content">
   <h2>Group memberships</h2>
-  <%= t 'projects.groups_intro', group_count: @project.groups.count %><br>
+  <%= t 'projects.groups_intro', group_count: @project.groups.size %><br>
   <br>
   <% if @project.groups.any? || @project.enrolled_user_rosters.any? %>
     <table id="project_table" width="90%" data-role="table"

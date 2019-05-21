@@ -2,7 +2,6 @@
 
 class ConsentForm < ApplicationRecord
   belongs_to :user
-  has_many :projects, inverse_of: :consent_form
   translates :form_text
 
   has_one_attached :pdf
@@ -20,12 +19,19 @@ class ConsentForm < ApplicationRecord
                         .where('consent_forms.end_date IS NULL OR consent_forms.end_date >= ?', date)
                     }
 
+  scope :global_active_at, lambda { |date|
+                      where(active: true, courses_count: 0)
+                        .where('consent_forms.start_date <= ?', date)
+                        .where('consent_forms.end_date IS NULL OR consent_forms.end_date >= ?', date)
+                    }
+
   def global?
-    projects.count == 0
+    courses.size == 0
   end
 
   def is_active?
     now = Date.today
     active && start_date <= now && (end_date.nil? || end_date >= now)
   end
+
 end

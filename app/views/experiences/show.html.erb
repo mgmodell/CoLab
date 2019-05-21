@@ -35,7 +35,7 @@
 </div>
 <div id="summary" class="ui-body-<%= theme_code %> ui-content">
   <h2>Student Response Summary</h2>
-  <%= @experience.reactions.count %> of <%= @experience.course.enrolled_students.count %> students have completed the experience.
+  <%= @experience.reactions.size %> of <%= @experience.course.enrolled_students.size %> students have completed the experience.
   <table width="90%" data-role="table"
           id="responsesTable"
           data-column-btn-theme"<%= theme_code %>" 

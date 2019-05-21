@@ -38,7 +38,7 @@
         </td>
         <td><%= Date::DAYNAMES.at project.start_dow %></td>
         <td><%= Date::DAYNAMES.at project.end_dow %></td>
-        <td><%= project.groups.count %></td>
+        <td><%= project.groups.size %></td>
         <td><%= link_to( t( :show ), project) %>&nbsp;|&nbsp;
           <%= link_to( t( :edit ), edit_project_path(project) ) %>&nbsp;|&nbsp;
           <%= link_to( t( :destroy ), project, method: :delete, data: { confirm: t( :confirmation ) }  )%></td>

@@ -12,7 +12,7 @@
 <%= simple_form_for @reaction, :url => { :controller => "experiences", :action => "react" }, :method => :get do |f| %>
   <%= f.hidden_field( :id ) %>
   <%= f.hidden_field( :narrative_id ) %>
-  <% if @reaction.errors.any? && @reaction.errors[:behavior ].count > 0 %>
+  <% if @reaction.errors.any? && @reaction.errors[:behavior ].size > 0 %>
     <p class='error'><%= @reaction.errors[ :behavior ].first %></p>
   <% end %>
   <div class="ui-corner-all custom-corners">
@@ -21,7 +21,7 @@
     </div>
     <div class="ui-body ui-body-a">
       <%= f.association :behavior, :collection => Behavior.all, :as => :radio_buttons, label: false, :error => false %>
-      <% if @reaction.errors.any? && @reaction.errors[ :other_name ].count > 0 %>
+      <% if @reaction.errors.any? && @reaction.errors[ :other_name ].size > 0 %>
         <div id="other_name_panel">
           <p class='error'><%= @reaction.errors[ :other_name ].first %></p>
         <% else %>

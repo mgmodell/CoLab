@@ -151,7 +151,7 @@
   </div>
   <div id="courses" class="ui-body-<%= theme_code %> ui-content">
     <h2><%= t 'devise.registrations.my_courses' %></h2>
-    <%= t 'devise.registrations.my_courses_count', count: @current_user.courses.count %>
+    <%= t 'devise.registrations.my_courses_count', count: @current_user.courses.size %>
         <table data-role="table"
             id="basicTable"
             data-column-btn-theme"<%= theme_code %>" 
@@ -216,7 +216,7 @@
   <div id="history" class="ui-body-<%= theme_code %> ui-content">
     <h2><%= t 'devise.registrations.activity_history' %></h2>
       <% activities = @current_user.activity_history
-      if activities.count < 1 %>
+      if activities.size < 1 %>
         <p><%= t 'devise.registrations.no_activities' %></p>
       <% else %>
         <table data-role="table"
@@ -265,7 +265,7 @@
         </td>
         <td>
         <% if activity.class.name == "BingoGame" %>
-          <%= activity.candidate_list_for_user( @current_user ).get_concepts.count %> unique concepts
+          <%= activity.candidate_list_for_user( @current_user ).get_concepts.size %> unique concepts
         <% elsif activity.class.name == "Experience" %>
            <% if activity.get_user_reaction( @current_user ).status != "Not started" %>
              <%= t 'devise.registrations.simulation_id', 
