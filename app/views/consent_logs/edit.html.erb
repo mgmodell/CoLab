@@ -4,7 +4,7 @@
   <%= raw t ('.instructions') %>
 </p>
 <P><%= raw @consent_log.consent_form.form_text %></p>
-<p><%= link_to t( '.consent_dl' ), @consent_log.consent_form.pdf.url %></p>
+<p><%= link_to t( '.consent_dl' ), @consent_log.consent_form.pdf %></p>
 <%= simple_form_for @consent_log do |f| %>
   <%= f.hidden_field :user_id %>
   <%= f.hidden_field :presented, :value => true %>
