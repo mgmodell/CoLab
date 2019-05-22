@@ -3,13 +3,19 @@
 require 'chronic'
 require 'forgery'
 
+Given /^reset time clock to now$/ do
+  travel_back
+
+end
+
 Given /^there is a global consent form$/ do
   @consent_form = ConsentForm.new(
     name: Forgery::Name.location,
     user: User.find(1)
   )
-  @consent_form.pdf.attach( io: File.open( Rails.root.join( 'db' ),
-                            filename: 'ConsentForms_consolidated.pdf',
+  @consent_form.pdf.attach( io: File.open(
+                      Rails.root.join( 'db', 'ConsentForms_consolidated.pdf' ) ),
+                            filename: 'cf.pdf',
                             content_type: 'application/pdf')
   @consent_form.save
   puts @consent_form.errors.full_messages unless @consent_form.errors.blank?
@@ -20,6 +26,10 @@ Given /^the course has a consent form$/ do
     user: User.find(1),
     name: Forgery::Name.location
   )
+  @consent_form.pdf.attach( io: File.open( 
+                      Rails.root.join( 'db', 'ConsentForms_consolidated.pdf' ) ),
+                            filename: 'cf.pdf',
+                            content_type: 'application/pdf')
   @consent_form.save
   puts @consent_form.errors.full_messages unless @consent_form.errors.blank?
   course = @project.course

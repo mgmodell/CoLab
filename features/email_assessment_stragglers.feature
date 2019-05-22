@@ -27,6 +27,7 @@ Feature: Email assessment stragglers
     Then 3 emails will be tracked
 
   Scenario: Three students have open assessments waiting when we email the stragglers, but one does not - three emails are sent
+    Given reset time clock to now
     Given the email queue is empty
     Given the project measures 4 factors
     Given the course has a consent form

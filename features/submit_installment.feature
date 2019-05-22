@@ -8,6 +8,7 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     Given the user is the instructor for the course
     Given the project has a group with 4 confirmed users
+    Given reset time clock to now
     Given the project started "two months ago" and ends "next month", opened "yesterday" and closes "tomorrow"
 
   Scenario: User should be able to complete an open weekly installment

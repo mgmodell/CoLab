@@ -8,6 +8,7 @@ Feature: User registration
     Given the email queue is empty
 
   Scenario: Registered user provides consent and demographics.
+    Given reset time clock to now
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
     Given the course has a consent form
@@ -24,6 +25,7 @@ Feature: User registration
     Then the user will see the task listing page
 
   Scenario: Registered user does not provide consent
+    Given reset time clock to now
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
     Given the course has a consent form

@@ -7,6 +7,7 @@ Feature: Presenting Consent Forms
     Given the project has a group with 4 confirmed users
     Given the user is the "last" user in the group
     Given the factor pack is set to "Original"
+    Given reset time clock to now
 
   Scenario: User should be presented with an unpresented project consent form if one exists
     When the user logs in
