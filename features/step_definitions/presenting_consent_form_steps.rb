@@ -8,6 +8,11 @@ Given /^there is a global consent form$/ do
     name: Forgery::Name.location,
     user: User.find(1)
   )
+  @consent_form.pdf.attach( io: File.open( Rails.root.join( 'db' ),
+                            filename: 'ConsentForms_consolidated.pdf',
+                            content_type: 'application/pdf')
+  @consent_form.save
+  puts @consent_form.errors.full_messages unless @consent_form.errors.blank?
 end
 
 Given /^the course has a consent form$/ do
