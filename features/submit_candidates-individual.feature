@@ -20,7 +20,7 @@ Feature: Submitting Candidate words for Bingo!
     Given the user logs in
     Then user should see 0 open task
 
-  Scenario: User should not be able to closed list of candidates
+  Scenario: User should not be able to see a closed list of candidates
     Given the Bingo! game required 1 day of lead time
     Given the Bingo! started "last month" and ends "today"
     Given the Bingo! "has" been activated
@@ -30,6 +30,21 @@ Feature: Submitting Candidate words for Bingo!
   Scenario: User should be able to open and save an unstarted list of candidates
     Given the user logs in
     Then user should see 1 open task
+    When the user clicks the link to the candidate list
+    Then the user should see the Bingo candidate list
+    Then the user will see 7 term field sets
+    Then the candidate entries should be empty
+    Then the user clicks "Save"
+    Then the candidate properties should be empty
+
+  Scenario: User should be able to enter candidates with an assigned course consent
+    Given the course has a consent form
+    Given the consent form started "1 month ago" and ends "1 month from now"
+    Given the consent form "is" active
+    Given the consent form "has" been presented to the user
+    Given the user logs in
+    Then user should see 1 open task
+    Then user should see a consent form listed for the open bingo
     When the user clicks the link to the candidate list
     Then the user should see the Bingo candidate list
     Then the user will see 7 term field sets

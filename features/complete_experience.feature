@@ -13,6 +13,23 @@ Feature: Users can complete 'experiences'
     Then the user should see a successful login message
 
   Scenario: The student should not be able to proceed without selecting a behavior
+    Given the course has a consent form
+    Given the consent form started "1 month ago" and ends "1 month from now"
+    Given the consent form "is" active
+    Given the consent form "has" been presented to the user
+    Then user should see 1 open task
+    Then user should see a consent form listed for the open experience
+    Then the user clicks the link to the experience
+    Then the user sees the experience instructions page
+     And the user presses "Next"
+    Then the user will see "Week 1"
+     And the user presses "Save and continue"
+    Then the user will see "Week 1"
+    Then the user will see "You must select a behavior"
+    Then user opens their profile
+    Then the user sees the experience in the history
+
+  Scenario: The student should not be able to proceed without selecting a behavior
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page

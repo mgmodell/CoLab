@@ -38,6 +38,16 @@ Given /^the course has a consent form$/ do
   puts course.errors.full_messages unless course.errors.blank?
 end
 
+Then("user should see a consent form listed for the open experience") do
+  page.should have_content 'Research Consent Form'
+  page.should have_content @experience.name
+end
+
+Then("user should see a consent form listed for the open bingo") do
+  page.should have_content 'Research Consent Form'
+  page.should have_content @bingo.name
+end
+
 Then /^user should see a consent form listed for the open project$/ do
   page.should have_content 'Research Consent Form'
   page.should have_content @project.name

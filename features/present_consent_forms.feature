@@ -9,16 +9,58 @@ Feature: Presenting Consent Forms
     Given the factor pack is set to "Original"
     Given reset time clock to now
 
-  Scenario: User should be presented with an unpresented project consent form if one exists
+  Scenario: (Project)User should be presented with an unpresented course consent form if one exists
+    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     When the user logs in
     Then the user should see a successful login message
-    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
     Given the consent form "is" active
     Given the consent form "has not" been presented to the user
     Given the project has been activated
     Given the user "has" had demographics requested
+    When the user visits the index
+    Then the user will see a consent request
+
+  Scenario: (Bingo)User should be presented with an unpresented course consent form if one exists
+    #Disable the project
+    Given the project started "two months hence" and ends "three months hence", opened "yesterday" and closes "tomorrow"
+    #Create the Bingo
+    Given the course has a Bingo! game
+    Given the Bingo! game individual count is 7
+    Given the Bingo! started "last month" and ends "3 days from now"
+    Given the Bingo! "has" been activated
+
+    When the user logs in
+    Then the user should see a successful login message
+    # Build the consent form
+    Given the course has a consent form
+    Given the consent form started "1 month ago" and ends "1 month from now"
+    Given the consent form "is" active
+    Given the consent form "has not" been presented to the user
+    Given the project has been activated
+    Given the user "has" had demographics requested
+
+    When the user visits the index
+    Then the user will see a consent request
+
+  Scenario: (Experience)User should be presented with an unpresented course consent form if one exists
+    #Disable the project
+    Given the project started "two months hence" and ends "three months hence", opened "yesterday" and closes "tomorrow"
+    #Create the Experience
+    Given there is a course with an experience
+    Given the experience "has" been activated
+    When the user logs in
+    Then the user should see a successful login message
+
+    # Build the consent form
+    Given the course has a consent form
+    Given the consent form started "1 month ago" and ends "1 month from now"
+    Given the consent form "is" active
+    Given the consent form "has not" been presented to the user
+    Given the project has been activated
+    Given the user "has" had demographics requested
+
     When the user visits the index
     Then the user will see a consent request
 
