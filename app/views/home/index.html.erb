@@ -152,7 +152,10 @@
                   :short_date %>)
                 </i></small>
             </td>
-            <td>N/A</td>
+            <td>
+              <%= render :partial => "shared/consent", :locals =>
+                { log: task.course.get_consent_log( user: @current_user )} %>
+            </td>
           </tr>
         <% else %>
           <% reaction = task.get_user_reaction( @current_user ) %>
@@ -181,7 +184,8 @@
               <%= l in_tz( date: task.get_activity_begin ), format: :tz_clarity %>
             </td>
             <td>
-              <%= t :n_a %>
+              <%= render :partial => "shared/consent", :locals =>
+                { log: task.course.get_consent_log( user: @current_user )} %>
             </td>
           </tr>
         <% end %>

@@ -42,6 +42,7 @@ class Course < ApplicationRecord
 
   def get_consent_log user:
     log = nil
+
     unless consent_form_id.nil? || !consent_form.is_active?
       log = self.consent_form.consent_logs
         .where( user: user ).take

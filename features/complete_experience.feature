@@ -17,6 +17,7 @@ Feature: Users can complete 'experiences'
     Given the consent form started "1 month ago" and ends "1 month from now"
     Given the consent form "is" active
     Given the consent form "has" been presented to the user
+    When the user visits the index
     Then user should see 1 open task
     Then user should see a consent form listed for the open experience
     Then the user clicks the link to the experience

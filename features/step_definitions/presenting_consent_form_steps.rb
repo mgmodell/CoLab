@@ -32,10 +32,9 @@ Given /^the course has a consent form$/ do
                             content_type: 'application/pdf')
   @consent_form.save
   puts @consent_form.errors.full_messages unless @consent_form.errors.blank?
-  course = @project.course
-  course.consent_form = @consent_form
-  course.save
-  puts course.errors.full_messages unless course.errors.blank?
+  @course.consent_form = @consent_form
+  @course.save
+  puts @course.errors.full_messages unless @course.errors.blank?
 end
 
 Then("user should see a consent form listed for the open experience") do
@@ -45,7 +44,7 @@ end
 
 Then("user should see a consent form listed for the open bingo") do
   page.should have_content 'Research Consent Form'
-  page.should have_content @bingo.name
+  page.should have_content @bingo.topic
 end
 
 Then /^user should see a consent form listed for the open project$/ do
