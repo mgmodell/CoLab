@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_21_031731) do
+ActiveRecord::Schema.define(version: 2019_05_23_014532) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -144,6 +144,7 @@ ActiveRecord::Schema.define(version: 2019_05_21_031731) do
     t.boolean "archived", default: false, null: false
     t.integer "contributor_count", default: 1, null: false
     t.integer "current_candidate_list_id"
+    t.integer "candidates_count", default: 0, null: false
     t.index ["bingo_game_id"], name: "index_candidate_lists_on_bingo_game_id"
     t.index ["current_candidate_list_id"], name: "fk_rails_de17bb0877"
     t.index ["group_id"], name: "index_candidate_lists_on_group_id"

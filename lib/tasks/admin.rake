@@ -13,6 +13,19 @@ namespace :admin do
     AdministrativeMailer.inform_instructors
   end
 
+  desc 'Update counters'
+  task update_counters: :environment do
+    CandidateList.all.each do |cl|
+      CandidateList.reset_counters( cl.id, :candidates, touch: false )
+    end
+    ConsentForm.all.each do |cf|
+      ConsentForm.reset_counters( cf.id, :courses, touch: false )
+    end
+    Concept.all.each do |concept|
+      Concept.reset_counters( concept.id, :candidates, touch: false )
+    end
+  end
+
   desc 'Cache performance numbers'
   task update_caches: :environment do
     CandidateList.joins(:bingo_game)
