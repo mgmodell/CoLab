@@ -414,7 +414,10 @@ class BingoGamesController < ApplicationController
       existing_concepts = {}
 
       @bingo_game.candidates.completed
-                 .includes(:candidate_feedback, :concept, :user, :candidate_list )
+                 .includes(:candidate_feedback,
+                           :concept,
+                           :user,
+                           candidate_list: :bingo_game  )
                  .find_all do |candidate|
         entered_candidate = candidate_map[candidate.id]
 
@@ -489,7 +492,7 @@ class BingoGamesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_game
-    bg_test = BingoGame.joins(:course).includes({ candidate_lists: :candidates, course: :projects }).find(params[:id])
+    bg_test = BingoGame.joins(:course).includes({ candidate_lists: {candidates: :concept }, course: :projects }).find(params[:id])
     if @current_user.is_admin?
       @bingo_game = bg_test
     else

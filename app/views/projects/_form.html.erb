@@ -98,7 +98,7 @@
         </tr>
       </thead>
       <tbody>
-        <% @project.course.rosters.enrolled.each do |roster| 
+        <% @project.course.rosters.includes( :user ).enrolled.each do |roster| 
            user = roster.user %>
           <tr>
             <td><%= mail_to user.email, user.name( anonymize ) %></td>
