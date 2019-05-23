@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.17  Distrib 10.3.12-MariaDB, for osx10.14 (x86_64)
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	10.1.38-MariaDB-0ubuntu0.18.04.2
+-- Server version	10.3.12-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -57,7 +57,7 @@ CREATE TABLE `active_storage_blobs` (
   `key` varchar(255) NOT NULL,
   `filename` varchar(255) NOT NULL,
   `content_type` varchar(255) DEFAULT NULL,
-  `metadata` text,
+  `metadata` text DEFAULT NULL,
   `byte_size` bigint(20) NOT NULL,
   `checksum` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL,
@@ -85,11 +85,11 @@ DROP TABLE IF EXISTS `ahoy_messages`;
 CREATE TABLE `ahoy_messages` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `token` varchar(255) DEFAULT NULL,
-  `to` text,
+  `to` text DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `user_type` varchar(255) DEFAULT NULL,
   `mailer` varchar(255) DEFAULT NULL,
-  `subject` text,
+  `subject` text DEFAULT NULL,
   `sent_at` timestamp NULL DEFAULT NULL,
   `opened_at` timestamp NULL DEFAULT NULL,
   `clicked_at` timestamp NULL DEFAULT NULL,
@@ -148,8 +148,8 @@ CREATE TABLE `assessments` (
   `project_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `instructor_updated` tinyint(1) NOT NULL DEFAULT '0',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `instructor_updated` tinyint(1) NOT NULL DEFAULT 0,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `index_assessments_on_project_id` (`project_id`),
   CONSTRAINT `fk_rails_1acaaff98a` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`)
@@ -175,11 +175,11 @@ DROP TABLE IF EXISTS `behaviors`;
 CREATE TABLE `behaviors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name_en` varchar(255) DEFAULT NULL,
-  `description_en` text,
+  `description_en` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `name_ko` varchar(255) DEFAULT NULL,
-  `description_ko` text,
+  `description_ko` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_behaviors_on_name_en` (`name_en`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
@@ -210,8 +210,8 @@ CREATE TABLE `bingo_boards` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `win_claimed` tinyint(1) DEFAULT NULL,
-  `iteration` int(11) DEFAULT '0',
-  `board_type` int(11) DEFAULT '0',
+  `iteration` int(11) DEFAULT 0,
+  `board_type` int(11) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_bingo_boards_on_bingo_game_id` (`bingo_game_id`),
   KEY `index_bingo_boards_on_user_id` (`user_id`),
@@ -276,7 +276,7 @@ DROP TABLE IF EXISTS `bingo_games`;
 CREATE TABLE `bingo_games` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic` varchar(255) DEFAULT NULL,
-  `description` text,
+  `description` text DEFAULT NULL,
   `link` varchar(255) DEFAULT NULL,
   `source` varchar(255) DEFAULT NULL,
   `group_option` tinyint(1) DEFAULT NULL,
@@ -285,16 +285,16 @@ CREATE TABLE `bingo_games` (
   `end_date` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `active` tinyint(1) DEFAULT '0',
+  `active` tinyint(1) DEFAULT 0,
   `course_id` int(11) DEFAULT NULL,
   `project_id` int(11) DEFAULT NULL,
-  `lead_time` int(11) DEFAULT '3',
+  `lead_time` int(11) DEFAULT 3,
   `group_discount` int(11) DEFAULT NULL,
   `reviewed` tinyint(1) DEFAULT NULL,
-  `instructor_notified` tinyint(1) NOT NULL DEFAULT '0',
-  `students_notified` tinyint(1) NOT NULL DEFAULT '0',
+  `instructor_notified` tinyint(1) NOT NULL DEFAULT 0,
+  `students_notified` tinyint(1) NOT NULL DEFAULT 0,
   `anon_topic` varchar(255) DEFAULT NULL,
-  `size` int(11) DEFAULT '5',
+  `size` int(11) DEFAULT 5,
   PRIMARY KEY (`id`),
   KEY `index_bingo_games_on_course_id` (`course_id`),
   KEY `index_bingo_games_on_project_id` (`project_id`),
@@ -325,8 +325,8 @@ CREATE TABLE `candidate_feedbacks` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `name_ko` varchar(255) DEFAULT NULL,
-  `definition_en` text,
-  `definition_ko` text,
+  `definition_en` text DEFAULT NULL,
+  `definition_ko` text DEFAULT NULL,
   `credit` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_candidate_feedbacks_on_name_en` (`name_en`)
@@ -360,9 +360,10 @@ CREATE TABLE `candidate_lists` (
   `bingo_game_id` int(11) DEFAULT NULL,
   `group_requested` tinyint(1) DEFAULT NULL,
   `cached_performance` int(11) DEFAULT NULL,
-  `archived` tinyint(1) NOT NULL DEFAULT '0',
-  `contributor_count` int(11) NOT NULL DEFAULT '1',
+  `archived` tinyint(1) NOT NULL DEFAULT 0,
+  `contributor_count` int(11) NOT NULL DEFAULT 1,
   `current_candidate_list_id` int(11) DEFAULT NULL,
+  `candidates_count` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_candidate_lists_on_user_id` (`user_id`),
   KEY `index_candidate_lists_on_group_id` (`group_id`),
@@ -393,7 +394,7 @@ DROP TABLE IF EXISTS `candidates`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `candidates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `definition` text,
+  `definition` text DEFAULT NULL,
   `candidate_list_id` int(11) DEFAULT NULL,
   `candidate_feedback_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
@@ -466,9 +467,9 @@ CREATE TABLE `concepts` (
   `name` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `candidates_count` int(11) NOT NULL DEFAULT '0',
-  `courses_count` int(11) NOT NULL DEFAULT '0',
-  `bingo_games_count` int(11) NOT NULL DEFAULT '0',
+  `candidates_count` int(11) NOT NULL DEFAULT 0,
+  `courses_count` int(11) NOT NULL DEFAULT 0,
+  `bingo_games_count` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_concepts_on_name` (`name`),
   FULLTEXT KEY `concept_fulltext` (`name`)
@@ -498,12 +499,12 @@ CREATE TABLE `consent_forms` (
   `user_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `form_text_en` text,
+  `form_text_en` text DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '0',
-  `form_text_ko` text,
-  `courses_count` int(11) NOT NULL DEFAULT '0',
+  `active` tinyint(1) NOT NULL DEFAULT 0,
+  `form_text_ko` text DEFAULT NULL,
+  `courses_count` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `index_consent_forms_on_user_id` (`user_id`),
   CONSTRAINT `fk_rails_c31f002e28` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
@@ -561,7 +562,7 @@ DROP TABLE IF EXISTS `courses`;
 CREATE TABLE `courses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
-  `description` text,
+  `description` text DEFAULT NULL,
   `timezone` varchar(255) DEFAULT NULL,
   `school_id` int(11) DEFAULT NULL,
   `start_date` datetime DEFAULT NULL,
@@ -598,10 +599,10 @@ DROP TABLE IF EXISTS `delayed_jobs`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `delayed_jobs` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `priority` int(11) NOT NULL DEFAULT '0',
-  `attempts` int(11) NOT NULL DEFAULT '0',
+  `priority` int(11) NOT NULL DEFAULT 0,
+  `attempts` int(11) NOT NULL DEFAULT 0,
   `handler` text NOT NULL,
-  `last_error` text,
+  `last_error` text DEFAULT NULL,
   `run_at` datetime DEFAULT NULL,
   `locked_at` datetime DEFAULT NULL,
   `failed_at` datetime DEFAULT NULL,
@@ -635,7 +636,7 @@ CREATE TABLE `diagnoses` (
   `behavior_id` int(11) DEFAULT NULL,
   `reaction_id` int(11) DEFAULT NULL,
   `week_id` int(11) DEFAULT NULL,
-  `comment` text,
+  `comment` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `other_name` varchar(255) DEFAULT NULL,
@@ -669,7 +670,7 @@ CREATE TABLE `emails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `primary` tinyint(1) DEFAULT '0',
+  `primary` tinyint(1) DEFAULT 0,
   `confirmation_token` varchar(255) DEFAULT NULL,
   `unconfirmed_email` varchar(255) DEFAULT NULL,
   `confirmed_at` datetime DEFAULT NULL,
@@ -708,10 +709,10 @@ CREATE TABLE `experiences` (
   `end_date` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `active` tinyint(1) DEFAULT '0',
-  `instructor_updated` tinyint(1) NOT NULL DEFAULT '0',
+  `active` tinyint(1) DEFAULT 0,
+  `instructor_updated` tinyint(1) NOT NULL DEFAULT 0,
   `anon_name` varchar(255) DEFAULT NULL,
-  `lead_time` int(11) NOT NULL DEFAULT '3',
+  `lead_time` int(11) NOT NULL DEFAULT 3,
   `student_end_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_experiences_on_course_id` (`course_id`),
@@ -738,11 +739,11 @@ DROP TABLE IF EXISTS `factor_packs`;
 CREATE TABLE `factor_packs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name_en` varchar(255) DEFAULT NULL,
-  `description_en` text,
+  `description_en` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `name_ko` varchar(255) DEFAULT NULL,
-  `description_ko` text,
+  `description_ko` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_factor_packs_on_name_en` (`name_en`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
@@ -767,12 +768,12 @@ DROP TABLE IF EXISTS `factors`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `factors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description_en` text,
+  `description_en` text DEFAULT NULL,
   `name_en` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `name_ko` varchar(255) DEFAULT NULL,
-  `description_ko` text,
+  `description_ko` text DEFAULT NULL,
   `factor_pack_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_factors_on_name_en` (`name_en`),
@@ -975,11 +976,11 @@ CREATE TABLE `installments` (
   `inst_date` datetime DEFAULT NULL,
   `assessment_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `comments` text,
+  `comments` text DEFAULT NULL,
   `group_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `anon_comments` text,
+  `anon_comments` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_installments_on_assessment_id` (`assessment_id`),
   KEY `index_installments_on_user_id` (`user_id`),
@@ -1068,13 +1069,13 @@ DROP TABLE IF EXISTS `projects`;
 CREATE TABLE `projects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
-  `description` text,
+  `description` text DEFAULT NULL,
   `course_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `start_dow` int(11) DEFAULT NULL,
   `end_dow` int(11) DEFAULT NULL,
-  `active` tinyint(1) DEFAULT '0',
+  `active` tinyint(1) DEFAULT 0,
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL,
   `factor_pack_id` int(11) DEFAULT NULL,
@@ -1138,7 +1139,7 @@ CREATE TABLE `reactions` (
   `behavior_id` int(11) DEFAULT NULL,
   `narrative_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `improvements` text,
+  `improvements` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `experience_id` int(11) DEFAULT NULL,
@@ -1174,7 +1175,7 @@ DROP TABLE IF EXISTS `rosters`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rosters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `role` int(11) NOT NULL DEFAULT '4',
+  `role` int(11) NOT NULL DEFAULT 4,
   `course_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
@@ -1246,7 +1247,7 @@ CREATE TABLE `schema_migrations` (
 
 LOCK TABLES `schema_migrations` WRITE;
 /*!40000 ALTER TABLE `schema_migrations` DISABLE KEYS */;
-INSERT INTO `schema_migrations` VALUES ('20170115031828'),('20170115064115'),('20170115070431'),('20170115071238'),('20170115071944'),('20170115072104'),('20170115072301'),('20170115074013'),('20170115080733'),('20170115080901'),('20170115081145'),('20170115091046'),('20170115091956'),('20170115092752'),('20170115093038'),('20170115094815'),('20170115103526'),('20170115105424'),('20170115111424'),('20170115111609'),('20170116062743'),('20170116103703'),('20170117104127'),('20170117115431'),('20170117120755'),('20170118045213'),('20170118045302'),('20170118045614'),('20170118070916'),('20170119125723'),('20170119133102'),('20170119134145'),('20170120013435'),('20170120013843'),('20170120013944'),('20170120014106'),('20170120014709'),('20170120094750'),('20170126073154'),('20170127030217'),('20170127030436'),('20170127030610'),('20170206053808'),('20170206071120'),('20170208064148'),('20170209045242'),('20170209064126'),('20170213051438'),('20170219004833'),('20170220103043'),('20170225093221'),('20170225093259'),('20170227124407'),('20170228021027'),('20170303025903'),('20170316161141'),('20170318114421'),('20170318115157'),('20170318115702'),('20170318120059'),('20170318120238'),('20170318120547'),('20170318120735'),('20170318141645'),('20170320150239'),('20170330153632'),('20170331025301'),('20170331040142'),('20170331045901'),('20170401061207'),('20170401065733'),('20170402133941'),('20170402134023'),('20170406070704'),('20170406070715'),('20170407024545'),('20170410131734'),('20170411005748'),('20170411010018'),('20170411010208'),('20170419023423'),('20170419145439'),('20170425000307'),('20170524022348'),('20170524023157'),('20170524023603'),('20170524023820'),('20170524023947'),('20170524024114'),('20170524044413'),('20170524112411'),('20170527033545'),('20170529054801'),('20170529054817'),('20170616035248'),('20170616040505'),('20170618121948'),('20170621041602'),('20170621041603'),('20170621041604'),('20170622054334'),('20170622054630'),('20170630203730'),('20170630203930'),('20170701103930'),('20170701153930'),('20170701155140'),('20170701171634'),('20170701173434'),('20170701191534'),('20170702053534'),('20170702054534'),('20170702055534'),('20170728135355'),('20170728140605'),('20170728142028'),('20170729021942'),('20170729030240'),('20170731084719'),('20170803080009'),('20170807013336'),('20170824050028'),('20170828054803'),('20171009050315'),('20171014054009'),('20171014135440'),('20171014135942'),('20171017020030'),('20171022013628'),('20171026030636'),('20171103055606'),('20171118140620'),('20171225131145'),('20180115065402'),('20180129083336'),('20180226064814'),('20180228001942'),('20180318021636'),('20180320071940'),('20180401054814'),('20180407212714'),('20180913021018'),('20190113055316'),('20190204083206'),('20190204084200'),('20190423122433'),('20190423123022'),('20190428135713'),('20190508060916'),('20190520002703'),('20190520042318'),('20190520054740'),('20190521031731');
+INSERT INTO `schema_migrations` VALUES ('20170115031828'),('20170115064115'),('20170115070431'),('20170115071238'),('20170115071944'),('20170115072104'),('20170115072301'),('20170115074013'),('20170115080733'),('20170115080901'),('20170115081145'),('20170115091046'),('20170115091956'),('20170115092752'),('20170115093038'),('20170115094815'),('20170115103526'),('20170115105424'),('20170115111424'),('20170115111609'),('20170116062743'),('20170116103703'),('20170117104127'),('20170117115431'),('20170117120755'),('20170118045213'),('20170118045302'),('20170118045614'),('20170118070916'),('20170119125723'),('20170119133102'),('20170119134145'),('20170120013435'),('20170120013843'),('20170120013944'),('20170120014106'),('20170120014709'),('20170120094750'),('20170126073154'),('20170127030217'),('20170127030436'),('20170127030610'),('20170206053808'),('20170206071120'),('20170208064148'),('20170209045242'),('20170209064126'),('20170213051438'),('20170219004833'),('20170220103043'),('20170225093221'),('20170225093259'),('20170227124407'),('20170228021027'),('20170303025903'),('20170316161141'),('20170318114421'),('20170318115157'),('20170318115702'),('20170318120059'),('20170318120238'),('20170318120547'),('20170318120735'),('20170318141645'),('20170320150239'),('20170330153632'),('20170331025301'),('20170331040142'),('20170331045901'),('20170401061207'),('20170401065733'),('20170402133941'),('20170402134023'),('20170406070704'),('20170406070715'),('20170407024545'),('20170410131734'),('20170411005748'),('20170411010018'),('20170411010208'),('20170419023423'),('20170419145439'),('20170425000307'),('20170524022348'),('20170524023157'),('20170524023603'),('20170524023820'),('20170524023947'),('20170524024114'),('20170524044413'),('20170524112411'),('20170527033545'),('20170529054801'),('20170529054817'),('20170616035248'),('20170616040505'),('20170618121948'),('20170621041602'),('20170621041603'),('20170621041604'),('20170622054334'),('20170622054630'),('20170630203730'),('20170630203930'),('20170701103930'),('20170701153930'),('20170701155140'),('20170701171634'),('20170701173434'),('20170701191534'),('20170702053534'),('20170702054534'),('20170702055534'),('20170728135355'),('20170728140605'),('20170728142028'),('20170729021942'),('20170729030240'),('20170731084719'),('20170803080009'),('20170807013336'),('20170824050028'),('20170828054803'),('20171009050315'),('20171014054009'),('20171014135440'),('20171014135942'),('20171017020030'),('20171022013628'),('20171026030636'),('20171103055606'),('20171118140620'),('20171225131145'),('20180115065402'),('20180129083336'),('20180226064814'),('20180228001942'),('20180318021636'),('20180320071940'),('20180401054814'),('20180407212714'),('20180913021018'),('20190113055316'),('20190204083206'),('20190204084200'),('20190423122433'),('20190423123022'),('20190428135713'),('20190508060916'),('20190520002703'),('20190520042318'),('20190520054740'),('20190521031731'),('20190523014532');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1259,7 +1260,7 @@ DROP TABLE IF EXISTS `schools`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `schools` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` text,
+  `description` text DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -1289,7 +1290,7 @@ DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `session_id` varchar(255) NOT NULL,
-  `data` text,
+  `data` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -1379,7 +1380,7 @@ CREATE TABLE `users` (
   `reset_password_token` varchar(255) DEFAULT NULL,
   `reset_password_sent_at` datetime DEFAULT NULL,
   `remember_created_at` datetime DEFAULT NULL,
-  `sign_in_count` int(11) NOT NULL DEFAULT '0',
+  `sign_in_count` int(11) NOT NULL DEFAULT 0,
   `current_sign_in_at` datetime DEFAULT NULL,
   `last_sign_in_at` datetime DEFAULT NULL,
   `current_sign_in_ip` varchar(255) DEFAULT NULL,
@@ -1388,7 +1389,7 @@ CREATE TABLE `users` (
   `confirmed_at` datetime DEFAULT NULL,
   `confirmation_sent_at` datetime DEFAULT NULL,
   `unconfirmed_email` varchar(255) DEFAULT NULL,
-  `failed_attempts` int(11) NOT NULL DEFAULT '0',
+  `failed_attempts` int(11) NOT NULL DEFAULT 0,
   `unlock_token` varchar(255) DEFAULT NULL,
   `locked_at` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
@@ -1401,7 +1402,7 @@ CREATE TABLE `users` (
   `admin` tinyint(1) DEFAULT NULL,
   `welcomed` tinyint(1) DEFAULT NULL,
   `last_emailed` datetime DEFAULT NULL,
-  `theme_id` int(11) DEFAULT '1',
+  `theme_id` int(11) DEFAULT 1,
   `school_id` int(11) DEFAULT NULL,
   `anon_first_name` varchar(255) DEFAULT NULL,
   `anon_last_name` varchar(255) DEFAULT NULL,
@@ -1491,10 +1492,10 @@ CREATE TABLE `weeks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `narrative_id` int(11) DEFAULT NULL,
   `week_num` int(11) DEFAULT NULL,
-  `text_en` text,
+  `text_en` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `text_ko` text,
+  `text_ko` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_weeks_on_week_num_and_narrative_id` (`week_num`,`narrative_id`),
   KEY `index_weeks_on_narrative_id` (`narrative_id`),
@@ -1521,4 +1522,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-21 15:53:00
+-- Dump completed on 2019-05-23 14:22:33
