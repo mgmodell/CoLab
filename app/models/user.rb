@@ -85,12 +85,18 @@ class User < ApplicationRecord
     #Get logs tied to courses
     logs = {}
     
-    self.consent_logs.each do |consent_log|
+    self.consent_logs.joins(:consent_form)
+        .where(consent_forms: {active: true } )
+        .each do |consent_log|
       logs[ consent_log.consent_form_id ] = consent_log
     end
 
-    courses.each do |course|
-      if logs[ course.consent_form_id ].nil?
+    courses.includes( consent_form: :consent_logs )
+           .where( 'courses.consent_form_id IS NOT NULL' )
+           .each do |course|
+
+
+      if course.consent_form.active && logs[ course.consent_form_id ].nil?
         log = course.get_consent_log user: self
         logs[ log.consent_form_id ] = log unless log.nil?
       end

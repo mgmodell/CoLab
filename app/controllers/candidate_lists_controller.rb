@@ -17,7 +17,7 @@ class CandidateListsController < ApplicationController
 
     consent_log = @candidate_list.course.get_consent_log user: @current_user
 
-    if consent_log.present?
+    if consent_log.present? && !consent_log.presented?
       redirect_to edit_consent_log_path( consent_form_id: consent_log.consent_form_id )
     else
       @term_counts = {}
