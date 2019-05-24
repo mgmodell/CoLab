@@ -415,9 +415,9 @@ class BingoGamesController < ApplicationController
 
       @bingo_game.candidates.completed
                  .includes(:candidate_feedback,
-                           :concept,
                            :user,
-                           candidate_list: :bingo_game  )
+                           concept: [ :courses, :candidates ],
+                           candidate_list: { bingo_game: :course }  )
                  .find_all do |candidate|
         entered_candidate = candidate_map[candidate.id]
 
