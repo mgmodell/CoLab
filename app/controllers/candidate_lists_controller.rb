@@ -18,7 +18,7 @@ class CandidateListsController < ApplicationController
     consent_log = @candidate_list.course.get_consent_log user: @current_user
 
     if consent_log.present? && !consent_log.presented?
-      redirect_to edit_consent_log_path( consent_form_id: consent_log.consent_form_id )
+      redirect_to edit_consent_log_path(consent_form_id: consent_log.consent_form_id)
     else
       @term_counts = {}
       @candidate_list.candidates.each do |candidate|
@@ -29,7 +29,7 @@ class CandidateListsController < ApplicationController
 
       empties.times do
         @candidate_list.candidates.build(term: '', definition: '',
-                                       user_id: @current_user.id)
+                                         user_id: @current_user.id)
       end
 
       if @candidate_list.bingo_game.reviewed

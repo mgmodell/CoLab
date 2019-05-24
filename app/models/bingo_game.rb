@@ -79,22 +79,22 @@ class BingoGame < ApplicationRecord
     term_list_date
   end
 
-  def get_events user: 
+  def get_events(user:)
     helpers = Rails.application.routes.url_helpers
     events = []
-    user_role = self.course.get_user_role( user )
+    user_role = course.get_user_role(user)
 
     cl = nil
     edit_url = nil
     destroy_url = nil
-    if 'instructor' == user_role
-      edit_url = helpers.edit_bingo_game_path( self )
-      destroy_url = helpers.bingo_game_path( self )
-      cl = self.candidate_list_for_user( user )
+    if user_role == 'instructor'
+      edit_url = helpers.edit_bingo_game_path(self)
+      destroy_url = helpers.bingo_game_path(self)
+      cl = candidate_list_for_user(user)
     end
 
-    if ( active && 'enrolled_student' == user_role ) ||
-       ( 'instructor' == user_role )
+    if (active && user_role == 'enrolled_student') ||
+       (user_role == 'instructor')
       events << {
         type: 'bingo_game',
         id: "bg_#{id}",
@@ -111,19 +111,19 @@ class BingoGame < ApplicationRecord
             start: start_date,
             end: term_list_date,
             actor: cl.nil? ? 'instructor' :
-              ( cl.is_group? ? 'group' : 'solo' ),
-            url: (self.is_open? && user_role ) == 'enrolled_student' ?
-              helpers.edit_candidate_list_path( cl ) : nil,
+              (cl.is_group? ? 'group' : 'solo'),
+            url: (is_open? && user_role) == 'enrolled_student' ?
+              helpers.edit_candidate_list_path(cl) : nil
           },
           {
             type: 'terms_list_review',
             start: term_list_date + 1.day,
             end: end_date,
-            actor: ('enrolled_student' == user_role && self.reviewed ) ? 
+            actor: user_role == 'enrolled_student' && reviewed ?
               'solo' : 'instructor',
-            url: self.is_open? ? nil :
-              ('instructor' == user_role ? helpers.review_bingo_candidates_path( self ) :
-                ( self.reviewed ? helpers.candidate_list_path( cl ) : nil ) ),
+            url: is_open? ? nil :
+              (user_role == 'instructor' ? helpers.review_bingo_candidates_path(self) :
+                (reviewed ? helpers.candidate_list_path(cl) : nil))
           }
         ]
       }

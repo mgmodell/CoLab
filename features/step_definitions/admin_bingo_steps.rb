@@ -10,7 +10,7 @@ Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_pref
     elem.click
   rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
     puts e.inspect
-    retry if( retries += 1 ) < 4
+    retry if (retries += 1) < 4
   end
   elem.set(new_date)
 end

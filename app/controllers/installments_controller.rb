@@ -7,21 +7,21 @@ class InstallmentsController < ApplicationController
   include Demoable
 
   def submit_installment
-    @assessment = Assessment.find( params[ :assessment_id ] )
+    @assessment = Assessment.find(params[:assessment_id])
     @title = t 'installments.title'
     @project = @assessment.project
     consent_log = @project.course.get_consent_log user: @current_user
 
     if consent_log.present? && !consent_log.presented?
-      redirect_to edit_consent_log_path( consent_form_id: consent_log.consent_form_id )
+      redirect_to edit_consent_log_path(consent_form_id: consent_log.consent_form_id)
     else
       @group = @assessment.group_for_user current_user
       @members = @group.users
       @factors = @project.factors
-      @installment = Installment.includes( values: %i[factor user], assessment: :project)
-                                .where( assessment: @assessment,
-                                        user: current_user,
-                                        group: @group ).first
+      @installment = Installment.includes(values: %i[factor user], assessment: :project)
+                                .where(assessment: @assessment,
+                                       user: current_user,
+                                       group: @group).first
       if @installment.nil?
         @installment = Installment.new(id: 0,
                                        assessment: @assessment,
@@ -40,17 +40,16 @@ class InstallmentsController < ApplicationController
 
       render @project.style.filename
     end
-
   end
 
   def update
     @title = t 'installments.title'
     id = params[:id].to_i
-    if 0 > id
+    if id < 0
       flash[:notice] = t 'installments.demo_success'
       redirect_to root_url
-    elsif id > 0 
-      @installment = Installment.find( id )
+    elsif id > 0
+      @installment = Installment.find(id)
       if @installment.update_attributes(i_params)
         notice = t('installments.success')
         redirect_to root_url, notice: notice

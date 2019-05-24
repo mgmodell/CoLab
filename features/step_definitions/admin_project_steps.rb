@@ -44,7 +44,7 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
     btn.click
   rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
     puts e.inspect
-    retry if( retries += 1) < 4
+    retry if (retries += 1) < 4
   end
   # click_link_or_button link_or_button
 end

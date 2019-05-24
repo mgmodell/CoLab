@@ -82,23 +82,22 @@ class User < ApplicationRecord
   end
 
   def waiting_consent_logs
-    #Get logs tied to courses
+    # Get logs tied to courses
     logs = {}
-    
-    self.consent_logs.joins(:consent_form)
-        .where(consent_forms: {active: true } )
-        .each do |consent_log|
-      logs[ consent_log.consent_form_id ] = consent_log
+
+    consent_logs.joins(:consent_form)
+                .where(consent_forms: { active: true })
+                .each do |consent_log|
+      logs[consent_log.consent_form_id] = consent_log
     end
 
-    courses.includes( consent_form: :consent_logs )
-           .where( 'courses.consent_form_id IS NOT NULL' )
+    courses.includes(consent_form: :consent_logs)
+           .where('courses.consent_form_id IS NOT NULL')
            .each do |course|
 
-
-      if course.consent_form.active && logs[ course.consent_form_id ].nil?
+      if course.consent_form.active && logs[course.consent_form_id].nil?
         log = course.get_consent_log user: self
-        logs[ log.consent_form_id ] = log unless log.nil?
+        logs[log.consent_form_id] = log unless log.nil?
       end
     end
 
@@ -107,16 +106,14 @@ class User < ApplicationRecord
     # We only want to do this for currently active consent forms
     consent_forms = ConsentForm.global_active_at(now).to_a
 
-    
     consent_forms.each do |consent_form|
-      if logs[ consent_form.id ].nil?
-        log = self.create_consent_log( consent_form_id: consent_form_id, presented: false )
-        logs[ consent_form.id ] = log
+      next unless logs[consent_form.id].nil?
 
-      end
+      log = create_consent_log(consent_form_id: consent_form_id, presented: false)
+      logs[consent_form.id] = log
     end
 
-    logs.values.delete_if{|log| log.presented }
+    logs.values.delete_if(&:presented)
   end
 
   def is_admin?
@@ -276,7 +273,7 @@ class User < ApplicationRecord
     # Add the experiences
 
     waiting_experiences = Experience.active_at(cur_date)
-                                    .includes( course: :consent_form )
+                                    .includes(course: :consent_form)
                                     .joins(course: :rosters)
                                     .where('rosters.user_id': id)
                                     .where('rosters.role IN (?)',
@@ -289,7 +286,7 @@ class User < ApplicationRecord
 
     # Add the bingo games
     waiting_games = BingoGame.joins(course: :rosters)
-                             .includes({course: :consent_form}, :project)
+                             .includes({ course: :consent_form }, :project)
                              .where('rosters.user_id': id, 'bingo_games.active': true)
                              .where('rosters.role = ? OR rosters.role = ?',
                                     Roster.roles[:enrolled_student], Roster.roles[:invited_student])

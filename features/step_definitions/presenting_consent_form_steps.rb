@@ -5,7 +5,6 @@ require 'forgery'
 
 Given /^reset time clock to now$/ do
   travel_back
-
 end
 
 Given /^there is a global consent form$/ do
@@ -13,10 +12,11 @@ Given /^there is a global consent form$/ do
     name: Forgery::Name.location,
     user: User.find(1)
   )
-  @consent_form.pdf.attach( io: File.open(
-                      Rails.root.join( 'db', 'ConsentForms_consolidated.pdf' ) ),
-                            filename: 'cf.pdf',
-                            content_type: 'application/pdf')
+  @consent_form.pdf.attach(io: File.open(
+    Rails.root.join('db', 'ConsentForms_consolidated.pdf')
+  ),
+                           filename: 'cf.pdf',
+                           content_type: 'application/pdf')
   @consent_form.save
   puts @consent_form.errors.full_messages unless @consent_form.errors.blank?
 end
@@ -26,10 +26,11 @@ Given /^the course has a consent form$/ do
     user: User.find(1),
     name: Forgery::Name.location
   )
-  @consent_form.pdf.attach( io: File.open( 
-                      Rails.root.join( 'db', 'ConsentForms_consolidated.pdf' ) ),
-                            filename: 'cf.pdf',
-                            content_type: 'application/pdf')
+  @consent_form.pdf.attach(io: File.open(
+    Rails.root.join('db', 'ConsentForms_consolidated.pdf')
+  ),
+                           filename: 'cf.pdf',
+                           content_type: 'application/pdf')
   @consent_form.save
   puts @consent_form.errors.full_messages unless @consent_form.errors.blank?
   @course.consent_form = @consent_form
@@ -37,12 +38,12 @@ Given /^the course has a consent form$/ do
   puts @course.errors.full_messages unless @course.errors.blank?
 end
 
-Then("user should see a consent form listed for the open experience") do
+Then('user should see a consent form listed for the open experience') do
   page.should have_content 'Research Consent Form'
   page.should have_content @experience.name
 end
 
-Then("user should see a consent form listed for the open bingo") do
+Then('user should see a consent form listed for the open bingo') do
   page.should have_content 'Research Consent Form'
   page.should have_content @bingo.topic
 end

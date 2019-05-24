@@ -40,16 +40,17 @@ class Course < ApplicationRecord
     activities.sort_by(&:end_date)
   end
 
-  def get_consent_log user:
+  def get_consent_log(user:)
     log = nil
 
     unless consent_form_id.nil? || !consent_form.is_active?
-      log = self.consent_form.consent_logs
-        .where( user: user ).take
+      log = consent_form.consent_logs
+                        .where(user: user).take
       if log.nil?
         log = user.consent_logs.create(
-                    consent_form_id: consent_form_id,
-                    presented: false )
+          consent_form_id: consent_form_id,
+          presented: false
+        )
       end
     end
     log

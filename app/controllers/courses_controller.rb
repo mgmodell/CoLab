@@ -21,7 +21,7 @@ class CoursesController < ApplicationController
 
   def calendar
     events = @course.get_activities
-      .reduce([]) { |acc, add| acc.concat add.get_events user: @current_user }
+                    .reduce([]) { |acc, add| acc.concat add.get_events user: @current_user }
 
     respond_to do |format|
       format.json do

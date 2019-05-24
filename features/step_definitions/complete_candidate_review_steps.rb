@@ -133,7 +133,7 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       elem.click
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       puts e.inspect
-      retry if( retries += 1 ) < 4
+      retry if (retries += 1) < 4
     end
     elem = page.find(:xpath,
                      "//select[@id='feedback_4_#{candidate.id}']//option[@value='#{feedback.id}']",
@@ -143,7 +143,7 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       elem.click
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       puts e.inspect
-      retry if( retries += 1 ) < 4
+      retry if (retries += 1) < 4
     end
     unless concept.blank?
       page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
@@ -166,7 +166,7 @@ Given /^the user checks "([^"]*)"$/ do |checkbox_name|
     elem.click
   rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
     puts e.inspect
-    retry if( retries += 1 ) < 4
+    retry if (retries += 1) < 4
   end
 end
 

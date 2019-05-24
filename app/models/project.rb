@@ -156,20 +156,20 @@ class Project < ApplicationRecord
     days
   end
 
-  def get_events user: 
+  def get_events(user:)
     helpers = Rails.application.routes.url_helpers
     events = []
-    user_role = self.course.get_user_role( user )
+    user_role = course.get_user_role(user)
 
     edit_url = nil
     destroy_url = nil
-    if 'instructor' == user_role
-      edit_url = helpers.edit_project_path( self )
-      destroy_url = helpers.project_path( self )
+    if user_role == 'instructor'
+      edit_url = helpers.edit_project_path(self)
+      destroy_url = helpers.project_path(self)
     end
 
-    if( active && 'enrolled_student' == user_role ) ||
-      ( 'instructor' == user_role )
+    if (active && user_role == 'enrolled_student') ||
+       (user_role == 'instructor')
 
       days = get_days_applicable
 
