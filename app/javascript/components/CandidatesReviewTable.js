@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
@@ -533,11 +534,12 @@ class CandidatesReviewTable extends React.Component {
           />
         </Grid>
         <Grid item>
-          <div onClick={() => this.handleChange("review_complete")}>
-            <Typography>{this.state.progress}%</Typography>
+            <CircularProgress size={10}
+              variant={(this.state.progress > 0) ? 'static' : 'indeterminate'}
+              value={this.state.progress}/>&nbsp;
+            {this.state.progress}%
             {statusMsg}
             {notify}
-          </div>
         </Grid>
         <Grid item>
           <Button variant="contained" onClick={() => this.getData()}>
