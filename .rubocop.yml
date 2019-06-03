@@ -1,6 +1,7 @@
 require: 
   - rubocop-thread_safety
   - rubocop-performance
+  - rubocop-rails
 
 AllCops:
   Include:

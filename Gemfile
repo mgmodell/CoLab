@@ -51,7 +51,6 @@ gem 'jquery_mobile_rails'
 gem 'kaminari'
 gem 'listen'
 gem 'omniauth-google-oauth2'
-  gem 'paperclip', '~> 6.1.0'
 gem 'prawn'
 gem 'prawn-table'
 gem 'rails_12factor', group: :production
@@ -79,17 +78,19 @@ group :development, :test do
   gem 'htmlbeautifier'
   gem 'htmlentities'
   gem 'i18n_data'
+  gem 'paperclip', '~> 6.1.0'
   gem 'parallel_tests'
   gem 'railroady'
   gem 'rails-erd', require: false
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 0.68.1', require: false
+  gem 'rubocop', '~> 0.71.0', require: false
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
+  gem 'rubocop-rails'
   gem 'selenium-webdriver'
-  gem 'webdrivers', '~> 3.0'
+  gem 'webdrivers', '~> 4.0'
 end
 
 group :test do

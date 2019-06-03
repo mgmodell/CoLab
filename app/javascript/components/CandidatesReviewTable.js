@@ -479,10 +479,13 @@ class CandidatesReviewTable extends React.Component {
 
     const notify =
       this.state.progress < 100 ? null : (
-        <Typography>
+        <div
+          onClick={() => this.handleChange( 'review_complete')}>
           <Checkbox id="review_complete" checked={this.state.review_complete} />
+        <Typography >
           {this.state.review_complete_lbl}
         </Typography>
+        </div>
       );
     const statusMsg = this.state.dirty ? null : (
       <Typography>{this.state.reviewStatus}</Typography>
