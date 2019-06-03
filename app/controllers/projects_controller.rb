@@ -59,7 +59,7 @@ class ProjectsController < ApplicationController
       @project.groups.includes(:users).each do |group|
         groups_users[group] = []
         new_name = params['group_' + group.id.to_s]
-        group.name = new_name unless new_name.blank?
+        group.name = new_name if new_name.present?
       end
 
       @project.course.enrolled_students.each do |user|

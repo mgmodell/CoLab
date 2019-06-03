@@ -142,11 +142,11 @@ scenario_times = {}
 
 World(ActiveJob::TestHelper)
 Around() do |scenario, block|
-  start = Time.now
+  start = Time.zone.now
   perform_enqueued_jobs do
     block.call
   end
-  scenario_times["#{scenario.feature.file}::#{scenario.name}"] = Time.now - start
+  scenario_times["#{scenario.feature.file}::#{scenario.name}"] = Time.zone.now - start
 end
 
 at_exit do

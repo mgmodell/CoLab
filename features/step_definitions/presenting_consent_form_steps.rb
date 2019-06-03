@@ -18,7 +18,7 @@ Given /^there is a global consent form$/ do
                            filename: 'cf.pdf',
                            content_type: 'application/pdf')
   @consent_form.save
-  puts @consent_form.errors.full_messages unless @consent_form.errors.blank?
+  puts @consent_form.errors.full_messages if @consent_form.errors.present?
 end
 
 Given /^the course has a consent form$/ do
@@ -32,10 +32,10 @@ Given /^the course has a consent form$/ do
                            filename: 'cf.pdf',
                            content_type: 'application/pdf')
   @consent_form.save
-  puts @consent_form.errors.full_messages unless @consent_form.errors.blank?
+  puts @consent_form.errors.full_messages if @consent_form.errors.present?
   @course.consent_form = @consent_form
   @course.save
-  puts @course.errors.full_messages unless @course.errors.blank?
+  puts @course.errors.full_messages if @course.errors.present?
 end
 
 Then('user should see a consent form listed for the open experience') do

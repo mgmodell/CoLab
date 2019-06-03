@@ -74,13 +74,9 @@ class Reaction < ApplicationRecord
     end
   end
 
-  def end_date
-    experience.end_date
-  end
+  delegate :end_date, to: :experience
 
-  def name
-    experience.name
-  end
+  delegate :name, to: :experience
 
   def sim_id
     narrative.id + (100 * narrative.scenario.id)

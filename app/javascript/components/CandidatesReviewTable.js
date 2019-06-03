@@ -479,12 +479,9 @@ class CandidatesReviewTable extends React.Component {
 
     const notify =
       this.state.progress < 100 ? null : (
-        <div
-          onClick={() => this.handleChange( 'review_complete')}>
+        <div onClick={() => this.handleChange("review_complete")}>
           <Checkbox id="review_complete" checked={this.state.review_complete} />
-        <Typography >
-          {this.state.review_complete_lbl}
-        </Typography>
+          <Typography>{this.state.review_complete_lbl}</Typography>
         </div>
       );
     const statusMsg = this.state.dirty ? null : (
@@ -537,12 +534,14 @@ class CandidatesReviewTable extends React.Component {
           />
         </Grid>
         <Grid item>
-            <CircularProgress size={10}
-              variant={(this.state.progress > 0) ? 'static' : 'indeterminate'}
-              value={this.state.progress}/>&nbsp;
-            {this.state.progress}%
-            {statusMsg}
-            {notify}
+          <CircularProgress
+            size={10}
+            variant={this.state.progress > 0 ? "static" : "indeterminate"}
+            value={this.state.progress}
+          />
+          &nbsp;
+          {this.state.progress}%{statusMsg}
+          {notify}
         </Grid>
         <Grid item>
           <Button variant="contained" onClick={() => this.getData()}>

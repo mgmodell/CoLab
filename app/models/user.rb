@@ -87,14 +87,13 @@ class User < ApplicationRecord
 
     consent_logs.joins(:consent_form)
                 .where(consent_forms: { active: true })
-                .each do |consent_log|
+                .find_each do |consent_log|
       logs[consent_log.consent_form_id] = consent_log
     end
 
     courses.includes(consent_form: :consent_logs)
            .where('courses.consent_form_id IS NOT NULL')
-           .each do |course|
-
+           .find_each do |course|
       if course.consent_form.active && logs[course.consent_form_id].nil?
         log = course.get_consent_log user: self
         logs[log.consent_form_id] = log unless log.nil?
@@ -153,8 +152,7 @@ class User < ApplicationRecord
              .where(reviewed: true, 'rosters.user_id': id)
              .where('rosters.role = ? OR rosters.role = ?',
                     Roster.roles[:enrolled_student], Roster.roles[:invited_student])
-             .all.each do |bingo_game|
-
+             .all.find_each do |bingo_game|
       activities << bingo_game
     end
     # Add in the reactions
@@ -242,7 +240,7 @@ class User < ApplicationRecord
                    end
 
     total = 0
-    my_reactions.includes(:behavior).each do |reaction|
+    my_reactions.includes(:behavior).find_each do |reaction|
       total += reaction.status
     end
     my_reactions.count == 0 ? 100 : (total / my_reactions.count)
@@ -313,8 +311,8 @@ class User < ApplicationRecord
   end
 
   def self.merge_users(predator:, prey:)
-    pred_u = User.find_by_email(predator)
-    prey_u = User.find_by_email(prey)
+    pred_u = User.find_by(email: predator)
+    prey_u = User.find_by(email: prey)
 
     if pred_u.present? && prey_u.present?
       # copy the demographic data

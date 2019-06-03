@@ -19,7 +19,7 @@ class Experience < ApplicationRecord
                     }
 
   def get_user_reaction(user)
-    reaction = reactions.includes(narrative: { scenario: :behavior }).where(user: user).take
+    reaction = reactions.includes(narrative: { scenario: :behavior }).find_by(user: user)
 
     reaction = Reaction.create(user: user, experience: self, instructed: false) if reaction.nil?
     reaction
@@ -182,7 +182,7 @@ class Experience < ApplicationRecord
   def self.inform_instructors
     count = 0
     cur_date = DateTime.current
-    Experience.where('instructor_updated = false AND student_end_date < ?', cur_date).each do |experience|
+    Experience.where('instructor_updated = false AND student_end_date < ?', cur_date).find_each do |experience|
       completion_hash = {}
       experience.course.enrolled_students.each do |student|
         reaction = experience.get_user_reaction student

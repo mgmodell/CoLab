@@ -13,13 +13,13 @@ Given /^the project measures (\d+) factors$/ do |num_factors|
       description: Forgery::Basic.text
     )
     factor.save
-    puts factor.errors.full_messages unless factor.errors.blank?
+    puts factor.errors.full_messages if factor.errors.present?
   end
   bp.save
-  puts bp.errors.full_messages unless bp.errors.blank?
+  puts bp.errors.full_messages if bp.errors.present?
   @project.factor_pack = bp
   @project.save
-  puts @project.errors.full_messages unless @project.errors.blank?
+  puts @project.errors.full_messages if @project.errors.present?
 end
 
 Given /^the project started last month and lasts (\d+) weeks, opened yesterday and closes tomorrow$/ do |num_weeks|

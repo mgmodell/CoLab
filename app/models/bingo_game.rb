@@ -177,7 +177,7 @@ class BingoGame < ApplicationRecord
 
   def self.inform_instructors
     count = 0
-    BingoGame.includes(:course).where(instructor_notified: false).each do |bingo|
+    BingoGame.includes(:course).where(instructor_notified: false).find_each do |bingo|
       next unless bingo.end_date < DateTime.current + (1 + bingo.lead_time).days
 
       completion_hash = {}
@@ -201,7 +201,7 @@ class BingoGame < ApplicationRecord
   end
 
   def candidate_list_for_user(user)
-    cl = candidate_lists.where(user_id: user.id).take
+    cl = candidate_lists.find_by(user_id: user.id)
     if cl.nil?
       cl = CandidateList.new
       cl.user_id = user.id

@@ -105,7 +105,7 @@ class CandidateListsController < ApplicationController
     @candidate_list.bingo_game = BingoGame.new(id: -42,
                                                topic: (t 'candidate_lists.demo_bingo_topic'),
                                                description: (t 'candidate_lists.demo_bingo_description'),
-                                               end_date: 2.day.from_now.end_of_day,
+                                               end_date: 2.days.from_now.end_of_day,
                                                individual_count: 10)
 
     render :show
@@ -130,7 +130,7 @@ class CandidateListsController < ApplicationController
     @candidate_list.bingo_game = BingoGame.new(id: -1,
                                                topic: (t 'candidate_lists.demo_topic'),
                                                description: (t 'candidate_lists.demo_description'),
-                                               end_date: 4.day.from_now.end_of_day,
+                                               end_date: 4.days.from_now.end_of_day,
                                                group_option: true,
                                                project: demo_project,
                                                group_discount: 33,

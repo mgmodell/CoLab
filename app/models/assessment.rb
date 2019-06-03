@@ -44,8 +44,7 @@ class Assessment < ApplicationRecord
     init_date = DateTime.current
     logger.debug "\n\t**Populating Assessments**"
     Project.includes(:course).where('active = true AND start_date <= ? AND end_date >= ?',
-                                    init_date, init_date.end_of_day).each do |project|
-
+                                    init_date, init_date.end_of_day).find_each do |project|
       configure_current_assessment project if project.is_available?
     end
   end
@@ -59,7 +58,7 @@ class Assessment < ApplicationRecord
               .includes(:installments)
               .where(assessments: { active: true }, instructor_updated: false, projects: { active: true })
               .where('assessments.end_date < ?', date_now)
-              .each do |assessment|
+              .find_each do |assessment|
       completion_hash = {}
       # Collect data for notification and anonymize comments
       assessment.installments.each do |inst|
@@ -69,7 +68,7 @@ class Assessment < ApplicationRecord
       end
 
       assessment.project.course.enrolled_students.each do |student|
-        unless completion_hash[student.email].present?
+        if completion_hash[student.email].blank?
           completion_hash[student.email] = { name: student.name(false), status: 'Incomplete' }
         end
       end

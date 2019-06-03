@@ -50,7 +50,7 @@ class InstallmentsController < ApplicationController
       redirect_to root_url
     elsif id > 0
       @installment = Installment.find(id)
-      if @installment.update_attributes(i_params)
+      if @installment.update(i_params)
         notice = t('installments.success')
         redirect_to root_url, notice: notice
       else

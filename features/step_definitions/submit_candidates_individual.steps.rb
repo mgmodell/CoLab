@@ -5,7 +5,7 @@ require 'forgery'
 Given /^the Bingo! game required (\d+) day of lead time$/ do |lead_time|
   @bingo.lead_time = lead_time
   @bingo.save
-  puts @bingo.errors.full_messages unless @bingo.errors.blank?
+  puts @bingo.errors.full_messages if @bingo.errors.present?
 end
 
 Given /^the Bingo! started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_date|
@@ -13,13 +13,13 @@ Given /^the Bingo! started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_da
   @bingo.start_date = Chronic.parse(start_date)
   @bingo.end_date = Chronic.parse(end_date)
   @bingo.save
-  puts @bingo.errors.full_messages unless @bingo.errors.blank?
+  puts @bingo.errors.full_messages if @bingo.errors.present?
 end
 
 Given /^the Bingo! game individual count is (\d+)$/ do |individual_count|
   @bingo.individual_count = individual_count
   @bingo.save
-  puts @bingo.errors.full_messages unless @bingo.errors.blank?
+  puts @bingo.errors.full_messages if @bingo.errors.present?
 end
 
 When /^the user clicks the link to the candidate list$/ do
@@ -102,5 +102,5 @@ end
 Given(/^the Bingo! "([^"]*)" been activated$/) do |has_or_has_not|
   @bingo.active = has_or_has_not == 'has'
   @bingo.save
-  puts @bingo.errors.full_messages unless @bingo.errors.blank?
+  puts @bingo.errors.full_messages if @bingo.errors.present?
 end

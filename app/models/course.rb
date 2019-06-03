@@ -45,7 +45,7 @@ class Course < ApplicationRecord
 
     unless consent_form_id.nil? || !consent_form.is_active?
       log = consent_form.consent_logs
-                        .where(user: user).take
+                        .find_by(user: user)
       if log.nil?
         log = user.consent_logs.create(
           consent_form_id: consent_form_id,
@@ -65,7 +65,7 @@ class Course < ApplicationRecord
   end
 
   def set_user_role(user, role)
-    roster = rosters.where(user: user).take
+    roster = rosters.find_by(user: user)
     roster = Roster.new(user: user, course: self) if roster.nil?
     roster.role = role
     roster.save
@@ -73,13 +73,13 @@ class Course < ApplicationRecord
   end
 
   def drop_student(user)
-    roster = Roster.where(user: user, course: self).take
+    roster = Roster.find_by(user: user, course: self)
     roster.role = Roster.roles[:dropped_student]
     roster.save
   end
 
   def get_user_role(user)
-    roster = rosters.where(user: user).take
+    roster = rosters.find_by(user: user)
     roster.role
   end
 
@@ -200,7 +200,7 @@ class Course < ApplicationRecord
     if EmailAddress.valid? user_email
       role = instructor ? Roster.roles[:instructor] : Roster.roles[:invited_student]
       # Searching for the student and:
-      user = User.joins(:emails).where(emails: { email: user_email }).take
+      user = User.joins(:emails).find_by(emails: { email: user_email })
 
       passwd = (0...8).map { rand(65..90).chr }.join
 
@@ -209,7 +209,7 @@ class Course < ApplicationRecord
       end
 
       unless user.nil?
-        existing_roster = Roster.where(course: self, user: user).take
+        existing_roster = Roster.find_by(course: self, user: user)
         if existing_roster.nil?
           Roster.create(user: user, course: self, role: role)
           ret_val = true
@@ -271,42 +271,42 @@ class Course < ApplicationRecord
   def activity_date_check
     experiences.reload.each do |experience|
       if experience.start_date < start_date
-        msg = errors[:start_date].blank? ? '' : errors[:start_date]
+        msg = errors[:start_date].presence || ''
         msg = "Experience '#{experience.name}' currently starts before this course does"
         msg += " (#{experience.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
       next unless experience.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].blank? ? '' : errors[:end_date]
+      msg = errors[:end_date].presence || ''
       msg = "Experience '#{experience.name}' currently ends after this course does"
       msg += " (#{experience.end_date} > #{end_date})."
       errors.add(:end_date, msg)
     end
     projects.reload.each do |project|
       if project.start_date < start_date
-        msg = errors[:start_date].blank? ? '' : errors[:start_date]
+        msg = errors[:start_date].presence || ''
         msg += "Project '#{project.name}' currently starts before this course does"
         msg += " (#{project.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
       next unless project.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].blank? ? '' : errors[:end_date]
+      msg = errors[:end_date].presence || ''
       msg = "Project '#{project.name}' currently ends after this course does"
       msg += " (#{project.end_date} > #{end_date})."
       errors.add(:end_date, msg)
     end
     bingo_games.reload.each do |bingo_game|
       if bingo_game.start_date < start_date
-        msg = errors[:start_date].blank? ? '' : errors[:start_date]
+        msg = errors[:start_date].presence || ''
         msg = "Bingo! '#{bingo_game.topic}' currently starts before this course does "
         msg += " (#{bingo_game.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
       next unless bingo_game.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].blank? ? '' : errors[:end_date]
+      msg = errors[:end_date].presence || ''
       msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
       msg += " (#{bingo_game.end_date} > #{end_date})."
       errors.add(:end_date, msg)

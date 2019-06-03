@@ -156,7 +156,7 @@ Given /^the user enrolls in a new course$/ do
     role: Roster.roles[:enrolled_student]
   )
   @course.save
-  puts @course.errors.full_messages unless @course.errors.blank?
+  puts @course.errors.full_messages if @course.errors.present?
 end
 
 Given /^the course has an experience$/ do
@@ -165,7 +165,7 @@ Given /^the course has an experience$/ do
   )
 
   @experience.save
-  puts @experience.errors.full_messages unless @experience.errors.blank?
+  puts @experience.errors.full_messages if @experience.errors.present?
 end
 
 Given /^the user enrolls in the course$/ do
@@ -184,5 +184,5 @@ Given('the experience {string} is {int}') do |field, val|
     false.should eq true
   end
   @experience.save
-  puts @experience.errors.full_messages unless @experience.errors.blank?
+  puts @experience.errors.full_messages if @experience.errors.present?
 end

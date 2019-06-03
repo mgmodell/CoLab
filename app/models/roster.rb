@@ -9,7 +9,7 @@ class Roster < ApplicationRecord
   enum role: { instructor: 1, assistant: 2, enrolled_student: 3,
                invited_student: 4, declined_student: 5,
                dropped_student: 6 }
-  validates_uniqueness_of :user_id, scope: :course_id
+  validates :user_id, uniqueness: { scope: :course_id }
 
   scope :faculty, lambda {
     where(role: [roles[:instructor],
@@ -30,7 +30,7 @@ class Roster < ApplicationRecord
   # In this method, we will remove ou
   def clean_up_dropped
     if dropped_student?
-      course.projects.includes(groups: :users).each do |project|
+      course.projects.includes(groups: :users).find_each do |project|
         project.groups.each do |group|
           next unless group.users.includes(user)
 

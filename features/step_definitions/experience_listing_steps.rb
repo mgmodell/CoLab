@@ -18,7 +18,7 @@ Given(/^there is a course with an experience$/) do
     end_date: DateTime.tomorrow
   )
   @experience.save
-  puts @experience.errors.full_messages unless @experience.errors.blank?
+  puts @experience.errors.full_messages if @experience.errors.present?
 
   @course.get_name(true).should_not be_nil
   @course.get_name(true).length.should be > 0
@@ -29,7 +29,7 @@ end
 Given(/^the experience "([^"]*)" been activated$/) do |has_or_has_not|
   @experience.active = has_or_has_not == 'has'
   @experience.save
-  puts @experience.errors.full_messages unless @experience.errors.blank?
+  puts @experience.errors.full_messages if @experience.errors.present?
 end
 
 Given(/^the course has (\d+) confirmed users$/) do |user_count|
@@ -54,7 +54,7 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
       role: Roster.roles[:enrolled_student]
     )
     r.save
-    puts r.errors.full_messages unless r.errors.blank?
+    puts r.errors.full_messages if r.errors.present?
   end
 end
 
@@ -67,7 +67,7 @@ Given /^the experience started "([^"]*)" and ends "([^"]*)"$/ do |start_date, en
   @experience.end_date = course_tz.local(d.year, d.month, d.day)
   # byebug
   @experience.save
-  puts @experience.errors.full_messages unless @experience.errors.blank?
+  puts @experience.errors.full_messages if @experience.errors.present?
 end
 
 Given /^the users "(.*?)" had demographics requested$/ do |with_demographics|
@@ -75,7 +75,7 @@ Given /^the users "(.*?)" had demographics requested$/ do |with_demographics|
   @users.each do |u|
     u.welcomed = demographics_requested
     u.save!
-    puts u.errors.full_messages unless u.errors.blank?
+    puts u.errors.full_messages if u.errors.present?
   end
 end
 
@@ -106,7 +106,7 @@ Given /^the course has an assessed project$/ do
     @project.get_name(true).should_not be_nil
     @project.get_name(true).length.should be > 0
   end
-  puts @project.errors.full_messages unless @project.errors.blank?
+  puts @project.errors.full_messages if @project.errors.present?
 end
 
 Given /^the user is in a group on the project$/ do
@@ -128,21 +128,21 @@ Given /^the user is in a group on the project$/ do
     )
     u.skip_confirmation!
     u.save
-    puts u.errors.full_messages unless u.errors.blank?
+    puts u.errors.full_messages if u.errors.present?
     r = u.rosters.new(
       course: @project.course,
       role: Roster.roles[:enrolled_student]
     )
     u.save
     r.save
-    puts r.errors.full_messages unless r.errors.blank?
+    puts r.errors.full_messages if r.errors.present?
   end
   @group.users << @user
   @group.save
   @group.get_name(true).should_not be_nil
   @group.get_name(true).length.should be > 0
-  puts @group.errors.full_messages unless @group.errors.blank?
+  puts @group.errors.full_messages if @group.errors.present?
   @project.active = false
   @project.save
-  puts @project.errors.full_messages unless @project.errors.blank?
+  puts @project.errors.full_messages if @project.errors.present?
 end

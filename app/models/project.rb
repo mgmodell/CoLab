@@ -35,7 +35,7 @@ class Project < ApplicationRecord
     if id == -1 # This hack supports demonstration of group term lists
       Group.new(name: 'SuperStars', users: [user])
     else
-      groups.joins(:users).where(users: { id: user.id }).take
+      groups.joins(:users).find_by(users: { id: user.id })
     end
   end
 

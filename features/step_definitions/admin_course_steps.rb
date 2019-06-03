@@ -9,7 +9,7 @@ Given 'the project started {string} and ends {string}' do |start_date, end_date|
 end
 
 Given "the user's school is {string}" do |school_name|
-  school = School.find_by_name school_name
+  school = School.find_by name: school_name
   @user.school = school
   @user.save
 end

@@ -145,7 +145,7 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       puts e.inspect
       retry if (retries += 1) < 4
     end
-    unless concept.blank?
+    if concept.present?
       page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
           .set(concept)
     end
@@ -155,7 +155,7 @@ end
 Given /^the saved reviews match the list$/ do
   @feedback_list.each do |key, value|
     Candidate.find(key).candidate_feedback_id.should eq value[:feedback][:id]
-    Candidate.find(key).concept.name.should eq value[:concept] unless value[:concept].blank?
+    Candidate.find(key).concept.name.should eq value[:concept] if value[:concept].present?
   end
 end
 

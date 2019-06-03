@@ -43,7 +43,7 @@ Given /^the course has a Bingo! game$/ do
     @bingo.get_topic(true).should_not be_nil
     @bingo.get_topic(true).length.should be > 0
   end
-  puts @bingo.errors.full_messages unless @bingo.errors.blank?
+  puts @bingo.errors.full_messages if @bingo.errors.present?
 end
 
 Then /^the bingo "([^"]*)" is "([^"]*)"$/ do |field, value|
@@ -70,7 +70,7 @@ Given /^the bingo started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_dat
   d = Chronic.parse(end_date)
   @bingo.end_date = course_tz.local(d.year, d.month, d.day)
   @bingo.save
-  puts @bingo.errors.full_messages unless @bingo.errors.blank?
+  puts @bingo.errors.full_messages if @bingo.errors.present?
 end
 
 Then /^the bingo project is the course's project$/ do

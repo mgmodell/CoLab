@@ -70,13 +70,9 @@ class CandidateList < ApplicationRecord
     end
   end
 
-  def end_date
-    bingo_game.end_date
-  end
+  delegate :end_date, to: :bingo_game
 
-  def name
-    bingo_game.name
-  end
+  delegate :name, to: :bingo_game
 
   def others_requested_help
     requested_count = 0

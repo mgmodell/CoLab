@@ -30,7 +30,7 @@ class BingoBoardsController < ApplicationController
     bingo_game.project = demo_project
     bingo_game.topic = t 'candidate_lists.demo_bingo_topic'
     bingo_game.description = t 'candidate_lists.demo_bingo_description'
-    bingo_game.end_date = 1.days.from_now.end_of_day
+    bingo_game.end_date = 1.day.from_now.end_of_day
 
     # let the monkey-patching begin!
     def bingo_game.playable?
@@ -177,7 +177,7 @@ class BingoBoardsController < ApplicationController
                         .includes(:bingo_game, bingo_cells: %i[concept candidate])
                         .where(user_id: @current_user.id).take
 
-    unless wksheet.present?
+    if wksheet.blank?
       candidates = bingo_game.candidates.acceptable.to_a
       # Assuming 10 items
       items = {}

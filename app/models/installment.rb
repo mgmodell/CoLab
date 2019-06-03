@@ -45,7 +45,7 @@ class Installment < ApplicationRecord
   def values_by_factor
     hash_hash = {}
 
-    values.includes(:factor).each do |v|
+    values.includes(:factor).find_each do |v|
       au_hash = hash_hash[v.factor]
       au_hash = {} if au_hash.nil?
       au_hash.store(v.user, v)
@@ -56,7 +56,7 @@ class Installment < ApplicationRecord
 
   def values_by_user
     hash_hash = {}
-    values.includes(:factor).each do |v|
+    values.includes(:factor).find_each do |v|
       b_hash = hash_hash[v.user]
       b_hash = {} if b_hash.nil?
       b_hash.store(v.factor, v)
@@ -74,7 +74,7 @@ class Installment < ApplicationRecord
   end
 
   def anonymize_comments
-    unless comments.blank?
+    if comments.present?
       working_space = comments.dup
 
       # Phase 1 - convert to codes
@@ -82,32 +82,32 @@ class Installment < ApplicationRecord
                           .find(assessment.project.course_id)
 
       this_school = this_course.school
-      unless this_school.name.blank?
+      if this_school.name.present?
         working_space.gsub!(/\b#{this_school.name}\b/i, "[s_#{this_school.id}]")
       end
-      unless this_course.name.blank?
+      if this_course.name.present?
         working_space.gsub!(/\b#{this_course.name}\b/i, "[cnam_#{this_course.id}]")
       end
-      unless this_course.number.blank?
+      if this_course.number.present?
         working_space.gsub!(/\b#{this_course.number}\b/i, "[cnum_#{this_course.id}]")
       end
 
       this_course.projects.each do |project|
-        unless project.name.blank?
+        if project.name.present?
           working_space.gsub!(/\b#{project.name}\b/i, "[p_#{project.id}]")
         end
         project.groups.each do |group|
-          unless group.name.blank?
+          if group.name.present?
             working_space.gsub!(/\b#{group.name}\b/i, "[g_#{group.id}]")
           end
         end
       end
 
       this_course.users.each do |user|
-        unless user.first_name.blank?
+        if user.first_name.present?
           working_space.gsub! /\b#{user.first_name}\b/i, "[ufn_#{user.id}]"
         end
-        unless user.last_name.blank?
+        if user.last_name.present?
           working_space.gsub! /\b#{user.last_name}\b/i, "[uln_#{user.id}]"
         end
       end
