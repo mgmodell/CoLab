@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import GridList, { GridListTile } from "@material-ui/core/GridList";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+
 const styles = createMuiTheme({
   typography: {
     useNextVariants: true
@@ -291,4 +292,4 @@ BingoBuilder.propTypes = {
   worksheetUrl: PropTypes.string.isRequired,
   boardSaveUrl: PropTypes.string
 };
-export default withTheme()(BingoBuilder);
+export default withTheme(BingoBuilder);

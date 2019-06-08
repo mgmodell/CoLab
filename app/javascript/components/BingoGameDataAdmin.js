@@ -39,8 +39,8 @@ const styles = theme => ({
     flexWrap: "wrap"
   },
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing(),
+    marginRight: theme.spacing(),
     width: 200
   },
   dense: {
@@ -268,7 +268,7 @@ class BingoGameDataAdmin extends React.Component {
             {t("game_details_pnl")}:
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Grid container spacing={16}>
+            <Grid container spacing={10}>
               <Grid item>
                 <TextField
                   id="topic"

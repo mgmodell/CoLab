@@ -62,7 +62,7 @@ class CandidatesReviewTable extends React.Component {
       bingo_game: null,
       field_prefix: "",
       rowsPerPage: 5,
-      page: 1,
+      page: 0,
       filter_text: "",
       review_complete_lbl: "Review completed",
       review_complete: false,

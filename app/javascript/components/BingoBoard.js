@@ -48,4 +48,4 @@ class BingoBoard extends React.Component {
 BingoBoard.propTypes = {
   board: PropTypes.object
 };
-export default withTheme()(BingoBoard);
+export default withTheme(BingoBoard);

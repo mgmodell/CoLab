@@ -61,4 +61,4 @@ ConceptChips.propTypes = {
   token: PropTypes.string,
   utl: PropTypes.string
 };
-export default withTheme()(ConceptChips);
+export default withTheme(ConceptChips);
