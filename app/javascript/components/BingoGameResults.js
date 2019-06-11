@@ -13,6 +13,9 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
+import Typography from "@material-ui/core/Typography";
+
+import ScoredGameDataTable from "./ScoredGameDataTable";
 
 function PaperComponent(props) {
   return (
@@ -60,11 +63,13 @@ class BingoGameResults extends React.Component {
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={8}>
-            <Grid item xs={5}>
+            <Grid item >
+              <Typography>Bingo Answer Key</Typography>
               {this.renderBoard(this.props.board)}
             </Grid>
-            <Grid item xs={5}>
-              Candidates will go here
+            <Grid item >
+              <Typography>Scored Results</Typography>
+              <ScoredGameDataTable candidates={this.props.candidates} />
             </Grid>
           </Grid>
         </DialogContent>
@@ -83,6 +88,7 @@ BingoGameResults.propTypes = {
   close: PropTypes.func,
   candidates: PropTypes.arrayOf(
     PropTypes.shape({
+      id: PropTypes.number,
       concept: PropTypes.string,
       definition: PropTypes.string,
       term: PropTypes.string,
