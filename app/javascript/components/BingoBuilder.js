@@ -1,5 +1,6 @@
 import React from "react";
 import BingoBoard from "./BingoBoard";
+import ConceptChips from "./ConceptChips";
 import PropTypes from "prop-types";
 import { withTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
@@ -8,14 +9,15 @@ import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import GridList, { GridListTile } from "@material-ui/core/GridList";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 const styles = createMuiTheme({
   typography: {
     useNextVariants: true
   }
 });
+
 class BingoBuilder extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +26,7 @@ class BingoBuilder extends React.Component {
       saveStatus: "",
       concepts: [],
       endDate: endDate,
+      curTab: 'builder',
       board: {
         initialised: false,
         bingo_cells: [],
@@ -34,6 +37,7 @@ class BingoBuilder extends React.Component {
         }
       }
     };
+    this.changeTab = this.changeTab.bind(this);
     this.getWorksheet = this.getWorksheet.bind(this);
     this.getPrintableBoard = this.getPrintableBoard.bind(this);
   }
@@ -184,6 +188,12 @@ class BingoBuilder extends React.Component {
         }
       });
   }
+  changeTab( event, name ){
+    this.setState({
+      curTab: name
+    })
+
+  }
   getWorksheet() {
     open(this.props.worksheetUrl + ".pdf");
   }
@@ -265,20 +275,31 @@ class BingoBuilder extends React.Component {
       </div>
     ) : null;
 
+    const builderTab = 'builder' == this.state.curTab && (
+      <div id='builder'>
+        <ol>
+          {workSheetInstr}
+          {playableInstr}
+        </ol>
+        {builder}
+      </div> );
+
+
     return (
       <MuiThemeProvider theme={styles}>
         <Paper square={false}>
-          <Paper>
-            {this.state.concepts.map(chip => {
-              return <Chip key={chip.id} label={chip.name} />;
-            })}
-          </Paper>
-          <br />
-          <ol>
-            {workSheetInstr}
-            {playableInstr}
-          </ol>
-          {builder}
+          <Tabs value={this.state.curTab}
+                onChange={this.changeTab}
+                centered
+          >
+            <Tab value='builder'
+                 label='Builder' />
+            <Tab value='concepts'
+                 label='All Found Concepts'>
+            </Tab>
+          </Tabs>
+          {builderTab}
+          {'concepts' == this.state.curTab && <ConceptChips concepts={this.state.concepts} />}
         </Paper>
       </MuiThemeProvider>
     );
