@@ -17,10 +17,11 @@ class ConceptChips extends React.Component {
 
   render() {
     var c = [{ id: 1, name: "nothing" }];
+    const { concepts } = this.props;
     return (
       <MuiThemeProvider theme={theme}>
         <Paper>
-          {this.props.concepts.map(chip => {
+          {null == concepts ? "No concepts identified" : concepts.map(chip => {
             return <Chip key={chip.id} label={chip.name} />;
           })}
         </Paper>
