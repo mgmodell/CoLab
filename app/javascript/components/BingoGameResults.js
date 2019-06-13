@@ -8,7 +8,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -28,6 +29,10 @@ function PaperComponent(props) {
 class BingoGameResults extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      curTab: 'key'
+    }
+    this.changeTab = this.changeTab.bind(this);
   }
 
   renderBoard(board) {
@@ -50,6 +55,13 @@ class BingoGameResults extends React.Component {
     }
   }
 
+  changeTab( event, name ){
+    this.setState({
+      curTab: name
+    })
+
+  }
+
   render() {
     return (
       <Dialog
@@ -62,16 +74,15 @@ class BingoGameResults extends React.Component {
           Results for {this.props.student}
         </DialogTitle>
         <DialogContent>
-          <Grid container spacing={8}>
-            <Grid item >
-              <Typography>Bingo Answer Key</Typography>
-              {this.renderBoard(this.props.board)}
-            </Grid>
-            <Grid item >
-              <Typography>Scored Results</Typography>
-              <ScoredGameDataTable candidates={this.props.candidates} />
-            </Grid>
-          </Grid>
+          <Tabs value={this.state.curTab} onChange={this.changeTab}
+            centered>
+            <Tab value='results' label='Scored Results' />
+            <Tab value='key' label='Answer Key' />
+          </Tabs>
+          {'key' == this.state.curTab &&
+              this.renderBoard(this.props.board)}
+          {'results' == this.state.curTab &&
+              <ScoredGameDataTable candidates={this.props.candidates} />}
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.close}>Done</Button>

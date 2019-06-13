@@ -8,8 +8,6 @@ import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import GridList, { GridListTile } from "@material-ui/core/GridList";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 
 const styles = createMuiTheme({
   typography: {
