@@ -63,7 +63,7 @@ class BingoGamesController < ApplicationController
         [course: { rosters: { user: :emails } }, candidate_lists: [:user,
                                                                    { candidates: %i[concept candidate_feedback] }, group: :users],
          bingo_boards: { bingo_cells: :candidate }]
-      ).where(id: params[:id])
+      ).find_by_id(params[:id])
     else
       bingo_game = BingoGame.includes(
         [course: { rosters: { user: :emails } }, candidate_lists: [:user,
@@ -73,7 +73,7 @@ class BingoGamesController < ApplicationController
               candidate_lists: {user: @current_user.id},
               bingo_boards: {user_id: @current_user.id},
               bingo_boards: {board_type: 'worksheet'}
-              )
+              ).first
 
     end
     anon = @current_user.anonymize?
