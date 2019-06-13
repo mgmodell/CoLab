@@ -7,6 +7,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
+import Typography from "@material-ui/core/Typography";
 
 
 class ScoredGameDataTable extends React.Component {
@@ -111,6 +112,8 @@ class ScoredGameDataTable extends React.Component {
     const { columns } = this.state;
     const { candidates } = this.props;
     return (
+      <React.Fragment>
+      {candidates == null || 0 == candidates.length ? "No scored data" :
       <Table>
         <TableHead>
           <TableRow>
@@ -156,7 +159,8 @@ class ScoredGameDataTable extends React.Component {
 
         </TableBody>
       </Table>
-
+      }
+      </React.Fragment>
       
     );
   }

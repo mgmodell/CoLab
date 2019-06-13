@@ -139,6 +139,7 @@ class BingoGamesController < ApplicationController
         candidates = []
         cl.candidates.completed.each do |c|
           candidates << {
+            id: c.id,
             term: c.term,
             definition: c.definition,
             concept: c.concept.present? ? c.concept.name : nil,

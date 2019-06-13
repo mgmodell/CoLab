@@ -166,10 +166,10 @@ class BingoGameDataAdminTable extends React.Component {
       });
   }
   filter = function(event) {
-    var filtered = this.state.results_raw.filter(concept =>
-      concept.cap_name.includes(event.target.value.toUpperCase())
+    var filtered = this.state.results_raw.filter(user =>
+      user.student.toUpperCase().includes(event.target.value.toUpperCase())
     );
-    this.setState({ concepts: filtered });
+    this.setState({ results: filtered });
   };
 
   colSort = function(event) {
