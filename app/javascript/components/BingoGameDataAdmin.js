@@ -9,11 +9,10 @@ import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Input from "@material-ui/core/Input";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
@@ -23,8 +22,6 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
 import get_i18n from "./i18n";
-
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -58,6 +55,7 @@ class BingoGameDataAdmin extends React.Component {
     let end = new Date();
     end.setDate(end.getDate() + 7);
     this.state = {
+      curTab: 'details',
       dirty: false,
       messages: {},
       saveStatus: "",
@@ -79,6 +77,7 @@ class BingoGameDataAdmin extends React.Component {
       }
     };
     this.saveBingoGame = this.saveBingoGame.bind(this);
+    this.changeTab = this.changeTab.bind(this);
   }
 
   componentDidMount() {
@@ -204,6 +203,13 @@ class BingoGameDataAdmin extends React.Component {
     });
   };
 
+  changeTab( event, name ){
+    this.setState({
+      curTab: name
+    })
+
+  }
+
   render() {
     const { classes } = this.props;
     const save_btn = this.state.dirty ? (
@@ -263,11 +269,13 @@ class BingoGameDataAdmin extends React.Component {
     ) : null;
     return (
       <Paper>
-        <ExpansionPanel defaultExpanded={true}>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            {t("game_details_pnl")}:
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+        <Tabs value={this.state.curTab} onChange={this.changeTab}
+            centered>
+          <Tab value='details' label={t("game_details_pnl")} />
+          <Tab value='results' label={t("response_pnl")} />
+        </Tabs>
+          {'details' == this.state.curTab &&
+            <React.Fragment>
             <Grid container spacing={10}>
               <Grid item>
                 <TextField
@@ -375,14 +383,8 @@ class BingoGameDataAdmin extends React.Component {
             </Grid>
             {save_btn}
             <Typography>{this.state.saveStatus}</Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-
-        <ExpansionPanel disabled={!this.state.bingo_game.reviewed}>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            {t("response_pnl")}:
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+            </React.Fragment>}
+          {'results' == this.state.curTab &&
             <Grid container>
               <Grid item xs={5}>
                 <ConceptChips
@@ -396,9 +398,7 @@ class BingoGameDataAdmin extends React.Component {
                   gameResultsUrl={this.props.gameResultsUrl}
                 />
               </Grid>
-            </Grid>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+            </Grid> }
       </Paper>
     );
   }
