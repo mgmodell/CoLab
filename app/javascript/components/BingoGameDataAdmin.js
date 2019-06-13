@@ -164,6 +164,7 @@ class BingoGameDataAdmin extends React.Component {
           tz_extra_start: tz_extra_start,
           tz_extra_end: tz_extra_end,
           descriptionEditor: editorState,
+          concepts: data.concepts,
           bingo_game: data
         });
       });
@@ -388,8 +389,7 @@ class BingoGameDataAdmin extends React.Component {
             <Grid container>
               <Grid item xs={5}>
                 <ConceptChips
-                  token={this.props.token}
-                  url={this.props.conceptUrl}
+                  concepts={this.state.concepts}
                 />
               </Grid>
               <Grid item xs={7}>

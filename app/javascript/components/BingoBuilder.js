@@ -1,5 +1,6 @@
 import React from "react";
 import BingoBoard from "./BingoBoard";
+import ConceptChips from "./ConceptChips";
 import PropTypes from "prop-types";
 import { withTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
@@ -7,6 +8,8 @@ import Chip from "@material-ui/core/Chip";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 import GridList, { GridListTile } from "@material-ui/core/GridList";
 
 const styles = createMuiTheme({
@@ -22,6 +25,7 @@ class BingoBuilder extends React.Component {
       saveStatus: "",
       concepts: [],
       endDate: endDate,
+      curTab: 'builder',
       board: {
         initialised: false,
         bingo_cells: [],
@@ -32,6 +36,7 @@ class BingoBuilder extends React.Component {
         }
       }
     };
+    this.changeTab = this.changeTab.bind(this);
     this.getWorksheet = this.getWorksheet.bind(this);
     this.getPrintableBoard = this.getPrintableBoard.bind(this);
   }
@@ -135,6 +140,14 @@ class BingoBuilder extends React.Component {
         //}, this.randomizeTiles );
       });
   }
+
+  changeTab( event, name ){
+    this.setState({
+      curTab: name
+    })
+
+  }
+
   saveBoard() {
     var board = this.state.board;
     board.bingo_cells_attributes = board.bingo_cells;
@@ -265,18 +278,29 @@ class BingoBuilder extends React.Component {
 
     return (
       <MuiThemeProvider theme={styles}>
+        <Paper>
+        <Tabs value={this.state.curTab}
+              onChange={this.changeTab}
+              centered >
+          <Tab value='builder' label='Bingo game builder'/>
+          <Tab value='results' label='Your performance'/>
+          <Tab value='concepts' label='Concepts found by class' />
+        </Tabs>
+        {'builder' == this.state.curTab &&
         <Paper square={false}>
-          <Paper>
-            {this.state.concepts.map(chip => {
-              return <Chip key={chip.id} label={chip.name} />;
-            })}
-          </Paper>
           <br />
           <ol>
             {workSheetInstr}
             {playableInstr}
           </ol>
           {builder}
+        </Paper>}
+        {'results' == this.state.curTab &&
+          <div>Working on it</div>
+        }
+        {'concepts' == this.state.curTab &&
+          <ConceptChips concepts={this.state.concepts} />
+        }
         </Paper>
       </MuiThemeProvider>
     );

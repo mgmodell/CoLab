@@ -43,19 +43,42 @@ class BingoGamesController < ApplicationController
             name: p.get_name(@current_user.anonymize?)
           }
         end .as_json
+        resp[:concepts] = @bingo_game.get_concepts
+                                     .collect do |c|
+          {
+            id: c.id,
+            name: c.name
+          }
+        end .as_json
         render json: resp
       end
     end
   end
 
   def game_results
-    bingo_game = BingoGame.includes(
-      [course: { rosters: { user: :emails } }, candidate_lists: [:user,
-                                                                 { candidates: %i[concept candidate_feedback] }, group: :users],
-       bingo_boards: { bingo_cells: :candidate }]
-    ).find(params[:id])
+    editor = @current_user.is_admin? || @current_user.is_instructor?
+    bingo_game = nil
+    if editor
+      bingo_game = BingoGame.includes(
+        [course: { rosters: { user: :emails } }, candidate_lists: [:user,
+                                                                   { candidates: %i[concept candidate_feedback] }, group: :users],
+         bingo_boards: { bingo_cells: :candidate }]
+      ).where(id: params[:id])
+    else
+      bingo_game = BingoGame.includes(
+        [course: { rosters: { user: :emails } }, candidate_lists: [:user,
+                                                                   { candidates: %i[concept candidate_feedback] }, group: :users],
+         bingo_boards: { bingo_cells: :candidate }]
+      ).where(id: params[:id],
+              candidate_lists: {user: @current_user.id},
+              bingo_boards: {user_id: @current_user.id},
+              bingo_boards: {board_type: 'worksheet'}
+              )
+
+    end
     anon = @current_user.anonymize?
     resp = {}
+    # Get the users
     bingo_game.course.rosters.each do |r|
       next unless r.enrolled_student? || r.invited_student?
 
@@ -75,7 +98,7 @@ class BingoGamesController < ApplicationController
     end
     # Get the worksheets
     bingo_game.bingo_boards.each do |bb|
-      next unless bb.worksheet?
+      # next unless bb.worksheet?
 
       practice_answers = Array.new bingo_game.size
       bingo_game.size.times do |index|

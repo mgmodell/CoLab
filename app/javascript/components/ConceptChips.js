@@ -13,43 +13,13 @@ const theme = createMuiTheme({
 class ConceptChips extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      concepts: []
-    };
-  }
-  getConcepts() {
-    fetch(this.props.url + ".json", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
-      .then(data => {
-        this.setState({
-          concepts: data
-        });
-      });
-  }
-  componentDidMount() {
-    this.getConcepts();
   }
   render() {
     var c = [{ id: 1, name: "nothing" }];
     return (
       <MuiThemeProvider theme={theme}>
         <Paper>
-          {this.state.concepts.map(chip => {
+          {this.props.concepts.map(chip => {
             return <Chip key={chip.id} label={chip.name} />;
           })}
         </Paper>
@@ -58,7 +28,11 @@ class ConceptChips extends React.Component {
   }
 }
 ConceptChips.propTypes = {
-  token: PropTypes.string,
-  utl: PropTypes.string
+  concepts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string
+    })
+  )
 };
 export default withTheme(ConceptChips);
