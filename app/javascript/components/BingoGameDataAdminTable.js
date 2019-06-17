@@ -6,6 +6,7 @@ import BingoGameResults from "./BingoGameResults";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
+import LinearProgress from '@material-ui/core/LinearProgress';
 import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -41,11 +42,10 @@ class BingoGameDataAdminTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      results_raw: [],
-      results: [],
       search: "",
       sortBy: "student",
       sortDirection: SortDirection.DESC,
+      results: this.props.results_raw,
       individual: {
         open: false,
         student: "",
@@ -118,10 +118,6 @@ class BingoGameDataAdminTable extends React.Component {
     this.closeDialog = this.closeDialog.bind(this);
     this.openDialog = this.openDialog.bind(this);
   }
-  componentDidMount() {
-    //Retrieve data
-    this.getResults();
-  }
   openDialog(event) {
     const index = event.index;
     this.setState({
@@ -140,40 +136,15 @@ class BingoGameDataAdminTable extends React.Component {
       }
     });
   }
-  getResults() {
-    fetch(this.props.gameResultsUrl + ".json", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
-      .then(data => {
-        this.setState({
-          results: data,
-          results_raw: data
-        });
-      });
-  }
   filter = function(event) {
-    var filtered = this.state.results_raw.filter(user =>
+    var filtered = this.props.results_raw.filter(user =>
       user.student.toUpperCase().includes(event.target.value.toUpperCase())
     );
     this.setState({ results: filtered });
   };
 
   colSort = function(event) {
-    let tmpArray = this.state.results_raw;
+    let tmpArray = this.props.results_raw;
     let direction = SortDirection.DESC;
     let mod = 1;
     if (
@@ -208,12 +179,21 @@ class BingoGameDataAdminTable extends React.Component {
   render() {
     return (
       <Paper style={{ height: "100%", width: "100%" }}>
+        {null == this.props.results_raw || null == this.state.results ?
+        <React.Fragment>
+          <br/>
+          <Typography variant={'h3'} align={'center'} >
+            Loading&hellip;
+          </Typography>
+          <LinearProgress />
+        </React.Fragment>:
+        <React.Fragment>
         <Toolbar>
           <InputBase placeholder="Search results" onChange={this.filter} />
           <SearchIcon />
           <Typography variant="h6" color="inherit">
             Showing {this.state.results.length} of{" "}
-            {this.state.results_raw.length}
+            {this.props.results_raw.length}
           </Typography>
         </Toolbar>
         <WrappedVirtualizedTable
@@ -232,12 +212,12 @@ class BingoGameDataAdminTable extends React.Component {
           close={this.closeDialog}
           candidates={this.state.individual.candidates}
         />
+        </React.Fragment>}
       </Paper>
     );
   }
 }
 BingoGameDataAdminTable.propTypes = {
-  gameResultsUrl: PropTypes.string.isRequired,
-  token: PropTypes.string.isRequired
+  results_raw:  PropTypes.array
 };
 export default BingoGameDataAdminTable;

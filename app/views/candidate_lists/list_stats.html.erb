@@ -1,107 +1,11 @@
   <% theme_code = get_theme_code
      anonymize = false %>
-<table>
-  <tr>
-    <th align="right"><%= t 'bingo_games.topic' %>:</th>
-    <td><%= @candidate_list.bingo_game.topic %></td>
-  </tr>
-  <tr>
-    <th align="right"><%= t :description %>:</th>
-    <td><%= raw( @candidate_list.bingo_game.description ) %></td>
-  </tr>
-</table>
-<table data-role="table"
-    id="stats_table"
-    data-mode="columntoggle"
-    data-column-btn-theme="<%= theme_code %>"
-    data-column-btn-text="<%= t :column_select %>"
-    class="table-stroke ui-shadow table-stripe table-ui-responsive">
-  <thead><% candidate_feedbacks = CandidateFeedback.all %>
-    <tr>
-      <th colspan="<%= candidate_feedbacks.size %>" data-priority="1">
-        <%= t 'bingo_games.resp_challenged' %>
-      </th>
-      <th data-priority="0">
-        <%= t 'bingo_games.resp_con_expct' %>
-      </th>
-      <th data-priority="0">
-        <%= t 'bingo_games.resp_term_count' %>
-      </th>
-      <th data-priority="0">
-        <%= t 'bingo_games.resp_con_count' %>
-      </th>
-      <th data->
-        <%= t 'bingo_games.resp_perf' %>
-      </th>
-    </tr>
-    <tr>
-      <% candidate_feedbacks.each do |cf| %>
-        <th><%= cf.name %></th>
-      <% end %>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% candidate_feedbacks.each do |cf| %>
-      <% if @candidate_list.candidates.completed.size > 0
-           completed_count = @candidate_list.candidates.completed.size %>
-      <td><%= @candidate_list.get_by_feedback( cf ).size * 100 / completed_count %></td>
-    <% else %>
-      <td>N/A</td>
-    <% end %>
-  <% end %>
-  <td><%= @candidate_list.expected_count %></td>
-  <td><%= @candidate_list.candidates.completed.size %></td>
-  <td><%= @candidate_list.get_concepts.size %></td>
-  <td><%= @candidate_list.performance %></td>
-</tbody>
-</table>
-<h3><%= t 'candidate_lists.concepts_for_game' %>:</h3>
 <%= react_component "BingoBuilder", {
         endDateStr: @candidate_list.bingo_game.end_date,
         conceptsUrl: bingo_concepts_path( @candidate_list.bingo_game_id ),
+        resultsUrl: my_results_path( @candidate_list.bingo_game_id ),
         boardUrl: board_for_game_path( @candidate_list.bingo_game_id ),
         boardSaveUrl: update_board_path( @candidate_list.bingo_game_id ),
         worksheetUrl: worksheet_for_bingo_path( @candidate_list.bingo_game_id ),
         token: form_authenticity_token } %>
 </br>
-<p>
-  <%= @candidate_list.is_group ? 
-    (t 'candidate_lists.grp_sum_msg',
-        grp_name: @candidate_list.group.get_name( anonymize ),
-        con_count: @candidate_list.get_concepts.size ) :
-    (t 'candidate_lists.ind_sum_msg',
-        con_count: @candidate_list.get_concepts.size ) %>:
-  <table data-role="table"
-    id="candidates_table"
-    data-mode="columntoggle"
-    data-column-btn-theme="<%= theme_code %>"
-    data-column-btn-text="<%= t :column_select %>"
-    class="table-stroke ui-shadow table-stripe table-ui-responsive">
-    <thead>
-      <tr>
-        <th><%= t 'candidate_lists.term' %></th>
-        <th data-priority="0"><%= t '.def' %></th>
-        <th data-priority="0">
-          <%= t 'bingo_games.feedback' %>
-        </th>
-        <th>
-          <%= t 'bingo_games.concept' %>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @candidate_list.candidates.completed.includes( :candidate_feedback, :concept ).each do |candidate| %>
-        <tr>
-          <td><%= candidate.term %></td>
-          <td><%= candidate.definition %></td>
-          <td><%= candidate.candidate_feedback.present? ? candidate.candidate_feedback.name : t( :n_a ) %></td>
-          <td><%= candidate.concept.present? ? candidate.concept.name : t( :n_a ) %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</p>

@@ -16,6 +16,7 @@ class BingoGamesController < ApplicationController
                                           update_review_candidates ]
 
   before_action :check_editor, except: %i[next diagnose react
+                                          my_results
                                           update_review_candidates
                                           review_candidates_demo
                                           demo_update_review_candidates
@@ -55,27 +56,42 @@ class BingoGamesController < ApplicationController
     end
   end
 
-  def game_results
-    editor = @current_user.is_admin? || @current_user.is_instructor?
-    bingo_game = nil
-    if editor
-      bingo_game = BingoGame.includes(
-        [course: { rosters: { user: :emails } }, candidate_lists: [:user,
-                                                                   { candidates: %i[concept candidate_feedback] }, group: :users],
-         bingo_boards: { bingo_cells: :candidate }]
-      ).find_by_id(params[:id])
-    else
-      bingo_game = BingoGame.includes(
-        [course: { rosters: { user: :emails } }, candidate_lists: [:user,
-                                                                   { candidates: %i[concept candidate_feedback] }, group: :users],
-         bingo_boards: { bingo_cells: :candidate }]
-      ).where(id: params[:id],
-              candidate_lists: {user: @current_user.id},
-              bingo_boards: {user_id: @current_user.id},
-              bingo_boards: {board_type: 'worksheet'}
-              ).first
+  def my_results
+    candidate_lists = CandidateList.where(
+                        bingo_game_id: params[:id],
+                        user_id: @current_user.id )
+                          .includes( :current_candidate_list )
+    puts "****we have #{candidate_lists.size} candidate_lists"
 
+    candidate_list = candidate_lists.first.archived ?
+      candidate_lists.first.current_candidate_list :
+      candidate_lists.first
+
+    candidates = Candidate.completed.where( candidate_list: candidate_list )
+                          .includes( %i[concept candidate_feedback] )
+
+    candidates = candidates.to_a.collect do |c|
+      { id: c.id,
+        concept: c.concept.nil? ? nil : c.concept.name,
+        definition: c.definition,
+        term: c.term,
+        feedback: c.candidate_feedback.name,
+        feedback_id: c.candidate_feedback_id
+      }
     end
+
+    render json: {
+        candidate_list: candidate_list,
+        candidates: candidates
+    }
+  end
+
+  def game_results
+    bingo_game = BingoGame.includes(
+      [course: { rosters: { user: :emails } },
+                 candidate_lists: [ { candidates: %i[concept candidate_feedback] }, group: :users],
+                 bingo_boards: [:user, { bingo_cells: :candidate } ]]
+    ).find_by_id(params[:id])
     anon = @current_user.anonymize?
     resp = {}
     # Get the users
@@ -98,7 +114,7 @@ class BingoGamesController < ApplicationController
     end
     # Get the worksheets
     bingo_game.bingo_boards.each do |bb|
-      # next unless bb.worksheet?
+      next unless bb.worksheet?
 
       practice_answers = Array.new bingo_game.size
       bingo_game.size.times do |index|

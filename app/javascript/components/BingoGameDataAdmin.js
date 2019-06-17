@@ -59,6 +59,7 @@ class BingoGameDataAdmin extends React.Component {
       dirty: false,
       messages: {},
       saveStatus: "",
+      result_data: null,
       tz_extra_start: start.toISOString().substr(10),
       tz_extra_end: end.toISOString().substr(10),
       bingo_game: {
@@ -78,10 +79,12 @@ class BingoGameDataAdmin extends React.Component {
     };
     this.saveBingoGame = this.saveBingoGame.bind(this);
     this.changeTab = this.changeTab.bind(this);
+    this.initResultData = this.initResultData.bind(this);
   }
 
   componentDidMount() {
     this.getBingoGameData();
+    this.initResultData();
   }
 
   saveBingoGame() {
@@ -124,6 +127,32 @@ class BingoGameDataAdmin extends React.Component {
         });
         this.getBingoGameData();
       });
+  }
+
+  initResultData(){
+      fetch(this.props.gameResultsUrl + ".json", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accepts: "application/json",
+          "X-CSRF-Token": this.props.token
+        }
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            console.log("error");
+            return [{ id: -1, name: "no data" }];
+          }
+        })
+        .then(data => {
+          this.setState({
+            result_data: data
+          } )
+        });
+
   }
 
   getBingoGameData() {
@@ -394,8 +423,7 @@ class BingoGameDataAdmin extends React.Component {
               </Grid>
               <Grid item xs={7}>
                 <BingoGameDataAdminTable
-                  token={this.props.token}
-                  gameResultsUrl={this.props.gameResultsUrl}
+                  results_raw={this.state.result_data}
                 />
               </Grid>
             </Grid> }

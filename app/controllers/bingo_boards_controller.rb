@@ -106,7 +106,7 @@ class BingoBoardsController < ApplicationController
     respond_to do |format|
       format.json do
         resp = bingo_board.as_json(
-          only: %i[id size topic bingo_game_id], include:
+          only: %i[id size topic description bingo_game_id], include:
                [:bingo_game, bingo_cells:
                { only: %i[id bingo_board_id row column selected concept_id],
                  include:

@@ -1,6 +1,7 @@
 import React from "react";
 import BingoBoard from "./BingoBoard";
 import ConceptChips from "./ConceptChips";
+import ScoredGameDataTable from "./ScoredGameDataTable";
 import PropTypes from "prop-types";
 import { withTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
@@ -10,6 +11,7 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
 import GridList, { GridListTile } from "@material-ui/core/GridList";
 
 const styles = createMuiTheme({
@@ -26,6 +28,8 @@ class BingoBuilder extends React.Component {
       concepts: [],
       endDate: endDate,
       curTab: 'builder',
+      candidate_list: null,
+      candidates: [],
       board: {
         initialised: false,
         bingo_cells: [],
@@ -111,6 +115,32 @@ class BingoBuilder extends React.Component {
           },
           callbackFunc
         );
+      });
+  }
+  getMyResults() {
+    fetch(this.props.resultsUrl + ".json", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+        "X-CSRF-Token": this.props.token
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          console.log("error");
+          return [{ id: -1, name: "no data" }];
+        }
+      })
+      .then(data => {
+        this.setState({
+          candidate_list: data.candidate_list,
+          candidates: data.candidates
+        });
+        //}, this.randomizeTiles );
       });
   }
   getBoard() {
@@ -204,6 +234,7 @@ class BingoBuilder extends React.Component {
   componentDidMount() {
     //Let's retrieve any existing board
     this.getConcepts(this.getBoard);
+    this.getMyResults();
   }
   render() {
     //This nested ternary operator is ugly, but it works. At some point
@@ -276,9 +307,24 @@ class BingoBuilder extends React.Component {
       </div>
     ) : null;
 
+
     return (
       <MuiThemeProvider theme={styles}>
         <Paper>
+        <Typography>
+          <strong>Topic:</strong> {this.state.board.bingo_game.topic}
+        </Typography>
+        <Typography>
+          <strong>Description:</strong> {this.state.board.bingo_game.description}
+        </Typography>
+        {null != this.state.candidate_list &&
+        <Typography>
+          <strong>Performance:</strong>
+          {this.state.candidate_list.cached_performance}
+        </Typography>
+
+        }
+        <hr/>
         <Tabs value={this.state.curTab}
               onChange={this.changeTab}
               centered >
@@ -296,7 +342,7 @@ class BingoBuilder extends React.Component {
           {builder}
         </Paper>}
         {'results' == this.state.curTab &&
-          <div>Working on it</div>
+          <ScoredGameDataTable candidates={this.state.candidates} />
         }
         {'concepts' == this.state.curTab &&
           <ConceptChips concepts={this.state.concepts} />
@@ -307,11 +353,12 @@ class BingoBuilder extends React.Component {
   }
 }
 BingoBuilder.propTypes = {
-  endDateStr: PropTypes.string,
-  token: PropTypes.string,
-  boardUrl: PropTypes.string,
-  conceptsUrl: PropTypes.string,
+  endDateStr: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired,
+  resultsUrl: PropTypes.string.isRequired,
+  boardUrl: PropTypes.string.isRequired,
+  conceptsUrl: PropTypes.string.isRequired,
   worksheetUrl: PropTypes.string.isRequired,
-  boardSaveUrl: PropTypes.string
+  boardSaveUrl: PropTypes.string.isRequired
 };
 export default withTheme(BingoBuilder);

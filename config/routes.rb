@@ -43,6 +43,8 @@ Rails.application.routes.draw do
     get 'list_stats/:id' => 'candidate_lists#list_stats', as: :'bingo_list_stats'
     get 'results/:id' => 'bingo_games#game_results', as: 'game_results',
         constraints: ->(req) { req.format == :json }
+    get 'my_results/:id' => 'bingo_games#my_results', as: 'my_results',
+        constraints: ->(req) { req.format == :json }
 
     #Gameplay functions
     resources :bingo_boards, only: [:index, :show]
