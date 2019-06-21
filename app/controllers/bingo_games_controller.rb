@@ -57,18 +57,25 @@ class BingoGamesController < ApplicationController
   end
 
   def my_results
-    candidate_lists = CandidateList.where(
-                        bingo_game_id: params[:id],
-                        user_id: @current_user.id )
-                          .includes( :current_candidate_list )
-    puts "****we have #{candidate_lists.size} candidate_lists"
+    candidate_list = nil
+    candidates = nil
+    if 1 > params[:id].to_i
+      candidate_list = get_demo_candidate_list
+      candidates = candidate_list.candidates
+    else
+      candidate_lists = CandidateList.where(
+                          bingo_game_id: params[:id],
+                          user_id: @current_user.id )
+                            .includes( :current_candidate_list )
 
-    candidate_list = candidate_lists.first.archived ?
-      candidate_lists.first.current_candidate_list :
-      candidate_lists.first
+      candidate_list = candidate_lists.first.archived ?
+        candidate_lists.first.current_candidate_list :
+        candidate_lists.first
 
-    candidates = Candidate.completed.where( candidate_list: candidate_list )
-                          .includes( %i[concept candidate_feedback] )
+      candidates = Candidate.completed.where( candidate_list: candidate_list )
+                            .includes( %i[concept candidate_feedback] )
+
+    end
 
     candidates = candidates.to_a.collect do |c|
       { id: c.id,

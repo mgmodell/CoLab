@@ -11,24 +11,18 @@ Then /^the user clicks the link to the concept list$/ do
 
   page.should have_content 'Terms list for review'
   x = page.find(:xpath, "//div[@data-react-class='BingoBuilder']")
-  puts "\n\n\tX is: #{x}\n\t#{x.inspect}"
   
   props_string = x['data-react-props']
-  puts "\tProps String: #{props_string}"
 
   props = JSON.parse(HTMLEntities.new.decode(x['data-react-props']))
-  puts "\tProps: #{props}\n\t#{props.inspect}"
 
   #url = "#{props['conceptsUrl']}.json"
   url = "#{bingo_concepts_path( @bingo.id ) }.json"
-  puts "URL: #{url}"
   visit url
 
   @concepts = JSON.parse(page.text)
 
-  puts "\tbefore curreent path"
   visit current_path
-  puts "\tafter curreent path"
 end
 
 Then /^the concept list should match the list$/ do
