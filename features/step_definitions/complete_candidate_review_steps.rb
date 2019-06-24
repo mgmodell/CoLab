@@ -119,7 +119,7 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
     feedback = feedbacks.sample
     @feedback_list[candidate.id] = { feedback: feedback }
     concept = nil
-    if 'term_problem' == feedback.critique
+    if feedback.critique == 'term_problem'
       @feedback_list[candidate.id][:concept] = ''
     else
       concept = concepts.rotate!(1).first

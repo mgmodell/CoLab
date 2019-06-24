@@ -1,5 +1,5 @@
-import React from "react"
-import PropTypes from "prop-types"
+import React from "react";
+import PropTypes from "prop-types";
 import { SortDirection } from "react-virtualized";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -9,10 +9,9 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Typography from "@material-ui/core/Typography";
 
-
 class ScoredGameDataTable extends React.Component {
-  constructor(props){
-    super( props );
+  constructor(props) {
+    super(props);
     this.state = {
       sortBy: "term",
       sortDirection: SortDirection.DESC,
@@ -66,26 +65,24 @@ class ScoredGameDataTable extends React.Component {
           }
         }
       ]
-    }
+    };
   }
 
   sortCandidates(key, direction, candidates) {
     const dataKey = key;
     const mod = direction == SortDirection.ASC ? -1 : 1;
-    if( "concept" == dataKey ){
+    if ("concept" == dataKey) {
       candidates.sort((a, b) => {
-        const a_val = a[ "concept" ] || "zz";
-        const b_val = b[ "concept" ] || "zz";
+        const a_val = a["concept"] || "zz";
+        const b_val = b["concept"] || "zz";
 
         return mod * a_val.localeCompare(b_val);
       });
-
     } else {
       candidates.sort((a, b) => {
         return mod * a[dataKey].localeCompare(b[dataKey]);
       });
     }
-
   }
 
   sortEvent(event, dataKey) {
@@ -104,7 +101,7 @@ class ScoredGameDataTable extends React.Component {
     });
   }
 
-  render () {
+  render() {
     const direction = {
       [SortDirection.ASC]: "asc",
       [SortDirection.DESC]: "desc"
@@ -113,55 +110,58 @@ class ScoredGameDataTable extends React.Component {
     const { candidates } = this.props;
     return (
       <React.Fragment>
-      {candidates == null || 0 == candidates.length ? "No scored data" :
-      <Table>
-        <TableHead>
-          <TableRow>
-            {columns.map( cell => {
-              if( cell.visible ){
-                const header = cell.sortable ? (
-                <TableSortLabel
-                  active={cell.dataKey == this.state.sortBy}
-                  direction={direction[this.state.sortDirection]}
-                  onClick={() => this.sortEvent(event, cell.dataKey)}
-                >
-                  {cell.label}
-                </TableSortLabel>
-              ) : (
-                cell.label
-              );
-              return (
-                <TableCell width={cell.width} key={"h_" + cell.dataKey}>
-                  {header}
-                </TableCell>
-              );
-            }
+        {candidates == null || 0 == candidates.length ? (
+          "No scored data"
+        ) : (
+          <Table>
+            <TableHead>
+              <TableRow>
+                {columns.map(cell => {
+                  if (cell.visible) {
+                    const header = cell.sortable ? (
+                      <TableSortLabel
+                        active={cell.dataKey == this.state.sortBy}
+                        direction={direction[this.state.sortDirection]}
+                        onClick={() => this.sortEvent(event, cell.dataKey)}
+                      >
+                        {cell.label}
+                      </TableSortLabel>
+                    ) : (
+                      cell.label
+                    );
+                    return (
+                      <TableCell width={cell.width} key={"h_" + cell.dataKey}>
+                        {header}
+                      </TableCell>
+                    );
+                  }
                 })}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-              {null == candidates ? null : candidates
-                .map(candidate => {
-                  return (
-                    <TableRow key={"r_" + candidate.id}>
-                      {columns.map(cell => {
-                        if (cell.visible) {
-                          return (
-                            <TableCell key={candidate.id + "_c" + cell.dataKey}>
-                              {cell.render_func(candidate)}
-                            </TableCell>
-                          );
-                        }
-                      })}
-                    </TableRow>
-                  );
-                })}
-
-        </TableBody>
-      </Table>
-      }
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {null == candidates
+                ? null
+                : candidates.map(candidate => {
+                    return (
+                      <TableRow key={"r_" + candidate.id}>
+                        {columns.map(cell => {
+                          if (cell.visible) {
+                            return (
+                              <TableCell
+                                key={candidate.id + "_c" + cell.dataKey}
+                              >
+                                {cell.render_func(candidate)}
+                              </TableCell>
+                            );
+                          }
+                        })}
+                      </TableRow>
+                    );
+                  })}
+            </TableBody>
+          </Table>
+        )}
       </React.Fragment>
-      
     );
   }
 }
@@ -178,4 +178,4 @@ ScoredGameDataTable.propTypes = {
     })
   )
 };
-export default ScoredGameDataTable
+export default ScoredGameDataTable;

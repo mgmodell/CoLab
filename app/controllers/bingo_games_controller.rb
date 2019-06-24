@@ -59,21 +59,22 @@ class BingoGamesController < ApplicationController
   def my_results
     candidate_list = nil
     candidates = nil
-    if 1 > params[:id].to_i
+    if params[:id].to_i < 1
       candidate_list = get_demo_candidate_list
       candidates = candidate_list.candidates
     else
       candidate_lists = CandidateList.where(
-                          bingo_game_id: params[:id],
-                          user_id: @current_user.id )
-                            .includes( :current_candidate_list )
+        bingo_game_id: params[:id],
+        user_id: @current_user.id
+      )
+                                     .includes(:current_candidate_list)
 
       candidate_list = candidate_lists.first.archived ?
         candidate_lists.first.current_candidate_list :
         candidate_lists.first
 
-      candidates = Candidate.completed.where( candidate_list: candidate_list )
-                            .includes( %i[concept candidate_feedback] )
+      candidates = Candidate.completed.where(candidate_list: candidate_list)
+                            .includes(%i[concept candidate_feedback])
 
     end
 
@@ -83,22 +84,21 @@ class BingoGamesController < ApplicationController
         definition: c.definition,
         term: c.term,
         feedback: c.candidate_feedback.name,
-        feedback_id: c.candidate_feedback_id
-      }
+        feedback_id: c.candidate_feedback_id }
     end
 
     render json: {
-        candidate_list: candidate_list,
-        candidates: candidates
+      candidate_list: candidate_list,
+      candidates: candidates
     }
   end
 
   def game_results
     bingo_game = BingoGame.includes(
       [course: { rosters: { user: :emails } },
-                 candidate_lists: [ { candidates: %i[concept candidate_feedback] }, group: :users],
-                 bingo_boards: [:user, { bingo_cells: :candidate } ]]
-    ).find_by_id(params[:id])
+       candidate_lists: [{ candidates: %i[concept candidate_feedback] }, group: :users],
+       bingo_boards: [:user, { bingo_cells: :candidate }]]
+    ).find_by(id: params[:id])
     anon = @current_user.anonymize?
     resp = {}
     # Get the users
@@ -474,10 +474,10 @@ class BingoGamesController < ApplicationController
         candidate.candidate_feedback =
           feedback_map[entered_candidate[:candidate_feedback_id]]
 
-        #feedback_name = candidate.candidate_feedback.name_en
+        # feedback_name = candidate.candidate_feedback.name_en
 
-        if ( 'term_problem' != candidate.candidate_feedback.critique
-           entered_candidate[:concept][:name].present? )
+        if candidate.candidate_feedback.critique != 'term_problem'
+          entered_candidate[:concept][:name].present?
           concept_name = entered_candidate[:concept][:name]
           concept_name = Concept.standardize_name name: concept_name
 

@@ -55,7 +55,7 @@ class BingoGameDataAdmin extends React.Component {
     let end = new Date();
     end.setDate(end.getDate() + 7);
     this.state = {
-      curTab: 'details',
+      curTab: "details",
       dirty: false,
       messages: {},
       saveStatus: "",
@@ -129,30 +129,29 @@ class BingoGameDataAdmin extends React.Component {
       });
   }
 
-  initResultData(){
-      fetch(this.props.gameResultsUrl + ".json", {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Accepts: "application/json",
-          "X-CSRF-Token": this.props.token
+  initResultData() {
+    fetch(this.props.gameResultsUrl + ".json", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+        "X-CSRF-Token": this.props.token
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          console.log("error");
+          return [{ id: -1, name: "no data" }];
         }
       })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            console.log("error");
-            return [{ id: -1, name: "no data" }];
-          }
-        })
-        .then(data => {
-          this.setState({
-            result_data: data
-          } )
+      .then(data => {
+        this.setState({
+          result_data: data
         });
-
+      });
   }
 
   getBingoGameData() {
@@ -233,11 +232,10 @@ class BingoGameDataAdmin extends React.Component {
     });
   };
 
-  changeTab( event, name ){
+  changeTab(event, name) {
     this.setState({
       curTab: name
-    })
-
+    });
   }
 
   render() {
@@ -299,13 +297,12 @@ class BingoGameDataAdmin extends React.Component {
     ) : null;
     return (
       <Paper>
-        <Tabs value={this.state.curTab} onChange={this.changeTab}
-            centered>
-          <Tab value='details' label={t("game_details_pnl")} />
-          <Tab value='results' label={t("response_pnl")} />
+        <Tabs value={this.state.curTab} onChange={this.changeTab} centered>
+          <Tab value="details" label={t("game_details_pnl")} />
+          <Tab value="results" label={t("response_pnl")} />
         </Tabs>
-          {'details' == this.state.curTab &&
-            <React.Fragment>
+        {"details" == this.state.curTab && (
+          <React.Fragment>
             <Grid container spacing={10}>
               <Grid item>
                 <TextField
@@ -413,20 +410,18 @@ class BingoGameDataAdmin extends React.Component {
             </Grid>
             {save_btn}
             <Typography>{this.state.saveStatus}</Typography>
-            </React.Fragment>}
-          {'results' == this.state.curTab &&
-            <Grid container>
-              <Grid item xs={5}>
-                <ConceptChips
-                  concepts={this.state.concepts}
-                />
-              </Grid>
-              <Grid item xs={7}>
-                <BingoGameDataAdminTable
-                  results_raw={this.state.result_data}
-                />
-              </Grid>
-            </Grid> }
+          </React.Fragment>
+        )}
+        {"results" == this.state.curTab && (
+          <Grid container>
+            <Grid item xs={5}>
+              <ConceptChips concepts={this.state.concepts} />
+            </Grid>
+            <Grid item xs={7}>
+              <BingoGameDataAdminTable results_raw={this.state.result_data} />
+            </Grid>
+          </Grid>
+        )}
       </Paper>
     );
   }

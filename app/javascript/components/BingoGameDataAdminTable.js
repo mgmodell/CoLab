@@ -6,7 +6,7 @@ import BingoGameResults from "./BingoGameResults";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from "@material-ui/core/LinearProgress";
 import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -179,45 +179,47 @@ class BingoGameDataAdminTable extends React.Component {
   render() {
     return (
       <Paper style={{ height: "100%", width: "100%" }}>
-        {null == this.props.results_raw || null == this.state.results ?
-        <React.Fragment>
-          <br/>
-          <Typography variant={'h3'} align={'center'} >
-            Loading&hellip;
-          </Typography>
-          <LinearProgress />
-        </React.Fragment>:
-        <React.Fragment>
-        <Toolbar>
-          <InputBase placeholder="Search results" onChange={this.filter} />
-          <SearchIcon />
-          <Typography variant="h6" color="inherit">
-            Showing {this.state.results.length} of{" "}
-            {this.props.results_raw.length}
-          </Typography>
-        </Toolbar>
-        <WrappedVirtualizedTable
-          rowCount={this.state.results.length}
-          rowGetter={({ index }) => this.state.results[index]}
-          sort={this.colSort}
-          sortBy={this.state.sortBy}
-          sortDirection={this.state.sortDirection}
-          onRowClick={event => this.openDialog(event)}
-          columns={this.state.columns}
-        />
-        <BingoGameResults
-          open={this.state.individual.open}
-          student={this.state.individual.student}
-          board={this.state.individual.board}
-          close={this.closeDialog}
-          candidates={this.state.individual.candidates}
-        />
-        </React.Fragment>}
+        {null == this.props.results_raw || null == this.state.results ? (
+          <React.Fragment>
+            <br />
+            <Typography variant={"h3"} align={"center"}>
+              Loading&hellip;
+            </Typography>
+            <LinearProgress />
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <Toolbar>
+              <InputBase placeholder="Search results" onChange={this.filter} />
+              <SearchIcon />
+              <Typography variant="h6" color="inherit">
+                Showing {this.state.results.length} of{" "}
+                {this.props.results_raw.length}
+              </Typography>
+            </Toolbar>
+            <WrappedVirtualizedTable
+              rowCount={this.state.results.length}
+              rowGetter={({ index }) => this.state.results[index]}
+              sort={this.colSort}
+              sortBy={this.state.sortBy}
+              sortDirection={this.state.sortDirection}
+              onRowClick={event => this.openDialog(event)}
+              columns={this.state.columns}
+            />
+            <BingoGameResults
+              open={this.state.individual.open}
+              student={this.state.individual.student}
+              board={this.state.individual.board}
+              close={this.closeDialog}
+              candidates={this.state.individual.candidates}
+            />
+          </React.Fragment>
+        )}
       </Paper>
     );
   }
 }
 BingoGameDataAdminTable.propTypes = {
-  results_raw:  PropTypes.array
+  results_raw: PropTypes.array
 };
 export default BingoGameDataAdminTable;

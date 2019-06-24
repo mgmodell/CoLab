@@ -37,43 +37,40 @@ module Demoable
   end
 
   def get_demo_candidate_list
-    cl = CandidateList.new( id: -42,
-                            user_id: -11,
-                            group_id: nil,
-                            is_group: false,
-                            bingo_game_id: -42,
-                            group_requested: false,
-                            archived: false,
-                            contributor_count: 1,
-                            current_candidate_list: nil,
-                            candidates: [ ]
-                          )
+    cl = CandidateList.new(id: -42,
+                           user_id: -11,
+                           group_id: nil,
+                           is_group: false,
+                           bingo_game_id: -42,
+                           group_requested: false,
+                           archived: false,
+                           contributor_count: 1,
+                           current_candidate_list: nil,
+                           candidates: [])
 
     concepts = get_demo_game_concepts
     feedbacks = CandidateFeedback.all.to_a
-    (rand( 2 ) + 9).times do |index|
-      #select a concept
-      term = concepts.delete( concepts.sample )
-      concept = term[ 0 ]
-      definition = term[ 1 ]
+    rand(9..10).times do |index|
+      # select a concept
+      term = concepts.delete(concepts.sample)
+      concept = term[0]
+      definition = term[1]
       term = concept
 
-      feedback = 2 > rand( 3 ) ? feedbacks[ 0 ] : feedbacks.sample
-      if( 1 != feedback.id )
-        definition = concepts.delete( concepts.sample )[1]
-      end
+      feedback = rand(3) < 2 ? feedbacks[0] : feedbacks.sample
+      definition = concepts.delete(concepts.sample)[1] if feedback.id != 1
 
       cl.candidates << Candidate.new(
-                            id: - index,
-                            concept: Concept.new( name: concept ),
-                            definition: definition,
-                            term: term,
-                            candidate_feedback: feedback
-                                    )
+        id: - index,
+        concept: Concept.new(name: concept),
+        definition: definition,
+        term: term,
+        candidate_feedback: feedback
+      )
     end
     cl.candidates_count = cl.candidates.size
-    cl.cached_performance = cl.candidates.
-      reduce(0){ |sum,candidate| sum + candidate.candidate_feedback.credit} /10
+    cl.cached_performance = cl.candidates
+                              .reduce(0) { |sum, candidate| sum + candidate.candidate_feedback.credit } / 10
     cl
   end
 

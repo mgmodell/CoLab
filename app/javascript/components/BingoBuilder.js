@@ -27,7 +27,7 @@ class BingoBuilder extends React.Component {
       saveStatus: "",
       concepts: [],
       endDate: endDate,
-      curTab: 'builder',
+      curTab: "builder",
       candidate_list: null,
       candidates: [],
       board: {
@@ -171,11 +171,10 @@ class BingoBuilder extends React.Component {
       });
   }
 
-  changeTab( event, name ){
+  changeTab(event, name) {
     this.setState({
       curTab: name
-    })
-
+    });
   }
 
   saveBoard() {
@@ -307,46 +306,44 @@ class BingoBuilder extends React.Component {
       </div>
     ) : null;
 
-
     return (
       <MuiThemeProvider theme={styles}>
         <Paper>
-        <Typography>
-          <strong>Topic:</strong> {this.state.board.bingo_game.topic}
-        </Typography>
-        <Typography>
-          <strong>Description:</strong> {this.state.board.bingo_game.description}
-        </Typography>
-        {null != this.state.candidate_list &&
-        <Typography>
-          <strong>Performance:</strong>
-          {this.state.candidate_list.cached_performance}
-        </Typography>
-
-        }
-        <hr/>
-        <Tabs value={this.state.curTab}
-              onChange={this.changeTab}
-              centered >
-          <Tab value='builder' label='Bingo game builder'/>
-          <Tab value='results' label='Your performance'/>
-          <Tab value='concepts' label='Concepts found by class' />
-        </Tabs>
-        {'builder' == this.state.curTab &&
-        <Paper square={false}>
-          <br />
-          <ol>
-            {workSheetInstr}
-            {playableInstr}
-          </ol>
-          {builder}
-        </Paper>}
-        {'results' == this.state.curTab &&
-          <ScoredGameDataTable candidates={this.state.candidates} />
-        }
-        {'concepts' == this.state.curTab &&
-          <ConceptChips concepts={this.state.concepts} />
-        }
+          <Typography>
+            <strong>Topic:</strong> {this.state.board.bingo_game.topic}
+          </Typography>
+          <Typography>
+            <strong>Description:</strong>{" "}
+            {this.state.board.bingo_game.description}
+          </Typography>
+          {null != this.state.candidate_list && (
+            <Typography>
+              <strong>Performance:</strong>
+              {this.state.candidate_list.cached_performance}
+            </Typography>
+          )}
+          <hr />
+          <Tabs value={this.state.curTab} onChange={this.changeTab} centered>
+            <Tab value="builder" label="Bingo game builder" />
+            <Tab value="results" label="Your performance" />
+            <Tab value="concepts" label="Concepts found by class" />
+          </Tabs>
+          {"builder" == this.state.curTab && (
+            <Paper square={false}>
+              <br />
+              <ol>
+                {workSheetInstr}
+                {playableInstr}
+              </ol>
+              {builder}
+            </Paper>
+          )}
+          {"results" == this.state.curTab && (
+            <ScoredGameDataTable candidates={this.state.candidates} />
+          )}
+          {"concepts" == this.state.curTab && (
+            <ConceptChips concepts={this.state.concepts} />
+          )}
         </Paper>
       </MuiThemeProvider>
     );
