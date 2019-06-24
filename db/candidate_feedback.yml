@@ -2,6 +2,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: Acceptable
   name_ko: 
+  critique: 1
   credit: 100
   definition_en: >
     You've accurately identified and defined an important term related 
@@ -11,6 +12,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: 'Definition: Incorrect'
   name_ko: 
+  critique: 2
   credit: 50
   definition_en: >
     You've identified an important term related to the stated topic, but
@@ -20,6 +22,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: 'Definition: Insufficient'
   name_ko: 
+  critique: 2
   credit: 75
   definition_en: >
     You've identified an important term related to the stated topic, but
@@ -29,6 +32,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: 'Definition: Not Understood'
   name_ko: 
+  critique: 2
   credit: 50
   definition_en: >
     You've identified an important term related to the stated topic,
@@ -38,6 +42,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: 'Definition: Plagiarised'
   name_ko: 
+  critique: 2
   credit: 25
   definition_en: >
     You've identified an important term related to the stated topic,
@@ -48,6 +53,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: 'Definition: Wrong Context'
   name_ko: 
+  critique: 2
   credit: 50
   definition_en: >
     You've identified an important term related to the stated topic,
@@ -58,6 +64,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: 'Term: Too Generic'
   name_ko: 
+  critique: 3
   credit: 10
   definition_en: >
     The term is not specific to the topic or the course.
@@ -66,6 +73,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: 'Term: Too Obvious'
   name_ko: 
+  critique: 3
   credit: 10
   definition_en: >
     The term does not represent new learning or consideration relevant
@@ -75,6 +83,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: 'Term: Invalid/Incorrect'
   name_ko: 
+  critique: 3
   credit: 20
   definition_en: >
     The term is either not a real term or is being misused.
@@ -83,6 +92,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: 'Term: Not Relevant'
   name_ko: 
+  critique: 3
   credit: 30
   definition_en: >
     The term may be interesting, but not relevant to the topic.
@@ -91,6 +101,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: "Term: Doesn't match"
   name_ko: 
+  critique: 3
   credit: 40
   definition_en: >
     The term does not match the definition.
@@ -99,6 +110,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: "Term: Product Name"
   name_ko: 
+  critique: 3
   credit: 30
   definition_en: >
     Products should not be used unless they are dominant to the point
@@ -108,6 +120,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: "Term: Proper Name"
   name_ko: 
+  critique: 3
   credit: 30
   definition_en: >
     Proper names should not be used unless they are household names
@@ -117,6 +130,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: "Term: Too specific"
   name_ko: 
+  critique: 3
   credit: 30
   definition_en: >
     Terms ought to be at a conceptual level. Terms that are specific to
@@ -126,6 +140,7 @@
 - !ruby/object:CandidateFeedback_
   name_en: "Definition: Recursive"
   name_ko: 
+  critique: 2
   credit: 50
   definition_en: >
     The term was used to define itself.

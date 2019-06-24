@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_23_014532) do
+ActiveRecord::Schema.define(version: 2019_06_21_144829) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 2019_05_23_014532) do
     t.text "definition_en"
     t.text "definition_ko"
     t.integer "credit"
+    t.integer "critique", default: 3, null: false
     t.index ["name_en"], name: "index_candidate_feedbacks_on_name_en", unique: true
   end
 

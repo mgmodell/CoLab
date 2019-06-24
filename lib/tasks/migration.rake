@@ -1,5 +1,21 @@
 namespace :migratify do
 
+  desc 'Adding type to Candidate Feedback'
+  task cf_type: :environment do
+    CandidateFeedback.all.each do |cf|
+      if 'Acceptable' == cf.name_en
+        cf.critique = 1
+      
+      elsif cf.name_en.start_with? 'Definition'
+        cf.critique = 2
+
+      end
+      cf.save
+
+    end
+
+  end
+
   desc 'lead time fixes'
   task lead_time: :environment do
     #update the lead times for bingo games

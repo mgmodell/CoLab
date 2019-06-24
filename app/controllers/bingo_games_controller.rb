@@ -146,12 +146,12 @@ class BingoGamesController < ApplicationController
           resp[user_id][:concepts_credited] = cl.candidates
                                                 .reject do |c|
             c.candidate_feedback.present? &&
-              c.candidate_feedback.name.start_with?('Term')
+              CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name
           end .count
           resp[user_id][:term_problems] = cl.candidates
                                             .reject do |c|
             c.candidate_feedback.present? &&
-              !c.candidate_feedback.name.start_with?('Term')
+              CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name
           end .count
           resp[user_id][:performance] = cl.performance
           candidates = []
@@ -174,12 +174,12 @@ class BingoGamesController < ApplicationController
         concepts_credited = cl.candidates
                               .reject do |c|
           c.candidate_feedback.present? &&
-            c.candidate_feedback.name.start_with?('Term')
+            CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name
         end .count
         term_problems = cl.candidates
                           .reject do |c|
           c.candidate_feedback.present? &&
-            !c.candidate_feedback.name.start_with?('Term')
+            CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name
         end .count
         performance = cl.performance
         candidates = []
@@ -396,7 +396,7 @@ class BingoGamesController < ApplicationController
       users: users.as_json(only:
         %i[id first_name last_name], methods: :email),
       feedback_opts: CandidateFeedback.all.as_json(only:
-        %i[id name_en definition_en credit]),
+        %i[id name_en definition_en credit critique]),
       groups: groups.as_json(only:
         %i[id name]),
       candidate_lists: candidate_lists.as_json(only:
@@ -474,9 +474,10 @@ class BingoGamesController < ApplicationController
         candidate.candidate_feedback =
           feedback_map[entered_candidate[:candidate_feedback_id]]
 
-        feedback_name = candidate.candidate_feedback.name_en
-        if (!feedback_name.start_with? 'Term:') &&
-           entered_candidate[:concept][:name].present?
+        #feedback_name = candidate.candidate_feedback.name_en
+
+        if ( 'term_problem' != candidate.candidate_feedback.critique
+           entered_candidate[:concept][:name].present? )
           concept_name = entered_candidate[:concept][:name]
           concept_name = Concept.standardize_name name: concept_name
 

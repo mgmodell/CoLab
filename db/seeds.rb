@@ -303,7 +303,7 @@ end
 class CandidateFeedback_
   attr_accessor :name_en, :name_ko
   attr_accessor :definition_en, :definition_ko
-  attr_accessor :credit
+  attr_accessor :credit, :critique
 end
 quote_data = YAML.safe_load(File.open('db/candidate_feedback.yml'), [CandidateFeedback_])
 quote_data.each do |cf|
@@ -314,6 +314,7 @@ quote_data.each do |cf|
   g.credit = cf.credit unless g.credit == cf.credit
   g.definition_en = cf.definition_en unless g.definition_en == cf.definition_en
   g.definition_ko = cf.definition_ko unless g.definition_ko == cf.definition_ko
+  g.critique = cf.critique unless g.critique == cf.critique
   g.save
 end
 

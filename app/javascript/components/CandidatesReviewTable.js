@@ -222,7 +222,7 @@ class CandidatesReviewTable extends React.Component {
     const fb_id = item.candidate_feedback_id;
     if (
       fb_id != null &&
-      (feedback_opts[fb_id].name_en.startsWith("Term") ||
+      ('term_problem' == feedback_opts[fb_id].critique ||
         item.concept.name.length > 0)
     ) {
       item.completed = true;
@@ -424,7 +424,8 @@ class CandidatesReviewTable extends React.Component {
     const fb_id = c.candidate_feedback_id;
 
     let output = "N/A";
-    if (fb_id != null && !feedback_opts[fb_id].name_en.startsWith("Term")) {
+    if (fb_id != null &&
+        'term_problem' != feedback_opts[fb_id].critique ) {
       output = (
         <RemoteAutosuggest
           inputLabel={label}
