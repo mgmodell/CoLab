@@ -78,7 +78,6 @@ group :development, :test do
   gem 'htmlbeautifier'
   gem 'htmlentities'
   gem 'i18n_data'
-  gem 'paperclip', '~> 6.1.0'
   gem 'parallel_tests'
   gem 'railroady'
   gem 'rails-erd', require: false
