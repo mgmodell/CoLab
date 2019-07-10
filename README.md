@@ -41,6 +41,12 @@ the Heroku toolbelt. Follow the installation instructions for your OS:
     * Create `colab_dev` and `colab_test` databases
     * Create a `test` user with `test` for the password
     * Make sure the user is enabled and has full access to the 'colab_dev' and `colab_test` databases
+* Make the following environment variables available (the following should work in a .profile (if you will actually need to test file attachments, contact me and we can look into setting up S3 buckets for you):
+  * export S3_BUCKET_NAME=colab-dev
+  * export AWS_ACCESS_KEY_ID=XXXXXXX
+  * export AWS_SECRET_ACCESS_KEY=XXXXXXX
+  * export AWS_REGION=ap-northeast-2
+
 * clone this repository 'git clone https://<your bitbucket ID>@bitbucket.org/_performance/colab.git'
 * Enter the new `CoLab` directory (type `cd colab`)
 * `gem install bundler`
