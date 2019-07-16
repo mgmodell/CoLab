@@ -19,6 +19,7 @@ class User < ApplicationRecord
   has_many :bingo_games, through: :courses
   has_many :bingo_boards, inverse_of: :user
   has_many :candidates, inverse_of: :user
+  has_many :concepts, through: :candidates
   belongs_to :gender, inverse_of: :users, optional: true
   belongs_to :theme, inverse_of: :users, optional: true
   has_one :home_country, through: :home_state
