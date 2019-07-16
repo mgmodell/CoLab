@@ -71,7 +71,7 @@ class BingoBoardsController < ApplicationController
     board_for_game_helper bingo_board: bingo_board,
                           bingo_game: bingo_game,
                           acceptable_count: bingo_game.candidates
-                            .where(candidate_feedback_id: 1)
+                                                      .where(candidate_feedback_id: 1)
                                                       .group(:concept_id).length
   end
 
