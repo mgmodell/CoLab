@@ -16,7 +16,7 @@
     "add": "^2.0.6",
     "autosuggest-highlight": "^3.1.1",
     "babel-preset-react": "^6.24.1",
-    "draft-js": "^0.10.5",
+    "draft-js": "^0.11.0",
     "draftjs-to-html": "^0.8.4",
     "html-to-draftjs": "^1.4.0",
     "html2canvas": "^1.0.0-alpha.11",

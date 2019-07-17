@@ -328,7 +328,7 @@ GEM
       execjs
       railties (>= 3.2)
       tilt
-    regexp_parser (1.5.1)
+    regexp_parser (1.6.0)
     report_builder (1.8)
       json (>= 1.8.1)
     responders (3.0.0)
