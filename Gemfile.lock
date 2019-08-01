@@ -60,17 +60,17 @@ GEM
     arel (9.0.0)
     ast (2.4.0)
     aws-eventstream (1.0.3)
-    aws-partitions (1.191.0)
-    aws-sdk-core (3.60.0)
+    aws-partitions (1.195.0)
+    aws-sdk-core (3.61.2)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.23.0)
-      aws-sdk-core (~> 3, >= 3.58.0)
+    aws-sdk-kms (1.24.0)
+      aws-sdk-core (~> 3, >= 3.61.1)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.45.0)
-      aws-sdk-core (~> 3, >= 3.58.0)
+    aws-sdk-s3 (1.46.0)
+      aws-sdk-core (~> 3, >= 3.61.1)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.1.0)
@@ -91,7 +91,7 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.0.1)
-    capybara (3.26.0)
+    capybara (3.27.0)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -322,7 +322,7 @@ GEM
       ffi (~> 1.0)
     rb-readline (0.5.5)
     rdoc (6.1.1)
-    react-rails (2.5.0)
+    react-rails (2.6.0)
       babel-transpiler (>= 0.7.0)
       connection_pool
       execjs
@@ -347,14 +347,14 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.2)
-    rubocop (0.73.0)
+    rubocop (0.74.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.6)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
-    rubocop-performance (1.4.0)
+    rubocop-performance (1.4.1)
       rubocop (>= 0.71.0)
     rubocop-rails (2.2.1)
       rack (>= 1.1)
@@ -421,7 +421,7 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
-    webdrivers (4.1.1)
+    webdrivers (4.1.2)
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (>= 3.0, < 4.0)
@@ -484,7 +484,7 @@ DEPENDENCIES
   react-rails
   report_builder
   rspec
-  rubocop (~> 0.73.0)
+  rubocop (~> 0.74.0)
   rubocop-performance
   rubocop-rails
   rubocop-thread_safety
