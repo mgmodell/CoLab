@@ -7,6 +7,8 @@ Feature: Users can complete 'experiences' with health and SAPA.
     Given the course has 4 confirmed users
     Given the user is "a random" user
     Given the experience started "last month" and ends "in two months"
+    Given the experience "does" support "health"
+    Given the experience "does" support "SAPA"
     Given the experience "has" been activated
     Given the users "have" had demographics requested
     When the user logs in

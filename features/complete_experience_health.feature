@@ -1,4 +1,4 @@
-Feature: Users can complete 'experiences'
+Feature: Users can complete 'experiences' with health
   Users must be able to access and react to experiences.
 
   Background:
@@ -8,6 +8,8 @@ Feature: Users can complete 'experiences'
     Given the user is "a random" user
     Given the experience started "last month" and ends "in two months"
     Given the experience "has" been activated
+    Given the experience "does" support "health"
+    Given the experience "does not" support "SAPA"
     Given the users "have" had demographics requested
     When the user logs in
     Then the user should see a successful login message
