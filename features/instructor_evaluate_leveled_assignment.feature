@@ -20,6 +20,9 @@ Feature: Instructor can evaluate a submitted leveled assignment
   Scenario: Instructor revises a previous evaluation
   Scenario: Instructor grades 3 consecutive submissions
   Scenario: Instructor grades the latest submission (skipping outdated)
+  Scenario: Instructor grades the submitted assignment mixed with response file
+  Scenario: Members view current grade and instructor feedback
+  Scenario: Members view assignment submission history
 
 
     Given today is "tomorrow"
