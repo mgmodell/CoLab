@@ -14,7 +14,7 @@ Feature: Experience Administration
     Given the user is the instructor for the course
     Given the user logs in
 
-  Scenario: Instructor creates a new Experience
+  Scenario: Instructor creates a new Experience with health assessment
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user sees 1 course
@@ -26,6 +26,48 @@ Feature: Experience Administration
     Then the user will see "success"
     #Let's check the values stored
     Then retrieve the latest Experience from the db
+     And the experience "health" is "true"
+     And the experience "SAPA" is "false"
+     And the experience "name" is "Jimmy Hendrix"
+     And the experience "lead_time" is 5
+     And the experience start date is "5/10/1976" and the end date is "tomorrow"
+
+  Scenario: Instructor creates a new Experience with SAPA
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "New Experience"
+    Then the user sets the "Name" field to "Jimmy Hendrix"
+    Then the user sets the "Days for instructor prep" field to "5"
+    Then the user sets the "SAPA" field to "true"
+    Then the user sets the "health" field to "false"
+    Then the user clicks "Create Experience"
+    Then the user will see "success"
+    #Let's check the values stored
+    Then retrieve the latest Experience from the db
+     And the experience "health" is "true"
+     And the experience "SAPA" is "false"
+     And the experience "name" is "Jimmy Hendrix"
+     And the experience "lead_time" is 5
+     And the experience start date is "5/10/1976" and the end date is "tomorrow"
+
+  Scenario: Instructor creates a new Experience with SAPA and Health
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "New Experience"
+    Then the user sets the "Name" field to "Jimmy Hendrix"
+    Then the user sets the "Days for instructor prep" field to "5"
+    Then the user sets the "SAPA" field to "true"
+    Then the user sets the "health" field to "true"
+    Then the user clicks "Create Experience"
+    Then the user will see "success"
+    #Let's check the values stored
+    Then retrieve the latest Experience from the db
+     And the experience "health" is "true"
+     And the experience "SAPA" is "true"
      And the experience "name" is "Jimmy Hendrix"
      And the experience "lead_time" is 5
      And the experience start date is "5/10/1976" and the end date is "tomorrow"

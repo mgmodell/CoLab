@@ -1,6 +1,6 @@
 Feature: Experience Listing
   In order to provide us with their review data,
-  Students must be able to see what experience.
+  Students must be able to see what experience
   are due.
 
   Background:
