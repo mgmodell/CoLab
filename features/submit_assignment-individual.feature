@@ -26,6 +26,8 @@ Feature: (Re)Submitting individual assignments
   Scenario: User can open and submit text to an assignment
   Scenario: User can open and submit a file to an assignment
   Scenario: User can open and submit a link to an assignment
+  Scenario: User can open and submit files to an assignment
+  Scenario: User can open and submit links to an assignment
   Scenario: User can open and submit a combo to an assignment
   Scenario: User can submit a combo to an assignment before the first deadline
   Scenario: User can submit a combo to an assignment after the first deadline but before the final

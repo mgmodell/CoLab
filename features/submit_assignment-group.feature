@@ -27,6 +27,8 @@ Feature: (Re)Submitting individual assignments
   Scenario: Group member can open and submit text to a group assignment
   Scenario: Group member can open and submit a file to a group assignment
   Scenario: Group member can open and submit a link to a group assignment
+  Scenario: Group member can open and submit files to a group assignment
+  Scenario: Group member can open and submit links to a group assignment
   Scenario: User can open and submit a combo to a group assignment
   Scenario: User can submit a combo to a group assignment before the first deadline
   Scenario: User can submit a combo to a group assignment after the first deadline but before the final
