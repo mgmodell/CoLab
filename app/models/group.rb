@@ -6,6 +6,7 @@ class Group < ApplicationRecord
   after_initialize :store_load_state
 
   belongs_to :project, inverse_of: :groups
+  belongs_to :course, through: :project
   has_and_belongs_to_many :users, inverse_of: :groups,
                                   after_add: :set_dirty, after_remove: :set_dirty
   has_many :group_revisions, inverse_of: :group, dependent: :destroy
@@ -22,6 +23,7 @@ class Group < ApplicationRecord
 
   validates :name, presence: true
   validate :validate_activation_status
+  validate :course_unique_name
 
   before_create :anonymize
 
@@ -151,6 +153,16 @@ class Group < ApplicationRecord
     if changed? || @dirty
       project.active = false
       project.save
+    end
+  end
+
+  def course_unique_name
+    if name_changed?
+      group_names = self.course.groups.collect{ |g| g.name }
+      unless group_names.find( name )
+        errors.add(:name,
+                   "Group names must be unique")
+      end
     end
   end
 

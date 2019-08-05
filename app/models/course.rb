@@ -4,6 +4,7 @@ require 'forgery'
 class Course < ApplicationRecord
   belongs_to :school, inverse_of: :courses
   has_many :projects, inverse_of: :course, dependent: :destroy
+  has_many :groups, through: :projects
   has_many :rosters, inverse_of: :course, dependent: :destroy
   has_many :bingo_games, inverse_of: :course, dependent: :destroy
   has_many :candidate_lists, through: :bingo_games
@@ -17,6 +18,7 @@ class Course < ApplicationRecord
   validates :name, presence: true
   validate :date_sanity
   validate :activity_date_check
+  validate :school_unique_number
 
   before_validation :timezone_adjust
   before_create :anonymize
@@ -312,6 +314,17 @@ class Course < ApplicationRecord
       msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
       msg += " (#{bingo_game.end_date} > #{end_date})."
       errors.add(:end_date, msg)
+    end
+  end
+
+  def school_unique_number
+    if number_changed?
+      school_numbers = school.courses.collect{ |c| c.number }
+
+      unless school_names.find( name )
+        errors.add(:number,
+                   "Course numbers must be unique")
+      end
     end
   end
 

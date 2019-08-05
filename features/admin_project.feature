@@ -29,6 +29,7 @@ Feature: Project Administration
     Then the user selects "Simple" as "Factor pack"
     Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
+    Then the user "enables" chat
     Then the user clicks "Create Project"
     Then the user will see "success"
     #Let's check the values stored
@@ -41,6 +42,37 @@ Feature: Project Administration
     #check the selects
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
+    Then the project Chat is "enabled"
+
+  Scenario: Instructor creates a new project
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "New Project"
+    Then the user sets the "Name" field to "Cool-yo!"
+    Then the user sets the project "start" date to "02/29/1980"
+    Then the user sets the project "end" date to "07/10/2008"
+    Then the user selects "Monday" as "Opens every"
+    Then the user selects "Tuesday" as "Closes every"
+    Then the user selects "Simple" as "Factor pack"
+    Then the user selects "Sliders (simple)" as "Style"
+    Then the user sets the "Description" field to "this is the coolest"
+    Then the user clicks "Create Project"
+    Then the user will see "success"
+    #Let's check the values stored
+    Then retrieve the latest project from the db
+    Then the project "Name" is "Cool-yo!"
+    Then the project "Description" is "this is the coolest"
+    #check the dates
+    Then the project "start" date is "02/29/1980"
+    Then the project "end" date is "07/10/2008"
+    #check the selects
+    Then the project Factor pack is "Simple"
+    Then the project Style is "Sliders (simple)"
+    Then the project Chat is "disabled"
 
   Scenario: Instructor creates a new project but leaves the dates untouched
     Given the user is the instructor for the course
@@ -280,18 +312,52 @@ Feature: Project Administration
     Then group "my group" has 1 user
     Then group "my group" has 1 revision
 
-    #Another revision
-    Then the user clicks "Edit Project Details"
-    Then set user 2 to group "my group"
-    Then set user 3 to group "your group"
-    Then set user 4 to group "your group"
-    Then the user clicks "Update Project"
+  Scenario: No 2 groups in 1 project can have the same name
+    Given the course started "5/10/1976" and ended "4 months hence"
+    Given the project started "last month" and ends "next month", opened "Saturday" and closes "Monday"
+    Given the course started "last month" and ended "next month"
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+
+    Then the user clicks "Show" on the existing project
+    Then the user sets the "New group name" field to "my group"
+    Then the user clicks "Add!"
     Then the user will see "success"
-    Then retrieve the latest project from the db
-    Then group "my group" has 2 user
-    Then group "my group" has 2 revision
-    Then group "your group" has 2 user
-    Then group "your group" has 1 revision
+    Then the user sets the "New group name" field to "my group"
+    Then the user clicks "Add!"
+    Then the user will see "Error"
+    Then the user will see "Group names must be unique"
+
+  Scenario: No 2 groups in 1 class can have the same name
+    Given the course started "5/10/1976" and ended "4 months hence"
+    Given the project started "last month" and ends "next month", opened "Saturday" and closes "Monday"
+    Given the course started "last month" and ended "next month"
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "Show" on the existing project
+    Then the user sets the "New group name" field to "my group"
+    Then the user clicks "Add!"
+    Then the user will see "success"
+
+    Then the user returns home
+     And the course has a project named "awesome"
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "Show" on project "awesome"
+    Then the user sets the "New group name" field to "my group"
+    Then the user clicks "Add!"
+    Then the user will see "Error"
+    Then the user will see "Group names must be unique"
 
   Scenario: Existing Sat-Mon proj=> Fri-Sat on Sat => tomorrow no emails, no access
     Given the email queue is empty

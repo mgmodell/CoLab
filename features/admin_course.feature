@@ -37,6 +37,24 @@ Feature: Course Administration
      And the course start date is "tomorrow" and the end date is "next month"
      And the course "timezone" is "Nairobi"
 
+  Scenario: Cannot create two courses with the same Number
+    Given the user remembers the existing project number
+    Given the user is an admin
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+     And the user clicks "New Course"
+     And the user sets the "Name" field to "Off"
+     And the user sets the "Number" field to the remembered number
+     And the user sets the "Description" field to "I love to eat peas and carrots all day long"
+     And the user sets the start date to "tomorrow" and the end date to "next month"
+     And the timezone "is" "Nairobi"
+     And the timezone "isn't" "Mexico City"
+    Then the user clicks "Create Course"
+    Then the user will see "Error"
+    Then the user will see "Course numbers must be unique to a school"
+    
   Scenario: Admin cannot creates an incomplete new course
     Given the user is an admin
     Given the user logs in
