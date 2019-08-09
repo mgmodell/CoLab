@@ -24,7 +24,7 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    active_storage_validations (0.8.0)
+    active_storage_validations (0.8.2)
       rails (>= 5.2.0)
     activejob (5.2.3)
       activesupport (= 5.2.3)
@@ -60,8 +60,8 @@ GEM
     arel (9.0.0)
     ast (2.4.0)
     aws-eventstream (1.0.3)
-    aws-partitions (1.195.0)
-    aws-sdk-core (3.61.2)
+    aws-partitions (1.198.0)
+    aws-sdk-core (3.62.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1.0)
       aws-sigv4 (~> 1.1)
@@ -91,7 +91,7 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.0.1)
-    capybara (3.27.0)
+    capybara (3.28.0)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -137,10 +137,10 @@ GEM
       cucumber-tag_expressions (~> 1.1.0)
       gherkin (~> 5.0)
     cucumber-expressions (6.0.1)
-    cucumber-rails (1.7.0)
-      capybara (>= 2.3.0, < 4)
+    cucumber-rails (1.8.0)
+      capybara (>= 2.12, < 4)
       cucumber (>= 3.0.2, < 4)
-      mime-types (>= 1.17, < 4)
+      mime-types (>= 2.0, < 4)
       nokogiri (~> 1.8)
       railties (>= 4.2, < 7)
     cucumber-tag_expressions (1.1.1)
@@ -228,7 +228,7 @@ GEM
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.11.3)
-    msgpack (1.3.0)
+    msgpack (1.3.1)
     multi_json (1.13.1)
     multi_test (0.1.2)
     multi_xml (0.6.0)
@@ -262,7 +262,7 @@ GEM
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
     parallel (1.17.0)
-    parallel_tests (2.29.1)
+    parallel_tests (2.29.2)
       parallel
     parser (2.6.3.0)
       ast (~> 2.4.0)
@@ -273,7 +273,7 @@ GEM
     prawn-table (0.2.2)
       prawn (>= 1.3.0, < 3.0.0)
     public_suffix (3.1.1)
-    puma (4.0.1)
+    puma (4.1.0)
       nio4r (~> 2.0)
     rack (2.0.7)
     rack-proxy (0.6.5)
@@ -302,7 +302,7 @@ GEM
       activesupport (>= 4.2)
       choice (~> 0.2.0)
       ruby-graphviz (~> 1.2)
-    rails-html-sanitizer (1.0.4)
+    rails-html-sanitizer (1.1.0)
       loofah (~> 2.2, >= 2.2.2)
     rails_12factor (0.0.3)
       rails_serve_static_assets
@@ -365,8 +365,8 @@ GEM
     ruby-progressbar (1.10.1)
     ruby_dep (1.5.0)
     rubyzip (1.2.3)
-    safely_block (0.2.1)
-      errbase
+    safely_block (0.2.2)
+      errbase (>= 0.1.1)
     sdoc (1.0.0)
       rdoc (>= 5.0)
     selenium-webdriver (3.142.3)
@@ -477,7 +477,7 @@ DEPENDENCIES
   prawn-table
   puma (~> 4.0)
   railroady
-  rails (~> 5.2.2)
+  rails (~> 5.2.3)
   rails-erd
   rails_12factor
   rb-readline
