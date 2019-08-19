@@ -20,15 +20,15 @@
 # Rails.application.config.action_dispatch.return_only_media_type_on_content_type = false
 
 # Return false instead of self when enqueuing is aborted from a callback.
-# Rails.application.config.active_job.return_false_on_aborted_enqueue = true
+Rails.application.config.active_job.return_false_on_aborted_enqueue = true
 
 # Send Active Storage analysis and purge jobs to dedicated queues.
-# Rails.application.config.active_storage.queues.analysis = :active_storage_analysis
-# Rails.application.config.active_storage.queues.purge    = :active_storage_purge
+Rails.application.config.active_storage.queues.analysis = :active_storage_analysis
+Rails.application.config.active_storage.queues.purge    = :active_storage_purge
 
 # When assigning to a collection of attachments declared via `has_many_attached`, replace existing
 # attachments instead of appending. Use #attach to add new attachments without replacing existing ones.
-# Rails.application.config.active_storage.replace_on_assign_to_many = true
+Rails.application.config.active_storage.replace_on_assign_to_many = true
 
 # Use ActionMailer::MailDeliveryJob for sending parameterized and normal mail.
 #
@@ -42,4 +42,5 @@
 # Enable the same cache key to be reused when the object being cached of type
 # `ActiveRecord::Relation` changes by moving the volatile information (max updated at and count)
 # of the relation's cache key into the cache version to support recycling cache key.
-# Rails.application.config.active_record.collection_cache_versioning = true
+Rails.application.config.active_record.collection_cache_versioning = true
+
