@@ -15,6 +15,69 @@ Feature: Course Administration
     Given the project started '5/12/1976' and ends '10/01/2012'
     Given the course started "5/10/1976" and ended "11/01/2012"
 
+  Scenario: Instructor downloads self-registration image
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Then the user clicks "Download self-registration link"
+
+  Scenario: Instructor approves existing student self-registration
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Given a "existing" user self-registers for a course
+
+  Scenario: Instructor approves new student self-registration
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Given a "new" user self-registers for a course
+
+  Scenario: Instructor rejects existing student self-registration
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Given a "existing" user self-registers for a course
+
+  Scenario: Instructor approves dropped student self-registration
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Given a "new" user self-registers for a course
+
+  Scenario: Instructor un-rejects student self-enrollment rejection
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Given a "new" user self-registers for a course
+
+  Scenario: Instructor rejects new student self-registration
+    Given the user is the instructor for the course
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user sees 1 course
+    Then the user opens the course
+    Given a "new" user self-registers for a course
+
   Scenario: Admin creates a new course
     Given the user is an admin
     Given the user logs in
