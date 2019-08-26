@@ -180,7 +180,7 @@ class BingoGameDataAdmin extends React.Component {
         if (data.group_discount == null) {
           data.group_discount = 0;
         }
-        if (data.project_id == null) {
+        if (data.projects.length > 0 && data.project_id == null) {
           data.project_id = data.projects[0].id;
         }
         const contentBlock = htmlToDraft(data.description);
@@ -401,6 +401,8 @@ class BingoGameDataAdmin extends React.Component {
                   checked={this.state.bingo_game.group_option}
                   id="group_option"
                   onChange={this.handleCheckChange("group_option")}
+                  disabled={null == this.state.bingo_game.projects ||
+                            1 > this.state.bingo_game.projects.length }
                 />
                 <InputLabel htmlFor="group_option">
                   {t("group_option")}
