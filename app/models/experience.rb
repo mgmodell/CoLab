@@ -30,7 +30,7 @@ class Experience < ApplicationRecord
   end
 
   def next_deadline
-    end_date
+    end_date - (1 + lead_time).days
   end
 
   def get_activity_on_date(date:, anon:)
