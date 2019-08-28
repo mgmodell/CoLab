@@ -7,7 +7,8 @@ class BingoGamesController < ApplicationController
                              review_candidates_demo game_results ]
   skip_before_action :authenticate_user!,
                      only: %i[review_candidates_demo
-                              demo_update_review_candidates ]
+                              demo_update_review_candidates
+                              demo_my_results ]
   before_action :demo_user, only: %i[ review_candidates_demo
                                       demo_update_review_candidates ]
 
@@ -20,6 +21,7 @@ class BingoGamesController < ApplicationController
                                           update_review_candidates
                                           review_candidates_demo
                                           demo_update_review_candidates
+                                          demo_my_results 
                                           show index get_concepts]
 
   before_action :check_viewer, only: %i[show index]
@@ -56,13 +58,31 @@ class BingoGamesController < ApplicationController
     end
   end
 
+  def demo_my_results
+    candidate_list = nil
+    candidates = nil
+    candidate_list = get_demo_candidate_list
+    candidates = candidate_list.candidates
+
+    candidates = candidates.to_a.collect do |c|
+      { id: c.id,
+        concept: c.concept.nil? ? nil : c.concept.name,
+        definition: c.definition,
+        term: c.term,
+        feedback: c.candidate_feedback.name,
+        feedback_id: c.candidate_feedback_id }
+    end
+
+    render json: {
+      candidate_list: candidate_list,
+      candidates: candidates
+    }
+  end
+
   def my_results
     candidate_list = nil
     candidates = nil
-    if params[:id].to_i < 1
-      candidate_list = get_demo_candidate_list
-      candidates = candidate_list.candidates
-    else
+    if params[:id].to_i >= 1
       candidate_lists = CandidateList.where(
         bingo_game_id: params[:id],
         user_id: @current_user.id

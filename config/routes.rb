@@ -122,6 +122,9 @@ Rails.application.routes.draw do
     get 'worksheet/-42' => 'bingo_boards#demo_worksheet_for_game',
         as: :worksheet_for_bingo_demo,
         constraints: ->(req) { req.format == :pdf }
+    get 'my_results/:id' => 'bingo_games#demo_my_results',
+        as: 'my_results_demo',
+        constraints: ->(req) { req.format == :json }
   end
 
   get 'installments/edit/:assessment_id' => 'installments#submit_installment', as: :edit_installment
