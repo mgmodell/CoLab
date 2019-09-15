@@ -175,7 +175,7 @@ class BingoGamesController < ApplicationController
           end .count
           resp[user_id][:performance] = cl.performance
           candidates = []
-          cl.candidates.completed.each do |c|
+          cl.candidates.reviewed.each do |c|
             candidates << {
               id: c.id,
               term: c.term,
