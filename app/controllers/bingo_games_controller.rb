@@ -38,6 +38,7 @@ class BingoGamesController < ApplicationController
               start_date end_date active lead_time group_discount
               reviewed project_id ])
         resp[:topic] = @bingo_game.get_topic(@current_user.anonymize?)
+        resp[:timezone] = @bingo_game.course.timezone
         resp[:reviewed] = @bingo_game.reviewed?
         resp[:projects] = @bingo_game.course.projects
                                      .collect do |p|
@@ -53,6 +54,7 @@ class BingoGamesController < ApplicationController
             name: c.name
           }
         end .as_json
+        puts "\n\n\t***\n\t#{resp}"
         render json: resp
       end
     end
@@ -276,8 +278,7 @@ class BingoGamesController < ApplicationController
             messages: {}
           }
         else
-          puts "\n\n\n\t***** Error"
-          puts @bingo_game.errors.full_messages
+          logger.debug @bingo_game.errors.full_messages
           render json: {
             notice: 'Unable to save',
             messages: @bingo_game.errors

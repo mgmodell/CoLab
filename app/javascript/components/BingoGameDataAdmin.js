@@ -16,6 +16,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
+import { DateTime } from "luxon";
+
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
@@ -64,6 +66,7 @@ class BingoGameDataAdmin extends React.Component {
       tz_extra_end: end.toISOString().substr(10),
       bingo_game: {
         topic: "",
+        timezone: 'UTC',
         active: false,
         description: "",
         start_date: start.toISOString().substr(0, 10),
@@ -175,8 +178,14 @@ class BingoGameDataAdmin extends React.Component {
       .then(data => {
         const tz_extra_start = data.start_date.substr(10);
         const tz_extra_end = data.end_date.substr(10);
-        data.start_date = data.start_date.substr(0, 10);
-        data.end_date = data.end_date.substr(0, 10);
+        var tmpDate = DateTime.fromISO( data.start_date )
+        tmpDate.setZone( data.timezone )
+        data.start_date = tmpDate.toISO( ).substr(0, 10 )
+
+        tmpDate = DateTime.fromISO( data.end_date )
+        tmpDate.setZone( data.timezone )
+        data.end_date = tmpDate.toISO( ).substr( 0, 10)
+
         if (data.group_discount == null) {
           data.group_discount = 0;
         }
