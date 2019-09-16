@@ -276,6 +276,8 @@ class BingoGamesController < ApplicationController
             messages: {}
           }
         else
+          puts "\n\n\n\t***** Error"
+          puts @bingo_game.errors.full_messages
           render json: {
             notice: 'Unable to save',
             messages: @bingo_game.errors

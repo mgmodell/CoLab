@@ -312,10 +312,13 @@ class BingoBuilder extends React.Component {
           <Typography>
             <strong>Topic:</strong> {this.state.board.bingo_game.topic}
           </Typography>
-          <Typography>
+          <div>
             <strong>Description:</strong>{" "}
-            {this.state.board.bingo_game.description}
-          </Typography>
+            <p
+              dangerouslySetInnerHTML=
+                {{__html: this.state.board.bingo_game.description}}
+            />
+          </div>
           {null != this.state.candidate_list && (
             <Typography>
               <strong>Performance:</strong>

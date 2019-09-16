@@ -2,6 +2,7 @@
 
 require 'forgery'
 class Course < ApplicationRecord
+
   belongs_to :school, inverse_of: :courses
   has_many :projects, inverse_of: :course, dependent: :destroy
   has_many :rosters, inverse_of: :course, dependent: :destroy
@@ -18,7 +19,7 @@ class Course < ApplicationRecord
   validate :date_sanity
   validate :activity_date_check
 
-  before_validation :timezone_adjust
+  before_validation :timezone_adjust_comprehensive
   before_create :anonymize
 
   def pretty_name(anonymous = false)
@@ -323,7 +324,7 @@ class Course < ApplicationRecord
     self.anon_number = "#{dpts.sample}-#{rand(100..700)}"
   end
 
-  def timezone_adjust
+  def timezone_adjust_comprehensive
     course_tz = ActiveSupport::TimeZone.new(timezone)
     # TODO: must handle changing timezones at some point
 
@@ -343,36 +344,16 @@ class Course < ApplicationRecord
       orig_tz = ActiveSupport::TimeZone.new(timezone_was)
 
       Course.transaction do
-        projects.reload.each do |project|
-          d = orig_tz.parse(project.start_date.to_s)
-          d = course_tz.local(d.year, d.month, d.day)
-          project.start_date = d.beginning_of_day
+        get_activities.each do |activity|
 
-          d = orig_tz.parse(project.end_date.to_s)
+          d = orig_tz.parse(activity.start_date.to_s)
           d = course_tz.local(d.year, d.month, d.day)
-          project.end_date = d.end_of_day
-          # {project.end_date}\n\n"
-          project.save!(validate: false)
-        end
-        experiences.reload.each do |experience|
-          d = orig_tz.parse(experience.start_date.to_s)
-          d = course_tz.local(d.year, d.month, d.day)
-          experience.start_date = d.beginning_of_day
+          activity.start_date = d.beginning_of_day
 
-          d = orig_tz.parse(experience.end_date.to_s)
+          d = orig_tz.parse(activity.end_date.to_s)
           d = course_tz.local(d.year, d.month, d.day)
-          experience.end_date = d.end_of_day
-          experience.save!(validate: false)
-        end
-        bingo_games.each do |bingo_game|
-          d = orig_tz.parse(bingo_game.start_date.to_s)
-          d = course_tz.local(d.year, d.month, d.day)
-          bingo_game.start_date = d.beginning_of_day
-
-          d = orig_tz.parse(bingo_game.end_date.to_s)
-          d = course_tz.local(d.year, d.month, d.day)
-          bingo_game.end_date = d.end_of_day
-          bingo_game.save!(validate: false)
+          activity.end_date = d.end_of_day
+          activity.save!(validate: false)
         end
       end
     end

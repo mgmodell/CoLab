@@ -2,6 +2,8 @@
 
 require 'forgery'
 class BingoGame < ApplicationRecord
+  include TimezonesSupportConcern
+
   belongs_to :course, inverse_of: :bingo_games
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
   has_many :bingo_boards, inverse_of: :bingo_game, dependent: :destroy
@@ -26,7 +28,6 @@ class BingoGame < ApplicationRecord
 
   validate :group_components
 
-  before_validation :timezone_adjust
   validate :dates_within_course
   before_create :anonymize
   before_save :reset_notification
@@ -242,23 +243,6 @@ class BingoGame < ApplicationRecord
     end
   end
 
-  def timezone_adjust
-    course_tz = ActiveSupport::TimeZone.new(course.timezone)
-
-    if start_date.nil? || start_date.change(hour: 0) == course.start_date.change(hour: 0)
-      self.start_date = course.start_date
-    elsif start_date_changed?
-      proc_date = course_tz.local(start_date.year, start_date.month, start_date.day)
-      self.start_date = proc_date.beginning_of_day
-    end
-
-    if end_date.nil? || end_date.change(hour: 0) == course.end_date.change(hour: 0)
-      self.end_date = course.end_date
-    elsif end_date_changed?
-      proc_date = course_tz.local(end_date.year, end_date.month, end_date.day)
-      self.end_date = proc_date.end_of_day.change(sec: 0)
-    end
-  end
 
   def dates_within_course
     unless start_date.nil? || end_date.nil?

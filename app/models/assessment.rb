@@ -9,8 +9,6 @@ class Assessment < ApplicationRecord
   has_many :users, through: :project
   has_many :groups, through: :project
 
-  # after_validation :timezone_adjust
-
   # Helpful scope
   scope :active_at, lambda { |date|
                       joins(:project)
@@ -149,10 +147,4 @@ class Assessment < ApplicationRecord
     end
   end
 
-  def timezone_adjust
-    course_tz = ActiveSupport::TimeZone.new(project.course.timezone)
-    self.start_date -= course_tz.utc_offset if saved_change_to_start_date?
-
-    self.end_date -= course_tz.utc_offset if saved_change_to_end_date?
-  end
 end
