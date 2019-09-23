@@ -115,7 +115,8 @@
   credit: 30
   definition_en: >
     Proper names and products should not be used unless they are 
-    dominant to the point of being synonymous with a class of activity.
+    dominant to the point of being synonymous with a class of activity
+    or a household name.
   definition_ko:
 
 - !ruby/object:CandidateFeedback_

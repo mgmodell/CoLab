@@ -26,24 +26,32 @@ namespace :migratify do
         puts "Error on plagiarised: #{cf.size} items found"
       end
 
+      remap_to_id = -1
       cf = CandidateFeedback.where name_en: 'Term: Proper Name'
       if 1 == cf.size
         cf = cf[ 0 ]
-        cf.name_en = 'Definition: Proper Name or Product Name'
+        remap_to_id = cf.id
+        cf.name_en = 'Term: Proper Name or Product Name'
         cf.definition_en = 
           "Proper names and products should not be used unless they are "+
-          "dominant to the point of being synonymous with a class of activity."
+          "dominant to the point of being synonymous with a class of " +
+          "activity or a household name."
         cf.save
+
+        cf = CandidateFeedback.where name_en: 'Term: Product Name'
+        if 1 == cf.size
+          remap_from_id = cf[0].id
+          # Remap 11 (proper name) to 12 (product name)
+          Candidate.where( candidate_feedback_id: remap_from_id )
+            .update_all( candidate_feedback_id: remap_to_id )
+          if 0 < CandidateFeedback.where( id: remap_from_id ).size
+            CandidateFeedback.destroy( remap_from_id )
+          end
+        end
       else
         puts "Error on proper: #{cf.size} items found"
       end
 
-      # Remap 11 (proper name) to 12 (product name)
-      Candidate.where( candidate_feedback_id: 11 )
-        .update_all( candidate_feedback_id: 12 )
-      if 0 < Candidate.where( id: 11 ).size
-        CandidateFeedback.destroy( 11 )
-      end
     end
 
 
