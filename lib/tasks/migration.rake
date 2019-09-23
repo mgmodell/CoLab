@@ -52,6 +52,12 @@ namespace :migratify do
         puts "Error on proper: #{cf.size} items found"
       end
 
+      #Standardize concept names
+      Concept.all.each do |concept|
+        concept.name = Concept.standardize_name name: concept.name
+        concept.save
+      end
+
     end
 
 

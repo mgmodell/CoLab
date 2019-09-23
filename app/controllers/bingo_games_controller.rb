@@ -462,14 +462,17 @@ class BingoGamesController < ApplicationController
         next unless candidate[:concept].present? && candidate[:concept][:name].present?
 
         concept_name = candidate[:concept][:name]
-        concept_name = concept_name.split.map(&:capitalize).*' '
-        entered_concepts << concept_name
+        #concept_name = concept_name.split.map(&:capitalize).*' '
+        #entered_concepts << concept_name
+        entered_concepts << Concept.standardize_name( name: concept_name)
       end
 
+      puts entered_concepts
       concept_map = {}
       Concept.where(name: entered_concepts).each do |c|
         concept_map[c.name] = c
       end
+      puts concept_map
 
       feedback_map = {}
       CandidateFeedback.all.each do |cf|
