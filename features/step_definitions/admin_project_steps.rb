@@ -61,8 +61,9 @@ Then /^the user sets the rich "([^"]*)" field to "([^"]*)"$/ do |field, value|
   field = find(:xpath,
                "//div[@id='rdw-wrapper-#{field}']//div[@contenteditable='true']")
   text = field.text
+  field.send_keys :end
   text.length.times do
-    field.send_keys :delete
+    field.send_keys :backspace
   end
   field.send_keys value
 end

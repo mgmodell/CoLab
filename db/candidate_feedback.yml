@@ -20,13 +20,14 @@
   definition_ko:
 
 - !ruby/object:CandidateFeedback_
-  name_en: 'Definition: Insufficient'
+  name_en: 'Definition: Almost correct'
   name_ko: 
   critique: 2
   credit: 75
   definition_en: >
-    You've identified an important term related to the stated topic, but
-    the definition is incomplete in crucial ways.
+    You've identified an important term related to the stated topic and
+    provided a definition that is close to complete, but is lacking in
+    some crucial ways.
   definition_ko:
 
 - !ruby/object:CandidateFeedback_
@@ -40,7 +41,7 @@
   definition_ko:
 
 - !ruby/object:CandidateFeedback_
-  name_en: 'Definition: Plagiarised'
+  name_en: 'Definition: Borrowed Word-for-Word'
   name_ko: 
   critique: 2
   credit: 25
@@ -108,23 +109,13 @@
   definition_ko:
 
 - !ruby/object:CandidateFeedback_
-  name_en: "Term: Product Name"
+  name_en: "Term: Proper Name or Product Name"
   name_ko: 
   critique: 3
   credit: 30
   definition_en: >
-    Products should not be used unless they are dominant to the point
-    of being a household name.
-  definition_ko:
-
-- !ruby/object:CandidateFeedback_
-  name_en: "Term: Proper Name"
-  name_ko: 
-  critique: 3
-  credit: 30
-  definition_en: >
-    Proper names should not be used unless they are household names
-    associated with the field.
+    Proper names and products should not be used unless they are 
+    dominant to the point of being synonymous with a class of activity.
   definition_ko:
 
 - !ruby/object:CandidateFeedback_

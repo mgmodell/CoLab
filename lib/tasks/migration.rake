@@ -1,5 +1,55 @@
 namespace :migratify do
 
+  desc 'Applying changes to Candidate Feedback options'
+  task cf_updates: :environment do
+
+    CandidateFeedback.transaction do
+      cf = CandidateFeedback.where name_en: 'Definition: Insufficient'
+      if 1 == cf.size
+        cf = cf[ 0 ]
+        cf.name_en = 'Definition: Almost correct'
+        cf.definition_en = 
+          "You've identified an important term related to the stated topic and " +
+          "provided a definition that is close to complete, but is lacking in " +
+          "some crucial way(s)."
+        cf.save
+      else
+        puts "Error on insufficient: #{cf.size} items found"
+      end
+
+      cf = CandidateFeedback.where name_en: 'Definition: Plagiarised'
+      if 1 == cf.size
+        cf = cf[ 0 ]
+        cf.name_en = 'Definition: Borrowed Word-for-Word'
+        cf.save
+      else
+        puts "Error on plagiarised: #{cf.size} items found"
+      end
+
+      cf = CandidateFeedback.where name_en: 'Term: Proper Name'
+      if 1 == cf.size
+        cf = cf[ 0 ]
+        cf.name_en = 'Definition: Proper Name or Product Name'
+        cf.definition_en = 
+          "Proper names and products should not be used unless they are "+
+          "dominant to the point of being synonymous with a class of activity."
+        cf.save
+      else
+        puts "Error on proper: #{cf.size} items found"
+      end
+
+      # Remap 11 (proper name) to 12 (product name)
+      Candidate.where( candidate_feedback_id: 11 )
+        .update_all( candidate_feedback_id: 12 )
+      if 0 < Candidate.where( id: 11 ).size
+        CandidateFeedback.destroy( 11 )
+      end
+    end
+
+
+  end
+  
+
   desc 'Adding type to Candidate Feedback'
   task cf_type: :environment do
     CandidateFeedback.all.each do |cf|
