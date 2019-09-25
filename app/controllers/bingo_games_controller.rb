@@ -7,7 +7,8 @@ class BingoGamesController < ApplicationController
                              review_candidates_demo game_results ]
   skip_before_action :authenticate_user!,
                      only: %i[review_candidates_demo
-                              demo_update_review_candidates ]
+                              demo_update_review_candidates
+                              demo_my_results ]
   before_action :demo_user, only: %i[ review_candidates_demo
                                       demo_update_review_candidates ]
 
@@ -20,6 +21,7 @@ class BingoGamesController < ApplicationController
                                           update_review_candidates
                                           review_candidates_demo
                                           demo_update_review_candidates
+                                          demo_my_results 
                                           show index get_concepts]
 
   before_action :check_viewer, only: %i[show index]
@@ -36,6 +38,7 @@ class BingoGamesController < ApplicationController
               start_date end_date active lead_time group_discount
               reviewed project_id ])
         resp[:topic] = @bingo_game.get_topic(@current_user.anonymize?)
+        resp[:timezone] = @bingo_game.course.timezone
         resp[:reviewed] = @bingo_game.reviewed?
         resp[:projects] = @bingo_game.course.projects
                                      .collect do |p|
@@ -56,13 +59,31 @@ class BingoGamesController < ApplicationController
     end
   end
 
+  def demo_my_results
+    candidate_list = nil
+    candidates = nil
+    candidate_list = get_demo_candidate_list
+    candidates = candidate_list.candidates
+
+    candidates = candidates.to_a.collect do |c|
+      { id: c.id,
+        concept: c.concept.nil? ? nil : c.concept.name,
+        definition: c.definition,
+        term: c.term,
+        feedback: c.candidate_feedback.name,
+        feedback_id: c.candidate_feedback_id }
+    end
+
+    render json: {
+      candidate_list: candidate_list,
+      candidates: candidates
+    }
+  end
+
   def my_results
     candidate_list = nil
     candidates = nil
-    if params[:id].to_i < 1
-      candidate_list = get_demo_candidate_list
-      candidates = candidate_list.candidates
-    else
+    if params[:id].to_i >= 1
       candidate_lists = CandidateList.where(
         bingo_game_id: params[:id],
         user_id: @current_user.id
@@ -155,7 +176,7 @@ class BingoGamesController < ApplicationController
           end .count
           resp[user_id][:performance] = cl.performance
           candidates = []
-          cl.candidates.completed.each do |c|
+          cl.candidates.reviewed.each do |c|
             candidates << {
               id: c.id,
               term: c.term,
@@ -256,6 +277,7 @@ class BingoGamesController < ApplicationController
             messages: {}
           }
         else
+          logger.debug @bingo_game.errors.full_messages
           render json: {
             notice: 'Unable to save',
             messages: @bingo_game.errors
@@ -439,8 +461,7 @@ class BingoGamesController < ApplicationController
         next unless candidate[:concept].present? && candidate[:concept][:name].present?
 
         concept_name = candidate[:concept][:name]
-        concept_name = concept_name.split.map(&:capitalize).*' '
-        entered_concepts << concept_name
+        entered_concepts << Concept.standardize_name( name: concept_name)
       end
 
       concept_map = {}

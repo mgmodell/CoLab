@@ -19,7 +19,7 @@
     <%= react_component "BingoBuilder", {
     endDateStr: @candidate_list.bingo_game.end_date,
     conceptsUrl: bingo_concepts_demo_path( -42 ),
-    resultsUrl: my_results_path( @candidate_list.bingo_game_id ),
+    resultsUrl: my_results_demo_path( @candidate_list.bingo_game_id ),
     boardUrl: board_for_game_demo_path( -42 ),
     boardSaveUrl: update_board_demo_path( -42 ),
     worksheetUrl: worksheet_for_bingo_demo_path,

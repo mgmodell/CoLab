@@ -2,6 +2,8 @@
 
 require 'forgery'
 class Project < ApplicationRecord
+  include TimezonesSupportConcern
+
   after_save :build_assessment
 
   belongs_to :course, inverse_of: :projects
@@ -19,7 +21,6 @@ class Project < ApplicationRecord
   validates :end_date, :start_date, presence: true
   before_create :anonymize
 
-  before_validation :timezone_adjust
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
@@ -262,25 +263,6 @@ class Project < ApplicationRecord
   end
 
   private
-
-  def timezone_adjust
-    course_tz = ActiveSupport::TimeZone.new(course.timezone)
-
-    # TZ corrections
-    if start_date.nil? || start_date.change(hour: 0) == course.start_date.change(hour: 0)
-      self.start_date = course.start_date
-    elsif start_date_change_to_be_saved
-      proc_date = course_tz.local(start_date.year, start_date.month, start_date.day)
-      self.start_date = proc_date.beginning_of_day
-    end
-
-    if end_date.nil? || end_date.change(hour: 0) == course.end_date.change(hour: 0)
-      self.end_date = course.end_date
-    elsif end_date_change_to_be_saved
-      proc_date = course_tz.local(end_date.year, end_date.month, end_date.day)
-      self.end_date = proc_date.end_of_day.change(sec: 0)
-    end
-  end
 
   def anonymize
     self.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"

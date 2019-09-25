@@ -29,7 +29,8 @@
       </tr>
       <tr>
         <td colspan="3">
-          <%= f.input :group_option, :label => ( t 'bingo_games.group_option') %>
+          <%= f.input :group_option, :label => ( t 'bingo_games.group_option'),
+                      disabled: @bingo_game.course.projects.empty?  %>
         </td>
       </tr>
       <tr id="group_options" style="<%= @bingo_game.group_option ? '' : 'display:none' %>">

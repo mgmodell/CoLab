@@ -1,5 +1,69 @@
 namespace :migratify do
 
+  desc 'Applying changes to Candidate Feedback options'
+  task cf_updates: :environment do
+
+    CandidateFeedback.transaction do
+      cf = CandidateFeedback.where name_en: 'Definition: Insufficient'
+      if 1 == cf.size
+        cf = cf[ 0 ]
+        cf.name_en = 'Definition: Almost correct'
+        cf.definition_en = 
+          "You've identified an important term related to the stated topic and " +
+          "provided a definition that is close to complete, but is lacking in " +
+          "some crucial way(s)."
+        cf.save
+      else
+        puts "Error on insufficient: #{cf.size} items found"
+      end
+
+      cf = CandidateFeedback.where name_en: 'Definition: Plagiarised'
+      if 1 == cf.size
+        cf = cf[ 0 ]
+        cf.name_en = 'Definition: Borrowed Word-for-Word'
+        cf.save
+      else
+        puts "Error on plagiarised: #{cf.size} items found"
+      end
+
+      remap_to_id = -1
+      cf = CandidateFeedback.where name_en: 'Term: Proper Name'
+      if 1 == cf.size
+        cf = cf[ 0 ]
+        remap_to_id = cf.id
+        cf.name_en = 'Term: Proper Name or Product Name'
+        cf.definition_en = 
+          "Proper names and products should not be used unless they are "+
+          "dominant to the point of being synonymous with a class of " +
+          "activity or a household name."
+        cf.save
+
+        cf = CandidateFeedback.where name_en: 'Term: Product Name'
+        if 1 == cf.size
+          remap_from_id = cf[0].id
+          # Remap 11 (proper name) to 12 (product name)
+          Candidate.where( candidate_feedback_id: remap_from_id )
+            .update_all( candidate_feedback_id: remap_to_id )
+          if 0 < CandidateFeedback.where( id: remap_from_id ).size
+            CandidateFeedback.destroy( remap_from_id )
+          end
+        end
+      else
+        puts "Error on proper: #{cf.size} items found"
+      end
+
+      #Standardize concept names
+      Concept.all.each do |concept|
+        concept.name = Concept.standardize_name name: concept.name
+        concept.save
+      end
+
+    end
+
+
+  end
+  
+
   desc 'Adding type to Candidate Feedback'
   task cf_type: :environment do
     CandidateFeedback.all.each do |cf|

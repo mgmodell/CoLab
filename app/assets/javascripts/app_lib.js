@@ -25,6 +25,7 @@ function init_me( obj, data ){
   var x = d3.scaleLinear().domain([0, data.length]).range([0, width]);
   var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 
+
   graph.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   var line = d3.line().curve( d3.curveMonotoneX )
@@ -67,6 +68,7 @@ function init_me( obj, data ){
         if( leastSquaresCoeff[ 0 ] < 0 ){
           trendLineColor="red";
         }
+
         var trendline = graph.selectAll(".trendline")
           .data(trendData);
         trendline.enter()
@@ -78,9 +80,39 @@ function init_me( obj, data ){
             .attr("y2", function(d) { return y(d[3]); })
             .attr("stroke", trendLineColor )
             .attr("stroke-width", 2);
+        // Calculate the performance with improvement
+        var avg = getAvg( data );
+        var ePerformance = Math.round(
+            avg * ( 1 + leastSquaresCoeff[0] / data.length ) )
+
+        graph.append( "text" )
+             .style("fill", "black")
+             .style("font-size", "9")
+             .style("opacity", .35)
+             .attr("text-anchor", "middle")
+             .attr("x", .25 * width)
+             .attr("y", .8 * height)
+             .text( Math.round( avg ).toString()+'%' )
+        graph.append( "text" )
+             .style("fill", "blue")
+             .style("font-size", "12")
+             .style("opacity", .95)
+             .attr("text-anchor", "middle")
+             .attr("x", .65 * width)
+             .attr("y", height)
+             .text( ePerformance.toString()+'%' )
+
       }
 }
 
+function getAvg( valueArray ){
+  var total = 0;
+  for(var i = 0; i < valueArray.length; i++) {
+    total += valueArray[i];
+  }
+  return total / valueArray.length;
+
+}
 // returns slope, intercept and r-square of the line
 function leastSquares(xSeries, ySeries) {
   var reduceSumFunc = function(prev, cur) { return prev + cur; };

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '2.6.3'
+ruby '2.6.4'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.3'
+gem 'rails', '~> 6.0.0'
 
 gem 'puma', '~> 4.0'
 # Use mysql as the database for Active Record
@@ -55,6 +55,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'rails_12factor', group: :production
 gem 'react-rails'
+gem 'sassc-rails'
 gem 'simple_calendar', '~> 2.0'
 gem 'simple_form'
 gem 'stopwords-filter', require: 'stopwords'
