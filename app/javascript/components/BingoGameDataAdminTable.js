@@ -192,7 +192,7 @@ class BingoGameDataAdminTable extends React.Component {
             <Toolbar>
               <InputBase placeholder="Search results" onChange={this.filter} />
               <SearchIcon />
-              <Typography variant="h6" color="inherit">
+              <Typography color="inherit">
                 Showing {this.state.results.length} of{" "}
                 {this.props.results_raw.length}
               </Typography>

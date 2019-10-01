@@ -553,7 +553,7 @@ class CandidatesReviewTable extends React.Component {
     );
 
     return (
-      <Paper style={{ width: "100%" }}>
+      <Paper style={{ height: "95%", width: "100%" }}>
         {toolbar}
         <div>
           <Table>

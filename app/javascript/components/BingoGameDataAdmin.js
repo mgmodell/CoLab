@@ -305,7 +305,7 @@ class BingoGameDataAdmin extends React.Component {
       </React.Fragment>
     ) : null;
     return (
-      <Paper>
+      <Paper style={{height: "95%", width: "100%"}}>
         <Tabs value={this.state.curTab} onChange={this.changeTab} centered>
           <Tab value="details" label={t("game_details_pnl")} />
           <Tab value="results" label={t("response_pnl")} />
@@ -424,7 +424,7 @@ class BingoGameDataAdmin extends React.Component {
           </React.Fragment>
         )}
         {"results" == this.state.curTab && (
-          <Grid container>
+          <Grid container style={{height: "100%"}}>
             <Grid item xs={5}>
               <ConceptChips concepts={this.state.concepts} />
             </Grid>
