@@ -109,7 +109,7 @@ class User < ApplicationRecord
     consent_forms.each do |consent_form|
       next unless logs[consent_form.id].nil?
 
-      log = create_consent_log(consent_form_id: consent_form_id, presented: false)
+      log = consent_logs.create(consent_form_id: consent_form.id, presented: false)
       logs[consent_form.id] = log
     end
 
