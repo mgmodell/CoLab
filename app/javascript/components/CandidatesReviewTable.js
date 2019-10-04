@@ -93,7 +93,7 @@ class CandidatesReviewTable extends React.Component {
           visible: true,
           sortable: true,
           render_func: c => {
-            return c.completed ? "*" : null;
+            return 100 == c.completed ? "*" : null;
           }
         },
         {
@@ -206,7 +206,7 @@ class CandidatesReviewTable extends React.Component {
       });
     } else if ("completed" == dataKey) {
       candidates.sort((a, b) => {
-        const retval = a.completed === b.completed ? 0 : a.completed ? -1 : 1;
+        const retval = a.completed - b.completed;
         return mod * retval;
       });
     } else {
@@ -220,14 +220,15 @@ class CandidatesReviewTable extends React.Component {
   setCompleted = function(item) {
     const { feedback_opts } = this.state;
     const fb_id = item.candidate_feedback_id;
-    if (
-      fb_id != null &&
-      ("term_problem" == feedback_opts[fb_id].critique ||
-        item.concept.name.length > 0)
-    ) {
-      item.completed = true;
+    if ( fb_id != null ){
+        item.completed = 100;
+        if( "term_problem" != feedback_opts[fb_id].critique &&
+            item.concept.name.length < 1){
+          item.completed = 50;
+        }
+
     } else {
-      item.completed = false;
+      item.completed = 0;
     }
   };
 
@@ -235,7 +236,7 @@ class CandidatesReviewTable extends React.Component {
     const { candidates_map } = this.state;
     const candidates = Object.values(candidates_map);
     const completed = candidates.reduce((acc, item) => {
-      if (item.completed) {
+      if (100 == item.completed) {
         acc = acc + 1;
       }
       return acc;
@@ -277,7 +278,6 @@ class CandidatesReviewTable extends React.Component {
         if (response.ok) {
           return response.json();
         } else {
-          console.log("error");
           return [{ id: -1, name: "no data" }];
         }
       })
@@ -338,7 +338,7 @@ class CandidatesReviewTable extends React.Component {
       method: "PATCH",
       credentials: "include",
       body: JSON.stringify({
-        candidates: this.state.candidates.filter(c => c.completed),
+        candidates: this.state.candidates.filter(c => 0 < c.completed),
         reviewed: this.state.review_complete
       }),
       headers: {

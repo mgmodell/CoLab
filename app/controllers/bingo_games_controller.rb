@@ -503,7 +503,7 @@ class BingoGamesController < ApplicationController
           concept_name = Concept.standardize_name name: concept_name
 
           concept = concept_map[concept_name]
-          if concept.nil?
+          if !concept_name.blank? && concept.nil?
             concept = Concept.create(name: concept_name)
             concept_map[concept_name] = concept
           end
