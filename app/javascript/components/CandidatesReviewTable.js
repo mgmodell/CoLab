@@ -68,6 +68,7 @@ class CandidatesReviewTable extends React.Component {
       review_complete: false,
       reviewStatus: "",
       progress: 0,
+      unique_concepts: 0,
       sortBy: "number",
       sortDirection: SortDirection.DESC,
       dirty: false,
@@ -312,12 +313,22 @@ class CandidatesReviewTable extends React.Component {
           this.setCompleted(item);
           candidates_map[item.id] = item;
         });
+        //Concept count init
+        let concepts = new Array(
+          ...Object.values( candidates_map ).entries( )
+        )
+        let filtered = concepts
+          .filter( (x)=>( '' != x[1].concept.name ) )
+          .map( (x)=>(x[1].concept.name.toLowerCase( ) ) )
+
+        let unique_concepts = new Set( filtered ).size
         this.setState({
           bingo_game: data.bingo_game,
           field_prefix: "_bingo_candidates_review_" + data.bingo_game.id,
           groups: groups,
           dirty: false,
           users: users,
+          unique_concepts: unique_concepts,
           rowsPerPage: data.candidates.length,
           candidate_lists: candidate_lists,
           candidates_map: candidates_map,
@@ -377,6 +388,7 @@ class CandidatesReviewTable extends React.Component {
   };
   handleChangeRowsPerPage = function(event) {
     this.setState({ rowsPerPage: event.target.value });
+    this.setState({ page: 1 });
   };
   filter = function(event) {
     const { sortBy, sortDirection, candidates_map } = this.state;
@@ -395,9 +407,19 @@ class CandidatesReviewTable extends React.Component {
     let candidates_map = this.state.candidates_map;
     candidates_map[id].concept.name = value;
     this.setCompleted(candidates_map[id]);
+    let concepts = new Array(
+      ...Object.values( candidates_map ).entries( )
+    )
+    let filtered = concepts
+      .filter( (x)=>( '' != x[1].concept.name ) )
+      .map( (x)=>(x[1].concept.name.toLowerCase( ) ) )
+
+    let unique_concepts = new Set( filtered ).size
+
     this.setState({
       dirty: true,
-      candidates_map: candidates_map
+      candidates_map: candidates_map,
+      unique_concepts: unique_concepts
     });
     this.updateProgress();
   };
@@ -541,6 +563,7 @@ class CandidatesReviewTable extends React.Component {
           />
           &nbsp;
           {this.state.progress}%{statusMsg}
+          ({this.state.unique_concepts} concepts)
           {notify}
         </Grid>
         <Grid item>
