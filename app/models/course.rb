@@ -2,7 +2,6 @@
 
 require 'forgery'
 class Course < ApplicationRecord
-
   belongs_to :school, inverse_of: :courses
   has_many :projects, inverse_of: :course, dependent: :destroy
   has_many :rosters, inverse_of: :course, dependent: :destroy
@@ -345,7 +344,6 @@ class Course < ApplicationRecord
 
       Course.transaction do
         get_activities.each do |activity|
-
           d = orig_tz.parse(activity.start_date.to_s)
           d = course_tz.local(d.year, d.month, d.day)
           activity.start_date = d.beginning_of_day

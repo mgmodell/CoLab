@@ -243,7 +243,6 @@ class BingoGame < ApplicationRecord
     end
   end
 
-
   def dates_within_course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date

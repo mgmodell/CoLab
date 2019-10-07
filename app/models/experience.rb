@@ -22,7 +22,9 @@ class Experience < ApplicationRecord
   def get_user_reaction(user)
     reaction = reactions.includes(narrative: { scenario: :behavior }).find_by(user: user)
 
-    reaction = Reaction.create(user: user, experience: self, instructed: false) if reaction.nil?
+    if reaction.nil?
+      reaction = Reaction.create(user: user, experience: self, instructed: false)
+    end
     reaction
   end
 
@@ -199,7 +201,9 @@ class Experience < ApplicationRecord
       end
       experience.instructor_updated = true
       experience.save
-      logger.debug experience.errors.full_messages unless experience.errors.empty?
+      unless experience.errors.empty?
+        logger.debug experience.errors.full_messages
+      end
     end
     logger.debug "\n\t**#{count} Experience Reports sent to Instructors**"
   end

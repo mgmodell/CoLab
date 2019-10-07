@@ -23,7 +23,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TablePagination from "@material-ui/core/TablePagination";
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import ViewColumnRounded from "@material-ui/icons/ViewColumnRounded";
 import { SortDirection } from "react-virtualized";
@@ -223,13 +223,14 @@ class CandidatesReviewTable extends React.Component {
   setCompleted = function(item) {
     const { feedback_opts } = this.state;
     const fb_id = item.candidate_feedback_id;
-    if ( fb_id != null ){
-        item.completed = 100;
-        if( "term_problem" != feedback_opts[fb_id].critique &&
-            item.concept.name.length < 1){
-          item.completed = 50;
-        }
-
+    if (fb_id != null) {
+      item.completed = 100;
+      if (
+        "term_problem" != feedback_opts[fb_id].critique &&
+        item.concept.name.length < 1
+      ) {
+        item.completed = 50;
+      }
     } else {
       item.completed = 0;
     }
@@ -244,22 +245,22 @@ class CandidatesReviewTable extends React.Component {
       }
       return acc;
     }, 0);
-    //Concept count 
-    const concepts = new Array(
-      ...Object.values( candidates_map ).entries( )
-    )
+    //Concept count
+    const concepts = new Array(...Object.values(candidates_map).entries());
     let filtered = concepts
-      .filter( (x)=>( '' != x[1].concept.name ) )
-      .map( (x)=>(x[1].concept.name.toLowerCase( ) ) )
+      .filter(x => "" != x[1].concept.name)
+      .map(x => x[1].concept.name.toLowerCase());
 
-    const unique_concepts = new Set( filtered ).size
+    const unique_concepts = new Set(filtered).size;
     //Now for just the acceptable ones
     filtered = concepts
-      .filter( (x)=>(
-                          '' != x[1].concept.name && 'acceptable' == feedback_opts[ x[1].candidate_feedback_id ].critique
-                    ) )
-      .map( (x)=>(x[1].concept.name.toLowerCase( ) ) )
-    const acceptable_unique_concepts = new Set( filtered ).size
+      .filter(
+        x =>
+          "" != x[1].concept.name &&
+          "acceptable" == feedback_opts[x[1].candidate_feedback_id].critique
+      )
+      .map(x => x[1].concept.name.toLowerCase());
+    const acceptable_unique_concepts = new Set(filtered).size;
 
     this.setState({
       unique_concepts: unique_concepts,
@@ -351,8 +352,7 @@ class CandidatesReviewTable extends React.Component {
         this.updateProgress();
       });
   }
-  conceptStats(){
-  }
+  conceptStats() {}
   saveFeedback() {
     this.setState({
       dirty: false,
@@ -423,7 +423,7 @@ class CandidatesReviewTable extends React.Component {
 
     this.setState({
       dirty: true,
-      candidates_map: candidates_map,
+      candidates_map: candidates_map
     });
     this.updateProgress();
   };
@@ -569,7 +569,8 @@ class CandidatesReviewTable extends React.Component {
           {this.state.progress}%
           <Tooltip title="Unique concepts identified [acceptably explained]">
             <Typography>
-            {this.state.unique_concepts} [{this.state.acceptable_unique_concepts}]
+              {this.state.unique_concepts} [
+              {this.state.acceptable_unique_concepts}]
             </Typography>
           </Tooltip>
           {statusMsg}

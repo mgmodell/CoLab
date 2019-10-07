@@ -31,7 +31,9 @@ class ConsentFormsController < ApplicationController
         format.html { redirect_to @consent_form, notice: 'Consent form was successfully created.' }
         format.json { render :show, status: :created, location: @consent_form }
       else
-        logger.debug @consent_form.errors.full_messages unless @consent_form.errors.empty?
+        unless @consent_form.errors.empty?
+          logger.debug @consent_form.errors.full_messages
+        end
         format.html { render :new }
         format.json { render json: @consent_form.errors, status: :unprocessable_entity }
       end
@@ -46,7 +48,9 @@ class ConsentFormsController < ApplicationController
         format.html { redirect_to @consent_form, notice: 'Consent form was successfully updated.' }
         format.json { render :show, status: :ok, location: @consent_form }
       else
-        logger.debug @consent_form.errors.full_messages unless @consent_form.errors.empty?
+        unless @consent_form.errors.empty?
+          logger.debug @consent_form.errors.full_messages
+        end
         format.html { render :edit }
         format.json { render json: @consent_form.errors, status: :unprocessable_entity }
       end

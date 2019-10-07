@@ -155,7 +155,9 @@ end
 Given /^the saved reviews match the list$/ do
   @feedback_list.each do |key, value|
     Candidate.find(key).candidate_feedback_id.should eq value[:feedback][:id]
-    Candidate.find(key).concept.name.should eq value[:concept] if value[:concept].present?
+    if value[:concept].present?
+      Candidate.find(key).concept.name.should eq value[:concept]
+    end
   end
 end
 

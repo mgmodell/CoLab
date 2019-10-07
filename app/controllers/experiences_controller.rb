@@ -40,7 +40,9 @@ class ExperiencesController < ApplicationController
     if @experience.save
       redirect_to @experience, notice: t('experiences.create_success')
     else
-      logger.debug @experience.errors.full_messages unless @experience.errors.empty?
+      unless @experience.errors.empty?
+        logger.debug @experience.errors.full_messages
+      end
       @title = t('experiences.new.title')
       render :new
     end
@@ -50,7 +52,9 @@ class ExperiencesController < ApplicationController
     if @experience.update(experience_params)
       redirect_to @experience, notice: t('experiences.update_success')
     else
-      logger.debug @experience.errors.full_messages unless @experience.errors.empty?
+      unless @experience.errors.empty?
+        logger.debug @experience.errors.full_messages
+      end
       @title = t('experiences.edit.title')
       render :edit
     end
@@ -103,7 +107,9 @@ class ExperiencesController < ApplicationController
     received_diagnosis = Diagnosis.new(diagnosis_params)
     received_diagnosis.reaction = Reaction.find(received_diagnosis.reaction_id)
     received_diagnosis.save
-    logger.debug received_diagnosis.errors.full_messages unless received_diagnosis.errors.empty?
+    unless received_diagnosis.errors.empty?
+      logger.debug received_diagnosis.errors.full_messages
+    end
 
     week = received_diagnosis.reaction.next_week
     if received_diagnosis.errors.any?
@@ -145,7 +151,9 @@ class ExperiencesController < ApplicationController
        experience.course.get_roster_for_user(@current_user).role.instructor?
       experience.active = true
       experience.save
-      logger.debug experience.errors.full_messages unless experience.errors.empty?
+      unless experience.errors.empty?
+        logger.debug experience.errors.full_messages
+      end
     end
     @experience = experience
     render :show
@@ -176,7 +184,9 @@ class ExperiencesController < ApplicationController
   end
 
   def check_editor
-    redirect_to root_path unless @current_user.is_admin? || @current_user.is_instructor?
+    unless @current_user.is_admin? || @current_user.is_instructor?
+      redirect_to root_path
+    end
   end
 
   def experience_params

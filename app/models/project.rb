@@ -21,7 +21,6 @@ class Project < ApplicationRecord
   validates :end_date, :start_date, presence: true
   before_create :anonymize
 
-
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
     less_than_or_equal_to: 6

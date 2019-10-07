@@ -79,7 +79,9 @@ class CandidateList < ApplicationRecord
     tentative_group = bingo_game.project.group_for_user(user)
     if bingo_game.group_option? && tentative_group.present?
       tentative_group.users.each do |user|
-        requested_count += 1 if bingo_game.candidate_list_for_user(user).group_requested
+        if bingo_game.candidate_list_for_user(user).group_requested
+          requested_count += 1
+        end
       end
     end
     tentative_group.nil? ? 0 : requested_count.to_f / tentative_group.users.count

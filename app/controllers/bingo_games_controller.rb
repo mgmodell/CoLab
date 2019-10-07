@@ -21,7 +21,7 @@ class BingoGamesController < ApplicationController
                                           update_review_candidates
                                           review_candidates_demo
                                           demo_update_review_candidates
-                                          demo_my_results 
+                                          demo_my_results
                                           show index get_concepts]
 
   before_action :check_viewer, only: %i[show index]
@@ -260,7 +260,9 @@ class BingoGamesController < ApplicationController
     if @bingo_game.save
       redirect_to @bingo_game, notice: t('bingo_games.create_success')
     else
-      logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
+      unless @bingo_game.errors.empty?
+        logger.debug @bingo_game.errors.full_messages
+      end
       render :new
     end
   end
@@ -458,10 +460,12 @@ class BingoGamesController < ApplicationController
       candidates = params[:candidates]
       entered_concepts = []
       candidates.each do |candidate|
-        next unless candidate[:concept].present? && candidate[:concept][:name].present?
+        unless candidate[:concept].present? && candidate[:concept][:name].present?
+          next
+        end
 
         concept_name = candidate[:concept][:name]
-        entered_concepts << Concept.standardize_name( name: concept_name)
+        entered_concepts << Concept.standardize_name(name: concept_name)
       end
 
       concept_map = {}
@@ -490,7 +494,9 @@ class BingoGamesController < ApplicationController
                  .find_all do |candidate|
         entered_candidate = candidate_map[candidate.id]
 
-        next if entered_candidate.nil? || entered_candidate[:candidate_feedback_id].nil?
+        if entered_candidate.nil? || entered_candidate[:candidate_feedback_id].nil?
+          next
+        end
 
         candidate.candidate_feedback =
           feedback_map[entered_candidate[:candidate_feedback_id]]
@@ -503,7 +509,7 @@ class BingoGamesController < ApplicationController
           concept_name = Concept.standardize_name name: concept_name
 
           concept = concept_map[concept_name]
-          if !concept_name.blank? && concept.nil?
+          if concept_name.present? && concept.nil?
             concept = Concept.create(name: concept_name)
             concept_map[concept_name] = concept
           end
@@ -512,7 +518,9 @@ class BingoGamesController < ApplicationController
           candidate.concept = nil
         end
         candidate.save
-        logger.debug candidate.errors.full_messages unless candidate.errors.empty?
+        unless candidate.errors.empty?
+          logger.debug candidate.errors.full_messages
+        end
       end
 
       # Send notifications to students
@@ -525,7 +533,9 @@ class BingoGamesController < ApplicationController
         @bingo_game.students_notified = true
       end
       @bingo_game.save
-      logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
+      unless @bingo_game.errors.empty?
+        logger.debug @bingo_game.errors.full_messages
+      end
 
       if @bingo_game.errors.empty?
         response[:notice] = (t 'bingo_games.review_success')
@@ -582,7 +592,9 @@ class BingoGamesController < ApplicationController
   end
 
   def check_editor
-    redirect_to root_path unless @current_user.is_admin? || @current_user.is_instructor?
+    unless @current_user.is_admin? || @current_user.is_instructor?
+      redirect_to root_path
+    end
   end
 
   def bingo_game_params

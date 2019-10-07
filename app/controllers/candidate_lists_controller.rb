@@ -47,8 +47,12 @@ class CandidateListsController < ApplicationController
     if desired
       @candidate_list.group_requested = true
       @candidate_list.save
-      logger.debug @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
-      @candidate_list = merge_to_group_list(@candidate_list) if @candidate_list.others_requested_help == 1
+      unless @candidate_list.errors.empty?
+        logger.debug @candidate_list.errors.full_messages
+      end
+      if @candidate_list.others_requested_help == 1
+        @candidate_list = merge_to_group_list(@candidate_list)
+      end
     else
       @candidate_list.transaction do
         @candidate_list.bingo_game.project.group_for_user(@current_user).users.each do |user|
@@ -77,7 +81,9 @@ class CandidateListsController < ApplicationController
                         notice: (t 'candidate_lists.update_success')
           end
         else
-          logger.debug @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
+          unless @candidate_list.errors.empty?
+            logger.debug @candidate_list.errors.full_messages
+          end
           format.html { render :edit }
         end
       end
@@ -181,10 +187,14 @@ class CandidateListsController < ApplicationController
         member_cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
         member_cl.archived = true
         member_cl.candidates.includes(:user).each do |candidate|
-          merged_list << candidate if candidate.term.present? || candidate.definition.present?
+          if candidate.term.present? || candidate.definition.present?
+            merged_list << candidate
+          end
         end
         member_cl.save!
-        logger.debug member_cl.errors.full_messages unless member_cl.errors.empty?
+        unless member_cl.errors.empty?
+          logger.debug member_cl.errors.full_messages
+        end
         group_lists << member_cl
       end
       if merged_list.count < (required_terms - 1)
@@ -205,7 +215,9 @@ class CandidateListsController < ApplicationController
       group_lists.each do |member_cl|
         member_cl.current_candidate_list = cl
         member_cl.save!
-        logger.debug member_cl.errors.full_messages unless member_cl.errors.empty?
+        unless member_cl.errors.empty?
+          logger.debug member_cl.errors.full_messages
+        end
       end
     end
     cl
