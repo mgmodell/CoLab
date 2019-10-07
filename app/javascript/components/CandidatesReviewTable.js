@@ -23,6 +23,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TablePagination from "@material-ui/core/TablePagination";
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from "@material-ui/core/Typography";
 import ViewColumnRounded from "@material-ui/icons/ViewColumnRounded";
 import { SortDirection } from "react-virtualized";
@@ -69,6 +70,7 @@ class CandidatesReviewTable extends React.Component {
       reviewStatus: "",
       progress: 0,
       unique_concepts: 0,
+      acceptable_unique_concepts: 0,
       sortBy: "number",
       sortDirection: SortDirection.DESC,
       dirty: false,
@@ -234,7 +236,7 @@ class CandidatesReviewTable extends React.Component {
   };
 
   updateProgress() {
-    const { candidates_map } = this.state;
+    const { feedback_opts, candidates_map } = this.state;
     const candidates = Object.values(candidates_map);
     const completed = candidates.reduce((acc, item) => {
       if (100 == item.completed) {
@@ -242,7 +244,26 @@ class CandidatesReviewTable extends React.Component {
       }
       return acc;
     }, 0);
+    //Concept count 
+    const concepts = new Array(
+      ...Object.values( candidates_map ).entries( )
+    )
+    let filtered = concepts
+      .filter( (x)=>( '' != x[1].concept.name ) )
+      .map( (x)=>(x[1].concept.name.toLowerCase( ) ) )
+
+    const unique_concepts = new Set( filtered ).size
+    //Now for just the acceptable ones
+    filtered = concepts
+      .filter( (x)=>(
+                          '' != x[1].concept.name && 'acceptable' == feedback_opts[ x[1].candidate_feedback_id ].critique
+                    ) )
+      .map( (x)=>(x[1].concept.name.toLowerCase( ) ) )
+    const acceptable_unique_concepts = new Set( filtered ).size
+
     this.setState({
+      unique_concepts: unique_concepts,
+      acceptable_unique_concepts: acceptable_unique_concepts,
       progress: Math.round((completed / candidates.length) * 100)
     });
   }
@@ -313,22 +334,12 @@ class CandidatesReviewTable extends React.Component {
           this.setCompleted(item);
           candidates_map[item.id] = item;
         });
-        //Concept count init
-        let concepts = new Array(
-          ...Object.values( candidates_map ).entries( )
-        )
-        let filtered = concepts
-          .filter( (x)=>( '' != x[1].concept.name ) )
-          .map( (x)=>(x[1].concept.name.toLowerCase( ) ) )
-
-        let unique_concepts = new Set( filtered ).size
         this.setState({
           bingo_game: data.bingo_game,
           field_prefix: "_bingo_candidates_review_" + data.bingo_game.id,
           groups: groups,
           dirty: false,
           users: users,
-          unique_concepts: unique_concepts,
           rowsPerPage: data.candidates.length,
           candidate_lists: candidate_lists,
           candidates_map: candidates_map,
@@ -339,6 +350,8 @@ class CandidatesReviewTable extends React.Component {
         });
         this.updateProgress();
       });
+  }
+  conceptStats(){
   }
   saveFeedback() {
     this.setState({
@@ -407,19 +420,10 @@ class CandidatesReviewTable extends React.Component {
     let candidates_map = this.state.candidates_map;
     candidates_map[id].concept.name = value;
     this.setCompleted(candidates_map[id]);
-    let concepts = new Array(
-      ...Object.values( candidates_map ).entries( )
-    )
-    let filtered = concepts
-      .filter( (x)=>( '' != x[1].concept.name ) )
-      .map( (x)=>(x[1].concept.name.toLowerCase( ) ) )
-
-    let unique_concepts = new Set( filtered ).size
 
     this.setState({
       dirty: true,
       candidates_map: candidates_map,
-      unique_concepts: unique_concepts
     });
     this.updateProgress();
   };
@@ -562,8 +566,13 @@ class CandidatesReviewTable extends React.Component {
             value={this.state.progress}
           />
           &nbsp;
-          {this.state.progress}%{statusMsg}
-          ({this.state.unique_concepts} concepts)
+          {this.state.progress}%
+          <Tooltip title="Unique concepts identified [acceptably explained]">
+            <Typography>
+            {this.state.unique_concepts} [{this.state.acceptable_unique_concepts}]
+            </Typography>
+          </Tooltip>
+          {statusMsg}
           {notify}
         </Grid>
         <Grid item>
