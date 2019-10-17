@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TimezonesSupportConcern
   extend ActiveSupport::Concern
 
@@ -19,9 +21,8 @@ module TimezonesSupportConcern
       self.end_date = course.end_date
     elsif end_date_changed?
       proc_date = course_tz
-        .local(end_date.year, end_date.month, end_date.day, 23, 59)
+                  .local(end_date.year, end_date.month, end_date.day, 23, 59)
       self.end_date = proc_date
     end
-
   end
 end

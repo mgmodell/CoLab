@@ -23,6 +23,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TablePagination from "@material-ui/core/TablePagination";
+import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import ViewColumnRounded from "@material-ui/icons/ViewColumnRounded";
 import { SortDirection } from "react-virtualized";
@@ -68,6 +69,8 @@ class CandidatesReviewTable extends React.Component {
       review_complete: false,
       reviewStatus: "",
       progress: 0,
+      unique_concepts: 0,
+      acceptable_unique_concepts: 0,
       sortBy: "number",
       sortDirection: SortDirection.DESC,
       dirty: false,
@@ -93,7 +96,7 @@ class CandidatesReviewTable extends React.Component {
           visible: true,
           sortable: true,
           render_func: c => {
-            return c.completed ? "*" : null;
+            return 100 == c.completed ? "*" : null;
           }
         },
         {
@@ -206,7 +209,7 @@ class CandidatesReviewTable extends React.Component {
       });
     } else if ("completed" == dataKey) {
       candidates.sort((a, b) => {
-        const retval = a.completed === b.completed ? 0 : a.completed ? -1 : 1;
+        const retval = a.completed - b.completed;
         return mod * retval;
       });
     } else {
@@ -220,27 +223,48 @@ class CandidatesReviewTable extends React.Component {
   setCompleted = function(item) {
     const { feedback_opts } = this.state;
     const fb_id = item.candidate_feedback_id;
-    if (
-      fb_id != null &&
-      ("term_problem" == feedback_opts[fb_id].critique ||
-        item.concept.name.length > 0)
-    ) {
-      item.completed = true;
+    if (fb_id != null) {
+      item.completed = 100;
+      if (
+        "term_problem" != feedback_opts[fb_id].critique &&
+        item.concept.name.length < 1
+      ) {
+        item.completed = 50;
+      }
     } else {
-      item.completed = false;
+      item.completed = 0;
     }
   };
 
   updateProgress() {
-    const { candidates_map } = this.state;
+    const { feedback_opts, candidates_map } = this.state;
     const candidates = Object.values(candidates_map);
     const completed = candidates.reduce((acc, item) => {
-      if (item.completed) {
+      if (100 == item.completed) {
         acc = acc + 1;
       }
       return acc;
     }, 0);
+    //Concept count
+    const concepts = new Array(...Object.values(candidates_map).entries());
+    let filtered = concepts
+      .filter(x => "" != x[1].concept.name)
+      .map(x => x[1].concept.name.toLowerCase());
+
+    const unique_concepts = new Set(filtered).size;
+    //Now for just the acceptable ones
+    filtered = concepts
+      .filter(
+        x =>
+          "" != x[1].concept.name &&
+          "acceptable" == feedback_opts[x[1].candidate_feedback_id].critique
+      )
+      .map(x => x[1].concept.name.toLowerCase());
+    const acceptable_unique_concepts = new Set(filtered).size;
+
     this.setState({
+      unique_concepts: unique_concepts,
+      acceptable_unique_concepts: acceptable_unique_concepts,
       progress: Math.round((completed / candidates.length) * 100)
     });
   }
@@ -277,7 +301,6 @@ class CandidatesReviewTable extends React.Component {
         if (response.ok) {
           return response.json();
         } else {
-          console.log("error");
           return [{ id: -1, name: "no data" }];
         }
       })
@@ -329,6 +352,7 @@ class CandidatesReviewTable extends React.Component {
         this.updateProgress();
       });
   }
+  conceptStats() {}
   saveFeedback() {
     this.setState({
       dirty: false,
@@ -338,7 +362,7 @@ class CandidatesReviewTable extends React.Component {
       method: "PATCH",
       credentials: "include",
       body: JSON.stringify({
-        candidates: this.state.candidates.filter(c => c.completed),
+        candidates: this.state.candidates.filter(c => 0 < c.completed),
         reviewed: this.state.review_complete
       }),
       headers: {
@@ -377,6 +401,7 @@ class CandidatesReviewTable extends React.Component {
   };
   handleChangeRowsPerPage = function(event) {
     this.setState({ rowsPerPage: event.target.value });
+    this.setState({ page: 1 });
   };
   filter = function(event) {
     const { sortBy, sortDirection, candidates_map } = this.state;
@@ -395,6 +420,7 @@ class CandidatesReviewTable extends React.Component {
     let candidates_map = this.state.candidates_map;
     candidates_map[id].concept.name = value;
     this.setCompleted(candidates_map[id]);
+
     this.setState({
       dirty: true,
       candidates_map: candidates_map
@@ -540,7 +566,14 @@ class CandidatesReviewTable extends React.Component {
             value={this.state.progress}
           />
           &nbsp;
-          {this.state.progress}%{statusMsg}
+          {this.state.progress}%
+          <Tooltip title="Unique concepts identified [acceptably explained]">
+            <Typography>
+              {this.state.unique_concepts} [
+              {this.state.acceptable_unique_concepts}]
+            </Typography>
+          </Tooltip>
+          {statusMsg}
           {notify}
         </Grid>
         <Grid item>

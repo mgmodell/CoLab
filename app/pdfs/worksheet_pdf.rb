@@ -42,7 +42,9 @@ class WorksheetPdf
   def render_clues
     items = []
     @bingo_board.bingo_cells.each do |bc|
-      items << [bc.indeks_as_letter, bc.candidate.definition, bc.concept] unless bc.candidate.nil?
+      unless bc.candidate.nil?
+        items << [bc.indeks_as_letter, bc.candidate.definition, bc.concept]
+      end
     end
     items.sort! { |a, b| a[0] <=> b[0] }
 

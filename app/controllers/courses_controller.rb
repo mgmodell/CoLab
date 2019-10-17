@@ -207,7 +207,9 @@ class CoursesController < ApplicationController
   end
 
   def check_editor
-    redirect_to root_path unless @current_user.is_admin? || @current_user.is_instructor?
+    unless @current_user.is_admin? || @current_user.is_instructor?
+      redirect_to root_path
+    end
   end
 
   def course_params

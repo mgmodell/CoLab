@@ -28,3 +28,4 @@ yarn-debug.log*
 test_results.html
 coverage
 cucumber
+.rake_tasks

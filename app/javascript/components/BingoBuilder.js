@@ -315,8 +315,9 @@ class BingoBuilder extends React.Component {
           <div>
             <strong>Description:</strong>{" "}
             <p
-              dangerouslySetInnerHTML=
-                {{__html: this.state.board.bingo_game.description}}
+              dangerouslySetInnerHTML={{
+                __html: this.state.board.bingo_game.description
+              }}
             />
           </div>
           {null != this.state.candidate_list && (

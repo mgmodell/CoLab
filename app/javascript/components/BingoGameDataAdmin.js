@@ -66,7 +66,7 @@ class BingoGameDataAdmin extends React.Component {
       tz_extra_end: end.toISOString().substr(10),
       bingo_game: {
         topic: "",
-        timezone: 'UTC',
+        timezone: "UTC",
         active: false,
         description: "",
         start_date: start.toISOString().substr(0, 10),
@@ -178,13 +178,13 @@ class BingoGameDataAdmin extends React.Component {
       .then(data => {
         const tz_extra_start = data.start_date.substr(10);
         const tz_extra_end = data.end_date.substr(10);
-        var tmpDate = DateTime.fromISO( data.start_date )
-        tmpDate.setZone( data.timezone )
-        data.start_date = tmpDate.toISO( ).substr(0, 10 )
+        var tmpDate = DateTime.fromISO(data.start_date);
+        tmpDate.setZone(data.timezone);
+        data.start_date = tmpDate.toISO().substr(0, 10);
 
-        tmpDate = DateTime.fromISO( data.end_date )
-        tmpDate.setZone( data.timezone )
-        data.end_date = tmpDate.toISO( ).substr( 0, 10)
+        tmpDate = DateTime.fromISO(data.end_date);
+        tmpDate.setZone(data.timezone);
+        data.end_date = tmpDate.toISO().substr(0, 10);
 
         if (data.group_discount == null) {
           data.group_discount = 0;
@@ -305,7 +305,7 @@ class BingoGameDataAdmin extends React.Component {
       </React.Fragment>
     ) : null;
     return (
-      <Paper style={{height: "95%", width: "100%"}}>
+      <Paper style={{ height: "95%", width: "100%" }}>
         <Tabs value={this.state.curTab} onChange={this.changeTab} centered>
           <Tab value="details" label={t("game_details_pnl")} />
           <Tab value="results" label={t("response_pnl")} />
@@ -410,8 +410,10 @@ class BingoGameDataAdmin extends React.Component {
                   checked={this.state.bingo_game.group_option}
                   id="group_option"
                   onChange={this.handleCheckChange("group_option")}
-                  disabled={null == this.state.bingo_game.projects ||
-                            1 > this.state.bingo_game.projects.length }
+                  disabled={
+                    null == this.state.bingo_game.projects ||
+                    1 > this.state.bingo_game.projects.length
+                  }
                 />
                 <InputLabel htmlFor="group_option">
                   {t("group_option")}
@@ -424,7 +426,7 @@ class BingoGameDataAdmin extends React.Component {
           </React.Fragment>
         )}
         {"results" == this.state.curTab && (
-          <Grid container style={{height: "100%"}}>
+          <Grid container style={{ height: "100%" }}>
             <Grid item xs={5}>
               <ConceptChips concepts={this.state.concepts} />
             </Grid>

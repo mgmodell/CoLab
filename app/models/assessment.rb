@@ -125,7 +125,9 @@ class Assessment < ApplicationRecord
        assessment.end_date >= init_date
       assessment.project = project
       assessment.save
-      logger.debug assessment.errors.full_messages unless assessment.errors.empty?
+      unless assessment.errors.empty?
+        logger.debug assessment.errors.full_messages
+      end
 
     elsif existing_assessments.count == 1
       existing_assessment = existing_assessments[0]
@@ -146,5 +148,4 @@ class Assessment < ApplicationRecord
       logger.debug msg
     end
   end
-
 end

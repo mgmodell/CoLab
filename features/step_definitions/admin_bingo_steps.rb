@@ -96,11 +96,11 @@ Then /^the bingo "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value
   end
 end
 
-Then("the {string} label is disabled")do |label|
-  control = page.all( :xpath, "//label[contains(., '#{label}')][not(@disabled)]" )
+Then('the {string} label is disabled') do |label|
+  control = page.all(:xpath, "//label[contains(., '#{label}')][not(@disabled)]")
   control.size.should be > 0
 end
 
-Then("the bingo project is empty") do
+Then('the bingo project is empty') do
   @bingo.project.should be_nil
 end
