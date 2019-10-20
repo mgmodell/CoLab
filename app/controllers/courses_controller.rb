@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
 class CoursesController < ApplicationController
-  layout 'admin'
+  layout 'admin', except: %i[self_reg self_reg_confirm]
   before_action :set_course, only: %i[show edit update destroy
                                       add_students add_instructors calendar
-                                      new_from_template]
+                                      new_from_template ]
+  before_action :set_reg_course, only: %i[self_reg self_reg_confirm]
   before_action :check_admin, only: %i[new create]
   before_action :check_editor, except: %i[next diagnose react accept_roster
-                                          decline_roster show index]
+                                          decline_roster show index
+                                          self_reg_confirm self_reg]
   before_action :check_viewer, except: %i[next diagnose react accept_roster
-                                          decline_roster]
+                                          decline_roster
+                                          self_reg_confirm self_reg]
+  skip_before_action :authenticate_user!, only: %i[qr get_quote]
 
   def show
     @title = t('.title')
@@ -17,6 +21,74 @@ class CoursesController < ApplicationController
 
   def edit
     @title = t('.title')
+  end
+
+  def qr
+    require 'rqrcode'
+    qrcode = RQRCode::QRCode.new( self_reg_url )
+    png = qrcode.as_png(
+      bit_depth: 1,
+      border_modules: 4,
+      color_mode: ChunkyPNG::COLOR_GRAYSCALE,
+      color: 'black',
+      file: nil,
+      fill: 'white',
+      module_px_size: 6,
+      resize_exactly_to: false,
+      resize_gte_to: false,
+      size: 120
+    )
+    send_data png.to_s,
+              type: 'image/png',
+              disposition: 'inline'
+
+  end
+
+  def self_reg
+
+  end
+
+  def self_reg_confirm
+
+    roster = Roster.where( user: @current_user, course: @course ).take
+    if roster.nil?
+      roster = @course.rosters.create(role: Roster.roles[:requesting_student], user: @current_user)
+    else
+      puts roster.role
+      if not( roster.enrolled_student? || roster.invited_student? ||
+              roster.instructor? || roster.assistant? )
+        roster.requesting_student!
+      elsif roster.invited_student?
+        roster.enrolled_student!
+      end
+    end
+    roster.save
+    logger.debug roster.errors.full_messages unless roster.errors.empty?
+
+    redirect_to controller: 'home', action: 'index'
+    
+  end
+
+  def reg_requests
+    # Pull any requesting students for review
+    courses = current_user.rosters.faculty.collect{|r| r.course }
+    waiting_student_requests = Roster.enrolled_student
+      .where( course: courses )
+    respond_to do |format|
+      format.json do
+        resp = waiting_student_requests.collect{|r|
+          {id: r.id, first_name: r.user.first_name,
+                     last_name: r.user.last_name,
+                     course_name: r.course.name,
+                     course_number: r.course.number }
+        }
+        render json: resp
+      end
+    end
+  end
+
+  def proc_reg_requests
+
   end
 
   def calendar
@@ -194,6 +266,10 @@ class CoursesController < ApplicationController
                 .where(course_id: params[:id]).take.course
       redirect_to :show if @course.nil?
     end
+  end
+
+  def set_reg_course
+    @course = Course.find( params[:id] )
   end
 
   def check_viewer

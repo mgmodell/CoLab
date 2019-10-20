@@ -25,6 +25,11 @@ end
 
 Given /^the user is the instructor for the course$/ do
   @course.set_user_role @user, Roster.roles[:instructor]
+  @instructor = @user
+end
+
+Then("retrieve the instructor user") do
+  @user = @instructor
 end
 
 Then /^the user opens the course$/ do

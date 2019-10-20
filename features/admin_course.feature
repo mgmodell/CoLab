@@ -9,6 +9,8 @@ Feature: Course Administration
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
     Given the course has 8 confirmed users
+     Then the course has 12 "enrolled student" users
+    # 12 confirmed students
     Given the course timezone is "Mexico City"
     Given the user timezone is "Nairobi"
     Given the course started "5/10/1970" and ended "4 months hence"
@@ -22,61 +24,143 @@ Feature: Course Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Download self-registration link"
+    Then the user sees self-registration image
+    Then the user clicks "Download self-registration code"
 
-  Scenario: Instructor approves existing student self-registration
+  Scenario: An instructor cannot enroll in their own course
     Given the user is the instructor for the course
     Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Given a "existing" user self-registers for a course
+     Then the user opens the self-registration link for the course
+     Then the user sees "You cannot enroll in your own course"
+     Then the course has 12 "enrolled student" users
+     Then the course has 0 "requesting student" users
 
-  Scenario: Instructor approves new student self-registration
-    Given the user is the instructor for the course
+  Scenario: A logged in course-enrolled CoLab user self-registers for the course
+    Given the user is "a random" user
     Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Given a "new" user self-registers for a course
+     Then the user opens the self-registration link for the course
+     Then the user sees "Enrollment confirmation"
+     Then the user clicks "Enroll me!"
+     Then the course has 12 "enrolled student" users
 
-  Scenario: Instructor rejects existing student self-registration
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Given a "existing" user self-registers for a course
+  Scenario: A course-dropped CoLab user self-registers for the course
+    Given the user is "a random" user
+    Given the user is dropped from the course
+     Then the user opens the self-registration link for the course
+     Then the user submits credentials
+     Then the user sees "Enrollment confirmation"
+     Then the user clicks "Enroll me!"
+     Then the course has 1 "requesting student" users
+     Then the course has 11 "enrolled student" users
 
-  Scenario: Instructor approves dropped student self-registration
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Given a "new" user self-registers for a course
+  Scenario: A course-declined CoLab user self-registers for the course
+    Given the user is "a random" user
+    Given the user has "declined" the course
+     Then the user opens the self-registration link for the course
+     Then the user submits credentials
+     Then the user sees "Enrollment confirmation"
+     Then the user clicks "Enroll me!"
+     Then the course has 1 "requesting student" users
+     Then the course has 11 "enrolled student" users
 
-  Scenario: Instructor un-rejects student self-enrollment rejection
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Given a "new" user self-registers for a course
+  Scenario: A course-invited CoLab user self-registers for the course
+    Given a user has signed up
+    Given the user "has" had demographics requested
+      And the user's school is "SUNY Korea"
+    Given the user has "been invited to" the course
+     Then the user opens the self-registration link for the course
+     Then the user submits credentials
+     Then the user sees "Enrollment confirmation"
+     Then the user clicks "Enroll me!"
+     Then the course has 13 "enrolled student" users
 
-  Scenario: Instructor rejects new student self-registration
-    Given the user is the instructor for the course
+  Scenario: A new CoLab user self-registers for the course
+     Then the user opens the self-registration link for the course
+     Then the new user registers
+     #Manual signup requires email confirmation, so they will have to
+     #start again after registration and confirmation.
+
+  Scenario: A logged in course non-enrolled CoLab user self-registers for the course
+    Given a user has signed up
+    Given the user "has" had demographics requested
+      And the user's school is "SUNY Korea"
     Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Given a "new" user self-registers for a course
+     Then the user opens the self-registration link for the course
+     Then the user sees "Enrollment confirmation"
+     Then the user clicks "Enroll me!"
+     Then the course has 1 "requesting student" users
+
+  Scenario: A logged in course non-enrolled CoLab user self-registers for the course
+    Given a user has signed up
+    Given the user "has" had demographics requested
+      And the user's school is "SUNY Korea"
+      And the user logs in
+     Then the user opens the self-registration link for the course
+     Then the user sees "Enrollment confirmation"
+     Then the user clicks "Enroll me!"
+     Then the course has 1 "requesting student" users
+
+  Scenario: A logged in course-enrolled CoLab user self-registers for the course
+    Given the user is "a random" user
+    Given the user "has" had demographics requested
+    Given the user logs in
+     Then the user opens the self-registration link for the course
+     Then the user sees "Enrollment confirmation"
+     Then the user clicks "Enroll me!"
+     Then the course has 12 "enrolled student" users
+
+  Scenario: A course-dropped CoLab user self-registers for the course
+    Given the user is "a random" user
+    Given the user "has" had demographics requested
+    Given the user is dropped from the course
+     Then the user opens the self-registration link for the course
+     Then the user submits credentials
+     Then the user sees "Enrollment confirmation"
+     Then the user clicks "Enroll me!"
+     Then the course has 1 "requesting student" users
+     Then the course has 11 "enrolled student" users
+
+  Scenario: A course-declined CoLab user self-registers for the course
+    Given the user is "a random" user
+    Given the user "has" had demographics requested
+    Given the user has "declined" the course
+     Then the user opens the self-registration link for the course
+     Then the user submits credentials
+     Then the user sees "Enrollment confirmation"
+     Then the user clicks "Enroll me!"
+     Then the course has 1 "requesting student" users
+     Then the course has 11 "enrolled student" users
+
+  Scenario: A course-invited CoLab user self-registers for the course
+    Given a user has signed up
+    Given the user "has" had demographics requested
+      And the user's school is "SUNY Korea"
+    Given the user has "been invited to" the course
+     Then the course has 1 "invited student" users
+     Then the user opens the self-registration link for the course
+     Then the user submits credentials
+     Then the user sees "Enrollment confirmation"
+     Then the user clicks "Enroll me!"
+     Then the course has 13 "enrolled student" users
+
+  Scenario: Instructor approves student self-registration
+    Given the user is the instructor for the course
+    Given the course adds 1 "requesting student" users
+     Then retrieve the instructor user
+    Given the user logs in
+     Then the user sees 1 enrollment request
+     Then the user "approves" 1 enrollment request
+     Then the course has 13 "enrolled student" users
+
+  Scenario: Instructor approves student self-registration
+    Given the user is the instructor for the course
+    Given the course adds 2 "requesting student" users
+     Then retrieve the instructor user
+    Given the user logs in
+     Then the user sees 2 enrollment request
+     Then the user "rejects" 2 enrollment request
+     Then the course has 12 "enrolled student" users
+     Then the course has 2 "rejected student" users
 
   Scenario: Admin creates a new course
     Given the user is an admin

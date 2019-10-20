@@ -1,0 +1,11 @@
+<H1>Enrollment confirmation</h1>
+  <P>
+  Would you like to join the "<%= @course.name %> (<%= @course.number
+  %>)" experience?
+</P>
+<P><%= @course.description %></p>
+<%= link_to "Cancel", root_path, class: "ui-btn ui-btn-inline ui-icon-delete" %>
+<%= link_to "Enroll me!",
+            self_reg_confirm_path( @course ),
+            class: "ui-btn ui-btn-inline ui-icon-check" %>
+

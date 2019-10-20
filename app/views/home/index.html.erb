@@ -4,6 +4,11 @@
 <p><%= t 'home.greeting', name: @first_name %>,</br>
 <% tasks = @waiting_student_tasks + @waiting_instructor_tasks %>
 <%= t 'home.tasks', count: tasks.size %></p>
+<%= react_component "DecisionEnrollmentsTable", {
+  init_url: course_reg_requests_path,
+  update_url: proc_course_reg_requests_path,
+  token: form_authenticity_token } %>
+  
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>

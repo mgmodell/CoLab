@@ -224,7 +224,14 @@
   } %>
     
   </div>
+<%= link_to course_reg_qr_path( @course ) do %><br/>
+  <%= image_tag course_reg_qr_path( @course ),
+                alt: 'Registration QR Code' %>
+  <%= t('courses.edit.self_reg_dwnld') %>
+<% end %>
 </div>
+
+  
 
 
 <%= link_to t( :back_to_courses ), courses_path %>

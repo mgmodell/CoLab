@@ -8,7 +8,8 @@ class Roster < ApplicationRecord
 
   enum role: { instructor: 1, assistant: 2, enrolled_student: 3,
                invited_student: 4, declined_student: 5,
-               dropped_student: 6 }
+               dropped_student: 6, requesting_student: 7,
+               rejected_student: 8 }
   validates :user_id, uniqueness: { scope: :course_id }
 
   scope :faculty, lambda {

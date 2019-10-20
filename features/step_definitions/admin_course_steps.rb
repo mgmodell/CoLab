@@ -315,3 +315,79 @@ Then 'the users are instructors' do
            .count.should eq 1
   end
 end
+
+Then("the user sees self-registration image") do
+  page.should have_xpath( "//img[@alt='Registration QR Code']")
+end
+
+Then "the user opens the self-registration link for the course" do
+  visit( self_reg_path @course )
+end
+
+Then "the user sees {string}" do |string|
+  page.has_text? string
+end
+
+Then "the user submits credentials" do
+  fill_in 'user[email]', with: @user.email
+  fill_in 'user[password]', with: 'password'
+
+  click_link_or_button 'Log in'
+end
+
+Given("the user has {string} the course") do |action|
+  roster = Roster.where( course: @course, user: @user ).take
+  if roster.nil?
+    roster = @course.rosters.create( user: @user )
+  end
+  case action
+  when 'declined'
+    roster.declined_student!
+  when 'been invited to'
+    roster.invited_student!
+  else
+    puts "No '#{action}' option available"
+    expect(true).to be false
+  end
+  roster.save
+  puts roster.errors.full_messages unless roster.errors.empty?
+
+end
+
+Given("the course adds {int} {string} users") do |count, role|
+  count.times do
+    user = User.new(
+      first_name: Forgery::Name.first_name,
+      last_name: Forgery::Name.last_name,
+      password: 'password',
+      password_confirmation: 'password',
+      email: Forgery::Internet.email_address,
+      timezone: 'UTC',
+      school: School.find(1),
+      theme_id: 1
+    )
+    user.skip_confirmation!
+    user.save
+    puts user.errors.full_messages unless user.errors.empty?
+
+    roster = @course.rosters.create( user: user )
+    case role
+    when 'requesting student'
+      roster.requesting_student!
+    else
+      puts "Unsupported role: #{role}"
+      expect(true).to be false
+    end
+    roster.save
+    puts roster.errors.full_messages unless roster.errors.empty?
+
+  end
+end
+
+Then("the user sees {int} enrollment request") do |int|
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+Then("the user {string} {int} enrollment request") do |string, int|
+  pending # Write code here that turns the phrase above into concrete actions
+end

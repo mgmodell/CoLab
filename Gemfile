@@ -53,6 +53,7 @@ gem 'listen'
 gem 'omniauth-google-oauth2'
 gem 'prawn'
 gem 'prawn-table'
+gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
 gem 'react-rails'
 gem 'sassc-rails'

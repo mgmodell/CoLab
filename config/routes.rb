@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         as: :add_instructors
     get 'courses/re_invite_student/:user_id' => 'courses#re_invite_student',
         as: :re_invite_student
+    get 'course/qr/:id', to: 'courses#qr', as: :course_reg_qr
     get 'projects/add_group' => 'projects#add_group', as: :add_group
     get 'projects/remove_group' => 'projects#remove_group', as: :remove_group
     get 'projects/activate/:id' => 'projects#activate', as: :activate_project
@@ -24,6 +25,12 @@ Rails.application.routes.draw do
         as: :activate_bingo_game
     get 'course/cal/:id' => 'courses#calendar',
         as: :course_cal,
+        constraints: ->(req) { req.format == :json }
+    get 'course/reg_requests' => 'courses#reg_requests',
+        as: :course_reg_requests,
+        constraints: ->(req) { req.format == :json }
+    get 'course/proc_reg_requests' => 'courses#proc_reg_requests',
+        as: :proc_course_reg_requests,
         constraints: ->(req) { req.format == :json }
     resources :courses, :projects, :experiences, :bingo_games, :schools,
               :consent_forms
@@ -95,6 +102,11 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
   root to: 'home#index'
+
+  #self registration
+  get 'course/enroll/:id', to: 'courses#self_reg', as: :self_reg
+  get 'course/enroll_confirm/:id', to: 'courses#self_reg_confirm', as:
+  :self_reg_confirm
 
   # Consent log paths
   get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', as: :edit_consent_log

@@ -8,6 +8,7 @@ en:
       copy_new_start_lbl: New course start date?
     edit:
       title: Edit Course Details
+      self_reg_dwnld: Download self-registration code
     show:
       title: Course Details
       instructors: Course Instructors

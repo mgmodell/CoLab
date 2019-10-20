@@ -54,6 +54,32 @@ When /^the user "(.*?)" fill in demographics data$/ do |does_or_does_not|
   click_button 'my profile'
 end
 
+When /^the new user registers$/ do
+  click_link_or_button "Signup"
+  email = Forgery::Internet.email_address
+
+  fill_in 'user[email]', with: email
+  fill_in 'user[first_name]', with: Forgery::Name.first_name
+  fill_in 'user[last_name]', with: Forgery::Name.last_name
+  fill_in 'user[password]', with: 'password'
+
+  #These aren't working in capybara
+  #page.select('Male', from: 'user_gender_id')
+  #page.select('Education', from: 'user_cip_code_id')
+  #page.select('Belize', from: 'country')
+  #page.select('Avestan', from: 'user_primary_language_id')
+
+  new_date = Date.parse('10-05-1976')
+  page.find('#user_date_of_birth').set(new_date)
+  new_date = Date.parse('10-09-2016')
+  page.find('#user_date_of_birth').set(new_date)
+  click_button 'Create my profile'
+  email = Email.where email: email
+  expect( email.size ).to eq( 1 )
+  @user = email[ 0 ].user
+  expect( @user ).to be
+end
+
 Given /^(\d+) users$/ do |user_count|
   @users = []
   user_count.to_i.times do
@@ -102,18 +128,24 @@ Then /^the users are added to the course as instructors by email address$/ do
 end
 
 Then /^the course has (\d+) "([^"]*)" users$/ do |user_count, user_status|
-  status = 0
+  rosters = []
   case user_status.downcase
   when 'invited student'
-    status = Roster.roles[:invited_student]
+    rosters = @course.rosters.invited_student
   when 'instructor'
-    status = Roster.roles[:instructor]
+    rosters = @course.rosters.instructor
   when 'enrolled student'
-    status = Roster.roles[:enrolled_student]
+    rosters = @course.rosters.enrolled_student
+  when 'requesting student'
+    rosters = @course.rosters.requesting_student
+  when 'rejected student'
+    rosters = @course.rosters.rejected_student
+  when 'dropped student'
+    rosters = @course.rosters.dropped_student
   when 'declined student'
-    status = Roster.roles[:declined_student]
+    rosters = @course.rosters.declined_student
   end
-  @course.rosters.where(role: status).count.should eq user_count.to_i
+  rosters.size.should eq user_count.to_i
 end
 
 Then /^(\d+) emails will have been sent$/  do |email_count|
