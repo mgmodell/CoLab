@@ -2,14 +2,21 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import Fab from '@material-ui/core/Fab'
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
+import LinearProgress from '@material-ui/core/LinearProgress';
 import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
+import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { SortDirection } from "react-virtualized";
 import WrappedVirtualizedTable from "../components/WrappedVirtualizedTable";
+
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+
 const styles = theme => ({
   table: {
     fontFamily: theme.typography.fontFamily
@@ -42,6 +49,7 @@ class DecisionEnrollmentsTable extends React.Component {
       requests: [],
       search: "",
       sortBy: "course_number",
+      working: false,
       sortDirection: SortDirection.DESC,
       columns: [
         {
@@ -76,6 +84,38 @@ class DecisionEnrollmentsTable extends React.Component {
           numeric: false,
           disableSort: false,
           visible: true
+        },
+        {
+          width: 100,
+          label: "Accept/Decline",
+          dataKey: "id",
+          numeric: false,
+          disableSort: false,
+          visible: true,
+          formatter: (data )=>{
+            const id = data
+            return(
+              <React.Fragment>
+                <Tooltip title='Accept' aria-label='accept'>
+                  <Fab
+                    onClick={ ( )=> {this.decision( id, true )} }
+                    aria-label='Accept'
+                    size='small'
+                    disabled={this.state.working}
+                  ><ThumbUpIcon/></Fab>
+                </Tooltip>
+
+                <Tooltip title='Reject' aria-label='reject'>
+                  <Fab
+                    onClick={ ( )=> {this.decision( id, false )} }
+                    aria-label='Reject'
+                    size='small'
+                    disabled={this.state.working}
+                  ><ThumbDownIcon/></Fab>
+                </Tooltip>
+              </React.Fragment>
+            );
+          }
         }
       ]
     };
@@ -118,6 +158,7 @@ class DecisionEnrollmentsTable extends React.Component {
     this.setState({ requests: filtered });
   };
 
+
   colSort = function(event) {
     let tmpArray = this.state.requests_raw;
     let direction = SortDirection.DESC;
@@ -140,27 +181,68 @@ class DecisionEnrollmentsTable extends React.Component {
       sortBy: event.sortBy
     });
   };
+
+  decision( id, accept ){
+    this.setState( { working: true } )
+    fetch( this.props.update_url + '.json',{
+      method: 'PATCH',
+      credentials: 'include',
+      body: JSON.stringify({
+        roster_id: id,
+        decision: accept
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+        "X-CSRF-Token": this.props.token
+      }
+    } )
+      .then(response => {
+        if( response.ok ){
+          return response.json( );
+        } else {
+          const fail_data = new Object( );
+          fail_data.notice = "The operation failed";
+            fail_data.success = false;
+            console.log("error");
+            return fail_data;
+        }
+      })
+      .then( data => {
+        this.setState({
+          requests: data,
+          requests_raw: data,
+          working: false
+        });
+      } );
+    }
+
   render() {
-    return (
-      <Paper style={{ height: 450, width: "100%" }}>
-        <Toolbar>
-          <InputBase placeholder="Search requests" onChange={this.filter} />
-          <SearchIcon />
-          <Typography variant="h6" color="inherit">
-            Showing {this.state.requests.length} of{" "}
-            {this.state.requests_raw.length}
-          </Typography>
-        </Toolbar>
-        <WrappedVirtualizedTable
-          rowCount={this.state.requests.length}
-          rowGetter={({ index }) => this.state.requests[index]}
-          sort={this.colSort}
-          sortBy={this.state.sortBy}
-          sortDirection={this.state.sortDirection}
-          columns={this.state.columns}
-        />
-      </Paper>
-    );
+    if( 0 < this.state.requests.length ){
+      return (
+        <Paper style={{ height: 450, width: "100%" }}>
+          <Toolbar>
+            <InputBase placeholder="Search requests" onChange={this.filter} />
+            <SearchIcon />
+            <Typography color="inherit">
+              Showing {this.state.requests.length} of{" "}
+              {this.state.requests_raw.length}
+            </Typography>
+          </Toolbar>
+          { this.state.working ? <LinearProgress /> : null }
+          <WrappedVirtualizedTable
+            rowCount={this.state.requests.length}
+            rowGetter={({ index }) => this.state.requests[index]}
+            sort={this.colSort}
+            sortBy={this.state.sortBy}
+            sortDirection={this.state.sortDirection}
+            columns={this.state.columns}
+          />
+        </Paper>
+      );
+    } else {
+      return ( null );
+    }
   }
 }
 DecisionEnrollmentsTable.propTypes = {

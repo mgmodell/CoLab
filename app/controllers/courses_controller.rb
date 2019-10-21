@@ -72,7 +72,7 @@ class CoursesController < ApplicationController
   def reg_requests
     # Pull any requesting students for review
     courses = current_user.rosters.faculty.collect{|r| r.course }
-    waiting_student_requests = Roster.enrolled_student
+    waiting_student_requests = Roster.requesting_student
       .where( course: courses )
     respond_to do |format|
       format.json do
@@ -88,7 +88,17 @@ class CoursesController < ApplicationController
   end
 
   def proc_reg_requests
-
+    roster = Roster.find params[ :roster_id ]
+    if roster.requesting_student?
+      if params[:decision]
+        roster.enrolled_student!
+      else
+        roster.rejected_student!
+      end
+    end
+    roster.save
+    logger.debug roster.errors.full_messages unless roster.errors.empty?
+    reg_requests
   end
 
   def calendar

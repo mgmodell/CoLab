@@ -384,10 +384,24 @@ Given("the course adds {int} {string} users") do |count, role|
   end
 end
 
-Then("the user sees {int} enrollment request") do |int|
-  pending # Write code here that turns the phrase above into concrete actions
+Then("the user sees {int} enrollment request") do |count|
+  expect( all( :xpath, '//button[@title=\'Accept\']' ).size ).to eq count
 end
 
-Then("the user {string} {int} enrollment request") do |string, int|
-  pending # Write code here that turns the phrase above into concrete actions
+Then("the user {string} {int} enrollment request") do |decision, count|
+  action = 'approves' == decision ? 'Accept' : 'Reject'
+  buttons = all( :xpath, "//button[@title='#{action}']" )
+  unless buttons.size < count
+
+    buttons.to_a.shuffle.each do |button|
+      begin
+        retries ||= 0
+        button.click
+      rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+        puts e.inspect
+        retry if (retries += 1) < 4
+      end
+    end
+  end
+  sleep( 0.3 ) unless 0 == all( :xpath, "//div[@role='progressbar']" ).size
 end

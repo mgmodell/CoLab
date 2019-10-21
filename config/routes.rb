@@ -29,7 +29,7 @@ Rails.application.routes.draw do
     get 'course/reg_requests' => 'courses#reg_requests',
         as: :course_reg_requests,
         constraints: ->(req) { req.format == :json }
-    get 'course/proc_reg_requests' => 'courses#proc_reg_requests',
+    patch 'course/proc_reg_requests' => 'courses#proc_reg_requests',
         as: :proc_course_reg_requests,
         constraints: ->(req) { req.format == :json }
     resources :courses, :projects, :experiences, :bingo_games, :schools,

@@ -53,7 +53,9 @@ class MuiVirtualizedTable extends React.PureComponent {
             : "left"
         }
       >
-        {cellData}
+        {null == columns[columnIndex].formatter ?
+            cellData :
+            columns[columnIndex].formatter( cellData ) }
       </TableCell>
     );
   };

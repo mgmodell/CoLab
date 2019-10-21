@@ -143,6 +143,7 @@ Feature: Course Administration
      Then the user clicks "Enroll me!"
      Then the course has 13 "enrolled student" users
 
+  @javascript
   Scenario: Instructor approves student self-registration
     Given the user is the instructor for the course
     Given the course adds 1 "requesting student" users
@@ -152,6 +153,7 @@ Feature: Course Administration
      Then the user "approves" 1 enrollment request
      Then the course has 13 "enrolled student" users
 
+  @javascript
   Scenario: Instructor approves student self-registration
     Given the user is the instructor for the course
     Given the course adds 2 "requesting student" users
