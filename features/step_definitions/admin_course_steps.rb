@@ -316,30 +316,28 @@ Then 'the users are instructors' do
   end
 end
 
-Then("the user sees self-registration image") do
-  page.should have_xpath( "//img[@alt='Registration QR Code']")
+Then('the user sees self-registration image') do
+  page.should have_xpath("//img[@alt='Registration QR Code']")
 end
 
-Then "the user opens the self-registration link for the course" do
-  visit( self_reg_path @course )
+Then 'the user opens the self-registration link for the course' do
+  visit(self_reg_path(@course))
 end
 
-Then "the user sees {string}" do |string|
+Then 'the user sees {string}' do |string|
   page.has_text? string
 end
 
-Then "the user submits credentials" do
+Then 'the user submits credentials' do
   fill_in 'user[email]', with: @user.email
   fill_in 'user[password]', with: 'password'
 
   click_link_or_button 'Log in'
 end
 
-Given("the user has {string} the course") do |action|
-  roster = Roster.where( course: @course, user: @user ).take
-  if roster.nil?
-    roster = @course.rosters.create( user: @user )
-  end
+Given('the user has {string} the course') do |action|
+  roster = Roster.where(course: @course, user: @user).take
+  roster = @course.rosters.create(user: @user) if roster.nil?
   case action
   when 'declined'
     roster.declined_student!
@@ -351,10 +349,9 @@ Given("the user has {string} the course") do |action|
   end
   roster.save
   puts roster.errors.full_messages unless roster.errors.empty?
-
 end
 
-Given("the course adds {int} {string} users") do |count, role|
+Given('the course adds {int} {string} users') do |count, role|
   count.times do
     user = User.new(
       first_name: Forgery::Name.first_name,
@@ -370,7 +367,7 @@ Given("the course adds {int} {string} users") do |count, role|
     user.save
     puts user.errors.full_messages unless user.errors.empty?
 
-    roster = @course.rosters.create( user: user )
+    roster = @course.rosters.create(user: user)
     case role
     when 'requesting student'
       roster.requesting_student!
@@ -380,28 +377,25 @@ Given("the course adds {int} {string} users") do |count, role|
     end
     roster.save
     puts roster.errors.full_messages unless roster.errors.empty?
-
   end
 end
 
-Then("the user sees {int} enrollment request") do |count|
-  expect( all( :xpath, '//button[@title=\'Accept\']' ).size ).to eq count
+Then('the user sees {int} enrollment request') do |count|
+  expect(all(:xpath, '//button[@title=\'Accept\']').size).to eq count
 end
 
-Then("the user {string} {int} enrollment request") do |decision, count|
-  action = 'approves' == decision ? 'Accept' : 'Reject'
-  buttons = all( :xpath, "//button[@title='#{action}']" )
+Then('the user {string} {int} enrollment request') do |decision, count|
+  action = decision == 'approves' ? 'Accept' : 'Reject'
+  buttons = all(:xpath, "//button[@title='#{action}']")
   unless buttons.size < count
 
     buttons.to_a.shuffle.each do |button|
-      begin
-        retries ||= 0
-        button.click
-      rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-        puts e.inspect
-        retry if (retries += 1) < 4
-      end
+      retries ||= 0
+      button.click
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+      puts e.inspect
+      retry if (retries += 1) < 4
     end
   end
-  sleep( 0.3 ) unless 0 == all( :xpath, "//div[@role='progressbar']" ).size
+  sleep(0.3) unless all(:xpath, "//div[@role='progressbar']").empty?
 end

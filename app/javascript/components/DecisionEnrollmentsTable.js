@@ -2,11 +2,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import Fab from '@material-ui/core/Fab'
+import Fab from "@material-ui/core/Fab";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from "@material-ui/core/LinearProgress";
 import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -14,8 +14,8 @@ import Typography from "@material-ui/core/Typography";
 import { SortDirection } from "react-virtualized";
 import WrappedVirtualizedTable from "../components/WrappedVirtualizedTable";
 
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import ThumbDownIcon from "@material-ui/icons/ThumbDown";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 
 const styles = theme => ({
   table: {
@@ -92,26 +92,34 @@ class DecisionEnrollmentsTable extends React.Component {
           numeric: false,
           disableSort: false,
           visible: true,
-          formatter: (data )=>{
-            const id = data
-            return(
+          formatter: data => {
+            const id = data;
+            return (
               <React.Fragment>
-                <Tooltip title='Accept' aria-label='accept'>
+                <Tooltip title="Accept" aria-label="accept">
                   <Fab
-                    onClick={ ( )=> {this.decision( id, true )} }
-                    aria-label='Accept'
-                    size='small'
+                    onClick={() => {
+                      this.decision(id, true);
+                    }}
+                    aria-label="Accept"
+                    size="small"
                     disabled={this.state.working}
-                  ><ThumbUpIcon/></Fab>
+                  >
+                    <ThumbUpIcon />
+                  </Fab>
                 </Tooltip>
 
-                <Tooltip title='Reject' aria-label='reject'>
+                <Tooltip title="Reject" aria-label="reject">
                   <Fab
-                    onClick={ ( )=> {this.decision( id, false )} }
-                    aria-label='Reject'
-                    size='small'
+                    onClick={() => {
+                      this.decision(id, false);
+                    }}
+                    aria-label="Reject"
+                    size="small"
                     disabled={this.state.working}
-                  ><ThumbDownIcon/></Fab>
+                  >
+                    <ThumbDownIcon />
+                  </Fab>
                 </Tooltip>
               </React.Fragment>
             );
@@ -152,12 +160,13 @@ class DecisionEnrollmentsTable extends React.Component {
       });
   }
   filter = function(event) {
-    var filtered = this.state.requests_raw.filter(request => 
-        null != request && request.first_name.includes(event.target.value.toUpperCase())
+    var filtered = this.state.requests_raw.filter(
+      request =>
+        null != request &&
+        request.first_name.includes(event.target.value.toUpperCase())
     );
     this.setState({ requests: filtered });
   };
-
 
   colSort = function(event) {
     let tmpArray = this.state.requests_raw;
@@ -171,8 +180,8 @@ class DecisionEnrollmentsTable extends React.Component {
       mod = -1;
     }
     tmpArray.sort((a, b) => {
-      const a_prime =  a[event.sortBy] == null ? '' : a[event.sortBy]
-      const b_prime =  b[event.sortBy] == null ? '' : b[event.sortBy]
+      const a_prime = a[event.sortBy] == null ? "" : a[event.sortBy];
+      const b_prime = b[event.sortBy] == null ? "" : b[event.sortBy];
       return mod * a_prime.localeCompare(b_prime);
     });
     this.setState({
@@ -182,11 +191,11 @@ class DecisionEnrollmentsTable extends React.Component {
     });
   };
 
-  decision( id, accept ){
-    this.setState( { working: true } )
-    fetch( this.props.update_url + '.json',{
-      method: 'PATCH',
-      credentials: 'include',
+  decision(id, accept) {
+    this.setState({ working: true });
+    fetch(this.props.update_url + ".json", {
+      method: "PATCH",
+      credentials: "include",
       body: JSON.stringify({
         roster_id: id,
         decision: accept
@@ -196,29 +205,29 @@ class DecisionEnrollmentsTable extends React.Component {
         Accepts: "application/json",
         "X-CSRF-Token": this.props.token
       }
-    } )
+    })
       .then(response => {
-        if( response.ok ){
-          return response.json( );
+        if (response.ok) {
+          return response.json();
         } else {
-          const fail_data = new Object( );
+          const fail_data = new Object();
           fail_data.notice = "The operation failed";
-            fail_data.success = false;
-            console.log("error");
-            return fail_data;
+          fail_data.success = false;
+          console.log("error");
+          return fail_data;
         }
       })
-      .then( data => {
+      .then(data => {
         this.setState({
           requests: data,
           requests_raw: data,
           working: false
         });
-      } );
-    }
+      });
+  }
 
   render() {
-    if( 0 < this.state.requests.length ){
+    if (0 < this.state.requests.length) {
       return (
         <Paper style={{ height: 450, width: "100%" }}>
           <Toolbar>
@@ -229,7 +238,7 @@ class DecisionEnrollmentsTable extends React.Component {
               {this.state.requests_raw.length}
             </Typography>
           </Toolbar>
-          { this.state.working ? <LinearProgress /> : null }
+          {this.state.working ? <LinearProgress /> : null}
           <WrappedVirtualizedTable
             rowCount={this.state.requests.length}
             rowGetter={({ index }) => this.state.requests[index]}
@@ -241,7 +250,7 @@ class DecisionEnrollmentsTable extends React.Component {
         </Paper>
       );
     } else {
-      return ( null );
+      return null;
     }
   }
 }

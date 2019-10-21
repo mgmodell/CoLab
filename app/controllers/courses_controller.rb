@@ -25,7 +25,7 @@ class CoursesController < ApplicationController
 
   def qr
     require 'rqrcode'
-    qrcode = RQRCode::QRCode.new( self_reg_url )
+    qrcode = RQRCode::QRCode.new(self_reg_url)
     png = qrcode.as_png(
       bit_depth: 1,
       border_modules: 4,
@@ -41,22 +41,18 @@ class CoursesController < ApplicationController
     send_data png.to_s,
               type: 'image/png',
               disposition: 'inline'
-
   end
 
-  def self_reg
-
-  end
+  def self_reg; end
 
   def self_reg_confirm
-
-    roster = Roster.where( user: @current_user, course: @course ).take
+    roster = Roster.where(user: @current_user, course: @course).take
     if roster.nil?
       roster = @course.rosters.create(role: Roster.roles[:requesting_student], user: @current_user)
     else
       puts roster.role
-      if not( roster.enrolled_student? || roster.invited_student? ||
-              roster.instructor? || roster.assistant? )
+      if !((roster.enrolled_student? || roster.invited_student? ||
+              roster.instructor? || roster.assistant?))
         roster.requesting_student!
       elsif roster.invited_student?
         roster.enrolled_student!
@@ -66,29 +62,28 @@ class CoursesController < ApplicationController
     logger.debug roster.errors.full_messages unless roster.errors.empty?
 
     redirect_to controller: 'home', action: 'index'
-    
   end
 
   def reg_requests
     # Pull any requesting students for review
-    courses = current_user.rosters.faculty.collect{|r| r.course }
+    courses = current_user.rosters.faculty.collect(&:course)
     waiting_student_requests = Roster.requesting_student
-      .where( course: courses )
+                                     .where(course: courses)
     respond_to do |format|
       format.json do
-        resp = waiting_student_requests.collect{|r|
-          {id: r.id, first_name: r.user.first_name,
-                     last_name: r.user.last_name,
-                     course_name: r.course.name,
-                     course_number: r.course.number }
-        }
+        resp = waiting_student_requests.collect do |r|
+          { id: r.id, first_name: r.user.first_name,
+            last_name: r.user.last_name,
+            course_name: r.course.name,
+            course_number: r.course.number }
+        end
         render json: resp
       end
     end
   end
 
   def proc_reg_requests
-    roster = Roster.find params[ :roster_id ]
+    roster = Roster.find params[:roster_id]
     if roster.requesting_student?
       if params[:decision]
         roster.enrolled_student!
@@ -279,7 +274,7 @@ class CoursesController < ApplicationController
   end
 
   def set_reg_course
-    @course = Course.find( params[:id] )
+    @course = Course.find(params[:id])
   end
 
   def check_viewer

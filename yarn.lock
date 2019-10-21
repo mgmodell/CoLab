@@ -3772,10 +3772,10 @@ i18next-fetch-backend@^2.1.0:
   resolved "https://registry.yarnpkg.com/i18next-fetch-backend/-/i18next-fetch-backend-2.2.0.tgz#39ff6578596e0122e80692e04d7897ee373607d6"
   integrity sha512-HodOCr4fezjMgJwWnOR/JUotdbM1onXdnB6Y+XDgDpXX58SkZXcyz6VmmUGc/8XMxFzq3162Qs2vO+SlO4TCFw==
 
-i18next@^17.0.6:
-  version "17.2.0"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-17.2.0.tgz#d1ac5a817b7e2aaf4bd0374ef689a7e64f5bcef1"
-  integrity sha512-ltl4LSzCEAPBbHRJ6R8diJCnxCbVkf6cxH3k1B4CjB0YFGoISm3/Jxgw3noELe9TP+C/x8fEostuJcGVUeYwdw==
+i18next@^17.3.0:
+  version "17.3.0"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-17.3.0.tgz#6223799605303607243ce7c4c9846b205c14cd9c"
+  integrity sha512-4sJ6CHhLu/+xOEo3wresVl7jhC92bXhBkZYigJRzXCljzlgdayNhP/+0K+76GHmFTlL/OHg/hw04Praph9SJsA==
   dependencies:
     "@babel/runtime" "^7.3.1"
 

@@ -28,7 +28,7 @@ Given /^the user is the instructor for the course$/ do
   @instructor = @user
 end
 
-Then("retrieve the instructor user") do
+Then('retrieve the instructor user') do
   @user = @instructor
 end
 

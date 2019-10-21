@@ -55,7 +55,7 @@ When /^the user "(.*?)" fill in demographics data$/ do |does_or_does_not|
 end
 
 When /^the new user registers$/ do
-  click_link_or_button "Signup"
+  click_link_or_button 'Signup'
   email = Forgery::Internet.email_address
 
   fill_in 'user[email]', with: email
@@ -63,11 +63,11 @@ When /^the new user registers$/ do
   fill_in 'user[last_name]', with: Forgery::Name.last_name
   fill_in 'user[password]', with: 'password'
 
-  #These aren't working in capybara
-  #page.select('Male', from: 'user_gender_id')
-  #page.select('Education', from: 'user_cip_code_id')
-  #page.select('Belize', from: 'country')
-  #page.select('Avestan', from: 'user_primary_language_id')
+  # These aren't working in capybara
+  # page.select('Male', from: 'user_gender_id')
+  # page.select('Education', from: 'user_cip_code_id')
+  # page.select('Belize', from: 'country')
+  # page.select('Avestan', from: 'user_primary_language_id')
 
   new_date = Date.parse('10-05-1976')
   page.find('#user_date_of_birth').set(new_date)
@@ -75,9 +75,9 @@ When /^the new user registers$/ do
   page.find('#user_date_of_birth').set(new_date)
   click_button 'Create my profile'
   email = Email.where email: email
-  expect( email.size ).to eq( 1 )
-  @user = email[ 0 ].user
-  expect( @user ).to be
+  expect(email.size).to eq(1)
+  @user = email[0].user
+  expect(@user).to be
 end
 
 Given /^(\d+) users$/ do |user_count|
