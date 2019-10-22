@@ -1,0 +1,14 @@
+<br/><br/>
+<%= @bingo_board.bingo_game.topic %><br/>
+<table border="1">
+  <tbody>
+    <% @practice_answers.each do |pr| %>
+    <tr>
+      <% pr.each do |cell| %>
+        <td><%= cell.blank? ? '--' : cell %></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+

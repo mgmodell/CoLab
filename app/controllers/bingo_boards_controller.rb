@@ -4,6 +4,7 @@ class BingoBoardsController < ApplicationController
   before_action :set_bingo_board,
                 except: %i[index update board_for_game board_for_game_demo
                            update_demo demo_worksheet_for_game worksheet_for_game]
+  before_action :check_editor, only: :worksheet_results
   skip_before_action :authenticate_user!,
                      only: %i[board_for_game_demo update_demo
                               demo_worksheet_for_game]
@@ -118,7 +119,8 @@ class BingoBoardsController < ApplicationController
         render json: resp
       end
       format.pdf do
-        pdf = WorksheetPdf.new(bingo_board)
+        pdf = WorksheetPdf.new(bingo_board,
+                              url: ws_results_url( bingo_board.id ))
         send_data pdf.render, filename: 'bingo_game.pdf', type: 'application/pdf'
       end
     end
@@ -129,6 +131,7 @@ class BingoBoardsController < ApplicationController
     concepts = get_demo_game_concepts
 
     wksheet = BingoBoard.new(
+      id: -42,
       iteration: 0,
       user_id: @current_user.id,
       user: @current_user,
@@ -164,8 +167,38 @@ class BingoBoardsController < ApplicationController
 
     respond_to do |format|
       format.pdf do
-        pdf = WorksheetPdf.new(wksheet)
+        pdf = WorksheetPdf.new(wksheet,
+                              url: ws_results_url( -42 ) )
         send_data pdf.render, filename: 'demo_bingo_practice.pdf', type: 'application/pdf'
+      end
+    end
+  end
+
+  def worksheet_results
+    unless @bingo_board.worksheet?
+      redirect_to root_path
+    else
+      bingo_game = @bingo_board.bingo_game
+      @practice_answers = Array.new bingo_game.size
+      bingo_game.size.times do |index|
+        @practice_answers[index] = Array.new bingo_game.size
+      end
+      @bingo_board.bingo_cells.each do |bc|
+        if bc.candidate.present?
+          @practice_answers[bc.row][bc.column] = bc.indeks_as_letter
+        end
+      end
+      respond_to do |format|
+        format.json do
+          render json: {
+            bingo_game: @bingo_board.bingo_game.as_json(
+              only: %i[ topic description ] ),
+            practice_answers: @practice_answers.as_json
+          }
+        end
+        format.html do
+          #worksheet_results
+        end
       end
     end
   end
@@ -344,7 +377,12 @@ class BingoBoardsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_board
-    @bingo_board = BingoBoard.find(params[:id])
+    id = params[:id].to_i
+    if 0 >= id
+      redirect_to root_path
+    else
+      @bingo_board = BingoBoard.find( id )
+    end
   end
 
   def bingo_board_params
@@ -353,6 +391,13 @@ class BingoBoardsController < ApplicationController
                                                 %i[id concept_id
                                                    selected row
                                                    column])
+  end
+
+  def check_editor
+    unless @current_user.is_admin? ||
+      @bingo_board.bingo_game.course.rosters.instructor.where( user: @current_user).present?
+      redirect_to root_path
+    end
   end
 
   def play_bingo_board_params

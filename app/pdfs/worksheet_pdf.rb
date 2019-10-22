@@ -3,7 +3,7 @@
 class WorksheetPdf
   include Prawn::View
 
-  def initialize(bingo_board)
+  def initialize(bingo_board, url: )
     super()
     font_families.update('OpenSans' => {
                            normal: Rails.root.join('app/assets/fonts/OpenSans-Regular.ttf'),
@@ -14,6 +14,7 @@ class WorksheetPdf
 
     font 'OpenSans'
     @bingo_board = bingo_board
+    @url = url
     header
     gen_bingo_board
     render_clues if @bingo_board.worksheet?
@@ -23,9 +24,15 @@ class WorksheetPdf
     # This inserts an image in the pdf file and sets the size of the image
     top = cursor
 
+
     image "#{Rails.root}/app/assets/images/CoLab.png",
           width: 120, height: 120,
           at: [450, top + 20]
+    if @bingo_board.worksheet?
+      qrcode = RQRCode::QRCode.new( @url )
+      render_qr_code( qrcode,
+                      pos: [0 - 3, top - 43] )
+    end
     bounding_box([0, top], width: 210) do
       text "Player: #{@bingo_board.user.first_name} #{@bingo_board.user.last_name}"
       text "Game Date: #{@bingo_board.bingo_game.end_date.strftime('%b %e, %Y')}"

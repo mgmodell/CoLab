@@ -47,7 +47,10 @@ Rails.application.routes.draw do
     patch 'candidates_review/:id' => 'bingo_games#update_review_candidates',
         as: :update_bingo_candidates_review,
         constraints: ->(req) { req.format == :json }
-    get 'list_stats/:id' => 'candidate_lists#list_stats', as: :'bingo_list_stats'
+    get 'list_stats/:id' => 'candidate_lists#list_stats',
+      as: :'bingo_list_stats'
+    get 'ws_results/:id' => 'bingo_boards#worksheet_results',
+      as: 'ws_results'
     get 'results/:id' => 'bingo_games#game_results', as: 'game_results',
         constraints: ->(req) { req.format == :json }
     get 'my_results/:id' => 'bingo_games#my_results', as: 'my_results',

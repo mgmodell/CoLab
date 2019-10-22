@@ -16,14 +16,6 @@ class BingoGamesController < ApplicationController
                                           destroy review_candidates
                                           update_review_candidates ]
 
-  before_action :check_editor, except: %i[next diagnose react
-                                          my_results
-                                          update_review_candidates
-                                          review_candidates_demo
-                                          demo_update_review_candidates
-                                          demo_my_results
-                                          show index get_concepts]
-
   before_action :check_viewer, only: %i[show index]
 
   include Demoable
@@ -120,6 +112,7 @@ class BingoGamesController < ApplicationController
        candidate_lists: [{ candidates: %i[concept candidate_feedback] }, group: :users],
        bingo_boards: [:user, { bingo_cells: :candidate }]]
     ).find_by(id: params[:id])
+    check_editor bingo_game: bingo_game
     anon = @current_user.anonymize?
     resp = {}
     # Get the users
@@ -269,6 +262,7 @@ class BingoGamesController < ApplicationController
 
   def update
     @title = t '.title'
+    check_editor bingo_game: @bingo_game
     @bingo_game.update(bingo_game_params)
 
     respond_to do |format|
@@ -398,6 +392,7 @@ class BingoGamesController < ApplicationController
 
   def review_candidates
     @title = t '.title'
+    check_editor bingo_game: @bingo_game
     respond_to do |format|
       format.json do
         review_helper(
@@ -552,12 +547,14 @@ class BingoGamesController < ApplicationController
 
   def destroy
     @course = @bingo_game.course
+    check_editor bingo_game: @bingo_game
     @bingo_game.destroy
     redirect_to @course, notice: (t 'bingo_games.destroy_success')
   end
 
   def activate
     bingo_game = BingoGame.find(params[:bingo_game_id])
+    check_editor bingo_game: bingo_game
     if @current_user.is_admin? ||
        bingo_game.course.get_roster_for_user(@current_user).role.code == 'inst'
       bingo_game.active = true
@@ -591,8 +588,9 @@ class BingoGamesController < ApplicationController
                                  @current_user.is_researcher?
   end
 
-  def check_editor
-    unless @current_user.is_admin? || @current_user.is_instructor?
+  def check_editor bingo_game: 
+    unless @current_user.is_admin? ||
+          !bingo_game.course.rosters.instructor.where( user: @current_user ).nil?
       redirect_to root_path
     end
   end

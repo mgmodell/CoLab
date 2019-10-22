@@ -400,8 +400,10 @@ class CandidatesReviewTable extends React.Component {
     this.setState({ page: page });
   };
   handleChangeRowsPerPage = function(event) {
-    this.setState({ rowsPerPage: event.target.value });
-    this.setState({ page: 1 });
+    this.setState({
+      rowsPerPage: event.target.value,
+      page: 0
+    });
   };
   filter = function(event) {
     const { sortBy, sortDirection, candidates_map } = this.state;

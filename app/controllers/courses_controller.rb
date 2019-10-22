@@ -50,7 +50,6 @@ class CoursesController < ApplicationController
     if roster.nil?
       roster = @course.rosters.create(role: Roster.roles[:requesting_student], user: @current_user)
     else
-      puts roster.role
       if !((roster.enrolled_student? || roster.invited_student? ||
               roster.instructor? || roster.assistant?))
         roster.requesting_student!
