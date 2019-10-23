@@ -392,10 +392,10 @@ Then('the user {string} {int} enrollment request') do |decision, count|
     buttons.to_a.shuffle.each do |button|
       retries ||= 0
       button.click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-      puts e.inspect
-      retry if (retries += 1) < 4
+      rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+        puts e.inspect
+        retry if (retries += 1) < 4
+      sleep(0.3) unless all(:xpath, "//div[@role='progressbar']").empty?
     end
   end
-  sleep(0.3) unless all(:xpath, "//div[@role='progressbar']").empty?
 end
