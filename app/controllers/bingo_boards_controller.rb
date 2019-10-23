@@ -43,6 +43,7 @@ class BingoBoardsController < ApplicationController
     end
 
     bingo_board = BingoBoard.new(
+      id: -42,
       bingo_game: bingo_game,
       user: @current_user,
       iteration: 0
