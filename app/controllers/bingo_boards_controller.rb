@@ -120,7 +120,7 @@ class BingoBoardsController < ApplicationController
       end
       format.pdf do
         pdf = WorksheetPdf.new(bingo_board,
-                              url: ws_results_url( bingo_board.id ))
+                               url: ws_results_url(bingo_board.id))
         send_data pdf.render, filename: 'bingo_game.pdf', type: 'application/pdf'
       end
     end
@@ -168,16 +168,14 @@ class BingoBoardsController < ApplicationController
     respond_to do |format|
       format.pdf do
         pdf = WorksheetPdf.new(wksheet,
-                              url: ws_results_url( -42 ) )
+                               url: ws_results_url(-42))
         send_data pdf.render, filename: 'demo_bingo_practice.pdf', type: 'application/pdf'
       end
     end
   end
 
   def worksheet_results
-    unless @bingo_board.worksheet?
-      redirect_to root_path
-    else
+    if @bingo_board.worksheet?
       bingo_game = @bingo_board.bingo_game
       @practice_answers = Array.new bingo_game.size
       bingo_game.size.times do |index|
@@ -192,14 +190,17 @@ class BingoBoardsController < ApplicationController
         format.json do
           render json: {
             bingo_game: @bingo_board.bingo_game.as_json(
-              only: %i[ topic description ] ),
+              only: %i[topic description]
+            ),
             practice_answers: @practice_answers.as_json
           }
         end
         format.html do
-          #worksheet_results
+          # worksheet_results
         end
       end
+    else
+      redirect_to root_path
     end
   end
 
@@ -378,10 +379,10 @@ class BingoBoardsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_board
     id = params[:id].to_i
-    if 0 >= id
+    if id <= 0
       redirect_to root_path
     else
-      @bingo_board = BingoBoard.find( id )
+      @bingo_board = BingoBoard.find(id)
     end
   end
 
@@ -395,7 +396,7 @@ class BingoBoardsController < ApplicationController
 
   def check_editor
     unless @current_user.is_admin? ||
-      @bingo_board.bingo_game.course.rosters.instructor.where( user: @current_user).present?
+           @bingo_board.bingo_game.course.rosters.instructor.where(user: @current_user).present?
       redirect_to root_path
     end
   end

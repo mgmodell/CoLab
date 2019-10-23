@@ -588,9 +588,9 @@ class BingoGamesController < ApplicationController
                                  @current_user.is_researcher?
   end
 
-  def check_editor bingo_game: 
+  def check_editor(bingo_game:)
     unless @current_user.is_admin? ||
-          !bingo_game.course.rosters.instructor.where( user: @current_user ).nil?
+           !bingo_game.course.rosters.instructor.where(user: @current_user).nil?
       redirect_to root_path
     end
   end
