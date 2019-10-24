@@ -43,7 +43,6 @@ class BingoBoardsController < ApplicationController
     end
 
     bingo_board = BingoBoard.new(
-      id: -42,
       bingo_game: bingo_game,
       user: @current_user,
       iteration: 0
@@ -105,6 +104,8 @@ class BingoBoardsController < ApplicationController
       end
     end
 
+    url = bingo_board.id.nil? ? root_url : ws_results_url( bingo_board.id )
+      
     respond_to do |format|
       format.json do
         resp = bingo_board.as_json(
@@ -120,8 +121,7 @@ class BingoBoardsController < ApplicationController
         render json: resp
       end
       format.pdf do
-        pdf = WorksheetPdf.new(bingo_board,
-                               url: ws_results_url(bingo_board.id))
+        pdf = WorksheetPdf.new(bingo_board, url: url )
         send_data pdf.render, filename: 'bingo_game.pdf', type: 'application/pdf'
       end
     end
@@ -169,7 +169,7 @@ class BingoBoardsController < ApplicationController
     respond_to do |format|
       format.pdf do
         pdf = WorksheetPdf.new(wksheet,
-                               url: ws_results_url(-42))
+                               url: ws_results_url(wksheet))
         send_data pdf.render, filename: 'demo_bingo_practice.pdf', type: 'application/pdf'
       end
     end
