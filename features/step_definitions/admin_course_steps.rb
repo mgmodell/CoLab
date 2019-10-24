@@ -389,13 +389,15 @@ Then('the user {string} {int} enrollment request') do |decision, count|
   buttons = all(:xpath, "//button[@title='#{action}']")
   unless buttons.size < count
 
-    buttons.to_a.shuffle.each do |button|
-      retries ||= 0
+    count.times do
+      button = all(:xpath, "//button[@title='#{action}']").sample
       button.click
-      rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-        puts e.inspect
-        retry if (retries += 1) < 4
-      sleep(0.3) unless all(:xpath, "//div[@role='progressbar']").empty?
+      waits = 0
+      until all(:xpath, "//div[@role='progressbar']").empty?
+        sleep(0.3)
+        waits += 1
+        waits.should be < 3
+      end
     end
   end
 end
