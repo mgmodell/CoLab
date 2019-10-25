@@ -260,7 +260,8 @@ class BingoBoardsController < ApplicationController
 
     respond_to do |format|
       format.pdf do
-        pdf = WorksheetPdf.new(wksheet)
+        pdf = WorksheetPdf.new(wksheet,
+                               url: ws_results_url(wksheet))
         send_data pdf.render, filename: 'bingo_practice.pdf', type: 'application/pdf'
       end
     end
@@ -342,12 +343,17 @@ class BingoBoardsController < ApplicationController
     end
     @board.bingo_cells = cells
 
+        bingo_game = @board.bingo_game
     if @board.save
       @board = BingoBoard
                .includes(:bingo_game, bingo_cells: :concept)
                .find(@board.id)
 
-      update_responder
+    board_for_game_helper bingo_board: @board,
+                          bingo_game: bingo_game,
+                          acceptable_count: bingo_game.candidates
+                                                      .where(candidate_feedback_id: 1)
+                                                      .group(:concept_id).length
     else
       logger.debug @board.errors.full_messages
 
