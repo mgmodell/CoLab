@@ -330,8 +330,24 @@ class BingoBuilder extends React.Component {
           <Tabs value={this.state.curTab} onChange={this.changeTab} centered>
             <Tab value="builder" label="Bingo game builder" />
             <Tab value="results" label="Your performance" />
+            <Tab value="worksheet" label="Worksheet result"
+              disabled={!this.state.board.practicable ||
+                          null == this.state.board.worksheet ||
+                         ( null == this.state.board.worksheet.performance &&
+                           null == this.state.board.worksheet.result_img ) 
+                       } />
             <Tab value="concepts" label="Concepts found by class" />
           </Tabs>
+          {"worksheet" == this.state.curTab && (
+            <Paper square={false}>
+              <Typography>
+                <strong>Score:</strong>&nbsp;
+                  {this.state.board.worksheet.performance}<br/>
+              </Typography>
+              <img src={this.state.board.worksheet.result_img} />
+
+            </Paper>
+          )}
           {"builder" == this.state.curTab && (
             <Paper square={false}>
               <br />

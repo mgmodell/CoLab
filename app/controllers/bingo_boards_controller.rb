@@ -45,7 +45,8 @@ class BingoBoardsController < ApplicationController
     bingo_board = BingoBoard.new(
       bingo_game: bingo_game,
       user: @current_user,
-      iteration: 0
+      iteration: 0,
+      score: 88
     )
     if params[:format] == 'pdf'
       bingo_board.bingo_cells = []
@@ -69,14 +70,19 @@ class BingoBoardsController < ApplicationController
     bingo_board = bingo_game.bingo_boards.playable
                             .includes(:bingo_game, bingo_cells: :concept)
                             .where(user_id: @current_user.id).take
+    worksheet = bingo_game.bingo_boards.worksheet
+                            .where(user_id: @current_user.id).take
     board_for_game_helper bingo_board: bingo_board,
+                          worksheet: worksheet,
                           bingo_game: bingo_game,
                           acceptable_count: bingo_game.candidates
                                                       .where(candidate_feedback_id: 1)
                                                       .group(:concept_id).length
   end
 
-  def board_for_game_helper(bingo_board: nil, bingo_game:, acceptable_count: 42)
+  def board_for_game_helper(bingo_board: nil, bingo_game:,
+                            acceptable_count: 42,
+                            worksheet: nil )
     # TODO: Maybe this can be simplified?
     if bingo_board.nil?
       bingo_board = BingoBoard.new
@@ -109,15 +115,25 @@ class BingoBoardsController < ApplicationController
     respond_to do |format|
       format.json do
         resp = bingo_board.as_json(
-          only: %i[id size topic description bingo_game_id], include:
-               [:bingo_game, bingo_cells:
-               { only: %i[id bingo_board_id row column selected concept_id],
+          only: %i[id size topic description bingo_game_id performance],
+               include: [:bingo_game, bingo_cells: {
+                          only: %i[id bingo_board_id row column
+                          selected concept_id],
                  include:
                  [concept: { only: %i[id name] }] }]
         )
         resp[:acceptable] = acceptable_count
         resp[:playable] = bingo_game.playable?
         resp[:practicable] = bingo_game.practicable?
+        unless worksheet.nil?
+          resp[:worksheet] = {
+            performance: worksheet.performance,
+            result_img: worksheet.result_img.attached? ?
+              url_for( worksheet.result_img ) :
+              nil
+            }
+        end
+        resp[:result_img] = url_for( bingo_board.result_img ) if bingo_board.result_img.attached?
         render json: resp
       end
       format.pdf do
@@ -367,7 +383,6 @@ class BingoBoardsController < ApplicationController
   end
 
   def score_worksheet
-    puts @bingo_board.inspect
     if @bingo_board.update( score_bingo_board_params )
       redirect_to ws_results_path( @bingo_board )
     else
