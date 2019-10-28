@@ -51,6 +51,8 @@ Rails.application.routes.draw do
       as: :'bingo_list_stats'
     get 'ws_results/:id' => 'bingo_boards#worksheet_results',
       as: 'ws_results'
+    patch 'ws_score/:id' => 'bingo_boards#score_worksheet',
+      as: 'ws_score'
     get 'results/:id' => 'bingo_games#game_results', as: 'game_results',
         constraints: ->(req) { req.format == :json }
     get 'my_results/:id' => 'bingo_games#my_results', as: 'my_results',

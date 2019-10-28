@@ -3,8 +3,8 @@
 class BingoBoardsController < ApplicationController
   before_action :set_bingo_board,
                 except: %i[index update board_for_game board_for_game_demo
-                           update_demo demo_worksheet_for_game worksheet_for_game]
-  before_action :check_editor, only: :worksheet_results
+                           update_demo demo_worksheet_for_game worksheet_for_game ]
+  before_action :check_editor, only: %i[worksheet_results score_worksheet]
   skip_before_action :authenticate_user!,
                      only: %i[board_for_game_demo update_demo
                               demo_worksheet_for_game]
@@ -366,6 +366,17 @@ class BingoBoardsController < ApplicationController
     end
   end
 
+  def score_worksheet
+    puts @bingo_board.inspect
+    if @bingo_board.update( score_bingo_board_params )
+      redirect_to ws_results_path( @bingo_board )
+    else
+      logger.debug @bingo_board.errors.full_message unless @bingo_board.errors.empty?
+      redirect_to root_path
+    end
+
+  end
+
   private
 
   def update_responder
@@ -408,6 +419,10 @@ class BingoBoardsController < ApplicationController
     end
   end
 
+  def score_bingo_board_params
+    params.require(:bingo_board).permit( :id, :result_img, :performance )
+  end
+  
   def play_bingo_board_params
     params.require(:bingo_board).permit(bingo_cells: %i[id selected])
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_18_234515) do
+ActiveRecord::Schema.define(version: 2019_10_28_013641) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 2019_08_18_234515) do
     t.boolean "win_claimed"
     t.integer "iteration", default: 0
     t.integer "board_type", default: 0
+    t.integer "performance"
     t.index ["bingo_game_id"], name: "index_bingo_boards_on_bingo_game_id"
     t.index ["user_id"], name: "index_bingo_boards_on_user_id"
   end
