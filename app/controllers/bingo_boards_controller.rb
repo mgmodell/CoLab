@@ -383,7 +383,17 @@ class BingoBoardsController < ApplicationController
   end
 
   def score_worksheet
-    if @bingo_board.update( score_bingo_board_params )
+    @bingo_board.performance = params[:bingo_board][:performance]
+    
+    #image processing
+    proc_image = ImageProcessing::Vips
+      .source( params[:bingo_board][:result_img].tempfile.path )
+      .resize_to_limit!( 800, 800 )
+    
+    @bingo_board.result_img.attach( io: File.open( proc_image.path ),
+                                    filename: File.basename( proc_image.path ) )
+    
+    if @bingo_board.save
       redirect_to ws_results_path( @bingo_board )
     else
       logger.debug @bingo_board.errors.full_message unless @bingo_board.errors.empty?
