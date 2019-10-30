@@ -386,6 +386,7 @@ class BingoBoardsController < ApplicationController
   end
 
   def score_worksheet
+    require 'image_processing/vips'
     @bingo_board.performance = params[:bingo_board][:performance]
 
     # image processing
