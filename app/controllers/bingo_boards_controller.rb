@@ -71,7 +71,7 @@ class BingoBoardsController < ApplicationController
                             .includes(:bingo_game, bingo_cells: :concept)
                             .where(user_id: @current_user.id).take
     worksheet = bingo_game.bingo_boards.worksheet
-                            .where(user_id: @current_user.id).take
+                          .where(user_id: @current_user.id).take
     board_for_game_helper bingo_board: bingo_board,
                           worksheet: worksheet,
                           bingo_game: bingo_game,
@@ -82,7 +82,7 @@ class BingoBoardsController < ApplicationController
 
   def board_for_game_helper(bingo_board: nil, bingo_game:,
                             acceptable_count: 42,
-                            worksheet: nil )
+                            worksheet: nil)
     # TODO: Maybe this can be simplified?
     if bingo_board.nil?
       bingo_board = BingoBoard.new
@@ -110,17 +110,18 @@ class BingoBoardsController < ApplicationController
       end
     end
 
-    url = bingo_board.id.nil? ? root_url : ws_results_url( bingo_board.id )
-      
+    url = bingo_board.id.nil? ? root_url : ws_results_url(bingo_board.id)
+
     respond_to do |format|
       format.json do
         resp = bingo_board.as_json(
           only: %i[id size topic description bingo_game_id performance],
-               include: [:bingo_game, bingo_cells: {
-                          only: %i[id bingo_board_id row column
-                          selected concept_id],
-                 include:
-                 [concept: { only: %i[id name] }] }]
+          include: [:bingo_game, bingo_cells: {
+            only: %i[id bingo_board_id row column
+                     selected concept_id],
+            include:
+                 [concept: { only: %i[id name] }]
+          }]
         )
         resp[:acceptable] = acceptable_count
         resp[:playable] = bingo_game.playable?
@@ -129,15 +130,17 @@ class BingoBoardsController < ApplicationController
           resp[:worksheet] = {
             performance: worksheet.performance,
             result_img: worksheet.result_img.attached? ?
-              url_for( worksheet.result_img ) :
+              url_for(worksheet.result_img) :
               nil
-            }
+          }
         end
-        resp[:result_img] = url_for( bingo_board.result_img ) if bingo_board.result_img.attached?
+        if bingo_board.result_img.attached?
+          resp[:result_img] = url_for(bingo_board.result_img)
+        end
         render json: resp
       end
       format.pdf do
-        pdf = WorksheetPdf.new(bingo_board, url: url )
+        pdf = WorksheetPdf.new(bingo_board, url: url)
         send_data pdf.render, filename: 'bingo_game.pdf', type: 'application/pdf'
       end
     end
@@ -359,17 +362,17 @@ class BingoBoardsController < ApplicationController
     end
     @board.bingo_cells = cells
 
-        bingo_game = @board.bingo_game
+    bingo_game = @board.bingo_game
     if @board.save
       @board = BingoBoard
                .includes(:bingo_game, bingo_cells: :concept)
                .find(@board.id)
 
-    board_for_game_helper bingo_board: @board,
-                          bingo_game: bingo_game,
-                          acceptable_count: bingo_game.candidates
-                                                      .where(candidate_feedback_id: 1)
-                                                      .group(:concept_id).length
+      board_for_game_helper bingo_board: @board,
+                            bingo_game: bingo_game,
+                            acceptable_count: bingo_game.candidates
+                                                        .where(candidate_feedback_id: 1)
+                                                        .group(:concept_id).length
     else
       logger.debug @board.errors.full_messages
 
@@ -384,22 +387,23 @@ class BingoBoardsController < ApplicationController
 
   def score_worksheet
     @bingo_board.performance = params[:bingo_board][:performance]
-    
-    #image processing
+
+    # image processing
     proc_image = ImageProcessing::Vips
-      .source( params[:bingo_board][:result_img].tempfile.path )
-      .resize_to_limit!( 800, 800 )
-    
-    @bingo_board.result_img.attach( io: File.open( proc_image.path ),
-                                    filename: File.basename( proc_image.path ) )
-    
+                 .source(params[:bingo_board][:result_img].tempfile.path)
+                 .resize_to_limit!(800, 800)
+
+    @bingo_board.result_img.attach(io: File.open(proc_image.path),
+                                   filename: File.basename(proc_image.path))
+
     if @bingo_board.save
-      redirect_to ws_results_path( @bingo_board )
+      redirect_to ws_results_path(@bingo_board)
     else
-      logger.debug @bingo_board.errors.full_message unless @bingo_board.errors.empty?
+      unless @bingo_board.errors.empty?
+        logger.debug @bingo_board.errors.full_message
+      end
       redirect_to root_path
     end
-
   end
 
   private
@@ -445,9 +449,9 @@ class BingoBoardsController < ApplicationController
   end
 
   def score_bingo_board_params
-    params.require(:bingo_board).permit( :id, :result_img, :performance )
+    params.require(:bingo_board).permit(:id, :result_img, :performance)
   end
-  
+
   def play_bingo_board_params
     params.require(:bingo_board).permit(bingo_cells: %i[id selected])
   end
