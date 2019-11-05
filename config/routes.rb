@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 Rails.application.routes.draw do
+  get 'c_panel/' => 'c_panel#index'
+  match 'c_panel/*path' => 'c_panel#index', via: [:get, :post]
+
   get 'admin' => 'courses#index'
 
   scope 'admin' do

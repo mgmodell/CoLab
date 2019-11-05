@@ -1,0 +1,2 @@
+module CPanelHelper
+end
