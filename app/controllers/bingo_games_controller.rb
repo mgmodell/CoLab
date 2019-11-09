@@ -148,6 +148,7 @@ class BingoGamesController < ApplicationController
         end
       end
       resp[bb.user.id][:practice_answers] = practice_answers
+      resp[bb.user.id][:score] = bb.performance
     end
 
     bingo_game.candidate_lists.each do |cl|

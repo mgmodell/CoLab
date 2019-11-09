@@ -40,17 +40,24 @@ class BingoGameResults extends React.Component {
       return <p>No board available</p>;
     } else {
       return (
-        <Table>
-          <TableBody>
-            {this.props.board.map((row, r_ind) => (
-              <TableRow key={r_ind}>
-                {row.map((col, c_ind) => (
-                  <TableCell key={r_ind + "_" + c_ind}>{col}</TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <React.Fragment>
+          <Typography>
+            <b>Score: </b>
+            {null == this.props.score ? "unscored" : this.props.score}
+            <br />
+          </Typography>
+          <Table>
+            <TableBody>
+              {this.props.board.map((row, r_ind) => (
+                <TableRow key={r_ind}>
+                  {row.map((col, c_ind) => (
+                    <TableCell key={r_ind + "_" + c_ind}>{col}</TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </React.Fragment>
       );
     }
   }
@@ -94,6 +101,7 @@ BingoGameResults.propTypes = {
   open: PropTypes.bool.isRequired,
   student: PropTypes.string,
   board: PropTypes.array,
+  score: PropTypes.number,
   close: PropTypes.func,
   candidates: PropTypes.arrayOf(
     PropTypes.shape({

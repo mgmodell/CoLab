@@ -57,6 +57,15 @@ class BingoGameDataAdminTable extends React.Component {
         {
           width: 120,
           flexGrow: 1.0,
+          label: "Worksheet Score",
+          dataKey: "score",
+          numeric: true,
+          disableSort: false,
+          visible: true
+        },
+        {
+          width: 120,
+          flexGrow: 1.0,
           label: "Student",
           dataKey: "student",
           numeric: false,
@@ -102,14 +111,6 @@ class BingoGameDataAdminTable extends React.Component {
           numeric: true,
           disableSort: false,
           visible: true
-        },
-        {
-          width: 120,
-          label: "Score",
-          dataKey: "performance",
-          numeric: true,
-          disableSort: false,
-          visible: true
         }
       ]
     };
@@ -125,7 +126,8 @@ class BingoGameDataAdminTable extends React.Component {
         open: true,
         student: this.state.results[index].student,
         board: this.state.results[index].practice_answers,
-        candidates: this.state.results[index].candidates
+        candidates: this.state.results[index].candidates,
+        score: this.state.results[index].score
       }
     });
   }
@@ -210,6 +212,7 @@ class BingoGameDataAdminTable extends React.Component {
               open={this.state.individual.open}
               student={this.state.individual.student}
               board={this.state.individual.board}
+              score={this.state.individual.score}
               close={this.closeDialog}
               candidates={this.state.individual.candidates}
             />
