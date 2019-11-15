@@ -46,7 +46,7 @@ class BingoBoardsController < ApplicationController
       bingo_game: bingo_game,
       user: @current_user,
       iteration: 0,
-      score: 88
+      performance: 88
     )
     if params[:format] == 'pdf'
       bingo_board.bingo_cells = []
@@ -224,6 +224,7 @@ class BingoBoardsController < ApplicationController
     end
   end
 
+  ITEM_COUNT = 10
   def worksheet_for_game
     bingo_game_id = params[:bingo_game_id]
     bingo_game = BingoGame .find(params[:bingo_game_id])
@@ -236,7 +237,7 @@ class BingoBoardsController < ApplicationController
       # Assuming 10 items
       items = {}
 
-      while items.length < 10 && !candidates.empty?
+      while items.length < ITEM_COUNT && !candidates.empty?
         candidate = candidates.sample
         items[candidate.concept] = candidate
         candidates.delete(candidate)
@@ -250,14 +251,16 @@ class BingoBoardsController < ApplicationController
         board_type: :worksheet
       )
 
+      # Distribute clues and board elements
       concepts = bingo_game.concepts.to_a
-      if items.length == 10 && concepts.size > 25
+      if items.length == ITEM_COUNT && concepts.size > 25
         cells = items.values
         while cells.length < 24
           c = concepts.delete(concepts.sample)
           cells << c if items[c].nil?
         end
-        index = 0
+        # Initialise the indexes
+        indices = (1..10).to_a
         star = Concept.find 0
         0.upto(bingo_game.size - 1) do |row|
           0.upto(bingo_game.size - 1) do |column|
@@ -268,7 +271,7 @@ class BingoBoardsController < ApplicationController
               column: column,
               concept: c.class == Concept ? c : c.concept,
               candidate: c.class == Concept ? nil : c,
-              indeks: c.class == Concept ? nil : index += 1
+              indeks: c.class == Concept ? nil : indices.delete( indices.sample )
             )
           end
         end
