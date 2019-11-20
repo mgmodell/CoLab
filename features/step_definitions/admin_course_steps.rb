@@ -386,11 +386,14 @@ end
 
 Then('the user {string} {int} enrollment request') do |decision, count|
   action = decision == 'approves' ? 'Accept' : 'Reject'
-  buttons = all(:xpath, "//button[@title='#{action}']")
+  #Using aria-labl instead of title because of some strange JavaScript
+  # error.
+  buttons = all(:xpath, "//button[@aria-label='#{action}']")
   unless buttons.size < count
 
     count.times do
-      button = all(:xpath, "//button[@title='#{action}']").sample
+        
+      button = all(:xpath, "//button[@aria-label='#{action}']").sample
       button.click
       waits = 0
       until all(:xpath, "//div[@role='progressbar']").empty?
@@ -398,6 +401,7 @@ Then('the user {string} {int} enrollment request') do |decision, count|
         waits += 1
         waits.should be < 3
       end
+      sleep(0.3)
     end
   end
 end

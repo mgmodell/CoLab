@@ -20,6 +20,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
+    Then the user clicks "Activities"
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "02/29/1980"
@@ -42,6 +43,7 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor creates a new project but leaves the dates untouched
     Given the user is the instructor for the course
     Given the user logs in
@@ -49,6 +51,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
+    Then the user clicks "Activities"
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user selects "Monday" as "Opens every"
@@ -106,6 +109,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
+    Then the user clicks "Activities"
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user selects "Monday" as "Opens every"
@@ -154,6 +158,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
+    Then the user clicks "Activities"
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "02/29/1980"
@@ -206,6 +211,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
+    Then the user clicks "Activities"
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "02/29/1980"

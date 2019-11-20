@@ -37,12 +37,19 @@ Then /^the user opens the course$/ do
 end
 
 Then /^the user clicks "([^"]*)"$/ do |link_or_button|
-  if has_xpath?("//button[contains(.,'#{link_or_button}')]")
-    btn = find(:xpath, "//button[contains(.,'#{link_or_button}')]", match: :first)
-  elsif has_xpath? "//a[contains(.,'#{link_or_button}')]"
-    btn = find(:xpath, "//a[contains(.,'#{link_or_button}')]")
-  elsif has_xpath? "//input[@value='#{link_or_button}']"
-    btn = find(:xpath, "//input[@value='#{link_or_button}']")
+  if has_xpath?("//button[contains(.,'#{link_or_button}')]",
+                visible: :all )
+    btn = find(:xpath, "//button[contains(.,'#{link_or_button}')]",
+                  match: :first,
+                  visible: :all )
+  elsif has_xpath?( "//a[contains(.,'#{link_or_button}')]",
+                    visible: :all )
+    btn = find(:xpath, "//a[contains(.,'#{link_or_button}')]",
+                visible: :all )
+  elsif has_xpath?( "//input[@value='#{link_or_button}']",
+                visible: :all )
+    btn = find(:xpath, "//input[@value='#{link_or_button}']",
+                visible: :all )
   end
   begin
     retries ||= 0
@@ -84,7 +91,10 @@ Then /^the user sets the project "([^"]*)" date to "([^"]*)"$/ do |date_field_pr
 end
 
 Then /^the user selects "([^"]*)" as "([^"]*)"$/ do |value, field|
-  page.select(value, from: field)
+  id = find(:xpath,
+    "//label[contains(text(),'#{field}')]")[:for]
+  find( :xpath, "//select[@id='#{id}']", visible: :all ).select( value )
+  #page.select(value, from: field)
 end
 
 Then /^retrieve the latest project from the db$/ do

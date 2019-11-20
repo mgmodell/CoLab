@@ -72,7 +72,11 @@ class CandidateListsController < ApplicationController
 
   def update
     if !@candidate_list.bingo_game.is_open?
-      redirect_to show_candidate_list_path
+      if @candidate_list.bingo_game.reviewed
+        redirect_to :root_path, notice: (t 'candidate_lists.list_closed')
+      else
+        redirect_to show_candidate_list_path
+      end
     else
       respond_to do |format|
         if @candidate_list.update(candidate_list_params)

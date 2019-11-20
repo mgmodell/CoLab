@@ -49,7 +49,7 @@ class DecisionEnrollmentsTable extends React.Component {
       requests: [],
       search: "",
       sortBy: "course_number",
-      working: false,
+      working: true,
       sortDirection: SortDirection.DESC,
       columns: [
         {
@@ -155,7 +155,8 @@ class DecisionEnrollmentsTable extends React.Component {
       .then(data => {
         this.setState({
           requests: data,
-          requests_raw: data
+          requests_raw: data,
+          working: false
         });
       });
   }

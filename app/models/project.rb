@@ -2,7 +2,6 @@
 
 require 'forgery'
 class Project < ApplicationRecord
-  include TimezonesSupportConcern
 
   after_save :build_assessment
 
@@ -20,6 +19,7 @@ class Project < ApplicationRecord
   validates :name, :end_dow, :start_dow, presence: true
   validates :end_date, :start_date, presence: true
   before_create :anonymize
+  before_validation :init_dates
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
@@ -206,18 +206,21 @@ class Project < ApplicationRecord
     end
   end
 
+  def init_dates
+    self.start_date ||= course.start_date
+    self.end_date ||= course.end_date
+  end
+
   def dates_within_course
-    unless start_date.nil? || end_date.nil?
-      if start_date < course.start_date
-        msg = 'The project cannot begin before the course has begun '
-        msg += "(#{start_date} < #{course.start_date})"
-        errors.add(:start_date, msg)
-      end
-      if end_date > course.end_date
-        msg = 'The project cannot continue after the course has ended '
-        msg += "(#{end_date} > #{course.end_date})"
-        errors.add(:end_date, msg)
-      end
+    if self.start_date < course.start_date
+      msg = 'The project cannot begin before the course has begun '
+      msg += "(#{start_date} < #{course.start_date})"
+      errors.add(:start_date, msg)
+    end
+    if self.end_date > course.end_date
+      msg = 'The project cannot continue after the course has ended '
+      msg += "(#{end_date} > #{course.end_date})"
+      errors.add(:end_date, msg)
     end
     errors
   end
