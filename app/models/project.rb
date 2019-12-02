@@ -6,6 +6,7 @@ class Project < ApplicationRecord
   after_save :build_assessment
 
   belongs_to :course, inverse_of: :projects
+  has_many :rosters, through: :course
   belongs_to :style, inverse_of: :projects
   belongs_to :factor_pack, inverse_of: :projects, optional: true
   has_many :groups, inverse_of: :project, dependent: :destroy

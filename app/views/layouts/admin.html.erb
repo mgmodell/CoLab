@@ -25,7 +25,7 @@
       </div>
       <div data-role="content">
         <%= link_to t( :concepts_edit ), concepts_path,
-          data: { inline: true, mini: true, role: 'button' } if @current_user.is_admin?%>
+          data: { inline: true, mini: true, role: 'button' } if current_user.is_admin?%>
         <% if flash[:error] -%>
           <p class='error'><%=h flash[:error] %></p>
         <% end -%>

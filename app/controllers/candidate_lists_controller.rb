@@ -15,7 +15,7 @@ class CandidateListsController < ApplicationController
   def edit
     @title = t '.title'
 
-    consent_log = @candidate_list.course.get_consent_log user: @current_user
+    consent_log = @candidate_list.course.get_consent_log user: current_user
 
     if consent_log.present? && !consent_log.presented?
       redirect_to edit_consent_log_path(consent_form_id: consent_log.consent_form_id)
@@ -29,7 +29,7 @@ class CandidateListsController < ApplicationController
 
       empties.times do
         @candidate_list.candidates.build(term: '', definition: '',
-                                         user_id: @current_user.id)
+                                         user_id: current_user.id)
       end
 
       if @candidate_list.bingo_game.reviewed
@@ -55,7 +55,7 @@ class CandidateListsController < ApplicationController
       end
     else
       @candidate_list.transaction do
-        @candidate_list.bingo_game.project.group_for_user(@current_user).users.each do |user|
+        @candidate_list.bingo_game.project.group_for_user(current_user).users.each do |user|
           cl = @candidate_list.bingo_game.candidate_list_for_user(user)
           cl.group_requested = false
           cl.save!
@@ -107,7 +107,7 @@ class CandidateListsController < ApplicationController
     @candidate_list = CandidateList.new(id: -1,
                                         contributor_count: 1,
                                         is_group: false)
-    @candidate_list.user = @current_user
+    @candidate_list.user = current_user
     demo_project = Project.new(id: -1,
                                name: (t :demo_project),
                                course_id: -1)
@@ -126,12 +126,12 @@ class CandidateListsController < ApplicationController
                orig: (t 'candidate_lists.edit.title')
     demo_group = Group.new
     demo_group.name = t :demo_group
-    demo_group.users = [@current_user]
+    demo_group.users = [current_user]
     @candidate_list = CandidateList.new(id: -1,
                                         contributor_count: 1,
                                         is_group: false)
     @candidate_list.group = demo_group
-    @candidate_list.user = @current_user
+    @candidate_list.user = current_user
     demo_project = Project.new(id: -1,
                                name: (t :demo_project),
                                course_id: -1)
@@ -157,7 +157,7 @@ class CandidateListsController < ApplicationController
     # Add in the remainder elements
     4.times do
       @candidate_list.candidates.build(term: '', definition: '',
-                                       user_id: @current_user.id)
+                                       user_id: current_user.id)
     end
 
     @term_counts = {}
@@ -203,7 +203,7 @@ class CandidateListsController < ApplicationController
       end
       if merged_list.count < (required_terms - 1)
         merged_list.count.upto ( required_terms - 1) do
-          merged_list << Candidate.new('term' => '', 'definition' => '', user: @current_user)
+          merged_list << Candidate.new('term' => '', 'definition' => '', user: current_user)
         end
       end
 

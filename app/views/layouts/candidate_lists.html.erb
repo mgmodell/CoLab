@@ -13,7 +13,7 @@
     <% working = !( @diagnosis.nil? && @reaction.nil? ) %>
   </head>
   <body>
-    <div data-role="page" data-theme="<%= @current_user.nil? ? "a" : @current_user.theme.code %>">
+    <div data-role="page" data-theme="<%= current_user.nil? ? "a" : current_user.theme.code %>">
       <div data-role="header" data-position="fixed" style="overflow:hidden;" >
         <h1 id="title_head">
           <%= t :title %> <%= " : " + @title unless @title.nil? %>

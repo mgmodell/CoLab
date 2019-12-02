@@ -18,6 +18,8 @@ class BingoGamesController < ApplicationController
 
   before_action :check_viewer, only: %i[show index]
 
+  skip_before_action :set_locale
+
   include Demoable
 
   def show
@@ -29,14 +31,14 @@ class BingoGamesController < ApplicationController
           %i[ id topic description source group_option individual_count
               start_date end_date active lead_time group_discount
               reviewed project_id ])
-        resp[:topic] = @bingo_game.get_topic(@current_user.anonymize?)
+        resp[:topic] = @bingo_game.get_topic(current_user.anonymize?)
         resp[:timezone] = @bingo_game.course.timezone
         resp[:reviewed] = @bingo_game.reviewed?
         resp[:projects] = @bingo_game.course.projects
                                      .collect do |p|
           {
             id: p.id,
-            name: p.get_name(@current_user.anonymize?)
+            name: p.get_name(current_user.anonymize?)
           }
         end .as_json
         resp[:concepts] = @bingo_game.get_concepts
@@ -78,7 +80,7 @@ class BingoGamesController < ApplicationController
     if params[:id].to_i >= 1
       candidate_lists = CandidateList.where(
         bingo_game_id: params[:id],
-        user_id: @current_user.id
+        user_id: current_user.id
       )
                                      .includes(:current_candidate_list)
 
@@ -113,7 +115,7 @@ class BingoGamesController < ApplicationController
        bingo_boards: [:user, { bingo_cells: :candidate }]]
     ).find_by(id: params[:id])
     check_editor bingo_game: bingo_game
-    anon = @current_user.anonymize?
+    anon = current_user.anonymize?
     resp = {}
     # Get the users
     bingo_game.course.rosters.each do |r|
@@ -231,10 +233,10 @@ class BingoGamesController < ApplicationController
   def index
     @title = t '.title'
     @bingo_games = []
-    if @current_user.is_admin?
+    if current_user.is_admin?
       @bingo_games = BingoGame.includes(:course).all
     else
-      rosters = @current_user.rosters.includes(course: :bingo_games).instructor
+      rosters = current_user.rosters.includes(course: :bingo_games).instructor
       rosters.each do |roster|
         @bingo_games.concat roster.course.bingo_games.to_a
       end
@@ -450,8 +452,8 @@ class BingoGamesController < ApplicationController
     else
       @bingo_game = BingoGame.find(bingo_id)
       # Security check to support demos
-      redirect_to root_path unless @current_user.present? &&
-                                   @bingo_game.course.instructors.include?(@current_user)
+      redirect_to root_path unless current_user.present? &&
+                                   @bingo_game.course.instructors.include?(current_user)
 
       candidates = params[:candidates]
       entered_concepts = []
@@ -556,8 +558,8 @@ class BingoGamesController < ApplicationController
   def activate
     bingo_game = BingoGame.find(params[:bingo_game_id])
     check_editor bingo_game: bingo_game
-    if @current_user.is_admin? ||
-       bingo_game.course.get_roster_for_user(@current_user).role.code == 'inst'
+    if current_user.is_admin? ||
+       bingo_game.course.get_roster_for_user(current_user).role.code == 'inst'
       bingo_game.active = true
       bingo_game.save
     end
@@ -571,11 +573,11 @@ class BingoGamesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_game
     bg_test = BingoGame.joins(:course).includes(candidate_lists: { candidates: :concept }, course: :projects).find(params[:id])
-    if @current_user.is_admin?
+    if current_user.is_admin?
       @bingo_game = bg_test
     else
       @course = bg_test.course
-      if bg_test.course.rosters.instructor.where(user: @current_user).nil?
+      if bg_test.course.rosters.instructor.where(user: current_user).nil?
         redirect_to @course if @bingo_game.nil?
       else
         @bingo_game = bg_test
@@ -584,14 +586,14 @@ class BingoGamesController < ApplicationController
   end
 
   def check_viewer
-    redirect_to root_path unless @current_user.is_admin? ||
-                                 @current_user.is_instructor? ||
-                                 @current_user.is_researcher?
+    redirect_to root_path unless current_user.is_admin? ||
+                                 current_user.is_instructor? ||
+                                 current_user.is_researcher?
   end
 
   def check_editor(bingo_game:)
-    unless @current_user.is_admin? ||
-           !bingo_game.course.rosters.instructor.where(user: @current_user).nil?
+    unless current_user.is_admin? ||
+           !bingo_game.course.rosters.instructor.where(user: current_user).nil?
       redirect_to root_path
     end
   end

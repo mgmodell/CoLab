@@ -1,6 +1,6 @@
 <h1><%= t( :your_tasks ) %></h1>
 <% theme_code = get_theme_code %>
-<p><%= t 'home.greeting', name: @current_user.nil? ? "John" : @current_user.first_name %>,</br>
+<p><%= t 'home.greeting', name: current_user.nil? ? "John" : current_user.first_name %>,</br>
 <%= t 'home.tasks', count: @events.size %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">

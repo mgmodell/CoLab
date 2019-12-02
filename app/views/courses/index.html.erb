@@ -65,7 +65,7 @@
   </tbody>
 </table>
 <br>
-<%= link_to( t( 'courses.new.title' ), new_course_path ) if @current_user.is_admin? %>
+<%= link_to( t( 'courses.new.title' ), new_course_path ) if current_user.is_admin? %>
 <div data-role="popup" id="copyPop" data-theme="<%= theme_code %>" class="ui-corner-all">
   <%= form_tag copy_course_path, method: :get do %>
     <div style="padding:10px 20px;">

@@ -6,18 +6,18 @@ class GraphingController < ApplicationController
   def index
     @title = 'Reports'
     @user = current_user
-    @current_users_projects = []
+    current_users_projects = []
 
     # Get the assessments administered by the current user
     if @user.is_instructor?
       if @user.is_admin?
-        @current_users_projects = Project.all
+        current_users_projects = Project.all
       elsif @user.is_instructor?
         Roster.instructor.where(user_id: @user.id).each do |roster|
-          @current_users_projects.concat roster.course.projects.to_a
+          current_users_projects.concat roster.course.projects.to_a
         end
       end
-      return @current_users_projects
+      return current_users_projects
     else
       redirect_to root_url
     end
@@ -26,13 +26,13 @@ class GraphingController < ApplicationController
   def projects
     for_research = params[:for_research] == 'true'
     anon_req = params[:anonymous] == 'true'
-    anonymize = @current_user.anonymize? || @current_user.is_researcher? || anon_req
+    anonymize = current_user.anonymize? || current_user.is_researcher? || anon_req
     projects = []
-    if @current_user.admin || @current_user.is_researcher?
+    if current_user.admin || current_user.is_researcher?
       project_list = Project.all.to_a
     else
       project_list = Project.joins(course: :rosters)
-                            .where('rosters.user': @current_user,
+                            .where('rosters.user': current_user,
                                    'rosters.role': Roster.roles[:instructor])
                             .uniq.to_a
     end
@@ -48,7 +48,7 @@ class GraphingController < ApplicationController
     project_id = params[:project_id]
     for_research = params[:for_research] == 'true'
     anon_req = params[:anonymous] == 'true'
-    anonymize = @current_user.anonymize? || anon_req
+    anonymize = current_user.anonymize? || anon_req
 
     subjects = []
     case unit_of_analysis
@@ -76,7 +76,7 @@ class GraphingController < ApplicationController
     subject = params[:subject]
     for_research = params[:for_research] == 'true'
     anon_req = params[:anonymous] == 'true'
-    anonymize = @current_user.anonymize? || anon_req
+    anonymize = current_user.anonymize? || anon_req
 
     dataset = {
       unitOfAnalysis: nil,
@@ -91,8 +91,8 @@ class GraphingController < ApplicationController
     streams = dataset[:streams]
     users = {}
     # Security checks
-    if @current_user.is_admin? ||
-       project.course.instructors.include?(@current_user)
+    if current_user.is_admin? ||
+       project.course.instructors.include?(current_user)
       # Start pulling data
 
       groups = {}
@@ -234,7 +234,7 @@ class GraphingController < ApplicationController
   #
   def raw_data
     user = User.find(subject.to_i)
-    anonymize = @current_user.anonymize?
+    anonymize = current_user.anonymize?
 
     installments = Installment.joins(:assessment)
                               .where(user_id: subject.to_i, assessment: { project_id: assessment.to_i })

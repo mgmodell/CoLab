@@ -5,26 +5,26 @@ class HomeController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[demo_start get_quote]
 
   def index
-    @current_user = current_user
+    #current_user = current_user
     # The first thing we want to do is make sure they've had an opportunity to
     # complete any waiting consent forms
-    waiting_consent_logs = @current_user.waiting_consent_logs
+    waiting_consent_logs = current_user.waiting_consent_logs
 
     if !waiting_consent_logs.empty?
       redirect_to(controller: 'consent_logs',
                   action: 'edit',
                   consent_form_id: waiting_consent_logs[0].consent_form_id)
-    elsif @current_user.rosters.invited_student.count > 0
+    elsif current_user.rosters.invited_student.count > 0
       @waiting_rosters = current_user.rosters.invited_student
       render :rsvp
     elsif !current_user.welcomed?
-      redirect_to edit_user_registration_path(@current_user)
+      redirect_to edit_user_registration_path(current_user)
     end
     @first_name = current_user.first_name
     @waiting_student_tasks = current_user.waiting_student_tasks
     @waiting_instructor_tasks = current_user.waiting_instructor_tasks
 
-    @current_location = 'home'
+    current_location = 'home'
   end
 
   def get_quote
@@ -53,8 +53,11 @@ class HomeController < ApplicationController
                 .includes(:gender, :primary_language,
                           :cip_code, home_state: [:home_country],
                                      reactions: [narrative: [:scenario]])
-    @diversity_score = Group.calc_diversity_score_for_group users: users
-    @found_users = users.collect do |u|
+    diversity_score = Group.calc_diversity_score_for_group users: users
+    puts "\n\n\n\n\tscore #{diversity_score}\n\n\n"
+    puts emails
+    puts users.inspect
+    found_users = users.collect do |u|
       { email: u.email,
         name: u.informal_name(false),
         family_name: u.last_name,
@@ -62,7 +65,12 @@ class HomeController < ApplicationController
     end
     # Return the retrieved data
     respond_to do |format|
-      format.json
+      format.json do
+        render json: {
+          'found_users': found_users,
+          'diversity_score': diversity_score
+        }
+      end
     end
   end
 
@@ -75,8 +83,8 @@ class HomeController < ApplicationController
 
   def demo_start
     @title = t 'titles.demonstration'
-    if @current_user.nil?
-      @current_user = User.new(first_name: t(:demo_surname_1),
+    if current_user.nil?
+      current_user = User.new(first_name: t(:demo_surname_1),
                                last_name: t(:demo_fam_name_1),
                                timezone: t(:demo_user_tz))
     end

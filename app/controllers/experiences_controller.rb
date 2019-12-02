@@ -17,10 +17,10 @@ class ExperiencesController < ApplicationController
   def index
     @title = t('.title')
     @experiences = []
-    if @current_user.is_admin?
+    if current_user.is_admin?
       @experiences = Experience.all
     else
-      rosters = @current_user.rosters.instructor
+      rosters = current_user.rosters.instructor
       rosters.each do |roster|
         @experiences.concat roster.course.experiences.to_a
       end
@@ -71,9 +71,9 @@ class ExperiencesController < ApplicationController
     experience_id = params[:experience_id]
 
     experience = Experience.joins(course: { rosters: :user })
-                           .where(id: experience_id, users: { id: @current_user }).take
+                           .where(id: experience_id, users: { id: current_user }).take
 
-    consent_log = experience.course.get_consent_log user: @current_user
+    consent_log = experience.course.get_consent_log user: current_user
 
     if consent_log.present? && !consent_log.presented?
       redirect_to edit_consent_log_path(consent_form_id: consent_log.consent_form_id)
@@ -81,7 +81,7 @@ class ExperiencesController < ApplicationController
     elsif experience.nil? && !experience.is_open
       redirect_to '/', notice: t('experiences.wrong_course')
     else
-      reaction = experience.get_user_reaction(@current_user)
+      reaction = experience.get_user_reaction(current_user)
       week = reaction.next_week
       if !reaction.instructed?
         reaction.instructed = true
@@ -147,8 +147,8 @@ class ExperiencesController < ApplicationController
 
   def activate
     experience = Experience.find(params[:experience_id])
-    if @current_user.is_admin? ||
-       experience.course.get_roster_for_user(@current_user).role.instructor?
+    if current_user.is_admin? ||
+       experience.course.get_roster_for_user(current_user).role.instructor?
       experience.active = true
       experience.save
       unless experience.errors.empty?
@@ -164,12 +164,12 @@ class ExperiencesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_experience
     e_test = Experience.find(params[:id])
-    if @current_user.is_admin?
+    if current_user.is_admin?
       @experience = e_test
     else
       @experience = e_test
       @course = @experience.course
-      if e_test.course.rosters.instructor.where(user: @current_user).nil?
+      if e_test.course.rosters.instructor.where(user: current_user).nil?
         redirect_to @course if @experience.nil?
       else
         @experience = e_test
@@ -178,13 +178,13 @@ class ExperiencesController < ApplicationController
   end
 
   def check_viewer
-    redirect_to root_path unless @current_user.is_admin? ||
-                                 @current_user.is_instructor? ||
-                                 @current_user.is_researcher?
+    redirect_to root_path unless current_user.is_admin? ||
+                                 current_user.is_instructor? ||
+                                 current_user.is_researcher?
   end
 
   def check_editor
-    unless @current_user.is_admin? || @current_user.is_instructor?
+    unless current_user.is_admin? || current_user.is_instructor?
       redirect_to root_path
     end
   end

@@ -46,9 +46,9 @@ class CoursesController < ApplicationController
   def self_reg; end
 
   def self_reg_confirm
-    roster = Roster.where(user: @current_user, course: @course).take
+    roster = Roster.where(user: current_user, course: @course).take
     if roster.nil?
-      roster = @course.rosters.create(role: Roster.roles[:requesting_student], user: @current_user)
+      roster = @course.rosters.create(role: Roster.roles[:requesting_student], user: current_user)
     else
       if !((roster.enrolled_student? || roster.invited_student? ||
               roster.instructor? || roster.assistant?))
@@ -97,7 +97,7 @@ class CoursesController < ApplicationController
 
   def calendar
     events = @course.get_activities
-                    .reduce([]) { |acc, add| acc.concat add.get_events user: @current_user }
+                    .reduce([]) { |acc, add| acc.concat add.get_events user: current_user }
 
     respond_to do |format|
       format.json do
@@ -110,10 +110,10 @@ class CoursesController < ApplicationController
   def index
     @title = t('.title')
     @courses = []
-    if @current_user.admin?
+    if current_user.admin?
       @courses = Course.includes(:school).all
     else
-      rosters = @current_user.rosters.instructor.includes(course: :school)
+      rosters = current_user.rosters.instructor.includes(course: :school)
       rosters.each do |roster|
         @courses << roster.course
       end
@@ -123,15 +123,15 @@ class CoursesController < ApplicationController
   def new
     @title = t('.title')
     @course = nil
-    @course = if @current_user.school.nil?
+    @course = if current_user.school.nil?
                 Course.new
               else
-                @current_user.school.courses.new
+                current_user.school.courses.new
               end
-    @course.timezone = @current_user.timezone
+    @course.timezone = current_user.timezone
     @course.start_date = Date.tomorrow.beginning_of_day
     @course.end_date = 1.month.from_now.end_of_day
-    @course.rosters.new(role: Roster.roles[:instructor], user: @current_user)
+    @course.rosters.new(role: Roster.roles[:instructor], user: current_user)
   end
 
   def new_from_template
@@ -148,7 +148,7 @@ class CoursesController < ApplicationController
   def create
     @title = t('courses.new.title')
     @course = Course.new(course_params)
-    @course.rosters << Roster.new(role: Roster.roles[:instructor], user: @current_user)
+    @course.rosters << Roster.new(role: Roster.roles[:instructor], user: current_user)
 
     if @course.save
       redirect_to courses_url, notice: t('courses.create_success')
@@ -185,7 +185,7 @@ class CoursesController < ApplicationController
   end
 
   def accept_roster
-    r = Roster.students.where(id: params[:roster_id], user: @current_user).take
+    r = Roster.students.where(id: params[:roster_id], user: current_user).take
     if r.nil?
       flash[:notice] = t('courses.accept_fail')
     else
@@ -197,7 +197,7 @@ class CoursesController < ApplicationController
   end
 
   def decline_roster
-    r = Roster.students.where(id: params[:roster_id], user: @current_user).take
+    r = Roster.students.where(id: params[:roster_id], user: current_user).take
     if r.nil?
       flash[:notice] = t('courses.decline_fail')
     else
@@ -210,7 +210,7 @@ class CoursesController < ApplicationController
 
   def remove_instructor
     r = Roster.find(params[:roster_id])
-    if !@current_user.is_instructor? && !current_user.is_admin?
+    if !current_user.is_instructor? && !current_user.is_admin?
       flash[:notice] = t('courses.permission_fail')
       flash.keep
       redirect_to :root
@@ -241,8 +241,8 @@ class CoursesController < ApplicationController
       flash.keep
       redirect_to :root
     else
-      instructor_action = r.user != @current_user
-      if !instructor_action && r.user != @current_user
+      instructor_action = r.user != current_user
+      if !instructor_action && r.user != current_user
         flash[:notice] = t('courses.permission_fail')
         flash.keep
         redirect_to :root
@@ -262,10 +262,10 @@ class CoursesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_course
-    if @current_user.is_admin?
+    if current_user.is_admin?
       @course = Course.includes(:users).find(params[:id])
     else
-      @course = @current_user
+      @course = current_user
                 .rosters.instructor
                 .where(course_id: params[:id]).take.course
       redirect_to :show if @course.nil?
@@ -277,17 +277,17 @@ class CoursesController < ApplicationController
   end
 
   def check_viewer
-    redirect_to root_path unless @current_user.is_admin? ||
-                                 @current_user.is_instructor? ||
-                                 @current_user.is_researcher?
+    redirect_to root_path unless current_user.is_admin? ||
+                                 current_user.is_instructor? ||
+                                 current_user.is_researcher?
   end
 
   def check_admin
-    redirect_to root_path unless @current_user.is_admin?
+    redirect_to root_path unless current_user.is_admin?
   end
 
   def check_editor
-    unless @current_user.is_admin? || @current_user.is_instructor?
+    unless current_user.is_admin? || current_user.is_instructor?
       redirect_to root_path
     end
   end

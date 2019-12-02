@@ -1,4 +1,4 @@
-    <% theme_code = @current_user.nil? ? "a" : @current_user.theme.code  %>
+    <% theme_code = current_user.nil? ? "a" : current_user.theme.code  %>
     <div data-role="footer" data-position="fixed" data-theme="<%= theme_code %>">
       <div class="ui-grid-a">
         <div class="ui-block-a">
@@ -7,8 +7,8 @@
               <%= link_to t('home.title'), root_path,
                   :data => { :icon => "home", :role => "button" } %>
             <% end %>
-            <% unless @current_user.nil? || @current_location == "profile"  %>
-                      <%= link_to t(:profile), edit_user_registration_path(@current_user),
+            <% unless current_user.nil? || @current_location == "profile"  %>
+                      <%= link_to t(:profile), edit_user_registration_path(current_user),
                           :data => { :icon => 'user', :role => 'button' } %>
                       <% unless working %>
                       <a href="#diversityPop" data-rel="popup" data-position-to="window"
@@ -45,8 +45,8 @@
                         </form>
                       </div>
             <% end %>
-            <% if !@current_user.nil? %>
-              <% if @current_user.is_instructor? %>
+            <% if !current_user.nil? %>
+              <% if current_user.is_instructor? %>
                 <a href="#adminMenu" data-rel="popup" data-transition="fade"
                        class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-gear ui-btn-icon-left ui-btn-<%= theme_code %>"><%= raw (t :c_panel ) %></a>
                   <div data-role="popup" id="adminMenu" data-theme="<%= theme_code %>">
@@ -70,7 +70,7 @@
         <div class="ui-block-b">
           <div data-role="controlgroup" data-type="horizontal" data-mini="true" align="right">
 
-            <% if @current_user.nil? || @current_location == "home" %>
+            <% if current_user.nil? || @current_location == "home" %>
             <%= link_to t(:demo), demo_start_path,
                   :data => { :icon => "action", :role => "button" } %>
             <% end %>

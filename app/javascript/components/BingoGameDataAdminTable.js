@@ -57,6 +57,15 @@ class BingoGameDataAdminTable extends React.Component {
         {
           width: 120,
           flexGrow: 1.0,
+          label: "List Performance",
+          dataKey: "performance",
+          numeric: true,
+          disableSort: false,
+          visible: true
+        },
+        {
+          width: 120,
+          flexGrow: 1.0,
           label: "Worksheet Score",
           dataKey: "score",
           numeric: true,

@@ -13,6 +13,7 @@ Feature: Project Administration
     Given the project started "5/10/1978" and ends "10/29/2012", opened "Saturday" and closes "Monday"
     Given the course started "5/10/1976" and ended "11/01/2012"
 
+  @javascript
   Scenario: Instructor creates a new project
     Given the user is the instructor for the course
     Given the user logs in

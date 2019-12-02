@@ -75,14 +75,14 @@ class ConceptsController < ApplicationController
     if bingo_game_id > 0
       concepts = BingoGame.find(bingo_game_id).concepts.where('concepts.id > 0').uniq.to_a
     else
-      if @current_user.is_admin? || @current_user.is_instructor?
+      if current_user.is_admin? || current_user.is_instructor?
         substring = params[:search_string].strip
         criteria = 'true ?'
         concepts = []
         if substring.length > 2
           criteria = 'concepts.name LIKE ?'
           substring = "%#{substring}%"
-          if @current_user.is_instructor?
+          if current_user.is_instructor?
             concepts = Concept.where('concepts.id > 0')
                               .where(criteria, substring)
                               .order(bingo_games_count: :desc)
@@ -139,7 +139,7 @@ class ConceptsController < ApplicationController
   end
 
   def check_admin
-    redirect_to root_path unless @current_user.is_admin?
+    redirect_to root_path unless current_user.is_admin?
   end
 
   def concept_params

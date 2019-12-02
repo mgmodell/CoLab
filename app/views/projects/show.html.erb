@@ -6,8 +6,6 @@
     <ul>
       <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
       <li><a href="#groups" data-ajax="false">Group Assignments</a></li>
-      <li><a href="#summary" data-ajax="false"><%= t :resp_summ %></a></li>
-      <li><a href="#responses" data-ajax="false"><%= t :resp_data %></a></li>
     </ul>
   </div>
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
@@ -53,79 +51,16 @@
   <h2><%= t :groups %></h2>
   <p>
     <%= t 'projects.groups_intro', group_count: @project.groups.size %><br>
-    <br>
-    <%= link_to t('projects.recalculate_diversities'),
-        rescore_groups_path( id: @project.id ) %>
-    <%= form_tag add_group_path, method: :get do %>
-      <%= label_tag :group_name, t( 'projects.new_group' ) %>
-      <%= text_field_tag :group_name %>
-      <%= hidden_field_tag :project_id, @project.id %>
-      <%= submit_tag "Add!" %>
-    <% end %>
-    <% if @project.groups.any? || @project.course.rosters.enrolled.any? %>
-      <table id="groups_table" width="90%" data-role="table"
-          data-mode="columntoggle"
-          data-column-btn-theme="<%= theme_code %>" 
-          data-column-btn-text="<%= t :column_select %>"
-          class="table-stroke ui-shadow table-stripe table-ui-responsive ">
-        <thead>
-          <tr>
-            <th>
-              <%= t :groups_names %><br>
-            </th>
-            <% groups = @project.groups %>
-            <% groups.each do |group| %>
-              <th align="center" data-priority="0">
-                <%= group.get_name( anonymize ) %>
-              </th>
-            <% end %>
-            <th data-priority="0" rowspan='2'>[<%= t 'projects.no_group' %>]</th>
-          </tr>
-          <tr>
-            <th>
-              <%= t 'projects.diversity_scores' %><br>
-              <br>
-              <%= t :student_names %>
-            </th>
-            <% groups = @project.groups %>
-            <% groups.each do |group| %>
-              <td align="center">
-                <center>
-                  <%= group.diversity_score.nil? ? '--' : group.diversity_score %><br>
-                  <%= link_to "[#{t('projects.rescore')}]",
-                          rescore_group_path( id: @project.id, group_id: group.id ) %>
-                </center>
-              </td>
-            <% end %>
-          </tr>
-        </thead>
-        <tbody>
-          <% @project.course.rosters.includes( user: :emails ).enrolled.each do |roster| 
-             user = roster.user %>
-            <tr>
-              <td><%= mail_to user.email, user.name( anonymize ) %></td>
-              <% @project.groups.each do |group| %>
-                <td>
-                  <center><%= raw( "&#10004;" ) if group.has_user user %></center>
-                </td>
-              <% end %>
-              <td>
-                <center><%= raw( "&#10004;" ) if @project.group_for_user( user ).nil? %></center>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% end %>
+    <%= react_component "ProjectGroups", {
+      token: form_authenticity_token,
+      projectId: @project.id,
+      groupsUrl: groups_path(@project),
+      diversityCheckUrl: check_diversity_score_path,
+      diversityRescoreGroup: rescore_group_path(@project),
+      diversityRescoreGroups: rescore_groups_path(@project)
+      }
+      %>
   </p>
 </div>
-<div id="summary" class="ui-body-<%= theme_code %> ui-content">
-  <h2><%= t :resp_summ %></h2>
-</div>
-<div id="responses" class="ui-body-<%= theme_code %> ui-content">
-  <h2><%= t :resp_data %>
-    <h2>
-    </div>
-  </div>
   <%= link_to (t 'projects.edit.title'), edit_project_path(@project) %>
   <%= link_to (t :back_to_course), @project.course %>

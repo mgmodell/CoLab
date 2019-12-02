@@ -1,4 +1,4 @@
-<% theme_code = @current_user.nil? ? 'a' : @current_user.theme.code %>
+<% theme_code = current_user.nil? ? 'a' : current_user.theme.code %>
 <div data-role="tabs" id="tabs">
   <div data-role="navbar">
     <ul>
@@ -74,7 +74,7 @@
                 </td>
               </tr>
               <tr>
-              <% if @current_user.is_instructor? %>
+              <% if current_user.is_instructor? %>
                 <td width="20%">
               <%= f.input :researcher, as: :select,
                           input_html: { data: 
@@ -95,7 +95,7 @@
 
               <div class="ui-corner-all custom-corners">
                 <div class="ui-bar ui-bar-<%=theme_code %>">
-                  <h3><%= t 'devise.registrations.tell_about_personalized', name: (@current_user.first_name unless @current_user.first_name.nil? ) %></h3>
+                  <h3><%= t 'devise.registrations.tell_about_personalized', name: (current_user.first_name unless current_user.first_name.nil? ) %></h3>
                 </div>
                 <div class="ui-body ui-body-<%=theme_code %>">
               <%= f.association :school %>
@@ -151,7 +151,7 @@
   </div>
   <div id="courses" class="ui-body-<%= theme_code %> ui-content">
     <h2><%= t 'devise.registrations.my_courses' %></h2>
-    <%= t 'devise.registrations.my_courses_count', count: @current_user.courses.size %>
+    <%= t 'devise.registrations.my_courses_count', count: current_user.courses.size %>
         <table data-role="table"
             id="basicTable"
             data-column-btn-theme"<%= theme_code %>" 
@@ -188,24 +188,24 @@
             </th>
           </thead>
           <tbody>
-          <% @current_user.rosters.enrolled.includes( :course ).each do |roster| %>
+          <% current_user.rosters.enrolled.includes( :course ).each do |roster| %>
           <% course = roster.course %>
           <tr>
             <td><%= course.number %></td>
             <td><%= course.name %></td>
             <td>
-              <%= @current_user.get_bingo_performance( course_id: course.id ) %>%
+              <%= current_user.get_bingo_performance( course_id: course.id ) %>%
             </td>
             <td>
               <svg width="50" height="50"
-                onload="init_me( this, <%= @current_user.get_bingo_data( course_id: course.id ) %>);">
+                onload="init_me( this, <%= current_user.get_bingo_data( course_id: course.id ) %>);">
               </svg>
             </td>
             <td>
-              <%= @current_user.get_experience_performance( course_id: course.id ) %>%
+              <%= current_user.get_experience_performance( course_id: course.id ) %>%
             </td>
             <td>
-              <%= @current_user.get_assessment_performance( course_id: course.id ) %>%
+              <%= current_user.get_assessment_performance( course_id: course.id ) %>%
             </td>
           </tr>
           <% end %>
@@ -215,7 +215,7 @@
   </div>
   <div id="history" class="ui-body-<%= theme_code %> ui-content">
     <h2><%= t 'devise.registrations.activity_history' %></h2>
-      <% activities = @current_user.activity_history
+      <% activities = current_user.activity_history
       if activities.size < 1 %>
         <p><%= t 'devise.registrations.no_activities' %></p>
       <% else %>
@@ -244,7 +244,7 @@
       <tr>
         <% if activity.class.name == "BingoGame" && activity.reviewed %>
           <td><%= link_to activity.get_name( false ),
-                  bingo_list_stats_path( activity.candidate_list_for_user( @current_user ) ) %>
+                  bingo_list_stats_path( activity.candidate_list_for_user( current_user ) ) %>
           </td>
         <% else %>
           <td>
@@ -256,25 +256,25 @@
         <td><%= activity.end_date %></td>
         <td>
           <% if activity.class.name == "BingoGame" %>
-            <%= activity.candidate_list_for_user( @current_user ).performance %>%
+            <%= activity.candidate_list_for_user( current_user ).performance %>%
           <% elsif activity.class.name == "Project" %>
-            <%= @current_user.get_assessment_performance( course_id: activity.course.id ) %>%
+            <%= current_user.get_assessment_performance( course_id: activity.course.id ) %>%
           <% elsif activity.class.name == "Experience" %>
-            <%= @current_user.get_experience_performance( course_id: activity.course.id ) %>%
+            <%= current_user.get_experience_performance( course_id: activity.course.id ) %>%
           <% end %>
         </td>
         <td>
         <% if activity.class.name == "BingoGame" %>
-          <%= activity.candidate_list_for_user( @current_user ).get_concepts.size %> unique concepts
+          <%= activity.candidate_list_for_user( current_user ).get_concepts.size %> unique concepts
         <% elsif activity.class.name == "Experience" %>
-           <% if activity.get_user_reaction( @current_user ).status != "Not started" %>
+           <% if activity.get_user_reaction( current_user ).status != "Not started" %>
              <%= t 'devise.registrations.simulation_id', 
-                    sim_id: activity.get_user_reaction( @current_user ).sim_id %>
+                    sim_id: activity.get_user_reaction( current_user ).sim_id %>
            <% else %>
              <%= t 'devise.registrations.experience_not_started' %>
            <% end %>
         <% elsif activity.class.name == "Project" %>
-          <%= activity.get_performance(@current_user ) %>
+          <%= activity.get_performance(current_user ) %>
         <% else %>
           <%= t :coming_soon %>
         <% end %>
@@ -294,7 +294,7 @@
         <th><%= t ( :actions ) %></th>
       </thead>
       <tbody>
-    <% @current_user.consent_logs.each do |consent_log| %>
+    <% current_user.consent_logs.each do |consent_log| %>
       <tr>
         <td><%= consent_log.consent_form.name %></td>
         <td><%= consent_log.accepted ? t( 'devise.registrations.study_participant' ) :

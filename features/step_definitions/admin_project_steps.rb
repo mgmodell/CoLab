@@ -87,7 +87,10 @@ end
 
 Then /^the user sets the project "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%Y-%m-%dT%T')
+  puts new_date
+  puts page.find('#project_' + date_field_prefix + '_date').value
   page.find('#project_' + date_field_prefix + '_date').set(new_date)
+  puts page.find('#project_' + date_field_prefix + '_date').value
 end
 
 Then /^the user selects "([^"]*)" as "([^"]*)"$/ do |value, field|

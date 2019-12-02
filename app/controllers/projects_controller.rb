@@ -6,8 +6,11 @@ class ProjectsController < ApplicationController
                                        rescore_group rescore_groups]
   before_action :check_editor, except: %i[next diagnose react
                                           rescore_group rescore_groups
-                                          show index]
+                                          show index get_groups
+                                          set_groups]
   before_action :check_viewer, only: %i[show index]
+
+  skip_before_action :set_locale
 
   def show
     @title = t('.title')
@@ -20,10 +23,10 @@ class ProjectsController < ApplicationController
   def index
     @title = t('.title')
     @projects = []
-    if @current_user.is_admin?
+    if current_user.is_admin?
       @projects = Project.all
     else
-      rosters = @current_user.rosters.instructor
+      rosters = current_user.rosters.instructor
       rosters.each do |roster|
         @projects.concat roster.course.projects.to_a
       end
@@ -91,6 +94,77 @@ class ProjectsController < ApplicationController
     redirect_to @course, notice: t('projects.destroy_success')
   end
 
+  def set_groups
+    project = Project.includes( :groups, course: { rosters: :user } )
+                .joins( :groups, course: { rosters: :user } )
+                .find_by_id( params[:id] )
+
+    group_hash = { }
+    params[:groups].values.each do |g|
+      group = nil
+      if 0 < g[:id]
+        group = project.groups.find_by_id g[:id]
+        group.name = g[:name]
+      else
+        group = project.groups.build( name: g[:name] )
+      end
+      group.users = []
+      group_hash[ g[:id] ] = group
+
+    end
+    params[:students].values.each do |s|
+      student = project.rosters.find_by_user_id( s[:id] ).user
+      group = group_hash[ s[ :group_id ] ]
+      group.users << student unless group.nil?
+    end
+    group_hash.values.each do |group|
+      group.save
+    end
+
+    get_groups
+  end
+
+  def get_groups
+    project = Project.includes( rosters: { user: :emails }, groups: :users )
+                .joins( rosters: :user )
+                .left_outer_joins( groups: :users )
+                .find_by_id( params[:id] )
+
+    students = {}
+    project.rosters.enrolled.each do |roster|
+      student = roster.user
+      students[ student.id ] = {
+        id: student.id,
+        first_name: student.first_name,
+        last_name: student.last_name,
+        email: student.email
+      }
+    end
+
+    groups = {}
+    project.groups.each do |group|
+      groups[group.id] = {
+        id: group.id,
+        name: group.name,
+        diversity: group.diversity_score
+      }
+      group.users.each do |user|
+        students[ user.id ][ :group_id ] = group.id
+      end
+    end
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          groups: groups,
+          students: students
+        }
+
+      end
+    end
+
+  end
+
   def remove_group
     group = Group.find(params[:group_id])
     group&.delete
@@ -107,13 +181,21 @@ class ProjectsController < ApplicationController
 
   def rescore_group
     @title = t('.title')
+        puts "\n\n\n\t format: #{params}\n\n\n\n"
     group = @project.groups.where(id: params[:group_id]).take
     if group.present?
       group.calc_diversity_score
       group.save
       logger.debug group.errors.full_messages unless group.errors.empty?
 
-      redirect_to @project, notice: t('projects.diversity_calculated')
+      respond_to do |format|
+        format.json do
+          get_groups
+        end
+        format.html do
+          redirect_to @project, notice: t('projects.diversity_calculated')
+        end
+      end
     else
       redirect_to @project, notice: t('projects.wrong_group')
     end
@@ -127,13 +209,20 @@ class ProjectsController < ApplicationController
       logger.debug group.errors.full_messages unless group.errors.empty?
     end
 
-    redirect_to @project, notice: t('projects.diversities_calculated')
+      respond_to do |format|
+        format.json do
+          get_groups
+        end
+        format.html do
+          redirect_to @project, notice: t('projects.diversities_calculated')
+        end
+      end
   end
 
   def activate
     @title = t('projects.show.title')
-    if @current_user.is_admin? ||
-       @project.course.get_user_role(@current_user) == 'instructor'
+    if current_user.is_admin? ||
+       @project.course.get_user_role(current_user) == 'instructor'
       @project.active = true
       @project.save
       logger.debug @project.errors.full_messages unless @project.errors.empty?
@@ -146,10 +235,10 @@ class ProjectsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_project
     p_test = Project.find(params[:id])
-    if @current_user.is_admin?
+    if current_user.is_admin?
       @project = p_test
     else
-      if p_test.course.rosters.instructor.where(user: @current_user).nil?
+      if p_test.course.rosters.instructor.where(user: current_user).nil?
         @course = @project.course
         redirect_to @course if @project.nil?
       else
@@ -159,14 +248,15 @@ class ProjectsController < ApplicationController
   end
 
   def check_viewer
-    redirect_to root_path unless @current_user.is_admin? ||
-                                 @current_user.is_instructor? ||
-                                 @current_user.is_researcher?
+    redirect_to root_path unless current_user.is_admin? ||
+                                 current_user.is_instructor? ||
+                                 current_user.is_researcher?
   end
 
   def check_editor
-    unless @current_user.is_admin? || @current_user.is_instructor?
+    unless current_user.is_admin? || current_user.is_instructor?
       redirect_to root_path
+      #TODO: handle JSON response
     end
   end
 

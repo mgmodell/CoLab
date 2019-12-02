@@ -15,9 +15,15 @@ Rails.application.routes.draw do
     get 'projects/add_group' => 'projects#add_group', as: :add_group
     get 'projects/remove_group' => 'projects#remove_group', as: :remove_group
     get 'projects/activate/:id' => 'projects#activate', as: :activate_project
-    get 'projects/rescore_group/:id/:group_id' => 'projects#rescore_group', 
+    get 'projects/groups/:id' => 'projects#get_groups',
+        as: :groups,
+        constraints: ->(req) { req.format == :json }
+    patch 'projects/groups/:id' => 'projects#set_groups',
+        as: :set_groups,
+        constraints: ->(req) { req.format == :json }
+    post 'projects/rescore_group/:id' => 'projects#rescore_group', 
         as: :rescore_group
-    get 'projects/rescore_groups/:id' => 'projects#rescore_groups', 
+    post 'projects/rescore_groups/:id' => 'projects#rescore_groups', 
         as: :rescore_groups
     get 'experiences/activate/:experience_id' => 'experiences#activate', 
         as: :activate_experience
@@ -74,7 +80,7 @@ Rails.application.routes.draw do
   scope 'infra' do
     post 'quote' => 'home#get_quote', as: :get_quote
     get 'states_for_country/:country_code' => 'home#states_for_country', as: :states_for
-    get 'diversity_score_for' => 'home#check_diversity_score',
+    post 'diversity_score_for' => 'home#check_diversity_score',
         as: :check_diversity_score
     get 'locales/:ns' => 'locales#get_resources', as: :i18n,
         constraints: ->(req) { req.format == :json }

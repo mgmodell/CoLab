@@ -44,7 +44,7 @@ class BingoBoardsController < ApplicationController
 
     bingo_board = BingoBoard.new(
       bingo_game: bingo_game,
-      user: @current_user,
+      user: current_user,
       iteration: 0,
       performance: 88
     )
@@ -69,9 +69,9 @@ class BingoBoardsController < ApplicationController
     bingo_game = BingoGame .find(params[:bingo_game_id])
     bingo_board = bingo_game.bingo_boards.playable
                             .includes(:bingo_game, bingo_cells: :concept)
-                            .where(user_id: @current_user.id).take
+                            .where(user_id: current_user.id).take
     worksheet = bingo_game.bingo_boards.worksheet
-                          .where(user_id: @current_user.id).take
+                          .where(user_id: current_user.id).take
     board_for_game_helper bingo_board: bingo_board,
                           worksheet: worksheet,
                           bingo_game: bingo_game,
@@ -87,7 +87,7 @@ class BingoBoardsController < ApplicationController
     if bingo_board.nil?
       bingo_board = BingoBoard.new
       bingo_board.bingo_game = bingo_game
-      bingo_board.user = @current_user
+      bingo_board.user = current_user
       bingo_board.iteration = 0
     end
 
@@ -153,8 +153,8 @@ class BingoBoardsController < ApplicationController
     wksheet = BingoBoard.new(
       id: -42,
       iteration: 0,
-      user_id: @current_user.id,
-      user: @current_user,
+      user_id: current_user.id,
+      user: current_user,
       bingo_cells: [],
       bingo_game: bingo_game,
       board_type: :worksheet
@@ -230,7 +230,7 @@ class BingoBoardsController < ApplicationController
     bingo_game = BingoGame .find(params[:bingo_game_id])
     wksheet = bingo_game.bingo_boards.worksheet
                         .includes(:bingo_game, bingo_cells: %i[concept candidate])
-                        .where(user_id: @current_user.id).take
+                        .where(user_id: current_user.id).take
 
     if wksheet.blank?
       candidates = bingo_game.candidates.acceptable.to_a
@@ -245,8 +245,8 @@ class BingoBoardsController < ApplicationController
 
       wksheet = BingoBoard.new(
         iteration: 0,
-        user_id: @current_user.id,
-        user: @current_user,
+        user_id: current_user.id,
+        user: current_user,
         bingo_game: bingo_game,
         board_type: :worksheet
       )
@@ -293,7 +293,7 @@ class BingoBoardsController < ApplicationController
   def index
     @title = t '.title'
     # Narrow down to those available to the user
-    @bingo_boards = BingoBoard.where user: @current_user
+    @bingo_boards = BingoBoard.where user: current_user
     respond_to do |format|
       format.json do
         render json: @bingo_boards.collect do |board|
@@ -308,8 +308,8 @@ class BingoBoardsController < ApplicationController
     @board = BingoBoard.new(
       id: -42,
       iteration: 0,
-      user_id: @current_user.id,
-      user: @current_user,
+      user_id: current_user.id,
+      user: current_user,
       board_type: :playable
     )
     # @board.assign_attributes(bingo_board_params)
@@ -334,19 +334,19 @@ class BingoBoardsController < ApplicationController
   def update
     bingo_game_id = params[:bingo_game_id]
     @board = BingoBoard.playable.where(
-      user_id: @current_user.id,
+      user_id: current_user.id,
       bingo_game_id: bingo_game_id
     ).take
     if @board.nil?
       @board = BingoBoard.new(
-        user_id: @current_user.id,
-        user: @current_user,
+        user_id: current_user.id,
+        user: current_user,
         bingo_game_id: bingo_game_id
       )
     end
 
     iteration = @board.iteration
-    # @board.user_id = @current_user.id
+    # @board.user_id = current_user.id
     # @board.bingo_game_id = bingo_game_id
     @board.iteration += iteration
 
@@ -446,8 +446,8 @@ class BingoBoardsController < ApplicationController
   end
 
   def check_editor
-    unless @current_user.is_admin? ||
-           @bingo_board.bingo_game.course.rosters.instructor.where(user: @current_user).present?
+    unless current_user.is_admin? ||
+           @bingo_board.bingo_game.course.rosters.instructor.where(user: current_user).present?
       redirect_to root_path
     end
   end

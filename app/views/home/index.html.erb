@@ -42,7 +42,7 @@
           <% @waiting_instructor_tasks.each do |task| %>
             <tr>
               <td data-priority="0">
-                <%= task_link task: task, anonymize: anonymize, user: @current_user  %>
+                <%= task_link task: task, anonymize: anonymize, user: current_user  %>
               </td>
               <td align="center" data-priority="1"><%= t 'bingo_games.review_candidates.title' %></td>
               <td align="center" data-priority="1"><%= task.status %>%</td>
@@ -84,14 +84,14 @@
       <tbody>
         <% @waiting_student_tasks.each do |task| %>
           <% if task.class == Assessment %>
-            <% group = task.group_for_user( @current_user )%>
+            <% group = task.group_for_user( current_user )%>
             <tr>
               <td data-priority="0">
-                <%= task_link task: task, anonymize: anonymize, user: @current_user  %>
+                <%= task_link task: task, anonymize: anonymize, user: current_user  %>
               </td>
               <td><%= t 'home.sapa' %></td>
               <td>
-                <% if(task.is_completed_by_user @current_user) %>
+                <% if(task.is_completed_by_user current_user) %>
                   <em><%= t :complete %></em>
                 <% else %>
                   <em><%= t :not_started %></em>
@@ -113,13 +113,13 @@
               </td>
               <td>
                 <%= render :partial => "shared/consent", :locals =>
-                  { log: task.course.get_consent_log( user: @current_user )} %>
+                  { log: task.course.get_consent_log( user: current_user )} %>
               </td>
             </tr>
           <% elsif task.class == BingoGame %>
-            <tr><% candidate_list = task.candidate_list_for_user( @current_user ) %>
+            <tr><% candidate_list = task.candidate_list_for_user( current_user ) %>
               <td data-priority="0">
-                <%= task_link task: task, anonymize: anonymize, user: @current_user  %>
+                <%= task_link task: task, anonymize: anonymize, user: current_user  %>
               </td>
               <% if task.is_open? %>
                 <td><%= t 'candidates.submission' %></td>
@@ -133,8 +133,8 @@
                 </td>
               <% end %>
               <td>
-                <% if task.project.present? && task.project.group_for_user( @current_user ) %>
-                  <%= task.project.group_for_user( @current_user ).get_name( anonymize ) %>
+                <% if task.project.present? && task.project.group_for_user( current_user ) %>
+                  <%= task.project.group_for_user( current_user ).get_name( anonymize ) %>
                 <% else %>
                   N/A
                 <% end %>
@@ -159,14 +159,14 @@
             </td>
             <td>
               <%= render :partial => "shared/consent", :locals =>
-                { log: task.course.get_consent_log( user: @current_user )} %>
+                { log: task.course.get_consent_log( user: current_user )} %>
             </td>
           </tr>
         <% else %>
-          <% reaction = task.get_user_reaction( @current_user ) %>
+          <% reaction = task.get_user_reaction( current_user ) %>
           <tr>
             <td data-priority="0">
-              <%= task_link task: task, anonymize: anonymize, user: @current_user  %>
+              <%= task_link task: task, anonymize: anonymize, user: current_user  %>
             </td>
             <td><%= t 'experience.simulation' %></td>
             <td>
@@ -190,7 +190,7 @@
             </td>
             <td>
               <%= render :partial => "shared/consent", :locals =>
-                { log: task.course.get_consent_log( user: @current_user )} %>
+                { log: task.course.get_consent_log( user: current_user )} %>
             </td>
           </tr>
         <% end %>
@@ -208,7 +208,7 @@
     <ul>
       <% meetings.each do |meeting| %>
         <li>
-          <%= task_link task: meeting, anonymize: anonymize, user: @current_user  %>
+          <%= task_link task: meeting, anonymize: anonymize, user: current_user  %>
         </li>
       <% end %>
     </ul>
@@ -223,7 +223,7 @@
     <ul>
       <% meetings.each do |meeting| %>
         <li>
-          <%= task_link task: meeting, anonymize: anonymize, user: @current_user  %>
+          <%= task_link task: meeting, anonymize: anonymize, user: current_user  %>
         </li>
       <% end %>
     </ul>

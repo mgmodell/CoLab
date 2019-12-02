@@ -58,7 +58,7 @@ class SchoolsController < ApplicationController
   end
 
   def check_admin
-    redirect_to root_path unless @current_user.is_admin?
+    redirect_to root_path unless current_user.is_admin?
   end
 
   def school_params
