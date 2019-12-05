@@ -165,6 +165,7 @@ class ProjectsController < ApplicationController
 
   end
 
+
   def remove_group
     group = Group.find(params[:group_id])
     group&.delete

@@ -49,6 +49,8 @@
         <td><%= course.bingo_games.size %></td>
         <td>
           <%= link_to t( :show ), course_path( course ) %>&nbsp;|&nbsp;
+          <%= link_to t( :scores ),
+            course_scores_path( course, format: :csv) %>&nbsp;|&nbsp;
           <%= link_to t( :edit ), edit_course_path(course) %>&nbsp;|&nbsp;
           <%= link_to t( :copy ), "#", onclick:
             raw( "popCopyPop('#{course.number}',

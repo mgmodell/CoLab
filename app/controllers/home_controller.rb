@@ -35,6 +35,7 @@ class HomeController < ApplicationController
     end
   end
 
+
   def states_for_country
     country_code = params[:country_code]
     country = HomeCountry.where(code: country_code).take

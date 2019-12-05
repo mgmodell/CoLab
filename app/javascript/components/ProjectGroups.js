@@ -30,7 +30,7 @@ class ProjectGroups extends React.Component {
     super(props);
     this.state = {
       dirty: false,
-      saving: false,
+      working: true,
       filter_text: '',
       sortBy: 'last_name',
       sortDirection: SortDirection.DESC,
@@ -168,7 +168,7 @@ class ProjectGroups extends React.Component {
   getGroups( ){
     const url = this.props.groupsUrl + '.json';
     this.setState({
-      saving: true
+      working: true
     })
     fetch( url, {
       method: 'GET',
@@ -189,7 +189,7 @@ class ProjectGroups extends React.Component {
       })
       .then(data => {
         this.setState({
-          saving: false,
+          working: false,
           groups_raw: data.groups,
           students_raw: data.students,
           groups: Object.values( data.groups ),
@@ -200,7 +200,7 @@ class ProjectGroups extends React.Component {
 
   rescoreGroup( event, group_id ){
     this.setState({
-      saving: true
+      working: true
     })
     const g_req = {
       group_id: group_id
@@ -230,7 +230,7 @@ class ProjectGroups extends React.Component {
       } )
       .then(data => {
         this.setState({
-          saving: false,
+          working: false,
           groups_raw: data.groups,
           students_raw: data.students,
           groups: Object.values( data.groups ),
@@ -241,7 +241,7 @@ class ProjectGroups extends React.Component {
 
   recalcDiversity( ){
     this.setState({
-      saving: true
+      working: true
     })
     fetch(this.props.diversityRescoreGroups + '.json',{
       method: 'POST',
@@ -265,7 +265,7 @@ class ProjectGroups extends React.Component {
       } )
       .then(data => {
         this.setState({
-          saving: false,
+          working: false,
           groups_raw: data.groups,
           students_raw: data.students,
           groups: Object.values( data.groups ),
@@ -277,7 +277,7 @@ class ProjectGroups extends React.Component {
 
   saveGroups( ){
     this.setState({
-      saving: true
+      working: true
     })
     fetch(this.props.groupsUrl + '.json',{
       method: 'PATCH',
@@ -305,7 +305,7 @@ class ProjectGroups extends React.Component {
       } )
       .then(data => {
         this.setState({
-          saving: false,
+          working: false,
           groups_raw: data.groups,
           students_raw: data.students,
           groups: Object.values( data.groups ),
@@ -322,7 +322,7 @@ class ProjectGroups extends React.Component {
     };
     return (
       <Paper>
-        { this.state.saving ?
+        { this.state.working ?
           ( <LinearProgress /> ) :
           null }
         <Toolbar>

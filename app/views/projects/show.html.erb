@@ -9,6 +9,17 @@
     </ul>
   </div>
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
+    <%= react_component "ProjectDataAdmin", {
+      token: form_authenticity_token,
+      projectId: @project.id,
+      projectUrl: projects_path,
+      activateProjectUrl: activate_project_path,
+      groupsUrl: groups_path(@project),
+      diversityCheckUrl: check_diversity_score_path,
+      diversityRescoreGroup: rescore_group_path(@project),
+      diversityRescoreGroups: rescore_groups_path(@project)
+      }
+      %>
     <h2><%= t '.title' %></h2>
     <p>
       <h3><%= t :name %>:</h3>

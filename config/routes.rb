@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     get 'course/qr/:id', to: 'courses#qr', as: :course_reg_qr
     get 'projects/add_group' => 'projects#add_group', as: :add_group
     get 'projects/remove_group' => 'projects#remove_group', as: :remove_group
-    get 'projects/activate/:id' => 'projects#activate', as: :activate_project
+    get 'projects/activate' => 'projects#activate', as: :activate_project
     get 'projects/groups/:id' => 'projects#get_groups',
         as: :groups,
         constraints: ->(req) { req.format == :json }
@@ -38,6 +38,9 @@ Rails.application.routes.draw do
     patch 'course/proc_reg_requests' => 'courses#proc_reg_requests',
         as: :proc_course_reg_requests,
         constraints: ->(req) { req.format == :json }
+    get 'course/scores/:id' => 'courses#score_sheet',
+        as: :course_scores,
+        constraints: ->(req) { req.format == :csv }
     resources :courses, :projects, :experiences, :bingo_games, :schools,
               :consent_forms
     resources :concepts, except: [:destroy, :create]

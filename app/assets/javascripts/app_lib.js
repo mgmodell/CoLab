@@ -140,31 +140,6 @@ function leastSquares(xSeries, ySeries) {
 //Add some code to the page.
 $(document).ready(function(){
 
-  $("#calc_diversity").click(function() {
-    var emails;
-    emails = $("#emails_for_ds").val( );
-    url = "/infra/diversity_score_for?emails=";
-    url += encodeURIComponent( emails );
-    $.getJSON(url, function(data) {
-      var i, user_list;
-      i = 0;
-      user_list = "<ol>"
-      while (i < data.found_users.length){
-        var user = data.found_users[ i ];
-        user_list += "<li><a href='mailto:" + user.email + "'>";
-        user_list += user.name; 
-        user_list += "</a></li>";
-        i++;
-      }
-      user_list += "</ol>";
-      console.log( user_list );
-      $("#users").html( user_list );
-      $("#diversity_score").html( data.diversity_score );
-      $("#results").show( );
-    });
-    return false;
-  });
-
   $(".country_select").change(function() {
     var country_code, state_select, url;
     country_code = $(this).val();

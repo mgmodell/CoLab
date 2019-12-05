@@ -3,7 +3,11 @@
 class LocalesController < ApplicationController
   def get_resources
     ns = params[:ns]
-    texts = I18n.t ns
+    if 'base' == ns
+      texts = I18n.t '.'
+    else
+      texts = I18n.t ns
+    end
 
     render json: texts
   end
