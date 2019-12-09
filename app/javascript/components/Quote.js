@@ -1,23 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-class Quote extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      quote: {
-        text: "",
-        attribution: "..."
-      }
-    };
-  }
-  updateQuote() {
-    fetch(this.props.url, {
+
+export default function Quote( props ) {
+  const [quote, setQuote] = useState( '' );
+  const [attribution, setAttribution] = useState( '' );
+
+  const updateQuote = ()=> {
+    fetch(props.url, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
+        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -28,27 +23,19 @@ class Quote extends React.Component {
         }
       })
       .then(data => {
-        return this.setState({
-          quote: {
-            text: data.text_en,
-            attribution: data.attribution
-          }
-        });
+        setQuote( data.text_en );
+        setAttribution( data.attribution );
       });
   }
-  componentDidMount() {
-    this.updateQuote();
-  }
-  render() {
-    return (
-      <p onClick={() => this.updateQuote()} className="quotes">
-        {this.state.quote.text} ({this.state.quote.attribution})
-      </p>
-    );
-  }
+  useEffect( ()=>updateQuote( ), [ ] )
+
+  return (
+    <p onClick={() => updateQuote()} className="quotes">
+      {quote} ({attribution})
+    </p>
+  );
 }
 Quote.propTypes = {
   url: PropTypes.string,
   token: PropTypes.string
 };
-export default Quote;
