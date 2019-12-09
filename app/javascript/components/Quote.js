@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 export default function Quote( props ) {
-  const [quote, setQuote] = useState( '' );
-  const [attribution, setAttribution] = useState( '' );
+  const [quote, setQuote] = useState( { text: '', attribution: '' } );
 
   const updateQuote = ()=> {
     fetch(props.url, {
@@ -23,15 +22,14 @@ export default function Quote( props ) {
         }
       })
       .then(data => {
-        setQuote( data.text_en );
-        setAttribution( data.attribution );
+        setQuote( {text: data.text_en, attribution: data.attribution } );
       });
   }
   useEffect( ()=>updateQuote( ), [ ] )
 
   return (
     <p onClick={() => updateQuote()} className="quotes">
-      {quote} ({attribution})
+      {quote.text} ({quote.attribution})
     </p>
   );
 }
