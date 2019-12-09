@@ -6,14 +6,16 @@ import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
-import TableSortLabel from '@material-ui/core/TableSortLabel'
 import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import get_i18n from './i18n';
 
 import CompareIcon from '@material-ui/icons/Compare';
-
-import Popup from "reactjs-popup";
 
 const t = get_i18n( 'base' );
 
@@ -22,10 +24,13 @@ class DiversityCheck extends React.Component {
   constructor( props ){
     super( props );
     this.state = {
+      dialogOpen: false,
       emails: '',
       diversity_score: null,
       found_users: [ ]
     }
+    this.openDialog = this.openDialog.bind( this );
+    this.closeDialog = this.closeDialog.bind( this );
     this.handleChange = this.handleChange.bind( this );
     this.handleClear = this.handleClear.bind( this );
     this.calcDiversity = this.calcDiversity.bind( this );
@@ -73,51 +78,72 @@ class DiversityCheck extends React.Component {
     })
   }
 
+  openDialog( ){
+    console.log( 'hi' )
+    this.setState({
+      dialogOpen: true
+    })
+  }
+
+  closeDialog( ){
+    this.setState({
+      dialogOpen: false
+    })
+  }
+
   render () {
     return (
-      <Popup trigger={
-        <Button variant='contained' size='small'>
+      <React.Fragment>
+        <Button variant='contained' size='small' onClick={()=>this.openDialog( )}>
           <CompareIcon />
           {t("calc_diversity")}
         </Button>
-        } position='top left'>
-        <div>
-        <h1>{t('calc_it')}</h1>
-        {t('ds_emails_lbl')}
-        <TextField
-          value={this.state.emails}
-          onChange={()=>this.handleChange( event )} />
-        <Button variant='contained' onClick={()=>this.calcDiversity( )}>
-          {t('calc_diversity_sub')}
-        </Button>
-        <Button variant='contained' onClick={()=>this.handleClear( )}>
-          Clear
-        </Button>
+        <Dialog open={this.state.dialogOpen} onClose={()=>this.closeDialog()}
+                aria-labelledby={t('calc_id')}>
+          <DialogTitle>
+            {t('calc_it')}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              {t('ds_emails_lbl')}
+            </DialogContentText>
+            <TextField
+              value={this.state.emails}
+              onChange={()=>this.handleChange( event )} />
 
-        {this.state.found_users.length > 0 ? (
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell>
-                {this.state.found_users.map( (user)=>{
-                  return (
-                    <a key={user.email} href={'mailto:' + user.email}>
-                      {user.name}
-                      <br/>
-                    </a>
-                  )
-                } ) }
-              </TableCell>
-              <TableCell valign='middle' align='center'>
-                {this.state.diversity_score}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table> )
-        : null }
+            {this.state.found_users.length > 0 ? (
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    {this.state.found_users.map( (user)=>{
+                      return (
+                        <a key={user.email} href={'mailto:' + user.email}>
+                          {user.name}
+                          <br/>
+                        </a>
+                      )
+                    } ) }
+                  </TableCell>
+                  <TableCell valign='middle' align='center'>
+                    {this.state.diversity_score}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table> )
+            : null }
+            <DialogActions>
+              <Button variant='contained' onClick={()=>this.calcDiversity( )}>
+                {t('calc_diversity_sub')}
+              </Button>
+              <Button variant='contained' onClick={()=>this.handleClear( )}>
+                Clear
+              </Button>
+            </DialogActions>
+          </DialogContent>
+        </Dialog>
 
-        </div>
-      </Popup>
+      </React.Fragment>
     );
   }
 }
