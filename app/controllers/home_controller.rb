@@ -36,6 +36,22 @@ class HomeController < ApplicationController
   end
 
 
+  def simple_profile
+    respond_to do |format|
+      format.json do
+        render json: {
+          id: @current_user.id,
+          first_name: @current_user.first_name,
+          last_name: @current_user.last_name,
+          theme: @current_user.theme.code,
+          timezone: @current_user.timezone,
+          language: @current_user.language.code
+        }
+
+      end
+    end
+  end
+
   def states_for_country
     country_code = params[:country_code]
     country = HomeCountry.where(code: country_code).take

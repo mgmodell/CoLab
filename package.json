@@ -44,6 +44,7 @@
     "react-draft-wysiwyg": "^1.13.2",
     "react-draggable": "^4.0.3",
     "react-render-html": "^0.6.0",
+    "react-sweet-state": "^1.1.1",
     "react-virtualized": "^9.21.0",
     "react_ujs": "^2.5.0",
     "reactjs-popup": "^1.5.0",

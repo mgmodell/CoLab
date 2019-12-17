@@ -11,6 +11,7 @@ import {
 } from '@material-ui/pickers'
 
 import LuxonUtils from '@date-io/luxon'
+import { useUserStore } from './UserStore';
 
 export default function ProjectDataAdmin( props ){
   const [dirty, setDirty] = useState( false );
@@ -18,6 +19,7 @@ export default function ProjectDataAdmin( props ){
   const [factorPacks, setFactorPacks] = useState( [ ] );
   const [styles, setStyles] = useState( [ ] );
   const [project, setProject] = useState( { id: props.projectId } );
+  const [user, userActions] = useUserStore( );
 
   const getProject = ()=>{
     setDirty( true );
@@ -47,7 +49,12 @@ export default function ProjectDataAdmin( props ){
     } );
 
   }
-  useEffect( ()=>getProject( ), [] )
+  useEffect( ()=>{
+    if( !user.loaded ){
+      userActions.fetch( props.token );
+    }
+    getProject( );
+  }, [] )
 
   const toggleChecked = ( ) => {
 

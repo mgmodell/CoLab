@@ -83,6 +83,8 @@ Rails.application.routes.draw do
   scope 'infra' do
     post 'quote' => 'home#get_quote', as: :get_quote
     get 'states_for_country/:country_code' => 'home#states_for_country', as: :states_for
+    get 'simple_profile' => 'home#simple_profile', as: :simple_profile,
+        constraints: ->(req) { req.format == :json }
     post 'diversity_score_for' => 'home#check_diversity_score',
         as: :check_diversity_score
     get 'locales/:ns' => 'locales#get_resources', as: :i18n,
