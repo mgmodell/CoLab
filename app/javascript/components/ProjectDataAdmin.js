@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import LinearProgress from '@material-ui/core/LinearProgress';
 import TextField from '@material-ui/core/TextField';
@@ -12,50 +12,67 @@ import {
 
 import LuxonUtils from '@date-io/luxon'
 
-class ProjectDataAdmin extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      dirty: false,
-      working: true,
-      project: {
-        name: '',
-      },
-      factor_packs: [ ],
-      styles: [ ]
-    }
+export default function ProjectDataAdmin( props ){
+  const [dirty, setDirty] = useState( false );
+  const [working, setWorking] = useState( true );
+  const [factorPacks, setFactorPacks] = useState( [ ] );
+  const [styles, setStyles] = useState( [ ] );
+  const [project, setProject] = useState( { id: props.projectId } );
+
+  const getProject = ()=>{
+    setDirty( true );
+    const url= props.url + '/' + project.id + '.json';
+    fetch( url, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Accepts: 'application/json',
+        'X-CSRF-Token': props.token
+      }
+    })
+    .then( response => {
+      if( response.ok ){
+        return response.json( );
+      } else {
+        console.log( 'error' );
+      }
+    })
+    .then( data => {
+      setFactorPacks( data.factorPacks );
+      setStyles( data.styles );
+      setProject( data.project );
+      setWorking( false );
+      setDirty( false );
+    } );
+
+  }
+  useEffect( ()=>getProject( ), [] )
+
+  const toggleChecked = ( ) => {
+
   }
 
-  componentDidMount( ){
-    //TODO: do that fetching thing
-
-  }
-
-  toggleChecked( ){
-
-  }
-
-  render () {
     return (
       <Paper>
-        { this.state.working ? 
+        { working ? 
           <LinearProgress /> :
           null }
           <TextField
             label='Project Name'
-            value={this.state.project.name}
+            value={project.name}
             fullWidth={true}
             onChange={(event)=>handleChange( event, 'name' )} />
           <TextField
             label='Project Description'
-            value={this.state.project.desscription}
+            value={project.description}
             fullWidth={true}
             onChange={(event)=>handleChange( event, 'description' )} />
           <FormControlLabel
             control={
               <Switch
-                checked={this.state.active}
-                onChange={this.toggleChecked}
+                checked={project.active}
+                onChange={toggleChecked}
               />}
             label='Active' />
         
@@ -66,7 +83,7 @@ class ProjectDataAdmin extends React.Component {
             format='MM/dd/yyyy'
             margin='normal'
             label='Project Start Date'
-            value={this.state.project.start_date}
+            value={project.start_date}
             onChange={(event)=>handleDateChange( event, 'start' )}
           />
           <KeyboardDatePicker
@@ -75,13 +92,12 @@ class ProjectDataAdmin extends React.Component {
             format='MM/dd/yyyy'
             margin='normal'
             label='Project End Date'
-            value={this.state.project.start_date}
+            value={project.start_date}
             onChange={(event)=>handleDateChange( event, 'start' )}
           />
         </MuiPickersUtilsProvider>
       </Paper>
     );
-  }
 }
 
 ProjectDataAdmin.propTypes = {
@@ -90,4 +106,3 @@ ProjectDataAdmin.propTypes = {
   projectUrl: PropTypes.string.isRequired,
   activateProjectUrl: PropTypes.string.isRequired,
 };
-export default ProjectDataAdmin
