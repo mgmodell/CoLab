@@ -14,6 +14,24 @@ class ProjectsController < ApplicationController
 
   def show
     @title = t('.title')
+    respond_to do |format|
+      format.html { render :show }
+      format.json do
+        response = {
+          project: @project.as_json(
+            only: %i[ id name description active start_date end_date
+            start_dow end_dow factor_pack_id style_id ] ),
+          course: @project.course.as_json(
+            only: %i[id name timezone] ),
+          factorPacks: FactorPack.all.as_json(
+            only: :id, methods: :name  ),
+          styles: Style.all.as_json(
+            only: :id, methods: :name  ),
+        }
+        render json: response
+
+      end
+    end
   end
 
   def edit
@@ -58,30 +76,25 @@ class ProjectsController < ApplicationController
   def update
     @title = t('projects.edit.title')
     if @project.update(project_params)
-      groups_users = {}
-      @project.groups.includes(:users).each do |group|
-        groups_users[group] = []
-        new_name = params['group_' + group.id.to_s]
-        group.name = new_name if new_name.present?
+    respond_to do |format|
+      format.html do
+        notice = @project.active ?
+              t('projects.update_success') :
+              t('projects.update_success_inactive')
+        redirect_to @project, notice: notice
       end
+      format.json do
+        response = {
+          project: @project.as_json(
+            only: %i[ id name description active start_date end_date
+                      start_dow end_dow factor_pack_id style_id ] ),
+          course: @project.course.as_json(
+            only: %i[id name timezone] ),
+        }
+        render json: response
 
-      @project.course.enrolled_students.each do |user|
-        gid = params['user_group_' + user.id.to_s]
-        unless gid.blank? || gid.to_i == -1
-          group = Group.includes(:users).find(gid)
-          groups_users[group] << user
-        end
       end
-      groups_users.each do |group, users_array|
-        group.users.clear
-        group.users = users_array
-        group.save
-        logger.debug group.errors.full_messages unless group.errors.empty?
-      end
-      notice = @project.active ?
-            t('projects.update_success') :
-            t('projects.update_success_inactive')
-      redirect_to @project, notice: notice
+    end
     else
       logger.debug @project.errors.full_messages unless @project.errors.empty?
       render :edit

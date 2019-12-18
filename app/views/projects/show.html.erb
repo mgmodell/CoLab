@@ -5,13 +5,14 @@
   <div data-role="navbar">
     <ul>
       <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
-      <li><a href="#groups" data-ajax="false">Group Assignments</a></li>
     </ul>
   </div>
   <div id="details" class="ui-body-<%= theme_code %> ui-content">
+    <h2><%= t '.title' %></h2>
     <%= react_component "ProjectDataAdmin", {
       token: form_authenticity_token,
       projectId: @project.id,
+      courseId: @project.course_id,
       projectUrl: projects_path,
       activateProjectUrl: activate_project_path,
       groupsUrl: groups_path(@project),
@@ -20,58 +21,6 @@
       diversityRescoreGroups: rescore_groups_path(@project)
       }
       %>
-    <h2><%= t '.title' %></h2>
-    <p>
-      <h3><%= t :name %>:</h3>
-      <%= @project.get_name( anonymize ) %>
-      (<% if @project.active %>
-        <%= t :active %>
-      <% else %>
-        <span class="error"><%= t :inactive %></span> &mdash;
-        <%= link_to t( :activate ), activate_project_path( @project ) %>
-      <% end %>)
-    </p>
-    <p>
-      <h3><%= t :dates %>:</h3>
-      <%= raw t( 'projects.edit.date_summ',
-            start_date: in_tz( date: @project.start_date ),
-            end_date: in_tz( date: @project.end_date ),
-            start_dow: ( Date::DAYNAMES.at @project.start_dow ),
-            end_dow: ( Date::DAYNAMES.at @project.end_dow ) ) %><br>
-      <em><%= t :note %>: <%= t 'projects.tz_warn', time_zone: @project.course.timezone %></em></br>
-  </p>
-  <p>
-    <h3><%= t :description %>:</h3>
-    <%= raw( @project.description ) %>
-  </p>
-  <p>
-    <h3><%= t :factor_pack %>:</h3>
-    <% if @project.factor_pack.present? %>
-      <%= @project.factor_pack.name %></br>
-    <ul>
-      <% @project.factor_pack.factors.each do |factor| %>
-        <li><%= factor.name %></li>
-      <% end %>
-    </ul>
-  <% else %>
-    [<%= t :not_set %>]
-  <% end %>
-</p>
-</div>
-<div id="groups" class="ui-body-<%= theme_code %> ui-content">
-  <h2><%= t :groups %></h2>
-  <p>
-    <%= t 'projects.groups_intro', group_count: @project.groups.size %><br>
-    <%= react_component "ProjectGroups", {
-      token: form_authenticity_token,
-      projectId: @project.id,
-      groupsUrl: groups_path(@project),
-      diversityCheckUrl: check_diversity_score_path,
-      diversityRescoreGroup: rescore_group_path(@project),
-      diversityRescoreGroups: rescore_groups_path(@project)
-      }
-      %>
-  </p>
 </div>
   <%= link_to (t 'projects.edit.title'), edit_project_path(@project) %>
   <%= link_to (t :back_to_course), @project.course %>

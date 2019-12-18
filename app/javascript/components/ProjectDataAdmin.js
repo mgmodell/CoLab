@@ -1,29 +1,54 @@
 import React, { useState, useEffect } from "react"
+import Button from '@material-ui/core/Button';
 import PropTypes from "prop-types"
 import LinearProgress from '@material-ui/core/LinearProgress';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import Paper from '@material-ui/core/Paper';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from '@material-ui/pickers'
 
+import DateTime from 'luxon/src/datetime.js'
+import Info from 'luxon/src/info.js'
+
 import LuxonUtils from '@date-io/luxon'
 import { useUserStore } from './UserStore';
 
 export default function ProjectDataAdmin( props ){
+
   const [dirty, setDirty] = useState( false );
   const [working, setWorking] = useState( true );
-  const [factorPacks, setFactorPacks] = useState( [ ] );
-  const [styles, setStyles] = useState( [ ] );
-  const [project, setProject] = useState( { id: props.projectId } );
+  const [factorPacks, setFactorPacks] =
+    useState( [ { id: 1, name_en: 'none selected' }] );
+  const [styles, setStyles] = 
+    useState( [ { id: 1, name_en: 'none selected' }] );
+  const [projectId, setProjectId] = useState( props.projectId );
+  const [projectName, setProjectName] = useState( '' );
+  const [projectDescription, setProjectDescription] = useState( '' );
+  const [projectStartDate, setProjectStartDate] =
+    useState( DateTime.local( ).toJSDate( ) );
+  //Using this Luxon function for later i18n
+  const [daysOfWeek, setDaysOfWeek] = useState( Info.weekdays( ) );
+  const [projectEndDate, setProjectEndDate] =
+    useState( DateTime.local( ).plus( { month: 3 } ).toJSDate( ) );
+  const [projectStartDOW, setProjectStartDOW] = useState( 5 );
+  const [projectEndDOW, setProjectEndDOW] = useState( 1 );
+  const [projectActive, setProjectActive] = useState( false );
+  const [projectFactorPackId, setProjectFactorPackId] = useState( 1 );
+  const [projectStyleId, setProjectStyleId] = useState( 1 );
+  const [courseId, setCourseId] = useState( -1 );
+  const [courseName, setCourseName] = useState( '' );
   const [user, userActions] = useUserStore( );
 
   const getProject = ()=>{
     setDirty( true );
-    const url= props.url + '/' + project.id + '.json';
+    const url= props.projectUrl + '/' + projectId + '.json';
     fetch( url, {
       method: 'GET',
       credentials: 'include',
@@ -41,23 +66,109 @@ export default function ProjectDataAdmin( props ){
       }
     })
     .then( data => {
+      const project = data.project;
       setFactorPacks( data.factorPacks );
       setStyles( data.styles );
-      setProject( data.project );
+      setProjectName( project.name );
+      setProjectDescription( project.description );
+      setProjectActive( project.active );
+      setProjectStartDate(
+        DateTime.fromISO( project.start_date).toJSDate( ) );
+      setProjectEndDate(
+        DateTime.fromISO( project.end_date).toJSDate( ) );
+      setProjectFactorPackId( project.factor_pack_id );
+      setProjectStyleId( project.style_id );
+      setProjectStartDOW( project.start_dow );
+      setProjectEndDOW( project.end_dow );
+
+      const course = data.course;
+      setCourseId( course.id );
+      setCourseName( course.name );
+      setWorking( false );
+      setDirty( false );
+    } );
+
+  }
+  const saveProject = ()=>{
+    const method = projectId < 1 ? 'POST' : 'PATCH';
+    setWorking( true );
+
+    const url= props.projectUrl +
+      ( projectId < 1 ? null : '/' + projectId ) +
+      '.json';
+
+    fetch( url, {
+      method: method,
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Accepts: 'application/json',
+        'X-CSRF-Token': props.token
+      },
+      body: JSON.stringify( {
+        project: {
+          name: projectName,
+          description: projectDescription,
+          active: projectActive,
+          start_date: projectStartDate,
+          end_date: projectEndDate,
+          start_dow: projectStartDOW,
+          end_dow: projectEndDOW,
+          factor_pack_id: projectFactorPackId,
+          style_id: projectStyleId
+        }
+      } )
+    })
+    .then( response => {
+      if( response.ok ){
+        return response.json( );
+      } else {
+        console.log( 'error' );
+      }
+    })
+    .then( data => {
+      const project = data.project;
+      setProjectName( project.name );
+      setProjectDescription( project.description );
+      setProjectActive( project.active );
+      setProjectStartDate(
+        DateTime.fromISO( project.start_date).toJSDate( ) );
+      setProjectEndDate(
+        DateTime.fromISO( project.end_date).toJSDate( ) );
+      setProjectFactorPackId( project.factor_pack_id );
+      setProjectStyleId( project.style_id );
+      setProjectStartDOW( project.start_dow );
+      setProjectEndDOW( project.end_dow );
+
+      const course = data.course;
+      setCourseId( course.id );
+      setCourseName( course.name );
       setWorking( false );
       setDirty( false );
     } );
 
   }
   useEffect( ()=>{
+    daysOfWeek.unshift( daysOfWeek.pop( ) );
+    setDaysOfWeek( daysOfWeek );
     if( !user.loaded ){
       userActions.fetch( props.token );
     }
     getProject( );
   }, [] )
 
-  const toggleChecked = ( ) => {
+  useEffect( ()=>setDirty( true ),
+    [projectName, projectDescription, projectStyleId,
+    projectFactorPackId, projectStartDate, projectEndDate,
+    projectStartDOW, projectEndDOW ] );
 
+  const saveButton = dirty ?
+        (<Button variant='contained' onClick={saveProject}>
+          Save
+        </Button>) : null;
+
+  const toggleActive = ( ) => {
+    setProjectActive( !projectActive );
   }
 
     return (
@@ -67,19 +178,19 @@ export default function ProjectDataAdmin( props ){
           null }
           <TextField
             label='Project Name'
-            value={project.name}
+            value={projectName}
             fullWidth={true}
-            onChange={(event)=>handleChange( event, 'name' )} />
+            onChange={ (event)=>setProjectName(event.target.value) } />
           <TextField
             label='Project Description'
-            value={project.description}
+            value={projectDescription}
             fullWidth={true}
-            onChange={(event)=>handleChange( event, 'description' )} />
+            onChange={ (event)=>setProjectDescription(event.target.value) } /> 
           <FormControlLabel
             control={
               <Switch
-                checked={project.active}
-                onChange={toggleChecked}
+                checked={projectActive}
+                onChange={()=>toggleActive( )}
               />}
             label='Active' />
         
@@ -87,28 +198,99 @@ export default function ProjectDataAdmin( props ){
           <KeyboardDatePicker
             disableToolbar
             variant='inline'
+            autoOk={true}
             format='MM/dd/yyyy'
             margin='normal'
             label='Project Start Date'
-            value={project.start_date}
-            onChange={(event)=>handleDateChange( event, 'start' )}
+            value={projectStartDate}
+            onChange={setProjectStartDate}
           />
           <KeyboardDatePicker
             disableToolbar
             variant='inline'
+            autoOk={true}
             format='MM/dd/yyyy'
             margin='normal'
             label='Project End Date'
-            value={project.start_date}
-            onChange={(event)=>handleDateChange( event, 'start' )}
+            value={projectEndDate}
+            onChange={setProjectEndDate}
           />
         </MuiPickersUtilsProvider>
+        <br/>
+        <InputLabel id='start_dow-label'>
+          Opens Every
+        </InputLabel>
+        <Select
+          labelId='start_dow-label'
+          id='start_dow'
+          onChange={(event)=>setProjectStartDOW(event.target.value)}
+          value={projectStartDOW} >
+          {daysOfWeek.map( (day, index) => {
+            return(
+              <MenuItem key={index} value={index}>
+                {day}
+              </MenuItem>
+            )
+          } ) }
+        </Select>
+        <InputLabel id='end_dow-label'>
+          Closes Every
+        </InputLabel>
+        <Select
+          labelId='end_dow-label'
+          id='end_dow'
+          onChange={(event)=>setProjectEndDOW(event.target.value)}
+          value={projectEndDOW} >
+          {daysOfWeek.map( (day, index) => {
+            return(
+              <MenuItem key={index} value={index}>
+                {day}
+              </MenuItem>
+            )
+          } ) }
+        </Select>
+
+        <InputLabel id='style-label'>
+          Style
+        </InputLabel>
+        <Select
+          labelId='style-label'
+          id='style'
+          onChange={(event)=>setProjectStyleId(event.target.value)}
+          value={projectStyleId} >
+          {styles.map( style => {
+            return(
+              <MenuItem key={style.id} value={style.id}>
+                {style.name}
+              </MenuItem>
+            )
+          } ) }
+        </Select>
+        <InputLabel id='factor_pack-label'>
+          Factor Pack
+        </InputLabel>
+        <Select
+          labelId='factor_pack-label'
+          id='factor_pack'
+          onChange={(event)=>setProjectFactorPackId(event.target.value)}
+          value={projectFactorPackId} >
+          {factorPacks.map( factorPack => {
+            return(
+              <MenuItem key={factorPack.id} value={factorPack.id}>
+                {factorPack.name}
+              </MenuItem>
+            )
+          } ) }
+        </Select>
+        <br/>
+        {saveButton}
       </Paper>
     );
 }
 
 ProjectDataAdmin.propTypes = {
   token: PropTypes.string.isRequired,
+  courseId: PropTypes.number,
   projectId: PropTypes.number,
   projectUrl: PropTypes.string.isRequired,
   activateProjectUrl: PropTypes.string.isRequired,
