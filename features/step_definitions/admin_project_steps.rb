@@ -38,18 +38,18 @@ end
 
 Then /^the user clicks "([^"]*)"$/ do |link_or_button|
   if has_xpath?("//button[contains(.,'#{link_or_button}')]",
-                visible: :all )
+                visible: :all)
     btn = find(:xpath, "//button[contains(.,'#{link_or_button}')]",
-                  match: :first,
-                  visible: :all )
-  elsif has_xpath?( "//a[contains(.,'#{link_or_button}')]",
-                    visible: :all )
+               match: :first,
+               visible: :all)
+  elsif has_xpath?("//a[contains(.,'#{link_or_button}')]",
+                   visible: :all)
     btn = find(:xpath, "//a[contains(.,'#{link_or_button}')]",
-                visible: :all )
-  elsif has_xpath?( "//input[@value='#{link_or_button}']",
-                visible: :all )
+               visible: :all)
+  elsif has_xpath?("//input[@value='#{link_or_button}']",
+                   visible: :all)
     btn = find(:xpath, "//input[@value='#{link_or_button}']",
-                visible: :all )
+               visible: :all)
   end
   begin
     retries ||= 0
@@ -86,18 +86,27 @@ Then /^the user sets the "([^"]*)" field to "([^"]*)"$/ do |field, value|
 end
 
 Then /^the user sets the project "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
-  new_date = Chronic.parse(date_value).strftime('%Y-%m-%dT%T')
-  puts new_date
-  puts page.find('#project_' + date_field_prefix + '_date').value
+  new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
   page.find('#project_' + date_field_prefix + '_date').set(new_date)
-  puts page.find('#project_' + date_field_prefix + '_date').value
 end
 
 Then /^the user selects "([^"]*)" as "([^"]*)"$/ do |value, field|
   id = find(:xpath,
-    "//label[contains(text(),'#{field}')]")[:for]
-  find( :xpath, "//select[@id='#{id}']", visible: :all ).select( value )
-  #page.select(value, from: field)
+            "//label[contains(text(),'#{field}')]")[:for]
+  begin
+    retries ||= 0
+    selectCtrl = find_all(:xpath, "//select[@id='#{id}']")
+  rescue NoMethodError => e
+    retry if (retries += 1) < 4
+  end
+
+  if 0 == selectCtrl.size
+    find(:xpath, "//div[@id='#{id}']", visible: :all).click
+    find(:xpath, "//li[contains(text(),'#{value}')]" ).click
+    sleep( 0.3 )
+  else
+    selectCtrl[ 0 ].select( value )
+  end
 end
 
 Then /^retrieve the latest project from the db$/ do
@@ -134,6 +143,7 @@ Then /^the project "([^"]*)" is "([^"]*)"$/ do |field, value|
 end
 
 Then /^the user clicks "([^"]*)" on the existing project$/ do |action|
+  click_link_or_button 'Activities'
   elem = find(:xpath, "//tr[td[contains(.,'#{@project.name}')]]/td/a", text: action)
   elem.click
 end

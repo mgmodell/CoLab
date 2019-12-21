@@ -1,110 +1,116 @@
-import React from "react"
-import PropTypes from "prop-types"
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import React from "react";
+import PropTypes from "prop-types";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
 
-import CompareIcon from '@material-ui/icons/Compare';
-import SaveIcon from '@material-ui/icons/Save';
-import SortIcon from '@material-ui/icons/Sort';
+import CompareIcon from "@material-ui/icons/Compare";
+import SaveIcon from "@material-ui/icons/Save";
+import SortIcon from "@material-ui/icons/Sort";
 
-import {SortDirection} from 'react-virtualized';
-
+import { SortDirection } from "react-virtualized";
 
 class DiversityScore extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       calculated: null
-    }
-    this.calcDiversity = this.calcDiversity.bind( this );
-    this.save = this.save.bind( this );
+    };
+    this.calcDiversity = this.calcDiversity.bind(this);
+    this.save = this.save.bind(this);
   }
 
-  save( ){
-    this.props.rescoreGroup( event, this.props.groupId );
+  save() {
+    this.props.rescoreGroup(event, this.props.groupId);
     this.setState({
       calculated: null
-    } )
-
+    });
   }
 
-  render () {
+  render() {
     const direction = {
-      [SortDirection.ASC]: 'asc',
-      [SortDirection.DESC]: 'desc'
-    }
-    const {calculated} = this.state;
-    const {groupId, sortDirection, sortBy, documented, parentDirty, sortFunc } = this.props;
+      [SortDirection.ASC]: "asc",
+      [SortDirection.DESC]: "desc"
+    };
+    const { calculated } = this.state;
+    const {
+      groupId,
+      sortDirection,
+      sortBy,
+      documented,
+      parentDirty,
+      sortFunc
+    } = this.props;
     return (
       <React.Fragment>
-        <IconButton size="small"
-          onClick={()=>this.calcDiversity( )}>
-          { documented }
+        <IconButton size="small" onClick={() => this.calcDiversity()}>
+          {documented}
           <CompareIcon />
         </IconButton>
-        { null != calculated &&
-          calculated != documented ?
-          (
-            <React.Fragment> 
-            / {parentDirty ?
-              calculated :
-              ( <IconButton size='small' onClick={()=>this.save( ) } >
-              {calculated}
-              <SaveIcon />
-            </IconButton> )}
-            </React.Fragment> 
-          ) : calculated == documented ?
-            ' / ' + calculated  : null }
+        {null != calculated && calculated != documented ? (
+          <React.Fragment>
+            /{" "}
+            {parentDirty ? (
+              calculated
+            ) : (
+              <IconButton size="small" onClick={() => this.save()}>
+                {calculated}
+                <SaveIcon />
+              </IconButton>
+            )}
+          </React.Fragment>
+        ) : calculated == documented ? (
+          " / " + calculated
+        ) : null}
 
-            <TableSortLabel
-              active={ groupId == parseInt( sortBy )}
-              direction={direction[sortBy]}
-              onClick={()=>sortFunc(event, groupId)} >
-              <SortIcon />
-            </TableSortLabel>
+        <TableSortLabel
+          active={groupId == parseInt(sortBy)}
+          direction={direction[sortBy]}
+          onClick={() => sortFunc(event, groupId)}
+        >
+          <SortIcon />
+        </TableSortLabel>
       </React.Fragment>
     );
   }
-  calcDiversity( ){
+  calcDiversity() {
     const url = this.props.scoreReviewUrl;
     const gid = this.props.groupId;
-    const student_list = Object.values( this.props.students )
-      .filter( function( student ){
-        return student.group_id == gid;
-      } );
-    const emails = [ ];
-    student_list.forEach((item,index)=>{
-      emails.push( item.email );
+    const student_list = Object.values(this.props.students).filter(function(
+      student
+    ) {
+      return student.group_id == gid;
     });
-    fetch( this.props.scoreReviewUrl + '.json', {
-      method: 'POST',
-      credentials: 'include',
+    const emails = [];
+    student_list.forEach((item, index) => {
+      emails.push(item.email);
+    });
+    fetch(this.props.scoreReviewUrl + ".json", {
+      method: "POST",
+      credentials: "include",
       headers: {
-        'Content-Type': 'application/json',
-        Accepts: 'application/json',
-        'X-CSRF-Token': this.props.token
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+        "X-CSRF-Token": this.props.token
       },
       body: JSON.stringify({
-        emails: emails.join( )
+        emails: emails.join()
       })
-    } )
-      .then(response =>{
-        if( response.ok ){
-          return response.json( );
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
         } else {
-          console.log( 'error' );
-          return[{ id: -1, name: 'no data'}];
+          console.log("error");
+          return [{ id: -1, name: "no data" }];
         }
       })
       .then(data => {
-          this.setState({
-            calculated: data.diversity_score,
-          })
-      })
-
+        this.setState({
+          calculated: data.diversity_score
+        });
+      });
   }
-
 }
 
 DiversityScore.propTypes = {
@@ -118,4 +124,4 @@ DiversityScore.propTypes = {
   sortDirection: PropTypes.string.isRequired,
   sortFunc: PropTypes.func.isRequired
 };
-export default DiversityScore
+export default DiversityScore;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Paper from "@material-ui/core/Paper";
@@ -23,14 +23,16 @@ import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
-import get_i18n from "./i18n";
+import i18n from './i18n';
+import { Translation } from 'react-i18next';
+
 
 import { withStyles } from "@material-ui/core/styles";
 
 import ConceptChips from "./ConceptChips";
 import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
 
-const t = get_i18n("bingo_games");
+//const t = get_i18n("bingo_games");
 
 const styles = theme => ({
   container: {
@@ -100,8 +102,9 @@ class BingoGameDataAdmin extends React.Component {
     bg_sav.description = draftToHtml(
       convertToRaw(descriptionEditor.getCurrentContent())
     );
+      //saveStatus: t("save_status")
     this.setState({
-      saveStatus: t("save_status")
+      saveStatus: i18n.t( 'save status' )
     });
     fetch(this.props.bingoGameUrl + ".json", {
       method: "PATCH",
@@ -250,7 +253,10 @@ class BingoGameDataAdmin extends React.Component {
   render() {
     const { classes } = this.props;
     const save_btn = this.state.dirty ? (
-      <React.Fragment>
+    <Suspense fallback={<div>Loading...</div>}>
+    <Translation ns={['bingo_games']}>
+    {
+      (t) => 
         <Button
           variant="contained"
           color="primary"
@@ -261,11 +267,17 @@ class BingoGameDataAdmin extends React.Component {
         >
           {t("update_bingo_btn")}
         </Button>
-      </React.Fragment>
+    }
+    </Translation>
+    </Suspense>
     ) : null;
 
     const group_options = this.state.bingo_game.group_option ? (
-      <React.Fragment>
+    <Suspense fallback={<div>Loading...</div>}>
+    <Translation ns={['bingo_games']}>
+    {
+      (t) => 
+        <React.Fragment>
         <Grid item>
           <TextField
             id="bingo-name"
@@ -302,9 +314,16 @@ class BingoGameDataAdmin extends React.Component {
             </Select>
           </FormControl>
         </Grid>
-      </React.Fragment>
+          </React.Fragment>
+        }
+        </Translation>
+        </Suspense>
     ) : null;
     return (
+    <Suspense fallback={<div>Loading...</div>}>
+    <Translation ns={['bingo_games']}>
+    {
+      (t) => 
       <Paper style={{ height: "95%", width: "100%" }}>
         <Tabs value={this.state.curTab} onChange={this.changeTab} centered>
           <Tab value="details" label={t("game_details_pnl")} />
@@ -436,6 +455,9 @@ class BingoGameDataAdmin extends React.Component {
           </Grid>
         )}
       </Paper>
+    }
+    </Translation>
+    </Suspense>
     );
   }
 }

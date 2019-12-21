@@ -7,5 +7,4 @@
         gameResultsUrl: game_results_path( id: @bingo_game.id ),
         token: form_authenticity_token } %>
 
-<%= link_to t( 'bingo_games.edit.title' ), edit_bingo_game_path(@bingo_game) %>
 <%= link_to t( :back_to_course ), @bingo_game.course %>

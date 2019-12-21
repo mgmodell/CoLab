@@ -20,16 +20,19 @@ class ProjectsController < ApplicationController
         response = {
           project: @project.as_json(
             only: %i[ id name description active start_date end_date
-            start_dow end_dow factor_pack_id style_id ] ),
+                      start_dow end_dow factor_pack_id style_id ]
+          ),
           course: @project.course.as_json(
-            only: %i[id name timezone] ),
+            only: %i[id name timezone]
+          ),
           factorPacks: FactorPack.all.as_json(
-            only: :id, methods: :name  ),
+            only: :id, methods: :name
+          ),
           styles: Style.all.as_json(
-            only: :id, methods: :name  ),
+            only: :id, methods: :name
+          )
         }
         render json: response
-
       end
     end
   end
@@ -76,28 +79,36 @@ class ProjectsController < ApplicationController
   def update
     @title = t('projects.edit.title')
     if @project.update(project_params)
-    respond_to do |format|
-      format.html do
-        notice = @project.active ?
-              t('projects.update_success') :
-              t('projects.update_success_inactive')
-        redirect_to @project, notice: notice
+      respond_to do |format|
+        format.html do
+          notice = @project.active ?
+                t('projects.update_success') :
+                t('projects.update_success_inactive')
+          redirect_to @project, notice: notice
+        end
+        format.json do
+          response = {
+            project: @project.as_json(
+              only: %i[ id name description active start_date end_date
+                        start_dow end_dow factor_pack_id style_id ]
+            ),
+            course: @project.course.as_json(
+              only: %i[id name timezone]
+            )
+          }
+          render json: response
+        end
       end
-      format.json do
-        response = {
-          project: @project.as_json(
-            only: %i[ id name description active start_date end_date
-                      start_dow end_dow factor_pack_id style_id ] ),
-          course: @project.course.as_json(
-            only: %i[id name timezone] ),
-        }
-        render json: response
-
-      end
-    end
     else
-      logger.debug @project.errors.full_messages unless @project.errors.empty?
-      render :edit
+      respond_to do |format|
+        format.html do
+          logger.debug @project.errors.full_messages
+          render :edit
+        end
+        format.json do
+          render json: @project.errors.full_messages
+        end
+      end
     end
   end
 
@@ -108,40 +119,37 @@ class ProjectsController < ApplicationController
   end
 
   def set_groups
-    project = Project.includes( :groups, course: { rosters: :user } )
-                .joins( :groups, course: { rosters: :user } )
-                .find_by_id( params[:id] )
+    project = Project.includes(:groups, course: { rosters: :user })
+                     .joins(:groups, course: { rosters: :user })
+                     .find_by(id: params[:id])
 
-    group_hash = { }
+    group_hash = {}
     params[:groups].values.each do |g|
       group = nil
-      if 0 < g[:id]
-        group = project.groups.find_by_id g[:id]
+      if g[:id] > 0
+        group = project.groups.find_by id: g[:id]
         group.name = g[:name]
       else
-        group = project.groups.build( name: g[:name] )
+        group = project.groups.build(name: g[:name])
       end
       group.users = []
-      group_hash[ g[:id] ] = group
-
+      group_hash[g[:id]] = group
     end
     params[:students].values.each do |s|
-      student = project.rosters.find_by_user_id( s[:id] ).user
-      group = group_hash[ s[ :group_id ] ]
+      student = project.rosters.find_by(user_id: s[:id]).user
+      group = group_hash[s[:group_id]]
       group.users << student unless group.nil?
     end
-    group_hash.values.each do |group|
-      group.save
-    end
+    group_hash.values.each(&:save)
 
     get_groups
   end
 
   def get_groups
-    project = Project.includes( rosters: { user: :emails }, groups: :users )
-                .joins( rosters: :user )
-                .left_outer_joins( groups: :users )
-                .find_by_id( params[:id] )
+    project = Project.includes(rosters: { user: :emails }, groups: :users)
+                     .joins(rosters: :user)
+                     .left_outer_joins(groups: :users)
+                     .find_by(id: params[:id])
 
     students = {}
     project.rosters.enrolled.each do |roster|
@@ -162,7 +170,7 @@ class ProjectsController < ApplicationController
         diversity: group.diversity_score
       }
       group.users.each do |user|
-        students[ user.id ][ :group_id ] = group.id
+        students[user.id][ :group_id ] = group.id
       end
     end
 
@@ -172,12 +180,9 @@ class ProjectsController < ApplicationController
           groups: groups,
           students: students
         }
-
       end
     end
-
   end
-
 
   def remove_group
     group = Group.find(params[:group_id])
@@ -195,7 +200,7 @@ class ProjectsController < ApplicationController
 
   def rescore_group
     @title = t('.title')
-        puts "\n\n\n\t format: #{params}\n\n\n\n"
+    puts "\n\n\n\t format: #{params}\n\n\n\n"
     group = @project.groups.where(id: params[:group_id]).take
     if group.present?
       group.calc_diversity_score
@@ -223,14 +228,14 @@ class ProjectsController < ApplicationController
       logger.debug group.errors.full_messages unless group.errors.empty?
     end
 
-      respond_to do |format|
-        format.json do
-          get_groups
-        end
-        format.html do
-          redirect_to @project, notice: t('projects.diversities_calculated')
-        end
+    respond_to do |format|
+      format.json do
+        get_groups
       end
+      format.html do
+        redirect_to @project, notice: t('projects.diversities_calculated')
+      end
+    end
   end
 
   def activate
@@ -270,7 +275,7 @@ class ProjectsController < ApplicationController
   def check_editor
     unless current_user.is_admin? || current_user.is_instructor?
       redirect_to root_path
-      #TODO: handle JSON response
+      # TODO: handle JSON response
     end
   end
 

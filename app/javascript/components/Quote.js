@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-export default function Quote( props ) {
-  const [quote, setQuote] = useState( { text: '', attribution: '' } );
+export default function Quote(props) {
+  const [quote, setQuote] = useState({ text: "", attribution: "" });
 
-  const updateQuote = ()=> {
+  const updateQuote = () => {
     fetch(props.url, {
       method: "POST",
       credentials: "include",
@@ -22,10 +22,10 @@ export default function Quote( props ) {
         }
       })
       .then(data => {
-        setQuote( {text: data.text_en, attribution: data.attribution } );
+        setQuote({ text: data.text_en, attribution: data.attribution });
       });
-  }
-  useEffect( ()=>updateQuote( ), [ ] )
+  };
+  useEffect(() => updateQuote(), []);
 
   return (
     <p onClick={() => updateQuote()} className="quotes">

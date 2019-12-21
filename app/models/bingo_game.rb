@@ -39,9 +39,9 @@ class BingoGame < ApplicationRecord
   def status
     completed = candidates.completed.count
     if completed > 0
-      return 100 * candidates.reviewed.count / candidates.completed.count
+      100 * candidates.reviewed.count / candidates.completed.count
     else
-      return 0
+      0
     end
   end
 

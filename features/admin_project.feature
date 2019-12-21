@@ -73,6 +73,7 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor edits an existing project
     Given the user is the instructor for the course
     Given the user logs in
@@ -80,7 +81,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Edit" on the existing project
+    Then the user clicks "Show" on the existing project
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "05/10/1976"
     Then the user sets the project "end" date to "02/29/1980"
@@ -89,7 +90,7 @@ Feature: Project Administration
     Then the user selects "Simple" as "Factor pack"
     Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
+    Then the user clicks "Save Project"
     Then the user will see "success"
     Then retrieve the latest project from the db
     #Let's check the values stored
@@ -103,6 +104,7 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor creates a project and doesn't set the dates then edits it
     Given the user is the instructor for the course
     Given the user logs in
@@ -152,6 +154,7 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor creates a project then edits it
     Given the user is the instructor for the course
     Given the user logs in
@@ -205,6 +208,7 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor creates a project then edits it, but doesn't edit the dates
     Given the user is the instructor for the course
     Given the user logs in
@@ -255,6 +259,7 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
+  @javascript
   Scenario: Instructor assigns a course's students to groups
     Given the course started "5/10/1976" and ended "4 months hence"
     Given the project started "last month" and ends "next month", opened "Saturday" and closes "Monday"

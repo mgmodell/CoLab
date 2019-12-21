@@ -66,16 +66,16 @@ class CoursesController < ApplicationController
   def score_sheet
     require 'csv'
     course = Course
-      .includes( rosters: :user, bingo_games:
-        [ :candidate_lists, :bingo_boards ] )
-      .joins( rosters: :user )
-      .left_outer_joins( bingo_games: [ :bingo_boards, :candidate_lists ] )
-      .find_by_id( params[:id] )
+             .includes(rosters: :user, bingo_games:
+        %i[candidate_lists bingo_boards])
+             .joins(rosters: :user)
+             .left_outer_joins(bingo_games: %i[bingo_boards candidate_lists])
+             .find_by(id: params[:id])
 
-    headers = [ 'First Name', 'Last Name', 'Email',
-              'Assessment', 'Experience', 'Bingo Performance']
+    headers = ['First Name', 'Last Name', 'Email',
+               'Assessment', 'Experience', 'Bingo Performance']
 
-    bingo_games = course.bingo_games.sort {|a,b| a.end_date <=> b.end_date}
+    bingo_games = course.bingo_games.sort_by(&:end_date)
     headers << 'Terms Lists'
     bingo_games.each do |bingo_game|
       headers << bingo_game.end_date
@@ -89,47 +89,46 @@ class CoursesController < ApplicationController
 
       course.rosters.enrolled.each do |roster|
         user = roster.user
-        user_row = [ 
+        user_row = [
           user.first_name,
           user.last_name,
           user.email,
-          user.get_assessment_performance( course_id: course.id ),
-          user.get_experience_performance( course_id: course.id ),
-          user.get_bingo_performance( course_id: course.id )
+          user.get_assessment_performance(course_id: course.id),
+          user.get_experience_performance(course_id: course.id),
+          user.get_bingo_performance(course_id: course.id)
         ]
         terms_lists = []
         worksheets = []
         bingo_games.each do |bingo_game|
-          list = bingo_game.candidate_lists.find_by_user_id user.id 
-          if list.nil?
-            terms_lists << 0
-          else
-            terms_lists << list.cached_performance
-          end
+          list = bingo_game.candidate_lists.find_by user_id: user.id
+          terms_lists << if list.nil?
+                           0
+                         else
+                           list.cached_performance
+                         end
 
-          worksheet = bingo_game.bingo_boards.worksheet.find_by_user_id user.id
-          if worksheet.nil? || worksheet.performance.blank?
-            worksheets << 0
-          else
-            worksheets << worksheet.performance
-          end
+          worksheet = bingo_game.bingo_boards.worksheet.find_by user_id: user.id
+          worksheets << if worksheet.nil? || worksheet.performance.blank?
+                          0
+                        else
+                          worksheet.performance
+                        end
         end
-        #Add a spacer
+        # Add a spacer
         user_row << nil
-        user_row.concat( terms_lists )
+        user_row.concat(terms_lists)
         user_row << nil
-        user_row.concat( worksheets )
-        doc <<  user_row
+        user_row.concat(worksheets)
+        doc << user_row
       end
     end
 
     respond_to do |format|
       format.csv do
-        send_data( csv,
-                  filename: "#{course.name}-#{course.number}.csv" )
+        send_data(csv,
+                  filename: "#{course.name}-#{course.number}.csv")
       end
     end
-
   end
 
   def reg_requests

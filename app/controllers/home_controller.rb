@@ -5,7 +5,7 @@ class HomeController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[demo_start get_quote]
 
   def index
-    #current_user = current_user
+    # current_user = current_user
     # The first thing we want to do is make sure they've had an opportunity to
     # complete any waiting consent forms
     waiting_consent_logs = current_user.waiting_consent_logs
@@ -35,7 +35,6 @@ class HomeController < ApplicationController
     end
   end
 
-
   def simple_profile
     respond_to do |format|
       format.json do
@@ -47,7 +46,6 @@ class HomeController < ApplicationController
           timezone: @current_user.timezone,
           language: @current_user.language.code
         }
-
       end
     end
   end
@@ -102,8 +100,8 @@ class HomeController < ApplicationController
     @title = t 'titles.demonstration'
     if current_user.nil?
       current_user = User.new(first_name: t(:demo_surname_1),
-                               last_name: t(:demo_fam_name_1),
-                               timezone: t(:demo_user_tz))
+                              last_name: t(:demo_fam_name_1),
+                              timezone: t(:demo_user_tz))
     end
 
     e = Event_.new

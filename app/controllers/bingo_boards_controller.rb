@@ -271,7 +271,7 @@ class BingoBoardsController < ApplicationController
               column: column,
               concept: c.class == Concept ? c : c.concept,
               candidate: c.class == Concept ? nil : c,
-              indeks: c.class == Concept ? nil : indices.delete( indices.sample )
+              indeks: c.class == Concept ? nil : indices.delete(indices.sample)
             )
           end
         end

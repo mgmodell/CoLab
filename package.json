@@ -43,6 +43,7 @@
     "react-dom": "^16.11.0",
     "react-draft-wysiwyg": "^1.13.2",
     "react-draggable": "^4.0.3",
+    "react-i18next": "^11.2.7",
     "react-render-html": "^0.6.0",
     "react-sweet-state": "^1.1.1",
     "react-virtualized": "^9.21.0",

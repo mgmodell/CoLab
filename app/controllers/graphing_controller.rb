@@ -17,7 +17,7 @@ class GraphingController < ApplicationController
           current_users_projects.concat roster.course.projects.to_a
         end
       end
-      return current_users_projects
+      current_users_projects
     else
       redirect_to root_url
     end

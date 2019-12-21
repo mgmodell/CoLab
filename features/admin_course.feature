@@ -406,6 +406,7 @@ Feature: Course Administration
     Then there are 6 instructors in the course
     Then the users are instructors
 
+  @javascript
   Scenario: Admin duplicates an existing course
     Given the course started "5/10/1976" and ended "11/01/2012"
      And the course start date is "5/10/1976" and the end date is "11/01/2012"
@@ -465,6 +466,7 @@ Feature: Course Administration
      And the 'bingo' is 'not' active
     Then the 'bingo' dates are '5/30/1976' and '7/30/1976'
 
+  @javascript
   Scenario: Admin duplicates an existing course with a bingo but no project
     Given the course started "5/10/1976" and ended "11/01/2012"
      And the course start date is "5/10/1976" and the end date is "11/01/2012"
