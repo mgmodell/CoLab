@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Paper from "@material-ui/core/Paper";
@@ -16,7 +16,14 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider
+} from '@material-ui/pickers';
+
 import { DateTime } from "luxon";
+import LuxonUtils from '@date-io/luxon';
+import {useUserStore} from './UserStore';
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
@@ -27,21 +34,19 @@ import i18n from './i18n';
 import { Translation } from 'react-i18next';
 
 
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import ConceptChips from "./ConceptChips";
 import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
 
 //const t = get_i18n("bingo_games");
 
-const styles = theme => ({
+const useStyles = makeStyles({
   container: {
     display: "flex",
     flexWrap: "wrap"
   },
   textField: {
-    marginLeft: theme.spacing(),
-    marginRight: theme.spacing(),
     width: 200
   },
   dense: {
@@ -52,68 +57,92 @@ const styles = theme => ({
   }
 });
 
-class BingoGameDataAdmin extends React.Component {
-  constructor(props) {
-    super(props);
-    let start = new Date();
-    let end = new Date();
-    end.setDate(end.getDate() + 7);
-    this.state = {
-      curTab: "details",
-      dirty: false,
-      messages: {},
-      saveStatus: "",
-      result_data: null,
-      tz_extra_start: start.toISOString().substr(10),
-      tz_extra_end: end.toISOString().substr(10),
-      bingo_game: {
-        topic: "",
-        timezone: "UTC",
-        active: false,
-        description: "",
-        start_date: start.toISOString().substr(0, 10),
-        end_date: end.toISOString().substr(0, 10),
-        group_option: false,
-        group_discount: 0,
-        individual_count: 0,
-        lead_time: 0,
-        reviewed: false,
-        source: null,
-        project_id: ""
-      }
-    };
-    this.saveBingoGame = this.saveBingoGame.bind(this);
-    this.changeTab = this.changeTab.bind(this);
-    this.initResultData = this.initResultData.bind(this);
-  }
-
-  componentDidMount() {
-    this.getBingoGameData();
-    this.initResultData();
-  }
-
-  saveBingoGame() {
-    const { bingo_game, descriptionEditor } = this.state;
-    var bg_sav = Object.assign({}, bingo_game);
-    delete bg_sav.projects;
-    delete bg_sav.reviewed;
-    bg_sav.start_date = bg_sav.start_date + this.state.tz_extra_start;
-    bg_sav.end_date = bg_sav.end_date + this.state.tz_extra_end;
-    bg_sav.description = draftToHtml(
-      convertToRaw(descriptionEditor.getCurrentContent())
+export default function BingoGameDataAdmin( props ){
+  const classes = useStyles( );
+  const [dirty, setDirty] = useState( false );
+  const [curTab, setCurTab] = useState( 'details' );
+  const [messages, setMessages] = useState( { } );
+  const [gameProjects, setGameProjects] = useState( [
+    {id: -1, name: 'None Selected' }] );
+  const [concepts, setConcepts] = useState( [ ] );
+  const [saveStatus, setSaveStatus] = useState( '' );
+  const [resultData, setResultData] = useState( null );
+  const [gameTopic, setGameTopic] = useState( '' );
+  const [gameDescriptionEditor, setGameDescriptionEditor] =
+    useState(
+      EditorState.createWithContent(
+        ContentState.createFromBlockArray(
+          htmlToDraft( '' ).contentBlocks
+        )
+      )
     );
-      //saveStatus: t("save_status")
-    this.setState({
-      saveStatus: i18n.t( 'save status' )
-    });
-    fetch(this.props.bingoGameUrl + ".json", {
+  const [gameSource, setGameSource] = useState( '' );
+  const [gameTimezone, setGameTimezone] = useState( 'UTC' );
+  const [gameActive, setGameActive] = useState( false );
+  const [gameEndDate, setGameEndDate] = useState(
+    DateTime.local( ).plus({month: 3} ).toJSDate( )
+  );
+  const [gameStartDate, setGameStartDate] = useState(
+    DateTime.local( ).toJSDate( )
+  );
+  const [gameIndividualCount, setGameIndividualCount] = useState( 0 );
+  const [gameLeadTime, setGameLeadTime] = useState( 0 );
+  //Group parameters
+  const [gameGroupOption, setGameGroupOption] = useState( false );
+  const [gameGroupDiscount, setGameGroupDiscount] = useState( 0 );
+  const [gameGroupProjectId, setGameGroupProjectId] = useState( -1 );
+
+
+  useEffect(() => {
+    getBingoGameData();
+    initResultData();
+  }, [ ]);
+
+  useEffect( ( ) => {
+    setDirty( true ),
+    [
+      gameTopic,
+      gameDescriptionEditor,
+      gameSource,
+      gameTimezone,
+      gameActive,
+      gameStartDate,
+      gameEndDate,
+      gameIndividualCount,
+      gameLeadTime,
+      gameGroupOption,
+      gameGroupDiscount,
+      gameGroupProjectId
+    ] } );
+
+  const saveBingoGame = () => {
+    setSaveStatus( t( 'save_status' ) )
+    fetch(props.bingoGameUrl + ".json", {
       method: "PATCH",
       credentials: "include",
-      body: JSON.stringify({ bingo_game: bg_sav }),
+      body: JSON.stringify({
+        bingo_game: {
+          topic: gameTopic,
+          description: draftToHtml(
+            convertToRaw(
+              descriptionEditor.getCurrentContent( )
+            )
+          ),
+          source: gameSource,
+          active: gameActive,
+          start_date: gameStartDate,
+          end_date: gameEndDate,
+          individual_count: gameIndividualCount,
+          lead_time: gameLeadTime,
+          group_option: gameGroupOption,
+          group_discount: gameGroupDiscount,
+          project_id: gameGroupProjectId
+        }
+      }),
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
+        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -126,23 +155,22 @@ class BingoGameDataAdmin extends React.Component {
       })
       .then(data => {
         //TODO: handle save errors
-        this.setState({
-          saveStatus: data.notice,
-          dirty: false,
-          messages: data.messages
-        });
-        this.getBingoGameData();
+        setSaveStatus( data.notice );
+        setDirty( false );
+        setMessages( data.messages );
+
+        getBingoGameData();
       });
   }
 
-  initResultData() {
-    fetch(this.props.gameResultsUrl + ".json", {
+  const initResultData = () => {
+    fetch(props.gameResultsUrl + ".json", {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
+        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -154,20 +182,18 @@ class BingoGameDataAdmin extends React.Component {
         }
       })
       .then(data => {
-        this.setState({
-          result_data: data
-        });
+        setResultData( data )
       });
   }
 
-  getBingoGameData() {
-    fetch(this.props.bingoGameUrl + ".json", {
+  const getBingoGameData = () => {
+    fetch(props.bingoGameUrl + ".json", {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
+        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -179,80 +205,39 @@ class BingoGameDataAdmin extends React.Component {
         }
       })
       .then(data => {
-        const tz_extra_start = data.start_date.substr(10);
-        const tz_extra_end = data.end_date.substr(10);
-        var tmpDate = DateTime.fromISO(data.start_date);
-        tmpDate.setZone(data.timezone);
-        data.start_date = tmpDate.toISO().substr(0, 10);
+        const projects =
+          new Array( { id: -1, name: 'None Selected'}).
+                concat( data.projects );
 
-        tmpDate = DateTime.fromISO(data.end_date);
-        tmpDate.setZone(data.timezone);
-        data.end_date = tmpDate.toISO().substr(0, 10);
-
-        if (data.group_discount == null) {
-          data.group_discount = 0;
-        }
-        if (data.projects.length > 0 && data.project_id == null) {
-          data.project_id = data.projects[0].id;
-        }
-        const contentBlock = htmlToDraft(data.description);
-        const contentState = ContentState.createFromBlockArray(
-          contentBlock.contentBlocks
+        setGameProjects( projects );
+        setConcepts( data.concepts );
+        setGameTopic( data.topic );
+        setGameDescriptionEditor( 
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              htmlToDraft(data.description).contentBlocks
+            )
+          )
         );
-        const editorState = EditorState.createWithContent(contentState);
-        this.setState({
-          tz_extra_start: tz_extra_start,
-          tz_extra_end: tz_extra_end,
-          descriptionEditor: editorState,
-          concepts: data.concepts,
-          bingo_game: data
-        });
+        setGameSource( data.source );
+        setGameActive( data.active );
+        setGameStartDate( DateTime.fromISO( data.start_date ).toJSDate( ) );
+        setGameEndDate( DateTime.fromISO( data.end_date ).toJSDate( ) );
+        setGameIndividualCount( data.individual_count );
+        setGameLeadTime( data.lead_time );
+        //Group options
+        setGameGroupOption( data.group_option );
+        setGameGroupDiscount( data.group_discount );
+        setGameGroupProjectId( data.project_id );
+        setDirty( false );
       });
   }
 
-  handleChange = name => event => {
-    let bingo = this.state.bingo_game;
-    bingo[name] = event.target.value;
-    this.setState({
-      dirty: true,
-      bingo_game: bingo
-    });
-  };
-
-  handleNumberChange = name => event => {
-    let bingo = this.state.bingo_game;
-    bingo[name] = parseInt(event.target.value);
-    this.setState({
-      dirty: true,
-      bingo_game: bingo
-    });
-  };
-
-  handleCheckChange = name => event => {
-    let bingo = this.state.bingo_game;
-    bingo[name] = event.target.checked;
-    this.setState({
-      dirty: true,
-      bingo_game: bingo
-    });
-  };
-
-  onEditorStateChange = editorState => {
-    this.setState({
-      dirty: true,
-      descriptionEditor: editorState
-    });
-  };
-
-  changeTab(event, name) {
-    this.setState({
-      curTab: name
-    });
+  const changeTab = (event, name) => {
+    setCurTab( name );
   }
 
-  render() {
-    const { classes } = this.props;
-    const save_btn = this.state.dirty ? (
+    const save_btn = dirty ? (
     <Suspense fallback={<div>Loading...</div>}>
     <Translation ns={['bingo_games']}>
     {
@@ -261,7 +246,7 @@ class BingoGameDataAdmin extends React.Component {
           variant="contained"
           color="primary"
           className={classes.button}
-          onClick={this.saveBingoGame}
+          onClick={saveBingoGame}
           id="save_bingo_game"
           value="save_bingo_game"
         >
@@ -272,7 +257,7 @@ class BingoGameDataAdmin extends React.Component {
     </Suspense>
     ) : null;
 
-    const group_options = this.state.bingo_game.group_option ? (
+    const group_options = gameGroupOption ? (
     <Suspense fallback={<div>Loading...</div>}>
     <Translation ns={['bingo_games']}>
     {
@@ -284,8 +269,8 @@ class BingoGameDataAdmin extends React.Component {
             label={t("group_discount")}
             type="number"
             className={classes.textField}
-            value={this.state.bingo_game.group_discount}
-            onChange={this.handleChange("group_discount")}
+            value={gameGroupDiscount}
+            onChange={setGameGroupDiscount}
             margin="normal"
           />
         </Grid>
@@ -295,16 +280,14 @@ class BingoGameDataAdmin extends React.Component {
               {t("group_source")}
             </InputLabel>
             <Select
-              value={this.state.bingo_game.project_id}
-              onChange={this.handleChange("project_id")}
-              input={
-                <Input name="bingo_game_project" id="bingo_game_project_id" />
-              }
+              id='bingo_game_project_id'
+              value={gameGroupProjectId}
+              onChange={setGameGroupProjectId}
               displayEmpty
               name="bingo_game_project"
               className={classes.selectEmpty}
             >
-              {this.state.bingo_game.projects.map(project => {
+              {gameProjects.map(project => {
                 return (
                   <MenuItem value={project.id} key={project.id}>
                     {project.name}
@@ -325,11 +308,11 @@ class BingoGameDataAdmin extends React.Component {
     {
       (t) => 
       <Paper style={{ height: "95%", width: "100%" }}>
-        <Tabs value={this.state.curTab} onChange={this.changeTab} centered>
+        <Tabs value={curTab} onChange={changeTab} centered>
           <Tab value="details" label={t("game_details_pnl")} />
           <Tab value="results" label={t("response_pnl")} />
         </Tabs>
-        {"details" == this.state.curTab && (
+        {"details" == curTab && (
           <React.Fragment>
             <Grid container spacing={10}>
               <Grid item>
@@ -337,8 +320,8 @@ class BingoGameDataAdmin extends React.Component {
                   id="topic"
                   label={t("topic")}
                   className={classes.textField}
-                  value={this.state.bingo_game.topic}
-                  onChange={this.handleChange("topic")}
+                  value={gameTopic}
+                  onChange={setGameTopic}
                   margin="normal"
                 />
               </Grid>
@@ -347,12 +330,12 @@ class BingoGameDataAdmin extends React.Component {
                   toolbarClassName="demo-toolbar-absolute"
                   wrapperId="Description"
                   label={t("description")}
-                  onEditorStateChange={this.onEditorStateChange}
+                  onEditorStateChange={setGameDescriptionEditor}
                   toolbarOnFocus
                   toolbar={{
                     options: ["inline", "list", "link"]
                   }}
-                  editorState={this.state.descriptionEditor}
+                  editorState={gameDescriptionEditor}
                 />
               </Grid>
               <Grid item>
@@ -360,9 +343,9 @@ class BingoGameDataAdmin extends React.Component {
                   id="bingo-lead-time"
                   label={t("lead_time")}
                   className={classes.lead_time}
-                  value={this.state.bingo_game.lead_time}
+                  value={gameLeadTime}
                   type="number"
-                  onChange={this.handleNumberChange("lead_time")}
+                  onChange={setGameLeadTime}
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -374,51 +357,49 @@ class BingoGameDataAdmin extends React.Component {
                   id="bingo-individual_count"
                   label={t("ind_term_count")}
                   className={classes.textField}
-                  value={this.state.bingo_game.individual_count}
+                  value={gameIndividualCount}
                   type="number"
-                  onChange={this.handleNumberChange("individual_count")}
+                  onChange={setGameIndividualCount}
                   InputLabelProps={{
                     shrink: true
                   }}
                   margin="normal"
                 />
+              </Grid>
+                <MuiPickersUtilsProvider utils={LuxonUtils}>
+              <Grid item>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant='inline'
+                    autoOk={true}
+                    format='MM/dd/yyyy'
+                    margin='normal'
+                    id='bingo-start_date'
+                    label={t("open_date")}
+                    value={gameStartDate}
+                    onChange={setGameStartDate}
+                  />
               </Grid>
               <Grid item>
-                <TextField
-                  id="bingo-start_date"
-                  label={t("open_date")}
-                  className={classes.textField}
-                  value={this.state.bingo_game.start_date}
-                  type="date"
-                  onChange={this.handleChange("start_date")}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  helperText={this.state.messages["start_date"]}
-                  margin="normal"
-                />
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant='inline'
+                    autoOk={true}
+                    format='MM/dd/yyyy'
+                    margin='normal'
+                    id='bingo-end_date'
+                    label={t("close_date")}
+                    value={gameEndDate}
+                    onChange={setGameEndDate}
+                  />
               </Grid>
-              <Grid item>
-                <TextField
-                  id="bingo-close_date"
-                  label={t("close_date")}
-                  className={classes.textField}
-                  value={this.state.bingo_game.end_date}
-                  type="date"
-                  onChange={this.handleChange("end_date")}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  helperText={this.state.messages["end_date"]}
-                  margin="normal"
-                />
-              </Grid>
+              </MuiPickersUtilsProvider>
               <Grid item>
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={this.state.bingo_game.active}
-                      onChange={this.handleCheckChange("active")}
+                      checked={gameActive}
+                      onChange={setGameActive}
                     />
                   }
                   label={t("active")}
@@ -426,12 +407,12 @@ class BingoGameDataAdmin extends React.Component {
               </Grid>
               <Grid item>
                 <Switch
-                  checked={this.state.bingo_game.group_option}
+                  checked={gameGroupOption}
                   id="group_option"
-                  onChange={this.handleCheckChange("group_option")}
+                  onChange={setGameGroupOption}
                   disabled={
-                    null == this.state.bingo_game.projects ||
-                    1 > this.state.bingo_game.projects.length
+                    null == gameProjects ||
+                    1 > gameProjects.length
                   }
                 />
                 <InputLabel htmlFor="group_option">
@@ -441,16 +422,16 @@ class BingoGameDataAdmin extends React.Component {
               {group_options}
             </Grid>
             {save_btn}
-            <Typography>{this.state.saveStatus}</Typography>
+            <Typography>{saveStatus}</Typography>
           </React.Fragment>
         )}
-        {"results" == this.state.curTab && (
+        {"results" == curTab && (
           <Grid container style={{ height: "100%" }}>
             <Grid item xs={5}>
-              <ConceptChips concepts={this.state.concepts} />
+              <ConceptChips concepts={concepts} />
             </Grid>
             <Grid item xs={7}>
-              <BingoGameDataAdminTable results_raw={this.state.result_data} />
+              <BingoGameDataAdminTable results_raw={resultData} />
             </Grid>
           </Grid>
         )}
@@ -459,7 +440,6 @@ class BingoGameDataAdmin extends React.Component {
     </Translation>
     </Suspense>
     );
-  }
 }
 
 BingoGameDataAdmin.propTypes = {
@@ -468,4 +448,3 @@ BingoGameDataAdmin.propTypes = {
   conceptUrl: PropTypes.string.isRequired,
   gameResultsUrl: PropTypes.string.isRequired
 };
-export default withStyles(styles)(BingoGameDataAdmin);

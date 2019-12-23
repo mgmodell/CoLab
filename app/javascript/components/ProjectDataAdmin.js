@@ -171,6 +171,7 @@ export default function ProjectDataAdmin(props) {
     </Button>
   ) : null;
 
+  //Later I want to call the activate/deactivate right here
   const toggleActive = () => {
     setProjectActive(!projectActive);
   };

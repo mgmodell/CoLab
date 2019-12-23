@@ -5,9 +5,9 @@ import { initReactI18next } from "react-i18next";
 import Fetch from "i18next-fetch-backend";
 
   i18n
-    .use(initReactI18next)
     .use(LngDetector) //language detector
     .use(Fetch)
+    .use(initReactI18next)
     .init({
       backend: {
         loadPath: "/infra/locales/{{ns}}.json",
