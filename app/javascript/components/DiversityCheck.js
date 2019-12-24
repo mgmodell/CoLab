@@ -92,7 +92,7 @@ class DiversityCheck extends React.Component {
   render() {
     return (
       <Suspense fallback={<div>Loading...</div>}>
-      <Translation ns='base'>
+      <Translation >
       {
         (t) =>
       <React.Fragment>
@@ -107,7 +107,7 @@ class DiversityCheck extends React.Component {
         <Dialog
           open={this.state.dialogOpen}
           onClose={() => this.closeDialog()}
-          aria-labelledby={t("calc_id")}
+          aria-labelledby={t("calc_it")}
         >
           <DialogTitle>{t("calc_it")}</DialogTitle>
           <DialogContent>

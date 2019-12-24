@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, lazy } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Paper from "@material-ui/core/Paper";
@@ -31,7 +31,7 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
 import i18n from './i18n';
-import { Translation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -59,6 +59,10 @@ const useStyles = makeStyles({
 
 export default function BingoGameDataAdmin( props ){
   const classes = useStyles( );
+  //const { xl, i18n } = useTranslation( 'bingo_game' );
+
+  const { t, i18n } = useTranslation('bingo_games' );
+  
   const [dirty, setDirty] = useState( false );
   const [curTab, setCurTab] = useState( 'details' );
   const [messages, setMessages] = useState( { } );
@@ -116,7 +120,13 @@ export default function BingoGameDataAdmin( props ){
     ] } );
 
   const saveBingoGame = () => {
-    setSaveStatus( t( 'save_status' ) )
+    /* Save
+    setSaveStatus( 
+      <Suspense fallback={<div>Loading...</div>} >
+        xl( 'save_status' )
+       </Suspense>
+    );
+    */
     fetch(props.bingoGameUrl + ".json", {
       method: "PATCH",
       credentials: "include",
@@ -125,7 +135,7 @@ export default function BingoGameDataAdmin( props ){
           topic: gameTopic,
           description: draftToHtml(
             convertToRaw(
-              descriptionEditor.getCurrentContent( )
+              gameDescriptionEditor.getCurrentContent( )
             )
           ),
           source: gameSource,
@@ -239,9 +249,6 @@ export default function BingoGameDataAdmin( props ){
 
     const save_btn = dirty ? (
     <Suspense fallback={<div>Loading...</div>}>
-    <Translation ns={['bingo_games']}>
-    {
-      (t) => 
         <Button
           variant="contained"
           color="primary"
@@ -252,16 +259,11 @@ export default function BingoGameDataAdmin( props ){
         >
           {t("update_bingo_btn")}
         </Button>
-    }
-    </Translation>
     </Suspense>
     ) : null;
 
     const group_options = gameGroupOption ? (
     <Suspense fallback={<div>Loading...</div>}>
-    <Translation ns={['bingo_games']}>
-    {
-      (t) => 
         <React.Fragment>
         <Grid item>
           <TextField
@@ -270,7 +272,7 @@ export default function BingoGameDataAdmin( props ){
             type="number"
             className={classes.textField}
             value={gameGroupDiscount}
-            onChange={setGameGroupDiscount}
+            onChange={(event)=>setGameGroupDiscount(event.target.value)}
             margin="normal"
           />
         </Grid>
@@ -282,7 +284,7 @@ export default function BingoGameDataAdmin( props ){
             <Select
               id='bingo_game_project_id'
               value={gameGroupProjectId}
-              onChange={setGameGroupProjectId}
+              onChange={(event)=>setGameGroupProjectId(event.target.value)}
               displayEmpty
               name="bingo_game_project"
               className={classes.selectEmpty}
@@ -298,15 +300,10 @@ export default function BingoGameDataAdmin( props ){
           </FormControl>
         </Grid>
           </React.Fragment>
-        }
-        </Translation>
         </Suspense>
     ) : null;
     return (
     <Suspense fallback={<div>Loading...</div>}>
-    <Translation ns={['bingo_games']}>
-    {
-      (t) => 
       <Paper style={{ height: "95%", width: "100%" }}>
         <Tabs value={curTab} onChange={changeTab} centered>
           <Tab value="details" label={t("game_details_pnl")} />
@@ -321,7 +318,7 @@ export default function BingoGameDataAdmin( props ){
                   label={t("topic")}
                   className={classes.textField}
                   value={gameTopic}
-                  onChange={setGameTopic}
+                  onChange={event=>setGameTopic(event.target.value)}
                   margin="normal"
                 />
               </Grid>
@@ -345,7 +342,7 @@ export default function BingoGameDataAdmin( props ){
                   className={classes.lead_time}
                   value={gameLeadTime}
                   type="number"
-                  onChange={setGameLeadTime}
+                  onChange={event=>setGameLeadTime(event.target.value)}
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -359,7 +356,7 @@ export default function BingoGameDataAdmin( props ){
                   className={classes.textField}
                   value={gameIndividualCount}
                   type="number"
-                  onChange={setGameIndividualCount}
+                  onChange={event=>setGameIndividualCount(event.target.value)}
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -399,7 +396,7 @@ export default function BingoGameDataAdmin( props ){
                   control={
                     <Switch
                       checked={gameActive}
-                      onChange={setGameActive}
+                      onChange={(event)=>setGameActive(!gameActive)}
                     />
                   }
                   label={t("active")}
@@ -409,7 +406,7 @@ export default function BingoGameDataAdmin( props ){
                 <Switch
                   checked={gameGroupOption}
                   id="group_option"
-                  onChange={setGameGroupOption}
+                  onChange={(event)=>setGameGroupOption(!gameGroupOption)}
                   disabled={
                     null == gameProjects ||
                     1 > gameProjects.length
@@ -436,8 +433,6 @@ export default function BingoGameDataAdmin( props ){
           </Grid>
         )}
       </Paper>
-    }
-    </Translation>
     </Suspense>
     );
 }

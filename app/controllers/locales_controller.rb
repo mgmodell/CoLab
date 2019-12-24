@@ -3,8 +3,6 @@
 class LocalesController < ApplicationController
   def get_resources
     ns = params[:ns]
-    puts "\n\n\n\t#{params[:ns]}\n"
-    puts "#{params}"
     texts = if ns == 'base'
               I18n.t '.'
             else

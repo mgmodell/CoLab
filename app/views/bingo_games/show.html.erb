@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 <% theme_code = get_theme_code
    anonymize = get_anonymous %>
-<%= react_component "BingoGameDataAdmin", {
+<%= react_component "BingoGameDataAdminWrapper", {
         bingoGameUrl: bingo_game_path( @bingo_game ),
         conceptUrl: bingo_concepts_path( id: @bingo_game.id ),
         gameResultsUrl: game_results_path( id: @bingo_game.id ),

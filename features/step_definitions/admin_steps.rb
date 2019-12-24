@@ -17,7 +17,7 @@ Then /^the user sets the project to the course's project$/ do
   if has_select? 'Source of groups', visible: :all
     page.select(@project.name, from: 'Source of groups', visible: :all)
   else
-    find('div', id: /select-bingo_game_project/).click
+    find('div', id: /bingo_game_project_id/).click
     find('li', text: @project.name).click
 
   end

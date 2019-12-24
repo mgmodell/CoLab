@@ -60,7 +60,7 @@ Feature: Bingo Administration
     Then the user sets the rich "Description" field to "this is the coolest"
     Then the user clicks "Update Bingo Game"
     Then the user waits while seeing "Saving game"
-    Then the user will see "success"
+    Then the user will see "successfully"
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
     Then the bingo "Topic" is "Privacy"
