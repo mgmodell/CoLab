@@ -19,6 +19,8 @@
     "@material-ui/pickers": "^3.2.8",
     "@material-ui/styles": "^4.2.0",
     "@rails/webpacker": "^4.0.7",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
     "add": "^2.0.6",
     "autosuggest-highlight": "^3.1.1",
     "babel-loader": "^8.0.6",
@@ -51,6 +53,8 @@
     "react-virtualized": "^9.21.0",
     "react_ujs": "^2.5.0",
     "reactjs-popup": "^1.5.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4",
     "webpack": "^4.0.0",
     "whatwg-fetch": "^3.0.0",
     "yarn": "^1.15.2"

@@ -16,6 +16,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
+import Skeleton from '@material-ui/lab/Skeleton';
+
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
@@ -38,8 +40,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import ConceptChips from "./ConceptChips";
 import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
-
-//const t = get_i18n("bingo_games");
 
 const useStyles = makeStyles({
   container: {
@@ -103,7 +103,7 @@ export default function BingoGameDataAdmin( props ){
   }, [ ]);
 
   useEffect( ( ) => {
-    setDirty( true ),
+    setDirty( true ) },
     [
       gameTopic,
       gameDescriptionEditor,
@@ -117,16 +117,11 @@ export default function BingoGameDataAdmin( props ){
       gameGroupOption,
       gameGroupDiscount,
       gameGroupProjectId
-    ] } );
+    ] );
 
   const saveBingoGame = () => {
-    /* Save
-    setSaveStatus( 
-      <Suspense fallback={<div>Loading...</div>} >
-        xl( 'save_status' )
-       </Suspense>
-    );
-    */
+    // Save
+    setSaveStatus( t('save_status' ) );
     fetch(props.bingoGameUrl + ".json", {
       method: "PATCH",
       credentials: "include",
@@ -248,7 +243,7 @@ export default function BingoGameDataAdmin( props ){
   }
 
     const save_btn = dirty ? (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Skeleton variant='text'/>}>
         <Button
           variant="contained"
           color="primary"
@@ -263,7 +258,7 @@ export default function BingoGameDataAdmin( props ){
     ) : null;
 
     const group_options = gameGroupOption ? (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Skeleton variant='text'/>}>
         <React.Fragment>
         <Grid item>
           <TextField
@@ -303,7 +298,7 @@ export default function BingoGameDataAdmin( props ){
         </Suspense>
     ) : null;
     return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Skeleton variant='text'/>}>
       <Paper style={{ height: "95%", width: "100%" }}>
         <Tabs value={curTab} onChange={changeTab} centered>
           <Tab value="details" label={t("game_details_pnl")} />
@@ -342,7 +337,7 @@ export default function BingoGameDataAdmin( props ){
                   className={classes.lead_time}
                   value={gameLeadTime}
                   type="number"
-                  onChange={event=>setGameLeadTime(event.target.value)}
+                  onChange={(event)=>setGameLeadTime(event.target.value)}
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -356,7 +351,7 @@ export default function BingoGameDataAdmin( props ){
                   className={classes.textField}
                   value={gameIndividualCount}
                   type="number"
-                  onChange={event=>setGameIndividualCount(event.target.value)}
+                  onChange={(event)=>setGameIndividualCount(event.target.value)}
                   InputLabelProps={{
                     shrink: true
                   }}
