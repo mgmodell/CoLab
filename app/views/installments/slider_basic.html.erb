@@ -18,6 +18,11 @@
 <% 
      url_params = { :action => "update", :id => @installment.id }
 %>
+  <%= react_component 'InstallmentReport', {
+    token: form_authenticity_token,
+    getInstallmentUrl: 'hi',
+    setInstallmentUrl: 'there'
+  } %>
 <%= form_for @installment, method: 'PATCH', :url => url_params, html: {novalidate: true} do |f| %>
   <%= f.hidden_field :inst_date %>
   <%= f.hidden_field :assessment_id %>
