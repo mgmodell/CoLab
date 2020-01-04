@@ -2,7 +2,7 @@
 
 class ProjectsController < ApplicationController
   layout 'admin'
-  before_action :set_project, only: %i[show edit update destroy activate
+  before_action :set_project, only: %i[show new edit update destroy activate
                                        rescore_group rescore_groups]
   before_action :check_editor, except: %i[next diagnose react
                                           rescore_group rescore_groups
@@ -54,14 +54,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def new
-    @title = t('.title')
-    course = Course.find(params[:course_id])
-    @project = course.projects.new
-    @project.start_date = course.start_date
-    @project.end_date = course.end_date
-  end
-
   def create
     @title = t('.title')
     @project = Project.new(project_params)
@@ -69,7 +61,9 @@ class ProjectsController < ApplicationController
       notice = @project.active ?
             t('projects.create_success') :
             t('projects.create_success_inactive')
-      redirect_to @project, notice: notice
+      redirect_to project_path( @project,
+        notice: notice,
+        format: params[:format] )
     else
       logger.debug @project.errors.full_messages unless @project.errors.empty?
       render :new
@@ -106,7 +100,7 @@ class ProjectsController < ApplicationController
           render :edit
         end
         format.json do
-          render json: @project.errors.full_messages
+          render json: { messages: @project.errors }
         end
       end
     end
@@ -200,7 +194,6 @@ class ProjectsController < ApplicationController
 
   def rescore_group
     @title = t('.title')
-    puts "\n\n\n\t format: #{params}\n\n\n\n"
     group = @project.groups.where(id: params[:group_id]).take
     if group.present?
       group.calc_diversity_score
@@ -253,7 +246,15 @@ class ProjectsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_project
-    p_test = Project.find(params[:id])
+    if( params[:id].blank? )
+      course = Course.find(params[:course_id])
+      p_test = course.projects.new
+      p_test.start_date = course.start_date
+      p_test.end_date = course.end_date
+    else
+      p_test = Project.find(params[:id])
+    end
+
     if current_user.is_admin?
       @project = p_test
     else

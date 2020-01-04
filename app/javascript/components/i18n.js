@@ -27,7 +27,7 @@ import Fetch from "i18next-fetch-backend";
       fallbackLng: "en",
       initImmediate: true,
       ns: 'base',
-      debug: true
+      debug: false
     });
 
 export default i18n;

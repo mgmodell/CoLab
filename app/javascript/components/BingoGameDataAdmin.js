@@ -269,6 +269,8 @@ export default function BingoGameDataAdmin( props ){
             value={gameGroupDiscount}
             onChange={(event)=>setGameGroupDiscount(event.target.value)}
             margin="normal"
+            error={null != messages.name}
+            helper={messages.name}
           />
         </Grid>
         <Grid item>

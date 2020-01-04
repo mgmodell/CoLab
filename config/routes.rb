@@ -41,7 +41,10 @@ Rails.application.routes.draw do
     get 'course/scores/:id' => 'courses#score_sheet',
         as: :course_scores,
         constraints: ->(req) { req.format == :csv }
-    resources :courses, :projects, :experiences, :bingo_games, :schools,
+    get 'projects/new' => 'projects#show', as: :new_project
+    resources :projects, except: %i[new]
+
+    resources :courses, :experiences, :bingo_games, :schools,
               :consent_forms
     resources :concepts, except: [:destroy, :create]
     resources :bingo_games, except: [:edit ]

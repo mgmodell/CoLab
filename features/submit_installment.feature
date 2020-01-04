@@ -93,6 +93,7 @@ Feature: Submitting Reports
     Then there should be 0 project save errors
     Then the installment values will match the submit ratio
 
+  @javascript
   Scenario: An installment's factor values can be randomly assigned
     Given the project measures 3 factors
     Given the course has a consent form
@@ -105,6 +106,8 @@ Feature: Submitting Reports
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
+    Then the user switches to the "Task View" tab
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form

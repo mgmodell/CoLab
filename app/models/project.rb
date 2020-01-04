@@ -31,6 +31,20 @@ class Project < ApplicationRecord
   validate :dates_within_course
   validate :activation_status
 
+  #Set default values
+  after_initialize do
+    if self.new_record?
+      self.active = false
+      #Simple/Goldfinch factor pack is the default
+      self.factor_pack_id = 1
+      #Sliders style
+      self.style_id = 2
+      self.start_dow = 5
+      self.end_dow = 1
+
+    end
+  end
+
   def group_for_user(user)
     if id == -1 # This hack supports demonstration of group term lists
       Group.new(name: 'SuperStars', users: [user])

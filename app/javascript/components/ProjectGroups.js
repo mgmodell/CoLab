@@ -163,7 +163,7 @@ class ProjectGroups extends React.Component {
   }
 
   getGroups() {
-    const url = this.props.groupsUrl + ".json";
+    const url = this.props.groupsUrl + this.props.projectId + ".json";
     this.setState({
       working: true
     });
@@ -202,7 +202,7 @@ class ProjectGroups extends React.Component {
     const g_req = {
       group_id: group_id
     };
-    fetch(this.props.diversityRescoreGroup + ".json", {
+    fetch(this.props.diversityRescoreGroup + this.props.projectId + ".json", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -240,7 +240,7 @@ class ProjectGroups extends React.Component {
     this.setState({
       working: true
     });
-    fetch(this.props.diversityRescoreGroups + ".json", {
+    fetch(this.props.diversityRescoreGroups + this.props.projectId + ".json", {
       method: "POST",
       credentials: "include",
       headers: {

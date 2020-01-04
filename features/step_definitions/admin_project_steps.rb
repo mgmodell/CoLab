@@ -65,6 +65,13 @@ Then /^the user switches to the "([^"]*)" tab$/ do |tab|
   click_link tab
 end
 
+Then 'the user enables the {string} table view option' do |view_option|
+  find( :xpath, "//a[contains(text(), 'Show/Hide')]" ).click
+  find( :xpath, "//label[contains(text(), '#{view_option}')]" ).click
+  find( :xpath, "//body" ).send_keys :escape
+end
+
+
 Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/ do |field, value|
   page.fill_in(field, with: value, visible: false)
 end

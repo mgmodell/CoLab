@@ -28,6 +28,7 @@ Given /^a user has signed up$/ do
     password_confirmation: 'password',
     email: Forgery::Internet.email_address,
     timezone: 'UTC',
+    language: Language.find_by( code: 'en' ),
     school: School.find(1),
     theme_id: 1
   )

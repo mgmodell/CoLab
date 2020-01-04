@@ -15,12 +15,13 @@
       courseId: @project.course_id,
       projectUrl: projects_path,
       activateProjectUrl: activate_project_path,
-      groupsUrl: groups_path(@project),
+      groupsUrl: groups_path(id: ''),
       diversityCheckUrl: check_diversity_score_path,
-      diversityRescoreGroup: rescore_group_path(@project),
-      diversityRescoreGroups: rescore_groups_path(@project)
+
+      diversityRescoreGroup: rescore_group_path(id: '' ),
+      diversityRescoreGroups: rescore_groups_path(id: '' )
       }
       %>
+  </div>
 </div>
-  <%= link_to (t 'projects.edit.title'), edit_project_path(@project) %>
   <%= link_to (t :back_to_course), @project.course %>

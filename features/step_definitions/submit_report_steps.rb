@@ -66,19 +66,32 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
       element.set cell_value if element[:id].end_with? 'value'
     end
   else
+    byebug
     @project.factors.each do |factor|
+      click_link factor.name
+      puts factor.name
       factor_vals = []
-      elements = page.all(:xpath, "//input[contains(@class,\"#{factor.name.delete(' ')}\")]")
+      elements = page.
+        all(:xpath, "//input[@factor='#{factor.name}']",
+        { visible: :all } )
       index = 0
       total = 0
       while index < (elements.length - 1)
         what_is_left = column_points.to_i - total
         value = Random.rand(what_is_left)
         elements[index].set value
+        puts "\t #{index}: #{value} found: #{elements[index].value}"
         total += value
         factor_vals << value
         index += 1
       end
+      #debug
+      elements = page.
+        all(:xpath, "//input[@factor='#{factor.name}']",
+        { visible: :all } ).each do |element|
+        puts "saved: #{element.value}"
+      end
+
       elements[index].set (column_points.to_i - total)
       factor_vals << column_points.to_i - total
       @installment_values[factor.id] = factor_vals
@@ -94,7 +107,9 @@ Then /^the installment form should request factor x user values$/ do
   expected_count = group.users.count * factors.count
 
   actual_count = 0
-  page.all(:xpath, '//input[starts-with(@id,"installment_values_attributes_")]').each do |element|
+  page.all(:xpath,
+      '//input[starts-with(@id,"installment_values_attributes_")]',
+      {visible: :all}).each do |element|
     actual_count += 1 if element[:id].end_with? 'value'
   end
   actual_count.should eq expected_count
