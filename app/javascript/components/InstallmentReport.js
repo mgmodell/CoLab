@@ -11,29 +11,50 @@ export default function InstallmentReport(props){
   
   const [dirty, setDirty] = useState( false );
   const [curPanel, setCurPanel] = useState( 0 );
+  const [factors, setFactors] = useState( {
+    1: {
+        name: 'hello',
+        description: 'this is gonna\' rock!'
+       },
+    2: {
+        name: 'there',
+        description: 'this is not gonna\' rock!'
+       }
+    } );
+
   const [contributions, setContributions] = useState({
-        1: [
+        1: {
+            factorId: 1,
+            values: [
           {id: 1, name: 'bob 1', value: 1500 },
           {id: 2, name: 'bob 2', value: 1500 },
           {id: 3, name: 'bob 3', value: 1500 },
           {id: 4, name: 'bob 4', value: 1500 }
-          ],
-        2: 
-          [
+          ] },
+        2: {
+            factorId: 2,
+            values: [
           {id: 1, name: 'bob 1', value: 1500 },
           {id: 2, name: 'bob 2', value: 2000 },
           {id: 3, name: 'bob 3', value: 1000 },
           {id: 4, name: 'bob 4', value: 1500 }
-          ]
+          ] }
         });
     
     const updateSlice = (id, update) =>{
       const lContributions = Object.assign( {}, contributions);
-
-      lContributions[ id ] = update;
-
+      lContributions[ id ].values = update;
       setContributions( lContributions );
-      setDirty( true );
+    }
+
+    useEffect( () => setDirty( true ), [
+      contributions
+    ]);
+
+    useEffect( ()=>getContributions(), [] );
+
+    const getContributions = ()=>{
+      console.log( 'get that data!' );
     }
 
     const setPanel = ( panelId )=>{
@@ -58,9 +79,9 @@ export default function InstallmentReport(props){
         <ExpansionPanelSummary 
           expandIcon={<ExpandMoreIcon />}
           id={sliceId}>
-        {sliceId}
+        {factors[ contributions[ sliceId ].factorId ].name }
         ({
-          contributions[sliceId].reduce( (total, val)=>{
+          contributions[sliceId].values.reduce( (total, val)=>{
             return  total + val.value;
 
           }, 0 ) }
@@ -71,8 +92,8 @@ export default function InstallmentReport(props){
             id={Number( sliceId )}
             sum={6000}
             updateContributors={updateSlice.bind( null, sliceId ) }
-            description='definition of stuff that is cool'
-            contributors={contributions[sliceId]}
+            description={factors[ contributions[ sliceId ].factorId ].description }
+            contributors={contributions[sliceId].values}
           />
         </ExpansionPanelDetails>
       </ExpansionPanel>
