@@ -36,17 +36,34 @@ export default function InstallmentReport(props){
       setDirty( true );
     }
 
+    const setPanel = ( panelId )=>{
+      //If the panel is already selected...
+      if( panelId == curPanel ){
+        //...close it.
+        setCurPanel( '' );
+      //Otherwise...
+      } else {
+        //...open it
+        setCurPanel( panelId );
+      }
+    }
+
     return (
       Object.keys( contributions ).map( (sliceId)=> {
       return(
       <ExpansionPanel
         expanded={sliceId == curPanel}
-        onChange={()=>setCurPanel( sliceId )}
+        onChange={()=>setPanel( sliceId )}
         key={sliceId}>
         <ExpansionPanelSummary 
           expandIcon={<ExpandMoreIcon />}
           id={sliceId}>
-        {sliceId} ({dirty ? 'dirty' : 'clean' } )
+        {sliceId}
+        ({
+          contributions[sliceId].reduce( (total, val)=>{
+            return  total + val.value;
+
+          }, 0 ) }
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <LinkedSliders
