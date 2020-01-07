@@ -20,50 +20,8 @@
 %>
   <%= react_component 'InstallmentReport', {
     token: form_authenticity_token,
-    getInstallmentUrl: 'hi',
+    getInstallmentUrl: (@installment.assessment_id > 0 ?
+      edit_installment_path( @installment.assessment_id ) :
+      assessment_demo_complete_path ),
     setInstallmentUrl: 'there'
   } %>
-<%= form_for @installment, method: 'PATCH', :url => url_params, html: {novalidate: true} do |f| %>
-  <%= f.hidden_field :inst_date %>
-  <%= f.hidden_field :assessment_id %>
-  <%= f.hidden_field :user_id %>
-  <%= f.hidden_field :group_id %>
-  <% index = 0 %>
-  <div data-role="collapsible-set" data-content-theme="<%=theme_code%>">
-    <% @factors.each do |factor| %>
-      <div data-role="collapsible" data-collapsed="true" >
-        <h3><%= factor.name %></h3>
-        <p><%= t :description %>: <%= factor.description %></p>
-        <table width="90%">
-          <% @members.each do |member| %>
-            <tr>
-              <td width="150" class="full-width-slider" >
-                <%= fields_for "installment[values_attributes][]",
-                        @installment.value_for_user_factor( member, factor )do |value_form| %>
-                  <%= value_form.hidden_field :factor_id %>
-                  <%= value_form.hidden_field :user_id %>
-                  <%= label_tag :value, member.informal_name( anonymize ) %>
-                </td>
-                <td>
-                  <br>
-                  <%= value_form.range_field :value, 
-                        :min => 0, :max => 6000, 
-                        :data => {:highlight => true },
-                        :class => "slider ui-hidden-accessible val_container",
-                        :step => ( @members.length - 1 ) ** 2,
-                        :member => member.hash,
-                  			:factor => factor.name,
-                  			:oldValue => (6000 / @members.length ) %>
-                  <br>
-                <% end %><br>
-                <% index += 1 %>
-              </td>
-            </tr>
-          <% end %>
-        </table>
-      </div>
-    <% end %>
-  </div>
-  <%= render :partial => "installments/shared/comments", :object => f %>
-  <%= f.submit t 'installments.submit' %>
-<% end %>

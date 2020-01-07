@@ -10,13 +10,14 @@ class InstallmentsController < ApplicationController
     @assessment = Assessment.find(params[:assessment_id])
     @title = t 'installments.title'
     @project = @assessment.project
+
+    #TODO: Consent Log logic ought to move into a before_action
     consent_log = @project.course.get_consent_log user: current_user
 
     if consent_log.present? && !consent_log.presented?
       redirect_to edit_consent_log_path(consent_form_id: consent_log.consent_form_id)
     else
       @group = @assessment.group_for_user current_user
-      @members = @group.users
       @factors = @project.factors
       @installment = Installment.includes(values: %i[factor user], assessment: :project)
                                 .where(assessment: @assessment,
@@ -30,16 +31,47 @@ class InstallmentsController < ApplicationController
                                        group: @group)
 
         cell_value = Installment::TOTAL_VAL / @members.size
-        @members.each do |u|
+        group.users.each do |u|
           @factors.each do |b|
             @installment.values.build(factor: b, user: u, value: cell_value)
           end
         end
       end
-      @project_name = @project.name
-
-      render @project.style.filename
+      submit_helper(
+        factors: @factors, group: @group, installment: @installment )
     end
+  end
+
+  def submit_helper factors:, group:, installment:
+      respond_to do |format|
+        format.html { render installment.assessment.project.style.filename }
+
+        format.json do
+          render json: {
+            factors: Hash[ factors.collect{|factor| [factor.id, {
+              id: factor.id,
+              name: factor.name,
+              description: factor.description
+            } ] } ],
+            group: {
+              name: group.name,
+              users: Hash[ group.users.collect { |member| [member.id, {
+                id: member.id,
+                name: member.name( false )
+              } ] } ]
+            },
+            installment: {
+              inst_date: installment.inst_date,
+              values: installment.values.as_json( only: %i[factor_id user_id value] ),
+              project: {
+                name: installment.assessment.project.name,
+                description: installment.assessment.project.description
+              }
+            }
+          }
+        end
+      end
+
   end
 
   def update
@@ -100,19 +132,21 @@ class InstallmentsController < ApplicationController
     @project = get_demo_project
     @group = get_demo_group
 
-    @installment = Installment.new(id: -42, user_id: -1, assessment_id: -1,
-                                   group_id: @group.id)
+    @installment = get_demo_installment
+    @installment.group = @group
+
     @factors = @project.factor_pack
     @members = @group.users
 
     cell_value = Installment::TOTAL_VAL / @members.size
     @members.each do |_u|
       @factors.each do |b|
-        @installment.values.build(factor: b, user: _u, value: cell_value)
+        @installment.values_build(factor: b, user: _u, value: cell_value)
       end
     end
 
-    render @project.style.filename
+    submit_helper( 
+        factors: @factors, group: @group, installment: @installment )
   end
 
   private

@@ -10,40 +10,17 @@ import LinkedSliders from './LinkedSliders';
 export default function InstallmentReport(props){
   
   const [dirty, setDirty] = useState( false );
+  const [messages, setMessages] = useState( { } );
   const [curPanel, setCurPanel] = useState( 0 );
-  const [factors, setFactors] = useState( {
-    1: {
-        name: 'hello',
-        description: 'this is gonna\' rock!'
-       },
-    2: {
-        name: 'there',
-        description: 'this is not gonna\' rock!'
-       }
-    } );
+  const [factors, setFactors] = useState( { } );
+  const [group, setGroup] = useState( { } );
+  const [project, setProject] = useState( { } );
 
-  const [contributions, setContributions] = useState({
-        1: {
-            factorId: 1,
-            values: [
-          {id: 1, name: 'bob 1', value: 1500 },
-          {id: 2, name: 'bob 2', value: 1500 },
-          {id: 3, name: 'bob 3', value: 1500 },
-          {id: 4, name: 'bob 4', value: 1500 }
-          ] },
-        2: {
-            factorId: 2,
-            values: [
-          {id: 1, name: 'bob 1', value: 1500 },
-          {id: 2, name: 'bob 2', value: 2000 },
-          {id: 3, name: 'bob 3', value: 1000 },
-          {id: 4, name: 'bob 4', value: 1500 }
-          ] }
-        });
+  const [contributions, setContributions] = useState({ });
     
     const updateSlice = (id, update) =>{
       const lContributions = Object.assign( {}, contributions);
-      lContributions[ id ].values = update;
+      lContributions[ id ] = update;
       setContributions( lContributions );
     }
 
@@ -54,7 +31,46 @@ export default function InstallmentReport(props){
     useEffect( ()=>getContributions(), [] );
 
     const getContributions = ()=>{
-      console.log( 'get that data!' );
+      fetch( props.getInstallmentUrl + '.json', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Accepts: 'application/json',
+          'X-CSRF-Token': props.token
+        }
+      })
+        .then(response => {
+          if( response.ok ){
+            setMessages( { } );
+            return response.json( );
+          } else {
+            console.log( 'error' );
+          }
+        })
+        .then( data => {
+          setFactors( data.factors );
+
+          //Process Contributions
+          const contributions = data.installment.values.reduce(
+            (valuesAccum,value)=>{
+              const values = valuesAccum[ value.factor_id ] || [ ];
+              values.push ({
+                id: value.user_id,
+                factorId: value.factor_id,
+                name: data.group.users[ value.user_id ].name,
+                value: value.value
+              });
+              valuesAccum[ value.factor_id ] = values;
+              return valuesAccum;
+              }, {} );
+          setContributions( contributions );
+
+          setGroup( data.group );
+          setProject( data.installment.project )
+
+
+        });
     }
 
     const setPanel = ( panelId )=>{
@@ -79,9 +95,9 @@ export default function InstallmentReport(props){
         <ExpansionPanelSummary 
           expandIcon={<ExpandMoreIcon />}
           id={sliceId}>
-        {factors[ contributions[ sliceId ].factorId ].name }
+        {factors[ sliceId ].name }
         ({
-          contributions[sliceId].values.reduce( (total, val)=>{
+          contributions[sliceId].reduce( (total, val)=>{
             return  total + val.value;
 
           }, 0 ) }
@@ -92,8 +108,8 @@ export default function InstallmentReport(props){
             id={Number( sliceId )}
             sum={6000}
             updateContributors={updateSlice.bind( null, sliceId ) }
-            description={factors[ contributions[ sliceId ].factorId ].description }
-            contributors={contributions[sliceId].values}
+            description={factors[ sliceId ].description }
+            contributors={contributions[sliceId]}
           />
         </ExpansionPanelDetails>
       </ExpansionPanel>

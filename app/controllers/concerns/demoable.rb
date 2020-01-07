@@ -15,6 +15,7 @@ module Demoable
     @project = ProjStub.new
     @project.style = Style.find(2)
     @project.name = t :demo_project
+    @project.description = t :demo_project_description
     @project.factor_pack = FactorPack.find(1).factors
     @project
   end
@@ -29,8 +30,8 @@ module Demoable
 
     @group.users << @current_user
 
-    user_names.each do |name|
-      u = User.new(last_name: name[0], first_name: name[1])
+    user_names.each_with_index do |name,idx|
+      u = User.new(id: -idx, last_name: name[0], first_name: name[1])
       @group.users << u
     end
     @group
@@ -87,6 +88,42 @@ module Demoable
                   individual_count: 10)
   end
 
+
+  def get_demo_installment
+    a = AssessmentStub.new
+    a.id = -1
+    a.project = get_demo_project
+
+    i = InstallmentStub.new
+    i.id = -42
+    i.user_id = -1
+    i.assessment = a
+    i.assessment_id = a.id
+    i.inst_date = DateTime.current.in_time_zone('UTC')
+    i
+  end
+
+  class InstallmentStub
+    attr_accessor :id, :user_id
+    attr_accessor :assessment, :assessment_id
+    attr_accessor :group, :group_id
+    attr_accessor :values, :inst_date
+
+    def values_build( factor:, user:, value: )
+      #puts "u: #{user.inspect}\nf: #{factor.inspect}\nv: #{value}"
+      self.values = self.values || [ ]
+      v = Value.new
+      v.factor = factor
+      v.factor_id = factor.id
+      v.user = user
+      v.user_id = user.id
+      v.value = value
+      self.values << v
+    end
+  end
+  class AssessmentStub
+    attr_accessor :id, :project
+  end
   class UserStub
     attr_accessor :id, :first_name, :last_name
     def name
@@ -94,7 +131,7 @@ module Demoable
     end
   end
   class ProjStub
-    attr_accessor :id, :style, :name, :factor_pack
+    attr_accessor :id, :style, :name, :description, :factor_pack
 
     def get_name(_anon)
       name

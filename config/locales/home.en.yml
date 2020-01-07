@@ -93,6 +93,10 @@ en:
   demo: Demo
   demo_group: SuperStars
   demo_project: Research Paper
+  demo_project_description: >
+    This project involves researching the topic decided in your class
+    and working with your team to author a paper thoroughly detailing
+    all you've learned on the topic.
   demo_course_name: Advanced Collaborative Research
   #admin functions
   about: About
