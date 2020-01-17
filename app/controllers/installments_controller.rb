@@ -7,30 +7,30 @@ class InstallmentsController < ApplicationController
   include Demoable
 
   def submit_installment
-    @assessment = Assessment.find(params[:assessment_id])
+    assessment = Assessment.find(params[:assessment_id])
     @title = t 'installments.title'
-    @project = @assessment.project
+    project = assessment.project
 
-    #TODO: Consent Log logic ought to move into a before_action
-    consent_log = @project.course.get_consent_log user: current_user
+    # TODO: Consent Log logic ought to move into a before_action
+    consent_log = project.course.get_consent_log user: current_user
 
     if consent_log.present? && !consent_log.presented?
       redirect_to edit_consent_log_path(consent_form_id: consent_log.consent_form_id)
     else
-      @group = @assessment.group_for_user current_user
-      @factors = @project.factors
+      group = assessment.group_for_user current_user
+      @factors = project.factors
       @installment = Installment.includes(values: %i[factor user], assessment: :project)
-                                .where(assessment: @assessment,
+                                .where(assessment: assessment,
                                        user: current_user,
-                                       group: @group).first
+                                       group: group).first
       if @installment.nil?
-        @installment = Installment.new(id: 0,
-                                       assessment: @assessment,
+        @installment = Installment.new(
+                                       assessment: assessment,
                                        user: current_user,
-                                       inst_date: DateTime.current.in_time_zone(@project.course.timezone),
-                                       group: @group)
+                                       inst_date: DateTime.current.in_time_zone(project.course.timezone),
+                                       group: group)
 
-        cell_value = Installment::TOTAL_VAL / @members.size
+        cell_value = Installment::TOTAL_VAL / group.users.size
         group.users.each do |u|
           @factors.each do |b|
             @installment.values.build(factor: b, user: u, value: cell_value)
@@ -38,7 +38,7 @@ class InstallmentsController < ApplicationController
         end
       end
       submit_helper(
-        factors: @factors, group: @group, installment: @installment )
+        factors: @factors, group: group, installment: @installment )
     end
   end
 
@@ -54,6 +54,7 @@ class InstallmentsController < ApplicationController
               description: factor.description
             } ] } ],
             group: {
+              id: group.id,
               name: group.name,
               users: Hash[ group.users.collect { |member| [member.id, {
                 id: member.id,
@@ -61,67 +62,199 @@ class InstallmentsController < ApplicationController
               } ] } ]
             },
             installment: {
+              id: installment.id,
+              assessment_id: installment.assessment_id,
               inst_date: installment.inst_date,
-              values: installment.values.as_json( only: %i[factor_id user_id value] ),
+              values: installment.values.as_json( only: %i[id factor_id user_id value] ),
               project: {
                 name: installment.assessment.project.name,
                 description: installment.assessment.project.description
               }
-            }
+            },
+            sliderSum: Installment::TOTAL_VAL
           }
         end
       end
 
   end
 
+  def create
+    respond_to do |format|
+      format.json do
+        installment = nil
+          ActiveRecord::Base.transaction do
+            installment_hash = params[:installment]
+              installment = Installment.new(
+                assessment_id: installment_hash[:assessment_id],
+                group_id: installment_hash[:group_id],
+                user: current_user,
+                inst_date: installment_hash[ :inst_date ],
+                comments: installment_hash[:comments]
+              )
+            installment.save
+            puts installment.errors.full_messages unless installment.errors.empty?
+            params[:contributions].values.each do |contribution|
+              contribution.each do |value|
+                installment.values.create(
+                  user_id: value[:userId],
+                  factor_id: value[:factorId],
+                  value: value[:value]
+                )
+              end
+            end
+          end
+          installment.reload
+          render json: {
+            messages: {
+              status: t( 'success'),
+            },
+            installment: {
+                id: installment.id,
+                assessment_id: installment.assessment_id,
+                group_id: installment.group_id,
+                comments: installment.comments,
+                values: installment.values
+                  .collect{|item|
+                      {
+                        id: item[:id],
+                        user_id: item[:userId],
+                        factor_id: item[:factorId],
+                        name: item[:name],
+                        value: item[:value]
+                      }
+                 }
+            }
+          }
+      end
+    end
+
+  end
+
   def update
-    @title = t 'installments.title'
     id = params[:id].to_i
-    if id < 0
-      flash[:notice] = t 'installments.demo_success'
-      redirect_to root_url
-    elsif id > 0
-      @installment = Installment.find(id)
-      if @installment.update(i_params)
-        notice = t('installments.success')
-        redirect_to root_url, notice: notice
-      else
-        unless @installment.errors.empty?
-          logger.debug @installment.errors.full_messages
-        end
-        @group = Group.find(@installment.group)
-        @project = @installment.assessment.project
-        @factors = @installment.assessment.project.factors
-        @project_name = @installment.assessment.project.name
-        @members = @group.users
-        render @project.style.filename
-      end
-    else
-      @installment = Installment.new(i_params)
-      @installment.id = nil
-      found = false
-      @installment.group.users.each do |user|
-        found = true if current_user == user
-      end
-
-      if !found
-        redirect_to root_url error: (t 'installments.err_not_member')
-      elsif @installment.save
-        project = @installment.assessment.project
-        flash[:notice] = t 'installments.success'
-        redirect_to root_url
-      else
-        @factors = @installment.assessment.project.factors
-        @project_name = @installment.assessment.project.name
-        @group = @installment.group
-
-        @members = @installment.values_by_user.keys
-        if @installment.errors[:base].any?
-          flash[:error] = @installment.errors[:base][0]
+    
+    respond_to do |format|
+      format.html do
+        @title = t 'installments.title'
+        if id < 0
+          flash[:notice] = t 'installments.demo_success'
           redirect_to root_url
+        elsif id > 0
+          @installment = Installment.find(id)
+          if @installment.update(i_params)
+            notice = t('installments.success')
+            redirect_to root_url, notice: notice
+          else
+            unless @installment.errors.empty?
+              logger.debug @installment.errors.full_messages
+            end
+            @group = Group.find(@installment.group)
+            @project = @installment.assessment.project
+            @factors = @installment.assessment.project.factors
+            @project_name = @installment.assessment.project.name
+            @members = @group.users
+            render @project.style.filename
+          end
         else
-          flash[:error] = t 'installments.err_unknown'
-          render @installment.assessment.project.style.filename
+          @installment = Installment.new(i_params)
+          @installment.id = nil
+          found = false
+          @installment.group.users.each do |user|
+            found = true if current_user == user
+          end
+
+          if !found
+            redirect_to root_url error: (t 'installments.err_not_member')
+          elsif @installment.save
+            project = @installment.assessment.project
+            flash[:notice] = t 'installments.success'
+            redirect_to root_url
+          else
+            @factors = @installment.assessment.project.factors
+            @project_name = @installment.assessment.project.name
+            @group = @installment.group
+
+            @members = @installment.values_by_user.keys
+            if @installment.errors[:base].any?
+              flash[:error] = @installment.errors[:base][0]
+              redirect_to root_url
+            else
+              flash[:error] = t 'installments.err_unknown'
+              render @installment.assessment.project.style.filename
+            end
+          end
+        end
+      end
+      format.json do
+        if id < 0
+          valueArray = 
+          render json: {
+            messages: {
+              status: t( 'installments.demo_success'),
+            },
+            installment: {
+                id: id,
+                assessment_id: params[:assessment_id],
+                group_id: params[:group_id],
+                values: params[:contributions].values
+                  .reduce([]){|tmpArr,itemSet| tmpArr.concat( 
+                    itemSet.collect{|item|
+                      {
+                        id: item[:id],
+                        user_id: item[:userId],
+                        factor_id: item[:factorId],
+                        name: item[:name],
+                        value: item[:value]
+                      }
+                    }
+                 ) }
+            }
+          }
+        else
+          ActiveRecord::Base.transaction do
+            installment = Installment.includes( :values ).find( id )
+            installment.comments = params[:installment][:comments]
+            installment.save
+
+            value_hash = installment.values.reduce() {|v_map,item| v_map[ item.id] = item}
+            params[:contributions].each do |contribution|
+              value = value_hash[ contribution.id ]
+              if value.nil?
+                installment.build_value(
+                  user_id: item[:userId],
+                  factor_id: item[:factorId],
+                  value: item[:value]
+                )
+              else
+                value.value = item[:value]
+              end
+              #TODO check for valid sum and normalize if not
+              value.save
+            end
+          end
+          render json: {
+            messages: {
+              status: t( 'success'),
+            },
+            installment: {
+                id: id,
+                assessment_id: params[:assessment_id],
+                group_id: params[:group_id],
+                values: params[:contributions].values
+                  .reduce([]){|tmpArr,itemSet| tmpArr.concat( 
+                    itemSet.collect{|item|
+                      puts item
+                      {
+                        id: item[:id],
+                        user_id: item[:userId],
+                        factor_id: item[:factorId],
+                        name: item[:name],
+                        value: item[:value]
+                      }
+                    }
+                 ) }
+            }
+          }
         end
       end
     end

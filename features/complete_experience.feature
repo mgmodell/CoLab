@@ -12,13 +12,16 @@ Feature: Users can complete 'experiences'
     When the user logs in
     Then the user should see a successful login message
 
+  @javascript
   Scenario: The student should not be able to proceed without selecting a behavior
     Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
     Given the consent form "is" active
     Given the consent form "has" been presented to the user
     When the user visits the index
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open experience
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page

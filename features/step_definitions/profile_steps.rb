@@ -10,6 +10,7 @@ Then /^user opens their profile$/ do
 end
 
 Then /^the user sees the experience in the history$/ do
+  click_link_or_button 'History'
   page.should have_content(@experience.get_name(false))
 end
 
@@ -19,5 +20,6 @@ Then /^user sees the Bingo! in the history$/ do
 end
 
 Then /^user sees the assessed project in the history$/ do
+  click_link 'History'
   page.should have_content(@project.get_name(false))
 end

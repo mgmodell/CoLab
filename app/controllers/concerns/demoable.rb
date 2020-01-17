@@ -22,6 +22,7 @@ module Demoable
 
   def get_demo_group
     @group = GroupStub.new
+    @group.id = -1
     @group.name = t :demo_group
     user_names = [%w[Doe Robert],
                   %w[Jones Roberta], %w[Kim Janice]]

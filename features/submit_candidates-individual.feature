@@ -44,6 +44,7 @@ Feature: Submitting Candidate words for Bingo!
     Given the consent form "has" been presented to the user
     Given the user logs in
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open bingo
     When the user clicks the link to the candidate list
     Then the user should see the Bingo candidate list

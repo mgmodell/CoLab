@@ -160,7 +160,7 @@ Rails.application.routes.draw do
 
   get 'installments/edit/:assessment_id' => 'installments#submit_installment', as: :edit_installment
 
-  resources :installments, only: [:update]
+  resources :installments, only: %i[update create]
 
   get 'graphing/index' => 'graphing#index', as: :'graphing'
   get 'graphing/data/:unit_of_analysis/:subject/:project/:for_research/:anonymous' =>

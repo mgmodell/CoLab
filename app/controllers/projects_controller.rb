@@ -30,8 +30,12 @@ class ProjectsController < ApplicationController
           ),
           styles: Style.all.as_json(
             only: :id, methods: :name
-          )
+          ),
+          messages: {
+            status: params[:notice]
+          }
         }
+        puts "\n\n\n\t#{response}\n\n"
         render json: response
       end
     end
@@ -88,7 +92,10 @@ class ProjectsController < ApplicationController
             ),
             course: @project.course.as_json(
               only: %i[id name timezone]
-            )
+            ),
+            messages: {
+              status: t( 'update_success')
+            }
           }
           render json: response
         end

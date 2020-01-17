@@ -88,6 +88,7 @@ Feature: Email experience stragglers
     Then 7 emails will be sent
     Then 7 emails will be tracked
 
+  @javascript
   Scenario: 1 user is in an experience and a project they receive only one email
     Given the user is "a random" user
     Given there is a course with an assessed project

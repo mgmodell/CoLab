@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect, lazy } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Paper from "@material-ui/core/Paper";

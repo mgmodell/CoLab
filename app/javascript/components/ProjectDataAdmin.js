@@ -75,7 +75,6 @@ export default function ProjectDataAdmin(props) {
     })
       .then(response => {
         if (response.ok) {
-          setMessages( { } );
           return response.json();
         } else {
           console.log("error");
@@ -142,7 +141,7 @@ export default function ProjectDataAdmin(props) {
         }
       })
       .then(data => {
-        if(null == data.messages){
+        if(data.messages == null || Object.keys( data.messages ).length < 2){
         const project = data.project;
         setProjectId(project.id);
         setProjectName(project.name);
@@ -160,7 +159,7 @@ export default function ProjectDataAdmin(props) {
         setCourseName(course.name);
         setWorking(false);
         setDirty(false);
-          setMessages( { } );
+        setMessages( data.messages );
         }else{
           setMessages( data.messages );
         }
@@ -287,6 +286,7 @@ export default function ProjectDataAdmin(props) {
       <InputLabel htmlFor="style">Style</InputLabel>
       <Select
         id="style"
+        disabled
         onChange={event => setProjectStyleId(event.target.value)}
         value={projectStyleId}
       >
@@ -313,7 +313,7 @@ export default function ProjectDataAdmin(props) {
         })}
       </Select>
       <br />
-      {saveButton}
+      {saveButton}{messages.status}
     </Paper>
   )
   return (

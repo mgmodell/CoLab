@@ -107,6 +107,7 @@ Feature: Presenting Consent Forms
     When the user visits the index
     Then the user will see a consent request
 
+  @javascript
   Scenario: User should be able to access a presented consent form, but not be redirected to it
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the course has a consent form
@@ -117,22 +118,28 @@ Feature: Presenting Consent Forms
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
 
+  @javascript
   Scenario: If no consent form is attached to an assessment, none should be presented
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the project has been activated
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should not see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
 
+  @javascript
   Scenario: If an inactive consent form is attached to an assessment, none should be presented
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the project has been activated
@@ -143,7 +150,9 @@ Feature: Presenting Consent Forms
     Given the consent form "has not" been presented to the user
     When the user logs in
     Then the user should see a successful login message
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should not see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form

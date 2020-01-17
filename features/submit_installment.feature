@@ -11,6 +11,7 @@ Feature: Submitting Reports
     Given reset time clock to now
     Given the project started "two months ago" and ends "next month", opened "yesterday" and closes "tomorrow"
 
+  @javascript
   Scenario: User should be able to complete an open weekly installment
     Given the project measures 3 factors
     Given the course has a consent form
@@ -22,18 +23,21 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
     Then the installment form should request factor x user values
     Then the user should enter values summing to 6000, "evenly" across each column
     When the user submits the installment
-    Then there should be 0 project save errors
+    Then the installment will successfully save
     Then user opens their profile
     Then user sees the assessed project in the history
     Then the installment values will match the submit ratio
 
+  @javascript
   Scenario: User should be able to complete an open weekly installment with a comment
     Given the project measures 3 factors
     Given the course has a consent form
@@ -45,7 +49,9 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
@@ -53,13 +59,14 @@ Feature: Submitting Reports
     Then the user should enter values summing to 6000, "evenly" across each column
     Then the user enters a comment "with" personally identifiable information
     When the user submits the installment
-    Then there should be 0 project save errors
+    Then the installment will successfully save
     Then user opens their profile
     Then user sees the assessed project in the history
     Then the comment matches what was entered
     Then the anonymous comment "is empty"
     Then the installment values will match the submit ratio
 
+  @javascript
   Scenario: User should not be able to edit a completed weekly installment
     Given the project measures 4 factors
     Given the project has a group with 4 confirmed users
@@ -72,6 +79,7 @@ Feature: Submitting Reports
     Then the assessment should show up as completed
     Then the installment values will match the submit ratio
 
+  @javascript
   Scenario: An installment's factor values can all be set to 0
     Given the project measures 3 factors
     Given the course has a consent form
@@ -83,14 +91,16 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
     Then the installment form should request factor x user values
     Then the user should enter values summing to 0, "evenly" across each column
     When the user submits the installment
-    Then there should be 0 project save errors
+    Then the installment will successfully save
     Then the installment values will match the submit ratio
 
   @javascript
@@ -114,9 +124,10 @@ Feature: Submitting Reports
     Then the installment form should request factor x user values
     Then the user should enter values summing to 6000, "randomly" across each column
     When the user submits the installment
-    Then there should be 0 project save errors
+    Then the installment will successfully save
     Then the installment values will match the submit ratio
 
+  @javascript
   Scenario: A installment's factor column need not sum to 600 or be distributed evenly
     Given the project measures 3 factors
     Given the course has a consent form
@@ -128,16 +139,19 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
     Then the installment form should request factor x user values
     Then the user should enter values summing to 6549, "randomly" across each column
     When the user submits the installment
-    Then there should be 0 project save errors
+    Then the installment will successfully save
     Then the installment values will match the submit ratio
 
+  @javascript
   Scenario: A installment's factor column need not sum to 6000
     Given the project measures 3 factors
     Given the course has a consent form
@@ -149,16 +163,19 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
     Then the installment form should request factor x user values
     Then the user should enter values summing to 1200, "evenly" across each column
     When the user submits the installment
-    Then there should be 0 project save errors
+    Then the installment will successfully save
     Then the installment values will match the submit ratio
 
+  @javascript
   Scenario: User should not be able to submit an installment after the assessment has closed
     Given the project measures 3 factors
     Given the course has a consent form
@@ -171,7 +188,9 @@ Feature: Submitting Reports
     Given today is "tomorrow 23:57"
     When the user logs in
     Then the user should see a successful login message
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
@@ -181,6 +200,7 @@ Feature: Submitting Reports
     When the user submits the installment
     Then the user should see an error indicating that the installment request expired
 
+  @javascript
   Scenario: Comments with PII should be anonymized when the assessment period closes
     Given the project measures 3 factors
     Given the course has a consent form
@@ -192,7 +212,9 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
     Then user will be presented with the installment form
@@ -200,7 +222,7 @@ Feature: Submitting Reports
     Then the user should enter values summing to 6000, "evenly" across each column
     Then the user enters a comment "with" personally identifiable information
     When the user submits the installment
-    Then there should be 0 project save errors
+    Then the installment will successfully save
     Then user opens their profile
     Then user sees the assessed project in the history
     Then the comment matches what was entered
@@ -213,6 +235,7 @@ Feature: Submitting Reports
     Then the comment matches what was entered
     Then the anonymous comment "is anonymized"
 
+  @javascript
   Scenario: Comments without PII should not be anonymized when the assessment period closes
     Given the project measures 3 factors
     Given the course has a consent form
@@ -224,6 +247,8 @@ Feature: Submitting Reports
     Given the user "has" had demographics requested
     When the user logs in
     Then the user should see a successful login message
+    Then the user switches to the "Task View" tab
+    Then the user enables the "Consent Form" table view option
     Then user should see 1 open task
     Then user should see a consent form listed for the open project
     When user clicks the link to the project
@@ -232,7 +257,7 @@ Feature: Submitting Reports
     Then the user should enter values summing to 6000, "evenly" across each column
     Then the user enters a comment "without" personally identifiable information
     When the user submits the installment
-    Then there should be 0 project save errors
+    Then the installment will successfully save
     Then user opens their profile
     Then user sees the assessed project in the history
     Then the comment matches what was entered

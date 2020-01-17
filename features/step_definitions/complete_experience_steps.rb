@@ -29,7 +29,12 @@ Then /^in the field "([^"]*)" they will see "([^"]*)"$/ do |fld, value|
 end
 
 Then /^the user chooses the "([^"]*)" radio button$/ do |choice|
-  choose(choice)
+  # TODO: this will need to be fixed after the migration to react
+  # choose(choice)
+  inputId = find( :xpath, '//label[text()="' + choice + '"]' )[:for]
+  checkbox = find( :xpath, "//input[@id='#{inputId}']")
+  # JQueryMobile makes the enclosing span clickable
+  checkbox.find( :xpath, '../..' ).click
 end
 
 Then /^the database will show a new week (\d+) "([^"]*)" diagnosis from the user$/ do |week_num, behavior|
@@ -114,10 +119,11 @@ Then /^no user will have reacted to the same narrative more than once$/ do
 end
 
 Then /^the user successfully completes an experience$/ do
+  step 'the user switches to the "Task View" tab'
   step 'the user clicks the link to the experience'
   step 'the user sees the experience instructions page'
   step 'the user presses "Next"'
-  14.times do
+  14.times do |count|
     step 'the user completes a week'
   end
   step 'the user will see "Overall Group Behavior"'

@@ -78,6 +78,8 @@ group :development, :test do
   gem 'byebug'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
+  gem 'ruby-debug-ide'
+  gem 'debase'
   gem 'htmlbeautifier'
   gem 'htmlentities'
   gem 'i18n_data'
@@ -88,11 +90,13 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 0.78', require: false
+  gem 'rubocop', '~> 0.79', require: false
+  gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'selenium-webdriver'
+  gem 'solargraph'
   gem 'webdrivers', '~> 4.0'
 end
 

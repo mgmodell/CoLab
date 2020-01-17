@@ -21,7 +21,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Activities"
+    Then the user switches to the "Activities" tab
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "02/29/1980"
@@ -29,7 +29,7 @@ Feature: Project Administration
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
     Then the user will see "success"
@@ -52,13 +52,13 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Activities"
+    Then the user switches to the "Activities" tab
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
     Then the user will see "success"
@@ -88,7 +88,7 @@ Feature: Project Administration
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Save Project"
     Then the user will see "success"
@@ -112,13 +112,13 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Activities"
+    Then the user switches to the "Activities" tab
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
-    Then the user selects "Sliders (simple)" as "Style"
+    # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
     Then the user will see "success"
@@ -162,7 +162,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Activities"
+    Then the user switches to the "Activities" tab
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "02/29/1980"
@@ -216,7 +216,7 @@ Feature: Project Administration
     Then the user clicks the Admin button
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Activities"
+    Then the user switches to the "Activities" tab
     Then the user clicks "New Project"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "02/29/1980"
@@ -372,6 +372,7 @@ Feature: Project Administration
      Then the user should see a successful login message
      Then user should see 0 open task
 
+  @javascript
   Scenario: End date=> 10/10/1979 on 11/10/1979=> no emails, no access
     # Change the project
     Given today is "11/10/1979"

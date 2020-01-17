@@ -1,0 +1,7 @@
+{
+    "vscode-wds.configFileName": "./config/webpack/development.js",
+    "ruby.rubocop.useBundler": true,
+    "ruby.format": "rubocop",
+    "ruby.useBundler": true,
+    "ruby.useLanguageServer": true
+}

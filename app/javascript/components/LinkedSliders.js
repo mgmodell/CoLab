@@ -1,113 +1,158 @@
-import React, {useState} from "react"
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/paper'
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState } from "react";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/paper";
+import Typography from "@material-ui/core/Typography";
+import Slider from "@material-ui/core/Slider";
+//For debug purposes
+import Input from "@material-ui/core/Input";
 
-import PropTypes from "prop-types"
+import { makeStyles } from "@material-ui/core/styles";
+
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
+    textAlign: "center",
+    color: theme.palette.text.secondary
+  }
 }));
 
-
-export default function LinkedSliders(props){
+export default function LinkedSliders(props) {
   const classes = useStyles();
 
-  const handleChange = ( index, id, e, newValue )=>{
-    const lContributors = props.contributors.reduce( (arr, newEl) =>{
-      arr.push( Object.assign( {}, newEl ) );
+  const handleDebugChange = (index, id, e) => {
+    console.log("debug");
+    console.log(e);
+    handleChange(index, id, null, e.target.value);
+  };
+  const handleChange = (index, id, e, newValue) => {
+    const lContributions = props.contributions.reduce((arr, newEl) => {
+      arr.push(Object.assign({}, newEl));
       return arr;
-    }, [ ] );
+    }, []);
 
-    const oldVal = lContributors[ index ].value;
-    const distOver = lContributors.length - 1
+    if (newValue >= props.sum) {
+      newValue = props.sum;
+      lContributions.forEach(contribution => {
+        if (contribution.userId != id) {
+          contribution.value = 0;
+        } else {
+          contribution.value = newValue;
+        }
+      });
+    } else {
+      const oldVal = lContributions[index].value;
+      const distOver = lContributions.length - 1;
 
-    const diff = newValue - oldVal;
-    const mod = diff % distOver;
+      const diff = newValue - oldVal;
+      const mod = diff % distOver;
 
-    const lNewVal = newValue - mod;
-    var split = ( diff - mod ) / distOver;
+      const lNewVal = newValue - mod;
+      var split = (diff - mod) / distOver;
 
-
-    //If one decreases, the rest split the gain
-    for( var counter = 0; counter < lContributors.length; counter++ ){
-      const lContributor = lContributors[ counter ];
-      if( lContributor.id != id ) {
-        var cVal = lContributor.value - split
-        lContributor.value = cVal;
-      }else{
-        lContributor.value = lNewVal;
+      //If one decreases, the rest split the gain
+      for (var counter = 0; counter < lContributions.length; counter++) {
+        const lContribution = lContributions[counter];
+        if (lContribution.userId != id) {
+          var cVal = lContribution.value - split;
+          lContribution.value = cVal;
+        } else {
+          lContribution.value = lNewVal;
+        }
       }
     }
 
-    const negVal = lContributors.reduce( (total, item )=>{
-      if( item.value < 0 ){
-        total+= item.value;
+    var remainder = lContributions.reduce((total, item) => {
+      if (item.value < 0) {
+        total += item.value;
         item.value = 0;
       }
       return total;
-    }, 0 );
+    }, 0);
 
-    if( negVal != 0 ){
-      const toDec = lContributors.reduce( (progress, element)=>{
-          if( id != element.id && 0 != element.value ){
-            progress.push( element );
-          }
-          return progress;
-        }, [ ] );
-      const reduceBy = negVal / toDec.length;
+    //Reallocate from those that have gone negative
+    while (remainder != 0) {
+      const toDec = lContributions.reduce((progress, element) => {
+        if (id != element.id && 0 != element.value) {
+          progress.push(element);
+        }
+        return progress;
+      }, []);
+      const modulo = remainder % toDec.length;
+      //Apply the remainder to the largest element
+      toDec.sort((a, b) => {
+        b.value - a.value;
+      });
+      toDec[0].value += modulo;
+      var reduceBy = Math.ceil((remainder - modulo) / toDec.length);
       //Apply the reductions and adjustment
-      const remainder = toDec.reduce( (unalloc, element)=>{
+      remainder = toDec.reduce((negVal, element) => {
         element.value += reduceBy;
-        unalloc -= reduceBy;
-        return unalloc;
-      }, 0 );
+        if (element.value < 0) {
+          negVal += element.value;
+          element.value = 0;
+        }
+        return negVal;
+      }, 0);
     }
-    props.updateContributors( lContributors );
-  }
 
+    props.updateContributions(lContributions);
+  };
 
   return (
     <Paper className={classes.root}>
       <Typography>
-        {'' == (props.title || '' ) ? '' : (<b>{props.title}:&nbsp;</b>) }
-        {props.description} 
+        {"" == (props.title || "") ? "" : <b>{props.title}:&nbsp;</b>}
+        {props.description}
       </Typography>
-      {props.contributors.map( (contributor, index)=> {
-        return(
-          <Grid container key={'fs_' + props.id + '_c_' + contributor.id} spacing={10}>
+      {props.contributions.map((contribution, index) => {
+        return (
+          <Grid
+            container
+            key={"fs_" + props.id + "_c_" + contribution.userId}
+            spacing={10}
+          >
             <Grid item xs={2}>
-          <Typography display='inline'>
-            {contributor.name}
-          </Typography>
+              <Typography display="inline">{contribution.name}</Typography>
             </Grid>
             <Grid item xs={8}>
-          <Slider value={contributor.value}
-                  id={'fs_'+ props.id + '_c_' + contributor.id}
+              <Slider
+                value={contribution.value}
+                id={"fs_" + props.id + "_c_" + contribution.userId}
+                name={"slider_fs_" + props.id + "_c_" + contribution.userId}
+                min={0}
+                defaultValue={contribution.value}
+                max={props.sum}
+                factor={props.id}
+                key={contribution.userId}
+                onChange={handleChange.bind(null, index, contribution.userId)}
+                aria-label={contribution.name}
+              />
+              {props.debug || false ? (
+                <input
+                  value={contribution.value}
                   min={0}
-                  defaultValue={contributor.value}
                   max={props.sum}
-                  //step={props.contributors.length-1}
-                  key={contributor.id}
-                  onChange={handleChange.bind(
+                  step={props.contributions.length}
+                  type="number"
+                  factor={props.id}
+                  contributor={contribution.userId}
+                  id={"debug_fs_" + props.id + "_c_" + contribution.userId}
+                  onChange={handleDebugChange.bind(
                     null,
                     index,
-                    contributor.id )}
-                  aria-label={contributor.name} />
+                    contribution.userId
+                  )}
+                />
+              ) : null}
             </Grid>
           </Grid>
-        )
+        );
       })}
-
     </Paper>
   );
 }
@@ -117,10 +162,11 @@ LinkedSliders.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   sum: PropTypes.number.isRequired,
-  updateContributors: PropTypes.func.isRequired,
-  contributors: PropTypes.arrayOf(
+  updateContributions: PropTypes.func.isRequired,
+  debug: PropTypes.bool,
+  contributions: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      userId: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
       value: PropTypes.number.isRequired
     })

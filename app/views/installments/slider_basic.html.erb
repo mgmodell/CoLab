@@ -7,21 +7,30 @@
 <% if flash[:error] %>
   <p class="error"><%= flash[:error] %></p>
 <% end %>
+<% group = @installment.group%>
 <div class="instructions">
   <p><%= raw t 'installments.instructions', 
-          group_name: @group.get_name( false ),
-          project_name: @group.project.get_name( false ),
-          member_count: @members.size,
+          group_name: group.get_name( false ),
+          project_name: group.project.get_name( false ),
+          member_count: group.users.size,
           factor_count: @factors.size %></p>
-  <p><%= t raw 'installments.slider.instructions' %></p>
 </div>
-<% 
-     url_params = { :action => "update", :id => @installment.id }
-%>
-  <%= react_component 'InstallmentReport', {
+  <%=
+  if @installment.assessment_id > 0
+  react_component( 'InstallmentReportWrapper', {
     token: form_authenticity_token,
-    getInstallmentUrl: (@installment.assessment_id > 0 ?
-      edit_installment_path( @installment.assessment_id ) :
-      assessment_demo_complete_path ),
-    setInstallmentUrl: 'there'
-  } %>
+    installmentId: @installment.id,
+    getInstallmentUrl: ( edit_installment_path( @installment.assessment_id ) ),
+    setInstallmentUrl: ( installments_path )
+  })
+  else
+  react_component( 'InstallmentReportWrapper', {
+    token: form_authenticity_token,
+    installmentId: @installment.id,
+    getInstallmentUrl: ( assessment_demo_complete_path ),
+    setInstallmentUrl: ( installments_path )
+  })
+    
+  end
+  
+  %>
