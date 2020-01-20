@@ -16,25 +16,24 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
-import Skeleton from '@material-ui/lab/Skeleton';
+import Skeleton from "@material-ui/lab/Skeleton";
 
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
-} from '@material-ui/pickers';
+} from "@material-ui/pickers";
 
 import { DateTime } from "luxon";
-import LuxonUtils from '@date-io/luxon';
-import {useUserStore} from './UserStore';
+import LuxonUtils from "@date-io/luxon";
+import { useUserStore } from "./UserStore";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
-import i18n from './i18n';
-import { useTranslation } from 'react-i18next';
-
+import i18n from "./i18n";
+import { useTranslation } from "react-i18next";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -57,71 +56,70 @@ const useStyles = makeStyles({
   }
 });
 
-export default function BingoGameDataAdmin( props ){
-  const classes = useStyles( );
+export default function BingoGameDataAdmin(props) {
+  const classes = useStyles();
   //const { xl, i18n } = useTranslation( 'bingo_game' );
 
-  const { t, i18n } = useTranslation('bingo_games' );
-  
-  const [dirty, setDirty] = useState( false );
-  const [curTab, setCurTab] = useState( 'details' );
-  const [messages, setMessages] = useState( { } );
-  const [gameProjects, setGameProjects] = useState( [
-    {id: -1, name: 'None Selected' }] );
-  const [concepts, setConcepts] = useState( [ ] );
-  const [saveStatus, setSaveStatus] = useState( '' );
-  const [resultData, setResultData] = useState( null );
-  const [gameTopic, setGameTopic] = useState( '' );
-  const [gameDescriptionEditor, setGameDescriptionEditor] =
-    useState(
-      EditorState.createWithContent(
-        ContentState.createFromBlockArray(
-          htmlToDraft( '' ).contentBlocks
-        )
-      )
-    );
-  const [gameSource, setGameSource] = useState( '' );
-  const [gameTimezone, setGameTimezone] = useState( 'UTC' );
-  const [gameActive, setGameActive] = useState( false );
+  const { t, i18n } = useTranslation("bingo_games");
+
+  const [dirty, setDirty] = useState(false);
+  const [curTab, setCurTab] = useState("details");
+  const [messages, setMessages] = useState({});
+  const [gameProjects, setGameProjects] = useState([
+    { id: -1, name: "None Selected" }
+  ]);
+  const [concepts, setConcepts] = useState([]);
+  const [saveStatus, setSaveStatus] = useState("");
+  const [resultData, setResultData] = useState(null);
+  const [gameTopic, setGameTopic] = useState("");
+  const [gameDescriptionEditor, setGameDescriptionEditor] = useState(
+    EditorState.createWithContent(
+      ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
+    )
+  );
+  const [gameSource, setGameSource] = useState("");
+  const [gameTimezone, setGameTimezone] = useState("UTC");
+  const [gameActive, setGameActive] = useState(false);
   const [gameEndDate, setGameEndDate] = useState(
-    DateTime.local( ).plus({month: 3} ).toJSDate( )
+    DateTime.local()
+      .plus({ month: 3 })
+      .toJSDate()
   );
   const [gameStartDate, setGameStartDate] = useState(
-    DateTime.local( ).toJSDate( )
+    DateTime.local().toJSDate()
   );
-  const [gameIndividualCount, setGameIndividualCount] = useState( 0 );
-  const [gameLeadTime, setGameLeadTime] = useState( 0 );
+  const [gameIndividualCount, setGameIndividualCount] = useState(0);
+  const [gameLeadTime, setGameLeadTime] = useState(0);
   //Group parameters
-  const [gameGroupOption, setGameGroupOption] = useState( false );
-  const [gameGroupDiscount, setGameGroupDiscount] = useState( 0 );
-  const [gameGroupProjectId, setGameGroupProjectId] = useState( -1 );
-
+  const [gameGroupOption, setGameGroupOption] = useState(false);
+  const [gameGroupDiscount, setGameGroupDiscount] = useState(0);
+  const [gameGroupProjectId, setGameGroupProjectId] = useState(-1);
 
   useEffect(() => {
     getBingoGameData();
     initResultData();
-  }, [ ]);
+  }, []);
 
-  useEffect( ( ) => {
-    setDirty( true ) },
-    [
-      gameTopic,
-      gameDescriptionEditor,
-      gameSource,
-      gameTimezone,
-      gameActive,
-      gameStartDate,
-      gameEndDate,
-      gameIndividualCount,
-      gameLeadTime,
-      gameGroupOption,
-      gameGroupDiscount,
-      gameGroupProjectId
-    ] );
+  useEffect(() => {
+    setDirty(true);
+  }, [
+    gameTopic,
+    gameDescriptionEditor,
+    gameSource,
+    gameTimezone,
+    gameActive,
+    gameStartDate,
+    gameEndDate,
+    gameIndividualCount,
+    gameLeadTime,
+    gameGroupOption,
+    gameGroupDiscount,
+    gameGroupProjectId
+  ]);
 
   const saveBingoGame = () => {
     // Save
-    setSaveStatus( t('save_status' ) );
+    setSaveStatus(t("save_status"));
     fetch(props.bingoGameUrl + ".json", {
       method: "PATCH",
       credentials: "include",
@@ -129,9 +127,7 @@ export default function BingoGameDataAdmin( props ){
         bingo_game: {
           topic: gameTopic,
           description: draftToHtml(
-            convertToRaw(
-              gameDescriptionEditor.getCurrentContent( )
-            )
+            convertToRaw(gameDescriptionEditor.getCurrentContent())
           ),
           source: gameSource,
           active: gameActive,
@@ -160,13 +156,13 @@ export default function BingoGameDataAdmin( props ){
       })
       .then(data => {
         //TODO: handle save errors
-        setSaveStatus( data.notice );
-        setDirty( false );
-        setMessages( data.messages );
+        setSaveStatus(data.notice);
+        setDirty(false);
+        setMessages(data.messages);
 
         getBingoGameData();
       });
-  }
+  };
 
   const initResultData = () => {
     fetch(props.gameResultsUrl + ".json", {
@@ -187,9 +183,9 @@ export default function BingoGameDataAdmin( props ){
         }
       })
       .then(data => {
-        setResultData( data )
+        setResultData(data);
       });
-  }
+  };
 
   const getBingoGameData = () => {
     fetch(props.bingoGameUrl + ".json", {
@@ -210,56 +206,56 @@ export default function BingoGameDataAdmin( props ){
         }
       })
       .then(data => {
-        const projects =
-          new Array( { id: -1, name: 'None Selected'}).
-                concat( data.projects );
+        const projects = new Array({ id: -1, name: "None Selected" }).concat(
+          data.projects
+        );
 
-        setGameProjects( projects );
-        setConcepts( data.concepts );
-        setGameTopic( data.topic );
-        setGameDescriptionEditor( 
+        setGameProjects(projects);
+        setConcepts(data.concepts);
+        setGameTopic(data.topic);
+        setGameDescriptionEditor(
           EditorState.createWithContent(
             ContentState.createFromBlockArray(
               htmlToDraft(data.description).contentBlocks
             )
           )
         );
-        setGameSource( data.source );
-        setGameActive( data.active );
-        setGameStartDate( DateTime.fromISO( data.start_date ).toJSDate( ) );
-        setGameEndDate( DateTime.fromISO( data.end_date ).toJSDate( ) );
-        setGameIndividualCount( data.individual_count );
-        setGameLeadTime( data.lead_time );
+        setGameSource(data.source);
+        setGameActive(data.active);
+        setGameStartDate(DateTime.fromISO(data.start_date).toJSDate());
+        setGameEndDate(DateTime.fromISO(data.end_date).toJSDate());
+        setGameIndividualCount(data.individual_count);
+        setGameLeadTime(data.lead_time);
         //Group options
-        setGameGroupOption( data.group_option );
-        setGameGroupDiscount( data.group_discount );
-        setGameGroupProjectId( data.project_id );
-        setDirty( false );
+        setGameGroupOption(data.group_option);
+        setGameGroupDiscount(data.group_discount);
+        setGameGroupProjectId(data.project_id);
+        setDirty(false);
       });
-  }
+  };
 
   const changeTab = (event, name) => {
-    setCurTab( name );
-  }
+    setCurTab(name);
+  };
 
-    const save_btn = dirty ? (
-    <Suspense fallback={<Skeleton variant='text'/>}>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={saveBingoGame}
-          id="save_bingo_game"
-          value="save_bingo_game"
-        >
-          {t("update_bingo_btn")}
-        </Button>
+  const save_btn = dirty ? (
+    <Suspense fallback={<Skeleton variant="text" />}>
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        onClick={saveBingoGame}
+        id="save_bingo_game"
+        value="save_bingo_game"
+      >
+        {t("update_bingo_btn")}
+      </Button>
     </Suspense>
-    ) : null;
+  ) : null;
 
-    const group_options = gameGroupOption ? (
-    <Suspense fallback={<Skeleton variant='text'/>}>
-        <React.Fragment>
+  const group_options = gameGroupOption ? (
+    <Suspense fallback={<Skeleton variant="text" />}>
+      <React.Fragment>
         <Grid item>
           <TextField
             id="bingo-name"
@@ -267,7 +263,7 @@ export default function BingoGameDataAdmin( props ){
             type="number"
             className={classes.textField}
             value={gameGroupDiscount}
-            onChange={(event)=>setGameGroupDiscount(event.target.value)}
+            onChange={event => setGameGroupDiscount(event.target.value)}
             margin="normal"
             error={null != messages.name}
             helper={messages.name}
@@ -279,9 +275,9 @@ export default function BingoGameDataAdmin( props ){
               {t("group_source")}
             </InputLabel>
             <Select
-              id='bingo_game_project_id'
+              id="bingo_game_project_id"
               value={gameGroupProjectId}
-              onChange={(event)=>setGameGroupProjectId(event.target.value)}
+              onChange={event => setGameGroupProjectId(event.target.value)}
               displayEmpty
               name="bingo_game_project"
               className={classes.selectEmpty}
@@ -296,11 +292,11 @@ export default function BingoGameDataAdmin( props ){
             </Select>
           </FormControl>
         </Grid>
-          </React.Fragment>
-        </Suspense>
-    ) : null;
-    return (
-    <Suspense fallback={<Skeleton variant='text'/>}>
+      </React.Fragment>
+    </Suspense>
+  ) : null;
+  return (
+    <Suspense fallback={<Skeleton variant="text" />}>
       <Paper style={{ height: "95%", width: "100%" }}>
         <Tabs value={curTab} onChange={changeTab} centered>
           <Tab value="details" label={t("game_details_pnl")} />
@@ -315,7 +311,7 @@ export default function BingoGameDataAdmin( props ){
                   label={t("topic")}
                   className={classes.textField}
                   value={gameTopic}
-                  onChange={event=>setGameTopic(event.target.value)}
+                  onChange={event => setGameTopic(event.target.value)}
                   margin="normal"
                 />
               </Grid>
@@ -339,7 +335,7 @@ export default function BingoGameDataAdmin( props ){
                   className={classes.lead_time}
                   value={gameLeadTime}
                   type="number"
-                  onChange={(event)=>setGameLeadTime(event.target.value)}
+                  onChange={event => setGameLeadTime(event.target.value)}
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -353,47 +349,47 @@ export default function BingoGameDataAdmin( props ){
                   className={classes.textField}
                   value={gameIndividualCount}
                   type="number"
-                  onChange={(event)=>setGameIndividualCount(event.target.value)}
+                  onChange={event => setGameIndividualCount(event.target.value)}
                   InputLabelProps={{
                     shrink: true
                   }}
                   margin="normal"
                 />
               </Grid>
-                <MuiPickersUtilsProvider utils={LuxonUtils}>
-              <Grid item>
+              <MuiPickersUtilsProvider utils={LuxonUtils}>
+                <Grid item>
                   <KeyboardDatePicker
                     disableToolbar
-                    variant='inline'
+                    variant="inline"
                     autoOk={true}
-                    format='MM/dd/yyyy'
-                    margin='normal'
-                    id='bingo-start_date'
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    id="bingo-start_date"
                     label={t("open_date")}
                     value={gameStartDate}
                     onChange={setGameStartDate}
                   />
-              </Grid>
-              <Grid item>
+                </Grid>
+                <Grid item>
                   <KeyboardDatePicker
                     disableToolbar
-                    variant='inline'
+                    variant="inline"
                     autoOk={true}
-                    format='MM/dd/yyyy'
-                    margin='normal'
-                    id='bingo-end_date'
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    id="bingo-end_date"
                     label={t("close_date")}
                     value={gameEndDate}
                     onChange={setGameEndDate}
                   />
-              </Grid>
+                </Grid>
               </MuiPickersUtilsProvider>
               <Grid item>
                 <FormControlLabel
                   control={
                     <Switch
                       checked={gameActive}
-                      onChange={(event)=>setGameActive(!gameActive)}
+                      onChange={event => setGameActive(!gameActive)}
                     />
                   }
                   label={t("active")}
@@ -403,11 +399,8 @@ export default function BingoGameDataAdmin( props ){
                 <Switch
                   checked={gameGroupOption}
                   id="group_option"
-                  onChange={(event)=>setGameGroupOption(!gameGroupOption)}
-                  disabled={
-                    null == gameProjects ||
-                    1 > gameProjects.length
-                  }
+                  onChange={event => setGameGroupOption(!gameGroupOption)}
+                  disabled={null == gameProjects || 1 > gameProjects.length}
                 />
                 <InputLabel htmlFor="group_option">
                   {t("group_option")}
@@ -431,7 +424,7 @@ export default function BingoGameDataAdmin( props ){
         )}
       </Paper>
     </Suspense>
-    );
+  );
 }
 
 BingoGameDataAdmin.propTypes = {

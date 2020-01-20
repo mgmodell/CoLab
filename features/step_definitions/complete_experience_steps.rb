@@ -3,6 +3,7 @@
 require 'forgery'
 
 Then /^the user clicks the link to the experience$/ do
+  step 'the user switches to the "Task View" tab'
   first(:link, @experience.name).click
   # click_link_or_button @experience.name
 end
@@ -31,10 +32,10 @@ end
 Then /^the user chooses the "([^"]*)" radio button$/ do |choice|
   # TODO: this will need to be fixed after the migration to react
   # choose(choice)
-  inputId = find( :xpath, '//label[text()="' + choice + '"]' )[:for]
-  checkbox = find( :xpath, "//input[@id='#{inputId}']")
+  inputId = find(:xpath, '//label[text()="' + choice + '"]')[:for]
+  checkbox = find(:xpath, "//input[@id='#{inputId}']")
   # JQueryMobile makes the enclosing span clickable
-  checkbox.find( :xpath, '../..' ).click
+  checkbox.find(:xpath, '../..').click
 end
 
 Then /^the database will show a new week (\d+) "([^"]*)" diagnosis from the user$/ do |week_num, behavior|
@@ -123,7 +124,7 @@ Then /^the user successfully completes an experience$/ do
   step 'the user clicks the link to the experience'
   step 'the user sees the experience instructions page'
   step 'the user presses "Next"'
-  14.times do |count|
+  14.times do |_count|
     step 'the user completes a week'
   end
   step 'the user will see "Overall Group Behavior"'

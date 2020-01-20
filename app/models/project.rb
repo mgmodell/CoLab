@@ -31,13 +31,13 @@ class Project < ApplicationRecord
   validate :dates_within_course
   validate :activation_status
 
-  #Set default values
+  # Set default values
   after_initialize do
-    if self.new_record?
+    if new_record?
       self.active = false
-      #Simple/Goldfinch factor pack is the default
+      # Simple/Goldfinch factor pack is the default
       self.factor_pack_id = 1
-      #Sliders style
+      # Sliders style
       self.style_id = 2
       self.start_dow = 5
       self.end_dow = 1

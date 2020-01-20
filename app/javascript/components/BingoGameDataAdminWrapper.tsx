@@ -2,17 +2,13 @@ import React, { Suspense, useState, useEffect, lazy } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import Skeleton from '@material-ui/lab/Skeleton';
+import Skeleton from "@material-ui/lab/Skeleton";
 
 import BingoGameDataAdmin from "./BingoGameDataAdmin";
 
-
-export default function BingoGameDataAdminWrapper( props ){
-
-    return (
-    <Suspense fallback={
-      <Skeleton variant='rect' height={300} />}
-    >
+export default function BingoGameDataAdminWrapper(props) {
+  return (
+    <Suspense fallback={<Skeleton variant="rect" height={300} />}>
       <BingoGameDataAdmin
         bingoGameUrl={props.bingoGameUrl}
         token={props.token}
@@ -20,7 +16,7 @@ export default function BingoGameDataAdminWrapper( props ){
         gameResultsUrl={props.gameResultsUrl}
       />
     </Suspense>
-    );
+  );
 }
 
 BingoGameDataAdminWrapper.propTypes = {

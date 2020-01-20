@@ -14,7 +14,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import "./i18n";
-import {Translation} from 'react-i18next';
+import { Translation } from "react-i18next";
 
 import CompareIcon from "@material-ui/icons/Compare";
 
@@ -92,65 +92,73 @@ class DiversityCheck extends React.Component {
   render() {
     return (
       <Suspense fallback={<div>Loading...</div>}>
-      <Translation >
-      {
-        (t) =>
-      <React.Fragment>
-        <Button
-          variant="contained"
-          size="small"
-          onClick={() => this.openDialog()}
-        >
-          <CompareIcon />
-          {t("calc_diversity")}
-        </Button>
-        <Dialog
-          open={this.state.dialogOpen}
-          onClose={() => this.closeDialog()}
-          aria-labelledby={t("calc_it")}
-        >
-          <DialogTitle>{t("calc_it")}</DialogTitle>
-          <DialogContent>
-            <DialogContentText>{t("ds_emails_lbl")}</DialogContentText>
-            <TextField
-              value={this.state.emails}
-              onChange={() => this.handleChange(event)}
-            />
+        <Translation>
+          {t => (
+            <React.Fragment>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => this.openDialog()}
+              >
+                <CompareIcon />
+                {t("calc_diversity")}
+              </Button>
+              <Dialog
+                open={this.state.dialogOpen}
+                onClose={() => this.closeDialog()}
+                aria-labelledby={t("calc_it")}
+              >
+                <DialogTitle>{t("calc_it")}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>{t("ds_emails_lbl")}</DialogContentText>
+                  <TextField
+                    value={this.state.emails}
+                    onChange={() => this.handleChange(event)}
+                  />
 
-            {this.state.found_users.length > 0 ? (
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      {this.state.found_users.map(user => {
-                        return (
-                          <a key={user.email} href={"mailto:" + user.email}>
-                            {user.name}
-                            <br />
-                          </a>
-                        );
-                      })}
-                    </TableCell>
-                    <TableCell valign="middle" align="center">
-                      {this.state.diversity_score}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            ) : null}
-            <DialogActions>
-              <Button variant="contained" onClick={() => this.calcDiversity()}>
-                {t("calc_diversity_sub")}
-              </Button>
-              <Button variant="contained" onClick={() => this.handleClear()}>
-                Clear
-              </Button>
-            </DialogActions>
-          </DialogContent>
-        </Dialog>
-      </React.Fragment>
-      }
-      </Translation>
+                  {this.state.found_users.length > 0 ? (
+                    <Table>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>
+                            {this.state.found_users.map(user => {
+                              return (
+                                <a
+                                  key={user.email}
+                                  href={"mailto:" + user.email}
+                                >
+                                  {user.name}
+                                  <br />
+                                </a>
+                              );
+                            })}
+                          </TableCell>
+                          <TableCell valign="middle" align="center">
+                            {this.state.diversity_score}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  ) : null}
+                  <DialogActions>
+                    <Button
+                      variant="contained"
+                      onClick={() => this.calcDiversity()}
+                    >
+                      {t("calc_diversity_sub")}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => this.handleClear()}
+                    >
+                      Clear
+                    </Button>
+                  </DialogActions>
+                </DialogContent>
+              </Dialog>
+            </React.Fragment>
+          )}
+        </Translation>
       </Suspense>
     );
   }

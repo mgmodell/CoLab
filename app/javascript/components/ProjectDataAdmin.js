@@ -9,8 +9,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Paper from "@material-ui/core/Paper";
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
 
 import {
   KeyboardDatePicker,
@@ -23,13 +23,13 @@ import Info from "luxon/src/info.js";
 import LuxonUtils from "@date-io/luxon";
 import { useUserStore } from "./UserStore";
 
-import ProjectGroups from './ProjectGroups';
+import ProjectGroups from "./ProjectGroups";
 
 export default function ProjectDataAdmin(props) {
-  const [curTab, setCurTab] = useState( 'details' );
+  const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
   const [working, setWorking] = useState(true);
-  const [messages, setMessages] = useState( { } )
+  const [messages, setMessages] = useState({});
   const [factorPacks, setFactorPacks] = useState([
     { id: 0, name_en: "none selected" }
   ]);
@@ -53,14 +53,14 @@ export default function ProjectDataAdmin(props) {
   const [projectFactorPackId, setProjectFactorPackId] = useState(0);
   const [projectStyleId, setProjectStyleId] = useState(0);
   const [courseId, setCourseId] = useState(props.courseId);
-  const [courseName, setCourseName] = useState('');
+  const [courseName, setCourseName] = useState("");
   const [user, userActions] = useUserStore();
 
   const getProject = () => {
     setDirty(true);
-    var url = props.projectUrl + '/';
-    if( null == projectId ){
-      url = url + 'new.json?course_id=' + courseId;
+    var url = props.projectUrl + "/";
+    if (null == projectId) {
+      url = url + "new.json?course_id=" + courseId;
     } else {
       url = url + projectId + ".json";
     }
@@ -82,11 +82,11 @@ export default function ProjectDataAdmin(props) {
       })
       .then(data => {
         const project = data.project;
-        setFactorPacks(factorPacks.concat( data.factorPacks) );
-        setStyles(styles.concat( data.styles) );
+        setFactorPacks(factorPacks.concat(data.factorPacks));
+        setStyles(styles.concat(data.styles));
 
-        setProjectName(project.name || '');
-        setProjectDescription(project.description || '');
+        setProjectName(project.name || "");
+        setProjectDescription(project.description || "");
         setProjectActive(project.active);
         setProjectStartDate(DateTime.fromISO(project.start_date).toJSDate());
         setProjectEndDate(DateTime.fromISO(project.end_date).toJSDate());
@@ -107,7 +107,7 @@ export default function ProjectDataAdmin(props) {
     setWorking(true);
 
     const url =
-      props.projectUrl + (null == projectId ? '' : "/" + projectId) + ".json";
+      props.projectUrl + (null == projectId ? "" : "/" + projectId) + ".json";
 
     fetch(url, {
       method: method,
@@ -136,32 +136,32 @@ export default function ProjectDataAdmin(props) {
         if (response.ok) {
           return response.json();
         } else {
-          setMessages( data.messages );
+          setMessages(data.messages);
           console.log("error");
         }
       })
       .then(data => {
-        if(data.messages == null || Object.keys( data.messages ).length < 2){
-        const project = data.project;
-        setProjectId(project.id);
-        setProjectName(project.name);
-        setProjectDescription(project.description);
-        setProjectActive(project.active);
-        setProjectStartDate(DateTime.fromISO(project.start_date).toJSDate());
-        setProjectEndDate(DateTime.fromISO(project.end_date).toJSDate());
-        setProjectFactorPackId(project.factor_pack_id);
-        setProjectStyleId(project.style_id);
-        setProjectStartDOW(project.start_dow);
-        setProjectEndDOW(project.end_dow);
+        if (data.messages == null || Object.keys(data.messages).length < 2) {
+          const project = data.project;
+          setProjectId(project.id);
+          setProjectName(project.name);
+          setProjectDescription(project.description);
+          setProjectActive(project.active);
+          setProjectStartDate(DateTime.fromISO(project.start_date).toJSDate());
+          setProjectEndDate(DateTime.fromISO(project.end_date).toJSDate());
+          setProjectFactorPackId(project.factor_pack_id);
+          setProjectStyleId(project.style_id);
+          setProjectStartDOW(project.start_dow);
+          setProjectEndDOW(project.end_dow);
 
-        const course = data.course;
-        setCourseId(course.id);
-        setCourseName(course.name);
-        setWorking(false);
-        setDirty(false);
-        setMessages( data.messages );
-        }else{
-          setMessages( data.messages );
+          const course = data.course;
+          setCourseId(course.id);
+          setCourseName(course.name);
+          setWorking(false);
+          setDirty(false);
+          setMessages(data.messages);
+        } else {
+          setMessages(data.messages);
         }
       });
   };
@@ -188,7 +188,7 @@ export default function ProjectDataAdmin(props) {
 
   const saveButton = dirty ? (
     <Button variant="contained" onClick={saveProject}>
-      {null == projectId ? 'Create' : 'Save'} Project
+      {null == projectId ? "Create" : "Save"} Project
     </Button>
   ) : null;
 
@@ -202,7 +202,7 @@ export default function ProjectDataAdmin(props) {
       {working ? <LinearProgress /> : null}
       <TextField
         label="Project Name"
-        id='project-name'
+        id="project-name"
         value={projectName}
         fullWidth={true}
         onChange={event => setProjectName(event.target.value)}
@@ -211,7 +211,7 @@ export default function ProjectDataAdmin(props) {
       />
       <TextField
         label="Project Description"
-        id='project-description'
+        id="project-description"
         value={projectDescription}
         fullWidth={true}
         onChange={event => setProjectDescription(event.target.value)}
@@ -232,7 +232,7 @@ export default function ProjectDataAdmin(props) {
           autoOk={true}
           format="MM/dd/yyyy"
           margin="normal"
-          id='project_start_date'
+          id="project_start_date"
           label="Project Start Date"
           value={projectStartDate}
           onChange={setProjectStartDate}
@@ -245,7 +245,7 @@ export default function ProjectDataAdmin(props) {
           autoOk={true}
           format="MM/dd/yyyy"
           margin="normal"
-          id='project_end_date'
+          id="project_end_date"
           label="Project End Date"
           value={projectEndDate}
           onChange={setProjectEndDate}
@@ -313,17 +313,18 @@ export default function ProjectDataAdmin(props) {
         })}
       </Select>
       <br />
-      {saveButton}{messages.status}
+      {saveButton}
+      {messages.status}
     </Paper>
-  )
+  );
   return (
     <Paper>
-    <Tabs value={curTab} onChange={(event, value) => setCurTab(value)}>
-      <Tab label='Details' value='details' />
-      <Tab label='Groups' value='groups' disabled={null == projectId} />
-    </Tabs>
-      {'details' == curTab ? detailsComponent : null }
-      {'groups' == curTab ? (
+      <Tabs value={curTab} onChange={(event, value) => setCurTab(value)}>
+        <Tab label="Details" value="details" />
+        <Tab label="Groups" value="groups" disabled={null == projectId} />
+      </Tabs>
+      {"details" == curTab ? detailsComponent : null}
+      {"groups" == curTab ? (
         <ProjectGroups
           token={props.token}
           projectId={projectId}
@@ -331,8 +332,8 @@ export default function ProjectDataAdmin(props) {
           diversityCheckUrl={props.diversityCheckUrl}
           diversityRescoreGroup={props.diversityRescoreGroup}
           diversityRescoreGroups={props.diversityRescoreGroups}
-
-        /> ) : null }
+        />
+      ) : null}
     </Paper>
   );
 }

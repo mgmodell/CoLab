@@ -31,7 +31,7 @@ module Demoable
 
     @group.users << @current_user
 
-    user_names.each_with_index do |name,idx|
+    user_names.each_with_index do |name, idx|
       u = User.new(id: -idx, last_name: name[0], first_name: name[1])
       @group.users << u
     end
@@ -89,7 +89,6 @@ module Demoable
                   individual_count: 10)
   end
 
-
   def get_demo_installment
     a = AssessmentStub.new
     a.id = -1
@@ -110,16 +109,16 @@ module Demoable
     attr_accessor :group, :group_id
     attr_accessor :values, :inst_date
 
-    def values_build( factor:, user:, value: )
-      #puts "u: #{user.inspect}\nf: #{factor.inspect}\nv: #{value}"
-      self.values = self.values || [ ]
+    def values_build(factor:, user:, value:)
+      # puts "u: #{user.inspect}\nf: #{factor.inspect}\nv: #{value}"
+      self.values = values || []
       v = Value.new
       v.factor = factor
       v.factor_id = factor.id
       v.user = user
       v.user_id = user.id
       v.value = value
-      self.values << v
+      values << v
     end
   end
   class AssessmentStub

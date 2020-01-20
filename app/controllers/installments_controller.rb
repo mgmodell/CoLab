@@ -25,10 +25,11 @@ class InstallmentsController < ApplicationController
                                        group: group).first
       if @installment.nil?
         @installment = Installment.new(
-                                       assessment: assessment,
-                                       user: current_user,
-                                       inst_date: DateTime.current.in_time_zone(project.course.timezone),
-                                       group: group)
+          assessment: assessment,
+          user: current_user,
+          inst_date: DateTime.current.in_time_zone(project.course.timezone),
+          group: group
+        )
 
         cell_value = Installment::TOTAL_VAL / group.users.size
         group.users.each do |u|
@@ -38,61 +39,65 @@ class InstallmentsController < ApplicationController
         end
       end
       submit_helper(
-        factors: @factors, group: group, installment: @installment )
+        factors: @factors, group: group, installment: @installment
+      )
     end
   end
 
-  def submit_helper factors:, group:, installment:
-      respond_to do |format|
-        format.html { render installment.assessment.project.style.filename }
+  def submit_helper(factors:, group:, installment:)
+    respond_to do |format|
+      format.html { render installment.assessment.project.style.filename }
 
-        format.json do
-          render json: {
-            factors: Hash[ factors.collect{|factor| [factor.id, {
-              id: factor.id,
-              name: factor.name,
-              description: factor.description
-            } ] } ],
-            group: {
-              id: group.id,
-              name: group.name,
-              users: Hash[ group.users.collect { |member| [member.id, {
-                id: member.id,
-                name: member.name( false )
-              } ] } ]
-            },
-            installment: {
-              id: installment.id,
-              assessment_id: installment.assessment_id,
-              inst_date: installment.inst_date,
-              values: installment.values.as_json( only: %i[id factor_id user_id value] ),
-              project: {
-                name: installment.assessment.project.name,
-                description: installment.assessment.project.description
-              }
-            },
-            sliderSum: Installment::TOTAL_VAL
-          }
-        end
+      format.json do
+        render json: {
+          factors: Hash[ factors.collect do |factor|
+                           [factor.id, {
+                             id: factor.id,
+                             name: factor.name,
+                             description: factor.description
+                           }]
+                         end ],
+          group: {
+            id: group.id,
+            name: group.name,
+            users: Hash[ group.users.collect do |member|
+                           [member.id, {
+                             id: member.id,
+                             name: member.name(false)
+                           }]
+                         end ]
+          },
+          installment: {
+            id: installment.id,
+            assessment_id: installment.assessment_id,
+            inst_date: installment.inst_date,
+            values: installment.values.as_json(only: %i[id factor_id user_id value]),
+            project: {
+              name: installment.assessment.project.name,
+              description: installment.assessment.project.description
+            }
+          },
+          sliderSum: Installment::TOTAL_VAL
+        }
       end
-
+    end
   end
 
   def create
     respond_to do |format|
       format.json do
         installment = nil
-          ActiveRecord::Base.transaction do
-            installment_hash = params[:installment]
-              installment = Installment.new(
-                assessment_id: installment_hash[:assessment_id],
-                group_id: installment_hash[:group_id],
-                user: current_user,
-                inst_date: installment_hash[ :inst_date ],
-                comments: installment_hash[:comments]
-              )
-            installment.save
-            puts installment.errors.full_messages unless installment.errors.empty?
+        ActiveRecord::Base.transaction do
+          installment_hash = params[:installment]
+          installment = Installment.new(
+            assessment_id: installment_hash[:assessment_id],
+            group_id: installment_hash[:group_id],
+            user: current_user,
+            inst_date: installment_hash[:inst_date],
+            comments: installment_hash[:comments]
+          )
+          installment.save
+          if installment.errors.empty?
             params[:contributions].values.each do |contribution|
               contribution.each do |value|
                 installment.values.create(
@@ -102,19 +107,19 @@ class InstallmentsController < ApplicationController
                 )
               end
             end
-          end
-          installment.reload
-          render json: {
-            messages: {
-              status: t( 'success'),
-            },
-            installment: {
-                id: installment.id,
-                assessment_id: installment.assessment_id,
-                group_id: installment.group_id,
-                comments: installment.comments,
-                values: installment.values
-                  .collect{|item|
+        installment.reload
+        render json: {
+          error: false,
+          messages: {
+            status: t('success') 
+          },
+          installment: {
+            id: installment.id,
+            assessment_id: installment.assessment_id,
+            group_id: installment.group_id,
+            comments: installment.comments,
+            values: installment.values
+                               .collect do |item|
                       {
                         id: item[:id],
                         user_id: item[:userId],
@@ -122,17 +127,27 @@ class InstallmentsController < ApplicationController
                         name: item[:name],
                         value: item[:value]
                       }
-                 }
-            }
+                    end
           }
+        }
+          else
+            puts installment.errors.full_messages unless installment.errors.empty?
+            messages = installment.errors.full_messages
+            render json: {
+              messages: {
+                status: messages[ 0 ],
+              },
+              error: true
+            }
+          end
+        end
       end
     end
-
   end
 
   def update
     id = params[:id].to_i
-    
+
     respond_to do |format|
       format.html do
         @title = t 'installments.title'
@@ -187,38 +202,40 @@ class InstallmentsController < ApplicationController
       end
       format.json do
         if id < 0
-          valueArray = 
-          render json: {
-            messages: {
-              status: t( 'installments.demo_success'),
-            },
-            installment: {
+          valueArray =
+            render json: {
+              messages: {
+                status: t('installments.demo_success')
+              },
+              installment: {
                 id: id,
                 assessment_id: params[:assessment_id],
                 group_id: params[:group_id],
                 values: params[:contributions].values
-                  .reduce([]){|tmpArr,itemSet| tmpArr.concat( 
-                    itemSet.collect{|item|
-                      {
-                        id: item[:id],
-                        user_id: item[:userId],
-                        factor_id: item[:factorId],
-                        name: item[:name],
-                        value: item[:value]
-                      }
-                    }
-                 ) }
+                                              .reduce([]) do |tmpArr, itemSet|
+                          tmpArr.concat(
+                            itemSet.collect do |item|
+                              {
+                                id: item[:id],
+                                user_id: item[:userId],
+                                factor_id: item[:factorId],
+                                name: item[:name],
+                                value: item[:value]
+                              }
+                            end
+                          )
+                        end
+              }
             }
-          }
         else
           ActiveRecord::Base.transaction do
-            installment = Installment.includes( :values ).find( id )
+            installment = Installment.includes(:values).find(id)
             installment.comments = params[:installment][:comments]
             installment.save
 
-            value_hash = installment.values.reduce() {|v_map,item| v_map[ item.id] = item}
+            value_hash = installment.values.reduce { |v_map, item| v_map[item.id] = item }
             params[:contributions].each do |contribution|
-              value = value_hash[ contribution.id ]
+              value = value_hash[contribution.id]
               if value.nil?
                 installment.build_value(
                   user_id: item[:userId],
@@ -228,31 +245,32 @@ class InstallmentsController < ApplicationController
               else
                 value.value = item[:value]
               end
-              #TODO check for valid sum and normalize if not
+              # TODO: check for valid sum and normalize if not
               value.save
             end
           end
           render json: {
             messages: {
-              status: t( 'success'),
+              status: t('success')
             },
             installment: {
-                id: id,
-                assessment_id: params[:assessment_id],
-                group_id: params[:group_id],
-                values: params[:contributions].values
-                  .reduce([]){|tmpArr,itemSet| tmpArr.concat( 
-                    itemSet.collect{|item|
-                      puts item
-                      {
-                        id: item[:id],
-                        user_id: item[:userId],
-                        factor_id: item[:factorId],
-                        name: item[:name],
-                        value: item[:value]
-                      }
-                    }
-                 ) }
+              id: id,
+              assessment_id: params[:assessment_id],
+              group_id: params[:group_id],
+              values: params[:contributions].values
+                                            .reduce([]) do |tmpArr, itemSet|
+                        tmpArr.concat(
+                          itemSet.collect do |item|
+                            {
+                              id: item[:id],
+                              user_id: item[:userId],
+                              factor_id: item[:factorId],
+                              name: item[:name],
+                              value: item[:value]
+                            }
+                          end
+                        )
+                      end
             }
           }
         end
@@ -278,8 +296,9 @@ class InstallmentsController < ApplicationController
       end
     end
 
-    submit_helper( 
-        factors: @factors, group: @group, installment: @installment )
+    submit_helper(
+      factors: @factors, group: @group, installment: @installment
+    )
   end
 
   private

@@ -37,6 +37,7 @@ end
 Capybara.javascript_driver = :selenium_chrome_headless
 # Capybara.javascript_driver = :chrome
 # Capybara.javascript_driver = :headless_firefox
+# Capybara.javascript_driver = :safari
 # Capybara.javascript_driver = :selenium
 Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false

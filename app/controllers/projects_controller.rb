@@ -35,7 +35,6 @@ class ProjectsController < ApplicationController
             status: params[:notice]
           }
         }
-        puts "\n\n\n\t#{response}\n\n"
         render json: response
       end
     end
@@ -65,9 +64,9 @@ class ProjectsController < ApplicationController
       notice = @project.active ?
             t('projects.create_success') :
             t('projects.create_success_inactive')
-      redirect_to project_path( @project,
-        notice: notice,
-        format: params[:format] )
+      redirect_to project_path(@project,
+                               notice: notice,
+                               format: params[:format])
     else
       logger.debug @project.errors.full_messages unless @project.errors.empty?
       render :new
@@ -94,7 +93,7 @@ class ProjectsController < ApplicationController
               only: %i[id name timezone]
             ),
             messages: {
-              status: t( 'update_success')
+              status: t('update_success')
             }
           }
           render json: response
@@ -253,7 +252,7 @@ class ProjectsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_project
-    if( params[:id].blank? )
+    if params[:id].blank?
       course = Course.find(params[:course_id])
       p_test = course.projects.new
       p_test.start_date = course.start_date

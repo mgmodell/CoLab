@@ -37,6 +37,7 @@ Feature: Submitting Candidate words for Bingo!
     Then the user clicks "Save"
     Then the candidate properties should be empty
 
+@javascript
   Scenario: User should be able to enter candidates with an assigned course consent
     Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
@@ -44,6 +45,7 @@ Feature: Submitting Candidate words for Bingo!
     Given the consent form "has" been presented to the user
     Given the user logs in
     Then user should see 1 open task
+    Then the user switches to the "Task View" tab
     Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open bingo
     When the user clicks the link to the candidate list

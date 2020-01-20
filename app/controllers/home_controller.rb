@@ -69,9 +69,6 @@ class HomeController < ApplicationController
                           :cip_code, home_state: [:home_country],
                                      reactions: [narrative: [:scenario]])
     diversity_score = Group.calc_diversity_score_for_group users: users
-    puts "\n\n\n\n\tscore #{diversity_score}\n\n\n"
-    puts emails
-    puts users.inspect
     found_users = users.collect do |u|
       { email: u.email,
         name: u.informal_name(false),

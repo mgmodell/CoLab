@@ -66,81 +66,42 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
       element.set cell_value if element[:id].end_with? 'value'
     end
   else
-    #push the panel into debug mode
-    find( :xpath, '//input[@id="debug"]', visible: :all).click
+    # push the panel into debug mode
+    find(:xpath, '//input[@id="debug"]', visible: :all).click
     @project.factors.each do |factor|
-      puts factor.name
-      #Open the factor panel
+      # Open the factor panel
       find(:xpath, "//div[text( )='#{factor.name}']").click
-      elements = page.
-        all(:xpath, "//input[@factor=#{factor.id}]",
-        { visible: false } )
-      factor_vals = Hash[ elements.collect{|element| [element[:contributor], element.value]}]
+      elements = page
+                 .all(:xpath, "//input[@factor=#{factor.id}]",
+                      visible: false)
+      factor_vals = Hash[elements.collect { |element| [element[:contributor], element.value] }]
 
       actions = []
-      rand(20).times do
+      (rand(8) + 3).times do
         actions << {
-          increment: rand( 2000 ) * ( rand( 2 ) == 1 ? -1 : 1 ),
+          increment: rand(2000) * (rand(2) == 1 ? -1 : 1),
           target: factor_vals.keys.sample
         }
       end
 
-      actions.each do |action|
+      actions.each_with_index do |action, index|
         target = action[:target]
         increment = action[:increment]
         contrib = find(:xpath, "//input[@factor='#{factor.id}'][@contributor='#{target}']")
-        
-        #let's do the allocation math - this doesn't have to be performant
-        newVal = min( increment + Integer( contrib.value, Installment::TOTAL_VAL ) )
-        diff = newVal - Integer( contrib.value )
-        factor_vals[ target ] = newVal
-        to_alloc = diff / (factor_vals.keys - 1)
-        mod = diff % (factor_vals.keys -1)
-        #pass any modulo back to the changed bar
-        newVal = newVal - mod
 
-        #first pass at allocation
-        factor_vals.keys.reject{|contributor| contributor == target}.each do |contributor|
-          factor_vals[ contributor ] = factor_vals[ contributor ] - to_alloc
-        end
+        # let's do the allocation math - this doesn't have to be performant
+        new_val = (increment + contrib.value.to_i).clamp(0, Installment::TOTAL_VAL)
+        contrib.set new_val
 
-        #Collect and 0 out the negative values
-        negVal = factor_vals.keys.reduce do |retVal,key|
-          if factor_vals[key] < 0
-            retVal = retVal + factor_vals[ key ]
-            factor_vals[ key ] = 0
-          end
-          retVal
+        sum = all(:xpath, "//input[@factor='#{factor.id}']").reduce(0) do |total, slider|
+          factor_vals[slider[:contributor]] = slider.value
+          total = total + slider.value.to_i
         end
-        #readjust the remaining non-zero values
-        while negVal != 0 do
-          toDec = factor_vals.reduce([]) do |progress,element|
-            if( element.id == target || 0 == element.value)
-              progress << element
-            end
-            progress
-          end
-          modulo = negVal % toDec.size
-          #Apply the remainder to the largest element
-          toDec.sort!{|a,b| b.value - a.value}
-          toDec[ 0 ].value = toDec[ 0 ].value + modulo
-          reduceBy = ((negVal - modulo).ceil / toDec.size )
-          #Apply the reductions and adjustment
-          negVal = toDec.reduce do |remainder,element|
-            element.value = element.value + reduceBy
-            if( element.value < 0 )
-              remainder = remainder + element.value
-              element.value = 0
-            end
-            remainder
-          end
-        end
-        contrib.set( newVal )
-
+        sum.should eq Installment::TOTAL_VAL
       end
 
-      #elements[index].set (column_points.to_i - total)
-      #factor_vals << column_points.to_i - total
+      # elements[index].set (column_points.to_i - total)
+      # factor_vals << column_points.to_i - total
       @installment_values[factor.id] = factor_vals
     end
   end
@@ -155,12 +116,13 @@ Then /^the installment form should request factor x user values$/ do
 
   actual_count = 0
   page.all(:xpath,
-      '//input[starts-with(@name,"slider_")]', {visible: :all} ).size.should eq expected_count
+           '//input[starts-with(@name,"slider_")]', visible: :all).size.should eq expected_count
 end
 
 Then /^the assessment should show up as completed$/ do
   # Using some cool xpath stuff to check for proper content
   link_text = @project.group_for_user(@user).name
+  step 'the user switches to the "Task View" tab'
 
   page.should have_xpath("//a[contains(., '#{link_text}')]/.."), 'No link to assessment'
   page.should have_xpath("//td[contains(., 'Completed')]"), "No 'completed' message"
@@ -199,20 +161,24 @@ Then /^the installment values will match the submit ratio$/ do
     installment.values.each do |value|
       factor_vals = recorded_vals[value.factor.id]
       factor_vals = [] if factor_vals.nil?
-      factor_vals << value.value
+      factor_vals << [value.user_id, value.value]
       recorded_vals[value.factor.id] = factor_vals
     end
 
     recorded_vals.keys.each do |factor_id|
       set_vals = @installment_values[factor_id]
-      set_tot = set_vals.inject { |sum, x| sum + x }
-      set_vals.collect! { |x| x.to_f / set_tot }
+      set_tot = set_vals.values.reduce(0) { |sum, x| sum + x.to_i }
+      set_vals_a = []
 
-      rec_vals = recorded_vals[factor_id]
+      set_vals.keys.sort.each do |key|
+        set_vals_a << set_vals[ key ].to_f / set_tot
+      end
+
+      rec_vals = recorded_vals[factor_id].sort{|a,b| a[0] - b[0]}.collect{|item| item[1]}
       rec_tot = rec_vals.inject { |sum, x| sum + x }
       rec_vals.collect! { |x| x.to_f / rec_tot }
 
-      set_vals.should eq rec_vals
+      set_vals_a.should eq rec_vals
     end
 
   end
@@ -251,7 +217,7 @@ Then /^the user enters a comment "([^"]*)" personally identifiable information$/
 
   end
 
-  find( :xpath, '//*[text()="Would you like to add additional comments?"]' ).click
+  find(:xpath, '//*[text()="Would you like to add additional comments?"]').click
   page.fill_in('Comments', with: @comment, visible: :all, disabled: :all)
 end
 
@@ -279,11 +245,11 @@ Then /^the anonymous comment "([^"]*)"$/ do |comment_status|
   end
 end
 
-Then "the installment will successfully save"  do
+Then 'the installment will successfully save' do
   # Using aria-labl instead of title because of some strange JavaScript
   # error.
   waits = 0
-  unless( all(:xpath, "//div[contains(text(),'success')]").size > 0 || waits > 3 )
+  unless !all(:xpath, "//div[contains(text(),'success')]").empty? || waits > 3
 
     sleep(0.3)
     waits += 1

@@ -40,6 +40,7 @@ Feature: Email experience stragglers
     Then 0 emails will be sent
     Then 0 emails will be tracked
 
+@javascript
   Scenario: 1 student completes an experience
     Given the user is "a random" user
     When the user logs in
@@ -73,6 +74,7 @@ Feature: Email experience stragglers
     Then 8 emails will be sent
     Then 8 emails will be tracked
 
+  @javascript
   Scenario: 1 user is in an experience and a project they receive only one email
     Given the user is "a random" user
     Given there is a course with an assessed project

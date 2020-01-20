@@ -164,9 +164,9 @@ export default function InstallmentReport(props) {
       })
       .then(data => {
         //Process Contributions
+        if( !data.error ){
         setInstallment(data.installment);
-        console.log(data);
-        const contributions = data.installment.values.reduce(
+        contributions = data.installment.values.reduce(
           (valuesAccum, value) => {
             const values = valuesAccum[value.factor_id] || [];
             values.push({
@@ -181,6 +181,8 @@ export default function InstallmentReport(props) {
           {}
         );
         setContributions(contributions);
+        }
+        console.log( data.messages );
         setMessages(data.messages);
         setShowAlerts(true);
         setWorking(false);

@@ -2,17 +2,13 @@ import React, { Suspense, useState, useEffect, lazy } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import Skeleton from '@material-ui/lab/Skeleton';
+import Skeleton from "@material-ui/lab/Skeleton";
 
 import InstallmentReport from "./InstallmentReport";
 
-
-export default function InstallmentReportWrapper( props ){
-
-    return (
-    <Suspense fallback={
-      <Skeleton variant='rect' height={300} />}
-    >
+export default function InstallmentReportWrapper(props) {
+  return (
+    <Suspense fallback={<Skeleton variant="rect" height={300} />}>
       <InstallmentReport
         token={props.token}
         installmentId={props.installmentId}
@@ -20,7 +16,7 @@ export default function InstallmentReportWrapper( props ){
         setInstallmentUrl={props.setInstallmentUrl}
       />
     </Suspense>
-    );
+  );
 }
 
 InstallmentReportWrapper.propTypes = {
