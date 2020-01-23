@@ -34,11 +34,18 @@ Capybara.register_driver(:chrome) do |app|
   )
 end
 
-Capybara.javascript_driver = :selenium_chrome_headless
-# Capybara.javascript_driver = :chrome
-# Capybara.javascript_driver = :headless_firefox
-# Capybara.javascript_driver = :safari
-# Capybara.javascript_driver = :selenium
+case ENV['DRIVER']
+when 'chrome'
+  Capybara.javascript_driver = :chrome
+when 'headless_ff'
+  Capybara.javascript_driver = :headless_firefox
+when 'safari'
+  Capybara.javascript_driver = :safari
+when 'selenium'
+  Capybara.javascript_driver = :selenium
+else # This will be the default for JavaScript
+  Capybara.javascript_driver = :selenium_chrome_headless
+end
 Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false
 

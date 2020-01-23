@@ -88,8 +88,8 @@ export default function ProjectDataAdmin(props) {
         setProjectName(project.name || "");
         setProjectDescription(project.description || "");
         setProjectActive(project.active);
-        setProjectStartDate(DateTime.fromISO(project.start_date).toJSDate());
-        setProjectEndDate(DateTime.fromISO(project.end_date).toJSDate());
+        setProjectStartDate(DateTime.fromISO(project.start_date).setZone( user.timezone ).toJSDate());
+        setProjectEndDate(DateTime.fromISO(project.end_date).setZone( user.timezone).toJSDate());
         setProjectFactorPackId(project.factor_pack_id);
         setProjectStyleId(project.style_id);
         setProjectStartDOW(project.start_dow);
@@ -123,8 +123,8 @@ export default function ProjectDataAdmin(props) {
           course_id: courseId,
           description: projectDescription,
           active: projectActive,
-          start_date: projectStartDate,
-          end_date: projectEndDate,
+          start_date: projectStartDate.setZone( 'UTC' ),
+          end_date: projectEndDate.setZone( 'UTC' ),
           start_dow: projectStartDOW,
           end_dow: projectEndDOW,
           factor_pack_id: projectFactorPackId,
