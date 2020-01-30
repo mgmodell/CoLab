@@ -119,7 +119,7 @@ class BingoGamesController < ApplicationController
     resp = {}
     # Get the users
     bingo_game.course.rosters.each do |r|
-      next unless r.enrolled_student? || r.invited_student?
+      next unless r.enrolled_student? || r.invited_student? || r.dropped_student?
 
       resp[ r.user.id ] = {
         student: r.user.informal_name(anon),

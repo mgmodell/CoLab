@@ -60,6 +60,7 @@ Then /^the bingo "([^"]*)" is "([^"]*)"$/ do |field, value|
     @bingo.lead_time.should eq value.to_i
   else
     puts "We didn't test anything there: " + field + ' not found'
+    pending
   end
 end
 

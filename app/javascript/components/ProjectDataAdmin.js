@@ -11,14 +11,16 @@ import Select from "@material-ui/core/Select";
 import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
+import Typography from "@material-ui/core/Typography";
 
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from "@material-ui/pickers";
 
-import DateTime from "luxon/src/datetime.js";
-import Info from "luxon/src/info.js";
+import { DateTime, Info } from "luxon";
+import Settings from 'luxon/src/settings.js'
+
 
 import LuxonUtils from "@date-io/luxon";
 import { useUserStore } from "./UserStore";
@@ -26,6 +28,8 @@ import { useUserStore } from "./UserStore";
 import ProjectGroups from "./ProjectGroups";
 
 export default function ProjectDataAdmin(props) {
+  const cityTimezones = require('city-timezones');
+
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
   const [working, setWorking] = useState(true);
@@ -38,14 +42,14 @@ export default function ProjectDataAdmin(props) {
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [projectStartDate, setProjectStartDate] = useState(
-    DateTime.local().toJSDate()
+    DateTime.local().toISO( )
   );
   //Using this Luxon function for later i18n
   const [daysOfWeek, setDaysOfWeek] = useState(Info.weekdays());
   const [projectEndDate, setProjectEndDate] = useState(
     DateTime.local()
       .plus({ month: 3 })
-      .toJSDate()
+      .toISO()
   );
   const [projectStartDOW, setProjectStartDOW] = useState(5);
   const [projectEndDOW, setProjectEndDOW] = useState(1);
@@ -54,6 +58,7 @@ export default function ProjectDataAdmin(props) {
   const [projectStyleId, setProjectStyleId] = useState(0);
   const [courseId, setCourseId] = useState(props.courseId);
   const [courseName, setCourseName] = useState("");
+  const [courseTimezone, setCourseTimezone] = useState( 'UTC');
   const [user, userActions] = useUserStore();
 
   const getProject = () => {
@@ -85,19 +90,31 @@ export default function ProjectDataAdmin(props) {
         setFactorPacks(factorPacks.concat(data.factorPacks));
         setStyles(styles.concat(data.styles));
 
+        const course = data.course;
+        setCourseId(course.id);
+        setCourseName(course.name);
+        console.log( course.timezone )
+        const foundTimezone = cityTimezones.lookupViaCity( course.timezone )[0].timezone;
+        console.log( foundTimezone );
+        setCourseTimezone( foundTimezone );
+        Settings.defaultZoneName = foundTimezone;
+
         setProjectName(project.name || "");
         setProjectDescription(project.description || "");
         setProjectActive(project.active);
-        setProjectStartDate(DateTime.fromISO(project.start_date).setZone( user.timezone ).toJSDate());
-        setProjectEndDate(DateTime.fromISO(project.end_date).setZone( user.timezone).toJSDate());
+
+        console.log( DateTime.fromISO( project.start_date).setZone( foundTimezone ))
+
+        var receivedDate = DateTime.fromISO( project.start_date).setZone( foundTimezone )
+        setProjectStartDate(receivedDate.toISO() );
+        console.log( foundTimezone )
+        console.log( receivedDate.toISO() )
+        receivedDate = DateTime.fromISO( project.end_date).setZone( foundTimezone )
+        setProjectEndDate(receivedDate.toISO() );
         setProjectFactorPackId(project.factor_pack_id);
         setProjectStyleId(project.style_id);
         setProjectStartDOW(project.start_dow);
         setProjectEndDOW(project.end_dow);
-
-        const course = data.course;
-        setCourseId(course.id);
-        setCourseName(course.name);
         setWorking(false);
         setDirty(false);
       });
@@ -123,8 +140,8 @@ export default function ProjectDataAdmin(props) {
           course_id: courseId,
           description: projectDescription,
           active: projectActive,
-          start_date: projectStartDate.setZone( 'UTC' ),
-          end_date: projectEndDate.setZone( 'UTC' ),
+          start_date: projectStartDate,
+          end_date: projectEndDate,
           start_dow: projectStartDOW,
           end_dow: projectEndDOW,
           factor_pack_id: projectFactorPackId,
@@ -147,8 +164,11 @@ export default function ProjectDataAdmin(props) {
           setProjectName(project.name);
           setProjectDescription(project.description);
           setProjectActive(project.active);
-          setProjectStartDate(DateTime.fromISO(project.start_date).toJSDate());
-          setProjectEndDate(DateTime.fromISO(project.end_date).toJSDate());
+          console.log( 'save response')
+          var receivedDate = DateTime.fromISO( project.start_date).setZone( courseTimezone )
+          setProjectStartDate(receivedDate.toISO());
+          receivedDate = DateTime.fromISO( project.end_date).setZone( courseTimezone )
+          setProjectEndDate(receivedDate.toISO());
           setProjectFactorPackId(project.factor_pack_id);
           setProjectStyleId(project.style_id);
           setProjectStartDOW(project.start_dow);
@@ -225,6 +245,7 @@ export default function ProjectDataAdmin(props) {
         label="Active"
       />
 
+      <Typography>All dates shown in {courseTimezone} timezone.</Typography>
       <MuiPickersUtilsProvider utils={LuxonUtils}>
         <KeyboardDatePicker
           disableToolbar

@@ -34,8 +34,14 @@ Then /^the user chooses the "([^"]*)" radio button$/ do |choice|
   # choose(choice)
   inputId = find(:xpath, '//label[text()="' + choice + '"]')[:for]
   checkbox = find(:xpath, "//input[@id='#{inputId}']")
+  begin
+    #Chrome does it this way
+    checkbox.find(:xpath, '../..').click
+  rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+    #Firefox does it this way
+    checkbox.find(:xpath, '..').click
+  end
   # JQueryMobile makes the enclosing span clickable
-  checkbox.find(:xpath, '../..').click
 end
 
 Then /^the database will show a new week (\d+) "([^"]*)" diagnosis from the user$/ do |week_num, behavior|

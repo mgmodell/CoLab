@@ -120,6 +120,7 @@ Then /^retrieve the latest project from the db$/ do
 end
 
 Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value|
+  puts @course.timezone
   course_tz = ActiveSupport::TimeZone.new(@course.timezone)
 
   case date_field_prefix.downcase

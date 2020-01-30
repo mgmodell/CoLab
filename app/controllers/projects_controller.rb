@@ -61,15 +61,41 @@ class ProjectsController < ApplicationController
     @title = t('.title')
     @project = Project.new(project_params)
     if @project.save
-      notice = @project.active ?
-            t('projects.create_success') :
-            t('projects.create_success_inactive')
-      redirect_to project_path(@project,
-                               notice: notice,
-                               format: params[:format])
+      respond_to do |format|
+        format.html do
+          notice = @project.active ?
+                t('projects.create_success') :
+                t('projects.create_success_inactive')
+          redirect_to project_path(@project,
+                                   notice: notice,
+                                   format: params[:format])
+        end
+        format.json do
+          response = {
+            project: @project.as_json(
+              only: %i[ id name description active start_date end_date
+                        start_dow end_dow factor_pack_id style_id ]
+            ),
+            course: @project.course.as_json(
+              only: %i[id name timezone]
+            ),
+            messages: {
+              status: t('create_success')
+            }
+          }
+          render json: response
+        end
+      end
     else
-      logger.debug @project.errors.full_messages unless @project.errors.empty?
-      render :new
+      respond_to do |format|
+        format.html do
+          logger.debug @project.errors.full_messages unless @project.errors.empty?
+          render :new
+        end
+        format.json do
+          render json: { messages: @project.errors }
+        end
+      end
     end
   end
 
@@ -79,7 +105,7 @@ class ProjectsController < ApplicationController
       respond_to do |format|
         format.html do
           notice = @project.active ?
-                t('projects.update_success') :
+                t( 'projects.update_success') :
                 t('projects.update_success_inactive')
           redirect_to @project, notice: notice
         end
@@ -93,7 +119,9 @@ class ProjectsController < ApplicationController
               only: %i[id name timezone]
             ),
             messages: {
-              status: t('update_success')
+              status: @project.active ?
+              t( 'projects.update_success') :
+              t( 'projects.update_success_inactive')
             }
           }
           render json: response
