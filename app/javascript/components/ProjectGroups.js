@@ -31,6 +31,7 @@ class ProjectGroups extends React.Component {
     this.state = {
       dirty: false,
       working: true,
+      message: '',
       filter_text: "",
       sortBy: "last_name",
       sortDirection: SortDirection.DESC,
@@ -144,7 +145,7 @@ class ProjectGroups extends React.Component {
     const { sortBy, sortDirection } = this.state;
     const groups = this.state.groups_raw;
     groups[group_id]["name"] = event.target.value;
-    this.sortStudents(sortBy, sortDirection, students);
+    //this.sortStudents(sortBy, sortDirection, students);
     this.setState({
       dirty: true,
       groups: Object.values(groups),
@@ -275,7 +276,7 @@ class ProjectGroups extends React.Component {
     this.setState({
       working: true
     });
-    fetch(this.props.groupsUrl + ".json", {
+    fetch(this.props.groupsUrl + this.props.projectId + ".json", {
       method: "PATCH",
       credentials: "include",
       body: JSON.stringify({
@@ -305,7 +306,8 @@ class ProjectGroups extends React.Component {
           groups_raw: data.groups,
           students_raw: data.students,
           groups: Object.values(data.groups),
-          students: Object.values(data.students)
+          students: Object.values(data.students),
+          message: data.message == null ? '' : data.message
         });
       });
   }
@@ -332,6 +334,9 @@ class ProjectGroups extends React.Component {
               Save
             </Fab>
           ) : null}
+          <Typography color="inherit">
+            {this.state.message}
+          </Typography>
           <Fab variant="extended" onClick={this.recalcDiversity}>
             Recalculate Diversity
           </Fab>
@@ -367,6 +372,7 @@ class ProjectGroups extends React.Component {
                     <TextField
                       onChange={() => this.setGroupName(event, group.id)}
                       value={group.name}
+                      id={'g_' + group.id}
                     />
                     {group.id < 0 ? (
                       <Fab
@@ -417,6 +423,7 @@ class ProjectGroups extends React.Component {
                       >
                         <Radio
                           onClick={() => this.setGroup(student.id, group.id)}
+                          id={'user_group_' + student.id + '_' + group.id}
                           checked={group.id == student.group_id}
                         />
                       </TableCell>

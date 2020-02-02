@@ -80,7 +80,7 @@ class ProjectsController < ApplicationController
               only: %i[id name timezone]
             ),
             messages: {
-              status: t('create_success')
+              status: t('projects.create_success')
             }
           }
           render json: response
@@ -148,8 +148,8 @@ class ProjectsController < ApplicationController
 
   def set_groups
     project = Project.includes(:groups, course: { rosters: :user })
-                     .joins(:groups, course: { rosters: :user })
                      .find_by(id: params[:id])
+
 
     group_hash = {}
     params[:groups].values.each do |g|
@@ -168,9 +168,18 @@ class ProjectsController < ApplicationController
       group = group_hash[s[:group_id]]
       group.users << student unless group.nil?
     end
-    group_hash.values.each(&:save)
+  
+    begin
+      ActiveRecord::Base.transaction do
+        group_hash.values.each(&:save!)
+      end
+    rescue => exception
+      # Post back a JSON error
+      get_groups_helper project: project, message: t( 'projects.group_save_failure')
+    else
+      get_groups_helper project: project, message: t( 'projects.group_save_success')
+    end
 
-    get_groups
   end
 
   def get_groups
@@ -179,6 +188,10 @@ class ProjectsController < ApplicationController
                      .left_outer_joins(groups: :users)
                      .find_by(id: params[:id])
 
+    get_groups_helper project: project
+  end
+
+  def get_groups_helper project:, message: nil
     students = {}
     project.rosters.enrolled.each do |roster|
       student = roster.user
@@ -205,6 +218,7 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
+          message: message,
           groups: groups,
           students: students
         }

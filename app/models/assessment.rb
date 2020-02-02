@@ -122,7 +122,8 @@ class Assessment < ApplicationRecord
 
     if existing_assessments.empty? &&
        assessment.start_date <= init_date &&
-       assessment.end_date >= init_date
+       assessment.end_date >= init_date &&
+       project.is_available?
       assessment.project = project
       assessment.save
       unless assessment.errors.empty?

@@ -13,20 +13,30 @@ require 'simplecov'
 SimpleCov.start 'rails'
 
 Capybara.register_driver :headless_firefox do |app|
+  profile = Selenium::WebDriver::Firefox::Profile.new
+  client = Selenium::WebDriver::Remote::Http::Default.new
+  client.timeout = 120 # instead of the default of 60s
   browser_options = Selenium::WebDriver::Firefox::Options.new
   browser_options.args << '--headless'
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
+    profile: profile,
+    http_client: client,
     options: browser_options
   )
 end
 
 Capybara.register_driver :firefox do |app|
+  profile = Selenium::WebDriver::Firefox::Profile.new
+  client = Selenium::WebDriver::Remote::Http::Default.new
+  client.timeout = 120 # instead of the default of 60s
   browser_options = Selenium::WebDriver::Firefox::Options.new
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
+    profile: profile,
+    http_client: client,
     options: browser_options
   )
 end

@@ -61,15 +61,14 @@ en:
       in %{con_count} unique concepts
     list_stats:
       title: Candidate list stats
-      def: Definition
+      def: Clue
     edit:
       title: Complete the term list
       instructions: >
         Please read up on the topic above, being sure to go through the
         assigned readings, as well as to find your own materials. Make a
         list of what you believe to be the most important and/or salient
-        terms and enter them, along with explanations of their meaning
-        and importance to serve as clues to help others identify the
+        terms and enter them, along with clues to help others identify the
         terms you're describing.
       behalf: on behalf of 
       waiting: Still awaiting a response to your group help request
@@ -79,6 +78,6 @@ en:
       confirm_decline: Are you sure? Did you save your changes?
       dup: Possible Duplicate
       term: Term
-      def: Definition
+      def: Clue
     show:
       title: Terms list for review

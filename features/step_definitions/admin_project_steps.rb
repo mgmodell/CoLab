@@ -62,7 +62,15 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
 end
 
 Then /^the user switches to the "([^"]*)" tab$/ do |tab|
-  click_link tab
+  begin
+    click_link tab
+    
+  rescue Capybara::ElementNotFound => exception
+    find( :xpath, "//*[text()='#{tab}']").click
+    
+  else
+    
+  end
 end
 
 Then 'the user enables the {string} table view option' do |view_option|
@@ -175,7 +183,7 @@ Then /^set user (\d+) to group "([^"]*)"$/ do |user_number, group_name|
   group = Group.where(name: group_name).take
   button_id = 'user_group_' + user.id.to_s + '_' + group.id.to_s
 
-  page.choose(button_id)
+  find( :xpath, "//input[@id='#{button_id}']", visible: :all ).click
 end
 
 Then /^group "([^"]*)" has (\d+) user$/ do |group_name, user_count|

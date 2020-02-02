@@ -1,13 +1,6 @@
 <p id="notice"><%= notice %></p>
 <% theme_code = get_theme_code
    anonymize = get_anonymous %>
-<div data-role="tabs" id="tabs">
-  <div data-role="navbar">
-    <ul>
-      <li><a href="#details" data-ajax="false"><%= t :details %></a></li>
-    </ul>
-  </div>
-  <div id="details" class="ui-body-<%= theme_code %> ui-content">
     <h2><%= t '.title' %></h2>
     <%= react_component "ProjectDataAdmin", {
       token: form_authenticity_token,
@@ -22,6 +15,4 @@
       diversityRescoreGroups: rescore_groups_path(id: '' )
       }
       %>
-  </div>
-</div>
   <%= link_to (t :back_to_course), @project.course %>

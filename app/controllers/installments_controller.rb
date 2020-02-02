@@ -87,55 +87,55 @@ class InstallmentsController < ApplicationController
     respond_to do |format|
       format.json do
         installment = nil
-        ActiveRecord::Base.transaction do
-          installment_hash = params[:installment]
-          installment = Installment.new(
-            assessment_id: installment_hash[:assessment_id],
-            group_id: installment_hash[:group_id],
-            user: current_user,
-            inst_date: installment_hash[:inst_date],
-            comments: installment_hash[:comments]
-          )
-          installment.save
-          if installment.errors.empty?
-            params[:contributions].values.each do |contribution|
-              contribution.each do |value|
-                installment.values.create(
-                  user_id: value[:userId],
-                  factor_id: value[:factorId],
-                  value: value[:value]
-                )
+        begin
+          ActiveRecord::Base.transaction do
+            installment_hash = params[:installment]
+            installment = Installment.new(
+              assessment_id: installment_hash[:assessment_id],
+              group_id: installment_hash[:group_id],
+              user: current_user,
+              inst_date: installment_hash[:inst_date],
+              comments: installment_hash[:comments]
+            )
+            installment.save!
+            if installment.errors.empty?
+              params[:contributions].values.each do |contribution|
+                contribution.each do |value|
+                  installment.values.create!(
+                    user_id: value[:userId],
+                    factor_id: value[:factorId],
+                    value: value[:value]
+                  )
+                end
               end
+              installment.reload
+              render json: {
+                error: false,
+                messages: {
+                  status: t('success')
+                },
+                installment: {
+                  id: installment.id,
+                  assessment_id: installment.assessment_id,
+                  group_id: installment.group_id,
+                  comments: installment.comments,
+                  values: installment.values
+                                     .collect do |item|
+                            {
+                              id: item[:id],
+                              user_id: item[:userId],
+                              factor_id: item[:factorId],
+                              name: item[:name],
+                              value: item[:value]
+                            }
+                          end
+                }
+              }
             end
-        installment.reload
-        render json: {
-          error: false,
-          messages: {
-            status: t('success') 
-          },
-          installment: {
-            id: installment.id,
-            assessment_id: installment.assessment_id,
-            group_id: installment.group_id,
-            comments: installment.comments,
-            values: installment.values
-                               .collect do |item|
-                      {
-                        id: item[:id],
-                        user_id: item[:userId],
-                        factor_id: item[:factorId],
-                        name: item[:name],
-                        value: item[:value]
-                      }
-                    end
-          }
-        }
-          else
-            puts installment.errors.full_messages unless installment.errors.empty?
-            messages = installment.errors.full_messages
+          rescue ActiveRecord::RecordInvalid => e
             render json: {
               messages: {
-                status: messages[ 0 ],
+                status: e.message
               },
               error: true
             }
@@ -231,7 +231,7 @@ class InstallmentsController < ApplicationController
           ActiveRecord::Base.transaction do
             installment = Installment.includes(:values).find(id)
             installment.comments = params[:installment][:comments]
-            installment.save
+            installment.save!
 
             value_hash = installment.values.reduce { |v_map, item| v_map[item.id] = item }
             params[:contributions].each do |contribution|
@@ -246,7 +246,7 @@ class InstallmentsController < ApplicationController
                 value.value = item[:value]
               end
               # TODO: check for valid sum and normalize if not
-              value.save
+              value.save!
             end
           end
           render json: {
