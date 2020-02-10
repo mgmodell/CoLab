@@ -17,16 +17,19 @@ Feature: Course Administration
     Given the project started '5/12/1976' and ends '10/01/2012'
     Given the course started "5/10/1976" and ended "11/01/2012"
 
+@javascript
   Scenario: Instructor downloads self-registration image
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user sees self-registration image
     Then the user clicks "Download self-registration code"
 
+@javascript
   Scenario: An instructor cannot enroll in their own course
     Given the user is the instructor for the course
     Given the user logs in
@@ -35,6 +38,7 @@ Feature: Course Administration
      Then the course has 12 "enrolled student" users
      Then the course has 0 "requesting student" users
 
+@javascript
   Scenario: A logged in course-enrolled CoLab user self-registers for the course
     Given the user is "a random" user
     Given the user logs in
@@ -43,6 +47,7 @@ Feature: Course Administration
      Then the user clicks "Enroll me!"
      Then the course has 12 "enrolled student" users
 
+@javascript
   Scenario: A course-dropped CoLab user self-registers for the course
     Given the user is "a random" user
     Given the user is dropped from the course
@@ -53,6 +58,7 @@ Feature: Course Administration
      Then the course has 1 "requesting student" users
      Then the course has 11 "enrolled student" users
 
+@javascript
   Scenario: A course-declined CoLab user self-registers for the course
     Given the user is "a random" user
     Given the user has "declined" the course
@@ -63,6 +69,7 @@ Feature: Course Administration
      Then the course has 1 "requesting student" users
      Then the course has 11 "enrolled student" users
 
+@javascript
   Scenario: A course-invited CoLab user self-registers for the course
     Given a user has signed up
     Given the user "has" had demographics requested
@@ -74,12 +81,14 @@ Feature: Course Administration
      Then the user clicks "Enroll me!"
      Then the course has 13 "enrolled student" users
 
+@javascript
   Scenario: A new CoLab user self-registers for the course
      Then the user opens the self-registration link for the course
      Then the new user registers
      #Manual signup requires email confirmation, so they will have to
      #start again after registration and confirmation.
 
+@javascript
   Scenario: A logged in course non-enrolled CoLab user self-registers for the course
     Given a user has signed up
     Given the user "has" had demographics requested
@@ -90,6 +99,7 @@ Feature: Course Administration
      Then the user clicks "Enroll me!"
      Then the course has 1 "requesting student" users
 
+@javascript
   Scenario: A logged in course non-enrolled CoLab user self-registers for the course
     Given a user has signed up
     Given the user "has" had demographics requested
@@ -100,6 +110,7 @@ Feature: Course Administration
      Then the user clicks "Enroll me!"
      Then the course has 1 "requesting student" users
 
+@javascript
   Scenario: A logged in course-enrolled CoLab user self-registers for the course
     Given the user is "a random" user
     Given the user "has" had demographics requested
@@ -109,6 +120,7 @@ Feature: Course Administration
      Then the user clicks "Enroll me!"
      Then the course has 12 "enrolled student" users
 
+@javascript
   Scenario: A course-dropped CoLab user self-registers for the course
     Given the user is "a random" user
     Given the user "has" had demographics requested
@@ -120,6 +132,7 @@ Feature: Course Administration
      Then the course has 1 "requesting student" users
      Then the course has 11 "enrolled student" users
 
+@javascript
   Scenario: A course-declined CoLab user self-registers for the course
     Given the user is "a random" user
     Given the user "has" had demographics requested
@@ -131,6 +144,7 @@ Feature: Course Administration
      Then the course has 1 "requesting student" users
      Then the course has 11 "enrolled student" users
 
+@javascript
   Scenario: A course-invited CoLab user self-registers for the course
     Given a user has signed up
     Given the user "has" had demographics requested
@@ -164,11 +178,13 @@ Feature: Course Administration
      Then the course has 12 "enrolled student" users
      Then the course has 2 "rejected student" users
 
+@javascript
   Scenario: Admin creates a new course
     Given the user is an admin
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
      And the user clicks "New Course"
      And the user sets the "Name" field to "Off"
@@ -186,11 +202,13 @@ Feature: Course Administration
      And the course start date is "tomorrow" and the end date is "next month"
      And the course "timezone" is "Nairobi"
 
+@javascript
   Scenario: Admin cannot creates an incomplete new course
     Given the user is an admin
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
      And the user clicks "New Course"
      #no name
@@ -235,19 +253,23 @@ Feature: Course Administration
      And the course start date is "tomorrow" and the end date is "next month"
      And the course "timezone" is "Nairobi"
 
+@javascript
   Scenario: Instructor cannot create a new course
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user does not see a "New Course" link
 
+@javascript
   Scenario: Admin edits an existing course
     Given the user is an admin
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user clicks "Edit Course Details"
@@ -266,11 +288,13 @@ Feature: Course Administration
      And the course start date is "5/11/1976" and the end date is "next month"
      And the course "timezone" is "Nairobi"
 
+@javascript
   Scenario: Admin adds an existing student to a course
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Given 1 users
@@ -278,22 +302,26 @@ Feature: Course Administration
     Then there are 13 students in the course
     Then the users are students
 
+@javascript
   Scenario: Admin adds a new student to a course
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'student' users 'me@mailinator.com'
     Then there are 13 students in the course
 
+@javascript
   Scenario: Admin adds a the same student multiple times with different
       capitalization student to a course
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'student' users 'me@mailinator.com'
@@ -304,11 +332,13 @@ Feature: Course Administration
     Then the user adds the 'student' users 'mE@mAILinaTor.com'
     Then there are 13 students in the course
 
+@javascript
   Scenario: Admin adds a new student, then drops and re-adds them
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'student' users 'me@mailinator.com'
@@ -318,11 +348,13 @@ Feature: Course Administration
     Then the user adds the 'student' users 'me@mailinator.com'
     Then there are 13 enrolled students in the course
 
+@javascript
   Scenario: Admin adds existing students to a course
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Given 5 users
@@ -330,11 +362,13 @@ Feature: Course Administration
     Then there are 17 students in the course
     Then the users are students
 
+@javascript
   Scenario: Admin adds existing students, then drops and re-adds them
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Given 5 users
@@ -347,22 +381,26 @@ Feature: Course Administration
     Then there are 17 enrolled students in the course
     Then the users are students
 
+@javascript
   Scenario: Admin adds new students to a course
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'student' users 'me@mailinator.com, you@mailinator.com, myself@mailinator.com'
     Then there are 15 students in the course
     Then the users are students
 
+@javascript
   Scenario: Malformed email address returns an error
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'instructor' users 'me@mailinator.com<'
@@ -384,21 +422,25 @@ Feature: Course Administration
     Then there are 2 instructors in the course
      And the user will see "Was there a typo?"
 
+@javascript
   Scenario: Admin adds an instructor to a course
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user adds the 'instructor' users 'me@mailinator.com'
     Then there are 2 instructors in the course
 
+@javascript
   Scenario: Admin adds 5 existing instructors to a course
     Given the user is the instructor for the course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Given 5 users
@@ -433,6 +475,7 @@ Feature: Course Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user clicks "Copy"
      And the course start date is "5/10/1976" and the end date is "11/01/2012"
@@ -489,6 +532,7 @@ Feature: Course Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user clicks "Copy"
      And the course start date is "5/10/1976" and the end date is "11/01/2012"

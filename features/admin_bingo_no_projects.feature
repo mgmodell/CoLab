@@ -20,6 +20,7 @@ Feature: Bingo Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -50,6 +51,7 @@ Feature: Bingo Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user clicks "Show" on the existing bingo game

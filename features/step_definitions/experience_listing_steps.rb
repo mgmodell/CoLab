@@ -65,7 +65,6 @@ Given /^the experience started "([^"]*)" and ends "([^"]*)"$/ do |start_date, en
   @experience.start_date = course_tz.local(d.year, d.month, d.day)
   d = Chronic.parse(end_date)
   @experience.end_date = course_tz.local(d.year, d.month, d.day)
-  # byebug
   @experience.save
   puts @experience.errors.full_messages if @experience.errors.present?
 end

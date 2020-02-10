@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 Then /^user opens their profile$/ do
-  click_link_or_button('Profile')
+  find( :xpath, '//*[@id="main-menu-button"]').click
+  find( :xpath, '//*[@id="profile-menu-item"]').click
   page.should have_content('Edit your profile')
   page.should have_content('Tell us about yourself, ' + @user.first_name)
   @user.emails.each do |email|

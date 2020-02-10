@@ -123,6 +123,7 @@ en:
     other: There are %{count} students enrolled in the course.
   email_close: Thank you!
   support_formal: CoLab Support
+  support_menu: Contact Support
   demo_surname_1: John
   demo_fam_name_1: Smith
   demo_user_tz: Seoul
@@ -160,6 +161,7 @@ en:
   school: School
   schools_edit: Schools
   courses_edit: Courses
+  reporting: Reporting Center
   experiences_edit: Experiences
   bingo_games_edit: Terms lists
   projects_edit: Projects

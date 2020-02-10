@@ -55,6 +55,7 @@ Feature: Submitting Candidate words for Bingo!
     Then the user clicks "Save"
     Then the candidate properties should be empty
 
+@javascript
   Scenario: User should be able to open update and then re-edit a list of candidates
     Given the user logs in
     Then user should see 1 open task

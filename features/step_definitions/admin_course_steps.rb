@@ -25,9 +25,9 @@ Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
   field_lbl = 'course_timezone'
 
   if is_or_isnt == 'is'
-    page.find('#course_timezone').value.should eq timezone
+    page.find('#course_timezone', visible: :all).value.should eq timezone
   else
-    page.find('#course_timezone').value.should_not eq timezone
+    page.find('#course_timezone', visible: :all).value.should_not eq timezone
   end
 end
 

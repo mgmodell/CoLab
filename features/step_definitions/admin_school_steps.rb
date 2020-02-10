@@ -31,5 +31,5 @@ Then 'the user opens the school' do
 end
 
 Then 'the user selects {string} as the {string}' do |value, field|
-  select(value, from: field)
+  select(value, from: field, visible: :all)
 end

@@ -9,12 +9,14 @@ Feature: Email experience stragglers
     Given the experience started "last month" and ends "in two months"
     Given the experience "has" been activated
 
+@javascript
   Scenario: Four students have experiences waiting when we email the stragglers - four emails are sent
     Given the email queue is empty
     When the system emails stragglers
     Then 4 emails will be sent
     Then 4 emails will be tracked
 
+@javascript
   Scenario: 4 students are invited and one student drops - 3 emails are sent
     Given the email queue is empty
     Given the user is "a random" user

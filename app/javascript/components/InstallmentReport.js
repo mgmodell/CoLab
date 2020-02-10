@@ -57,6 +57,12 @@ export default function InstallmentReport(props) {
 
   useEffect(() => getContributions(), []);
 
+  useEffect(() => {
+    if (!user.loaded) {
+      userActions.fetch(props.token);
+    }
+  }, []);
+
   //Use this to sort team members with the user on top
   const userCompare = (a, b) => {
     var retVal = 0;
@@ -268,6 +274,7 @@ export default function InstallmentReport(props) {
         </ExpansionPanel>
       </Suspense>
       {saveButton}
+        <center>
       <div
         id="installment_debug_div"
         style={{ height: "10px", width: "10px", opacity: 0, border: "0px" }}
@@ -279,6 +286,7 @@ export default function InstallmentReport(props) {
           onChange={() => setDebug(!debug)}
         />
       </div>
+        </center>
     </Paper>
   );
 }

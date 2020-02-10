@@ -20,9 +20,11 @@ Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pe
 end
 
 When /^the user requests collaboration$/ do
+
   link_text = "Invite your teammates in #{@group.get_name(false)} to help?"
   page.should have_content link_text
   click_link_or_button link_text
+  page.accept_confirm
 end
 
 When /^group user (\d+) logs in$/ do |user_count|
@@ -46,8 +48,10 @@ Then /^the user "([^"]*)" the collaboration request$/ do |accept_or_decline|
   case accept_or_decline.downcase
   when 'accepts'
     click_link_or_button 'Accept'
+    page.accept_confirm
   when 'declines'
     click_link_or_button 'Decline'
+    page.dismiss_confirm
   else
     puts "We didn't test anything there: " + accept_or_decline
   end

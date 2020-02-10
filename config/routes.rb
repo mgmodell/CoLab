@@ -92,6 +92,8 @@ Rails.application.routes.draw do
         as: :check_diversity_score
     get 'locales/:ns' => 'locales#get_resources', as: :i18n,
         constraints: ->(req) { req.format == :json }
+    get 'endpoints/:unit' => 'home#endpoints', as: :endpoints,
+        constraints: ->(req) {req.format == :json }
   end
 
   get 'experiences/next/:experience_id:' => 'experiences#next', as: :next_experience
@@ -116,6 +118,7 @@ Rails.application.routes.draw do
     post 'users/add_email', to: 'registrations#add_email', as: :add_registered_email
     get 'users/password/send_reset', to: 'registrations#initiate_password_reset',
       as: :initiate_password_reset
+    get 'user/logout', to: 'devise/sessions#destroy', as: :logout
   end
 
   # You can have the root of your site routed with "root"

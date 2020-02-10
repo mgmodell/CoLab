@@ -8,6 +8,8 @@ const Store = createStore({
     theme: "",
     timezone: "UTC",
     language: "en",
+    is_instructor: false,
+    is_admin: false,
     loading: false,
     loaded: false,
     error: null
@@ -39,6 +41,8 @@ const Store = createStore({
               first_name: data.first_name,
               last_name: data.last_name,
               theme: data.theme,
+              is_instructor: data.is_instructor,
+              is_admin: data.is_admin,
               timezone: data.timezone,
               language: data.language,
               loading: false

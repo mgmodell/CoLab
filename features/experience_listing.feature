@@ -8,6 +8,7 @@ Feature: Experience Listing
     Given the course has 4 confirmed users
     Given the users "have" had demographics requested
 
+@javascript
   Scenario: Checking for open experiences
     Given the experience started "last month" and ends "2 months hence"
     Given the experience "has" been activated

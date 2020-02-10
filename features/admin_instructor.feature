@@ -13,31 +13,39 @@ Feature: Administration: instructor
 
     Given the user is the instructor for the course
 
+@javascript
   Scenario: Instructors see admin buttons with a project
     Given the course has an assessed project
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
 
+@javascript
   Scenario: Instructors see admin buttons with an experience
     Given the course has an experience
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
 
+@javascript
   Scenario: Regular users do not see the Admin button
     Given the course has a Bingo! game
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
 
+@javascript
   Scenario: Instructor users see admin buttons.
     Given the course has a Bingo! game
     Given there is a course
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course

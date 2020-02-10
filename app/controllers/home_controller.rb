@@ -27,6 +27,41 @@ class HomeController < ApplicationController
     current_location = 'home'
   end
 
+  def endpoints
+    ep_hash = {}
+    case params[:unit]
+    when 'home'
+      ep_hash = {
+        supportAddress: 'Support@CoLab.online',
+        logoPath: ActionController::Base.helpers.asset_path( 'CoLab_small.png' ),
+        quotePath: get_quote_path,
+        moreInfoUrl: 'http://PeerAssess.info',
+        demoUrl: demo_start_path,
+        homeUrl: root_path,
+        diversityScoreFor: check_diversity_score_path
+      }
+      if user_signed_in?
+        ep_hash[ :profileUrl] = edit_user_registration_path(current_user)
+        ep_hash[ :logoutUrl ] = logout_path
+        if current_user.is_admin? || current_user.is_instructor?
+          ep_hash[ :adminUrl] = admin_path
+          ep_hash[ :coursesPath ] = courses_path
+          ep_hash[ :schoolsPath ] = schools_path
+          ep_hash[ :conceptsPath ] = concepts_path
+          ep_hash[ :projectsPath ] = projects_path
+          ep_hash[ :reportingUrl ] = graphing_path
+        end
+      end
+    end
+    # Provide the endpoints
+    respond_to do |format|
+      format.json do
+        render json: ep_hash
+      end
+    end
+
+  end
+
   def get_quote
     quote = Quote.get_quote
 
@@ -44,7 +79,9 @@ class HomeController < ApplicationController
           last_name: @current_user.last_name,
           theme: @current_user.theme.code,
           timezone: @current_user.timezone,
-          language: @current_user.language.code
+          language: @current_user.language.code,
+          is_instructor: @current_user.is_instructor?,
+          is_admin: @current_user.is_admin?
         }
       end
     end

@@ -16,14 +16,12 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
       step 'the user clicks the link to the candidate list'
       step 'the user should see the Bingo candidate list'
 
-      accept_alert do
         if !collab_requested
           step 'the user requests collaboration'
           collab_requested = true
         else
           step 'the user "accepts" the collaboration request'
         end
-      end
 
       step 'the user logs out'
     end
@@ -186,6 +184,7 @@ Then /^there will be (\d+) concepts$/ do |concept_count|
   Concept.count.should eq ( concept_count.to_i + 1)
 end
 
-Then('the user navigates to {string}') do |location|
-  click_link_or_button location
+Then('the user navigates home') do 
+  find( :xpath, '//*[@id="main-menu-button"]').click
+  find( :xpath, '//*[@id="home-menu-item"]').click
 end

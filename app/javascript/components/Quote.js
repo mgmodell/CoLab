@@ -28,9 +28,9 @@ export default function Quote(props) {
   useEffect(() => updateQuote(), []);
 
   return (
-    <p onClick={() => updateQuote()} className="quotes">
+    <span onClick={() => updateQuote()} className="quotes">
       {quote.text} ({quote.attribution})
-    </p>
+    </span>
   );
 }
 Quote.propTypes = {

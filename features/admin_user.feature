@@ -10,21 +10,25 @@ Feature: Administration: user
     Given the user timezone is "Nairobi"
     Given the course started "5/10/1976" and ended "11/01/2012"
 
+@javascript
   Scenario: Regular users do not see the Admin button 
     Given there is a course
     Given the user logs in
     Then the user "does not" see an Admin button
 
+@javascript
   Scenario: Regular users do not see the Admin button 
     Given the course has an assessed project
     Given the user logs in
     Then the user "does not" see an Admin button
 
+@javascript
   Scenario: Regular users do not see the Admin button
     Given the course has an experience
     Given the user logs in
     Then the user "does not" see an Admin button
 
+@javascript
   Scenario: Regular users do not see the Admin button
     Given the course has a Bingo! game
     Given the user logs in

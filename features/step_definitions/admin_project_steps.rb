@@ -1,11 +1,13 @@
 require 'chronic'
 # frozen_string_literal: true
 Then /^the user "([^"]*)" see an Admin button$/ do |admin|
+  find( :xpath, '//*[@id="main-menu-button"]').click
   if admin == 'does'
-    page.should have_content('Admin…')
+    page.should have_content('Administration')
   else
-    page.should_not have_content('Admin…')
+    page.should_not have_content('Administration')
   end
+  page.document.first( :id, 'home-menu-item' ).send_keys :escape
 end
 
 Given /^the user is an admin$/ do
@@ -15,8 +17,8 @@ Given /^the user is an admin$/ do
 end
 
 Then /^the user clicks the Admin button$/ do
-  click_link_or_button 'Admin…'
-  click_link_or_button 'Administration'
+  find( :xpath, '//*[@id="main-menu-button"]').click
+  find( :xpath, '//*[@id="administration-menu"]').click
 end
 
 Then /^the user sees (\d+) course$/ do |course_count|
@@ -192,4 +194,8 @@ end
 
 Then /^group "([^"]*)" has (\d+) revision$/ do |group_name, revision_count|
   Group.where(name: group_name).take.group_revisions.count.should eq revision_count.to_i
+end
+
+Then("the user selects the {string} menu item") do |menu_item|
+  find( :xpath, "//*[@id='#{menu_item.downcase}-menu-item']").click
 end

@@ -14,40 +14,10 @@
   </head>
   <body>
     <div data-role="page" data-theme="<%= theme_code %>">
-      <div data-role="header" data-position="fixed" style="overflow:hidden;" >
-        <h1 id="title_head">
-          <%= t :title %> <%= " : " + @title unless @title.nil? %>
-          <%= image_tag 'CoLab_small.png', size: '32x32', alt: 'CoLab Logo' %>
-        </h1>
-        <%= react_component "Quote", {
-          url: get_quote_path,
-          token: form_authenticity_token } %>
-        <% if working %>
-          <div data-role="controlgroup" data-type="horizontal" data-mini="true"
-                                        class="ui-btn-right">
-            <a data-role="button" href="#instructions" id="instr_btn" data-icon="info"
-                class="ui-btn ui-btn-corner-all ui-icon-info
-                ui-btn-icon-left" ><%= t 'experiences.instructions_lbl' %></a>
-            <a data-role="button" href="#glossary" id="instr_btn" data-icon="help"
-                class="ui-btn ui-btn-corner-all ui-icon-tag
-                ui-btn-icon-right" ><%= t 'experiences.glossary_lbl' %></a>
-          </div>
-        <% end %>
-      </div>
-      <% if working %>
-        <% if working %>
-        </br>
-        <div id="progressbar" style="width: 50%; margin: auto">
-          <% if !@diagnosis.nil? && !@diagnosis.week.nil? %>
-            <div style="width: <%= @diagnosis.week.percent_complete %>%">
-              <center><%= @diagnosis.week.percent_complete %>% <%= t :complete %></center>
-            <% else %>
-              <div style="width: 98%">
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      <% end %>
+  <%= react_component "PageWrapper", {
+          token: form_authenticity_token,
+          getEndpointsUrl: endpoints_path( unit: 'home' )
+      }%>
       <div data-role="content">
         <% if flash[:error] -%>
           <p class='error'><%=h flash[:error] %></p>

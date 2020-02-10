@@ -7,12 +7,13 @@ Feature: School Administration
     Given the user "has" had demographics requested
       And the user's school is "SUNY Korea"
 
+@javascript
   Scenario: Admin creates a new school
     Given the user is an admin
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
-     And the user clicks "Schools"
+    Then the user selects the 'Schools' menu item
      And the user clicks "New School"
      And the user sets the "Name" field to "hard knocks"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
@@ -23,12 +24,13 @@ Feature: School Administration
      And the school "Timezone" field is "UTC"
      And the school "Description" field is "I love to eat peas and carrots all day long"
 
+@javascript
   Scenario: Admin cannot creates an incomplete new school
     Given the user is an admin
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
-     And the user clicks "Schools"
+    Then the user selects the 'Schools' menu item
      And the user clicks "New School"
      #no name
      And the user sets the "Name" field to ""
@@ -46,6 +48,7 @@ Feature: School Administration
      And the school "Description" field is "I love to eat peas and carrots all day long"
      And the school "Timezone" field is "Seoul"
 
+@javascript
   Scenario: Instructor cannot create a new school
     Given there is a course
     Given the user is the instructor for the course
@@ -54,12 +57,13 @@ Feature: School Administration
     Then the user clicks the Admin button
     Then the user does not see a "Schools" link
 
+@javascript
   Scenario: Admin edits an existing school
     Given the user is an admin
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
-     And the user clicks "Schools"
+    Then the user selects the 'Schools' menu item
     Then the user sees 2 school
     Then the user opens the school
     Then the user clicks "Edit school details"

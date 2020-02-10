@@ -33,6 +33,7 @@ Feature: Users can complete 'experiences'
     Then user opens their profile
     Then the user sees the experience in the history
 
+@javascript
   Scenario: The student should not be able to proceed without selecting a behavior
     Then the user switches to the "Task View" tab
     Then user should see 1 open task
@@ -46,6 +47,7 @@ Feature: Users can complete 'experiences'
     Then user opens their profile
     Then the user sees the experience in the history
 
+@javascript
   Scenario: The dropped student should not see an experience
     Then the user logs out
     Then the user is dropped from the course
@@ -53,6 +55,7 @@ Feature: Users can complete 'experiences'
     Then the user should see a successful login message
     Then user should see 0 open task
 
+@javascript
   Scenario: The participant should not be able to proceed without selecting a behavior and comments should remain
     Then user should see 1 open task
     Then the user clicks the link to the experience
@@ -64,6 +67,7 @@ Feature: Users can complete 'experiences'
     Then the user will see "You must select a behavior"
     Then in the field "Your comments" they will see "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
 
+@javascript
   Scenario: instructions are only presented when users first begin an experience
     Then user should see 1 open task
     Then the user clicks the link to the experience

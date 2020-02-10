@@ -20,11 +20,16 @@ Then /^the user presses "([^"]*)"$/ do |linkOrButtonName|
   click_link_or_button linkOrButtonName
 end
 
+Then /^they open the drawer for additional comments$/ do
+  click_link_or_button 'Click here if you have additional comments for us regarding this narrative.'
+end
+
 Then /^they enter "([^"]*)" in extant field "([^"]*)"$/ do |txt, fld|
   page.fill_in(fld, with: txt, visible: :all, disabled: :all)
 end
 
 Then /^in the field "([^"]*)" they will see "([^"]*)"$/ do |fld, value|
+  click_link_or_button 'Click here if you have additional comments for us regarding this narrative.'
   field_value = find_field(fld).value
   expect(field_value).to include value
 end

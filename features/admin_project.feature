@@ -19,6 +19,7 @@ Feature: Project Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -50,6 +51,7 @@ Feature: Project Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -79,6 +81,7 @@ Feature: Project Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user clicks "Show" on the existing project
@@ -110,6 +113,7 @@ Feature: Project Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -160,6 +164,7 @@ Feature: Project Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -214,6 +219,7 @@ Feature: Project Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
@@ -268,6 +274,7 @@ Feature: Project Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
 
@@ -310,6 +317,7 @@ Feature: Project Administration
     Then group "your group" has 2 user
     Then group "your group" has 1 revision
 
+@javascript
   Scenario: Existing Sat-Mon proj=> Fri-Sat on Sat => tomorrow no emails, no access
     Given the email queue is empty
     Given the project has a group with 4 confirmed users
@@ -343,6 +351,7 @@ Feature: Project Administration
      Then the user should see a successful login message
      Then user should see 0 open task
 
+@javascript
   Scenario: Existing Sat-Mon proj=> Fri-Sat on Sun=> no emails, no access
     Given the course timezone is "UTC"
     Given the user timezone is "UTC"
@@ -377,6 +386,7 @@ Feature: Project Administration
      Then the user should see a successful login message
      Then user should see 0 open task
 
+@javascript
   Scenario: End date=> 10/10/1979 on 11/10/1979=> no emails, no access
     # Change the project
     Given today is "11/10/1979"
@@ -396,6 +406,7 @@ Feature: Project Administration
      Then the user should see a successful login message
      Then user should see 0 open task
 
+@javascript
   Scenario: A deactivated project incurs no emails and is not listed
     Given the email queue is empty
     Given the project has a group with 4 confirmed users
