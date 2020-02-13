@@ -15,9 +15,11 @@ Given "the user's school is {string}" do |school_name|
 end
 
 Then 'the user sets the start date to {string} and the end date to {string}' do |start_date, end_date|
-  new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%Y-%m-%dT%T')
+  #new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%Y-%m-%dT%T')
+  new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%m-%d-%Y')
   page.find('#course_start_date').set(new_date)
-  new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%Y-%m-%dT%T')
+  #new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%Y-%m-%dT%T')
+  new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%m-%d-%Y')
   page.find('#course_end_date').set(new_date)
 end
 
@@ -272,6 +274,9 @@ Then 'the user adds the {string} users {string}' do |type, addresses|
 end
 
 Then 'the user drops the {string} users {string}' do |type, addresses|
+  step 'the user switches to the "Students" tab'
+  step 'the user enables the "Email" table view option'
+  step 'the user enables the "Actions" table view option'
   url = if type == 'student'
           add_students_path + '?'
         else
@@ -282,11 +287,18 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
       elem = find(:xpath,
                   "//tr[td[contains(.,'#{address.email}')]]/td/a", text: 'Drop')
       elem.click
+      page.accept_confirm
+
+      step 'the user switches to the "Students" tab'
+      step 'the user enables the "Email" table view option'
+      step 'the user enables the "Actions" table view option'
     end
   else
     elem = find(:xpath,
                 "//tr[td[contains(.,'#{addresses}')]]/td/a", text: 'Drop')
     elem.click
+    page.accept_confirm
+    sleep( 0.2)
   end
 end
 

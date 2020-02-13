@@ -31,6 +31,7 @@ class Roster < ApplicationRecord
   # In this method, we will remove ou
   def clean_up_dropped
     if dropped_student?
+      ActiveRecord::Base.transaction do
       course.projects.includes(groups: :users).find_each do |project|
         project.groups.each do |group|
           next unless group.users.includes(user)
@@ -38,15 +39,16 @@ class Roster < ApplicationRecord
           project = group.project
           activation_status = project.active
           group.users.delete(user)
-          group.save
+          group.save!
           logger.debug group.errors.full_messages unless group.errors.empty?
           project = group.project
           project.reload
           project.active = activation_status
-          project.save
+          project.save!
           logger.debug project.errors.full_messages unless project.errors.empty?
         end
       end
+    end
     end
   end
 end
