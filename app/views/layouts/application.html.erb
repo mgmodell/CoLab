@@ -17,7 +17,7 @@
       <% if !current_user.nil? %>
       <%= react_component "PageWrapper", {
           token: form_authenticity_token,
-          getEndpointsUrl: endpoints_path( unit: 'home' )
+          getEndpointsUrl: endpoints_path( unit: '' )
 
       }%>
       <% end %>

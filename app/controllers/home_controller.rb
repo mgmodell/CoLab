@@ -52,6 +52,15 @@ class HomeController < ApplicationController
           ep_hash[ :reportingUrl ] = graphing_path
         end
       end
+    when 'project'
+      ep_hash = {
+        projectUrl: projects_path,
+        activateProjectUrl: activate_project_path,
+        diversityCheckUrl: check_diversity_score_path,
+        groupsUrl: groups_path(id: ''),
+        diversityRescoreGroup: rescore_group_path(id: '' ),
+        diversityRescoreGroups: rescore_groups_path(id: '' )
+      }
     end
     # Provide the endpoints
     respond_to do |format|
@@ -73,12 +82,13 @@ class HomeController < ApplicationController
   def simple_profile
     respond_to do |format|
       format.json do
+        tz = ActiveSupport::TimeZone.new( @current_user.timezone ).tzinfo.name
         render json: {
           id: @current_user.id,
           first_name: @current_user.first_name,
           last_name: @current_user.last_name,
           theme: @current_user.theme.code,
-          timezone: @current_user.timezone,
+          timezone: tz,
           language: @current_user.language.code,
           is_instructor: @current_user.is_instructor?,
           is_admin: @current_user.is_admin?

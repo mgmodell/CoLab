@@ -9,37 +9,20 @@ import Quote from "./Quote";
 import {i18n} from "./i18n"
 import { useTranslation } from "react-i18next";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { useEndpointStore } from "./EndPointStore"
 
 export default function AppHeader(props) {
   const {t, i18n} = useTranslation()
-  const [endpoints, setEndpoints] = useState({})
-  const [loaded, setLoaded] = useState( false );
+  //const [endpoints, setEndpoints] = useState({})
+  const endpointSet = 'home';
+  const [endpoints, endpointsActions] = useEndpointStore();
 
-  useEffect(() => getEndpoints(), []);
 
-  const getEndpoints = () =>{
-    fetch(props.getEndpointsUrl + ".json", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-        "X-CSRF-Token": props.token
-      }
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        console.log("error");
-      }
-    })
-    .then(data => {
-      setEndpoints(data);
-      setLoaded( true );
-    } );
-  }
-
+  useEffect(() => {
+    if (endpoints.endpointStatus[endpointSet] != 'loaded') {
+      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
+    }
+  }, []);
 
   return (
     <React.Fragment>
@@ -48,28 +31,28 @@ export default function AppHeader(props) {
           <Suspense fallback={<Skeleton
           variant="rect" width={32} height={32}/>}>
 
-          {loaded ? 
+          {endpoints.endpointStatus['home'] == 'loaded' ? 
           (<MainMenu
             token={props.token}
-            homeUrl={endpoints.homeUrl}
-            profileUrl={endpoints.profileUrl}
-            diversityScoreFor={endpoints.diversityScoreFor}
-            adminUrl={endpoints.adminUrl}
-            coursesUrl={endpoints.coursesPath}
-            schoolsUrl={endpoints.schoolsPath}
-            conceptsUrl={endpoints.conceptsPath}
-            reportingUrl={endpoints.reportingUrl}
-            demoUrl={endpoints.demoUrl}
-            logoutUrl={endpoints.logoutUrl}
-            supportAddress={endpoints.supportAddress}
-            moreInfoUrl={endpoints.moreInfoUrl}
+            homeUrl={endpoints.endpoints['home'].homeUrl}
+            profileUrl={endpoints.endpoints['home'].profileUrl}
+            diversityScoreFor={endpoints.endpoints['home'].diversityScoreFor}
+            adminUrl={endpoints.endpoints['home'].adminUrl}
+            coursesUrl={endpoints.endpoints['home'].coursesPath}
+            schoolsUrl={endpoints.endpoints['home'].schoolsPath}
+            conceptsUrl={endpoints.endpoints['home'].conceptsPath}
+            reportingUrl={endpoints.endpoints['home'].reportingUrl}
+            demoUrl={endpoints.endpoints['home'].demoUrl}
+            logoutUrl={endpoints.endpoints['home'].logoutUrl}
+            supportAddress={endpoints.endpoints['home'].supportAddress}
+            moreInfoUrl={endpoints.endpoints['home'].moreInfoUrl}
           />) : 
           (<Skeleton variant="rect" width={32} height={32} />) }
           </Suspense>
-          {loaded ?
+          {endpoints.endpointStatus['home'] == 'loaded' ?
           (<Suspense fallback={<Skeleton variant='rect' width={32} height={32}/>}>
             <img
-              src={endpoints.logoPath}
+              src={endpoints.endpoints['home'].logoPath}
               style={{ width: 32, height: 32 }}
               alt="CoLab Logo"
             />
@@ -77,12 +60,12 @@ export default function AppHeader(props) {
           : 
           (<Skeleton variant="rect" width={32} height={32} />) }
 
-          {loaded ?
+          {endpoints.endpointStatus['home'] == 'loaded' ?
           (<Suspense fallback={<Skeleton variant='text' />} >
           <Typography>
             {t( 'title' )}
             <br/>
-            <Quote token={props.token} url={endpoints.quotePath} />
+            <Quote token={props.token} url={endpoints.endpoints['home'].quotePath} />
           </Typography> 
 
           </Suspense>) :

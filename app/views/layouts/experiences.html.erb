@@ -16,7 +16,7 @@
     <div data-role="page" data-theme="<%= theme_code %>">
   <%= react_component "PageWrapper", {
           token: form_authenticity_token,
-          getEndpointsUrl: endpoints_path( unit: 'home' )
+          getEndpointsUrl: endpoints_path( unit: '' )
       }%>
       <div data-role="content">
         <% if flash[:error] -%>

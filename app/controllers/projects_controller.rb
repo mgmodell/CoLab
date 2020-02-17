@@ -17,14 +17,17 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.html { render :show }
       format.json do
+        course_hash = {
+          id: @project.course.id,
+          name: @project.course.name,
+          timezone: tz = ActiveSupport::TimeZone.new( @project.course.timezone ).tzinfo.name
+        }
         response = {
           project: @project.as_json(
             only: %i[ id name description active start_date end_date
                       start_dow end_dow factor_pack_id style_id ]
           ),
-          course: @project.course.as_json(
-            only: %i[id name timezone]
-          ),
+          course: course_hash,
           factorPacks: FactorPack.all.as_json(
             only: :id, methods: :name
           ),

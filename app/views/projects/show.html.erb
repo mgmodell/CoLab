@@ -6,13 +6,8 @@
       token: form_authenticity_token,
       projectId: @project.id,
       courseId: @project.course_id,
-      projectUrl: projects_path,
-      activateProjectUrl: activate_project_path,
-      groupsUrl: groups_path(id: ''),
-      diversityCheckUrl: check_diversity_score_path,
+      getEndpointsUrl: endpoints_path( unit: '' )
 
-      diversityRescoreGroup: rescore_group_path(id: '' ),
-      diversityRescoreGroups: rescore_groups_path(id: '' )
       }
       %>
   <%= link_to (t :back_to_course), @project.course %>

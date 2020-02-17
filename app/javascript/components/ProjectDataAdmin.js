@@ -23,12 +23,15 @@ import Settings from 'luxon/src/settings.js'
 
 
 import LuxonUtils from "@date-io/luxon";
-import { useUserStore } from "./UserStore";
+import { useEndpointStore } from "./EndPointStore"
 
 import ProjectGroups from "./ProjectGroups";
 
 export default function ProjectDataAdmin(props) {
   const cityTimezones = require('city-timezones');
+
+  const endpointSet = 'project';
+  const [endpoints, endpointsActions] = useEndpointStore();
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
@@ -59,11 +62,10 @@ export default function ProjectDataAdmin(props) {
   const [courseId, setCourseId] = useState(props.courseId);
   const [courseName, setCourseName] = useState("");
   const [courseTimezone, setCourseTimezone] = useState( 'UTC');
-  const [user, userActions] = useUserStore();
 
   const getProject = () => {
     setDirty(true);
-    var url = props.projectUrl + "/";
+    var url = endpoints.endpoints['project'].projectUrl + "/";
     if (null == projectId) {
       url = url + "new.json?course_id=" + courseId;
     } else {
@@ -94,22 +96,21 @@ export default function ProjectDataAdmin(props) {
         setCourseId(course.id);
         setCourseName(course.name);
         console.log( course.timezone )
-        const foundTimezone = cityTimezones.lookupViaCity( course.timezone )[0].timezone;
-        console.log( foundTimezone );
-        setCourseTimezone( foundTimezone );
-        Settings.defaultZoneName = foundTimezone;
+        console.log( DateTime.local( ).setZone( course.timezone ).isValid )
+        setCourseTimezone( course.timezone );
+        Settings.defaultZoneName = course.timezone;
 
         setProjectName(project.name || "");
         setProjectDescription(project.description || "");
         setProjectActive(project.active);
 
-        console.log( DateTime.fromISO( project.start_date).setZone( foundTimezone ))
+        console.log( DateTime.fromISO( project.start_date).setZone( course.timezone ))
 
-        var receivedDate = DateTime.fromISO( project.start_date).setZone( foundTimezone )
+        var receivedDate = DateTime.fromISO( project.start_date).setZone( course.timezone )
         setProjectStartDate(receivedDate.toISO() );
-        console.log( foundTimezone )
+        console.log( course.timezone )
         console.log( receivedDate.toISO() )
-        receivedDate = DateTime.fromISO( project.end_date).setZone( foundTimezone )
+        receivedDate = DateTime.fromISO( project.end_date).setZone( course.timezone )
         setProjectEndDate(receivedDate.toISO() );
         setProjectFactorPackId(project.factor_pack_id);
         setProjectStyleId(project.style_id);
@@ -124,7 +125,7 @@ export default function ProjectDataAdmin(props) {
     setWorking(true);
 
     const url =
-      props.projectUrl + (null == projectId ? "" : "/" + projectId) + ".json";
+    endpoints.endpoints['project'].projectUrl + (null == projectId ? "" : "/" + projectId) + ".json";
 
     fetch(url, {
       method: method,
@@ -186,13 +187,23 @@ export default function ProjectDataAdmin(props) {
       });
   };
   useEffect(() => {
+    if (endpoints.endpointStatus[endpointSet] != 'loaded') {
+      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
+    }
+
     daysOfWeek.unshift(daysOfWeek.pop());
     setDaysOfWeek(daysOfWeek);
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-    getProject();
+
+    //getProject();
   }, []);
+
+  useEffect(() =>{
+    if (endpoints.endpointStatus[endpointSet] == 'loaded') {
+      getProject();
+    }
+  }, [
+    endpoints.endpointStatus[endpointSet]
+  ]);
 
   useEffect(() => setDirty(true), [
     projectName,
@@ -349,10 +360,10 @@ export default function ProjectDataAdmin(props) {
         <ProjectGroups
           token={props.token}
           projectId={projectId}
-          groupsUrl={props.groupsUrl}
-          diversityCheckUrl={props.diversityCheckUrl}
-          diversityRescoreGroup={props.diversityRescoreGroup}
-          diversityRescoreGroups={props.diversityRescoreGroups}
+          groupsUrl={endpoints.endpoints['project'].groupsUrl}
+          diversityCheckUrl={endpoints.endpoints['project'].diversityCheckUrl}
+          diversityRescoreGroup={endpoints.endpoints['project'].diversityRescoreGroup}
+          diversityRescoreGroups={endpoints.endpoints['project'].diversityRescoreGroups}
         />
       ) : null}
     </Paper>
@@ -361,8 +372,7 @@ export default function ProjectDataAdmin(props) {
 
 ProjectDataAdmin.propTypes = {
   token: PropTypes.string.isRequired,
-  courseId: PropTypes.number,
-  projectId: PropTypes.number,
-  projectUrl: PropTypes.string.isRequired,
-  activateProjectUrl: PropTypes.string.isRequired
+  getEndpointsUrl: PropTypes.string.isRequired,
+  courseId: PropTypes.number.isRequired,
+  projectId: PropTypes.number
 };
