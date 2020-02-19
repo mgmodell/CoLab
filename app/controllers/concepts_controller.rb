@@ -14,6 +14,14 @@ class ConceptsController < ApplicationController
 
   def show
     @title = t '.title'
+    respond_to do |format|
+      format.html do
+        render :index
+      end
+      format.json do
+        render json: @concept.to_json( only: %i[name candidates_count courses_count bingo_count] )
+      end
+    end
   end
 
   def edit
@@ -100,29 +108,46 @@ class ConceptsController < ApplicationController
     end
   end
 
-  def new
-    @title = t '.title'
-    @concept = Concept.new
-  end
+  # def new
+  #   @title = t '.title'
+  #   @concept = Concept.new
+  # end
 
-  def create
-    @title = t '.title'
-    @concept = Concept.new(concept_params)
-    if @concept.save
-      redirect_to url: concept_url(@concept), notice: t('concepts.create_success')
-    else
-      logger.debug @concepts.errors.full_messages unless @concepts.errors.empty?
-      render :new
-    end
-  end
+  # def create
+  #   @title = t '.title'
+  #   @concept = Concept.new(concept_params)
+  #   if @concept.save
+  #     redirect_to url: concept_url(@concept), notice: t('concepts.create_success')
+  #   else
+  #     logger.debug @concepts.errors.full_messages unless @concepts.errors.empty?
+  #     render :new
+  #   end
+  # end
 
   def update
-    @title = t '.title'
+    puts params
     if @concept.update(concept_params)
-      redirect_to concept_path(@concept), notice: t('concepts.update_success')
+      respond_to do |format|
+        format.html do
+          @title = t '.title'
+          redirect_to concept_path(@concept), notice: t('concepts.update_success')
+        end
+        format.json do
+          render json: @concept.to_json( only: %i[name candidates_count courses_count bingo_count] )
+        end
+      end
     else
       logger.debug @concept.errors.full_messages unless @concept.errors.empty?
-      render :edit
+      respond_to do |format|
+        format.html do
+          @title = t '.title'
+          render :edit
+        end
+        format.json do
+          #TODO add proper error handling here
+          render json: @concept.to_json( only: %i[name candidates_count courses_count bingo_count] )
+        end
+      end
     end
   end
 

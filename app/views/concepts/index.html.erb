@@ -2,6 +2,6 @@
 <% theme_code = get_theme_code
    anonymize = get_anonymous %>
 <%= react_component "ConceptsTable", {
-  conceptsUrl: concepts_path,
+  getEndpointsUrl: endpoints_path( unit: '' ),
   token: form_authenticity_token
   } %>

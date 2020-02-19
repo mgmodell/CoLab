@@ -61,6 +61,10 @@ class HomeController < ApplicationController
         diversityRescoreGroup: rescore_group_path(id: '' ),
         diversityRescoreGroups: rescore_groups_path(id: '' )
       }
+    when 'concept'
+      ep_hash = {
+        conceptsUrl: concepts_path
+      }
     end
     # Provide the endpoints
     respond_to do |format|
