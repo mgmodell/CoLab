@@ -16,7 +16,7 @@ class BingoGame < ApplicationRecord
   has_many :concepts, through: :candidates
 
   # validations
-  validates :topic, :end_date, :start_date, presence: true
+  validates :course, :topic, :end_date, :start_date, presence: true
   validates :group_discount, numericality:
     { only_integer: true,
       greater_than_or_equal_to: 0,
@@ -30,6 +30,7 @@ class BingoGame < ApplicationRecord
 
   validate :dates_within_course
   before_create :anonymize
+  # before_validation :init_dates
   before_save :reset_notification
 
   def status_for_user(user)
@@ -233,6 +234,11 @@ class BingoGame < ApplicationRecord
     end
   end
 
+  def init_dates
+    self.start_date ||= self.course.start_date
+    self.end_date ||= self.course.end_date
+  end
+
   # validation methods
   def date_sanity
     unless start_date.nil? || end_date.nil?
@@ -245,16 +251,16 @@ class BingoGame < ApplicationRecord
 
   def dates_within_course
     unless start_date.nil? || end_date.nil?
-      if start_date < course.start_date
+      if start_date < self.course.start_date
         msg = I18n.t('bingo_games.start_date_err',
                      start_date: start_date,
-                     course_start_date: course.start_date)
+                     course_start_date: self.course.start_date)
         errors.add(:start_date, msg)
       end
-      if end_date.change(sec: 0) > course.end_date.change(sec: 0)
+      if end_date.change(sec: 0) > self.course.end_date.change(sec: 0)
         msg = I18n.t('bingo_games.end_date_err',
                      end_date: end_date,
-                     course_end_date: course.end_date)
+                     course_end_date: self.course.end_date)
         errors.add(:end_date, msg)
       end
     end

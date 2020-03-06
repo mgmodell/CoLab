@@ -103,6 +103,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
+    puts params
     @title = t('projects.edit.title')
     if @project.update(project_params)
       respond_to do |format|
@@ -297,7 +298,7 @@ class ProjectsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_project
-    if params[:id].blank?
+    if params[:id].blank? || params[:id] == 'new'
       course = Course.find(params[:course_id])
       p_test = course.projects.new
       p_test.start_date = course.start_date

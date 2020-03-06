@@ -27,31 +27,12 @@ class BingoGamesController < ApplicationController
     respond_to do |format|
       format.html { render :show }
       format.json do
-        resp = @bingo_game.as_json(only:
-          %i[ id topic description source group_option individual_count
-              start_date end_date active lead_time group_discount
-              reviewed project_id ])
-        resp[:topic] = @bingo_game.get_topic(current_user.anonymize?)
-        resp[:timezone] = @bingo_game.course.timezone
-        resp[:reviewed] = @bingo_game.reviewed?
-        resp[:projects] = @bingo_game.course.projects
-                                     .collect do |p|
-          {
-            id: p.id,
-            name: p.get_name(current_user.anonymize?)
-          }
-        end .as_json
-        resp[:concepts] = @bingo_game.get_concepts
-                                     .collect do |c|
-          {
-            id: c.id,
-            name: c.name
-          }
-        end .as_json
+        resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
         render json: resp
       end
     end
   end
+
 
   def demo_my_results
     candidate_list = nil
@@ -248,33 +229,48 @@ class BingoGamesController < ApplicationController
     @bingo_game = Course.find(params[:course_id]).bingo_games.new
     @bingo_game.start_date = @bingo_game.course.start_date
     @bingo_game.end_date = @bingo_game.course.end_date
+      respond_to do |format|
+        format.json do
+          resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
+          render json: resp
+        end
+      end
   end
 
   def create
-    @title = t 'bingo_games.new.title'
     @bingo_game = BingoGame.new(bingo_game_params)
     if @bingo_game.save
-      redirect_to @bingo_game, notice: t('bingo_games.create_success')
-    else
-      unless @bingo_game.errors.empty?
-        logger.debug @bingo_game.errors.full_messages
+      respond_to do |format|
+        @title = t 'bingo_games.new.title'
+        format.json do
+          resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
+          resp[:messages] = {status: t('bingo_games.create_success') }
+          render json: resp
+
+        end
       end
-      render :new
+    else
+      respond_to do |format|
+        format.json do
+          resp = bingo_responder bingo_game: @bingo_game, current_user: current_user 
+          resp[:messages] = @bingo_game.errors
+          render json: resp
+        end
+      end
     end
   end
 
   def update
-    @title = t '.title'
     check_editor bingo_game: @bingo_game
     @bingo_game.update(bingo_game_params)
 
     respond_to do |format|
       format.json do
         if @bingo_game.errors.empty?
-          render json: {
-            notice: 'Game saved successfully!',
-            messages: {}
-          }
+          resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
+          resp[:notice] ='Game saved successfully!' 
+          resp[:messages] = {}
+          render json: resp
         else
           logger.debug @bingo_game.errors.full_messages
           render json: {
@@ -570,9 +566,48 @@ class BingoGamesController < ApplicationController
 
   private
 
+  def bingo_responder bingo_game:, current_user:
+        timezone = ActiveSupport::TimeZone.new( bingo_game.course.timezone ).tzinfo.name
+        resp = bingo_game.as_json(only:
+          %i[ id description source group_option individual_count
+              start_date end_date active lead_time group_discount
+              project_id ])
+        resp[:topic] = bingo_game.get_topic(current_user.anonymize?)
+        resp[:reviewed] = bingo_game.reviewed?
+        resp[:course] = { timezone: timezone }
+
+        resp = {
+          bingo_game: resp
+        }
+        resp[:projects] = bingo_game.course.projects
+                                     .collect do |p|
+          {
+            id: p.id,
+            name: p.get_name(current_user.anonymize?)
+          }
+        end .as_json
+        resp[:concepts] = bingo_game.get_concepts
+                                     .collect do |c|
+          {
+            id: c.id,
+            name: c.name
+          }
+        end .as_json
+        resp
+
+  end
+
   # Use callbacks to share common setup or constraints between actions.
   def set_bingo_game
-    bg_test = BingoGame.joins(:course).includes(candidate_lists: { candidates: :concept }, course: :projects).find(params[:id])
+    if params[:id].nil?
+      course = Course.find(params[:course_id])
+      bg_test = course.bingo_games.new
+      bg_test.start_date = course.start_date
+      bg_test.end_date = course.end_date
+    else
+      bg_test = BingoGame.joins(:course).includes(candidate_lists: { candidates: :concept }, course: :projects).find(params[:id])
+    end
+
     if current_user.is_admin?
       @bingo_game = bg_test
     else

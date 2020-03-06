@@ -15,20 +15,27 @@ Feature: Timezone Support for Bingo!
     Given the user is "a random" user
     Given the email queue is empty
 
+  @javascript
   Scenario: Checking for open bingo bears correct time
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
+    Then the user switches to the "Task View" tab
+    Then the user enables the "Open Date" table view option
+
     Then the user should see "Fri, Feb 15 at 12:00am UTC"
     #Rounding goes on here
     Then the user should see "Sat, Apr 12 at 11:59pm UTC"
     
+  @javascript
   Scenario: Checking that open bingos reflect my timezone
     Given the user timezone is "Seoul"
     Given the course timezone is "UTC"
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
+    Then the user switches to the "Task View" tab
+    Then the user enables the "Open Date" table view option
     Then the user should see "Fri, Feb 15 at 9:00am KST"
     Then the user should see "Sun, Apr 13 at 8:59am KST"
     
@@ -40,12 +47,15 @@ Feature: Timezone Support for Bingo!
     Then the user should see a successful login message
     Then user should see 0 open task
     
+  @javascript
   Scenario: Bingo times should reflect course timezones - New York
     Given the course timezone is "America/New_York"
     Given the user timezone is "UTC"
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
+    Then the user switches to the "Task View" tab
+    Then the user enables the "Open Date" table view option
     Then the user should see "Fri, Feb 15 at 5:00am UTC"
     Then the user should see "Sun, Apr 13 at 4:59am UTC"
     

@@ -4,7 +4,7 @@ require 'forgery'
 
 Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
-  elem = page.find('#bingo_game_' + date_field_prefix + '_date')
+  elem = page.find(:id, 'bingo_game_' + date_field_prefix + '_date')
   begin
     retries ||= 0
     elem.click

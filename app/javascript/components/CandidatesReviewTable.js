@@ -637,7 +637,6 @@ class CandidatesReviewTable extends React.Component {
             </TableBody>
           </Table>
         </div>
-        {toolbar}
       </Paper>
     );
   }

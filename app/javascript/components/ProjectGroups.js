@@ -274,7 +274,8 @@ class ProjectGroups extends React.Component {
 
   saveGroups() {
     this.setState({
-      working: true
+      working: true,
+      message: 'Saving...'
     });
     fetch(this.props.groupsUrl + this.props.projectId + ".json", {
       method: "PATCH",
@@ -387,7 +388,7 @@ class ProjectGroups extends React.Component {
                       groupId={group.id}
                       token={this.props.token}
                       parentDirty={this.state.dirty}
-                      documented={this.state.groups_raw[group.id].diversity}
+                      documented={this.state.groups_raw[group.id].diversity || 0 }
                       scoreReviewUrl={this.props.diversityCheckUrl}
                       rescoreGroup={this.rescoreGroup}
                       students={this.state.students_raw}

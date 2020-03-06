@@ -5,7 +5,7 @@ Then 'retrieve the latest Experience from the db' do
 end
 
 Then 'the user sets the experience {string} date to {string}' do |ordinal, date|
-  new_date = date.blank? ? '' : Chronic.parse(date).strftime('%Y-%m-%dT%T')
+  new_date = date.blank? ? '' : Chronic.parse(date).strftime('%m/%d/%Y' )
   case ordinal.downcase
   when 'start'
     page.find('#experience_start_date').set(new_date)

@@ -125,7 +125,7 @@ export default function LinkedSliders(props) {
                 id={"fs_" + props.id + "_c_" + contribution.userId}
                 name={"slider_fs_" + props.id + "_c_" + contribution.userId}
                 min={0}
-                defaultValue={contribution.value}
+                defaultValue={props.sum / props.contributions.length}
                 max={props.sum}
                 factor={props.id}
                 key={contribution.userId}
@@ -137,7 +137,6 @@ export default function LinkedSliders(props) {
                   value={contribution.value}
                   min={0}
                   max={props.sum}
-                  step={props.contributions.length}
                   type="number"
                   factor={props.id}
                   contributor={contribution.userId}

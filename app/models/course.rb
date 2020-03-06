@@ -82,7 +82,7 @@ class Course < ApplicationRecord
 
   def get_user_role(user)
     roster = rosters.find_by(user: user)
-    roster.role
+    roster.nil? ? nil : roster.role
   end
 
   def copy_from_template(new_start:)

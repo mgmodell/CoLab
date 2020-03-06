@@ -35,7 +35,7 @@ end
 
 Then 'the user sets the course timezone to {string}' do |timezone|
   field_lbl = 'course_timezone'
-  page.select(timezone, from: field_lbl)
+  page.select(timezone, from: field_lbl, visible: :all)
 end
 
 Then 'retrieve the latest course from the db' do

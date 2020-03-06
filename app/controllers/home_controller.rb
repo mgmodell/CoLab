@@ -61,6 +61,11 @@ class HomeController < ApplicationController
         diversityRescoreGroup: rescore_group_path(id: '' ),
         diversityRescoreGroups: rescore_groups_path(id: '' )
       }
+    when 'bingo_game'
+      ep_hash = {
+        bingoGameUrl: bingo_games_path,
+        gameResultsUrl: game_results_path( id: '' ),
+      }
     when 'concept'
       ep_hash = {
         conceptsUrl: concepts_path

@@ -58,7 +58,7 @@ when 'chrome'
   Capybara.javascript_driver = :chrome
 when 'ff'
   Capybara.javascript_driver = :firefox
-when 'headless_ff'
+when 'ff_h'
   Capybara.javascript_driver = :headless_firefox
 when 'safari'
   Capybara.javascript_driver = :safari

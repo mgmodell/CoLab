@@ -37,8 +37,7 @@
           <%= l in_tz( date: bingo_game.end_date ), format: :tz_clarity %>
         </td>
         <td><%= bingo_game.active %></td>
-        <td><%= link_to t( :show ), bingo_game %>&nbsp;|&nbsp;
-          <%= link_to t( :edit ), edit_bingo_game_path(bingo_game) %>&nbsp;|&nbsp;
+        <td>
           <%= link_to t( :destroy ), bingo_game, method: :delete, data: { confirm: t( :confirmation ) } %></td>
       </tr>
     <% end %>

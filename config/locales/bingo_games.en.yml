@@ -1,6 +1,7 @@
 en:
   bingo_games:
     update_bingo_btn: Update Bingo Game
+    create_bingo_btn: Create Bingo Game
     game_details_pnl: Game details
     response_pnl: Response data
     save_status: Saving game

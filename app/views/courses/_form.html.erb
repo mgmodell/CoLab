@@ -94,6 +94,7 @@
     <h2><%= t 'courses.activities' %></h2>
 <p>
   <h3><%= t 'courses.activities' %></h3>
+  <% unless @course.id.nil? %>
     <table data-role="table"
           id="bingo_table"
           data-mode="columntoggle"
@@ -171,6 +172,9 @@
       </td>
     </tr>
   </table>
+  <% else %>
+  <p>Course must be saved before activities can be added to it.</p>
+  <% end %>
 </p>
   </div>
 </div>

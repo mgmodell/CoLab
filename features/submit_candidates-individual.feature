@@ -15,11 +15,13 @@ Feature: Submitting Candidate words for Bingo!
     Given the user is the "random" user in the group
     Given the user "has" had demographics requested
 
+  @javascript
   Scenario: User should not be able to closed list of candidates
     Given the Bingo! "has not" been activated
     Given the user logs in
     Then user should see 0 open task
 
+  @javascript
   Scenario: User should not be able to see a closed list of candidates
     Given the Bingo! game required 1 day of lead time
     Given the Bingo! started "last month" and ends "today"
@@ -27,6 +29,7 @@ Feature: Submitting Candidate words for Bingo!
     Given the user logs in
     Then user should see 0 open task
 
+@javascript
   Scenario: User should be able to open and save an unstarted list of candidates
     Given the user logs in
     Then user should see 1 open task

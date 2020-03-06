@@ -12,6 +12,7 @@ import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
+import FormHelperText from '@material-ui/core/FormHelperText'
 
 import {
   KeyboardDatePicker,
@@ -59,7 +60,6 @@ export default function ProjectDataAdmin(props) {
   const [projectActive, setProjectActive] = useState(false);
   const [projectFactorPackId, setProjectFactorPackId] = useState(0);
   const [projectStyleId, setProjectStyleId] = useState(0);
-  const [courseId, setCourseId] = useState(props.courseId);
   const [courseName, setCourseName] = useState("");
   const [courseTimezone, setCourseTimezone] = useState( 'UTC');
 
@@ -67,7 +67,7 @@ export default function ProjectDataAdmin(props) {
     setDirty(true);
     var url = endpoints.endpoints['project'].projectUrl + "/";
     if (null == projectId) {
-      url = url + "new.json?course_id=" + courseId;
+      url = url + 'new/' + props.courseId + ".json";
     } else {
       url = url + projectId + ".json";
     }
@@ -93,10 +93,7 @@ export default function ProjectDataAdmin(props) {
         setStyles(styles.concat(data.styles));
 
         const course = data.course;
-        setCourseId(course.id);
         setCourseName(course.name);
-        console.log( course.timezone )
-        console.log( DateTime.local( ).setZone( course.timezone ).isValid )
         setCourseTimezone( course.timezone );
         Settings.defaultZoneName = course.timezone;
 
@@ -104,12 +101,9 @@ export default function ProjectDataAdmin(props) {
         setProjectDescription(project.description || "");
         setProjectActive(project.active);
 
-        console.log( DateTime.fromISO( project.start_date).setZone( course.timezone ))
 
         var receivedDate = DateTime.fromISO( project.start_date).setZone( course.timezone )
         setProjectStartDate(receivedDate.toISO() );
-        console.log( course.timezone )
-        console.log( receivedDate.toISO() )
         receivedDate = DateTime.fromISO( project.end_date).setZone( course.timezone )
         setProjectEndDate(receivedDate.toISO() );
         setProjectFactorPackId(project.factor_pack_id);
@@ -125,7 +119,7 @@ export default function ProjectDataAdmin(props) {
     setWorking(true);
 
     const url =
-    endpoints.endpoints['project'].projectUrl + (null == projectId ? "" : "/" + projectId) + ".json";
+    endpoints.endpoints[endpointSet].projectUrl + '/' + (null == projectId ? props.courseId : projectId) + ".json";
 
     fetch(url, {
       method: method,
@@ -138,7 +132,7 @@ export default function ProjectDataAdmin(props) {
       body: JSON.stringify({
         project: {
           name: projectName,
-          course_id: courseId,
+          course_id: props.courseId,
           description: projectDescription,
           active: projectActive,
           start_date: projectStartDate,
@@ -159,13 +153,12 @@ export default function ProjectDataAdmin(props) {
         }
       })
       .then(data => {
-        if (data.messages == null || Object.keys(data.messages).length < 2) {
+        if (data.messages != null && Object.keys(data.messages).length < 2) {
           const project = data.project;
           setProjectId(project.id);
           setProjectName(project.name);
           setProjectDescription(project.description);
           setProjectActive(project.active);
-          console.log( 'save response')
           var receivedDate = DateTime.fromISO( project.start_date).setZone( courseTimezone )
           setProjectStartDate(receivedDate.toISO());
           receivedDate = DateTime.fromISO( project.end_date).setZone( courseTimezone )
@@ -176,7 +169,6 @@ export default function ProjectDataAdmin(props) {
           setProjectEndDOW(project.end_dow);
 
           const course = data.course;
-          setCourseId(course.id);
           setCourseName(course.name);
           setWorking(false);
           setDirty(false);
@@ -190,11 +182,8 @@ export default function ProjectDataAdmin(props) {
     if (endpoints.endpointStatus[endpointSet] != 'loaded') {
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
-
     daysOfWeek.unshift(daysOfWeek.pop());
     setDaysOfWeek(daysOfWeek);
-
-    //getProject();
   }, []);
 
   useEffect(() =>{
@@ -271,6 +260,14 @@ export default function ProjectDataAdmin(props) {
           error={null != messages.start_date}
           helperText={messages.start_date}
         />
+        </MuiPickersUtilsProvider>
+        { null != messages.start_date ? (
+          <FormHelperText error={true}>
+            {messages.start_date}
+          </FormHelperText>
+        ): null }
+
+      <MuiPickersUtilsProvider utils={LuxonUtils}>
         <KeyboardDatePicker
           disableToolbar
           variant="inline"
@@ -285,6 +282,11 @@ export default function ProjectDataAdmin(props) {
           helperText={messages.end_date}
         />
       </MuiPickersUtilsProvider>
+        { null != messages.end_date ? (
+          <FormHelperText error={true}>
+            {messages.end_date}
+          </FormHelperText>
+        ): null }
       <br />
       <InputLabel htmlFor="start_dow">Opens every</InputLabel>
       <Select

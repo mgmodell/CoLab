@@ -125,7 +125,6 @@ class ConceptsController < ApplicationController
   # end
 
   def update
-    puts params
     if @concept.update(concept_params)
       respond_to do |format|
         format.html do

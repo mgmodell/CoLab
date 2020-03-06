@@ -190,7 +190,7 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
-    Then the user clicks "Edit Project Details"
+    #Then the user clicks "Edit Project Details"
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "05/10/1976"
     Then the user sets the project "end" date to "02/29/1980"
@@ -199,7 +199,7 @@ Feature: Project Administration
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
+    Then the user clicks "Save Project"
     Then the user will see "success"
     Then retrieve the latest project from the db
     #Let's check the values stored
@@ -245,14 +245,14 @@ Feature: Project Administration
     Then the project Factor pack is "Simple"
     Then the project Style is "Sliders (simple)"
 
-    Then the user clicks "Edit Project Details"
+    # Then the user clicks "Edit Project Details"
     Then the user sets the "Name" field to "Cool beans"
     Then the user selects "Monday" as "Opens every"
     Then the user selects "Tuesday" as "Closes every"
     Then the user selects "Simple" as "Factor pack"
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Update Project"
+    Then the user clicks "Save Project"
     Then the user will see "success"
     Then retrieve the latest project from the db
     #Let's check the values stored
@@ -288,11 +288,13 @@ Feature: Project Administration
     # Because the above was saved, this one is -1 again
     Then the user sets the "g_-1" field to "your group"
     Then the user clicks "Save"
-    #Edit the groups
     Then the user switches to the "Details" tab
     Then the user sets the project "start" date to "yesterday"
     Then the user sets the project "end" date to "tomorrow"
+    Then the user clicks "Save"
+    Then the user will see "success"
 
+    #Edit the groups
     Then the user switches to the "Groups" tab
     Then set user 1 to group "my group"
     Then the user clicks "Save"
@@ -305,7 +307,7 @@ Feature: Project Administration
     Then group "my group" has 1 revision
 
     #Another revision
-    Then the user switches to the "Details" tab
+    Then the user switches to the "Groups" tab
     Then set user 2 to group "my group"
     Then set user 3 to group "your group"
     Then set user 4 to group "your group"
@@ -313,8 +315,8 @@ Feature: Project Administration
     Then the user will see "success"
     Then retrieve the latest project from the db
     Then group "my group" has 2 user
-    Then group "my group" has 2 revision
     Then group "your group" has 2 user
+    Then group "my group" has 2 revision
     Then group "your group" has 1 revision
 
 @javascript

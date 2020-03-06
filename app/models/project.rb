@@ -2,6 +2,7 @@
 
 require 'forgery'
 class Project < ApplicationRecord
+  include TimezonesSupportConcern
   after_save :build_assessment
 
   belongs_to :course, inverse_of: :projects

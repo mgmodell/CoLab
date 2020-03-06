@@ -160,14 +160,15 @@ Given /^the saved reviews match the list$/ do
 end
 
 Given /^the user checks "([^"]*)"$/ do |checkbox_name|
-  elem = all(:xpath, "//div[contains(.,'#{checkbox_name}')]").last
-  begin
-    retries ||= 0
-    elem.click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-    puts e.inspect
-    retry if (retries += 1) < 4
-  end
+  find( :xpath, "//*[text()='#{checkbox_name}']" ).click
+  # elem = all(:xpath, "//div[contains(.,'#{checkbox_name}')]").last
+  # begin
+  #   retries ||= 0
+  #   elem.click
+  # rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+  #   puts e.inspect
+  #   retry if (retries += 1) < 4
+  # end
 end
 
 Given /^the user is the most recently created user$/ do
