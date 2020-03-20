@@ -186,6 +186,28 @@ class CoursesController < ApplicationController
         @courses << roster.course
       end
     end
+
+    respond_to do |format|
+      format.html do
+      end
+      format.json do
+        resp = @courses.collect do |r|
+          { id: r.id,
+            name: r.name,
+            number: r.number,
+            school_name: r.school.name,
+            start_date: r.start_date,
+            end_date: r.end_date,
+            faculty_count: r.rosters.faculty.size,
+            student_count: r.rosters.students.size,
+            project_count: r.projects.size,
+            experience_count: r.experiences.size,
+            bingo_game_count: r.bingo_games.size
+          }
+        end
+        render json: resp
+      end
+    end
   end
 
   def new

@@ -130,7 +130,7 @@ export default function MainMenu(props) {
               <AccountBoxIcon />
             </ListItemIcon>
             <ListItemText>
-              {t('prrofile')}
+              {t('profile')}
             </ListItemText>
           </ListItem>
           <DiversityCheck token={props.token} diversityScoreFor={props.diversityScoreFor} />

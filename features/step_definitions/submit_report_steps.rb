@@ -33,10 +33,6 @@ When /^the user submits the installment$/ do
   click_link_or_button('Submit Weekly Installment')
 end
 
-When /^the user returns home$/ do
-  visit '/'
-end
-
 Then /^there should be no error$/ do
   page.should_not have_content('Unable to reconcile installment values.')
   page.should_not have_content('assessment has expired')
@@ -47,8 +43,7 @@ Then /^the user should see an error indicating that the installment request expi
 end
 
 When /^user clicks the link to the project$/ do
-  first(:link, @project.group_for_user(@user).name).click
-  # click_link_or_button @project.group_for_user(@user).name, visible: :all
+  find( :xpath, "//td[contains(text(),'#{@project.group_for_user(@user).name}')]" ).click
 end
 
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points, distribution|
@@ -121,10 +116,10 @@ end
 
 Then /^the assessment should show up as completed$/ do
   # Using some cool xpath stuff to check for proper content
-  link_text = @project.group_for_user(@user).name
+  group_name = @project.group_for_user(@user).name
   step 'the user switches to the "Task View" tab'
 
-  page.should have_xpath("//a[contains(., '#{link_text}')]/.."), 'No link to assessment'
+  page.should have_xpath("//td[contains(., '#{group_name}')]/.."), 'No link to assessment'
   page.should have_xpath("//td[contains(., 'Completed')]"), "No 'completed' message"
 end
 

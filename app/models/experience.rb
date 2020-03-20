@@ -105,6 +105,35 @@ class Experience < ApplicationRecord
     get_user_reaction(user).status
   end
 
+  def task_data current_user:
+    helpers = Rails.application.routes.url_helpers
+    link = if( get_user_reaction( current_user ).behavior.nil? )
+            helpers.next_experience_path( experience_id: id )
+           else
+            nil
+           end
+
+    log = course.get_consent_log( user: current_user )
+    consent_link = log.present? ?
+                     helpers.edit_consent_log_path( 
+                       consent_form_id: log.consent_form_id
+                     ) : nil
+
+    {
+      id: id,
+      type: :experience,
+      name: get_name( false ),
+      group_name: 'N/A',
+      status: status_for_user( current_user),
+      course_name: course.get_name( false ),
+      start_date: start_date,
+      end_date: end_date,
+      link: link,
+      consent_link: consent_link,
+      active: active
+    }
+  end
+
   def get_least_reviewed_narrative(include_ids = [])
     narrative_counts = if include_ids.empty?
                          reactions.group(:narrative_id).count

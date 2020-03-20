@@ -5,7 +5,7 @@ Given /^the user is any student in the course$/ do
 end
 
 Then /^the user clicks the link to the concept list$/ do
-  first(:link, @bingo.get_name(@anon)).click
+  find( :xpath, "//td[contains(text(),'#{@bingo.get_name(@anon)}')]" ).click
 
   current_path = page.current_path
 
@@ -16,7 +16,6 @@ Then /^the user clicks the link to the concept list$/ do
 
   props = JSON.parse(HTMLEntities.new.decode(x['data-react-props']))
 
-  # url = "#{props['conceptsUrl']}.json"
   url = "#{bingo_concepts_path(@bingo.id)}.json"
   visit url
 

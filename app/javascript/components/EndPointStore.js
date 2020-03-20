@@ -36,8 +36,10 @@ const Store = createStore({
             const tmpEndpoints = getState( ).endpoints;
             allStatus = getState().endpointStatus;
 
-            tmpEndpoints[ unit ] = data;
-            allStatus[ unit ] = 'loaded'
+            if( undefined != data ){
+              tmpEndpoints[ unit ] = data;
+              allStatus[ unit ] = 'loaded'
+            }
             setState({
               endpoints: tmpEndpoints,
               endpointStatus: allStatus

@@ -64,21 +64,25 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
 end
 
 Then /^the user switches to the "([^"]*)" tab$/ do |tab|
-  begin
-    click_link tab
-    
-  rescue Capybara::ElementNotFound => exception
-    find( :xpath, "//*[text()='#{tab}']").click
-    
-  else
-    
+  unless 'Task View' == tab
+    begin
+      click_link tab
+      
+    rescue Capybara::ElementNotFound => exception
+      find( :xpath, "//*[text()='#{tab}']").click
+      
+    else
+      
+    end
   end
 end
 
 Then 'the user enables the {string} table view option' do |view_option|
-  find(:xpath, "//a[contains(text(), 'Show/Hide')]").click
-  find(:xpath, "//label[contains(text(), '#{view_option}')]").click
-  find(:xpath, '//body').send_keys :escape
+  find(:xpath, "//button[@aria-label='View Columns']").click
+  sleep 0.1
+  find(:xpath, "//span[contains(text(), '#{view_option}')]").click
+  sleep 0.1
+  find(:xpath, '//body').click
 end
 
 Then /^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/ do |field, value|

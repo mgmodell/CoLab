@@ -161,14 +161,6 @@ end
 
 Given /^the user checks "([^"]*)"$/ do |checkbox_name|
   find( :xpath, "//*[text()='#{checkbox_name}']" ).click
-  # elem = all(:xpath, "//div[contains(.,'#{checkbox_name}')]").last
-  # begin
-  #   retries ||= 0
-  #   elem.click
-  # rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-  #   puts e.inspect
-  #   retry if (retries += 1) < 4
-  # end
 end
 
 Given /^the user is the most recently created user$/ do
@@ -176,8 +168,7 @@ Given /^the user is the most recently created user$/ do
 end
 
 When /^the user clicks the link to the candidate review$/ do
-  first(:link, @bingo.get_name(@anon)).click
-  # click_link_or_button @bingo.get_name(@anon)
+  find( :xpath, "//td[contains(text(),'#{@bingo.get_name(@anon)}')]" ).click
 end
 
 Then /^there will be (\d+) concepts$/ do |concept_count|

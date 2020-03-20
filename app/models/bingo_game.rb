@@ -75,6 +75,42 @@ class BingoGame < ApplicationRecord
     end_date - (1 + lead_time).days
   end
 
+  def task_data current_user:
+    #TODO: There's got to be a better way
+    group = project.group_for_user( current_user )
+    helpers = Rails.application.routes.url_helpers
+    link = if awaiting_review?
+            helpers.review_bingo_candidates_path( self )
+          else 
+            candidate_list = candidate_list_for_user(current_user)
+            if is_open?
+              helpers.edit_candidate_list_path( candidate_list )
+            elsif reviewed
+              helpers.candidate_list_path( candidate_list )
+            end
+          end
+
+    log = course.get_consent_log( user: current_user )
+    consent_link = log.present? ?
+                     helpers.edit_consent_log_path( 
+                       consent_form_id: log.consent_form_id
+                     ) : nil
+    {
+      id: id,
+      type: :bingo_game,
+      name: get_name( false ),
+      group_name: group.present? ? group.get_name( false ) : nil ,
+      status: status,
+      course_name: course.get_name( false ),
+      start_date: start_date,
+      end_date: end_date,
+      link: link,
+      consent_link: consent_link,
+      active: active
+    }
+
+  end
+
   # Let's create a true activity interface later
   # TODO this is really more of a student activity end date
   def get_activity_begin

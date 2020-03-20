@@ -5,6 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
 import MainMenu from "./MainMenu";
+import HelpMenu from "./HelpMenu";
 import Quote from "./Quote";
 import {i18n} from "./i18n"
 import { useTranslation } from "react-i18next";
@@ -70,6 +71,9 @@ export default function AppHeader(props) {
 
           </Suspense>) :
           (<Skeleton variant='text' />)}
+          <HelpMenu
+            token={props.token} />
+          
 
         </Toolbar>
       </AppBar>

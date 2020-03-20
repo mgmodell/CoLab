@@ -1,3 +1,8 @@
+<%= react_component "CourseList", {
+  token: form_authenticity_token,
+  getEndpointsUrl: endpoints_path( unit: '' )
+} %>
+<hr/>
 <p id="notice"><%= notice %></p>
 <% theme_code = get_theme_code
    anonymize = get_anonymous %>

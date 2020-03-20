@@ -119,7 +119,7 @@ export default function ConceptsTable (props){
   }
 
   const getConcepts = () =>  {
-    fetch(endpoints.endpoints[endpointSet].conceptsUrl + ".json", {
+    fetch(endpoints.endpoints[endpointSet].baseUrl + ".json", {
       method: "GET",
       credentials: "include",
       headers: {
@@ -175,7 +175,7 @@ export default function ConceptsTable (props){
   }
   const updateConcept = (id, name)=>{
     setWorking( true );
-    fetch(endpoints.endpoints[endpointSet].conceptsUrl + '/' + id + ".json", {
+    fetch(endpoints.endpoints[endpointSet].baseUrl + '/' + id + ".json", {
       method: "PATCH",
       credentials: "include",
       headers: {

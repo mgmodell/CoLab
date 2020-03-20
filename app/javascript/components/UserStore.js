@@ -45,7 +45,8 @@ const Store = createStore({
               is_admin: data.is_admin,
               timezone: data.timezone,
               language: data.language,
-              loading: false
+              loading: false,
+              loaded: true
             });
           });
       }

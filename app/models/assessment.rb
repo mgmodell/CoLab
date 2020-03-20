@@ -22,6 +22,31 @@ class Assessment < ApplicationRecord
     user.installments.where(assessment: self).count != 0
   end
 
+  def task_data current_user:
+    helpers = Rails.application.routes.url_helpers
+    link = helpers.edit_installment_path(assessment_id: id)
+    group = group_for_user( current_user )
+
+    log = course.get_consent_log( user: current_user )
+    consent_link = log.present? ?
+                     helpers.edit_consent_log_path( 
+                       consent_form_id: log.consent_form_id
+                     ) : nil
+    {
+      id: id,
+      type: :assessment,
+      name: project.get_name( false ),
+      group_name: group.get_name( false ),
+      status: is_completed_by_user(current_user) ? 100 : 0,
+      course_name: course.get_name( false ),
+      start_date: self.start_date,
+      end_date: self.end_date,
+      link: link,
+      consent_link: consent_link,
+      active: project.active
+    }
+  end
+
   def next_deadline
     end_date
   end

@@ -2,7 +2,7 @@
 Rails.application.routes.draw do
   get 'admin' => 'courses#index'
 
-  scope 'admin' do
+  scope 'api-backend' do
     get 'courses/copy' => 'courses#new_from_template',
         as: :copy_course
     get 'courses/add_students' => 'courses#add_students',
@@ -127,6 +127,9 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
   root to: 'home#index'
+
+  get 'task_list' => 'home#task_list', as: :task_list,
+        constraints: ->(req) { req.format == :json }
 
   #self registration
   get 'course/enroll/:id', to: 'courses#self_reg', as: :self_reg

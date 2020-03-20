@@ -75,7 +75,8 @@ Feature: Submitting Reports
     Given the consent form "has" been presented to the user
     Given the project has been activated
     Then the user logs in and submits an installment
-    When the user returns home
+    When the user navigates home
+    Then the user enables the "Status" table view option
     Then the assessment should show up as completed
     Then the installment values will match the submit ratio
 

@@ -65,7 +65,7 @@ export default function ProjectDataAdmin(props) {
 
   const getProject = () => {
     setDirty(true);
-    var url = endpoints.endpoints['project'].projectUrl + "/";
+    var url = endpoints.endpoints['project'].baseUrl + "/";
     if (null == projectId) {
       url = url + 'new/' + props.courseId + ".json";
     } else {
@@ -119,7 +119,7 @@ export default function ProjectDataAdmin(props) {
     setWorking(true);
 
     const url =
-    endpoints.endpoints[endpointSet].projectUrl + '/' + (null == projectId ? props.courseId : projectId) + ".json";
+    endpoints.endpoints[endpointSet].baseUrl + '/' + (null == projectId ? props.courseId : projectId) + ".json";
 
     fetch(url, {
       method: method,

@@ -5,7 +5,6 @@ class HomeController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[demo_start get_quote]
 
   def index
-    # current_user = current_user
     # The first thing we want to do is make sure they've had an opportunity to
     # complete any waiting consent forms
     waiting_consent_logs = current_user.waiting_consent_logs
@@ -27,6 +26,18 @@ class HomeController < ApplicationController
     current_location = 'home'
   end
 
+  def task_list
+    waiting_tasks = current_user.waiting_student_tasks
+    waiting_tasks.concat current_user.waiting_instructor_tasks
+
+    respond_to do |format|
+      format.json do
+        render json: waiting_tasks_hash = waiting_tasks.collect{|t|t.task_data( current_user: current_user )}
+      end
+    end
+
+  end
+
   def endpoints
     ep_hash = {}
     case params[:unit]
@@ -38,6 +49,7 @@ class HomeController < ApplicationController
         moreInfoUrl: 'http://PeerAssess.info',
         demoUrl: demo_start_path,
         homeUrl: root_path,
+        taskListUrl: task_list_path,
         diversityScoreFor: check_diversity_score_path
       }
       if user_signed_in?
@@ -54,21 +66,30 @@ class HomeController < ApplicationController
       end
     when 'project'
       ep_hash = {
-        projectUrl: projects_path,
+        baseUrl: projects_path,
         activateProjectUrl: activate_project_path,
         diversityCheckUrl: check_diversity_score_path,
         groupsUrl: groups_path(id: ''),
         diversityRescoreGroup: rescore_group_path(id: '' ),
         diversityRescoreGroups: rescore_groups_path(id: '' )
       }
+    when 'course'
+      ep_hash = {
+        baseUrl: courses_path,
+        scoresUrl: course_scores_path( id: '' )
+      }
+    when 'experience'
+      ep_hash = {
+        baseUrl: experience_path
+      }
     when 'bingo_game'
       ep_hash = {
-        bingoGameUrl: bingo_games_path,
-        gameResultsUrl: game_results_path( id: '' ),
+        baseUrl: bingo_games_path,
+        gameResultsUrl: game_results_path( id: '' )
       }
     when 'concept'
       ep_hash = {
-        conceptsUrl: concepts_path
+        baseUrl: concepts_path
       }
     end
     # Provide the endpoints

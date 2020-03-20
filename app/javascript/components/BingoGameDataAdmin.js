@@ -1,6 +1,5 @@
 import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import classNames from "classnames";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -8,7 +7,6 @@ import Grid from "@material-ui/core/Grid";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
@@ -138,7 +136,7 @@ export default function BingoGameDataAdmin(props) {
     setWorking( true );
 
     const url =
-    endpoints.endpoints[endpointSet].bingoGameUrl + '/' + (null == bingoGameId ? props.courseId : bingoGameId) + '.json';
+    endpoints.endpoints[endpointSet].baseUrl + '/' + (null == bingoGameId ? props.courseId : bingoGameId) + '.json';
 
     // Save
     setSaveStatus(t("save_status"));
@@ -215,7 +213,7 @@ export default function BingoGameDataAdmin(props) {
 
   const getBingoGameData = () => {
     setDirty( true );
-    var url = endpoints.endpoints[endpointSet].bingoGameUrl + '/'
+    var url = endpoints.endpoints[endpointSet].baseUrl + '/'
     if( null == bingoGameId ){
       url = url + 'new/' + props.courseId  + '.json';
     } else {
