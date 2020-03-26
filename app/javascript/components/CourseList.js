@@ -3,22 +3,28 @@ import PropTypes from "prop-types";
 import IconButton from '@material-ui/core/IconButton';
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Paper from '@material-ui/core/Paper';
+import Tooltip from '@material-ui/core/Tooltip'
 import {DateTime} from 'luxon'
 import Settings from 'luxon/src/settings.js'
 
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import BookIcon from '@material-ui/icons/Book';
 import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
+import AddIcon from '@material-ui/icons/Add';
 
 import { useEndpointStore } from "./EndPointStore"
 import { useUserStore } from "./UserStore"
 import MUIDataTable from "mui-datatables";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
 
 export default function CourseList(props) {
   const endpointSet = 'course';
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
+  const [copyData, setCopyData] = useState( null );
 
   const [working, setWorking] = useState(true);
   const columns = 
@@ -127,31 +133,48 @@ export default function CourseList(props) {
                   display: true,
                   filter: false,
                   customBodyRender: (value, tableMeta, updateValue) => {
-                    const url = endpoints.endpoints[endpointSet].scoresUrl + value + '.csv'
+                    const scoresUrl = endpoints.endpoints[endpointSet].scoresUrl + value + '.csv'
+                    const copyUrl = endpoints.endpoints[endpointSet].courseCopyUrl + value + '.json'
                     return(
                       <React.Fragment>
-                        <IconButton
-                          onClick={event=>{
-                            console.log( url );
-                            window.location.href=url;
-                          }}
-                          aria-label='Download scores as CSV'>
-                            <CloudDownloadIcon/>
-                        </IconButton>
-                        <IconButton
-                          onClick={event=>{
-                            console.log( 'Copy Function' );
-                          }}
-                          aria-label='Make a Copy'>
-                            <CollectionsBookmarkIcon/>
-                        </IconButton>
-                        <IconButton
-                          onClick={event=>{
-                            console.log( 'Delete Function' );
-                          }}
-                          aria-label='Remove this Class'>
-                            <DeleteForeverIcon/>
-                        </IconButton>
+                        <Tooltip title="Download Scores to CSV" aria-label="Download">
+                          <IconButton
+                            id={'csv-' + value }
+                            onClick={event=>{
+                              window.location.href=scoresUrl;
+                              event.preventDefault()
+                            }}
+                            aria-label='Download scores as CSV'>
+                              <CloudDownloadIcon/>
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Create a copy based on this course" aria-label="Copy">
+                          <IconButton
+                            id={'copy-' + value }
+                            onClick={event=>{
+                              console.log( 'Copy Function' );
+                              setCopyData( copyUrl );
+                              event.preventDefault()
+                            }}
+                            aria-label='Make a Copy'>
+                              <Dialog
+                                open={null != copyData}
+                                fullScreen={false}
+                                onClose={(event,reason)=>{
+                                  console.log( reason );
+                                  setCopyData( null )
+                                }}
+                                >
+                                <DialogContent>
+                                  <DialogTitle>Create a Copy</DialogTitle>
+                                  <DialogContentText>
+                                    Say something cool here.
+                                  </DialogContentText>
+                                </DialogContent>
+                              </Dialog>
+                              <CollectionsBookmarkIcon/>
+                          </IconButton>
+                        </Tooltip>
                       </React.Fragment>
                     )
                   }
@@ -222,6 +245,19 @@ export default function CourseList(props) {
         filterType:'checkbox',
         print: false,
         download: false,
+        customToolbar: ()=>(
+          <Tooltip
+            title='New Course'>
+            <IconButton
+              id='new_course'
+              onClick={event=>{
+                window.location.href = endpoints.endpoints[endpointSet].courseCreateUrl;
+              }}
+              aria-label='New Course'>
+              <AddIcon/>
+            </IconButton>
+          </Tooltip>
+        ),
         onCellClick: (colData, cellMeta) =>{
           if( 'Actions' != columns[ cellMeta.colIndex ].label ){
             const link = endpoints.endpoints[endpointSet].baseUrl + '/' + courses[ cellMeta.dataIndex ].id

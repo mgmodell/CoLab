@@ -76,11 +76,14 @@ class HomeController < ApplicationController
     when 'course'
       ep_hash = {
         baseUrl: courses_path,
-        scoresUrl: course_scores_path( id: '' )
+        courseCreateUrl: new_course_path,
+        courseUsersUrl: get_users_path( id: '' ),
+        scoresUrl: course_scores_path( id: '' ),
+        courseCopyUrl: copy_course_path( id: '' )
       }
     when 'experience'
       ep_hash = {
-        baseUrl: experience_path
+        baseUrl: experiences_path
       }
     when 'bingo_game'
       ep_hash = {

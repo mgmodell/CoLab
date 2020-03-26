@@ -4,7 +4,7 @@ class CoursesController < ApplicationController
   layout 'admin', except: %i[self_reg self_reg_confirm]
   before_action :set_course, only: %i[show edit update destroy
                                       add_students add_instructors calendar
-                                      new_from_template ]
+                                      new_from_template get_users ]
   before_action :set_reg_course, only: %i[self_reg self_reg_confirm]
   before_action :check_admin, only: %i[new create]
   before_action :check_editor, except: %i[next diagnose react accept_roster
@@ -15,8 +15,90 @@ class CoursesController < ApplicationController
                                           self_reg_confirm self_reg]
   skip_before_action :authenticate_user!, only: %i[qr get_quote]
 
+  #TimeZones constant
+  TIMEZONES ||= ActiveSupport::TimeZone.all.collect{ |tz|
+    {
+      name: tz.name,
+      stdName: tz.tzinfo.name
+
+    }
+  }
   def show
     @title = t('.title')
+    respond_to do |format|
+      format.html{ render :show }
+      format.json do
+        response = {
+          course: @course.as_json(
+            only: %i[ id name number description timezone
+                    school_id start_date end_date
+                    consent_form_id ]
+          ),
+          timezones: CoursesController::TIMEZONES,
+          schools: School.all.as_json(
+            only: %i[ id name timezone ]
+          ),
+          consent_forms: ConsentForm.where( active: true ).as_json(
+            only: %i[ id name]
+          )
+        }
+        if @course.id && @course.id > 0
+          response[:new_activity_links] = [
+            {name: 'Group Experience', link: new_experience_path( course_id: @course.id )},
+            {name: 'Project', link: new_project_path( course_id: @course.id )},
+            {name: 'Terms List', link: new_bingo_game_path( course_id: @course.id )}
+          ]
+          activities = @course.get_activities.collect{|activity|
+            {
+              id: activity.id,
+              name: activity.get_name( @anon ),
+              active: activity.active,
+              type: activity.type,
+              start_date: activity.start_date,
+              end_date: activity.end_date,
+              link: activity.get_link
+            }
+          }
+          response[:course][:activities] = activities
+        else
+          response[:new_activity_links] = [ ]
+          response[:course][:activities] = [ ]
+
+        end
+        render json: response
+      end
+    end
+  end
+
+  def get_users
+    rosters = @course.rosters
+    users = @course.rosters.collect do |roster|
+      {
+        first_name: @anon ? roster.user.anon_first_name : roster.user.first_name,
+        last_name: @anon ? roster.user.anon_last_name : roster.user.last_name,
+        email: @anon ? "#{roster.user.last_name_anon}@mailinator.com" : roster.user.email,
+        drop_link: drop_student_path( roster_id: roster.id ),
+        drop_link: drop_student_path( roster_id: roster.id ),
+        reinvite_link: re_invite_student_path( user_id: roster.user.id ),
+        bingo_data: user.get_bingo_data( course_id: @course.id ),
+        get_bingo_performance: user.get_get_bingo_performance( course_id: @course.id ),
+        get_assessment_performance: user.get_get_assessment_performance( course_id: @course.id ),
+        get_experience_performance: user.get_get_experience_performance( course_id: @course.id ),
+        status: roster.role
+      }
+    end
+    response = {
+      users: users,
+      add_function: {
+        instructor: add_instructors_path,
+        students: add_students_path
+      }
+    }
+    respond_to do |format|
+      format.json do
+        render json: response
+      end
+    end
   end
 
   def edit
@@ -202,7 +284,11 @@ class CoursesController < ApplicationController
             student_count: r.rosters.students.size,
             project_count: r.projects.size,
             experience_count: r.experiences.size,
-            bingo_game_count: r.bingo_games.size
+            bingo_game_count: r.bingo_games.size,
+            actions: {
+              course_scores: course_scores_path( id: r.id ),
+              create_copy: copy_course_path( id: r.id )
+            }
           }
         end
         render json: resp
@@ -241,18 +327,53 @@ class CoursesController < ApplicationController
     @course.rosters << Roster.new(role: Roster.roles[:instructor], user: current_user)
 
     if @course.save
-      redirect_to courses_url, notice: t('courses.create_success')
+      respond_to do |format|
+        format.html do
+          redirect_to courses_url, notice: t('courses.create_success')
+        end
+        format.json do
+          response = {
+            course: @course.as_json(
+              only: %i[ id name number description timezone
+                      school_id start_date end_date
+                      consent_form_id ]
+            )
+          }
+          render json: response
+        end
+      end
     else
       logger.debug @course.errors.full_messages unless @course.errors.empty?
-      render :new
+      respond_to do |format|
+        format.html do
+          render :new
+        end
+        format.json do
+          render json: {messages: @course.errors}
+        end
+      end
     end
   end
 
   def update
     @title = t('courses.edit.title')
     if @course.update(course_params)
-      @course.school = School.find(@course.school_id)
-      redirect_to course_path(@course), notice: t('courses.update_success')
+      respond_to do |format|
+        format.html do
+          @course.school = School.find(@course.school_id)
+          redirect_to course_path(@course), notice: t('courses.update_success')
+        end
+        format.json do
+          response = {
+            course: @course.as_json(
+              only: %i[ id name number description timezone
+                      school_id start_date end_date
+                      consent_form_id ]
+            )
+          }
+          render json: response
+        end
+      end
     else
       logger.debug @course.errors.full_messages unless @course.errors.empty?
       render :edit
@@ -353,11 +474,16 @@ class CoursesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_course
     if current_user.is_admin?
-      @course = Course.includes(:users).find(params[:id])
+      if params[:id].blank? || params[:id] == 'new'
+        @course = Course.new(school_id: current_user.school_id )
+      else
+        @course = Course.includes(:users).find(params[:id])
+      end
     else
       @course = current_user
                 .rosters.instructor
                 .where(course_id: params[:id]).take.course
+      #TODO: This can't be right and must be fixed for security later
       redirect_to :show if @course.nil?
     end
   end

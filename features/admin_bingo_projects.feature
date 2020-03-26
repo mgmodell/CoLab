@@ -25,7 +25,7 @@ Feature: Bingo Administration
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "New Bingo! Game"
+    Then the user creates a new "New Terms List"
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor review" field to "2"
     Then the user sets the "Entries per student" field to "15"
@@ -59,7 +59,7 @@ Feature: Bingo Administration
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "New Bingo! Game"
+    Then the user creates a new "New Terms List"
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor review" field to "2"
     Then the user sets the "Entries per student" field to "15"

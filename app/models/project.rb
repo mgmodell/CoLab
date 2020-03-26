@@ -60,6 +60,11 @@ class Project < ApplicationRecord
   end
 
   # TODO: Not ideal structuring for UI
+  def get_link
+    helpers = Rails.application.routes.url_helpers
+    helpers.project_path self
+  end
+
   def get_activity_begin
     start_date
   end
@@ -142,7 +147,7 @@ class Project < ApplicationRecord
   end
 
   def type
-    'Self- and Peer-Assessed Project'
+    'Project'
   end
 
   def status_for_user(_user)

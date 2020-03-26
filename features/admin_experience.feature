@@ -22,7 +22,7 @@ Feature: Experience Administration
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "New Experience"
+    Then the user creates a new "New Group Experience"
     Then the user sets the "Name" field to "Jimmy Hendrix"
     Then the user sets the "Days for instructor prep" field to "5"
     Then the user clicks "Create Experience"
@@ -41,7 +41,7 @@ Feature: Experience Administration
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "New Experience"
+    Then the user creates a new "New Group Experience"
     Then the user sets the "Name" field to "Jimmy Hendrix"
     Then the user clicks "Create Experience"
     Then the user will see "success"
@@ -59,7 +59,7 @@ Feature: Experience Administration
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "New Experience"
+    Then the user creates a new "New Group Experience"
     Then the user sets the "Name" field to "Jimmy Hendrix"
     Then the user sets the experience "start" date to "2/29/1980"
     Then the user sets the experience "end" date to "7/10/2008"
@@ -82,7 +82,7 @@ Feature: Experience Administration
     Then the user sets the "Name" field to "Bob Marley"
     Then the user sets the experience "start" date to "2/29/1980"
     Then the user sets the experience "end" date to "7/10/2008"
-    Then the user clicks "Update Experience"
+    Then the user clicks "Save Experience"
     Then the user will see "success"
     #Let's check the values stored
     Then retrieve the latest Experience from the db
@@ -103,7 +103,7 @@ Feature: Experience Administration
     Then the user sets the experience "start" date to "2/29/1980"
     Then the user sets the experience "end" date to "7/10/2008"
     Then the user sets the "Days for instructor prep" field to "5"
-    Then the user clicks "Update Experience"
+    Then the user clicks "Save Experience"
     Then the user will see "success"
     #Let's check the values stored
     Then retrieve the latest Experience from the db

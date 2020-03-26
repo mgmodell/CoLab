@@ -65,7 +65,7 @@ export default function ProjectDataAdmin(props) {
 
   const getProject = () => {
     setDirty(true);
-    var url = endpoints.endpoints['project'].baseUrl + "/";
+    var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == projectId) {
       url = url + 'new/' + props.courseId + ".json";
     } else {
@@ -362,10 +362,10 @@ export default function ProjectDataAdmin(props) {
         <ProjectGroups
           token={props.token}
           projectId={projectId}
-          groupsUrl={endpoints.endpoints['project'].groupsUrl}
-          diversityCheckUrl={endpoints.endpoints['project'].diversityCheckUrl}
-          diversityRescoreGroup={endpoints.endpoints['project'].diversityRescoreGroup}
-          diversityRescoreGroups={endpoints.endpoints['project'].diversityRescoreGroups}
+          groupsUrl={endpoints.endpoints[endpointSet].groupsUrl}
+          diversityCheckUrl={endpoints.endpoints[endpointSet].diversityCheckUrl}
+          diversityRescoreGroup={endpoints.endpoints[endpointSet].diversityRescoreGroup}
+          diversityRescoreGroups={endpoints.endpoints[endpointSet].diversityRescoreGroups}
         />
       ) : null}
     </Paper>

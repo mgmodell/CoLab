@@ -18,9 +18,9 @@ class ProjectsController < ApplicationController
       format.html { render :show }
       format.json do
         course_hash = {
-          id: @project.course.id,
+          id: @project.course_id,
           name: @project.course.name,
-          timezone: tz = ActiveSupport::TimeZone.new( @project.course.timezone ).tzinfo.name
+          timezone: ActiveSupport::TimeZone.new( @project.course.timezone ).tzinfo.name
         }
         response = {
           project: @project.as_json(
@@ -90,9 +90,9 @@ class ProjectsController < ApplicationController
         end
       end
     else
+      logger.debug @project.errors.full_messages unless @project.errors.empty?
       respond_to do |format|
         format.html do
-          logger.debug @project.errors.full_messages unless @project.errors.empty?
           render :new
         end
         format.json do
@@ -103,7 +103,6 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    puts params
     @title = t('projects.edit.title')
     if @project.update(project_params)
       respond_to do |format|
@@ -132,9 +131,9 @@ class ProjectsController < ApplicationController
         end
       end
     else
+      logger.debug @project.errors.full_messages
       respond_to do |format|
         format.html do
-          logger.debug @project.errors.full_messages
           render :edit
         end
         format.json do

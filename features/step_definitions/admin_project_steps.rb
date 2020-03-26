@@ -35,7 +35,14 @@ Then('retrieve the instructor user') do
 end
 
 Then /^the user opens the course$/ do
-  click_link_or_button 'Show'
+  elem = find( :xpath, "//td[contains(.,'#{@course.get_name(@anon)}')]")
+  elem.click
+  #click_link_or_button 'Show'
+end
+
+Then /^the user creates a new "([^"]*)"$/ do |link_or_button|
+  find( :xpath, '//button[@aria-label="Add Activity"]').click
+  find( :xpath, "//li[contains(.,'#{link_or_button}')]").click
 end
 
 Then /^the user clicks "([^"]*)"$/ do |link_or_button|
@@ -164,7 +171,8 @@ end
 
 Then /^the user clicks "([^"]*)" on the existing project$/ do |action|
   click_link_or_button 'Activities'
-  elem = find(:xpath, "//tr[td[contains(.,'#{@project.name}')]]/td/a", text: action)
+  elem = find(:xpath, "//td[contains(.,'#{@project.name}')]")
+  #elem = find(:xpath, "//tr[td[contains(.,'#{@project.name}')]]/td/a", text: action)
   elem.click
 end
 
@@ -201,4 +209,9 @@ end
 
 Then("the user selects the {string} menu item") do |menu_item|
   find( :xpath, "//*[@id='#{menu_item.downcase}-menu-item']").click
+end
+
+Then("the user clicks the {string} button") do |button_name|
+  elem = find( :xpath, "//button[@aria-label='#{button_name}']" )
+  elem.click
 end

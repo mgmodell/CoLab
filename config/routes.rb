@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get 'admin' => 'courses#index'
 
   scope 'api-backend' do
-    get 'courses/copy' => 'courses#new_from_template',
+    get 'courses/copy/:id' => 'courses#new_from_template',
         as: :copy_course
     get 'courses/add_students' => 'courses#add_students',
         as: :add_students
@@ -42,13 +42,21 @@ Rails.application.routes.draw do
         as: :course_scores,
         constraints: ->(req) { req.format == :csv }
 
-    resources :courses, :experiences, :schools,
-              :consent_forms
+    resources :schools, :consent_forms
     resources :concepts, except: %i[destroy create]
 
-    resources :projects, :bingo_games, except: %i[new create]
+    resources :courses, except: %i[new create]
+    get 'courses/new/' => 'courses#show', as: :new_course
+    post 'courses/:course_id' => 'courses#create'
+
+    resources :courses, :experiences, :projects, :bingo_games, except: %i[new create]
+
+    get 'experiences/new/:course_id' => 'experiences#show', as: :new_experience
+    post 'experiences/:course_id' => 'experiences#create'
+
     get 'projects/new/:course_id' => 'projects#show', as: :new_project
     post 'projects/:course_id' => 'projects#create'
+
     get 'bingo_games/new/:course_id' => 'bingo_games#show', as: :new_bingo_game
     post 'bingo_games/:course_id' => 'bingo_games#create'
   end
@@ -103,6 +111,8 @@ Rails.application.routes.draw do
   get 'exeriences/diagnose' => 'experiences#diagnose', as: :diagnose
   get 'exeriences/reaction' => 'experiences#react', as: :react
 
+  get 'course/users/:id' => 'courses#get_users', as: :get_users,
+        constraints: ->(req) { req.format == :json }
   get 'course/accept/:roster_id' => 'courses#accept_roster', as: :accept_roster
   get 'course/decline/:roster_id' => 'courses#decline_roster', as: :decline_roster
   get 'courses/drop_student/:roster_id' => 'courses#drop_student', as: :drop_student

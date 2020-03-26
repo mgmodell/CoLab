@@ -28,6 +28,11 @@ class Experience < ApplicationRecord
     reaction
   end
 
+  def get_link
+    helpers = Rails.application.routes.url_helpers
+    helpers.experience_path self
+  end
+
   def get_type
     I18n.t(:experience)
   end
@@ -94,7 +99,7 @@ class Experience < ApplicationRecord
   end
 
   def type
-    'Group work simulation'
+    'Group Experience'
   end
 
   def get_name(anonymous)

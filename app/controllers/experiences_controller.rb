@@ -8,6 +8,26 @@ class ExperiencesController < ApplicationController
 
   def show
     @title = t('.title')
+    respond_to do |format|
+      format.html { render :show }
+      format.json do
+        course_hash = {
+          id: @experience.course_id,
+          name: @experience.course.name,
+          timezone: ActiveSupport::TimeZone.new( @experience.course.timezone ).tzinfo.name
+        }
+        response = {
+          experience: @experience.as_json(
+            only: %i[ id name active start_date end_date lead_time]
+          ),
+          course: course_hash,
+          messages: {
+            status: params[:notice]
+          }
+        }
+        render json: response
+      end
+    end
   end
 
   def edit
@@ -27,36 +47,76 @@ class ExperiencesController < ApplicationController
     end
   end
 
-  def new
-    @title = t('.title')
-    @experience = Course.find(params[:course_id]).experiences.new
-    @experience.start_date = @experience.course.start_date
-    @experience.end_date = @experience.course.end_date
-  end
-
   def create
+    @title = t('experiences.new.title')
     @experience = Experience.new(experience_params)
     @experience.course = Course.find(@experience.course_id)
     if @experience.save
-      redirect_to @experience, notice: t('experiences.create_success')
-    else
-      unless @experience.errors.empty?
-        logger.debug @experience.errors.full_messages
+      respond_to do |format|
+        format.html do
+          redirect_to @experience,
+            notice: t('experiences.create_success')
+        end
+        format.json do
+          response = {
+            experience: @experience.as_json(
+              only: %i[ id name active start_date end_date lead_time]
+            ),
+            course: @experience.course.as_json(
+              only: %i[ id name timezone ]
+            ),
+            messages: {
+              status: t( 'experiences.create_success')
+            }
+          }
+          render json: response
+        end
       end
-      @title = t('experiences.new.title')
-      render :new
+    else
+      logger.debug @experience.errors.full_messages unless @experience.errors.empty?
+      respond_to do |format|
+        format.html do
+          render :new
+        end
+        format.json do
+          render json: { messages: @experience.errors }
+        end
+      end
     end
   end
 
   def update
+    @title = t('experiences.edit.title')
     if @experience.update(experience_params)
-      redirect_to @experience, notice: t('experiences.update_success')
-    else
-      unless @experience.errors.empty?
-        logger.debug @experience.errors.full_messages
+      respond_to do |format|
+        format.html do
+          redirect_to @experience, notice: t('experiences.update_success')
+        end
+        format.json do
+          response = {
+            experience: @experience.as_json(
+              only: %i[ id name active start_date end_date lead_time]
+            ),
+            course: @experience.course.as_json(
+              only: %i[ id name timezone ]
+            ),
+            messages: {
+              status: t( 'experiences.update_success')
+            }
+          }
+          render json: response
+        end
       end
-      @title = t('experiences.edit.title')
-      render :edit
+    else
+      logger.debug @experience.errors.full_messages @experience.errors.empty?
+      respond_to do |format|
+        format.html do
+          render :edit
+        end
+        format.json do
+          render json: { messages: @experience.errors }
+        end
+      end
     end
   end
 
@@ -163,7 +223,15 @@ class ExperiencesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_experience
-    e_test = Experience.find(params[:id])
+    if params[:id].blank? || params[:id] == 'new'
+      course = Course.find(params[:course_id])
+      e_test = course.experiences.new
+      e_test.start_date = course.start_date
+      e_test.end_date = course.end_date
+    else
+      e_test = Experience.find(params[:id])
+    end
+
     if current_user.is_admin?
       @experience = e_test
     else

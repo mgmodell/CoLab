@@ -186,7 +186,7 @@ Feature: Course Administration
     Then the user clicks the Admin button
     Then the user selects the 'Courses' menu item
     Then the user sees 1 course
-     And the user clicks "New Course"
+     And the user clicks the "New Course" button
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to "099"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
@@ -210,7 +210,7 @@ Feature: Course Administration
     Then the user clicks the Admin button
     Then the user selects the 'Courses' menu item
     Then the user sees 1 course
-     And the user clicks "New Course"
+     And the user clicks the "New Course" button
      #no name
      And the user sets the "Name" field to ""
      And the user sets the "Number" field to "099"

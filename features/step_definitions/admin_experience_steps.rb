@@ -30,5 +30,6 @@ Then 'the experience start date is {string} and the end date is {string}' do |st
 end
 
 Then 'the user clicks {string} on the existing experience' do |action|
-  find(:xpath, "//tr[td[contains(.,'#{@experience.name}')]]/td/a", text: action).click
+  find( :xpath, "//td[contains(.,'#{@experience.name}')]").click
+  #find(:xpath, "//tr[td[contains(.,'#{@experience.name}')]]/td/a", text: action).click
 end
