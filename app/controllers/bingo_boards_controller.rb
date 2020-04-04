@@ -393,12 +393,14 @@ class BingoBoardsController < ApplicationController
     @bingo_board.performance = params[:bingo_board][:performance]
 
     # image processing
-    proc_image = ImageProcessing::Vips
-                 .source(params[:bingo_board][:result_img].tempfile.path)
-                 .resize_to_limit!(800, 800)
+    unless params[:bingo_board][:result_img].empty?
+      proc_image = ImageProcessing::Vips
+                   .source(params[:bingo_board][:result_img].tempfile.path)
+                   .resize_to_limit!(800, 800)
 
-    @bingo_board.result_img.attach(io: File.open(proc_image.path),
-                                   filename: File.basename(proc_image.path))
+      @bingo_board.result_img.attach(io: File.open(proc_image.path),
+                                     filename: File.basename(proc_image.path))
+    end
 
     if @bingo_board.save
       redirect_to ws_results_path(@bingo_board)

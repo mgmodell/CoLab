@@ -37,7 +37,6 @@ end
 Then /^the user opens the course$/ do
   elem = find( :xpath, "//td[contains(.,'#{@course.get_name(@anon)}')]")
   elem.click
-  #click_link_or_button 'Show'
 end
 
 Then /^the user creates a new "([^"]*)"$/ do |link_or_button|
@@ -67,7 +66,6 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
     puts e.inspect
     retry if (retries += 1) < 4
   end
-  # click_link_or_button link_or_button
 end
 
 Then /^the user switches to the "([^"]*)" tab$/ do |tab|
@@ -109,7 +107,11 @@ end
 
 Then /^the user sets the "([^"]*)" field to "([^"]*)"$/ do |field, value|
   find_field(field).click
-  find_field(field).set(value)
+  elem = find_field(field)
+  elem.value.size.times do
+    elem.send_keys :backspace
+  end
+  elem.set(value)
 end
 
 Then /^the user sets the project "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
@@ -213,5 +215,11 @@ end
 
 Then("the user clicks the {string} button") do |button_name|
   elem = find( :xpath, "//button[@aria-label='#{button_name}']" )
+  elem.click
+end
+
+Then("the user clicks the course {string} button") do |button_name|
+  xquery = "//tr[contains(.,'#{@course.get_name( false )}')]//button[@aria-label='#{button_name}']"
+  elem = find( :xpath, xquery )
   elem.click
 end

@@ -3,8 +3,9 @@ Rails.application.routes.draw do
   get 'admin' => 'courses#index'
 
   scope 'api-backend' do
-    get 'courses/copy/:id' => 'courses#new_from_template',
-        as: :copy_course
+    post 'courses/copy/:id' => 'courses#new_from_template',
+        as: :copy_course,
+        constraints: ->(req) { req.format == :json }
     get 'courses/add_students' => 'courses#add_students',
         as: :add_students
     get 'courses/add_instructors' => 'courses#add_instructors',

@@ -397,7 +397,6 @@ export default function BingoGameDataAdmin(props) {
               <MuiPickersUtilsProvider utils={LuxonUtils}>
                 <Grid item>
                   <KeyboardDatePicker
-                    disableToolbar
                     variant="inline"
                     autoOk={true}
                     format="MM/dd/yyyy"
@@ -414,7 +413,6 @@ export default function BingoGameDataAdmin(props) {
                 </Grid>
                 <Grid item>
                   <KeyboardDatePicker
-                    disableToolbar
                     variant="inline"
                     autoOk={true}
                     format="MM/dd/yyyy"

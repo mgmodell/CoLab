@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
+import Collapse from '@material-ui/core/Collapse'
 import PropTypes from "prop-types";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import TextField from "@material-ui/core/TextField";
@@ -8,6 +10,12 @@ import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import FormHelperText from '@material-ui/core/FormHelperText'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import Menu from '@material-ui/core/Menu'
+
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import {
@@ -28,7 +36,9 @@ import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import GridOffIcon from '@material-ui/icons/GridOff';
 import TuneIcon from '@material-ui/icons/Tune';
 import AddIcon from '@material-ui/icons/Add';
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import CloseIcon from '@material-ui/icons/Close'
+import IconButton from "@material-ui/core/IconButton";
+import { Link } from "@material-ui/core";
 
 export default function CourseDataAdmin(props) {
 
@@ -40,6 +50,7 @@ export default function CourseDataAdmin(props) {
   const [dirty, setDirty] = useState(false);
   const [working, setWorking] = useState(true);
   const [messages, setMessages] = useState({});
+  const [showErrors, setShowErrors ] = useState( false );
   const [courseId, setCourseId] = useState(props.courseId);
   const [courseName, setCourseName] = useState("");
   const [courseNumber, setCourseNumber] = useState("");
@@ -55,13 +66,15 @@ export default function CourseDataAdmin(props) {
       .toISO()
   );
   const [courseSchoolId, setCourseSchoolId ] = useState( 0 );
-  const [courseTimezone, setCourseTimezone] = useState( 'UTC');
+  const [courseTimezone, setCourseTimezone] = useState( '');
   const [courseConsentFormId, setCourseConsentFormId ] = useState( 0 );
+  const [courseRegImage, setCourseRegImage ] = useState( null );
 
   const [schools, setSchools] = useState( [] );
   const [timezones, setTimezones] = useState( [] );
   const [consentForms, setConsentForms] = useState( [] );
   const [newActivityLinks, setNewActivityLinks ] = useState([])
+  const [schoolTzHash, setSchoolTzHash] = useState({});
 
   const getCourse = () => {
     setDirty(true);
@@ -88,9 +101,12 @@ export default function CourseDataAdmin(props) {
         }
       })
       .then(data => {
-        console.log( data.timezones );
+        //MetaData and Infrastructure
         setTimezones( data.timezones );
         setSchools( data.schools );
+        data.schools.map( (schoolData) =>{
+          schoolTzHash[ schoolData.id ] = schoolData.timezone;
+        })
         setConsentForms( data.consent_forms );
         setNewActivityLinks( data.new_activity_links );
 
@@ -105,6 +121,7 @@ export default function CourseDataAdmin(props) {
         receivedDate = DateTime.fromISO( course.end_date).setZone( Settings.timezone )
 
         setCourseEndDate(receivedDate );
+        setCourseRegImage( course.reg_link );
         course.activities.forEach(activity=>{
           receivedDate = DateTime.fromISO( activity.end_date).setZone( Settings.timezone )
           activity.end_date = receivedDate;
@@ -140,13 +157,14 @@ export default function CourseDataAdmin(props) {
       body: JSON.stringify({
         course: {
           name: courseName,
+          number: courseNumber,
           course_id: props.courseId,
           description: courseDescription,
           start_date: courseStartDate,
           end_date: courseEndDate,
           school_id: courseSchoolId,
           consent_form_id: courseConsentFormId,
-          timezone: timezone
+          timezone: courseTimezone
         }
       })
     })
@@ -159,9 +177,13 @@ export default function CourseDataAdmin(props) {
         }
       })
       .then(data => {
-        if (data.messages != null && Object.keys(data.messages).length < 2) {
+        console.log( data.messages )
+        console.log( data )
+        console.log( Object.keys( data.messages ).length )
+        if (Object.keys(data.messages).length < 2) {
           setCourseId( data.id );
           setCourseName(data.name);
+          setCourseNumber(data.number);
           setCourseDescription(data.description);
           setCourseTimezone(data.timezone);
           setCourseConsentFormId(data.consent_form_id);
@@ -175,10 +197,10 @@ export default function CourseDataAdmin(props) {
 
           setWorking(false);
           setDirty(false);
-          setMessages(data.messages);
         } else {
-          setMessages(data.messages);
+          setShowErrors( true );
         }
+        setMessages(data.messages);
       });
   };
   useEffect(() => {
@@ -217,9 +239,12 @@ export default function CourseDataAdmin(props) {
   ]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveCourse}>
-      {null == courseId ? "Create" : "Save"} Course
-    </Button>
+    <React.Fragment>
+      <hr/>
+      <Button variant="contained" onClick={saveCourse}>
+        {null == courseId ? "Create" : "Save"} Course
+      </Button>
+    </React.Fragment>
   ) : null;
 
   //Later I want to call the activate/deactivate right here
@@ -229,7 +254,6 @@ export default function CourseDataAdmin(props) {
 
   const detailsComponent = (
     <Paper>
-      {working ? <LinearProgress /> : null}
       <TextField
         label="Course Number"
         id="course-number"
@@ -260,68 +284,52 @@ export default function CourseDataAdmin(props) {
         helperText={messages.description}
       />
       <br/><br/>
-      <Autocomplete
-        id='course-school'
-        options={schools}
-        blurOnSelect={true}
-        autoComplete={true}
-        autoSelect={true}
-        onInputChange={(event,value,reason)=>{
-          if( 'reset' == reason && 'LI' == event.target.tagName ){
-            const lSchool = schools[ event.target.dataset.optionIndex ];
-            setCourseSchoolId( lSchool.id );
-          }
-        }}
-        getOptionLabel={option=>option.name}
-        renderInput={ params =>
-          <TextField
-            {...params}
-            label='School'
-            />
+      <FormControl >
+        <InputLabel htmlFor='course_school' id="course_school_lbl">School</InputLabel>
+        <Select
+          id='course_school'
+          value={courseSchoolId}
+          onChange={(event)=>{
+            setCourseSchoolId(event.target.value)
+            setCourseTimezone( schoolTzHash[ event.target.value ])
+          }}
+        >
+          <MenuItem value={0}>None Selected</MenuItem>
+          {schools.map(school=>{
+            return (<MenuItem key={'school_' + school.id} value={school.id}>{school.name}</MenuItem>)
+          })}
+        </Select>
+        <FormHelperText>Error schtuff</FormHelperText>
+      </FormControl>
 
-        }
-      />
-      <Autocomplete
-        id='course-timezone'
-        options={timezones}
-        value={courseTimezone}
-        blurOnSelect={true}
-        autoComplete={true}
-        autoSelect={true}
-        onInputChange={(event,value,reason)=>{
-          if( 'reset' == reason ){
-            //setCourseTimezone( value );
-          }
-        }}
-        renderInput={ params =>
-          <TextField
-            {...params}
-            label='Timezone'
-            />
+      <FormControl >
+        <InputLabel htmlFor='course_timezone' id="course_timezone_lbl">Time Zone</InputLabel>
+        <Select
+          id='course_timezone'
+          value={courseTimezone}
+          onChange={(event)=>setCourseTimezone(event.target.value)}
+        >
+          {timezones.map(timezone=>{
+            return(<MenuItem key={timezone.name} value={timezone.name}>{timezone.name}</MenuItem>)
+          })}
+        </Select>
+        <FormHelperText>More Error Schtuff</FormHelperText>
+      </FormControl>
 
-        }
-      />
-      <Autocomplete
-        id='course-consent_form'
-        options={consentForms}
-        blurOnSelect={true}
-        autoComplete={true}
-        autoSelect={true}
-        onInputChange={(event,value,reason)=>{
-          if( 'reset' == reason && 'LI' == event.target.tagName ){
-            const lConsentForm = schools[ event.target.dataset.optionIndex ];
-            setCourseConsentFormId( lConsentForm.id );
-          }
-        }}
-        getOptionLabel={option=>option.name}
-        renderInput={ params =>
-          <TextField
-            {...params}
-            label='Consent Form'
-            />
-
-        }
-      />
+      <FormControl >
+        <InputLabel htmlFor='course_consent_form' id="course_consent_form_lbl">Consent Form</InputLabel>
+        <Select
+          id='course_consent_form'
+          value={courseConsentFormId}
+          onChange={(event)=>setCourseConsentFormId(event.target.value)}
+        >
+          <MenuItem value={0}>None Selected</MenuItem>
+          {consentForms.map(consent_form=>{
+            return(<MenuItem key={consent_form.id} value={consent_form.id}>{consent_form.name}</MenuItem>)
+          })}
+        </Select>
+        <FormHelperText>More Error Schtuff</FormHelperText>
+      </FormControl>
 
       <Typography>All dates shown in {courseTimezone} timezone.</Typography>
       <MuiPickersUtilsProvider utils={LuxonUtils}>
@@ -366,10 +374,21 @@ export default function CourseDataAdmin(props) {
           </FormHelperText>
         ): null }
       <br />
+      {
+          ( courseId != null && courseId > 0) ?
+          (
+            <Link
+              href={courseRegImage}>
+              <img
+                 src={courseRegImage}
+                 alt='Registration QR Code' />
+              Download self-registration code
+            </Link>
+          ) : null
+
+      }
 
       <br />
-      {saveButton}
-      {messages.status}
     </Paper>
   );
   const iconForType = (type)=>{
@@ -511,6 +530,7 @@ export default function CourseDataAdmin(props) {
       </Menu>
     </React.Fragment>
   )
+
   const activityList =(
           ( courseId != null && courseId > 0) ?
             (
@@ -539,16 +559,36 @@ export default function CourseDataAdmin(props) {
 
   return (
     <Paper>
+      <Collapse in={showErrors}>
+        <Alert action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setShowErrors(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+        >
+          {messages.main}
+        </Alert>
+      </Collapse>
       <Tabs centered value={curTab} onChange={(event, value) => setCurTab(value)}>
         <Tab label="Details" value="details" />
         <Tab value='people' label='People' />
         <Tab value='activities' label='Activities' />
       </Tabs>
+      {working ? <LinearProgress /> : null}
       {"details" == curTab ? detailsComponent : null}
       {"people" == curTab ? (
         ('Coming soon!')
       ) : null}
       {"activities" == curTab ? activityList : null }
+      {saveButton}
+      {messages.status}
     </Paper>
   );
 }

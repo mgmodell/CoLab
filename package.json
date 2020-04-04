@@ -19,7 +19,7 @@
     "@material-ui/lab": "^4.0.0-alpha.46",
     "@material-ui/pickers": "^3.2.8",
     "@material-ui/styles": "^4.9.6",
-    "@rails/webpacker": "^4.0.7",
+    "@rails/webpacker": "^5.0.1",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "add": "^2.0.6",

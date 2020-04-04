@@ -18,7 +18,7 @@
 <% end %>
 <%= form_with model: @bingo_board, url: ws_score_path( @bingo_board ) do |f| %>
   <%= f.number_field :performance %>
-  <%= f.file_field :result_img, accept: 'image/*'  %>
+  <%= f.file_field :result_img, accept: 'image/*,application/pdf'  %>
   <%= f.submit %>
 <% end %>
 

@@ -24,18 +24,25 @@ Then 'the user sets the start date to {string} and the end date to {string}' do 
 end
 
 Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
-  field_lbl = 'course_timezone'
+  field_lbl = 'Time Zone'
+  lbl = find( :xpath, "//label[text()='#{field_lbl}']")
+  elem = find( :xpath, "//*[@id='#{lbl[:for]}']")
 
   if is_or_isnt == 'is'
-    page.find('#course_timezone', visible: :all).value.should eq timezone
+    elem.text.should eq timezone
   else
-    page.find('#course_timezone', visible: :all).value.should_not eq timezone
+    elem.text.should_not eq timezone
   end
 end
 
 Then 'the user sets the course timezone to {string}' do |timezone|
-  field_lbl = 'course_timezone'
-  page.select(timezone, from: field_lbl, visible: :all)
+  field_lbl = 'Time Zone'
+  lbl = find(:xpath, "//label[text()='#{field_lbl}']")
+  elem = find( :xpath, "//*[@id='#{lbl[:for]}']")
+  elem.click
+
+  menu_item = find( :xpath, "//li[text()='#{timezone}']")
+  menu_item.click
 end
 
 Then 'retrieve the latest course from the db' do
@@ -151,8 +158,15 @@ Given 'the Bingo! is active' do
 end
 
 Then 'set the new course start date to {string}' do |new_date|
-  @new_date = new_date
-  fill_in 'New course start date?', with: @new_date
+  label = find(:xpath, "//label[text()='New course start date?']")
+  elem = find(:xpath, "//input[@id='#{label[:for]}']")
+
+  @new_date = Chronic.parse(new_date)
+
+  #byebug
+  #elem.send_keys :backspace
+  elem.click
+  elem.set( @new_date.strftime('%m/%d/%Y') )
 end
 
 Then 'the course has {int} instructor user' do |instructor_count|
@@ -160,9 +174,9 @@ Then 'the course has {int} instructor user' do |instructor_count|
 end
 
 Then 'the user executes the copy' do
-  url = copy_course_path + '?'
-  url += { start_date: @new_date, id: @course.id }.to_param
-  visit url
+  elem = find(:xpath, "//button[contains(.,'Make a Copy')]")
+  elem.click
+
   @orig_course = @course
   @course = Course.last
 end

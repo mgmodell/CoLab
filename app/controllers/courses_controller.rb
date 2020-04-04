@@ -60,11 +60,13 @@ class CoursesController < ApplicationController
             }
           }
           response[:course][:activities] = activities
+          response[:course][:reg_link] = course_reg_qr_path( id: @course.id )
         else
           response[:new_activity_links] = [ ]
           response[:course][:activities] = [ ]
 
         end
+        response[:messages] = {}
         render json: response
       end
     end
@@ -311,25 +313,29 @@ class CoursesController < ApplicationController
   end
 
   def new_from_template
+    puts "\n\n\n\t**** #{params}\n\n"
     new_start = Chronic.parse(params[:start_date])
 
     copied_course = @course.copy_from_template new_start: new_start
-    if copied_course.errors.empty?
-      redirect_to courses_url, notice: t('courses.copy_success')
-    else
-      redirect_to courses_url, notice: t('courses.copy_fail')
+    respond_to do
+      format.json do
+        notice = copied_course.errors.empty? ? t('courses.copy_success') : t('courses.copy_fail')
+        render json: { messages: {main: notice } }
+      end
     end
   end
 
   def create
     @title = t('courses.new.title')
+    puts "\n\n\n\t#{course_params}\n\n\n"
     @course = Course.new(course_params)
     @course.rosters << Roster.new(role: Roster.roles[:instructor], user: current_user)
 
     if @course.save
+      notice = t('courses.create_success')
       respond_to do |format|
         format.html do
-          redirect_to courses_url, notice: t('courses.create_success')
+          redirect_to courses_url, notice: notice
         end
         format.json do
           response = {
@@ -337,7 +343,8 @@ class CoursesController < ApplicationController
               only: %i[ id name number description timezone
                       school_id start_date end_date
                       consent_form_id ]
-            )
+            ),
+            messages: {main: notice }
           }
           render json: response
         end
@@ -349,7 +356,11 @@ class CoursesController < ApplicationController
           render :new
         end
         format.json do
-          render json: {messages: @course.errors}
+          messages = @course.errors.as_json
+          messages[:main] = 'Please review the problems below'
+          render json: {
+            messages: messages
+          }
         end
       end
     end
@@ -358,10 +369,11 @@ class CoursesController < ApplicationController
   def update
     @title = t('courses.edit.title')
     if @course.update(course_params)
+      notice = t('courses.create_success')
       respond_to do |format|
         format.html do
           @course.school = School.find(@course.school_id)
-          redirect_to course_path(@course), notice: t('courses.update_success')
+          redirect_to course_path(@course), notice: notice
         end
         format.json do
           response = {
@@ -369,14 +381,25 @@ class CoursesController < ApplicationController
               only: %i[ id name number description timezone
                       school_id start_date end_date
                       consent_form_id ]
-            )
+            ),
+            messages: {main: notice }
           }
           render json: response
         end
       end
     else
-      logger.debug @course.errors.full_messages unless @course.errors.empty?
-      render :edit
+      respond_to do |format|
+        format.html do
+          logger.debug @course.errors.full_messages unless @course.errors.empty?
+          render :edit
+        end
+        format.json do
+          response = {
+            messages: @course.errors.store( :main, 'Please review the problems below')
+          }
+          render json: response
+        end
+      end
     end
   end
 
@@ -475,7 +498,10 @@ class CoursesController < ApplicationController
   def set_course
     if current_user.is_admin?
       if params[:id].blank? || params[:id] == 'new'
-        @course = Course.new(school_id: current_user.school_id )
+        @course = Course.new(
+          school_id: current_user.school_id,
+          timezone: current_user.timezone
+        )
       else
         @course = Course.includes(:users).find(params[:id])
       end
