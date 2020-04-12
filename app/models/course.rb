@@ -208,6 +208,7 @@ class Course < ApplicationRecord
 
       if user.nil?
         user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school)
+        puts user.errors.full_messages unless user.errors.empty?
       end
 
       unless user.nil?

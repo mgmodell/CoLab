@@ -276,15 +276,20 @@ Then 'the new bingo metadata is the same as the old' do
 end
 
 Then 'the user adds the {string} users {string}' do |type, addresses|
-  url = if type == 'student'
-          add_students_path + '?'
-        else
-          add_instructors_path + '?'
-        end
-  addresses = @users.map(&:email).join(', ') if addresses == 'user_list'
+  lbl = "#{type}s"
+  tab = find( :xpath, "//*[text()='#{lbl.capitalize}']")
+  tab.click
 
-  url += { addresses: addresses, id: @course.id }.to_param
-  visit url
+  btn = find( :xpath, "//button[@aria-label='Add #{lbl}']")
+  btn.click
+
+  inpt = find( :xpath, "//input[@id='addresses']")
+  addresses = @users.map(&:email).join(', ') if addresses == 'user_list'
+  inpt.set addresses
+
+  btn = find( :xpath, "//button[contains(.,'Add #{lbl}!')]")
+  btn.click
+
 end
 
 Then 'the user drops the {string} users {string}' do |type, addresses|

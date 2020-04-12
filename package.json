@@ -45,7 +45,7 @@
     "prop-types": "^15.6.1",
     "rails-erb-loader": "^5.4.1",
     "react": "^16.11.0",
-    "react-autosuggest": "^9.4.3",
+    "react-autosuggest": "^10.0.0",
     "react-dom": "^16.11.0",
     "react-draft-wysiwyg": "^1.13.2",
     "react-draggable": "^4.0.3",

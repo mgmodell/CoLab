@@ -2,9 +2,9 @@
 
 class ExperiencesController < ApplicationController
   layout 'admin', except: %i[next diagnose react]
-  before_action :set_experience, only: %i[show edit update destroy]
+  before_action :set_experience, only: %i[show get_reactions edit update destroy]
   before_action :check_viewer, only: %i[show index]
-  before_action :check_editor, only: %i[edit update destroy]
+  before_action :check_editor, only: %i[edit get_reactions update destroy]
 
   def show
     @title = t('.title')
@@ -21,6 +21,7 @@ class ExperiencesController < ApplicationController
             only: %i[ id name active start_date end_date lead_time]
           ),
           course: course_hash,
+          reactionsUrl: @experience.id.nil? ? nil : get_reactions_path( @experience ),
           messages: {
             status: params[:notice]
           }
@@ -28,6 +29,36 @@ class ExperiencesController < ApplicationController
         render json: response
       end
     end
+  end
+
+  def get_reactions
+    rosters_hash = @experience.course.rosters.students
+      .reduce({}) do |hash,roster|
+        hash[ roster.user_id ] = roster
+        hash
+      end
+
+    reactions = Reaction.includes( [:behavior, {user: :emails}, { narrative: :scenario } ])
+      .where( experience_id: @experience.id, user_id: rosters_hash.values.collect{|roster| roster.user_id})
+
+    render json: {
+      reactions: reactions.collect{|reaction|
+        puts reaction.inspect
+        {
+          user: {
+            email: reaction.user.email,
+            name: reaction.user.name( @anon ),
+          },
+          student_status: rosters_hash[ reaction.user_id ].role,
+          status: reaction.status,
+          behavior: reaction.behavior.present? ? reaction.behavior.name : 'Incomplete',
+          narrative: reaction.narrative.member,
+          scenario: reaction.narrative.scenario.name,
+          other_name: reaction.other_name,
+          improvements: reaction.improvements || ''
+        }
+      }.as_json
+    }
   end
 
   def edit

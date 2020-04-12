@@ -1,0 +1,577 @@
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Paper from "@material-ui/core/Paper";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
+
+import MUIDataTable from "mui-datatables";
+
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import ClearIcon from '@material-ui/icons/Clear';
+
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import EmailIcon from '@material-ui/icons/Email';
+import CheckIcon from '@material-ui/icons/Check';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
+
+import Link from "@material-ui/core/Link";
+import { Tooltip, IconButton } from "@material-ui/core";
+
+export default function CourseUsersList(props) {
+  const [addUsersPath, setAddUsersPath] = useState( );
+  const [procRegReqPath, setProcRegReqPath] = useState( );
+  const [addDialogOpen, setAddDialogOpen] = useState( false );
+  const [newUserAddresses, setNewUserAddresses] = useState( '' );
+
+  const getUsers = () => {
+    var url = props.retrievalUrl
+    fetch(url, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+        "X-CSRF-Token": props.token
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          console.log("error");
+        }
+      })
+      .then(data => {
+        //MetaData and Infrastructure
+        if( 'student' == props.userType ){
+          setAddUsersPath( data.add_function.students + '.json' )
+        }else{
+          setAddUsersPath( data.add_function.instructor + '.json' )
+        }
+        setProcRegReqPath( data.add_function.proc_self_reg + '.json' )
+        props.usersListUpdateFunc( data.users )
+
+        props.setWorking( false )
+      });
+  };
+
+  useEffect(() => {
+    if (null == props.usersList ){
+      getUsers();
+    }
+  }, []);
+
+  var userColumns = 
+  [
+    {
+      label: 'First Name',
+      name: 'first_name',
+      options: {
+        filter: false
+      }
+    },
+    {
+      label: 'Last Name',
+      name: 'last_name',
+      options: {
+        filter: false
+      }
+    },
+    {
+      label: 'Email',
+      name: 'email',
+      options: {
+        display: false,
+        filter: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return(<Link
+                  href={'mailto:' + value }>
+                    {value}
+                  </Link>)
+        }
+      }
+    },
+    {
+      label: 'Bingo Progress',
+      name: 'bingo_performance',
+      options: {
+        filter: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return(value + '%')
+        }
+      }
+    },
+    {
+      label: 'Assessment Progress',
+      name: 'assessment_performance',
+      options: {
+        filter: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return(value  + '%');
+        }
+      }
+    },
+    {
+      label: 'Experience Progress',
+      name: 'experience_performance',
+      options: {
+        filter: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return(value + '%' );
+        }
+      }
+    },
+    {
+      label: 'Status',
+      name: 'status',
+      options: {
+        display: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return(iconForStatus( value ) );
+        },
+        customFilterListOptions: {
+          render: value =>{
+            return iconForStatus( value );
+          }
+        },
+        filterOptions: {
+          names: [ 'Enrolled', 'Dropped', 'Undetermined'],
+          logic: (location, filters) => {
+            console.log( location, filters )
+            switch( location ){
+              case 'enrolled_student':
+                return ! filters.includes( 'Enrolled' );
+                break;
+              case 'invited_student':
+              case 'requesting_student':
+                return ! filters.includes( 'Undetermined' );
+                break;
+              case 'rejected_student':
+              case 'dropped_student':
+              case 'declined_student':
+                return ! filters.includes( 'Dropped' );
+                break;
+              case 'instructor':
+                return ! filters.includes( 'Instructor' );
+                break;
+              case 'assistant':
+                return ! filters.includes( 'Assistant' );
+                break;
+              default:
+                console.log( 'filter not found: ' + location )
+            }
+            return( false );
+          }
+
+        }
+      }
+    },
+    {
+      label: 'Actions',
+      name: 'id',
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          const user = props.usersList.filter((user)=>{
+            return value == user.id;
+          })[0]
+          var btn = null;
+          var lbl = ''
+          switch( user.status ){
+              case 'instructor':
+              case 'assistant':
+              case 'enrolled_student':
+                lbl ='Drop Student'
+                btn = (
+                  <Tooltip title={lbl}>
+                    <IconButton aria-label={lbl}
+                      onClick={(event)=>{
+                        fetch(user.drop_link, {
+                          method: "GET",
+                          credentials: "include",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Accepts: "application/json",
+                            "X-CSRF-Token": props.token
+                          }
+                        })
+                          .then(response => {
+                            if (response.ok) {
+                              return response.json();
+                            } else {
+                              console.log("error");
+                            }
+                          })
+                          .then(data => {
+                            getUsers( );
+                            props.addMessagesFunc( data.messages );
+                            props.setWorking( false )
+                          });
+
+                      } } >
+                      <DeleteForeverIcon/>
+                    </IconButton>
+                  </Tooltip>
+                )
+                break;
+              case 'invited_student':
+                lbl ='Re-Send Invitation'
+                btn = (
+                  <Tooltip title={lbl}>
+                    <IconButton aria-label={lbl}
+                      onClick={(event)=>{
+                        setWorking(true)
+                        fetch(user.reinvite_link, {
+                          method: "GET",
+                          credentials: "include",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Accepts: "application/json",
+                            "X-CSRF-Token": props.token
+                          }
+                        })
+                          .then(response => {
+                            if (response.ok) {
+                              return response.json();
+                            } else {
+                              console.log("error");
+                            }
+                          })
+                          .then(data => {
+                            getUsers( );
+                            props.addMessagesFunc( data.messages );
+                            props.setWorking( false )
+                          });
+
+                      } } >
+                      <EmailIcon/>
+                    </IconButton>
+                  </Tooltip>
+                )
+                break;
+              case 'requesting_student':
+                lbl ='Accept Student'
+                const lbl2 ='Decline Student'
+                btn = (
+                  <React.Fragment>
+
+                  <Tooltip title={lbl}>
+                    <IconButton aria-label={lbl}
+                      onClick={(event)=>{
+                        setWorking(true)
+                        fetch(procRegReqPath, {
+                          method: "PATCH",
+                          credentials: "include",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Accepts: "application/json",
+                            "X-CSRF-Token": props.token
+                          },
+                          body: JSON.stringify({
+                            roster_id: user.id,
+                            decision: true,
+                          })
+                        })
+                          .then(response => {
+                            if (response.ok) {
+                              return response.json();
+                            } else {
+                              console.log("error");
+                            }
+                          })
+                          .then(data => {
+                            getUsers( );
+                            props.addMessagesFunc( data.messages );
+                            props.setWorking( false )
+                          });
+
+                      } } >
+                      <CheckIcon/>
+                  </IconButton>
+
+                  </Tooltip>
+                  <Tooltip title={lbl2}>
+                    <IconButton aria-label={lbl2}
+                      onClick={(event)=>{
+                        setWorking(true)
+                        fetch(procRegReqPath, {
+                          method: "PATCH",
+                          credentials: "include",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Accepts: "application/json",
+                            "X-CSRF-Token": props.token
+                          },
+                          body: JSON.stringify({
+                            roster_id: user.id,
+                            decision: false,
+                          })
+                        })
+                          .then(response => {
+                            if (response.ok) {
+                              return response.json();
+                            } else {
+                              console.log("error");
+                            }
+                          })
+                          .then(data => {
+                            getUsers( );
+                            props.addMessagesFunc( data.messages );
+                            props.setWorking( false )
+                          });
+
+                      } } >
+                      <ClearIcon/>
+                  </IconButton>
+
+                  </Tooltip>
+                  </React.Fragment>
+                )
+                break;
+              case 'rejected_student':
+              case 'dropped_student':
+              case 'declined_student':
+                lbl ='Re-Add Student'
+                btn = (
+                  <Tooltip title={lbl}>
+                    <IconButton aria-label={lbl}
+                      onClick={(event)=>{
+                        setWorking(true)
+                        fetch(addUsersPath, {
+                          method: "PUT",
+                          credentials: "include",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Accepts: "application/json",
+                            "X-CSRF-Token": props.token
+                          },
+                          body: JSON.stringify({
+                            addresses: user.email,
+                          })
+                        })
+                          .then(response => {
+                            if (response.ok) {
+                              return response.json();
+                            } else {
+                              console.log("error");
+                            }
+                          })
+                          .then(data => {
+                            getUsers( );
+                            props.addMessagesFunc( data.messages );
+                            props.setWorking( false )
+                          });
+
+                      } } >
+                      <PersonAddIcon/>
+                    </IconButton>
+                  </Tooltip>
+                )
+                break;
+              default:
+                console.log( 'Status not found: ' + user.status )
+          }
+
+
+          return btn;
+        }
+      }
+    },
+  ]
+
+  if( 'instructor' == props.userType ){
+    userColumns = userColumns.filter((column)=>{
+      const toRemove = ['bingo_performance','experience_performance','assessment_performance','bingo_data'];
+      return !toRemove.includes( column.name );
+    });
+    userColumns[ userColumns.length - 2 ].options.filterOptions.names = ['Instructor', 'Assistant']
+  }
+
+  const closeDialog = ()=>{
+    setNewUserAddresses( '' );
+    setAddDialogOpen( false )
+  }
+
+
+  const iconForStatus = (status)=>{
+    var icon;
+    switch( status.toLowerCase() ){
+      case 'enrolled':
+      case 'enrolled_student':
+        icon = (
+          <Tooltip title='Enrolled'>
+            <CheckCircleOutlineIcon/>
+          </Tooltip>)
+        break;
+      case 'undetermined':
+      case 'invited_student':
+      case 'requesting_student':
+        icon = (
+          <Tooltip title='Awaiting Response'>
+            <HelpOutlineIcon/>
+          </Tooltip>)
+        break;
+      case 'dropped':
+       case 'rejected_student':
+       case 'dropped_student':
+       case 'declined_student':
+        icon = (
+          <Tooltip title='Not Enrolled'>
+            <NotInterestedIcon/>
+          </Tooltip>)
+        break;
+      case 'instructor':
+      case 'assistant':
+        icon = (
+          <Tooltip title='Instructor or Assistant'>
+            <SupervisedUserCircleIcon/>
+          </Tooltip>)
+        break;
+      default:
+        console.log( 'status not found: ' + status );
+
+    }
+    return icon;
+  }
+
+
+  const userList =(
+          ( null != props.usersList ) ?
+            (
+              <MUIDataTable
+                title={ 'instructor' ==props.userType ? 'Instructor' : 'Students'}
+                columns={userColumns}
+                data={props.usersList.filter((user)=>{
+                  const checkType = 'instructor' != user.status && 'assistant' != user.status
+                  return 'instructor' == props.userType ? !checkType : checkType;
+                })}
+                options={{
+                  responsive: 'scrollMaxHeight',
+                  filterType: 'checkbox',
+                  selectableRows: 'none',
+                  print: false,
+                  download: false,
+                  customToolbar: ()=>{
+                    const lbl ='Add ' + props.userType + 's' ;
+                    return (
+                      <React.Fragment>
+                        <Dialog 
+                          fullWidth={true}
+                          open={addDialogOpen}
+                          onClose={()=>closeDialog()}
+                          aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Add {props.userType}s</DialogTitle>
+                        <DialogContent>
+                          <DialogContentText>
+                            Add {props.userType}s by email:
+                          </DialogContentText>
+                          <TextField
+                            autoFocus
+                            margin="dense"
+                            id="addresses"
+                            label="Email Address"
+                            type="email"
+                            value={newUserAddresses}
+                            onChange={(event)=>setNewUserAddresses(event.target.value)}
+                            fullWidth
+                          />
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={()=>closeDialog()} color="primary">
+                            Cancel
+                          </Button>
+                          <Button onClick={()=>{
+                            props.setWorking(true)
+                            fetch(addUsersPath, {
+                              method: "PUT",
+                              credentials: "include",
+                              headers: {
+                                "Content-Type": "application/json",
+                                Accepts: "application/json",
+                                "X-CSRF-Token": props.token
+                              },
+                              body: JSON.stringify({
+                                id: props.courseId,
+                                addresses: newUserAddresses
+                              })
+                            })
+                              .then(response => {
+                                if (response.ok) {
+                                  return response.json();
+                                } else {
+                                  console.log("error");
+                                }
+                              })
+                              .then(data => {
+                                console.log( data );
+                                getUsers( );
+                                props.addMessagesFunc( data.messages );
+                                props.setWorking( false )
+                              });
+                              closeDialog();
+
+                          } }
+                          color="primary">
+                            Add {props.userType}s!
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+
+                      <Tooltip title={lbl}>
+                        <IconButton aria-label={lbl}
+                          onClick={(event)=>{
+                            setAddDialogOpen( true );
+                          }
+                        } >
+                          <GroupAddIcon/>
+                        </IconButton>
+                      </Tooltip>
+                      </React.Fragment>
+
+                    )
+                  }
+                }}
+              /> 
+            ) : null )
+
+
+
+  return (
+    <Paper>
+      {props.working ? <LinearProgress /> : null}
+      {(null != props.usersList ) ?
+      (
+        <React.Fragment>
+          {userList}
+          <br/>
+        </React.Fragment>
+      ): 'You must save the Course to have students assigned to it'}
+    </Paper>
+  );
+}
+
+CourseUsersList.propTypes = {
+  token: PropTypes.string.isRequired,
+  courseId: PropTypes.number.isRequired,
+  retrievalUrl: PropTypes.string.isRequired,
+  usersList: PropTypes.array,
+  usersListUpdateFunc: PropTypes.func.isRequired,
+
+  userType: PropTypes.oneOf(['student','instructor']),
+  addMessagesFunc: PropTypes.func.isRequired,
+  working: PropTypes.bool.isRequired,
+  setWorking: PropTypes.func.isRequired
+};

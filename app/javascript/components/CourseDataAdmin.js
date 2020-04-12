@@ -15,8 +15,7 @@ import Select from '@material-ui/core/Select'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
-
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Tooltip from '@material-ui/core/Tooltip'
 
 import {
   KeyboardDatePicker,
@@ -26,6 +25,7 @@ import {
 import { DateTime, Info } from "luxon";
 import Settings from 'luxon/src/settings.js'
 import { useUserStore } from "./UserStore"
+import CourseUsersList from './CourseUsersList'
 
 
 import LuxonUtils from "@date-io/luxon";
@@ -37,8 +37,9 @@ import GridOffIcon from '@material-ui/icons/GridOff';
 import TuneIcon from '@material-ui/icons/Tune';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close'
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import IconButton from "@material-ui/core/IconButton";
-import { Link } from "@material-ui/core";
+import Link from "@material-ui/core/Link";
 
 export default function CourseDataAdmin(props) {
 
@@ -55,6 +56,7 @@ export default function CourseDataAdmin(props) {
   const [courseName, setCourseName] = useState("");
   const [courseNumber, setCourseNumber] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
+  const [courseUsersList, setCourseUsersList] = useState( );
   const [courseActivities, setCourseActivities ] = useState( [] )
   const [courseStartDate, setCourseStartDate] = useState(
     DateTime.local().toISO( )
@@ -172,7 +174,7 @@ export default function CourseDataAdmin(props) {
         if (response.ok) {
           return response.json();
         } else {
-          setMessages(data.messages);
+          postNewMessage(data.messages);
           console.log("error");
         }
       })
@@ -197,10 +199,8 @@ export default function CourseDataAdmin(props) {
 
           setWorking(false);
           setDirty(false);
-        } else {
-          setShowErrors( true );
-        }
-        setMessages(data.messages);
+        } 
+        postNewMessage(data.messages);
       });
   };
   useEffect(() => {
@@ -237,6 +237,11 @@ export default function CourseDataAdmin(props) {
     courseStartDate,
     courseEndDate,
   ]);
+
+  const postNewMessage = (msgs)=>{
+    setMessages( msgs );
+    setShowErrors( true );
+  }
 
   const saveButton = dirty ? (
     <React.Fragment>
@@ -485,10 +490,46 @@ export default function CourseDataAdmin(props) {
       }
     },
     {
-      label: 'Actions',
+      label: ' ',
       name: 'link',
       options: {
         filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          const lbl = 'Delete'
+          return(
+                  <Tooltip title={lbl}>
+                    <IconButton aria-label={lbl}
+                      onClick={(event)=>{
+                        fetch(user.drop_link, {
+                          method: "DESTROY",
+                          credentials: "include",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Accepts: "application/json",
+                            "X-CSRF-Token": props.token
+                          }
+                        })
+                          .then(response => {
+                            if (response.ok) {
+                              return response.json();
+                            } else {
+                              console.log("error");
+                            }
+                          })
+                          .then(data => {
+                            getUsers( );
+                            setMessages( data.messages );
+                            setWorking( false )
+                          });
+
+                      } } >
+                      <DeleteForeverIcon/>
+                    </IconButton>
+                  </Tooltip>
+          )
+        }
+
       }
     },
   ]
@@ -546,10 +587,14 @@ export default function CourseDataAdmin(props) {
                   customToolbar: ()=>{
                     return addButton;
                   },
-                  onRowClick: (rowData, rowState) =>{
-                    const link = courseActivities[ rowState.dataIndex ].link
-                    if( null != link ){
-                      window.location.href = link
+                  onCellClick: (colData, cellMeta) =>{
+                    console.log( cellMeta );
+                    if( 'link' != activityColumns[cellMeta.colIndex].name){
+                      const link = courseActivities[cellMeta.rowIndex].link
+                      if( null != link ){
+                        window.location.href = link
+                      }
+
                     }
                   }
                 }}
@@ -578,13 +623,41 @@ export default function CourseDataAdmin(props) {
       </Collapse>
       <Tabs centered value={curTab} onChange={(event, value) => setCurTab(value)}>
         <Tab label="Details" value="details" />
-        <Tab value='people' label='People' />
+        <Tab value='instructors' label='Instructors' />
+        <Tab value='students' label='Students' />
         <Tab value='activities' label='Activities' />
       </Tabs>
       {working ? <LinearProgress /> : null}
       {"details" == curTab ? detailsComponent : null}
-      {"people" == curTab ? (
-        ('Coming soon!')
+      {"instructors" == curTab ? (
+        (
+          <CourseUsersList
+            token={props.token}
+            courseId={courseId}
+            retrievalUrl={endpoints.endpoints[endpointSet].courseUsersUrl + courseId + '.json'}
+            usersList={courseUsersList}
+            usersListUpdateFunc={setCourseUsersList}
+            userType='instructor'
+            working={working}
+            setWorking={setWorking}
+            addMessagesFunc={postNewMessage}
+          />
+        )
+      ) : null}
+      {"students" == curTab ? (
+        (
+          <CourseUsersList
+            token={props.token}
+            courseId={courseId}
+            retrievalUrl={endpoints.endpoints[endpointSet].courseUsersUrl + courseId + '.json'}
+            usersList={courseUsersList}
+            usersListUpdateFunc={setCourseUsersList}
+            userType='student'
+            working={working}
+            setWorking={setWorking}
+            addMessagesFunc={postNewMessage}
+          />
+        )
       ) : null}
       {"activities" == curTab ? activityList : null }
       {saveButton}

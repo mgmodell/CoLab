@@ -6,9 +6,9 @@ Rails.application.routes.draw do
     post 'courses/copy/:id' => 'courses#new_from_template',
         as: :copy_course,
         constraints: ->(req) { req.format == :json }
-    get 'courses/add_students' => 'courses#add_students',
+    put 'courses/add_students' => 'courses#add_students',
         as: :add_students
-    get 'courses/add_instructors' => 'courses#add_instructors',
+    put 'courses/add_instructors' => 'courses#add_instructors',
         as: :add_instructors
     get 'courses/re_invite_student/:user_id' => 'courses#re_invite_student',
         as: :re_invite_student
@@ -113,6 +113,8 @@ Rails.application.routes.draw do
   get 'exeriences/reaction' => 'experiences#react', as: :react
 
   get 'course/users/:id' => 'courses#get_users', as: :get_users,
+        constraints: ->(req) { req.format == :json }
+  get 'experience/reactions/:id' => 'experiences#get_reactions', as: :get_reactions,
         constraints: ->(req) { req.format == :json }
   get 'course/accept/:roster_id' => 'courses#accept_roster', as: :accept_roster
   get 'course/decline/:roster_id' => 'courses#decline_roster', as: :decline_roster

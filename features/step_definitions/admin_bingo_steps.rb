@@ -17,7 +17,7 @@ end
 
 Then /^the user clicks "([^"]*)" on the existing bingo game$/ do |action|
   click_link_or_button 'Activities'
-  find(:xpath, "//tr[td[contains(.,'#{@bingo.get_name(@anon)}')]]/td/a", text: action).click
+  find(:xpath, "//tr[td[contains(.,'#{@bingo.get_name(@anon)}')]]" ).click
 end
 
 Then /^retrieve the latest Bingo! game from the db$/ do

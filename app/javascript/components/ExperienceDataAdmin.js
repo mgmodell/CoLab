@@ -18,6 +18,7 @@ import {
 
 import { DateTime, Info } from "luxon";
 import Settings from 'luxon/src/settings.js'
+import ReactionsList from './ReactionsList';
 
 
 import LuxonUtils from "@date-io/luxon";
@@ -51,6 +52,8 @@ export default function ExperienceDataAdmin(props) {
       .toISO()
   );
   const [experienceActive, setExperienceActive] = useState(false);
+  const [reactionsUrl, setReactionsUrl] = useState( );
+  const [reactionData, setReactionData] = useState( );
   const [courseName, setCourseName] = useState("");
   const [courseTimezone, setCourseTimezone] = useState( 'UTC');
 
@@ -84,6 +87,7 @@ export default function ExperienceDataAdmin(props) {
 
         setCourseName(course.name);
         setCourseTimezone( course.timezone );
+        setReactionsUrl( data.reactionsUrl );
         Settings.defaultZoneName = course.timezone;
 
         setExperienceName(experience.name || "");
@@ -279,6 +283,17 @@ export default function ExperienceDataAdmin(props) {
       {messages.status}
     </Paper>
   );
+
+  const reactionListing = experienceId > 0 ? (
+        <ReactionsList
+          token={props.token}
+          retrievalUrl={reactionsUrl}
+          reactionsList={reactionData}
+          reactionsListUpdateFunc={setReactionData}
+          working={working}
+          setWorking={setWorking}
+          />
+  ) : 'The Experience must be created before students can react to it.'
   return (
     <Paper>
       <Tabs value={curTab} onChange={(event, value) => setCurTab(value)}>
@@ -287,7 +302,7 @@ export default function ExperienceDataAdmin(props) {
       </Tabs>
       {"details" == curTab ? detailsComponent : null}
       {"groups" == curTab ? (
-        ('Coming soon!')
+        {reactionListing}
       ) : null}
     </Paper>
   );

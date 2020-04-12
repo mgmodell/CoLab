@@ -9,10 +9,10 @@ class CoursesController < ApplicationController
   before_action :check_admin, only: %i[new create]
   before_action :check_editor, except: %i[next diagnose react accept_roster
                                           decline_roster show index
-                                          self_reg_confirm self_reg]
+                                          self_reg_confirm self_reg qr]
   before_action :check_viewer, except: %i[next diagnose react accept_roster
                                           decline_roster
-                                          self_reg_confirm self_reg]
+                                          self_reg_confirm self_reg qr]
   skip_before_action :authenticate_user!, only: %i[qr get_quote]
 
   #TimeZones constant
@@ -75,23 +75,26 @@ class CoursesController < ApplicationController
   def get_users
     rosters = @course.rosters
     users = @course.rosters.collect do |roster|
+      puts "\n\n\n\t***no user\n" unless roster.user.present?
+      # byebug unless roster.user.present?
       {
+        id: roster.id,
         first_name: @anon ? roster.user.anon_first_name : roster.user.first_name,
         last_name: @anon ? roster.user.anon_last_name : roster.user.last_name,
         email: @anon ? "#{roster.user.last_name_anon}@mailinator.com" : roster.user.email,
+        bingo_data: current_user.get_bingo_data( course_id: @course.id ),
+        bingo_performance: current_user.get_bingo_performance( course_id: @course.id ),
+        assessment_performance: current_user.get_assessment_performance( course_id: @course.id ),
+        experience_performance: current_user.get_experience_performance( course_id: @course.id ),
+        status: roster.role,
         drop_link: drop_student_path( roster_id: roster.id ),
-        drop_link: drop_student_path( roster_id: roster.id ),
-        reinvite_link: re_invite_student_path( user_id: roster.user.id ),
-        bingo_data: user.get_bingo_data( course_id: @course.id ),
-        get_bingo_performance: user.get_get_bingo_performance( course_id: @course.id ),
-        get_assessment_performance: user.get_get_assessment_performance( course_id: @course.id ),
-        get_experience_performance: user.get_get_experience_performance( course_id: @course.id ),
-        status: roster.role
+        reinvite_link: re_invite_student_path( user_id: roster.user.id )
       }
     end
     response = {
       users: users,
       add_function: {
+        proc_self_reg: proc_course_reg_requests_path,
         instructor: add_instructors_path,
         students: add_students_path
       }
@@ -410,12 +413,28 @@ class CoursesController < ApplicationController
 
   def add_students
     count = @course.add_students_by_email params[:addresses]
-    redirect_to @course, notice: t('courses.students_invited', count: count)
+    msg = t('courses.students_invited', count: count) 
+    respond_to do |format|
+      format.html do
+        redirect_to @course, notice: msg
+      end
+      format.json do
+        render json: { messages: { main: msg }}
+      end
+    end
   end
 
   def add_instructors
     count = @course.add_instructors_by_email params[:addresses]
-    redirect_to @course, notice: t('courses.instructor_invited', count: count)
+    msg = t('courses.instructor_invited', count: count)
+    respond_to do |format|
+      format.html do
+        redirect_to @course, notice: msg
+      end
+      format.json do
+        render json: { messages: { main: msg }}
+      end
+    end
   end
 
   def accept_roster
@@ -465,29 +484,53 @@ class CoursesController < ApplicationController
   def re_invite_student
     user = User.find(params[:user_id])
     AdministrativeMailer.re_invite(user).deliver_later
-    redirect_to :admin
+    respond_to do |format|
+      format.html do
+        redirect_to :admin
+      end
+      format.json do
+        render json: {
+          messages: {
+            main: message || 'Successfully reinvited'
+          }
+        }
+      end
+    end
   end
 
   def drop_student
     r = Roster.find(params[:roster_id])
+    message = nil
+    destination = :root
     if r.nil?
-      flash[:notice] = t('courses.no_roster')
-      flash.keep
-      redirect_to :root
+      message = t('courses.no_roster')
     else
       instructor_action = r.user != current_user
       if !instructor_action && r.user != current_user
-        flash[:notice] = t('courses.permission_fail')
-        flash.keep
-        redirect_to :root
+        message = t('courses.permission_fail')
       else
         r.role = Roster.roles[:dropped_student]
         r.save
         if instructor_action
-          redirect_to course_path(r.course)
-        else
-          redirect_to :root
+          destination = course_path(r.course)
         end
+      end
+    end
+    respond_to do |format|
+      format.json do
+        render json: {
+          messages: {
+            main: message || 'Successfully dropped'
+          }
+        }
+      end
+      format.html do
+        unless message.nil?
+          flash[:notice] = message
+          flash.keep
+        end
+        redirect_to destination
+        
       end
     end
   end

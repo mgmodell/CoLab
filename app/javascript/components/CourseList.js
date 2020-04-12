@@ -7,33 +7,23 @@ import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip'
 import {DateTime} from 'luxon'
 import Settings from 'luxon/src/settings.js'
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider
-} from "@material-ui/pickers";
-import LuxonUtils from '@date-io/luxon';
 
 
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import BookIcon from '@material-ui/icons/Book';
-import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { useEndpointStore } from "./EndPointStore"
 import { useUserStore } from "./UserStore"
+import CopyActivityButton from './CopyActivityButton'
 import MUIDataTable from "mui-datatables";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import { DialogActions, Button, Collapse } from "@material-ui/core";
+import Collapse from '@material-ui/core/Collapse'
 
 export default function CourseList(props) {
   const endpointSet = 'course';
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
-  const [copyData, setCopyData] = useState( null );
   const [messages, setMessages] = useState()
   const [showErrors, setShowErrors] = useState( false );
 
@@ -165,21 +155,17 @@ export default function CourseList(props) {
                               <CloudDownloadIcon/>
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Create a copy based on this course" aria-label="Copy">
-                          <IconButton
-                            id={'copy-' + value }
-                            onClick={event=>{
-                              const element = courses.filter((element)=>{return value == element.id })[0]
-                              setCopyData( {
-                                id: value,
-                                startDate: DateTime.fromISO( element.start_date ),
-                                copyUrl: copyUrl
-                              } );
-                            }}
-                            aria-label='Make a Copy'>
-                              <CollectionsBookmarkIcon/>
-                          </IconButton>
-                        </Tooltip>
+                        <CopyActivityButton
+                          token={props.token}
+                          copyUrl={endpoints.endpoints[endpointSet].courseCopyUrl}
+                          itemId={value}
+                          itemUpdateFunc={getCourses}
+                          startDate={new Date( courses[tableMeta.rowIndex].start_date )}
+                          isWorking={working}
+                          setIsWorking={setWorking}
+                          addMessagesFunc={postNewMessage}
+                          />
+                        
                       </React.Fragment>
                     )
                   }
@@ -189,90 +175,10 @@ export default function CourseList(props) {
 
   const [courses, setCourses] = useState( [ ] );
   const [newStartDate, setNewStartDate] = useState( DateTime.local().toISO() );
-  const copyDialog = (
-                       <Dialog
-                         open={null != copyData}
-                         PaperComponent={PaperComponent}
-                         onClose={(event,reason)=>{
-                           setNewStartDate( DateTime.local().toISO( ) )
-                           setNewStartDate( null )
-                           setCopyData( null )
-                         }}
-                         >
-                           {null != copyData ? (
-                             <React.Fragment>
-
-                              <DialogTitle>Create a Copy</DialogTitle>
-                              <DialogContent>
-                                {working ? <LinearProgress/> : null }
-                                <DialogContentText>
-                                  This course started on {copyData.startDate.toLocaleString(DateTime.DATE_SHORT)}.
-                                  When would you like for the new copy to begin? Everything will be shifted accordingly.
-                                  <br/>
-
-                                </DialogContentText>
-                                 <MuiPickersUtilsProvider utils={LuxonUtils}>
-                                   <KeyboardDatePicker
-                                     variant='inline'
-                                     autoOk={true}
-                                     format="MM/dd/yyyy"
-                                     margin='normal'
-                                     id='newCourseStartDate'
-                                     label="New course start date?"
-                                     value={newStartDate}
-                                     onChange={setNewStartDate}
-                                   />
-                                  </MuiPickersUtilsProvider>
-                              </DialogContent>
-                              <DialogActions>
-                                <Button disabled={working} onClick={(event)=>{
-                                    setNewStartDate( DateTime.local().toISO( ) );
-                                    setNewStartDate( null );
-                                    setCopyData(null)
-                                  }}
-                                  >
-                                  Cancel
-                                </Button>
-                                <Button disabled={working} onClick={(event)=>{
-                                  setWorking( true );
-                                  console.log( newStartDate );
-                                  fetch( copyData.copyUrl ,{
-                                    method: 'POST',
-                                    credentials: 'include',
-                                    headers: {
-                                      'Content-Type': 'application/json',
-                                      Accepts: 'application/json',
-                                      'X-CSRF-Token': props.token
-                                    },
-                                    body: JSON.stringify({
-                                      start_date: newStartDate
-                                    })
-                                  })
-                                  .then(response=>{
-                                    if( response.ok ){
-                                      return response.json()
-                                    }else{
-                                      console.log( 'Error' )
-                                    }
-                                  })
-                                  .then(data =>{
-                                      setMessages( data.messages )
-                                      getCourses();
-                                      setNewStartDate( DateTime.local().toISO( ) )
-                                      setCopyData( null );
-                                      setWorking( false );
-                                  })
-                                }}
-                                >
-                                  Make a Copy
-                                </Button>
-                              </DialogActions> 
-                             </React.Fragment> ) : <DialogContent></DialogContent> }
-                       </Dialog> )
 
 
   const getCourses = () => {
-    var url = endpoints.endpoints[endpointSet].baseUrl + '.json';
+    const url = endpoints.endpoints[endpointSet].baseUrl + '.json';
 
     fetch(url, {
       method: 'GET',
@@ -321,6 +227,11 @@ export default function CourseList(props) {
   }, [
     user.loaded
   ]);
+
+  const postNewMessage = (msgs)=>{
+    setMessages( msgs );
+    setShowErrors( true );
+  }
 
   const muiDatTab = (
     <MUIDataTable
@@ -381,7 +292,6 @@ export default function CourseList(props) {
       </Collapse>
       {working ? <LinearProgress/> : null }
       <div style={{ maxWidth: '100%' }}>
-        {copyDialog}
         {muiDatTab}
       </div>
     </React.Fragment>
