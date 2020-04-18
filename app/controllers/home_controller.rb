@@ -32,10 +32,9 @@ class HomeController < ApplicationController
 
     respond_to do |format|
       format.json do
-        render json: waiting_tasks_hash = waiting_tasks.collect{|t|t.task_data( current_user: current_user )}
+        render json: waiting_tasks_hash = waiting_tasks.collect { |t| t.task_data(current_user: current_user) }
       end
     end
-
   end
 
   def endpoints
@@ -44,7 +43,7 @@ class HomeController < ApplicationController
     when 'home'
       ep_hash = {
         supportAddress: 'Support@CoLab.online',
-        logoPath: ActionController::Base.helpers.asset_path( 'CoLab_small.png' ),
+        logoPath: ActionController::Base.helpers.asset_path('CoLab_small.png'),
         quotePath: get_quote_path,
         moreInfoUrl: 'http://PeerAssess.info',
         demoUrl: demo_start_path,
@@ -53,15 +52,15 @@ class HomeController < ApplicationController
         diversityScoreFor: check_diversity_score_path
       }
       if user_signed_in?
-        ep_hash[ :profileUrl] = edit_user_registration_path(current_user)
-        ep_hash[ :logoutUrl ] = logout_path
+        ep_hash[:profileUrl] = edit_user_registration_path(current_user)
+        ep_hash[:logoutUrl] = logout_path
         if current_user.is_admin? || current_user.is_instructor?
-          ep_hash[ :adminUrl] = admin_path
-          ep_hash[ :coursesPath ] = courses_path
-          ep_hash[ :schoolsPath ] = schools_path
-          ep_hash[ :conceptsPath ] = concepts_path
-          ep_hash[ :projectsPath ] = projects_path
-          ep_hash[ :reportingUrl ] = graphing_path
+          ep_hash[:adminUrl] = admin_path
+          ep_hash[:coursesPath] = courses_path
+          ep_hash[:schoolsPath] = schools_path
+          ep_hash[:conceptsPath] = concepts_path
+          ep_hash[:projectsPath] = projects_path
+          ep_hash[:reportingUrl] = graphing_path
         end
       end
     when 'project'
@@ -70,16 +69,16 @@ class HomeController < ApplicationController
         activateProjectUrl: activate_project_path,
         diversityCheckUrl: check_diversity_score_path,
         groupsUrl: groups_path(id: ''),
-        diversityRescoreGroup: rescore_group_path(id: '' ),
-        diversityRescoreGroups: rescore_groups_path(id: '' )
+        diversityRescoreGroup: rescore_group_path(id: ''),
+        diversityRescoreGroups: rescore_groups_path(id: '')
       }
     when 'course'
       ep_hash = {
         baseUrl: courses_path,
         courseCreateUrl: new_course_path,
-        courseUsersUrl: get_users_path( id: '' ),
-        scoresUrl: course_scores_path( id: '' ),
-        courseCopyUrl: copy_course_path( id: '' )
+        courseUsersUrl: get_users_path(id: ''),
+        scoresUrl: course_scores_path(id: ''),
+        courseCopyUrl: copy_course_path(id: '')
       }
     when 'experience'
       ep_hash = {
@@ -88,7 +87,7 @@ class HomeController < ApplicationController
     when 'bingo_game'
       ep_hash = {
         baseUrl: bingo_games_path,
-        gameResultsUrl: game_results_path( id: '' )
+        gameResultsUrl: game_results_path(id: '')
       }
     when 'concept'
       ep_hash = {
@@ -101,7 +100,6 @@ class HomeController < ApplicationController
         render json: ep_hash
       end
     end
-
   end
 
   def get_quote
@@ -115,7 +113,7 @@ class HomeController < ApplicationController
   def simple_profile
     respond_to do |format|
       format.json do
-        tz = ActiveSupport::TimeZone.new( @current_user.timezone ).tzinfo.name
+        tz = ActiveSupport::TimeZone.new(@current_user.timezone).tzinfo.name
         render json: {
           id: @current_user.id,
           first_name: @current_user.first_name,

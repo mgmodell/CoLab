@@ -18,7 +18,7 @@ import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { SortDirection } from "react-virtualized";
 
-import WrappedVirtualizedTable from "../components/WrappedVirtualizedTable";
+import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
 
 import { useEndpointStore } from "./EndPointStore"
 

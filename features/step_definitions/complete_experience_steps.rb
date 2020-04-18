@@ -40,10 +40,10 @@ Then /^the user chooses the "([^"]*)" radio button$/ do |choice|
   inputId = find(:xpath, '//label[text()="' + choice + '"]')[:for]
   checkbox = find(:xpath, "//input[@id='#{inputId}']")
   begin
-    #Chrome does it this way
+    # Chrome does it this way
     checkbox.find(:xpath, '../..').click
   rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
-    #Firefox does it this way
+    # Firefox does it this way
     checkbox.find(:xpath, '..').click
   end
   # JQueryMobile makes the enclosing span clickable

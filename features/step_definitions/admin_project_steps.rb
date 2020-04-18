@@ -1,13 +1,13 @@
 require 'chronic'
 # frozen_string_literal: true
 Then /^the user "([^"]*)" see an Admin button$/ do |admin|
-  find( :xpath, '//*[@id="main-menu-button"]').click
+  find(:xpath, '//*[@id="main-menu-button"]').click
   if admin == 'does'
     page.should have_content('Administration')
   else
     page.should_not have_content('Administration')
   end
-  page.document.first( :id, 'home-menu-item' ).send_keys :escape
+  page.document.first(:id, 'home-menu-item').send_keys :escape
 end
 
 Given /^the user is an admin$/ do
@@ -17,8 +17,8 @@ Given /^the user is an admin$/ do
 end
 
 Then /^the user clicks the Admin button$/ do
-  find( :xpath, '//*[@id="main-menu-button"]').click
-  find( :xpath, '//*[@id="administration-menu"]').click
+  find(:xpath, '//*[@id="main-menu-button"]').click
+  find(:xpath, '//*[@id="administration-menu"]').click
 end
 
 Then /^the user sees (\d+) course$/ do |course_count|
@@ -35,13 +35,13 @@ Then('retrieve the instructor user') do
 end
 
 Then /^the user opens the course$/ do
-  elem = find( :xpath, "//td[contains(.,'#{@course.get_name(@anon)}')]")
+  elem = find(:xpath, "//td[contains(.,'#{@course.get_name(@anon)}')]")
   elem.click
 end
 
 Then /^the user creates a new "([^"]*)"$/ do |link_or_button|
-  find( :xpath, '//button[@aria-label="Add Activity"]').click
-  find( :xpath, "//li[contains(.,'#{link_or_button}')]").click
+  find(:xpath, '//button[@aria-label="Add Activity"]').click
+  find(:xpath, "//li[contains(.,'#{link_or_button}')]").click
 end
 
 Then /^the user clicks "([^"]*)"$/ do |link_or_button|
@@ -69,15 +69,12 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
 end
 
 Then /^the user switches to the "([^"]*)" tab$/ do |tab|
-  unless 'Task View' == tab
+  unless tab == 'Task View'
     begin
       click_link tab
-      
-    rescue Capybara::ElementNotFound => exception
-      find( :xpath, "//*[text()='#{tab}']").click
-      
+    rescue Capybara::ElementNotFound => e
+      find(:xpath, "//button/span[text()='#{tab}']").click
     else
-      
     end
   end
 end
@@ -171,10 +168,10 @@ Then /^the project "([^"]*)" is "([^"]*)"$/ do |field, value|
   end
 end
 
-Then /^the user clicks "([^"]*)" on the existing project$/ do |action|
+Then /^the user clicks "([^"]*)" on the existing project$/ do |_action|
   click_link_or_button 'Activities'
   elem = find(:xpath, "//td[contains(.,'#{@project.name}')]")
-  #elem = find(:xpath, "//tr[td[contains(.,'#{@project.name}')]]/td/a", text: action)
+  # elem = find(:xpath, "//tr[td[contains(.,'#{@project.name}')]]/td/a", text: action)
   elem.click
 end
 
@@ -198,7 +195,7 @@ Then /^set user (\d+) to group "([^"]*)"$/ do |user_number, group_name|
   group = Group.where(name: group_name).take
   button_id = 'user_group_' + user.id.to_s + '_' + group.id.to_s
 
-  find( :xpath, "//input[@id='#{button_id}']", visible: :all ).click
+  find(:xpath, "//input[@id='#{button_id}']", visible: :all).click
 end
 
 Then /^group "([^"]*)" has (\d+) user$/ do |group_name, user_count|
@@ -209,17 +206,17 @@ Then /^group "([^"]*)" has (\d+) revision$/ do |group_name, revision_count|
   Group.where(name: group_name).take.group_revisions.count.should eq revision_count.to_i
 end
 
-Then("the user selects the {string} menu item") do |menu_item|
-  find( :xpath, "//*[@id='#{menu_item.downcase}-menu-item']").click
+Then('the user selects the {string} menu item') do |menu_item|
+  find(:xpath, "//*[@id='#{menu_item.downcase}-menu-item']").click
 end
 
-Then("the user clicks the {string} button") do |button_name|
-  elem = find( :xpath, "//button[@aria-label='#{button_name}']" )
+Then('the user clicks the {string} button') do |button_name|
+  elem = find(:xpath, "//button[@aria-label='#{button_name}']")
   elem.click
 end
 
-Then("the user clicks the course {string} button") do |button_name|
-  xquery = "//tr[contains(.,'#{@course.get_name( false )}')]//button[@aria-label='#{button_name}']"
-  elem = find( :xpath, xquery )
+Then('the user clicks the course {string} button') do |button_name|
+  xquery = "//tr[contains(.,'#{@course.get_name(false)}')]//button[@aria-label='#{button_name}']"
+  elem = find(:xpath, xquery)
   elem.click
 end

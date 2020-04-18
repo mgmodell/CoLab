@@ -20,7 +20,7 @@ class ProjectsController < ApplicationController
         course_hash = {
           id: @project.course_id,
           name: @project.course.name,
-          timezone: ActiveSupport::TimeZone.new( @project.course.timezone ).tzinfo.name
+          timezone: ActiveSupport::TimeZone.new(@project.course.timezone).tzinfo.name
         }
         response = {
           project: @project.as_json(
@@ -108,7 +108,7 @@ class ProjectsController < ApplicationController
       respond_to do |format|
         format.html do
           notice = @project.active ?
-                t( 'projects.update_success') :
+                t('projects.update_success') :
                 t('projects.update_success_inactive')
           redirect_to @project, notice: notice
         end
@@ -123,8 +123,8 @@ class ProjectsController < ApplicationController
             ),
             messages: {
               status: @project.active ?
-              t( 'projects.update_success') :
-              t( 'projects.update_success_inactive')
+              t('projects.update_success') :
+              t('projects.update_success_inactive')
             }
           }
           render json: response
@@ -153,7 +153,6 @@ class ProjectsController < ApplicationController
     project = Project.includes(:groups, course: { rosters: :user })
                      .find_by(id: params[:id])
 
-
     group_hash = {}
     params[:groups].values.each do |g|
       group = nil
@@ -171,18 +170,17 @@ class ProjectsController < ApplicationController
       group = group_hash[s[:group_id]]
       group.users << student unless group.nil?
     end
-  
+
     begin
       ActiveRecord::Base.transaction do
         group_hash.values.each(&:save!)
       end
-    rescue => exception
+    rescue StandardError => e
       # Post back a JSON error
-      get_groups_helper project: project, message: t( 'projects.group_save_failure')
+      get_groups_helper project: project, message: t('projects.group_save_failure')
     else
-      get_groups_helper project: project, message: t( 'projects.group_save_success')
+      get_groups_helper project: project, message: t('projects.group_save_success')
     end
-
   end
 
   def get_groups
@@ -194,7 +192,7 @@ class ProjectsController < ApplicationController
     get_groups_helper project: project
   end
 
-  def get_groups_helper project:, message: nil
+  def get_groups_helper(project:, message: nil)
     students = {}
     project.rosters.enrolled.each do |roster|
       student = roster.user

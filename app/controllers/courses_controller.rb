@@ -15,55 +15,55 @@ class CoursesController < ApplicationController
                                           self_reg_confirm self_reg qr]
   skip_before_action :authenticate_user!, only: %i[qr get_quote]
 
-  #TimeZones constant
-  TIMEZONES ||= ActiveSupport::TimeZone.all.collect{ |tz|
+  # TimeZones constant
+  TIMEZONES ||= ActiveSupport::TimeZone.all.collect do |tz|
     {
       name: tz.name,
       stdName: tz.tzinfo.name
 
     }
-  }
+  end
   def show
     @title = t('.title')
     respond_to do |format|
-      format.html{ render :show }
+      format.html { render :show }
       format.json do
         response = {
           course: @course.as_json(
             only: %i[ id name number description timezone
-                    school_id start_date end_date
-                    consent_form_id ]
+                      school_id start_date end_date
+                      consent_form_id ]
           ),
           timezones: CoursesController::TIMEZONES,
           schools: School.all.as_json(
-            only: %i[ id name timezone ]
+            only: %i[id name timezone]
           ),
-          consent_forms: ConsentForm.where( active: true ).as_json(
-            only: %i[ id name]
+          consent_forms: ConsentForm.where(active: true).as_json(
+            only: %i[id name]
           )
         }
         if @course.id && @course.id > 0
           response[:new_activity_links] = [
-            {name: 'Group Experience', link: new_experience_path( course_id: @course.id )},
-            {name: 'Project', link: new_project_path( course_id: @course.id )},
-            {name: 'Terms List', link: new_bingo_game_path( course_id: @course.id )}
+            { name: 'Group Experience', link: new_experience_path(course_id: @course.id) },
+            { name: 'Project', link: new_project_path(course_id: @course.id) },
+            { name: 'Terms List', link: new_bingo_game_path(course_id: @course.id) }
           ]
-          activities = @course.get_activities.collect{|activity|
+          activities = @course.get_activities.collect do |activity|
             {
               id: activity.id,
-              name: activity.get_name( @anon ),
+              name: activity.get_name(@anon),
               active: activity.active,
               type: activity.type,
               start_date: activity.start_date,
               end_date: activity.end_date,
               link: activity.get_link
             }
-          }
+          end
           response[:course][:activities] = activities
-          response[:course][:reg_link] = course_reg_qr_path( id: @course.id )
+          response[:course][:reg_link] = course_reg_qr_path(id: @course.id)
         else
-          response[:new_activity_links] = [ ]
-          response[:course][:activities] = [ ]
+          response[:new_activity_links] = []
+          response[:course][:activities] = []
 
         end
         response[:messages] = {}
@@ -74,21 +74,31 @@ class CoursesController < ApplicationController
 
   def get_users
     rosters = @course.rosters
+    users = []
+    @course.rosters.each do |roster|
+      byebug if roster.user.blank?
+
+      users << {
+        id: roster.id
+      }
+    end
+
     users = @course.rosters.collect do |roster|
-      puts "\n\n\n\t***no user\n" unless roster.user.present?
-      # byebug unless roster.user.present?
+      puts "\n\n\n\t***no user\n" if roster.user.blank?
+      user = roster.user
+      byebug if roster.user.blank?
       {
         id: roster.id,
-        first_name: @anon ? roster.user.anon_first_name : roster.user.first_name,
-        last_name: @anon ? roster.user.anon_last_name : roster.user.last_name,
-        email: @anon ? "#{roster.user.last_name_anon}@mailinator.com" : roster.user.email,
-        bingo_data: current_user.get_bingo_data( course_id: @course.id ),
-        bingo_performance: current_user.get_bingo_performance( course_id: @course.id ),
-        assessment_performance: current_user.get_assessment_performance( course_id: @course.id ),
-        experience_performance: current_user.get_experience_performance( course_id: @course.id ),
+        first_name: @anon ? user.anon_first_name : user.first_name,
+        last_name: @anon ? user.anon_last_name : user.last_name,
+        email: @anon ? "#{user.last_name_anon}@mailinator.com" : user.email,
+        bingo_data: user.get_bingo_data(course_id: @course.id),
+        bingo_performance: user.get_bingo_performance(course_id: @course.id),
+        assessment_performance: user.get_assessment_performance(course_id: @course.id),
+        experience_performance: user.get_experience_performance(course_id: @course.id),
         status: roster.role,
-        drop_link: drop_student_path( roster_id: roster.id ),
-        reinvite_link: re_invite_student_path( user_id: roster.user.id )
+        drop_link: drop_student_path(roster_id: roster.id),
+        reinvite_link: re_invite_student_path(user_id: roster.user.id)
       }
     end
     response = {
@@ -291,10 +301,9 @@ class CoursesController < ApplicationController
             experience_count: r.experiences.size,
             bingo_game_count: r.bingo_games.size,
             actions: {
-              course_scores: course_scores_path( id: r.id ),
-              create_copy: copy_course_path( id: r.id )
-            }
-          }
+              course_scores: course_scores_path(id: r.id),
+              create_copy: copy_course_path(id: r.id)
+            } }
         end
         render json: resp
       end
@@ -323,7 +332,7 @@ class CoursesController < ApplicationController
     respond_to do
       format.json do
         notice = copied_course.errors.empty? ? t('courses.copy_success') : t('courses.copy_fail')
-        render json: { messages: {main: notice } }
+        render json: { messages: { main: notice } }
       end
     end
   end
@@ -344,10 +353,10 @@ class CoursesController < ApplicationController
           response = {
             course: @course.as_json(
               only: %i[ id name number description timezone
-                      school_id start_date end_date
-                      consent_form_id ]
+                        school_id start_date end_date
+                        consent_form_id ]
             ),
-            messages: {main: notice }
+            messages: { main: notice }
           }
           render json: response
         end
@@ -382,10 +391,10 @@ class CoursesController < ApplicationController
           response = {
             course: @course.as_json(
               only: %i[ id name number description timezone
-                      school_id start_date end_date
-                      consent_form_id ]
+                        school_id start_date end_date
+                        consent_form_id ]
             ),
-            messages: {main: notice }
+            messages: { main: notice }
           }
           render json: response
         end
@@ -398,7 +407,7 @@ class CoursesController < ApplicationController
         end
         format.json do
           response = {
-            messages: @course.errors.store( :main, 'Please review the problems below')
+            messages: @course.errors.store(:main, 'Please review the problems below')
           }
           render json: response
         end
@@ -413,13 +422,13 @@ class CoursesController < ApplicationController
 
   def add_students
     count = @course.add_students_by_email params[:addresses]
-    msg = t('courses.students_invited', count: count) 
+    msg = t('courses.students_invited', count: count)
     respond_to do |format|
       format.html do
         redirect_to @course, notice: msg
       end
       format.json do
-        render json: { messages: { main: msg }}
+        render json: { messages: { main: msg } }
       end
     end
   end
@@ -432,7 +441,7 @@ class CoursesController < ApplicationController
         redirect_to @course, notice: msg
       end
       format.json do
-        render json: { messages: { main: msg }}
+        render json: { messages: { main: msg } }
       end
     end
   end
@@ -511,9 +520,7 @@ class CoursesController < ApplicationController
       else
         r.role = Roster.roles[:dropped_student]
         r.save
-        if instructor_action
-          destination = course_path(r.course)
-        end
+        destination = course_path(r.course) if instructor_action
       end
     end
     respond_to do |format|
@@ -530,7 +537,6 @@ class CoursesController < ApplicationController
           flash.keep
         end
         redirect_to destination
-        
       end
     end
   end
@@ -540,19 +546,19 @@ class CoursesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_course
     if current_user.is_admin?
-      if params[:id].blank? || params[:id] == 'new'
-        @course = Course.new(
-          school_id: current_user.school_id,
-          timezone: current_user.timezone
-        )
-      else
-        @course = Course.includes(:users).find(params[:id])
-      end
+      @course = if params[:id].blank? || params[:id] == 'new'
+                  Course.new(
+                    school_id: current_user.school_id,
+                    timezone: current_user.timezone
+                  )
+                else
+                  Course.includes(:users).find(params[:id])
+                end
     else
       @course = current_user
                 .rosters.instructor
                 .where(course_id: params[:id]).take.course
-      #TODO: This can't be right and must be fixed for security later
+      # TODO: This can't be right and must be fixed for security later
       redirect_to :show if @course.nil?
     end
   end

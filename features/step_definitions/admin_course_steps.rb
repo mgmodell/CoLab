@@ -15,18 +15,18 @@ Given "the user's school is {string}" do |school_name|
 end
 
 Then 'the user sets the start date to {string} and the end date to {string}' do |start_date, end_date|
-  #new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%Y-%m-%dT%T')
+  # new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%Y-%m-%dT%T')
   new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%m-%d-%Y')
   page.find('#course_start_date').set(new_date)
-  #new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%Y-%m-%dT%T')
+  # new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%Y-%m-%dT%T')
   new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%m-%d-%Y')
   page.find('#course_end_date').set(new_date)
 end
 
 Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
   field_lbl = 'Time Zone'
-  lbl = find( :xpath, "//label[text()='#{field_lbl}']")
-  elem = find( :xpath, "//*[@id='#{lbl[:for]}']")
+  lbl = find(:xpath, "//label[text()='#{field_lbl}']")
+  elem = find(:xpath, "//*[@id='#{lbl[:for]}']")
 
   if is_or_isnt == 'is'
     elem.text.should eq timezone
@@ -38,10 +38,10 @@ end
 Then 'the user sets the course timezone to {string}' do |timezone|
   field_lbl = 'Time Zone'
   lbl = find(:xpath, "//label[text()='#{field_lbl}']")
-  elem = find( :xpath, "//*[@id='#{lbl[:for]}']")
+  elem = find(:xpath, "//*[@id='#{lbl[:for]}']")
   elem.click
 
-  menu_item = find( :xpath, "//li[text()='#{timezone}']")
+  menu_item = find(:xpath, "//li[text()='#{timezone}']")
   menu_item.click
 end
 
@@ -163,10 +163,8 @@ Then 'set the new course start date to {string}' do |new_date|
 
   @new_date = Chronic.parse(new_date)
 
-  #byebug
-  #elem.send_keys :backspace
   elem.click
-  elem.set( @new_date.strftime('%m/%d/%Y') )
+  elem.set(@new_date.strftime('%m/%d/%Y'))
 end
 
 Then 'the course has {int} instructor user' do |instructor_count|
@@ -277,47 +275,49 @@ end
 
 Then 'the user adds the {string} users {string}' do |type, addresses|
   lbl = "#{type}s"
-  tab = find( :xpath, "//*[text()='#{lbl.capitalize}']")
+  tab = find(:xpath, "//button/span[text()='#{lbl.capitalize}']")
   tab.click
 
-  btn = find( :xpath, "//button[@aria-label='Add #{lbl}']")
+  btn = find(:xpath, "//button[@aria-label='Add #{lbl}']")
   btn.click
 
-  inpt = find( :xpath, "//input[@id='addresses']")
+  inpt = find(:xpath, "//input[@id='addresses']")
   addresses = @users.map(&:email).join(', ') if addresses == 'user_list'
   inpt.set addresses
 
-  btn = find( :xpath, "//button[contains(.,'Add #{lbl}!')]")
+  btn = find(:xpath, "//button[contains(.,'Add #{lbl}!')]")
   btn.click
-
 end
 
 Then 'the user drops the {string} users {string}' do |type, addresses|
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
-  step 'the user enables the "Actions" table view option'
+  # step 'the user enables the "Actions" table view option'
   url = if type == 'student'
           add_students_path + '?'
         else
           add_instructors_path + '?'
         end
-  if addresses == 'user_list'
-    @users.each do |address|
-      elem = find(:xpath,
-                  "//tr[td[contains(.,'#{address.email}')]]/td/a", text: 'Drop')
-      elem.click
-      page.accept_confirm
+  find(:xpath, '//div[@id="pagination-rows"]').click
+  find(:xpath, '//li[text()="100"]').click
 
-      step 'the user switches to the "Students" tab'
-      step 'the user enables the "Email" table view option'
-      step 'the user enables the "Actions" table view option'
+  step 'the user switches to the "Students" tab'
+  # step 'the user enables the "Email" table view option'
+  if addresses == 'user_list'
+    @users.each do |_address|
+      elem = find(:xpath,
+                  "//tr[td[contains(.,'#{addresses.email}')]]//button[@aria-label='Drop Student']")
+      elem.click
+      find(:xpath,
+           "//button/span[contains(.,'Drop the Student')]").click
     end
   else
     elem = find(:xpath,
-                "//tr[td[contains(.,'#{addresses}')]]/td/a", text: 'Drop')
+                "//tr[td[contains(.,'#{addresses}')]]//button[@aria-label='Drop Student']")
     elem.click
-    page.accept_confirm
-    sleep( 0.2)
+    find(:xpath,
+         "//button/span[contains(.,'Drop the Student')]").click
+    sleep(0.2)
   end
 end
 

@@ -75,40 +75,39 @@ class BingoGame < ApplicationRecord
     end_date - (1 + lead_time).days
   end
 
-  def task_data current_user:
-    #TODO: There's got to be a better way
-    group = project.group_for_user( current_user )
+  def task_data(current_user:)
+    # TODO: There's got to be a better way
+    group = project.group_for_user(current_user)
     helpers = Rails.application.routes.url_helpers
     link = if awaiting_review?
-            helpers.review_bingo_candidates_path( self )
-          else 
-            candidate_list = candidate_list_for_user(current_user)
-            if is_open?
-              helpers.edit_candidate_list_path( candidate_list )
-            elsif reviewed
-              helpers.candidate_list_path( candidate_list )
-            end
+             helpers.review_bingo_candidates_path(self)
+           else
+             candidate_list = candidate_list_for_user(current_user)
+             if is_open?
+               helpers.edit_candidate_list_path(candidate_list)
+             elsif reviewed
+               helpers.candidate_list_path(candidate_list)
+             end
           end
 
-    log = course.get_consent_log( user: current_user )
+    log = course.get_consent_log(user: current_user)
     consent_link = log.present? ?
-                     helpers.edit_consent_log_path( 
+                     helpers.edit_consent_log_path(
                        consent_form_id: log.consent_form_id
                      ) : nil
     {
       id: id,
       type: :bingo_game,
-      name: get_name( false ),
-      group_name: group.present? ? group.get_name( false ) : nil ,
+      name: get_name(false),
+      group_name: group.present? ? group.get_name(false) : nil,
       status: status,
-      course_name: course.get_name( false ),
+      course_name: course.get_name(false),
       start_date: start_date,
       end_date: end_date,
       link: link,
       consent_link: consent_link,
       active: active
     }
-
   end
 
   # Let's create a true activity interface later
@@ -280,8 +279,8 @@ class BingoGame < ApplicationRecord
   end
 
   def init_dates
-    self.start_date ||= self.course.start_date
-    self.end_date ||= self.course.end_date
+    self.start_date ||= course.start_date
+    self.end_date ||= course.end_date
   end
 
   # validation methods
@@ -296,16 +295,16 @@ class BingoGame < ApplicationRecord
 
   def dates_within_course
     unless start_date.nil? || end_date.nil?
-      if start_date < self.course.start_date
+      if start_date < course.start_date
         msg = I18n.t('bingo_games.start_date_err',
                      start_date: start_date,
-                     course_start_date: self.course.start_date)
+                     course_start_date: course.start_date)
         errors.add(:start_date, msg)
       end
-      if end_date.change(sec: 0) > self.course.end_date.change(sec: 0)
+      if end_date.change(sec: 0) > course.end_date.change(sec: 0)
         msg = I18n.t('bingo_games.end_date_err',
                      end_date: end_date,
-                     course_end_date: self.course.end_date)
+                     course_end_date: course.end_date)
         errors.add(:end_date, msg)
       end
     end

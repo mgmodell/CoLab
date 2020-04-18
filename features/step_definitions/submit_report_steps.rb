@@ -43,7 +43,7 @@ Then /^the user should see an error indicating that the installment request expi
 end
 
 When /^user clicks the link to the project$/ do
-  find( :xpath, "//td[contains(text(),'#{@project.group_for_user(@user).name}')]" ).click
+  find(:xpath, "//td[contains(text(),'#{@project.group_for_user(@user).name}')]").click
 end
 
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points, distribution|
@@ -72,14 +72,14 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
       factor_vals = Hash[elements.collect { |element| [element[:contributor], element.value] }]
 
       actions = []
-      (rand(8) + 3).times do
+      rand(3..10).times do
         actions << {
           increment: rand(2000) * (rand(2) == 1 ? -1 : 1),
           target: factor_vals.keys.sample
         }
       end
 
-      actions.each_with_index do |action, index|
+      actions.each_with_index do |action, _index|
         target = action[:target]
         increment = action[:increment]
         contrib = find(:xpath, "//input[@factor='#{factor.id}'][@contributor='#{target}']")
@@ -90,7 +90,7 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
 
         sum = all(:xpath, "//input[@factor='#{factor.id}']").reduce(0) do |total, slider|
           factor_vals[slider[:contributor]] = slider.value
-          total = total + slider.value.to_i
+          total += slider.value.to_i
         end
         sum.should eq Installment::TOTAL_VAL
       end
@@ -137,16 +137,16 @@ Then /^the user logs in and submits an installment$/ do
 end
 
 Then /^the user logs out$/ do
-  find( :xpath, '//*[@id="main-menu-button"]').click
+  find(:xpath, '//*[@id="main-menu-button"]').click
   # Retry a couple of time to account for slow animation.
-  #begin
+  # begin
   #  retries||= 0
-    find(:xpath, '//*[@id="logout-menu-item"]').click
-    
-  #rescue Capybara::ElementNotFound => exception
+  find(:xpath, '//*[@id="logout-menu-item"]').click
+
+  # rescue Capybara::ElementNotFound => exception
   #  sleep( 0.3 )
   #  retry if (retries += 1 ) < 3
-  #end
+  # end
 end
 
 Then /^there should be an error$/ do
@@ -175,10 +175,10 @@ Then /^the installment values will match the submit ratio$/ do
       set_vals_a = []
 
       set_vals.keys.sort.each do |key|
-        set_vals_a << set_vals[ key ].to_f / set_tot
+        set_vals_a << set_vals[key].to_f / set_tot
       end
 
-      rec_vals = recorded_vals[factor_id].sort{|a,b| a[0] - b[0]}.collect{|item| item[1]}
+      rec_vals = recorded_vals[factor_id].sort { |a, b| a[0] - b[0] }.collect { |item| item[1] }
       rec_tot = rec_vals.inject { |sum, x| sum + x }
       rec_vals.collect! { |x| x.to_f / rec_tot }
 

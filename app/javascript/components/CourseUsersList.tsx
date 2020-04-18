@@ -27,13 +27,16 @@ import CheckIcon from '@material-ui/icons/Check';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 
 import Link from "@material-ui/core/Link";
-import { Tooltip, IconButton } from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import DropUserButton from './DropUserButton';
 
 export default function CourseUsersList(props) {
-  const [addUsersPath, setAddUsersPath] = useState( );
-  const [procRegReqPath, setProcRegReqPath] = useState( );
+  const [addUsersPath, setAddUsersPath] = useState( '' );
+  const [procRegReqPath, setProcRegReqPath] = useState( '' );
   const [addDialogOpen, setAddDialogOpen] = useState( false );
   const [newUserAddresses, setNewUserAddresses] = useState( '' );
+  const [working, setWorking] = useState( true );
 
   const getUsers = () => {
     var url = props.retrievalUrl
@@ -67,8 +70,14 @@ export default function CourseUsersList(props) {
       });
   };
 
+  const refreshFunc = (newMessages) =>{
+    getUsers();
+    props.addMessagesFunc( newMessages );
+    setWorking( false );
+  }
+
   useEffect(() => {
-    if (null == props.usersList ){
+    if (null == props.usersList || props.usersList.length < 1 ){
       getUsers();
     }
   }, []);
@@ -109,6 +118,7 @@ export default function CourseUsersList(props) {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
+          const data = props.usersList[ tableMeta.rowIndex ].bingo_data
           return(value + '%')
         }
       }
@@ -149,7 +159,6 @@ export default function CourseUsersList(props) {
         filterOptions: {
           names: [ 'Enrolled', 'Dropped', 'Undetermined'],
           logic: (location, filters) => {
-            console.log( location, filters )
             switch( location ){
               case 'enrolled_student':
                 return ! filters.includes( 'Enrolled' );
@@ -188,49 +197,13 @@ export default function CourseUsersList(props) {
           const user = props.usersList.filter((user)=>{
             return value == user.id;
           })[0]
-          var btn = null;
+          var btns = [];
           var lbl = ''
           switch( user.status ){
-              case 'instructor':
-              case 'assistant':
-              case 'enrolled_student':
-                lbl ='Drop Student'
-                btn = (
-                  <Tooltip title={lbl}>
-                    <IconButton aria-label={lbl}
-                      onClick={(event)=>{
-                        fetch(user.drop_link, {
-                          method: "GET",
-                          credentials: "include",
-                          headers: {
-                            "Content-Type": "application/json",
-                            Accepts: "application/json",
-                            "X-CSRF-Token": props.token
-                          }
-                        })
-                          .then(response => {
-                            if (response.ok) {
-                              return response.json();
-                            } else {
-                              console.log("error");
-                            }
-                          })
-                          .then(data => {
-                            getUsers( );
-                            props.addMessagesFunc( data.messages );
-                            props.setWorking( false )
-                          });
-
-                      } } >
-                      <DeleteForeverIcon/>
-                    </IconButton>
-                  </Tooltip>
-                )
-                break;
               case 'invited_student':
                 lbl ='Re-Send Invitation'
-                btn = (
-                  <Tooltip title={lbl}>
+                btns.push (
+                  <Tooltip key='re-send-invite' title={lbl}>
                     <IconButton aria-label={lbl}
                       onClick={(event)=>{
                         setWorking(true)
@@ -251,9 +224,7 @@ export default function CourseUsersList(props) {
                             }
                           })
                           .then(data => {
-                            getUsers( );
-                            props.addMessagesFunc( data.messages );
-                            props.setWorking( false )
+                            refreshFunc( data.messages)
                           });
 
                       } } >
@@ -261,14 +232,23 @@ export default function CourseUsersList(props) {
                     </IconButton>
                   </Tooltip>
                 )
+              case 'instructor':
+              case 'assistant':
+              case 'enrolled_student':
+                lbl ='Drop Student'
+                btns.push (
+                  <DropUserButton
+                    key='drop-student-button'
+                    token={props.token}
+                    dropUrl={user.drop_link}
+                    refreshFunc={refreshFunc} />
+                )
                 break;
               case 'requesting_student':
                 lbl ='Accept Student'
                 const lbl2 ='Decline Student'
-                btn = (
-                  <React.Fragment>
-
-                  <Tooltip title={lbl}>
+                btns.push (
+                  <Tooltip key='accept' title={lbl}>
                     <IconButton aria-label={lbl}
                       onClick={(event)=>{
                         setWorking(true)
@@ -293,17 +273,16 @@ export default function CourseUsersList(props) {
                             }
                           })
                           .then(data => {
-                            getUsers( );
-                            props.addMessagesFunc( data.messages );
-                            props.setWorking( false )
+                            refreshFunc( data.messages)
                           });
 
                       } } >
                       <CheckIcon/>
                   </IconButton>
-
                   </Tooltip>
-                  <Tooltip title={lbl2}>
+                  )
+                btns.push(
+                  <Tooltip key='decline' title={lbl2}>
                     <IconButton aria-label={lbl2}
                       onClick={(event)=>{
                         setWorking(true)
@@ -328,9 +307,7 @@ export default function CourseUsersList(props) {
                             }
                           })
                           .then(data => {
-                            getUsers( );
-                            props.addMessagesFunc( data.messages );
-                            props.setWorking( false )
+                            refreshFunc( data.messages)
                           });
 
                       } } >
@@ -338,15 +315,14 @@ export default function CourseUsersList(props) {
                   </IconButton>
 
                   </Tooltip>
-                  </React.Fragment>
                 )
                 break;
               case 'rejected_student':
               case 'dropped_student':
               case 'declined_student':
                 lbl ='Re-Add Student'
-                btn = (
-                  <Tooltip title={lbl}>
+                btns.push (
+                  <Tooltip key='re-add' title={lbl}>
                     <IconButton aria-label={lbl}
                       onClick={(event)=>{
                         setWorking(true)
@@ -370,9 +346,7 @@ export default function CourseUsersList(props) {
                             }
                           })
                           .then(data => {
-                            getUsers( );
-                            props.addMessagesFunc( data.messages );
-                            props.setWorking( false )
+                            refreshFunc( data.messages)
                           });
 
                       } } >
@@ -386,7 +360,7 @@ export default function CourseUsersList(props) {
           }
 
 
-          return btn;
+          return btns;
         }
       }
     },
@@ -516,7 +490,6 @@ export default function CourseUsersList(props) {
                                 }
                               })
                               .then(data => {
-                                console.log( data );
                                 getUsers( );
                                 props.addMessagesFunc( data.messages );
                                 props.setWorking( false )

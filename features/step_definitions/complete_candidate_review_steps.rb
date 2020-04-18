@@ -16,12 +16,12 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
       step 'the user clicks the link to the candidate list'
       step 'the user should see the Bingo candidate list'
 
-        if !collab_requested
-          step 'the user requests collaboration'
-          collab_requested = true
-        else
-          step 'the user "accepts" the collaboration request'
-        end
+      if !collab_requested
+        step 'the user requests collaboration'
+        collab_requested = true
+      else
+        step 'the user "accepts" the collaboration request'
+      end
 
       step 'the user logs out'
     end
@@ -160,7 +160,7 @@ Given /^the saved reviews match the list$/ do
 end
 
 Given /^the user checks "([^"]*)"$/ do |checkbox_name|
-  find( :xpath, "//*[text()='#{checkbox_name}']" ).click
+  find(:xpath, "//*[text()='#{checkbox_name}']").click
 end
 
 Given /^the user is the most recently created user$/ do
@@ -168,7 +168,7 @@ Given /^the user is the most recently created user$/ do
 end
 
 When /^the user clicks the link to the candidate review$/ do
-  find( :xpath, "//td[contains(text(),'#{@bingo.get_name(@anon)}')]" ).click
+  find(:xpath, "//td[contains(text(),'#{@bingo.get_name(@anon)}')]").click
 end
 
 Then /^there will be (\d+) concepts$/ do |concept_count|
@@ -176,7 +176,7 @@ Then /^there will be (\d+) concepts$/ do |concept_count|
   Concept.count.should eq ( concept_count.to_i + 1)
 end
 
-Then('the user navigates home') do 
-  find( :xpath, '//*[@id="main-menu-button"]').click
-  find( :xpath, '//*[@id="home-menu-item"]').click
+Then('the user navigates home') do
+  find(:xpath, '//*[@id="main-menu-button"]').click
+  find(:xpath, '//*[@id="home-menu-item"]').click
 end

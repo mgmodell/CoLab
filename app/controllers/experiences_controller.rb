@@ -14,14 +14,14 @@ class ExperiencesController < ApplicationController
         course_hash = {
           id: @experience.course_id,
           name: @experience.course.name,
-          timezone: ActiveSupport::TimeZone.new( @experience.course.timezone ).tzinfo.name
+          timezone: ActiveSupport::TimeZone.new(@experience.course.timezone).tzinfo.name
         }
         response = {
           experience: @experience.as_json(
-            only: %i[ id name active start_date end_date lead_time]
+            only: %i[id name active start_date end_date lead_time]
           ),
           course: course_hash,
-          reactionsUrl: @experience.id.nil? ? nil : get_reactions_path( @experience ),
+          reactionsUrl: @experience.id.nil? ? nil : get_reactions_path(@experience),
           messages: {
             status: params[:notice]
           }
@@ -33,23 +33,20 @@ class ExperiencesController < ApplicationController
 
   def get_reactions
     rosters_hash = @experience.course.rosters.students
-      .reduce({}) do |hash,roster|
-        hash[ roster.user_id ] = roster
-        hash
-      end
+                              .index_by(&:user_id)
 
-    reactions = Reaction.includes( [:behavior, {user: :emails}, { narrative: :scenario } ])
-      .where( experience_id: @experience.id, user_id: rosters_hash.values.collect{|roster| roster.user_id})
+    reactions = Reaction.includes([:behavior, { user: :emails }, { narrative: :scenario }])
+                        .where(experience_id: @experience.id, user_id: rosters_hash.values.collect(&:user_id))
 
     render json: {
-      reactions: reactions.collect{|reaction|
+      reactions: reactions.collect do |reaction|
         puts reaction.inspect
         {
           user: {
             email: reaction.user.email,
-            name: reaction.user.name( @anon ),
+            name: reaction.user.name(@anon)
           },
-          student_status: rosters_hash[ reaction.user_id ].role,
+          student_status: rosters_hash[reaction.user_id].role,
           status: reaction.status,
           behavior: reaction.behavior.present? ? reaction.behavior.name : 'Incomplete',
           narrative: reaction.narrative.member,
@@ -57,7 +54,7 @@ class ExperiencesController < ApplicationController
           other_name: reaction.other_name,
           improvements: reaction.improvements || ''
         }
-      }.as_json
+      end.as_json
     }
   end
 
@@ -86,25 +83,27 @@ class ExperiencesController < ApplicationController
       respond_to do |format|
         format.html do
           redirect_to @experience,
-            notice: t('experiences.create_success')
+                      notice: t('experiences.create_success')
         end
         format.json do
           response = {
             experience: @experience.as_json(
-              only: %i[ id name active start_date end_date lead_time]
+              only: %i[id name active start_date end_date lead_time]
             ),
             course: @experience.course.as_json(
-              only: %i[ id name timezone ]
+              only: %i[id name timezone]
             ),
             messages: {
-              status: t( 'experiences.create_success')
+              status: t('experiences.create_success')
             }
           }
           render json: response
         end
       end
     else
-      logger.debug @experience.errors.full_messages unless @experience.errors.empty?
+      unless @experience.errors.empty?
+        logger.debug @experience.errors.full_messages
+      end
       respond_to do |format|
         format.html do
           render :new
@@ -126,13 +125,13 @@ class ExperiencesController < ApplicationController
         format.json do
           response = {
             experience: @experience.as_json(
-              only: %i[ id name active start_date end_date lead_time]
+              only: %i[id name active start_date end_date lead_time]
             ),
             course: @experience.course.as_json(
-              only: %i[ id name timezone ]
+              only: %i[id name timezone]
             ),
             messages: {
-              status: t( 'experiences.update_success')
+              status: t('experiences.update_success')
             }
           }
           render json: response

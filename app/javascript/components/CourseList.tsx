@@ -24,7 +24,7 @@ export default function CourseList(props) {
   const endpointSet = 'course';
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
-  const [messages, setMessages] = useState()
+  const [messages, setMessages] = useState( {} )
   const [showErrors, setShowErrors] = useState( false );
 
   function PaperComponent(props) {
@@ -287,7 +287,7 @@ export default function CourseList(props) {
             </IconButton>
         }
         >
-          {null != messages ? messages.main : null }
+          {messages['main'] || null }
         </Alert>
       </Collapse>
       {working ? <LinearProgress/> : null }

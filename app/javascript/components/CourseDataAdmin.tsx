@@ -56,7 +56,7 @@ export default function CourseDataAdmin(props) {
   const [courseName, setCourseName] = useState("");
   const [courseNumber, setCourseNumber] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
-  const [courseUsersList, setCourseUsersList] = useState( );
+  const [courseUsersList, setCourseUsersList] = useState(  );
   const [courseActivities, setCourseActivities ] = useState( [] )
   const [courseStartDate, setCourseStartDate] = useState(
     DateTime.local().toISO( )
@@ -67,7 +67,7 @@ export default function CourseDataAdmin(props) {
       .plus({ month: 3 })
       .toISO()
   );
-  const [courseSchoolId, setCourseSchoolId ] = useState( 0 );
+  const [courseSchoolId, setCourseSchoolId ] = useState<number>( 0 );
   const [courseTimezone, setCourseTimezone] = useState( '');
   const [courseConsentFormId, setCourseConsentFormId ] = useState( 0 );
   const [courseRegImage, setCourseRegImage ] = useState( null );
@@ -146,7 +146,7 @@ export default function CourseDataAdmin(props) {
     setWorking(true);
 
     const url =
-    endpoints.endpoints[endpointSet].baseUrl + '/' + (null == courseId ? props.courseId : courseId) + ".json";
+    endpoints.endpoints[endpointSet].baseUrl + '/' + (Boolean(courseId) ? courseId : props.courseId ) + ".json";
 
     fetch(url, {
       method: method,
@@ -174,7 +174,6 @@ export default function CourseDataAdmin(props) {
         if (response.ok) {
           return response.json();
         } else {
-          postNewMessage(data.messages);
           console.log("error");
         }
       })
@@ -247,15 +246,10 @@ export default function CourseDataAdmin(props) {
     <React.Fragment>
       <hr/>
       <Button variant="contained" onClick={saveCourse}>
-        {null == courseId ? "Create" : "Save"} Course
+        {Boolean( courseId ) ? 'Save' : 'Create' } Course
       </Button>
     </React.Fragment>
   ) : null;
-
-  //Later I want to call the activate/deactivate right here
-  const toggleActive = () => {
-    setCourseActive(!courseActive);
-  };
 
   const detailsComponent = (
     <Paper>
@@ -265,8 +259,8 @@ export default function CourseDataAdmin(props) {
         value={courseNumber}
         fullWidth={false}
         onChange={event => setCourseNumber(event.target.value)}
-        error={null != messages.number}
-        helperText={messages.number}
+        error={Boolean( messages['number'] )}
+        helperText={messages['number']}
       />
       <TextField
         label="Course Name"
@@ -274,8 +268,8 @@ export default function CourseDataAdmin(props) {
         value={courseName}
         fullWidth={false}
         onChange={event => setCourseName(event.target.value)}
-        error={null != messages.name}
-        helperText={messages.name}
+        error={Boolean( messages['name'] ) }
+        helperText={messages['name']}
       />
       <br/>
       <TextField
@@ -285,8 +279,8 @@ export default function CourseDataAdmin(props) {
         fullWidth={true}
         multiline={true}
         onChange={event => setCourseDescription(event.target.value)}
-        error={null != messages.description}
-        helperText={messages.description}
+        error={Boolean( messages['description' ] ) }
+        helperText={messages['description']}
       />
       <br/><br/>
       <FormControl >
@@ -295,8 +289,9 @@ export default function CourseDataAdmin(props) {
           id='course_school'
           value={courseSchoolId}
           onChange={(event)=>{
-            setCourseSchoolId(event.target.value)
-            setCourseTimezone( schoolTzHash[ event.target.value ])
+            const changeTo = Number(event.target.value)
+            setCourseSchoolId(changeTo)
+            setCourseTimezone( schoolTzHash[ changeTo ])
           }}
         >
           <MenuItem value={0}>None Selected</MenuItem>
@@ -312,7 +307,7 @@ export default function CourseDataAdmin(props) {
         <Select
           id='course_timezone'
           value={courseTimezone}
-          onChange={(event)=>setCourseTimezone(event.target.value)}
+          onChange={(event)=>setCourseTimezone(String( event.target.value ))}
         >
           {timezones.map(timezone=>{
             return(<MenuItem key={timezone.name} value={timezone.name}>{timezone.name}</MenuItem>)
@@ -326,7 +321,7 @@ export default function CourseDataAdmin(props) {
         <Select
           id='course_consent_form'
           value={courseConsentFormId}
-          onChange={(event)=>setCourseConsentFormId(event.target.value)}
+          onChange={(event)=>setCourseConsentFormId(Number( event.target.value ))}
         >
           <MenuItem value={0}>None Selected</MenuItem>
           {consentForms.map(consent_form=>{
@@ -348,13 +343,13 @@ export default function CourseDataAdmin(props) {
           label="Course Start Date"
           value={courseStartDate}
           onChange={setCourseStartDate}
-          error={null != messages.start_date}
-          helperText={messages.start_date}
+          error={Boolean( messages['start_date'] ) }
+          helperText={messages['start_date']}
         />
         </MuiPickersUtilsProvider>
-        { null != messages.start_date ? (
+        { Boolean( messages['start_date'] ) ? (
           <FormHelperText error={true}>
-            {messages.start_date}
+            {messages['start_date'] }
           </FormHelperText>
         ): null }
 
@@ -369,13 +364,13 @@ export default function CourseDataAdmin(props) {
           label="Course End Date"
           value={courseEndDate}
           onChange={setCourseEndDate}
-          error={null != messages.end_date}
-          helperText={messages.end_date}
+          error={Boolean(messages['end_date'] )}
+          helperText={messages['end_date']}
         />
       </MuiPickersUtilsProvider>
-        { null != messages.end_date ? (
+        { Boolean( messages['end_date'] ) ? (
           <FormHelperText error={true}>
-            {messages.end_date}
+            {messages['end_date']}
           </FormHelperText>
         ): null }
       <br />
@@ -518,7 +513,7 @@ export default function CourseDataAdmin(props) {
                             }
                           })
                           .then(data => {
-                            getUsers( );
+                            getCourse( );
                             setMessages( data.messages );
                             setWorking( false )
                           });
@@ -618,7 +613,7 @@ export default function CourseDataAdmin(props) {
             </IconButton>
           }
         >
-          {messages.main}
+          {messages['main']}
         </Alert>
       </Collapse>
       <Tabs centered value={curTab} onChange={(event, value) => setCurTab(value)}>
@@ -661,7 +656,7 @@ export default function CourseDataAdmin(props) {
       ) : null}
       {"activities" == curTab ? activityList : null }
       {saveButton}
-      {messages.status}
+      {messages['status']}
     </Paper>
   );
 }

@@ -110,27 +110,25 @@ class Experience < ApplicationRecord
     get_user_reaction(user).status
   end
 
-  def task_data current_user:
+  def task_data(current_user:)
     helpers = Rails.application.routes.url_helpers
-    link = if( get_user_reaction( current_user ).behavior.nil? )
-            helpers.next_experience_path( experience_id: id )
-           else
-            nil
+    link = if get_user_reaction(current_user).behavior.nil?
+             helpers.next_experience_path(experience_id: id)
            end
 
-    log = course.get_consent_log( user: current_user )
+    log = course.get_consent_log(user: current_user)
     consent_link = log.present? ?
-                     helpers.edit_consent_log_path( 
+                     helpers.edit_consent_log_path(
                        consent_form_id: log.consent_form_id
                      ) : nil
 
     {
       id: id,
       type: :experience,
-      name: get_name( false ),
+      name: get_name(false),
       group_name: 'N/A',
-      status: status_for_user( current_user),
-      course_name: course.get_name( false ),
+      status: status_for_user(current_user),
+      course_name: course.get_name(false),
       start_date: start_date,
       end_date: end_date,
       link: link,

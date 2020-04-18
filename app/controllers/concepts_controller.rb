@@ -19,7 +19,7 @@ class ConceptsController < ApplicationController
         render :index
       end
       format.json do
-        render json: @concept.to_json( only: %i[name candidates_count courses_count bingo_count] )
+        render json: @concept.to_json(only: %i[name candidates_count courses_count bingo_count])
       end
     end
   end
@@ -108,22 +108,6 @@ class ConceptsController < ApplicationController
     end
   end
 
-  # def new
-  #   @title = t '.title'
-  #   @concept = Concept.new
-  # end
-
-  # def create
-  #   @title = t '.title'
-  #   @concept = Concept.new(concept_params)
-  #   if @concept.save
-  #     redirect_to url: concept_url(@concept), notice: t('concepts.create_success')
-  #   else
-  #     logger.debug @concepts.errors.full_messages unless @concepts.errors.empty?
-  #     render :new
-  #   end
-  # end
-
   def update
     if @concept.update(concept_params)
       respond_to do |format|
@@ -132,7 +116,7 @@ class ConceptsController < ApplicationController
           redirect_to concept_path(@concept), notice: t('concepts.update_success')
         end
         format.json do
-          render json: @concept.to_json( only: %i[name candidates_count courses_count bingo_count] )
+          render json: @concept.to_json(only: %i[name candidates_count courses_count bingo_count])
         end
       end
     else
@@ -143,8 +127,8 @@ class ConceptsController < ApplicationController
           render :edit
         end
         format.json do
-          #TODO add proper error handling here
-          render json: @concept.to_json( only: %i[name candidates_count courses_count bingo_count] )
+          # TODO: add proper error handling here
+          render json: @concept.to_json(only: %i[name candidates_count courses_count bingo_count])
         end
       end
     end

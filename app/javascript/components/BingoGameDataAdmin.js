@@ -177,9 +177,9 @@ export default function BingoGameDataAdmin(props) {
       })
       .then(data => {
         //TODO: handle save errors
-        setSaveStatus(data.notice);
+        setSaveStatus(data['notice']);
         setDirty(false);
-        setMessages(data.messages);
+        setMessages(data['messages']);
 
         getBingoGameData();
       });
@@ -279,7 +279,7 @@ export default function BingoGameDataAdmin(props) {
       <Button
         variant="contained"
         color="primary"
-        className={classes.button}
+        className={classes['button']}
         onClick={saveBingoGame}
         id="save_bingo_game"
         value="save_bingo_game"
@@ -299,10 +299,10 @@ export default function BingoGameDataAdmin(props) {
             type="number"
             className={classes.textField}
             value={gameGroupDiscount}
-            onChange={event => setGameGroupDiscount(event.target.value)}
+            onChange={event => setGameGroupDiscount(parseInt( event.target.value) )}
             margin="normal"
-            error={null != messages.name}
-            helper={messages.name}
+            error={null != messages['name']}
+            helper={messages['name']}
           />
         </Grid>
         <Grid item>

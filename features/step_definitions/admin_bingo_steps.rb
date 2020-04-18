@@ -15,9 +15,9 @@ Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_pref
   elem.set(new_date)
 end
 
-Then /^the user clicks "([^"]*)" on the existing bingo game$/ do |action|
+Then /^the user clicks "([^"]*)" on the existing bingo game$/ do |_action|
   click_link_or_button 'Activities'
-  find(:xpath, "//tr[td[contains(.,'#{@bingo.get_name(@anon)}')]]" ).click
+  find(:xpath, "//tr[td[contains(.,'#{@bingo.get_name(@anon)}')]]").click
 end
 
 Then /^retrieve the latest Bingo! game from the db$/ do

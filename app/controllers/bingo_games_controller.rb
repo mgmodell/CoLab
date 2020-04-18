@@ -33,7 +33,6 @@ class BingoGamesController < ApplicationController
     end
   end
 
-
   def demo_my_results
     candidate_list = nil
     candidates = nil
@@ -100,7 +99,9 @@ class BingoGamesController < ApplicationController
     resp = {}
     # Get the users
     bingo_game.course.rosters.each do |r|
-      next unless r.enrolled_student? || r.invited_student? || r.dropped_student?
+      unless r.enrolled_student? || r.invited_student? || r.dropped_student?
+        next
+      end
 
       resp[ r.user.id ] = {
         student: r.user.informal_name(anon),
@@ -229,12 +230,12 @@ class BingoGamesController < ApplicationController
     @bingo_game = Course.find(params[:course_id]).bingo_games.new
     @bingo_game.start_date = @bingo_game.course.start_date
     @bingo_game.end_date = @bingo_game.course.end_date
-      respond_to do |format|
-        format.json do
-          resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
-          render json: resp
-        end
+    respond_to do |format|
+      format.json do
+        resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
+        render json: resp
       end
+    end
   end
 
   def create
@@ -244,15 +245,14 @@ class BingoGamesController < ApplicationController
         @title = t 'bingo_games.new.title'
         format.json do
           resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
-          resp[:messages] = {status: t('bingo_games.create_success') }
+          resp[:messages] = { status: t('bingo_games.create_success') }
           render json: resp
-
         end
       end
     else
       respond_to do |format|
         format.json do
-          resp = bingo_responder bingo_game: @bingo_game, current_user: current_user 
+          resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
           resp[:messages] = @bingo_game.errors
           render json: resp
         end
@@ -268,7 +268,7 @@ class BingoGamesController < ApplicationController
       format.json do
         if @bingo_game.errors.empty?
           resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
-          resp[:notice] ='Game saved successfully!' 
+          resp[:notice] = 'Game saved successfully!'
           resp[:messages] = {}
           render json: resp
         else
@@ -566,35 +566,34 @@ class BingoGamesController < ApplicationController
 
   private
 
-  def bingo_responder bingo_game:, current_user:
-        timezone = ActiveSupport::TimeZone.new( bingo_game.course.timezone ).tzinfo.name
-        resp = bingo_game.as_json(only:
-          %i[ id description source group_option individual_count
-              start_date end_date active lead_time group_discount
-              project_id ])
-        resp[:topic] = bingo_game.get_topic(current_user.anonymize?)
-        resp[:reviewed] = bingo_game.reviewed?
-        resp[:course] = { timezone: timezone }
+  def bingo_responder(bingo_game:, current_user:)
+    timezone = ActiveSupport::TimeZone.new(bingo_game.course.timezone).tzinfo.name
+    resp = bingo_game.as_json(only:
+      %i[ id description source group_option individual_count
+          start_date end_date active lead_time group_discount
+          project_id ])
+    resp[:topic] = bingo_game.get_topic(current_user.anonymize?)
+    resp[:reviewed] = bingo_game.reviewed?
+    resp[:course] = { timezone: timezone }
 
-        resp = {
-          bingo_game: resp
-        }
-        resp[:projects] = bingo_game.course.projects
-                                     .collect do |p|
-          {
-            id: p.id,
-            name: p.get_name(current_user.anonymize?)
-          }
-        end .as_json
-        resp[:concepts] = bingo_game.get_concepts
-                                     .collect do |c|
-          {
-            id: c.id,
-            name: c.name
-          }
-        end .as_json
-        resp
-
+    resp = {
+      bingo_game: resp
+    }
+    resp[:projects] = bingo_game.course.projects
+                                .collect do |p|
+      {
+        id: p.id,
+        name: p.get_name(current_user.anonymize?)
+      }
+    end .as_json
+    resp[:concepts] = bingo_game.get_concepts
+                                .collect do |c|
+      {
+        id: c.id,
+        name: c.name
+      }
+    end .as_json
+    resp
   end
 
   # Use callbacks to share common setup or constraints between actions.

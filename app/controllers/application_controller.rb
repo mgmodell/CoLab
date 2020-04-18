@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    # TODO remove this once we are no longer tied to the interface - maybe
+    # TODO: remove this once we are no longer tied to the interface - maybe
     # Time.zone = current_user.timezone if current_user.timezone
     I18n.locale = current_user.language_code || params[:lang] || I18n.default_locale
   end

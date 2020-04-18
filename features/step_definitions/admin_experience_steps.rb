@@ -5,7 +5,7 @@ Then 'retrieve the latest Experience from the db' do
 end
 
 Then 'the user sets the experience {string} date to {string}' do |ordinal, date|
-  new_date = date.blank? ? '' : Chronic.parse(date).strftime('%m/%d/%Y' )
+  new_date = date.blank? ? '' : Chronic.parse(date).strftime('%m/%d/%Y')
   case ordinal.downcase
   when 'start'
     page.find('#experience_start_date').set(new_date)
@@ -29,7 +29,7 @@ Then 'the experience start date is {string} and the end date is {string}' do |st
   @experience.end_date.change(sec: 0).should eq test_date.change(sec: 0)
 end
 
-Then 'the user clicks {string} on the existing experience' do |action|
-  find( :xpath, "//td[contains(.,'#{@experience.name}')]").click
-  #find(:xpath, "//tr[td[contains(.,'#{@experience.name}')]]/td/a", text: action).click
+Then 'the user clicks {string} on the existing experience' do |_action|
+  find(:xpath, "//td[contains(.,'#{@experience.name}')]").click
+  # find(:xpath, "//tr[td[contains(.,'#{@experience.name}')]]/td/a", text: action).click
 end

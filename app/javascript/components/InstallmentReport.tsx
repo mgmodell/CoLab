@@ -77,7 +77,7 @@ export default function InstallmentReport(props) {
     //If the panel is already selected...
     if (panelId == curPanel) {
       //...close it.
-      setCurPanel("");
+      setCurPanel(null);
       //Otherwise...
     } else {
       //...open it
@@ -144,9 +144,8 @@ export default function InstallmentReport(props) {
   const saveContributions = () => {
     const url =
       props.setInstallmentUrl +
-      (installment.id == null ? "" : "/" + installment.id) +
-      ".json";
-    const method = installment.id == null ? "POST" : "PATCH";
+      (Boolean( installment['id'] ) ? '/' + installment['id'] : '' ) + ".json";
+    const method = Boolean( installment['id'] ) ? 'PATCH' : 'POST';
     fetch(url, {
       method: method,
       credentials: "include",
@@ -172,13 +171,13 @@ export default function InstallmentReport(props) {
         //Process Contributions
         if( !data.error ){
         setInstallment(data.installment);
-        contributions = data.installment.values.reduce(
+        const receivedContributions = data.installment.values.reduce(
           (valuesAccum, value) => {
             const values = valuesAccum[value.factor_id] || [];
             values.push({
               userId: value.user_id,
               factorId: value.factor_id,
-              name: group.users[value.user_id].name,
+              name: group['users'][value.user_id].name,
               value: value.value
             });
             valuesAccum[value.factor_id] = values.sort(userCompare);
@@ -186,7 +185,7 @@ export default function InstallmentReport(props) {
           },
           {}
         );
-        setContributions(contributions);
+        setContributions(receivedContributions);
         }
         console.log( data.messages );
         setMessages(data.messages);
@@ -214,7 +213,7 @@ export default function InstallmentReport(props) {
             </IconButton>
           }
         >
-          {messages.status}
+          {messages['status']}
         </Alert>
       </Collapse>
       <p>
@@ -226,7 +225,7 @@ export default function InstallmentReport(props) {
         {Object.keys(contributions).map(sliceId => {
           return (
             <ExpansionPanel
-              expanded={sliceId == curPanel}
+              expanded={sliceId == String(curPanel)}
               onChange={() => setPanel(sliceId)}
               key={sliceId}
             >
@@ -265,7 +264,7 @@ export default function InstallmentReport(props) {
               name="Comments"
               id="Comments"
               placeholder={"Enter your comments"}
-              helperText={messages.comments}
+              helperText={messages['comments']}
               multiline={true}
               fullWidth={true}
               onChange={updateComments}
@@ -274,19 +273,17 @@ export default function InstallmentReport(props) {
         </ExpansionPanel>
       </Suspense>
       {saveButton}
-        <center>
       <div
         id="installment_debug_div"
-        style={{ height: "10px", width: "10px", opacity: 0, border: "0px" }}
+        style={{ height: "10px", margin: 'auto', width: "10px", opacity: 0, border: "0px" }}
       >
         <input
           type="checkbox"
-          value={debug}
+          value={String(debug)}
           id="debug"
           onChange={() => setDebug(!debug)}
         />
       </div>
-        </center>
     </Paper>
   );
 }
