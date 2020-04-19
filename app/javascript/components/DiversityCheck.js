@@ -2,9 +2,9 @@ import React, { Suspense } from "react";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
-import ListItem from "@material-ui/core/ListItem"
-import ListItemIcon from "@material-ui/core/ListItemIcon"
-import ListItemText from "@material-ui/core/ListItemText"
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
@@ -99,13 +99,11 @@ class DiversityCheck extends React.Component {
         <Translation>
           {t => (
             <React.Fragment>
-              <ListItem button onClick={()=>this.openDialog()}>
+              <ListItem button onClick={() => this.openDialog()}>
                 <ListItemIcon>
-                  <CompareIcon fontSize='small'/>
+                  <CompareIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText>
-                    {t("calc_diversity")}
-                </ListItemText>
+                <ListItemText>{t("calc_diversity")}</ListItemText>
               </ListItem>
               <Dialog
                 open={this.state.dialogOpen}

@@ -2,21 +2,21 @@ import { createStore, createSubscriber, createHook } from "react-sweet-state";
 
 const Store = createStore({
   initialState: {
-    endpoints: { },
-    endpointStatus: { }
+    endpoints: {},
+    endpointStatus: {}
   },
   actions: {
     fetch: (unit, endpointUrl, token) => ({ setState, getState }) => {
       var allStatus = getState().endpointStatus;
 
-      if ( null == allStatus[ unit ] ) {
+      if (null == allStatus[unit]) {
         //Let everyone know we're loading
-        allStatus[ unit ] = 'loading';
+        allStatus[unit] = "loading";
         setState({
           endpointStatus: allStatus
         });
 
-        fetch( endpointUrl + unit + '.json', {
+        fetch(endpointUrl + unit + ".json", {
           method: "GET",
           credentials: "include",
           headers: {
@@ -33,12 +33,12 @@ const Store = createStore({
             }
           })
           .then(data => {
-            const tmpEndpoints = getState( ).endpoints;
+            const tmpEndpoints = getState().endpoints;
             allStatus = getState().endpointStatus;
 
-            if( undefined != data ){
-              tmpEndpoints[ unit ] = data;
-              allStatus[ unit ] = 'loaded'
+            if (undefined != data) {
+              tmpEndpoints[unit] = data;
+              allStatus[unit] = "loaded";
             }
             setState({
               endpoints: tmpEndpoints,

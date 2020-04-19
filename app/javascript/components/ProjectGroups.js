@@ -31,7 +31,7 @@ class ProjectGroups extends React.Component {
     this.state = {
       dirty: false,
       working: true,
-      message: '',
+      message: "",
       filter_text: "",
       sortBy: "last_name",
       sortDirection: SortDirection.DESC,
@@ -275,7 +275,7 @@ class ProjectGroups extends React.Component {
   saveGroups() {
     this.setState({
       working: true,
-      message: 'Saving...'
+      message: "Saving..."
     });
     fetch(this.props.groupsUrl + this.props.projectId + ".json", {
       method: "PATCH",
@@ -308,7 +308,7 @@ class ProjectGroups extends React.Component {
           students_raw: data.students,
           groups: Object.values(data.groups),
           students: Object.values(data.students),
-          message: data.message == null ? '' : data.message
+          message: data.message == null ? "" : data.message
         });
       });
   }
@@ -335,9 +335,7 @@ class ProjectGroups extends React.Component {
               Save
             </Fab>
           ) : null}
-          <Typography color="inherit">
-            {this.state.message}
-          </Typography>
+          <Typography color="inherit">{this.state.message}</Typography>
           <Fab variant="extended" onClick={this.recalcDiversity}>
             Recalculate Diversity
           </Fab>
@@ -373,7 +371,7 @@ class ProjectGroups extends React.Component {
                     <TextField
                       onChange={() => this.setGroupName(event, group.id)}
                       value={group.name}
-                      id={'g_' + group.id}
+                      id={"g_" + group.id}
                     />
                     {group.id < 0 ? (
                       <Fab
@@ -388,7 +386,9 @@ class ProjectGroups extends React.Component {
                       groupId={group.id}
                       token={this.props.token}
                       parentDirty={this.state.dirty}
-                      documented={this.state.groups_raw[group.id].diversity || 0 }
+                      documented={
+                        this.state.groups_raw[group.id].diversity || 0
+                      }
                       scoreReviewUrl={this.props.diversityCheckUrl}
                       rescoreGroup={this.rescoreGroup}
                       students={this.state.students_raw}
@@ -424,7 +424,7 @@ class ProjectGroups extends React.Component {
                       >
                         <Radio
                           onClick={() => this.setGroup(student.id, group.id)}
-                          id={'user_group_' + student.id + '_' + group.id}
+                          id={"user_group_" + student.id + "_" + group.id}
                           checked={group.id == student.group_id}
                         />
                       </TableCell>

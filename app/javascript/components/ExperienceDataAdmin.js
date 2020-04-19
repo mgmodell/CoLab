@@ -9,7 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
-import FormHelperText from '@material-ui/core/FormHelperText'
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 import {
   KeyboardDatePicker,
@@ -17,19 +17,17 @@ import {
 } from "@material-ui/pickers";
 
 import { DateTime, Info } from "luxon";
-import Settings from 'luxon/src/settings.js'
-import ReactionsList from './ReactionsList';
-
+import Settings from "luxon/src/settings.js";
+import ReactionsList from "./ReactionsList";
 
 import LuxonUtils from "@date-io/luxon";
-import { useEndpointStore } from "./EndPointStore"
+import { useEndpointStore } from "./EndPointStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { useUserStore } from './UserStore';
+import { useUserStore } from "./UserStore";
 
 export default function ExperienceDataAdmin(props) {
-
-  const endpointSet = 'experience';
+  const endpointSet = "experience";
   const [endpoints, endpointsActions] = useEndpointStore();
   //const { t, i18n } = useTranslation('experiences' );
   const [user, userActions] = useUserStore();
@@ -43,7 +41,7 @@ export default function ExperienceDataAdmin(props) {
   const [experienceLeadTime, setExperienceLeadTime] = useState(0);
 
   const [experienceStartDate, setExperienceStartDate] = useState(
-    DateTime.local().toISO( )
+    DateTime.local().toISO()
   );
   //Using this Luxon function for later i18n
   const [experienceEndDate, setExperienceEndDate] = useState(
@@ -52,16 +50,16 @@ export default function ExperienceDataAdmin(props) {
       .toISO()
   );
   const [experienceActive, setExperienceActive] = useState(false);
-  const [reactionsUrl, setReactionsUrl] = useState( );
-  const [reactionData, setReactionData] = useState( );
+  const [reactionsUrl, setReactionsUrl] = useState();
+  const [reactionData, setReactionData] = useState();
   const [courseName, setCourseName] = useState("");
-  const [courseTimezone, setCourseTimezone] = useState( 'UTC');
+  const [courseTimezone, setCourseTimezone] = useState("UTC");
 
   const getExperience = () => {
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == experienceId) {
-      url = url + 'new/' + props.courseId + ".json";
+      url = url + "new/" + props.courseId + ".json";
     } else {
       url = url + experienceId + ".json";
     }
@@ -86,19 +84,22 @@ export default function ExperienceDataAdmin(props) {
         const course = data.course;
 
         setCourseName(course.name);
-        setCourseTimezone( course.timezone );
-        setReactionsUrl( data.reactionsUrl );
+        setCourseTimezone(course.timezone);
+        setReactionsUrl(data.reactionsUrl);
         Settings.defaultZoneName = course.timezone;
 
         setExperienceName(experience.name || "");
         setExperienceActive(experience.active || false);
-        setExperienceLeadTime( experience.lead_time || 3 );
+        setExperienceLeadTime(experience.lead_time || 3);
 
-
-        var receivedDate = DateTime.fromISO( experience.start_date).setZone( course.timezone )
-        setExperienceStartDate(receivedDate.toISO() );
-        receivedDate = DateTime.fromISO( experience.end_date).setZone( course.timezone )
-        setExperienceEndDate(receivedDate.toISO() );
+        var receivedDate = DateTime.fromISO(experience.start_date).setZone(
+          course.timezone
+        );
+        setExperienceStartDate(receivedDate.toISO());
+        receivedDate = DateTime.fromISO(experience.end_date).setZone(
+          course.timezone
+        );
+        setExperienceEndDate(receivedDate.toISO());
 
         setWorking(false);
         setDirty(false);
@@ -109,7 +110,10 @@ export default function ExperienceDataAdmin(props) {
     setWorking(true);
 
     const url =
-    endpoints.endpoints[endpointSet].baseUrl + '/' + (null == experienceId ? props.courseId : experienceId) + ".json";
+      endpoints.endpoints[endpointSet].baseUrl +
+      "/" +
+      (null == experienceId ? props.courseId : experienceId) +
+      ".json";
 
     fetch(url, {
       method: method,
@@ -126,7 +130,7 @@ export default function ExperienceDataAdmin(props) {
           lead_time: experienceLeadTime,
           active: experienceActive,
           start_date: experienceStartDate,
-          end_date: experienceEndDate,
+          end_date: experienceEndDate
         }
       })
     })
@@ -144,9 +148,13 @@ export default function ExperienceDataAdmin(props) {
           setExperienceId(experience.id);
           setExperienceName(experience.name);
           setExperienceActive(experience.active);
-          var receivedDate = DateTime.fromISO( experience.start_date).setZone( courseTimezone )
+          var receivedDate = DateTime.fromISO(experience.start_date).setZone(
+            courseTimezone
+          );
           setExperienceStartDate(receivedDate.toISO());
-          receivedDate = DateTime.fromISO( experience.end_date).setZone( courseTimezone )
+          receivedDate = DateTime.fromISO(experience.end_date).setZone(
+            courseTimezone
+          );
           setExperienceEndDate(receivedDate.toISO());
 
           const course = data.course;
@@ -160,36 +168,32 @@ export default function ExperienceDataAdmin(props) {
       });
   };
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != 'loaded') {
+    if (endpoints.endpointStatus[endpointSet] != "loaded") {
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
-    if( !user.loaded){
-      userActions.fetch( props.token );
+    if (!user.loaded) {
+      userActions.fetch(props.token);
     }
   }, []);
 
-  useEffect(() =>{
-    if (endpoints.endpointStatus[endpointSet] == 'loaded') {
+  useEffect(() => {
+    if (endpoints.endpointStatus[endpointSet] == "loaded") {
       getExperience();
     }
-  }, [
-    endpoints.endpointStatus[endpointSet]
-  ]);
+  }, [endpoints.endpointStatus[endpointSet]]);
 
-  useEffect(() =>{
-    if (user.loaded){
+  useEffect(() => {
+    if (user.loaded) {
       Settings.defaultZoneName = user.timezone;
     }
-  }, [
-    user.loaded
-  ]);
+  }, [user.loaded]);
 
   useEffect(() => setDirty(true), [
     experienceName,
     experienceLeadTime,
     experienceActive,
     experienceStartDate,
-    experienceEndDate,
+    experienceEndDate
   ]);
 
   const saveButton = dirty ? (
@@ -216,17 +220,17 @@ export default function ExperienceDataAdmin(props) {
         helperText={messages.name}
       />
       <TextField
-        id='experience-lead-time'
+        id="experience-lead-time"
         //label={t('lead_time')}
-        label='Days for instructor prep'
+        label="Days for instructor prep"
         value={experienceLeadTime}
-        type='number'
-        onChange={event => setExperienceLeadTime( event.target.value )}
+        type="number"
+        onChange={event => setExperienceLeadTime(event.target.value)}
         InputLabelProps={{
           shrink: true
         }}
-        margin='normal'
-        />
+        margin="normal"
+      />
       <FormControlLabel
         control={
           <Switch checked={experienceActive} onChange={() => toggleActive()} />
@@ -249,12 +253,10 @@ export default function ExperienceDataAdmin(props) {
           error={null != messages.start_date}
           helperText={messages.start_date}
         />
-        </MuiPickersUtilsProvider>
-        { null != messages.start_date ? (
-          <FormHelperText error={true}>
-            {messages.start_date}
-          </FormHelperText>
-        ): null }
+      </MuiPickersUtilsProvider>
+      {null != messages.start_date ? (
+        <FormHelperText error={true}>{messages.start_date}</FormHelperText>
+      ) : null}
 
       <MuiPickersUtilsProvider utils={LuxonUtils}>
         <KeyboardDatePicker
@@ -271,11 +273,9 @@ export default function ExperienceDataAdmin(props) {
           helperText={messages.end_date}
         />
       </MuiPickersUtilsProvider>
-        { null != messages.end_date ? (
-          <FormHelperText error={true}>
-            {messages.end_date}
-          </FormHelperText>
-        ): null }
+      {null != messages.end_date ? (
+        <FormHelperText error={true}>{messages.end_date}</FormHelperText>
+      ) : null}
       <br />
 
       <br />
@@ -284,16 +284,19 @@ export default function ExperienceDataAdmin(props) {
     </Paper>
   );
 
-  const reactionListing = experienceId > 0 ? (
-        <ReactionsList
-          token={props.token}
-          retrievalUrl={reactionsUrl}
-          reactionsList={reactionData}
-          reactionsListUpdateFunc={setReactionData}
-          working={working}
-          setWorking={setWorking}
-          />
-  ) : 'The Experience must be created before students can react to it.'
+  const reactionListing =
+    experienceId > 0 ? (
+      <ReactionsList
+        token={props.token}
+        retrievalUrl={reactionsUrl}
+        reactionsList={reactionData}
+        reactionsListUpdateFunc={setReactionData}
+        working={working}
+        setWorking={setWorking}
+      />
+    ) : (
+      "The Experience must be created before students can react to it."
+    );
   return (
     <Paper>
       <Tabs value={curTab} onChange={(event, value) => setCurTab(value)}>
@@ -301,9 +304,7 @@ export default function ExperienceDataAdmin(props) {
         <Tab label="Results" value="groups" disabled={null == experienceId} />
       </Tabs>
       {"details" == curTab ? detailsComponent : null}
-      {"groups" == curTab ? (
-        {reactionListing}
-      ) : null}
+      {"groups" == curTab ? { reactionListing } : null}
     </Paper>
   );
 }

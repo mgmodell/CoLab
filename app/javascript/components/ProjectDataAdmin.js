@@ -12,7 +12,7 @@ import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
-import FormHelperText from '@material-ui/core/FormHelperText'
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 import {
   KeyboardDatePicker,
@@ -20,18 +20,17 @@ import {
 } from "@material-ui/pickers";
 
 import { DateTime, Info } from "luxon";
-import Settings from 'luxon/src/settings.js'
-
+import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@date-io/luxon";
-import { useEndpointStore } from "./EndPointStore"
+import { useEndpointStore } from "./EndPointStore";
 
 import ProjectGroups from "./ProjectGroups";
 
 export default function ProjectDataAdmin(props) {
-  const cityTimezones = require('city-timezones');
+  const cityTimezones = require("city-timezones");
 
-  const endpointSet = 'project';
+  const endpointSet = "project";
   const [endpoints, endpointsActions] = useEndpointStore();
 
   const [curTab, setCurTab] = useState("details");
@@ -46,7 +45,7 @@ export default function ProjectDataAdmin(props) {
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [projectStartDate, setProjectStartDate] = useState(
-    DateTime.local().toISO( )
+    DateTime.local().toISO()
   );
   //Using this Luxon function for later i18n
   const [daysOfWeek, setDaysOfWeek] = useState(Info.weekdays());
@@ -61,13 +60,13 @@ export default function ProjectDataAdmin(props) {
   const [projectFactorPackId, setProjectFactorPackId] = useState(0);
   const [projectStyleId, setProjectStyleId] = useState(0);
   const [courseName, setCourseName] = useState("");
-  const [courseTimezone, setCourseTimezone] = useState( 'UTC');
+  const [courseTimezone, setCourseTimezone] = useState("UTC");
 
   const getProject = () => {
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == projectId) {
-      url = url + 'new/' + props.courseId + ".json";
+      url = url + "new/" + props.courseId + ".json";
     } else {
       url = url + projectId + ".json";
     }
@@ -94,18 +93,21 @@ export default function ProjectDataAdmin(props) {
 
         const course = data.course;
         setCourseName(course.name);
-        setCourseTimezone( course.timezone );
+        setCourseTimezone(course.timezone);
         Settings.defaultZoneName = course.timezone;
 
         setProjectName(project.name || "");
         setProjectDescription(project.description || "");
         setProjectActive(project.active);
 
-
-        var receivedDate = DateTime.fromISO( project.start_date).setZone( course.timezone )
-        setProjectStartDate(receivedDate.toISO() );
-        receivedDate = DateTime.fromISO( project.end_date).setZone( course.timezone )
-        setProjectEndDate(receivedDate.toISO() );
+        var receivedDate = DateTime.fromISO(project.start_date).setZone(
+          course.timezone
+        );
+        setProjectStartDate(receivedDate.toISO());
+        receivedDate = DateTime.fromISO(project.end_date).setZone(
+          course.timezone
+        );
+        setProjectEndDate(receivedDate.toISO());
         setProjectFactorPackId(project.factor_pack_id);
         setProjectStyleId(project.style_id);
         setProjectStartDOW(project.start_dow);
@@ -119,7 +121,10 @@ export default function ProjectDataAdmin(props) {
     setWorking(true);
 
     const url =
-    endpoints.endpoints[endpointSet].baseUrl + '/' + (null == projectId ? props.courseId : projectId) + ".json";
+      endpoints.endpoints[endpointSet].baseUrl +
+      "/" +
+      (null == projectId ? props.courseId : projectId) +
+      ".json";
 
     fetch(url, {
       method: method,
@@ -159,9 +164,13 @@ export default function ProjectDataAdmin(props) {
           setProjectName(project.name);
           setProjectDescription(project.description);
           setProjectActive(project.active);
-          var receivedDate = DateTime.fromISO( project.start_date).setZone( courseTimezone )
+          var receivedDate = DateTime.fromISO(project.start_date).setZone(
+            courseTimezone
+          );
           setProjectStartDate(receivedDate.toISO());
-          receivedDate = DateTime.fromISO( project.end_date).setZone( courseTimezone )
+          receivedDate = DateTime.fromISO(project.end_date).setZone(
+            courseTimezone
+          );
           setProjectEndDate(receivedDate.toISO());
           setProjectFactorPackId(project.factor_pack_id);
           setProjectStyleId(project.style_id);
@@ -179,20 +188,18 @@ export default function ProjectDataAdmin(props) {
       });
   };
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != 'loaded') {
+    if (endpoints.endpointStatus[endpointSet] != "loaded") {
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     daysOfWeek.unshift(daysOfWeek.pop());
     setDaysOfWeek(daysOfWeek);
   }, []);
 
-  useEffect(() =>{
-    if (endpoints.endpointStatus[endpointSet] == 'loaded') {
+  useEffect(() => {
+    if (endpoints.endpointStatus[endpointSet] == "loaded") {
       getProject();
     }
-  }, [
-    endpoints.endpointStatus[endpointSet]
-  ]);
+  }, [endpoints.endpointStatus[endpointSet]]);
 
   useEffect(() => setDirty(true), [
     projectName,
@@ -260,12 +267,10 @@ export default function ProjectDataAdmin(props) {
           error={null != messages.start_date}
           helperText={messages.start_date}
         />
-        </MuiPickersUtilsProvider>
-        { null != messages.start_date ? (
-          <FormHelperText error={true}>
-            {messages.start_date}
-          </FormHelperText>
-        ): null }
+      </MuiPickersUtilsProvider>
+      {null != messages.start_date ? (
+        <FormHelperText error={true}>{messages.start_date}</FormHelperText>
+      ) : null}
 
       <MuiPickersUtilsProvider utils={LuxonUtils}>
         <KeyboardDatePicker
@@ -282,11 +287,9 @@ export default function ProjectDataAdmin(props) {
           helperText={messages.end_date}
         />
       </MuiPickersUtilsProvider>
-        { null != messages.end_date ? (
-          <FormHelperText error={true}>
-            {messages.end_date}
-          </FormHelperText>
-        ): null }
+      {null != messages.end_date ? (
+        <FormHelperText error={true}>{messages.end_date}</FormHelperText>
+      ) : null}
       <br />
       <InputLabel htmlFor="start_dow">Opens every</InputLabel>
       <Select
@@ -364,8 +367,12 @@ export default function ProjectDataAdmin(props) {
           projectId={projectId}
           groupsUrl={endpoints.endpoints[endpointSet].groupsUrl}
           diversityCheckUrl={endpoints.endpoints[endpointSet].diversityCheckUrl}
-          diversityRescoreGroup={endpoints.endpoints[endpointSet].diversityRescoreGroup}
-          diversityRescoreGroups={endpoints.endpoints[endpointSet].diversityRescoreGroups}
+          diversityRescoreGroup={
+            endpoints.endpoints[endpointSet].diversityRescoreGroup
+          }
+          diversityRescoreGroups={
+            endpoints.endpoints[endpointSet].diversityRescoreGroups
+          }
         />
       ) : null}
     </Paper>

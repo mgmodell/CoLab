@@ -4,16 +4,6 @@ $(document).bind("mobileinit", function(){
   $.mobile.ajaxEnabled = false;
 });
 
-// This function enables copy course functionality
-function popCopyPop( courseNumber, courseId, prettyStartDate, uglyStartDate )
-{
-  $('#copyPop #number').val( courseNumber );
-  $('#copyPop #id').val( courseId );
-  $('#copyPop #orig_date').text( prettyStartDate );
-  $('#copyPop #start_date').val( uglyStartDate );
-  $('#copyPop').popup( 'open', { transition: 'flip' } );
-
-}
 // This function builds the trend graphs for student data responses
 function init_me( obj, data ){
   var graph = d3.select( obj );
@@ -37,7 +27,7 @@ function init_me( obj, data ){
       .y(function(d) { 
         // return the Y coordinate where we want to plot this datapoint
         return y(d < 100 ? d : 100); 
-      })
+      });
       // Add the line by appending an svg:path element with the data
       // line we created above
       // do this AFTER the axes above so that the line is above the
@@ -47,7 +37,7 @@ function init_me( obj, data ){
         .attr("stroke", "steelblue")
         .attr("stroke-width", "1")
         .attr("fill", "none" )
-        .style("opacity", .5);
+        .style("opacity", 0.5);
 
       // From http://bl.ocks.org/benvandyke/8459843
       // get the x and y values for least squares
@@ -83,24 +73,24 @@ function init_me( obj, data ){
         // Calculate the performance with improvement
         var avg = getAvg( data );
         var ePerformance = Math.round(
-            avg * ( 1 + leastSquaresCoeff[0] / data.length ) )
+            avg * ( 1 + leastSquaresCoeff[0] / data.length ) );
 
         graph.append( "text" )
              .style("fill", "black")
              .style("font-size", "9")
-             .style("opacity", .35)
+             .style("opacity", 0.35)
              .attr("text-anchor", "middle")
-             .attr("x", .25 * width)
-             .attr("y", .8 * height)
-             .text( Math.round( avg ).toString()+'%' )
+             .attr("x", 0.25 * width)
+             .attr("y", 0.8 * height)
+             .text( Math.round( avg ).toString()+'%' );
         graph.append( "text" )
              .style("fill", "blue")
              .style("font-size", "12")
-             .style("opacity", .95)
+             .style("opacity", 0.95)
              .attr("text-anchor", "middle")
-             .attr("x", .65 * width)
+             .attr("x", 0.65 * width)
              .attr("y", height)
-             .text( ePerformance.toString()+'%' )
+             .text( ePerformance.toString()+'%' );
 
       }
 }

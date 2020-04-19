@@ -144,8 +144,9 @@ export default function InstallmentReport(props) {
   const saveContributions = () => {
     const url =
       props.setInstallmentUrl +
-      (Boolean( installment['id'] ) ? '/' + installment['id'] : '' ) + ".json";
-    const method = Boolean( installment['id'] ) ? 'PATCH' : 'POST';
+      (Boolean(installment["id"]) ? "/" + installment["id"] : "") +
+      ".json";
+    const method = Boolean(installment["id"]) ? "PATCH" : "POST";
     fetch(url, {
       method: method,
       credentials: "include",
@@ -169,25 +170,25 @@ export default function InstallmentReport(props) {
       })
       .then(data => {
         //Process Contributions
-        if( !data.error ){
-        setInstallment(data.installment);
-        const receivedContributions = data.installment.values.reduce(
-          (valuesAccum, value) => {
-            const values = valuesAccum[value.factor_id] || [];
-            values.push({
-              userId: value.user_id,
-              factorId: value.factor_id,
-              name: group['users'][value.user_id].name,
-              value: value.value
-            });
-            valuesAccum[value.factor_id] = values.sort(userCompare);
-            return valuesAccum;
-          },
-          {}
-        );
-        setContributions(receivedContributions);
+        if (!data.error) {
+          setInstallment(data.installment);
+          const receivedContributions = data.installment.values.reduce(
+            (valuesAccum, value) => {
+              const values = valuesAccum[value.factor_id] || [];
+              values.push({
+                userId: value.user_id,
+                factorId: value.factor_id,
+                name: group["users"][value.user_id].name,
+                value: value.value
+              });
+              valuesAccum[value.factor_id] = values.sort(userCompare);
+              return valuesAccum;
+            },
+            {}
+          );
+          setContributions(receivedContributions);
         }
-        console.log( data.messages );
+        console.log(data.messages);
         setMessages(data.messages);
         setShowAlerts(true);
         setWorking(false);
@@ -213,7 +214,7 @@ export default function InstallmentReport(props) {
             </IconButton>
           }
         >
-          {messages['status']}
+          {messages["status"]}
         </Alert>
       </Collapse>
       <p>
@@ -264,7 +265,7 @@ export default function InstallmentReport(props) {
               name="Comments"
               id="Comments"
               placeholder={"Enter your comments"}
-              helperText={messages['comments']}
+              helperText={messages["comments"]}
               multiline={true}
               fullWidth={true}
               onChange={updateComments}
@@ -275,7 +276,13 @@ export default function InstallmentReport(props) {
       {saveButton}
       <div
         id="installment_debug_div"
-        style={{ height: "10px", margin: 'auto', width: "10px", opacity: 0, border: "0px" }}
+        style={{
+          height: "10px",
+          margin: "auto",
+          width: "10px",
+          opacity: 0,
+          border: "0px"
+        }}
       >
         <input
           type="checkbox"

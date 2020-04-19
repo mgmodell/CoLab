@@ -303,10 +303,11 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
 
   step 'the user switches to the "Students" tab'
   # step 'the user enables the "Email" table view option'
+  byebug
   if addresses == 'user_list'
     @users.each do |_address|
       elem = find(:xpath,
-                  "//tr[td[contains(.,'#{addresses.email}')]]//button[@aria-label='Drop Student']")
+                  "//tr[td[contains(.,'#{_address.email}')]]//button[@aria-label='Drop Student']")
       elem.click
       find(:xpath,
            "//button/span[contains(.,'Drop the Student')]").click

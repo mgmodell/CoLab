@@ -23,8 +23,8 @@ import {
 
 import { DateTime } from "luxon";
 import LuxonUtils from "@date-io/luxon";
-import {useEndpointStore} from './EndPointStore'
-import { useUserStore } from "./UserStore"
+import { useEndpointStore } from "./EndPointStore";
+import { useUserStore } from "./UserStore";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
@@ -58,14 +58,14 @@ const useStyles = makeStyles({
 export default function BingoGameDataAdmin(props) {
   const classes = useStyles();
 
-  const endpointSet = 'bingo_game'
+  const endpointSet = "bingo_game";
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
 
   const { t, i18n } = useTranslation("bingo_games");
 
   const [dirty, setDirty] = useState(false);
-  const [working, setWorking] = useState( false );
+  const [working, setWorking] = useState(false);
   const [curTab, setCurTab] = useState("details");
   const [messages, setMessages] = useState({});
   const [gameProjects, setGameProjects] = useState([
@@ -80,7 +80,7 @@ export default function BingoGameDataAdmin(props) {
       ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
     )
   );
-  const [bingoGameId, setBingoGameId] = useState( props.bingoGameId)
+  const [bingoGameId, setBingoGameId] = useState(props.bingoGameId);
   const [gameSource, setGameSource] = useState("");
   const [gameTimezone, setGameTimezone] = useState("UTC");
   const [gameActive, setGameActive] = useState(false);
@@ -100,19 +100,17 @@ export default function BingoGameDataAdmin(props) {
   const [gameGroupProjectId, setGameGroupProjectId] = useState(-1);
 
   useEffect(() => {
-    if( endpoints.endpointStatus[endpointSet] != 'loaded'){
-      endpointsActions.fetch(endpointSet,props.getEndpointsUrl, props.token);
+    if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
   }, []);
 
-  useEffect(() =>{
-    if (endpoints.endpointStatus[endpointSet] == 'loaded') {
+  useEffect(() => {
+    if (endpoints.endpointStatus[endpointSet] == "loaded") {
       getBingoGameData();
       initResultData();
     }
-  }, [
-    endpoints.endpointStatus[endpointSet]
-  ]);
+  }, [endpoints.endpointStatus[endpointSet]]);
 
   useEffect(() => {
     setDirty(true);
@@ -132,11 +130,14 @@ export default function BingoGameDataAdmin(props) {
   ]);
 
   const saveBingoGame = () => {
-    const method = null == bingoGameId ? 'POST' : 'PATCH';
-    setWorking( true );
+    const method = null == bingoGameId ? "POST" : "PATCH";
+    setWorking(true);
 
     const url =
-    endpoints.endpoints[endpointSet].baseUrl + '/' + (null == bingoGameId ? props.courseId : bingoGameId) + '.json';
+      endpoints.endpoints[endpointSet].baseUrl +
+      "/" +
+      (null == bingoGameId ? props.courseId : bingoGameId) +
+      ".json";
 
     // Save
     setSaveStatus(t("save_status"));
@@ -177,49 +178,54 @@ export default function BingoGameDataAdmin(props) {
       })
       .then(data => {
         //TODO: handle save errors
-        setSaveStatus(data['notice']);
+        setSaveStatus(data["notice"]);
         setDirty(false);
-        setMessages(data['messages']);
+        setMessages(data["messages"]);
 
         getBingoGameData();
       });
   };
 
   const initResultData = () => {
-    if( bingoGameId > 0 ){
-    fetch(endpoints.endpoints[endpointSet].gameResultsUrl + '/' + bingoGameId + ".json", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-        "X-CSRF-Token": props.token
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
+    if (bingoGameId > 0) {
+      fetch(
+        endpoints.endpoints[endpointSet].gameResultsUrl +
+          "/" +
+          bingoGameId +
+          ".json",
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Accepts: "application/json",
+            "X-CSRF-Token": props.token
+          }
         }
-      })
-      .then(data => {
-        setResultData(data);
-      });
-
+      )
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            console.log("error");
+            return [{ id: -1, name: "no data" }];
+          }
+        })
+        .then(data => {
+          setResultData(data);
+        });
     }
   };
 
   const getBingoGameData = () => {
-    setDirty( true );
-    var url = endpoints.endpoints[endpointSet].baseUrl + '/'
-    if( null == bingoGameId ){
-      url = url + 'new/' + props.courseId  + '.json';
+    setDirty(true);
+    var url = endpoints.endpoints[endpointSet].baseUrl + "/";
+    if (null == bingoGameId) {
+      url = url + "new/" + props.courseId + ".json";
     } else {
-      url = url + bingoGameId + '.json';
+      url = url + bingoGameId + ".json";
     }
-    fetch( url, {
+    fetch(url, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -247,19 +253,25 @@ export default function BingoGameDataAdmin(props) {
         //Set the bingo_game stuff
         const bingo_game = data.bingo_game;
         setBingoGameId(bingo_game.id);
-        setGameTopic(bingo_game.topic || '');
+        setGameTopic(bingo_game.topic || "");
         setGameDescriptionEditor(
           EditorState.createWithContent(
             ContentState.createFromBlockArray(
-              htmlToDraft(bingo_game.description || '').contentBlocks
+              htmlToDraft(bingo_game.description || "").contentBlocks
             )
           )
         );
-        setGameSource(bingo_game.source || '');
+        setGameSource(bingo_game.source || "");
         setGameActive(bingo_game.active || false);
-        var receivedDate = DateTime.fromISO( bingo_game.start_date).setZone( bingo_game.course.timezone )
+        var receivedDate = DateTime.fromISO(bingo_game.start_date).setZone(
+          bingo_game.course.timezone
+        );
         setGameStartDate(receivedDate.toISO());
-        setGameEndDate(DateTime.fromISO(bingo_game.end_date).setZone( bingo_game.course.timezone ).toISO());
+        setGameEndDate(
+          DateTime.fromISO(bingo_game.end_date)
+            .setZone(bingo_game.course.timezone)
+            .toISO()
+        );
         setGameIndividualCount(bingo_game.individual_count || 0);
         setGameLeadTime(bingo_game.lead_time || 0);
         //Group options
@@ -279,12 +291,12 @@ export default function BingoGameDataAdmin(props) {
       <Button
         variant="contained"
         color="primary"
-        className={classes['button']}
+        className={classes["button"]}
         onClick={saveBingoGame}
         id="save_bingo_game"
         value="save_bingo_game"
       >
-        {null == bingoGameId ? t('create_bingo_btn') : t('update_bingo_btn')}
+        {null == bingoGameId ? t("create_bingo_btn") : t("update_bingo_btn")}
       </Button>
     </Suspense>
   ) : null;
@@ -299,10 +311,12 @@ export default function BingoGameDataAdmin(props) {
             type="number"
             className={classes.textField}
             value={gameGroupDiscount}
-            onChange={event => setGameGroupDiscount(parseInt( event.target.value) )}
+            onChange={event =>
+              setGameGroupDiscount(parseInt(event.target.value))
+            }
             margin="normal"
-            error={null != messages['name']}
-            helper={messages['name']}
+            error={null != messages["name"]}
+            helper={messages["name"]}
           />
         </Grid>
         <Grid item>
@@ -353,9 +367,9 @@ export default function BingoGameDataAdmin(props) {
               </Grid>
               <Grid item>
                 <Editor
-                  wrapperId='Description'
+                  wrapperId="Description"
                   label={t("description")}
-                  placeholder={t('description')}
+                  placeholder={t("description")}
                   onEditorStateChange={setGameDescriptionEditor}
                   toolbarOnFocus
                   toolbar={{
@@ -406,10 +420,11 @@ export default function BingoGameDataAdmin(props) {
                     value={gameStartDate}
                     onChange={setGameStartDate}
                   />
-                  { null != messages.start_date ?
-                  (<FormHelperText error={true}>
-                    {messages.start_date}
-                  </FormHelperText>): null}
+                  {null != messages.start_date ? (
+                    <FormHelperText error={true}>
+                      {messages.start_date}
+                    </FormHelperText>
+                  ) : null}
                 </Grid>
                 <Grid item>
                   <KeyboardDatePicker
@@ -422,10 +437,11 @@ export default function BingoGameDataAdmin(props) {
                     value={gameEndDate}
                     onChange={setGameEndDate}
                   />
-                  { null != messages.end_date ?
-                  (<FormHelperText error={true}>
-                    {messages.end_date}
-                  </FormHelperText>): null}
+                  {null != messages.end_date ? (
+                    <FormHelperText error={true}>
+                      {messages.end_date}
+                    </FormHelperText>
+                  ) : null}
                 </Grid>
               </MuiPickersUtilsProvider>
               <Grid item>

@@ -5,8 +5,7 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
 
-
-function ConceptChips(props){
+function ConceptChips(props) {
   const theme = createMuiTheme();
   var c = [{ id: 1, name: "nothing" }];
 
@@ -19,7 +18,6 @@ function ConceptChips(props){
       </Paper>
     </MuiThemeProvider>
   );
-
 }
 
 ConceptChips.propTypes = {
