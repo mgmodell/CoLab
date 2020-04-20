@@ -287,6 +287,9 @@ Then 'the user adds the {string} users {string}' do |type, addresses|
 
   btn = find(:xpath, "//button[contains(.,'Add #{lbl}!')]")
   btn.click
+  while ( all( :xpath, "//*[@id='waiting']" ).size > 0 ) do
+    sleep( 0.01)
+  end
 end
 
 Then 'the user drops the {string} users {string}' do |type, addresses|
@@ -303,14 +306,17 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
 
   step 'the user switches to the "Students" tab'
   # step 'the user enables the "Email" table view option'
-  byebug
   if addresses == 'user_list'
     @users.each do |_address|
+      step 'the user enables the "Email" table view option'
       elem = find(:xpath,
                   "//tr[td[contains(.,'#{_address.email}')]]//button[@aria-label='Drop Student']")
       elem.click
       find(:xpath,
            "//button/span[contains(.,'Drop the Student')]").click
+      while ( all( :xpath, "//*[@id='waiting']" ).size > 0 ) do
+        sleep( 0.01)
+      end
     end
   else
     elem = find(:xpath,
@@ -318,7 +324,9 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
     elem.click
     find(:xpath,
          "//button/span[contains(.,'Drop the Student')]").click
-    sleep(0.2)
+    while ( all( :xpath, "//*[@id='waiting']" ).size > 0 ) do
+      sleep( 0.01)
+    end
   end
 end
 

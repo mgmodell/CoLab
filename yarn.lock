@@ -7177,9 +7177,9 @@ react-dom@^16.11.0:
     scheduler "^0.19.1"
 
 react-draft-wysiwyg@^1.13.2:
-  version "1.14.4"
-  resolved "https://registry.yarnpkg.com/react-draft-wysiwyg/-/react-draft-wysiwyg-1.14.4.tgz#6fefe3201116e77c965cdc587ee26286072d88a0"
-  integrity sha512-aV7pEc91tO4r0vv40f4NkWBZhC0PnmHvQBRVAo8egfHXOm5C6MvDhYysC4Aab219zir7GL79xIZh1hz0Z6sQLQ==
+  version "1.14.5"
+  resolved "https://registry.yarnpkg.com/react-draft-wysiwyg/-/react-draft-wysiwyg-1.14.5.tgz#82e34ae3472b815b5d9f70615f40e13afcbc2055"
+  integrity sha512-utbJEs91757QXYoBwKRb/4kB3JdswLlj0heUiAeXs/OxZAUISJXxLMFLBIixRlIcUnNkwxOsMikRshDMtWIS3g==
   dependencies:
     classnames "^2.2.6"
     draftjs-utils "^0.10.2"
@@ -7196,9 +7196,9 @@ react-draggable@^4.0.3:
     prop-types "^15.6.0"
 
 react-i18next@^11.2.7:
-  version "11.3.4"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.3.4.tgz#355df5fe5133e5e30302d166f529678100ffc968"
-  integrity sha512-IRZMD7PAM3C+fJNzRbyLNi1ZD0kc3Z3obBspJjEl+9H+ME41PhVor3BpdIqv/Rm7lUoGhMjmpu42J45ooJ61KA==
+  version "11.3.5"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.3.5.tgz#9cd5273f752a241db65b3118e3075f895f5fbf65"
+  integrity sha512-x1dgM7UU/jKQ72/q3p9kkYz0C8fqAfMlUlx+SxqBUcRMTs/09HfnOUZFry1+GBpUcDHAg8R/vmPqL9rRzFO0UQ==
   dependencies:
     "@babel/runtime" "^7.3.1"
     html-parse-stringify2 "2.0.1"

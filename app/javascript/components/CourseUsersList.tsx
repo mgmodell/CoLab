@@ -534,7 +534,7 @@ export default function CourseUsersList(props) {
 
   return (
     <Paper>
-      {props.working ? <LinearProgress /> : null}
+      {props.working ? <LinearProgress id='waiting' /> : null}
       {null != props.usersList ? (
         <React.Fragment>
           {userList}

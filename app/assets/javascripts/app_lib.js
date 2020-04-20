@@ -224,19 +224,12 @@ $(document).ready(function(){
   });
 
   $("#basicTable").tablesorter( {sortList: [[0,0],[1,0]]} );
-  $("#activities_table").tablesorter( {sortList: [[3,0],[2,0]]} );
   $("#courseListingTable").tablesorter( {sortList: [[4,1],[1,0]]} );
   $("#responsesTable").tablesorter( {sortList: [[3,0]]});
-  $("#groups_table").tablesorter( {sortList: [[0,0],[1,0]]} );
   $("#bingo_table").tablesorter( {sortList: [[0,0]]} );
-  $("#projects_table").tablesorter( {sortList: [[0,0]]} );
-  $("#experiences_table").tablesorter( {sortList: [[0,0]]} );
   $("#course_table").tablesorter( {sortList: [[0,0]]} );
   $("#candidates_table").tablesorter( {sortList: [[0,0]]} );
-  $("#concepts_table").tablesorter( {sortList: [[0,0]]} );
   $("#history_table").tablesorter( {sortList: [[0,0]]} );
-
-  $( "[data-role='header'], [data-role='footer']" ).toolbar();
 
 });
 
