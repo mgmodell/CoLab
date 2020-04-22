@@ -20,7 +20,6 @@ import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import ClearIcon from "@material-ui/icons/Clear";
 
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EmailIcon from "@material-ui/icons/Email";
 import CheckIcon from "@material-ui/icons/Check";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
@@ -29,6 +28,7 @@ import Link from "@material-ui/core/Link";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import DropUserButton from "./DropUserButton";
+import BingoDataRepresentation from "./BingoDataRepresentation";
 
 export default function CourseUsersList(props) {
   const [addUsersPath, setAddUsersPath] = useState("");
@@ -109,12 +109,24 @@ export default function CourseUsersList(props) {
     },
     {
       label: "Bingo Progress",
-      name: "bingo_performance",
+      name: "id",
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const data = props.usersList[tableMeta.rowIndex].bingo_data;
-          return value + "%";
+          const user = props.usersList.filter((item)=> {
+            return value == item.id;
+          })[0]
+          const data = user.bingo_data;
+          return (
+          <React.Fragment>
+            <BingoDataRepresentation
+              height={30}
+              width={70}
+              value={Number(value)}
+              scores={data} />
+
+          </React.Fragment>
+          )
         }
       }
     },
@@ -435,8 +447,8 @@ export default function CourseUsersList(props) {
         columns={userColumns}
         data={props.usersList.filter(user => {
           const checkType =
-            "instructor" != user.status && "assistant" != user.status;
-          return "instructor" == props.userType ? !checkType : checkType;
+            "instructor" !== user.status && "assistant" != user.status;
+          return "instructor" === props.userType ? !checkType : checkType;
         })}
         options={{
           responsive: "scrollMaxHeight",

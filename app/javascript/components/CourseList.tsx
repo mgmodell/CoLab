@@ -138,6 +138,9 @@ export default function CourseList(props) {
         display: true,
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
+          const course = courses.filter((item)=>{
+            return value == item.id;
+          })
           const scoresUrl =
             endpoints.endpoints[endpointSet].scoresUrl + value + ".csv";
           const copyUrl =
@@ -161,7 +164,7 @@ export default function CourseList(props) {
                 copyUrl={endpoints.endpoints[endpointSet].courseCopyUrl}
                 itemId={value}
                 itemUpdateFunc={getCourses}
-                startDate={new Date(courses[tableMeta.rowIndex].start_date)}
+                startDate={new Date(course['start_date'])}
                 isWorking={working}
                 setIsWorking={setWorking}
                 addMessagesFunc={postNewMessage}

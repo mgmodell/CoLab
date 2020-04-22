@@ -100,13 +100,13 @@ export default function BingoGameDataAdmin(props) {
   const [gameGroupProjectId, setGameGroupProjectId] = useState(-1);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
+    if (endpoints.endpointStatus[endpointSet] !== "loaded") {
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
   }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
+    if (endpoints.endpointStatus[endpointSet] === "loaded") {
       getBingoGameData();
       initResultData();
     }
@@ -130,13 +130,13 @@ export default function BingoGameDataAdmin(props) {
   ]);
 
   const saveBingoGame = () => {
-    const method = null == bingoGameId ? "POST" : "PATCH";
+    const method = null === bingoGameId ? "POST" : "PATCH";
     setWorking(true);
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
       "/" +
-      (null == bingoGameId ? props.courseId : bingoGameId) +
+      (null === bingoGameId ? props.courseId : bingoGameId) +
       ".json";
 
     // Save
@@ -220,7 +220,7 @@ export default function BingoGameDataAdmin(props) {
   const getBingoGameData = () => {
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
-    if (null == bingoGameId) {
+    if (null === bingoGameId) {
       url = url + "new/" + props.courseId + ".json";
     } else {
       url = url + bingoGameId + ".json";

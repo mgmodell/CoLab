@@ -197,9 +197,11 @@
               <%= current_user.get_bingo_performance( course_id: course.id ) %>%
             </td>
             <td>
-              <svg width="50" height="50"
-                onload="init_me( this, <%= current_user.get_bingo_data( course_id: course.id ) %>);">
-              </svg>
+              <%= react_component "BingoDataRepresentation", {
+                height: 50,
+                width: 50,
+                scores: current_user.get_bingo_data( course_id: course.id )  
+              }%>
             </td>
             <td>
               <%= current_user.get_experience_performance( course_id: course.id ) %>%
