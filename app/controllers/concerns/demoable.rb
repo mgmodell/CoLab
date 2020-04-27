@@ -110,7 +110,6 @@ module Demoable
     attr_accessor :values, :inst_date
 
     def values_build(factor:, user:, value:)
-      # puts "u: #{user.inspect}\nf: #{factor.inspect}\nv: #{value}"
       self.values = values || []
       v = Value.new
       v.factor = factor

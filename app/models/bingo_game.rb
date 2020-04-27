@@ -77,7 +77,7 @@ class BingoGame < ApplicationRecord
 
   def task_data(current_user:)
     # TODO: There's got to be a better way
-    group = project.group_for_user(current_user)
+    group = self.project.group_for_user(current_user) if project.present?
     helpers = Rails.application.routes.url_helpers
     link = if awaiting_review?
              helpers.review_bingo_candidates_path(self)
@@ -104,6 +104,7 @@ class BingoGame < ApplicationRecord
       course_name: course.get_name(false),
       start_date: start_date,
       end_date: end_date,
+      next_date: self.next_deadline,
       link: link,
       consent_link: consent_link,
       active: active

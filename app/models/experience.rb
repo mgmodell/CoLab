@@ -131,6 +131,7 @@ class Experience < ApplicationRecord
       course_name: course.get_name(false),
       start_date: start_date,
       end_date: end_date,
+      next_deadline: next_deadline(),
       link: link,
       consent_link: consent_link,
       active: active

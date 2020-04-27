@@ -69,14 +69,11 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
 end
 
 Then /^the user switches to the "([^"]*)" tab$/ do |tab|
-  unless tab == 'Task View'
     begin
       click_link tab
     rescue Capybara::ElementNotFound => e
       find(:xpath, "//button/span[text()='#{tab}']").click
-    else
     end
-  end
 end
 
 Then 'the user enables the {string} table view option' do |view_option|

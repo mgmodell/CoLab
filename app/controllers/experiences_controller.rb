@@ -40,7 +40,6 @@ class ExperiencesController < ApplicationController
 
     render json: {
       reactions: reactions.collect do |reaction|
-        puts reaction.inspect
         {
           user: {
             email: reaction.user.email,

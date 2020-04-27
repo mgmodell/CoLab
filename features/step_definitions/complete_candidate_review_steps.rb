@@ -168,6 +168,7 @@ Given /^the user is the most recently created user$/ do
 end
 
 When /^the user clicks the link to the candidate review$/ do
+  step 'the user switches to the "Task View" tab'
   find(:xpath, "//td[contains(text(),'#{@bingo.get_name(@anon)}')]").click
 end
 

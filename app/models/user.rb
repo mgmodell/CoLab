@@ -369,7 +369,7 @@ class User < ApplicationRecord
         # prey_u.destroy!
       end
     else
-      puts 'One or more user were not found. No work done.'
+      logger.debug 'One or more user were not found. No work done.'
     end
   end
 

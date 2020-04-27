@@ -84,9 +84,7 @@ class CoursesController < ApplicationController
     end
 
     users = @course.rosters.collect do |roster|
-      puts "\n\n\n\t***no user\n" if roster.user.blank?
       user = roster.user
-      byebug if roster.user.blank?
       {
         id: roster.id,
         first_name: @anon ? user.anon_first_name : user.first_name,
@@ -325,7 +323,6 @@ class CoursesController < ApplicationController
   end
 
   def new_from_template
-    puts "\n\n\n\t**** #{params}\n\n"
     new_start = Chronic.parse(params[:start_date])
 
     copied_course = @course.copy_from_template new_start: new_start
@@ -339,7 +336,6 @@ class CoursesController < ApplicationController
 
   def create
     @title = t('courses.new.title')
-    puts "\n\n\n\t#{course_params}\n\n\n"
     @course = Course.new(course_params)
     @course.rosters << Roster.new(role: Roster.roles[:instructor], user: current_user)
 

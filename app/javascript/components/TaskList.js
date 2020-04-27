@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import { DateTime } from "luxon";
@@ -19,7 +18,6 @@ export default function TaskList(props) {
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
 
-  const [working, setWorking] = useState(true);
   const columns = [
     {
       label: "Type",
@@ -154,48 +152,6 @@ export default function TaskList(props) {
     }
   ];
 
-  const [tasks, setTasks] = useState([]);
-
-  const getTasks = () => {
-    var url = endpoints.endpoints[endpointSet].taskListUrl + ".json";
-
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "X-CSRF-Token": props.token
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
-      .then(data => {
-        //Process the data
-        setTasks(data);
-        setWorking(false);
-      });
-  };
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
-      getTasks();
-    }
-  }, [endpoints.endpointStatus[endpointSet]]);
 
   useEffect(() => {
     if (user.loaded) {
@@ -206,7 +162,7 @@ export default function TaskList(props) {
   const muiDatTab = (
     <MUIDataTable
       title="Tasks"
-      data={tasks}
+      data={props.tasks}
       columns={columns}
       options={{
         responsive: "scrollMaxHeight",
@@ -214,7 +170,7 @@ export default function TaskList(props) {
         print: false,
         download: false,
         onRowClick: (rowData, rowState) => {
-          const link = tasks[rowState.dataIndex].link;
+          const link = props.tasks[rowState.dataIndex].link;
           if (null != link) {
             window.location.href = link;
           }
@@ -226,13 +182,11 @@ export default function TaskList(props) {
 
   return (
     <Paper>
-      {working ? <LinearProgress /> : null}
       <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
     </Paper>
   );
 }
 
 TaskList.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired
+  tasks: PropTypes.array.isRequired
 };
