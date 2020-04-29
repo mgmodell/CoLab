@@ -144,6 +144,7 @@ export default function ExperienceDataAdmin(props) {
       })
       .then(data => {
         if (data.messages != null && Object.keys(data.messages).length < 2) {
+          console.log( data );
           const experience = data.experience;
           setExperienceId(experience.id);
           setExperienceName(experience.name);
@@ -164,6 +165,7 @@ export default function ExperienceDataAdmin(props) {
           setMessages(data.messages);
         } else {
           setMessages(data.messages);
+          setWorking(false);
         }
       });
   };

@@ -108,7 +108,9 @@ class ExperiencesController < ApplicationController
           render :new
         end
         format.json do
-          render json: { messages: @experience.errors }
+          messages = @experience.errors.to_hash
+          messages[:status] = 'Error creating the Experience'
+          render json: { messages: messages }
         end
       end
     end
@@ -143,7 +145,9 @@ class ExperiencesController < ApplicationController
           render :edit
         end
         format.json do
-          render json: { messages: @experience.errors }
+          messages = @experience.errors.to_hash
+          messages[:status] = 'Error saving the Experience'
+          render json: { messages: messages }
         end
       end
     end
