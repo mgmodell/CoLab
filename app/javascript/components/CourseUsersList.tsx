@@ -35,7 +35,6 @@ export default function CourseUsersList(props) {
   const [procRegReqPath, setProcRegReqPath] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newUserAddresses, setNewUserAddresses] = useState("");
-  const [working, setWorking] = useState(true);
 
   const getUsers = () => {
     var url = props.retrievalUrl;
@@ -72,7 +71,7 @@ export default function CourseUsersList(props) {
   const refreshFunc = newMessages => {
     getUsers();
     props.addMessagesFunc(newMessages);
-    setWorking(false);
+    props.setWorking(false);
   };
 
   useEffect(() => {
@@ -213,7 +212,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      setWorking(true);
+                      props.setWorking(true);
                       fetch(user.reinvite_link, {
                         method: "GET",
                         credentials: "include",
@@ -260,7 +259,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      setWorking(true);
+                      props.setWorking(true);
                       fetch(procRegReqPath, {
                         method: "PATCH",
                         credentials: "include",
@@ -295,7 +294,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl2}
                     onClick={event => {
-                      setWorking(true);
+                      props.setWorking(true);
                       fetch(procRegReqPath, {
                         method: "PATCH",
                         credentials: "include",
@@ -335,7 +334,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      setWorking(true);
+                      props.setWorking(true);
                       fetch(addUsersPath, {
                         method: "PUT",
                         credentials: "include",

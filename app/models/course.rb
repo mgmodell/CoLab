@@ -2,7 +2,7 @@
 
 require 'forgery'
 class Course < ApplicationRecord
-  belongs_to :school, inverse_of: :courses
+  belongs_to :school, inverse_of: :courses, counter_cache: true
   has_many :projects, inverse_of: :course, dependent: :destroy
   has_many :rosters, inverse_of: :course, dependent: :destroy
   has_many :bingo_games, inverse_of: :course, dependent: :destroy

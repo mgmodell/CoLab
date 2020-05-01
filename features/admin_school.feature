@@ -14,7 +14,7 @@ Feature: School Administration
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user selects the 'Schools' menu item
-     And the user clicks "New School"
+     And the user clicks the "New School" button
      And the user sets the "Name" field to "hard knocks"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
     Then the user clicks "Create School"
@@ -31,13 +31,13 @@ Feature: School Administration
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user selects the 'Schools' menu item
-     And the user clicks "New School"
+     And the user clicks the "New School" button
      #no name
      And the user sets the "Name" field to ""
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
-     And the user selects "Seoul" as the "Timezone"
+     And the user selects "Seoul" as the "Time Zone"
     Then the user clicks "Create School"
-     And the user will see "Please review the problems below"
+     And the user will dismiss the error "Please review the problems below"
      #Now we complete it
      And the user sets the "Name" field to "life"
     Then the user clicks "Create School"
@@ -66,10 +66,10 @@ Feature: School Administration
     Then the user selects the 'Schools' menu item
     Then the user sees 2 school
     Then the user opens the school
-    Then the user clicks "Edit school details"
+    # Then the user clicks "Edit school details"
      And the user sets the "Name" field to "Off"
      And the user sets the "Description" field to "blue is the best"
-    Then the user clicks "Update School"
+    Then the user clicks "Save School"
     Then retrieve the latest school from the db
      And the school "Name" field is "Off"
      And the school "Description" field is "blue is the best"

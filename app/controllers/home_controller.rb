@@ -80,6 +80,11 @@ class HomeController < ApplicationController
         scoresUrl: course_scores_path(id: ''),
         courseCopyUrl: copy_course_path(id: '')
       }
+    when 'school'
+      ep_hash = {
+        baseUrl: schools_path,
+        schoolCreateUrl: new_school_path,
+      }
     when 'experience'
       ep_hash = {
         baseUrl: experiences_path

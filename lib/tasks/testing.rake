@@ -156,6 +156,7 @@ namespace :testing do
         input_path: 'cucumber/',
         report_path: 'test_results',
         report_title: 'CoLab BDD Test Results',
+        report_types: [:json, :html],
         voice_commands: true
        }
       ReportBuilder.build_report options

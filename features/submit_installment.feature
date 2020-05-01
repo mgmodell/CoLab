@@ -76,6 +76,7 @@ Feature: Submitting Reports
     Given the project has been activated
     Then the user logs in and submits an installment
     When the user navigates home
+    Then the user switches to the "Task View" tab
     Then the user enables the "Status" table view option
     Then the assessment should show up as completed
     Then the installment values will match the submit ratio

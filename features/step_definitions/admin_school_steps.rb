@@ -27,9 +27,17 @@ end
 
 Then 'the user opens the school' do
   @school = School.last
-  click_link_or_button @school.name
+  row = find( :xpath, "//td[contains(.,'#{@school.name}')]")
+  row.click
 end
 
 Then 'the user selects {string} as the {string}' do |value, field|
-  select(value, from: field, visible: :all)
+  lbl = find( :xpath, "//label[text()='#{field}']")[:for]
+  elem = find( :xpath, "//*[@id='#{lbl}']").click
+  find(:xpath, "//li[text()='#{value}']").click
+end
+
+Then 'the user will dismiss the error {string}' do |error_message|
+  page.should have_content error_message
+  find( :xpath, "//button[@id='error-close']").click
 end

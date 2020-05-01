@@ -396,14 +396,15 @@ class CoursesController < ApplicationController
         end
       end
     else
+      logger.debug @course.errors.full_messages unless @course.errors.empty?
       respond_to do |format|
         format.html do
-          logger.debug @course.errors.full_messages unless @course.errors.empty?
           render :edit
         end
         format.json do
+          messages = @course.errors.to_hash.store(:main, 'Please review the problems below')
           response = {
-            messages: @course.errors.store(:main, 'Please review the problems below')
+            messages: messages
           }
           render json: response
         end
