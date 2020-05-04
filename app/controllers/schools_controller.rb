@@ -14,7 +14,7 @@ class SchoolsController < ApplicationController
           school: @school.as_json(
             only: %i[ id name description timezone ]
           ),
-          timezones: CoursesController::TIMEZONES,
+          timezones: HomeController::TIMEZONES,
           messages: {}
         }
         render json: response

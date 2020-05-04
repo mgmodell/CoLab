@@ -100,6 +100,8 @@ Rails.application.routes.draw do
   scope 'infra' do
     post 'quote' => 'home#get_quote', as: :get_quote
     get 'states_for_country/:country_code' => 'home#states_for_country', as: :states_for
+    get 'full_profile' => 'home#full_profile', as: :full_profile,
+        constraints: ->(req) { req.format == :json }
     get 'simple_profile' => 'home#simple_profile', as: :simple_profile,
         constraints: ->(req) { req.format == :json }
     post 'diversity_score_for' => 'home#check_diversity_score',
@@ -107,6 +109,16 @@ Rails.application.routes.draw do
     get 'locales/:ns' => 'locales#get_resources', as: :i18n,
         constraints: ->(req) { req.format == :json }
     get 'endpoints/:unit' => 'home#endpoints', as: :endpoints,
+        constraints: ->(req) {req.format == :json }
+    get 'timezones' => 'home#get_time_zones', as: :timezones,
+        constraints: ->(req) {req.format == :json }
+    get 'genders' => 'home#get_genders', as: :genders,
+        constraints: ->(req) {req.format == :json }
+    get 'cip_codes' => 'home#get_cip_codes', as: :cip_codes,
+        constraints: ->(req) {req.format == :json }
+    get 'languages' => 'home#get_languages', as: :languages,
+        constraints: ->(req) {req.format == :json }
+    get 'countries' => 'home#get_countries', as: :countries,
         constraints: ->(req) {req.format == :json }
   end
 

@@ -15,14 +15,6 @@ class CoursesController < ApplicationController
                                           self_reg_confirm self_reg qr]
   skip_before_action :authenticate_user!, only: %i[qr get_quote]
 
-  # TimeZones constant
-  TIMEZONES ||= ActiveSupport::TimeZone.all.collect do |tz|
-    {
-      name: tz.name,
-      stdName: tz.tzinfo.name
-
-    }
-  end
   def show
     @title = t('.title')
     respond_to do |format|
@@ -34,7 +26,7 @@ class CoursesController < ApplicationController
                       school_id start_date end_date
                       consent_form_id ]
           ),
-          timezones: CoursesController::TIMEZONES,
+          timezones: HomeController::TIMEZONES,
           schools: School.all.as_json(
             only: %i[id name timezone]
           ),

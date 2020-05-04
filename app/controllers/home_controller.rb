@@ -98,11 +98,113 @@ class HomeController < ApplicationController
       ep_hash = {
         baseUrl: concepts_path
       }
+    when 'consent_form'
+      ep_hash = {
+        baseUrl: consent_forms_path,
+      }
+    when 'profile'
+      ep_hash = {
+        baseUrl: profile_path,
+      }
     end
     # Provide the endpoints
     respond_to do |format|
       format.json do
         render json: ep_hash
+      end
+    end
+  end
+
+  def full_profile
+    respond_to do |format|
+      format.json do
+        profile_hash = {
+          user: current_user.as_json(
+            only: %i[ id first_name last_name gender_id country
+                    timezone theme school_id language_id 
+                    date_of_birth home_state_id cip_code_id 
+                    primary_language_id started_school
+                    impairment_visual impairment_auditory
+                    impairment_motor impairment_cognitive
+                    impairment_other ]
+          ),
+          coursePerformanceUrl: user_performance_path,
+          activitiesUrl: user_activities_path,
+          consentFormsPath: user_consent_forms_path,
+
+          addEmailUrl: add_registered_email_path,
+          removeEmailUrl: remove_registered_email_path,
+          setPrimaryEmailUrl: set_primary_registered_email_path,
+          passwordResetUrl: initiate_password_reset_path,
+          #infrastructure
+          countriesUrl: countries_path,
+          statesForUrl: states_for_path,
+          languagesUrl: languages_path,
+          cipCodesUrl: cip_codes_path,
+          gendersUrl: genders_path,
+          timezonesUrl: timezones_path,
+          schoolsUrl: schools_path
+
+        }
+        profile_hash[:emails] = current_user.emails.as_json(
+          only: %i[ id email primary ]
+        )
+        render json: profile_hash
+      end
+    end
+  end
+
+  # TimeZones constant
+  TIMEZONES ||= ActiveSupport::TimeZone.all.collect do |tz|
+    {
+      name: tz.name,
+      stdName: tz.tzinfo.name
+
+    }
+  end
+
+  def get_time_zones
+    respond_to do |format|
+      format.json { render json: HomeController::TIMEZONES }
+    end
+  end
+
+  def get_genders
+    respond_to do |format|
+      format.json do
+        render json Gender.all.as_json(
+          only: %i[ id name code ]
+        )
+      end
+    end
+  end
+
+  def get_cip_codes
+    respond_to do |format|
+      format.json do
+        render json Gender.all.as_json(
+          only: %i[ id name gov_code ]
+        )
+      end
+    end
+  end
+  
+  def get_languages
+    respond_to do |format|
+      format.json do
+        render json Language.all.as_json(
+          only: %i[ id name code ]
+        )
+      end
+    end
+  end
+  
+  def get_countries
+    respond_to do |format|
+      format.json do
+        render json HomeCountry.all.as_json(
+          only: %i[ id name code ]
+        )
       end
     end
   end
