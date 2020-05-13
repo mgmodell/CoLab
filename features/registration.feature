@@ -7,6 +7,7 @@ Feature: User registration
     Given a user has signed up
     Given the email queue is empty
 
+  @javascript
   Scenario: Registered user provides consent and demographics.
     Given reset time clock to now
     Given there is a course with an assessed project
@@ -24,6 +25,7 @@ Feature: User registration
     When the user visits the index
     Then the user will see the task listing page
 
+  @javascript
   Scenario: Registered user does not provide consent
     Given reset time clock to now
     Given there is a course with an assessed project

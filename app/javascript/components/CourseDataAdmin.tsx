@@ -17,6 +17,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Tooltip from "@material-ui/core/Tooltip";
 
+import {iconForType} from './ActivityLib'
+
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
@@ -31,9 +33,6 @@ import LuxonUtils from "@date-io/luxon";
 import { useEndpointStore } from "./EndPointStore";
 import MUIDataTable from "mui-datatables";
 
-import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
-import GridOffIcon from "@material-ui/icons/GridOff";
-import TuneIcon from "@material-ui/icons/Tune";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
@@ -406,19 +405,6 @@ export default function CourseDataAdmin(props) {
       <br />
     </Paper>
   );
-  const iconForType = type => {
-    var icon;
-    if (["Group Experience", "Experiences"].includes(type)) {
-      icon = <LocalLibraryIcon />;
-    } else if (["Project", "Assessments"].includes(type)) {
-      icon = <TuneIcon />;
-    } else if (["Terms List", "Bingo Games"].includes(type)) {
-      icon = <GridOffIcon />;
-    } else {
-      console.log(type);
-    }
-    return icon;
-  };
   const activityColumns = [
     {
       label: "Type",

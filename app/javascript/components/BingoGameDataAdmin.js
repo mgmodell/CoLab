@@ -304,7 +304,7 @@ export default function BingoGameDataAdmin(props) {
   const group_options = gameGroupOption ? (
     <Suspense fallback={<Skeleton variant="text" />}>
       <React.Fragment>
-        <Grid item>
+        <Grid item xs={6}>
           <TextField
             id="bingo-name"
             label={t("group_discount")}
@@ -319,7 +319,7 @@ export default function BingoGameDataAdmin(props) {
             helper={messages["name"]}
           />
         </Grid>
-        <Grid item>
+        <Grid item xs={6}>
           <FormControl className={classes.formControl}>
             <InputLabel shrink htmlFor="bingo_game_project_id">
               {t("group_source")}
@@ -354,18 +354,19 @@ export default function BingoGameDataAdmin(props) {
         </Tabs>
         {"details" == curTab && (
           <React.Fragment>
-            <Grid container spacing={10}>
-              <Grid item>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
                 <TextField
                   id="topic"
                   label={t("topic")}
                   className={classes.textField}
                   value={gameTopic}
+                  fullWidth
                   onChange={event => setGameTopic(event.target.value)}
                   margin="normal"
                 />
               </Grid>
-              <Grid item>
+              <Grid item xs={12}>
                 <Editor
                   wrapperId="Description"
                   label={t("description")}
@@ -373,12 +374,29 @@ export default function BingoGameDataAdmin(props) {
                   onEditorStateChange={setGameDescriptionEditor}
                   toolbarOnFocus
                   toolbar={{
-                    options: ["inline", "list", "link"]
+                    options: ['inline', 'list', 'link', 'blockType', 'fontSize', 'fontFamily'],
+                    inline: {
+                      options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'],
+                      bold: { className: 'bordered-option-classname' },
+                      italic: { className: 'bordered-option-classname' },
+                      underline: { className: 'bordered-option-classname' },
+                      strikethrough: { className: 'bordered-option-classname' },
+                      code: { className: 'bordered-option-classname' },
+                    },
+                    blockType: {
+                      className: 'bordered-option-classname',
+                    },
+                    fontSize: {
+                      className: 'bordered-option-classname',
+                    },
+                    fontFamily: {
+                      className: 'bordered-option-classname',
+                    }
                   }}
                   editorState={gameDescriptionEditor}
                 />
               </Grid>
-              <Grid item>
+              <Grid item xs={6}>
                 <TextField
                   id="bingo-lead-time"
                   label={t("lead_time")}
@@ -392,7 +410,7 @@ export default function BingoGameDataAdmin(props) {
                   margin="normal"
                 />
               </Grid>
-              <Grid item>
+              <Grid item xs={6}>
                 <TextField
                   id="bingo-individual_count"
                   label={t("ind_term_count")}
@@ -409,7 +427,7 @@ export default function BingoGameDataAdmin(props) {
                 />
               </Grid>
               <MuiPickersUtilsProvider utils={LuxonUtils}>
-                <Grid item>
+                <Grid item xs={4}>
                   <KeyboardDatePicker
                     variant="inline"
                     autoOk={true}
@@ -426,7 +444,7 @@ export default function BingoGameDataAdmin(props) {
                     </FormHelperText>
                   ) : null}
                 </Grid>
-                <Grid item>
+                <Grid item xs={4}>
                   <KeyboardDatePicker
                     variant="inline"
                     autoOk={true}
@@ -444,7 +462,7 @@ export default function BingoGameDataAdmin(props) {
                   ) : null}
                 </Grid>
               </MuiPickersUtilsProvider>
-              <Grid item>
+              <Grid item xs={4}>
                 <FormControlLabel
                   control={
                     <Switch
@@ -455,7 +473,7 @@ export default function BingoGameDataAdmin(props) {
                   label={t("active")}
                 />
               </Grid>
-              <Grid item>
+              <Grid item xs={12}>
                 <Switch
                   checked={gameGroupOption}
                   id="group_option"

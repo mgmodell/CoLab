@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Paper from "@material-ui/core/Paper";
+import { iconForType } from './ActivityLib'
 
 import MUIDataTable from "mui-datatables";
 
@@ -13,7 +14,7 @@ export default function UserCourseList(props) {
   const [] = useState(false);
   const [] = useState("");
 
-  const getCourses = () => {
+  const getActivities = () => {
     props.setWorking( true );
     var url = props.retrievalUrl;
     fetch(url, {
@@ -33,19 +34,20 @@ export default function UserCourseList(props) {
         }
       })
       .then(data => {
+        console.log( data );
         //MetaData and Infrastructure
-        props.coursesListUpdateFunc(data);
+        props.activitiesListUpdateFunc(data);
         props.setWorking(false);
       });
   };
 
   useEffect(() => {
     if (null == props.usersList || props.usersList.length < 1) {
-      getCourses();
+      getActivities();
     }
   }, []);
 
-  var courseColumns = [
+  var activityColumns = [
     {
       label: "Name",
       name: "name",
@@ -54,64 +56,41 @@ export default function UserCourseList(props) {
       }
     },
     {
-      label: "Number",
-      name: "number",
+      label: "Type",
+      name: "type",
+      options: {
+        filter: false,
+        customBodyRender: (value) => {
+          const course = props.activitiesList.filter((item)=> {
+            return value === item.id;
+          })[0]
+          const output = iconForType( value )
+          return output
+        }
+      }
+    },
+    {
+      label: "Course Name",
+      name: "course_name",
       options: {
         filter: false
       }
     },
     {
-      label: "Bingo Progress",
-      name: "id",
+      label: "Course Number",
+      name: "course_number",
       options: {
-        filter: false,
-        customBodyRender: (value) => {
-          const course = props.coursesList.filter((item)=> {
-            return value === item.id;
-          })[0]
-          console.log( course )
-          const data = course.bingo_data;
-          return (
-          <React.Fragment>
-            <BingoDataRepresentation
-              height={30}
-              width={70}
-              value={Number(value)}
-              scores={data} />
-
-          </React.Fragment>
-          )
-        }
-      }
-    },
-    {
-      label: "Assessment Progress",
-      name: "assessment_performance",
-      options: {
-        filter: false,
-        customBodyRender: (value) => {
-          return value + "%";
-        }
-      }
-    },
-    {
-      label: "Experience Progress",
-      name: "experience_performance",
-      options: {
-        filter: false,
-        customBodyRender: (value) => {
-          return value + "%";
-        }
+        filter: false
       }
     }
   ];
 
-  const courseList =
-    null != props.coursesList ? (
+  const activityList =
+    null != props.activitiesList ? (
       <MUIDataTable
-        title={'Your course performance'}
-        columns={courseColumns}
-        data={props.coursesList}
+        title={'Activities'}
+        columns={activityColumns}
+        data={props.activitiesList}
         options={{
           responsive: "scrollMaxHeight",
           filterType: "checkbox",
@@ -120,12 +99,12 @@ export default function UserCourseList(props) {
           download: false
         }}
       />
-    ) : 'The course data is loading';
+    ) : 'The activities are loading' ;
 
   return (
     <Paper>
       {props.working ? <LinearProgress id='waiting' /> : null}
-      {courseList}
+      {activityList}
     </Paper>
   );
 }
@@ -133,8 +112,8 @@ export default function UserCourseList(props) {
 UserCourseList.propTypes = {
   token: PropTypes.string.isRequired,
   retrievalUrl: PropTypes.string.isRequired,
-  coursesList: PropTypes.array,
-  coursesListUpdateFunc: PropTypes.func.isRequired,
+  activitiesList: PropTypes.array,
+  activitiesListUpdateFunc: PropTypes.func.isRequired,
 
   addMessagesFunc: PropTypes.func.isRequired,
   working: PropTypes.bool.isRequired,

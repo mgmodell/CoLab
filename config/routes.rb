@@ -100,25 +100,23 @@ Rails.application.routes.draw do
   scope 'infra' do
     post 'quote' => 'home#get_quote', as: :get_quote
     get 'states_for_country/:country_code' => 'home#states_for_country', as: :states_for
+    get 'simple_profile' => 'home#simple_profile', as: :simple_profile,
+        constraints: ->(req) { req.format == :json }
     get 'full_profile' => 'home#full_profile', as: :full_profile,
         constraints: ->(req) { req.format == :json }
-    get 'simple_profile' => 'home#simple_profile', as: :simple_profile,
+    patch 'full_profile' => 'home#update_full_profile',
+        constraints: ->(req) { req.format == :json }
+    get 'user_course_performance' => 'home#user_courses', as: :user_courses,
+        constraints: ->(req) { req.format == :json }
+    get 'user_activities' => 'home#user_activities', as: :user_activities,
+        constraints: ->(req) { req.format == :json }
+    get 'user_consents' => 'consent_logs#user_logs', as: :user_consents,
         constraints: ->(req) { req.format == :json }
     post 'diversity_score_for' => 'home#check_diversity_score',
         as: :check_diversity_score
     get 'locales/:ns' => 'locales#get_resources', as: :i18n,
         constraints: ->(req) { req.format == :json }
     get 'endpoints/:unit' => 'home#endpoints', as: :endpoints,
-        constraints: ->(req) {req.format == :json }
-    get 'timezones' => 'home#get_time_zones', as: :timezones,
-        constraints: ->(req) {req.format == :json }
-    get 'genders' => 'home#get_genders', as: :genders,
-        constraints: ->(req) {req.format == :json }
-    get 'cip_codes' => 'home#get_cip_codes', as: :cip_codes,
-        constraints: ->(req) {req.format == :json }
-    get 'languages' => 'home#get_languages', as: :languages,
-        constraints: ->(req) {req.format == :json }
-    get 'countries' => 'home#get_countries', as: :countries,
         constraints: ->(req) {req.format == :json }
   end
 

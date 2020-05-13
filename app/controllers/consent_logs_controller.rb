@@ -27,6 +27,24 @@ class ConsentLogsController < ApplicationController
     end
   end
 
+  def user_logs
+    resp = current_user.consent_logs.collect{|consent_log|
+      {
+        id: consent_log.id,
+        name: consent_log.consent_form.name,
+        accepted: consent_log.accepted,
+        active: consent_log.consent_form.active,
+        open_date: consent_log.consent_form.start_date,
+        end_date: consent_log.consent_form.end_date,
+        link: edit_consent_log_path( consent_log.consent_form_id )
+      }
+  
+    }
+    respond_to do |format|
+      format.json { render json: resp }
+    end
+  end
+
   private
 
   def cl_params

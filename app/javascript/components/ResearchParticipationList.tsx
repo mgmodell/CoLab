@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import Link from '@material-ui/core/Link'
 import Paper from "@material-ui/core/Paper";
 
 import MUIDataTable from "mui-datatables";
@@ -8,8 +9,6 @@ import MUIDataTable from "mui-datatables";
 import BingoDataRepresentation from "./BingoDataRepresentation";
 
 export default function UserCourseList(props) {
-  // const [addUsersPath, setAddUsersPath] = useState("");
-  // const [procRegReqPath, setProcRegReqPath] = useState("");
   const [] = useState(false);
   const [] = useState("");
 
@@ -34,7 +33,7 @@ export default function UserCourseList(props) {
       })
       .then(data => {
         //MetaData and Infrastructure
-        props.coursesListUpdateFunc(data);
+        props.consentFormListUpdateFunc(data);
         props.setWorking(false);
       });
   };
@@ -45,7 +44,7 @@ export default function UserCourseList(props) {
     }
   }, []);
 
-  var courseColumns = [
+  var consentColumns = [
     {
       label: "Name",
       name: "name",
@@ -54,64 +53,69 @@ export default function UserCourseList(props) {
       }
     },
     {
-      label: "Number",
-      name: "number",
-      options: {
-        filter: false
-      }
-    },
-    {
-      label: "Bingo Progress",
+      label: "Consent Form Status",
       name: "id",
       options: {
-        filter: false,
+        filter: true,
         customBodyRender: (value) => {
-          const course = props.coursesList.filter((item)=> {
+          const consentForm = props.consentFormList.filter((item)=> {
             return value === item.id;
           })[0]
-          console.log( course )
-          const data = course.bingo_data;
-          return (
-          <React.Fragment>
-            <BingoDataRepresentation
-              height={30}
-              width={70}
-              value={Number(value)}
-              scores={data} />
+          let output: string;
+          if( consentForm.active ){
+            if( Date.now() < Date.parse( consentForm. end_date ) ){
+              output = 'Active'
+            } else {
+              output = 'Inactive (expired)'
+            }
 
-          </React.Fragment>
+          } else {
+            output = 'Inactive'
+          }
+          return (
+          <span>
+            {output}
+          </span>
           )
         }
       }
     },
     {
-      label: "Assessment Progress",
-      name: "assessment_performance",
+      label: "Consent Status",
+      name: "accepted",
       options: {
-        filter: false,
+        filter: true,
         customBodyRender: (value) => {
-          return value + "%";
+          return (
+            <span>
+              {value ? 'Accepted' : 'Declined'}
+            </span>
+          )
         }
       }
     },
     {
-      label: "Experience Progress",
-      name: "experience_performance",
+      label: "Action",
+      name: "link",
       options: {
         filter: false,
         customBodyRender: (value) => {
-          return value + "%";
+          return (
+            <Link href={value}>
+              Review/Update
+            </Link>
+          )
         }
       }
     }
   ];
 
-  const courseList =
-    null != props.coursesList ? (
+  const consentFormList =
+    null != props.consentFormList ? (
       <MUIDataTable
-        title={'Your course performance'}
-        columns={courseColumns}
-        data={props.coursesList}
+        title={"Your research participation"}
+        columns={consentColumns}
+        data={props.consentFormList}
         options={{
           responsive: "scrollMaxHeight",
           filterType: "checkbox",
@@ -125,7 +129,7 @@ export default function UserCourseList(props) {
   return (
     <Paper>
       {props.working ? <LinearProgress id='waiting' /> : null}
-      {courseList}
+       {consentFormList}
     </Paper>
   );
 }
@@ -133,8 +137,8 @@ export default function UserCourseList(props) {
 UserCourseList.propTypes = {
   token: PropTypes.string.isRequired,
   retrievalUrl: PropTypes.string.isRequired,
-  coursesList: PropTypes.array,
-  coursesListUpdateFunc: PropTypes.func.isRequired,
+  consentFormList: PropTypes.array,
+  consentFormListUpdateFunc: PropTypes.func.isRequired,
 
   addMessagesFunc: PropTypes.func.isRequired,
   working: PropTypes.bool.isRequired,

@@ -111,8 +111,8 @@ export default function SchoolDataAdmin(props) {
         if (response.ok) {
           return response.json();
         } else {
-          setMessages(data.messages);
           console.log("error");
+          setWorking(false);
         }
       })
       .then(data => {
@@ -167,11 +167,6 @@ export default function SchoolDataAdmin(props) {
     </Button>
   ) : null;
 
-  //Later I want to call the activate/deactivate right here
-  const toggleActive = () => {
-    setSchoolActive(!schoolActive);
-  };
-
   const detailsComponent = (
     <Paper>
       {working ? <LinearProgress /> : null}
@@ -181,8 +176,8 @@ export default function SchoolDataAdmin(props) {
         value={schoolName}
         fullWidth={false}
         onChange={event => setSchoolName(event.target.value)}
-        error={null != messages.name}
-        helperText={messages.name}
+        error={null != messages['name']}
+        helperText={messages['name']}
       />
       &nbsp;
       <FormControl>
@@ -202,7 +197,7 @@ export default function SchoolDataAdmin(props) {
             );
           })}
         </Select>
-        <FormHelperText error={true}>{messages.timezone}</FormHelperText>
+        <FormHelperText error={true}>{messages['timezone']}</FormHelperText>
       </FormControl>
       <br/>
       <TextField
@@ -213,7 +208,7 @@ export default function SchoolDataAdmin(props) {
         rowsMax={4}
         label="Description"
         value={schoolDescription}
-        onChange={()=>setSchoolDescription(event.target.value)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>)=>setSchoolDescription(event.target.value)}
         InputLabelProps={{
           shrink: true
         }}
@@ -223,7 +218,6 @@ export default function SchoolDataAdmin(props) {
 
       <br />
       {saveButton}
-      {messages.status}
     </Paper>
   );
 

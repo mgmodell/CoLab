@@ -84,6 +84,7 @@ export default function CourseUsersList(props) {
     {
       label: "First Name",
       name: "first_name",
+      tag: "first_name",
       options: {
         filter: false
       }
@@ -91,6 +92,7 @@ export default function CourseUsersList(props) {
     {
       label: "Last Name",
       name: "last_name",
+      tag: "last_name",
       options: {
         filter: false
       }
@@ -98,6 +100,7 @@ export default function CourseUsersList(props) {
     {
       label: "Email",
       name: "email",
+      tag: "email",
       options: {
         display: false,
         filter: false,
@@ -109,6 +112,7 @@ export default function CourseUsersList(props) {
     {
       label: "Bingo Progress",
       name: "id",
+      tag: "bingo_performance",
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
@@ -132,6 +136,7 @@ export default function CourseUsersList(props) {
     {
       label: "Assessment Progress",
       name: "assessment_performance",
+      tag: 'assessment_performance',
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
@@ -142,6 +147,7 @@ export default function CourseUsersList(props) {
     {
       label: "Experience Progress",
       name: "experience_performance",
+      tag: "experience_performance",
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
@@ -152,6 +158,7 @@ export default function CourseUsersList(props) {
     {
       label: "Status",
       name: "status",
+      tag: "status",
       options: {
         display: true,
         customBodyRender: (value, tableMeta, updateValue) => {
@@ -382,7 +389,7 @@ export default function CourseUsersList(props) {
         "assessment_performance",
         "bingo_data"
       ];
-      return !toRemove.includes(column.name);
+      return !toRemove.includes(column.tag);
     });
     userColumns[userColumns.length - 2].options.filterOptions.names = [
       "Instructor",

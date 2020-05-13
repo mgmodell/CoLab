@@ -7,37 +7,6 @@ $(document).bind("mobileinit", function(){
 //Add some code to the page.
 $(document).ready(function(){
 
-  $(".country_select").change(function() {
-    var country_code, state_select, url;
-    country_code = $(this).val();
-    url = "/infra/states_for_country/" + country_code;
-    $.getJSON(url, function(data) {
-      state_select = $("#user_home_state_id");
-      var i, newOption, results;
-      i = void 0;
-      newOption = void 0;
-      $(state_select).empty();
-      i = 0;
-      results = [];
-      while (i < data.states.length) {
-        newOption = new Option( data.states[i].name,
-              data.states[i].id, i < 1, i < 1 );
-
-        $(state_select).append(newOption);
-        results.push(i++);
-      }
-      return results;
-    });
-    return $(state_select).selectmenu('refresh', true);
-  });
-
-  /*
-    This code (next two functions) enacts the 
-    JavaScript-based reveal.
-    It is game-able in case anyone truly cares, but 
-    hopefully the text does not entice participants 
-    to do so.
-  */
   $("input:radio[name='instructor_conclusion[behavior_id]']").change(function(){
     $("#reveal").removeClass( 'ui-state-disabled' );
   });
@@ -101,9 +70,7 @@ $(document).ready(function(){
   });
 
   $("#basicTable").tablesorter( {sortList: [[0,0],[1,0]]} );
-  $("#courseListingTable").tablesorter( {sortList: [[4,1],[1,0]]} );
   $("#responsesTable").tablesorter( {sortList: [[3,0]]});
-  $("#bingo_table").tablesorter( {sortList: [[0,0]]} );
   $("#course_table").tablesorter( {sortList: [[0,0]]} );
   $("#candidates_table").tablesorter( {sortList: [[0,0]]} );
   $("#history_table").tablesorter( {sortList: [[0,0]]} );

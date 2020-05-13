@@ -42,17 +42,42 @@ end
 When /^the user "(.*?)" fill in demographics data$/ do |does_or_does_not|
   give_demographics = does_or_does_not == 'does'
   if give_demographics
-    page.select('Male', from: 'user_gender_id')
-    page.select('Education', from: 'user_cip_code_id')
-    page.select('Belize', from: 'country')
-    page.select('Avestan', from: 'user_primary_language_id')
+    find( :xpath, "//div[contains(text(),'Tell us about yourself')]").click
 
-    new_date = Date.parse('10-05-1976')
-    page.find('#user_date_of_birth').set(new_date)
-    new_date = Date.parse('10-09-2016')
-    page.find('#user_date_of_birth').set(new_date)
+    demographics = [
+        {label: 'What is your gender?', value: 'Male'},
+        {label: 'What are you studying?', value: 'Education'},
+        {label: 'What country and state do you call home?', value: 'Belize'},
+        {label: 'What language do you speak at home?', value: 'Avestan'}
+      ]
+
+    demographics.each do |demo_data|
+      label = find( :xpath, "//label[text()='#{demo_data[:label]}']")[:for]
+      find(:xpath, "//div[@id='#{label}']").click
+      find(:xpath, "//li[text()='#{demo_data[:value]}']").click
+    end
+      
+    demographics = [
+      {label: 'When did you begin your studies?', value: Date.parse('11-09-2016')},
+      {label: 'When were you born?', value: Date.parse('10-05-1976')},
+    ]
+
+    demographics.each do |demo_data|
+      label = find( :xpath, "//label[text()='#{demo_data[:label]}']")[:for]
+      find(:xpath, "//input[@id='#{label}']").set( demo_data[:value].strftime( '%m/%d/%Y') )
+    end
+
+    #new_date = Date.parse('10-05-1976')
+    #page.find('#user_date_of_birth').set(new_date)
+    #new_date = Date.parse('10-09-2016')
+    #page.find('#user_date_of_birth').set(new_date)
   end
-  click_button 'my profile'
+  click_button 'Save Profile'
+  count = 0
+  while( all( :xpath, '//*[@id="waiting"]' ).size > 0 && count < 3 )
+    sleep( 0.1 )
+    count+= 1
+  end
 end
 
 When /^the new user registers$/ do

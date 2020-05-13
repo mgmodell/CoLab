@@ -112,7 +112,7 @@ class SchoolsController < ApplicationController
         end
       end
     else
-      logger.debug @school.errors.full_messages unless @school.errors.empty?
+      logger.debug @school.errors.full_messages
       respond_to do |format|
         format.html do
           render :edit
