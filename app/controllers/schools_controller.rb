@@ -52,11 +52,6 @@ class SchoolsController < ApplicationController
     end
   end
 
-  def new
-    @title = t '.title'
-    @school = School.new
-  end
-
   def create
     @title = t '.title'
     @school = School.new(school_params)

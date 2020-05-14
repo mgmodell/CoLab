@@ -61,7 +61,7 @@ export default function UserCourseList(props) {
           const consentForm = props.consentFormList.filter((item)=> {
             return value === item.id;
           })[0]
-          let output: string;
+          let output: String;
           if( consentForm.active ){
             if( Date.now() < Date.parse( consentForm. end_date ) ){
               output = 'Active'

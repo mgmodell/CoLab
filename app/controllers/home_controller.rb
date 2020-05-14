@@ -101,6 +101,7 @@ class HomeController < ApplicationController
     when 'consent_form'
       ep_hash = {
         baseUrl: consent_forms_path,
+        consentFormCreateUrl: new_consent_form_path
       }
     when 'profile'
       ep_hash = {

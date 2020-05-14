@@ -24,8 +24,8 @@ import { useEndpointStore } from "./EndPointStore";
 import { useUserStore } from "./UserStore";
 import { TextareaAutosize } from "@material-ui/core";
 
-export default function SchoolDataAdmin(props) {
-  const endpointSet = "school";
+export default function ConsentFormDataAdmin(props) {
+  const endpointSet = "consent_form";
   const [endpoints, endpointsActions] = useEndpointStore();
   //const { t, i18n } = useTranslation('schools' );
   const [user, userActions] = useUserStore();
@@ -35,20 +35,22 @@ export default function SchoolDataAdmin(props) {
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState( false );
 
-  const [schoolId, setSchoolId] = useState(props.schoolId);
-  const [schoolName, setSchoolName] = useState("");
-  const [schoolDescription, setSchoolDescription] = useState("");
-  const [schoolTimezone, setSchoolTimezone] = useState("UTC");
+  const [consentFormId, setConsentFormId] = useState(props.consentFormId);
+  const [consentFormName, setConsentFormName] = useState("");
+  const [consentFormActive, setConsentFormActive] = useState(false);
+  const [consentFormStartDate, setConsentFormStartDate] = useState(new Date( ) );
+  const [consentFormEndDate, setConsentFormEndDate] = useState(new Date( ) );
+  const [consentFormFormTextEn, setConsentFormFormTextEn] = useState("");
+  const [consentFormFormTextKo, setConsentFormFormTextKo] = useState("");
 
-  const [timezones, setTimezones] = useState( [] );
 
-  const getSchool = () => {
+  const getConsentForm = () => {
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
-    if (null == schoolId) {
+    if (null == consentFormId) {
       url = url + "new.json";
     } else {
-      url = url + schoolId + ".json";
+      url = url + consentFormId + ".json";
     }
     fetch(url, {
       method: "GET",
@@ -68,26 +70,26 @@ export default function SchoolDataAdmin(props) {
         }
       })
       .then(data => {
-        const school = data.school;
+        const consentForm = data.consent_form;
 
-        setTimezones(data.timezones);
-
-        setSchoolName(school.name || "");
-        setSchoolDescription(school.description || '');
-        setSchoolTimezone(school.timezone || 'UTC');
+        setConsentFormName(consentForm.name || "");
+        setConsentFormStartDate(consentForm.start_date || '');
+        setConsentFormEndDate(consentForm.end_date || '');
+        setConsentFormFormTextEn(consentForm.form_text_en || '');
+        setConsentFormFormTextKo(consentForm.form_text_ko || '');
 
         setWorking(false);
         setDirty(false);
       });
   };
-  const saveSchool = () => {
-    const method = null == schoolId ? "POST" : "PATCH";
+  const saveConsentForm = () => {
+    const method = null == consentFormId ? "POST" : "PATCH";
     setWorking(true);
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
       "/" +
-      (null == schoolId ? props.schoolId : schoolId) +
+      (null == consentFormId ? props.schoolId : consentFormId) +
       ".json";
 
     fetch(url, {
@@ -99,11 +101,10 @@ export default function SchoolDataAdmin(props) {
         "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
-        school: {
-          name: schoolName,
-          //school_id: schoolId,
-          description: schoolDescription,
-          timezone: schoolTimezone
+        consent_form: {
+          id: consentFormId,
+          name: consentFormName,
+          start_date: consentFormStartDate,
         }
       })
     })
@@ -117,11 +118,11 @@ export default function SchoolDataAdmin(props) {
       })
       .then(data => {
         if (data.messages != null && Object.keys(data.messages).length < 2) {
-          const school = data.school;
-          setSchoolId(school.id);
-          setSchoolName(school.name);
-          setSchoolDescription(school.description);
-          setSchoolTimezone(school.timezone);
+          const consentForm = data.school;
+          setConsentFormId(consentForm.id);
+          setConsentFormName(consentForm.name);
+          setConsentFormStartDate(consentForm.start_date);
+          setConsentFormEndDate(consentForm.end_date);
 
           setShowErrors( true );
           setDirty(false);
@@ -145,7 +146,7 @@ export default function SchoolDataAdmin(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] == "loaded") {
-      getSchool();
+      getConsentForm();
     }
   }, [endpoints.endpointStatus[endpointSet]]);
 
@@ -156,14 +157,15 @@ export default function SchoolDataAdmin(props) {
   }, [user.loaded]);
 
   useEffect(() => setDirty(true), [
-    schoolName,
-    schoolDescription,
-    schoolTimezone
+    consentFormName,
+    consentFormActive,
+    consentFormStartDate,
+    consentFormEndDate,
   ]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveSchool}>
-      {null == schoolId ? "Create" : "Save"} School
+    <Button variant="contained" onClick={saveConsentForm}>
+      {null == consentFormId ? "Create" : "Save"} School
     </Button>
   ) : null;
 
@@ -171,50 +173,16 @@ export default function SchoolDataAdmin(props) {
     <Paper>
       {working ? <LinearProgress /> : null}
       <TextField
-        label="School Name"
-        id="school-name"
-        value={schoolName}
+        label="Consent Form Name"
+        id="consent_form-name"
+        value={consentFormName}
         fullWidth={false}
-        onChange={event => setSchoolName(event.target.value)}
+        onChange={event => setConsentFormName(event.target.value)}
         error={null != messages['name']}
         helperText={messages['name']}
       />
       &nbsp;
-      <FormControl>
-        <InputLabel htmlFor="school_timezone" id="school_timezone_lbl">
-          Time Zone
-        </InputLabel>
-        <Select
-          id="school_timezone"
-          value={schoolTimezone}
-          onChange={event => setSchoolTimezone(String(event.target.value))}
-        >
-          {timezones.map(timezone => {
-            return (
-              <MenuItem key={timezone.name} value={timezone.name}>
-                {timezone.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-        <FormHelperText error={true}>{messages['timezone']}</FormHelperText>
-      </FormControl>
       <br/>
-      <TextField
-        id="school-description"
-        placeholder="Enter a description of the school"
-        multiline={true}
-        rows={2}
-        rowsMax={4}
-        label="Description"
-        value={schoolDescription}
-        onChange={(event)=>setSchoolDescription(event.target.value)}
-        InputLabelProps={{
-          shrink: true
-        }}
-        margin="normal"
-      />
-
 
       <br />
       {saveButton}
@@ -247,8 +215,8 @@ export default function SchoolDataAdmin(props) {
   );
 }
 
-SchoolDataAdmin.propTypes = {
+ConsentFormDataAdmin.propTypes = {
   token: PropTypes.string.isRequired,
   getEndpointsUrl: PropTypes.string.isRequired,
-  schoolId: PropTypes.number
+  consentFormId: PropTypes.number
 };

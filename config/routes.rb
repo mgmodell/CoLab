@@ -43,10 +43,12 @@ Rails.application.routes.draw do
         as: :course_scores,
         constraints: ->(req) { req.format == :csv }
 
-    resources :consent_forms
     resources :concepts, except: %i[destroy create]
 
-    resources :schools, :courses, :experiences, :projects, :bingo_games, except: %i[new create]
+    resources :consent_forms, :schools, :courses, :experiences, :projects, :bingo_games, except: %i[new create]
+
+    get 'consent_forms/new/' => 'consent_forms#show', as: :new_consent_form
+    post 'consent_forms/:school_id' => 'consent_forms#create'
 
     get 'schools/new/' => 'schools#show', as: :new_school
     post 'schools/:school_id' => 'schools#create'
