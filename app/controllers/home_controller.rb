@@ -58,6 +58,7 @@ class HomeController < ApplicationController
           ep_hash[:adminUrl] = admin_path
           ep_hash[:coursesPath] = courses_path
           ep_hash[:schoolsPath] = schools_path
+          ep_hash[:consentFormsPath] = consent_forms_path
           ep_hash[:conceptsPath] = concepts_path
           ep_hash[:projectsPath] = projects_path
           ep_hash[:reportingUrl] = graphing_path

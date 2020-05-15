@@ -25,6 +25,7 @@ import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import SchoolIcon from "@material-ui/icons/School";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+import FindInPageIcon from '@material-ui/icons/FindInPage';
 
 import DiversityCheck from "./DiversityCheck";
 import { useUserStore } from "./UserStore";
@@ -98,6 +99,16 @@ export default function MainMenu(props) {
             <AccountBoxIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{t("schools_edit")}</ListItemText>
+        </ListItem>
+        <ListItem
+          button
+          id="consent_forms-menu-item"
+          onClick={() => navTo(props.consentFormsUrl)}
+        >
+          <ListItemIcon>
+            <FindInPageIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{t("consent_forms_edit")}</ListItemText>
         </ListItem>
 
         <Divider />
@@ -212,6 +223,7 @@ MainMenu.propTypes = {
   adminUrl: PropTypes.string,
   coursesUrl: PropTypes.string,
   schoolsUrl: PropTypes.string,
+  consentFormsUrl: PropTypes.string,
   conceptsUrl: PropTypes.string,
   reportingUrl: PropTypes.string,
   demoUrl: PropTypes.string.isRequired,

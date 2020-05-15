@@ -37,6 +37,7 @@ class ConsentFormsController < ApplicationController
           ),
           messages: { }
         }
+        render json: response
 
       end
     end

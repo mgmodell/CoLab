@@ -42,6 +42,7 @@ export default function AppHeader(props) {
                 adminUrl={endpoints.endpoints["home"].adminUrl}
                 coursesUrl={endpoints.endpoints["home"].coursesPath}
                 schoolsUrl={endpoints.endpoints["home"].schoolsPath}
+                consentFormsUrl={endpoints.endpoints['home'].consentFormsPath}
                 conceptsUrl={endpoints.endpoints["home"].conceptsPath}
                 reportingUrl={endpoints.endpoints["home"].reportingUrl}
                 demoUrl={endpoints.endpoints["home"].demoUrl}

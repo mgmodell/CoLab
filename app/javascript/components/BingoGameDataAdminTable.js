@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
 import React from "react";
 import PropTypes from "prop-types";
-import classNames from "classnames";
 import BingoGameResults from "./BingoGameResults";
-import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -13,30 +11,6 @@ import Typography from "@material-ui/core/Typography";
 import { SortDirection } from "react-virtualized";
 import WrappedVirtualizedTable from "../components/WrappedVirtualizedTable";
 
-const styles = theme => ({
-  table: {
-    fontFamily: theme.typography.fontFamily
-  },
-  flexContainer: {
-    display: "flex",
-    alignItems: "center",
-    boxSizing: "border-box"
-  },
-  tableRow: {
-    cursor: "pointer"
-  },
-  tableRowHover: {
-    "&:hover": {
-      backgroundColor: theme.palette.grey[200]
-    }
-  },
-  tableCell: {
-    flex: 1
-  },
-  noClick: {
-    cursor: "initial"
-  }
-});
 
 class BingoGameDataAdminTable extends React.Component {
   constructor(props) {
