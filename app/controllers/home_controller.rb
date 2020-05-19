@@ -104,6 +104,11 @@ class HomeController < ApplicationController
         baseUrl: consent_forms_path,
         consentFormCreateUrl: new_consent_form_path
       }
+    when 'consent_log'
+      ep_hash = {
+        baseUrl: edit_consent_log_path( consent_form_id: '' ),
+        consentLogSaveUrl: consent_log_path( id: '')
+      }
     when 'profile'
       ep_hash = {
         baseUrl: full_profile_path,

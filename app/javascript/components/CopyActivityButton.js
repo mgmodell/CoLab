@@ -6,8 +6,8 @@ import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
 import { DateTime } from "luxon";
 import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  DatePicker,
+  LocalizationProvider
 } from "@material-ui/pickers";
 import LuxonUtils from "@date-io/luxon";
 
@@ -50,18 +50,19 @@ export default function CopyActivityButton(props) {
               shifted accordingly.
               <br />
             </DialogContentText>
-            <MuiPickersUtilsProvider utils={LuxonUtils}>
-              <KeyboardDatePicker
+            <LocalizationProvider dateAdapter={LuxonUtils}>
+              <DatePicker
                 variant="inline"
                 autoOk={true}
-                format="MM/dd/yyyy"
+                inputFormat="MM/dd/yyyy"
                 margin="normal"
                 id="newCourseStartDate"
                 label="New course start date?"
                 value={newStartDate}
                 onChange={setNewStartDate}
+                renderInput={props => <TextField {...props} />}
               />
-            </MuiPickersUtilsProvider>
+            </LocalizationProvider>
           </DialogContent>
           <DialogActions>
             <Button

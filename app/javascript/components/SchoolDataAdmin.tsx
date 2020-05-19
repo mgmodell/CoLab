@@ -17,7 +17,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import LuxonUtils from "@date-io/luxon";
+import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./EndPointStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';

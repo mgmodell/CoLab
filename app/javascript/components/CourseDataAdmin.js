@@ -20,8 +20,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import {iconForType} from './ActivityLib'
 
 import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  DatePicker,
+  LocalizationProvider
 } from "@material-ui/pickers";
 
 import { DateTime, Info } from "luxon";
@@ -29,7 +29,7 @@ import Settings from "luxon/src/settings.js";
 import { useUserStore } from "./UserStore";
 import CourseUsersList from "./CourseUsersList";
 
-import LuxonUtils from "@date-io/luxon";
+import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./EndPointStore";
 import MUIDataTable from "mui-datatables";
 
@@ -64,7 +64,8 @@ export default function CourseDataAdmin(props) {
       .plus({ month: 3 })
       .toISO()
   );
-  const [courseSchoolId, setCourseSchoolId] = useState<number>(0);
+  const [courseSchoolId, setCourseSchoolId] = useState(0);
+  // const [courseSchoolId, setCourseSchoolId] = useState<Number>(0);
   const [courseTimezone, setCourseTimezone] = useState("");
   const [courseConsentFormId, setCourseConsentFormId] = useState(0);
   const [courseRegImage, setCourseRegImage] = useState(null);
@@ -357,40 +358,42 @@ export default function CourseDataAdmin(props) {
       </FormControl>
 
       <Typography>All dates shown in {courseTimezone} timezone.</Typography>
-      <MuiPickersUtilsProvider utils={LuxonUtils}>
-        <KeyboardDatePicker
-          disableToolbar
+      <LocalizationProvider dateAdapter={LuxonUtils}>
+        <DatePicker
           variant="inline"
           autoOk={true}
-          format="MM/dd/yyyy"
+          inputFormat="MM/dd/yyyy"
           margin="normal"
-          id="course_start_date"
           label="Course Start Date"
           value={courseStartDate}
           onChange={setCourseStartDate}
           error={Boolean(messages["start_date"])}
           helperText={messages["start_date"]}
+          renderInput={props => <TextField
+            id="course_start_date"
+            {...props} />}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
       {Boolean(messages["start_date"]) ? (
         <FormHelperText error={true}>{messages["start_date"]}</FormHelperText>
       ) : null}
 
-      <MuiPickersUtilsProvider utils={LuxonUtils}>
-        <KeyboardDatePicker
-          disableToolbar
+      <LocalizationProvider dateAdapter={LuxonUtils}>
+        <DatePicker
           variant="inline"
           autoOk={true}
-          format="MM/dd/yyyy"
+          inputFormat="MM/dd/yyyy"
           margin="normal"
-          id="course_end_date"
           label="Course End Date"
           value={courseEndDate}
           onChange={setCourseEndDate}
           error={Boolean(messages["end_date"])}
           helperText={messages["end_date"]}
+          renderInput={props => <TextField
+            id="course_end_date"
+            {...props} />}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
       {Boolean(messages["end_date"]) ? (
         <FormHelperText error={true}>{messages["end_date"]}</FormHelperText>
       ) : null}

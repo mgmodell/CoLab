@@ -17,12 +17,12 @@ import Switch from "@material-ui/core/Switch";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  DatePicker,
+  LocalizationProvider
 } from "@material-ui/pickers";
 
 import { DateTime } from "luxon";
-import LuxonUtils from "@date-io/luxon";
+import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./EndPointStore";
 import { useUserStore } from "./UserStore";
 
@@ -426,17 +426,19 @@ export default function BingoGameDataAdmin(props) {
                   helperText={messages.individual_count}
                 />
               </Grid>
-              <MuiPickersUtilsProvider utils={LuxonUtils}>
+              <LocalizationProvider dateAdapter={LuxonUtils}>
                 <Grid item xs={4}>
-                  <KeyboardDatePicker
+                  <DatePicker
                     variant="inline"
                     autoOk={true}
-                    format="MM/dd/yyyy"
+                    inputFormat="MM/dd/yyyy"
                     margin="normal"
-                    id="bingo_game_start_date"
                     label={t("open_date")}
                     value={gameStartDate}
                     onChange={setGameStartDate}
+                    renderInput={props => <TextField
+                      id="bingo_game_start_date"
+                      {...props} />}
                   />
                   {null != messages.start_date ? (
                     <FormHelperText error={true}>
@@ -445,15 +447,17 @@ export default function BingoGameDataAdmin(props) {
                   ) : null}
                 </Grid>
                 <Grid item xs={4}>
-                  <KeyboardDatePicker
+                  <DatePicker
                     variant="inline"
                     autoOk={true}
-                    format="MM/dd/yyyy"
+                    inputFormat="MM/dd/yyyy"
                     margin="normal"
-                    id="bingo_game_end_date"
                     label={t("close_date")}
                     value={gameEndDate}
                     onChange={setGameEndDate}
+                    renderInput={props => <TextField
+                      id="bingo_game_end_date"
+                      {...props} />}
                   />
                   {null != messages.end_date ? (
                     <FormHelperText error={true}>
@@ -461,7 +465,7 @@ export default function BingoGameDataAdmin(props) {
                     </FormHelperText>
                   ) : null}
                 </Grid>
-              </MuiPickersUtilsProvider>
+              </LocalizationProvider>
               <Grid item xs={4}>
                 <FormControlLabel
                   control={

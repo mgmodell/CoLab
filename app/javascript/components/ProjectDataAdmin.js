@@ -15,14 +15,14 @@ import Typography from "@material-ui/core/Typography";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
 import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  DatePicker,
+  LocalizationProvider
 } from "@material-ui/pickers";
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import LuxonUtils from "@date-io/luxon";
+import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./EndPointStore";
 
 import ProjectGroups from "./ProjectGroups";
@@ -253,40 +253,44 @@ export default function ProjectDataAdmin(props) {
       />
 
       <Typography>All dates shown in {courseTimezone} timezone.</Typography>
-      <MuiPickersUtilsProvider utils={LuxonUtils}>
-        <KeyboardDatePicker
+      <LocalizationProvider dateAdapter={LuxonUtils}>
+        <DatePicker
           disableToolbar
           variant="inline"
           autoOk={true}
-          format="MM/dd/yyyy"
+          inputFormat="MM/dd/yyyy"
           margin="normal"
-          id="project_start_date"
           label="Project Start Date"
           value={projectStartDate}
           onChange={setProjectStartDate}
           error={null != messages.start_date}
           helperText={messages.start_date}
+          renderInput={props => <TextField
+            id="project_start_date"
+            {...props} />}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
       {null != messages.start_date ? (
         <FormHelperText error={true}>{messages.start_date}</FormHelperText>
       ) : null}
 
-      <MuiPickersUtilsProvider utils={LuxonUtils}>
-        <KeyboardDatePicker
+      <LocalizationProvider dateAdapter={LuxonUtils}>
+        <DatePicker
           disableToolbar
           variant="inline"
           autoOk={true}
-          format="MM/dd/yyyy"
+          inputFormat="MM/dd/yyyy"
           margin="normal"
-          id="project_end_date"
           label="Project End Date"
           value={projectEndDate}
           onChange={setProjectEndDate}
           error={null != messages.end_date}
           helperText={messages.end_date}
+          renderInput={props => <TextField
+            id="project_end_date"
+            {...props} />}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
       {null != messages.end_date ? (
         <FormHelperText error={true}>{messages.end_date}</FormHelperText>
       ) : null}

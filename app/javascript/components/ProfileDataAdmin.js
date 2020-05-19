@@ -26,11 +26,11 @@ import UserEmailList from './UserEmailList'
 import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
-import {KeyboardDatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers'
+import {DatePicker, LocalizationProvider} from '@material-ui/pickers'
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import LuxonUtils from "@date-io/luxon";
+import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./EndPointStore";
 import UserCourseList from './UserCourseList';
 import ResearchParticipationList from './ResearchParticipationList';
@@ -585,16 +585,18 @@ export default function ProfileDataAdmin(props) {
               <InputLabel htmlFor="profile_primary_start_school" id="profile_primary_start_school_lbl">
                 When did you begin your studies?
               </InputLabel>
-              <MuiPickersUtilsProvider utils={LuxonUtils}>
-                <KeyboardDatePicker
+              <LocalizationProvider dateAdapter={LuxonUtils}>
+                <DatePicker
                   clearable
-                  id='profile_primary_start_school'
                   value={profileStartedSchool}
                   placeholder="Enter Date"
                   onChange={date => setProfileStartedSchool(date)}
-                  format="MM/dd/yyyy"
+                  inputFormat="MM/dd/yyyy"
+                  renderInput={props => <TextField 
+                    id='profile_primary_start_school'
+                    {...props} />}
                 />
-              </MuiPickersUtilsProvider>
+              </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={6} >
 
@@ -700,16 +702,18 @@ export default function ProfileDataAdmin(props) {
               <InputLabel htmlFor="profile_date_of_birth" id="profile_date_of_birth_lbl">
                 When were you born?
               </InputLabel>
-              <MuiPickersUtilsProvider utils={LuxonUtils}>
-                <KeyboardDatePicker
+              <LocalizationProvider dateAdapter={LuxonUtils}>
+                <DatePicker
                   clearable
-                  id='profile_date_of_birth'
                   value={profileDOB}
                   placeholder="Enter Date"
                   onChange={date => setProfileDOB(date)}
-                  format="MM/dd/yyyy"
+                  inputFormat="MM/dd/yyyy"
+                  renderInput={props => <TextField
+                    id='profile_date_of_birth'
+                    {...props} />}
                 />
-              </MuiPickersUtilsProvider>
+              </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={12}>
               <InputLabel htmlFor='impairments'>

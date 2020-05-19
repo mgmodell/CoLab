@@ -20,12 +20,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import LuxonUtils from "@date-io/luxon";
+import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./EndPointStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useUserStore } from "./UserStore";
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
@@ -206,7 +206,7 @@ export default function ConsentFormDataAdmin(props) {
     <Paper>
       {working ? <LinearProgress /> : null}
       <Grid container spacing={3}>
-        <MuiPickersUtilsProvider utils={LuxonUtils}>
+        <LocalizationProvider dateAdapter={LuxonUtils}>
         <Grid item xs={12}>
           <TextField
             label="Name of the study"
@@ -219,33 +219,37 @@ export default function ConsentFormDataAdmin(props) {
           />
         </Grid>
         <Grid item xs={12} sm={5}>
-          <KeyboardDatePicker
+          <DatePicker
             disableToolbar
             variant="inline"
             autoOk={true}
-            format="MM/dd/yyyy"
+            inputFormat="MM/dd/yyyy"
             margin="normal"
-            id="consent_form_start_date"
             label="Study Start Date"
             value={consentFormStartDate}
             onChange={setConsentFormStartDate}
             error={null != messages['start_date']}
             helperText={messages['start_date']}
+            renderInput={props => <TextField
+              id="consent_form_start_date"
+              {...props} />}
           />
         </Grid>
         <Grid item xs={12} sm={5}>
-          <KeyboardDatePicker
+          <DatePicker
             disableToolbar
             variant="inline"
             autoOk={true}
-            format="MM/dd/yyyy"
+            inputFormat="MM/dd/yyyy"
             margin="normal"
-            id="consent_form_end_date"
             label="Study End Date"
             value={consentFormEndDate}
             onChange={setConsentFormEndDate}
             error={null != messages['end_date']}
             helperText={messages['end_date']}
+            renderInput={props => <TextField
+              id="consent_form_end_date"
+              {...props} />}
           />
         </Grid>
         <Grid item xs={12} sm={2}>
@@ -259,7 +263,7 @@ export default function ConsentFormDataAdmin(props) {
             }
             label='Active' />
         </Grid>
-        </MuiPickersUtilsProvider>
+        </LocalizationProvider>
 
       </Grid>
       <Tabs value={curTab} onChange={(event,name)=>setCurTab(name)} centered>
