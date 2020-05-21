@@ -31,7 +31,7 @@ can help you set them up if you run into difficulty.
     * `mkdir dev`
     * `cd dev`
     * `ssh-keygen` (press enter for all questions)
-    * `eval ``ssh-agent`` `
+    * ``eval `ssh-agent` ``
     * `ssh-add ~/.ssh/id_rsa`
     * `cat ~/.ssh/id_rsa.pub`
 * Copy the output of the above command (`cat`)
