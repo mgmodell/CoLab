@@ -6,11 +6,10 @@ sudo apt-get update
 sudo apt-get upgrade
 gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 
-
-
-sudo apt-get install zsh software-properties-common mariadb-server imagemagick libmysqlclient-dev firefox google-chrome-stable x11-apps
+sudo apt-get -y install zsh software-properties-common mariadb-server imagemagick libmysqlclient-dev firefox google-chrome-stable x11-apps nodejs
 chsh -s /bin/zsh
 sudo service mysql start
+echo 'setting up DB users'
 sudo mysql < ./initDBs.sql
 
 sudo apt-add-repository -y ppa:rael-gc/rvm
@@ -23,6 +22,7 @@ if ! grep -q "S3_BUCKET_NAME" ~/.profile; then
 	echo "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.profile
 	echo "export AWS_REGION=ap-northeast-2" >> ~/.profile
 	echo "export DISPLAY=:0" >> ~/.profile
+	echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.profile
 fi
 
 ~/.profile
