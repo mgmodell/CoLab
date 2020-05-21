@@ -9,12 +9,8 @@ echo 'be no on-screen output'
 echo ''
 rvm install "ruby-2.6.5"
 
-cd .
-cd .
-cd .
-
-gem install bundler
-bundle install
-yarn install --check-files
-yarn install
-rake db:create db:schema:load db:seed
+echo 'Run the following command 3 times'
+echo 'cd .'
+echo ''
+echo 'Then run'
+echo '/bin/sh setup_part_3'
