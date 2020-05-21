@@ -27,7 +27,7 @@ if ! grep -q "S3_BUCKET_NAME" ~/.profile; then
 	echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.profile
 fi
 
-~/.profile
+source /etc/profile
 rvm install "ruby-2.6.5"
 cd .
 cd .
