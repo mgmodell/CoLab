@@ -1,0 +1,36 @@
+#/bin/bash
+
+wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+sudo apt-get update
+sudo apt-get upgrade
+gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+
+
+
+sudo apt-get install zsh software-properties-common mariadb-server imagemagick libmysqlclient-dev firefox google-chrome-stable x11-apps
+chsh -s /bin/zsh
+sudo service mysql start
+sudo mysql < ./initDBs.sql
+
+sudo apt-add-repository -y ppa:rael-gc/rvm
+sudo apt-get update
+sudo apt-get install rvm
+
+if ! grep -q "S3_BUCKET_NAME" ~/.profile; then
+	echo "export S3_BUCKET_NAME=colab-dev" >> ~/.profile
+	echo "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.profile
+	echo "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.profile
+	echo "export AWS_REGION=ap-northeast-2" >> ~/.profile
+	echo "export DISPLAY=:0" >> ~/.profile
+fi
+
+~/.profile
+rvm install "ruby-2.6.5"
+cd .
+cd .
+
+gem install bundler
+bundler install
+rake db:create db:schema:load db:seed
+
