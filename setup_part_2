@@ -8,5 +8,6 @@ cd .
 
 gem install bundler
 bundle install
+yarn install --check-files
 yarn install
 rake db:create db:schema:load db:seed
