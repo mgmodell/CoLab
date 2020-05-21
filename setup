@@ -2,11 +2,13 @@
 
 wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+
 sudo apt-get update
 sudo apt-get upgrade
 gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 
-sudo apt-get -y install zsh software-properties-common mariadb-server imagemagick libmysqlclient-dev firefox google-chrome-stable x11-apps nodejs
+sudo apt-get -y install zsh software-properties-common mariadb-server imagemagick libmysqlclient-dev firefox google-chrome-stable x11-apps nodejs yarn
 chsh -s /bin/zsh
 sudo service mysql start
 echo 'setting up DB users'
@@ -32,5 +34,6 @@ cd .
 
 gem install bundler
 bundler install
+yarn install
 rake db:create db:schema:load db:seed
 
