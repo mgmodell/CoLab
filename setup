@@ -27,13 +27,9 @@ if ! grep -q "S3_BUCKET_NAME" ~/.profile; then
 	echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.profile
 fi
 
-source /etc/profile
-rvm install "ruby-2.6.5"
-cd .
-cd .
-
-gem install bundler
-bundler install
-yarn install
-rake db:create db:schema:load db:seed
-
+echo '**********************'
+echo 'First part of installation is complete'
+echo 'Please close all your Ubuntu/Linux windows'
+echo 'Then open a new Ubuntu/Linux window and run:'
+echo 'cd dev/colab'
+echo '/bin/sh setup'

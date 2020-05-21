@@ -1,0 +1,12 @@
+#/bin/bash
+
+rvm install "ruby-2.6.5"
+
+cd .
+cd .
+cd .
+
+gem install bundler
+bundle install
+yarn install
+rake db:create db:schema:load db:seed
