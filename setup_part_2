@@ -1,5 +1,12 @@
 #/bin/bash
 
+echo 'We will now install ruby using rvm'
+echo 'Please watch the output as it may ask'
+echo 'for your password, but it may be buried'
+echo 'in other text. Please watch for it and'
+echo 'type it in and then press enter. There will'
+echo 'be no on-screen output'
+echo ''
 rvm install "ruby-2.6.5"
 
 cd .
