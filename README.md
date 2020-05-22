@@ -23,6 +23,7 @@ can help you set them up if you run into difficulty.
 
 ### Contributing ###
 
+* [Visual Studio Code](https://code.visualstudio.com/download) - I recommend this for development
 * [Learn Cucumber](https://cucumber.io/docs)
 * [Xcode -- if you're using Mac](https://developer.apple.com/xcode/)
 * Set up your environment:
