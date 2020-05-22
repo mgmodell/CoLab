@@ -61,11 +61,11 @@ can help you set them up if you run into difficulty.
     * Create your own user account
     * Execute `rake testing:set_admin['true','<your email>']` to make yourself an admin
 * Start writing tests
-* Run your tests
+* Run your tests (this currently will not work on WSL)
     * `rake cucumber:rerun`
 * Check in your code
     * `git add <file name>`
-    * `git commit -m ``<meaningful message>```
+    * ``git commit -m `<meaningful message>` ``
     * `git push`
 
 ### Who do I talk to? ###
