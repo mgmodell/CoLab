@@ -1,5 +1,14 @@
 #/bin/bash
 
+if ! grep -q "S3_BUCKET_NAME" ~/.zshrc; then
+	echo "export S3_BUCKET_NAME=colab-dev" >> ~/.zshrc
+	echo "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.zshrc
+	echo "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.zshrc
+	echo "export AWS_REGION=ap-northeast-2" >> ~/.zshrc
+	echo "export DISPLAY=:0" >> ~/.profile
+	echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.profile
+fi
+
 echo 'We will now install ruby using rvm'
 echo 'Please watch the output as it may ask'
 echo 'for your password, but it may be buried'

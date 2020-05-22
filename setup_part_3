@@ -6,3 +6,4 @@ yarn install
 rake db:create db:schema:load db:seed
 echo 'Done!'
 echo 'Happy CoLab-orating!'
+echo '(           ^^ see what I did just there?)
