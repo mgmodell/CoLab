@@ -10,18 +10,18 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import luxonPlugin from '@fullcalendar/luxon'
 
-import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
-import GridOffIcon from "@material-ui/icons/GridOff";
-import TuneIcon from "@material-ui/icons/Tune";
-
 import { useEndpointStore } from "./EndPointStore";
 import { useUserStore } from "./UserStore";
+import DecisionEnrollmentsTable from './DecisionEnrollmentsTable';
+import { i18n } from './i18n';
+import {useTranslation} from 'react-i18next';
 import TaskList from './TaskList'
 
 export default function HomeShell(props) {
   const endpointSet = "home";
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
+  const { t, i18n } = useTranslation( );
 
   const [working, setWorking] = useState(true);
 
@@ -81,7 +81,7 @@ export default function HomeShell(props) {
   }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
+    if (endpoints.endpointStatus[endpointSet] === "loaded") {
       getTasks();
     }
   }, [endpoints.endpointStatus[endpointSet]]);
@@ -94,6 +94,19 @@ export default function HomeShell(props) {
 
   return (
     <Paper>
+      {'loaded' === endpoints.endpointStatus[endpointSet] ?
+      (
+        <DecisionEnrollmentsTable
+          token={props.token}
+          init_url={endpoints.endpoints[endpointSet].courseRegRequestsUrl}
+          update_url={endpoints.endpoints[endpointSet].courseRegUpdatesUrl}
+          />
+      )
+      : null }
+        <h1>{t( 'home.your_tasks' )}</h1>
+        <p>{t( 'home.greeting', { name: user.first_name } )},<br/>
+        {t( 'home.task_interval', { postProcess: 'interval', count: tasks.length} )}
+        </p>
         <Tabs value={curTab} onChange={(event,newValue)=>{setCurTab(newValue)}}>
           <Tab label='Calendar View' value='calendar'/>
           <Tab label='Task View' value='list'/>

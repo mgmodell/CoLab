@@ -6,12 +6,15 @@ import Skeleton from "@material-ui/lab/Skeleton";
 
 import InstallmentReport from "./InstallmentReport";
 
+/*
 export default function InstallmentReportWrapper(props: {
   token: any;
   installmentId: any;
   getInstallmentUrl: any;
   setInstallmentUrl: any;
 }) {
+  */
+export default function InstallmentReportWrapper(props) {
   return (
     <Suspense fallback={<Skeleton variant="rect" height={300} />}>
       <InstallmentReport

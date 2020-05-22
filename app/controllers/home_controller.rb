@@ -30,6 +30,25 @@ class HomeController < ApplicationController
     waiting_tasks = current_user.waiting_student_tasks
     waiting_tasks.concat current_user.waiting_instructor_tasks
 
+    waiting_consent_logs = current_user.waiting_consent_logs
+
+    resp_hash = {
+        tasks: waiting_tasks.collect { |t| t.task_data(current_user: current_user) },
+        consent_logs: waiting_consent_logs.collect {|cl|
+          {
+            id: cl.id,
+            consent_form_id: cl.consent_form_id,
+            accepted: cl.accepted,
+            presented: cl.presented,
+            updated_at: cl.updated_at,
+            consent_form_name: cl.consent_form.name,
+            consent_form_text: cl.consent_form.form_text,
+            consent_form_file_path: url_for( cl.consent_form.pdf ),
+            consent_edit_url: edit_consent_log_path( cl.consent_form_id )
+          }
+        }
+    }
+
     respond_to do |format|
       format.json do
         render json: waiting_tasks_hash = waiting_tasks.collect { |t| t.task_data(current_user: current_user) }
@@ -49,7 +68,9 @@ class HomeController < ApplicationController
         demoUrl: demo_start_path,
         homeUrl: root_path,
         taskListUrl: task_list_path,
-        diversityScoreFor: check_diversity_score_path
+        diversityScoreFor: check_diversity_score_path,
+        courseRegRequestsUrl: course_reg_requests_path,
+        courseRegUpdatesUrl: proc_course_reg_requests_path,
       }
       if user_signed_in?
         ep_hash[:profileUrl] = edit_user_registration_path(current_user)
@@ -262,6 +283,7 @@ class HomeController < ApplicationController
           first_name: @current_user.first_name,
           last_name: @current_user.last_name,
           theme: @current_user.theme.code,
+          welcomed: @current_user.welcomed,
           timezone: tz,
           language: @current_user.language.code,
           is_instructor: @current_user.is_instructor?,

@@ -147,7 +147,7 @@ export default function CourseList(props) {
             endpoints.endpoints[endpointSet].courseCopyUrl + value + ".json";
           return (
             <React.Fragment>
-              <Tooltip title="Download Scores to CSV" aria-label="Download">
+              <Tooltip title="Download Scores to CSV">
                 <IconButton
                   id={"csv-" + value}
                   onClick={event => {

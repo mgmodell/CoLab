@@ -107,9 +107,9 @@ en:
     The %{activity_name} is now available for you on %{site_link}. Please
     %{login_link} at your earliest convenience to have a look and complete
     it.
-  course_invite_body:
-    one: "You've been invited to participate in the following course:"
-    other: "You've been invited to participate in the following %{count} courses:"
+  course_invite_body: >
+    (1){You've been invited to participate in the following course:};
+    (2-inf){You've been invited to participate in the following {{count}} courses:}
   course_invite_close: Please log in to %{site_link} accept or decline this enrollment.
   reminder_body: >
     This email is to serve as a friendly reminder that you have an open
@@ -183,7 +183,7 @@ en:
     title: Home
     your_tasks: Your Tasks
     invited: You've been invited!
-    greeting: Hello %{name}
+    greeting: Hello {{name}}
     greeting_unknown: Hello!
     instructor_tasks: Instructor Tasks
     student_tasks: Tasks for Class
@@ -200,7 +200,4 @@ en:
     courses_proper:
       one: the course
       other: the %{count} courses
-    tasks:
-      zero: You do not currently have any tasks due. Check back later or contact your instructor.
-      one: You've got one task at the moment.
-      other: You've got %{count} tasks today.
+    task_interval: (0){You do not currently have any tasks due. Check back later or contact your instructor.};(1){You've got one task at the moment.};(2-inf){You've got {{count}} tasks today.}

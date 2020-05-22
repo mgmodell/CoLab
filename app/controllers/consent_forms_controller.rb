@@ -27,7 +27,6 @@ class ConsentFormsController < ApplicationController
   # GET /consent_forms/1.json
   def show
     respond_to do |format|
-      puts "\n\n\n*******#{format}\n\n\n"
       format.html 
       format.json do
         response = {
