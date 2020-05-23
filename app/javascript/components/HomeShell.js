@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Paper from "@material-ui/core/Paper";
+import Grid from '@material-ui/core/Grid'
 import { DateTime } from "luxon";
 import Settings from "luxon/src/settings.js";
 import Tab from "@material-ui/core/Tab";
@@ -28,6 +29,7 @@ export default function HomeShell(props) {
   const [curTab, setCurTab] = useState( 'calendar' )
 
   const [tasks, setTasks] = useState([]);
+  const [consentLogs, setConsentLogs] = useState([]);
 
   const getTasks = () => {
     var url = endpoints.endpoints[endpointSet].taskListUrl + ".json";
@@ -51,7 +53,7 @@ export default function HomeShell(props) {
       })
       .then(data => {
         //Process the data
-        data.forEach((value,index,array)=>{
+        data.tasks.forEach((value,index,array)=>{
           switch( value.type ){
             case 'assessment':
               value.title = 
@@ -67,7 +69,9 @@ export default function HomeShell(props) {
           value.url = value.link;
           value.start = value.next_date;
         })
-        setTasks(data);
+        setTasks(data.tasks);
+        setConsentLogs( data.consent_logs );
+
         setWorking(false);
       });
   };
@@ -94,15 +98,20 @@ export default function HomeShell(props) {
 
   return (
     <Paper>
+      <Grid container spacing={3}>
+      </Grid>
       {'loaded' === endpoints.endpointStatus[endpointSet] ?
       (
-        <DecisionEnrollmentsTable
-          token={props.token}
-          init_url={endpoints.endpoints[endpointSet].courseRegRequestsUrl}
-          update_url={endpoints.endpoints[endpointSet].courseRegUpdatesUrl}
-          />
+        <Grid item xs={12}>
+          <DecisionEnrollmentsTable
+            token={props.token}
+            init_url={endpoints.endpoints[endpointSet].courseRegRequestsUrl}
+            update_url={endpoints.endpoints[endpointSet].courseRegUpdatesUrl}
+            />
+        </Grid>
       )
       : null }
+      <Grid item xs={12}>
         <h1>{t( 'home.your_tasks' )}</h1>
         <p>{t( 'home.greeting', { name: user.first_name } )},<br/>
         {t( 'home.task_interval', { postProcess: 'interval', count: tasks.length} )}
@@ -141,6 +150,8 @@ export default function HomeShell(props) {
           <TaskList tasks={tasks}/>
         ) : null
       }
+
+      </Grid>
     </Paper>
   );
 }

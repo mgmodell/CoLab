@@ -39,6 +39,7 @@ Feature: Timezone Support for Bingo!
     Then the user should see "Feb 15, 1980, 9:00 AM"
     Then the user should see "Apr 13, 1980, 8:59 AM"
     
+@javascript
   Scenario: Bingos shouldn't open too soon
     Given today is "February 14, 1980 at 2:59pm"
     Given the course timezone is "Seoul"

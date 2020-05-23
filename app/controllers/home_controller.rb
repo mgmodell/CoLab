@@ -51,7 +51,7 @@ class HomeController < ApplicationController
 
     respond_to do |format|
       format.json do
-        render json: waiting_tasks_hash = waiting_tasks.collect { |t| t.task_data(current_user: current_user) }
+        render json: resp_hash
       end
     end
   end

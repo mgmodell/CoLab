@@ -85,6 +85,7 @@ Feature: User registration
     Then the course has 2 "Invited Student" users
     Then 0 emails will have been sent
 
+@javascript
   Scenario: A student accepts enrollment in a course
     Given 5 users
     Given the users are confirmed
@@ -104,6 +105,7 @@ Feature: User registration
     Then the course has 4 "Invited Student" users
     Then the course has 1 "Enrolled Student" users
 
+@javascript
   Scenario: A student declines enrollment in a course
     Given 5 users
     Given the users are confirmed
@@ -122,6 +124,7 @@ Feature: User registration
     Then the course has 4 "Invited Student" users
     Then the course has 1 "Declined Student" users
 
+@javascript
   Scenario: A student is invited to 2 courses
     Given 5 users
     Given the users are confirmed

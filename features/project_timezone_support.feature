@@ -141,6 +141,7 @@ Feature: Timezone Support
     When the system emails stragglers
     Then an email will be sent to each member of the group
     
+@javascript
   Scenario: Only one assessment per project per week
     Given the course timezone is "Seoul"
     Given the user timezone is "Seoul"
