@@ -44,6 +44,11 @@ can help you set them up if you run into difficulty.
 * Back in Ubuntu:
     * `git clone git@bitbucket.org:_performance/colab.git`
     * `cd colab`
+    * __NOTE:__ The following installer will change your shell to zsh. If you are already
+      a *NIX user, you probably know this is the current trend in the industry, but that
+      it is a significant difference from other shells. Also, I recommend installing
+      [Oh my zsh](http://ohmyz.sh/) as it will provide lots of nice little shortcuts and
+      enhancements. Feel free to ask me about this if you're interested.
     * `/bin/sh setup` [enter your password when it is requested]
 
 
