@@ -1,11 +1,13 @@
 import React, { useState, Suspense } from "react";
 import { BrowserRouter as Router,
-  Switch, Route, Link } from "react-router-dom";
+  Switch, Route } from "react-router-dom";
 import Skeleton from "@material-ui/lab/Skeleton";
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
 
 import HomeShell from './HomeShell';
+import ProfileDataAdmin from './ProfileDataAdmin'
+import Admin from './Admin'
 
 
 
@@ -20,14 +22,27 @@ export default function PageWrapper(props) {
       <br/><br/>
       <Suspense fallback={<Skeleton variant='rect' height={600} />} >
         <Switch >
-          <Route path='/'>
-            <HomeShell
+          <Route path='/profile'>
+            <ProfileDataAdmin
               token={props.token}
               getEndpointsUrl={props.getEndpointsUrl} />
           </Route>
-          <Route path='installments'>
+          <Route path='/admin' >
+            <Admin
+              token={props.token}
+              getEndpointsUrl={props.getEndpointsUrl}
+
+            />
+
+          </Route>
+          <Route path='/installments'>
             Some installments stuff
 
+          </Route>
+          <Route exact path='/'>
+            <HomeShell
+              token={props.token}
+              getEndpointsUrl={props.getEndpointsUrl} />
           </Route>
     
         </Switch>

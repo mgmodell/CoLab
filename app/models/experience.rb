@@ -29,8 +29,9 @@ class Experience < ApplicationRecord
   end
 
   def get_link
-    helpers = Rails.application.routes.url_helpers
-    helpers.experience_path self
+    # helpers = Rails.application.routes.url_helpers
+    # helpers.experience_path self
+    'experience'
   end
 
   def get_type

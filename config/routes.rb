@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 Rails.application.routes.draw do
-  get 'admin' => 'courses#index'
+  # get 'admin' => 'courses#index'
 
   scope 'api-backend' do
     post 'courses/copy/:id' => 'courses#new_from_template',
@@ -64,10 +64,23 @@ Rails.application.routes.draw do
 
     get 'bingo_games/new/:course_id' => 'bingo_games#show', as: :new_bingo_game
     post 'bingo_games/:course_id' => 'bingo_games#create'
+
+    #Candidate List stuff
+    get 'candidate_lists/:bingo_game_id' => 'candidate_lists#get_candidate_list',
+        as: :get_candidate_list,
+        constraints: ->(req) { req.format == :json }
+    put 'candidate_lists/:bingo_game_id' => 'candidate_lists#update',
+        as: :update_candidate_list,
+        constraints: ->(req) { req.format == :json }
+    post 'candidate_lists/collaborate/:bingo_game_id' => 'candidate_lists#request_collaboration',
+        as: :request_collaboration,
+        constraints: ->(req) { req.format == :json }
+
   end
 
   scope 'bingo' do
     resources :candidate_lists, only: [:create, :edit, :update, :show]
+    #TODO: remove the next line
     get 'request_collaboration/:id/:desired' => 'candidate_lists#request_collaboration',
         as: :request_bingo_collaboration
     get 'candidates_review/:id' => 'bingo_games#review_candidates',
@@ -206,4 +219,5 @@ Rails.application.routes.draw do
   get 'graphing/subjects/:unit_of_analysis/:project_id/:for_research/:anonymous' =>
           'graphing#subjects', as: :graphing_subjects
 
+  match '*path', to: 'home#index', via: :all
 end

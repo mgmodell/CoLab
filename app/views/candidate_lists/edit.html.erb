@@ -1,3 +1,9 @@
+<%= react_component "CandidateListEntry", {
+        token: form_authenticity_token,
+        getEndPointsUrl: endpoints_path( unit: '' ),
+        bingo_game_id: @candidate_list.bingo_game_id
+        } %>
+
 <%= simple_form_for @candidate_list do |f| %>
   <%= f.error_notification %>
   <% theme_code = get_theme_code

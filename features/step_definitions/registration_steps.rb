@@ -192,6 +192,12 @@ Then /^the user "([^"]*)" enrollment in the course$/ do |accept|
 end
 
 Then /^the user sees (\d+) invitation$/ do |invitation_count|
+  check_count = 0
+  while ( check_count < 5 && all( :xpath, "//*[@id='waiting']" ).size > 0 ) do
+    sleep( 0.01)
+    check_count+= 1
+  end
+
   page.should have_content 'confirm that you are actually enrolled in'
   if invitation_count.to_i == 1
     page.should have_content 'the course listed below'

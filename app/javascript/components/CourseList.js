@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from "react";
+import {
+  useHistory,
+  useRouteMatch
+} from 'react-router-dom';
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
@@ -22,6 +26,10 @@ import Collapse from "@material-ui/core/Collapse";
 export default function CourseList(props) {
   const endpointSet = "course";
   const [endpoints, endpointsActions] = useEndpointStore();
+
+  const history = useHistory( );
+  const {path, url} = useRouteMatch( );
+
   const [user, userActions] = useUserStore();
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
@@ -246,8 +254,9 @@ export default function CourseList(props) {
             <IconButton
               id="new_course"
               onClick={event => {
-                window.location.href =
-                  endpoints.endpoints[endpointSet].courseCreateUrl;
+                history.push(
+                  path + '/new'
+                )
               }}
               aria-label="New Course"
             >
@@ -257,13 +266,14 @@ export default function CourseList(props) {
         ),
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
-            const link =
-              endpoints.endpoints[endpointSet].baseUrl +
-              "/" +
-              courses[cellMeta.dataIndex].id;
-            if (null != link) {
-              window.location.href = link;
-            }
+            console.log( path )
+              const course_id = courses[cellMeta.dataIndex].id
+              console.log(  course_id );
+              const location = path + '/' + course_id
+              console.log( location ) 
+              history.push(
+                location
+              )
           }
         },
         selectableRows: "none"

@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from "react";
+import {
+  useRouteMatch,
+  Switch,
+  Route,
+  useParams,
+  useHistory
+} from 'react-router-dom';
 import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
@@ -43,6 +50,9 @@ export default function CourseDataAdmin(props) {
   const endpointSet = "course";
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
+
+  const history = useHistory( );
+  const {path, url} = useRouteMatch( );
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
@@ -561,7 +571,11 @@ export default function CourseDataAdmin(props) {
               key={linkData.name}
               onClick={event => {
                 setMenuAnchorEl(null);
-                window.location.href = linkData.link;
+                history.push(
+                 `${url}/${linkData.link}/new`
+
+                )
+                // window.location.href = linkData.link;
               }}
             >
               {iconForType(linkData.name)}
@@ -591,9 +605,14 @@ export default function CourseDataAdmin(props) {
             console.log(cellMeta);
             if ("link" != activityColumns[cellMeta.colIndex].name) {
               const link = courseActivities[cellMeta.rowIndex].link;
-              if (null != link) {
-                window.location.href = link;
-              }
+              const activityId = courseActivities[cellMeta.rowIndex].id;
+              history.push(
+                `${url}/${link}/${activityId}`
+
+              )
+              // if (null != link) {
+              //   window.location.href = link;
+              // }
             }
           }
         }}
@@ -603,6 +622,8 @@ export default function CourseDataAdmin(props) {
     );
 
   return (
+    <Switch>
+      <Route >
     <Paper>
       <Collapse in={showErrors}>
         <Alert
@@ -668,6 +689,9 @@ export default function CourseDataAdmin(props) {
       {saveButton}
       {messages["status"]}
     </Paper>
+
+      </Route>
+    </Switch>
   );
 }
 

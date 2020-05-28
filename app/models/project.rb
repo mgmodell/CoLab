@@ -61,8 +61,9 @@ class Project < ApplicationRecord
 
   # TODO: Not ideal structuring for UI
   def get_link
-    helpers = Rails.application.routes.url_helpers
-    helpers.project_path self
+    # helpers = Rails.application.routes.url_helpers
+    # helpers.project_path self
+    'project'
   end
 
   def get_activity_begin

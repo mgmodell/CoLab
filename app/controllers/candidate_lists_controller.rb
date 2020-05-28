@@ -41,6 +41,37 @@ class CandidateListsController < ApplicationController
     end
   end
 
+  #API code here
+  def get_candidate_list
+
+    bingo_game = BingoGame.find( params[:bingo_game_id])
+    candidate_list = bingo_game.candidate_list_for_user( current_user )
+
+    group = bingo_game.group_option? ?
+      bingo_game.project.group_for_user( current_user ) : nil
+    
+    respond_to do |format|
+      format.json do
+        render json: {
+          id: candidate_list.id,
+          topic: bingo_game.topic,
+          description: bingo_game.description,
+          group_option: bingo_game.group_option?,
+          end_date: bingo_game.end_date,
+          group_name: group.present? ? group.get_name( false ) : nil ,
+          is_group: candidate_list.is_group?,
+          expected_count: candidate_list.expected_count,
+          candidates: candidate_list.candidates.as_json(
+            only: %i[ id term definition filtered_consistent candidate_feedback_id ]
+          ),
+          others_requested_help: candidate_list.others_requested_help,
+          request_collaboration_url: request_collaboration_path( bingo_game_id: bingo_game.id )
+        }
+
+      end
+    end
+  end
+
   def request_collaboration
     @title = t '.title'
     desired = params[:desired] == 'yes'

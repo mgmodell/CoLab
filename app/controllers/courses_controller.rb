@@ -36,9 +36,9 @@ class CoursesController < ApplicationController
         }
         if @course.id && @course.id > 0
           response[:new_activity_links] = [
-            { name: 'Group Experience', link: new_experience_path(course_id: @course.id) },
-            { name: 'Project', link: new_project_path(course_id: @course.id) },
-            { name: 'Terms List', link: new_bingo_game_path(course_id: @course.id) }
+            { name: 'Group Experience', link: 'experience' },
+            { name: 'Project', link: 'project' },
+            { name: 'Terms List', link: 'bingo_game' }
           ]
           activities = @course.get_activities.collect do |activity|
             {
@@ -437,26 +437,48 @@ class CoursesController < ApplicationController
 
   def accept_roster
     r = Roster.students.where(id: params[:roster_id], user: current_user).take
+    notice = 'Successfully accepted the course'
     if r.nil?
-      flash[:notice] = t('courses.accept_fail')
+      notice = t('courses.accept_fail')
     else
       r.role = Roster.roles[:enrolled_student]
       r.save
     end
-    flash.keep
-    redirect_to :root
+    respond_to do |format|
+      format.html do
+        flash.keep
+        redirect_to :root
+      end
+      format.json do
+        render json: {
+          messages: { main: notice }
+        }
+
+      end
+    end
   end
 
   def decline_roster
     r = Roster.students.where(id: params[:roster_id], user: current_user).take
+    notice = 'Successfully declined the course'
     if r.nil?
-      flash[:notice] = t('courses.decline_fail')
+      notice = t('courses.decline_fail')
     else
       r.role = Roster.roles[:declined_student]
       r.save
     end
-    flash.keep
-    redirect_to :root
+    respond_to do |format|
+      format.html do
+        flash.keep
+        redirect_to :root
+      end
+      format.json do
+        render json: {
+          messages: { main: notice }
+        }
+
+      end
+    end
   end
 
   def remove_instructor

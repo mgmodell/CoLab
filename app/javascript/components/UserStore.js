@@ -10,6 +10,7 @@ const Store = createStore({
     language: "en",
     is_instructor: false,
     is_admin: false,
+    welcomed: false,
     loading: false,
     loaded: false,
     error: null
@@ -45,6 +46,7 @@ const Store = createStore({
               is_admin: data.is_admin,
               timezone: data.timezone,
               language: data.language,
+              welcomed: data.welcomed,
               loading: false,
               loaded: true
             });

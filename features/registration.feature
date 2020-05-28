@@ -99,7 +99,7 @@ Feature: User registration
     Then the course has 5 "Invited Student" users
     Then the user logs in
     Then the user sees 1 invitation
-    Then the user does not see a task listing
+    # Then the user does not see a task listing
     Then the user "accepts" enrollment in the course
     Then user should see 1 open task
     Then the course has 4 "Invited Student" users
@@ -118,7 +118,7 @@ Feature: User registration
     Then the course has 5 "Invited Student" users
     Then the user logs in
     Then the user sees 1 invitation
-    Then the user does not see a task listing
+    # Then the user does not see a task listing
     Then the user "declines" enrollment in the course
     Then user should see 0 open task
     Then the course has 4 "Invited Student" users
@@ -141,4 +141,4 @@ Feature: User registration
     Then the course has 5 "Invited Student" users
     Then the user logs in
     Then the user sees 2 invitation
-    Then the user does not see a task listing
+    # Then the user does not see a task listing

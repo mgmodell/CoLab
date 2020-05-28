@@ -14,6 +14,9 @@ import luxonPlugin from '@fullcalendar/luxon'
 import { useEndpointStore } from "./EndPointStore";
 import { useUserStore } from "./UserStore";
 import DecisionEnrollmentsTable from './DecisionEnrollmentsTable';
+import DecisionInvitationsTable from './DecisionInvitationsTable';
+import ConsentLog from './ConsentLog';
+import ProfileDataAdmin from './ProfileDataAdmin'
 import { i18n } from './i18n';
 import {useTranslation} from 'react-i18next';
 import TaskList from './TaskList'
@@ -30,6 +33,7 @@ export default function HomeShell(props) {
 
   const [tasks, setTasks] = useState([]);
   const [consentLogs, setConsentLogs] = useState([]);
+  const [waitingRosters, setWaitingRosters] = useState([]);
 
   const getTasks = () => {
     var url = endpoints.endpoints[endpointSet].taskListUrl + ".json";
@@ -71,6 +75,7 @@ export default function HomeShell(props) {
         })
         setTasks(data.tasks);
         setConsentLogs( data.consent_logs );
+        setWaitingRosters( data.waiting_rosters );
 
         setWorking(false);
       });
@@ -96,22 +101,27 @@ export default function HomeShell(props) {
     }
   }, [user.loaded]);
 
-  return (
-    <Paper>
-      <Grid container spacing={3}>
-      </Grid>
-      {'loaded' === endpoints.endpointStatus[endpointSet] ?
-      (
-        <Grid item xs={12}>
-          <DecisionEnrollmentsTable
-            token={props.token}
-            init_url={endpoints.endpoints[endpointSet].courseRegRequestsUrl}
-            update_url={endpoints.endpoints[endpointSet].courseRegUpdatesUrl}
-            />
-        </Grid>
-      )
-      : null }
-      <Grid item xs={12}>
+  var pageContent;
+  if( consentLogs.length > 0 ){
+        pageContent = (<ConsentLog
+          token={props.token}
+          getEndpointsUrl={props.getEndpointsUrl}
+          consentFormId={consentLogs[0].consent_form_id}
+          parentUpdateFunc={getTasks}
+        />)
+  }else if( !user.welcomed ){
+    pageContent = (
+      <ProfileDataAdmin
+        token={props.token}
+        getEndpointsUrl={props.getEndpointsUrl}
+        profileId={user.id}
+      />
+    )
+
+  }else{
+    pageContent = (
+      <React.Fragment>
+
         <h1>{t( 'home.your_tasks' )}</h1>
         <p>{t( 'home.greeting', { name: user.first_name } )},<br/>
         {t( 'home.task_interval', { postProcess: 'interval', count: tasks.length} )}
@@ -150,8 +160,43 @@ export default function HomeShell(props) {
           <TaskList tasks={tasks}/>
         ) : null
       }
+      </React.Fragment>
+
+    )
+  }
+
+  return (
+    <Paper>
+      <Grid container spacing={3}>
+      {'loaded' === endpoints.endpointStatus[endpointSet] ?
+      (
+        <React.Fragment>
+
+        <Grid item xs={12}>
+          {waitingRosters.length > 0 ?
+          (
+          <DecisionInvitationsTable
+            token={props.token}
+            invitations={waitingRosters}
+            parentUpdateFunc={getTasks}
+            />
+          ) : null }
+        </Grid>
+        <Grid item xs={12}>
+          <DecisionEnrollmentsTable
+            token={props.token}
+            init_url={endpoints.endpoints[endpointSet].courseRegRequestsUrl}
+            update_url={endpoints.endpoints[endpointSet].courseRegUpdatesUrl}
+            />
+        </Grid>
+        </React.Fragment>
+      )
+      : null }
+      <Grid item xs={12}>
+        {pageContent}
 
       </Grid>
+    </Grid>
     </Paper>
   );
 }

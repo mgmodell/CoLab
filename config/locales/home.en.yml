@@ -191,13 +191,9 @@ en:
     sapa: Self- and Peer-Assessment
     terms_list: Terms list submission
     course_confirm: >
-      You've been added to %{course_list_text}, but sometimes instructors make
+      You've been added to {{course_list_text}}, but sometimes instructors make
       mistakes, so please do confirm that you are actually enrolled in
-      %{proper_course_list} listed below
-    courses: 
-      one: a course
-      other: '%{count} courses'
-    courses_proper:
-      one: the course
-      other: the %{count} courses
+      {{proper_course_list}} listed below
+    courses_interval: (1){a course};(2-inf){ {{count}} courses}
+    courses_proper_interval: (1){the course};(2-inf){the {{count}} courses}
     task_interval: (0){You do not currently have any tasks due. Check back later or contact your instructor.};(1){You've got one task at the moment.};(2-inf){You've got {{count}} tasks today.}

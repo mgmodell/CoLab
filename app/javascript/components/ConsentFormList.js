@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from "react";
+import {
+  useHistory,
+  useRouteMatch
+} from 'react-router-dom'
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
@@ -18,6 +22,10 @@ import Collapse from "@material-ui/core/Collapse";
 export default function ConsentFormList(props) {
   const endpointSet = "consent_form";
   const [endpoints, endpointsActions] = useEndpointStore();
+
+  const history = useHistory();
+  const {path, url} = useRouteMatch( );
+
   const [user, userActions] = useUserStore();
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
@@ -45,7 +53,7 @@ export default function ConsentFormList(props) {
     }
   ]
 
-  const [schools, setSchools] = useState([]);
+  const [consent_forms, setSchools] = useState([]);
 
   const getSchools = () => {
     const url = endpoints.endpoints[endpointSet].baseUrl + ".json";
@@ -102,7 +110,7 @@ export default function ConsentFormList(props) {
   const muiDatTab = (
     <MUIDataTable
       title="Schools"
-      data={schools}
+      data={consent_forms}
       columns={columns}
       options={{
         responsive: "scrollMaxHeight",
@@ -114,8 +122,9 @@ export default function ConsentFormList(props) {
             <IconButton
               id="new_consent_form"
               onClick={event => {
-                window.location.href =
-                  endpoints.endpoints[endpointSet].consentFormCreateUrl;
+                history.push( 'new' );
+                //window.location.href =
+                //  endpoints.endpoints[endpointSet].consentFormCreateUrl;
               }}
               aria-label="New Consent Form"
             >
@@ -125,13 +134,16 @@ export default function ConsentFormList(props) {
         ),
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
-            const link =
-              endpoints.endpoints[endpointSet].baseUrl +
-              "/" +
-              schools[cellMeta.dataIndex].id;
-            if (null != link) {
-              window.location.href = link;
-            }
+            //const link =
+            //  endpoints.endpoints[endpointSet].baseUrl +
+            //  "/" +
+            const consent_form_id =  consent_forms[cellMeta.dataIndex].id;
+              history.push(
+                path + '/' + consent_form_id
+              )
+            // if (null != link) {
+              // window.location.href = link;
+            // }
           }
         },
         selectableRows: "none"

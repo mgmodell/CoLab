@@ -114,8 +114,9 @@ class BingoGame < ApplicationRecord
   # Let's create a true activity interface later
   # TODO this is really more of a student activity end date
   def get_link
-    helpers = Rails.application.routes.url_helpers
-    helpers.bingo_game_path self
+    # helpers = Rails.application.routes.url_helpers
+    # helpers.bingo_game_path self
+    'bingo_game'
   end
 
   def type

@@ -7,21 +7,24 @@ class HomeController < ApplicationController
   def index
     # The first thing we want to do is make sure they've had an opportunity to
     # complete any waiting consent forms
-    waiting_consent_logs = current_user.waiting_consent_logs
 
-    if !waiting_consent_logs.empty?
-      redirect_to(controller: 'consent_logs',
-                  action: 'edit',
-                  consent_form_id: waiting_consent_logs[0].consent_form_id)
-    elsif current_user.rosters.invited_student.count > 0
-      @waiting_rosters = current_user.rosters.invited_student
-      render :rsvp
-    elsif !current_user.welcomed?
-      redirect_to edit_user_registration_path(current_user)
-    end
-    @first_name = current_user.first_name
-    @waiting_student_tasks = current_user.waiting_student_tasks
-    @waiting_instructor_tasks = current_user.waiting_instructor_tasks
+    # waiting_consent_logs = current_user.waiting_consent_logs
+
+    # if !waiting_consent_logs.empty?
+    #   redirect_to(controller: 'consent_logs',
+    #               action: 'edit',
+    #               consent_form_id: waiting_consent_logs[0].consent_form_id)
+    # elsif current_user.rosters.invited_student.count > 0
+    # if current_user.rosters.invited_student.count > 0
+    #   @waiting_rosters = current_user.rosters.invited_student
+    #   render :rsvp
+    # elsif !current_user.welcomed?
+    #   redirect_to edit_user_registration_path(current_user)
+    # end
+
+    # @first_name = current_user.first_name
+    # @waiting_student_tasks = current_user.waiting_student_tasks
+    # @waiting_instructor_tasks = current_user.waiting_instructor_tasks
 
     current_location = 'home'
   end
@@ -31,20 +34,24 @@ class HomeController < ApplicationController
     waiting_tasks.concat current_user.waiting_instructor_tasks
 
     waiting_consent_logs = current_user.waiting_consent_logs
+    waiting_rosters = current_user.rosters.invited_student
 
     resp_hash = {
         tasks: waiting_tasks.collect { |t| t.task_data(current_user: current_user) },
         consent_logs: waiting_consent_logs.collect {|cl|
           {
             id: cl.id,
-            consent_form_id: cl.consent_form_id,
-            accepted: cl.accepted,
-            presented: cl.presented,
-            updated_at: cl.updated_at,
-            consent_form_name: cl.consent_form.name,
-            consent_form_text: cl.consent_form.form_text,
-            consent_form_file_path: url_for( cl.consent_form.pdf ),
-            consent_edit_url: edit_consent_log_path( cl.consent_form_id )
+            consent_form_id: cl.consent_form_id
+          }
+        },
+        waiting_rosters: waiting_rosters.collect{|r|
+          {
+            id: r.id,
+            name: r.course.get_name( false ),
+            startDate: r.course.start_date,
+            endDate: r.course.end_date,
+            acceptPath: accept_roster_path( roster_id: r.id ),
+            declinePath: decline_roster_path( roster_id: r.id )
           }
         }
     }
@@ -73,16 +80,16 @@ class HomeController < ApplicationController
         courseRegUpdatesUrl: proc_course_reg_requests_path,
       }
       if user_signed_in?
-        ep_hash[:profileUrl] = edit_user_registration_path(current_user)
+        ep_hash[:profileUrl] = '/profile'
         ep_hash[:logoutUrl] = logout_path
         if current_user.is_admin? || current_user.is_instructor?
-          ep_hash[:adminUrl] = admin_path
-          ep_hash[:coursesPath] = courses_path
-          ep_hash[:schoolsPath] = schools_path
-          ep_hash[:consentFormsPath] = consent_forms_path
-          ep_hash[:conceptsPath] = concepts_path
-          ep_hash[:projectsPath] = projects_path
-          ep_hash[:reportingUrl] = graphing_path
+          ep_hash[:adminUrl] = '/admin'
+          ep_hash[:coursesPath] = '/admin/courses'
+          ep_hash[:schoolsPath] = '/admin/schools'
+          ep_hash[:consentFormsPath] = '/admin/consent_forms'
+          ep_hash[:conceptsPath] = '/admin/concepts'
+          ep_hash[:projectsPath] = '/admin/projects'
+          ep_hash[:reportingUrl] = '/admin/reporting'
         end
       end
     when 'project'
@@ -129,6 +136,10 @@ class HomeController < ApplicationController
       ep_hash = {
         baseUrl: edit_consent_log_path( consent_form_id: '' ),
         consentLogSaveUrl: consent_log_path( id: '')
+      }
+    when 'candidate_list'
+      ep_hash = {
+        baseUrl: get_candidate_list_path( bingo_game_id: '' )
       }
     when 'profile'
       ep_hash = {

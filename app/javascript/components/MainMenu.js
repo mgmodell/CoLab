@@ -1,7 +1,11 @@
 import React, { useState, Suspense, useEffect } from "react";
 import PropTypes from "prop-types";
+import {
+  BrowserRouter as Router,
+  useHistory,
+} from 'react-router-dom';
+
 import IconButton from "@material-ui/core/IconButton";
-import Link from "@material-ui/core/Link";
 import Collapse from "@material-ui/core/Collapse";
 
 import List from "@material-ui/core/List";
@@ -33,6 +37,8 @@ import { i18n } from "./i18n";
 import { useTranslation } from "react-i18next";
 
 export default function MainMenu(props) {
+
+  const history = useHistory();
   const [menuOpen, setMenuOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [t, i18n] = useTranslation();
@@ -53,8 +59,10 @@ export default function MainMenu(props) {
   };
 
   const navTo = url => {
-    window.location = url;
-    return;
+    history.push( url );
+    setMenuOpen( false );
+    // window.location = url;
+    // return;
   };
 
   useEffect(() => {
@@ -162,6 +170,7 @@ export default function MainMenu(props) {
               <AccountBoxIcon />
             </ListItemIcon>
             <ListItemText>{t("profile")}</ListItemText>
+
           </ListItem>
           <DiversityCheck
             token={props.token}
