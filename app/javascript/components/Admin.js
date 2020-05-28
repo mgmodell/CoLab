@@ -16,10 +16,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import SchoolList from './SchoolList';
 import CourseAdmin from './CourseAdmin';
 import SchoolDataAdmin from './SchoolDataAdmin';
-import ConsentFormList from './ConsentFormList';
-import ConsentFormDataAdmin from './ConsentFormDataAdmin';
+import ConsentFormList from './Consent/ConsentFormList';
+import ConsentFormDataAdmin from './Consent/ConsentFormDataAdmin';
 
-import { useUserStore } from "./UserStore";
+import {useUserStore} from "./infrastructure/UserStore";
 import Collapse from "@material-ui/core/Collapse";
 
 export default function Admin(props) {

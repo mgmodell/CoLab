@@ -32,8 +32,8 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import FindInPageIcon from '@material-ui/icons/FindInPage';
 
 import DiversityCheck from "./DiversityCheck";
-import { useUserStore } from "./UserStore";
-import { i18n } from "./i18n";
+import { useUserStore } from "./infrastructure/UserStore";
+import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 export default function MainMenu(props) {

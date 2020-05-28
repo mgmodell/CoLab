@@ -39,6 +39,7 @@ const Store = createStore({
           .then(data => {
             setState({
               id: data.id,
+              name: data.name,
               first_name: data.first_name,
               last_name: data.last_name,
               theme: data.theme,

@@ -21,10 +21,10 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./EndPointStore";
+import { useEndpointStore } from "../infrastructure/EndPointStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { useUserStore } from "./UserStore";
+import { useUserStore } from "../infrastructure/UserStore";
 import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";

@@ -8,11 +8,11 @@ import Settings from "luxon/src/settings.js";
 
 import CourseList from './CourseList';
 import CourseDataAdmin from './CourseDataAdmin';
-import BingoGameDataAdmin from './BingoGameDataAdmin';
+import BingoGameDataAdmin from './BingoBoards/BingoGameDataAdmin';
 import ExperienceDataAdmin from './ExperienceDataAdmin';
 import ProjectDataAdmin from './ProjectDataAdmin';
 
-import { useUserStore } from "./UserStore";
+import { useUserStore } from "./infrastructure/UserStore";
 
 export default function CourseAdmin(props) {
   let match = useRouteMatch();
@@ -89,8 +89,7 @@ export default function CourseAdmin(props) {
 
             </React.Fragment>
           )}
-        >
-        </Route>
+        />
         <Route exact path={`${match.path}`}>
           <CourseList
             token={props.token}

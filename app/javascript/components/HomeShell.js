@@ -11,13 +11,13 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import luxonPlugin from '@fullcalendar/luxon'
 
-import { useEndpointStore } from "./EndPointStore";
-import { useUserStore } from "./UserStore";
+import { useEndpointStore } from"./infrastructure/EndPointStore";
+import { useUserStore } from "./infrastructure/UserStore";
 import DecisionEnrollmentsTable from './DecisionEnrollmentsTable';
 import DecisionInvitationsTable from './DecisionInvitationsTable';
-import ConsentLog from './ConsentLog';
+import ConsentLog from './Consent/ConsentLog';
 import ProfileDataAdmin from './ProfileDataAdmin'
-import { i18n } from './i18n';
+import { i18n } from './infrastructure/i18n';
 import {useTranslation} from 'react-i18next';
 import TaskList from './TaskList'
 
@@ -109,7 +109,7 @@ export default function HomeShell(props) {
           consentFormId={consentLogs[0].consent_form_id}
           parentUpdateFunc={getTasks}
         />)
-  }else if( !user.welcomed ){
+  }else if( user.loaded && !user.welcomed ){
     pageContent = (
       <ProfileDataAdmin
         token={props.token}

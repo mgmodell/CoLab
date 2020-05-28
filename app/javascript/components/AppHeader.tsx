@@ -7,10 +7,10 @@ import Typography from "@material-ui/core/Typography";
 import MainMenu from "./MainMenu";
 import HelpMenu from "./HelpMenu";
 import Quote from "./Quote";
-import { i18n } from "./i18n";
+import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { useEndpointStore } from "./EndPointStore";
+import { useEndpointStore } from "./infrastructure/EndPointStore";
 
 export default function AppHeader(props) {
   const { t, i18n } = useTranslation();

@@ -28,7 +28,7 @@ import Link from "@material-ui/core/Link";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import DropUserButton from "./DropUserButton";
-import BingoDataRepresentation from "./BingoDataRepresentation";
+import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
 
 export default function CourseUsersList(props) {
   const [addUsersPath, setAddUsersPath] = useState("");

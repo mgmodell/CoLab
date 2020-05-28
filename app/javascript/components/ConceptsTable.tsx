@@ -20,7 +20,7 @@ import { SortDirection } from "react-virtualized";
 
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
 
-import { useEndpointStore } from "./EndPointStore";
+import { useEndpointStore } from "./infrastructure/EndPointStore";
 
 const styles = theme => ({
   table: {

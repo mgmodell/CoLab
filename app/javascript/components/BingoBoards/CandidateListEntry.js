@@ -11,6 +11,7 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Collapse from '@material-ui/core/Collapse';
+import Typography from '@material-ui/core/Typography'
 import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -18,10 +19,10 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./EndPointStore";
+import { useEndpointStore } from "../infrastructure/EndPointStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { useUserStore } from "./UserStore";
+import { useUserStore } from "../infrastructure/UserStore";
 import { TextareaAutosize, Grid } from "@material-ui/core";
 import { updateExternalModuleReference } from "typescript";
 
@@ -70,6 +71,7 @@ export default function CandidateListEntry(props) {
         }
       })
       .then(data => {
+        console.log( data );
         setCandidateListId( data.id );
         setTopic( data.topic );
         setDescription( data.description );
@@ -80,7 +82,11 @@ export default function CandidateListEntry(props) {
         setExpectedCount( data.expected_count );
 
         const candidate_count = data.candidates.length;
-        for( var count = candidates_count; count < data.expected_count; count++){
+        console.log( candidate_count );
+        console.log( data.expected_count - candidate_count )
+
+        for( var count = candidate_count; count < data.expected_count; count++){
+          console.log( count )
           data.candidates.push(
             {
               id: null,
@@ -91,6 +97,7 @@ export default function CandidateListEntry(props) {
             }
           )
         }
+        console.log( data.candidates );
         setCandidates( data.candidates );
         setOthersRequestedHelp( data.others_requested_help );
         setRequestCollaborationUrl( data.request_collaboration_url );
@@ -215,52 +222,65 @@ export default function CandidateListEntry(props) {
     <Paper>
       {working ? <LinearProgress /> : null}
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label='Topic'
-            fullWidth
-            variant='outlined'
-            value={topic} />
+        <Grid item xs={12} sm={3}>
+          <Typography>
+            Topic
+          </Typography>
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label='Description'
-            fullWidth
-            variant='outlined'
-            value={description} />
+        <Grid item xs={12} sm={9}>
+          <Typography>
+            {topic}
+          </Typography>
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label='Description'
-            fullWidth
-            variant='outlined'
-            value={description} />
+        <Grid item xs={12} sm={3}>
+          <Typography>
+            Description
+          </Typography>
         </Grid>
+        <Grid item xs={12} sm={9}>
+          <Typography>
+            {description}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Typography>
+            For
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <Typography>
+            {user.name}
+          </Typography>
+        </Grid>
+        <hr/>
         <Grid item xs={12}>
           {groupComponent}
         </Grid>
         {candidates.map((candidate, index) =>{
-          <React.Fragment key={index}>
-            <Grid item xs={12}>
-              <TextField
-                label='Term'
-                fullWidth
-                variant='outlined'
-                onChange={(event)=>updateTerm(event, index)}
-                value={candidate.term} />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label='Definition'
-                fullWidth
-                variant='outlined'
-                onChange={(event)=>updateTerm(event, index)}
-                value={candidate.definition} />
-            </Grid>
-          </React.Fragment>
+            return(
+              <React.Fragment key={index}>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    label='Term'
+                    fullWidth
+                    id={`term_${index}`}
+                    onChange={(event)=>updateTerm(event, index)}
+                    value={candidate.term} />
+                </Grid>
+                <Grid item xs={12} sm={9}>
+                  <TextareaAutosize
+                    label='Definition'
+                    width='90%'
+                    id={`definition_${index}`}
+                    onChange={(event)=>updateTerm(event, index)}
+                    value={candidate.definition} />
+                </Grid>
+              </React.Fragment>
+            )
         })}
 
       </Grid>
+        {candidates.length}
       {saveButton}
     </Paper>
   );
@@ -294,5 +314,5 @@ export default function CandidateListEntry(props) {
 CandidateListEntry.propTypes = {
   token: PropTypes.string.isRequired,
   getEndpointsUrl: PropTypes.string.isRequired,
-  bingoGameId: PropTypes.number
+  bingoGameId: PropTypes.number.isRequired
 };

@@ -33,11 +33,11 @@ import {
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
-import { useUserStore } from "./UserStore";
+import { useUserStore } from "./infrastructure/UserStore";
 import CourseUsersList from "./CourseUsersList";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./EndPointStore";
+import { useEndpointStore } from "./infrastructure/EndPointStore";
 import MUIDataTable from "mui-datatables";
 
 import AddIcon from "@material-ui/icons/Add";

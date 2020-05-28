@@ -11,10 +11,10 @@ import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
-import { useUserStore } from "./UserStore";
+import { useUserStore } from "./infrastructure/UserStore";
 
 import MUIDataTable from 'mui-datatables';
-import i18n from './i18n';
+import { i18n } from './infrastructure/i18n';
 import {useTranslation} from 'react-i18next';
 
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";

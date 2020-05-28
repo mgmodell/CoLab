@@ -9,7 +9,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { SortDirection } from "react-virtualized";
-import WrappedVirtualizedTable from "../components/WrappedVirtualizedTable";
+import WrappedVirtualizedTable from "../WrappedVirtualizedTable";
 
 
 class BingoGameDataAdminTable extends React.Component {

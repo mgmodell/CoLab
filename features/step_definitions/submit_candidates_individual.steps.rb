@@ -31,24 +31,24 @@ end
 Then /^the user should see the Bingo candidate list$/ do
   page.should have_content('Topic')
   page.should have_content(@bingo.topic)
-  page.should have_content('For:')
+  page.should have_content('For')
   page.should have_content(@user.name(@anon))
 end
 
 Then /^the user will see (\d+) term field sets$/ do |count|
   page.all(:xpath,
-           "//textarea[contains(@id, '_definition')]")
+           "//textarea[contains(@id, 'definition_')]")
       .count.should eq count.to_i
   page.all(:xpath,
-           "//input[contains(@id, '_term')]")
+           "//input[contains(@id, 'term_')]")
       .count.should eq count.to_i
 end
 
 Then /^the candidate entries should be empty$/ do
   @bingo.individual_count.times do |index|
-    query = "//input[@id='candidate_list_candidates_attributes_#{index}_term']"
+    query = "//input[@id='term_#{index}']"
     page.find(:xpath, query).value.should eq ''
-    query = "//textarea[@id='candidate_list_candidates_attributes_#{index}_definition']"
+    query = "//textarea[@id='definition_#{index}']"
     page.find(:xpath, query).value.should eq ''
   end
 end
@@ -104,4 +104,12 @@ Given(/^the Bingo! "([^"]*)" been activated$/) do |has_or_has_not|
   @bingo.active = has_or_has_not == 'has'
   @bingo.save
   puts @bingo.errors.full_messages if @bingo.errors.present?
+end
+
+Then("the {string} button is not available") do |button_name|
+  btns = all( :xpath, "//button[text()='#{button_name}']")
+  btns.each do |btn|
+    puts( btn[:disabled] )
+    btn[:disabled].should be true
+  end
 end

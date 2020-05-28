@@ -23,20 +23,20 @@ import {
 
 import { DateTime } from "luxon";
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./EndPointStore";
-import { useUserStore } from "./UserStore";
+import { useEndpointStore } from "../infrastructure/EndPointStore";
+import { useUserStore } from "../infrastructure/UserStore";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
-import i18n from "./i18n";
+import { i18n } from "../infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import ConceptChips from "./ConceptChips";
+import ConceptChips from "../ConceptChips";
 import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
 
 const useStyles = makeStyles({

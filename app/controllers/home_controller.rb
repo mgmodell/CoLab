@@ -141,6 +141,12 @@ class HomeController < ApplicationController
       ep_hash = {
         baseUrl: get_candidate_list_path( bingo_game_id: '' )
       }
+    when 'installment'
+      ep_hash = {
+        baseUrl: edit_installment_path( '' ),
+        saveInstallmentUrl: installments_path
+
+      }
     when 'profile'
       ep_hash = {
         baseUrl: full_profile_path,
@@ -291,6 +297,7 @@ class HomeController < ApplicationController
         tz = ActiveSupport::TimeZone.new(@current_user.timezone).tzinfo.name
         render json: {
           id: @current_user.id,
+          name: @current_user.name( false ),
           first_name: @current_user.first_name,
           last_name: @current_user.last_name,
           theme: @current_user.theme.code,

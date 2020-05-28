@@ -21,10 +21,10 @@ import Settings from "luxon/src/settings.js";
 import ReactionsList from "./ReactionsList";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./EndPointStore";
+import { useEndpointStore } from "./infrastructure/EndPointStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { useUserStore } from "./UserStore";
+import { useUserStore } from "./infrastructure/UserStore";
 
 export default function ExperienceDataAdmin(props) {
   const endpointSet = "experience";

@@ -5,7 +5,7 @@ import IconButton from "@material-ui/core/IconButton";
 // Icons
 import HelpIcon from "@material-ui/icons/Help";
 
-import { i18n } from "./i18n";
+import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 export default function HelpMenu(props) {

@@ -7,6 +7,8 @@ import AppHeader from "./AppHeader";
 
 import HomeShell from './HomeShell';
 import ProfileDataAdmin from './ProfileDataAdmin'
+import InstallmentReport from './InstallmentReport';
+import CandidateListEntry from './BingoBoards/CandidateListEntry';
 import Admin from './Admin'
 
 
@@ -35,10 +37,28 @@ export default function PageWrapper(props) {
             />
 
           </Route>
-          <Route path='/installments'>
-            Some installments stuff
-
-          </Route>
+          <Route path={`/submit_installment/:id`}
+            render={routeProps => (
+              <React.Fragment>
+                <InstallmentReport
+                  token={props.token}
+                  getEndpointsUrl={props.getEndpointsUrl}
+                  installmentId={Number(routeProps.match.params.id)}
+                />
+              </React.Fragment>
+            )}
+          />
+          <Route path={`/enter_candidates/:id`}
+            render={routeProps => (
+              <React.Fragment>
+                <CandidateListEntry
+                  token={props.token}
+                  getEndpointsUrl={props.getEndpointsUrl}
+                  bingoGameId={Number(routeProps.match.params.id)}
+                />
+              </React.Fragment>
+            )}
+          />
           <Route exact path='/'>
             <HomeShell
               token={props.token}

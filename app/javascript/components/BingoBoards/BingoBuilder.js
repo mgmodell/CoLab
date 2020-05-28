@@ -1,7 +1,7 @@
 import React from "react";
 import BingoBoard from "./BingoBoard";
-import ConceptChips from "./ConceptChips";
-import ScoredGameDataTable from "./ScoredGameDataTable";
+import ConceptChips from "../ConceptChips";
+import ScoredGameDataTable from "../ScoredGameDataTable";
 import PropTypes from "prop-types";
 import { withTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";

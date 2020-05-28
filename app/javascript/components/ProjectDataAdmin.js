@@ -23,7 +23,7 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./EndPointStore";
+import { useEndpointStore } from "./infrastructure/EndPointStore";
 
 import ProjectGroups from "./ProjectGroups";
 

@@ -31,13 +31,13 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./EndPointStore";
+import { useEndpointStore } from"./infrastructure/EndPointStore";
 import UserCourseList from './UserCourseList';
 import ResearchParticipationList from './ResearchParticipationList';
 import UserActivityList from './UserActivityList';
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { useUserStore } from "./UserStore";
+import { useUserStore } from "./infrastructure/UserStore";
 import { Grid, Link } from "@material-ui/core";
 
 export default function ProfileDataAdmin(props) {

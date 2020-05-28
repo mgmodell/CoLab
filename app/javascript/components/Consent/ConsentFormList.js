@@ -14,8 +14,8 @@ import AddIcon from '@material-ui/icons/Add'
 import CloseIcon from '@material-ui/icons/Close'
 import CheckIcon from '@material-ui/icons/Check'
 
-import { useEndpointStore } from "./EndPointStore";
-import { useUserStore } from "./UserStore";
+import { useEndpointStore } from "../infrastructure/EndPointStore";
+import { useUserStore } from "../infrastructure/UserStore";
 import MUIDataTable from "mui-datatables";
 import Collapse from "@material-ui/core/Collapse";
 

@@ -17,8 +17,8 @@ import BookIcon from "@material-ui/icons/Book";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 
-import { useEndpointStore } from "./EndPointStore";
-import { useUserStore } from "./UserStore";
+import { useEndpointStore } from "./infrastructure/EndPointStore";
+import { useUserStore } from "./infrastructure/UserStore";
 import CopyActivityButton from "./CopyActivityButton";
 import MUIDataTable from "mui-datatables";
 import Collapse from "@material-ui/core/Collapse";

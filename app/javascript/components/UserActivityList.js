@@ -6,7 +6,6 @@ import { iconForType } from './ActivityLib'
 
 import MUIDataTable from "mui-datatables";
 
-import BingoDataRepresentation from "./BingoDataRepresentation";
 
 export default function UserCourseList(props) {
   // const [addUsersPath, setAddUsersPath] = useState("");
@@ -61,9 +60,6 @@ export default function UserCourseList(props) {
       options: {
         filter: false,
         customBodyRender: (value) => {
-          const course = props.activitiesList.filter((item)=> {
-            return value === item.id;
-          })[0]
           const output = iconForType( value )
           return output
         }

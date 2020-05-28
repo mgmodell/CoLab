@@ -16,7 +16,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 
-import ScoredGameDataTable from "./ScoredGameDataTable";
+import ScoredGameDataTable from "../ScoredGameDataTable";
 
 function PaperComponent(props) {
   return (

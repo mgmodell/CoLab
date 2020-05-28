@@ -16,12 +16,16 @@ import Collapse from "@material-ui/core/Collapse";
 import CloseIcon from "@material-ui/icons/Close";
 //For debug purposes
 
-import { useUserStore } from "./UserStore";
-import i18n from "./i18n";
+import { useUserStore } from "./infrastructure/UserStore";
+import { useEndpointStore } from"./infrastructure/EndPointStore";
+import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 import LinkedSliders from "./LinkedSliders";
 export default function InstallmentReport(props) {
+  const endpointSet = "installment";
+  const [endpoints, endpointsActions] = useEndpointStore();
+
   const [working, setWorking] = useState(true);
   const [dirty, setDirty] = useState(false);
   const [debug, setDebug] = useState(false);
@@ -56,6 +60,21 @@ export default function InstallmentReport(props) {
   useEffect(() => setDirty(true), [contributions, installment]);
 
   useEffect(() => getContributions(), []);
+
+  useEffect(() => {
+    if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
+    }
+    if (!user.loaded) {
+      userActions.fetch(props.token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (endpoints.endpointStatus[endpointSet] === "loaded") {
+      getTasks();
+    }
+  }, [endpoints.endpointStatus[endpointSet]]);
 
   useEffect(() => {
     if (!user.loaded) {
@@ -94,7 +113,8 @@ export default function InstallmentReport(props) {
 
   //Retrieve the latest data
   const getContributions = () => {
-    fetch(props.getInstallmentUrl + ".json", {
+    const url = `${endpoints.endpoints[endpointSet].baseUrl}/${props.installmentId}.json`;
+    fetch(url, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -143,9 +163,8 @@ export default function InstallmentReport(props) {
   //Store what we've got
   const saveContributions = () => {
     const url =
-      props.setInstallmentUrl +
-      (Boolean(installment["id"]) ? "/" + installment["id"] : "") +
-      ".json";
+    endpoints.endpoints[endpointSet].saveInstallmentUrl +
+      (Boolean(props.installmentId) ? `/${props.installmentId}` : ``) + ".json";
     const method = Boolean(installment["id"]) ? "PATCH" : "POST";
     fetch(url, {
       method: method,
@@ -297,7 +316,6 @@ export default function InstallmentReport(props) {
 
 InstallmentReport.propTypes = {
   token: PropTypes.string.isRequired,
-  installmentId: PropTypes.number,
-  getInstallmentUrl: PropTypes.string.isRequired,
-  setInstallmentUrl: PropTypes.string.isRequired
+  getEndpointsUrl: PropTypes.string.isRequired,
+  installmentId: PropTypes.number
 };

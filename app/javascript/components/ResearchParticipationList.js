@@ -6,7 +6,6 @@ import Paper from "@material-ui/core/Paper";
 
 import MUIDataTable from "mui-datatables";
 
-import BingoDataRepresentation from "./BingoDataRepresentation";
 
 export default function UserCourseList(props) {
   const [] = useState(false);

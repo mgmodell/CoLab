@@ -78,15 +78,18 @@ class BingoGame < ApplicationRecord
   def task_data(current_user:)
     # TODO: There's got to be a better way
     group = self.project.group_for_user(current_user) if project.present?
-    helpers = Rails.application.routes.url_helpers
+    # helpers = Rails.application.routes.url_helpers
     link = if awaiting_review?
-             helpers.review_bingo_candidates_path(self)
+             # helpers.review_bingo_candidates_path(self)
+             "review_candidates/#{self.id}"
            else
              candidate_list = candidate_list_for_user(current_user)
              if is_open?
-               helpers.edit_candidate_list_path(candidate_list)
+               # helpers.edit_candidate_list_path(candidate_list)
+               "enter_candidates/#{candidate_list.id}"
              elsif reviewed
-               helpers.candidate_list_path(candidate_list)
+               # helpers.candidate_list_path(candidate_list)
+               "candidate_results/#{candidate_list.id}"
              end
           end
 

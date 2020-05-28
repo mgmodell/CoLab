@@ -27,9 +27,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import ViewColumnRounded from "@material-ui/icons/ViewColumnRounded";
 import { SortDirection } from "react-virtualized";
-import ColumnMenu from "../components/ColumnMenu";
-import SelectFrom from "../components/SelectFrom";
-import RemoteAutosuggest from "../components/RemoteAutosuggest";
+import ColumnMenu from "../ColumnMenu";
+import SelectFrom from "../SelectFrom";
+import RemoteAutosuggest from "../RemoteAutosuggest";
 const styles = theme => ({
   table: {
     fontFamily: theme.typography.fontFamily

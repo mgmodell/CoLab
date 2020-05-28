@@ -113,9 +113,10 @@ class Experience < ApplicationRecord
 
   def task_data(current_user:)
     helpers = Rails.application.routes.url_helpers
-    link = if get_user_reaction(current_user).behavior.nil?
-             helpers.next_experience_path(experience_id: id)
-           end
+    link = "experience/#{id}"
+    # link = if get_user_reaction(current_user).behavior.nil?
+    #          helpers.next_experience_path(experience_id: id)
+    #        end
 
     log = course.get_consent_log(user: current_user)
     consent_link = log.present? ?
