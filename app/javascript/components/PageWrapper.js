@@ -9,6 +9,7 @@ import HomeShell from './HomeShell';
 import ProfileDataAdmin from './ProfileDataAdmin'
 import InstallmentReport from './InstallmentReport';
 import CandidateListEntry from './BingoBoards/CandidateListEntry';
+import ConsentLog from './Consent/ConsentLog'
 import Admin from './Admin'
 
 
@@ -55,6 +56,17 @@ export default function PageWrapper(props) {
                   token={props.token}
                   getEndpointsUrl={props.getEndpointsUrl}
                   bingoGameId={Number(routeProps.match.params.id)}
+                />
+              </React.Fragment>
+            )}
+          />
+          <Route path={`/research_information/:id`}
+            render={routeProps => (
+              <React.Fragment>
+                <ConsentLog
+                  token={props.token}
+                  getEndpointsUrl={props.getEndpointsUrl}
+                  consentFormId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
             )}

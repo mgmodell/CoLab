@@ -143,7 +143,7 @@ class HomeController < ApplicationController
       }
     when 'installment'
       ep_hash = {
-        baseUrl: edit_installment_path( '' ),
+        baseUrl: edit_installment_path( assessment_id: '' ),
         saveInstallmentUrl: installments_path
 
       }

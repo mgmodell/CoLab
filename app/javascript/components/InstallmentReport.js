@@ -59,8 +59,6 @@ export default function InstallmentReport(props) {
 
   useEffect(() => setDirty(true), [contributions, installment]);
 
-  useEffect(() => getContributions(), []);
-
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
@@ -72,7 +70,7 @@ export default function InstallmentReport(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] === "loaded") {
-      getTasks();
+      getContributions();
     }
   }, [endpoints.endpointStatus[endpointSet]]);
 
@@ -132,6 +130,7 @@ export default function InstallmentReport(props) {
         }
       })
       .then(data => {
+        console.log( data );
         setFactors(data.factors);
         setSliderSum(data.sliderSum);
 
@@ -164,8 +163,8 @@ export default function InstallmentReport(props) {
   const saveContributions = () => {
     const url =
     endpoints.endpoints[endpointSet].saveInstallmentUrl +
-      (Boolean(props.installmentId) ? `/${props.installmentId}` : ``) + ".json";
-    const method = Boolean(installment["id"]) ? "PATCH" : "POST";
+      (Boolean(installment.id) ? `/${installment.id}` : ``) + ".json";
+    const method = Boolean(installment.id) ? "PATCH" : "POST";
     fetch(url, {
       method: method,
       credentials: "include",
@@ -236,11 +235,22 @@ export default function InstallmentReport(props) {
           {messages["status"]}
         </Alert>
       </Collapse>
-      <p>
-        <Suspense fallback={<Skeleton variant="text" height={15} />}>
-          {t("slider.instructions")}
+        <Suspense fallback={<Skeleton variant='text' height={15} />}>
+          <h1>{t('subtitle')}</h1>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: t('instructions', {
+                  group_name: group.name,
+                  project_name: project.name,
+                  member_count: Object.keys( group.users || {} ).length,
+                  factor_count: factors.length
+                })
+              }}
+            />
+          <p>
+            {t('slider.instructions')}
+          </p>
         </Suspense>
-      </p>
       <Suspense fallback={<Skeleton variant="rect" height={300} />}>
         {Object.keys(contributions).map(sliceId => {
           return (

@@ -9,6 +9,7 @@ Feature: Presenting Consent Forms
     Given the factor pack is set to "Original"
     Given reset time clock to now
 
+@javascript
   Scenario: (Project)User should be presented with an unpresented course consent form if one exists
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     When the user logs in
@@ -22,6 +23,7 @@ Feature: Presenting Consent Forms
     When the user visits the index
     Then the user will see a consent request
 
+@javascript
   Scenario: (Bingo)User should be presented with an unpresented course consent form if one exists
     #Disable the project
     Given the project started "two months hence" and ends "three months hence", opened "yesterday" and closes "tomorrow"
@@ -44,6 +46,7 @@ Feature: Presenting Consent Forms
     When the user visits the index
     Then the user will see a consent request
 
+@javascript
   Scenario: (Experience)User should be presented with an unpresented course consent form if one exists
     #Disable the project
     Given the project started "two months hence" and ends "three months hence", opened "yesterday" and closes "tomorrow"
@@ -64,6 +67,7 @@ Feature: Presenting Consent Forms
     When the user visits the index
     Then the user will see a consent request
 
+@javascript
   Scenario: User should be presented with an active unpresented global consent form with no end date if one exists
     When the user logs in
     Then the user should see a successful login message
@@ -77,6 +81,7 @@ Feature: Presenting Consent Forms
     When the user visits the index
     Then the user will see a consent request
 
+@javascript
   Scenario: User should be presented with an unpresented global consent form if one exists
     When the user logs in
     Then the user should see a successful login message
@@ -90,6 +95,7 @@ Feature: Presenting Consent Forms
     When the user visits the index
     Then the user will see a consent request
 
+@javascript
   Scenario: User should be presented with an unpresented global and project consent form if one exists
     When the user logs in
     Then the user should see a successful login message

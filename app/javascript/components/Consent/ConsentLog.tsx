@@ -92,7 +92,11 @@ export default function ConsentLog(props) {
       .then(data => {
         //Process the data
         setFormAccepted( data.accepted );
-        props.parentUpdateFunc( );
+        if( null != props.parentUpdateFunc ){
+          props.parentUpdateFunc( );
+        } else {
+          history.back( );
+        }
 
         setWorking(false);
       });
@@ -158,5 +162,5 @@ ConsentLog.propTypes = {
   token: PropTypes.string.isRequired,
   getEndpointsUrl: PropTypes.string.isRequired,
   consentFormId: PropTypes.number.isRequired,
-  parentUpdateFunc: PropTypes.func.isRequired
+  parentUpdateFunc: PropTypes.func
 };
