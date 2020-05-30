@@ -211,7 +211,9 @@ export default function MainMenu(props) {
           <ListItem
             id="logout-menu-item"
             button
-            onClick={() => navTo(props.logoutUrl)}
+            onClick={() => {
+              window.location.href = props.logoutUrl
+            }}
           >
             <ListItemIcon>
               <ExitToAppIcon fontSize="small" />

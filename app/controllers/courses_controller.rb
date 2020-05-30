@@ -68,8 +68,6 @@ class CoursesController < ApplicationController
     rosters = @course.rosters
     users = []
     @course.rosters.each do |roster|
-      byebug if roster.user.blank?
-
       users << {
         id: roster.id
       }

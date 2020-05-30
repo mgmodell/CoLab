@@ -20,11 +20,10 @@ Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pe
 end
 
 When /^the user requests collaboration$/ do
-  byebug
   link_text = "Invite your teammates in #{@group.get_name(false)} to help?"
-  page.should have_content link_text
-  click_link_or_button link_text
-  page.accept_confirm
+  expect(page).to have_content link_text
+  link = find( :xpath, "//a[contains(.,'#{link_text}')]")
+  link.click
 end
 
 When /^group user (\d+) logs in$/ do |user_count|

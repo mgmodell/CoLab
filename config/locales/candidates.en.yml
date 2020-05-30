@@ -72,8 +72,8 @@ en:
         terms you're describing.
       behalf: on behalf of 
       waiting: Still awaiting a response to your group help request
-      req_rec: Your teammates in %{grp_name} want to collaborate
-      req_help: Invite your teammates in %{grp_name} to help?
+      req_rec: Your teammates in {{grp_name}} want to collaborate
+      req_help: Invite your teammates in {{grp_name}} to help?
       confirm_accept: Are you sure? Did you save your changes? This cannot be undone.
       confirm_decline: Are you sure? Did you save your changes?
       dup: Possible Duplicate

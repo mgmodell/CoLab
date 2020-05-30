@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import {
+  useHistory
+} from 'react-router-dom'
 import PropTypes from "prop-types";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Paper from "@material-ui/core/Paper";
@@ -26,6 +29,7 @@ export default function HomeShell(props) {
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
   const { t, i18n } = useTranslation( );
+  const history = useHistory( );
 
   const [working, setWorking] = useState(true);
 
@@ -152,6 +156,10 @@ export default function HomeShell(props) {
             }}
             displayEventTime={false}
             events={tasks}
+            eventClick={(info)=>{
+              console.log( info.event );
+              history.push(info.event.url);
+            }}
             plugins={[ dayGridPlugin, luxonPlugin ]}
           />) : null
       }

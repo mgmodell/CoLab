@@ -20,16 +20,16 @@ import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "../infrastructure/EndPointStore";
-//import i18n from './i18n';
-//import { useTranslation } from 'react-i18next';
+import i18n from '../infrastructure/i18n';
+import { useTranslation } from 'react-i18next';
 import { useUserStore } from "../infrastructure/UserStore";
-import { TextareaAutosize, Grid } from "@material-ui/core";
+import { TextareaAutosize, Grid, Link } from "@material-ui/core";
 import { updateExternalModuleReference } from "typescript";
 
 export default function CandidateListEntry(props) {
   const endpointSet = "candidate_list";
   const [endpoints, endpointsActions] = useEndpointStore();
-  //const { t, i18n } = useTranslation('schools' );
+  const { t, i18n } = useTranslation('candidate_lists' );
   const [user, userActions] = useUserStore();
 
   const [dirty, setDirty] = useState(false);
@@ -47,12 +47,13 @@ export default function CandidateListEntry(props) {
   const [expectedCount, setExpectedCount] = useState( 0 );
   const [candidates, setCandidates] = useState( []);
   const [othersRequestedHelp, setOthersRequestedHelp] = useState( 0 );
+  const [helpRequested, setHelpRequested ] = useState( false );
   const [requestCollaborationUrl, setRequestCollaborationUrl] = useState( '' );
 
 
   const getCandidateList = () => {
     setDirty(true);
-    var url = endpoints.endpoints[endpointSet].baseUrl + "/" + props.bingoGameId + '.json';
+    var url = endpoints.endpoints[endpointSet].baseUrl + props.bingoGameId + '.json';
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -71,7 +72,6 @@ export default function CandidateListEntry(props) {
         }
       })
       .then(data => {
-        console.log( data );
         setCandidateListId( data.id );
         setTopic( data.topic );
         setDescription( data.description );
@@ -82,11 +82,8 @@ export default function CandidateListEntry(props) {
         setExpectedCount( data.expected_count );
 
         const candidate_count = data.candidates.length;
-        console.log( candidate_count );
-        console.log( data.expected_count - candidate_count )
 
         for( var count = candidate_count; count < data.expected_count; count++){
-          console.log( count )
           data.candidates.push(
             {
               id: null,
@@ -97,9 +94,9 @@ export default function CandidateListEntry(props) {
             }
           )
         }
-        console.log( data.candidates );
         setCandidates( data.candidates );
         setOthersRequestedHelp( data.others_requested_help );
+        setHelpRequested( data.help_requested );
         setRequestCollaborationUrl( data.request_collaboration_url );
 
         setWorking(false);
@@ -151,6 +148,7 @@ export default function CandidateListEntry(props) {
             )
           }
           setCandidates( data.candidates );
+          setHelpRequested( data.help_requested );
           setOthersRequestedHelp( data.others_requested_help );
 
           setShowErrors( true );
@@ -195,16 +193,69 @@ export default function CandidateListEntry(props) {
     </Button>
   ) : null;
 
-  const groupComponent = groupOption ? (
-    <React.Fragment>
-    {isGroup ? (
-      <p>List for {user.first_name}</p>
-    ) : (
-      <p>Beat it, kid!</p>
-    )}
-    </React.Fragment>
+  const colabResponse = (decision) =>{
+    const url = requestCollaborationUrl + decision
+    fetch(url, {
+      method: 'GET',
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+        "X-CSRF-Token": props.token
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          console.log("error");
+          setWorking(false);
+        }
+      })
+      .then(data => {
+        console.log( data )
+      })
 
-  ) : ( null )
+  }
+
+  var groupComponent;
+
+  if( groupOption ){
+    if( isGroup ){
+      groupComponent = (
+        <em>
+          `${t( 'edit.behalf' )}: ${groupName}`
+        </em>
+      )
+    }else if( helpRequested ){
+      groupComponent =(
+        <React.Fragment>
+          {t( 'edit.waiting' )}
+        </React.Fragment>
+      )
+    }else if( othersRequestedHelp > 0){
+      groupComponent =(
+        <React.Fragment>
+          {t('edit.req_rec', {grp_name: groupName})}:
+          <Link onClick={()=>colabResponse(true)}>
+            {t('confirm_accept')}
+          </Link>
+          or
+          <Link onClick={()=>colabResponse(false)}>
+            {t('edit.confirm_decline')}
+          </Link>
+        </React.Fragment>
+      )
+    } else {
+      groupComponent =(
+        <React.Fragment>
+          <Link onClick={()=>colabResponse(true)}>
+            {t('edit.req_help', {grp_name: groupName})}
+          </Link>
+        </React.Fragment>
+      )
+    }
+  }
 
   const updateTerm = (event, index)=>{
     const tempList = [...candidates];
@@ -280,7 +331,6 @@ export default function CandidateListEntry(props) {
         })}
 
       </Grid>
-        {candidates.length}
       {saveButton}
     </Paper>
   );

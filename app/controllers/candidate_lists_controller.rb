@@ -44,6 +44,7 @@ class CandidateListsController < ApplicationController
   #API code here
   def get_candidate_list
 
+    puts "\n\nID: #{params[:bingo_game_id]}\n\n"
     bingo_game = BingoGame.find( params[:bingo_game_id])
     candidate_list = bingo_game.candidate_list_for_user( current_user )
 
@@ -65,6 +66,7 @@ class CandidateListsController < ApplicationController
             only: %i[ id term definition filtered_consistent candidate_feedback_id ]
           ),
           others_requested_help: candidate_list.others_requested_help,
+          help_requested: candidate_list.group_requested,
           request_collaboration_url: request_collaboration_path( bingo_game_id: bingo_game.id )
         }
 
@@ -98,7 +100,15 @@ class CandidateListsController < ApplicationController
     @candidate_list.candidates.each do |candidate|
       @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
     end
-    render :edit
+    respond_to do |format|
+      format.html do
+        render :edit
+      end
+      format.json do
+        #must finish with errors
+        render json: { }
+      end
+    end
   end
 
   def update

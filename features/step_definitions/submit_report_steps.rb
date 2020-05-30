@@ -138,15 +138,7 @@ end
 
 Then /^the user logs out$/ do
   find(:xpath, '//*[@id="main-menu-button"]').click
-  # Retry a couple of time to account for slow animation.
-  # begin
-  #  retries||= 0
   find(:xpath, '//*[@id="logout-menu-item"]').click
-
-  # rescue Capybara::ElementNotFound => exception
-  #  sleep( 0.3 )
-  #  retry if (retries += 1 ) < 3
-  # end
 end
 
 Then /^there should be an error$/ do

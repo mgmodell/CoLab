@@ -175,6 +175,7 @@ export default function TaskList(props) {
         download: false,
         onRowClick: (rowData, rowState) => {
           const link = props.tasks[rowState.dataIndex].link;
+          console.log( props.tasks[rowState.dataIndex] )
           if (null != link) {
             // window.location.href = link;
             history.push( link )

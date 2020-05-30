@@ -11,7 +11,6 @@ Then /^the user will see a consent request$/ do
 end
 
 When /^the user "(.*?)" provide consent$/ do |does_or_does_not|
-  # byebug
   consent = does_or_does_not == 'does'
   check('consent_log[accepted]') if consent
   click_button 'Record my response to this Consent Form'
