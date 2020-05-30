@@ -1,0 +1,9 @@
+#/bin/bash
+gem install bundler
+bundle install
+yarn install --check-files
+yarn install
+rake db:create db:schema:load db:seed
+echo 'Done!'
+echo 'Happy CoLab-orating!'
+echo '(           ^^ see what I did just there?)
