@@ -16,7 +16,7 @@ echo 'in other text. Please watch for it and'
 echo 'type it in and then press enter. There will'
 echo 'be no on-screen output'
 echo ''
-rvm install "ruby-2.6.5"
+rvm install "ruby-2.7.1"
 
 echo 'Run the following command 3 times'
 echo 'cd .'

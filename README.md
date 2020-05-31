@@ -21,7 +21,7 @@ command line. That's just for context - GUIs can be powerful too and I
 can help you set them up if you run into difficulty.
 
 
-### Contributing ###
+### Setting up ###
 
 * [Visual Studio Code](https://code.visualstudio.com/download) - I recommend this for development
 * [Learn Cucumber](https://cucumber.io/docs)
@@ -61,10 +61,16 @@ can help you set them up if you run into difficulty.
     * `git branch <enter_new_branch_name>`
     * `git checkout <enter_new_branch_name>`
 * Use `rails s` to run the server
+    * If this gives an error, try the following:
+        1. `yarn install` (this sets up the JavaScript packages)
+        1. `bundle install` (this sets up the ruby gems/packages)
+        1. `rails db:migrate` (this sets up the database)
+        1. try again
 * Open [the test server](http://localhost:3000)
 * Play with it to understand the problem
     * Create your own user account
     * Execute `rake testing:set_admin['true','<your email>']` to make yourself an admin
+    * Look in `app/javascript/components` for UI materials
 * Start writing tests
 * Run your tests (this currently will not work on WSL)
     * `rake cucumber:rerun`
