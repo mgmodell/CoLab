@@ -85,7 +85,7 @@ export default function HomeShell(props) {
       });
   };
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
+    if (endpoints.endpointStatus[endpointSet] !== "loaded") {
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {

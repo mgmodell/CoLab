@@ -44,7 +44,6 @@ class CandidateListsController < ApplicationController
   #API code here
   def get_candidate_list
 
-    puts "\n\nID: #{params[:bingo_game_id]}\n\n"
     bingo_game = BingoGame.find( params[:bingo_game_id])
     candidate_list = bingo_game.candidate_list_for_user( current_user )
 
@@ -105,8 +104,19 @@ class CandidateListsController < ApplicationController
         render :edit
       end
       format.json do
-        #must finish with errors
-        render json: { }
+        render json: {
+          id: @candidate_list.id,
+          is_group: @candidate_list.is_group?,
+          expected_count: @candidate_list.expected_count,
+          candidates: @candidate_list.candidates.as_json(
+            only: %i[ id term definition filtered_consistent candidate_feedback_id ]
+          ),
+          others_requested_help: @candidate_list.others_requested_help,
+          help_requested: @candidate_list.group_requested,
+          request_collaboration_url: request_collaboration_path( bingo_game_id: bingo_game.id ),
+          messages: { main: 'All good' }
+        }
+
       end
     end
   end
@@ -120,16 +130,68 @@ class CandidateListsController < ApplicationController
       end
     else
       respond_to do |format|
-        if @candidate_list.update(candidate_list_params)
+        params[:candidates].each do |candidate_data|
+          term = candidate_data[:term]
+          definition = candidate_data[:definition]
+          id = candidate_data[:id]
+
+
+          if( id.blank? )
+            candidate = @candidate_list.candidates.build(
+              term: term,
+              definition: definition,
+              user: current_user
+            )
+          else
+            candidate = @candidate_list.candidates.find{|c|c.id == id}
+            candidate.term = term
+            candidate.definition = definition
+            candidate.user = current_user
+          end
+        end
+
+        if @candidate_list.save
+          @candidate_list.reload
+          notice = t 'candidate_lists.update_success'
           format.html do
             redirect_to edit_candidate_list_path(@candidate_list),
-                        notice: (t 'candidate_lists.update_success')
+                        notice: notice
+          end
+          format.json do
+            render json: {
+              id: @candidate_list.id,
+              is_group: @candidate_list.is_group?,
+              expected_count: @candidate_list.expected_count,
+              candidates: @candidate_list.candidates.as_json(
+                only: %i[ id term definition filtered_consistent candidate_feedback_id ]
+              ),
+              others_requested_help: @candidate_list.others_requested_help,
+              help_requested: @candidate_list.group_requested,
+              messages: { main: notice }
+            }
+
           end
         else
           unless @candidate_list.errors.empty?
             logger.debug @candidate_list.errors.full_messages
           end
           format.html { render :edit }
+          format.json do
+            messages = @candidate_list.errors.to_h
+            messages[:main] = 'Please review the errors noted'
+            render json: {
+              id: @candidate_list.id,
+              is_group: @candidate_list.is_group?,
+              expected_count: @candidate_list.expected_count,
+              candidates: @candidate_list.candidates.as_json(
+                only: %i[ id term definition filtered_consistent candidate_feedback_id ]
+              ),
+              others_requested_help: @candidate_list.others_requested_help,
+              help_requested: @candidate_list.group_requested,
+              messages: messages
+            }
+
+          end
         end
       end
     end
@@ -272,11 +334,12 @@ class CandidateListsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_candidate_list
-    if params[:id] == '-1' # Support for demo
+    if params[:bingo_game_id] == '-1' # Support for demo
       flash[:notice] = t('candidate_lists.demo_colab_success')
       redirect_to root_url
     else
-      @candidate_list = CandidateList.find(params[:id])
+      bingo_game = BingoGame.find_by_id params[:bingo_game_id]
+      @candidate_list = bingo_game.candidate_list_for_user current_user
       if @candidate_list.archived
         @candidate_list = @candidate_list.current_candidate_list
       end

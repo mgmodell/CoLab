@@ -86,7 +86,7 @@ class BingoGame < ApplicationRecord
              candidate_list = candidate_list_for_user(current_user)
              if is_open?
                # helpers.edit_candidate_list_path(candidate_list)
-               "/enter_candidates/#{candidate_list.id}"
+               "/enter_candidates/#{candidate_list.bingo_game_id}"
              elsif reviewed
                # helpers.candidate_list_path(candidate_list)
                "/candidate_results/#{candidate_list.id}"

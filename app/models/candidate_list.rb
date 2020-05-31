@@ -5,7 +5,8 @@ class CandidateList < ApplicationRecord
   belongs_to :group, inverse_of: :candidate_lists, optional: true
   belongs_to :bingo_game, inverse_of: :candidate_lists
   has_many :candidates, inverse_of: :candidate_list,
-                        dependent: :destroy
+                        dependent: :destroy,
+                        autosave: true
   has_many :concepts, through: :candidates
   has_one :course, through: :bingo_game
 

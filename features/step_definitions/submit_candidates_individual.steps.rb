@@ -70,7 +70,7 @@ When /^the user populates (\d+) of the "([^"]*)" entries$/ do |count, field|
     @entries_list[index][field] = field == 'term' ?
                         Forgery::Name.industry :
                         Forgery::Basic.text
-    page.fill_in("candidate_list_candidates_attributes_#{index}_#{field}",
+    page.fill_in("#{field}_#{index}",
                  with: @entries_list[index][field])
   end
 end
@@ -83,13 +83,15 @@ Then /^the candidate list properties will match the list$/ do
 end
 
 Then /^the candidate list entries should match the list$/ do
-  field_count = page.all(:xpath, "//textarea[contains(@id, '_definition')]") .count
+
+  field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]") .count
 
   items_not_found = @entries_lists[@user].count
   @entries_lists[@user].each do |candidate|
+
     field_count.times do |index|
-      t_query = "//input[@id='candidate_list_candidates_attributes_#{index}_term']"
-      d_query = "//textarea[@id='candidate_list_candidates_attributes_#{index}_definition']"
+      t_query = "//input[@id='term_#{index}']"
+      d_query = "//textarea[@id='definition_#{index}']"
       term = candidate['term'].blank? ? candidate['term'] : candidate['term'].strip.split.map(&:capitalize) * ' '
       if page.find(:xpath, t_query).value == term &&
          page.find(:xpath, d_query).value == candidate['definition']
@@ -109,7 +111,6 @@ end
 Then("the {string} button is not available") do |button_name|
   btns = all( :xpath, "//button[text()='#{button_name}']")
   btns.each do |btn|
-    puts( btn[:disabled] )
     btn[:disabled].should be true
   end
 end

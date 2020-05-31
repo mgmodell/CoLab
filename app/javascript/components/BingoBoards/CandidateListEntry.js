@@ -81,20 +81,7 @@ export default function CandidateListEntry(props) {
         setIsGroup( data.is_group );
         setExpectedCount( data.expected_count );
 
-        const candidate_count = data.candidates.length;
-
-        for( var count = candidate_count; count < data.expected_count; count++){
-          data.candidates.push(
-            {
-              id: null,
-              term: '',
-              definition: '',
-              filtered_consistent: '',
-              candidate_feedback_id: null
-            }
-          )
-        }
-        setCandidates( data.candidates );
+        setCandidates( prepCandidates( data.candidates, data.expected_count ) );
         setOthersRequestedHelp( data.others_requested_help );
         setHelpRequested( data.help_requested );
         setRequestCollaborationUrl( data.request_collaboration_url );
@@ -103,12 +90,34 @@ export default function CandidateListEntry(props) {
         setDirty(false);
       });
   };
+  const prepCandidates = (candidates, expectedCount)=>{
+    const tmpCandidates = [...candidates]
+    const candidate_count = candidates.length;
+    tmpCandidates.sort( (a,b)=>{
+      a.term.localeCompare( b.term )
+
+    })
+
+    for( var count = candidate_count; count < expectedCount; count++){
+      tmpCandidates.push(
+        {
+          id: null,
+          term: '',
+          definition: '',
+          filtered_consistent: '',
+          candidate_feedback_id: null
+        }
+      )
+    }
+    return tmpCandidates;
+  }
+
   const saveCandidateList = () => {
     setWorking(true);
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
-      props.bingo_game_id + '.json';
+      props.bingoGameId + '.json';
 
     fetch(url, {
       method: 'PUT',
@@ -119,7 +128,12 @@ export default function CandidateListEntry(props) {
         "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
-        candidates: candidates
+        candidates: candidates.filter((item)=>{
+          return !(null === item.id &&
+                 '' === item.term &&
+                 '' === item.definition);
+
+        })
       })
     })
       .then(response => {
@@ -135,19 +149,8 @@ export default function CandidateListEntry(props) {
           setCandidateListId( data.id );
           setIsGroup( data.is_group );
           setExpectedCount( data.expected_count );
-          const candidate_count = data.candidates.length;
-          for( var count = candidates_count; count < data.expected_count; count++){
-            data.candidates.push(
-              {
-                id: null,
-                term: '',
-                definition: '',
-                filtered_consistent: '',
-                candidate_feedback_id: null
-              }
-            )
-          }
-          setCandidates( data.candidates );
+
+          setCandidates( prepCandidates( data.candidates, data.expected_count ) );
           setHelpRequested( data.help_requested );
           setOthersRequestedHelp( data.others_requested_help );
 
@@ -271,7 +274,7 @@ export default function CandidateListEntry(props) {
   }
   const detailsComponent = (
     <Paper>
-      {working ? <LinearProgress /> : null}
+      {working ? <LinearProgress id='waiting' /> : null}
       <Grid container spacing={3}>
         <Grid item xs={12} sm={3}>
           <Typography>
@@ -323,7 +326,7 @@ export default function CandidateListEntry(props) {
                     label='Definition'
                     width='90%'
                     id={`definition_${index}`}
-                    onChange={(event)=>updateTerm(event, index)}
+                    onChange={(event)=>updateDefinition(event, index)}
                     value={candidate.definition} />
                 </Grid>
               </React.Fragment>

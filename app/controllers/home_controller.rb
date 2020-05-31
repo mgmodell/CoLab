@@ -55,8 +55,6 @@ class HomeController < ApplicationController
           }
         }
     }
-    puts "\n\n\ntasks: #{waiting_tasks.inspect}\n"
-
     respond_to do |format|
       format.json do
         render json: resp_hash

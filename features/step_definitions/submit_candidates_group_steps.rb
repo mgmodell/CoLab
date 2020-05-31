@@ -7,7 +7,17 @@ Given /^the Bingo! is group\-enabled with the project and a (\d+) percent group 
   @bingo.group_discount = group_discount
 end
 
+def wait_for_render
+  times = 3
+  
+  while ( all( :xpath, "//*[@id='waiting']" ).size > 0 && times > 0 ) do
+    sleep( 0.01)
+    times -= 1
+  end
+end
+
 Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pending|
+  wait_for_render
   link_text = "Your teammates in #{@group.get_name(false)} want to collaborate"
   case collaboration_pending.downcase
   when 'should'
@@ -20,6 +30,7 @@ Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pe
 end
 
 When /^the user requests collaboration$/ do
+wait_for_render
   link_text = "Invite your teammates in #{@group.get_name(false)} to help?"
   expect(page).to have_content link_text
   link = find( :xpath, "//a[contains(.,'#{link_text}')]")
