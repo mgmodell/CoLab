@@ -51,9 +51,7 @@ can help you set them up if you run into difficulty.
       enhancements. Be sure to add `rails git rake rake-fast yarn bundler` following to
       the `plugins` line in the file .zshrc in your home directory so that
       you have something like:
-
       `plugins=(rails git rake rake-fast yarn bundler)`
-
       Feel free to ask me about this if you're interested. 
     * `/bin/sh setup` [enter your password when it is requested]
 
