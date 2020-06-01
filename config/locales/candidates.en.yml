@@ -76,6 +76,8 @@ en:
       req_help: Invite your teammates in {{grp_name}} to help?
       confirm_accept: Are you sure? Did you save your changes? This cannot be undone.
       confirm_decline: Are you sure? Did you save your changes?
+      accept: Accept
+      decline: Decline
       dup: Possible Duplicate
       term: Term
       def: Clue

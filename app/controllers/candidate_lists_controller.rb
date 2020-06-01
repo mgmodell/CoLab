@@ -66,7 +66,8 @@ class CandidateListsController < ApplicationController
           ),
           others_requested_help: candidate_list.others_requested_help,
           help_requested: candidate_list.group_requested,
-          request_collaboration_url: request_collaboration_path( bingo_game_id: bingo_game.id )
+          request_collaboration_url: request_collaboration_path(
+                        bingo_game_id: bingo_game.id, desired: '' )
         }
 
       end
@@ -75,7 +76,7 @@ class CandidateListsController < ApplicationController
 
   def request_collaboration
     @title = t '.title'
-    desired = params[:desired] == 'yes'
+    desired = params[:desired].downcase == 'true'
     if desired
       @candidate_list.group_requested = true
       @candidate_list.save
@@ -113,7 +114,6 @@ class CandidateListsController < ApplicationController
           ),
           others_requested_help: @candidate_list.others_requested_help,
           help_requested: @candidate_list.group_requested,
-          request_collaboration_url: request_collaboration_path( bingo_game_id: bingo_game.id ),
           messages: { main: 'All good' }
         }
 

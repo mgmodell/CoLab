@@ -157,7 +157,6 @@ export default function HomeShell(props) {
             displayEventTime={false}
             events={tasks}
             eventClick={(info)=>{
-              console.log( info.event );
               history.push(info.event.url);
             }}
             plugins={[ dayGridPlugin, luxonPlugin ]}

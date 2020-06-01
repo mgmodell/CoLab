@@ -72,7 +72,7 @@ Rails.application.routes.draw do
     put 'candidate_lists/:bingo_game_id' => 'candidate_lists#update',
         as: :update_candidate_list,
         constraints: ->(req) { req.format == :json }
-    post 'candidate_lists/collaborate/:bingo_game_id' => 'candidate_lists#request_collaboration',
+    get 'candidate_lists/collaborate/:bingo_game_id/:desired' => 'candidate_lists#request_collaboration',
         as: :request_collaboration,
         constraints: ->(req) { req.format == :json }
 

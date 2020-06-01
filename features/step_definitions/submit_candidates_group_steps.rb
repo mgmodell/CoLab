@@ -57,14 +57,15 @@ end
 Then /^the user "([^"]*)" the collaboration request$/ do |accept_or_decline|
   case accept_or_decline.downcase
   when 'accepts'
-    click_link_or_button 'Accept'
-    page.accept_confirm
+    btn = find(:xpath, "//a[text()='Accept']" )
+    # click_link_or_button 'Accept'
   when 'declines'
-    click_link_or_button 'Decline'
-    page.dismiss_confirm
+    btn = find(:xpath, "//a[text()='Decline']" )
+    # click_link_or_button 'Decline'
   else
     puts "We didn't test anything there: " + accept_or_decline
   end
+  btn.click
 end
 
 Then /^the user "([^"]*)" see collaboration request button$/ do |button_present|

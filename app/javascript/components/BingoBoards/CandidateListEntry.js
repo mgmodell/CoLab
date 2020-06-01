@@ -72,6 +72,7 @@ export default function CandidateListEntry(props) {
         }
       })
       .then(data => {
+        console.log( data )
         setCandidateListId( data.id );
         setTopic( data.topic );
         setDescription( data.description );
@@ -197,7 +198,8 @@ export default function CandidateListEntry(props) {
   ) : null;
 
   const colabResponse = (decision) =>{
-    const url = requestCollaborationUrl + decision
+    const url = `${requestCollaborationUrl}${decision}.json`;
+    console.log( url )
     fetch(url, {
       method: 'GET',
       credentials: "include",
@@ -216,6 +218,7 @@ export default function CandidateListEntry(props) {
         }
       })
       .then(data => {
+        console.log( 'got here')
         console.log( data )
       })
 
@@ -239,13 +242,13 @@ export default function CandidateListEntry(props) {
     }else if( othersRequestedHelp > 0){
       groupComponent =(
         <React.Fragment>
-          {t('edit.req_rec', {grp_name: groupName})}:
+          {t('edit.req_rec', {grp_name: groupName})}:&nbsp;
           <Link onClick={()=>colabResponse(true)}>
-            {t('confirm_accept')}
-          </Link>
-          or
+            {t('edit.accept')}
+          </Link>&nbsp;
+          or&nbsp;
           <Link onClick={()=>colabResponse(false)}>
-            {t('edit.confirm_decline')}
+            {t('edit.decline')}
           </Link>
         </React.Fragment>
       )
