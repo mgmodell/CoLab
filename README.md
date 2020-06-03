@@ -64,16 +64,22 @@ can help you set them up if you run into difficulty.
 * Start working in your own branch
     * `git branch <enter_new_branch_name>`
     * `git checkout <enter_new_branch_name>`
+* On WSL (Windows), use `sudo service mysql start` to start the database
+  server
 * Use `rails s` to run the server
     * If this gives an error, try the following:
         1. `yarn install` (this sets up the JavaScript packages)
         1. `bundle install` (this sets up the ruby gems/packages)
         1. `rails db:migrate` (this sets up the database)
         1. try again
+* In a separate window, run `bin/webpack-dev-server` to run the webpack (JavaScript file)
+  server.
 * Open [the test server](http://localhost:3000)
 * Play with it to understand the problem
     * Create your own user account
     * Execute `rake testing:set_admin['true','<your email>']` to make yourself an admin
+      (if you're using [Oh my zsh](http://ohmyz.sh/), you'll run `brake
+      testing:set_admin['true','<your email>']`)
     * Look in `app/javascript/components` for UI materials
 * Start writing tests
 * Run your tests (this currently will not work on WSL)
