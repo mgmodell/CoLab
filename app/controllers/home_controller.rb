@@ -140,6 +140,12 @@ class HomeController < ApplicationController
       ep_hash = {
         baseUrl: get_candidate_list_path( bingo_game_id: '' )
       }
+    when 'candidate_review'
+      ep_hash = {
+        baseUrl: review_bingo_candidates_path( '' ),
+        reviewSaveUrl: update_bingo_candidates_review_path( '' ),
+        conceptUrl: bingo_concepts_path( 0 )
+      }
     when 'installment'
       ep_hash = {
         baseUrl: edit_installment_path( assessment_id: '' ),

@@ -1,15 +1,8 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
-import MainMenu from "../MainMenu";
-import HelpMenu from "../HelpMenu";
-import Quote from "../Quote";
-import { i18n } from "../infrastructure/i18n";
 import { useTranslation } from "react-i18next";
-import Skeleton from "@material-ui/lab/Skeleton";
 import { useEndpointStore } from "../infrastructure/EndPointStore";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -18,17 +11,17 @@ import Paper from '@material-ui/core/Paper'
 import { FormControlLabel, Checkbox } from "@material-ui/core";
 
 export default function ConsentLog(props) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const endpointSet = 'consent_log';
   const [endpoints, endpointsActions] = useEndpointStore();
   const [logId, setLogId] = useState( );
   const [formName, setFormName] = useState( '' );
   const [formText, setFormText] = useState( '' );
-  const [formPresented, setFormPresented] = useState( false );
+  const [, setFormPresented] = useState( false );
   const [formPdfLink, setFormPdfLink] = useState( '' );
   const [formAccepted, setFormAccepted ] = useState( false );
-  const [logLastUpdated, setLogLastUpdated ] = useState( new Date( ) )
-  const [working, setWorking] = useState( true );
+  const [, setLogLastUpdated ] = useState( new Date( ) )
+  const [, setWorking] = useState( true );
 
   const getLog = () => {
     var url = endpoints.endpoints[endpointSet].baseUrl + props.consentFormId + ".json";
@@ -144,7 +137,7 @@ export default function ConsentLog(props) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormControlLabel
-            control={<Checkbox checked={formAccepted} onChange={(event, value)=>setFormAccepted(!formAccepted)}/>}
+            control={<Checkbox checked={formAccepted} onChange={()=>setFormAccepted(!formAccepted)}/>}
             label={t( 'consent_logs.accepted')}
           />
         </Grid>

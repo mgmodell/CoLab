@@ -1,20 +1,13 @@
 /* eslint-disable no-console */
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import Input from "@material-ui/core/Input";
 import InputBase from "@material-ui/core/InputBase";
 import Link from "@material-ui/core/Link";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import SearchIcon from "@material-ui/icons/Search";
-import MenuList from "@material-ui/core/MenuList";
-import MenuItem from "@material-ui/core/MenuItem";
 import Checkbox from "@material-ui/core/Checkbox";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -25,56 +18,47 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TablePagination from "@material-ui/core/TablePagination";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
-import ViewColumnRounded from "@material-ui/icons/ViewColumnRounded";
 import { SortDirection } from "react-virtualized";
 import ColumnMenu from "../ColumnMenu";
 import SelectFrom from "../SelectFrom";
 import RemoteAutosuggest from "../RemoteAutosuggest";
-const styles = theme => ({
-  table: {
-    fontFamily: theme.typography.fontFamily
-  },
-  flexContainer: {
-    display: "flex",
-    alignItems: "center",
-    boxSizing: "border-box"
-  },
-  tableRow: {
-    cursor: "pointer"
-  },
-  tableRowHover: {
-    "&:hover": {
-      backgroundColor: theme.palette.grey[200]
-    }
-  },
-  tableCell: {
-    flex: 1
-  },
-  noClick: {
-    cursor: "initial"
-  }
-});
-class CandidatesReviewTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      search: "",
-      candidates: [],
-      bingo_game: null,
-      field_prefix: "",
-      rowsPerPage: 5,
-      page: 0,
-      filter_text: "",
-      review_complete_lbl: "Review completed",
-      review_complete: false,
-      reviewStatus: "",
-      progress: 0,
-      unique_concepts: 0,
-      acceptable_unique_concepts: 0,
-      sortBy: "number",
-      sortDirection: SortDirection.DESC,
-      dirty: false,
-      columns: [
+
+import { useEndpointStore } from '../infrastructure/EndPointStore';
+import {i18n } from '../infrastructure/i18n';
+import { useTranslation } from 'react-i18next';
+
+export default function CandidatesReviewTable( props ){
+  const { t } = useTranslation( 'bingo_games' );
+  const endpointSet = 'candidate_review';
+  const [endpoints, endpointsActions] = useEndpointStore( );
+  const [search, setSearch] = useState( '' );
+  const [candidates, setCandidates] = useState( [] );
+  const [candidateLists, setCandidateLists] = useState( [] );
+  const [candidateMap, setCandidateMap] = useState( {} );
+  const [bingoGame, setBingoGame] = useState( );
+  const [fieldPrefix, setFieldPrefix] = useState( '' );
+  const [rowsPerPage, setRowsPerPage] = useState( 5 );
+  const [page, setPage] = useState( 0 );
+  const [filterText, setFilterText] = useState( '' );
+  const [reviewComplete, setReviewComplete] = useState( false );
+  const [reviewStatus, setReviewStatus] = useState( '' );
+  const [progress, setProgress] = useState( 0 );
+  const [uniqueConcepts, setUniqueConcepts] = useState( 0 );
+  const [acceptableUniqueConcepts, setAcceptableUniqueConcepts] = useState( 0 );
+  const [sortBy, setSortBy ] = useState( 'number' );
+  const [sortDirection, setSortDirection] = useState( SortDirection.DESC );
+  const [dirty, setDirty] = useState( false );
+  const [users, setUsers] = useState( {} );
+  const [groups, setGroups] = useState( {} );
+  const [feedbackOpts, setFeedbackOpts ] =  useState( {} );
+  useEffect(()=>{
+    setDirty( true );
+    updateProgress( )
+  },[
+    reviewComplete,
+    candidateMap
+  ])
+  const [columns, setColumns ] = useState([
         {
           width: 1,
           flexGrow: 0,
@@ -107,7 +91,7 @@ class CandidatesReviewTable extends React.Component {
           numeric: false,
           visible: false,
           sortable: true,
-          render_func: c => this.submitterRender(c)
+          render_func: c => submitterRender(c)
         },
         {
           width: 50,
@@ -142,7 +126,7 @@ class CandidatesReviewTable extends React.Component {
           visible: true,
           sortable: true,
           render_func: c => {
-            return this.feedbackRender(c);
+            return feedbackRender(c);
           }
         },
         {
@@ -154,30 +138,28 @@ class CandidatesReviewTable extends React.Component {
           visible: true,
           sortable: true,
           render_func: c => {
-            return this.conceptRender(c);
+            return conceptRender(c);
           }
         }
-      ]
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleChangePage = this.handleChangePage.bind(this);
-    this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-    this.feedbackRender = this.feedbackRender.bind(this);
-    this.submitterRender = this.submitterRender.bind(this);
-    this.conceptRender = this.conceptRender.bind(this);
-    this.filter = this.filter.bind(this);
-    this.colSel = this.colSel.bind(this);
-    this.feedbackSet = this.feedbackSet.bind(this);
-    this.conceptSet = this.conceptSet.bind(this);
-    this.updateProgress = this.updateProgress.bind(this);
-    this.setCompleted = this.setCompleted.bind(this);
-  }
-  componentDidMount() {
-    //Retrieve concepts
-    this.getData();
-  }
 
-  sortCandidates(key, direction, candidates) {
+  ])
+
+  const review_complete_lbl = 'Review completed';
+
+  useEffect(() => {
+    if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
+    }
+  }, []);
+
+  useEffect(() =>{
+    if( 'loaded' === endpoints.endpointStatus[endpointSet] ){
+      getData( );
+    }
+
+  }, [endpoints.endpointStatus[endpointSet]]);
+
+  const sortCandidates = (key, direction, candidates) => {
     const dataKey = key;
     const mod = direction == SortDirection.ASC ? -1 : 1;
 
@@ -189,7 +171,6 @@ class CandidatesReviewTable extends React.Component {
         let b_val = !b["candidate_feedback_id"]
           ? 0
           : b["candidate_feedback_id"];
-        let comparison = a_val - b_val;
         return mod * (a_val - b_val);
       });
     } else if ("concept" == dataKey) {
@@ -198,7 +179,8 @@ class CandidatesReviewTable extends React.Component {
       });
     } else if ("submitter" == dataKey) {
       candidates.sort((a, b) => {
-        const { users } = this.state;
+        //Using users from state
+        //This is ugly
         const af = users[a.user_id].last_name;
         const bf = users[b.user_id].last_name;
         return mod * af.localeCompare(bf);
@@ -220,13 +202,13 @@ class CandidatesReviewTable extends React.Component {
 
     return candidates;
   }
-  setCompleted = function(item) {
-    const { feedback_opts } = this.state;
+  const setCompleted = (item) => {
+    //This use feedbackOpts from state
     const fb_id = item.candidate_feedback_id;
     if (fb_id != null) {
       item.completed = 100;
       if (
-        "term_problem" != feedback_opts[fb_id].critique &&
+        "term_problem" != feedbackOpts[fb_id].critique &&
         item.concept.name.length < 1
       ) {
         item.completed = 50;
@@ -236,9 +218,9 @@ class CandidatesReviewTable extends React.Component {
     }
   };
 
-  updateProgress() {
-    const { feedback_opts, candidates_map } = this.state;
-    const candidates = Object.values(candidates_map);
+  const updateProgress = () => {
+    //We're using feedbackOpts and candidatesMap from state
+    const candidates = Object.values(candidateMap);
     const completed = candidates.reduce((acc, item) => {
       if (100 == item.completed) {
         acc = acc + 1;
@@ -246,7 +228,7 @@ class CandidatesReviewTable extends React.Component {
       return acc;
     }, 0);
     //Concept count
-    const concepts = new Array(...Object.values(candidates_map).entries());
+    const concepts = new Array(...Object.values(candidateMap).entries());
     let filtered = concepts
       .filter(x => "" != x[1].concept.name)
       .map(x => x[1].concept.name.toLowerCase());
@@ -257,44 +239,39 @@ class CandidatesReviewTable extends React.Component {
       .filter(
         x =>
           "" != x[1].concept.name &&
-          "acceptable" == feedback_opts[x[1].candidate_feedback_id].critique
+          "acceptable" == feedbackOpts[x[1].candidate_feedback_id].critique
       )
       .map(x => x[1].concept.name.toLowerCase());
     const acceptable_unique_concepts = new Set(filtered).size;
 
-    this.setState({
-      unique_concepts: unique_concepts,
-      acceptable_unique_concepts: acceptable_unique_concepts,
-      progress: Math.round((completed / candidates.length) * 100)
-    });
+    setUniqueConcepts( unique_concepts );
+    setAcceptableUniqueConcepts( acceptable_unique_concepts );
+    setProgress( Math.round((completed / candidates.length ) * 100 ))
   }
 
-  sortEvent(event, dataKey) {
-    const { candidates, sortBy, sortDirection } = this.state;
+  const sortEvent = (dataKey) => {
+    //const { candidates, sortBy, sortDirection } = this.state;
 
     let direction = SortDirection.DESC;
     if (dataKey == sortBy && direction == sortDirection) {
       direction = SortDirection.ASC;
     }
-    this.sortCandidates(dataKey, direction, candidates);
-    this.setState({
-      candidates: candidates,
-      sortDirection: direction,
-      sortBy: dataKey
-    });
+    sortCandidates(dataKey, direction, candidates);
+    setCandidates( candidates );
+    setSortDirection( direction );
+    setSortDirection( dataKey );
   }
 
-  getData() {
-    this.setState({
-      reviewStatus: "Loading data"
-    });
-    fetch(this.props.dataUrl + ".json", {
+  const getData = () => {
+    setReviewStatus( "Loading data" );
+
+    fetch( `${endpoints.endpoints[endpointSet].baseUrl}${props.bingoGameId}.json`, {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
+        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -315,60 +292,58 @@ class CandidatesReviewTable extends React.Component {
         data.feedback_opts.map(item => {
           feedback_opts[item.id] = item;
         });
-        this.setState({
-          feedback_opts: feedback_opts
-        });
-        const groups = {};
+        setFeedbackOpts( feedback_opts)
+
+        const found_groups = {};
         data.groups.map(item => {
-          groups[item.id] = item;
+          found_groups[item.id] = item;
         });
-        const users = {};
+        setGroups( found_groups );
+        const found_users = {};
         data.users.map(item => {
-          users[item.id] = item;
+          found_users[item.id] = item;
         });
+        setUsers( found_users );
+        setCandidates( data.candidates );
+
         const candidate_lists = {};
         data.candidate_lists.map(item => {
           candidate_lists[item.id] = item;
         });
+        setCandidateLists( candidate_lists );
+
         const candidates_map = {};
         data.candidates.map(item => {
-          this.setCompleted(item);
+          setCompleted(item);
           candidates_map[item.id] = item;
         });
-        this.setState({
-          bingo_game: data.bingo_game,
-          field_prefix: "_bingo_candidates_review_" + data.bingo_game.id,
-          groups: groups,
-          dirty: false,
-          users: users,
-          rowsPerPage: data.candidates.length,
-          candidate_lists: candidate_lists,
-          candidates_map: candidates_map,
-          candidates: data.candidates
-        });
-        this.setState({
-          reviewStatus: "Data loaded"
-        });
-        this.updateProgress();
+        setCandidateMap( candidates_map );
+
+        setBingoGame( data.bingo_game );
+        setFieldPrefix( "_bingo_candidates_review_" + data.bingo_game.id )
+        setRowsPerPage( data.candidates.length );
+
+        setReviewStatus( 'Data loaded' );
+        setDirty( false );
+        updateProgress();
       });
   }
-  conceptStats() {}
-  saveFeedback() {
-    this.setState({
-      dirty: false,
-      reviewStatus: "Saving feedback."
-    });
-    fetch(this.props.reviewSaveUrl + ".json", {
+  // conceptStats() {}
+  const saveFeedback = () => {
+    setDirty( false );
+    setReviewStatus( 'Saving feedback.' )
+
+    fetch(`${endpoints.endpoints[endpointSet].reviewSaveUrl}${props.bingoGameId}.json`, {
       method: "PATCH",
       credentials: "include",
       body: JSON.stringify({
-        candidates: this.state.candidates.filter(c => 0 < c.completed),
-        reviewed: this.state.review_complete
+        candidates: candidates.filter(c => 0 < c.completed),
+        reviewed: review_complete
       }),
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
+        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -383,107 +358,84 @@ class CandidatesReviewTable extends React.Component {
         }
       })
       .then(data => {
-        this.setState({
-          dirty: typeof data.success !== "undefined",
-          reviewStatus: data.notice
-        });
+        setDirty( typeof data.success !== "undefined" )
+        setReviewStatus( data.notice );
       });
   }
-  handleChange = function(name) {
-    this.setState({
-      dirty: true,
-      [name]: !this.state[name]
-    });
-    this.updateProgress();
+
+  handleChangeRowsPerPage = (event) => {
+    setRowsPerPage( event.target.value );
+    setPage( 1 );
   };
-  handleChangePage = function(event, page) {
-    this.setState({ page: page });
-  };
-  handleChangeRowsPerPage = function(event) {
-    this.setState({
-      rowsPerPage: event.target.value,
-      page: 0
-    });
-  };
-  filter = function(event) {
-    const { sortBy, sortDirection, candidates_map } = this.state;
+
+  const filter = (event) => {
+    //const { sortBy, sortDirection, candidates_map } = this.state;
+    //We'll be using sortBy, sortDirection and candidatesMap
     const filter_text = event.target.value;
-    const filtered = Object.values(candidates_map).filter(candidate =>
+    const filtered = Object.values(candidateMap).filter(candidate =>
       candidate.definition.toUpperCase().includes(filter_text.toUpperCase())
     );
-    this.sortCandidates(sortBy, sortDirection, filtered);
-    this.setState({
-      candidates: filtered,
-      filter_text: filter_text,
-      page: 1
-    });
-  };
-  conceptSet = function(id, value) {
-    let candidates_map = this.state.candidates_map;
-    candidates_map[id].concept.name = value;
-    this.setCompleted(candidates_map[id]);
+    sortCandidates(sortBy, sortDirection, filtered);
 
-    this.setState({
-      dirty: true,
-      candidates_map: candidates_map
-    });
-    this.updateProgress();
+    setCandidates( filtered );
+    setFilterText( filter_text );
+    setPage( 1 );
   };
-  feedbackSet = function(id, value) {
+  const conceptSet = (id, value) => {
+    //let candidates_map = this.state.candidates_map;
+    candidates_map[id].concept.name = value;
+
+    setCompleted(candidates_map[id]);
+    setCandidateMap( candidates_map )
+  };
+  const feedbackSet = (id, value) => {
     const candidates_map = this.state.candidates_map;
     candidates_map[id].candidate_feedback_id = parseInt(value);
-    this.setCompleted(candidates_map[id]);
-    this.setState({
-      dirty: true,
-      candidates_map: candidates_map
-    });
-    this.updateProgress();
+    setCompleted(candidates_map[id]);
+    setCandidateMap( candidates_map );
   };
-  colSel = function(event, index) {
-    let cols = this.state.columns;
+  const colSel = (event, index) => {
+    let cols = columns;
     cols[index].visible = !cols[index].visible;
-    this.setState({
-      columns: cols
-    });
+    setColumns( cols );
   };
-  conceptRender = function(c) {
-    const { feedback_opts, candidates } = this.state;
+  const conceptRender = (c) => {
+    //const { feedback_opts } = this.state;
     const label = "Concept";
     const fb_id = c.candidate_feedback_id;
 
     let output = "N/A";
-    if (fb_id != null && "term_problem" != feedback_opts[fb_id].critique) {
+    if (fb_id != null && "term_problem" != feedbackOpts[fb_id].critique) {
       output = (
         <RemoteAutosuggest
           inputLabel={label}
           itemId={c.id}
           enteredValue={c.concept.name}
           controlId={"concept_4_" + c.id}
-          dataUrl={this.props.conceptUrl}
-          setFunction={this.conceptSet}
+          dataUrl={endpoints.endpoints[endpointSet].conceptUrl}
+          setFunction={conceptSet}
         />
       );
     }
     return output;
   };
-  feedbackRender = function(c) {
+  const feedbackRender = (c)=> {
     const label = "Feedback";
     const id = c.candidate_feedback_id > 0 ? "" + c.candidate_feedback_id : "0";
     return (
       <SelectFrom
-        options={this.state.feedback_opts}
+        options={feedbackOpts}
         selectLbl={label}
         itemId={c.id}
         selectedValue={id}
         controlId={"feedback_4_" + c.id}
-        selectFunction={this.feedbackSet}
+        selectFunction={feedbackSet}
       />
     );
   };
-  submitterRender = function(c) {
-    let cl = this.state.candidate_lists[c.candidate_list_id];
-    let u = this.state.users[c.user_id];
-    let behalf;
+  const submitterRender = (c)=> {
+    let cl = candidateLists[c.candidate_list_id];
+    let u = users[c.user_id];
     return (
       <div>
         <Link href={"mailto:" + u.email}>
@@ -492,35 +444,34 @@ class CandidatesReviewTable extends React.Component {
         {cl.is_group && (
           <em>
             {"\n"}
-            (on behalf of {this.state.groups[cl.group_id].name})
+            (on behalf of {groups[cl.group_id].name})
           </em>
         )}
       </div>
     );
   };
-  render() {
+
     const direction = {
       [SortDirection.ASC]: "asc",
       [SortDirection.DESC]: "desc"
     };
-    const { columns, candidates, rowsPerPage, page } = this.state;
 
     const notify =
-      this.state.progress < 100 ? null : (
-        <div onClick={() => this.handleChange("review_complete")}>
-          <Checkbox id="review_complete" checked={this.state.review_complete} />
-          <Typography>{this.state.review_complete_lbl}</Typography>
+      progress < 100 ? null : (
+        <div onClick={setReviewComplete} >
+          <Checkbox id="review_complete" checked={reviewComplete} />
+          <Typography>{review_complete_lbl}</Typography>
         </div>
       );
-    const statusMsg = this.state.dirty ? null : (
-      <Typography>{this.state.reviewStatus}</Typography>
+    const statusMsg = dirty ? null : (
+      <Typography>{reviewStatus}</Typography>
     );
-    const saveButton = this.state.dirty ? (
-      <Button variant="contained" onClick={() => this.saveFeedback()}>
+    const saveButton = dirty ? (
+      <Button variant="contained" onClick={() => saveFeedback()}>
         Save
       </Button>
     ) : (
-      <Button disabled variant="contained" onClick={() => this.saveFeedback()}>
+      <Button disabled variant="contained" onClick={() => saveFeedback()}>
         Save
       </Button>
     );
@@ -536,13 +487,13 @@ class CandidatesReviewTable extends React.Component {
         <Grid item>
           <InputBase
             placeholder="Search definitions"
-            value={this.state.filter_text}
-            onChange={this.filter}
+            value={filterText}
+            onChange={filter}
           />
           <SearchIcon />
         </Grid>
         <Grid item>
-          <ColumnMenu columns={columns} selMethod={this.colSel} />
+          <ColumnMenu columns={columns} selMethod={colSel} />
         </Grid>
         <Grid item>
           <TablePagination
@@ -557,29 +508,29 @@ class CandidatesReviewTable extends React.Component {
             nextIconButtonProps={{
               "aria-label": "Next Page"
             }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            onChangePage={(event,page)=>setPage( page )}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
           />
         </Grid>
         <Grid item>
           <CircularProgress
             size={10}
-            variant={this.state.progress > 0 ? "static" : "indeterminate"}
-            value={this.state.progress}
+            variant={progress > 0 ? "static" : "indeterminate"}
+            value={progress}
           />
           &nbsp;
-          {this.state.progress}%
+          {progress}%
           <Tooltip title="Unique concepts identified [acceptably explained]">
             <Typography>
-              {this.state.unique_concepts} [
-              {this.state.acceptable_unique_concepts}]
+              {uniqueConcepts} [
+              {acceptableUniqueConcepts}]
             </Typography>
           </Tooltip>
           {statusMsg}
           {notify}
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={() => this.getData()}>
+          <Button variant="contained" onClick={() => getData()}>
             Reload
           </Button>
           {saveButton}
@@ -589,6 +540,30 @@ class CandidatesReviewTable extends React.Component {
 
     return (
       <Paper style={{ height: "95%", width: "100%" }}>
+        <Grid container>
+          <Grid item xs={12} sm={3}>
+            {t('topic')}:
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            {bingoGame.topic}
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            {t('close_date')}:
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            {bingoGame.end_date}
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            {t('description')}:
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: bingoGame.description
+              }}
+            />
+          </Grid>
+        </Grid>
         {toolbar}
         <div>
           <Table>
@@ -598,9 +573,9 @@ class CandidatesReviewTable extends React.Component {
                   if (cell.visible) {
                     const header = cell.sortable ? (
                       <TableSortLabel
-                        active={cell.dataKey == this.state.sortBy}
-                        direction={direction[this.state.sortDirection]}
-                        onClick={() => this.sortEvent(event, cell.dataKey)}
+                        active={cell.dataKey == sortBy}
+                        direction={direction[sortDirection]}
+                        onClick={() => sortEvent(cell.dataKey)}
                       >
                         {cell.label}
                       </TableSortLabel>
@@ -639,12 +614,9 @@ class CandidatesReviewTable extends React.Component {
         </div>
       </Paper>
     );
-  }
 }
 CandidatesReviewTable.propTypes = {
-  dataUrl: PropTypes.string.isRequired,
-  conceptUrl: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
-  bingo_game_id: PropTypes.number.isRequired
+  getEndPpointsUrl: PropTypes.string.isRequired,
+  bingoGameId: PropTypes.number.isRequired
 };
-export default CandidatesReviewTable;

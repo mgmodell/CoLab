@@ -12,6 +12,16 @@ require 'selenium/webdriver'
 require 'simplecov'
 SimpleCov.start 'rails'
 
+def wait_for_render
+  times = 3
+  
+  while ( all( :xpath, "//*[@id='waiting']" ).size > 0 && times > 0 ) do
+    sleep( 0.01)
+    times -= 1
+  end
+end
+
+
 Capybara.register_driver :headless_firefox do |app|
   profile = Selenium::WebDriver::Firefox::Profile.new
   client = Selenium::WebDriver::Remote::Http::Default.new

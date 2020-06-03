@@ -72,7 +72,6 @@ export default function CandidateListEntry(props) {
         }
       })
       .then(data => {
-        console.log( data )
         setCandidateListId( data.id );
         setTopic( data.topic );
         setDescription( data.description );
@@ -95,7 +94,17 @@ export default function CandidateListEntry(props) {
     const tmpCandidates = [...candidates]
     const candidate_count = candidates.length;
     tmpCandidates.sort( (a,b)=>{
-      a.term.localeCompare( b.term )
+      if( 0 == b.term.length ){
+        console.log( `empty b: "${a.term}" and "${b.term}"`)
+        return -1;
+      } else if( 0 == a.term.length ){
+        console.log( `empty a: "${a.term}" and "${b.term}"`)
+        return 1
+      } else {
+        console.log( `not empty: "${a.term}" and "${b.term}"`)
+        return ( a.term.localeCompare( b.term ) )
+
+      }
 
     })
 
@@ -198,6 +207,7 @@ export default function CandidateListEntry(props) {
   ) : null;
 
   const colabResponse = (decision) =>{
+    setWorking( true );
     const url = `${requestCollaborationUrl}${decision}.json`;
     console.log( url )
     fetch(url, {
@@ -218,8 +228,15 @@ export default function CandidateListEntry(props) {
         }
       })
       .then(data => {
-        console.log( 'got here')
-        console.log( data )
+        setCandidateListId( data.id );
+        setIsGroup( data.is_group );
+        setExpectedCount( data.expected_count );
+
+        setCandidates( prepCandidates( data.candidates, data.expected_count ) );
+        setHelpRequested( data.help_requested );
+        setOthersRequestedHelp( data.others_requested_help );
+        setDirty( false );
+        setWorking( false );
       })
 
   }
@@ -230,7 +247,7 @@ export default function CandidateListEntry(props) {
     if( isGroup ){
       groupComponent = (
         <em>
-          `${t( 'edit.behalf' )}: ${groupName}`
+          {t( 'edit.behalf' )}: ${groupName}`
         </em>
       )
     }else if( helpRequested ){
@@ -264,12 +281,14 @@ export default function CandidateListEntry(props) {
   }
 
   const updateTerm = (event, index)=>{
+    console.log( 'term update')
     const tempList = [...candidates];
     tempList[index].term = event.target.value;
     setCandidates( tempList );
 
   }
   const updateDefinition = (event, index)=>{
+    console.log( 'def update')
     const tempList = [...candidates];
     tempList[index].definition = event.target.value;
     setCandidates( tempList );

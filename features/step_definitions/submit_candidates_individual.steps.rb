@@ -36,6 +36,7 @@ Then /^the user should see the Bingo candidate list$/ do
 end
 
 Then /^the user will see (\d+) term field sets$/ do |count|
+  wait_for_render
   page.all(:xpath,
            "//textarea[contains(@id, 'definition_')]")
       .count.should eq count.to_i
@@ -86,20 +87,25 @@ Then /^the candidate list entries should match the list$/ do
 
   field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]") .count
 
-  items_not_found = @entries_lists[@user].count
-  @entries_lists[@user].each do |candidate|
+  field_count.times do |index|
+    t_query = "//input[@id='term_#{index}']"
+    d_query = "//textarea[@id='definition_#{index}']"
+    term = find( :xpath, t_query).value
+    definition = find( :xpath, d_query).value
 
-    field_count.times do |index|
-      t_query = "//input[@id='term_#{index}']"
-      d_query = "//textarea[@id='definition_#{index}']"
-      term = candidate['term'].blank? ? candidate['term'] : candidate['term'].strip.split.map(&:capitalize) * ' '
-      if page.find(:xpath, t_query).value == term &&
-         page.find(:xpath, d_query).value == candidate['definition']
-        items_not_found -= 1
+    if( term.present? || definition.present? )
+
+      entry = @entries_lists[@user].find do |candidate|
+        elem_term = candidate['term'].blank? ? candidate['term'] : candidate['term'].strip.split.map(&:capitalize) * ' '
+        term == elem_term && definition == candidate['definition']
       end
+      # byebug unless entry.present?
+      entry.present?.should eq true
+
     end
   end
-  items_not_found.should eq 0
+
+    
 end
 
 Given(/^the Bingo! "([^"]*)" been activated$/) do |has_or_has_not|

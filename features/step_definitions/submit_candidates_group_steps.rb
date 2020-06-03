@@ -7,14 +7,6 @@ Given /^the Bingo! is group\-enabled with the project and a (\d+) percent group 
   @bingo.group_discount = group_discount
 end
 
-def wait_for_render
-  times = 3
-  
-  while ( all( :xpath, "//*[@id='waiting']" ).size > 0 && times > 0 ) do
-    sleep( 0.01)
-    times -= 1
-  end
-end
 
 Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pending|
   wait_for_render
@@ -55,6 +47,7 @@ Then /^the user "([^"]*)" see they're waiting on a collaboration response$/ do |
 end
 
 Then /^the user "([^"]*)" the collaboration request$/ do |accept_or_decline|
+  wait_for_render
   case accept_or_decline.downcase
   when 'accepts'
     btn = find(:xpath, "//a[text()='Accept']" )
@@ -94,7 +87,7 @@ When /^the user populates (\d+) additional "([^"]*)" entries$/ do |count, field|
     @entries_list[existing_count + index][field] = field == 'term' ?
                         Forgery::Name.industry :
                         Forgery::Basic.text
-    page.fill_in("candidate_list_candidates_attributes_#{existing_count + index}_#{field}",
+    page.fill_in("#{field}_#{existing_count + index}",
                  with: @entries_list[existing_count + index][field])
   end
 end
@@ -105,17 +98,20 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
   @entries_list = @entries_lists[@user]
 
   count.to_i.times do |index|
-    existing_term = page.find(:xpath, "//input[@id='candidate_list_candidates_attributes_#{index}_term']")
+    existing_term = page.find(:xpath, "//input[@id='term_#{index}']").value
+    puts "term: #{existing_term.inspect}"
     new_val = field == 'term' ?
             Forgery::Name.industry :
             Forgery::Basic.text
 
     @entries_list[index] = {} if @entries_list[index].blank?
     @entries_list.each do |entry|
+      puts "checking #{entry['term']}"
       next unless entry['term'] == existing_term
+      puts 'setting'
 
       entry[field] = new_val
-      page.fill_in("candidate_list_candidates_attributes_#{index}_#{field}",
+      page.fill_in("#{field}_#{index}",
                    with: @entries_list[index][field])
     end
   end

@@ -27,10 +27,11 @@
      end
   %>
   <%= react_component "CandidatesReviewTable", {
-    dataUrl: dataUrl,
-    conceptUrl: conceptUrl,
     token: form_authenticity_token,
     bingo_game_id: @bingo_game.id,
+
+    dataUrl: dataUrl,
+    conceptUrl: conceptUrl,
     reviewSaveUrl: reviewSaveUrl,
   } %>
 <% end %>

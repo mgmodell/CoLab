@@ -146,7 +146,7 @@ class CandidateListsController < ApplicationController
             candidate = @candidate_list.candidates.find{|c|c.id == id}
             candidate.term = term
             candidate.definition = definition
-            candidate.user = current_user
+            # candidate.user = current_user
           end
         end
 

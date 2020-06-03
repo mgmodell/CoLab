@@ -9,6 +9,7 @@ import HomeShell from './HomeShell';
 import ProfileDataAdmin from './ProfileDataAdmin'
 import InstallmentReport from './InstallmentReport';
 import CandidateListEntry from './BingoBoards/CandidateListEntry';
+import CandidatesReviewTable from './BingoBoards/CandidatesReviewTable';
 import ConsentLog from './Consent/ConsentLog'
 import Admin from './Admin'
 
@@ -53,6 +54,17 @@ export default function PageWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <CandidateListEntry
+                  token={props.token}
+                  getEndpointsUrl={props.getEndpointsUrl}
+                  bingoGameId={Number(routeProps.match.params.id)}
+                />
+              </React.Fragment>
+            )}
+          />
+          <Route path={`/review_candidates/:id`}
+            render={routeProps => (
+              <React.Fragment>
+                <CandidatesReviewTable
                   token={props.token}
                   getEndpointsUrl={props.getEndpointsUrl}
                   bingoGameId={Number(routeProps.match.params.id)}
