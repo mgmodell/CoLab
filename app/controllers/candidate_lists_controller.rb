@@ -135,7 +135,6 @@ class CandidateListsController < ApplicationController
           definition = candidate_data[:definition]
           id = candidate_data[:id]
 
-
           if( id.blank? )
             candidate = @candidate_list.candidates.build(
               term: term,

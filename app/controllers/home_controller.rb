@@ -142,8 +142,8 @@ class HomeController < ApplicationController
       }
     when 'candidate_review'
       ep_hash = {
-        baseUrl: review_bingo_candidates_path( '' ),
-        reviewSaveUrl: update_bingo_candidates_review_path( '' ),
+        baseUrl: review_bingo_candidates_path( id: '' ),
+        reviewSaveUrl: update_bingo_candidates_review_path( id: '' ),
         conceptUrl: bingo_concepts_path( 0 )
       }
     when 'installment'

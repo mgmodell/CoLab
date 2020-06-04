@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import InputBase from "@material-ui/core/InputBase";
 import Link from "@material-ui/core/Link";
 import SearchIcon from "@material-ui/icons/Search";
+import Skeleton from '@material-ui/lab/Skeleton'
 import Checkbox from "@material-ui/core/Checkbox";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -26,6 +27,7 @@ import RemoteAutosuggest from "../RemoteAutosuggest";
 import { useEndpointStore } from '../infrastructure/EndPointStore';
 import {i18n } from '../infrastructure/i18n';
 import { useTranslation } from 'react-i18next';
+import { LinearProgress, FormControlLabel } from "@material-ui/core";
 
 export default function CandidatesReviewTable( props ){
   const { t } = useTranslation( 'bingo_games' );
@@ -51,6 +53,8 @@ export default function CandidatesReviewTable( props ){
   const [users, setUsers] = useState( {} );
   const [groups, setGroups] = useState( {} );
   const [feedbackOpts, setFeedbackOpts ] =  useState( {} );
+  const [messages, setMessages] = useState( '' );
+  const [working, setWorking] = useState( true );
   useEffect(()=>{
     setDirty( true );
     updateProgress( )
@@ -264,6 +268,7 @@ export default function CandidatesReviewTable( props ){
 
   const getData = () => {
     setReviewStatus( "Loading data" );
+    console.log( `${endpoints.endpoints[endpointSet].baseUrl}${props.bingoGameId}.json` )
 
     fetch( `${endpoints.endpoints[endpointSet].baseUrl}${props.bingoGameId}.json`, {
       method: "GET",
@@ -282,6 +287,7 @@ export default function CandidatesReviewTable( props ){
         }
       })
       .then(data => {
+        console.log( data );
         data.candidates.map((candidate, index) => {
           candidate.number = index;
           if (!candidate.concept) {
@@ -325,14 +331,17 @@ export default function CandidatesReviewTable( props ){
 
         setReviewStatus( 'Data loaded' );
         setDirty( false );
+        setWorking( false );
         updateProgress();
       });
   }
   // conceptStats() {}
   const saveFeedback = () => {
     setDirty( false );
+    setWorking( true );
     setReviewStatus( 'Saving feedback.' )
 
+    console.log(`${endpoints.endpoints[endpointSet].reviewSaveUrl}${props.bingoGameId}.json`)
     fetch(`${endpoints.endpoints[endpointSet].reviewSaveUrl}${props.bingoGameId}.json`, {
       method: "PATCH",
       credentials: "include",
@@ -358,12 +367,14 @@ export default function CandidatesReviewTable( props ){
         }
       })
       .then(data => {
+        console.log( data );
         setDirty( typeof data.success !== "undefined" )
+        setWorking( false );
         setReviewStatus( data.notice );
       });
   }
 
-  handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = (event) => {
     setRowsPerPage( event.target.value );
     setPage( 1 );
   };
@@ -458,23 +469,20 @@ export default function CandidatesReviewTable( props ){
 
     const notify =
       progress < 100 ? null : (
-        <div onClick={setReviewComplete} >
-          <Checkbox id="review_complete" checked={reviewComplete} />
-          <Typography>{review_complete_lbl}</Typography>
-        </div>
+        <FormControlLabel control={
+          <Checkbox id="review_complete"
+            onClick={() => setReviewComplete( !reviewComplete ) }
+            checked={reviewComplete} />
+          }
+          label={review_complete_lbl}
+        />
       );
-    const statusMsg = dirty ? null : (
-      <Typography>{reviewStatus}</Typography>
-    );
-    const saveButton = dirty ? (
-      <Button variant="contained" onClick={() => saveFeedback()}>
+    const saveButton = 
+    (
+      <Button disabled={!dirty} variant="contained" onClick={() => saveFeedback()}>
         Save
       </Button>
-    ) : (
-      <Button disabled variant="contained" onClick={() => saveFeedback()}>
-        Save
-      </Button>
-    );
+    )
 
     const toolbar = (
       <Grid
@@ -526,7 +534,7 @@ export default function CandidatesReviewTable( props ){
               {acceptableUniqueConcepts}]
             </Typography>
           </Tooltip>
-          {statusMsg}
+          {messages}
           {notify}
         </Grid>
         <Grid item>
@@ -539,7 +547,10 @@ export default function CandidatesReviewTable( props ){
     );
 
     return (
-      <Paper style={{ height: "95%", width: "100%" }}>
+      <Paper >
+        {working ? (<LinearProgress id='waiting' />) : null }
+        
+          {bingoGame != null ? (
         <Grid container>
           <Grid item xs={12} sm={3}>
             {t('topic')}:
@@ -564,6 +575,8 @@ export default function CandidatesReviewTable( props ){
             />
           </Grid>
         </Grid>
+
+          ) : (<Skeleton variant='rect' height={20}/>) }
         {toolbar}
         <div>
           <Table>
@@ -617,6 +630,6 @@ export default function CandidatesReviewTable( props ){
 }
 CandidatesReviewTable.propTypes = {
   token: PropTypes.string.isRequired,
-  getEndPpointsUrl: PropTypes.string.isRequired,
+  getEndpointsUrl: PropTypes.string.isRequired,
   bingoGameId: PropTypes.number.isRequired
 };

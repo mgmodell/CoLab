@@ -32,7 +32,7 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
   step 'the user "has" had demographics requested'
   step 'the user logs in'
   step 'the user clicks the link to the candidate list'
-  fields = page.all(:xpath, "//input[contains(@id, '_term')]").count
+  fields = page.all(:xpath, "//input[contains(@id, 'term_')]").count
   step 'the user logs out'
 
   # set up how much we want to complete
@@ -54,7 +54,9 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
     step 'the user clicks the link to the candidate list'
     step "the user populates #{fields_to_complete} of the \"term\" entries"
     step "the user populates #{fields_to_complete} of the \"definition\" entries"
-    step 'the user clicks "Save"'
+    if fields_to_complete > 0
+      step 'the user clicks "Save"'
+    end
     step 'the user will see "success"'
     step 'the user logs out'
   end
@@ -82,12 +84,13 @@ Given /^the user sees review items for all the expected candidates$/ do
 end
 
 Then /^the user waits while seeing "([^"]*)"$/ do |wait_msg|
-  counter = 0
-  while page.has_text? wait_msg
-    sleep 1
-    counter += 1
-    break if counter > 60
-  end
+  wait_for_render
+  # counter = 0
+  # while page.has_text? wait_msg
+  #   sleep 1
+  #   counter += 1
+  #   break if counter > 60
+  # end
 end
 
 Given /^the user lowercases "([^"]*)" concepts$/ do |which_concepts|
