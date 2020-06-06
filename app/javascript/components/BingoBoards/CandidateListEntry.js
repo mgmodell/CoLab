@@ -95,13 +95,13 @@ export default function CandidateListEntry(props) {
     const candidate_count = candidates.length;
     tmpCandidates.sort( (a,b)=>{
       if( 0 == b.term.length ){
-        console.log( `empty b: "${a.term}" and "${b.term}"`)
+        //console.log( `empty b: "${a.term}" and "${b.term}"`)
         return -1;
       } else if( 0 == a.term.length ){
-        console.log( `empty a: "${a.term}" and "${b.term}"`)
+        //console.log( `empty a: "${a.term}" and "${b.term}"`)
         return 1
       } else {
-        console.log( `not empty: "${a.term}" and "${b.term}"`)
+        //console.log( `not empty: "${a.term}" and "${b.term}"`)
         return ( a.term.localeCompare( b.term ) )
 
       }
@@ -209,7 +209,6 @@ export default function CandidateListEntry(props) {
   const colabResponse = (decision) =>{
     setWorking( true );
     const url = `${requestCollaborationUrl}${decision}.json`;
-    console.log( url )
     fetch(url, {
       method: 'GET',
       credentials: "include",
@@ -281,14 +280,12 @@ export default function CandidateListEntry(props) {
   }
 
   const updateTerm = (event, index)=>{
-    console.log( 'term update')
     const tempList = [...candidates];
     tempList[index].term = event.target.value;
     setCandidates( tempList );
 
   }
   const updateDefinition = (event, index)=>{
-    console.log( 'def update')
     const tempList = [...candidates];
     tempList[index].definition = event.target.value;
     setCandidates( tempList );

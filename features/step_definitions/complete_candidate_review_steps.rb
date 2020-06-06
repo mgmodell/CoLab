@@ -106,6 +106,7 @@ Given /^the user lowercases "([^"]*)" concepts$/ do |which_concepts|
 end
 
 Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_type|
+  wait_for_render
   concept_count = Concept.count
   concepts = concept_count < 2 ? [] :
               Concept.where('id > 0').collect(&:name)
@@ -126,8 +127,9 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       concept = concepts.rotate!(1).first
       @feedback_list[candidate.id][:concept] = concept.split.map(&:capitalize).*' '
     end
+    
     elem = page.find(:xpath,
-                     "//select[@id='feedback_4_#{candidate.id}']",
+                     "//div[@id='feedback_4_#{candidate.id}']",
                      visible: :all)
     begin
       retries ||= 0
@@ -137,15 +139,10 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       retry if (retries += 1) < 4
     end
     elem = page.find(:xpath,
-                     "//select[@id='feedback_4_#{candidate.id}']//option[@value='#{feedback.id}']",
-                     visible: :all)
-    begin
-      retries ||= 0
-      elem.click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-      puts e.inspect
-      retry if (retries += 1) < 4
-    end
+                     "//div[@id='feedback_4_#{candidate.id}']" ).click
+    elem = page.find(:xpath,
+                     "//li[text()='#{feedback.name}']" ).click
+
     if concept.present?
       page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
           .set(concept)
