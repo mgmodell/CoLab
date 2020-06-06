@@ -11,7 +11,7 @@ import Paper from '@material-ui/core/Paper'
 import { FormControlLabel, Checkbox } from "@material-ui/core";
 
 export default function ConsentLog(props) {
-  const { t } = useTranslation();
+  const { t } = useTranslation( 'consent_logs');
   const endpointSet = 'consent_log';
   const [endpoints, endpointsActions] = useEndpointStore();
   const [logId, setLogId] = useState( );
@@ -45,20 +45,24 @@ export default function ConsentLog(props) {
       })
       .then(data => {
         //Process the data
-        setLogId( data.id );
-        setFormName( data.name );
-        setFormText( data.formText );
-        setFormPdfLink( data.pdfLink)
-        setFormAccepted( data.accepted );
-        setFormPresented( data.presented );
-        setLogLastUpdated( new Date( data.updatedAt ) );
+        console.log( data );
+        setLogId( data.consent_log.id );
+        setFormName( data.consent_log.name );
+        setFormText( data.consent_log.formText );
+        setFormPdfLink( data.consent_log.pdfLink)
+        setFormAccepted( data.consent_log.accepted || false );
+        setFormPresented( data.consent_log.presented );
+        setLogLastUpdated( new Date( data.consent_log.updatedAt ) );
 
         setWorking(false);
       });
   };
 
   const updateLog = () => {
+    console.log( logId );
     var url = endpoints.endpoints[endpointSet].consentLogSaveUrl + logId + ".json";
+
+    console.log( 'update', url );
 
     fetch(url, {
       method: "PATCH",
@@ -113,16 +117,16 @@ export default function ConsentLog(props) {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography variant='h1'>
-            {t( 'consent_logs.edit.opening')}
+            {t( 'edit.opening')}
           </Typography>
           <Typography variant='h2'>
-            {t( 'consent_logs.edit.title')}: {formName}
+            {t( 'edit.title')}: {formName}
           </Typography>
 
         </Grid>
         <Grid item xs={12}>
           <p>
-            {t( 'consent_logs.edit.instructions')}
+            {t( 'edit.instructions')}
           </p>
           <p
             dangerouslySetInnerHTML={{
@@ -132,18 +136,19 @@ export default function ConsentLog(props) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <Link href={formPdfLink}>
-            {t( 'consent_logs.edit.consent_dl')}
+            {t( 'edit.consent_dl')}
           </Link>
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormControlLabel
             control={<Checkbox checked={formAccepted} onChange={()=>setFormAccepted(!formAccepted)}/>}
-            label={t( 'consent_logs.accepted')}
+            id='accepted'
+            label={t( 'edit.accept')}
           />
         </Grid>
         <Grid item xs={12} >
           <Button fullWidth onClick={updateLog}>
-            {t( 'consent_logs.edit.submit_response')}
+            {t( 'edit.submit_response')}
           </Button>
         </Grid>
       </Grid>

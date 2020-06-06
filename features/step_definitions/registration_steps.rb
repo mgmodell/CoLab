@@ -12,7 +12,10 @@ end
 
 When /^the user "(.*?)" provide consent$/ do |does_or_does_not|
   consent = does_or_does_not == 'does'
-  check('consent_log[accepted]') if consent
+  chkbox = find( :xpath, "//label[contains(.,'I agree')]" )
+  if( chkbox.find( :xpath, '//input', visible: :all ).checked? == consent )
+    chkbox.click
+  end
   click_button 'Record my response to this Consent Form'
 end
 
