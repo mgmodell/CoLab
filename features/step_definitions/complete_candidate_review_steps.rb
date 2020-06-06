@@ -107,6 +107,10 @@ end
 
 Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_type|
   wait_for_render
+  #Enable max rows
+  page.find(:xpath, "//div[@id='pagination-rows']").click
+  page.find(:xpath, "//li[text()='134']").click
+
   concept_count = Concept.count
   concepts = concept_count < 2 ? [] :
               Concept.where('id > 0').collect(&:name)
@@ -128,25 +132,26 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       @feedback_list[candidate.id][:concept] = concept.split.map(&:capitalize).*' '
     end
     
-    elem = page.find(:xpath,
-                     "//div[@id='feedback_4_#{candidate.id}']",
-                     visible: :all)
     begin
-      retries ||= 0
+      elem = page.find(:xpath,
+                       "//div[@id='feedback_4_#{candidate.id}']" )
       elem.click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-      puts e.inspect
-      retry if (retries += 1) < 4
-    end
-    elem = page.find(:xpath,
-                     "//div[@id='feedback_4_#{candidate.id}']" ).click
-    elem = page.find(:xpath,
-                     "//li[text()='#{feedback.name}']" ).click
 
-    if concept.present?
-      page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
-          .set(concept)
+      elem = page.find(:xpath,
+                       "//li[text()='#{feedback.name}']" )
+      elem.click
+
+      if concept.present?
+        elem = page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
+        byebug if elem.nil?
+        elem.set(concept)
+      end
+      
+    rescue Capybara::ElementNotFound => e
+      byebug
+      
     end
+
   end
 end
 

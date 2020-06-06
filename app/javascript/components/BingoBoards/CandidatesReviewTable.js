@@ -215,7 +215,7 @@ export default function CandidatesReviewTable( props ){
       .filter(
         x =>
           "" != x.concept.name &&
-          "acceptable" == feedbackOptions[x[1].candidate_feedback_id].critique
+          "acceptable" == getById( feedbackOptions, x.candidate_feedback_id ).critique
       )
       .map(x => x.concept.name.toLowerCase());
     const acceptable_unique_concepts = new Set(filtered).size;
@@ -396,6 +396,7 @@ export default function CandidatesReviewTable( props ){
               print: false,
               download: false,
               selectableRows: 'none',
+              rowsPerPageOptions: [10,15,100,candidates.length],
               customToolbar: ()=>{
                 return(
                   <Grid
