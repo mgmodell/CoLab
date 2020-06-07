@@ -66,14 +66,12 @@ can help you set them up if you run into difficulty.
     * `git checkout <enter_new_branch_name>`
 * On WSL (Windows), use `sudo service mysql start` to start the database
   server
-* Use `rails s` to run the server
+* Use `foreman start -f Procfile.dev` to run the server
     * If this gives an error, try the following:
         1. `yarn install` (this sets up the JavaScript packages)
         1. `bundle install` (this sets up the ruby gems/packages)
         1. `rails db:migrate` (this sets up the database)
         1. try again
-* In a separate window, run `bin/webpack-dev-server` to run the webpack (JavaScript file)
-  server.
 * Open [the test server](http://localhost:3000)
 * Play with it to understand the problem
     * Create your own user account
