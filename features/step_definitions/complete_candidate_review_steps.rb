@@ -66,7 +66,12 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
 end
 
 Then /^the user sees (\d+) candidate items for review$/ do |candidate_count|
-  page.all(:xpath, "//select[contains(@id, 'feedback_4_')]")
+  wait_for_render
+  #Enable max rows
+  page.find(:xpath, "//div[@id='pagination-rows']").click
+  page.find(:xpath, "//li[text()='134']").click
+
+  page.all(:xpath, "//div[contains(@id, 'feedback_4_')]")
       .count.should eq candidate_count.to_i
   # Latest UI only shows 'Concept' when relevant/available
   # page.all(:xpath, "//input[contains(@id, 'concept_4_')]")
