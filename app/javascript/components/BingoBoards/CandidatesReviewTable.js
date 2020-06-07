@@ -265,7 +265,8 @@ export default function CandidatesReviewTable( props ){
         setUsers( data.users );
         setCandidateLists( data.candidate_lists );
 
-        data.candidates.map(item => {
+        data.candidates.map(item,index => {
+          item['number'] = index;
           if( null == item.concept_id ){
             item['concept'] = {
               name: ''

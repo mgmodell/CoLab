@@ -133,24 +133,36 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
     end
     
     begin
+      retries ||= 0
+
       elem = page.find(:xpath,
                        "//div[@id='feedback_4_#{candidate.id}']" )
       elem.click
+    rescue Capybara::ElementNotFound => e
+      puts e.to_s
+      puts 'retrying'
+      retry if ( retries += 1 ) < 3
+      
+    end
 
+    begin
+      retries ||= 0
       elem = page.find(:xpath,
                        "//li[text()='#{feedback.name}']" )
       elem.click
-
+      
       if concept.present?
         elem = page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
         byebug if elem.nil?
         elem.set(concept)
       end
-      
     rescue Capybara::ElementNotFound => e
-      byebug
+      puts e.to_s
+      puts 'retrying'
+      retry if ( retries += 1 ) < 3
       
     end
+      
 
   end
 end

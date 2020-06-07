@@ -55,7 +55,6 @@ Feature: Students review Candidate words for Bingo!
      Then user opens their profile
      Then user sees the Bingo! in the history
      Given today is "4 days from now"
-     Then we debug
      Then the user logs out
      When the user is any student in the course
      Then the user logs in
