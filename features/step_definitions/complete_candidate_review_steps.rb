@@ -144,9 +144,8 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
                        "//div[@id='feedback_4_#{candidate.id}']" )
       elem.click
     rescue Capybara::ElementNotFound => e
-      puts e.to_s
-      puts 'retrying'
-      retry if ( retries += 1 ) < 3
+      (retries += 1).should be < 3,  'Too many retries'
+      retry
       
     end
 
@@ -162,9 +161,8 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
         elem.set(concept)
       end
     rescue Capybara::ElementNotFound => e
-      puts e.to_s
-      puts 'retrying'
-      retry if ( retries += 1 ) < 3
+      (retries += 1).should be < 3,  'Too many retries'
+      retry
       
     end
       
