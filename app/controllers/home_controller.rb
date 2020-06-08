@@ -146,6 +146,13 @@ class HomeController < ApplicationController
         reviewSaveUrl: update_bingo_candidates_review_path( id: '' ),
         conceptUrl: bingo_concepts_path( 0 )
       }
+    when 'candidate_results'
+      ep_hash = {
+        baseUrl: my_results_path( '' ),
+        boardUrl: board_for_game_path( '' ),
+        conceptsUrl: bingo_concepts_path( '' ),
+        worksheetUrl: worksheet_for_bingo_path( '' )
+      }
     when 'installment'
       ep_hash = {
         baseUrl: edit_installment_path( assessment_id: '' ),

@@ -32,7 +32,6 @@ export default function HomeShell(props) {
   const history = useHistory( );
 
   const [working, setWorking] = useState(true);
-
   const [curTab, setCurTab] = useState( 'calendar' )
 
   const [tasks, setTasks] = useState([]);

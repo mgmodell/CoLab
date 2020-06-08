@@ -83,7 +83,7 @@ Given /^the user sees review items for all the expected candidates$/ do
     # Latest UI only shows 'Concept' when relevant/available
     # page.all(:xpath, "//input[@id='concept_4_#{candidate.id}']").count.should eq 1
     page.all(:xpath,
-             "//select[@id='feedback_4_#{candidate.id}']",
+             "//div[@id='feedback_4_#{candidate.id}']",
              visible: false).count.should eq 1
   end
 end
@@ -153,7 +153,7 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
     begin
       retries ||= 0
       elem = page.find(:xpath,
-                       "//li[text()='#{feedback.name}']" )
+                       "//li[text()=\"#{feedback.name}\"]" )
       elem.click
       
       if concept.present?
@@ -192,6 +192,11 @@ end
 When /^the user clicks the link to the candidate review$/ do
   step 'the user switches to the "Task View" tab'
   find(:xpath, "//td[contains(text(),'#{@bingo.get_name(@anon)}')]").click
+
+  wait_for_render
+  #Enable max rows
+  page.find(:xpath, "//div[@id='pagination-rows']").click
+  page.find(:xpath, "//li[text()='134']").click
 end
 
 Then /^there will be (\d+) concepts$/ do |concept_count|

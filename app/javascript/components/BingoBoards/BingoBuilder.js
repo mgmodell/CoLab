@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import BingoBoard from "./BingoBoard";
 import ConceptChips from "../ConceptChips";
 import ScoredGameDataTable from "../ScoredGameDataTable";
@@ -14,23 +14,30 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import GridList, { GridListTile } from "@material-ui/core/GridList";
 
+import {useEndpointStore} from '../infrastructure/EndPointStore';
+import { i18n } from '../infrastructure/i18n';
+import {useTranslation} from 'react-i18next';
+
 const styles = createMuiTheme({
   typography: {
     useNextVariants: true
   }
 });
-class BingoBuilder extends React.Component {
-  constructor(props) {
-    super(props);
-    var endDate = new Date(this.props.endDateStr);
-    this.state = {
-      saveStatus: "",
-      concepts: [],
-      endDate: endDate,
-      curTab: "builder",
-      candidate_list: null,
-      candidates: [],
-      board: {
+export default function BingoBuilder( props ){
+  const endpointSet = "candidate_results";
+  const [endpoints, endpointsActions] = useEndpointStore();
+  const {t, i18n} = useTranslation( );
+
+  const [working, setWorking] = useState(true);
+  const [curTab, setCurTab] = useState( 'builder' )
+
+  const [saveStatus, setSaveStatus] = useState( '' );
+
+  const [bingoGameId, setBingoGameId] = useState( props.bingoGameId );
+  const [concepts, setConcepts] = useState( [ ] );
+  const [candidateList, setCandidateList] = useState( );
+  const [candidates, setCandidates] = useState( [] );
+  const [board, setBoard] = useState({
         initialised: false,
         bingo_cells: [],
         iteration: 0,
@@ -38,32 +45,42 @@ class BingoBuilder extends React.Component {
           size: 5,
           topic: "no game"
         }
-      }
-    };
-    this.changeTab = this.changeTab.bind(this);
-    this.getWorksheet = this.getWorksheet.bind(this);
-    this.getPrintableBoard = this.getPrintableBoard.bind(this);
-  }
-  randomizeTiles() {
+  })
+
+  useEffect(() => {
+    if (endpoints.endpointStatus[endpointSet] !== "loaded") {
+      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (endpoints.endpointStatus[endpointSet] === "loaded") {
+      getConcepts( );
+      getMyResults();
+    }
+  }, [endpoints.endpointStatus[endpointSet]]);
+
+
+  const randomizeTiles = () => {
     var selectedConcepts = {};
-    var iteration = this.state.board.iteration + 1;
+    var iteration = board.iteration + 1;
     var counter = 0;
     while (
       Object.keys(selectedConcepts).length <
-        this.state.board.bingo_cells.length &&
+        board.bingo_cells.length &&
       counter < 100
     ) {
       counter++;
-      var sample = this.state.concepts[
-        Math.floor(Math.random() * this.state.concepts.length)
+      var sample = concepts[
+        Math.floor(Math.random() * concepts.length)
       ];
 
       selectedConcepts[sample.id] = sample;
     }
     //Repurpose localConcepts
     var localConcepts = Object.values(selectedConcepts);
-    var size = this.state.board.bingo_game.size;
-    var cells = this.state.board.bingo_cells;
+    var size = board.bingo_game.size;
+    var cells = board.bingo_cells;
     for (var row = 0; row < size; row++) {
       for (var col = 0; col < size; col++) {
         var i = row * 5 + col;
@@ -81,23 +98,20 @@ class BingoBuilder extends React.Component {
         cells[i].concept = concept;
       }
     }
-    var board = this.state.board;
     board.bingo_cells = cells;
     board.iteration = iteration;
     board.initialised = true;
-    this.setState({
-      board: board
-    });
+    setBoard( board );
   }
 
-  getConcepts(callbackFunc) {
-    fetch(this.props.conceptsUrl + ".json", {
+  const getConcepts = (callbackFunc) => {
+    fetch(`${endpoints[endpointSet].conceptsUrl}${bingoGameId}.json`, {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
+        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -109,22 +123,21 @@ class BingoBuilder extends React.Component {
         }
       })
       .then(data => {
-        this.setState(
-          {
-            concepts: data
-          },
-          callbackFunc
-        );
+        setConcepts( data );
       });
   }
-  getMyResults() {
-    fetch(this.props.resultsUrl + ".json", {
+  useEffect(()=>{
+    getBoard( );
+  }, [concepts]);
+
+  const getMyResults = () => {
+    fetch( `${endpoints[endpointSet].baseUrl}${bingoGameId}.json`, {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
+        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -136,21 +149,19 @@ class BingoBuilder extends React.Component {
         }
       })
       .then(data => {
-        this.setState({
-          candidate_list: data.candidate_list,
-          candidates: data.candidates
-        });
+        setCandidateList( data.candidate_list );
+        setCandidates( data.candidates );
         //}, this.randomizeTiles );
       });
   }
-  getBoard() {
-    fetch(this.props.boardUrl + ".json", {
+  const getBoard = () => {
+    fetch( `${endpoints[endpointSet].boardUrl}${bingoGameId}.json`, {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
+        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -164,31 +175,22 @@ class BingoBuilder extends React.Component {
       .then(data => {
         data.initialised = data.id != null;
         data.iteration = 0;
-        this.setState({
-          board: data
-        });
+        setBoard( data );
         //}, this.randomizeTiles );
       });
   }
 
-  changeTab(event, name) {
-    this.setState({
-      curTab: name
-    });
-  }
-
-  saveBoard() {
-    var board = this.state.board;
+  const saveBoard = () => {
     board.bingo_cells_attributes = board.bingo_cells;
     delete board.bingo_cells;
-    fetch(this.props.boardSaveUrl + ".json", {
+    fetch( `${endpoints[endpointSet].boardUrl}${bingoGameId}.json`,{
       method: "PATCH",
       credentials: "include",
-      body: JSON.stringify({ bingo_board: this.state.board }),
+      body: JSON.stringify({ bingo_board: board }),
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
+        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -203,51 +205,42 @@ class BingoBuilder extends React.Component {
         data.initialised = true;
         data.iteration = 0;
         if (data.id > 0) {
-          this.setState({
-            saveStatus: "Your board has been saved",
-            board: data
-          });
+          setSaveStatus( 'Your board has been saved' );
+          setBoard( data );
         } else if ((data.id = -42)) {
           board.bingo_cells = board.bingo_cells_attributes;
           board.id = -42;
           board.iteration = 0;
-          this.setState({
-            saveStatus: "DEMO: Your board would have been saved",
-            board: board
-          });
+          setSaveStatus( 'DEMO: Your board would have been saved' );
+          setBoard( board );
         } else {
           board.bingo_cells = board.bingo_cells_attributes;
-          this.setState({
-            saveStatus: "Save failed. Please try again or contact support",
-            board: board
-          });
+          setSaveStatus(  "Save failed. Please try again or contact support" );
+          setBoard( board );
         }
       });
   }
-  getWorksheet() {
-    open(this.props.worksheetUrl + ".pdf");
+  const getWorksheet = () => {
+    open( `${endpoints[endpointSet].worksheetUrl}${bingoGameId}.pdf`);
   }
-  getPrintableBoard() {
-    open(this.props.boardUrl + ".pdf");
+  const getPrintableBoard = () => {
+    open( `${endpoints[endpointSet].boardUrl}${bingoGameId}.pdf`);
   }
-  componentDidMount() {
-    //Let's retrieve any existing board
-    this.getConcepts(this.getBoard);
-    this.getMyResults();
-  }
-  render() {
+
     //This nested ternary operator is ugly, but it works. At some point
     // I need to figure out the right way to do it.
     const saveBtn =
-      this.state.endDate < new Date() ? (
+      null !== board.bingo_game.end_date &&
+      new Date( board.bingo_game.end_date ) < new Date() ? (
         <em>
           This game has already been played, so you cannot save a new board.
         </em>
-      ) : this.state.board.initialised &&
-        this.state.board.iteration > 0 &&
-        this.state.endDate > new Date() ? (
+      ) : board.initialised &&
+        board.iteration > 0 &&
+        null !== board.bingo_game.end_date &&
+        new Date( board.bingo_game.endDate ) > new Date() ? (
         <React.Fragment>
-          <Link onClick={() => this.saveBoard()}>Save</Link> the board you
+          <Link onClick={() => saveBoard()}>Save</Link> the board you
           generated&hellip;
         </React.Fragment>
       ) : (
@@ -255,10 +248,11 @@ class BingoBuilder extends React.Component {
       );
 
     const printBtn =
-      (this.state.board.id != null && this.state.board.iteration == 0) ||
-      this.state.endDate < new Date() ? (
+      (board.id != null && board.iteration == 0) ||
+      ( null !== board.bingo_game.end_date &&
+        new Date( board.bingo_game.end_date ) < new Date() ) ? (
         <React.Fragment>
-          <Link onClick={() => this.getPrintableBoard()}>
+          <Link onClick={() => getPrintableBoard()}>
             Download your Bingo Board
           </Link>{" "}
           and play along in class!
@@ -267,10 +261,10 @@ class BingoBuilder extends React.Component {
         "Save your board before this step"
       );
 
-    const workSheetInstr = this.state.board.practicable ? (
+    const workSheetInstr = board.practicable ? (
       <li>
         Print and complete this&nbsp;
-        <Link onClick={() => this.getWorksheet()}>
+        <Link onClick={() => getWorksheet()}>
           Practice Bingo Board
         </Link>{" "}
         then turn it in before class begins.
@@ -282,10 +276,10 @@ class BingoBuilder extends React.Component {
       </li>
     );
 
-    const playableInstr = this.state.board.playable ? (
+    const playableInstr = board.playable ? (
       <React.Fragment>
         <li>
-          <Link onClick={() => this.randomizeTiles()}>
+          <Link onClick={() => randomizeTiles()}>
             (Re)Generate your playable board
           </Link>{" "}
           until you get one you like and then&hellip;
@@ -300,9 +294,9 @@ class BingoBuilder extends React.Component {
       </li>
     );
 
-    const builder = this.state.board.playable ? (
+    const builder = board.playable ? (
       <div id="bingoBoard" className="mt4">
-        <BingoBoard board={this.state.board} />
+        <BingoBoard board={board} />
       </div>
     ) : null;
 
@@ -310,49 +304,49 @@ class BingoBuilder extends React.Component {
       <MuiThemeProvider theme={styles}>
         <Paper>
           <Typography>
-            <strong>Topic:</strong> {this.state.board.bingo_game.topic}
+            <strong>Topic:</strong> {board.bingo_game.topic}
           </Typography>
           <div>
             <strong>Description:</strong>{" "}
             <p
               dangerouslySetInnerHTML={{
-                __html: this.state.board.bingo_game.description
+                __html: board.bingo_game.description
               }}
             />
           </div>
-          {null != this.state.candidate_list && (
+          {null != candidate_list && (
             <Typography>
               <strong>Performance:</strong>
-              {this.state.candidate_list.cached_performance}
+              {candidateList.cached_performance}
             </Typography>
           )}
           <hr />
-          <Tabs value={this.state.curTab} onChange={this.changeTab} centered>
+          <Tabs value={curTab} onChange={(event,value)=>setCurTab(value)} centered>
             <Tab value="builder" label="Bingo game builder" />
             <Tab value="results" label="Your performance" />
             <Tab
               value="worksheet"
               label="Worksheet result"
               disabled={
-                !this.state.board.practicable ||
-                null == this.state.board.worksheet ||
-                (null == this.state.board.worksheet.performance &&
-                  null == this.state.board.worksheet.result_img)
+                !board.practicable ||
+                null == board.worksheet ||
+                (null == board.worksheet.performance &&
+                  null == board.worksheet.result_img)
               }
             />
             <Tab value="concepts" label="Concepts found by class" />
           </Tabs>
-          {"worksheet" == this.state.curTab && (
+          {"worksheet" == curTab && (
             <Paper square={false}>
               <Typography>
                 <strong>Score:</strong>&nbsp;
-                {this.state.board.worksheet.performance}
+                {board.worksheet.performance}
                 <br />
               </Typography>
-              <img src={this.state.board.worksheet.result_img} />
+              <img src={board.worksheet.result_img} />
             </Paper>
           )}
-          {"builder" == this.state.curTab && (
+          {"builder" == curTab && (
             <Paper square={false}>
               <br />
               <ol>
@@ -362,24 +356,18 @@ class BingoBuilder extends React.Component {
               {builder}
             </Paper>
           )}
-          {"results" == this.state.curTab && (
-            <ScoredGameDataTable candidates={this.state.candidates} />
+          {"results" == curTab && (
+            <ScoredGameDataTable candidates={candidates} />
           )}
-          {"concepts" == this.state.curTab && (
-            <ConceptChips concepts={this.state.concepts} />
+          {"concepts" == curTab && (
+            <ConceptChips concepts={concepts} />
           )}
         </Paper>
       </MuiThemeProvider>
     );
-  }
 }
 BingoBuilder.propTypes = {
-  endDateStr: PropTypes.string.isRequired,
   token: PropTypes.string.isRequired,
-  resultsUrl: PropTypes.string.isRequired,
-  boardUrl: PropTypes.string.isRequired,
-  conceptsUrl: PropTypes.string.isRequired,
-  worksheetUrl: PropTypes.string.isRequired,
-  boardSaveUrl: PropTypes.string.isRequired
+  getEndpointsUrl: PropTypes.string.isRequired,
+  bingoGameId: PropTypes.number.isRequired
 };
-export default withTheme(BingoBuilder);
