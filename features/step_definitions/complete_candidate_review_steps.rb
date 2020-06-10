@@ -90,12 +90,13 @@ end
 
 Then /^the user waits while seeing "([^"]*)"$/ do |wait_msg|
   wait_for_render
-  # counter = 0
-  # while page.has_text? wait_msg
-  #   sleep 1
-  #   counter += 1
-  #   break if counter > 60
-  # end
+
+  counter = 0
+  while page.has_text? wait_msg
+    sleep 1
+    counter += 1
+    break if counter > 60
+  end
 end
 
 Given /^the user lowercases "([^"]*)" concepts$/ do |which_concepts|
@@ -125,6 +126,7 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
   end
 
   feedbacks = CandidateFeedback.unscoped.where('name_en like ?', feedback_type + '%')
+  error_msg = ''
   @feedback_list = {}
   @bingo.candidates.completed.each do |candidate|
     feedback = feedbacks.sample
@@ -136,35 +138,57 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       concept = concepts.rotate!(1).first
       @feedback_list[candidate.id][:concept] = concept.split.map(&:capitalize).*' '
     end
-    
+
     begin
       retries ||= 0
-
       elem = page.find(:xpath,
-                       "//div[@id='feedback_4_#{candidate.id}']" )
+                         "//div[@id='feedback_4_#{candidate.id}']" )
+      elem.scroll_to( elem )
       elem.click
-    rescue Capybara::ElementNotFound => e
-      (retries += 1).should be < 3,  'Too many retries'
-      retry
-      
+    rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+      elem.send_keys :escape
+      (retries += 1).should be < 20,  'Too many retries'
+      retry unless retries > 5
     end
 
     begin
-      retries ||= 0
       elem = page.find(:xpath,
-                       "//li[text()=\"#{feedback.name}\"]" )
-      elem.click
+                       '//li[text()="' + feedback.name + '"]' )
+      elem.scroll_to( elem )
+      elem.send_keys :enter
       
       if concept.present?
         elem = page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
         byebug if elem.nil?
+        elem.scroll_to( elem )
         elem.set(concept)
       end
-    rescue Capybara::ElementNotFound => e
-      (retries += 1).should be < 3,  'Too many retries'
-      retry
+
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+      elem = page.find(:xpath,
+                       '//li[text()="' + feedback.name + '"]' )
+      elem.scroll_to( elem )
+      elem.click
+
+      error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries > 0
+      error_msg += e.message
+      error_msg += "\t\t#{candidate.inspect}" unless retries > 0
+      # elem.send_keys :escape
+
+      # byebug unless retries < 19
+      (retries += 1).should be < 20,  'Too many retries'
+      retry unless retries > 5
       
+    rescue Capybara::ElementNotFound => e
+      error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries > 0
+      error_msg += e.message
+      error_msg += "\t\t#{candidate.inspect}" unless retries > 0
+      elem.send_keys :enter
+      byebug
+
     end
+
+    puts error_msg
       
 
   end
@@ -172,14 +196,20 @@ end
 
 Given /^the saved reviews match the list$/ do
   @feedback_list.each do |key, value|
-    Candidate.find(key).candidate_feedback_id.should eq value[:feedback][:id]
+    puts "key: #{ key }"
+    puts "FB_ID: #{Candidate.find( key ).inspect}"
+    puts "value: #{value[:feedback][:id]}"
+    byebug unless Candidate.find(key).candidate_feedback_id == value[:feedback][:id]
+    # Candidate.find(key).candidate_feedback_id.should eq value[:feedback][:id]
     if value[:concept].present?
+      puts "\tcd: #{Candidate.find(key).concept.name} == #{ value[:concept] }"
       Candidate.find(key).concept.name.should eq value[:concept]
     end
   end
 end
 
 Given /^the user checks "([^"]*)"$/ do |checkbox_name|
+  byebug
   find(:xpath, "//*[text()='#{checkbox_name}']").click
 end
 

@@ -313,6 +313,7 @@ export default function CandidatesReviewTable( props ){
         }
       })
       .then(data => {
+        console.log( data );
         setDirty( typeof data.success !== "undefined" )
         setWorking( false );
         setReviewStatus( data.notice );
