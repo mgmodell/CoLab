@@ -117,7 +117,7 @@ export default function UserCourseList(props) {
         columns={consentColumns}
         data={props.consentFormList}
         options={{
-          responsive: "scrollMaxHeight",
+          responsive: "standard",
           filterType: "checkbox",
           selectableRows: "none",
           print: false,

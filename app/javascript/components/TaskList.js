@@ -169,7 +169,7 @@ export default function TaskList(props) {
       data={props.tasks}
       columns={columns}
       options={{
-        responsive: "scrollMaxHeight",
+        responsive: "standard",
         filterType: "checkbox",
         print: false,
         download: false,

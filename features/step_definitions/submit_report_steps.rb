@@ -43,7 +43,7 @@ Then /^the user should see an error indicating that the installment request expi
 end
 
 When /^user clicks the link to the project$/ do
-  find(:xpath, "//td[contains(text(),'#{@project.group_for_user(@user).name}')]").click
+  find(:xpath, "//td[contains(.,'#{@project.group_for_user(@user).name}')]").click
 end
 
 Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points, distribution|
@@ -245,7 +245,7 @@ Then 'the installment will successfully save' do
   # Using aria-labl instead of title because of some strange JavaScript
   # error.
   waits = 0
-  unless !all(:xpath, "//div[contains(text(),'success')]").empty? || waits > 3
+  unless !all(:xpath, "//div[contains(.,'success')]").empty? || waits > 3
 
     sleep(0.3)
     waits += 1

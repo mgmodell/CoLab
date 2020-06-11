@@ -113,7 +113,7 @@ export default function ConsentFormList(props) {
       data={consent_forms}
       columns={columns}
       options={{
-        responsive: "scrollMaxHeight",
+        responsive: "standard",
         filter: false,
         print: false,
         download: false,

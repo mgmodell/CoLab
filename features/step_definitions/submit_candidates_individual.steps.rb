@@ -24,7 +24,7 @@ end
 
 When /^the user clicks the link to the candidate list$/ do
   step 'the user switches to the "Task View" tab'
-  find(:xpath, "//td[contains(text(),'#{@bingo.get_name(@anon)}')]").click
+  find(:xpath, "//td[contains(.,'#{@bingo.get_name(@anon)}')]").click
   # click_link_or_button @bingo.get_name(@anon)
 end
 

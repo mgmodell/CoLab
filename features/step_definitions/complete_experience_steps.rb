@@ -4,7 +4,7 @@ require 'forgery'
 
 Then /^the user clicks the link to the experience$/ do
   step 'the user switches to the "Task View" tab'
-  find(:xpath, "//td[contains(text(),'#{@experience.name}')]").click
+  find(:xpath, "//td[contains(.,'#{@experience.name}')]").click
   # click_link_or_button @experience.name
 end
 

@@ -594,7 +594,7 @@ export default function CourseDataAdmin(props) {
         columns={activityColumns}
         data={courseActivities}
         options={{
-          responsive: "scrollMaxHeight",
+          responsive: "standard",
           filterType: "checkbox",
           print: false,
           download: false,

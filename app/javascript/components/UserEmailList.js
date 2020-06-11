@@ -168,7 +168,7 @@ export default function UserEmailList(props) {
         columns={emailColumns}
         data={props.emailList}
         options={{
-          responsive: "scrollMaxHeight",
+          responsive: "standard",
           filter: false,
           selectableRows: "none",
           print: false,

@@ -88,7 +88,7 @@ export default function UserCourseList(props) {
         columns={activityColumns}
         data={props.activitiesList}
         options={{
-          responsive: "scrollMaxHeight",
+          responsive: "standard",
           filterType: "checkbox",
           selectableRows: "none",
           print: false,

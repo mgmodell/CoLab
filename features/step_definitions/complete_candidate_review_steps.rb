@@ -188,7 +188,6 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
 
     end
 
-    puts error_msg
       
 
   end
@@ -199,7 +198,7 @@ Given /^the saved reviews match the list$/ do
     puts "key: #{ key }"
     puts "FB_ID: #{Candidate.find( key ).inspect}"
     puts "value: #{value[:feedback][:id]}"
-    byebug unless Candidate.find(key).candidate_feedback_id == value[:feedback][:id]
+    # byebug unless Candidate.find(key).candidate_feedback_id == value[:feedback][:id]
     # Candidate.find(key).candidate_feedback_id.should eq value[:feedback][:id]
     if value[:concept].present?
       puts "\tcd: #{Candidate.find(key).concept.name} == #{ value[:concept] }"
@@ -209,7 +208,6 @@ Given /^the saved reviews match the list$/ do
 end
 
 Given /^the user checks "([^"]*)"$/ do |checkbox_name|
-  byebug
   find(:xpath, "//*[text()='#{checkbox_name}']").click
 end
 
@@ -219,7 +217,7 @@ end
 
 When /^the user clicks the link to the candidate review$/ do
   step 'the user switches to the "Task View" tab'
-  find(:xpath, "//td[contains(text(),'#{@bingo.get_name(@anon)}')]").click
+  find(:xpath, "//td[contains(.,'#{@bingo.get_name(@anon)}')]").click
 
   wait_for_render
   #Enable max rows

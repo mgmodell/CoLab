@@ -166,7 +166,7 @@ export default function ReactionsList(props) {
             columns={reactionColumns}
             data={props.reactionsList}
             options={{
-              responsive: "scrollMaxHeight",
+              responsive: "standard",
               filterType: "checkbox",
               selectableRows: "none",
               print: false,

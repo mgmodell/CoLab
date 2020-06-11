@@ -6,7 +6,7 @@ end
 
 Then /^the user clicks the link to the concept list$/ do
   step 'the user switches to the "Task View" tab'
-  find(:xpath, "//td[contains(text(),'#{@bingo.get_name(@anon)}')]").click
+  find(:xpath, "//td[contains(.,'#{@bingo.get_name(@anon)}')]").click
 
   current_path = page.current_path
 

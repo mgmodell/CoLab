@@ -156,7 +156,7 @@ export default function DecisionInvitationsTable(props){
       data={props.invitations}
       columns={columns}
       options={{
-        responsive: 'scrollMaxHeight',
+        responsive: 'standard',
         filter: false,
         print: false,
         download: false,

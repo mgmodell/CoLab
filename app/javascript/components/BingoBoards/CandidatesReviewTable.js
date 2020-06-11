@@ -393,7 +393,7 @@ export default function CandidatesReviewTable( props ){
             data={candidates}
             columns={columns}
             options={{
-              responsive: 'scrollMaxHeight',
+              responsive: 'standard',
               filter: false,
               print: false,
               download: false,

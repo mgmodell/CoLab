@@ -140,7 +140,7 @@ export default function SchoolList(props) {
       data={schools}
       columns={columns}
       options={{
-        responsive: "scrollMaxHeight",
+        responsive: "standard",
         filter: false,
         print: false,
         download: false,

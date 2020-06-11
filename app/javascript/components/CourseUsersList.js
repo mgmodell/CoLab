@@ -457,7 +457,7 @@ export default function CourseUsersList(props) {
           return "instructor" === props.userType ? !checkType : checkType;
         })}
         options={{
-          responsive: "scrollMaxHeight",
+          responsive: "standard",
           filterType: "checkbox",
           selectableRows: "none",
           print: false,

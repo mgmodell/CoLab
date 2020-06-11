@@ -45,7 +45,7 @@
     "jspdf": "^1.3.5",
     "lodash": "^4.17.11",
     "luxon": "^1.21.3",
-    "mui-datatables": "^2.14.0",
+    "mui-datatables": "^3.0.0",
     "postcss-cssnext": "^3.1.0",
     "promise-polyfill": "^8.1.3",
     "prop-types": "^15.6.1",

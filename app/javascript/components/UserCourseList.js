@@ -113,7 +113,7 @@ export default function UserCourseList(props) {
         columns={courseColumns}
         data={props.coursesList}
         options={{
-          responsive: "scrollMaxHeight",
+          responsive: "standard",
           filterType: "checkbox",
           selectableRows: "none",
           print: false,
