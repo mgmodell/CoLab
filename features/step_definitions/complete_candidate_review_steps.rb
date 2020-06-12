@@ -195,13 +195,7 @@ end
 
 Given /^the saved reviews match the list$/ do
   @feedback_list.each do |key, value|
-    puts "key: #{ key }"
-    puts "FB_ID: #{Candidate.find( key ).inspect}"
-    puts "value: #{value[:feedback][:id]}"
-    # byebug unless Candidate.find(key).candidate_feedback_id == value[:feedback][:id]
-    # Candidate.find(key).candidate_feedback_id.should eq value[:feedback][:id]
     if value[:concept].present?
-      puts "\tcd: #{Candidate.find(key).concept.name} == #{ value[:concept] }"
       Candidate.find(key).concept.name.should eq value[:concept]
     end
   end

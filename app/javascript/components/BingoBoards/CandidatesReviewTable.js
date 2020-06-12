@@ -183,8 +183,9 @@ export default function CandidatesReviewTable( props ){
     const fb_id = item.candidate_feedback_id;
     if (fb_id != null) {
       item.completed = 100;
+      const fb = getById( feedbackOptions, fb_id );
       if (
-        "term_problem" != feedbackOptions[fb_id].critique &&
+        "term_problem" != fb.critique &&
         item.concept.name.length < 1
       ) {
         item.completed = 50;
@@ -313,7 +314,6 @@ export default function CandidatesReviewTable( props ){
         }
       })
       .then(data => {
-        console.log( data );
         setDirty( typeof data.success !== "undefined" )
         setWorking( false );
         setReviewStatus( data.notice );
@@ -333,6 +333,7 @@ export default function CandidatesReviewTable( props ){
   const feedbackSet = (id, value ) => {
     const candidates_temp = [...candidates];
     const candidate = getById( candidates_temp, id);
+    const fb = getById( feedbackOptions, value )
     candidate.candidate_feedback_id = value;
 
     setCompleted( candidate );
