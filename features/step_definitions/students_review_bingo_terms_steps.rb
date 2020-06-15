@@ -5,28 +5,36 @@ Given /^the user is any student in the course$/ do
 end
 
 Then /^the user clicks the link to the concept list$/ do
+  wait_for_render
   step 'the user switches to the "Task View" tab'
+  #I shouldn't need this, but it seems that I do
+  step 'the user switches to the "Task View" tab'
+
   find(:xpath, "//td[contains(.,'#{@bingo.get_name(@anon)}')]").click
 
-  current_path = page.current_path
+  wait_for_render
+  # current_path = page.current_path
 
-  page.should have_content 'Terms list for review'
-  x = page.find(:xpath, "//div[@data-react-class='BingoBuilder']")
+  # page.should have_content 'Terms list for review'
+  # x = page.find(:xpath, "//div[@data-react-class='BingoBuilder']")
 
-  props_string = x['data-react-props']
+  # props_string = x['data-react-props']
+  elem = page.find(:xpath, "//button[contains(.,'Concepts found by class')]")
+  elem.click
 
-  props = JSON.parse(HTMLEntities.new.decode(x['data-react-props']))
+  # props = JSON.parse(HTMLEntities.new.decode(x['data-react-props']))
 
-  url = "#{bingo_concepts_path(@bingo.id)}.json"
-  visit url
+  # url = "#{bingo_concepts_path(@bingo.id)}.json"
+  # visit url
 
-  @concepts = JSON.parse(page.text)
+  chips = all(:xpath, "//div[contains(@id,'concept_')]")
+  @concepts = chips.collect{ |chip| { id: chip[:id], name: chip.text} }
 
-  visit current_path
+  # visit current_path
 end
 
 Then /^the concept list should match the list$/ do
-  concept_names = @concepts.collect { |concept| concept['name'] }
+  concept_names = @concepts.collect { |concept| concept[:name] }
 
   @bingo.concepts.where('concepts.id > 0').uniq.each do |concept|
     concept_names.include?(concept.name).should be true

@@ -196,7 +196,7 @@ export default function InstallmentReport(props) {
               values.push({
                 userId: value.user_id,
                 factorId: value.factor_id,
-                name: group["users"][value.user_id].name,
+                name: group["users"][value.user_id].name || '',
                 value: value.value
               });
               valuesAccum[value.factor_id] = values.sort(userCompare);
@@ -290,7 +290,7 @@ export default function InstallmentReport(props) {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <TextField
-              value={installment.comments}
+              value={installment.comments || ''}
               name="Comments"
               id="Comments"
               placeholder={"Enter your comments"}

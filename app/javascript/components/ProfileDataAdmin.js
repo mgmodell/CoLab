@@ -364,7 +364,7 @@ export default function ProfileDataAdmin(props) {
     <Paper>
       {working ? <LinearProgress id='waiting' /> : null}
       <ExpansionPanel expanded>
-        <ExpansionPanelSummary >
+        <ExpansionPanelSummary id='profile' >
           Edit your profile
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
@@ -399,6 +399,7 @@ export default function ProfileDataAdmin(props) {
       <ExpansionPanel expanded={'email' === curPanel} onChange={()=>handlePanelClick('email')}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
+          id='email'
         >
           Email Settings
         </ExpansionPanelSummary>
@@ -431,6 +432,7 @@ export default function ProfileDataAdmin(props) {
       <ExpansionPanel expanded={'display' === curPanel} onChange={()=>handlePanelClick('display')}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
+          id='display'
         >
           Display Settings
         </ExpansionPanelSummary>
@@ -526,6 +528,7 @@ export default function ProfileDataAdmin(props) {
       <ExpansionPanel expanded={'demographics' === curPanel} onChange={()=>handlePanelClick('demographics')}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
+          id='demographics'
         >
           Tell us about yourself, {profileFirstName} (optional)
         </ExpansionPanelSummary>

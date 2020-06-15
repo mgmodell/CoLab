@@ -70,11 +70,14 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
 end
 
 Then /^the user switches to the "([^"]*)" tab$/ do |tab|
+  #TODO - this iteration should not be required, but I think it's an artifact of JQueryMobile
+  2.times do
     begin
       click_link tab
     rescue Capybara::ElementNotFound => e
       find(:xpath, "//button/span[text()='#{tab}']").click
     end
+  end
 end
 
 Then 'the user enables the {string} table view option' do |view_option|
@@ -117,7 +120,7 @@ end
 
 Then /^the user selects "([^"]*)" as "([^"]*)"$/ do |value, field|
   id = find(:xpath,
-            "//label[contains(.,'#{field}')]")[:for]
+            "//label[contains(text(),'#{field}')]")[:for]
   begin
     retries ||= 0
     selectCtrl = find_all(:xpath, "//select[@id='#{id}']")
@@ -127,7 +130,7 @@ Then /^the user selects "([^"]*)" as "([^"]*)"$/ do |value, field|
 
   if selectCtrl.empty?
     find(:xpath, "//div[@id='#{id}']", visible: :all).click
-    find(:xpath, "//li[contains(.,'#{value}')]").click
+    find(:xpath, "//li[contains(text(),'#{value}')]").click
     sleep(0.3)
   else
     selectCtrl[0].select(value)

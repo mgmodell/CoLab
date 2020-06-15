@@ -64,9 +64,12 @@ class BingoGamesController < ApplicationController
       )
                                      .includes(:current_candidate_list)
 
-      candidate_list = candidate_lists.first.archived ?
-        candidate_lists.first.current_candidate_list :
-        candidate_lists.first
+      #temporary storage for optimization
+      cl = candidate_lists.first
+
+      candidate_list = cl.archived ?
+        cl.current_candidate_list :
+        cl
 
       candidates = Candidate.completed.where(candidate_list: candidate_list)
                             .includes(%i[concept candidate_feedback])
@@ -83,7 +86,14 @@ class BingoGamesController < ApplicationController
     end
 
     render json: {
-      candidate_list: candidate_list,
+      candidate_list: {
+        id: candidate_list.id,
+        is_group: candidate_list.is_group,
+        performance: candidate_list.performance,
+        bingo_game_id: candidate_list.bingo_game_id,
+        group_id: candidate_list.group_id,
+        user_id: candidate_list.user_id
+      },
       candidates: candidates
     }
   end

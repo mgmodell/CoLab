@@ -9,7 +9,7 @@ export default function ConceptChips(props) {
   return (
       <Paper>
         {props.concepts.map(chip => {
-          return <Chip key={chip.id} label={chip.name} />;
+          return <Chip key={chip.id} id={`concept_${chip.id}`} label={chip.name} />;
         })}
       </Paper>
   );

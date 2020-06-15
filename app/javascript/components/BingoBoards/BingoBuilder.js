@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import BingoBoard from "./BingoBoard";
 import ConceptChips from "../ConceptChips";
 import ScoredGameDataTable from "../ScoredGameDataTable";
@@ -13,6 +13,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import GridList, { GridListTile } from "@material-ui/core/GridList";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import {useEndpointStore} from '../infrastructure/EndPointStore';
 import { i18n } from '../infrastructure/i18n';
@@ -24,7 +25,7 @@ const styles = createMuiTheme({
   }
 });
 export default function BingoBuilder( props ){
-  const endpointSet = "candidate_results";
+  const endpointSet = 'candidate_results';
   const [endpoints, endpointsActions] = useEndpointStore();
   const {t, i18n} = useTranslation( );
 
@@ -33,7 +34,8 @@ export default function BingoBuilder( props ){
 
   const [saveStatus, setSaveStatus] = useState( '' );
 
-  const [bingoGameId, setBingoGameId] = useState( props.bingoGameId );
+  const bingoGameId = props.bingoGameId;
+  //const [bingoGameId, setBingoGameId] = useState( props.bingoGameId );
   const [concepts, setConcepts] = useState( [ ] );
   const [candidateList, setCandidateList] = useState( );
   const [candidates, setCandidates] = useState( [] );
@@ -48,15 +50,17 @@ export default function BingoBuilder( props ){
   })
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] !== "loaded") {
+    if (endpoints.endpointStatus[endpointSet] != "loaded") {
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
   }, []);
 
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] === "loaded") {
+  useEffect(() =>{
+    if( 'loaded' === endpoints.endpointStatus[endpointSet] ){
+      console.log( endpoints.endpoints[endpointSet])
       getConcepts( );
       getMyResults();
+      getBoard( );
     }
   }, [endpoints.endpointStatus[endpointSet]]);
 
@@ -104,8 +108,10 @@ export default function BingoBuilder( props ){
     setBoard( board );
   }
 
-  const getConcepts = (callbackFunc) => {
-    fetch(`${endpoints[endpointSet].conceptsUrl}${bingoGameId}.json`, {
+  const getConcepts = () => {
+    setWorking( true );
+    console.log( 'concepts')
+    fetch( `${endpoints.endpoints[endpointSet].conceptsUrl}${bingoGameId}.json`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -124,14 +130,13 @@ export default function BingoBuilder( props ){
       })
       .then(data => {
         setConcepts( data );
+        setWorking( false );
       });
   }
-  useEffect(()=>{
-    getBoard( );
-  }, [concepts]);
 
   const getMyResults = () => {
-    fetch( `${endpoints[endpointSet].baseUrl}${bingoGameId}.json`, {
+    setWorking( true );
+    fetch( `${endpoints.endpoints[endpointSet].baseUrl}${bingoGameId}.json`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -149,13 +154,16 @@ export default function BingoBuilder( props ){
         }
       })
       .then(data => {
+        console.log( data );
         setCandidateList( data.candidate_list );
         setCandidates( data.candidates );
         //}, this.randomizeTiles );
+        setWorking( false );
       });
   }
   const getBoard = () => {
-    fetch( `${endpoints[endpointSet].boardUrl}${bingoGameId}.json`, {
+    setWorking( true );
+    fetch( `${endpoints.endpoints[endpointSet].boardUrl}${bingoGameId}.json`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -177,13 +185,14 @@ export default function BingoBuilder( props ){
         data.iteration = 0;
         setBoard( data );
         //}, this.randomizeTiles );
+        setWorking( false );
       });
   }
 
   const saveBoard = () => {
     board.bingo_cells_attributes = board.bingo_cells;
     delete board.bingo_cells;
-    fetch( `${endpoints[endpointSet].boardUrl}${bingoGameId}.json`,{
+    fetch( `${endpoints.endpoints[endpointSet].boardUrl}${bingoGameId}.json`,{
       method: "PATCH",
       credentials: "include",
       body: JSON.stringify({ bingo_board: board }),
@@ -221,10 +230,10 @@ export default function BingoBuilder( props ){
       });
   }
   const getWorksheet = () => {
-    open( `${endpoints[endpointSet].worksheetUrl}${bingoGameId}.pdf`);
+    open( `${endpoints.endpoints[endpointSet].worksheetUrl}${bingoGameId}.pdf`);
   }
   const getPrintableBoard = () => {
-    open( `${endpoints[endpointSet].boardUrl}${bingoGameId}.pdf`);
+    open( `${endpoints.endpoints[endpointSet].boardUrl}${bingoGameId}.pdf`);
   }
 
     //This nested ternary operator is ugly, but it works. At some point
@@ -303,6 +312,7 @@ export default function BingoBuilder( props ){
     return (
       <MuiThemeProvider theme={styles}>
         <Paper>
+        {working ? <LinearProgress /> : null}
           <Typography>
             <strong>Topic:</strong> {board.bingo_game.topic}
           </Typography>
@@ -314,10 +324,10 @@ export default function BingoBuilder( props ){
               }}
             />
           </div>
-          {null != candidate_list && (
+          {null != candidateList && (
             <Typography>
               <strong>Performance:</strong>
-              {candidateList.cached_performance}
+              {candidateList.performance}
             </Typography>
           )}
           <hr />

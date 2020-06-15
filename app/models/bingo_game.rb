@@ -89,7 +89,7 @@ class BingoGame < ApplicationRecord
                "/enter_candidates/#{self.id}"
              elsif reviewed
                # helpers.candidate_list_path(candidate_list)
-               "/candidate_results/#{candidate_list.id}"
+               "/candidate_results/#{self.id}"
              end
           end
 

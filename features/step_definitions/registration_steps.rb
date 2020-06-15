@@ -45,7 +45,7 @@ end
 When /^the user "(.*?)" fill in demographics data$/ do |does_or_does_not|
   give_demographics = does_or_does_not == 'does'
   if give_demographics
-    find( :xpath, "//div[contains(.,'Tell us about yourself')]").click
+    find( :xpath, "//div[@id='demographics']").click
 
     demographics = [
         {label: 'What is your gender?', value: 'Male'},

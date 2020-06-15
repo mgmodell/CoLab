@@ -23,8 +23,14 @@ Given /^the Bingo! game individual count is (\d+)$/ do |individual_count|
 end
 
 When /^the user clicks the link to the candidate list$/ do
+  wait_for_render
   step 'the user switches to the "Task View" tab'
-  find(:xpath, "//td[contains(.,'#{@bingo.get_name(@anon)}')]").click
+  #begin
+    find(:xpath, "//td[contains(.,'#{@bingo.get_name(@anon)}')]").click
+  #rescue Capybara::Ambiguous => e
+  #  puts e.message
+    
+  #end
   # click_link_or_button @bingo.get_name(@anon)
 end
 
@@ -69,7 +75,7 @@ When /^the user populates (\d+) of the "([^"]*)" entries$/ do |count, field|
   count.to_i.times do |index|
     @entries_list[index] = {} if @entries_list[index].nil?
     @entries_list[index][field] = field == 'term' ?
-                        Forgery::Name.industry :
+                        "#{Forgery::Name.industry}_#{index}" :
                         Forgery::Basic.text
     page.fill_in("#{field}_#{index}",
                  with: @entries_list[index][field])

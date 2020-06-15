@@ -148,10 +148,10 @@ class HomeController < ApplicationController
       }
     when 'candidate_results'
       ep_hash = {
-        baseUrl: my_results_path( '' ),
-        boardUrl: board_for_game_path( '' ),
-        conceptsUrl: bingo_concepts_path( '' ),
-        worksheetUrl: worksheet_for_bingo_path( '' )
+        baseUrl: my_results_path( id: '' ),
+        boardUrl: board_for_game_path( bingo_game_id: '' ),
+        conceptsUrl: bingo_concepts_path( id: '' ),
+        worksheetUrl: worksheet_for_bingo_path( bingo_game_id: '' )
       }
     when 'installment'
       ep_hash = {
@@ -167,7 +167,7 @@ class HomeController < ApplicationController
     # Provide the endpoints
     respond_to do |format|
       format.json do
-        render json: ep_hash
+        render json: ep_hash.as_json
       end
     end
   end
