@@ -34,6 +34,7 @@ import {
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 import { useUserStore } from "./infrastructure/UserStore";
+import { useStatusStore } from './infrastructure/StatusStore';
 import CourseUsersList from "./CourseUsersList";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
@@ -50,13 +51,15 @@ export default function CourseDataAdmin(props) {
   const endpointSet = "course";
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
+  const [status, statusActions] = useStatusStore( );
 
   const history = useHistory( );
   const {path, url} = useRouteMatch( );
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
-  const [working, setWorking] = useState(true);
+  statusActions.setWorking( true );
+
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
   const [courseId, setCourseId] = useState(props.courseId);
@@ -151,13 +154,13 @@ export default function CourseDataAdmin(props) {
         setCourseConsentFormId(course.consent_form_id || 0);
         setCourseSchoolId(course.school_id || 0);
 
-        setWorking(false);
+        statusActions.setWorking( false );
         setDirty(false);
       });
   };
   const saveCourse = () => {
     const method = null == courseId ? "POST" : "PATCH";
-    setWorking(true);
+    statusActions.setWorking( true );
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -217,7 +220,7 @@ export default function CourseDataAdmin(props) {
           );
           setCourseEndDate(receivedDate);
 
-          setWorking(false);
+          statusActions.setWorking( false );
           setDirty(false);
         }
         postNewMessage(data.messages);
@@ -532,7 +535,7 @@ export default function CourseDataAdmin(props) {
                     .then(data => {
                       getCourse();
                       setMessages(data.messages);
-                      setWorking(false);
+                      statusActions.setWorking( false );
                     });
                 }}
               >
@@ -665,8 +668,6 @@ export default function CourseDataAdmin(props) {
           usersList={courseUsersList}
           usersListUpdateFunc={setCourseUsersList}
           userType="instructor"
-          working={working}
-          setWorking={setWorking}
           addMessagesFunc={postNewMessage}
         />
       ) : null}
@@ -680,8 +681,6 @@ export default function CourseDataAdmin(props) {
           usersList={courseUsersList}
           usersListUpdateFunc={setCourseUsersList}
           userType="student"
-          working={working}
-          setWorking={setWorking}
           addMessagesFunc={postNewMessage}
         />
       ) : null}

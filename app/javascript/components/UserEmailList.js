@@ -21,16 +21,20 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import Link from "@material-ui/core/Link";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
+import { useStatusStore } from './infrastructure/StatusStore';
 
 export default function UserEmailList(props) {
   const [addUsersPath, setAddUsersPath] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newEmail, setNewEmail] = useState("");
 
+  const [status, statusActions] = useStatusStore( );
+
   const refreshFunc = newMessages => {
     //getUsers();
+    statusActions.addMessage( )
     props.addMessagesFunc(newMessages);
-    props.setWorking(false);
+    statusActions.setWorking(false);
   };
 
   const emailColumns = [
@@ -66,7 +70,7 @@ export default function UserEmailList(props) {
                     aria-label={lbl}
                     onClick={event => {
                       const url = props.primaryEmailUrl + value + '.json'
-                      props.setWorking( true )
+                      statusActions.setWorking( true )
                       fetch(url, {
                         method: "GET",
                         credentials: "include",
@@ -86,7 +90,7 @@ export default function UserEmailList(props) {
                         .then(data => {
                           props.emailListUpdateFunc( data.emails )
                           props.addMessagesFunc(data.messages);
-                          props.setWorking(false);
+                          statusActions.setWorking(false);
                         });
                     }}
                   >
@@ -123,7 +127,7 @@ export default function UserEmailList(props) {
                     aria-label={lbl2}
                     onClick={event => {
                       const url = props.removeEmailUrl + value + '.json'
-                      props.setWorking( true )
+                      statusActions.setWorking( true )
                       fetch(url, {
                         method: "GET",
                         credentials: "include",
@@ -143,7 +147,7 @@ export default function UserEmailList(props) {
                         .then(data => {
                           props.emailListUpdateFunc( data.emails )
                           props.addMessagesFunc(data.messages);
-                          props.setWorking(false);
+                          statusActions.setWorking(false);
                         });
                     }}
                   >
@@ -209,7 +213,7 @@ export default function UserEmailList(props) {
                     </Button>
                     <Button
                       onClick={() => {
-                        props.setWorking(true);
+                        statusActions.setWorking(true);
                         fetch(props.addEmailUrl + '.json', {
                           method: "PUT",
                           credentials: "include",
@@ -233,7 +237,7 @@ export default function UserEmailList(props) {
                             //getUsers();
                             props.emailListUpdateFunc(data.emails)
                             props.addMessagesFunc(data.messages);
-                            props.setWorking(false);
+                            statusActions.setWorking(false);
                           });
                         closeDialog();
                       }}
@@ -263,7 +267,7 @@ export default function UserEmailList(props) {
 
   return (
     <Paper>
-      {props.working ? <LinearProgress id='waiting' /> : null}
+      {status.working ? <LinearProgress id='waiting' /> : null}
       {null != props.emailList ? (
         <React.Fragment>
           {emailList}
@@ -284,8 +288,4 @@ UserEmailList.propTypes = {
   addEmailUrl: PropTypes.string.isRequired,
   removeEmailUrl: PropTypes.string.isRequired,
   primaryEmailUrl: PropTypes.string.isRequired,
-
-  addMessagesFunc: PropTypes.func.isRequired,
-  working: PropTypes.bool.isRequired,
-  setWorking: PropTypes.func.isRequired
 };

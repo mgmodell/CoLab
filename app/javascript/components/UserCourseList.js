@@ -6,15 +6,15 @@ import Paper from "@material-ui/core/Paper";
 import MUIDataTable from "mui-datatables";
 
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
+import { useStatusStore } from './infrastructure/StatusStore';
 
 export default function UserCourseList(props) {
   // const [addUsersPath, setAddUsersPath] = useState("");
   // const [procRegReqPath, setProcRegReqPath] = useState("");
-  const [] = useState(false);
-  const [] = useState("");
+  const [status, statusActions] = useStatusStore( );
 
   const getCourses = () => {
-    props.setWorking( true );
+    statusActions.setWorking( true );
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -35,7 +35,7 @@ export default function UserCourseList(props) {
       .then(data => {
         //MetaData and Infrastructure
         props.coursesListUpdateFunc(data);
-        props.setWorking(false);
+        statusActions.setWorking(false);
       });
   };
 
@@ -124,7 +124,7 @@ export default function UserCourseList(props) {
 
   return (
     <Paper>
-      {props.working ? <LinearProgress id='waiting' /> : null}
+      {status.working ? <LinearProgress id='waiting' /> : null}
       {courseList}
     </Paper>
   );
@@ -136,7 +136,5 @@ UserCourseList.propTypes = {
   coursesList: PropTypes.array,
   coursesListUpdateFunc: PropTypes.func.isRequired,
 
-  addMessagesFunc: PropTypes.func.isRequired,
-  working: PropTypes.bool.isRequired,
-  setWorking: PropTypes.func.isRequired
+  addMessagesFunc: PropTypes.func.isRequired
 };

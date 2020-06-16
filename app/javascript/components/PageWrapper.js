@@ -13,8 +13,7 @@ import CandidatesReviewTable from './BingoBoards/CandidatesReviewTable';
 import BingoBuilder from './BingoBoards/BingoBuilder';
 import ConsentLog from './Consent/ConsentLog'
 import Admin from './Admin'
-
-
+import AppStatusBar from './AppStatusBar';
 
 export default function PageWrapper(props) {
   const [helpTopic, setHelpTopic] = useState("");
@@ -24,7 +23,8 @@ export default function PageWrapper(props) {
       <Suspense fallback={<Skeleton variant="rect" height={50} />}>
         <AppHeader token={props.token} getEndpointsUrl={props.getEndpointsUrl} />
       </Suspense>
-      <br/><br/>
+      <br/>
+      <AppStatusBar/>
       <Suspense fallback={<Skeleton variant='rect' height={600} />} >
         <Switch >
           <Route path='/profile'>

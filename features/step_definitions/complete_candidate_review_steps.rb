@@ -184,7 +184,6 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       error_msg += e.message
       error_msg += "\t\t#{candidate.inspect}" unless retries > 0
       elem.send_keys :enter
-      byebug
 
     end
 
@@ -210,6 +209,8 @@ Given /^the user is the most recently created user$/ do
 end
 
 When /^the user clicks the link to the candidate review$/ do
+  wait_for_render
+  step 'the user switches to the "Task View" tab'
   step 'the user switches to the "Task View" tab'
   find(:xpath, "//td[contains(.,'#{@bingo.get_name(@anon)}')]").click
 

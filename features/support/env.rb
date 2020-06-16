@@ -13,7 +13,7 @@ require 'simplecov'
 SimpleCov.start 'rails'
 
 def wait_for_render
-  times = 3
+  times = 3000
   
   while ( all( :xpath, "//*[@id='waiting']" ).size > 0 && times > 0 ) do
     sleep( 0.01)

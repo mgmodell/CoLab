@@ -29,12 +29,15 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import DropUserButton from "./DropUserButton";
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
+import { useStatusStore } from './infrastructure/StatusStore';
 
 export default function CourseUsersList(props) {
   const [addUsersPath, setAddUsersPath] = useState("");
   const [procRegReqPath, setProcRegReqPath] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newUserAddresses, setNewUserAddresses] = useState("");
+
+  const [status, statusActions] = useStatusStore( );
 
   const getUsers = () => {
     var url = props.retrievalUrl;
@@ -64,14 +67,14 @@ export default function CourseUsersList(props) {
         setProcRegReqPath(data.add_function.proc_self_reg + ".json");
         props.usersListUpdateFunc(data.users);
 
-        props.setWorking(false);
+        statusActions.setWorking( false );
       });
   };
 
   const refreshFunc = newMessages => {
     getUsers();
     props.addMessagesFunc(newMessages);
-    props.setWorking(false);
+    statusActions.setWorking( false );
   };
 
   useEffect(() => {
@@ -219,7 +222,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      props.setWorking(true);
+                      statusActions.setWorking( true );
                       fetch(user.reinvite_link, {
                         method: "GET",
                         credentials: "include",
@@ -266,7 +269,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      props.setWorking(true);
+                      statusActions.setWorking( true );
                       fetch(procRegReqPath, {
                         method: "PATCH",
                         credentials: "include",
@@ -301,7 +304,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl2}
                     onClick={event => {
-                      props.setWorking(true);
+                      statusActions.setWorking( true );
                       fetch(procRegReqPath, {
                         method: "PATCH",
                         credentials: "include",
@@ -341,7 +344,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      props.setWorking(true);
+                      statusActions.setWorking( true );
                       fetch(addUsersPath, {
                         method: "PUT",
                         credentials: "include",
@@ -498,7 +501,7 @@ export default function CourseUsersList(props) {
                     </Button>
                     <Button
                       onClick={() => {
-                        props.setWorking(true);
+                        statusActions.setWorking( true );
                         fetch(addUsersPath, {
                           method: "PUT",
                           credentials: "include",
@@ -522,7 +525,7 @@ export default function CourseUsersList(props) {
                           .then(data => {
                             getUsers();
                             props.addMessagesFunc(data.messages);
-                            props.setWorking(false);
+                            statusActions.setWorking( false );
                           });
                         closeDialog();
                       }}
@@ -552,7 +555,7 @@ export default function CourseUsersList(props) {
 
   return (
     <Paper>
-      {props.working ? <LinearProgress id='waiting' /> : null}
+      {status.working ? <LinearProgress id='waiting' /> : null}
       {null != props.usersList ? (
         <React.Fragment>
           {userList}
@@ -573,7 +576,5 @@ CourseUsersList.propTypes = {
   usersListUpdateFunc: PropTypes.func.isRequired,
 
   userType: PropTypes.oneOf(["student", "instructor"]),
-  addMessagesFunc: PropTypes.func.isRequired,
-  working: PropTypes.bool.isRequired,
-  setWorking: PropTypes.func.isRequired
+  addMessagesFunc: PropTypes.func.isRequired
 };

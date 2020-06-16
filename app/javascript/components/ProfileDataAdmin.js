@@ -38,6 +38,7 @@ import UserActivityList from './UserActivityList';
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useUserStore } from "./infrastructure/UserStore";
+import { useStatusStore } from './infrastructure/StatusStore';
 import { Grid, Link } from "@material-ui/core";
 
 export default function ProfileDataAdmin(props) {
@@ -45,10 +46,10 @@ export default function ProfileDataAdmin(props) {
   const [endpoints, endpointsActions] = useEndpointStore();
   //const { t, i18n } = useTranslation('profiles' );
   const [user, userActions] = useUserStore();
+  const [status, statusActions] = useStatusStore( );
 
   const [curTab, setCurTab] = useState('details');
   const [dirty, setDirty] = useState(false);
-  const [working, setWorking] = useState(true);
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState( false );
   const [curPanel, setCurPanel] = useState( '' )
@@ -110,7 +111,7 @@ export default function ProfileDataAdmin(props) {
 
   const getStates = (countryCode ) =>{
     if( '' != statesForUrl ){
-      setWorking(true);
+      statusActions.setWorking( true );
       const url = statesForUrl + countryCode + '.json';
       fetch(url, {
         method: "GET",
@@ -141,7 +142,7 @@ export default function ProfileDataAdmin(props) {
             setProfileHomeState( foundSelectedStates[ 0 ].id );
             setDirty(true);
           }
-          setWorking(false);
+          statusActions.setWorking( false );
         });
 
       }
@@ -226,12 +227,12 @@ export default function ProfileDataAdmin(props) {
 
         setProfileFields( profile );
 
-        setWorking(false);
+        statusActions.setWorking( false );
         setDirty(false);
       });
   };
   const saveProfile = () => {
-    setWorking(true);
+    statusActions.setWorking( true );
     const url = endpoints.endpoints[endpointSet].baseUrl + '.json';
     console.log( url );
 
@@ -281,7 +282,7 @@ export default function ProfileDataAdmin(props) {
           return response.json();
         } else {
           console.log("error");
-          setWorking(false);
+          statusActions.setWorking( false );
         }
       })
       .then(data => {
@@ -296,17 +297,18 @@ export default function ProfileDataAdmin(props) {
           setShowErrors( true );
           setDirty(false);
           setMessages(data.messages);
-          setWorking(false);
+          statusActions.setWorking(false);
         } else {
           setShowErrors( true );
           setMessages(data.messages);
-          setWorking(false);
+          statusActions.setWorking(false);
         }
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
+      statusActions.setWorking( true );
     }
     if (!user.loaded) {
       userActions.fetch(props.token);
@@ -362,7 +364,7 @@ export default function ProfileDataAdmin(props) {
 
   const detailsComponent = (
     <Paper>
-      {working ? <LinearProgress id='waiting' /> : null}
+      {status.working ? <LinearProgress id='waiting' /> : null}
       <ExpansionPanel expanded>
         <ExpansionPanelSummary id='profile' >
           Edit your profile
@@ -413,8 +415,6 @@ export default function ProfileDataAdmin(props) {
                   emailList={profileEmails}
                   emailListUpdateFunc={setProfileEmails}
                   addMessagesFunc={setMessages}
-                  working={working}
-                  setWorking={setWorking}
                   addEmailUrl={addEmailUrl}
                   removeEmailUrl={removeEmailUrl}
                   primaryEmailUrl={primaryEmailUrl}
@@ -812,8 +812,6 @@ export default function ProfileDataAdmin(props) {
             coursesList={courses}
             coursesListUpdateFunc={setCourses}
             addMessagesFunc={setMessages}
-            working={working}
-            setWorking={setWorking}
         />
       : null }
       {'history' === curTab ?
@@ -823,8 +821,6 @@ export default function ProfileDataAdmin(props) {
             activitiesList={activities}
             activitiesListUpdateFunc={setActivities}
             addMessagesFunc={setMessages}
-            working={working}
-            setWorking={setWorking}
         />
       : null }
       {'research' === curTab ?
@@ -834,8 +830,6 @@ export default function ProfileDataAdmin(props) {
             consentFormList={consentForms}
             consentFormListUpdateFunc={setConsentForms}
             addMessagesFunc={setMessages}
-            working={working}
-            setWorking={setWorking}
         />
        : null }
     </Paper>

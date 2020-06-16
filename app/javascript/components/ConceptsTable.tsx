@@ -21,6 +21,7 @@ import { SortDirection } from "react-virtualized";
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
 
 import { useEndpointStore } from "./infrastructure/EndPointStore";
+import { useStatusStore } from './infrastructure/StatusStore';
 
 const styles = theme => ({
   table: {
@@ -49,6 +50,7 @@ const styles = theme => ({
 export default function ConceptsTable(props) {
   const endpointSet = "concept";
   const [endpoints, endpointsActions] = useEndpointStore();
+  const [status, statusActions] = useStatusStore( );
 
   const [conceptsRaw, setConceptsRaw] = useState([]);
   const [concepts, setConcepts] = useState([]);
@@ -56,7 +58,9 @@ export default function ConceptsTable(props) {
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const [sortDirection, setSortDirection] = useState(SortDirection.DESC);
-  const [working, setWorking] = useState(true);
+
+  //const [working, setWorking] = useState(true);
+
   const [editing, setEditing] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [conceptName, setConceptName] = useState("");
@@ -136,7 +140,8 @@ export default function ConceptsTable(props) {
       .then(data => {
         setConcepts(data);
         setConceptsRaw(data);
-        setWorking(false);
+        statusActions.setWorking( false );
+        //setWorking(false);
       });
   };
   const filter = function(event) {
@@ -168,7 +173,8 @@ export default function ConceptsTable(props) {
     setDirty(false);
   };
   const updateConcept = (id, name) => {
-    setWorking(true);
+    statusActions.setWorking( true );
+    // setWorking(true);
     fetch(endpoints.endpoints[endpointSet].baseUrl + "/" + id + ".json", {
       method: "PATCH",
       credentials: "include",
@@ -200,14 +206,15 @@ export default function ConceptsTable(props) {
 
         setConcepts(tmpConcepts);
         setConceptsRaw(tmpConcepts);
-        setWorking(false);
+        statusActions.setWorking( false );
+        // setWorking(false);
         setEditing(false);
       });
   };
   return (
     <React.Fragment>
       <Paper style={{ height: 450, width: "100%" }}>
-        {working ? <LinearProgress /> : null}
+        {/* working ? <LinearProgress /> : null */}
         <Toolbar>
           <InputBase placeholder="Search concepts" onChange={filter} />
           <SearchIcon />
@@ -230,7 +237,7 @@ export default function ConceptsTable(props) {
         onClose={() => setEditing(false)}
         aria-labelledby="edit"
       >
-        {working ? <LinearProgress /> : null}
+        {status.working ? <LinearProgress /> : null}
         <DialogTitle>Edit Concept</DialogTitle>
         <DialogContent>
           <DialogContentText>Concept Name</DialogContentText>

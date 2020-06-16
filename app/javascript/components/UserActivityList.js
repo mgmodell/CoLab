@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Paper from "@material-ui/core/Paper";
 import { iconForType } from './ActivityLib'
+import { useStatusStore } from './infrastructure/StatusStore';
 
 import MUIDataTable from "mui-datatables";
 
@@ -10,11 +11,10 @@ import MUIDataTable from "mui-datatables";
 export default function UserCourseList(props) {
   // const [addUsersPath, setAddUsersPath] = useState("");
   // const [procRegReqPath, setProcRegReqPath] = useState("");
-  const [] = useState(false);
-  const [] = useState("");
+  const [status, statusActions] = useStatusStore( );
 
   const getActivities = () => {
-    props.setWorking( true );
+    statusActions.setWorking( true );
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -36,7 +36,7 @@ export default function UserCourseList(props) {
         console.log( data );
         //MetaData and Infrastructure
         props.activitiesListUpdateFunc(data);
-        props.setWorking(false);
+        statusActions.setWorking(false);
       });
   };
 
@@ -99,7 +99,7 @@ export default function UserCourseList(props) {
 
   return (
     <Paper>
-      {props.working ? <LinearProgress id='waiting' /> : null}
+      {status.working ? <LinearProgress id='waiting' /> : null}
       {activityList}
     </Paper>
   );
@@ -111,7 +111,5 @@ UserCourseList.propTypes = {
   activitiesList: PropTypes.array,
   activitiesListUpdateFunc: PropTypes.func.isRequired,
 
-  addMessagesFunc: PropTypes.func.isRequired,
-  working: PropTypes.bool.isRequired,
-  setWorking: PropTypes.func.isRequired
+  addMessagesFunc: PropTypes.func.isRequired
 };

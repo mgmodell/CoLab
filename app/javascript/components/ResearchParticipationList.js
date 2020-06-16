@@ -4,12 +4,13 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Link from '@material-ui/core/Link'
 import Paper from "@material-ui/core/Paper";
 
+import { useStatusStore } from './infrastructure/StatusStore';
+
 import MUIDataTable from "mui-datatables";
 
 
 export default function UserCourseList(props) {
-  const [] = useState(false);
-  const [] = useState("");
+  const [status, statusActions] = useStatusStore( );
 
   const getCourses = () => {
     props.setWorking( true );
@@ -33,7 +34,7 @@ export default function UserCourseList(props) {
       .then(data => {
         //MetaData and Infrastructure
         props.consentFormListUpdateFunc(data);
-        props.setWorking(false);
+        statusActions.setWorking(false);
       });
   };
 
@@ -128,7 +129,7 @@ export default function UserCourseList(props) {
 
   return (
     <Paper>
-      {props.working ? <LinearProgress id='waiting' /> : null}
+      {status.working ? <LinearProgress id='waiting' /> : null}
        {consentFormList}
     </Paper>
   );
@@ -140,7 +141,5 @@ UserCourseList.propTypes = {
   consentFormList: PropTypes.array,
   consentFormListUpdateFunc: PropTypes.func.isRequired,
 
-  addMessagesFunc: PropTypes.func.isRequired,
-  working: PropTypes.bool.isRequired,
-  setWorking: PropTypes.func.isRequired
+  addMessagesFunc: PropTypes.func.isRequired
 };

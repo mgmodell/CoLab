@@ -16,6 +16,8 @@ import luxonPlugin from '@fullcalendar/luxon'
 
 import { useEndpointStore } from"./infrastructure/EndPointStore";
 import { useUserStore } from "./infrastructure/UserStore";
+import { useStatusStore } from './infrastructure/StatusStore';
+
 import DecisionEnrollmentsTable from './DecisionEnrollmentsTable';
 import DecisionInvitationsTable from './DecisionInvitationsTable';
 import ConsentLog from './Consent/ConsentLog';
@@ -28,10 +30,11 @@ export default function HomeShell(props) {
   const endpointSet = "home";
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
+  const [status, statusActions] = useStatusStore( );
   const { t, i18n } = useTranslation( );
   const history = useHistory( );
 
-  const [working, setWorking] = useState(true);
+  // const [working, setWorking] = useState(true);
   const [curTab, setCurTab] = useState( 'calendar' )
 
   const [tasks, setTasks] = useState([]);
@@ -80,7 +83,7 @@ export default function HomeShell(props) {
         setConsentLogs( data.consent_logs );
         setWaitingRosters( data.waiting_rosters );
 
-        setWorking(false);
+        statusActions.setWorking( false );
       });
   };
   useEffect(() => {
@@ -133,7 +136,7 @@ export default function HomeShell(props) {
           <Tab label='Calendar View' value='calendar'/>
           <Tab label='Task View' value='list'/>
         </Tabs>
-      {working ? <LinearProgress id='waiting' /> : null}
+      {/* status.working ? <LinearProgress id='waiting' /> : null */}
       {( 'calendar' === curTab ) ?
         (<FullCalendar
             headerToolbar={{

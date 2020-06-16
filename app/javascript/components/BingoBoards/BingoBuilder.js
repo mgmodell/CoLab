@@ -327,7 +327,7 @@ export default function BingoBuilder( props ){
           {null != candidateList && (
             <Typography>
               <strong>Performance:</strong>
-              {candidateList.performance}
+              <span id='performance'>{candidateList.performance}</span>
             </Typography>
           )}
           <hr />

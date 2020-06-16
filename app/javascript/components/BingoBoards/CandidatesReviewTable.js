@@ -178,12 +178,13 @@ export default function CandidatesReviewTable( props ){
 
   }, [endpoints.endpointStatus[endpointSet]]);
 
-  const setCompleted = (item) => {
+  const setCompleted = (item, options ) => {
     //This use feedbackOpts from state
     const fb_id = item.candidate_feedback_id;
+    console.log( ' in completed:', item, fb_id );
     if (fb_id != null) {
       item.completed = 100;
-      const fb = getById( feedbackOptions, fb_id );
+      const fb = getById( options, fb_id );
       if (
         "term_problem" != fb.critique &&
         item.concept.name.length < 1
@@ -273,6 +274,7 @@ export default function CandidatesReviewTable( props ){
               name: ''
             }
           }
+          setCompleted( item, data.feedback_opts );
         } );
             
         setCandidates( data.candidates );
@@ -322,11 +324,12 @@ export default function CandidatesReviewTable( props ){
 
 
   const conceptSet = (id, value) => {
+    console.log( 'concept setting:', id, value )
     const candidates_temp = [...candidates];
     const candidate = getById( candidates_temp, id);
     candidate.concept.name = value;
 
-    setCompleted( candidate );
+    setCompleted( candidate, feedbackOptions );
     setCandidates( candidates_temp );
   };
 
@@ -336,7 +339,7 @@ export default function CandidatesReviewTable( props ){
     const fb = getById( feedbackOptions, value )
     candidate.candidate_feedback_id = value;
 
-    setCompleted( candidate );
+    setCompleted( candidate, feedbackOptions );
     setCandidates( candidates_temp );
 
   }
