@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import WorkingIndicator from './infrastructure/WorkingIndicator';
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
 import { DateTime } from "luxon";
@@ -17,10 +17,14 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import { DialogActions, Button, Collapse } from "@material-ui/core";
+import DialogActions from '@material-ui/core/DialogActions';
+import Button from '@material-ui/core/Button';
+import Collapse from '@material-ui/core/Collapse';
+import { useStatusStore } from './infrastructure/StatusStore';
 
 export default function CopyActivityButton(props) {
   const [copyData, setCopyData] = useState(null);
+  const [status, statusActions] = useStatusStore( );
 
   function PaperComponent(props) {
     return <Paper {...props} />;
@@ -42,7 +46,7 @@ export default function CopyActivityButton(props) {
         <React.Fragment>
           <DialogTitle>Create a Copy</DialogTitle>
           <DialogContent>
-            {props.isWorking ? <LinearProgress /> : null}
+            <WorkingIndicator identifier='copying_course' />
             <DialogContentText>
               This course started on{" "}
               {copyData.startDate.toLocaleString(DateTime.DATE_SHORT)}. When
@@ -66,7 +70,7 @@ export default function CopyActivityButton(props) {
           </DialogContent>
           <DialogActions>
             <Button
-              disabled={props.isWorking}
+              disabled={status.working}
               onClick={event => {
                 setNewStartDate(DateTime.local().toISO());
                 setNewStartDate(null);
@@ -76,9 +80,9 @@ export default function CopyActivityButton(props) {
               Cancel
             </Button>
             <Button
-              disabled={props.isWorking}
+              disabled={status.working}
               onClick={event => {
-                props.setIsWorking(true);
+                statusActions.setWorking(true);
                 console.log(newStartDate);
                 fetch(props.copyUrl, {
                   method: "POST",
@@ -106,7 +110,7 @@ export default function CopyActivityButton(props) {
                     }
                     setNewStartDate(DateTime.local().toISO());
                     setCopyData(null);
-                    props.setIsWorking(false);
+                    statusActions.setWorking(false);
                   });
               }}
             >
@@ -148,7 +152,5 @@ CopyActivityButton.propTypes = {
   itemId: PropTypes.number.isRequired,
   itemUpdateFunc: PropTypes.func,
   startDate: PropTypes.instanceOf(Date).isRequired,
-  isWorking: PropTypes.bool.isRequired,
-  setIsWorking: PropTypes.func.isRequired,
   addMessagesFunc: PropTypes.func.isRequired
 };

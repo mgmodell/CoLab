@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import WorkingIndicator from './infrastructure/WorkingIndicator';
 import Paper from "@material-ui/core/Paper";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -555,7 +555,7 @@ export default function CourseUsersList(props) {
 
   return (
     <Paper>
-      {status.working ? <LinearProgress id='waiting' /> : null}
+      <WorkingIndicator identifier='loading_users' />
       {null != props.usersList ? (
         <React.Fragment>
           {userList}

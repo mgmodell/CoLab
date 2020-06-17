@@ -5,7 +5,6 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import Skeleton from "@material-ui/lab/Skeleton";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
@@ -18,6 +17,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { useUserStore } from "./infrastructure/UserStore";
 import { useEndpointStore } from"./infrastructure/EndPointStore";
+import { useStatusStore } from './infrastructure/StatusStore';
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
@@ -26,7 +26,7 @@ export default function InstallmentReport(props) {
   const endpointSet = "installment";
   const [endpoints, endpointsActions] = useEndpointStore();
 
-  const [working, setWorking] = useState(true);
+  const [status, statusActions] = useStatusStore( );
   const [dirty, setDirty] = useState(false);
   const [debug, setDebug] = useState(false);
   const [t, i18n] = useTranslation("installments");
@@ -61,6 +61,7 @@ export default function InstallmentReport(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -102,7 +103,6 @@ export default function InstallmentReport(props) {
     }
   };
 
-  const progBar = working ? <LinearProgress /> : null;
   const saveButton = (
     <Button variant="contained" onClick={() => saveContributions()}>
       <Suspense fallback={<Skeleton variant="text" />}>{t("submit")}</Suspense>
@@ -156,7 +156,7 @@ export default function InstallmentReport(props) {
         setGroup(data.group);
         data.installment.group_id = data.group.id;
         setProject(data.installment.project);
-        setWorking(false);
+        statusActions.setWorking(false);
       });
   };
   //Store what we've got
@@ -209,14 +209,13 @@ export default function InstallmentReport(props) {
         console.log(data.messages);
         setMessages(data.messages);
         setShowAlerts(true);
-        setWorking(false);
+        statusActions.setWorking(false);
         setDirty(false);
       });
   };
 
   return (
     <Paper>
-      {progBar}
       <Collapse in={showAlerts}>
         <Alert
           action={

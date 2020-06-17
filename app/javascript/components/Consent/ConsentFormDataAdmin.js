@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import IconButton from '@material-ui/core/IconButton';
@@ -25,6 +24,7 @@ import { useEndpointStore } from "../infrastructure/EndPointStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useUserStore } from "../infrastructure/UserStore";
+import { useStatusStore } from '../infrastructure/StatusStore';
 import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -39,9 +39,9 @@ export default function ConsentFormDataAdmin(props) {
   const [endpoints, endpointsActions] = useEndpointStore();
   //const { t, i18n } = useTranslation('schools' );
   const [user, userActions] = useUserStore();
+  const [status, statusActions] = useStatusStore( );
 
   const [dirty, setDirty] = useState(false);
-  const [working, setWorking] = useState(true);
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState( false );
 
@@ -105,13 +105,13 @@ export default function ConsentFormDataAdmin(props) {
           )
         )
 
-        setWorking(false);
+        statusActions.setWorking(false);
         setDirty(false);
       });
   };
   const saveConsentForm = () => {
     const method = null == consentFormId ? "POST" : "PATCH";
-    setWorking(true);
+    statusActions.setWorking(true);
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -140,7 +140,7 @@ export default function ConsentFormDataAdmin(props) {
           return response.json();
         } else {
           console.log("error");
-          setWorking(false);
+          statusActions.setWorking(false);
         }
       })
       .then(data => {
@@ -160,16 +160,17 @@ export default function ConsentFormDataAdmin(props) {
           setShowErrors( true );
           setDirty(false);
           setMessages(data.messages);
-          setWorking(false);
+          statusActions.setWorking(false);
         } else {
           setShowErrors( true );
           setMessages(data.messages);
-          setWorking(false);
+          statusActions.setWorking(false);
         }
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -204,7 +205,6 @@ export default function ConsentFormDataAdmin(props) {
 
   const detailsComponent = (
     <Paper>
-      {working ? <LinearProgress /> : null}
       <Grid container spacing={3}>
         <LocalizationProvider dateAdapter={LuxonUtils}>
         <Grid item xs={12}>

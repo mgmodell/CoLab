@@ -6,7 +6,6 @@ import {
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import Tooltip from "@material-ui/core/Tooltip";
 import Settings from "luxon/src/settings.js";
 
@@ -16,6 +15,7 @@ import CheckIcon from '@material-ui/icons/Check'
 
 import { useEndpointStore } from "../infrastructure/EndPointStore";
 import { useUserStore } from "../infrastructure/UserStore";
+import { useStatusStore } from '../infrastructure/StatusStore';
 import MUIDataTable from "mui-datatables";
 import Collapse from "@material-ui/core/Collapse";
 
@@ -30,7 +30,7 @@ export default function ConsentFormList(props) {
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
-  const [working, setWorking] = useState(true);
+  const [status, statusActions] = useStatusStore( );
   const columns = [
     {
       label: "Name",
@@ -78,11 +78,12 @@ export default function ConsentFormList(props) {
       .then(data => {
         //Process the data
         setSchools(data);
-        setWorking(false);
+        statusActions.setWorking(false);
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -171,7 +172,6 @@ export default function ConsentFormList(props) {
           {messages["main"] || null}
         </Alert>
       </Collapse>
-      {working ? <LinearProgress /> : null}
       <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
     </React.Fragment>
   );

@@ -1,4 +1,6 @@
 import React, { useState, Suspense, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
 
@@ -11,6 +13,7 @@ import { useTranslation } from "react-i18next";
 export default function HelpMenu(props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [t, i18n] = useTranslation();
+  const history = useHistory( );
 
   return (
     <React.Fragment>
@@ -19,6 +22,9 @@ export default function HelpMenu(props) {
         color="secondary"
         aria-controls="help-menu"
         aria-haspopup="true"
+        onClick={(event)=>{
+          console.log( `${history.location.pathname}`)
+        }}
       >
         <HelpIcon />
       </IconButton>

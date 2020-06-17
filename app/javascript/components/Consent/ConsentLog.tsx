@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 
 import { useTranslation } from "react-i18next";
 import { useEndpointStore } from "../infrastructure/EndPointStore";
+import { useStatusStore } from '../infrastructure/StatusStore';
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
@@ -14,14 +15,14 @@ export default function ConsentLog(props) {
   const { t } = useTranslation( 'consent_logs');
   const endpointSet = 'consent_log';
   const [endpoints, endpointsActions] = useEndpointStore();
+  const [status, statusActions] = useStatusStore( );
   const [logId, setLogId] = useState( );
   const [formName, setFormName] = useState( '' );
   const [formText, setFormText] = useState( '' );
   const [, setFormPresented] = useState( false );
   const [formPdfLink, setFormPdfLink] = useState( '' );
   const [formAccepted, setFormAccepted ] = useState( false );
-  const [, setLogLastUpdated ] = useState( new Date( ) )
-  const [, setWorking] = useState( true );
+  const [logLastUpdated, setLogLastUpdated ] = useState( new Date( ) )
 
   const getLog = () => {
     var url = endpoints.endpoints[endpointSet].baseUrl + props.consentFormId + ".json";
@@ -54,7 +55,7 @@ export default function ConsentLog(props) {
         setFormPresented( data.consent_log.presented );
         setLogLastUpdated( new Date( data.consent_log.updatedAt ) );
 
-        setWorking(false);
+        statusActions.setWorking(false);
       });
   };
 
@@ -95,7 +96,7 @@ export default function ConsentLog(props) {
           history.back( );
         }
 
-        setWorking(false);
+        statusActions.setWorking(false);
       });
   };
 

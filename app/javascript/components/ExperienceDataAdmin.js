@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -22,19 +21,20 @@ import ReactionsList from "./ReactionsList";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./infrastructure/EndPointStore";
+import { useStatusStore } from './infrastructure/StatusStore';
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useUserStore } from "./infrastructure/UserStore";
 
 export default function ExperienceDataAdmin(props) {
-  const endpointSet = "experience";
+  const endpointSet = "experience_admin";
   const [endpoints, endpointsActions] = useEndpointStore();
   //const { t, i18n } = useTranslation('experiences' );
   const [user, userActions] = useUserStore();
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
-  const [working, setWorking] = useState(true);
+  const [status, statusActions] = useStatusStore( );
   const [messages, setMessages] = useState({});
   const [experienceId, setExperienceId] = useState(props.experienceId);
   const [experienceName, setExperienceName] = useState("");
@@ -101,13 +101,13 @@ export default function ExperienceDataAdmin(props) {
         );
         setExperienceEndDate(receivedDate.toISO());
 
-        setWorking(false);
+        statusActions.setWorking(false);
         setDirty(false);
       });
   };
   const saveExperience = () => {
     const method = null == experienceId ? "POST" : "PATCH";
-    setWorking(true);
+    statusActions.setWorking(true);
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -160,17 +160,18 @@ export default function ExperienceDataAdmin(props) {
 
           const course = data.course;
           setCourseName(course.name);
-          setWorking(false);
+          statusActions.setWorking(false);
           setDirty(false);
           setMessages(data.messages);
         } else {
           setMessages(data.messages);
-          setWorking(false);
+          statusActions.setWorking(false);
         }
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -211,7 +212,6 @@ export default function ExperienceDataAdmin(props) {
 
   const detailsComponent = (
     <Paper>
-      {working ? <LinearProgress /> : null}
       <TextField
         label="Experience Name"
         id="experience-name"
@@ -297,8 +297,6 @@ export default function ExperienceDataAdmin(props) {
         retrievalUrl={reactionsUrl}
         reactionsList={reactionData}
         reactionsListUpdateFunc={setReactionData}
-        working={working}
-        setWorking={setWorking}
       />
     ) : (
       "The Experience must be created before students can react to it."

@@ -14,9 +14,13 @@ import { SortDirection } from "react-virtualized";
 import RemoteAutosuggest from "../RemoteAutosuggest";
 
 import { useEndpointStore } from '../infrastructure/EndPointStore';
+import { useStatusStore } from '../infrastructure/StatusStore';
 import { useTranslation } from 'react-i18next';
-import { LinearProgress, FormControlLabel, Select, MenuItem } from "@material-ui/core";
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import MUIDataTable from "mui-datatables";
+import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 export default function CandidatesReviewTable( props ){
   const { t } = useTranslation( 'bingo_games' );
@@ -38,7 +42,7 @@ export default function CandidatesReviewTable( props ){
   const [acceptableUniqueConcepts, setAcceptableUniqueConcepts] = useState( 0 );
 
   const [dirty, setDirty] = useState( false );
-  const [working, setWorking] = useState( true );
+  const [status, statusActions] = useStatusStore( );
 
   useEffect(()=>{
     setDirty( true );
@@ -167,6 +171,7 @@ export default function CandidatesReviewTable( props ){
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
   }, []);
@@ -281,14 +286,14 @@ export default function CandidatesReviewTable( props ){
 
         setReviewStatus( 'Data loaded' );
         setDirty( false );
-        setWorking( false );
+        statusActions.setWorking( false );
         updateProgress();
       });
   }
   // conceptStats() {}
   const saveFeedback = () => {
     setDirty( false );
-    setWorking( true );
+    statusActions.setWorking( true );
     setReviewStatus( 'Saving feedback.' )
 
     fetch(`${endpoints.endpoints[endpointSet].reviewSaveUrl}${props.bingoGameId}.json`, {
@@ -317,7 +322,7 @@ export default function CandidatesReviewTable( props ){
       })
       .then(data => {
         setDirty( typeof data.success !== "undefined" )
-        setWorking( false );
+        statusActions.setWorking( false );
         setReviewStatus( data.notice );
       });
   }
@@ -364,7 +369,7 @@ export default function CandidatesReviewTable( props ){
 
     return (
       <Paper >
-        {working ? (<LinearProgress id='waiting' />) : null }
+        <WorkingIndicator identifier='waiting' />
         
           {bingoGame != null ? (
         <Grid container>

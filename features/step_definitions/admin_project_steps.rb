@@ -22,6 +22,7 @@ Then /^the user clicks the Admin button$/ do
 end
 
 Then /^the user sees (\d+) course$/ do |course_count|
+  wait_for_render
   page.all('tr').count == course_count.to_i + 1
 end
 

@@ -24,6 +24,7 @@ import {
 import { DateTime } from "luxon";
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "../infrastructure/EndPointStore";
+import { useStatusStore } from '../infrastructure/StatusStore';
 import { useUserStore } from "../infrastructure/UserStore";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
@@ -65,7 +66,7 @@ export default function BingoGameDataAdmin(props) {
   const { t, i18n } = useTranslation("bingo_games");
 
   const [dirty, setDirty] = useState(false);
-  const [working, setWorking] = useState(false);
+  const [status, statusActions] = useStatusStore( );
   const [curTab, setCurTab] = useState("details");
   const [messages, setMessages] = useState({});
   const [gameProjects, setGameProjects] = useState([
@@ -101,6 +102,7 @@ export default function BingoGameDataAdmin(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] !== "loaded") {
+      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
   }, []);
@@ -131,7 +133,7 @@ export default function BingoGameDataAdmin(props) {
 
   const saveBingoGame = () => {
     const method = null === bingoGameId ? "POST" : "PATCH";
-    setWorking(true);
+    statusActions.setWorking(true);
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -181,6 +183,7 @@ export default function BingoGameDataAdmin(props) {
         setSaveStatus(data["notice"]);
         setDirty(false);
         setMessages(data["messages"]);
+        statusActions.setWorking( false );
 
         getBingoGameData();
       });
@@ -188,6 +191,7 @@ export default function BingoGameDataAdmin(props) {
 
   const initResultData = () => {
     if (bingoGameId > 0) {
+      statusActions.setWorking( true );
       fetch(
         endpoints.endpoints[endpointSet].gameResultsUrl +
           "/" +
@@ -213,6 +217,7 @@ export default function BingoGameDataAdmin(props) {
         })
         .then(data => {
           setResultData(data);
+          statusActions.setWorking( false );
         });
     }
   };
@@ -279,6 +284,7 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
         setDirty(false);
+        statusActions.setWorking( false );
       });
   };
 

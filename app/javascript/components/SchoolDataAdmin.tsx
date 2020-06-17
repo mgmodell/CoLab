@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import IconButton from '@material-ui/core/IconButton';
@@ -19,6 +18,7 @@ import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./infrastructure/EndPointStore";
+import { useStatusStore } from './infrastructure/StatusStore';
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useUserStore } from "./infrastructure/UserStore";
@@ -31,7 +31,8 @@ export default function SchoolDataAdmin(props) {
   const [user, userActions] = useUserStore();
 
   const [dirty, setDirty] = useState(false);
-  const [working, setWorking] = useState(true);
+  const [status, statusActions] = useStatusStore( );
+  
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState( false );
 
@@ -76,13 +77,13 @@ export default function SchoolDataAdmin(props) {
         setSchoolDescription(school.description || '');
         setSchoolTimezone(school.timezone || 'UTC');
 
-        setWorking(false);
+        statusActions.setWorking(false);
         setDirty(false);
       });
   };
   const saveSchool = () => {
     const method = null == schoolId ? "POST" : "PATCH";
-    setWorking(true);
+    statusActions.setWorking(true);
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -112,7 +113,7 @@ export default function SchoolDataAdmin(props) {
           return response.json();
         } else {
           console.log("error");
-          setWorking(false);
+          statusActions.setWorking(false);
         }
       })
       .then(data => {
@@ -126,16 +127,17 @@ export default function SchoolDataAdmin(props) {
           setShowErrors( true );
           setDirty(false);
           setMessages(data.messages);
-          setWorking(false);
+          statusActions.setWorking(false);
         } else {
           setShowErrors( true );
           setMessages(data.messages);
-          setWorking(false);
+          statusActions.setWorking(false);
         }
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -169,7 +171,6 @@ export default function SchoolDataAdmin(props) {
 
   const detailsComponent = (
     <Paper>
-      {working ? <LinearProgress /> : null}
       <TextField
         label="School Name"
         id="school-name"

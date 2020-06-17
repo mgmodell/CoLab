@@ -13,7 +13,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TextField from "@material-ui/core/TextField";
-import LinearProgress from "@material-ui/core/LinearProgress";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
@@ -320,7 +319,6 @@ class ProjectGroups extends React.Component {
     };
     return (
       <Paper>
-        {this.state.working ? <LinearProgress /> : null}
         <Toolbar>
           <InputBase placeholder="Search Students" onChange={this.filter} />
           <SearchIcon />

@@ -15,7 +15,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import WorkingIndicator from './infrastructure/WorkingIndicator';
 import { SortDirection } from "react-virtualized";
 
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
@@ -214,7 +214,6 @@ export default function ConceptsTable(props) {
   return (
     <React.Fragment>
       <Paper style={{ height: 450, width: "100%" }}>
-        {/* working ? <LinearProgress /> : null */}
         <Toolbar>
           <InputBase placeholder="Search concepts" onChange={filter} />
           <SearchIcon />
@@ -237,7 +236,7 @@ export default function ConceptsTable(props) {
         onClose={() => setEditing(false)}
         aria-labelledby="edit"
       >
-        {status.working ? <LinearProgress /> : null}
+        <WorkingIndicator identifier='saving_concept' />
         <DialogTitle>Edit Concept</DialogTitle>
         <DialogContent>
           <DialogContentText>Concept Name</DialogContentText>

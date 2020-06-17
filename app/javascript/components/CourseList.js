@@ -6,7 +6,6 @@ import {
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
 import { DateTime } from "luxon";
@@ -19,9 +18,11 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { useEndpointStore } from "./infrastructure/EndPointStore";
 import { useUserStore } from "./infrastructure/UserStore";
+import { useStatusStore } from './infrastructure/StatusStore';
 import CopyActivityButton from "./CopyActivityButton";
 import MUIDataTable from "mui-datatables";
 import Collapse from "@material-ui/core/Collapse";
+import WorkingIndicator from './infrastructure/WorkingIndicator';
 
 export default function CourseList(props) {
   const endpointSet = "course";
@@ -38,7 +39,7 @@ export default function CourseList(props) {
     return <Paper {...props} />;
   }
 
-  const [working, setWorking] = useState(true);
+  const [status, statusActions] = useStatusStore( );
   const columns = [
     {
       label: "Number",
@@ -173,8 +174,6 @@ export default function CourseList(props) {
                 itemId={value}
                 itemUpdateFunc={getCourses}
                 startDate={new Date(course['start_date'])}
-                isWorking={working}
-                setIsWorking={setWorking}
                 addMessagesFunc={postNewMessage}
               />
             </React.Fragment>
@@ -210,11 +209,12 @@ export default function CourseList(props) {
       .then(data => {
         //Process the data
         setCourses(data);
-        setWorking(false);
+        statusActions.setWorking(false);
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      statusActions.setWorking( true )
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -301,7 +301,7 @@ export default function CourseList(props) {
           {messages["main"] || null}
         </Alert>
       </Collapse>
-      {working ? <LinearProgress /> : null}
+      <WorkingIndicator identifier='courses_loading' />
       <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
     </React.Fragment>
   );

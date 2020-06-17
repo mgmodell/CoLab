@@ -10,7 +10,6 @@ import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
@@ -58,7 +57,6 @@ export default function CourseDataAdmin(props) {
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
-  statusActions.setWorking( true );
 
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
@@ -228,6 +226,7 @@ export default function CourseDataAdmin(props) {
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -656,7 +655,6 @@ export default function CourseDataAdmin(props) {
         <Tab value="students" label="Students" />
         <Tab value="activities" label="Activities" />
       </Tabs>
-      {working ? <LinearProgress /> : null}
       {"details" == curTab ? detailsComponent : null}
       {"instructors" == curTab ? (
         <CourseUsersList

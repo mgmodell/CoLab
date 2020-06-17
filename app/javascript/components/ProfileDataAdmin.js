@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import WorkingIndicator from './infrastructure/WorkingIndicator';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
@@ -364,7 +364,6 @@ export default function ProfileDataAdmin(props) {
 
   const detailsComponent = (
     <Paper>
-      {status.working ? <LinearProgress id='waiting' /> : null}
       <ExpansionPanel expanded>
         <ExpansionPanelSummary id='profile' >
           Edit your profile

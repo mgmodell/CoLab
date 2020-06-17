@@ -3,7 +3,7 @@ import {
   useHistory
 } from 'react-router-dom'
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import WorkingIndicator from './infrastructure/WorkingIndicator';
 import Paper from "@material-ui/core/Paper";
 import Grid from '@material-ui/core/Grid'
 import { DateTime } from "luxon";
@@ -136,7 +136,6 @@ export default function HomeShell(props) {
           <Tab label='Calendar View' value='calendar'/>
           <Tab label='Task View' value='list'/>
         </Tabs>
-      {/* status.working ? <LinearProgress id='waiting' /> : null */}
       {( 'calendar' === curTab ) ?
         (<FullCalendar
             headerToolbar={{

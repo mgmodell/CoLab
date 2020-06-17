@@ -6,12 +6,12 @@ import Fab from "@material-ui/core/Fab";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import { useUserStore } from "./infrastructure/UserStore";
+import { useStatusStore } from './infrastructure/StatusStore';
 
 import MUIDataTable from 'mui-datatables';
 import { i18n } from './infrastructure/i18n';
@@ -21,12 +21,14 @@ import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 
 export default function DecisionInvitationsTable(props){
-  const [working, setWorking] = useState( false );
+
+  const [status, statusActions] = useStatusStore( );
   const {t, i18n } = useTranslation( )
   const [user, userActions] = useUserStore();
 
   useEffect(() => {
     if (!user.loaded) {
+      statusActions.setWorking( true );
       userActions.fetch(props.token);
     }
   }, []);
@@ -70,7 +72,7 @@ export default function DecisionInvitationsTable(props){
                   .then(data => {
                     //Process the data
                     props.parentUpdateFunc();
-                    setWorking( false )
+                    statusActions.setWorking( false )
                   });
 
                 }} >
@@ -104,7 +106,7 @@ export default function DecisionInvitationsTable(props){
                   .then(data => {
                     //Process the data
                     props.parentUpdateFunc();
-                    setWorking( false )
+                    statusActions.setWorking( false )
                   });
 
                 }} >

@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import BingoGameResults from "./BingoGameResults";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -170,7 +169,6 @@ class BingoGameDataAdminTable extends React.Component {
             <Typography variant={"h3"} align={"center"}>
               Loading&hellip;
             </Typography>
-            <LinearProgress />
           </React.Fragment>
         ) : (
           <React.Fragment>

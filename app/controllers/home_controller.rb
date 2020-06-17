@@ -113,7 +113,7 @@ class HomeController < ApplicationController
         baseUrl: schools_path,
         schoolCreateUrl: new_school_path,
       }
-    when 'experience'
+    when 'experience_admin'
       ep_hash = {
         baseUrl: experiences_path
       }

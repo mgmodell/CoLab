@@ -9,7 +9,7 @@ import {
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import WorkingIndicator from './infrastructure/WorkingIndicator';
 import Settings from "luxon/src/settings.js";
 
 import CloseIcon from "@material-ui/icons/Close";
@@ -61,7 +61,7 @@ export default function Admin(props) {
           {messages["main"] || null}
         </Alert>
       </Collapse>
-      {working ? <LinearProgress /> : null}
+      <WorkingIndicator identifier='admin_save' />
       <Switch>
         <Route path={`${path}/courses`}>
           <CourseAdmin

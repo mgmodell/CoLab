@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import Paper from "@material-ui/core/Paper";
 import Popover from "@material-ui/core/Popover";
+import { useStatusStore } from './infrastructure/StatusStore';
 
 import MUIDataTable from "mui-datatables";
 
@@ -12,6 +12,7 @@ import { Container } from "@material-ui/core";
 export default function ReactionsList(props) {
   const [anchorEl, setAnchorEl] = useState();
   const [popMsg, setPopMsg] = useState();
+  const [status, statusActions] = useStatusStore( );
 
   const getReactions = () => {
     var url = props.retrievalUrl + ".json";
@@ -35,7 +36,7 @@ export default function ReactionsList(props) {
         //MetaData and Infrastructure
         props.reactionsListUpdateFunc(data.reactions);
 
-        props.setWorking(false);
+        statusActions.setWorking(false);
       });
   };
 
@@ -158,7 +159,6 @@ export default function ReactionsList(props) {
 
   return (
     <Paper>
-      {props.working ? <LinearProgress /> : null}
       {null != props.reactionsList ? (
         <React.Fragment>
           <MUIDataTable
@@ -193,7 +193,4 @@ ReactionsList.propTypes = {
   retrievalUrl: PropTypes.string.isRequired,
   reactionsList: PropTypes.array,
   reactionsListUpdateFunc: PropTypes.func.isRequired,
-
-  working: PropTypes.bool.isRequired,
-  setWorking: PropTypes.func.isRequired
 };

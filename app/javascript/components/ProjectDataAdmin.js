@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -24,6 +23,7 @@ import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./infrastructure/EndPointStore";
+import { useStatusStore } from './infrastructure/StatusStore';
 
 import ProjectGroups from "./ProjectGroups";
 
@@ -35,7 +35,7 @@ export default function ProjectDataAdmin(props) {
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
-  const [working, setWorking] = useState(true);
+  const [status, statusActions] = useStatusStore( );
   const [messages, setMessages] = useState({});
   const [factorPacks, setFactorPacks] = useState([
     { id: 0, name_en: "none selected" }
@@ -112,13 +112,13 @@ export default function ProjectDataAdmin(props) {
         setProjectStyleId(project.style_id);
         setProjectStartDOW(project.start_dow);
         setProjectEndDOW(project.end_dow);
-        setWorking(false);
+        statusActions.setWorking(false);
         setDirty(false);
       });
   };
   const saveProject = () => {
     const method = null == projectId ? "POST" : "PATCH";
-    setWorking(true);
+    statusActions.setWorking(true);
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -179,7 +179,7 @@ export default function ProjectDataAdmin(props) {
 
           const course = data.course;
           setCourseName(course.name);
-          setWorking(false);
+          statusActions.setWorking(false);
           setDirty(false);
           setMessages(data.messages);
         } else {
@@ -189,6 +189,7 @@ export default function ProjectDataAdmin(props) {
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     daysOfWeek.unshift(daysOfWeek.pop());
@@ -226,7 +227,6 @@ export default function ProjectDataAdmin(props) {
 
   const detailsComponent = (
     <Paper>
-      {working ? <LinearProgress /> : null}
       <TextField
         label="Project Name"
         id="project-name"

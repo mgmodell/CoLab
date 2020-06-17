@@ -13,9 +13,9 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import GridList, { GridListTile } from "@material-ui/core/GridList";
-import LinearProgress from '@material-ui/core/LinearProgress';
 
 import {useEndpointStore} from '../infrastructure/EndPointStore';
+import { useStatusStore } from '../infrastructure/StatusStore';
 import { i18n } from '../infrastructure/i18n';
 import {useTranslation} from 'react-i18next';
 
@@ -29,7 +29,7 @@ export default function BingoBuilder( props ){
   const [endpoints, endpointsActions] = useEndpointStore();
   const {t, i18n} = useTranslation( );
 
-  const [working, setWorking] = useState(true);
+  const [status, statusActions] = useStatusStore( );
   const [curTab, setCurTab] = useState( 'builder' )
 
   const [saveStatus, setSaveStatus] = useState( '' );
@@ -51,6 +51,7 @@ export default function BingoBuilder( props ){
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
+      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
   }, []);
@@ -109,7 +110,7 @@ export default function BingoBuilder( props ){
   }
 
   const getConcepts = () => {
-    setWorking( true );
+    statusActions.setWorking( true );
     console.log( 'concepts')
     fetch( `${endpoints.endpoints[endpointSet].conceptsUrl}${bingoGameId}.json`, {
       method: "GET",
@@ -130,12 +131,12 @@ export default function BingoBuilder( props ){
       })
       .then(data => {
         setConcepts( data );
-        setWorking( false );
+        statusActions.setWorking( false );
       });
   }
 
   const getMyResults = () => {
-    setWorking( true );
+    statusActions.setWorking( true );
     fetch( `${endpoints.endpoints[endpointSet].baseUrl}${bingoGameId}.json`, {
       method: "GET",
       credentials: "include",
@@ -158,11 +159,11 @@ export default function BingoBuilder( props ){
         setCandidateList( data.candidate_list );
         setCandidates( data.candidates );
         //}, this.randomizeTiles );
-        setWorking( false );
+        statusActions.setWorking( false );
       });
   }
   const getBoard = () => {
-    setWorking( true );
+    statusActions.setWorking( true );
     fetch( `${endpoints.endpoints[endpointSet].boardUrl}${bingoGameId}.json`, {
       method: "GET",
       credentials: "include",
@@ -185,7 +186,7 @@ export default function BingoBuilder( props ){
         data.iteration = 0;
         setBoard( data );
         //}, this.randomizeTiles );
-        setWorking( false );
+        statusActions.setWorking( false );
       });
   }
 
@@ -312,7 +313,6 @@ export default function BingoBuilder( props ){
     return (
       <MuiThemeProvider theme={styles}>
         <Paper>
-        {working ? <LinearProgress /> : null}
           <Typography>
             <strong>Topic:</strong> {board.bingo_game.topic}
           </Typography>

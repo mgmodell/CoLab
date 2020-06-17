@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import WorkingIndicator from './infrastructure/WorkingIndicator';
 import Paper from "@material-ui/core/Paper";
 
 import MUIDataTable from "mui-datatables";
@@ -124,7 +124,7 @@ export default function UserCourseList(props) {
 
   return (
     <Paper>
-      {status.working ? <LinearProgress id='waiting' /> : null}
+      <WorkingIndicator identifier='courses_loading' />
       {courseList}
     </Paper>
   );

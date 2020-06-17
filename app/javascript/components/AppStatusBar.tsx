@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from "@material-ui/core/Collapse";
-import LinearProgress from '@material-ui/core/LinearProgress';
+import WorkingIndicator from './infrastructure/WorkingIndicator';
 
 import CloseIcon from "@material-ui/icons/Close";
 
@@ -16,8 +16,9 @@ export default function Quote(props) {
     <React.Fragment>
       { status.statusMessages.map( (message, index)  =>{
         return(
-          <Collapse in={ !status.message['dismissed'] }>
+          <Collapse key={`collapse_${index}`} in={ !status.message['dismissed'] }>
             <Alert
+              id={`alert_${index}`}
               action={
                 <IconButton
                   aria-label="close"
@@ -36,7 +37,7 @@ export default function Quote(props) {
           </Collapse>
         )
       } ) }
-      {status.working ? <LinearProgress id='waiting' /> : null}
+      <WorkingIndicator identifier='waiting' />
     </React.Fragment>
   );
 }

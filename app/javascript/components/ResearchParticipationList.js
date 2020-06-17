@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import Link from '@material-ui/core/Link'
 import Paper from "@material-ui/core/Paper";
 
@@ -13,7 +12,6 @@ export default function UserCourseList(props) {
   const [status, statusActions] = useStatusStore( );
 
   const getCourses = () => {
-    props.setWorking( true );
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -40,6 +38,7 @@ export default function UserCourseList(props) {
 
   useEffect(() => {
     if (null == props.usersList || props.usersList.length < 1) {
+      statusActions.setWorking( true );
       getCourses();
     }
   }, []);
@@ -129,7 +128,6 @@ export default function UserCourseList(props) {
 
   return (
     <Paper>
-      {status.working ? <LinearProgress id='waiting' /> : null}
        {consentFormList}
     </Paper>
   );

@@ -17,6 +17,7 @@ When /^the user "(.*?)" provide consent$/ do |does_or_does_not|
     chkbox.click
   end
   click_button 'Record my response to this Consent Form'
+  wait_for_render
 end
 
 Then /^the user will see a request for demographics$/ do
