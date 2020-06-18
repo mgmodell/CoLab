@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 ruby '2.7.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.3.1'
+gem 'rails', '~> 6.0.3.2'
 
 gem 'puma', '~> 4.0'
 # Use mysql as the database for Active Record
