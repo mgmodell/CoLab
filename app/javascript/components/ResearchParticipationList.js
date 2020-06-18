@@ -12,6 +12,7 @@ export default function UserCourseList(props) {
   const [status, statusActions] = useStatusStore( );
 
   const getCourses = () => {
+    statusActions.startTask(  );
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -32,13 +33,12 @@ export default function UserCourseList(props) {
       .then(data => {
         //MetaData and Infrastructure
         props.consentFormListUpdateFunc(data);
-        statusActions.setWorking(false);
+        statusActions.endTask();
       });
   };
 
   useEffect(() => {
     if (null == props.usersList || props.usersList.length < 1) {
-      statusActions.setWorking( true );
       getCourses();
     }
   }, []);

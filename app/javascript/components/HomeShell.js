@@ -34,7 +34,6 @@ export default function HomeShell(props) {
   const { t, i18n } = useTranslation( );
   const history = useHistory( );
 
-  // const [working, setWorking] = useState(true);
   const [curTab, setCurTab] = useState( 'calendar' )
 
   const [tasks, setTasks] = useState([]);
@@ -44,6 +43,7 @@ export default function HomeShell(props) {
   const getTasks = () => {
     var url = endpoints.endpoints[endpointSet].taskListUrl + ".json";
 
+    statusActions.startTask( );
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -83,7 +83,7 @@ export default function HomeShell(props) {
         setConsentLogs( data.consent_logs );
         setWaitingRosters( data.waiting_rosters );
 
-        statusActions.setWorking( false );
+        statusActions.endTask( 'loading' );
       });
   };
   useEffect(() => {

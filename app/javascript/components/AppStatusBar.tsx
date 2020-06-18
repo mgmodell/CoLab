@@ -37,7 +37,7 @@ export default function Quote(props) {
           </Collapse>
         )
       } ) }
-      <WorkingIndicator identifier='waiting' />
+      <WorkingIndicator />
     </React.Fragment>
   );
 }

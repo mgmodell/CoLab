@@ -22,7 +22,8 @@ import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 import LinkedSliders from "./LinkedSliders";
-export default function InstallmentReport(props) {
+
+export default function Experience(props) {
   const endpointSet = "installment";
   const [endpoints, endpointsActions] = useEndpointStore();
 
@@ -61,7 +62,6 @@ export default function InstallmentReport(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -112,6 +112,7 @@ export default function InstallmentReport(props) {
   //Retrieve the latest data
   const getContributions = () => {
     const url = `${endpoints.endpoints[endpointSet].baseUrl}/${props.installmentId}.json`;
+    statusActions.startTask();
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -156,11 +157,12 @@ export default function InstallmentReport(props) {
         setGroup(data.group);
         data.installment.group_id = data.group.id;
         setProject(data.installment.project);
-        statusActions.setWorking(false);
+        statusActions.endTask( );
       });
   };
   //Store what we've got
   const saveContributions = () => {
+    statusActions.startTask( 'saving' );
     const url =
     endpoints.endpoints[endpointSet].saveInstallmentUrl +
       (Boolean(installment.id) ? `/${installment.id}` : ``) + ".json";
@@ -209,7 +211,7 @@ export default function InstallmentReport(props) {
         console.log(data.messages);
         setMessages(data.messages);
         setShowAlerts(true);
-        statusActions.setWorking(false);
+        statusActions.endTask( 'saving' );
         setDirty(false);
       });
   };
@@ -323,7 +325,7 @@ export default function InstallmentReport(props) {
   );
 }
 
-InstallmentReport.propTypes = {
+Experience.propTypes = {
   token: PropTypes.string.isRequired,
   getEndpointsUrl: PropTypes.string.isRequired,
   installmentId: PropTypes.number

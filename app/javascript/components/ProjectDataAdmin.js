@@ -63,6 +63,7 @@ export default function ProjectDataAdmin(props) {
   const [courseTimezone, setCourseTimezone] = useState("UTC");
 
   const getProject = () => {
+    statusActions.startTask( );
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == projectId) {
@@ -112,13 +113,13 @@ export default function ProjectDataAdmin(props) {
         setProjectStyleId(project.style_id);
         setProjectStartDOW(project.start_dow);
         setProjectEndDOW(project.end_dow);
-        statusActions.setWorking(false);
+        statusActions.endTask( );
         setDirty(false);
       });
   };
   const saveProject = () => {
     const method = null == projectId ? "POST" : "PATCH";
-    statusActions.setWorking(true);
+    statusActions.startTask( 'saving' );
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -179,17 +180,17 @@ export default function ProjectDataAdmin(props) {
 
           const course = data.course;
           setCourseName(course.name);
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
           setDirty(false);
           setMessages(data.messages);
         } else {
           setMessages(data.messages);
+          statusActions.endTask( 'saving' );
         }
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     daysOfWeek.unshift(daysOfWeek.pop());

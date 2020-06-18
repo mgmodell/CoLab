@@ -56,6 +56,7 @@ export default function ExperienceDataAdmin(props) {
   const [courseTimezone, setCourseTimezone] = useState("UTC");
 
   const getExperience = () => {
+    statusActions.startTask( );
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == experienceId) {
@@ -101,13 +102,13 @@ export default function ExperienceDataAdmin(props) {
         );
         setExperienceEndDate(receivedDate.toISO());
 
-        statusActions.setWorking(false);
+        statusActions.endTask( );
         setDirty(false);
       });
   };
   const saveExperience = () => {
     const method = null == experienceId ? "POST" : "PATCH";
-    statusActions.setWorking(true);
+    statusActions.startTask( 'saving' );
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -160,18 +161,17 @@ export default function ExperienceDataAdmin(props) {
 
           const course = data.course;
           setCourseName(course.name);
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
           setDirty(false);
           setMessages(data.messages);
         } else {
           setMessages(data.messages);
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         }
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {

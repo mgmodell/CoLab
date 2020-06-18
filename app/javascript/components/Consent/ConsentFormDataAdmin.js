@@ -57,6 +57,7 @@ export default function ConsentFormDataAdmin(props) {
 
 
   const getConsentForm = () => {
+    statusActions.startTask( );
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == consentFormId) {
@@ -105,13 +106,13 @@ export default function ConsentFormDataAdmin(props) {
           )
         )
 
-        statusActions.setWorking(false);
+        statusActions.endTask( );
         setDirty(false);
       });
   };
   const saveConsentForm = () => {
     const method = null == consentFormId ? "POST" : "PATCH";
-    statusActions.setWorking(true);
+    statusActions.startTask( 'saving' );
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -140,7 +141,7 @@ export default function ConsentFormDataAdmin(props) {
           return response.json();
         } else {
           console.log("error");
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         }
       })
       .then(data => {
@@ -160,17 +161,16 @@ export default function ConsentFormDataAdmin(props) {
           setShowErrors( true );
           setDirty(false);
           setMessages(data.messages);
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         } else {
           setShowErrors( true );
           setMessages(data.messages);
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         }
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {

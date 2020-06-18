@@ -188,6 +188,7 @@ export default function CourseList(props) {
 
   const getCourses = () => {
     const url = endpoints.endpoints[endpointSet].baseUrl + ".json";
+    statusActions.startTask( 'loading' )
 
     fetch(url, {
       method: "GET",
@@ -209,12 +210,12 @@ export default function CourseList(props) {
       .then(data => {
         //Process the data
         setCourses(data);
-        statusActions.setWorking(false);
+        statusActions.endTask( 'loading' )
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.setWorking( true )
+      statusActions.startTask( 'loading' )
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -224,6 +225,7 @@ export default function CourseList(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] == "loaded") {
+      statusActions.endTask( 'loading' )
       getCourses();
     }
   }, [endpoints.endpointStatus[endpointSet]]);

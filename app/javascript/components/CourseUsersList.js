@@ -40,6 +40,7 @@ export default function CourseUsersList(props) {
   const [status, statusActions] = useStatusStore( );
 
   const getUsers = () => {
+    statusActions.startTask( );
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -67,14 +68,13 @@ export default function CourseUsersList(props) {
         setProcRegReqPath(data.add_function.proc_self_reg + ".json");
         props.usersListUpdateFunc(data.users);
 
-        statusActions.setWorking( false );
+        statusActions.endTask( );
       });
   };
 
   const refreshFunc = newMessages => {
     getUsers();
     props.addMessagesFunc(newMessages);
-    statusActions.setWorking( false );
   };
 
   useEffect(() => {
@@ -222,7 +222,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      statusActions.setWorking( true );
+                      statusActions.startTask( 'inviting' );
                       fetch(user.reinvite_link, {
                         method: "GET",
                         credentials: "include",
@@ -241,6 +241,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
+                          statusActions.endTask( 'inviting')
                         });
                     }}
                   >
@@ -269,7 +270,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      statusActions.setWorking( true );
+                      statusActions.startTask( 'accepting_student' );
                       fetch(procRegReqPath, {
                         method: "PATCH",
                         credentials: "include",
@@ -292,6 +293,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
+                          statusActions.endTask( 'accepting_student' );
                         });
                     }}
                   >
@@ -304,7 +306,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl2}
                     onClick={event => {
-                      statusActions.setWorking( true );
+                      statusActions.startTask( 'decline_student' );
                       fetch(procRegReqPath, {
                         method: "PATCH",
                         credentials: "include",
@@ -327,6 +329,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
+                          statusActions.endTask( 'decline_student' );
                         });
                     }}
                   >
@@ -344,7 +347,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      statusActions.setWorking( true );
+                      statusActions.startTask( 're-adding' );
                       fetch(addUsersPath, {
                         method: "PUT",
                         credentials: "include",
@@ -366,6 +369,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
+                          statusActions.endTask( 're-adding' );
                         });
                     }}
                   >
@@ -501,7 +505,7 @@ export default function CourseUsersList(props) {
                     </Button>
                     <Button
                       onClick={() => {
-                        statusActions.setWorking( true );
+                        statusActions.startTask( 'adding_email' );
                         fetch(addUsersPath, {
                           method: "PUT",
                           credentials: "include",
@@ -525,7 +529,7 @@ export default function CourseUsersList(props) {
                           .then(data => {
                             getUsers();
                             props.addMessagesFunc(data.messages);
-                            statusActions.setWorking( false );
+                            statusActions.endTask( 'adding_email' );
                           });
                         closeDialog();
                       }}

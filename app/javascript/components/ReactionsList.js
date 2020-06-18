@@ -16,6 +16,7 @@ export default function ReactionsList(props) {
 
   const getReactions = () => {
     var url = props.retrievalUrl + ".json";
+    statusActions.startTask( );
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -36,7 +37,7 @@ export default function ReactionsList(props) {
         //MetaData and Infrastructure
         props.reactionsListUpdateFunc(data.reactions);
 
-        statusActions.setWorking(false);
+        statusActions.endTask( );
       });
   };
 

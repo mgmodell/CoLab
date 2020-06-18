@@ -111,7 +111,7 @@ export default function ProfileDataAdmin(props) {
 
   const getStates = (countryCode ) =>{
     if( '' != statesForUrl ){
-      statusActions.setWorking( true );
+      statusActions.startTask( );
       const url = statesForUrl + countryCode + '.json';
       fetch(url, {
         method: "GET",
@@ -142,7 +142,7 @@ export default function ProfileDataAdmin(props) {
             setProfileHomeState( foundSelectedStates[ 0 ].id );
             setDirty(true);
           }
-          statusActions.setWorking( false );
+          statusActions.endTask( 'loading' );
         });
 
       }
@@ -187,6 +187,7 @@ export default function ProfileDataAdmin(props) {
   const getProfile = () => {
     setDirty(true);
     const url = endpoints.endpoints[endpointSet].baseUrl + '.json';
+    statusActions.startTask( );
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -227,12 +228,12 @@ export default function ProfileDataAdmin(props) {
 
         setProfileFields( profile );
 
-        statusActions.setWorking( false );
+        statusActions.endTask( 'loading' );
         setDirty(false);
       });
   };
   const saveProfile = () => {
-    statusActions.setWorking( true );
+    statusActions.startTask( 'saving' );
     const url = endpoints.endpoints[endpointSet].baseUrl + '.json';
     console.log( url );
 
@@ -282,7 +283,7 @@ export default function ProfileDataAdmin(props) {
           return response.json();
         } else {
           console.log("error");
-          statusActions.setWorking( false );
+          statusActions.endTask( 'saving' );
         }
       })
       .then(data => {
@@ -297,18 +298,18 @@ export default function ProfileDataAdmin(props) {
           setShowErrors( true );
           setDirty(false);
           setMessages(data.messages);
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         } else {
           setShowErrors( true );
           setMessages(data.messages);
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         }
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-      statusActions.setWorking( true );
+      statusActions.startTask( );
     }
     if (!user.loaded) {
       userActions.fetch(props.token);
@@ -317,8 +318,8 @@ export default function ProfileDataAdmin(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] == "loaded") {
+      statusActions.endTask( 'loading' );
       getProfile();
-      // getStates( profileHomeCountry );
     }
   }, [endpoints.endpointStatus[endpointSet]]);
 

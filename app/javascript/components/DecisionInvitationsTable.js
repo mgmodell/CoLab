@@ -28,7 +28,6 @@ export default function DecisionInvitationsTable(props){
 
   useEffect(() => {
     if (!user.loaded) {
-      statusActions.setWorking( true );
       userActions.fetch(props.token);
     }
   }, []);
@@ -51,7 +50,7 @@ export default function DecisionInvitationsTable(props){
                 aria-label={t('accept')}
                 onClick={(event)=>{
                 const url = invitation.acceptPath + '.json'
-                console.log( url )
+                statusActions.startTask( 'accepting' );
                 fetch( url, {
                   method: 'GET',
                   credentials: "include",
@@ -72,7 +71,7 @@ export default function DecisionInvitationsTable(props){
                   .then(data => {
                     //Process the data
                     props.parentUpdateFunc();
-                    statusActions.setWorking( false )
+                    statusActions.endTask( 'accepting' );
                   });
 
                 }} >
@@ -85,7 +84,7 @@ export default function DecisionInvitationsTable(props){
                 aria-label={t('decline')}
                 onClick={(event)=>{
                 const url = invitation.declinePath + '.json'
-                console.log( url )
+                statusActions.startTask( 'declining' );
                 fetch( url, {
                   method: 'GET',
                   credentials: "include",
@@ -106,7 +105,7 @@ export default function DecisionInvitationsTable(props){
                   .then(data => {
                     //Process the data
                     props.parentUpdateFunc();
-                    statusActions.setWorking( false )
+                    statusActions.endTask( 'declining' );
                   });
 
                 }} >

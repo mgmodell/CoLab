@@ -26,7 +26,6 @@ export default function Admin(props) {
   let {path, url} = useRouteMatch();
 
   const [user] = useUserStore();
-  const [messages, setMessages] = useState({});
 
   const [showErrors, setShowErrors] = useState(false);
 
@@ -43,25 +42,7 @@ export default function Admin(props) {
 
   return (
     <React.Fragment>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"] || null}
-        </Alert>
-      </Collapse>
-      <WorkingIndicator identifier='admin_save' />
+      <WorkingIndicator id='admin_save' />
       <Switch>
         <Route path={`${path}/courses`}>
           <CourseAdmin

@@ -6,10 +6,12 @@ import { useStatusStore } from './StatusStore';
 export default function WorkingIndicator(props) {
   const [status, statusActions] = useStatusStore( );
 
-  return status.working ?
-    (<LinearProgress id={props.identifier} />) : null;
+  return ( (undefined === props.identifier && status.working > 0 ) ||
+    status.taskStatus[ props.identifier ] > 0 ) ?
+    (<LinearProgress id={props.identifier || 'waiting'} />) : null;
+
 
 }
 WorkingIndicator.propTypes = {
-  identifier: PropTypes.string.isRequired
+  identifier: PropTypes.string
 };

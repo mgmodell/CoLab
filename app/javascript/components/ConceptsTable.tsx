@@ -59,8 +59,6 @@ export default function ConceptsTable(props) {
   const [sortBy, setSortBy] = useState("name");
   const [sortDirection, setSortDirection] = useState(SortDirection.DESC);
 
-  //const [working, setWorking] = useState(true);
-
   const [editing, setEditing] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [conceptName, setConceptName] = useState("");
@@ -120,6 +118,7 @@ export default function ConceptsTable(props) {
   };
 
   const getConcepts = () => {
+    statusActions.startTask( 'load' )
     fetch(endpoints.endpoints[endpointSet].baseUrl + ".json", {
       method: "GET",
       credentials: "include",
@@ -140,8 +139,7 @@ export default function ConceptsTable(props) {
       .then(data => {
         setConcepts(data);
         setConceptsRaw(data);
-        statusActions.setWorking( false );
-        //setWorking(false);
+        statusActions.endTask( 'load' )
       });
   };
   const filter = function(event) {
@@ -173,8 +171,7 @@ export default function ConceptsTable(props) {
     setDirty(false);
   };
   const updateConcept = (id, name) => {
-    statusActions.setWorking( true );
-    // setWorking(true);
+    statusActions.startTask( 'load' );
     fetch(endpoints.endpoints[endpointSet].baseUrl + "/" + id + ".json", {
       method: "PATCH",
       credentials: "include",
@@ -206,8 +203,7 @@ export default function ConceptsTable(props) {
 
         setConcepts(tmpConcepts);
         setConceptsRaw(tmpConcepts);
-        statusActions.setWorking( false );
-        // setWorking(false);
+        statusActions.endTask( 'load' );
         setEditing(false);
       });
   };

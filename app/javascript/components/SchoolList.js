@@ -85,6 +85,7 @@ export default function SchoolList(props) {
   const getSchools = () => {
     const url = endpoints.endpoints[endpointSet].baseUrl + ".json";
 
+    statusActions.startTask( );
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -105,12 +106,12 @@ export default function SchoolList(props) {
       .then(data => {
         //Process the data
         setSchools(data);
-        statusActions.setWorking(false);
+        statusActions.endTask( 'loading' );
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.setWorking( true );
+      statusActions.startTask( );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -121,6 +122,7 @@ export default function SchoolList(props) {
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] == "loaded") {
       getSchools();
+      statusActions.endTask( 'loading' );
     }
   }, [endpoints.endpointStatus[endpointSet]]);
 

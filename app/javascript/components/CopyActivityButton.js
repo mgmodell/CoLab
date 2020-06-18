@@ -82,7 +82,7 @@ export default function CopyActivityButton(props) {
             <Button
               disabled={status.working}
               onClick={event => {
-                statusActions.setWorking(true);
+                statusActions.startTask( 'copying');
                 console.log(newStartDate);
                 fetch(props.copyUrl, {
                   method: "POST",
@@ -110,7 +110,7 @@ export default function CopyActivityButton(props) {
                     }
                     setNewStartDate(DateTime.local().toISO());
                     setCopyData(null);
-                    statusActions.setWorking(false);
+                    statusActions.endTask( 'copying');
                   });
               }}
             >

@@ -44,6 +44,7 @@ export default function SchoolDataAdmin(props) {
   const [timezones, setTimezones] = useState( [] );
 
   const getSchool = () => {
+    statusActions.startTask( );
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == schoolId) {
@@ -77,13 +78,13 @@ export default function SchoolDataAdmin(props) {
         setSchoolDescription(school.description || '');
         setSchoolTimezone(school.timezone || 'UTC');
 
-        statusActions.setWorking(false);
+        statusActions.endTask( );
         setDirty(false);
       });
   };
   const saveSchool = () => {
     const method = null == schoolId ? "POST" : "PATCH";
-    statusActions.setWorking(true);
+    statusActions.startTask( 'saving' );
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -113,7 +114,7 @@ export default function SchoolDataAdmin(props) {
           return response.json();
         } else {
           console.log("error");
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         }
       })
       .then(data => {
@@ -127,17 +128,16 @@ export default function SchoolDataAdmin(props) {
           setShowErrors( true );
           setDirty(false);
           setMessages(data.messages);
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         } else {
           setShowErrors( true );
           setMessages(data.messages);
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         }
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {

@@ -84,6 +84,17 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
+          <Route path={`/experience/:id`}
+            render={routeProps => (
+              <React.Fragment>
+                <ConsentLog
+                  token={props.token}
+                  getEndpointsUrl={props.getEndpointsUrl}
+                  consentFormId={Number(routeProps.match.params.id)}
+                />
+              </React.Fragment>
+            )}
+          />
           <Route path={`/research_information/:id`}
             render={routeProps => (
               <React.Fragment>

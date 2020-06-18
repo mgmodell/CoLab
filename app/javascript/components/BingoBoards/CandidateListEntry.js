@@ -53,6 +53,7 @@ export default function CandidateListEntry(props) {
 
 
   const getCandidateList = () => {
+    statusActions.startTask( );
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + props.bingoGameId + '.json';
     fetch(url, {
@@ -87,7 +88,7 @@ export default function CandidateListEntry(props) {
         setHelpRequested( data.help_requested );
         setRequestCollaborationUrl( data.request_collaboration_url );
 
-        statusActions.setWorking(false);
+        statusActions.endTask( );
         setDirty(false);
       });
   };
@@ -124,7 +125,7 @@ export default function CandidateListEntry(props) {
   }
 
   const saveCandidateList = () => {
-    statusActions.setWorking(true);
+    statusActions.startTask( 'saving' );
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -152,7 +153,7 @@ export default function CandidateListEntry(props) {
           return response.json();
         } else {
           console.log("error");
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         }
       })
       .then(data => {
@@ -168,17 +169,16 @@ export default function CandidateListEntry(props) {
           setShowErrors( true );
           setDirty(false);
           setMessages(data.messages);
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         } else {
           setShowErrors( true );
           setMessages(data.messages);
-          statusActions.setWorking(false);
+          statusActions.endTask( 'saving' );
         }
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -209,7 +209,7 @@ export default function CandidateListEntry(props) {
   ) : null;
 
   const colabResponse = (decision) =>{
-    statusActions.setWorking( true );
+    statusActions.startTask( 'updating' );
     const url = `${requestCollaborationUrl}${decision}.json`;
     fetch(url, {
       method: 'GET',
@@ -225,7 +225,7 @@ export default function CandidateListEntry(props) {
           return response.json();
         } else {
           console.log("error");
-          statusActions.setWorking(false);
+          statusActions.endTask( 'updating' );
         }
       })
       .then(data => {
@@ -237,7 +237,7 @@ export default function CandidateListEntry(props) {
         setHelpRequested( data.help_requested );
         setOthersRequestedHelp( data.others_requested_help );
         setDirty( false );
-        statusActions.setWorking( false );
+        statusActions.endTask( 'updating' );
       })
 
   }

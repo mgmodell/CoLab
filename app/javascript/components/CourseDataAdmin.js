@@ -88,6 +88,7 @@ export default function CourseDataAdmin(props) {
   const [schoolTzHash, setSchoolTzHash] = useState({});
 
   const getCourse = () => {
+    statusActions.startTask( );
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == courseId) {
@@ -152,13 +153,13 @@ export default function CourseDataAdmin(props) {
         setCourseConsentFormId(course.consent_form_id || 0);
         setCourseSchoolId(course.school_id || 0);
 
-        statusActions.setWorking( false );
+        statusActions.endTask( 'loading' );
         setDirty(false);
       });
   };
   const saveCourse = () => {
     const method = null == courseId ? "POST" : "PATCH";
-    statusActions.setWorking( true );
+    statusActions.startTask( 'saving' );
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -218,7 +219,7 @@ export default function CourseDataAdmin(props) {
           );
           setCourseEndDate(receivedDate);
 
-          statusActions.setWorking( false );
+          statusActions.endTask( 'saving' );
           setDirty(false);
         }
         postNewMessage(data.messages);
@@ -226,7 +227,7 @@ export default function CourseDataAdmin(props) {
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.setWorking( true );
+      statusActions.startTask( );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -236,6 +237,7 @@ export default function CourseDataAdmin(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] == "loaded") {
+      statusActions.endTask( 'loading' );
       getCourse();
     }
   }, [endpoints.endpointStatus[endpointSet]]);
@@ -515,6 +517,7 @@ export default function CourseDataAdmin(props) {
               <IconButton
                 aria-label={lbl}
                 onClick={event => {
+                  statusActions.startTask( 'deleting' );
                   fetch(user.drop_link, {
                     method: "DESTROY",
                     credentials: "include",
@@ -534,7 +537,7 @@ export default function CourseDataAdmin(props) {
                     .then(data => {
                       getCourse();
                       setMessages(data.messages);
-                      statusActions.setWorking( false );
+                      statusActions.endTask( 'deleting' );
                     });
                 }}
               >

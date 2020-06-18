@@ -57,6 +57,7 @@ export default function ConsentFormList(props) {
 
   const getSchools = () => {
     const url = endpoints.endpoints[endpointSet].baseUrl + ".json";
+    statusActions.startTask('loading');
 
     fetch(url, {
       method: "GET",
@@ -78,12 +79,12 @@ export default function ConsentFormList(props) {
       .then(data => {
         //Process the data
         setSchools(data);
-        statusActions.setWorking(false);
+        statusActions.endTask('loading');
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.setWorking( true );
+      statusActions.startTask( );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -94,6 +95,7 @@ export default function ConsentFormList(props) {
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] == "loaded") {
       getSchools();
+      statusActions.endTask( 'loading' );
     }
   }, [endpoints.endpointStatus[endpointSet]]);
 

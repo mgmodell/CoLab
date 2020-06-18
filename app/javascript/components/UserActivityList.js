@@ -14,7 +14,7 @@ export default function UserCourseList(props) {
   const [status, statusActions] = useStatusStore( );
 
   const getActivities = () => {
-    statusActions.setWorking( true );
+    statusActions.startTask( );
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -36,7 +36,7 @@ export default function UserCourseList(props) {
         console.log( data );
         //MetaData and Infrastructure
         props.activitiesListUpdateFunc(data);
-        statusActions.setWorking(false);
+        statusActions.endTask( );
       });
   };
 

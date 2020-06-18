@@ -102,7 +102,6 @@ export default function BingoGameDataAdmin(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] !== "loaded") {
-      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
   }, []);
@@ -133,7 +132,7 @@ export default function BingoGameDataAdmin(props) {
 
   const saveBingoGame = () => {
     const method = null === bingoGameId ? "POST" : "PATCH";
-    statusActions.setWorking(true);
+    statusActions.startTask( 'saving' );
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -183,7 +182,7 @@ export default function BingoGameDataAdmin(props) {
         setSaveStatus(data["notice"]);
         setDirty(false);
         setMessages(data["messages"]);
-        statusActions.setWorking( false );
+        statusActions.endTask( 'saving' );
 
         getBingoGameData();
       });
@@ -191,7 +190,7 @@ export default function BingoGameDataAdmin(props) {
 
   const initResultData = () => {
     if (bingoGameId > 0) {
-      statusActions.setWorking( true );
+      statusActions.startTask( );
       fetch(
         endpoints.endpoints[endpointSet].gameResultsUrl +
           "/" +
@@ -217,13 +216,14 @@ export default function BingoGameDataAdmin(props) {
         })
         .then(data => {
           setResultData(data);
-          statusActions.setWorking( false );
+          statusActions.endTask( );
         });
     }
   };
 
   const getBingoGameData = () => {
     setDirty(true);
+    statusActions.startTask( );
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null === bingoGameId) {
       url = url + "new/" + props.courseId + ".json";
@@ -284,7 +284,7 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
         setDirty(false);
-        statusActions.setWorking( false );
+        statusActions.endTask( );
       });
   };
 

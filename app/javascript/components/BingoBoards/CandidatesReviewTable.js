@@ -171,7 +171,6 @@ export default function CandidatesReviewTable( props ){
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.setWorking( true );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
   }, []);
@@ -234,6 +233,7 @@ export default function CandidatesReviewTable( props ){
 
 
   const getData = () => {
+    statusActions.startTask( );
     setReviewStatus( "Loading data" );
 
     fetch( `${endpoints.endpoints[endpointSet].baseUrl}${props.bingoGameId}.json`, {
@@ -273,7 +273,7 @@ export default function CandidatesReviewTable( props ){
         setCandidateLists( data.candidate_lists );
 
         data.candidates.map((item,index) => {
-          item['number'] = index;
+          item['number'] = index + 1;
           if( null == item.concept_id ){
             item['concept'] = {
               name: ''
@@ -286,14 +286,14 @@ export default function CandidatesReviewTable( props ){
 
         setReviewStatus( 'Data loaded' );
         setDirty( false );
-        statusActions.setWorking( false );
+        statusActions.endTask( );
         updateProgress();
       });
   }
   // conceptStats() {}
   const saveFeedback = () => {
     setDirty( false );
-    statusActions.setWorking( true );
+    statusActions.startTask( 'saving' );
     setReviewStatus( 'Saving feedback.' )
 
     fetch(`${endpoints.endpoints[endpointSet].reviewSaveUrl}${props.bingoGameId}.json`, {
@@ -322,7 +322,7 @@ export default function CandidatesReviewTable( props ){
       })
       .then(data => {
         setDirty( typeof data.success !== "undefined" )
-        statusActions.setWorking( false );
+        statusActions.endTask( 'saving' );
         setReviewStatus( data.notice );
       });
   }

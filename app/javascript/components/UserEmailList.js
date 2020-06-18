@@ -30,13 +30,6 @@ export default function UserEmailList(props) {
 
   const [status, statusActions] = useStatusStore( );
 
-  const refreshFunc = newMessages => {
-    //getUsers();
-    statusActions.addMessage( )
-    props.addMessagesFunc(newMessages);
-    statusActions.setWorking(false);
-  };
-
   const emailColumns = [
     {
       label: "Registered Emails",
@@ -69,8 +62,8 @@ export default function UserEmailList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
+                      statusActions.startTask( 'updating' );
                       const url = props.primaryEmailUrl + value + '.json'
-                      statusActions.setWorking( true )
                       fetch(url, {
                         method: "GET",
                         credentials: "include",
@@ -90,7 +83,7 @@ export default function UserEmailList(props) {
                         .then(data => {
                           props.emailListUpdateFunc( data.emails )
                           props.addMessagesFunc(data.messages);
-                          statusActions.setWorking(false);
+                          statusActions.endTask( 'updating' );
                         });
                     }}
                   >
@@ -127,7 +120,7 @@ export default function UserEmailList(props) {
                     aria-label={lbl2}
                     onClick={event => {
                       const url = props.removeEmailUrl + value + '.json'
-                      statusActions.setWorking( true )
+                      statusActions.startTask( 'removing' );
                       fetch(url, {
                         method: "GET",
                         credentials: "include",
@@ -147,7 +140,7 @@ export default function UserEmailList(props) {
                         .then(data => {
                           props.emailListUpdateFunc( data.emails )
                           props.addMessagesFunc(data.messages);
-                          statusActions.setWorking(false);
+                          statusActions.endTask( 'removing' );
                         });
                     }}
                   >
@@ -213,7 +206,7 @@ export default function UserEmailList(props) {
                     </Button>
                     <Button
                       onClick={() => {
-                        statusActions.setWorking(true);
+                        statusActions.startTask( 'updating' );
                         fetch(props.addEmailUrl + '.json', {
                           method: "PUT",
                           credentials: "include",
@@ -237,7 +230,7 @@ export default function UserEmailList(props) {
                             //getUsers();
                             props.emailListUpdateFunc(data.emails)
                             props.addMessagesFunc(data.messages);
-                            statusActions.setWorking(false);
+                            statusActions.endTask( 'updating' )
                           });
                         closeDialog();
                       }}

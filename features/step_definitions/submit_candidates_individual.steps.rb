@@ -25,12 +25,13 @@ end
 When /^the user clicks the link to the candidate list$/ do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  #begin
-    find(:xpath, "//td[contains(.,'#{@bingo.get_name(@anon)}')]").click
-  #rescue Capybara::Ambiguous => e
-  #  puts e.message
+  begin
+    find(:xpath, "//div[text()='#{@bingo.get_name(@anon)}']").click
+  rescue Capybara::Ambiguous => e
+    byebug
+    puts e.message
     
-  #end
+  end
   # click_link_or_button @bingo.get_name(@anon)
 end
 

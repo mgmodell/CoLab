@@ -27,6 +27,7 @@ export default function ConsentLog(props) {
   const getLog = () => {
     var url = endpoints.endpoints[endpointSet].baseUrl + props.consentFormId + ".json";
 
+    statusActions.startTask( 'loading')
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -55,13 +56,13 @@ export default function ConsentLog(props) {
         setFormPresented( data.consent_log.presented );
         setLogLastUpdated( new Date( data.consent_log.updatedAt ) );
 
-        statusActions.setWorking(false);
+        statusActions.endTask( 'loading')
       });
   };
 
   const updateLog = () => {
-    console.log( logId );
     var url = endpoints.endpoints[endpointSet].consentLogSaveUrl + logId + ".json";
+    statusActions.startTask( 'saving' );
 
     console.log( 'update', url );
 
@@ -96,7 +97,7 @@ export default function ConsentLog(props) {
           history.back( );
         }
 
-        statusActions.setWorking(false);
+        statusActions.endTask( 'saving' );
       });
   };
 
