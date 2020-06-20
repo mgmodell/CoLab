@@ -117,4 +117,5 @@ When /^the user logs in$/ do
   fill_in 'user[password]', with: 'password'
 
   click_link_or_button 'Log in'
+  wait_for_render
 end

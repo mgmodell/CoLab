@@ -11,8 +11,9 @@ import InstallmentReport from './InstallmentReport';
 import CandidateListEntry from './BingoBoards/CandidateListEntry';
 import CandidatesReviewTable from './BingoBoards/CandidatesReviewTable';
 import BingoBuilder from './BingoBoards/BingoBuilder';
-import ConsentLog from './Consent/ConsentLog'
-import Admin from './Admin'
+import Experience from './Experience';
+import ConsentLog from './Consent/ConsentLog';
+import Admin from './Admin';
 import AppStatusBar from './AppStatusBar';
 
 export default function PageWrapper(props) {
@@ -87,10 +88,10 @@ export default function PageWrapper(props) {
           <Route path={`/experience/:id`}
             render={routeProps => (
               <React.Fragment>
-                <ConsentLog
+                <Experience
                   token={props.token}
                   getEndpointsUrl={props.getEndpointsUrl}
-                  consentFormId={Number(routeProps.match.params.id)}
+                  experienceId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
             )}

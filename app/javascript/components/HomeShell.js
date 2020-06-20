@@ -25,6 +25,7 @@ import ProfileDataAdmin from './ProfileDataAdmin'
 import { i18n } from './infrastructure/i18n';
 import {useTranslation} from 'react-i18next';
 import TaskList from './TaskList'
+import Skeleton from "@material-ui/lab/Skeleton";
 
 export default function HomeShell(props) {
   const endpointSet = "home";
@@ -36,9 +37,10 @@ export default function HomeShell(props) {
 
   const [curTab, setCurTab] = useState( 'calendar' )
 
-  const [tasks, setTasks] = useState([]);
-  const [consentLogs, setConsentLogs] = useState([]);
-  const [waitingRosters, setWaitingRosters] = useState([]);
+  //Initialising to null 
+  const [tasks, setTasks] = useState();
+  const [consentLogs, setConsentLogs] = useState();
+  const [waitingRosters, setWaitingRosters] = useState();
 
   const getTasks = () => {
     var url = endpoints.endpoints[endpointSet].taskListUrl + ".json";
@@ -83,7 +85,7 @@ export default function HomeShell(props) {
         setConsentLogs( data.consent_logs );
         setWaitingRosters( data.waiting_rosters );
 
-        statusActions.endTask( 'loading' );
+        statusActions.endTask( );
       });
   };
   useEffect(() => {
@@ -107,70 +109,73 @@ export default function HomeShell(props) {
     }
   }, [user.loaded]);
 
-  var pageContent;
-  if( consentLogs.length > 0 ){
-        pageContent = (<ConsentLog
+  var pageContent = <Skeleton variant='rect' /> ;
+  if( undefined !== consentLogs ){
+    if( consentLogs.length > 0 ){
+          pageContent = (<ConsentLog
+            token={props.token}
+            getEndpointsUrl={props.getEndpointsUrl}
+            consentFormId={consentLogs[0].consent_form_id}
+            parentUpdateFunc={getTasks}
+          />)
+    }else if( user.loaded && !user.welcomed ){
+      pageContent = (
+        <ProfileDataAdmin
           token={props.token}
           getEndpointsUrl={props.getEndpointsUrl}
-          consentFormId={consentLogs[0].consent_form_id}
-          parentUpdateFunc={getTasks}
-        />)
-  }else if( user.loaded && !user.welcomed ){
-    pageContent = (
-      <ProfileDataAdmin
-        token={props.token}
-        getEndpointsUrl={props.getEndpointsUrl}
-        profileId={user.id}
-      />
-    )
+          profileId={user.id}
+        />
+      )
 
-  }else{
-    pageContent = (
-      <React.Fragment>
+    }else{
+      pageContent = (
+        <React.Fragment>
 
-        <h1>{t( 'home.your_tasks' )}</h1>
-        <p>{t( 'home.greeting', { name: user.first_name } )},<br/>
-        {t( 'home.task_interval', { postProcess: 'interval', count: tasks.length} )}
-        </p>
-        <Tabs value={curTab} onChange={(event,newValue)=>{setCurTab(newValue)}}>
-          <Tab label='Calendar View' value='calendar'/>
-          <Tab label='Task View' value='list'/>
-        </Tabs>
-      {( 'calendar' === curTab ) ?
-        (<FullCalendar
-            headerToolbar={{
-              center: 'thisWeek,dayGridMonth'
+          <h1>{t( 'home.your_tasks' )}</h1>
+          <p>{t( 'home.greeting', { name: user.first_name } )},<br/>
+          {t( 'home.task_interval', { postProcess: 'interval', count: tasks.length} )}
+          </p>
+          <Tabs value={curTab} onChange={(event,newValue)=>{setCurTab(newValue)}}>
+            <Tab label='Calendar View' value='calendar'/>
+            <Tab label='Task View' value='list'/>
+          </Tabs>
+        {( 'calendar' === curTab ) ?
+          (<FullCalendar
+              headerToolbar={{
+                center: 'thisWeek,dayGridMonth'
 
-            }}
-            initialView="thisWeek"
-            views={{
-              thisWeek:{
-                type: 'dayGrid',
-                duration: {
-                  weeks: 2
+              }}
+              initialView="thisWeek"
+              views={{
+                thisWeek:{
+                  type: 'dayGrid',
+                  duration: {
+                    weeks: 2
+                  },
+                  buttonText: 'Two Weeks'
                 },
-                buttonText: 'Two Weeks'
-              },
-              dayGridMonth:{
-                buttonText: 'One Month'
-              }
-            }}
-            displayEventTime={false}
-            events={tasks}
-            eventClick={(info)=>{
-              history.push(info.event.url);
-            }}
-            plugins={[ dayGridPlugin, luxonPlugin ]}
-          />) : null
-      }
-      {( 'list' === curTab ) ?
-        (
-          <TaskList tasks={tasks}/>
-        ) : null
-      }
-      </React.Fragment>
+                dayGridMonth:{
+                  buttonText: 'One Month'
+                }
+              }}
+              displayEventTime={false}
+              events={tasks}
+              eventClick={(info)=>{
+                history.push(info.event.url);
+              }}
+              plugins={[ dayGridPlugin, luxonPlugin ]}
+            />) : null
+        }
+        {( 'list' === curTab ) ?
+          (
+            <TaskList tasks={tasks}/>
+          ) : null
+        }
+        </React.Fragment>
 
-    )
+      )
+    }
+
   }
 
   return (
@@ -181,7 +186,7 @@ export default function HomeShell(props) {
         <React.Fragment>
 
         <Grid item xs={12}>
-          {waitingRosters.length > 0 ?
+          {undefined !== waitingRosters && waitingRosters.length > 0 ?
           (
           <DecisionInvitationsTable
             token={props.token}

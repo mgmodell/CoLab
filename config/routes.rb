@@ -135,9 +135,9 @@ Rails.application.routes.draw do
         constraints: ->(req) {req.format == :json }
   end
 
-  get 'experiences/next/:experience_id:' => 'experiences#next', as: :next_experience
-  get 'exeriences/diagnose' => 'experiences#diagnose', as: :diagnose
-  get 'exeriences/reaction' => 'experiences#react', as: :react
+  get 'experiences/next/:experience_id' => 'experiences#next', as: :next_experience
+  patch 'exeriences/diagnose' => 'experiences#diagnose', as: :diagnose
+  patch 'exeriences/reaction' => 'experiences#react', as: :react
 
   get 'course/users/:id' => 'courses#get_users', as: :get_users,
         constraints: ->(req) { req.format == :json }

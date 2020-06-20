@@ -66,6 +66,7 @@ Then /^the latest Diagnosis will show "([^"]*)" in the field "([^"]*)"$/ do |_va
 end
 
 Then /^the user sees the experience instructions page$/ do
+  wait_for_render
   step 'the user will see "Instructions for completing"'
 end
 

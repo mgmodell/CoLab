@@ -35,7 +35,7 @@
     "html-to-draftjs": "^1.4.0",
     "html2canvas": "^1.0.0-alpha.11",
     "i18next": "^19.0.0",
-    "i18next-browser-languagedetector": "^4.0.1",
+    "i18next-browser-languagedetector": "^5.0.0",
     "i18next-fetch-backend": "^3.0.0",
     "i18next-intervalplural-postprocessor": "^2.0.0",
     "i18next-localstorage-cache": "^1.1.1",

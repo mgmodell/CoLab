@@ -159,6 +159,12 @@ class HomeController < ApplicationController
         saveInstallmentUrl: installments_path
 
       }
+    when 'experience'
+      ep_hash = {
+        baseUrl: next_experience_path( experience_id: '' ),
+        diagnosisUrl: diagnose_path,
+        reactionUrl: react_path
+      }
     when 'profile'
       ep_hash = {
         baseUrl: full_profile_path,

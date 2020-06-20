@@ -166,33 +166,47 @@ class ExperiencesController < ApplicationController
     experience = Experience.joins(course: { rosters: :user })
                            .where(id: experience_id, users: { id: current_user }).take
 
-    consent_log = experience.course.get_consent_log user: current_user
+    response = {
+      messages: { }
+    }
 
-    if consent_log.present? && !consent_log.presented?
-      redirect_to edit_consent_log_path(consent_form_id: consent_log.consent_form_id)
+    if experience.nil? && !experience.is_open
+      response[ :messages ][ :main ] = t( 'experiences.wrong_course')
 
-    elsif experience.nil? && !experience.is_open
-      redirect_to '/', notice: t('experiences.wrong_course')
     else
       reaction = experience.get_user_reaction(current_user)
       week = reaction.next_week
-      if !reaction.instructed?
+
+      response = response.merge({
+        reaction_id: reaction.id,
+        instructed: reaction.instructed,
+        behaviors: Behavior.all.collect{ |behavior|
+          {
+            id: behavior.id,
+            name: behavior.name,
+            description: behavior.description
+
+          }
+        }
+      })
+
+      if !reaction.instructed
         reaction.instructed = true
         reaction.save
+
         logger.debug reaction.errors.full_messages unless reaction.errors.empty?
-        @experience = experience
-        @title = t('experiences.instr_title')
-        render :instructions
-      else
-        if week.nil?
-          @reaction = reaction
-          # we just finished the last week
-          @title = t('experiences.react_title')
-          render :reaction
-        else
-          @diagnosis = reaction.diagnoses.new(week: week)
-        end
+      elsif !week.nil?
+        response = response.merge( {
+          week_id: week.id,
+          week_num: week.week_num,
+          week_text: week.text,
+        } )
       end
+
+      respond_to do |format|
+        format.json { render json: response.as_json }
+      end
+
     end
   end
 
