@@ -25,9 +25,9 @@
       <% if @diagnosis.errors.any? && @diagnosis.errors[ :other_name ].size > 0 %>
         <div id="other_name_panel">
           <p class='error'><%= @diagnosis.errors[ :other_name ].first %></p>
-        <% else %>
-          <div style="display: none" id="other_name_panel">
-          <% end %>
+      <% else %>
+        <div style="display: none" id="other_name_panel">
+      <% end %>
           <%= f.input :other_name, label: (t '.other') %><br>
         </div>
       </div>

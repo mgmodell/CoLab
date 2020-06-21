@@ -4,6 +4,8 @@ const Store = createStore({
   initialState: {
     working: 0,
     taskStatus: {},
+    dirtyStatus: {},
+    dirty: false,
     statusMessages: []
   },
   actions: {
@@ -29,6 +31,33 @@ const Store = createStore({
       setState({
         taskStatus: taskStatus,
         working: workingCount || 0
+      })
+    },
+    setDirty: ( task ) => ({ setState, getState }) => {
+      const dirtyStatus = getState( ).dirtyStatus;
+
+      dirtyStatus[ task ] = true;
+      const dirty = Object.values( dirtyStatus ).reduce((accumulator, currentValue) => { if( currentValue) { accumulator += 1} })
+
+      setState({
+        dirtyStatus: dirtyStatus,
+        dirty: dirty > 0
+      })
+    },
+    setClean: ( task ) => ({ setState, getState }) => {
+      const dirtyStatus = getState( ).dirtyStatus;
+
+      if( undefined !== task ){
+        dirtyStatus[ task ] = false;
+      }else{
+        dirtyStatus = {};
+
+      }
+      const dirty = Object.values( dirtyStatus ).reduce((accumulator, currentValue) => { if( currentValue) { accumulator += 1} })
+
+      setState({
+        dirtyStatus: dirtyStatus,
+        dirty: dirty > 0
       })
     },
     addMessage: (text, priority) => ({setState, getState}) => {

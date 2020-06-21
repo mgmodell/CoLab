@@ -6,9 +6,15 @@ Then /^the user clicks the link to the experience$/ do
   step 'the user switches to the "Task View" tab'
   find(:xpath, "//div[text()='#{@experience.name}']").click
   # click_link_or_button @experience.name
+end 
+
+Then("the {string} button will be disabled") do |button_name|
+  elem = find(:xpath,  "//button[contains(.,'#{button_name}')]")
+  elem[:disabled].should eq 'true'
 end
 
 Then /^the user will see "([^"]*)"$/ do |checkText|
+  wait_for_render
   page.should have_content(:all, checkText)
 end
 

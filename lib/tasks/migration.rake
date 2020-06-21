@@ -1,5 +1,13 @@
 namespace :migratify do
 
+  desc 'Applying for the react migration in the summer of 2020'
+  task react_su_2020: :environment do
+    behavior = Behavior.find_by_name_en( 'Other' )
+    behavior.needs_detail = true
+    behavior.save
+
+  end
+
   desc 'Applying changes to Candidate Feedback options'
   task cf_updates: :environment do
 

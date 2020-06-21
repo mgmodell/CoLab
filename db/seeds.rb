@@ -110,6 +110,7 @@ end
 class Behavior_
   attr_accessor :name_en, :name_ko
   attr_accessor :description_en, :description_ko
+  attr_accessor :needs_detail
 end
 read_data = YAML.safe_load(File.open('db/behavior.yml'), [Behavior_])
 read_data.each do |behavior|
@@ -119,6 +120,7 @@ read_data.each do |behavior|
   g.name_ko = behavior.name_ko unless g.name_ko == behavior.name_ko
   g.description_en = behavior.description_en unless g.description_en == behavior.description_en
   g.description_ko = behavior.description_ko unless g.description_ko == behavior.description_ko
+  g.needs_detail = behavior.needs_detail
   g.save
 end
 

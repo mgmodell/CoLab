@@ -184,7 +184,8 @@ class ExperiencesController < ApplicationController
           {
             id: behavior.id,
             name: behavior.name,
-            description: behavior.description
+            description: behavior.description,
+            needs_detail: behavior.needs_detail
 
           }
         }
@@ -225,12 +226,22 @@ class ExperiencesController < ApplicationController
       reaction = received_diagnosis.reaction
       @diagnosis = reaction.diagnoses.new(week: week)
     end
+    response = {}
     if week.nil?
       # we just finished the last week
       @reaction = received_diagnosis.reaction
-      render :reaction
-    else
-      render :next
+      response = response.merge({
+        week_id: week.id,
+          week_num: week.week_num,
+          week_text: week.text,
+      })
+      # render :reaction
+    # else
+      # render :next
+    end
+
+    respond_to do |format|
+      format.json {render json: respons.as_json }
     end
   end
 

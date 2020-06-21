@@ -23,12 +23,12 @@ import { useTranslation } from "react-i18next";
 
 import ExperienceInstructions from "./ExperienceInstructions";
 import ExperienceDiagnosis from "./ExperienceDiagnosis";
+import ExperienceReaction from "./ExperienceReaction";
 
 export default function Experience(props) {
   const endpointSet = "experience";
   const [endpoints, endpointsActions] = useEndpointStore();
   const [status, statusActions] = useStatusStore( );
-  const [dirty, setDirty] = useState(false);
   const [t, i18n] = useTranslation("installments");
 
   const [reactionId, setReactionId] = useState( );
@@ -130,7 +130,45 @@ export default function Experience(props) {
         setWeekText( data.week_text );
 
         statusActions.endTask( 'saving' );
-        setDirty(false);
+        statusActions.setClean( 'diagnosis' );
+      });
+  };
+
+  //React
+  const saveReaction = (behaviorId, otherName, improvements) => {
+    statusActions.startTask( 'saving' );
+    const url =
+    endpoints.endpoints[endpointSet].diagnosisUrl
+    fetch(url, {
+      method: 'PATCH',
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+        "X-CSRF-Token": props.token
+      },
+      body: JSON.stringify({
+        diagnosis: {
+          reaction_id: reactionId,
+          behavior_id: behaviorId,
+          other_name: otherName,
+          improvements: improvements
+        }
+
+      })
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          console.log("error");
+        }
+      })
+      .then(data => {
+        //Process Contributions
+
+        statusActions.endTask( 'saving' );
+        statusActions.setClean( 'diagnosis' );
       });
   };
 
@@ -145,8 +183,13 @@ export default function Experience(props) {
       weekNum={weekNum}
       weekText={weekText}
       />)
-  } else {
+  } else if( undefined !== week_id ){
     output = (<ExperienceInstructions behaviors={behaviors} acknowledgeFunc={getNext} />)
+  } else {
+    output = (<ExperienceReaction
+      behaviors={behaviors}
+      reactionFunc={saveReaction}
+      />)
   }
 
   return output;

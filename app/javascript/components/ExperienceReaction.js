@@ -27,17 +27,17 @@ import LinkedSliders from "./LinkedSliders";
 import Select from "@material-ui/core/Select";
 import { Grid } from "@material-ui/core";
 
-export default function ExperienceDiagnosis(props) {
+export default function ExperienceReaction(props) {
   const [t, i18n] = useTranslation("experiences");
   const [behaviorId, setBehaviorId ] = useState( 0 );
   const [otherName, setOtherName] = useState( '' );
-  const [comments, setComments] = useState( '' );
-  const [showComments, setShowComments] = useState( false );
+  const [improvements, setImprovements] = useState( '' );
+  const [showImprovements, setShowImprovements] = useState( false );
   const [status, statusActions] = useStatusStore( );
 
   const saveButton = 
-    ( <Button disabled={!status.dirtyStatus['diagnosis']} variant="contained" onClick={() => props.diagnoseFunc( behaviorId, otherName, comments)}>
-      <Suspense fallback={<Skeleton variant="text" />}>{t('next.save_and_continue')}</Suspense>
+    ( <Button disabled={!status.dirtyStatus['reaction']} variant="contained" onClick={() => props.reactionFunc( behaviorId, otherName, improvements)}>
+      <Suspense fallback={<Skeleton variant="text" />}>{t('submit')}</Suspense>
     </Button>)
 
   const getById = (list, id) =>{
@@ -60,14 +60,14 @@ export default function ExperienceDiagnosis(props) {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Suspense fallback={<Skeleton variant='text' />} >
-            <h3>{t( 'next.journal', {week_num: props.weekNum } )}</h3>
+            <h3>{t( 'reaction.title' )}</h3>
           </Suspense>
         </Grid>
         <Grid item xs={12}>
           <Suspense fallback={<Skeleton variant='rect' />} >
                 <p
                   dangerouslySetInnerHTML={{
-                    __html: props.weekText
+                    __html: t( 'reaction.instructions')
                   }}
                 />
           </Suspense>
@@ -75,13 +75,13 @@ export default function ExperienceDiagnosis(props) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <InputLabel htmlFor="course_school" id="course_school_lbl">
-            <h3>{t( 'next.prompt' )}</h3>
+            <h3>{t( 'reaction.dom_behavior' )}</h3>
           </InputLabel>
           <Select
             id="behavior"
             value={behaviorId}
             onChange={event => {
-              statusActions.setDirty( 'diagnosis' )
+              statusActions.setDirty( 'reaction' )
               setBehaviorId(Number(event.target.value));
             }}
           >
@@ -102,14 +102,14 @@ export default function ExperienceDiagnosis(props) {
         <Grid item xs={12}>
           <ExpansionPanel expanded={showComments} onChange={()=>setShowComments( !showComments)} >
             <ExpansionPanelSummary id='comments_pnl'>
-              {t( 'next.click_for_comment')}
+              {t( 'reaction.improve')}
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <TextField
                 variant='filled'
-                label={t( 'next.comments' )}
-                value={comments}
-                onChange={(event)=>{setComments(event.target.value)}}
+                label={t( 'reaction.improve' )}
+                value={improvements}
+                onChange={(event)=>{setImprovements(event.target.value)}}
               />
 
             </ExpansionPanelDetails>
@@ -122,10 +122,7 @@ export default function ExperienceDiagnosis(props) {
   );
 }
 
-ExperienceDiagnosis.propTypes = {
-  diagnoseFunc: PropTypes.func.isRequired,
+ExperienceReaction.propTypes = {
+  reactionFunc: PropTypes.func.isRequired,
   behaviors: PropTypes.array.isRequired,
-  weekNum: PropTypes.number.isRequired,
-  weekText: PropTypes.string.isRequired
-
 };

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_043801) do
+ActiveRecord::Schema.define(version: 2020_06_21_012559) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_043801) do
     t.datetime "updated_at", null: false
     t.string "name_ko"
     t.text "description_ko"
+    t.boolean "needs_detail", default: false, null: false
     t.index ["name_en"], name: "index_behaviors_on_name_en", unique: true
   end
 
