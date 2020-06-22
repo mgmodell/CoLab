@@ -126,6 +126,7 @@ export default function Experience(props) {
       })
       .then(data => {
         //Process Contributions
+        console.log( data );
         setWeekId( data.week_id );
         setWeekNum( data.week_num );
         setWeekText( data.week_text );

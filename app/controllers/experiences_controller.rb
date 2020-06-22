@@ -230,13 +230,13 @@ class ExperiencesController < ApplicationController
     if week.nil?
       # we just finished the last week
       @reaction = received_diagnosis.reaction
+      # render :reaction
+    else
       response = response.merge({
         week_id: week.id,
           week_num: week.week_num,
           week_text: week.text,
       })
-      # render :reaction
-    # else
       # render :next
     end
 

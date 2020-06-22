@@ -80,6 +80,7 @@ Then /^the user completes a week$/ do
   week = reaction.next_week
   # get the current week number
 
+  wait_for_render
   behavior = Behavior.all.to_a.sample
   step_text = 'the user will see "Week ' + week.week_num.to_s + '"'
   step step_text
@@ -90,6 +91,7 @@ Then /^the user completes a week$/ do
   step step_text if behavior.name_en == 'Other'
   step_text = 'the user presses "Save and continue"'
   step step_text
+  wait_for_render
   step_text = 'the database will show a new week ' + week.week_num.to_s + ' "' + behavior.name_en + '" diagnosis from the user'
   step step_text
 end
