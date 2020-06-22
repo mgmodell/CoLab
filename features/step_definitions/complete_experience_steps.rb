@@ -27,35 +27,34 @@ Then /^the user presses "([^"]*)"$/ do |linkOrButtonName|
 end
 
 Then /^they open the drawer for additional comments$/ do
-  click_link_or_button 'Click here if you have additional comments for us regarding this narrative.'
+  find(:xpath, "//div[contains(text(),'Click here if you have additional comments for us regarding this narrative.')]").click
 end
 
 Then /^they enter "([^"]*)" in extant field "([^"]*)"$/ do |txt, fld|
-  page.fill_in(fld, with: txt, visible: :all, disabled: :all)
+  label = find( :xpath, "//label[text()='#{fld}']")
+  element = find( :xpath, "//input[@id='#{label[:for]}']")
+  element.click
+  element.send_keys txt
 end
 
 Then /^in the field "([^"]*)" they will see "([^"]*)"$/ do |fld, value|
-  click_link_or_button 'Click here if you have additional comments for us regarding this narrative.'
-  field_value = find_field(fld).value
+  label = find( :xpath, "//label[text()='#{fld}']")
+  panel = all( :xpath, "//input[@id='#{label[:for]}']")
+  if panel.size > 0
+    panel[0].click
+  end
+  # click_link_or_button 'Click here if you have additional comments for us regarding this narrative.'
+  field_value = panel[ 0 ].value
   expect(field_value).to include value
 end
 
 Then /^the user chooses the "([^"]*)" radio button$/ do |choice|
-  # TODO: this will need to be fixed after the migration to react
-  # choose(choice)
-  inputId = find(:xpath, '//label[text()="' + choice + '"]')[:for]
-  checkbox = find(:xpath, "//input[@id='#{inputId}']")
-  begin
-    # Chrome does it this way
-    checkbox.find(:xpath, '../..').click
-  rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
-    # Firefox does it this way
-    checkbox.find(:xpath, '..').click
-  end
-  # JQueryMobile makes the enclosing span clickable
+  elem = find(:xpath, "//label[contains(.,\"#{choice}\")]")
+  elem.click
 end
 
 Then /^the database will show a new week (\d+) "([^"]*)" diagnosis from the user$/ do |week_num, behavior|
+  wait_for_render
   diagnosis = Diagnosis.joins(:reaction).where(reactions: { user_id: @user.id }).last
   diagnosis.week.week_num.should eq week_num.to_i
   diagnosis.behavior.name_en.should eq behavior

@@ -41,9 +41,9 @@ Feature: Users can complete 'experiences'
     Then the user sees the experience instructions page
      And the user presses "Next"
     Then the user will see "Week 1"
-     And the user presses "Save and continue"
-    Then the user will see "Week 1"
-    Then the user will see "You must select a behavior"
+    Then the 'Save and continue' button will be disabled
+    #Then the user will see "Week 1"
+    #Then the user will see "You must select a behavior"
     Then user opens their profile
     Then the user sees the experience in the history
 
@@ -63,9 +63,9 @@ Feature: Users can complete 'experiences'
      And the user presses "Next"
     Then they open the drawer for additional comments
     Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment" in extant field "Your comments"
-     And the user presses "Save and continue"
-    Then the user will see "Week 1"
-    Then the user will see "You must select a behavior"
+    Then the 'Save and continue' button will be disabled
+    # Then the user will see "Week 1"
+    # Then the user will see "You must select a behavior"
     Then in the field "Your comments" they will see "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
 
 @javascript

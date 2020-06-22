@@ -23,9 +23,11 @@ import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import { useStatusStore } from './infrastructure/StatusStore';
 
-import LinkedSliders from "./LinkedSliders";
-import Select from "@material-ui/core/Select";
-import { Grid } from "@material-ui/core";
+import Radio from '@material-ui/core/Radio';
+import Grid from '@material-ui/core/Grid';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormLabel from "@material-ui/core/FormLabel";
 
 export default function ExperienceReaction(props) {
   const [t, i18n] = useTranslation("experiences");
@@ -35,16 +37,21 @@ export default function ExperienceReaction(props) {
   const [showImprovements, setShowImprovements] = useState( false );
   const [status, statusActions] = useStatusStore( );
 
-  const saveButton = 
-    ( <Button disabled={!status.dirtyStatus['reaction']} variant="contained" onClick={() => props.reactionFunc( behaviorId, otherName, improvements)}>
-      <Suspense fallback={<Skeleton variant="text" />}>{t('submit')}</Suspense>
-    </Button>)
 
   const getById = (list, id) =>{
     return list.filter( (item) =>{
       return id === item.id;
     })[0];
   }
+  const detailNeeded = 0 === behaviorId ? false : getById( props.behaviors, behaviorId ).needs_detail;
+  const detailPresent = otherName.length > 0;
+  const saveButton = 
+    ( <Button
+        disabled={( !status.dirtyStatus['reaction'] ) && (!detailNeeded || detailPresent)}
+        variant="contained"
+        onClick={() => props.diagnoseFunc( behaviorId, otherName, comments)}>
+      <Suspense fallback={<Skeleton variant="text" />}>{t('submit')}</Suspense>
+    </Button>)
   const otherPnl = (0 !== behaviorId && getById( props.behaviors, behaviorId ).needs_detail ) ? (
     <TextField
       variant='filled'
@@ -74,33 +81,44 @@ export default function ExperienceReaction(props) {
 
         </Grid>
         <Grid item xs={12} sm={6}>
-          <InputLabel htmlFor="course_school" id="course_school_lbl">
-            <h3>{t( 'reaction.dom_behavior' )}</h3>
-          </InputLabel>
-          <Select
-            id="behavior"
-            value={behaviorId}
-            onChange={event => {
-              statusActions.setDirty( 'reaction' )
-              setBehaviorId(Number(event.target.value));
-            }}
-          >
-            <MenuItem value={0}>None Selected</MenuItem>
+          <FormLabel>
+            {t( 'reaction.dom_behavior' )}
+          </FormLabel>
+            <RadioGroup
+              aria-label='behavior'
+              value={behaviorId}
+              onChange={(event)=>{
+                statusActions.setDirty( 'reaction' );
+                setBehaviorId(Number(event.target.value) );
+              }}
+              >
             {props.behaviors.map(behavior => {
               return (
-                <MenuItem key={"behavior_" + behavior.id} value={behavior.id}>
-                  {behavior.name}
-                </MenuItem>
+                <React.Fragment
+                    key={"behavior_" + behavior.id}
+                >
+                  <FormControlLabel
+                    value={behavior.id}
+                    label={behavior.name}
+                    control={<Radio />}
+                    />
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: behavior.description
+                    }}
+                    />
+
+                </React.Fragment>
               );
             })}
-          </Select>
+            </RadioGroup>
 
         </Grid>
         <Grid item xs={12} sm={6}>
           {otherPnl }
         </Grid>
         <Grid item xs={12}>
-          <ExpansionPanel expanded={showComments} onChange={()=>setShowComments( !showComments)} >
+          <ExpansionPanel expanded={showImprovements} onChange={()=>setshowImprovements( !showImprovements)} >
             <ExpansionPanelSummary id='comments_pnl'>
               {t( 'reaction.improve')}
             </ExpansionPanelSummary>

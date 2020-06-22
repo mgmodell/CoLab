@@ -95,6 +95,7 @@ export default function Experience(props) {
   //Store what we've got
   const saveDiagnosis = (behaviorId, otherName, comment) => {
     statusActions.startTask( 'saving' );
+    console.log( 'diagnosing' );
     const url =
     endpoints.endpoints[endpointSet].diagnosisUrl
     fetch(url, {
@@ -128,6 +129,7 @@ export default function Experience(props) {
         setWeekId( data.week_id );
         setWeekNum( data.week_num );
         setWeekText( data.week_text );
+        console.log( 'diagnosed' );
 
         statusActions.endTask( 'saving' );
         statusActions.setClean( 'diagnosis' );
@@ -138,7 +140,7 @@ export default function Experience(props) {
   const saveReaction = (behaviorId, otherName, improvements) => {
     statusActions.startTask( 'saving' );
     const url =
-    endpoints.endpoints[endpointSet].diagnosisUrl
+    endpoints.endpoints[endpointSet].reactionUrl
     fetch(url, {
       method: 'PATCH',
       credentials: "include",
@@ -176,19 +178,19 @@ export default function Experience(props) {
   if( behaviors.length < 1 ){
     output = (<Skeleton variant='rect' />)
 
-  } else if( instructed ){
+  } else if( !instructed ){
+    output = (<ExperienceInstructions behaviors={behaviors} acknowledgeFunc={getNext} />)
+  } else if( undefined === weekNum ){
+    output = (<ExperienceReaction
+      behaviors={behaviors}
+      reactionFunc={saveReaction}
+      />)
+  } else {
     output = (<ExperienceDiagnosis
       behaviors={behaviors}
       diagnoseFunc={saveDiagnosis}
       weekNum={weekNum}
       weekText={weekText}
-      />)
-  } else if( undefined !== week_id ){
-    output = (<ExperienceInstructions behaviors={behaviors} acknowledgeFunc={getNext} />)
-  } else {
-    output = (<ExperienceReaction
-      behaviors={behaviors}
-      reactionFunc={saveReaction}
       />)
   }
 

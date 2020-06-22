@@ -241,7 +241,7 @@ class ExperiencesController < ApplicationController
     end
 
     respond_to do |format|
-      format.json {render json: respons.as_json }
+      format.json {render json: response.as_json }
     end
   end
 
