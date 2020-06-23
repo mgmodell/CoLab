@@ -93,7 +93,7 @@ export default function Experience(props) {
       });
   };
   //Store what we've got
-  const saveDiagnosis = (behaviorId, otherName, comment) => {
+  const saveDiagnosis = (behaviorId, otherName, comment, resetFunc ) => {
     statusActions.startTask( 'saving' );
     console.log( 'diagnosing' );
     const url =
@@ -132,16 +132,19 @@ export default function Experience(props) {
         setWeekText( data.week_text );
         console.log( 'diagnosed' );
 
+        resetFunc( );
         statusActions.endTask( 'saving' );
         statusActions.setClean( 'diagnosis' );
       });
   };
 
   //React
-  const saveReaction = (behaviorId, otherName, improvements) => {
+  const saveReaction = (behaviorId, otherName, improvements, resetFunc ) => {
     statusActions.startTask( 'saving' );
+    console.log( 'reacting')
     const url =
     endpoints.endpoints[endpointSet].reactionUrl
+    console.log( url );
     fetch(url, {
       method: 'PATCH',
       credentials: "include",
@@ -151,8 +154,8 @@ export default function Experience(props) {
         "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
-        diagnosis: {
-          reaction_id: reactionId,
+        reaction: {
+          id: reactionId,
           behavior_id: behaviorId,
           other_name: otherName,
           improvements: improvements
@@ -170,8 +173,10 @@ export default function Experience(props) {
       .then(data => {
         //Process Contributions
 
+        resetFunc( );
+        console.log( 'reacted')
         statusActions.endTask( 'saving' );
-        statusActions.setClean( 'diagnosis' );
+        statusActions.setClean( 'reaction' );
       });
   };
 

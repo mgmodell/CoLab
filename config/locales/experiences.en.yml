@@ -87,6 +87,7 @@ en:
       dom_behavior: What behavior dominated the narrative?
       improve: How could I improve upon the narrative?
       suggest: 'Your suggestions:'
+      submit: Submit
     instructions:
       title: Instructions for completing this experience
       scenario_lbl: The student project scenario

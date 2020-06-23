@@ -195,7 +195,7 @@ Feature: Users can complete 'experiences'
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
     Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment" in extant field "Your suggestions:"
-    Then the user presses hidden "Submit"
+    Then the user presses "Submit"
      And the database will show a reaction with "Social loafing" as the behavior
      And the database will show a reaction with improvements of "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
     Then the user will see "Your reaction to the experience was recorded"
@@ -226,7 +226,7 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
-    Then the user presses hidden "Submit"
+    Then the user presses "Submit"
     Then the user will see "Reflection on possible improvements is required"
 
   @javascript
@@ -279,12 +279,12 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
-    Then the user presses hidden "Submit"
+    Then the user presses "Submit"
     Then the user will see "Reflection on possible improvements is required"
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Ganging up on the task" radio button
     Then they enter "first comment" in extant field "Your suggestions:"
-    Then the user presses hidden "Submit"
+    Then the user presses "Submit"
      And the database will show a reaction for the user with "Ganging up on the task" as the behavior
      And the database will show a reaction for the user with improvements of "first comment"
     Then the user will see "Your reaction to the experience was recorded"
@@ -311,7 +311,7 @@ Feature: Users can complete 'experiences'
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Group domination" radio button
     Then they enter "second comment" in extant field "Your suggestions:"
-    Then the user presses hidden "Submit"
+    Then the user presses "Submit"
      And the database will show a reaction with "Group domination" as the behavior
      And the database will show a reaction with improvements of "second comment"
     Then the user will see "Your reaction to the experience was recorded"

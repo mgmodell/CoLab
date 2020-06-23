@@ -23,7 +23,12 @@ Then /^the user presses hidden "([^"]*)"$/ do |linkOrButtonName|
 end
 
 Then /^the user presses "([^"]*)"$/ do |linkOrButtonName|
-  click_link_or_button linkOrButtonName
+  begin
+    click_link_or_button linkOrButtonName
+  rescue Capybara::ElementNotFound => e
+    byebug
+    
+  end
 end
 
 Then /^they open the drawer for additional comments$/ do

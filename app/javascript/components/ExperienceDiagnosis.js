@@ -49,7 +49,7 @@ export default function ExperienceDiagnosis(props) {
     ( <Button
         disabled={( !status.dirtyStatus['diagnosis'] ) && (!detailNeeded || detailPresent)}
         variant="contained"
-        onClick={() => props.diagnoseFunc( behaviorId, otherName, comments)}>
+        onClick={() => props.diagnoseFunc( behaviorId, otherName, comments, resetData )}>
       <Suspense fallback={<Skeleton variant="text" />}>{t('next.save_and_continue')}</Suspense>
     </Button>)
 
@@ -63,6 +63,13 @@ export default function ExperienceDiagnosis(props) {
     />
 
    ) : null;
+
+  const resetData = ()=>{
+    setBehaviorId( 0 );
+    setOtherName( '' );
+    setComments( '' );
+    setShowComments( false );
+  }
 
   return (
     <Paper>

@@ -49,8 +49,8 @@ export default function ExperienceReaction(props) {
     ( <Button
         disabled={( !status.dirtyStatus['reaction'] ) && (!detailNeeded || detailPresent)}
         variant="contained"
-        onClick={() => props.diagnoseFunc( behaviorId, otherName, comments)}>
-      <Suspense fallback={<Skeleton variant="text" />}>{t('submit')}</Suspense>
+        onClick={() => props.reactionFunc( behaviorId, otherName, improvements, resetData)}>
+      <Suspense fallback={<Skeleton variant="text" />}>{t('reaction.submit')}</Suspense>
     </Button>)
   const otherPnl = (0 !== behaviorId && getById( props.behaviors, behaviorId ).needs_detail ) ? (
     <TextField
@@ -61,6 +61,13 @@ export default function ExperienceReaction(props) {
     />
 
    ) : null;
+
+  const resetData = ()=>{
+    setBehaviorId( 0 );
+    setOtherName( '' );
+    setImprovements( '' );
+    setShowImprovements( false );
+  }
 
   return (
     <Paper>
@@ -118,21 +125,14 @@ export default function ExperienceReaction(props) {
           {otherPnl }
         </Grid>
         <Grid item xs={12}>
-          <ExpansionPanel expanded={showImprovements} onChange={()=>setshowImprovements( !showImprovements)} >
-            <ExpansionPanelSummary id='comments_pnl'>
-              {t( 'reaction.improve')}
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+            <h3>{t( 'reaction.improve')}</h3>
               <TextField
                 variant='filled'
-                label={t( 'reaction.improve' )}
+                label={t( 'reaction.suggest' )}
                 value={improvements}
+                id='improvements'
                 onChange={(event)=>{setImprovements(event.target.value)}}
               />
-
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          
         </Grid>
       </Grid>
       {saveButton}
