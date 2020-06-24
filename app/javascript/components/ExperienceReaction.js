@@ -22,6 +22,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import { useStatusStore } from './infrastructure/StatusStore';
+import { useLookupStore } from './infrastructure/LookupStore';
 
 import Radio from '@material-ui/core/Radio';
 import Grid from '@material-ui/core/Grid';
@@ -36,14 +37,19 @@ export default function ExperienceReaction(props) {
   const [improvements, setImprovements] = useState( '' );
   const [showImprovements, setShowImprovements] = useState( false );
   const [status, statusActions] = useStatusStore( );
+  const [lookup, lookupActions] = useLookupStore();
 
+  useEffect(() => {
+    lookupActions.fetch(['behaviors'], props.lookupUrl, props.token);
+  }, []);
 
   const getById = (list, id) =>{
     return list.filter( (item) =>{
       return id === item.id;
     })[0];
   }
-  const detailNeeded = 0 === behaviorId ? false : getById( props.behaviors, behaviorId ).needs_detail;
+
+  const detailNeeded = 0 === behaviorId ? false : getById( lookup.lookups.behaviors, behaviorId ).needs_detail;
   const detailPresent = otherName.length > 0;
   const saveButton = 
     ( <Button
@@ -52,7 +58,7 @@ export default function ExperienceReaction(props) {
         onClick={() => props.reactionFunc( behaviorId, otherName, improvements, resetData)}>
       <Suspense fallback={<Skeleton variant="text" />}>{t('reaction.submit')}</Suspense>
     </Button>)
-  const otherPnl = (0 !== behaviorId && getById( props.behaviors, behaviorId ).needs_detail ) ? (
+  const otherPnl = (0 !== behaviorId && getById( lookup.lookups.behaviors, behaviorId ).needs_detail ) ? (
     <TextField
       variant='filled'
       label={t( 'next.other' )}
@@ -99,7 +105,7 @@ export default function ExperienceReaction(props) {
                 setBehaviorId(Number(event.target.value) );
               }}
               >
-            {props.behaviors.map(behavior => {
+            {lookup.lookups.behaviors.map(behavior => {
               return (
                 <React.Fragment
                     key={"behavior_" + behavior.id}

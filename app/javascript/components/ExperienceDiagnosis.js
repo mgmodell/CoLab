@@ -22,6 +22,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import { useStatusStore } from './infrastructure/StatusStore';
+import { useLookupStore } from './infrastructure/LookupStore';
 
 import Radio from '@material-ui/core/Radio';
 import Grid from '@material-ui/core/Grid';
@@ -36,6 +37,7 @@ export default function ExperienceDiagnosis(props) {
   const [comments, setComments] = useState( '' );
   const [showComments, setShowComments] = useState( false );
   const [status, statusActions] = useStatusStore( );
+  const [lookup, lookupActions] = useLookupStore();
 
   const getById = (list, id) =>{
     return list.filter( (item) =>{
@@ -43,7 +45,11 @@ export default function ExperienceDiagnosis(props) {
     })[0];
   }
 
-  const detailNeeded = 0 === behaviorId ? false : getById( props.behaviors, behaviorId ).needs_detail;
+  useEffect(() => {
+    lookupActions.fetch(['behaviors'], props.lookupUrl, props.token);
+  }, []);
+
+  const detailNeeded = 0 === behaviorId ? false : getById( lookup.lookups.behaviors, behaviorId ).needs_detail;
   const detailPresent = otherName.length > 0;
   const saveButton = 
     ( <Button
@@ -102,7 +108,7 @@ export default function ExperienceDiagnosis(props) {
                 setBehaviorId(Number(event.target.value) );
               }}
               >
-            {props.behaviors.map(behavior => {
+            {lookup.lookups.behaviors.map(behavior => {
               return (
                 <React.Fragment
                     key={"behavior_" + behavior.id}
@@ -153,7 +159,6 @@ export default function ExperienceDiagnosis(props) {
 
 ExperienceDiagnosis.propTypes = {
   diagnoseFunc: PropTypes.func.isRequired,
-  behaviors: PropTypes.array.isRequired,
   weekNum: PropTypes.number.isRequired,
   weekText: PropTypes.string.isRequired
 

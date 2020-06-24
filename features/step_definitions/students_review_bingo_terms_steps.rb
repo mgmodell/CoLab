@@ -10,13 +10,8 @@ Then /^the user clicks the link to the concept list$/ do
   #I shouldn't need this, but it seems that I do
   step 'the user switches to the "Task View" tab'
 
-  begin
     find(:xpath, "//div[text()='#{@bingo.get_name(@anon)}']").click
     
-  rescue Capybara::Ambiguous => exception
-    byebug
-    
-  end
 
   wait_for_render
   # current_path = page.current_path

@@ -170,10 +170,85 @@ class HomeController < ApplicationController
         baseUrl: full_profile_path,
       }
     end
+    #Stuff we'll all need
+    ep_hash['lookupsUrl'] = lookups_path
     # Provide the endpoints
     respond_to do |format|
       format.json do
         render json: ep_hash.as_json
+      end
+    end
+  end
+
+  def lookups
+    lookups = { }
+    params[:requested].each do |req|
+      case req
+      when 'behaviors'
+        lookups[:behaviors] = Behavior.all.collect{ |behavior|
+          {
+            id: behavior.id,
+            name: behavior.name,
+            description: behavior.description,
+            needs_detail: behavior.needs_detail
+          }
+        }
+      when 'countries'
+        lookups[:countries] = HomeCountry.all.collect{|country|
+          {
+            id: country.id,
+            name: country.name,
+            code: country.code
+          }
+        }
+      when 'languages'
+        lookups[:languages] = Language.all.collect{|language|
+          {
+            id: language.id,
+            name: language.name,
+            code: language.code
+          }
+        }
+      when 'cip_codes'
+        lookups[:cipCodes] = CipCode.all.collect{|cip_code|
+          {
+            id: cip_code.id,
+            code: cip_code.gov_code,
+            name: cip_code.name
+          }
+        }
+      when 'genders'
+        lookups[:genders] = Gender.all.collect{|gender|
+          {
+            id: gender.id,
+            name: gender.name,
+            code: gender.code
+          }
+        }
+      when 'themes'
+        lookups[:themes] = Theme.all.collect{ |theme|
+          {
+            id: theme.id,
+            code: theme.code,
+            name: theme.name
+          }
+        }
+      when 'timezones'
+        lookups[:timezones] = HomeController::TIMEZONES
+      when 'schools'
+        lookups[:schools] = School.all.collect{ |school|
+          {
+            id: school.id,
+            name: school.name,
+            timezone: school.timezone
+          }
+      
+        }
+      end
+    end
+    respond_to do |format|
+      format.json do
+        render json: lookups.as_json
       end
     end
   end

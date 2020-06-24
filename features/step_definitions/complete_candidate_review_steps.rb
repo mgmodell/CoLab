@@ -69,14 +69,9 @@ Then /^the user sees (\d+) candidate items for review$/ do |candidate_count|
   wait_for_render
   #Enable max rows
   max_rows = @bingo.candidates.size
-  begin
     page.find(:xpath, "//div[@id='pagination-rows']").click
     page.find(:xpath, "//li[text()='#{max_rows}']").click
     
-  rescue Capybara::Ambiguous, Capybara::ElementNotFound => e
-    byebug
-    
-  end
 
   page.all(:xpath, "//div[contains(@id, 'feedback_4_')]")
       .count.should eq candidate_count.to_i
@@ -122,14 +117,9 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
   wait_for_render
   #Enable max rows
   max_rows = @bingo.candidates.size
-  begin
     page.find(:xpath, "//div[@id='pagination-rows']").click
     page.find(:xpath, "//li[text()='#{max_rows}']").click
     
-  rescue Capybara::Ambiguous, Capybara::ElementNotFound => e
-    byebug
-    
-  end
 
   concept_count = Concept.count
   concepts = concept_count < 2 ? [] :
@@ -173,7 +163,6 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       
       if concept.present?
         elem = page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
-        byebug if elem.nil?
         elem.scroll_to( elem )
         elem.set(concept)
       end
@@ -189,7 +178,6 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       error_msg += "\t\t#{candidate.inspect}" unless retries > 0
       # elem.send_keys :escape
 
-      # byebug unless retries < 19
       (retries += 1).should be < 20,  'Too many retries'
       retry unless retries > 5
       
@@ -231,14 +219,9 @@ When /^the user clicks the link to the candidate review$/ do
   wait_for_render
   #Enable max rows
   max_rows = @bingo.candidates.size
-  begin
     page.find(:xpath, "//div[@id='pagination-rows']").click
     page.find(:xpath, "//li[text()='#{max_rows}']").click
     
-  rescue Capybara::Ambiguous, Capybara::ElementNotFound => e
-    byebug
-    
-  end
 end
 
 Then /^there will be (\d+) concepts$/ do |concept_count|

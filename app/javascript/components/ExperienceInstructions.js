@@ -16,17 +16,20 @@ import CloseIcon from "@material-ui/icons/Close";
 //For debug purposes
 
 import { useUserStore } from "./infrastructure/UserStore";
-import { useEndpointStore } from"./infrastructure/EndPointStore";
+import { useLookupStore } from './infrastructure/LookupStore';
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 import LinkedSliders from "./LinkedSliders";
 
 export default function Experience(props) {
-  const endpointSet = "installment";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const [lookup, lookupActions] = useLookupStore();
 
   const [t, i18n] = useTranslation("experiences");
+
+  useEffect(() => {
+    lookupActions.fetch(['behaviors'], props.lookupUrl, props.token);
+  }, []);
 
   const saveButton = (
     <Button variant="contained" onClick={() => props.acknowledgeFunc()}>
@@ -66,7 +69,7 @@ export default function Experience(props) {
       </Suspense>
       <Suspense fallback={<Skeleton variant='rect' />} >
         <dl>
-          {props.behaviors.map((behavior)=>{
+          {(lookup.lookups.behaviors || [] ).map((behavior)=>{
             return(
               <React.Fragment key={behavior.id}>
                 <dt>{behavior.name}</dt>
@@ -112,6 +115,6 @@ export default function Experience(props) {
 
 Experience.propTypes = {
   acknowledgeFunc: PropTypes.func.isRequired,
-  behaviors: PropTypes.array.isRequired
+  lookupUrl: PropTypes.string.isRequired
 
 };

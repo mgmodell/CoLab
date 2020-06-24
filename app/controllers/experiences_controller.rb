@@ -179,16 +179,7 @@ class ExperiencesController < ApplicationController
 
       response = response.merge({
         reaction_id: reaction.id,
-        instructed: reaction.instructed,
-        behaviors: Behavior.all.collect{ |behavior|
-          {
-            id: behavior.id,
-            name: behavior.name,
-            description: behavior.description,
-            needs_detail: behavior.needs_detail
-
-          }
-        }
+        instructed: reaction.instructed
       })
 
       if !reaction.instructed

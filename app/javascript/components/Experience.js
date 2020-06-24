@@ -33,7 +33,6 @@ export default function Experience(props) {
 
   const [reactionId, setReactionId] = useState( );
   const [instructed, setInstructed] = useState( false );
-  const [behaviors, setBehaviors] = useState( [] );
 
   const [weekId, setWeekId] = useState( );
   const [weekNum, setWeekNum] = useState( 0 );
@@ -60,7 +59,6 @@ export default function Experience(props) {
   //Retrieve the latest data
   const getNext = () => {
     const url = `${endpoints.endpoints[endpointSet].baseUrl}${props.experienceId}.json`;
-    console.log( 'get next')
     statusActions.startTask();
     fetch(url, {
       method: "GET",
@@ -80,12 +78,10 @@ export default function Experience(props) {
         }
       })
       .then(data => {
-        console.log( data );
         setWeekId( data.week_id );
         setWeekNum( data.week_num );
         setWeekText( data.week_text );
 
-        setBehaviors( data.behaviors );
         setReactionId( data.reaction_id );
         setInstructed( data.instructed );
 
@@ -95,7 +91,6 @@ export default function Experience(props) {
   //Store what we've got
   const saveDiagnosis = (behaviorId, otherName, comment, resetFunc ) => {
     statusActions.startTask( 'saving' );
-    console.log( 'diagnosing' );
     const url =
     endpoints.endpoints[endpointSet].diagnosisUrl
     fetch(url, {
@@ -126,11 +121,9 @@ export default function Experience(props) {
       })
       .then(data => {
         //Process Contributions
-        console.log( data );
         setWeekId( data.week_id );
         setWeekNum( data.week_num );
         setWeekText( data.week_text );
-        console.log( 'diagnosed' );
 
         resetFunc( );
         statusActions.endTask( 'saving' );
@@ -181,19 +174,21 @@ export default function Experience(props) {
   };
 
   var output = null;
-  if( behaviors.length < 1 ){
+  if( 'loaded' !== endpoints.endpointStatus[endpointSet] ){
     output = (<Skeleton variant='rect' />)
 
   } else if( !instructed ){
-    output = (<ExperienceInstructions behaviors={behaviors} acknowledgeFunc={getNext} />)
+    output = (<ExperienceInstructions
+      lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
+      acknowledgeFunc={getNext} />)
   } else if( undefined === weekNum ){
     output = (<ExperienceReaction
-      behaviors={behaviors}
+      lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
       reactionFunc={saveReaction}
       />)
   } else {
     output = (<ExperienceDiagnosis
-      behaviors={behaviors}
+      lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
       diagnoseFunc={saveDiagnosis}
       weekNum={weekNum}
       weekText={weekText}

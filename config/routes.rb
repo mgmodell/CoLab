@@ -115,6 +115,8 @@ Rails.application.routes.draw do
   scope 'infra' do
     post 'quote' => 'home#get_quote', as: :get_quote
     get 'states_for_country/:country_code' => 'home#states_for_country', as: :states_for
+    get 'lookups' => 'home#lookups', as: :lookups,
+        constraints: ->(req) { req.format == :json }
     get 'simple_profile' => 'home#simple_profile', as: :simple_profile,
         constraints: ->(req) { req.format == :json }
     get 'full_profile' => 'home#full_profile', as: :full_profile,

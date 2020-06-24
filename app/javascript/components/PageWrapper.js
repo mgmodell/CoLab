@@ -4,6 +4,7 @@ import { BrowserRouter as Router,
 import Skeleton from "@material-ui/lab/Skeleton";
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
+import Joyride from 'react-joyride';
 
 import HomeShell from './HomeShell';
 import ProfileDataAdmin from './ProfileDataAdmin'
@@ -17,12 +18,13 @@ import Admin from './Admin';
 import AppStatusBar from './AppStatusBar';
 
 export default function PageWrapper(props) {
-  const [helpTopic, setHelpTopic] = useState("");
 
   return (
     <Router>
       <Suspense fallback={<Skeleton variant="rect" height={50} />}>
-        <AppHeader token={props.token} getEndpointsUrl={props.getEndpointsUrl} />
+        <AppHeader
+          token={props.token}
+          getEndpointsUrl={props.getEndpointsUrl} />
       </Suspense>
       <br/>
       <AppStatusBar/>
@@ -108,9 +110,10 @@ export default function PageWrapper(props) {
             )}
           />
           <Route exact path='/'>
-            <HomeShell
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl} />
+              <HomeShell
+                token={props.token}
+                getEndpointsUrl={props.getEndpointsUrl} />
+
           </Route>
     
         </Switch>
