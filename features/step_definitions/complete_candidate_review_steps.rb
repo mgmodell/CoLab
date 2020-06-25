@@ -44,7 +44,7 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
   when 'don\'t'
     fields_to_complete = 0
   else
-    puts "we didn't test anything here: " + completion_level
+    log "we didn't test anything here: " + completion_level
   end
 
   user_group.each do |user|

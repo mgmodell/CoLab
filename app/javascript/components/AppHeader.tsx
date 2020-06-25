@@ -82,7 +82,14 @@ export default function AppHeader(props) {
           ) : (
             <Skeleton variant="text" />
           )}
-          <HelpMenu token={props.token} />
+          {endpoints.endpointStatus["home"] == "loaded" ? (
+          <HelpMenu
+            token={props.token}
+            lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
+            /> ) : (
+              <Skeleton variant='circle' />
+            ) }
+            
         </Toolbar>
       </AppBar>
       <Toolbar />

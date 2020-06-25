@@ -38,7 +38,7 @@ Given /^a user has signed up$/ do
   )
   @user.confirm
   @user.save
-  puts @user.errors.full_messages if @user.errors.present?
+  log @user.errors.full_messages if @user.errors.present?
   @user.name(true).should_not be ', '
   @user.name(true).length.should be > 2
 end

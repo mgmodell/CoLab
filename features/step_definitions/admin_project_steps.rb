@@ -13,7 +13,7 @@ end
 Given /^the user is an admin$/ do
   @user.admin = true
   @user.save
-  puts @user.errors.full_messages if @user.errors.present?
+  log @user.errors.full_messages if @user.errors.present?
 end
 
 Then /^the user clicks the Admin button$/ do
@@ -65,7 +65,7 @@ Then /^the user clicks "([^"]*)"$/ do |link_or_button|
     retries ||= 0
     btn.click
   rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-    puts e.inspect
+    log e.inspect
     retry if (retries += 1) < 4
   end
 end
@@ -156,7 +156,7 @@ Then /^the project "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_val
     date = course_tz.local(d.year, d.month, d.day).end_of_day
     @project.end_date.change(sec: 0).should eq date.change(sec: 0)
   else
-    puts "We didn't test anything there: " + date_field_prefix + ' not found'
+    log "We didn't test anything there: " + date_field_prefix + ' not found'
   end
 end
 
@@ -167,7 +167,7 @@ Then /^the project "([^"]*)" is "([^"]*)"$/ do |field, value|
   when 'description'
     @project.description.should eq value
   else
-    puts "We didn't test anything there: " + field + ' not found'
+    log "We didn't test anything there: " + field + ' not found'
   end
 end
 
@@ -190,7 +190,7 @@ Given /^the course started "([^"]*)" and ended "([^"]*)"$/ do |start_date, end_d
   @course.start_date = Chronic.parse(start_date)
   @course.end_date = Chronic.parse(end_date)
   @course.save
-  puts @course.errors.full_messages if @course.errors.present?
+  log @course.errors.full_messages if @course.errors.present?
 end
 
 Then /^set user (\d+) to group "([^"]*)"$/ do |user_number, group_name|

@@ -39,7 +39,7 @@ end
 
 Then /^show the email queue$/ do
   ActionMailer::Base.deliveries.each do |mail|
-    puts mail
+    log mail
   end
 end
 
@@ -52,7 +52,7 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
   r.course = @course
   r.role = Roster.roles[:enrolled_student]
   r.save
-  puts r.errors.full_messages if r.errors.present?
+  log r.errors.full_messages if r.errors.present?
   @group.users << @user
   user_count.to_i.times do
     user = @group.users.new(
@@ -67,17 +67,17 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
     )
     user.skip_confirmation!
     user.save
-    puts user.errors.full_messages if user.errors.present?
+    log user.errors.full_messages if user.errors.present?
     r = user.rosters.new(
       course: @course,
       role: Roster.roles[:enrolled_student]
     )
     r.save
-    puts r.errors.full_messages if r.errors.present?
+    log r.errors.full_messages if r.errors.present?
   end
   @project.groups << @group
   @project.save
-  puts @project.errors.full_messages if @project.errors.present?
+  log @project.errors.full_messages if @project.errors.present?
 end
 
 Then /^the members of "([^"]*)" group go to other groups$/ do |ordinal|

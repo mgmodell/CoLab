@@ -82,7 +82,7 @@ export default function ExperienceDiagnosis(props) {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Suspense fallback={<Skeleton variant='text' />} >
-            <h3>{t( 'next.journal', {week_num: props.weekNum } )}</h3>
+            <h3 className='journal_entry'>{t( 'next.journal', {week_num: props.weekNum } )}</h3>
           </Suspense>
         </Grid>
         <Grid item xs={12}>
@@ -101,6 +101,7 @@ export default function ExperienceDiagnosis(props) {
             {t( 'next.prompt' ) }
           </FormLabel>
             <RadioGroup
+              className='behaviors'
               aria-label='behavior'
               value={behaviorId}
               onChange={(event)=>{

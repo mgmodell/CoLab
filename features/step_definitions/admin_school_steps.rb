@@ -17,7 +17,7 @@ Then 'the school {string} field is {string}' do |field_name, value|
   when 'timezone'
     @school.timezone.should eq value
   else
-    puts 'Not testing anything'
+    log 'Not testing anything'
   end
 end
 

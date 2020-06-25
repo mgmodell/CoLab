@@ -12,7 +12,7 @@ Given /^there is a course with an assessed project$/ do
     end_date: 2.months.from_now
   )
   @course.save
-  puts @course.errors.full_messages if @course.errors.present?
+  log @course.errors.full_messages if @course.errors.present?
   @project = @course.projects.new(
     name: "#{Forgery::Name.industry} Project",
     start_dow: 1,
@@ -21,7 +21,7 @@ Given /^there is a course with an assessed project$/ do
   )
 
   @project.save
-  puts @project.errors.full_messages if @project.errors.present?
+  log @project.errors.full_messages if @project.errors.present?
 
   # Check that the anonymous stuff got built
   @course.get_name(true).should_not be_nil
@@ -37,7 +37,7 @@ Given /^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes 
   @project.end_dow = Chronic.parse(end_dow).wday
 
   @project.save
-  puts @project.errors.full_messages if @project.errors.present?
+  log @project.errors.full_messages if @project.errors.present?
 end
 
 Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
@@ -63,26 +63,26 @@ Given /^the project has a group with (\d+) confirmed users$/ do |user_count|
       role: Roster.roles[:enrolled_student]
     )
     user.save
-    puts user.errors.full_messages if user.errors.present?
+    log user.errors.full_messages if user.errors.present?
     r.save
-    puts r.errors.full_messages if r.errors.present?
+    log r.errors.full_messages if r.errors.present?
   end
   @group.save
   @group.get_name(true).should_not be_nil
   @group.get_name(true).length.should be > 0
-  puts @group.errors.full_messages if @group.errors.present?
+  log @group.errors.full_messages if @group.errors.present?
 end
 
 Given /^the project has been deactivated$/ do
   @project.active = false
   @project.save
-  puts @project.errors.full_messages if @project.errors.present?
+  log @project.errors.full_messages if @project.errors.present?
 end
 
 Given /^the project has been activated$/ do
   @project.active = true
   @project.save
-  puts @project.errors.full_messages if @project.errors.present?
+  log @project.errors.full_messages if @project.errors.present?
 end
 
 Then /^the user should see a successful login message$/ do
@@ -108,7 +108,7 @@ Given /^the user "(.*?)" had demographics requested$/ do |with_demographics|
   demographics_requested = with_demographics == 'has'
   @user.welcomed = demographics_requested
   @user.save!
-  puts @user.errors.full_messages if @user.errors.present?
+  log @user.errors.full_messages if @user.errors.present?
 end
 
 When /^the user logs in$/ do

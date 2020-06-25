@@ -114,6 +114,7 @@ export default function Experience(props) {
 }
 
 Experience.propTypes = {
+  token: PropTypes.string.isRequired,
   acknowledgeFunc: PropTypes.func.isRequired,
   lookupUrl: PropTypes.string.isRequired
 

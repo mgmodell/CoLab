@@ -5,7 +5,7 @@ Given /^today is "(.*?)"$/ do |destination_time|
   travel_to Chronic.parse(destination_time).utc
 
   # The following line is often useful for debugging date issues
-  # puts "Date is now: #{Date.today}"
+  # log "Date is now: #{Date.today}"
 end
 
 Then /^the project should have (\d+) assessments attached to it$/ do |assessment_count|
@@ -20,5 +20,5 @@ Given /^the course started "(.*?)" and ends "(.*?)"$/ do |start_date, end_date|
   @course.start_date = Chronic.parse(start_date)
   @course.end_date = Chronic.parse(end_date)
   @course.save
-  puts @course.errors.full_messages unless @course.errors.empty?
+  log @course.errors.full_messages unless @course.errors.empty?
 end

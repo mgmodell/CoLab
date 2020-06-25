@@ -17,7 +17,7 @@ Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pe
   when 'should not'
     page.should_not have_content link_text
   else
-    puts "We didn't test anything there: " + collaboration_pending
+    log "We didn't test anything there: " + collaboration_pending
   end
 end
 
@@ -42,7 +42,7 @@ Then /^the user "([^"]*)" see they're waiting on a collaboration response$/ do |
   when 'should not'
     page.should_not have_content 'awaiting a response to your group help request'
   else
-    puts "We didn't test anything there: " + collaboration_pending
+    log "We didn't test anything there: " + collaboration_pending
   end
 end
 
@@ -56,7 +56,7 @@ Then /^the user "([^"]*)" the collaboration request$/ do |accept_or_decline|
     btn = find(:xpath, "//a[text()='Decline']" )
     # click_link_or_button 'Decline'
   else
-    puts "We didn't test anything there: " + accept_or_decline
+    log "We didn't test anything there: " + accept_or_decline
   end
   btn.click
 end
@@ -68,7 +68,7 @@ Then /^the user "([^"]*)" see collaboration request button$/ do |button_present|
   when 'should not'
     page.should_not have_content 'Invite your group to help?'
   else
-    puts "We didn't test anything there: " + button_present
+    log "We didn't test anything there: " + button_present
   end
 end
 
@@ -99,16 +99,16 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
 
   count.to_i.times do |index|
     existing_term = page.find(:xpath, "//input[@id='term_#{index}']").value
-    puts "term: #{existing_term.inspect}"
+    log "term: #{existing_term.inspect}"
     new_val = field == 'term' ?
             Forgery::Name.industry :
             Forgery::Basic.text
 
     @entries_list[index] = {} if @entries_list[index].blank?
     @entries_list.each do |entry|
-      puts "checking #{entry['term']}"
+      log "checking #{entry['term']}"
       next unless entry['term'] == existing_term
-      puts 'setting'
+      log 'setting'
 
       entry[field] = new_val
       page.fill_in("#{field}_#{index}",

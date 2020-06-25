@@ -76,5 +76,5 @@ Then 'the cached performance is erased' do
   cl = @bingo.candidate_list_for_user(@user)
   cl.cached_performance = nil
   cl.save
-  puts cl.errors.full_messages unless cl.errors.empty?
+  log cl.errors.full_messages unless cl.errors.empty?
 end

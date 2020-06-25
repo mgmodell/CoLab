@@ -12,7 +12,7 @@ Then 'the user sets the experience {string} date to {string}' do |ordinal, date|
   when 'end'
     page.find('#experience_end_date').set(new_date)
   else
-    puts "Invalid ordinal: #{ordinal}"
+    log "Invalid ordinal: #{ordinal}"
     pending
   end
 end

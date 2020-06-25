@@ -182,7 +182,7 @@ Rails.application.routes.draw do
   get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', as: :edit_consent_log
   patch 'consent_logs/:id' => 'consent_logs#update', as: :consent_log
 
-  scope 'demo' do
+  scope 'demo_support' do
   # Demo paths
     get 'installments/complete' => 'installments#demo_complete', as: :assessment_demo_complete
     get 'candidate_lists/entry' => 'candidate_lists#demo_entry', as: :terms_demo_entry

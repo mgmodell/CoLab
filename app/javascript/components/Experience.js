@@ -179,6 +179,7 @@ export default function Experience(props) {
 
   } else if( !instructed ){
     output = (<ExperienceInstructions
+      token={props.token}
       lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
       acknowledgeFunc={getNext} />)
   } else if( undefined === weekNum ){

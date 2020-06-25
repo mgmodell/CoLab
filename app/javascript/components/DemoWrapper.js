@@ -1,6 +1,6 @@
 import React, { useState, Suspense } from "react";
 import { BrowserRouter as Router,
-  Switch, Route } from "react-router-dom";
+  Switch, Route, useRouteMatch } from "react-router-dom";
 import Skeleton from "@material-ui/lab/Skeleton";
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
@@ -15,44 +15,16 @@ import BingoBuilder from './BingoBoards/BingoBuilder';
 import Experience from './Experience';
 import ConsentLog from './Consent/ConsentLog';
 import Admin from './Admin';
-import DemoWrapper from './DemoWrapper';
 import AppStatusBar from './AppStatusBar';
 
-export default function PageWrapper(props) {
+export default function DemoWrapper(props) {
+  let {path, url} = useRouteMatch();
 
   return (
     <Router>
-      <Suspense fallback={<Skeleton variant="rect" height={50} />}>
-        <AppHeader
-          token={props.token}
-          getEndpointsUrl={props.getEndpointsUrl} />
-      </Suspense>
-      <br/>
-      <AppStatusBar/>
       <Suspense fallback={<Skeleton variant='rect' height={600} />} >
         <Switch >
-          <Route path='/profile'>
-            <ProfileDataAdmin
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl} />
-          </Route>
-          <Route path='/demo' >
-            <DemoWrapper
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl}
-
-            />
-
-          </Route>
-          <Route path='/admin' >
-            <Admin
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl}
-
-            />
-
-          </Route>
-          <Route path={`/submit_installment/:id`}
+          <Route path={`${path}/submit_installment/:id`}
             render={routeProps => (
               <React.Fragment>
                 <InstallmentReport
@@ -63,7 +35,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route path={`/enter_candidates/:id`}
+          <Route path={`${path}/enter_candidates/:id`}
             render={routeProps => (
               <React.Fragment>
                 <CandidateListEntry
@@ -74,7 +46,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route path={`/review_candidates/:id`}
+          <Route path={`${path}/review_candidates/:id`}
             render={routeProps => (
               <React.Fragment>
                 <CandidatesReviewTable
@@ -85,7 +57,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route path={`/candidate_results/:id`}
+          <Route path={`${path}/candidate_results/:id`}
             render={routeProps => (
               <React.Fragment>
                 <BingoBuilder
@@ -96,7 +68,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route path={`/experience/:id`}
+          <Route path={`${path}/experience/:id`}
             render={routeProps => (
               <React.Fragment>
                 <Experience
@@ -107,7 +79,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route path={`/research_information/:id`}
+          <Route path={`${path}/research_information/:id`}
             render={routeProps => (
               <React.Fragment>
                 <ConsentLog
@@ -118,7 +90,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route exact path='/'>
+          <Route exact path={`${path}/`}>
               <HomeShell
                 token={props.token}
                 getEndpointsUrl={props.getEndpointsUrl} />
@@ -134,7 +106,7 @@ export default function PageWrapper(props) {
   );
 }
 
-PageWrapper.propTypes = {
+DemoWrapper.propTypes = {
   token: PropTypes.string.isRequired,
   getEndpointsUrl: PropTypes.string.isRequired
 };

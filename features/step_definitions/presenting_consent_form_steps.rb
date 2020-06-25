@@ -18,7 +18,7 @@ Given /^there is a global consent form$/ do
                            filename: 'cf.pdf',
                            content_type: 'application/pdf')
   @consent_form.save
-  puts @consent_form.errors.full_messages if @consent_form.errors.present?
+  log @consent_form.errors.full_messages if @consent_form.errors.present?
 end
 
 Given /^the course has a consent form$/ do
@@ -32,10 +32,10 @@ Given /^the course has a consent form$/ do
                            filename: 'cf.pdf',
                            content_type: 'application/pdf')
   @consent_form.save
-  puts @consent_form.errors.full_messages if @consent_form.errors.present?
+  log @consent_form.errors.full_messages if @consent_form.errors.present?
   @course.consent_form = @consent_form
   @course.save
-  puts @course.errors.full_messages if @course.errors.present?
+  log @course.errors.full_messages if @course.errors.present?
 end
 
 Then('user should see a consent form listed for the open experience') do
@@ -92,11 +92,11 @@ Given /^the consent form started "([^"]*)" and ends "([^"]*)"$/ do |start_date, 
   @consent_form.start_date = Chronic.parse(start_date)
   @consent_form.end_date = end_date.casecmp('null').zero? ? nil : Chronic.parse(end_date)
   @consent_form.save
-  puts @consent_form.errors.full_messages unless @consent_form.errors.empty?
+  log @consent_form.errors.full_messages unless @consent_form.errors.empty?
 end
 
 Given /^the consent form "([^"]*)" active$/ do |is_active|
   @consent_form.active = is_active == 'is'
   @consent_form.save
-  puts @consent_form.errors.full_messages unless @consent_form.errors.empty?
+  log @consent_form.errors.full_messages unless @consent_form.errors.empty?
 end

@@ -33,7 +33,7 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
   when 'loose'
     users = @users
   else
-    puts "There's no such thing as a '#{type}' user"
+    log "There's no such thing as a '#{type}' user"
     pending
   end
 
@@ -52,7 +52,7 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
   when 'random'
     u = users[rand(users.count) - 1]
   else
-    puts "There's no such thing as a '#{ordinal}' user"
+    log "There's no such thing as a '#{ordinal}' user"
     pending
   end
 
@@ -80,11 +80,11 @@ Then /^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/ do |demograp
     when 'other'
       u.impairment_other = true
     else
-      puts "Impairment (#{code}) is not an available demographic"
+      log "Impairment (#{code}) is not an available demographic"
       pending
     end
   else
-    puts "#{demographic} is not an available demographic"
+    log "#{demographic} is not an available demographic"
     pending
   end
   u.save
@@ -98,7 +98,7 @@ Given /^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/ do |ordina
   when 'loose'
     users = @users
   else
-    puts "There's no such thing as a '#{type}' user"
+    log "There's no such thing as a '#{type}' user"
     pending
   end
 
@@ -117,7 +117,7 @@ Given /^the "([^"]*)" "([^"]*)" user is from "([^"]*)" in "([^"]*)"$/ do |ordina
   when 'random'
     u = users[rand(users.count) - 1]
   else
-    puts "There's no such thing as a '#{ordinal}' user"
+    log "There's no such thing as a '#{ordinal}' user"
     pending
   end
 
@@ -141,7 +141,7 @@ Then /^we remove the "([^"]*)" user$/ do |ordinal|
   when 'random'
     @group.users.delete(@group.users.sample)
   else
-    puts "There's no such thing as a '#{ordinal}' user"
+    log "There's no such thing as a '#{ordinal}' user"
     pending
   end
   @group.save
@@ -162,7 +162,7 @@ Then /^the "([^"]*)" "([^"]*)" user is added to the group$/ do |ordinal, _type|
   when 'random'
     @group.users <<  @users.sample
   else
-    puts "There's no such thing as a '#{ordinal}' user"
+    log "There's no such thing as a '#{ordinal}' user"
     pending
   end
   @group.save

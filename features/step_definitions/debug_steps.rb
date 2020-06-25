@@ -5,7 +5,7 @@ Then /^we debug$/ do
 end
 
 Then /^show me the page$/ do
-  puts page.body
+  log page.body
 end
 
 Then /^show the entries list$/ do
@@ -15,6 +15,6 @@ Then /^show the entries list$/ do
   @entries_list.each do |item|
     term = item['term'].presence || ''
     definition = item['definition'].presence || ''
-    puts term + ' | ' + definition
+    log term + ' | ' + definition
   end
 end

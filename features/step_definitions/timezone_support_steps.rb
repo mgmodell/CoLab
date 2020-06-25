@@ -7,13 +7,13 @@ end
 Given(/^the course timezone is "([^"]*)"$/) do |timezone|
   @course.timezone = timezone
   @course.save
-  puts @course.errors.full_messages if @course.errors.present?
+  log @course.errors.full_messages if @course.errors.present?
 end
 
 Given(/^the user timezone is "([^"]*)"$/) do |timezone|
   @user.timezone = timezone
   @user.save
-  puts @user.errors.full_messages if @user.errors.present?
+  log @user.errors.full_messages if @user.errors.present?
 end
 
 Given /^the user sees (\d+) assessment every hour of the day$/ do |assessment_count|

@@ -173,16 +173,16 @@ Around() do |scenario, block|
   perform_enqueued_jobs do
     block.call
   end
-  scenario_times["#{scenario.feature.file}::#{scenario.name}"] = Time.zone.now - start
+  scenario_times["#{scenario.location.to_s}::#{scenario.name}"] = Time.zone.now - start
 end
 
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
   total_time = scenario_times.values.inject(0) { |sum, x| sum + x }
-  puts "Aggregate Testing Time: #{total_time}"
-  puts "------------- Top #{max_scenarios} slowest scenarios -------------"
+  log "Aggregate Testing Time: #{total_time}"
+  log "------------- Top #{max_scenarios} slowest scenarios -------------"
   sorted_times = scenario_times.sort { |a, b| b[1] <=> a[1] }
   sorted_times[0..max_scenarios - 1].each do |key, value|
-    puts "#{value.round(2)}  #{key}"
+    log "#{value.round(2)}  #{key}"
   end
 end

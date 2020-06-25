@@ -61,7 +61,7 @@ Then 'the course {string} field is {string}' do |field_name, value|
   when 'timezone'
     @course.timezone.should eq value
   else
-    puts 'Not testing anything'
+    log 'Not testing anything'
   end
 end
 
@@ -90,7 +90,7 @@ Then 'the course {string} is {string}' do |field_name, value|
   when 'timezone'
     @course.timezone = value
   else
-    puts "Not setting anything: #{value}"
+    log "Not setting anything: #{value}"
     pending
   end
   @course.save
@@ -105,7 +105,7 @@ Given 'the experience {string} is {string}' do |field_name, value|
   when 'name'
     @experience.name = value
   else
-    puts "Not setting anything: #{value}"
+    log "Not setting anything: #{value}"
     pending
   end
   @experience.save
@@ -120,7 +120,7 @@ Given 'the Bingo! {string} is {string}' do |field_name, value|
   when 'terms count'
     @bingo.individual_count = value
   else
-    puts "Not setting anything: #{value}"
+    log "Not setting anything: #{value}"
     pending
   end
   @bingo.save
@@ -131,7 +131,7 @@ Given 'the Bingo! {string} is {int}' do |field_name, value|
   when 'terms count'
     @bingo.individual_count = value
   else
-    puts "Not setting anything: #{value}"
+    log "Not setting anything: #{value}"
     pending
   end
   @bingo.save
@@ -202,7 +202,7 @@ Then 'the Experience {string} is {string}' do |field, value|
   when 'name'
     @experience.name.should eq value
   else
-    puts "no test for '#{field}'"
+    log "no test for '#{field}'"
     pending # Write code here that turns the phrase above into concrete
   end
 end
@@ -384,11 +384,11 @@ Given('the user has {string} the course') do |action|
   when 'been invited to'
     roster.invited_student!
   else
-    puts "No '#{action}' option available"
+    log "No '#{action}' option available"
     expect(true).to be false
   end
   roster.save
-  puts roster.errors.full_messages unless roster.errors.empty?
+  log roster.errors.full_messages unless roster.errors.empty?
 end
 
 Given('the course adds {int} {string} users') do |count, role|
@@ -405,18 +405,18 @@ Given('the course adds {int} {string} users') do |count, role|
     )
     user.skip_confirmation!
     user.save
-    puts user.errors.full_messages unless user.errors.empty?
+    log user.errors.full_messages unless user.errors.empty?
 
     roster = @course.rosters.create(user: user)
     case role
     when 'requesting student'
       roster.requesting_student!
     else
-      puts "Unsupported role: #{role}"
+      log "Unsupported role: #{role}"
       expect(true).to be false
     end
     roster.save
-    puts roster.errors.full_messages unless roster.errors.empty?
+    log roster.errors.full_messages unless roster.errors.empty?
   end
 end
 
