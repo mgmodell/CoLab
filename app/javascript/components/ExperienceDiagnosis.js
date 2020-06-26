@@ -100,6 +100,8 @@ export default function ExperienceDiagnosis(props) {
           <FormLabel>
             {t( 'next.prompt' ) }
           </FormLabel>
+          {lookup.lookups.behaviors !== undefined ?
+          (
             <RadioGroup
               className='behaviors'
               aria-label='behavior'
@@ -129,6 +131,10 @@ export default function ExperienceDiagnosis(props) {
               );
             })}
             </RadioGroup>
+
+          ) : <Skeleton variant='rect' />
+
+          }
 
         </Grid>
         <Grid item xs={12} sm={6}>
