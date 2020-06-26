@@ -243,14 +243,18 @@ class ExperiencesController < ApplicationController
                 else
                   Reaction.find(reaction_id)
                 end
+
+    response = { messages: { main: t( 'experiences.react_success')}}
+    puts reaction_params
+
+    if !@reaction.update(reaction_params)
+      response[:messages] = @reaction.errors
+      response[:messages][:main] = t('experiences.react_fail') 
+      puts @reaction.full_messages
+    end
+
     respond_to do |format|
-      if @reaction.update(reaction_params)
-        format.html { redirect_to root_path, notice: t('experiences.react_success') }
-        format.json { render :show, status: :ok, location: @reaction }
-      else
-        format.html { render :reaction, notice: t('experiences.react_fail') }
-        format.json { render json: @reaction.errors, status: :unprocessable_entity }
-      end
+      format.json {render json: response.as_json}
     end
   end
 

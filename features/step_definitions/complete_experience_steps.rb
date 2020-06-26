@@ -102,6 +102,7 @@ Then /^the user completes a week$/ do
 end
 
 Then(/^the database will show a reaction with "([^"]*)" as the behavior$/) do |behavior|
+  wait_for_render
   reaction = Reaction.last
   reaction.behavior.name_en.should eq behavior
 end
@@ -113,6 +114,7 @@ end
 Then(/^the database will show a reaction with improvements of "([^"]*)"$/) do |improvements|
   reaction = Reaction.last
   reaction.improvements.should eq improvements
+  byebug
 end
 
 Then(/^the database will show a reaction for the user with improvements of "([^"]*)"$/) do |improvements|

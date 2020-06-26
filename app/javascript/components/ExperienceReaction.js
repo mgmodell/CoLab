@@ -97,6 +97,8 @@ export default function ExperienceReaction(props) {
           <FormLabel>
             {t( 'reaction.dom_behavior' )}
           </FormLabel>
+          {lookup.lookups.behaviors !== undefined ?
+          (
             <RadioGroup
               aria-label='behavior'
               value={behaviorId}
@@ -125,6 +127,9 @@ export default function ExperienceReaction(props) {
               );
             })}
             </RadioGroup>
+          ) : <Skeleton variant='rect' />
+
+          }
 
         </Grid>
         <Grid item xs={12} sm={6}>

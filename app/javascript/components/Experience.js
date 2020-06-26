@@ -1,4 +1,7 @@
 import React, { Suspense, useState, useEffect } from "react";
+import {
+  useHistory
+} from 'react-router-dom';
 import PropTypes from "prop-types";
 
 import Button from "@material-ui/core/Button";
@@ -30,6 +33,7 @@ export default function Experience(props) {
   const [endpoints, endpointsActions] = useEndpointStore();
   const [status, statusActions] = useStatusStore( );
   const [t, i18n] = useTranslation("installments");
+  const history = useHistory( );
 
   const [reactionId, setReactionId] = useState( );
   const [instructed, setInstructed] = useState( false );
@@ -134,10 +138,8 @@ export default function Experience(props) {
   //React
   const saveReaction = (behaviorId, otherName, improvements, resetFunc ) => {
     statusActions.startTask( 'saving' );
-    console.log( 'reacting')
     const url =
     endpoints.endpoints[endpointSet].reactionUrl
-    console.log( url );
     fetch(url, {
       method: 'PATCH',
       credentials: "include",
@@ -164,12 +166,12 @@ export default function Experience(props) {
         }
       })
       .then(data => {
-        //Process Contributions
-
+        //Process Experience
         resetFunc( );
-        console.log( 'reacted')
+        statusActions.addMessage( data.messages.main, 1)
         statusActions.endTask( 'saving' );
         statusActions.setClean( 'reaction' );
+        history.push( '/' );
       });
   };
 

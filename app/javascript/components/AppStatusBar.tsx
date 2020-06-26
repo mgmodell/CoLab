@@ -9,14 +9,14 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { useStatusStore } from './infrastructure/StatusStore';
 
-export default function Quote(props) {
+export default function AppStatusBar(props) {
   const [status, statusActions] = useStatusStore( );
 
   return (
     <React.Fragment>
       { status.statusMessages.map( (message, index)  =>{
         return(
-          <Collapse key={`collapse_${index}`} in={ !status.message['dismissed'] }>
+          <Collapse key={`collapse_${index}`} in={ !message['dismissed'] }>
             <Alert
               id={`alert_${index}`}
               action={
@@ -25,6 +25,8 @@ export default function Quote(props) {
                   color="inherit"
                   size="small"
                   onClick={() => {
+                    console.log( index, status );
+                    console.log( status.statusMessages )
                     statusActions.acknowledge(index);
                   }}
                 >
