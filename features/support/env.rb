@@ -179,10 +179,10 @@ end
 at_exit do
   max_scenarios = scenario_times.size > 20 ? 20 : scenario_times.size
   total_time = scenario_times.values.inject(0) { |sum, x| sum + x }
-  log "Aggregate Testing Time: #{total_time}"
-  log "------------- Top #{max_scenarios} slowest scenarios -------------"
+  puts "Aggregate Testing Time: #{total_time}"
+  puts "------------- Top #{max_scenarios} slowest scenarios -------------"
   sorted_times = scenario_times.sort { |a, b| b[1] <=> a[1] }
   sorted_times[0..max_scenarios - 1].each do |key, value|
-    log "#{value.round(2)}  #{key}"
+    puts "#{value.round(2)}  #{key}"
   end
 end

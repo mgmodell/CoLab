@@ -21,13 +21,9 @@ export default function HelpMenu(props) {
   const [helpMe, setHelpMe] = useState( false );
 
   const endHelp = (data)=>{
-    var helpOngoing = false;
-    if( undefined !== data ){
-      const { action, status, type } = data;
-      helpOngoing = action !== ACTIONS.CLOSE;
-
+    if( data.action === ACTIONS.RESET){
+      setHelpMe( false );
     }
-    setHelpMe( helpOngoing )
   }
 
   const stepHash = {
@@ -109,11 +105,11 @@ export default function HelpMenu(props) {
   return (
     <React.Fragment>
             <Joyride
-              //callback={endHelp}
+              callback={endHelp}
               continuous={false}
               scrollToFirstStep={true}
               showProgress={steps.length > 1}
-              debug={true}
+              debug={false}
               steps={steps}
               showSkipButton={steps.length > 1}
               run={helpMe}
@@ -126,16 +122,16 @@ export default function HelpMenu(props) {
         onClick={(event)=>{
           const pathComponents = history.location.pathname.split( '/')
 
-          switch( history.location.pathname ){
-            case '/':
+          switch( pathComponents[1] ){
+            case '':
               setSteps( stepHash.home );
               break;
-            case '/experience/':
+            case 'experience':
               setSteps( stepHash.experience );
               break;
           }
-          setHelpMe( !helpMe );
-          console.log( `${history.location.pathname}`)
+
+          setHelpMe( true );
         }}
       >
         <HelpIcon />
