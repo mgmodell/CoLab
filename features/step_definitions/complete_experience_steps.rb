@@ -114,7 +114,6 @@ end
 Then(/^the database will show a reaction with improvements of "([^"]*)"$/) do |improvements|
   reaction = Reaction.last
   reaction.improvements.should eq improvements
-  byebug
 end
 
 Then(/^the database will show a reaction for the user with improvements of "([^"]*)"$/) do |improvements|
