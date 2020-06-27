@@ -126,7 +126,7 @@ export default function HelpMenu(props) {
         scrollToFirstStep={true}
         showProgress={steps.length > 1}
         steps={steps}
-        debug={true}
+        debug={false}
         showSkipButton={steps.length > 1}
         run={helpMe}
       />

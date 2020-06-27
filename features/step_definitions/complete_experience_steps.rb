@@ -24,8 +24,6 @@ end
 
 Then(/^the user presses "([^"]*)"$/) do |linkOrButtonName|
   click_link_or_button linkOrButtonName
-rescue Capybara::ElementNotFound => e
-  byebug
 end
 
 Then(/^they open the drawer for additional comments$/) do
