@@ -83,9 +83,7 @@ class AdministrativeMailer < ApplicationMailer
 
       experience.course.enrolled_students.each do |user|
         reaction = experience.get_user_reaction user
-        unless reaction.persisted? && reaction.behavior.present?
-          current_users.push user
-        end
+        current_users.push user unless reaction.persisted? && reaction.behavior.present?
       end
     end
 

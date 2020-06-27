@@ -10,7 +10,6 @@ import Typography from "@material-ui/core/Typography";
 import { SortDirection } from "react-virtualized";
 import WrappedVirtualizedTable from "../WrappedVirtualizedTable";
 
-
 class BingoGameDataAdminTable extends React.Component {
   constructor(props) {
     super(props);

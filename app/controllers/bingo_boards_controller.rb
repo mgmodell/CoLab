@@ -12,6 +12,8 @@ class BingoBoardsController < ApplicationController
                 only: %i[board_for_game_demo update_demo demo_worksheet_for_game]
 
   include Demoable
+  # Constants Declaration
+  ITEM_COUNT = 10
 
   def show
     @title = t '.title'
@@ -129,14 +131,10 @@ class BingoBoardsController < ApplicationController
         unless worksheet.nil?
           resp[:worksheet] = {
             performance: worksheet.performance,
-            result_img: worksheet.result_img.attached? ?
-              url_for(worksheet.result_img) :
-              nil
+            result_img: worksheet.result_img.attached? ? url_for(worksheet.result_img) : nil
           }
         end
-        if bingo_board.result_img.attached?
-          resp[:result_img] = url_for(bingo_board.result_img)
-        end
+        resp[:result_img] = url_for(bingo_board.result_img) if bingo_board.result_img.attached?
         render json: resp
       end
       format.pdf do
@@ -202,9 +200,7 @@ class BingoBoardsController < ApplicationController
         @practice_answers[index] = Array.new bingo_game.size
       end
       @bingo_board.bingo_cells.each do |bc|
-        if bc.candidate.present?
-          @practice_answers[bc.row][bc.column] = bc.indeks_as_letter
-        end
+        @practice_answers[bc.row][bc.column] = bc.indeks_as_letter if bc.candidate.present?
       end
       respond_to do |format|
         format.json do
@@ -224,7 +220,6 @@ class BingoBoardsController < ApplicationController
     end
   end
 
-  ITEM_COUNT = 10
   def worksheet_for_game
     bingo_game_id = params[:bingo_game_id]
     bingo_game = BingoGame .find(params[:bingo_game_id])
@@ -405,9 +400,7 @@ class BingoBoardsController < ApplicationController
     if @bingo_board.save
       redirect_to ws_results_path(@bingo_board)
     else
-      unless @bingo_board.errors.empty?
-        logger.debug @bingo_board.errors.full_message
-      end
+      logger.debug @bingo_board.errors.full_message unless @bingo_board.errors.empty?
       redirect_to root_path
     end
   end

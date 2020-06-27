@@ -13,17 +13,14 @@ import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
-import {
-  DatePicker,
-  LocalizationProvider
-} from "@material-ui/pickers";
+import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 
 import ProjectGroups from "./ProjectGroups";
 
@@ -35,7 +32,7 @@ export default function ProjectDataAdmin(props) {
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
   const [messages, setMessages] = useState({});
   const [factorPacks, setFactorPacks] = useState([
     { id: 0, name_en: "none selected" }
@@ -63,7 +60,7 @@ export default function ProjectDataAdmin(props) {
   const [courseTimezone, setCourseTimezone] = useState("UTC");
 
   const getProject = () => {
-    statusActions.startTask( );
+    statusActions.startTask();
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == projectId) {
@@ -113,13 +110,13 @@ export default function ProjectDataAdmin(props) {
         setProjectStyleId(project.style_id);
         setProjectStartDOW(project.start_dow);
         setProjectEndDOW(project.end_dow);
-        statusActions.endTask( );
+        statusActions.endTask();
         setDirty(false);
       });
   };
   const saveProject = () => {
     const method = null == projectId ? "POST" : "PATCH";
-    statusActions.startTask( 'saving' );
+    statusActions.startTask("saving");
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -180,12 +177,12 @@ export default function ProjectDataAdmin(props) {
 
           const course = data.course;
           setCourseName(course.name);
-          statusActions.endTask( 'saving' );
+          statusActions.endTask("saving");
           setDirty(false);
           setMessages(data.messages);
         } else {
           setMessages(data.messages);
-          statusActions.endTask( 'saving' );
+          statusActions.endTask("saving");
         }
       });
   };
@@ -266,9 +263,9 @@ export default function ProjectDataAdmin(props) {
           onChange={setProjectStartDate}
           error={null != messages.start_date}
           helperText={messages.start_date}
-          renderInput={props => <TextField
-            id="project_start_date"
-            {...props} />}
+          renderInput={props => (
+            <TextField id="project_start_date" {...props} />
+          )}
         />
       </LocalizationProvider>
       {null != messages.start_date ? (
@@ -287,9 +284,7 @@ export default function ProjectDataAdmin(props) {
           onChange={setProjectEndDate}
           error={null != messages.end_date}
           helperText={messages.end_date}
-          renderInput={props => <TextField
-            id="project_end_date"
-            {...props} />}
+          renderInput={props => <TextField id="project_end_date" {...props} />}
         />
       </LocalizationProvider>
       {null != messages.end_date ? (

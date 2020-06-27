@@ -16,15 +16,12 @@ import Switch from "@material-ui/core/Switch";
 
 import Skeleton from "@material-ui/lab/Skeleton";
 
-import {
-  DatePicker,
-  LocalizationProvider
-} from "@material-ui/pickers";
+import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
 
 import { DateTime } from "luxon";
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "../infrastructure/EndPointStore";
-import { useStatusStore } from '../infrastructure/StatusStore';
+import { useStatusStore } from "../infrastructure/StatusStore";
 import { useUserStore } from "../infrastructure/UserStore";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
@@ -66,7 +63,7 @@ export default function BingoGameDataAdmin(props) {
   const { t, i18n } = useTranslation("bingo_games");
 
   const [dirty, setDirty] = useState(false);
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
   const [curTab, setCurTab] = useState("details");
   const [messages, setMessages] = useState({});
   const [gameProjects, setGameProjects] = useState([
@@ -132,7 +129,7 @@ export default function BingoGameDataAdmin(props) {
 
   const saveBingoGame = () => {
     const method = null === bingoGameId ? "POST" : "PATCH";
-    statusActions.startTask( 'saving' );
+    statusActions.startTask("saving");
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -182,7 +179,7 @@ export default function BingoGameDataAdmin(props) {
         setSaveStatus(data["notice"]);
         setDirty(false);
         setMessages(data["messages"]);
-        statusActions.endTask( 'saving' );
+        statusActions.endTask("saving");
 
         getBingoGameData();
       });
@@ -190,7 +187,7 @@ export default function BingoGameDataAdmin(props) {
 
   const initResultData = () => {
     if (bingoGameId > 0) {
-      statusActions.startTask( );
+      statusActions.startTask();
       fetch(
         endpoints.endpoints[endpointSet].gameResultsUrl +
           "/" +
@@ -216,14 +213,14 @@ export default function BingoGameDataAdmin(props) {
         })
         .then(data => {
           setResultData(data);
-          statusActions.endTask( );
+          statusActions.endTask();
         });
     }
   };
 
   const getBingoGameData = () => {
     setDirty(true);
-    statusActions.startTask( );
+    statusActions.startTask();
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null === bingoGameId) {
       url = url + "new/" + props.courseId + ".json";
@@ -284,7 +281,7 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
         setDirty(false);
-        statusActions.endTask( );
+        statusActions.endTask();
       });
   };
 
@@ -380,23 +377,36 @@ export default function BingoGameDataAdmin(props) {
                   onEditorStateChange={setGameDescriptionEditor}
                   toolbarOnFocus
                   toolbar={{
-                    options: ['inline', 'list', 'link', 'blockType', 'fontSize', 'fontFamily'],
+                    options: [
+                      "inline",
+                      "list",
+                      "link",
+                      "blockType",
+                      "fontSize",
+                      "fontFamily"
+                    ],
                     inline: {
-                      options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'],
-                      bold: { className: 'bordered-option-classname' },
-                      italic: { className: 'bordered-option-classname' },
-                      underline: { className: 'bordered-option-classname' },
-                      strikethrough: { className: 'bordered-option-classname' },
-                      code: { className: 'bordered-option-classname' },
+                      options: [
+                        "bold",
+                        "italic",
+                        "underline",
+                        "strikethrough",
+                        "monospace"
+                      ],
+                      bold: { className: "bordered-option-classname" },
+                      italic: { className: "bordered-option-classname" },
+                      underline: { className: "bordered-option-classname" },
+                      strikethrough: { className: "bordered-option-classname" },
+                      code: { className: "bordered-option-classname" }
                     },
                     blockType: {
-                      className: 'bordered-option-classname',
+                      className: "bordered-option-classname"
                     },
                     fontSize: {
-                      className: 'bordered-option-classname',
+                      className: "bordered-option-classname"
                     },
                     fontFamily: {
-                      className: 'bordered-option-classname',
+                      className: "bordered-option-classname"
                     }
                   }}
                   editorState={gameDescriptionEditor}
@@ -442,9 +452,9 @@ export default function BingoGameDataAdmin(props) {
                     label={t("open_date")}
                     value={gameStartDate}
                     onChange={setGameStartDate}
-                    renderInput={props => <TextField
-                      id="bingo_game_start_date"
-                      {...props} />}
+                    renderInput={props => (
+                      <TextField id="bingo_game_start_date" {...props} />
+                    )}
                   />
                   {null != messages.start_date ? (
                     <FormHelperText error={true}>
@@ -461,9 +471,9 @@ export default function BingoGameDataAdmin(props) {
                     label={t("close_date")}
                     value={gameEndDate}
                     onChange={setGameEndDate}
-                    renderInput={props => <TextField
-                      id="bingo_game_end_date"
-                      {...props} />}
+                    renderInput={props => (
+                      <TextField id="bingo_game_end_date" {...props} />
+                    )}
                   />
                   {null != messages.end_date ? (
                     <FormHelperText error={true}>

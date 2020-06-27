@@ -45,9 +45,7 @@ class Roster < ApplicationRecord
             project.reload
             project.active = activation_status
             project.save!
-            unless project.errors.empty?
-              logger.debug project.errors.full_messages
-            end
+            logger.debug project.errors.full_messages unless project.errors.empty?
           end
         end
       end

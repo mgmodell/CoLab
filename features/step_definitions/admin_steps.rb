@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Given /^there is a course$/ do
+Given(/^there is a course$/) do
   @course = School.find(1).courses.new(
     name: "#{Forgery::Name.industry} Course",
     number: Forgery::Basic.number,
@@ -13,7 +13,7 @@ Given /^there is a course$/ do
   @course.get_name(true).length.should be > 0
 end
 
-Then /^the user sets the project to the course's project$/ do
+Then(/^the user sets the project to the course's project$/) do
   if has_select? 'Source of groups', visible: :all
     page.select(@project.name, from: 'Source of groups', visible: :all)
   else

@@ -3,22 +3,22 @@ import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from "@material-ui/core/IconButton";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import Collapse from '@material-ui/core/Collapse';
-import Alert from '@material-ui/lab/Alert';
-import CloseIcon from '@material-ui/icons/Close';
+import Collapse from "@material-ui/core/Collapse";
+import Alert from "@material-ui/lab/Alert";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useUserStore } from "./infrastructure/UserStore";
@@ -31,20 +31,20 @@ export default function SchoolDataAdmin(props) {
   const [user, userActions] = useUserStore();
 
   const [dirty, setDirty] = useState(false);
-  const [status, statusActions] = useStatusStore( );
-  
+  const [status, statusActions] = useStatusStore();
+
   const [messages, setMessages] = useState({});
-  const [showErrors, setShowErrors] = useState( false );
+  const [showErrors, setShowErrors] = useState(false);
 
   const [schoolId, setSchoolId] = useState(props.schoolId);
   const [schoolName, setSchoolName] = useState("");
   const [schoolDescription, setSchoolDescription] = useState("");
   const [schoolTimezone, setSchoolTimezone] = useState("UTC");
 
-  const [timezones, setTimezones] = useState( [] );
+  const [timezones, setTimezones] = useState([]);
 
   const getSchool = () => {
-    statusActions.startTask( );
+    statusActions.startTask();
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == schoolId) {
@@ -75,16 +75,16 @@ export default function SchoolDataAdmin(props) {
         setTimezones(data.timezones);
 
         setSchoolName(school.name || "");
-        setSchoolDescription(school.description || '');
-        setSchoolTimezone(school.timezone || 'UTC');
+        setSchoolDescription(school.description || "");
+        setSchoolTimezone(school.timezone || "UTC");
 
-        statusActions.endTask( );
+        statusActions.endTask();
         setDirty(false);
       });
   };
   const saveSchool = () => {
     const method = null == schoolId ? "POST" : "PATCH";
-    statusActions.startTask( 'saving' );
+    statusActions.startTask("saving");
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -114,7 +114,7 @@ export default function SchoolDataAdmin(props) {
           return response.json();
         } else {
           console.log("error");
-          statusActions.endTask( 'saving' );
+          statusActions.endTask("saving");
         }
       })
       .then(data => {
@@ -125,14 +125,14 @@ export default function SchoolDataAdmin(props) {
           setSchoolDescription(school.description);
           setSchoolTimezone(school.timezone);
 
-          setShowErrors( true );
+          setShowErrors(true);
           setDirty(false);
           setMessages(data.messages);
-          statusActions.endTask( 'saving' );
+          statusActions.endTask("saving");
         } else {
-          setShowErrors( true );
+          setShowErrors(true);
           setMessages(data.messages);
-          statusActions.endTask( 'saving' );
+          statusActions.endTask("saving");
         }
       });
   };
@@ -177,8 +177,8 @@ export default function SchoolDataAdmin(props) {
         value={schoolName}
         fullWidth={false}
         onChange={event => setSchoolName(event.target.value)}
-        error={null != messages['name']}
-        helperText={messages['name']}
+        error={null != messages["name"]}
+        helperText={messages["name"]}
       />
       &nbsp;
       <FormControl>
@@ -198,9 +198,9 @@ export default function SchoolDataAdmin(props) {
             );
           })}
         </Select>
-        <FormHelperText error={true}>{messages['timezone']}</FormHelperText>
+        <FormHelperText error={true}>{messages["timezone"]}</FormHelperText>
       </FormControl>
-      <br/>
+      <br />
       <TextField
         id="school-description"
         placeholder="Enter a description of the school"
@@ -209,14 +209,12 @@ export default function SchoolDataAdmin(props) {
         rowsMax={4}
         label="Description"
         value={schoolDescription}
-        onChange={(event)=>setSchoolDescription(event.target.value)}
+        onChange={event => setSchoolDescription(event.target.value)}
         InputLabelProps={{
           shrink: true
         }}
         margin="normal"
       />
-
-
       <br />
       {saveButton}
     </Paper>
@@ -228,7 +226,7 @@ export default function SchoolDataAdmin(props) {
         <Alert
           action={
             <IconButton
-              id='error-close'
+              id="error-close"
               aria-label="close"
               color="inherit"
               size="small"

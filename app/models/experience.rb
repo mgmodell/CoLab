@@ -22,9 +22,7 @@ class Experience < ApplicationRecord
   def get_user_reaction(user)
     reaction = reactions.includes(narrative: { scenario: :behavior }).find_by(user: user)
 
-    if reaction.nil?
-      reaction = Reaction.create(user: user, experience: self, instructed: false)
-    end
+    reaction = Reaction.create(user: user, experience: self, instructed: false) if reaction.nil?
     reaction
   end
 
@@ -119,10 +117,11 @@ class Experience < ApplicationRecord
     #        end
 
     log = course.get_consent_log(user: current_user)
-    consent_link = log.present? ?
+    consent_link = if log.present?
                      helpers.edit_consent_log_path(
                        consent_form_id: log.consent_form_id
-                     ) : nil
+                     )
+                   end
 
     {
       id: id,
@@ -133,7 +132,7 @@ class Experience < ApplicationRecord
       course_name: course.get_name(false),
       start_date: start_date,
       end_date: end_date,
-      next_deadline: next_deadline(),
+      next_deadline: next_deadline,
       link: link,
       consent_link: consent_link,
       active: active
@@ -162,7 +161,7 @@ class Experience < ApplicationRecord
           narrative = Narrative.includes(scenario: :behavior).find(possible.sample)
         else
           sorted =  narrative_counts.sort_by { |a| a[1] }
-          narrative = Narrative.includes(scenario: :behavior).find ( sorted[0][0])
+          narrative = Narrative.includes(scenario: :behavior).find(sorted[0][0])
         end
         # narrative = Narrative.where( id: include_ids).take
       end
@@ -179,20 +178,20 @@ class Experience < ApplicationRecord
         i = Narrative.includes(scenario: :behavior).joins(:reactions).where('scenario_id NOT IN (?)', scenario_counts.keys)
                      .where(reactions: { narrative_id: exp })
                      .group(:narrative_id).count
-        if include_ids.empty?
-          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
+        narrative = if include_ids.empty?
+                      Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where('id NOT IN (?)', narrative_counts.keys).sample
-        elsif world.count > 0
-          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
+                    elsif world.count > 0
+                      Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: world).sample
 
-        elsif exp.count > 0
-          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
+                    elsif exp.count > 0
+                      Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: world).sample
-        else
-          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
+                    else
+                      Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: include_ids).sample
-        end
+                    end
       end
 
       if narrative.nil?
@@ -236,9 +235,7 @@ class Experience < ApplicationRecord
       end
       experience.instructor_updated = true
       experience.save
-      unless experience.errors.empty?
-        logger.debug experience.errors.full_messages
-      end
+      logger.debug experience.errors.full_messages unless experience.errors.empty?
     end
     logger.debug "\n\t**#{count} Experience Reports sent to Instructors**"
   end
@@ -246,16 +243,12 @@ class Experience < ApplicationRecord
   private
 
   def reset_notification
-    if end_date_changed? && instructor_updated && DateTime.current <= end_date
-      self.instructor_updated = false
-    end
+    self.instructor_updated = false if end_date_changed? && instructor_updated && DateTime.current <= end_date
   end
 
   def date_sanity
     unless start_date.nil? || end_date.nil?
-      if start_date > end_date
-        errors.add(:start_date, 'The start date must come before the end date')
-      end
+      errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
       errors
     end
   end

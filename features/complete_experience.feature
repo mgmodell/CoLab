@@ -226,8 +226,8 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
-    Then the user presses "Submit"
-    Then the user will see "Reflection on possible improvements is required"
+    Then the 'Submit' button will be disabled
+    # Then the user will see "Reflection on possible improvements is required"
 
   @javascript
   Scenario: Interleaved users

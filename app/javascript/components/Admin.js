@@ -5,25 +5,25 @@ import {
   Redirect,
   useRouteMatch,
   useParams
-} from 'react-router-dom';
+} from "react-router-dom";
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
-import WorkingIndicator from './infrastructure/WorkingIndicator';
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Settings from "luxon/src/settings.js";
 
 import CloseIcon from "@material-ui/icons/Close";
-import SchoolList from './SchoolList';
-import CourseAdmin from './CourseAdmin';
-import SchoolDataAdmin from './SchoolDataAdmin';
-import ConsentFormList from './Consent/ConsentFormList';
-import ConsentFormDataAdmin from './Consent/ConsentFormDataAdmin';
+import SchoolList from "./SchoolList";
+import CourseAdmin from "./CourseAdmin";
+import SchoolDataAdmin from "./SchoolDataAdmin";
+import ConsentFormList from "./Consent/ConsentFormList";
+import ConsentFormDataAdmin from "./Consent/ConsentFormDataAdmin";
 
-import {useUserStore} from "./infrastructure/UserStore";
+import { useUserStore } from "./infrastructure/UserStore";
 import Collapse from "@material-ui/core/Collapse";
 
 export default function Admin(props) {
-  let {path, url} = useRouteMatch();
+  let { path, url } = useRouteMatch();
 
   const [user] = useUserStore();
 
@@ -37,51 +37,45 @@ export default function Admin(props) {
     }
   }, [user.loaded]);
 
-
-  let {id} = useParams( );
+  let { id } = useParams();
 
   return (
     <React.Fragment>
-      <WorkingIndicator id='admin_save' />
+      <WorkingIndicator id="admin_save" />
       <Switch>
         <Route path={`${path}/courses`}>
           <CourseAdmin
             token={props.token}
             getEndpointsUrl={props.getEndpointsUrl}
-            />
-
+          />
         </Route>
         <Route exact path={`${path}/schools`}>
           <SchoolList
             token={props.token}
             getEndpointsUrl={props.getEndpointsUrl}
-            />
-
+          />
         </Route>
         <Route path={`${path}/schools/:id`}>
           <SchoolDataAdmin
             token={props.token}
             getEndpointsUrl={props.getEndpointsUrl}
-            schoolId={'new' === id ? null : id }
-            />
-
+            schoolId={"new" === id ? null : id}
+          />
         </Route>
         <Route exact path={`${path}/consent_forms`}>
           <ConsentFormList
             token={props.token}
             getEndpointsUrl={props.getEndpointsUrl}
-            />
-
+          />
         </Route>
         <Route path={`${path}/consent_forms/:id`}>
           <ConsentFormDataAdmin
             token={props.token}
             getEndpointsUrl={props.getEndpointsUrl}
-            schoolId={id === 'new' ? null : id }
-            />
-
+            schoolId={id === "new" ? null : id}
+          />
         </Route>
-        <Route path={`${path}`} >
+        <Route path={`${path}`}>
           <Redirect to={`${path}/courses`} />
         </Route>
       </Switch>

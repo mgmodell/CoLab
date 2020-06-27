@@ -100,9 +100,7 @@ class ExperiencesController < ApplicationController
         end
       end
     else
-      unless @experience.errors.empty?
-        logger.debug @experience.errors.full_messages
-      end
+      logger.debug @experience.errors.full_messages unless @experience.errors.empty?
       respond_to do |format|
         format.html do
           render :new
@@ -167,20 +165,20 @@ class ExperiencesController < ApplicationController
                            .where(id: experience_id, users: { id: current_user }).take
 
     response = {
-      messages: { }
+      messages: {}
     }
 
     if experience.nil? && !experience.is_open
-      response[ :messages ][ :main ] = t( 'experiences.wrong_course')
+      response[:messages][ :main ] = t('experiences.wrong_course')
 
     else
       reaction = experience.get_user_reaction(current_user)
       week = reaction.next_week
 
       response = response.merge({
-        reaction_id: reaction.id,
-        instructed: reaction.instructed
-      })
+                                  reaction_id: reaction.id,
+                                  instructed: reaction.instructed
+                                })
 
       if !reaction.instructed
         reaction.instructed = true
@@ -188,11 +186,11 @@ class ExperiencesController < ApplicationController
 
         logger.debug reaction.errors.full_messages unless reaction.errors.empty?
       elsif !week.nil?
-        response = response.merge( {
-          week_id: week.id,
-          week_num: week.week_num,
-          week_text: week.text,
-        } )
+        response = response.merge({
+                                    week_id: week.id,
+                                    week_num: week.week_num,
+                                    week_text: week.text
+                                  })
       end
 
       respond_to do |format|
@@ -206,33 +204,35 @@ class ExperiencesController < ApplicationController
     received_diagnosis = Diagnosis.new(diagnosis_params)
     received_diagnosis.reaction = Reaction.find(received_diagnosis.reaction_id)
     received_diagnosis.save
-    unless received_diagnosis.errors.empty?
-      logger.debug received_diagnosis.errors.full_messages
-    end
+    logger.debug received_diagnosis.errors.full_messages unless received_diagnosis.errors.empty?
 
     week = received_diagnosis.reaction.next_week
+    response = {}
     if received_diagnosis.errors.any?
       @diagnosis = received_diagnosis
+      response[:messages] = @diagnosis.errors.to_hash
+      response[:messages][:main] = 'Unable to save your diagnosis. Please try again.'
     else
       reaction = received_diagnosis.reaction
       @diagnosis = reaction.diagnoses.new(week: week)
+      response[:messages] = {main: 'Diagnosis successfully saved.' }
     end
-    response = {}
+
     if week.nil?
       # we just finished the last week
       @reaction = received_diagnosis.reaction
       # render :reaction
     else
       response = response.merge({
-        week_id: week.id,
-          week_num: week.week_num,
-          week_text: week.text,
-      })
+                                  week_id: week.id,
+                                  week_num: week.week_num,
+                                  week_text: week.text
+                                })
       # render :next
     end
 
     respond_to do |format|
-      format.json {render json: response.as_json }
+      format.json { render json: response.as_json }
     end
   end
 
@@ -244,17 +244,17 @@ class ExperiencesController < ApplicationController
                   Reaction.find(reaction_id)
                 end
 
-    response = { messages: { main: t( 'experiences.react_success')}}
+    response = { messages: { main: t('experiences.react_success') } }
     puts reaction_params
 
-    if !@reaction.update(reaction_params)
-      response[:messages] = @reaction.errors
-      response[:messages][:main] = t('experiences.react_fail') 
-      puts @reaction.full_messages
+    unless @reaction.update(reaction_params)
+      response[:messages] = @reaction.errors.to_hash
+      response[:messages][:main] = t('experiences.react_fail')
+      puts @reaction.errors.full_messages
     end
 
     respond_to do |format|
-      format.json {render json: response.as_json}
+      format.json { render json: response.as_json }
     end
   end
 
@@ -264,9 +264,7 @@ class ExperiencesController < ApplicationController
        experience.course.get_roster_for_user(current_user).role.instructor?
       experience.active = true
       experience.save
-      unless experience.errors.empty?
-        logger.debug experience.errors.full_messages
-      end
+      logger.debug experience.errors.full_messages unless experience.errors.empty?
     end
     @experience = experience
     render :show
@@ -305,9 +303,7 @@ class ExperiencesController < ApplicationController
   end
 
   def check_editor
-    unless current_user.is_admin? || current_user.is_instructor?
-      redirect_to root_path
-    end
+    redirect_to root_path unless current_user.is_admin? || current_user.is_instructor?
   end
 
   def experience_params

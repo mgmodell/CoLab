@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
-Given /^the user is any student in the course$/ do
+Given(/^the user is any student in the course$/) do
   @user = @course.rosters.enrolled.sample.user
 end
 
-Then /^the user clicks the link to the concept list$/ do
+Then(/^the user clicks the link to the concept list$/) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  #I shouldn't need this, but it seems that I do
+  # I shouldn't need this, but it seems that I do
   step 'the user switches to the "Task View" tab'
 
-    find(:xpath, "//div[text()='#{@bingo.get_name(@anon)}']").click
-    
+  find(:xpath, "//div[text()='#{@bingo.get_name(@anon)}']").click
 
   wait_for_render
   # current_path = page.current_path
@@ -29,12 +28,12 @@ Then /^the user clicks the link to the concept list$/ do
   # visit url
 
   chips = all(:xpath, "//div[contains(@id,'concept_')]")
-  @concepts = chips.collect{ |chip| { id: chip[:id], name: chip.text} }
+  @concepts = chips.collect { |chip| { id: chip[:id], name: chip.text } }
 
   # visit current_path
 end
 
-Then /^the concept list should match the list$/ do
+Then(/^the concept list should match the list$/) do
   concept_names = @concepts.collect { |concept| concept[:name] }
 
   @bingo.concepts.where('concepts.id > 0').uniq.each do |concept|
@@ -43,12 +42,12 @@ Then /^the concept list should match the list$/ do
   end
 end
 
-Then /^the user should see (\d+) concepts$/ do |concept_count|
+Then(/^the user should see (\d+) concepts$/) do |concept_count|
   # Add a concept to compensate for the fake '*' square
   @concepts.count.should eq concept_count.to_i
 end
 
-Then /^the number of concepts is less than the total number of concepts$/ do
+Then(/^the number of concepts is less than the total number of concepts$/) do
   page.all(:xpath, "//tr[@id='concept']").count.should be < Concept.count
 end
 

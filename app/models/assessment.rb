@@ -29,10 +29,11 @@ class Assessment < ApplicationRecord
     group = group_for_user(current_user)
 
     log = course.get_consent_log(user: current_user)
-    consent_link = log.present? ?
+    consent_link = if log.present?
                      helpers.edit_consent_log_path(
                        consent_form_id: log.consent_form_id
-                     ) : nil
+                     )
+                   end
     {
       id: id,
       type: :assessment,
@@ -42,7 +43,7 @@ class Assessment < ApplicationRecord
       course_name: course.get_name(false),
       start_date: start_date,
       end_date: end_date,
-      next_deadline: next_deadline( ),
+      next_deadline: next_deadline,
       link: link,
       consent_link: consent_link,
       active: project.active
@@ -134,9 +135,11 @@ class Assessment < ApplicationRecord
     assessment.start_date = tz.parse(assessment.start_date.to_s).beginning_of_day
 
     # calc period
-    period = project.end_dow > project.start_dow ?
-      project.end_dow - project.start_dow :
-      7 - project.start_dow + project.end_dow
+    period = if project.end_dow > project.start_dow
+               project.end_dow - project.start_dow
+             else
+               7 - project.start_dow + project.end_dow
+end
 
     assessment.end_date = assessment.start_date + period.days
     assessment.end_date = tz.parse(assessment.end_date.to_s).end_of_day.change(sec: 0)
@@ -153,9 +156,7 @@ class Assessment < ApplicationRecord
        project.is_available?
       assessment.project = project
       assessment.save
-      unless assessment.errors.empty?
-        logger.debug assessment.errors.full_messages
-      end
+      logger.debug assessment.errors.full_messages unless assessment.errors.empty?
 
     elsif existing_assessments.count == 1
       existing_assessment = existing_assessments[0]

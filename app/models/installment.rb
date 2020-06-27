@@ -82,34 +82,20 @@ class Installment < ApplicationRecord
                           .find(assessment.project.course_id)
 
       this_school = this_course.school
-      if this_school.name.present?
-        working_space.gsub!(/\b#{this_school.name}\b/i, "[s_#{this_school.id}]")
-      end
-      if this_course.name.present?
-        working_space.gsub!(/\b#{this_course.name}\b/i, "[cnam_#{this_course.id}]")
-      end
-      if this_course.number.present?
-        working_space.gsub!(/\b#{this_course.number}\b/i, "[cnum_#{this_course.id}]")
-      end
+      working_space.gsub!(/\b#{this_school.name}\b/i, "[s_#{this_school.id}]") if this_school.name.present?
+      working_space.gsub!(/\b#{this_course.name}\b/i, "[cnam_#{this_course.id}]") if this_course.name.present?
+      working_space.gsub!(/\b#{this_course.number}\b/i, "[cnum_#{this_course.id}]") if this_course.number.present?
 
       this_course.projects.each do |project|
-        if project.name.present?
-          working_space.gsub!(/\b#{project.name}\b/i, "[p_#{project.id}]")
-        end
+        working_space.gsub!(/\b#{project.name}\b/i, "[p_#{project.id}]") if project.name.present?
         project.groups.each do |group|
-          if group.name.present?
-            working_space.gsub!(/\b#{group.name}\b/i, "[g_#{group.id}]")
-          end
+          working_space.gsub!(/\b#{group.name}\b/i, "[g_#{group.id}]") if group.name.present?
         end
       end
 
       this_course.users.each do |user|
-        if user.first_name.present?
-          working_space.gsub! /\b#{user.first_name}\b/i, "[ufn_#{user.id}]"
-        end
-        if user.last_name.present?
-          working_space.gsub! /\b#{user.last_name}\b/i, "[uln_#{user.id}]"
-        end
+        working_space.gsub!(/\b#{user.first_name}\b/i, "[ufn_#{user.id}]") if user.first_name.present?
+        working_space.gsub!(/\b#{user.last_name}\b/i, "[uln_#{user.id}]") if user.last_name.present?
       end
 
       # Phase 2 - convert from codes

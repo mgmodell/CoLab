@@ -220,9 +220,7 @@ class Project < ApplicationRecord
   # Validation check code
   def date_sanity
     unless start_date.nil? || end_date.nil?
-      if start_date > end_date
-        errors.add(:start_dow, 'The start date must come before the end date')
-      end
+      errors.add(:start_dow, 'The start date must come before the end date') if start_date > end_date
       errors
     end
   end
@@ -270,9 +268,7 @@ class Project < ApplicationRecord
           errors.add(:active, "#{group.name false} (group) appears #{count} times in your project.")
         end
       end
-      if factor_pack.nil?
-        errors.add(:factor_pack, 'Factor Pack must be set before a project can be activated')
-      end
+      errors.add(:factor_pack, 'Factor Pack must be set before a project can be activated') if factor_pack.nil?
       # If this is an activation, we need to set up any necessary weeklies
       Assessment.configure_current_assessment self
     end
@@ -284,8 +280,6 @@ class Project < ApplicationRecord
     # Nothing needs to be done unless we're active
     Assessment.configure_current_assessment self if active?
   end
-
-  private
 
   def anonymize
     self.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"

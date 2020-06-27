@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
-Given /^the Bingo! is group\-enabled with the project and a (\d+) percent group discount$/ do |group_discount|
+Given(/^the Bingo! is group\-enabled with the project and a (\d+) percent group discount$/) do |group_discount|
   @bingo.group_option = true
   @project.should_not be_nil
   @bingo.project = @project
   @bingo.group_discount = group_discount
 end
 
-
-Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pending|
+Then(/^the user "([^"]*)" see collaboration was requested$/) do |collaboration_pending|
   wait_for_render
   link_text = "Your teammates in #{@group.get_name(false)} want to collaborate"
   case collaboration_pending.downcase
@@ -21,21 +20,21 @@ Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pe
   end
 end
 
-When /^the user requests collaboration$/ do
-wait_for_render
+When(/^the user requests collaboration$/) do
+  wait_for_render
   link_text = "Invite your teammates in #{@group.get_name(false)} to help?"
   expect(page).to have_content link_text
-  link = find( :xpath, "//a[contains(.,'#{link_text}')]")
+  link = find(:xpath, "//a[contains(.,'#{link_text}')]")
   link.click
 end
 
-When /^group user (\d+) logs in$/ do |user_count|
+When(/^group user (\d+) logs in$/) do |user_count|
   @user = @group.users[user_count.to_i - 1]
   step 'the user "has" had demographics requested'
   step 'the user logs in'
 end
 
-Then /^the user "([^"]*)" see they're waiting on a collaboration response$/ do |collaboration_pending|
+Then(/^the user "([^"]*)" see they're waiting on a collaboration response$/) do |collaboration_pending|
   case collaboration_pending.downcase
   when 'should'
     page.should have_content 'awaiting a response to your group help request'
@@ -46,14 +45,14 @@ Then /^the user "([^"]*)" see they're waiting on a collaboration response$/ do |
   end
 end
 
-Then /^the user "([^"]*)" the collaboration request$/ do |accept_or_decline|
+Then(/^the user "([^"]*)" the collaboration request$/) do |accept_or_decline|
   wait_for_render
   case accept_or_decline.downcase
   when 'accepts'
-    btn = find(:xpath, "//a[text()='Accept']" )
+    btn = find(:xpath, "//a[text()='Accept']")
     # click_link_or_button 'Accept'
   when 'declines'
-    btn = find(:xpath, "//a[text()='Decline']" )
+    btn = find(:xpath, "//a[text()='Decline']")
     # click_link_or_button 'Decline'
   else
     log "We didn't test anything there: " + accept_or_decline
@@ -61,7 +60,7 @@ Then /^the user "([^"]*)" the collaboration request$/ do |accept_or_decline|
   btn.click
 end
 
-Then /^the user "([^"]*)" see collaboration request button$/ do |button_present|
+Then(/^the user "([^"]*)" see collaboration request button$/) do |button_present|
   case button_present.downcase
   when 'should'
     page.should have_content 'Invite your group to help?'
@@ -72,7 +71,7 @@ Then /^the user "([^"]*)" see collaboration request button$/ do |button_present|
   end
 end
 
-When /^the user populates (\d+) additional "([^"]*)" entries$/ do |count, field|
+When(/^the user populates (\d+) additional "([^"]*)" entries$/) do |count, field|
   # required_term_count = @bingo.required_terms_for_group(@bingo.project.group_for_user(@user))
 
   @entries_lists = {} if @entries_lists.nil?
@@ -84,15 +83,17 @@ When /^the user populates (\d+) additional "([^"]*)" entries$/ do |count, field|
     if @entries_list[existing_count + index].blank?
       @entries_list[existing_count + index] = { 'term' => '', 'definition' => '' }
     end
-    @entries_list[existing_count + index][field] = field == 'term' ?
-                        Forgery::Name.industry :
-                        Forgery::Basic.text
+    @entries_list[existing_count + index][field] = if field == 'term'
+                                                     Forgery::Name.industry
+                                                   else
+                                                     Forgery::Basic.text
+end
     page.fill_in("#{field}_#{existing_count + index}",
                  with: @entries_list[existing_count + index][field])
   end
 end
 
-When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
+When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
@@ -100,14 +101,17 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
   count.to_i.times do |index|
     existing_term = page.find(:xpath, "//input[@id='term_#{index}']").value
     log "term: #{existing_term.inspect}"
-    new_val = field == 'term' ?
-            Forgery::Name.industry :
-            Forgery::Basic.text
+    new_val = if field == 'term'
+                Forgery::Name.industry
+              else
+                Forgery::Basic.text
+end
 
     @entries_list[index] = {} if @entries_list[index].blank?
     @entries_list.each do |entry|
       log "checking #{entry['term']}"
       next unless entry['term'] == existing_term
+
       log 'setting'
 
       entry[field] = new_val
@@ -117,16 +121,14 @@ When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
   end
 end
 
-Then /^the candidate lists have been merged$/ do
+Then(/^the candidate lists have been merged$/) do
   @entries_lists = {} if @entries_lists.nil?
   combined_list = []
   @bingo.project.group_for_user(@user).users.each do |user|
     next if @entries_lists[user].blank?
 
     @entries_lists[user].each do |list_item|
-      if list_item['term'].present? || list_item['definition'].present?
-        combined_list << list_item
-      end
+      combined_list << list_item if list_item['term'].present? || list_item['definition'].present?
     end
   end
   @bingo.project.group_for_user(@user).users.each do |user|
@@ -134,7 +136,7 @@ Then /^the candidate lists have been merged$/ do
   end
 end
 
-Then /^all course users should see the terms list$/ do
+Then(/^all course users should see the terms list$/) do
   temp_user = @user
   @course.users.each do |user|
     @user = user

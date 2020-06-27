@@ -54,9 +54,11 @@ class ConceptsController < ApplicationController
   def concepts_for_game_demo
     concepts = []
     bingo_game_id = params[:id].to_i
-    search_string = params[:search_string].present? ?
-                      params[:search_string].strip.downcase :
+    search_string = if params[:search_string].present?
+                      params[:search_string].strip.downcase
+                    else
                       ''
+end
 
     if bingo_game_id != 0 || search_string.length > 2
       index = 0
@@ -65,9 +67,7 @@ class ConceptsController < ApplicationController
         index -= 1
         concepts << Concept.new(id: index, name: concept[0])
       end
-      if bingo_game_id == 0
-        concepts.select! { |c| c.name.downcase.include? search_string }
-      end
+      concepts.select! { |c| c.name.downcase.include? search_string } if bingo_game_id == 0
     end
 
     respond_to do |format|

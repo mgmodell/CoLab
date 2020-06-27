@@ -1,9 +1,6 @@
 import React, { useState, Suspense, useEffect } from "react";
 import PropTypes from "prop-types";
-import {
-  BrowserRouter as Router,
-  useHistory,
-} from 'react-router-dom';
+import { BrowserRouter as Router, useHistory } from "react-router-dom";
 
 import IconButton from "@material-ui/core/IconButton";
 import Collapse from "@material-ui/core/Collapse";
@@ -29,7 +26,7 @@ import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import SchoolIcon from "@material-ui/icons/School";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import FindInPageIcon from '@material-ui/icons/FindInPage';
+import FindInPageIcon from "@material-ui/icons/FindInPage";
 
 import DiversityCheck from "./DiversityCheck";
 import { useUserStore } from "./infrastructure/UserStore";
@@ -37,7 +34,6 @@ import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 export default function MainMenu(props) {
-
   const history = useHistory();
   const [menuOpen, setMenuOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
@@ -59,8 +55,8 @@ export default function MainMenu(props) {
   };
 
   const navTo = url => {
-    history.push( url );
-    setMenuOpen( false );
+    history.push(url);
+    setMenuOpen(false);
     // window.location = url;
     // return;
   };
@@ -170,7 +166,6 @@ export default function MainMenu(props) {
               <AccountBoxIcon />
             </ListItemIcon>
             <ListItemText>{t("profile")}</ListItemText>
-
           </ListItem>
           <DiversityCheck
             token={props.token}
@@ -214,7 +209,7 @@ export default function MainMenu(props) {
             id="logout-menu-item"
             button
             onClick={() => {
-              window.location.href = props.logoutUrl
+              window.location.href = props.logoutUrl;
             }}
           >
             <ListItemIcon>

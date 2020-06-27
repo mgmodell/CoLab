@@ -16,8 +16,8 @@ import CloseIcon from "@material-ui/icons/Close";
 //For debug purposes
 
 import { useUserStore } from "./infrastructure/UserStore";
-import { useEndpointStore } from"./infrastructure/EndPointStore";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useEndpointStore } from "./infrastructure/EndPointStore";
+import { useStatusStore } from "./infrastructure/StatusStore";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
@@ -26,7 +26,7 @@ export default function InstallmentReport(props) {
   const endpointSet = "installment";
   const [endpoints, endpointsActions] = useEndpointStore();
 
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
   const [dirty, setDirty] = useState(false);
   const [debug, setDebug] = useState(false);
   const [t, i18n] = useTranslation("installments");
@@ -110,8 +110,10 @@ export default function InstallmentReport(props) {
 
   //Retrieve the latest data
   const getContributions = () => {
-    const url = `${endpoints.endpoints[endpointSet].baseUrl}/${props.installmentId}.json`;
-    statusActions.startTask( );
+    const url = `${endpoints.endpoints[endpointSet].baseUrl}/${
+      props.installmentId
+    }.json`;
+    statusActions.startTask();
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -130,7 +132,7 @@ export default function InstallmentReport(props) {
         }
       })
       .then(data => {
-        console.log( data );
+        console.log(data);
         setFactors(data.factors);
         setSliderSum(data.sliderSum);
 
@@ -156,15 +158,16 @@ export default function InstallmentReport(props) {
         setGroup(data.group);
         data.installment.group_id = data.group.id;
         setProject(data.installment.project);
-        statusActions.endTask( );
+        statusActions.endTask();
       });
   };
   //Store what we've got
   const saveContributions = () => {
-    statusActions.startTask( 'saving' );
+    statusActions.startTask("saving");
     const url =
-    endpoints.endpoints[endpointSet].saveInstallmentUrl +
-      (Boolean(installment.id) ? `/${installment.id}` : ``) + ".json";
+      endpoints.endpoints[endpointSet].saveInstallmentUrl +
+      (Boolean(installment.id) ? `/${installment.id}` : ``) +
+      ".json";
     const method = Boolean(installment.id) ? "PATCH" : "POST";
     fetch(url, {
       method: method,
@@ -197,7 +200,7 @@ export default function InstallmentReport(props) {
               values.push({
                 userId: value.user_id,
                 factorId: value.factor_id,
-                name: group["users"][value.user_id].name || '',
+                name: group["users"][value.user_id].name || "",
                 value: value.value
               });
               valuesAccum[value.factor_id] = values.sort(userCompare);
@@ -210,7 +213,7 @@ export default function InstallmentReport(props) {
         console.log(data.messages);
         setMessages(data.messages);
         setShowAlerts(true);
-        statusActions.endTask( 'saving' );
+        statusActions.endTask("saving");
         setDirty(false);
       });
   };
@@ -235,22 +238,20 @@ export default function InstallmentReport(props) {
           {messages["status"]}
         </Alert>
       </Collapse>
-        <Suspense fallback={<Skeleton variant='text' height={15} />}>
-          <h1>{t('subtitle')}</h1>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: t('instructions', {
-                  group_name: group.name,
-                  project_name: project.name,
-                  member_count: Object.keys( group.users || {} ).length,
-                  factor_count: factors.length
-                })
-              }}
-            />
-          <p>
-            {t('slider.instructions')}
-          </p>
-        </Suspense>
+      <Suspense fallback={<Skeleton variant="text" height={15} />}>
+        <h1>{t("subtitle")}</h1>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: t("instructions", {
+              group_name: group.name,
+              project_name: project.name,
+              member_count: Object.keys(group.users || {}).length,
+              factor_count: factors.length
+            })
+          }}
+        />
+        <p>{t("slider.instructions")}</p>
+      </Suspense>
       <Suspense fallback={<Skeleton variant="rect" height={300} />}>
         {Object.keys(contributions).map(sliceId => {
           return (
@@ -290,7 +291,7 @@ export default function InstallmentReport(props) {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <TextField
-              value={installment.comments || ''}
+              value={installment.comments || ""}
               name="Comments"
               id="Comments"
               placeholder={"Enter your comments"}

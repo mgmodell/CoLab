@@ -10,10 +10,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Typography from "@material-ui/core/Typography";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
-import {
-  DatePicker,
-  LocalizationProvider
-} from "@material-ui/pickers";
+import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
@@ -21,7 +18,7 @@ import ReactionsList from "./ReactionsList";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useUserStore } from "./infrastructure/UserStore";
@@ -34,7 +31,7 @@ export default function ExperienceDataAdmin(props) {
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
   const [messages, setMessages] = useState({});
   const [experienceId, setExperienceId] = useState(props.experienceId);
   const [experienceName, setExperienceName] = useState("");
@@ -56,7 +53,7 @@ export default function ExperienceDataAdmin(props) {
   const [courseTimezone, setCourseTimezone] = useState("UTC");
 
   const getExperience = () => {
-    statusActions.startTask( );
+    statusActions.startTask();
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == experienceId) {
@@ -102,13 +99,13 @@ export default function ExperienceDataAdmin(props) {
         );
         setExperienceEndDate(receivedDate.toISO());
 
-        statusActions.endTask( );
+        statusActions.endTask();
         setDirty(false);
       });
   };
   const saveExperience = () => {
     const method = null == experienceId ? "POST" : "PATCH";
-    statusActions.startTask( 'saving' );
+    statusActions.startTask("saving");
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -145,7 +142,7 @@ export default function ExperienceDataAdmin(props) {
       })
       .then(data => {
         if (data.messages != null && Object.keys(data.messages).length < 2) {
-          console.log( data );
+          console.log(data);
           const experience = data.experience;
           setExperienceId(experience.id);
           setExperienceName(experience.name);
@@ -161,12 +158,12 @@ export default function ExperienceDataAdmin(props) {
 
           const course = data.course;
           setCourseName(course.name);
-          statusActions.endTask( 'saving' );
+          statusActions.endTask("saving");
           setDirty(false);
           setMessages(data.messages);
         } else {
           setMessages(data.messages);
-          statusActions.endTask( 'saving' );
+          statusActions.endTask("saving");
         }
       });
   };
@@ -253,9 +250,9 @@ export default function ExperienceDataAdmin(props) {
           onChange={setExperienceStartDate}
           error={null != messages.start_date}
           helperText={messages.start_date}
-          renderInput={props => <TextField
-            id="experience_start_date"
-            {...props} />}
+          renderInput={props => (
+            <TextField id="experience_start_date" {...props} />
+          )}
         />
       </LocalizationProvider>
       {null != messages.start_date ? (
@@ -274,9 +271,9 @@ export default function ExperienceDataAdmin(props) {
           onChange={setExperienceEndDate}
           error={null != messages.end_date}
           helperText={messages.end_date}
-          renderInput={props => <TextField
-            id="experience_end_date"
-            {...props} />}
+          renderInput={props => (
+            <TextField id="experience_end_date" {...props} />
+          )}
         />
       </LocalizationProvider>
       {null != messages.end_date ? (

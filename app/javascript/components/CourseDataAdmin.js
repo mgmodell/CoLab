@@ -5,7 +5,7 @@ import {
   Route,
   useParams,
   useHistory
-} from 'react-router-dom';
+} from "react-router-dom";
 import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
@@ -23,17 +23,14 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Tooltip from "@material-ui/core/Tooltip";
 
-import {iconForType} from './ActivityLib'
+import { iconForType } from "./ActivityLib";
 
-import {
-  DatePicker,
-  LocalizationProvider
-} from "@material-ui/pickers";
+import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 import { useUserStore } from "./infrastructure/UserStore";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 import CourseUsersList from "./CourseUsersList";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
@@ -50,10 +47,10 @@ export default function CourseDataAdmin(props) {
   const endpointSet = "course";
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
 
-  const history = useHistory( );
-  const {path, url} = useRouteMatch( );
+  const history = useHistory();
+  const { path, url } = useRouteMatch();
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
@@ -88,7 +85,7 @@ export default function CourseDataAdmin(props) {
   const [schoolTzHash, setSchoolTzHash] = useState({});
 
   const getCourse = () => {
-    statusActions.startTask( );
+    statusActions.startTask();
     setDirty(true);
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == courseId) {
@@ -153,13 +150,13 @@ export default function CourseDataAdmin(props) {
         setCourseConsentFormId(course.consent_form_id || 0);
         setCourseSchoolId(course.school_id || 0);
 
-        statusActions.endTask( 'loading' );
+        statusActions.endTask("loading");
         setDirty(false);
       });
   };
   const saveCourse = () => {
     const method = null == courseId ? "POST" : "PATCH";
-    statusActions.startTask( 'saving' );
+    statusActions.startTask("saving");
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -219,7 +216,7 @@ export default function CourseDataAdmin(props) {
           );
           setCourseEndDate(receivedDate);
 
-          statusActions.endTask( 'saving' );
+          statusActions.endTask("saving");
           setDirty(false);
         }
         postNewMessage(data.messages);
@@ -227,7 +224,7 @@ export default function CourseDataAdmin(props) {
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.startTask( );
+      statusActions.startTask();
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -237,7 +234,7 @@ export default function CourseDataAdmin(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] == "loaded") {
-      statusActions.endTask( 'loading' );
+      statusActions.endTask("loading");
       getCourse();
     }
   }, [endpoints.endpointStatus[endpointSet]]);
@@ -383,9 +380,7 @@ export default function CourseDataAdmin(props) {
           onChange={setCourseStartDate}
           error={Boolean(messages["start_date"])}
           helperText={messages["start_date"]}
-          renderInput={props => <TextField
-            id="course_start_date"
-            {...props} />}
+          renderInput={props => <TextField id="course_start_date" {...props} />}
         />
       </LocalizationProvider>
       {Boolean(messages["start_date"]) ? (
@@ -403,9 +398,7 @@ export default function CourseDataAdmin(props) {
           onChange={setCourseEndDate}
           error={Boolean(messages["end_date"])}
           helperText={messages["end_date"]}
-          renderInput={props => <TextField
-            id="course_end_date"
-            {...props} />}
+          renderInput={props => <TextField id="course_end_date" {...props} />}
         />
       </LocalizationProvider>
       {Boolean(messages["end_date"]) ? (
@@ -517,7 +510,7 @@ export default function CourseDataAdmin(props) {
               <IconButton
                 aria-label={lbl}
                 onClick={event => {
-                  statusActions.startTask( 'deleting' );
+                  statusActions.startTask("deleting");
                   fetch(user.drop_link, {
                     method: "DESTROY",
                     credentials: "include",
@@ -537,7 +530,7 @@ export default function CourseDataAdmin(props) {
                     .then(data => {
                       getCourse();
                       setMessages(data.messages);
-                      statusActions.endTask( 'deleting' );
+                      statusActions.endTask("deleting");
                     });
                 }}
               >
@@ -576,10 +569,7 @@ export default function CourseDataAdmin(props) {
               key={linkData.name}
               onClick={event => {
                 setMenuAnchorEl(null);
-                history.push(
-                 `${url}/${linkData.link}/new`
-
-                )
+                history.push(`${url}/${linkData.link}/new`);
                 // window.location.href = linkData.link;
               }}
             >
@@ -611,10 +601,7 @@ export default function CourseDataAdmin(props) {
             if ("link" != activityColumns[cellMeta.colIndex].name) {
               const link = courseActivities[cellMeta.rowIndex].link;
               const activityId = courseActivities[cellMeta.rowIndex].id;
-              history.push(
-                `${url}/${link}/${activityId}`
-
-              )
+              history.push(`${url}/${link}/${activityId}`);
               // if (null != link) {
               //   window.location.href = link;
               // }
@@ -628,68 +615,71 @@ export default function CourseDataAdmin(props) {
 
   return (
     <Switch>
-      <Route >
-    <Paper>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
+      <Route>
+        <Paper>
+          <Collapse in={showErrors}>
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setShowErrors(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
             >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"]}
-        </Alert>
-      </Collapse>
-      <Tabs
-        centered
-        value={curTab}
-        onChange={(event, value) => setCurTab(value)}
-      >
-        <Tab label="Details" value="details" />
-        <Tab value="instructors" label="Instructors" />
-        <Tab value="students" label="Students" />
-        <Tab value="activities" label="Activities" />
-      </Tabs>
-      {"details" == curTab ? detailsComponent : null}
-      {"instructors" == curTab ? (
-        <CourseUsersList
-          token={props.token}
-          courseId={courseId}
-          retrievalUrl={
-            endpoints.endpoints[endpointSet].courseUsersUrl + courseId + ".json"
-          }
-          usersList={courseUsersList}
-          usersListUpdateFunc={setCourseUsersList}
-          userType="instructor"
-          addMessagesFunc={postNewMessage}
-        />
-      ) : null}
-      {"students" == curTab ? (
-        <CourseUsersList
-          token={props.token}
-          courseId={courseId}
-          retrievalUrl={
-            endpoints.endpoints[endpointSet].courseUsersUrl + courseId + ".json"
-          }
-          usersList={courseUsersList}
-          usersListUpdateFunc={setCourseUsersList}
-          userType="student"
-          addMessagesFunc={postNewMessage}
-        />
-      ) : null}
-      {"activities" == curTab ? activityList : null}
-      {saveButton}
-      {messages["status"]}
-    </Paper>
-
+              {messages["main"]}
+            </Alert>
+          </Collapse>
+          <Tabs
+            centered
+            value={curTab}
+            onChange={(event, value) => setCurTab(value)}
+          >
+            <Tab label="Details" value="details" />
+            <Tab value="instructors" label="Instructors" />
+            <Tab value="students" label="Students" />
+            <Tab value="activities" label="Activities" />
+          </Tabs>
+          {"details" == curTab ? detailsComponent : null}
+          {"instructors" == curTab ? (
+            <CourseUsersList
+              token={props.token}
+              courseId={courseId}
+              retrievalUrl={
+                endpoints.endpoints[endpointSet].courseUsersUrl +
+                courseId +
+                ".json"
+              }
+              usersList={courseUsersList}
+              usersListUpdateFunc={setCourseUsersList}
+              userType="instructor"
+              addMessagesFunc={postNewMessage}
+            />
+          ) : null}
+          {"students" == curTab ? (
+            <CourseUsersList
+              token={props.token}
+              courseId={courseId}
+              retrievalUrl={
+                endpoints.endpoints[endpointSet].courseUsersUrl +
+                courseId +
+                ".json"
+              }
+              usersList={courseUsersList}
+              usersListUpdateFunc={setCourseUsersList}
+              userType="student"
+              addMessagesFunc={postNewMessage}
+            />
+          ) : null}
+          {"activities" == curTab ? activityList : null}
+          {saveButton}
+          {messages["status"]}
+        </Paper>
       </Route>
     </Switch>
   );

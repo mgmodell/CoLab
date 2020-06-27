@@ -66,9 +66,11 @@ class ProjectsController < ApplicationController
     if @project.save
       respond_to do |format|
         format.html do
-          notice = @project.active ?
-                t('projects.create_success') :
-                t('projects.create_success_inactive')
+          notice = if @project.active
+                     t('projects.create_success')
+                   else
+                     t('projects.create_success_inactive')
+end
           redirect_to project_path(@project,
                                    notice: notice,
                                    format: params[:format])
@@ -107,9 +109,11 @@ class ProjectsController < ApplicationController
     if @project.update(project_params)
       respond_to do |format|
         format.html do
-          notice = @project.active ?
-                t('projects.update_success') :
-                t('projects.update_success_inactive')
+          notice = if @project.active
+                     t('projects.update_success')
+                   else
+                     t('projects.update_success_inactive')
+end
           redirect_to @project, notice: notice
         end
         format.json do
@@ -122,9 +126,11 @@ class ProjectsController < ApplicationController
               only: %i[id name timezone]
             ),
             messages: {
-              status: @project.active ?
-              t('projects.update_success') :
-              t('projects.update_success_inactive')
+              status: if @project.active
+                        t('projects.update_success')
+                      else
+                        t('projects.update_success_inactive')
+end
             }
           }
           render json: response

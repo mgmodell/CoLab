@@ -2,13 +2,13 @@
 
 require 'forgery'
 
-Given /^the Bingo! game required (\d+) day of lead time$/ do |lead_time|
+Given(/^the Bingo! game required (\d+) day of lead time$/) do |lead_time|
   @bingo.lead_time = lead_time
   @bingo.save
   log @bingo.errors.full_messages if @bingo.errors.present?
 end
 
-Given /^the Bingo! started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_date|
+Given(/^the Bingo! started "([^"]*)" and ends "([^"]*)"$/) do |start_date, end_date|
   @bingo.reload
   @bingo.start_date = Chronic.parse(start_date)
   @bingo.end_date = Chronic.parse(end_date)
@@ -16,26 +16,26 @@ Given /^the Bingo! started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_da
   log @bingo.errors.full_messages if @bingo.errors.present?
 end
 
-Given /^the Bingo! game individual count is (\d+)$/ do |individual_count|
+Given(/^the Bingo! game individual count is (\d+)$/) do |individual_count|
   @bingo.individual_count = individual_count
   @bingo.save
   log @bingo.errors.full_messages if @bingo.errors.present?
 end
 
-When /^the user clicks the link to the candidate list$/ do
+When(/^the user clicks the link to the candidate list$/) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-    find(:xpath, "//div[text()='#{@bingo.get_name(@anon)}']").click
+  find(:xpath, "//div[text()='#{@bingo.get_name(@anon)}']").click
 end
 
-Then /^the user should see the Bingo candidate list$/ do
+Then(/^the user should see the Bingo candidate list$/) do
   page.should have_content('Topic')
   page.should have_content(@bingo.topic)
   page.should have_content('For')
   page.should have_content(@user.name(@anon))
 end
 
-Then /^the user will see (\d+) term field sets$/ do |count|
+Then(/^the user will see (\d+) term field sets$/) do |count|
   wait_for_render
   page.all(:xpath,
            "//textarea[contains(@id, 'definition_')]")
@@ -45,7 +45,7 @@ Then /^the user will see (\d+) term field sets$/ do |count|
       .count.should eq count.to_i
 end
 
-Then /^the candidate entries should be empty$/ do
+Then(/^the candidate entries should be empty$/) do
   @bingo.individual_count.times do |index|
     query = "//input[@id='term_#{index}']"
     page.find(:xpath, query).value.should eq ''
@@ -54,7 +54,7 @@ Then /^the candidate entries should be empty$/ do
   end
 end
 
-Then /^the candidate properties should be empty$/ do
+Then(/^the candidate properties should be empty$/) do
   cl = @bingo.candidate_list_for_user @user
   cl.candidates.each do |candidate|
     candidate.term.should eq ''
@@ -62,50 +62,47 @@ Then /^the candidate properties should be empty$/ do
   end
 end
 
-When /^the user populates (\d+) of the "([^"]*)" entries$/ do |count, field|
+When(/^the user populates (\d+) of the "([^"]*)" entries$/) do |count, field|
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
   count.to_i.times do |index|
     @entries_list[index] = {} if @entries_list[index].nil?
-    @entries_list[index][field] = field == 'term' ?
-                        "#{Forgery::Name.industry}_#{index}" :
-                        Forgery::Basic.text
+    @entries_list[index][field] = if field == 'term'
+                                    "#{Forgery::Name.industry}_#{index}"
+                                  else
+                                    Forgery::Basic.text
+end
     page.fill_in("#{field}_#{index}",
                  with: @entries_list[index][field])
   end
 end
 
-Then /^the candidate list properties will match the list$/ do
+Then(/^the candidate list properties will match the list$/) do
   cl = @bingo.candidate_list_for_user @user
   @entries_list.each do |cand|
     cl.candidates.where(term: cand['term'], definition: cand['definition']).count.should eq 1
   end
 end
 
-Then /^the candidate list entries should match the list$/ do
-
+Then(/^the candidate list entries should match the list$/) do
   field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]") .count
 
   field_count.times do |index|
     t_query = "//input[@id='term_#{index}']"
     d_query = "//textarea[@id='definition_#{index}']"
-    term = find( :xpath, t_query).value
-    definition = find( :xpath, d_query).value
+    term = find(:xpath, t_query).value
+    definition = find(:xpath, d_query).value
 
-    if( term.present? || definition.present? )
+    next unless term.present? || definition.present?
 
-      entry = @entries_lists[@user].find do |candidate|
-        elem_term = candidate['term'].blank? ? candidate['term'] : candidate['term'].strip.split.map(&:capitalize) * ' '
-        term == elem_term && definition == candidate['definition']
-      end
-      # byebug unless entry.present?
-      entry.present?.should eq true
-
+    entry = @entries_lists[@user].find do |candidate|
+      elem_term = candidate['term'].blank? ? candidate['term'] : candidate['term'].strip.split.map(&:capitalize) * ' '
+      term == elem_term && definition == candidate['definition']
     end
+    # byebug unless entry.present?
+    entry.present?.should eq true
   end
-
-    
 end
 
 Given(/^the Bingo! "([^"]*)" been activated$/) do |has_or_has_not|
@@ -114,8 +111,8 @@ Given(/^the Bingo! "([^"]*)" been activated$/) do |has_or_has_not|
   log @bingo.errors.full_messages if @bingo.errors.present?
 end
 
-Then("the {string} button is not available") do |button_name|
-  btns = all( :xpath, "//button[text()='#{button_name}']")
+Then('the {string} button is not available') do |button_name|
+  btns = all(:xpath, "//button[text()='#{button_name}']")
   btns.each do |btn|
     btn[:disabled].should be true
   end

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import WorkingIndicator from './infrastructure/WorkingIndicator';
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@material-ui/core/Paper";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -12,23 +12,23 @@ import Button from "@material-ui/core/Button";
 
 import MUIDataTable from "mui-datatables";
 
-import CheckIcon from '@material-ui/icons/Check';
-import AddIcon from '@material-ui/icons/Add';
-import StarIcon from '@material-ui/icons/Star';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
+import CheckIcon from "@material-ui/icons/Check";
+import AddIcon from "@material-ui/icons/Add";
+import StarIcon from "@material-ui/icons/Star";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
 
 import Link from "@material-ui/core/Link";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 
 export default function UserEmailList(props) {
   const [addUsersPath, setAddUsersPath] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newEmail, setNewEmail] = useState("");
 
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
 
   const emailColumns = [
     {
@@ -47,50 +47,48 @@ export default function UserEmailList(props) {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const email = props.emailList.filter((item)=>{
+          const email = props.emailList.filter(item => {
             return value == item.id;
-          })[0]
-          const lbl = 'Set as primary';
-          const resp = email.primary ? 
-            (
-              <Tooltip title='Primary'>
-                <StarIcon/>
-              </Tooltip>
-            ) :
-            (
-                <Tooltip title={lbl}>
-                  <IconButton
-                    aria-label={lbl}
-                    onClick={event => {
-                      statusActions.startTask( 'updating' );
-                      const url = props.primaryEmailUrl + value + '.json'
-                      fetch(url, {
-                        method: "GET",
-                        credentials: "include",
-                        headers: {
-                          "Content-Type": "application/json",
-                          Accepts: "application/json",
-                          "X-CSRF-Token": props.token
-                        }
-                      })
-                        .then(response => {
-                          if (response.ok) {
-                            return response.json();
-                          } else {
-                            console.log("error");
-                          }
-                        })
-                        .then(data => {
-                          props.emailListUpdateFunc( data.emails )
-                          props.addMessagesFunc(data.messages);
-                          statusActions.endTask( 'updating' );
-                        });
-                    }}
-                  >
-                    <StarBorderIcon />
-                  </IconButton>
-                </Tooltip>
-            )
+          })[0];
+          const lbl = "Set as primary";
+          const resp = email.primary ? (
+            <Tooltip title="Primary">
+              <StarIcon />
+            </Tooltip>
+          ) : (
+            <Tooltip title={lbl}>
+              <IconButton
+                aria-label={lbl}
+                onClick={event => {
+                  statusActions.startTask("updating");
+                  const url = props.primaryEmailUrl + value + ".json";
+                  fetch(url, {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Accepts: "application/json",
+                      "X-CSRF-Token": props.token
+                    }
+                  })
+                    .then(response => {
+                      if (response.ok) {
+                        return response.json();
+                      } else {
+                        console.log("error");
+                      }
+                    })
+                    .then(data => {
+                      props.emailListUpdateFunc(data.emails);
+                      props.addMessagesFunc(data.messages);
+                      statusActions.endTask("updating");
+                    });
+                }}
+              >
+                <StarBorderIcon />
+              </IconButton>
+            </Tooltip>
+          );
           return resp;
         }
       }
@@ -101,7 +99,7 @@ export default function UserEmailList(props) {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const resp = value ? <CheckIcon/> : null;
+          const resp = value ? <CheckIcon /> : null;
           return resp;
         }
       }
@@ -113,46 +111,45 @@ export default function UserEmailList(props) {
         filter: false,
         sort: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const lbl2 = 'Remove this address';
+          const lbl2 = "Remove this address";
           return (
-                <Tooltip title={lbl2}>
-                  <IconButton
-                    aria-label={lbl2}
-                    onClick={event => {
-                      const url = props.removeEmailUrl + value + '.json'
-                      statusActions.startTask( 'removing' );
-                      fetch(url, {
-                        method: "GET",
-                        credentials: "include",
-                        headers: {
-                          "Content-Type": "application/json",
-                          Accepts: "application/json",
-                          "X-CSRF-Token": props.token
-                        }
-                      })
-                        .then(response => {
-                          if (response.ok) {
-                            return response.json();
-                          } else {
-                            console.log("error");
-                          }
-                        })
-                        .then(data => {
-                          props.emailListUpdateFunc( data.emails )
-                          props.addMessagesFunc(data.messages);
-                          statusActions.endTask( 'removing' );
-                        });
-                    }}
-                  >
-                    <DeleteForeverIcon />
-                  </IconButton>
-                </Tooltip>
+            <Tooltip title={lbl2}>
+              <IconButton
+                aria-label={lbl2}
+                onClick={event => {
+                  const url = props.removeEmailUrl + value + ".json";
+                  statusActions.startTask("removing");
+                  fetch(url, {
+                    method: "GET",
+                    credentials: "include",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Accepts: "application/json",
+                      "X-CSRF-Token": props.token
+                    }
+                  })
+                    .then(response => {
+                      if (response.ok) {
+                        return response.json();
+                      } else {
+                        console.log("error");
+                      }
+                    })
+                    .then(data => {
+                      props.emailListUpdateFunc(data.emails);
+                      props.addMessagesFunc(data.messages);
+                      statusActions.endTask("removing");
+                    });
+                }}
+              >
+                <DeleteForeverIcon />
+              </IconButton>
+            </Tooltip>
           );
         }
       }
     }
   ];
-
 
   const closeDialog = () => {
     setNewEmail("");
@@ -180,9 +177,7 @@ export default function UserEmailList(props) {
                   onClose={() => closeDialog()}
                   aria-labelledby="form-dialog-title"
                 >
-                  <DialogTitle id="form-dialog-title">
-                    Add Email
-                  </DialogTitle>
+                  <DialogTitle id="form-dialog-title">Add Email</DialogTitle>
                   <DialogContent>
                     <DialogContentText>
                       Add a new email address:
@@ -194,9 +189,7 @@ export default function UserEmailList(props) {
                       label="Email Address"
                       type="email"
                       value={newEmail}
-                      onChange={event =>
-                        setNewEmail(event.target.value)
-                      }
+                      onChange={event => setNewEmail(event.target.value)}
                       fullWidth
                     />
                   </DialogContent>
@@ -206,8 +199,8 @@ export default function UserEmailList(props) {
                     </Button>
                     <Button
                       onClick={() => {
-                        statusActions.startTask( 'updating' );
-                        fetch(props.addEmailUrl + '.json', {
+                        statusActions.startTask("updating");
+                        fetch(props.addEmailUrl + ".json", {
                           method: "PUT",
                           credentials: "include",
                           headers: {
@@ -228,9 +221,9 @@ export default function UserEmailList(props) {
                           })
                           .then(data => {
                             //getUsers();
-                            props.emailListUpdateFunc(data.emails)
+                            props.emailListUpdateFunc(data.emails);
                             props.addMessagesFunc(data.messages);
-                            statusActions.endTask( 'updating' )
+                            statusActions.endTask("updating");
                           });
                         closeDialog();
                       }}
@@ -260,14 +253,14 @@ export default function UserEmailList(props) {
 
   return (
     <Paper>
-      <WorkingIndicator identifier='email_actions' />
+      <WorkingIndicator identifier="email_actions" />
       {null != props.emailList ? (
         <React.Fragment>
           {emailList}
           <br />
         </React.Fragment>
       ) : (
-        'No emails loaded.'
+        "No emails loaded."
       )}
     </Paper>
   );
@@ -280,5 +273,5 @@ UserEmailList.propTypes = {
 
   addEmailUrl: PropTypes.string.isRequired,
   removeEmailUrl: PropTypes.string.isRequired,
-  primaryEmailUrl: PropTypes.string.isRequired,
+  primaryEmailUrl: PropTypes.string.isRequired
 };

@@ -14,13 +14,12 @@ SimpleCov.start 'rails'
 
 def wait_for_render
   times = 3000
-  
-  while ( all( :xpath, "//*[@id='waiting']" ).size > 0 && times > 0 ) do
-    sleep( 0.01)
+
+  while !all(:xpath, "//*[@id='waiting']").empty? && times > 0
+    sleep(0.01)
     times -= 1
   end
 end
-
 
 Capybara.register_driver :headless_firefox do |app|
   profile = Selenium::WebDriver::Firefox::Profile.new
@@ -154,13 +153,13 @@ Before do
   @anon = false
 end
 
-After ('@javascript') do |_scenario|
+After('@javascript') do |_scenario|
   DatabaseCleaner.clean
   loadData
   travel_back
 end
 
-After ('not @javascript') do |_scenario|
+After('not @javascript') do |_scenario|
   DatabaseCleaner.clean
   travel_back
 end
@@ -173,7 +172,7 @@ Around() do |scenario, block|
   perform_enqueued_jobs do
     block.call
   end
-  scenario_times["#{scenario.location.to_s}::#{scenario.name}"] = Time.zone.now - start
+  scenario_times["#{scenario.location}::#{scenario.name}"] = Time.zone.now - start
 end
 
 at_exit do

@@ -2,48 +2,48 @@
 
 require 'forgery'
 
-Given /^the email queue is empty$/ do
+Given(/^the email queue is empty$/) do
   ActionMailer::Base.deliveries = []
   ActionMailer::Base.deliveries.count.should eq 0
 end
 
-When /^the system emails stragglers$/ do
+When(/^the system emails stragglers$/) do
   AdministrativeMailer.send_reminder_emails
 end
 
-When /^the system emails instructor reports$/ do
+When(/^the system emails instructor reports$/) do
   AdministrativeMailer.inform_instructors
 end
 
-Then /^an email will be sent to each member of the group$/ do
+Then(/^an email will be sent to each member of the group$/) do
   wt = @user.waiting_student_tasks
   g = wt[0].group_for_user(@user)
   group_count = g.users.count
   ActionMailer::Base.deliveries.count.should eq group_count
 end
 
-Then /^an email will be sent to each member of the group but one$/ do
+Then(/^an email will be sent to each member of the group but one$/) do
   ows = @user.waiting_student_tasks
   g = ows[0].group_for_user(@user)
   group_count_minus_one = g.users.count - 1
   ActionMailer::Base.deliveries.count.should eq group_count_minus_one
 end
 
-Then /^(\d+) emails will be tracked$/ do |email_count|
+Then(/^(\d+) emails will be tracked$/) do |email_count|
   Ahoy::Message.count.should eq email_count.to_i
 end
 
-Then /^(\d+) emails will be sent$/ do |email_count|
+Then(/^(\d+) emails will be sent$/) do |email_count|
   ActionMailer::Base.deliveries.count.should eq email_count.to_i
 end
 
-Then /^show the email queue$/ do
+Then(/^show the email queue$/) do
   ActionMailer::Base.deliveries.each do |mail|
     log mail
   end
 end
 
-Given /^the user is in a group on the project with (\d+) other users$/ do |user_count|
+Given(/^the user is in a group on the project with (\d+) other users$/) do |user_count|
   @group = Group.new(
     name: "#{Forgery::Basic.text} Group"
   )
@@ -80,7 +80,7 @@ Given /^the user is in a group on the project with (\d+) other users$/ do |user_
   log @project.errors.full_messages if @project.errors.present?
 end
 
-Then /^the members of "([^"]*)" group go to other groups$/ do |ordinal|
+Then(/^the members of "([^"]*)" group go to other groups$/) do |ordinal|
   if @project.groups.count > 1
     case ordinal.downcase
     when 'a random' then to_disperse = @project.groups.sample

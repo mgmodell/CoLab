@@ -28,14 +28,14 @@ class GraphingController < ApplicationController
     anon_req = params[:anonymous] == 'true'
     anonymize = current_user.anonymize? || current_user.is_researcher? || anon_req
     projects = []
-    if current_user.admin || current_user.is_researcher?
-      project_list = Project.all.to_a
-    else
-      project_list = Project.joins(course: :rosters)
+    project_list = if current_user.admin || current_user.is_researcher?
+                     Project.all.to_a
+                   else
+                     Project.joins(course: :rosters)
                             .where('rosters.user': current_user,
                                    'rosters.role': Roster.roles[:instructor])
                             .uniq.to_a
-    end
+                   end
     project_list.collect! { |project| { id: project.id, name: project.get_name(anonymize) } }
     respond_to do |format|
       format.json { render json: project_list }
@@ -53,13 +53,13 @@ class GraphingController < ApplicationController
     subjects = []
     case unit_of_analysis
     when Unit_Of_Analysis[:individual]
-      if for_research
-        subjects = User.joins(:consent_logs, :projects)
+      subjects = if for_research
+                   User.joins(:consent_logs, :projects)
                        .where(consent_logs: { accepted: true }, projects: { id: project_id })
                        .collect { |user| [user.name(anonymize), user.id] }
-      else
-        subjects = Project.find(project_id).users.collect { |user| [user.name(anonymize), user.id] }
-      end
+                 else
+                   Project.find(project_id).users.collect { |user| [user.name(anonymize), user.id] }
+                 end
     when Unit_Of_Analysis[:group]
       subjects = Project.find(project_id).groups.collect { |group| [group.get_name(anonymize), group.id] }
 
@@ -241,11 +241,11 @@ class GraphingController < ApplicationController
     @data = installments
     respond_to do |format|
       format.csv do
-        if anonymize
-          headers['Content-Disposition'] = "attachment; filename=\"#{user.anon_last_name}_#{user.anon_first_name}.csv\""
-        else
-          headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
-        end
+        headers['Content-Disposition'] = if anonymize
+                                           "attachment; filename=\"#{user.anon_last_name}_#{user.anon_first_name}.csv\""
+                                         else
+                                           "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
+                                         end
         headers['Content-Type'] ||= 'text/csv'
       end
     end

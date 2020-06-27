@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import Popover from "@material-ui/core/Popover";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 
 import MUIDataTable from "mui-datatables";
 
@@ -12,11 +12,11 @@ import { Container } from "@material-ui/core";
 export default function ReactionsList(props) {
   const [anchorEl, setAnchorEl] = useState();
   const [popMsg, setPopMsg] = useState();
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
 
   const getReactions = () => {
     var url = props.retrievalUrl + ".json";
-    statusActions.startTask( );
+    statusActions.startTask();
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -37,7 +37,7 @@ export default function ReactionsList(props) {
         //MetaData and Infrastructure
         props.reactionsListUpdateFunc(data.reactions);
 
-        statusActions.endTask( );
+        statusActions.endTask();
       });
   };
 
@@ -193,5 +193,5 @@ ReactionsList.propTypes = {
   token: PropTypes.string.isRequired,
   retrievalUrl: PropTypes.string.isRequired,
   reactionsList: PropTypes.array,
-  reactionsListUpdateFunc: PropTypes.func.isRequired,
+  reactionsListUpdateFunc: PropTypes.func.isRequired
 };

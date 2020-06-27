@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import WorkingIndicator from './infrastructure/WorkingIndicator';
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@material-ui/core/Paper";
 
 import MUIDataTable from "mui-datatables";
 
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 
 export default function UserCourseList(props) {
   // const [addUsersPath, setAddUsersPath] = useState("");
   // const [procRegReqPath, setProcRegReqPath] = useState("");
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
 
   const getCourses = () => {
-    statusActions.startTask(  );
+    statusActions.startTask();
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -65,22 +65,22 @@ export default function UserCourseList(props) {
       name: "id",
       options: {
         filter: false,
-        customBodyRender: (value) => {
-          const course = props.coursesList.filter((item)=> {
+        customBodyRender: value => {
+          const course = props.coursesList.filter(item => {
             return value === item.id;
-          })[0]
-          console.log( course )
+          })[0];
+          console.log(course);
           const data = course.bingo_data;
           return (
-          <React.Fragment>
-            <BingoDataRepresentation
-              height={30}
-              width={70}
-              value={Number(value)}
-              scores={data} />
-
-          </React.Fragment>
-          )
+            <React.Fragment>
+              <BingoDataRepresentation
+                height={30}
+                width={70}
+                value={Number(value)}
+                scores={data}
+              />
+            </React.Fragment>
+          );
         }
       }
     },
@@ -89,7 +89,7 @@ export default function UserCourseList(props) {
       name: "assessment_performance",
       options: {
         filter: false,
-        customBodyRender: (value) => {
+        customBodyRender: value => {
           return value + "%";
         }
       }
@@ -99,7 +99,7 @@ export default function UserCourseList(props) {
       name: "experience_performance",
       options: {
         filter: false,
-        customBodyRender: (value) => {
+        customBodyRender: value => {
           return value + "%";
         }
       }
@@ -109,7 +109,7 @@ export default function UserCourseList(props) {
   const courseList =
     null != props.coursesList ? (
       <MUIDataTable
-        title={'Your course performance'}
+        title={"Your course performance"}
         columns={courseColumns}
         data={props.coursesList}
         options={{
@@ -120,11 +120,13 @@ export default function UserCourseList(props) {
           download: false
         }}
       />
-    ) : 'The course data is loading';
+    ) : (
+      "The course data is loading"
+    );
 
   return (
     <Paper>
-      <WorkingIndicator identifier='courses_loading' />
+      <WorkingIndicator identifier="courses_loading" />
       {courseList}
     </Paper>
   );

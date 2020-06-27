@@ -42,7 +42,7 @@ export default function AppHeader(props) {
                 adminUrl={endpoints.endpoints["home"].adminUrl}
                 coursesUrl={endpoints.endpoints["home"].coursesPath}
                 schoolsUrl={endpoints.endpoints["home"].schoolsPath}
-                consentFormsUrl={endpoints.endpoints['home'].consentFormsPath}
+                consentFormsUrl={endpoints.endpoints["home"].consentFormsPath}
                 conceptsUrl={endpoints.endpoints["home"].conceptsPath}
                 reportingUrl={endpoints.endpoints["home"].reportingUrl}
                 demoUrl={endpoints.endpoints["home"].demoUrl}
@@ -83,13 +83,13 @@ export default function AppHeader(props) {
             <Skeleton variant="text" />
           )}
           {endpoints.endpointStatus["home"] == "loaded" ? (
-          <HelpMenu
-            token={props.token}
-            lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
-            /> ) : (
-              <Skeleton variant='circle' />
-            ) }
-            
+            <HelpMenu
+              token={props.token}
+              lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
+            />
+          ) : (
+            <Skeleton variant="circle" />
+          )}
         </Toolbar>
       </AppBar>
       <Toolbar />

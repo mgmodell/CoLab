@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 
 import Alert from "@material-ui/lab/Alert";
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from "@material-ui/core/IconButton";
 import Collapse from "@material-ui/core/Collapse";
-import WorkingIndicator from './infrastructure/WorkingIndicator';
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 import CloseIcon from "@material-ui/icons/Close";
 
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 
 export default function AppStatusBar(props) {
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
 
   return (
     <React.Fragment>
-      { status.statusMessages.map( (message, index)  =>{
-        return(
-          <Collapse key={`collapse_${index}`} in={ !message['dismissed'] }>
+      {status.statusMessages.map((message, index) => {
+        return (
+          <Collapse key={`collapse_${index}`} in={!message["dismissed"]}>
             <Alert
               id={`alert_${index}`}
               action={
@@ -25,8 +25,8 @@ export default function AppStatusBar(props) {
                   color="inherit"
                   size="small"
                   onClick={() => {
-                    console.log( index, status );
-                    console.log( status.statusMessages )
+                    console.log(index, status);
+                    console.log(status.statusMessages);
                     statusActions.acknowledge(index);
                   }}
                 >
@@ -34,11 +34,11 @@ export default function AppStatusBar(props) {
                 </IconButton>
               }
             >
-              {message['text'] || null}
+              {message["text"] || null}
             </Alert>
           </Collapse>
-        )
-      } ) }
+        );
+      })}
       <WorkingIndicator />
     </React.Fragment>
   );

@@ -2,70 +2,65 @@
 
 require 'forgery'
 
-Then /^the user clicks the link to the experience$/ do
+Then(/^the user clicks the link to the experience$/) do
   step 'the user switches to the "Task View" tab'
   find(:xpath, "//div[text()='#{@experience.name}']").click
   # click_link_or_button @experience.name
-end 
+end
 
-Then("the {string} button will be disabled") do |button_name|
-  elem = find(:xpath,  "//button[contains(.,'#{button_name}')]")
+Then('the {string} button will be disabled') do |button_name|
+  elem = find(:xpath, "//button[contains(.,'#{button_name}')]")
   elem[:disabled].should eq 'true'
 end
 
-Then /^the user will see "([^"]*)"$/ do |checkText|
+Then(/^the user will see "([^"]*)"$/) do |checkText|
   wait_for_render
   page.should have_content(:all, checkText)
 end
 
-Then /^the user presses hidden "([^"]*)"$/ do |linkOrButtonName|
+Then(/^the user presses hidden "([^"]*)"$/) do |linkOrButtonName|
   click_link_or_button linkOrButtonName, visible: :all, disabled: :all
 end
 
-Then /^the user presses "([^"]*)"$/ do |linkOrButtonName|
-  begin
-    click_link_or_button linkOrButtonName
-  rescue Capybara::ElementNotFound => e
-    byebug
-    
-  end
+Then(/^the user presses "([^"]*)"$/) do |linkOrButtonName|
+  click_link_or_button linkOrButtonName
+rescue Capybara::ElementNotFound => e
+  byebug
 end
 
-Then /^they open the drawer for additional comments$/ do
+Then(/^they open the drawer for additional comments$/) do
   find(:xpath, "//div[contains(text(),'Click here if you have additional comments for us regarding this narrative.')]").click
 end
 
-Then /^they enter "([^"]*)" in extant field "([^"]*)"$/ do |txt, fld|
-  label = find( :xpath, "//label[text()='#{fld}']")
-  element = find( :xpath, "//input[@id='#{label[:for]}']")
+Then(/^they enter "([^"]*)" in extant field "([^"]*)"$/) do |txt, fld|
+  label = find(:xpath, "//label[text()='#{fld}']")
+  element = find(:xpath, "//input[@id='#{label[:for]}']")
   element.click
   element.send_keys txt
 end
 
-Then /^in the field "([^"]*)" they will see "([^"]*)"$/ do |fld, value|
-  label = find( :xpath, "//label[text()='#{fld}']")
-  panel = all( :xpath, "//input[@id='#{label[:for]}']")
-  if panel.size > 0
-    panel[0].click
-  end
+Then(/^in the field "([^"]*)" they will see "([^"]*)"$/) do |fld, value|
+  label = find(:xpath, "//label[text()='#{fld}']")
+  panel = all(:xpath, "//input[@id='#{label[:for]}']")
+  panel[0].click unless panel.empty?
   # click_link_or_button 'Click here if you have additional comments for us regarding this narrative.'
-  field_value = panel[ 0 ].value
+  field_value = panel[0].value
   expect(field_value).to include value
 end
 
-Then /^the user chooses the "([^"]*)" radio button$/ do |choice|
+Then(/^the user chooses the "([^"]*)" radio button$/) do |choice|
   elem = find(:xpath, "//label[contains(.,\"#{choice}\")]")
   elem.click
 end
 
-Then /^the database will show a new week (\d+) "([^"]*)" diagnosis from the user$/ do |week_num, behavior|
+Then(/^the database will show a new week (\d+) "([^"]*)" diagnosis from the user$/) do |week_num, behavior|
   wait_for_render
   diagnosis = Diagnosis.joins(:reaction).where(reactions: { user_id: @user.id }).last
   diagnosis.week.week_num.should eq week_num.to_i
   diagnosis.behavior.name_en.should eq behavior
 end
 
-Then /^the latest Diagnosis will show "([^"]*)" in the field "([^"]*)"$/ do |_value, fld|
+Then(/^the latest Diagnosis will show "([^"]*)" in the field "([^"]*)"$/) do |_value, fld|
   diagnosis = Diagnosis.last
   case fld.downcase
   when 'comment'
@@ -75,12 +70,12 @@ Then /^the latest Diagnosis will show "([^"]*)" in the field "([^"]*)"$/ do |_va
   end
 end
 
-Then /^the user sees the experience instructions page$/ do
+Then(/^the user sees the experience instructions page$/) do
   wait_for_render
   step 'the user will see "Instructions for completing"'
 end
 
-Then /^the user completes a week$/ do
+Then(/^the user completes a week$/) do
   reaction = @experience.get_user_reaction @user
   week = reaction.next_week
   # get the current week number
@@ -135,7 +130,7 @@ Then(/^there will be (\d+) reactions from (\d+) different scenarios recorded$/) 
   Reaction.joins(:narrative).group(:scenario_id).count.count.should eq scenario_diversity.to_i
 end
 
-Then /^no user will have reacted to the same narrative more than once$/ do
+Then(/^no user will have reacted to the same narrative more than once$/) do
   User.all.each do |user|
     reaction_counts = user.reactions.group('narrative_id').count
     reaction_counts.values.each do |val|
@@ -144,7 +139,7 @@ Then /^no user will have reacted to the same narrative more than once$/ do
   end
 end
 
-Then /^the user successfully completes an experience$/ do
+Then(/^the user successfully completes an experience$/) do
   step 'the user switches to the "Task View" tab'
   step 'the user clicks the link to the experience'
   step 'the user sees the experience instructions page'
@@ -162,7 +157,7 @@ Then /^the user successfully completes an experience$/ do
   step 'the user will see "100%"'
 end
 
-Then /^all users complete the course successfully$/ do
+Then(/^all users complete the course successfully$/) do
   @course.enrolled_students.each do |user|
     @user = user
     step 'the user logs in'
@@ -172,7 +167,7 @@ Then /^all users complete the course successfully$/ do
   end
 end
 
-Given /^the user enrolls in a new course$/ do
+Given(/^the user enrolls in a new course$/) do
   @course = School.find(1).courses.new(
     name: "#{Forgery::Name.industry} Course",
     number: Forgery::Basic.number,
@@ -191,7 +186,7 @@ Given /^the user enrolls in a new course$/ do
   log @course.errors.full_messages if @course.errors.present?
 end
 
-Given /^the course has an experience$/ do
+Given(/^the course has an experience$/) do
   @experience = @course.experiences.new(
     name: Forgery::Name.industry + ' Experience'
   )
@@ -200,11 +195,11 @@ Given /^the course has an experience$/ do
   log @experience.errors.full_messages if @experience.errors.present?
 end
 
-Given /^the user enrolls in the course$/ do
+Given(/^the user enrolls in the course$/) do
   Roster.create(user: @user, course: @course, role: Roster.roles[:enrolled_student])
 end
 
-Then /^the user is dropped from the course$/ do
+Then(/^the user is dropped from the course$/) do
   @course.drop_student @user
 end
 

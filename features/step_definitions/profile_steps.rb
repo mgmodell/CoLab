@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Then /^user opens their profile$/ do
+Then(/^user opens their profile$/) do
   wait_for_render
   find(:xpath, '//*[@id="main-menu-button"]').click
   find(:xpath, '//*[@id="profile-menu-item"]').click
@@ -8,23 +8,23 @@ Then /^user opens their profile$/ do
   text = "Tell us about yourself, #{@user.first_name} (optional)"
   all(:xpath, "//div[contains(.,'#{text}')]").size.should be > 3
   # page.should have_content('Tell us about yourself, ' + @user.first_name)
-  find( :xpath, "//div[text()='Email Settings']" ).click
+  find(:xpath, "//div[text()='Email Settings']").click
   @user.emails.each do |email|
     page.should have_content(email.email)
   end
 end
 
-Then /^the user sees the experience in the history$/ do
-  find( :xpath, "//button[contains(.,'History')]" ).click
+Then(/^the user sees the experience in the history$/) do
+  find(:xpath, "//button[contains(.,'History')]").click
   page.should have_content(@experience.get_name(false))
 end
 
-Then /^user sees the Bingo! in the history$/ do
-  find( :xpath, "//button[contains(.,'History')]" ).click
+Then(/^user sees the Bingo! in the history$/) do
+  find(:xpath, "//button[contains(.,'History')]").click
   page.should have_content(@bingo.get_name(false))
 end
 
-Then /^user sees the assessed project in the history$/ do
-  find( :xpath, "//button[contains(.,'History')]" ).click
+Then(/^user sees the assessed project in the history$/) do
+  find(:xpath, "//button[contains(.,'History')]").click
   page.should have_content(@project.get_name(false))
 end

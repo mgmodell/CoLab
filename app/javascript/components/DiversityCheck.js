@@ -17,7 +17,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import {i18n} from "./infrastructure/i18n";
+import { i18n } from "./infrastructure/i18n";
 import { Translation } from "react-i18next";
 
 import CompareIcon from "@material-ui/icons/Compare";

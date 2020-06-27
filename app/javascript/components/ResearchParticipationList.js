@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import Link from '@material-ui/core/Link'
+import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 
 import MUIDataTable from "mui-datatables";
 
-
 export default function UserCourseList(props) {
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
 
   const getCourses = () => {
-    statusActions.startTask(  );
+    statusActions.startTask();
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -56,27 +55,22 @@ export default function UserCourseList(props) {
       name: "id",
       options: {
         filter: true,
-        customBodyRender: (value) => {
-          const consentForm = props.consentFormList.filter((item)=> {
+        customBodyRender: value => {
+          const consentForm = props.consentFormList.filter(item => {
             return value === item.id;
-          })[0]
+          })[0];
           // let output: String;
           var output;
-          if( consentForm.active ){
-            if( Date.now() < Date.parse( consentForm. end_date ) ){
-              output = 'Active'
+          if (consentForm.active) {
+            if (Date.now() < Date.parse(consentForm.end_date)) {
+              output = "Active";
             } else {
-              output = 'Inactive (expired)'
+              output = "Inactive (expired)";
             }
-
           } else {
-            output = 'Inactive'
+            output = "Inactive";
           }
-          return (
-          <span>
-            {output}
-          </span>
-          )
+          return <span>{output}</span>;
         }
       }
     },
@@ -85,12 +79,8 @@ export default function UserCourseList(props) {
       name: "accepted",
       options: {
         filter: true,
-        customBodyRender: (value) => {
-          return (
-            <span>
-              {value ? 'Accepted' : 'Declined'}
-            </span>
-          )
+        customBodyRender: value => {
+          return <span>{value ? "Accepted" : "Declined"}</span>;
         }
       }
     },
@@ -99,12 +89,8 @@ export default function UserCourseList(props) {
       name: "link",
       options: {
         filter: false,
-        customBodyRender: (value) => {
-          return (
-            <Link href={value}>
-              Review/Update
-            </Link>
-          )
+        customBodyRender: value => {
+          return <Link href={value}>Review/Update</Link>;
         }
       }
     }
@@ -124,13 +110,11 @@ export default function UserCourseList(props) {
           download: false
         }}
       />
-    ) : 'The course data is loading';
+    ) : (
+      "The course data is loading"
+    );
 
-  return (
-    <Paper>
-       {consentFormList}
-    </Paper>
-  );
+  return <Paper>{consentFormList}</Paper>;
 }
 
 UserCourseList.propTypes = {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import WorkingIndicator from './infrastructure/WorkingIndicator';
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@material-ui/core/Paper";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -29,7 +29,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import DropUserButton from "./DropUserButton";
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 
 export default function CourseUsersList(props) {
   const [addUsersPath, setAddUsersPath] = useState("");
@@ -37,10 +37,10 @@ export default function CourseUsersList(props) {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newUserAddresses, setNewUserAddresses] = useState("");
 
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
 
   const getUsers = () => {
-    statusActions.startTask( );
+    statusActions.startTask();
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -68,7 +68,7 @@ export default function CourseUsersList(props) {
         setProcRegReqPath(data.add_function.proc_self_reg + ".json");
         props.usersListUpdateFunc(data.users);
 
-        statusActions.endTask( );
+        statusActions.endTask();
       });
   };
 
@@ -119,27 +119,27 @@ export default function CourseUsersList(props) {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const user = props.usersList.filter((item)=> {
+          const user = props.usersList.filter(item => {
             return value == item.id;
-          })[0]
+          })[0];
           const data = user.bingo_data;
           return (
-          <React.Fragment>
-            <BingoDataRepresentation
-              height={30}
-              width={70}
-              value={Number(value)}
-              scores={data} />
-
-          </React.Fragment>
-          )
+            <React.Fragment>
+              <BingoDataRepresentation
+                height={30}
+                width={70}
+                value={Number(value)}
+                scores={data}
+              />
+            </React.Fragment>
+          );
         }
       }
     },
     {
       label: "Assessment Progress",
       name: "assessment_performance",
-      tag: 'assessment_performance',
+      tag: "assessment_performance",
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
@@ -222,7 +222,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      statusActions.startTask( 'inviting' );
+                      statusActions.startTask("inviting");
                       fetch(user.reinvite_link, {
                         method: "GET",
                         credentials: "include",
@@ -241,7 +241,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
-                          statusActions.endTask( 'inviting')
+                          statusActions.endTask("inviting");
                         });
                     }}
                   >
@@ -270,7 +270,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      statusActions.startTask( 'accepting_student' );
+                      statusActions.startTask("accepting_student");
                       fetch(procRegReqPath, {
                         method: "PATCH",
                         credentials: "include",
@@ -293,7 +293,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
-                          statusActions.endTask( 'accepting_student' );
+                          statusActions.endTask("accepting_student");
                         });
                     }}
                   >
@@ -306,7 +306,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl2}
                     onClick={event => {
-                      statusActions.startTask( 'decline_student' );
+                      statusActions.startTask("decline_student");
                       fetch(procRegReqPath, {
                         method: "PATCH",
                         credentials: "include",
@@ -329,7 +329,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
-                          statusActions.endTask( 'decline_student' );
+                          statusActions.endTask("decline_student");
                         });
                     }}
                   >
@@ -347,7 +347,7 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      statusActions.startTask( 're-adding' );
+                      statusActions.startTask("re-adding");
                       fetch(addUsersPath, {
                         method: "PUT",
                         credentials: "include",
@@ -369,7 +369,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
-                          statusActions.endTask( 're-adding' );
+                          statusActions.endTask("re-adding");
                         });
                     }}
                   >
@@ -505,7 +505,7 @@ export default function CourseUsersList(props) {
                     </Button>
                     <Button
                       onClick={() => {
-                        statusActions.startTask( 'adding_email' );
+                        statusActions.startTask("adding_email");
                         fetch(addUsersPath, {
                           method: "PUT",
                           credentials: "include",
@@ -529,7 +529,7 @@ export default function CourseUsersList(props) {
                           .then(data => {
                             getUsers();
                             props.addMessagesFunc(data.messages);
-                            statusActions.endTask( 'adding_email' );
+                            statusActions.endTask("adding_email");
                           });
                         closeDialog();
                       }}
@@ -559,7 +559,7 @@ export default function CourseUsersList(props) {
 
   return (
     <Paper>
-      <WorkingIndicator identifier='loading_users' />
+      <WorkingIndicator identifier="loading_users" />
       {null != props.usersList ? (
         <React.Fragment>
           {userList}

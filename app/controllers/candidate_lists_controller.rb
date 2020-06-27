@@ -41,15 +41,13 @@ class CandidateListsController < ApplicationController
     end
   end
 
-  #API code here
+  # API code here
   def get_candidate_list
+    bingo_game = BingoGame.find(params[:bingo_game_id])
+    candidate_list = bingo_game.candidate_list_for_user(current_user)
 
-    bingo_game = BingoGame.find( params[:bingo_game_id])
-    candidate_list = bingo_game.candidate_list_for_user( current_user )
+    group = (bingo_game.project.group_for_user(current_user) if bingo_game.group_option?)
 
-    group = bingo_game.group_option? ?
-      bingo_game.project.group_for_user( current_user ) : nil
-    
     respond_to do |format|
       format.json do
         render json: {
@@ -58,34 +56,30 @@ class CandidateListsController < ApplicationController
           description: bingo_game.description,
           group_option: bingo_game.group_option?,
           end_date: bingo_game.end_date,
-          group_name: group.present? ? group.get_name( false ) : nil ,
+          group_name: group.present? ? group.get_name(false) : nil,
           is_group: candidate_list.is_group?,
           expected_count: candidate_list.expected_count,
           candidates: candidate_list.candidates.as_json(
-            only: %i[ id term definition filtered_consistent candidate_feedback_id ]
+            only: %i[id term definition filtered_consistent candidate_feedback_id]
           ),
           others_requested_help: candidate_list.others_requested_help,
           help_requested: candidate_list.group_requested,
           request_collaboration_url: request_collaboration_path(
-                        bingo_game_id: bingo_game.id, desired: '' )
+            bingo_game_id: bingo_game.id, desired: ''
+          )
         }
-
       end
     end
   end
 
   def request_collaboration
     @title = t '.title'
-    desired = params[:desired].downcase == 'true'
+    desired = params[:desired].casecmp('true').zero?
     if desired
       @candidate_list.group_requested = true
       @candidate_list.save
-      unless @candidate_list.errors.empty?
-        logger.debug @candidate_list.errors.full_messages
-      end
-      if @candidate_list.others_requested_help == 1
-        @candidate_list = merge_to_group_list(@candidate_list)
-      end
+      logger.debug @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
+      @candidate_list = merge_to_group_list(@candidate_list) if @candidate_list.others_requested_help == 1
     else
       @candidate_list.transaction do
         @candidate_list.bingo_game.project.group_for_user(current_user).users.each do |user|
@@ -110,13 +104,12 @@ class CandidateListsController < ApplicationController
           is_group: @candidate_list.is_group?,
           expected_count: @candidate_list.expected_count,
           candidates: @candidate_list.candidates.as_json(
-            only: %i[ id term definition filtered_consistent candidate_feedback_id ]
+            only: %i[id term definition filtered_consistent candidate_feedback_id]
           ),
           others_requested_help: @candidate_list.others_requested_help,
           help_requested: @candidate_list.group_requested,
           messages: { main: 'All good' }
         }
-
       end
     end
   end
@@ -135,14 +128,14 @@ class CandidateListsController < ApplicationController
           definition = candidate_data[:definition]
           id = candidate_data[:id]
 
-          if( id.blank? )
+          if id.blank?
             candidate = @candidate_list.candidates.build(
               term: term,
               definition: definition,
               user: current_user
             )
           else
-            candidate = @candidate_list.candidates.find{|c|c.id == id}
+            candidate = @candidate_list.candidates.find { |c| c.id == id }
             candidate.term = term
             candidate.definition = definition
             # candidate.user = current_user
@@ -162,18 +155,15 @@ class CandidateListsController < ApplicationController
               is_group: @candidate_list.is_group?,
               expected_count: @candidate_list.expected_count,
               candidates: @candidate_list.candidates.as_json(
-                only: %i[ id term definition filtered_consistent candidate_feedback_id ]
+                only: %i[id term definition filtered_consistent candidate_feedback_id]
               ),
               others_requested_help: @candidate_list.others_requested_help,
               help_requested: @candidate_list.group_requested,
               messages: { main: notice }
             }
-
           end
         else
-          unless @candidate_list.errors.empty?
-            logger.debug @candidate_list.errors.full_messages
-          end
+          logger.debug @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
           format.html { render :edit }
           format.json do
             messages = @candidate_list.errors.to_h
@@ -183,13 +173,12 @@ class CandidateListsController < ApplicationController
               is_group: @candidate_list.is_group?,
               expected_count: @candidate_list.expected_count,
               candidates: @candidate_list.candidates.as_json(
-                only: %i[ id term definition filtered_consistent candidate_feedback_id ]
+                only: %i[id term definition filtered_consistent candidate_feedback_id]
               ),
               others_requested_help: @candidate_list.others_requested_help,
               help_requested: @candidate_list.group_requested,
               messages: messages
             }
-
           end
         end
       end
@@ -293,18 +282,14 @@ class CandidateListsController < ApplicationController
         member_cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
         member_cl.archived = true
         member_cl.candidates.includes(:user).each do |candidate|
-          if candidate.term.present? || candidate.definition.present?
-            merged_list << candidate
-          end
+          merged_list << candidate if candidate.term.present? || candidate.definition.present?
         end
         member_cl.save!
-        unless member_cl.errors.empty?
-          logger.debug member_cl.errors.full_messages
-        end
+        logger.debug member_cl.errors.full_messages unless member_cl.errors.empty?
         group_lists << member_cl
       end
       if merged_list.count < (required_terms - 1)
-        merged_list.count.upto ( required_terms - 1) do
+        merged_list.count.upto(required_terms - 1) do
           merged_list << Candidate.new('term' => '', 'definition' => '', user: current_user)
         end
       end
@@ -321,9 +306,7 @@ class CandidateListsController < ApplicationController
       group_lists.each do |member_cl|
         member_cl.current_candidate_list = cl
         member_cl.save!
-        unless member_cl.errors.empty?
-          logger.debug member_cl.errors.full_messages
-        end
+        logger.debug member_cl.errors.full_messages unless member_cl.errors.empty?
       end
     end
     cl
@@ -337,11 +320,9 @@ class CandidateListsController < ApplicationController
       flash[:notice] = t('candidate_lists.demo_colab_success')
       redirect_to root_url
     else
-      bingo_game = BingoGame.find_by_id params[:bingo_game_id]
+      bingo_game = BingoGame.find_by id: params[:bingo_game_id]
       @candidate_list = bingo_game.candidate_list_for_user current_user
-      if @candidate_list.archived
-        @candidate_list = @candidate_list.current_candidate_list
-      end
+      @candidate_list = @candidate_list.current_candidate_list if @candidate_list.archived
     end
   end
 

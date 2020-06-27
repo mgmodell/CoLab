@@ -1,7 +1,5 @@
 import React, { Suspense, useState, useEffect } from "react";
-import {
-  useHistory
-} from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import Button from "@material-ui/core/Button";
@@ -19,8 +17,8 @@ import CloseIcon from "@material-ui/icons/Close";
 //For debug purposes
 
 import { useUserStore } from "./infrastructure/UserStore";
-import { useEndpointStore } from"./infrastructure/EndPointStore";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useEndpointStore } from "./infrastructure/EndPointStore";
+import { useStatusStore } from "./infrastructure/StatusStore";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
@@ -31,16 +29,16 @@ import ExperienceReaction from "./ExperienceReaction";
 export default function Experience(props) {
   const endpointSet = "experience";
   const [endpoints, endpointsActions] = useEndpointStore();
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
   const [t, i18n] = useTranslation("installments");
-  const history = useHistory( );
+  const history = useHistory();
 
-  const [reactionId, setReactionId] = useState( );
-  const [instructed, setInstructed] = useState( false );
+  const [reactionId, setReactionId] = useState();
+  const [instructed, setInstructed] = useState(false);
 
-  const [weekId, setWeekId] = useState( );
-  const [weekNum, setWeekNum] = useState( 0 );
-  const [weekText, setWeekText] = useState( '' );
+  const [weekId, setWeekId] = useState();
+  const [weekNum, setWeekNum] = useState(0);
+  const [weekText, setWeekText] = useState("");
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
@@ -62,7 +60,9 @@ export default function Experience(props) {
 
   //Retrieve the latest data
   const getNext = () => {
-    const url = `${endpoints.endpoints[endpointSet].baseUrl}${props.experienceId}.json`;
+    const url = `${endpoints.endpoints[endpointSet].baseUrl}${
+      props.experienceId
+    }.json`;
     statusActions.startTask();
     fetch(url, {
       method: "GET",
@@ -82,23 +82,22 @@ export default function Experience(props) {
         }
       })
       .then(data => {
-        setWeekId( data.week_id );
-        setWeekNum( data.week_num );
-        setWeekText( data.week_text );
+        setWeekId(data.week_id);
+        setWeekNum(data.week_num);
+        setWeekText(data.week_text);
 
-        setReactionId( data.reaction_id );
-        setInstructed( data.instructed );
+        setReactionId(data.reaction_id);
+        setInstructed(data.instructed);
 
-        statusActions.endTask( );
+        statusActions.endTask();
       });
   };
   //Store what we've got
-  const saveDiagnosis = (behaviorId, otherName, comment, resetFunc ) => {
-    statusActions.startTask( 'saving' );
-    const url =
-    endpoints.endpoints[endpointSet].diagnosisUrl
+  const saveDiagnosis = (behaviorId, otherName, comment, resetFunc) => {
+    statusActions.startTask("saving");
+    const url = endpoints.endpoints[endpointSet].diagnosisUrl;
     fetch(url, {
-      method: 'PATCH',
+      method: "PATCH",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
@@ -113,7 +112,6 @@ export default function Experience(props) {
           other_name: otherName,
           comment: comment
         }
-
       })
     })
       .then(response => {
@@ -125,23 +123,23 @@ export default function Experience(props) {
       })
       .then(data => {
         //Process Contributions
-        setWeekId( data.week_id );
-        setWeekNum( data.week_num );
-        setWeekText( data.week_text );
+        setWeekId(data.week_id);
+        setWeekNum(data.week_num);
+        setWeekText(data.week_text);
 
-        resetFunc( );
-        statusActions.endTask( 'saving' );
-        statusActions.setClean( 'diagnosis' );
+        resetFunc();
+        statusActions.addMessage(data.messages.main, 1);
+        statusActions.endTask("saving");
+        statusActions.setClean("diagnosis");
       });
   };
 
   //React
-  const saveReaction = (behaviorId, otherName, improvements, resetFunc ) => {
-    statusActions.startTask( 'saving' );
-    const url =
-    endpoints.endpoints[endpointSet].reactionUrl
+  const saveReaction = (behaviorId, otherName, improvements, resetFunc) => {
+    statusActions.startTask("saving");
+    const url = endpoints.endpoints[endpointSet].reactionUrl;
     fetch(url, {
-      method: 'PATCH',
+      method: "PATCH",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
@@ -155,7 +153,6 @@ export default function Experience(props) {
           other_name: otherName,
           improvements: improvements
         }
-
       })
     })
       .then(response => {
@@ -167,35 +164,41 @@ export default function Experience(props) {
       })
       .then(data => {
         //Process Experience
-        resetFunc( );
-        statusActions.addMessage( data.messages.main, 1)
-        statusActions.endTask( 'saving' );
-        statusActions.setClean( 'reaction' );
-        history.push( '/' );
+        resetFunc();
+        statusActions.addMessage(data.messages.main, 1);
+        statusActions.endTask("saving");
+        statusActions.setClean("reaction");
+        history.push("/");
       });
   };
 
   var output = null;
-  if( 'loaded' !== endpoints.endpointStatus[endpointSet] ){
-    output = (<Skeleton variant='rect' />)
-
-  } else if( !instructed ){
-    output = (<ExperienceInstructions
-      token={props.token}
-      lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
-      acknowledgeFunc={getNext} />)
-  } else if( undefined === weekNum ){
-    output = (<ExperienceReaction
-      lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
-      reactionFunc={saveReaction}
-      />)
+  if ("loaded" !== endpoints.endpointStatus[endpointSet]) {
+    output = <Skeleton variant="rect" />;
+  } else if (!instructed) {
+    output = (
+      <ExperienceInstructions
+        token={props.token}
+        lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
+        acknowledgeFunc={getNext}
+      />
+    );
+  } else if (undefined === weekNum) {
+    output = (
+      <ExperienceReaction
+        lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
+        reactionFunc={saveReaction}
+      />
+    );
   } else {
-    output = (<ExperienceDiagnosis
-      lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
-      diagnoseFunc={saveDiagnosis}
-      weekNum={weekNum}
-      weekText={weekText}
-      />)
+    output = (
+      <ExperienceDiagnosis
+        lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
+        diagnoseFunc={saveDiagnosis}
+        weekNum={weekNum}
+        weekText={weekText}
+      />
+    );
   }
 
   return output;

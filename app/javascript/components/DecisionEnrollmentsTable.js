@@ -6,7 +6,7 @@ import Fab from "@material-ui/core/Fab";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
-import WorkingIndicator from './infrastructure/WorkingIndicator';
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -239,7 +239,7 @@ class DecisionEnrollmentsTable extends React.Component {
               {this.state.requests_raw.length}
             </Typography>
           </Toolbar>
-          <WorkingIndicator identifier='loading_enrollments' />
+          <WorkingIndicator identifier="loading_enrollments" />
           <WrappedVirtualizedTable
             rowCount={this.state.requests.length}
             rowGetter={({ index }) => this.state.requests[index]}

@@ -16,7 +16,7 @@ import CloseIcon from "@material-ui/icons/Close";
 //For debug purposes
 
 import { useUserStore } from "./infrastructure/UserStore";
-import { useLookupStore } from './infrastructure/LookupStore';
+import { useLookupStore } from "./infrastructure/LookupStore";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
@@ -28,49 +28,50 @@ export default function Experience(props) {
   const [t, i18n] = useTranslation("experiences");
 
   useEffect(() => {
-    lookupActions.fetch(['behaviors'], props.lookupUrl, props.token);
+    lookupActions.fetch(["behaviors"], props.lookupUrl, props.token);
   }, []);
 
   const saveButton = (
     <Button variant="contained" onClick={() => props.acknowledgeFunc()}>
-      <Suspense fallback={<Skeleton variant="text" />}>{t('instructions.next')}</Suspense>
+      <Suspense fallback={<Skeleton variant="text" />}>
+        {t("instructions.next")}
+      </Suspense>
     </Button>
   );
 
-
   return (
     <Paper>
-      <Suspense fallback={<Skeleton variant='text' />} >
-        <h3>{t( 'instructions.title' )}</h3>
+      <Suspense fallback={<Skeleton variant="text" />}>
+        <h3>{t("instructions.title")}</h3>
       </Suspense>
-      <Suspense fallback={<Skeleton variant='rect' />} >
-            <p
-              dangerouslySetInnerHTML={{
-                __html: t('inst_p1')
-              }}
-            />
+      <Suspense fallback={<Skeleton variant="rect" />}>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: t("inst_p1")
+          }}
+        />
       </Suspense>
-      <Suspense fallback={<Skeleton variant='rect' />} >
-            <p
-              dangerouslySetInnerHTML={{
-                __html: t('inst_p2')
-              }}
-            />
+      <Suspense fallback={<Skeleton variant="rect" />}>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: t("inst_p2")
+          }}
+        />
       </Suspense>
-      <Suspense fallback={<Skeleton variant='rect' />} >
-            <p
-              dangerouslySetInnerHTML={{
-                __html: t('inst_p3')
-              }}
-            />
+      <Suspense fallback={<Skeleton variant="rect" />}>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: t("inst_p3")
+          }}
+        />
       </Suspense>
-      <Suspense fallback={<Skeleton variant='text' />} >
-        <h3>{t( 'instructions.behaviors_lbl' )}</h3>
+      <Suspense fallback={<Skeleton variant="text" />}>
+        <h3>{t("instructions.behaviors_lbl")}</h3>
       </Suspense>
-      <Suspense fallback={<Skeleton variant='rect' />} >
+      <Suspense fallback={<Skeleton variant="rect" />}>
         <dl>
-          {(lookup.lookups.behaviors || [] ).map((behavior)=>{
-            return(
+          {(lookup.lookups.behaviors || []).map(behavior => {
+            return (
               <React.Fragment key={behavior.id}>
                 <dt>{behavior.name}</dt>
                 <dd
@@ -79,34 +80,33 @@ export default function Experience(props) {
                   }}
                 />
               </React.Fragment>
-            )
+            );
           })}
         </dl>
       </Suspense>
-      <Suspense fallback={<Skeleton variant='text' />} >
-        <h3>{t( 'scenario_lbl' )}</h3>
-
+      <Suspense fallback={<Skeleton variant="text" />}>
+        <h3>{t("scenario_lbl")}</h3>
       </Suspense>
-      <Suspense fallback={<Skeleton variant='rect' />} >
-            <p
-              dangerouslySetInnerHTML={{
-                __html: t('scenario_p1')
-              }}
-            />
+      <Suspense fallback={<Skeleton variant="rect" />}>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: t("scenario_p1")
+          }}
+        />
       </Suspense>
-      <Suspense fallback={<Skeleton variant='rect' />} >
-            <p
-              dangerouslySetInnerHTML={{
-                __html: t('scenario_p2')
-              }}
-            />
+      <Suspense fallback={<Skeleton variant="rect" />}>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: t("scenario_p2")
+          }}
+        />
       </Suspense>
-      <Suspense fallback={<Skeleton variant='rect' />} >
-            <p
-              dangerouslySetInnerHTML={{
-                __html: t('scenario_p3')
-              }}
-            />
+      <Suspense fallback={<Skeleton variant="rect" />}>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: t("scenario_p3")
+          }}
+        />
       </Suspense>
       {saveButton}
     </Paper>
@@ -117,5 +117,4 @@ Experience.propTypes = {
   token: PropTypes.string.isRequired,
   acknowledgeFunc: PropTypes.func.isRequired,
   lookupUrl: PropTypes.string.isRequired
-
 };

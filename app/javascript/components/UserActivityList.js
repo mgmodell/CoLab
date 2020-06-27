@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import WorkingIndicator from './infrastructure/WorkingIndicator';
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@material-ui/core/Paper";
-import { iconForType } from './ActivityLib'
-import { useStatusStore } from './infrastructure/StatusStore';
+import { iconForType } from "./ActivityLib";
+import { useStatusStore } from "./infrastructure/StatusStore";
 
 import MUIDataTable from "mui-datatables";
-
 
 export default function UserCourseList(props) {
   // const [addUsersPath, setAddUsersPath] = useState("");
   // const [procRegReqPath, setProcRegReqPath] = useState("");
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
 
   const getActivities = () => {
-    statusActions.startTask( );
+    statusActions.startTask();
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -33,10 +32,10 @@ export default function UserCourseList(props) {
         }
       })
       .then(data => {
-        console.log( data );
+        console.log(data);
         //MetaData and Infrastructure
         props.activitiesListUpdateFunc(data);
-        statusActions.endTask( );
+        statusActions.endTask();
       });
   };
 
@@ -59,9 +58,9 @@ export default function UserCourseList(props) {
       name: "type",
       options: {
         filter: false,
-        customBodyRender: (value) => {
-          const output = iconForType( value )
-          return output
+        customBodyRender: value => {
+          const output = iconForType(value);
+          return output;
         }
       }
     },
@@ -84,7 +83,7 @@ export default function UserCourseList(props) {
   const activityList =
     null != props.activitiesList ? (
       <MUIDataTable
-        title={'Activities'}
+        title={"Activities"}
         columns={activityColumns}
         data={props.activitiesList}
         options={{
@@ -95,11 +94,13 @@ export default function UserCourseList(props) {
           download: false
         }}
       />
-    ) : 'The activities are loading' ;
+    ) : (
+      "The activities are loading"
+    );
 
   return (
     <Paper>
-      <WorkingIndicator identifier='activity_list_loading' />
+      <WorkingIndicator identifier="activity_list_loading" />
       {activityList}
     </Paper>
   );

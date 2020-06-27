@@ -64,12 +64,14 @@ class BingoGamesController < ApplicationController
       )
                                      .includes(:current_candidate_list)
 
-      #temporary storage for optimization
+      # temporary storage for optimization
       cl = candidate_lists.first
 
-      candidate_list = cl.archived ?
-        cl.current_candidate_list :
-        cl
+      candidate_list = if cl.archived
+                         cl.current_candidate_list
+                       else
+                         cl
+end
 
       candidates = Candidate.completed.where(candidate_list: candidate_list)
                             .includes(%i[concept candidate_feedback])
@@ -109,9 +111,7 @@ class BingoGamesController < ApplicationController
     resp = {}
     # Get the users
     bingo_game.course.rosters.each do |r|
-      unless r.enrolled_student? || r.invited_student? || r.dropped_student?
-        next
-      end
+      next unless r.enrolled_student? || r.invited_student? || r.dropped_student?
 
       resp[ r.user.id ] = {
         student: r.user.informal_name(anon),
@@ -315,7 +315,7 @@ class BingoGamesController < ApplicationController
     cl_map = {}
     candidate_lists = []
     # working as a group
-    cl = CandidateList.new ()
+    cl = CandidateList.new
     cl.id = -1
     cl.is_group = true
     cl.archived = false
@@ -328,7 +328,7 @@ class BingoGamesController < ApplicationController
     @bingo_game.candidate_lists << cl
 
     0.downto(-3) do |index|
-      u = User.new ()
+      u = User.new
       u.id = index
       u.first_name = Forgery::Name.first_name
       u.anon_first_name = Forgery::Name.first_name
@@ -377,8 +377,11 @@ class BingoGamesController < ApplicationController
       candidate = Candidate.new(
         id: index,
         term: c[0],
-        definition: acceptable ? c[1] :
-          demo_concepts[Random.rand(demo_concepts.count)][1],
+        definition: if acceptable
+                      c[1]
+                    else
+                      demo_concepts[Random.rand(demo_concepts.count)][1]
+end,
         user: u,
         user_id: u.id
       )
@@ -419,14 +422,14 @@ class BingoGamesController < ApplicationController
 
   def review_helper(bingo_game:, users:, groups:,
                     candidate_lists:, candidates:)
-    feedback_opts = CandidateFeedback.all.collect{ |cf|
-        {
-          id: cf.id,
-          name: cf.name,
-          credit: cf.credit,
-          critique: cf.critique
-        }
-    }
+    feedback_opts = CandidateFeedback.all.collect do |cf|
+      {
+        id: cf.id,
+        name: cf.name,
+        credit: cf.credit,
+        critique: cf.critique
+      }
+    end
     render json: {
       bingo_game: bingo_game.as_json(only:
         %i[id topic description status close_date]),
@@ -472,9 +475,7 @@ class BingoGamesController < ApplicationController
       candidates = params[:candidates]
       entered_concepts = []
       candidates.each do |candidate|
-        unless candidate[:concept].present? && candidate[:concept][:name].present?
-          next
-        end
+        next unless candidate[:concept].present? && candidate[:concept][:name].present?
 
         concept_name = candidate[:concept][:name]
         entered_concepts << Concept.standardize_name(name: concept_name)
@@ -506,9 +507,7 @@ class BingoGamesController < ApplicationController
                  .find_all do |candidate|
         entered_candidate = candidate_map[candidate.id]
 
-        if entered_candidate.nil? || entered_candidate[:candidate_feedback_id].nil?
-          next
-        end
+        next if entered_candidate.nil? || entered_candidate[:candidate_feedback_id].nil?
 
         candidate.candidate_feedback =
           feedback_map[entered_candidate[:candidate_feedback_id]]
@@ -530,9 +529,7 @@ class BingoGamesController < ApplicationController
           candidate.concept = nil
         end
         candidate.save
-        unless candidate.errors.empty?
-          logger.debug candidate.errors.full_messages
-        end
+        logger.debug candidate.errors.full_messages unless candidate.errors.empty?
       end
 
       # Send notifications to students
@@ -545,9 +542,7 @@ class BingoGamesController < ApplicationController
         @bingo_game.students_notified = true
       end
       @bingo_game.save
-      unless @bingo_game.errors.empty?
-        logger.debug @bingo_game.errors.full_messages
-      end
+      logger.debug @bingo_game.errors.full_messages unless @bingo_game.errors.empty?
 
       if @bingo_game.errors.empty?
         response[:notice] = (t 'bingo_games.review_success')

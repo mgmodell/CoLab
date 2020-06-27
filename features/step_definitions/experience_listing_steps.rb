@@ -58,7 +58,7 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
   end
 end
 
-Given /^the experience started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_date|
+Given(/^the experience started "([^"]*)" and ends "([^"]*)"$/) do |start_date, end_date|
   course_tz = ActiveSupport::TimeZone.new(@experience.course.timezone)
   d = Chronic.parse(start_date)
   @experience.reload
@@ -69,7 +69,7 @@ Given /^the experience started "([^"]*)" and ends "([^"]*)"$/ do |start_date, en
   log @experience.errors.full_messages if @experience.errors.present?
 end
 
-Given /^the users "(.*?)" had demographics requested$/ do |with_demographics|
+Given(/^the users "(.*?)" had demographics requested$/) do |with_demographics|
   demographics_requested = with_demographics == 'have'
   @users.each do |u|
     u.welcomed = demographics_requested
@@ -78,7 +78,7 @@ Given /^the users "(.*?)" had demographics requested$/ do |with_demographics|
   end
 end
 
-Given /^the user is "(.*?)" user$/ do |which|
+Given(/^the user is "(.*?)" user$/) do |which|
   case which.downcase
   when 'a random' then @user = @users.sample
   when 'the first' then @user = @users.first
@@ -91,7 +91,7 @@ Given /^the user is "(.*?)" user$/ do |which|
   end
 end
 
-Given /^the course has an assessed project$/ do
+Given(/^the course has an assessed project$/) do
   @project = @course.projects.new(
     name: "#{Forgery::Name.industry} Project",
     start_dow: 1,
@@ -108,7 +108,7 @@ Given /^the course has an assessed project$/ do
   log @project.errors.full_messages if @project.errors.present?
 end
 
-Given /^the user is in a group on the project$/ do
+Given(/^the user is in a group on the project$/) do
   @group = @project.groups.new(
     name: "#{Forgery::Basic.text} Group"
   )

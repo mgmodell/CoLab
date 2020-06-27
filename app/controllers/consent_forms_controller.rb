@@ -10,34 +10,32 @@ class ConsentFormsController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
-        resp = @consent_forms.collect{ |cf|
+        resp = @consent_forms.collect do |cf|
           {
             id: cf.id,
             name: cf.name,
             active: cf.active
           }
-        }
+        end
         render json: resp
       end
     end
-
   end
 
   # GET /consent_forms/1
   # GET /consent_forms/1.json
   def show
     respond_to do |format|
-      format.html 
+      format.html
       format.json do
         response = {
           consent_form: @consent_form.as_json(
             only: %i[ id name start_date end_date active
                       form_text_en form_text_ko ]
           ),
-          messages: { }
+          messages: {}
         }
         render json: response
-
       end
     end
   end
@@ -48,7 +46,6 @@ class ConsentFormsController < ApplicationController
   # POST /consent_forms
   # POST /consent_forms.json
   def create
-
     @consent_form = ConsentForm.new(consent_form_params)
     respond_to do |format|
       if @consent_form.save
@@ -66,9 +63,7 @@ class ConsentFormsController < ApplicationController
           render json: response
         end
       else
-        unless @consent_form.errors.empty?
-          logger.debug @consent_form.errors.full_messages
-        end
+        logger.debug @consent_form.errors.full_messages unless @consent_form.errors.empty?
         format.html { render :new }
         format.json { render json: @consent_form.errors, status: :unprocessable_entity }
         format.json do

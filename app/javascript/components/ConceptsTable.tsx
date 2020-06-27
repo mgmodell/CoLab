@@ -15,13 +15,13 @@ import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import WorkingIndicator from './infrastructure/WorkingIndicator';
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import { SortDirection } from "react-virtualized";
 
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
 
 import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 
 const styles = theme => ({
   table: {
@@ -50,7 +50,7 @@ const styles = theme => ({
 export default function ConceptsTable(props) {
   const endpointSet = "concept";
   const [endpoints, endpointsActions] = useEndpointStore();
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
 
   const [conceptsRaw, setConceptsRaw] = useState([]);
   const [concepts, setConcepts] = useState([]);
@@ -118,7 +118,7 @@ export default function ConceptsTable(props) {
   };
 
   const getConcepts = () => {
-    statusActions.startTask( 'load' )
+    statusActions.startTask("load");
     fetch(endpoints.endpoints[endpointSet].baseUrl + ".json", {
       method: "GET",
       credentials: "include",
@@ -139,7 +139,7 @@ export default function ConceptsTable(props) {
       .then(data => {
         setConcepts(data);
         setConceptsRaw(data);
-        statusActions.endTask( 'load' )
+        statusActions.endTask("load");
       });
   };
   const filter = function(event) {
@@ -171,7 +171,7 @@ export default function ConceptsTable(props) {
     setDirty(false);
   };
   const updateConcept = (id, name) => {
-    statusActions.startTask( 'load' );
+    statusActions.startTask("load");
     fetch(endpoints.endpoints[endpointSet].baseUrl + "/" + id + ".json", {
       method: "PATCH",
       credentials: "include",
@@ -203,7 +203,7 @@ export default function ConceptsTable(props) {
 
         setConcepts(tmpConcepts);
         setConceptsRaw(tmpConcepts);
-        statusActions.endTask( 'load' );
+        statusActions.endTask("load");
         setEditing(false);
       });
   };
@@ -232,7 +232,7 @@ export default function ConceptsTable(props) {
         onClose={() => setEditing(false)}
         aria-labelledby="edit"
       >
-        <WorkingIndicator identifier='saving_concept' />
+        <WorkingIndicator identifier="saving_concept" />
         <DialogTitle>Edit Concept</DialogTitle>
         <DialogContent>
           <DialogContentText>Concept Name</DialogContentText>

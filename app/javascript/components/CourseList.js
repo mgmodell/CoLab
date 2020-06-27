@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  useHistory,
-  useRouteMatch
-} from 'react-router-dom';
+import { useHistory, useRouteMatch } from "react-router-dom";
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
@@ -18,18 +15,18 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { useEndpointStore } from "./infrastructure/EndPointStore";
 import { useUserStore } from "./infrastructure/UserStore";
-import { useStatusStore } from './infrastructure/StatusStore';
+import { useStatusStore } from "./infrastructure/StatusStore";
 import CopyActivityButton from "./CopyActivityButton";
 import MUIDataTable from "mui-datatables";
 import Collapse from "@material-ui/core/Collapse";
-import WorkingIndicator from './infrastructure/WorkingIndicator';
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 export default function CourseList(props) {
   const endpointSet = "course";
   const [endpoints, endpointsActions] = useEndpointStore();
 
-  const history = useHistory( );
-  const {path, url} = useRouteMatch( );
+  const history = useHistory();
+  const { path, url } = useRouteMatch();
 
   const [user, userActions] = useUserStore();
   const [messages, setMessages] = useState({});
@@ -39,7 +36,7 @@ export default function CourseList(props) {
     return <Paper {...props} />;
   }
 
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
   const columns = [
     {
       label: "Number",
@@ -147,9 +144,9 @@ export default function CourseList(props) {
         display: true,
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const course = courses.filter((item)=>{
+          const course = courses.filter(item => {
             return value == item.id;
-          })
+          });
           const scoresUrl =
             endpoints.endpoints[endpointSet].scoresUrl + value + ".csv";
           const copyUrl =
@@ -173,7 +170,7 @@ export default function CourseList(props) {
                 copyUrl={endpoints.endpoints[endpointSet].courseCopyUrl}
                 itemId={value}
                 itemUpdateFunc={getCourses}
-                startDate={new Date(course['start_date'])}
+                startDate={new Date(course["start_date"])}
                 addMessagesFunc={postNewMessage}
               />
             </React.Fragment>
@@ -188,7 +185,7 @@ export default function CourseList(props) {
 
   const getCourses = () => {
     const url = endpoints.endpoints[endpointSet].baseUrl + ".json";
-    statusActions.startTask( 'loading' )
+    statusActions.startTask("loading");
 
     fetch(url, {
       method: "GET",
@@ -210,12 +207,12 @@ export default function CourseList(props) {
       .then(data => {
         //Process the data
         setCourses(data);
-        statusActions.endTask( 'loading' )
+        statusActions.endTask("loading");
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.startTask( 'loading' )
+      statusActions.startTask("loading");
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -225,7 +222,7 @@ export default function CourseList(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] == "loaded") {
-      statusActions.endTask( 'loading' )
+      statusActions.endTask("loading");
       getCourses();
     }
   }, [endpoints.endpointStatus[endpointSet]]);
@@ -256,9 +253,7 @@ export default function CourseList(props) {
             <IconButton
               id="new_course"
               onClick={event => {
-                history.push(
-                  path + '/new'
-                )
+                history.push(path + "/new");
               }}
               aria-label="New Course"
             >
@@ -268,14 +263,12 @@ export default function CourseList(props) {
         ),
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
-            console.log( path )
-              const course_id = courses[cellMeta.dataIndex].id
-              console.log(  course_id );
-              const location = path + '/' + course_id
-              console.log( location ) 
-              history.push(
-                location
-              )
+            console.log(path);
+            const course_id = courses[cellMeta.dataIndex].id;
+            console.log(course_id);
+            const location = path + "/" + course_id;
+            console.log(location);
+            history.push(location);
           }
         },
         selectableRows: "none"
@@ -303,7 +296,7 @@ export default function CourseList(props) {
           {messages["main"] || null}
         </Alert>
       </Collapse>
-      <WorkingIndicator identifier='courses_loading' />
+      <WorkingIndicator identifier="courses_loading" />
       <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
     </React.Fragment>
   );

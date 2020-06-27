@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo|
+Given(/^the users "([^"]*)" prep "([^"]*)"$/) do |completion_level, group_or_solo|
   # Store the previous user (do no harm)
   temp_user = @user
 
@@ -54,9 +54,7 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
     step 'the user clicks the link to the candidate list'
     step "the user populates #{fields_to_complete} of the \"term\" entries"
     step "the user populates #{fields_to_complete} of the \"definition\" entries"
-    if fields_to_complete > 0
-      step 'the user clicks "Save"'
-    end
+    step 'the user clicks "Save"' if fields_to_complete > 0
     step 'the user will see "success"'
     step 'the user logs out'
   end
@@ -65,13 +63,12 @@ Given /^the users "([^"]*)" prep "([^"]*)"$/ do |completion_level, group_or_solo
   @user = temp_user
 end
 
-Then /^the user sees (\d+) candidate items for review$/ do |candidate_count|
+Then(/^the user sees (\d+) candidate items for review$/) do |candidate_count|
   wait_for_render
-  #Enable max rows
+  # Enable max rows
   max_rows = @bingo.candidates.size
-    page.find(:xpath, "//div[@id='pagination-rows']").click
-    page.find(:xpath, "//li[text()='#{max_rows}']").click
-    
+  page.find(:xpath, "//div[@id='pagination-rows']").click
+  page.find(:xpath, "//li[text()='#{max_rows}']").click
 
   page.all(:xpath, "//div[contains(@id, 'feedback_4_')]")
       .count.should eq candidate_count.to_i
@@ -80,7 +77,7 @@ Then /^the user sees (\d+) candidate items for review$/ do |candidate_count|
   #    .count.should eq candidate_count.to_i
 end
 
-Given /^the user sees review items for all the expected candidates$/ do
+Given(/^the user sees review items for all the expected candidates$/) do
   @bingo.candidates.completed.each do |candidate|
     # Latest UI only shows 'Concept' when relevant/available
     # page.all(:xpath, "//input[@id='concept_4_#{candidate.id}']").count.should eq 1
@@ -90,7 +87,7 @@ Given /^the user sees review items for all the expected candidates$/ do
   end
 end
 
-Then /^the user waits while seeing "([^"]*)"$/ do |wait_msg|
+Then(/^the user waits while seeing "([^"]*)"$/) do |wait_msg|
   wait_for_render
 
   counter = 0
@@ -101,7 +98,7 @@ Then /^the user waits while seeing "([^"]*)"$/ do |wait_msg|
   end
 end
 
-Given /^the user lowercases "([^"]*)" concepts$/ do |which_concepts|
+Given(/^the user lowercases "([^"]*)" concepts$/) do |which_concepts|
   page.all(:xpath, "//input[contains(@id,'concept_4_')]").each do |concept_field|
     next unless ('all'.eql? which_concepts) || (rand(2) > 0)
 
@@ -113,19 +110,21 @@ Given /^the user lowercases "([^"]*)" concepts$/ do |which_concepts|
   end
 end
 
-Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_type|
+Given(/^the user assigns "([^"]*)" feedback to all candidates$/) do |feedback_type|
   wait_for_render
-  #Enable max rows
+  # Enable max rows
   max_rows = @bingo.candidates.size
-    page.find(:xpath, "//div[@id='pagination-rows']").click
-    page.find(:xpath, "//li[text()='#{max_rows}']").click
-    
+  page.find(:xpath, "//div[@id='pagination-rows']").click
+  page.find(:xpath, "//li[text()='#{max_rows}']").click
 
   concept_count = Concept.count
-  concepts = concept_count < 2 ? [] :
-              Concept.where('id > 0').collect(&:name)
+  concepts = if concept_count < 2
+               []
+             else
+               Concept.where('id > 0').collect(&:name)
+end
 
-  concept_count.upto (concept_count + 3) do |counter|
+  concept_count.upto(concept_count + 3) do |counter|
     concepts << 'concept ' + counter.to_s
   end
 
@@ -146,31 +145,30 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
     begin
       retries ||= 0
       elem = page.find(:xpath,
-                         "//div[@id='feedback_4_#{candidate.id}']" )
-      elem.scroll_to( elem )
+                       "//div[@id='feedback_4_#{candidate.id}']")
+      elem.scroll_to(elem)
       elem.click
     rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
       elem.send_keys :escape
-      (retries += 1).should be < 20,  'Too many retries'
+      (retries += 1).should be < 20, 'Too many retries'
       retry unless retries > 5
     end
 
     begin
       elem = page.find(:xpath,
-                       '//li[text()="' + feedback.name + '"]' )
-      elem.scroll_to( elem )
+                       '//li[text()="' + feedback.name + '"]')
+      elem.scroll_to(elem)
       elem.send_keys :enter
-      
+
       if concept.present?
         elem = page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
-        elem.scroll_to( elem )
+        elem.scroll_to(elem)
         elem.set(concept)
       end
-
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       elem = page.find(:xpath,
-                       '//li[text()="' + feedback.name + '"]' )
-      elem.scroll_to( elem )
+                       '//li[text()="' + feedback.name + '"]')
+      elem.scroll_to(elem)
       elem.click
 
       error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries > 0
@@ -178,55 +176,47 @@ Given /^the user assigns "([^"]*)" feedback to all candidates$/ do |feedback_typ
       error_msg += "\t\t#{candidate.inspect}" unless retries > 0
       # elem.send_keys :escape
 
-      (retries += 1).should be < 20,  'Too many retries'
+      (retries += 1).should be < 20, 'Too many retries'
       retry unless retries > 5
-      
     rescue Capybara::ElementNotFound => e
       error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries > 0
       error_msg += e.message
       error_msg += "\t\t#{candidate.inspect}" unless retries > 0
       elem.send_keys :enter
-
     end
-
-      
-
   end
 end
 
-Given /^the saved reviews match the list$/ do
+Given(/^the saved reviews match the list$/) do
   @feedback_list.each do |key, value|
-    if value[:concept].present?
-      Candidate.find(key).concept.name.should eq value[:concept]
-    end
+    Candidate.find(key).concept.name.should eq value[:concept] if value[:concept].present?
   end
 end
 
-Given /^the user checks "([^"]*)"$/ do |checkbox_name|
+Given(/^the user checks "([^"]*)"$/) do |checkbox_name|
   find(:xpath, "//*[text()='#{checkbox_name}']").click
 end
 
-Given /^the user is the most recently created user$/ do
+Given(/^the user is the most recently created user$/) do
   @user = @users.last
 end
 
-When /^the user clicks the link to the candidate review$/ do
+When(/^the user clicks the link to the candidate review$/) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
   step 'the user switches to the "Task View" tab'
   find(:xpath, "//div[text()='#{@bingo.get_name(@anon)}']").click
 
   wait_for_render
-  #Enable max rows
+  # Enable max rows
   max_rows = @bingo.candidates.size
-    page.find(:xpath, "//div[@id='pagination-rows']").click
-    page.find(:xpath, "//li[text()='#{max_rows}']").click
-    
+  page.find(:xpath, "//div[@id='pagination-rows']").click
+  page.find(:xpath, "//li[text()='#{max_rows}']").click
 end
 
-Then /^there will be (\d+) concepts$/ do |concept_count|
+Then(/^there will be (\d+) concepts$/) do |concept_count|
   # Adjusting for an entry for the seeded '*' concept
-  Concept.count.should eq ( concept_count.to_i + 1)
+  Concept.count.should eq(concept_count.to_i + 1)
 end
 
 Then('the user navigates home') do

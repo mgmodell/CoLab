@@ -8,17 +8,16 @@ class SchoolsController < ApplicationController
   def show
     @title = t '.title'
     respond_to do |format|
-      format.html{ render :show }
+      format.html { render :show }
       format.json do
         response = {
           school: @school.as_json(
-            only: %i[ id name description timezone ]
+            only: %i[id name description timezone]
           ),
           timezones: HomeController::TIMEZONES,
           messages: {}
         }
         render json: response
-
       end
     end
   end
@@ -38,7 +37,7 @@ class SchoolsController < ApplicationController
         resp = @schools.collect do |school|
           {
             id: school.id,
-            name: school.get_name( @anon ),
+            name: school.get_name(@anon),
             courses: school.courses.size,
             students: school.enrolled_students.size,
             instructors: school.instructors.size,
@@ -64,7 +63,7 @@ class SchoolsController < ApplicationController
         format.json do
           response = {
             school: @school.as_json(
-              only: %i[ id name description timezone ]
+              only: %i[id name description timezone]
             ),
             messages: { main: notice }
           }
@@ -80,7 +79,7 @@ class SchoolsController < ApplicationController
         format.json do
           messages = @school.errors.as_json
           messages[:main] = 'Please review the problems below'
-          render json:{
+          render json: {
             messages: messages
           }
         end
@@ -91,7 +90,7 @@ class SchoolsController < ApplicationController
   def update
     @title = t '.title'
     if @school.update(school_params)
-      notice =t('schools.update_success')
+      notice = t('schools.update_success')
       respond_to do |format|
         format.html do
           redirect_to school_path(@school), notice: notice
@@ -99,7 +98,7 @@ class SchoolsController < ApplicationController
         format.json do
           response = {
             school: @school.as_json(
-              only: %i[ id name description timezone ]
+              only: %i[id name description timezone]
             ),
             messages: { main: notice }
           }
@@ -113,7 +112,7 @@ class SchoolsController < ApplicationController
           render :edit
         end
         format.json do
-          messages = @school.errors.to_hash.store( :main, 'Please review the errors below')
+          messages = @school.errors.to_hash.store(:main, 'Please review the errors below')
           response = {
             messages: messages
           }
@@ -132,13 +131,13 @@ class SchoolsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_school
-      @school = if params[:id].blank? || params[:id] == 'new'
-                  School.new(
-                    timezone: current_user.timezone
-                  )
-                else
-                  School.find(params[:id])
-                end
+    @school = if params[:id].blank? || params[:id] == 'new'
+                School.new(
+                  timezone: current_user.timezone
+                )
+              else
+                School.find(params[:id])
+              end
   end
 
   def check_admin

@@ -14,7 +14,7 @@ class RegistrationsController < Devise::RegistrationsController
         email.primary = false
       end
     end
-    #make sure
+    # make sure
     if found
       current_user.save
       msg = t('devise.registrations.set_primary')
@@ -24,13 +24,13 @@ class RegistrationsController < Devise::RegistrationsController
 
     resp = {
       emails: current_user.emails.as_json(
-        only: %i[ id email primary ],
-        methods: [ 'confirmed?']
+        only: %i[id email primary],
+        methods: ['confirmed?']
       ),
       messages: { main: msg }
 
     }
-    #redirect_to edit_user_registration_path, notice: t('.set_primary')
+    # redirect_to edit_user_registration_path, notice: t('.set_primary')
     respond_to do |format|
       format.json do
         render json: resp
@@ -43,15 +43,17 @@ class RegistrationsController < Devise::RegistrationsController
     email = Email.create(email: address, user: current_user)
 
     logger.debug email.errors.full_messages unless email.errors.empty?
-    msg = email.errors.empty? ?
-      t('devise.registrations.email_added') :
-      t('devise.registrations.email_not_added')
+    msg = if email.errors.empty?
+            t('devise.registrations.email_added')
+          else
+            t('devise.registrations.email_not_added')
+end
     # redirect_to edit_user_registration_path, notice: notice
 
     resp = {
       emails: current_user.emails.as_json(
-        only: %i[ id email primary ],
-        methods: [ 'confirmed?']
+        only: %i[id email primary],
+        methods: ['confirmed?']
       ),
       messages: { main: msg }
 
@@ -67,13 +69,13 @@ class RegistrationsController < Devise::RegistrationsController
     @email.destroy
     resp = {
       emails: current_user.emails.as_json(
-        only: %i[ id email primary ],
-        methods: [ 'confirmed?']
+        only: %i[id email primary],
+        methods: ['confirmed?']
       ),
-      messages: { main: t('devise.registrations.email_destroyed')}
+      messages: { main: t('devise.registrations.email_destroyed') }
 
     }
-    #redirect_to edit_user_registration_path, notice: t('devise.registrations.email_destroyed')
+    # redirect_to edit_user_registration_path, notice: t('devise.registrations.email_destroyed')
     respond_to do |format|
       format.json do
         render json: resp

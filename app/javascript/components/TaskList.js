@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  useHistory
-} from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
@@ -12,7 +10,7 @@ import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
 import GridOffIcon from "@material-ui/icons/GridOff";
 import TuneIcon from "@material-ui/icons/Tune";
 
-import { useEndpointStore } from"./infrastructure/EndPointStore";
+import { useEndpointStore } from "./infrastructure/EndPointStore";
 import { useUserStore } from "./infrastructure/UserStore";
 import MUIDataTable from "mui-datatables";
 
@@ -20,7 +18,7 @@ export default function TaskList(props) {
   const endpointSet = "home";
   const [endpoints, endpointsActions] = useEndpointStore();
   const [user, userActions] = useUserStore();
-  const history = useHistory( );
+  const history = useHistory();
 
   const columns = [
     {
@@ -156,7 +154,6 @@ export default function TaskList(props) {
     }
   ];
 
-
   useEffect(() => {
     if (user.loaded) {
       Settings.defaultZoneName = user.timezone;
@@ -177,7 +174,7 @@ export default function TaskList(props) {
           const link = props.tasks[rowState.dataIndex].link;
           if (null != link) {
             // window.location.href = link;
-            history.push( link )
+            history.push(link);
           }
         },
         selectableRows: "none"

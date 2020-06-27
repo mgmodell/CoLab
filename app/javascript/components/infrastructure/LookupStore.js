@@ -6,43 +6,45 @@ const Store = createStore({
     lookupStatus: {}
   },
   actions: {
-    set: (key, data ) => {
+    set: (key, data) => {
       const all = getState().lookups;
       const allStatus = getState().lookupStatus;
 
-      all[ key ] = data;
-      allStatus[ key ] = 'loaded';
+      all[key] = data;
+      allStatus[key] = "loaded";
       setState({
         lookups: all,
         lookupStatus: allStatus
-      })
-
+      });
     },
-    fetch: (lookupsNeededParam, lookupUrl, token) => ({ setState, getState }) => {
+    fetch: (lookupsNeededParam, lookupUrl, token) => ({
+      setState,
+      getState
+    }) => {
       const allStatus = getState().lookupStatus;
-      const keys = Object.keys( allStatus )
+      const keys = Object.keys(allStatus);
 
       var lookupsNeeded = [];
-      lookupsNeeded = lookupsNeeded.concat( lookupsNeededParam );
+      lookupsNeeded = lookupsNeeded.concat(lookupsNeededParam);
 
-      lookupsNeeded.filter((lookup)=>{
-        return !keys.includes( lookupsNeeded );
-      })
+      lookupsNeeded.filter(lookup => {
+        return !keys.includes(lookupsNeeded);
+      });
 
-      if (lookupsNeeded.length > 0 ) {
+      if (lookupsNeeded.length > 0) {
         //Let everyone know we're loading
         lookupsNeeded.forEach(element => {
-          allStatus[ element ] = 'loading';
+          allStatus[element] = "loading";
         });
         setState({
           lookupStatus: allStatus
         });
 
-        const queryParams = lookupsNeeded.map((curVal) =>{
-          return 'requested[]=' + encodeURI( curVal );
-        })
+        const queryParams = lookupsNeeded.map(curVal => {
+          return "requested[]=" + encodeURI(curVal);
+        });
 
-        fetch(lookupUrl + '.json?' + queryParams.join('&'), {
+        fetch(lookupUrl + ".json?" + queryParams.join("&"), {
           method: "GET",
           credentials: "include",
           headers: {
@@ -64,8 +66,8 @@ const Store = createStore({
 
             if (undefined != data) {
               lookupsNeeded.forEach(element => {
-                tmpEndpoints[ element ] = data[ element ];
-                allStatus[ element ] = 'loading';
+                tmpEndpoints[element] = data[element];
+                allStatus[element] = "loading";
               });
             }
             setState({

@@ -2,7 +2,7 @@
 
 require 'forgery'
 
-Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_prefix, date_value|
+Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
   elem = page.find(:id, 'bingo_game_' + date_field_prefix + '_date')
   begin
@@ -15,20 +15,20 @@ Then /^the user sets the bingo "([^"]*)" date to "([^"]*)"$/ do |date_field_pref
   elem.set(new_date)
 end
 
-Then /^the user clicks "([^"]*)" on the existing bingo game$/ do |_action|
+Then(/^the user clicks "([^"]*)" on the existing bingo game$/) do |_action|
   click_link_or_button 'Activities'
   find(:xpath, "//tr[td[contains(.,'#{@bingo.get_name(@anon)}')]]").click
 end
 
-Then /^retrieve the latest Bingo! game from the db$/ do
+Then(/^retrieve the latest Bingo! game from the db$/) do
   @bingo = BingoGame.last
 end
 
-Then /^the user clicks by label "([^"]*)"$/ do |checkbox|
+Then(/^the user clicks by label "([^"]*)"$/) do |checkbox|
   find('label', text: checkbox).click
 end
 
-Given /^the course has a Bingo! game$/ do
+Given(/^the course has a Bingo! game$/) do
   @bingo = @course.bingo_games.new(
     topic: Forgery::Name.industry + ' Topic',
     description: Forgery::Basic.text,
@@ -46,7 +46,7 @@ Given /^the course has a Bingo! game$/ do
   log @bingo.errors.full_messages if @bingo.errors.present?
 end
 
-Then /^the bingo "([^"]*)" is "([^"]*)"$/ do |field, value|
+Then(/^the bingo "([^"]*)" is "([^"]*)"$/) do |field, value|
   case field.downcase
   when 'description'
     @bingo.description.strip.should eq value
@@ -64,7 +64,7 @@ Then /^the bingo "([^"]*)" is "([^"]*)"$/ do |field, value|
   end
 end
 
-Given /^the bingo started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_date|
+Given(/^the bingo started "([^"]*)" and ends "([^"]*)"$/) do |start_date, end_date|
   course_tz = ActiveSupport::TimeZone.new(@bingo.course.timezone)
   d = Chronic.parse(start_date)
   @bingo.start_date = course_tz.local(d.year, d.month, d.day)
@@ -74,12 +74,12 @@ Given /^the bingo started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_dat
   log @bingo.errors.full_messages if @bingo.errors.present?
 end
 
-Then /^the bingo project is the course's project$/ do
+Then(/^the bingo project is the course's project$/) do
   @bingo.project_id.should eq @project.id
   @bingo.project.should eq @project
 end
 
-Then /^the bingo "([^"]*)" date is "([^"]*)"$/ do |date_field_prefix, date_value|
+Then(/^the bingo "([^"]*)" date is "([^"]*)"$/) do |date_field_prefix, date_value|
   course_tz = ActiveSupport::TimeZone.new(@bingo.course.timezone)
 
   case date_field_prefix.downcase

@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
-import WorkingIndicator from './infrastructure/WorkingIndicator';
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
 import { DateTime } from "luxon";
-import {
-  DatePicker,
-  LocalizationProvider
-} from "@material-ui/pickers";
+import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
 import LuxonUtils from "@date-io/luxon";
 
 import CollectionsBookmarkIcon from "@material-ui/icons/CollectionsBookmark";
@@ -17,14 +14,14 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
-import Collapse from '@material-ui/core/Collapse';
-import { useStatusStore } from './infrastructure/StatusStore';
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
+import Collapse from "@material-ui/core/Collapse";
+import { useStatusStore } from "./infrastructure/StatusStore";
 
 export default function CopyActivityButton(props) {
   const [copyData, setCopyData] = useState(null);
-  const [status, statusActions] = useStatusStore( );
+  const [status, statusActions] = useStatusStore();
 
   function PaperComponent(props) {
     return <Paper {...props} />;
@@ -46,7 +43,7 @@ export default function CopyActivityButton(props) {
         <React.Fragment>
           <DialogTitle>Create a Copy</DialogTitle>
           <DialogContent>
-            <WorkingIndicator identifier='copying_course' />
+            <WorkingIndicator identifier="copying_course" />
             <DialogContentText>
               This course started on{" "}
               {copyData.startDate.toLocaleString(DateTime.DATE_SHORT)}. When
@@ -82,7 +79,7 @@ export default function CopyActivityButton(props) {
             <Button
               disabled={status.working}
               onClick={event => {
-                statusActions.startTask( 'copying');
+                statusActions.startTask("copying");
                 console.log(newStartDate);
                 fetch(props.copyUrl, {
                   method: "POST",
@@ -110,7 +107,7 @@ export default function CopyActivityButton(props) {
                     }
                     setNewStartDate(DateTime.local().toISO());
                     setCopyData(null);
-                    statusActions.endTask( 'copying');
+                    statusActions.endTask("copying");
                   });
               }}
             >

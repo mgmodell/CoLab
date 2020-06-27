@@ -2,7 +2,7 @@
 
 require 'forgery'
 
-Given /^the project measures (\d+) factors$/ do |num_factors|
+Given(/^the project measures (\d+) factors$/) do |num_factors|
   bp = FactorPack.new(
     name: "#{Forgery::Name.industry}-#{Forgery::Basic.color} Factor Pack",
     description: Forgery::Basic.text
@@ -22,31 +22,31 @@ Given /^the project measures (\d+) factors$/ do |num_factors|
   log @project.errors.full_messages if @project.errors.present?
 end
 
-Given /^the project started last month and lasts (\d+) weeks, opened yesterday and closes tomorrow$/ do |num_weeks|
+Given(/^the project started last month and lasts (\d+) weeks, opened yesterday and closes tomorrow$/) do |num_weeks|
   @project.start_date = (Date.today - 1.month)
   @project.end_date = (@assessment.start_date + num_weeks.to_i.weeks)
   @project.start_dow = Date.yesterday.wday
   @project.end_dow = Date.tomorrow.wday
 end
 
-When /^the user submits the installment$/ do
+When(/^the user submits the installment$/) do
   click_link_or_button('Submit Weekly Installment')
 end
 
-Then /^there should be no error$/ do
+Then(/^there should be no error$/) do
   page.should_not have_content('Unable to reconcile installment values.')
   page.should_not have_content('assessment has expired')
 end
 
-Then /^the user should see an error indicating that the installment request expired$/ do
+Then(/^the user should see an error indicating that the installment request expired$/) do
   page.should have_content('assessment has expired')
 end
 
-When /^user clicks the link to the project$/ do
+When(/^user clicks the link to the project$/) do
   find(:xpath, "//td[contains(.,'#{@project.group_for_user(@user).name}')]").click
 end
 
-Then /^the user should enter values summing to (\d+), "(.*?)" across each column$/ do |column_points, distribution|
+Then(/^the user should enter values summing to (\d+), "(.*?)" across each column$/) do |column_points, distribution|
   task = @user.waiting_student_tasks[0]
 
   @value_ratio = distribution
@@ -102,7 +102,7 @@ Then /^the user should enter values summing to (\d+), "(.*?)" across each column
   end
 end
 
-Then /^the installment form should request factor x user values$/ do
+Then(/^the installment form should request factor x user values$/) do
   tasks = @user.waiting_student_tasks
   group = tasks[0].group_for_user(@user)
   factors = tasks[0].factors
@@ -114,7 +114,7 @@ Then /^the installment form should request factor x user values$/ do
            '//input[starts-with(@name,"slider_")]', visible: :all).size.should eq expected_count
 end
 
-Then /^the assessment should show up as completed$/ do
+Then(/^the assessment should show up as completed$/) do
   # Using some cool xpath stuff to check for proper content
   group_name = @project.group_for_user(@user).name
   step 'the user switches to the "Task View" tab'
@@ -123,7 +123,7 @@ Then /^the assessment should show up as completed$/ do
   page.should have_xpath("//td[contains(., 'Completed')]"), "No 'completed' message"
 end
 
-Then /^the user logs in and submits an installment$/ do
+Then(/^the user logs in and submits an installment$/) do
   step 'the user "has" had demographics requested'
   step 'the user logs in'
   step 'the user should see a successful login message'
@@ -136,16 +136,17 @@ Then /^the user logs in and submits an installment$/ do
   step 'there should be no error'
 end
 
-Then /^the user logs out$/ do
+Then(/^the user logs out$/) do
+  wait_for_render
   find(:xpath, '//*[@id="main-menu-button"]').click
   find(:xpath, '//*[@id="logout-menu-item"]').click
 end
 
-Then /^there should be an error$/ do
+Then(/^there should be an error$/) do
   page.should have_content('The factors in each category must equal 6000.')
 end
 
-Then /^the installment values will match the submit ratio$/ do
+Then(/^the installment values will match the submit ratio$/) do
   installment = Installment.last
   if @value_ratio == 'evenly'
     baseline = installment.values[0].value
@@ -180,7 +181,7 @@ Then /^the installment values will match the submit ratio$/ do
   end
 end
 
-Then /^the user enters a comment "([^"]*)" personally identifiable information$/ do |anonymized|
+Then(/^the user enters a comment "([^"]*)" personally identifiable information$/) do |anonymized|
   @comment = 'A nice, bland, comment'
   @anon_comment = @comment
 
@@ -217,11 +218,11 @@ Then /^the user enters a comment "([^"]*)" personally identifiable information$/
   page.fill_in('Comments', with: @comment, visible: :all, disabled: :all)
 end
 
-Then /^the comment matches what was entered$/ do
+Then(/^the comment matches what was entered$/) do
   Installment.last.comments.should eq @comment
 end
 
-Then /^the anonymous comment "([^"]*)"$/ do |comment_status|
+Then(/^the anonymous comment "([^"]*)"$/) do |comment_status|
   installment = Installment.last
   case comment_status.downcase
   when 'is empty'
