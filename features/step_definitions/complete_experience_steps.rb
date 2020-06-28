@@ -9,6 +9,7 @@ Then(/^the user clicks the link to the experience$/) do
 end
 
 Then('the {string} button will be disabled') do |button_name|
+  wait_for_render
   elem = find(:xpath, "//button[contains(.,'#{button_name}')]")
   elem[:disabled].should eq 'true'
 end

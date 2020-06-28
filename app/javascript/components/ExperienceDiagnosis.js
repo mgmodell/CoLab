@@ -57,7 +57,7 @@ export default function ExperienceDiagnosis(props) {
   const saveButton = (
     <Button
       disabled={
-        !status.dirtyStatus["diagnosis"] && (!detailNeeded || detailPresent)
+        !status.dirtyStatus["diagnosis"] || (detailNeeded && !detailPresent)
       }
       variant="contained"
       onClick={() =>

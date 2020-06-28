@@ -58,7 +58,6 @@ gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
 gem 'react-rails'
 gem 'sassc-rails'
-gem 'simple_calendar', '~> 2.0'
 gem 'simple_form'
 gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'

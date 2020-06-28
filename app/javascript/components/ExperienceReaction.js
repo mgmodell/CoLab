@@ -58,7 +58,7 @@ export default function ExperienceReaction(props) {
   const saveButton = (
     <Button
       disabled={
-        !status.dirtyStatus["reaction"] || !improvementsPresent || !detailNeeded || detailPresent
+        !status.dirtyStatus["reaction"] || !improvementsPresent || (!detailNeeded && detailPresent)
       }
       variant="contained"
       onClick={() =>

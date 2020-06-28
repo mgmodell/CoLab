@@ -245,12 +245,11 @@ class ExperiencesController < ApplicationController
                 end
 
     response = { messages: { main: t('experiences.react_success') } }
-    puts reaction_params
 
     unless @reaction.update(reaction_params)
       response[:messages] = @reaction.errors.to_hash
       response[:messages][:main] = t('experiences.react_fail')
-      puts @reaction.errors.full_messages
+      log @reaction.errors.full_messages
     end
 
     respond_to do |format|
