@@ -3,14 +3,20 @@
 require 'forgery'
 
 Then(/^the user clicks the link to the experience$/) do
+  wait_for_render
   step 'the user switches to the "Task View" tab'
-  find(:xpath, "//div[text()='#{@experience.name}']").click
+  begin
+    find(:xpath, "//div[text()='#{@experience.name}']").click
+  rescue Capybara::ElementNotFound => e
+    byebug
+  end
   # click_link_or_button @experience.name
 end
 
 Then('the {string} button will be disabled') do |button_name|
   wait_for_render
   elem = find(:xpath, "//button[contains(.,'#{button_name}')]")
+  byebug if elem[:disabled] == 'false'
   elem[:disabled].should eq 'true'
 end
 
@@ -24,7 +30,11 @@ Then(/^the user presses hidden "([^"]*)"$/) do |linkOrButtonName|
 end
 
 Then(/^the user presses "([^"]*)"$/) do |linkOrButtonName|
-  click_link_or_button linkOrButtonName
+  begin
+    click_link_or_button linkOrButtonName
+  rescue Capybara::ElementNotFound => exception
+    byebug
+  end
 end
 
 Then(/^they open the drawer for additional comments$/) do
@@ -102,6 +112,7 @@ Then(/^the database will show a reaction with "([^"]*)" as the behavior$/) do |b
 end
 
 Then(/^the database will show a reaction for the user with "([^"]*)" as the behavior$/) do |behavior|
+  wait_for_render
   Reaction.where(user: @user, behavior: Behavior.where(name_en: behavior).take).count.should be >= 1
 end
 
@@ -157,12 +168,18 @@ Then(/^the user successfully completes an experience$/) do
 end
 
 Then(/^all users complete the course successfully$/) do
+  _count = 1
   @course.enrolled_students.each do |user|
     @user = user
     step 'the user logs in'
+    puts "post-login: #{_count}"
     step 'the user should see a successful login message'
+    puts "logged in: #{_count}"
     step 'the user successfully completes an experience'
+    puts "iteration: #{_count}"
+    _count += 1
     step 'the user logs out'
+    puts "post-logout: #{_count}"
   end
 end
 

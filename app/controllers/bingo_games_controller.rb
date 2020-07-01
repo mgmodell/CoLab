@@ -282,7 +282,6 @@ end
           resp[:messages] = {}
           render json: resp
         else
-          log @bingo_game.errors.full_messages
           logger.debug @bingo_game.errors.full_messages
           render json: {
             notice: 'Unable to save',

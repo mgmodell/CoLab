@@ -1,5 +1,9 @@
 import React, { useState, Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {Provider} from 'react-redux';
+import { createStore } from 'redux';
+import appStatus from './infrastructure/StatusReducers';
+
 import Skeleton from "@material-ui/lab/Skeleton";
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
@@ -18,7 +22,10 @@ import DemoWrapper from "./DemoWrapper";
 import AppStatusBar from "./AppStatusBar";
 
 export default function PageWrapper(props) {
+  const store = createStore(appStatus);
   return (
+    <Provider store={store}>
+
     <Router>
       <Suspense fallback={<Skeleton variant="rect" height={50} />}>
         <AppHeader
@@ -129,6 +136,7 @@ export default function PageWrapper(props) {
         </Switch>
       </Suspense>
     </Router>
+    </Provider>
   );
 }
 

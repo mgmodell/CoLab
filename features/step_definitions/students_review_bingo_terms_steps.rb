@@ -7,8 +7,6 @@ end
 Then(/^the user clicks the link to the concept list$/) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  # I shouldn't need this, but it seems that I do
-  step 'the user switches to the "Task View" tab'
 
   find(:xpath, "//div[text()='#{@bingo.get_name(@anon)}']").click
 

@@ -35,7 +35,6 @@ export default function ExperienceReaction(props) {
   const [behaviorId, setBehaviorId] = useState(0);
   const [otherName, setOtherName] = useState("");
   const [improvements, setImprovements] = useState("");
-  const [showImprovements, setShowImprovements] = useState(false);
   const [status, statusActions] = useStatusStore();
   const [lookup, lookupActions] = useLookupStore();
 
@@ -55,10 +54,16 @@ export default function ExperienceReaction(props) {
       : getById(lookup.lookups.behaviors, behaviorId).needs_detail;
   const detailPresent = otherName.length > 0;
   const improvementsPresent = improvements.length > 0;
+  console.log( 
+      !status.dirtyStatus["reaction"] , 0 === behaviorId, !improvementsPresent , detailNeeded , !detailPresent
+  )
+  console.log( 
+        !status.dirtyStatus["reaction"] || 0 === behaviorId || !improvementsPresent || (detailNeeded && !detailPresent)
+  )
   const saveButton = (
     <Button
       disabled={
-        !status.dirtyStatus["reaction"] || !improvementsPresent || (!detailNeeded && detailPresent)
+        !status.dirtyStatus["reaction"] || !improvementsPresent || (detailNeeded && !detailPresent)
       }
       variant="contained"
       onClick={() =>
@@ -87,7 +92,6 @@ export default function ExperienceReaction(props) {
     setBehaviorId(0);
     setOtherName("");
     setImprovements("");
-    setShowImprovements(false);
   };
 
   return (
@@ -107,7 +111,7 @@ export default function ExperienceReaction(props) {
             />
           </Suspense>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} >
           <FormLabel>{t("reaction.dom_behavior")}</FormLabel>
           {lookup.lookups.behaviors !== undefined ? (
             <RadioGroup
@@ -139,7 +143,7 @@ export default function ExperienceReaction(props) {
             <Skeleton variant="rect" />
           )}
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} >
           {otherPnl}
         </Grid>
         <Grid item xs={12}>

@@ -33,7 +33,7 @@ export default function HomeShell(props) {
   const { t, i18n } = useTranslation();
   const history = useHistory();
 
-  const [curTab, setCurTab] = useState("calendar");
+  const [curTab, setCurTab] = useState("list");
 
   //Initialising to null
   const [tasks, setTasks] = useState();
@@ -142,8 +142,8 @@ export default function HomeShell(props) {
               setCurTab(newValue);
             }}
           >
-            <Tab label="Calendar View" value="calendar" />
             <Tab label="Task View" value="list" />
+            <Tab label="Calendar View" value="calendar" />
           </Tabs>
           {"calendar" === curTab ? (
             <FullCalendar

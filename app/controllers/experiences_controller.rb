@@ -249,7 +249,7 @@ class ExperiencesController < ApplicationController
     unless @reaction.update(reaction_params)
       response[:messages] = @reaction.errors.to_hash
       response[:messages][:main] = t('experiences.react_fail')
-      log @reaction.errors.full_messages
+      logger.debug @reaction.errors.full_messages
     end
 
     respond_to do |format|

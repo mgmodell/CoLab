@@ -204,7 +204,6 @@ end
 When(/^the user clicks the link to the candidate review$/) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  step 'the user switches to the "Task View" tab'
   find(:xpath, "//div[text()='#{@bingo.get_name(@anon)}']").click
 
   wait_for_render
