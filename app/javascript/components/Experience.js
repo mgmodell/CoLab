@@ -2,21 +2,19 @@ import React, { Suspense, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import Paper from "@material-ui/core/Paper";
-import Skeleton from "@material-ui/lab/Skeleton";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import TextField from "@material-ui/core/TextField";
-import Alert from "@material-ui/lab/Alert";
-import Collapse from "@material-ui/core/Collapse";
-import CloseIcon from "@material-ui/icons/Close";
-//For debug purposes
+//Redux store stuff
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  startTask,
+  endTask,
+  setDirty,
+  setClean,
+  addMessage,
+  acknowledgeMsg} from './infrastructure/StatusActions';
 
-import { useUserStore } from "./infrastructure/UserStore";
+import Button from "@material-ui/core/Button";
+import Skeleton from "@material-ui/lab/Skeleton";
+
 import { useEndpointStore } from "./infrastructure/EndPointStore";
 import { useStatusStore } from "./infrastructure/StatusStore";
 import { i18n } from "./infrastructure/i18n";
@@ -30,6 +28,7 @@ export default function Experience(props) {
   const endpointSet = "experience";
   const [endpoints, endpointsActions] = useEndpointStore();
   const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
   const [t, i18n] = useTranslation("installments");
   const history = useHistory();
 
@@ -63,7 +62,7 @@ export default function Experience(props) {
     const url = `${endpoints.endpoints[endpointSet].baseUrl}${
       props.experienceId
     }.json`;
-    statusActions.startTask();
+    dispatch( startTask() );
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -89,12 +88,12 @@ export default function Experience(props) {
         setReactionId(data.reaction_id);
         setInstructed(data.instructed);
 
-        statusActions.endTask();
+        dispatch( endTask() );
       });
   };
   //Store what we've got
   const saveDiagnosis = (behaviorId, otherName, comment, resetFunc) => {
-    statusActions.startTask("saving");
+    dispatch( startTask( 'saving' ) );
     const url = endpoints.endpoints[endpointSet].diagnosisUrl;
     fetch(url, {
       method: "PATCH",
@@ -128,15 +127,15 @@ export default function Experience(props) {
         setWeekText(data.week_text);
 
         resetFunc();
-        statusActions.addMessage(data.messages.main, 1);
-        statusActions.endTask("saving");
-        statusActions.setClean("diagnosis");
+        dispatch( addMessage( data.messages.main, Date.now( ), 1 ) )
+        dispatch( endTask( 'saving' ) );
+        dispatch( setClean('diagnosis') );
       });
   };
 
   //React
   const saveReaction = (behaviorId, otherName, improvements, resetFunc) => {
-    statusActions.startTask("saving");
+    dispatch( startTask( 'saving' ) );
     const url = endpoints.endpoints[endpointSet].reactionUrl;
     fetch(url, {
       method: "PATCH",
@@ -165,9 +164,9 @@ export default function Experience(props) {
       .then(data => {
         //Process Experience
         resetFunc();
-        statusActions.addMessage(data.messages.main, 1);
-        statusActions.endTask("saving");
-        statusActions.setClean("reaction");
+        dispatch( addMessage( data.messages.main, Date.now( ), 1 ) )
+        dispatch( endTask( 'saving' ) );
+        dispatch( setClean( 'reaction' ) );
         history.push("/");
       });
   };

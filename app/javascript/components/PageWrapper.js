@@ -7,7 +7,6 @@ import appStatus from './infrastructure/StatusReducers';
 import Skeleton from "@material-ui/lab/Skeleton";
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
-import Joyride from "react-joyride";
 
 import HomeShell from "./HomeShell";
 import ProfileDataAdmin from "./ProfileDataAdmin";
@@ -20,6 +19,7 @@ import ConsentLog from "./Consent/ConsentLog";
 import Admin from "./Admin";
 import DemoWrapper from "./DemoWrapper";
 import AppStatusBar from "./AppStatusBar";
+
 
 export default function PageWrapper(props) {
   const store = createStore(appStatus);

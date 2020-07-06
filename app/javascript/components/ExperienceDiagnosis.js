@@ -1,6 +1,12 @@
 import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  setDirty,
+  setClean
+} from './infrastructure/StatusActions';
+
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
@@ -9,9 +15,9 @@ import FormControl from "@material-ui/core/FormControlLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
@@ -21,7 +27,6 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
-import { useStatusStore } from "./infrastructure/StatusStore";
 import { useLookupStore } from "./infrastructure/LookupStore";
 
 import Radio from "@material-ui/core/Radio";
@@ -36,8 +41,10 @@ export default function ExperienceDiagnosis(props) {
   const [otherName, setOtherName] = useState("");
   const [comments, setComments] = useState("");
   const [showComments, setShowComments] = useState(false);
-  const [status, statusActions] = useStatusStore();
   const [lookup, lookupActions] = useLookupStore();
+
+  const dirtyStatus = useSelector( state =>{ return state.dirtyState['diagnosis'] });
+  const dispatch = useDispatch( );
 
   const getById = (list, id) => {
     return list.filter(item => {
@@ -57,7 +64,7 @@ export default function ExperienceDiagnosis(props) {
   const saveButton = (
     <Button
       disabled={
-        !status.dirtyStatus["diagnosis"] || 0 === behaviorId || (detailNeeded && !detailPresent)
+        !dirtyStatus || 0 === behaviorId || (detailNeeded && !detailPresent)
       }
       variant="contained"
       onClick={() =>
@@ -117,7 +124,7 @@ export default function ExperienceDiagnosis(props) {
               aria-label="behavior"
               value={behaviorId}
               onChange={event => {
-                statusActions.setDirty("diagnosis");
+                dispatch( setDirty( 'diagnosis' ) );
                 setBehaviorId(Number(event.target.value));
               }}
             >
@@ -146,14 +153,14 @@ export default function ExperienceDiagnosis(props) {
           {otherPnl}
         </Grid>
         <Grid item xs={12}>
-          <ExpansionPanel
+          <Accordion
             expanded={showComments}
             onChange={() => setShowComments(!showComments)}
           >
-            <ExpansionPanelSummary id="comments_pnl">
+            <AccordionSummary id="comments_pnl">
               {t("next.click_for_comment")}
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+            </AccordionSummary>
+            <AccordionDetails>
               <TextField
                 variant="filled"
                 label={t("next.comments")}
@@ -163,8 +170,8 @@ export default function ExperienceDiagnosis(props) {
                   setComments(event.target.value);
                 }}
               />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+            </AccordionDetails>
+          </Accordion>
         </Grid>
       </Grid>
       {saveButton}

@@ -21,7 +21,9 @@ import { SortDirection } from "react-virtualized";
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
 
 import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
+//import { useStatusStore } from "./infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from './infrastructure/StatusActions';
 
 const styles = theme => ({
   table: {
@@ -50,12 +52,13 @@ const styles = theme => ({
 export default function ConceptsTable(props) {
   const endpointSet = "concept";
   const [endpoints, endpointsActions] = useEndpointStore();
-  const [status, statusActions] = useStatusStore();
+  //const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
 
   const [conceptsRaw, setConceptsRaw] = useState([]);
   const [concepts, setConcepts] = useState([]);
 
-  const [search, setSearch] = useState("");
+  //const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const [sortDirection, setSortDirection] = useState(SortDirection.DESC);
 
@@ -118,7 +121,8 @@ export default function ConceptsTable(props) {
   };
 
   const getConcepts = () => {
-    statusActions.startTask("load");
+    dispatch( startTask( 'load' ) );
+    //statusActions.startTask("load");
     fetch(endpoints.endpoints[endpointSet].baseUrl + ".json", {
       method: "GET",
       credentials: "include",
@@ -139,7 +143,8 @@ export default function ConceptsTable(props) {
       .then(data => {
         setConcepts(data);
         setConceptsRaw(data);
-        statusActions.endTask("load");
+        dispatch( endTask( 'load' ) );
+        //statusActions.endTask("load");
       });
   };
   const filter = function(event) {
@@ -171,7 +176,8 @@ export default function ConceptsTable(props) {
     setDirty(false);
   };
   const updateConcept = (id, name) => {
-    statusActions.startTask("load");
+    dispatch( startTask( 'load' ) );
+    //statusActions.startTask("load");
     fetch(endpoints.endpoints[endpointSet].baseUrl + "/" + id + ".json", {
       method: "PATCH",
       credentials: "include",
@@ -203,7 +209,8 @@ export default function ConceptsTable(props) {
 
         setConcepts(tmpConcepts);
         setConceptsRaw(tmpConcepts);
-        statusActions.endTask("load");
+        dispatch( endTask( 'load' ) );
+        //statusActions.endTask("load");
         setEditing(false);
       });
   };

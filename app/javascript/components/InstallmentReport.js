@@ -5,9 +5,9 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import Skeleton from "@material-ui/lab/Skeleton";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
@@ -255,18 +255,18 @@ export default function InstallmentReport(props) {
       <Suspense fallback={<Skeleton variant="rect" height={300} />}>
         {Object.keys(contributions).map(sliceId => {
           return (
-            <ExpansionPanel
+            <Accordion
               expanded={sliceId == String(curPanel)}
               onChange={() => setPanel(sliceId)}
               key={sliceId}
             >
-              <ExpansionPanelSummary
+              <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 id={sliceId}
               >
                 {factors[sliceId].name}
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
+              </AccordionSummary>
+              <AccordionDetails>
                 <LinkedSliders
                   key={"f_" + sliceId}
                   id={Number(sliceId)}
@@ -276,20 +276,20 @@ export default function InstallmentReport(props) {
                   contributions={contributions[sliceId]}
                   debug={debug}
                 />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+              </AccordionDetails>
+            </Accordion>
           );
         })}
         <br />
         <br />
-        <ExpansionPanel
+        <Accordion
           expanded={commentPanelOpen}
           onChange={() => setCommentPanelOpen(!commentPanelOpen)}
         >
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} id={"comment"}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} id={"comment"}>
             {t("comment_prompt")}
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          </AccordionSummary>
+          <AccordionDetails>
             <TextField
               value={installment.comments || ""}
               name="Comments"
@@ -300,8 +300,8 @@ export default function InstallmentReport(props) {
               fullWidth={true}
               onChange={updateComments}
             />
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+          </AccordionDetails>
+        </Accordion>
       </Suspense>
       {saveButton}
       <div

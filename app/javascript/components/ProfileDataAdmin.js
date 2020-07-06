@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import IconButton from "@material-ui/core/IconButton";
@@ -360,11 +360,11 @@ export default function ProfileDataAdmin(props) {
 
   const detailsComponent = (
     <Paper>
-      <ExpansionPanel expanded>
-        <ExpansionPanelSummary id="profile">
+      <Accordion expanded>
+        <AccordionSummary id="profile">
           Edit your profile
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        </AccordionSummary>
+        <AccordionDetails>
           <Grid container spacing={3}>
             <Grid item sm={6} xs={12}>
               <TextField
@@ -389,16 +389,16 @@ export default function ProfileDataAdmin(props) {
               />
             </Grid>
           </Grid>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel
+        </AccordionDetails>
+      </Accordion>
+      <Accordion
         expanded={"email" === curPanel}
         onChange={() => handlePanelClick("email")}
       >
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} id="email">
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} id="email">
           Email Settings
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        </AccordionSummary>
+        <AccordionDetails>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               {0 < profileEmails.length ? (
@@ -420,16 +420,16 @@ export default function ProfileDataAdmin(props) {
               </Link>
             </Grid>
           </Grid>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel
+        </AccordionDetails>
+      </Accordion>
+      <Accordion
         expanded={"display" === curPanel}
         onChange={() => handlePanelClick("display")}
       >
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} id="display">
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} id="display">
           Display Settings
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        </AccordionSummary>
+        <AccordionDetails>
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
               <FormControl fullWidth>
@@ -530,19 +530,19 @@ export default function ProfileDataAdmin(props) {
               </FormControl>
             </Grid>
           </Grid>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel
+        </AccordionDetails>
+      </Accordion>
+      <Accordion
         expanded={"demographics" === curPanel}
         onChange={() => handlePanelClick("demographics")}
       >
-        <ExpansionPanelSummary
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           id="demographics"
         >
           Tell us about yourself, {profileFirstName} (optional)
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        </AccordionSummary>
+        <AccordionDetails>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
@@ -798,8 +798,8 @@ export default function ProfileDataAdmin(props) {
               </ToggleButtonGroup>
             </Grid>
           </Grid>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </AccordionDetails>
+      </Accordion>
       &nbsp;
       <br />
       <br />

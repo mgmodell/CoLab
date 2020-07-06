@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+
+import {acknowledgeMsg} from './infrastructure/StatusActions';
 
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
@@ -7,14 +10,17 @@ import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 import CloseIcon from "@material-ui/icons/Close";
 
-import { useStatusStore } from "./infrastructure/StatusStore";
+//import { useStatusStore } from "./infrastructure/StatusStore";
 
 export default function AppStatusBar(props) {
-  const [status, statusActions] = useStatusStore();
+  //const [status, statusActions] = useStatusStore();
+
+  const messages = useSelector(state =>{ return state.statusMessages } );
+  const dispatch = useDispatch( );
 
   return (
     <React.Fragment>
-      {status.statusMessages.map((message, index) => {
+      {messages.map((message, index) => {
         return (
           <Collapse key={`collapse_${index}`} in={!message["dismissed"]}>
             <Alert
@@ -25,9 +31,8 @@ export default function AppStatusBar(props) {
                   color="inherit"
                   size="small"
                   onClick={() => {
-                    console.log(index, status);
-                    console.log(status.statusMessages);
-                    statusActions.acknowledge(index);
+                    dispatch(acknowledgeMsg( index ));
+                    //statusActions.acknowledge(index);
                   }}
                 >
                   <CloseIcon fontSize="inherit" />

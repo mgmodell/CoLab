@@ -1,27 +1,19 @@
 import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  setDirty,
+  setClean
+} from './infrastructure/StatusActions';
+
 
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import Skeleton from "@material-ui/lab/Skeleton";
-import FormControl from "@material-ui/core/FormControlLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import InputLabel from "@material-ui/core/InputLabel";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TextField from "@material-ui/core/TextField";
-import Alert from "@material-ui/lab/Alert";
-import Collapse from "@material-ui/core/Collapse";
-import CloseIcon from "@material-ui/icons/Close";
-//For debug purposes
 
-import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
-import { useStatusStore } from "./infrastructure/StatusStore";
+import { i18n } from "./infrastructure/i18n";
 import { useLookupStore } from "./infrastructure/LookupStore";
 
 import Radio from "@material-ui/core/Radio";
@@ -29,13 +21,13 @@ import Grid from "@material-ui/core/Grid";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormLabel from "@material-ui/core/FormLabel";
-
 export default function ExperienceReaction(props) {
   const [t, i18n] = useTranslation("experiences");
   const [behaviorId, setBehaviorId] = useState(0);
   const [otherName, setOtherName] = useState("");
   const [improvements, setImprovements] = useState("");
-  const [status, statusActions] = useStatusStore();
+  const dirtyStatus = useSelector( state =>{ return state.dirtyState['reaction'] });
+  const dispatch = useDispatch( );
   const [lookup, lookupActions] = useLookupStore();
 
   useEffect(() => {
@@ -54,16 +46,10 @@ export default function ExperienceReaction(props) {
       : getById(lookup.lookups.behaviors, behaviorId).needs_detail;
   const detailPresent = otherName.length > 0;
   const improvementsPresent = improvements.length > 0;
-  console.log( 
-      !status.dirtyStatus["reaction"] , 0 === behaviorId, !improvementsPresent , detailNeeded , !detailPresent
-  )
-  console.log( 
-        !status.dirtyStatus["reaction"] || 0 === behaviorId || !improvementsPresent || (detailNeeded && !detailPresent)
-  )
   const saveButton = (
     <Button
       disabled={
-        !status.dirtyStatus["reaction"] || !improvementsPresent || (detailNeeded && !detailPresent)
+        !dirtyStatus || !improvementsPresent || (detailNeeded && !detailPresent)
       }
       variant="contained"
       onClick={() =>
@@ -118,7 +104,7 @@ export default function ExperienceReaction(props) {
               aria-label="behavior"
               value={behaviorId}
               onChange={event => {
-                statusActions.setDirty("reaction");
+                dispatch( setDirty( 'reaction' ) );
                 setBehaviorId(Number(event.target.value));
               }}
             >

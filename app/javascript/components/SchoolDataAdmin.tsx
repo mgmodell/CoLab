@@ -1,4 +1,13 @@
 import React, { useState, useEffect } from "react";
+//Redux store stuff
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  startTask,
+  endTask,
+  setDirty,
+  setClean,
+  addMessage,
+  acknowledgeMsg} from './infrastructure/StatusActions';
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
@@ -30,7 +39,8 @@ export default function SchoolDataAdmin(props) {
   //const { t, i18n } = useTranslation('schools' );
   const [user, userActions] = useUserStore();
 
-  const [dirty, setDirty] = useState(false);
+  const dirty = useSelector( state => state.dirtyState[ 'school' ] );
+  const dispatch = useDispatch( );
   const [status, statusActions] = useStatusStore();
 
   const [messages, setMessages] = useState({});
@@ -45,7 +55,7 @@ export default function SchoolDataAdmin(props) {
 
   const getSchool = () => {
     statusActions.startTask();
-    setDirty(true);
+    dispatch( setDirty('school') );
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == schoolId) {
       url = url + "new.json";
@@ -79,7 +89,7 @@ export default function SchoolDataAdmin(props) {
         setSchoolTimezone(school.timezone || "UTC");
 
         statusActions.endTask();
-        setDirty(false);
+        dispatch( setClean('school') );
       });
   };
   const saveSchool = () => {
@@ -127,6 +137,7 @@ export default function SchoolDataAdmin(props) {
 
           setShowErrors(true);
           setDirty(false);
+          dispatch( setClean('school') );
           setMessages(data.messages);
           statusActions.endTask("saving");
         } else {
@@ -157,7 +168,7 @@ export default function SchoolDataAdmin(props) {
     }
   }, [user.loaded]);
 
-  useEffect(() => setDirty(true), [
+  useEffect(() => dispatch( setDirty('school' ) ), [
     schoolName,
     schoolDescription,
     schoolTimezone

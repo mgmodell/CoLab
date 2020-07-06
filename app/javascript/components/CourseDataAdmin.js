@@ -6,6 +6,15 @@ import {
   useParams,
   useHistory
 } from "react-router-dom";
+//Redux store stuff
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  startTask,
+  endTask,
+  setDirty,
+  setClean,
+  addMessage,
+  acknowledgeMsg} from './infrastructure/StatusActions';
 import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
@@ -53,8 +62,8 @@ export default function CourseDataAdmin(props) {
   const { path, url } = useRouteMatch();
 
   const [curTab, setCurTab] = useState("details");
-  const [dirty, setDirty] = useState(false);
 
+  const dirty = useSelector( state => state.dirtyState[ 'course' ] );
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
   const [courseId, setCourseId] = useState(props.courseId);
@@ -84,9 +93,11 @@ export default function CourseDataAdmin(props) {
   const [newActivityLinks, setNewActivityLinks] = useState([]);
   const [schoolTzHash, setSchoolTzHash] = useState({});
 
+  const dispatch = useDispatch();
+
   const getCourse = () => {
-    statusActions.startTask();
-    setDirty(true);
+    dispatch( startTask( ));
+    dispatch( setDirty( 'course' ) );
     var url = endpoints.endpoints[endpointSet].baseUrl + "/";
     if (null == courseId) {
       url = url + "new.json";
@@ -150,13 +161,13 @@ export default function CourseDataAdmin(props) {
         setCourseConsentFormId(course.consent_form_id || 0);
         setCourseSchoolId(course.school_id || 0);
 
-        statusActions.endTask("loading");
-        setDirty(false);
+        dispatch( endTask( 'loading') );
+        dispatch( setClean( 'course' ) );
       });
   };
   const saveCourse = () => {
     const method = null == courseId ? "POST" : "PATCH";
-    statusActions.startTask("saving");
+    dispatch( startTask( 'saving' ) ) ;
 
     const url =
       endpoints.endpoints[endpointSet].baseUrl +
@@ -194,9 +205,6 @@ export default function CourseDataAdmin(props) {
         }
       })
       .then(data => {
-        console.log(data.messages);
-        console.log(data);
-        console.log(Object.keys(data.messages).length);
         if (Object.keys(data.messages).length < 2) {
           setCourseId(data.id);
           setCourseName(data.name);
@@ -216,15 +224,15 @@ export default function CourseDataAdmin(props) {
           );
           setCourseEndDate(receivedDate);
 
-          statusActions.endTask("saving");
-          setDirty(false);
+          dispatch( endTask( 'saving' ) );
+          dispatch( setClean( 'course' ) );
         }
         postNewMessage(data.messages);
       });
   };
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.startTask();
+      dispatch( startTask( ) );
       endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
     }
     if (!user.loaded) {
@@ -234,7 +242,7 @@ export default function CourseDataAdmin(props) {
 
   useEffect(() => {
     if (endpoints.endpointStatus[endpointSet] == "loaded") {
-      statusActions.endTask("loading");
+      dispatch( endTask( 'loading' ) );
       getCourse();
     }
   }, [endpoints.endpointStatus[endpointSet]]);
@@ -245,7 +253,9 @@ export default function CourseDataAdmin(props) {
     }
   }, [user.loaded]);
 
-  useEffect(() => setDirty(true), [
+  useEffect(() => {
+    dispatch( setDirty('course' ) )
+  }, [
     courseName,
     courseDescription,
     courseTimezone,
@@ -256,6 +266,7 @@ export default function CourseDataAdmin(props) {
   ]);
 
   const postNewMessage = msgs => {
+    dispatch( addMessage( data.messages.main, Date.now( ), 1))
     setMessages(msgs);
     setShowErrors(true);
   };
@@ -510,7 +521,7 @@ export default function CourseDataAdmin(props) {
               <IconButton
                 aria-label={lbl}
                 onClick={event => {
-                  statusActions.startTask("deleting");
+                  dispatch( startTask( 'deleting' ) );
                   fetch(user.drop_link, {
                     method: "DESTROY",
                     credentials: "include",
@@ -530,7 +541,7 @@ export default function CourseDataAdmin(props) {
                     .then(data => {
                       getCourse();
                       setMessages(data.messages);
-                      statusActions.endTask("deleting");
+                      dispatch( endTask("deleting") );
                     });
                 }}
               >
@@ -617,24 +628,6 @@ export default function CourseDataAdmin(props) {
     <Switch>
       <Route>
         <Paper>
-          <Collapse in={showErrors}>
-            <Alert
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setShowErrors(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              {messages["main"]}
-            </Alert>
-          </Collapse>
           <Tabs
             centered
             value={curTab}
