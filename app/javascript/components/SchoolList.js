@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import {
+  useRouteMatch,
+  useHistory
+} from "react-router-dom";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -20,6 +24,8 @@ export default function SchoolList(props) {
   const [user, userActions] = useUserStore();
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
+  let { path, url } = useRouteMatch();
+  const history = useHistory( );
 
   const [status, statusActions] = useStatusStore();
   const columns = [
@@ -152,8 +158,9 @@ export default function SchoolList(props) {
             <IconButton
               id="new_school"
               onClick={event => {
-                window.location.href =
-                  endpoints.endpoints[endpointSet].schoolCreateUrl;
+                history.push( path + '/new' );
+                //window.location.href =
+                //  endpoints.endpoints[endpointSet].schoolCreateUrl;
               }}
               aria-label="New School"
             >

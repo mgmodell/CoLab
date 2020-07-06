@@ -27,6 +27,7 @@ import SchoolIcon from "@material-ui/icons/School";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import FindInPageIcon from "@material-ui/icons/FindInPage";
+import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 
 import DiversityCheck from "./DiversityCheck";
 import { useUserStore } from "./infrastructure/UserStore";
@@ -113,6 +114,16 @@ export default function MainMenu(props) {
             <FindInPageIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{t("consent_forms_edit")}</ListItemText>
+        </ListItem>
+        <ListItem
+          button
+          id="concepts-menu-item"
+          onClick={() => navTo(props.conceptsUrl)}
+        >
+          <ListItemIcon>
+            <DynamicFeedIcon fontSize='small' />
+          </ListItemIcon>
+          <ListItemText>{t("concepts_edit")}</ListItemText>
         </ListItem>
 
         <Divider />

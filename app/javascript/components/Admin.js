@@ -18,6 +18,7 @@ import CourseAdmin from "./CourseAdmin";
 import SchoolDataAdmin from "./SchoolDataAdmin";
 import ConsentFormList from "./Consent/ConsentFormList";
 import ConsentFormDataAdmin from "./Consent/ConsentFormDataAdmin";
+import ConceptsTable from './ConceptsTable';
 
 import { useUserStore } from "./infrastructure/UserStore";
 import Collapse from "@material-ui/core/Collapse";
@@ -73,6 +74,12 @@ export default function Admin(props) {
             token={props.token}
             getEndpointsUrl={props.getEndpointsUrl}
             schoolId={id === "new" ? null : id}
+          />
+        </Route>
+        <Route path={`${path}/concepts`}>
+          <ConceptsTable
+            token={props.token}
+            getEndpointsUrl={props.getEndpointsUrl}
           />
         </Route>
         <Route path={`${path}`}>

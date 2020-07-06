@@ -266,7 +266,7 @@ export default function CourseDataAdmin(props) {
   ]);
 
   const postNewMessage = msgs => {
-    dispatch( addMessage( data.messages.main, Date.now( ), 1))
+    dispatch( addMessage( msgs.main, Date.now( ), 1))
     setMessages(msgs);
     setShowErrors(true);
   };

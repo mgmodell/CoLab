@@ -168,7 +168,9 @@ export default function SchoolDataAdmin(props) {
     }
   }, [user.loaded]);
 
-  useEffect(() => dispatch( setDirty('school' ) ), [
+  useEffect(() => {
+    dispatch( setDirty('school' ) )
+  }, [
     schoolName,
     schoolDescription,
     schoolTimezone
