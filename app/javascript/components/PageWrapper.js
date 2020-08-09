@@ -1,8 +1,9 @@
-import React, { useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import {Provider} from 'react-redux';
-import { createStore } from 'redux';
-import appStatus from './infrastructure/StatusReducers';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import appStatus from './infrastructure/AppReducers';
 
 import Skeleton from "@material-ui/lab/Skeleton";
 import PropTypes from "prop-types";
@@ -19,12 +20,21 @@ import ConsentLog from "./Consent/ConsentLog";
 import Admin from "./Admin";
 import DemoWrapper from "./DemoWrapper";
 import AppStatusBar from "./AppStatusBar";
+import SignIn from './SignIn';
+//import Auth from 'j-toker'
+import ProtectedRoute from './infrastructure/ProtectedRoute';
+import AuthInit from './infrastructure/AuthInit'
+
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 
 export default function PageWrapper(props) {
-  const store = createStore(appStatus);
+  const store = createStore(appStatus,
+    composeEnhancer( applyMiddleware( thunk ) ) );
+  
   return (
     <Provider store={store}>
+      <AuthInit />
 
     <Router>
       <Suspense fallback={<Skeleton variant="rect" height={50} />}>
@@ -35,27 +45,28 @@ export default function PageWrapper(props) {
       </Suspense>
       <br />
       <AppStatusBar />
+
       <Suspense fallback={<Skeleton variant="rect" height={600} />}>
         <Switch>
-          <Route path="/profile">
+          <ProtectedRoute path="/profile">
             <ProfileDataAdmin
               token={props.token}
               getEndpointsUrl={props.getEndpointsUrl}
             />
-          </Route>
+          </ProtectedRoute>
           <Route path="/demo">
             <DemoWrapper
               token={props.token}
               getEndpointsUrl={props.getEndpointsUrl}
             />
           </Route>
-          <Route path="/admin">
+          <ProtectedRoute path="/admin">
             <Admin
               token={props.token}
               getEndpointsUrl={props.getEndpointsUrl}
             />
-          </Route>
-          <Route
+          </ProtectedRoute>
+          <ProtectedRoute
             path={`/submit_installment/:id`}
             render={routeProps => (
               <React.Fragment>
@@ -67,7 +78,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route
+          <ProtectedRoute
             path={`/enter_candidates/:id`}
             render={routeProps => (
               <React.Fragment>
@@ -79,7 +90,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route
+          <ProtectedRoute
             path={`/review_candidates/:id`}
             render={routeProps => (
               <React.Fragment>
@@ -91,7 +102,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route
+          <ProtectedRoute
             path={`/candidate_results/:id`}
             render={routeProps => (
               <React.Fragment>
@@ -103,7 +114,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route
+          <ProtectedRoute
             path={`/experience/:id`}
             render={routeProps => (
               <React.Fragment>
@@ -115,7 +126,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route
+          <ProtectedRoute
             path={`/research_information/:id`}
             render={routeProps => (
               <React.Fragment>
@@ -127,12 +138,19 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
-          <Route exact path="/">
-            <HomeShell
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl}
-            />
-          </Route>
+          <ProtectedRoute exact path="/"
+            render={routeProps =>(
+              <HomeShell
+                token={props.token}
+                getEndpointsUrl={props.getEndpointsUrl}
+              />
+            ) }
+          />
+          <Route path='/login'
+            render={routeProps => (
+                  <SignIn />
+            )}
+          />
         </Switch>
       </Suspense>
     </Router>

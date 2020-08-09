@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_21_012559) do
+ActiveRecord::Schema.define(version: 2020_07_06_041850) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -542,6 +542,9 @@ ActiveRecord::Schema.define(version: 2020_06_21_012559) do
     t.boolean "impairment_motor"
     t.boolean "impairment_cognitive"
     t.boolean "impairment_other"
+    t.string "provider", default: "email", null: false
+    t.string "uid", default: "", null: false
+    t.text "tokens"
     t.index ["cip_code_id"], name: "index_users_on_cip_code_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["gender_id"], name: "index_users_on_gender_id"
@@ -550,6 +553,7 @@ ActiveRecord::Schema.define(version: 2020_06_21_012559) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["theme_id"], name: "index_users_on_theme_id"
+    t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 

@@ -3,7 +3,14 @@ import {
   END_TASK
 } from './StatusActions'
 
-export function tasks(state = {}, action) {
+interface TaskStatusRootState {
+  [taskName: string] : string;
+}
+
+//export const useTypedTaskStatusSelector: TypedUseSelectorHook<TaskStatusRootState> = useSelector
+const initialState: TaskStatusRootState = {}
+
+export function tasks(state: TaskStatusRootState = {}, action) {
   const newState = Object.assign( {}, state );
   const taskName = action.task || 'loading';
 

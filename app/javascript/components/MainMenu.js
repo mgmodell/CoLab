@@ -1,4 +1,6 @@
 import React, { useState, Suspense, useEffect } from "react";
+import { useDispatch } from 'react-redux';
+
 import PropTypes from "prop-types";
 import { BrowserRouter as Router, useHistory } from "react-router-dom";
 
@@ -30,16 +32,21 @@ import FindInPageIcon from "@material-ui/icons/FindInPage";
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 
 import DiversityCheck from "./DiversityCheck";
-import { useUserStore } from "./infrastructure/UserStore";
+//import { useUserStore } from "./infrastructure/UserStore";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
+
+import { useTypedSelector } from "./infrastructure/AppReducers";
+import {signOut} from './infrastructure/AuthenticationActions'
 
 export default function MainMenu(props) {
   const history = useHistory();
   const [menuOpen, setMenuOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [t, i18n] = useTranslation();
-  const [user, userActions] = useUserStore();
+  const isLoggedIn = useTypedSelector( state => { return state['login'].isLoggedIn }) 
+  const user = useTypedSelector( state => { return state['login'].profile }) 
+  const dispatch = useDispatch( );
 
   const toggleDrawer = event => {
     if (
@@ -58,17 +65,10 @@ export default function MainMenu(props) {
   const navTo = url => {
     history.push(url);
     setMenuOpen(false);
-    // window.location = url;
-    // return;
   };
 
-  useEffect(() => {
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
-  const adminItems = user.is_instructor ? (
+  const adminItems = user.is_admin ? (
     <React.Fragment>
       <Divider />
       <ListItem
@@ -88,7 +88,7 @@ export default function MainMenu(props) {
         <ListItem
           button
           id="courses-menu-item"
-          onClick={navTo.bind(null, props.coursesUrl)}
+          onClick={()=> navTo('/admin/courses')}
         >
           <ListItemIcon>
             <SchoolIcon fontSize="small" />
@@ -98,7 +98,7 @@ export default function MainMenu(props) {
         <ListItem
           button
           id="schools-menu-item"
-          onClick={() => navTo(props.schoolsUrl)}
+          onClick={() => navTo('/admin/schools')}
         >
           <ListItemIcon>
             <AccountBoxIcon fontSize="small" />
@@ -108,7 +108,7 @@ export default function MainMenu(props) {
         <ListItem
           button
           id="consent_forms-menu-item"
-          onClick={() => navTo(props.consentFormsUrl)}
+          onClick={() => navTo('/admin/consent_forms')}
         >
           <ListItemIcon>
             <FindInPageIcon fontSize="small" />
@@ -118,7 +118,7 @@ export default function MainMenu(props) {
         <ListItem
           button
           id="concepts-menu-item"
-          onClick={() => navTo(props.conceptsUrl)}
+          onClick={() => navTo('/admin/concepts')}
         >
           <ListItemIcon>
             <DynamicFeedIcon fontSize='small' />
@@ -140,6 +140,53 @@ export default function MainMenu(props) {
       </ListItem>
     </React.Fragment>
   ) : null;
+
+  const basicOpts = isLoggedIn
+    ? (
+        <React.Fragment>
+
+          <ListItem
+            id="home-menu-item"
+            button
+            onClick={() => navTo('/')}
+          >
+            <ListItemIcon>
+              <HomeIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t("home.title")}</ListItemText>
+          </ListItem>
+          <ListItem
+            id="profile-menu-item"
+            button
+            onClick={() => navTo('/profile')}
+          >
+            <ListItemIcon>
+              <AccountBoxIcon />
+            </ListItemIcon>
+            <ListItemText>{t("profile")}</ListItemText>
+          </ListItem>
+          <DiversityCheck
+            token={props.token}
+            diversityScoreFor={props.diversityScoreFor}
+          />
+        </React.Fragment>
+
+    )
+    :
+    (
+          <ListItem
+            id="home-menu-item"
+            button
+            onClick={() => navTo('/')}
+          >
+            <ListItemIcon>
+              <HomeIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t("home.login")}</ListItemText>
+          </ListItem>
+
+    )
+
   return (
     <React.Fragment>
       <IconButton
@@ -158,30 +205,7 @@ export default function MainMenu(props) {
         onOpen={toggleDrawer}
       >
         <List id="main-menu-list">
-          <ListItem
-            id="home-menu-item"
-            button
-            onClick={() => navTo(props.homeUrl)}
-          >
-            <ListItemIcon>
-              <HomeIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("home.title")}</ListItemText>
-          </ListItem>
-          <ListItem
-            id="profile-menu-item"
-            button
-            onClick={() => navTo(props.profileUrl)}
-          >
-            <ListItemIcon>
-              <AccountBoxIcon />
-            </ListItemIcon>
-            <ListItemText>{t("profile")}</ListItemText>
-          </ListItem>
-          <DiversityCheck
-            token={props.token}
-            diversityScoreFor={props.diversityScoreFor}
-          />
+        {basicOpts}
           {adminItems}
           <ListItem
             id="support-menu-item"
@@ -209,7 +233,7 @@ export default function MainMenu(props) {
           <ListItem
             id="demo-menu-item"
             button
-            onClick={() => navTo(props.demoUrl)}
+            onClick={() => navTo('/demo')}
           >
             <ListItemIcon>
               <RateReviewIcon fontSize="small" />
@@ -220,7 +244,8 @@ export default function MainMenu(props) {
             id="logout-menu-item"
             button
             onClick={() => {
-              window.location.href = props.logoutUrl;
+              dispatch( signOut( ))
+              //window.location.href = props.logoutUrl;
             }}
           >
             <ListItemIcon>
@@ -236,17 +261,8 @@ export default function MainMenu(props) {
 
 MainMenu.propTypes = {
   token: PropTypes.string.isRequired,
-  homeUrl: PropTypes.string.isRequired,
-  profileUrl: PropTypes.string.isRequired,
   diversityScoreFor: PropTypes.string.isRequired,
-  adminUrl: PropTypes.string,
-  coursesUrl: PropTypes.string,
-  schoolsUrl: PropTypes.string,
-  consentFormsUrl: PropTypes.string,
-  conceptsUrl: PropTypes.string,
   reportingUrl: PropTypes.string,
-  demoUrl: PropTypes.string.isRequired,
-  logoutUrl: PropTypes.string.isRequired,
   supportAddress: PropTypes.string.isRequired,
   moreInfoUrl: PropTypes.string.isRequired
 };

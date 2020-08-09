@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 //Redux store stuff
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   startTask,
   endTask,
@@ -32,6 +32,7 @@ import { useStatusStore } from "./infrastructure/StatusStore";
 //import { useTranslation } from 'react-i18next';
 import { useUserStore } from "./infrastructure/UserStore";
 import { TextareaAutosize } from "@material-ui/core";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function SchoolDataAdmin(props) {
   const endpointSet = "school";
@@ -39,7 +40,7 @@ export default function SchoolDataAdmin(props) {
   //const { t, i18n } = useTranslation('schools' );
   const [user, userActions] = useUserStore();
 
-  const dirty = useSelector( state => state.dirtyState[ 'school' ] );
+  const dirty = useTypedSelector( state => state['dirtyState'][ 'school' ] );
   const dispatch = useDispatch( );
   const [status, statusActions] = useStatusStore();
 

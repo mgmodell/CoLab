@@ -69,12 +69,6 @@ $(document).ready(function(){
     }
   });
 
-  $("#basicTable").tablesorter( {sortList: [[0,0],[1,0]]} );
-  $("#responsesTable").tablesorter( {sortList: [[3,0]]});
-  $("#course_table").tablesorter( {sortList: [[0,0]]} );
-  $("#candidates_table").tablesorter( {sortList: [[0,0]]} );
-  $("#history_table").tablesorter( {sortList: [[0,0]]} );
-
 });
 
 

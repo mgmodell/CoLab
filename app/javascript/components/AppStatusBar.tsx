@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import React from "react";
+import {useDispatch} from "react-redux";
+import {useTypedSelector} from './infrastructure/AppReducers'
 
 import {acknowledgeMsg} from './infrastructure/StatusActions';
 
@@ -13,9 +14,9 @@ import CloseIcon from "@material-ui/icons/Close";
 //import { useStatusStore } from "./infrastructure/StatusStore";
 
 export default function AppStatusBar(props) {
-  //const [status, statusActions] = useStatusStore();
 
-  const messages = useSelector(state =>{ return state.statusMessages } );
+  const messages = useTypedSelector( state => { return state['statusMessages'].messages } )
+  //const state = useTypedSelector( state => state )
   const dispatch = useDispatch( );
 
   return (

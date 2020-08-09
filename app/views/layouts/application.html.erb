@@ -14,13 +14,11 @@
   </head>
   <body>
     <div data-role="page" data-theme="<%= theme_code %>">
-      <% if !current_user.nil? %>
       <%= react_component "PageWrapper", {
           token: form_authenticity_token,
           getEndpointsUrl: endpoints_path( unit: '' )
 
       }%>
-      <% end %>
       <div data-role="content">
         <% if flash[:error] -%>
           <p class='error'><%=h flash[:error] %></p>

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
-  protect_from_forgery except: [:get_quote]
-  skip_before_action :authenticate_user!, only: %i[demo_start get_quote]
+  # protect_from_forgery except: [:get_quote]
+  # skip_before_action :authenticate_user!, only: %i[index endpoints demo_start get_quote]
 
   def index
     # The first thing we want to do is make sure they've had an opportunity to
