@@ -5,6 +5,7 @@ import {tasks} from './TaskStatusReducers';
 import {dirtyState} from './DirtyReducers';
 import {statusMessages} from './MessageReducers';
 import {login} from './AuthenticationReducers';
+import {resources} from './ResourceReducers';
 
 
 const appStatus = combineReducers({
@@ -12,6 +13,7 @@ const appStatus = combineReducers({
   dirtyState: dirtyState,
   statusMessages: statusMessages,
   login: login,
+  resources: resources,
 
 })
 

@@ -1,4 +1,5 @@
 import React, { Suspense, useState, useEffect } from "react";
+import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
@@ -20,9 +21,6 @@ import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
 
 import { DateTime } from "luxon";
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "../infrastructure/EndPointStore";
-import { useStatusStore } from "../infrastructure/StatusStore";
-import { useUserStore } from "../infrastructure/UserStore";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
@@ -36,6 +34,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import ConceptChips from "../ConceptChips";
 import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
+import { useTypedSelector } from "../infrastructure/AppReducers";
+import {startTask, endTask} from '../infrastructure/StatusActions';
 
 const useStyles = makeStyles({
   container: {
@@ -57,13 +57,14 @@ export default function BingoGameDataAdmin(props) {
   const classes = useStyles();
 
   const endpointSet = "bingo_game";
-  const [endpoints, endpointsActions] = useEndpointStore();
-  const [user, userActions] = useUserStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const user = useTypedSelector(state=>state['login'].profile)
+  const dispatch = useDispatch( );
 
   const { t, i18n } = useTranslation("bingo_games");
 
   const [dirty, setDirty] = useState(false);
-  const [status, statusActions] = useStatusStore();
   const [curTab, setCurTab] = useState("details");
   const [messages, setMessages] = useState({});
   const [gameProjects, setGameProjects] = useState([
@@ -98,17 +99,11 @@ export default function BingoGameDataAdmin(props) {
   const [gameGroupProjectId, setGameGroupProjectId] = useState(-1);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] !== "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] === "loaded") {
+    if (endpointStatus ){
       getBingoGameData();
       initResultData();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   useEffect(() => {
     setDirty(true);
@@ -129,10 +124,10 @@ export default function BingoGameDataAdmin(props) {
 
   const saveBingoGame = () => {
     const method = null === bingoGameId ? "POST" : "PATCH";
-    statusActions.startTask("saving");
+    dispatch( startTask("saving") );
 
     const url =
-      endpoints.endpoints[endpointSet].baseUrl +
+      endpoints.baseUrl +
       "/" +
       (null === bingoGameId ? props.courseId : bingoGameId) +
       ".json";
@@ -145,7 +140,6 @@ export default function BingoGameDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         bingo_game: {
@@ -179,7 +173,7 @@ export default function BingoGameDataAdmin(props) {
         setSaveStatus(data["notice"]);
         setDirty(false);
         setMessages(data["messages"]);
-        statusActions.endTask("saving");
+        dispatch( endTask("saving") );
 
         getBingoGameData();
       });
@@ -187,9 +181,9 @@ export default function BingoGameDataAdmin(props) {
 
   const initResultData = () => {
     if (bingoGameId > 0) {
-      statusActions.startTask();
+      dispatch( startTask( ));
       fetch(
-        endpoints.endpoints[endpointSet].gameResultsUrl +
+        endpoints.gameResultsUrl +
           "/" +
           bingoGameId +
           ".json",
@@ -199,7 +193,6 @@ export default function BingoGameDataAdmin(props) {
           headers: {
             "Content-Type": "application/json",
             Accepts: "application/json",
-            "X-CSRF-Token": props.token
           }
         }
       )
@@ -213,15 +206,15 @@ export default function BingoGameDataAdmin(props) {
         })
         .then(data => {
           setResultData(data);
-          statusActions.endTask();
+          dispatch( endTask() );
         });
     }
   };
 
   const getBingoGameData = () => {
     setDirty(true);
-    statusActions.startTask();
-    var url = endpoints.endpoints[endpointSet].baseUrl + "/";
+    dispatch( startTask( ));
+    var url = endpoints.baseUrl + "/";
     if (null === bingoGameId) {
       url = url + "new/" + props.courseId + ".json";
     } else {
@@ -233,7 +226,6 @@ export default function BingoGameDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -281,7 +273,7 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
         setDirty(false);
-        statusActions.endTask();
+        dispatch( endTask() );
       });
   };
 
@@ -526,8 +518,6 @@ export default function BingoGameDataAdmin(props) {
 }
 
 BingoGameDataAdmin.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   courseId: PropTypes.number.isRequired,
   bingoGameId: PropTypes.number
 };

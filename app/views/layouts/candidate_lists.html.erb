@@ -16,7 +16,7 @@
     <div data-role="page" data-theme="<%= current_user.nil? ? "a" : current_user.theme.code %>">
     <%= react_component "PageWrapper", {
           token: form_authenticity_token,
-          getEndpointsUrl: endpoints_path( unit: '' )
+          getEndpointsUrl: endpoints_path
 
       }%>
         <a data-role="button" href="#bingo_performance" id="instr_btn" data-icon="info"

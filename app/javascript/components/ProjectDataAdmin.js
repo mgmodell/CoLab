@@ -19,20 +19,22 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from './infrastructure/StatusActions';
 
 import ProjectGroups from "./ProjectGroups";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function ProjectDataAdmin(props) {
   const cityTimezones = require("city-timezones");
 
   const endpointSet = "project";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
   const [messages, setMessages] = useState({});
   const [factorPacks, setFactorPacks] = useState([
     { id: 0, name_en: "none selected" }
@@ -60,9 +62,9 @@ export default function ProjectDataAdmin(props) {
   const [courseTimezone, setCourseTimezone] = useState("UTC");
 
   const getProject = () => {
-    statusActions.startTask();
+    dispatch( startTask() );
     setDirty(true);
-    var url = endpoints.endpoints[endpointSet].baseUrl + "/";
+    var url = endpoints.baseUrl + "/";
     if (null == projectId) {
       url = url + "new/" + props.courseId + ".json";
     } else {
@@ -74,7 +76,6 @@ export default function ProjectDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -110,16 +111,16 @@ export default function ProjectDataAdmin(props) {
         setProjectStyleId(project.style_id);
         setProjectStartDOW(project.start_dow);
         setProjectEndDOW(project.end_dow);
-        statusActions.endTask();
+        dispatch( endTask() );
         setDirty(false);
       });
   };
   const saveProject = () => {
     const method = null == projectId ? "POST" : "PATCH";
-    statusActions.startTask("saving");
+    dispatch( startTask("saving") );
 
     const url =
-      endpoints.endpoints[endpointSet].baseUrl +
+      endpoints.baseUrl +
       "/" +
       (null == projectId ? props.courseId : projectId) +
       ".json";
@@ -130,7 +131,6 @@ export default function ProjectDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         project: {
@@ -177,28 +177,25 @@ export default function ProjectDataAdmin(props) {
 
           const course = data.course;
           setCourseName(course.name);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
           setDirty(false);
           setMessages(data.messages);
         } else {
           setMessages(data.messages);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         }
       });
   };
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
     daysOfWeek.unshift(daysOfWeek.pop());
     setDaysOfWeek(daysOfWeek);
   }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
+    if (endpointStatus ){
       getProject();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus ]);
 
   useEffect(() => setDirty(true), [
     projectName,
@@ -363,15 +360,14 @@ export default function ProjectDataAdmin(props) {
       {"details" == curTab ? detailsComponent : null}
       {"groups" == curTab ? (
         <ProjectGroups
-          token={props.token}
           projectId={projectId}
-          groupsUrl={endpoints.endpoints[endpointSet].groupsUrl}
-          diversityCheckUrl={endpoints.endpoints[endpointSet].diversityCheckUrl}
+          groupsUrl={endpoints.groupsUrl}
+          diversityCheckUrl={endpoints.diversityCheckUrl}
           diversityRescoreGroup={
-            endpoints.endpoints[endpointSet].diversityRescoreGroup
+            endpoints.diversityRescoreGroup
           }
           diversityRescoreGroups={
-            endpoints.endpoints[endpointSet].diversityRescoreGroups
+            endpoints.diversityRescoreGroups
           }
         />
       ) : null}
@@ -380,8 +376,6 @@ export default function ProjectDataAdmin(props) {
 }
 
 ProjectDataAdmin.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   courseId: PropTypes.number.isRequired,
   projectId: PropTypes.number
 };

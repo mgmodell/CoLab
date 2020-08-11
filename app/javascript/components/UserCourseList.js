@@ -6,15 +6,14 @@ import Paper from "@material-ui/core/Paper";
 import MUIDataTable from "mui-datatables";
 
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
-import { useStatusStore } from "./infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from './infrastructure/StatusActions';
 
 export default function UserCourseList(props) {
-  // const [addUsersPath, setAddUsersPath] = useState("");
-  // const [procRegReqPath, setProcRegReqPath] = useState("");
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
 
   const getCourses = () => {
-    statusActions.startTask();
+    dispatch( startTask() );
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -22,7 +21,6 @@ export default function UserCourseList(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -35,7 +33,7 @@ export default function UserCourseList(props) {
       .then(data => {
         //MetaData and Infrastructure
         props.coursesListUpdateFunc(data);
-        statusActions.endTask();
+        dispatch( endTask() );
       });
   };
 
@@ -133,7 +131,6 @@ export default function UserCourseList(props) {
 }
 
 UserCourseList.propTypes = {
-  token: PropTypes.string.isRequired,
   retrievalUrl: PropTypes.string.isRequired,
   coursesList: PropTypes.array,
   coursesListUpdateFunc: PropTypes.func.isRequired,

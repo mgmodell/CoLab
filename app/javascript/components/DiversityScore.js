@@ -91,7 +91,6 @@ class DiversityScore extends React.Component {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
       },
       body: JSON.stringify({
         emails: emails.join()
@@ -115,7 +114,6 @@ class DiversityScore extends React.Component {
 
 DiversityScore.propTypes = {
   groupId: PropTypes.number.isRequired,
-  token: PropTypes.string.isRequired,
   documented: PropTypes.number.isRequired,
   scoreReviewUrl: PropTypes.string.isRequired,
   students: PropTypes.object.isRequired,

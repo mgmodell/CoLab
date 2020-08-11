@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import PropTypes from "prop-types";
-import { useStatusStore } from "./StatusStore";
 import { useTypedSelector } from "./AppReducers";
 
 export default function WorkingIndicator(props) {
-  const [status, statusActions] = useStatusStore();
 
   const working = useTypedSelector( state =>{
     let accum = 0;

@@ -7,6 +7,7 @@ export const AUTH_SUCCESS = 'LOGIN_SUCCESS';
 
 import Auth from 'j-toker';
 import { addMessage, Priorities } from './StatusActions';
+import { reloadEndpoints, reloadLookups } from './ResourceActions'
 
 export function authInit( ) {
   return { type: AUTH_INIT }
@@ -29,10 +30,14 @@ export function authConfig( apiUrl = '/api/v1' ){
           out.id, out.first_name, out.last_name,
           out.theme_id, out.welcomed, out.timezone, out.language,
           out.admin ) );
+        dispatch( reloadEndpoints( ) );
+        dispatch( reloadLookups( ) )
         //dispatch( addMessage( "Successfully logged in", new Date(), Priorities.LOW ))
       })
       .fail(resp =>{
         dispatch( authClear( ) );
+        dispatch( reloadEndpoints( ) );
+        dispatch( reloadLookups( ) )
       });
   }
 }
@@ -47,11 +52,36 @@ export function emailSignIn( email, password ){
         })
           .then(user =>{
             dispatch( authSuccess( user.email ) );
+            dispatch( reloadEndpoints( ) );
             dispatch( addMessage( 'Successfully logged in', new Date( ), Priorities.LOW))
 
           })
           .fail(resp =>{
             dispatch( authClear( ) );
+            dispatch( reloadEndpoints( ) );
+            dispatch( addMessage( 'Authentication failure: ' + resp.errors.join(' '), new Date( ), Priorities.HIGH))
+
+          })
+    
+  }
+}
+
+export function oAuthSignIn( provider ){
+  return (dispatch)=>{
+        dispatch( authInit( ) );
+
+        Auth.oAuthSignIn({
+          provider: provider
+        })
+          .then(user =>{
+            dispatch( authSuccess( user.email ) );
+            dispatch( reloadEndpoints( ) );
+            dispatch( addMessage( 'Successfully logged in', new Date( ), Priorities.LOW))
+
+          })
+          .fail(resp =>{
+            dispatch( authClear( ) );
+            dispatch( reloadEndpoints( ) );
             dispatch( addMessage( 'Authentication failure: ' + resp.errors.join(' '), new Date( ), Priorities.HIGH))
 
           })
@@ -66,6 +96,7 @@ export function signOut( ){
     Auth.signOut( );
     console.log( 'signed out', auth );
     dispatch( authClear( ) );
+    dispatch( reloadEndpoints( ) );
     
   }
 }

@@ -8,13 +8,13 @@ import CourseDataAdmin from "./CourseDataAdmin";
 import BingoGameDataAdmin from "./BingoBoards/BingoGameDataAdmin";
 import ExperienceDataAdmin from "./ExperienceDataAdmin";
 import ProjectDataAdmin from "./ProjectDataAdmin";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
-import { useUserStore } from "./infrastructure/UserStore";
 
 export default function CourseAdmin(props) {
   let match = useRouteMatch();
 
-  const [user] = useUserStore();
+  const user = useTypedSelector(state=>state['login'].profile)
 
   useEffect(() => {
     if (user.loaded) {
@@ -29,13 +29,11 @@ export default function CourseAdmin(props) {
         render={routeProps => (
           <React.Fragment>
             <BingoGameDataAdmin
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl}
-              courseId={routeProps.match.params.course_id}
+              courseId={Number( routeProps.match.params.course_id )}
               bingoGameId={
                 "new" === routeProps.match.params.id
                   ? null
-                  : routeProps.match.params.id
+                  : Number( routeProps.match.params.id )
               }
             />
           </React.Fragment>
@@ -43,12 +41,11 @@ export default function CourseAdmin(props) {
       />
       <Route
         path={`${match.path}/:course_id/experience/:id`}
-        render={routeProps => (
+        render={routeProps =>{
+        return (
           <React.Fragment>
             <ExperienceDataAdmin
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl}
-              courseId={routeProps.match.params.course_id}
+              courseId={Number( routeProps.match.params.course_id )}
               experienceId={
                 "new" === routeProps.match.params.id
                   ? null
@@ -56,16 +53,17 @@ export default function CourseAdmin(props) {
               }
             />
           </React.Fragment>
-        )}
-      />
+        )
+
+
+        }
+      } />
       <Route
         path={`${match.path}/:course_id/project/:id`}
         render={routeProps => (
           <React.Fragment>
             <ProjectDataAdmin
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl}
-              courseId={routeProps.match.params.course_id}
+              courseId={Number( routeProps.match.params.course_id )}
               projectId={
                 "new" === routeProps.match.params.id
                   ? null
@@ -80,8 +78,6 @@ export default function CourseAdmin(props) {
         render={routeProps => (
           <React.Fragment>
             <CourseDataAdmin
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl}
               courseId={
                 "new" === routeProps.match.params.course_id
                   ? null
@@ -93,8 +89,6 @@ export default function CourseAdmin(props) {
       />
       <Route exact path={`${match.path}`}>
         <CourseList
-          token={props.token}
-          getEndpointsUrl={props.getEndpointsUrl}
         />
       </Route>
     </Switch>
@@ -102,6 +96,4 @@ export default function CourseAdmin(props) {
 }
 
 CourseAdmin.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired
 };

@@ -141,7 +141,6 @@ class DecisionEnrollmentsTable extends React.Component {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
       }
     })
       .then(response => {
@@ -204,7 +203,6 @@ class DecisionEnrollmentsTable extends React.Component {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
       }
     })
       .then(response => {
@@ -219,6 +217,7 @@ class DecisionEnrollmentsTable extends React.Component {
         }
       })
       .then(data => {
+        console.log( 'got enrollments', data )
         this.setState({
           requests: data,
           requests_raw: data,
@@ -258,7 +257,6 @@ class DecisionEnrollmentsTable extends React.Component {
 DecisionEnrollmentsTable.propTypes = {
   init_url: PropTypes.string.isRequired,
   update_url: PropTypes.string.isRequired,
-  token: PropTypes.string.isRequired
 };
 
 export default DecisionEnrollmentsTable;

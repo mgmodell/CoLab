@@ -17,21 +17,22 @@ import Settings from "luxon/src/settings.js";
 import ReactionsList from "./ReactionsList";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from './infrastructure/StatusActions';
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { useUserStore } from "./infrastructure/UserStore";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function ExperienceDataAdmin(props) {
   const endpointSet = "experience_admin";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
   //const { t, i18n } = useTranslation('experiences' );
-  const [user, userActions] = useUserStore();
+  const user = useTypedSelector(state=>state['login'].profile)
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch();
   const [messages, setMessages] = useState({});
   const [experienceId, setExperienceId] = useState(props.experienceId);
   const [experienceName, setExperienceName] = useState("");
@@ -53,9 +54,9 @@ export default function ExperienceDataAdmin(props) {
   const [courseTimezone, setCourseTimezone] = useState("UTC");
 
   const getExperience = () => {
-    statusActions.startTask();
+    dispatch( startTask() );
     setDirty(true);
-    var url = endpoints.endpoints[endpointSet].baseUrl + "/";
+    var url = endpoints.baseUrl + "/";
     if (null == experienceId) {
       url = url + "new/" + props.courseId + ".json";
     } else {
@@ -67,7 +68,6 @@ export default function ExperienceDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -99,16 +99,16 @@ export default function ExperienceDataAdmin(props) {
         );
         setExperienceEndDate(receivedDate.toISO());
 
-        statusActions.endTask();
+        dispatch( endTask() );
         setDirty(false);
       });
   };
   const saveExperience = () => {
     const method = null == experienceId ? "POST" : "PATCH";
-    statusActions.startTask("saving");
+    dispatch( startTask("saving") );
 
     const url =
-      endpoints.endpoints[endpointSet].baseUrl +
+      endpoints.baseUrl +
       "/" +
       (null == experienceId ? props.courseId : experienceId) +
       ".json";
@@ -119,7 +119,6 @@ export default function ExperienceDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         experience: {
@@ -142,7 +141,6 @@ export default function ExperienceDataAdmin(props) {
       })
       .then(data => {
         if (data.messages != null && Object.keys(data.messages).length < 2) {
-          console.log(data);
           const experience = data.experience;
           setExperienceId(experience.id);
           setExperienceName(experience.name);
@@ -158,29 +156,21 @@ export default function ExperienceDataAdmin(props) {
 
           const course = data.course;
           setCourseName(course.name);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
           setDirty(false);
           setMessages(data.messages);
         } else {
           setMessages(data.messages);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         }
       });
   };
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
+    if (endpointStatus ){
       getExperience();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   useEffect(() => {
     if (user.loaded) {
@@ -288,9 +278,8 @@ export default function ExperienceDataAdmin(props) {
   );
 
   const reactionListing =
-    experienceId > 0 ? (
+    reactionsUrl != undefined && experienceId > 0 ? (
       <ReactionsList
-        token={props.token}
         retrievalUrl={reactionsUrl}
         reactionsList={reactionData}
         reactionsListUpdateFunc={setReactionData}
@@ -302,17 +291,15 @@ export default function ExperienceDataAdmin(props) {
     <Paper>
       <Tabs value={curTab} onChange={(event, value) => setCurTab(value)}>
         <Tab label="Details" value="details" />
-        <Tab label="Results" value="groups" disabled={null == experienceId} />
+        <Tab label="Results" value="results" disabled={null == experienceId} />
       </Tabs>
       {"details" == curTab ? detailsComponent : null}
-      {"groups" == curTab ? { reactionListing } : null}
+      {"results" == curTab ?  reactionListing  : null}
     </Paper>
   );
 }
 
 ExperienceDataAdmin.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   courseId: PropTypes.number.isRequired,
   experienceId: PropTypes.number
 };

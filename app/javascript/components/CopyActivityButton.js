@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
@@ -17,11 +18,12 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
-import { useStatusStore } from "./infrastructure/StatusStore";
+
+import {startTask, endTask} from './infrastructure/StatusActions';
 
 export default function CopyActivityButton(props) {
   const [copyData, setCopyData] = useState(null);
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
 
   function PaperComponent(props) {
     return <Paper {...props} />;
@@ -79,7 +81,7 @@ export default function CopyActivityButton(props) {
             <Button
               disabled={status.working}
               onClick={event => {
-                statusActions.startTask("copying");
+                dispatch( startTask("copying") );
                 console.log(newStartDate);
                 fetch(props.copyUrl, {
                   method: "POST",
@@ -87,7 +89,6 @@ export default function CopyActivityButton(props) {
                   headers: {
                     "Content-Type": "application/json",
                     Accepts: "application/json",
-                    "X-CSRF-Token": props.token
                   },
                   body: JSON.stringify({
                     start_date: newStartDate
@@ -107,7 +108,7 @@ export default function CopyActivityButton(props) {
                     }
                     setNewStartDate(DateTime.local().toISO());
                     setCopyData(null);
-                    statusActions.endTask("copying");
+                    dispatch( endTask("copying") );
                   });
               }}
             >
@@ -144,7 +145,6 @@ export default function CopyActivityButton(props) {
 }
 
 CopyActivityButton.propTypes = {
-  token: PropTypes.string.isRequired,
   copyUrl: PropTypes.string.isRequired,
   itemId: PropTypes.number.isRequired,
   itemUpdateFunc: PropTypes.func,

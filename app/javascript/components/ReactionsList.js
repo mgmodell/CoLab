@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import Popover from "@material-ui/core/Popover";
-import { useStatusStore } from "./infrastructure/StatusStore";
 
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from './infrastructure/StatusActions';
 import MUIDataTable from "mui-datatables";
 
 import Link from "@material-ui/core/Link";
@@ -12,18 +13,17 @@ import { Container } from "@material-ui/core";
 export default function ReactionsList(props) {
   const [anchorEl, setAnchorEl] = useState();
   const [popMsg, setPopMsg] = useState();
-  const [status, statusActions] = useStatusStore();
 
+  const dispatch = useDispatch( );
   const getReactions = () => {
     var url = props.retrievalUrl + ".json";
-    statusActions.startTask();
+    dispatch( startTask() );
     fetch(url, {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -37,7 +37,7 @@ export default function ReactionsList(props) {
         //MetaData and Infrastructure
         props.reactionsListUpdateFunc(data.reactions);
 
-        statusActions.endTask();
+        dispatch( endTask() );
       });
   };
 
@@ -190,7 +190,6 @@ export default function ReactionsList(props) {
 }
 
 ReactionsList.propTypes = {
-  token: PropTypes.string.isRequired,
   retrievalUrl: PropTypes.string.isRequired,
   reactionsList: PropTypes.array,
   reactionsListUpdateFunc: PropTypes.func.isRequired

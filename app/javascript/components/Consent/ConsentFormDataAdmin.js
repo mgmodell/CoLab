@@ -20,11 +20,10 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "../infrastructure/EndPointStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { useUserStore } from "../infrastructure/UserStore";
-import { useStatusStore } from "../infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from '../infrastructure/StatusActions';
 import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -33,14 +32,16 @@ import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 
 export default function ConsentFormDataAdmin(props) {
   const endpointSet = "consent_form";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
   //const { t, i18n } = useTranslation('schools' );
-  const [user, userActions] = useUserStore();
-  const [status, statusActions] = useStatusStore();
+  const user = useTypedSelector(state=>state['login'].profile)
 
+  const dispatch = useDispatch( );
   const [dirty, setDirty] = useState(false);
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
@@ -56,9 +57,9 @@ export default function ConsentFormDataAdmin(props) {
   const [consentFormFormTextKo, setConsentFormFormTextKo] = useState("");
 
   const getConsentForm = () => {
-    statusActions.startTask();
+    dispatch( startTask() );
     setDirty(true);
-    var url = endpoints.endpoints[endpointSet].baseUrl + "/";
+    var url = endpoints.baseUrl + "/";
     if (null == consentFormId) {
       url = url + "new.json";
     } else {
@@ -70,7 +71,6 @@ export default function ConsentFormDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -105,16 +105,16 @@ export default function ConsentFormDataAdmin(props) {
           )
         );
 
-        statusActions.endTask();
+        dispatch( endTask() );
         setDirty(false);
       });
   };
   const saveConsentForm = () => {
     const method = null == consentFormId ? "POST" : "PATCH";
-    statusActions.startTask("saving");
+    dispatch( startTask("saving") );
 
     const url =
-      endpoints.endpoints[endpointSet].baseUrl +
+      endpoints.baseUrl +
       "/" +
       (null == consentFormId ? props.schoolId : consentFormId) +
       ".json";
@@ -125,7 +125,6 @@ export default function ConsentFormDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         consent_form: {
@@ -140,7 +139,7 @@ export default function ConsentFormDataAdmin(props) {
           return response.json();
         } else {
           console.log("error");
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         }
       })
       .then(data => {
@@ -160,28 +159,20 @@ export default function ConsentFormDataAdmin(props) {
           setShowErrors(true);
           setDirty(false);
           setMessages(data.messages);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         } else {
           setShowErrors(true);
           setMessages(data.messages);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         }
       });
   };
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
+    if (endpointStatus ){
       getConsentForm();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   useEffect(() => {
     if (user.loaded) {
@@ -389,7 +380,5 @@ export default function ConsentFormDataAdmin(props) {
 }
 
 ConsentFormDataAdmin.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   consentFormId: PropTypes.number
 };

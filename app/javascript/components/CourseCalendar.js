@@ -30,7 +30,6 @@ class CourseCalendar extends React.Component {
 }
 
 CourseCalendar.propTypes = {
-  token: PropTypes.string.isRequired,
   dataUrl: PropTypes.string.isRequired
 };
 export default CourseCalendar;

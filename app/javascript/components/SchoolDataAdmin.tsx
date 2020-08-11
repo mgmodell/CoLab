@@ -26,23 +26,20 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { useUserStore } from "./infrastructure/UserStore";
 import { TextareaAutosize } from "@material-ui/core";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function SchoolDataAdmin(props) {
   const endpointSet = "school";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const endpoints = useTypedSelector( state => {return state['resources'].endpoints[endpointSet]})
+  const endpointStatus = useTypedSelector( state => {return state['resources'].endpoints_loaded})
   //const { t, i18n } = useTranslation('schools' );
-  const [user, userActions] = useUserStore();
+  const user = useTypedSelector(state=>state['login'].profile)
 
   const dirty = useTypedSelector( state => state['dirtyState'][ 'school' ] );
   const dispatch = useDispatch( );
-  const [status, statusActions] = useStatusStore();
 
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
@@ -52,12 +49,14 @@ export default function SchoolDataAdmin(props) {
   const [schoolDescription, setSchoolDescription] = useState("");
   const [schoolTimezone, setSchoolTimezone] = useState("UTC");
 
+
+
   const [timezones, setTimezones] = useState([]);
 
   const getSchool = () => {
-    statusActions.startTask();
+    dispatch( startTask() );
     dispatch( setDirty('school') );
-    var url = endpoints.endpoints[endpointSet].baseUrl + "/";
+    var url = endpoints.baseUrl + "/";
     if (null == schoolId) {
       url = url + "new.json";
     } else {
@@ -69,7 +68,6 @@ export default function SchoolDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -89,16 +87,16 @@ export default function SchoolDataAdmin(props) {
         setSchoolDescription(school.description || "");
         setSchoolTimezone(school.timezone || "UTC");
 
-        statusActions.endTask();
+        dispatch( endTask() );
         dispatch( setClean('school') );
       });
   };
   const saveSchool = () => {
     const method = null == schoolId ? "POST" : "PATCH";
-    statusActions.startTask("saving");
+    dispatch( startTask("saving") );
 
     const url =
-      endpoints.endpoints[endpointSet].baseUrl +
+      endpoints['baseUrl'] +
       "/" +
       (null == schoolId ? props.schoolId : schoolId) +
       ".json";
@@ -109,7 +107,6 @@ export default function SchoolDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         school: {
@@ -125,7 +122,7 @@ export default function SchoolDataAdmin(props) {
           return response.json();
         } else {
           console.log("error");
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         }
       })
       .then(data => {
@@ -140,28 +137,20 @@ export default function SchoolDataAdmin(props) {
           setDirty(false);
           dispatch( setClean('school') );
           setMessages(data.messages);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         } else {
           setShowErrors(true);
           setMessages(data.messages);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         }
       });
   };
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
+    if (endpointStatus) {
       getSchool();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   useEffect(() => {
     if (user.loaded) {
@@ -261,7 +250,5 @@ export default function SchoolDataAdmin(props) {
 }
 
 SchoolDataAdmin.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   schoolId: PropTypes.number
 };

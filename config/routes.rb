@@ -133,7 +133,7 @@ Rails.application.routes.draw do
         as: :check_diversity_score
     get 'locales/:ns' => 'locales#get_resources', as: :i18n,
         constraints: ->(req) { req.format == :json }
-    get 'endpoints/:unit' => 'home#endpoints', as: :endpoints,
+    get 'endpoints' => 'home#endpoints', as: :endpoints,
         constraints: ->(req) {req.format == :json }
   end
 

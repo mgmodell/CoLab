@@ -11,12 +11,10 @@ import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 import CloseIcon from "@material-ui/icons/Close";
 
-//import { useStatusStore } from "./infrastructure/StatusStore";
 
 export default function AppStatusBar(props) {
 
   const messages = useTypedSelector( state => { return state['statusMessages'].messages } )
-  //const state = useTypedSelector( state => state )
   const dispatch = useDispatch( );
 
   return (

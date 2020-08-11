@@ -48,7 +48,6 @@ export default function DropUserButton(props) {
               headers: {
                 "Content-Type": "application/json",
                 Accepts: "application/json",
-                "X-CSRF-Token": props.token
               }
             })
               .then(response => {
@@ -90,7 +89,6 @@ export default function DropUserButton(props) {
 }
 
 DropUserButton.propTypes = {
-  token: PropTypes.string.isRequired,
   dropUrl: PropTypes.string.isRequired,
   refreshFunc: PropTypes.func.isRequired
 };

@@ -19,22 +19,23 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "../infrastructure/EndPointStore";
 import i18n from "../infrastructure/i18n";
 import { useTranslation } from "react-i18next";
-import { useUserStore } from "../infrastructure/UserStore";
-import { useStatusStore } from "../infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from '../infrastructure/StatusActions';
 import { TextareaAutosize, Grid, Link } from "@material-ui/core";
 import { updateExternalModuleReference } from "typescript";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 
 export default function CandidateListEntry(props) {
   const endpointSet = "candidate_list";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
   const { t, i18n } = useTranslation("candidate_lists");
-  const [user, userActions] = useUserStore();
+  const user = useTypedSelector(state=>state['login'].profile)
 
   const [dirty, setDirty] = useState(false);
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
@@ -52,17 +53,16 @@ export default function CandidateListEntry(props) {
   const [requestCollaborationUrl, setRequestCollaborationUrl] = useState("");
 
   const getCandidateList = () => {
-    statusActions.startTask();
+    dispatch( startTask() );
     setDirty(true);
     var url =
-      endpoints.endpoints[endpointSet].baseUrl + props.bingoGameId + ".json";
+      endpoints.baseUrl + props.bingoGameId + ".json";
     fetch(url, {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -88,7 +88,7 @@ export default function CandidateListEntry(props) {
         setHelpRequested(data.help_requested);
         setRequestCollaborationUrl(data.request_collaboration_url);
 
-        statusActions.endTask();
+        dispatch( endTask() );
         setDirty(false);
       });
   };
@@ -121,10 +121,10 @@ export default function CandidateListEntry(props) {
   };
 
   const saveCandidateList = () => {
-    statusActions.startTask("saving");
+    dispatch( startTask("saving") );
 
     const url =
-      endpoints.endpoints[endpointSet].baseUrl + props.bingoGameId + ".json";
+      endpoints.baseUrl + props.bingoGameId + ".json";
 
     fetch(url, {
       method: "PUT",
@@ -132,7 +132,6 @@ export default function CandidateListEntry(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         candidates: candidates.filter(item => {
@@ -149,7 +148,7 @@ export default function CandidateListEntry(props) {
           return response.json();
         } else {
           console.log("error");
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         }
       })
       .then(data => {
@@ -165,28 +164,20 @@ export default function CandidateListEntry(props) {
           setShowErrors(true);
           setDirty(false);
           setMessages(data.messages);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         } else {
           setShowErrors(true);
           setMessages(data.messages);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         }
       });
   };
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
+    if (endpointStatus){
       getCandidateList();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   useEffect(() => {
     if (user.loaded) {
@@ -203,7 +194,7 @@ export default function CandidateListEntry(props) {
   ) : null;
 
   const colabResponse = decision => {
-    statusActions.startTask("updating");
+    dispatch( startTask("updating") );
     const url = `${requestCollaborationUrl}${decision}.json`;
     fetch(url, {
       method: "GET",
@@ -211,7 +202,6 @@ export default function CandidateListEntry(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -219,7 +209,7 @@ export default function CandidateListEntry(props) {
           return response.json();
         } else {
           console.log("error");
-          statusActions.endTask("updating");
+          dispatch( endTask("updating") );
         }
       })
       .then(data => {
@@ -231,7 +221,7 @@ export default function CandidateListEntry(props) {
         setHelpRequested(data.help_requested);
         setOthersRequestedHelp(data.others_requested_help);
         setDirty(false);
-        statusActions.endTask("updating");
+        dispatch( endTask("updating") );
       });
   };
 
@@ -357,7 +347,5 @@ export default function CandidateListEntry(props) {
 }
 
 CandidateListEntry.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   bingoGameId: PropTypes.number.isRequired
 };

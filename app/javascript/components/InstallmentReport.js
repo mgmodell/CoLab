@@ -15,18 +15,19 @@ import Collapse from "@material-ui/core/Collapse";
 import CloseIcon from "@material-ui/icons/Close";
 //For debug purposes
 
-import { useUserStore } from "./infrastructure/UserStore";
-import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from './infrastructure/StatusActions';
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 import LinkedSliders from "./LinkedSliders";
 export default function InstallmentReport(props) {
   const endpointSet = "installment";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
 
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
   const [debug, setDebug] = useState(false);
   const [t, i18n] = useTranslation("installments");
@@ -43,7 +44,7 @@ export default function InstallmentReport(props) {
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState({ comments: "" });
 
-  const [user, userActions] = useUserStore();
+  const user = useTypedSelector(state=>state['login'].profile)
 
   const updateSlice = (id, update) => {
     const lContributions = Object.assign({}, contributions);
@@ -59,26 +60,13 @@ export default function InstallmentReport(props) {
 
   useEffect(() => setDirty(true), [contributions, installment]);
 
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] === "loaded") {
+    if (endpointStatus) {
       getContributions();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
-  useEffect(() => {
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   //Use this to sort team members with the user on top
   const userCompare = (a, b) => {
@@ -110,17 +98,16 @@ export default function InstallmentReport(props) {
 
   //Retrieve the latest data
   const getContributions = () => {
-    const url = `${endpoints.endpoints[endpointSet].baseUrl}/${
+    const url = `${endpoints.baseUrl}/${
       props.installmentId
     }.json`;
-    statusActions.startTask();
+    dispatch( startTask() );
     fetch(url, {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -158,14 +145,14 @@ export default function InstallmentReport(props) {
         setGroup(data.group);
         data.installment.group_id = data.group.id;
         setProject(data.installment.project);
-        statusActions.endTask();
+        dispatch(endTask() );
       });
   };
   //Store what we've got
   const saveContributions = () => {
-    statusActions.startTask("saving");
+    dispatch(startTask("saving") );
     const url =
-      endpoints.endpoints[endpointSet].saveInstallmentUrl +
+      endpoints.saveInstallmentUrl +
       (Boolean(installment.id) ? `/${installment.id}` : ``) +
       ".json";
     const method = Boolean(installment.id) ? "PATCH" : "POST";
@@ -175,7 +162,6 @@ export default function InstallmentReport(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         contributions: contributions,
@@ -213,7 +199,7 @@ export default function InstallmentReport(props) {
         console.log(data.messages);
         setMessages(data.messages);
         setShowAlerts(true);
-        statusActions.endTask("saving");
+        dispatch( endTask("saving") );
         setDirty(false);
       });
   };
@@ -326,7 +312,5 @@ export default function InstallmentReport(props) {
 }
 
 InstallmentReport.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   installmentId: PropTypes.number
 };

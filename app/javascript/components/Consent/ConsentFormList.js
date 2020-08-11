@@ -10,24 +10,25 @@ import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import CheckIcon from "@material-ui/icons/Check";
 
-import { useEndpointStore } from "../infrastructure/EndPointStore";
-import { useUserStore } from "../infrastructure/UserStore";
-import { useStatusStore } from "../infrastructure/StatusStore";
 import MUIDataTable from "mui-datatables";
 import Collapse from "@material-ui/core/Collapse";
+import { useTypedSelector } from "../infrastructure/AppReducers";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from '../infrastructure/StatusActions';
 
 export default function ConsentFormList(props) {
   const endpointSet = "consent_form";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const dispatch = useDispatch( );
 
   const history = useHistory();
   const { path, url } = useRouteMatch();
 
-  const [user, userActions] = useUserStore();
+  const user = useTypedSelector(state=>state['login'].profile)
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
-  const [status, statusActions] = useStatusStore();
   const columns = [
     {
       label: "Name",
@@ -52,8 +53,8 @@ export default function ConsentFormList(props) {
   const [consent_forms, setSchools] = useState([]);
 
   const getSchools = () => {
-    const url = endpoints.endpoints[endpointSet].baseUrl + ".json";
-    statusActions.startTask("loading");
+    const url = endpoints.baseUrl + ".json";
+    dispatch( startTask("loading") );
 
     fetch(url, {
       method: "GET",
@@ -62,7 +63,6 @@ export default function ConsentFormList(props) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -75,31 +75,17 @@ export default function ConsentFormList(props) {
       .then(data => {
         //Process the data
         setSchools(data);
-        statusActions.endTask("loading");
+        dispatch( endTask("loading") );
       });
   };
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.startTask();
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
+    if (endpointStatus) {
       getSchools();
-      statusActions.endTask("loading");
+      dispatch( endTask("loading") );
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
-  useEffect(() => {
-    if (user.loaded) {
-      Settings.defaultZoneName = user.timezone;
-    }
-  }, [user.loaded]);
 
   const postNewMessage = msgs => {
     setMessages(msgs);
@@ -122,8 +108,6 @@ export default function ConsentFormList(props) {
               id="new_consent_form"
               onClick={event => {
                 history.push("new");
-                //window.location.href =
-                //  endpoints.endpoints[endpointSet].consentFormCreateUrl;
               }}
               aria-label="New Consent Form"
             >
@@ -133,14 +117,8 @@ export default function ConsentFormList(props) {
         ),
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
-            //const link =
-            //  endpoints.endpoints[endpointSet].baseUrl +
-            //  "/" +
             const consent_form_id = consent_forms[cellMeta.dataIndex].id;
             history.push(path + "/" + consent_form_id);
-            // if (null != link) {
-            // window.location.href = link;
-            // }
           }
         },
         selectableRows: "none"
@@ -174,6 +152,4 @@ export default function ConsentFormList(props) {
 }
 
 ConsentFormList.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired
 };

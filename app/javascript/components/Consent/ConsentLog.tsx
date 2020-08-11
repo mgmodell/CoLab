@@ -3,19 +3,21 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 
 import { useTranslation } from "react-i18next";
-import { useEndpointStore } from "../infrastructure/EndPointStore";
-import { useStatusStore } from "../infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from '../infrastructure/StatusActions';
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import { FormControlLabel, Checkbox } from "@material-ui/core";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 
 export default function ConsentLog(props) {
   const { t } = useTranslation("consent_logs");
   const endpointSet = "consent_log";
-  const [endpoints, endpointsActions] = useEndpointStore();
-  const [status, statusActions] = useStatusStore();
+  const endpoints = useTypedSelector(state=>state['resources'][endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources']['endpointStatus'])
+  const dispatch = useDispatch( );
   const [logId, setLogId] = useState();
   const [formName, setFormName] = useState("");
   const [formText, setFormText] = useState("");
@@ -26,9 +28,9 @@ export default function ConsentLog(props) {
 
   const getLog = () => {
     var url =
-      endpoints.endpoints[endpointSet].baseUrl + props.consentFormId + ".json";
+      endpoints['baseUrl'] + props.consentFormId + ".json";
 
-    statusActions.startTask("loading");
+    dispatch( startTask("loading") );
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -36,7 +38,6 @@ export default function ConsentLog(props) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -57,14 +58,14 @@ export default function ConsentLog(props) {
         setFormPresented(data.consent_log.presented);
         setLogLastUpdated(new Date(data.consent_log.updatedAt));
 
-        statusActions.endTask("loading");
+        dispatch( endTask("loading") );
       });
   };
 
   const updateLog = () => {
     var url =
-      endpoints.endpoints[endpointSet].consentLogSaveUrl + logId + ".json";
-    statusActions.startTask("saving");
+      endpoints['consentLogSaveUrl'] + logId + ".json";
+    dispatch( startTask("saving") );
 
     console.log("update", url);
 
@@ -75,7 +76,6 @@ export default function ConsentLog(props) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         consent_log: {
@@ -99,21 +99,15 @@ export default function ConsentLog(props) {
           history.back();
         }
 
-        statusActions.endTask("saving");
+        dispatch( endTask("saving") );
       });
   };
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-  }, []);
-
-  useEffect(() => {
-    if ("loaded" === endpoints.endpointStatus[endpointSet]) {
+    if (endpointStatus ){
       getLog();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   return (
     <Paper>
@@ -158,8 +152,6 @@ export default function ConsentLog(props) {
 }
 
 ConsentLog.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   consentFormId: PropTypes.number.isRequired,
   parentUpdateFunc: PropTypes.func
 };

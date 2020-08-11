@@ -38,12 +38,9 @@ import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
-import { useUserStore } from "./infrastructure/UserStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
 import CourseUsersList from "./CourseUsersList";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./infrastructure/EndPointStore";
 import MUIDataTable from "mui-datatables";
 
 import AddIcon from "@material-ui/icons/Add";
@@ -51,12 +48,13 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import IconButton from "@material-ui/core/IconButton";
 import Link from "@material-ui/core/Link";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function CourseDataAdmin(props) {
   const endpointSet = "course";
-  const [endpoints, endpointsActions] = useEndpointStore();
-  const [user, userActions] = useUserStore();
-  const [status, statusActions] = useStatusStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const user = useTypedSelector(state=>state['login'].profile)
 
   const history = useHistory();
   const { path, url } = useRouteMatch();
@@ -98,7 +96,7 @@ export default function CourseDataAdmin(props) {
   const getCourse = () => {
     dispatch( startTask( ));
     dispatch( setDirty( 'course' ) );
-    var url = endpoints.endpoints[endpointSet].baseUrl + "/";
+    var url = endpoints.baseUrl + "/";
     if (null == courseId) {
       url = url + "new.json";
     } else {
@@ -110,7 +108,6 @@ export default function CourseDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -170,7 +167,7 @@ export default function CourseDataAdmin(props) {
     dispatch( startTask( 'saving' ) ) ;
 
     const url =
-      endpoints.endpoints[endpointSet].baseUrl +
+      endpoints.baseUrl +
       "/" +
       (Boolean(courseId) ? courseId : props.courseId) +
       ".json";
@@ -181,7 +178,6 @@ export default function CourseDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         course: {
@@ -230,22 +226,13 @@ export default function CourseDataAdmin(props) {
         postNewMessage(data.messages);
       });
   };
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      dispatch( startTask( ) );
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
+    if (endpointStatus) {
       dispatch( endTask( 'loading' ) );
       getCourse();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   useEffect(() => {
     if (user.loaded) {
@@ -528,7 +515,6 @@ export default function CourseDataAdmin(props) {
                     headers: {
                       "Content-Type": "application/json",
                       Accepts: "application/json",
-                      "X-CSRF-Token": props.token
                     }
                   })
                     .then(response => {
@@ -608,14 +594,10 @@ export default function CourseDataAdmin(props) {
             return addButton;
           },
           onCellClick: (colData, cellMeta) => {
-            console.log(cellMeta);
             if ("link" != activityColumns[cellMeta.colIndex].name) {
-              const link = courseActivities[cellMeta.rowIndex].link;
-              const activityId = courseActivities[cellMeta.rowIndex].id;
+              const link = courseActivities[cellMeta.dataIndex].link;
+              const activityId = courseActivities[cellMeta.dataIndex].id;
               history.push(`${url}/${link}/${activityId}`);
-              // if (null != link) {
-              //   window.location.href = link;
-              // }
             }
           }
         }}
@@ -641,10 +623,9 @@ export default function CourseDataAdmin(props) {
           {"details" == curTab ? detailsComponent : null}
           {"instructors" == curTab ? (
             <CourseUsersList
-              token={props.token}
               courseId={courseId}
               retrievalUrl={
-                endpoints.endpoints[endpointSet].courseUsersUrl +
+                endpoints.courseUsersUrl +
                 courseId +
                 ".json"
               }
@@ -656,10 +637,9 @@ export default function CourseDataAdmin(props) {
           ) : null}
           {"students" == curTab ? (
             <CourseUsersList
-              token={props.token}
               courseId={courseId}
               retrievalUrl={
-                endpoints.endpoints[endpointSet].courseUsersUrl +
+                endpoints.courseUsersUrl +
                 courseId +
                 ".json"
               }
@@ -679,7 +659,5 @@ export default function CourseDataAdmin(props) {
 }
 
 CourseDataAdmin.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   courseId: PropTypes.number
 };

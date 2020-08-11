@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@material-ui/core/Paper";
@@ -29,7 +30,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import DropUserButton from "./DropUserButton";
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
-import { useStatusStore } from "./infrastructure/StatusStore";
+import {startTask, endTask} from './infrastructure/StatusActions';
 
 export default function CourseUsersList(props) {
   const [addUsersPath, setAddUsersPath] = useState("");
@@ -37,10 +38,10 @@ export default function CourseUsersList(props) {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newUserAddresses, setNewUserAddresses] = useState("");
 
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
 
   const getUsers = () => {
-    statusActions.startTask();
+    dispatch( startTask() );
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -48,7 +49,6 @@ export default function CourseUsersList(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -68,7 +68,7 @@ export default function CourseUsersList(props) {
         setProcRegReqPath(data.add_function.proc_self_reg + ".json");
         props.usersListUpdateFunc(data.users);
 
-        statusActions.endTask();
+        dispatch( endTask() );
       });
   };
 
@@ -222,14 +222,13 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      statusActions.startTask("inviting");
+                      dispatch( startTask("inviting") );
                       fetch(user.reinvite_link, {
                         method: "GET",
                         credentials: "include",
                         headers: {
                           "Content-Type": "application/json",
                           Accepts: "application/json",
-                          "X-CSRF-Token": props.token
                         }
                       })
                         .then(response => {
@@ -241,7 +240,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
-                          statusActions.endTask("inviting");
+                          dispatch( endTask("inviting") );
                         });
                     }}
                   >
@@ -256,7 +255,6 @@ export default function CourseUsersList(props) {
               btns.push(
                 <DropUserButton
                   key="drop-student-button"
-                  token={props.token}
                   dropUrl={user.drop_link}
                   refreshFunc={refreshFunc}
                 />
@@ -270,14 +268,13 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      statusActions.startTask("accepting_student");
+                      dispatch( startTask("accepting_student") );
                       fetch(procRegReqPath, {
                         method: "PATCH",
                         credentials: "include",
                         headers: {
                           "Content-Type": "application/json",
                           Accepts: "application/json",
-                          "X-CSRF-Token": props.token
                         },
                         body: JSON.stringify({
                           roster_id: user.id,
@@ -293,7 +290,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
-                          statusActions.endTask("accepting_student");
+                          dispatch( endTask("accepting_student") );
                         });
                     }}
                   >
@@ -306,14 +303,13 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl2}
                     onClick={event => {
-                      statusActions.startTask("decline_student");
+                      dispatch( startTask("decline_student") );
                       fetch(procRegReqPath, {
                         method: "PATCH",
                         credentials: "include",
                         headers: {
                           "Content-Type": "application/json",
                           Accepts: "application/json",
-                          "X-CSRF-Token": props.token
                         },
                         body: JSON.stringify({
                           roster_id: user.id,
@@ -329,7 +325,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
-                          statusActions.endTask("decline_student");
+                          dispatch( endTask("decline_student") );
                         });
                     }}
                   >
@@ -347,14 +343,13 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      statusActions.startTask("re-adding");
+                      dispatch( startTask("re-adding") );
                       fetch(addUsersPath, {
                         method: "PUT",
                         credentials: "include",
                         headers: {
                           "Content-Type": "application/json",
                           Accepts: "application/json",
-                          "X-CSRF-Token": props.token
                         },
                         body: JSON.stringify({
                           addresses: user.email
@@ -369,7 +364,7 @@ export default function CourseUsersList(props) {
                         })
                         .then(data => {
                           refreshFunc(data.messages);
-                          statusActions.endTask("re-adding");
+                          dispatch( endTask("re-adding") );
                         });
                     }}
                   >
@@ -505,14 +500,13 @@ export default function CourseUsersList(props) {
                     </Button>
                     <Button
                       onClick={() => {
-                        statusActions.startTask("adding_email");
+                        dispatch( startTask("adding_email") );
                         fetch(addUsersPath, {
                           method: "PUT",
                           credentials: "include",
                           headers: {
                             "Content-Type": "application/json",
                             Accepts: "application/json",
-                            "X-CSRF-Token": props.token
                           },
                           body: JSON.stringify({
                             id: props.courseId,
@@ -529,7 +523,7 @@ export default function CourseUsersList(props) {
                           .then(data => {
                             getUsers();
                             props.addMessagesFunc(data.messages);
-                            statusActions.endTask("adding_email");
+                            dispatch( endTask("adding_email") );
                           });
                         closeDialog();
                       }}
@@ -573,7 +567,6 @@ export default function CourseUsersList(props) {
 }
 
 CourseUsersList.propTypes = {
-  token: PropTypes.string.isRequired,
   courseId: PropTypes.number.isRequired,
   retrievalUrl: PropTypes.string.isRequired,
   usersList: PropTypes.array,

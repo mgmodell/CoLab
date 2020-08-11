@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
 //Redux store stuff
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   startTask,
   endTask,
@@ -15,19 +15,18 @@ import {
 import Button from "@material-ui/core/Button";
 import Skeleton from "@material-ui/lab/Skeleton";
 
-import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 import ExperienceInstructions from "./ExperienceInstructions";
 import ExperienceDiagnosis from "./ExperienceDiagnosis";
 import ExperienceReaction from "./ExperienceReaction";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function Experience(props) {
   const endpointSet = "experience";
-  const [endpoints, endpointsActions] = useEndpointStore();
-  const [status, statusActions] = useStatusStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
   const dispatch = useDispatch( );
   const [t, i18n] = useTranslation("installments");
   const history = useHistory();
@@ -40,16 +39,10 @@ export default function Experience(props) {
   const [weekText, setWeekText] = useState("");
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] === "loaded") {
+    if (endpointStatus ){
       getNext();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   const saveButton = (
     <Button variant="contained" onClick={() => saveDiagnosis()}>
@@ -59,7 +52,7 @@ export default function Experience(props) {
 
   //Retrieve the latest data
   const getNext = () => {
-    const url = `${endpoints.endpoints[endpointSet].baseUrl}${
+    const url = `${endpoints.baseUrl}${
       props.experienceId
     }.json`;
     dispatch( startTask() );
@@ -69,7 +62,6 @@ export default function Experience(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -94,14 +86,13 @@ export default function Experience(props) {
   //Store what we've got
   const saveDiagnosis = (behaviorId, otherName, comment, resetFunc) => {
     dispatch( startTask( 'saving' ) );
-    const url = endpoints.endpoints[endpointSet].diagnosisUrl;
+    const url = endpoints.diagnosisUrl;
     fetch(url, {
       method: "PATCH",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         diagnosis: {
@@ -136,14 +127,13 @@ export default function Experience(props) {
   //React
   const saveReaction = (behaviorId, otherName, improvements, resetFunc) => {
     dispatch( startTask( 'saving' ) );
-    const url = endpoints.endpoints[endpointSet].reactionUrl;
+    const url = endpoints.reactionUrl;
     fetch(url, {
       method: "PATCH",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         reaction: {
@@ -172,27 +162,26 @@ export default function Experience(props) {
   };
 
   var output = null;
-  if ("loaded" !== endpoints.endpointStatus[endpointSet]) {
+  if (endpointStatus) {
     output = <Skeleton variant="rect" />;
   } else if (!instructed) {
     output = (
       <ExperienceInstructions
-        token={props.token}
-        lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
+        lookupUrl={endpoints.lookupsUrl}
         acknowledgeFunc={getNext}
       />
     );
   } else if (undefined === weekNum) {
     output = (
       <ExperienceReaction
-        lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
+        lookupUrl={endpoints.lookupsUrl}
         reactionFunc={saveReaction}
       />
     );
   } else {
     output = (
       <ExperienceDiagnosis
-        lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
+        lookupUrl={endpoints.lookupsUrl}
         diagnoseFunc={saveDiagnosis}
         weekNum={weekNum}
         weekText={weekText}
@@ -204,7 +193,5 @@ export default function Experience(props) {
 }
 
 Experience.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   experienceId: PropTypes.number.isRequired
 };

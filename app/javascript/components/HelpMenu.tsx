@@ -157,6 +157,4 @@ export default function HelpMenu(props) {
 }
 
 HelpMenu.propTypes = {
-  token: PropTypes.string.isRequired,
-  lookupUrl: PropTypes.string.isRequired
 };

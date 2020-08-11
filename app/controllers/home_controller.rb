@@ -63,116 +63,90 @@ class HomeController < ApplicationController
   end
 
   def endpoints
-    ep_hash = {}
-    case params[:unit]
-    when 'home'
-      ep_hash = {
+    ep_hash = {
+      home:{
         supportAddress: 'Support@CoLab.online',
         logoPath: ActionController::Base.helpers.asset_path('CoLab_small.png'),
         quotePath: get_quote_path,
         moreInfoUrl: 'http://PeerAssess.info',
-        # demoUrl: demo_start_path,
-        demoUrl: 'demo',
-        homeUrl: root_path,
-        taskListUrl: task_list_path,
         diversityScoreFor: check_diversity_score_path,
-        courseRegRequestsUrl: course_reg_requests_path,
-        courseRegUpdatesUrl: proc_course_reg_requests_path
+        lookupsUrl: lookups_path
       }
-      if user_signed_in?
-        ep_hash[:profileUrl] = '/profile'
-        ep_hash[:logoutUrl] = logout_path
-        if current_user.is_admin? || current_user.is_instructor?
-          ep_hash[:adminUrl] = '/admin'
-          ep_hash[:coursesPath] = '/admin/courses'
-          ep_hash[:schoolsPath] = '/admin/schools'
-          ep_hash[:consentFormsPath] = '/admin/consent_forms'
-          ep_hash[:conceptsPath] = '/admin/concepts'
-          ep_hash[:projectsPath] = '/admin/projects'
-          ep_hash[:reportingUrl] = '/admin/reporting'
-        end
-      end
-    when 'project'
-      ep_hash = {
-        baseUrl: projects_path,
-        activateProjectUrl: activate_project_path,
-        diversityCheckUrl: check_diversity_score_path,
-        groupsUrl: groups_path(id: ''),
-        diversityRescoreGroup: rescore_group_path(id: ''),
-        diversityRescoreGroups: rescore_groups_path(id: '')
-      }
-    when 'course'
-      ep_hash = {
-        baseUrl: courses_path,
-        courseCreateUrl: new_course_path,
-        courseUsersUrl: get_users_path(id: ''),
-        scoresUrl: course_scores_path(id: ''),
-        courseCopyUrl: copy_course_path(id: '')
-      }
-    when 'school'
-      ep_hash = {
-        baseUrl: schools_path,
-        schoolCreateUrl: new_school_path
-      }
-    when 'experience_admin'
-      ep_hash = {
-        baseUrl: experiences_path
-      }
-    when 'bingo_game'
-      ep_hash = {
-        baseUrl: bingo_games_path,
-        gameResultsUrl: game_results_path(id: '')
-      }
-    when 'concept'
-      ep_hash = {
-        baseUrl: concepts_path
-      }
-    when 'consent_form'
-      ep_hash = {
-        baseUrl: consent_forms_path,
-        consentFormCreateUrl: new_consent_form_path
-      }
-    when 'consent_log'
-      ep_hash = {
-        baseUrl: edit_consent_log_path(consent_form_id: ''),
-        consentLogSaveUrl: consent_log_path(id: '')
-      }
-    when 'candidate_list'
-      ep_hash = {
-        baseUrl: get_candidate_list_path(bingo_game_id: '')
-      }
-    when 'candidate_review'
-      ep_hash = {
+    }
+    if user_signed_in?
+      ep_hash[:home][ :taskListUrl] = task_list_path
+      ep_hash[:home][ :courseRegRequestsUrl] = course_reg_requests_path
+      ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path
+
+      ep_hash[:candidate_review] = {
         baseUrl: review_bingo_candidates_path(id: ''),
         reviewSaveUrl: update_bingo_candidates_review_path(id: ''),
         conceptUrl: bingo_concepts_path(0)
       }
-    when 'candidate_results'
-      ep_hash = {
+      ep_hash[:installment] = {
+        baseUrl: edit_installment_path(assessment_id: ''),
+        saveInstallmentUrl: installments_path
+
+      }
+      ep_hash[:candidate_results] = {
         baseUrl: my_results_path(id: ''),
         boardUrl: board_for_game_path(bingo_game_id: ''),
         conceptsUrl: bingo_concepts_path(id: ''),
         worksheetUrl: worksheet_for_bingo_path(bingo_game_id: '')
       }
-    when 'installment'
-      ep_hash = {
-        baseUrl: edit_installment_path(assessment_id: ''),
-        saveInstallmentUrl: installments_path
-
-      }
-    when 'experience'
-      ep_hash = {
+      ep_hash[:experience] = {
         baseUrl: next_experience_path(experience_id: ''),
         diagnosisUrl: diagnose_path,
         reactionUrl: react_path
       }
-    when 'profile'
-      ep_hash = {
+      ep_hash[:profile] = {
         baseUrl: full_profile_path
       }
+      ep_hash[:consent_log] = {
+        baseUrl: edit_consent_log_path(consent_form_id: ''),
+        consentLogSaveUrl: consent_log_path(id: '')
+      }
+      ep_hash[:candidate_list] = {
+        baseUrl: get_candidate_list_path(bingo_game_id: '')
+      }
+
+      if current_user.is_instructor?
+        ep_hash[ :project] = {
+          baseUrl: projects_path,
+          activateProjectUrl: activate_project_path,
+          diversityCheckUrl: check_diversity_score_path,
+          groupsUrl: groups_path(id: ''),
+          diversityRescoreGroup: rescore_group_path(id: ''),
+          diversityRescoreGroups: rescore_groups_path(id: '')
+        }
+        ep_hash[ :course] = {
+          baseUrl: courses_path,
+          courseCreateUrl: new_course_path,
+          courseUsersUrl: get_users_path(id: ''),
+          scoresUrl: course_scores_path(id: ''),
+          courseCopyUrl: copy_course_path(id: '')
+        }
+        ep_hash[ :school ] = {
+          baseUrl: schools_path,
+          schoolCreateUrl: new_school_path
+        }
+        ep_hash[:experience_admin] = {
+          baseUrl: experiences_path
+        }
+        ep_hash[:bingo_game] = {
+          baseUrl: bingo_games_path,
+          gameResultsUrl: game_results_path(id: '')
+        }
+        ep_hash[:concept] = {
+          baseUrl: concepts_path
+        }
+        ep_hash[:consent_form] = {
+          baseUrl: consent_forms_path,
+          consentFormCreateUrl: new_consent_form_path
+        }
+      end
     end
-    # Stuff we'll all need
-    ep_hash['lookupsUrl'] = lookups_path
+
     # Provide the endpoints
     respond_to do |format|
       format.json do
@@ -182,70 +156,59 @@ class HomeController < ApplicationController
   end
 
   def lookups
-    lookups = {}
-    params[:requested].each do |req|
-      case req
-      when 'behaviors'
-        lookups[:behaviors] = Behavior.all.collect do |behavior|
+      lookups = {
+        behaviors: Behavior.all.collect { |behavior|
           {
             id: behavior.id,
             name: behavior.name,
             description: behavior.description,
             needs_detail: behavior.needs_detail
           }
-        end
-      when 'countries'
-        lookups[:countries] = HomeCountry.all.collect do |country|
+        },
+        countries: HomeCountry.all.collect { |country|
           {
             id: country.id,
             name: country.name,
             code: country.code
           }
-        end
-      when 'languages'
-        lookups[:languages] = Language.all.collect do |language|
+      },
+        languages: Language.all.collect { |language|
           {
             id: language.id,
             name: language.name,
             code: language.code
           }
-        end
-      when 'cip_codes'
-        lookups[:cipCodes] = CipCode.all.collect do |cip_code|
+        },
+        cip_codes: CipCode.all.collect { |cip_code|
           {
             id: cip_code.id,
             code: cip_code.gov_code,
             name: cip_code.name
           }
-        end
-      when 'genders'
-        lookups[:genders] = Gender.all.collect do |gender|
+        },
+        genders: Gender.all.collect { |gender|
           {
             id: gender.id,
             name: gender.name,
             code: gender.code
           }
-        end
-      when 'themes'
-        lookups[:themes] = Theme.all.collect do |theme|
+        },
+        themes: Theme.all.collect {  |theme|
           {
             id: theme.id,
             code: theme.code,
             name: theme.name
           }
-        end
-      when 'timezones'
-        lookups[:timezones] = HomeController::TIMEZONES
-      when 'schools'
-        lookups[:schools] = School.all.collect do |school|
+        },
+        timezones: HomeController::TIMEZONES,
+        schools: School.all.collect { |school|
           {
             id: school.id,
             name: school.name,
             timezone: school.timezone
           }
-        end
-      end
-    end
+        }
+        }
     respond_to do |format|
       format.json do
         render json: lookups.as_json

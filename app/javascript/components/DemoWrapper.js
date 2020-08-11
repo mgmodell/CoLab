@@ -33,8 +33,6 @@ export default function DemoWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <InstallmentReport
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   installmentId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -45,8 +43,6 @@ export default function DemoWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <CandidateListEntry
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   bingoGameId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -57,8 +53,6 @@ export default function DemoWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <CandidatesReviewTable
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   bingoGameId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -69,8 +63,6 @@ export default function DemoWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <BingoBuilder
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   bingoGameId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -81,8 +73,6 @@ export default function DemoWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <Experience
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   experienceId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -93,8 +83,6 @@ export default function DemoWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <ConsentLog
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   consentFormId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -102,8 +90,6 @@ export default function DemoWrapper(props) {
           />
           <Route exact path={`${path}/`}>
             <HomeShell
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl}
             />
           </Route>
         </Switch>
@@ -113,6 +99,4 @@ export default function DemoWrapper(props) {
 }
 
 DemoWrapper.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired
 };

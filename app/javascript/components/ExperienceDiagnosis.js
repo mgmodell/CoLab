@@ -27,7 +27,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
-import { useLookupStore } from "./infrastructure/LookupStore";
+import {useTypedSelector} from './infrastructure/AppReducers';
 
 import Radio from "@material-ui/core/Radio";
 import Grid from "@material-ui/core/Grid";
@@ -41,9 +41,8 @@ export default function ExperienceDiagnosis(props) {
   const [otherName, setOtherName] = useState("");
   const [comments, setComments] = useState("");
   const [showComments, setShowComments] = useState(false);
-  const [lookup, lookupActions] = useLookupStore();
 
-  const dirtyStatus = useSelector( state =>{ return state.dirtyState['diagnosis'] });
+  const dirtyStatus = useTypedSelector( state => state.dirtyState['diagnosis'] );
   const dispatch = useDispatch( );
 
   const getById = (list, id) => {
@@ -52,14 +51,12 @@ export default function ExperienceDiagnosis(props) {
     })[0];
   };
 
-  useEffect(() => {
-    lookupActions.fetch(["behaviors"], props.lookupUrl, props.token);
-  }, []);
+  const behaviors = useTypedSelector(state => state.resources.lookups.behaviors)
 
   const detailNeeded =
     0 === behaviorId
       ? true
-      : getById(lookup.lookups.behaviors, behaviorId).needs_detail;
+      : getById(behaviors, behaviorId).needs_detail;
   const detailPresent = otherName.length > 0;
   const saveButton = (
     <Button
@@ -118,7 +115,7 @@ export default function ExperienceDiagnosis(props) {
         </Grid>
         <Grid item xs={12} >
           <FormLabel>{t("next.prompt")}</FormLabel>
-          {lookup.lookups.behaviors !== undefined ? (
+          {behaviors !== undefined ? (
             <RadioGroup
               className="behaviors"
               aria-label="behavior"
@@ -128,7 +125,7 @@ export default function ExperienceDiagnosis(props) {
                 setBehaviorId(Number(event.target.value));
               }}
             >
-              {lookup.lookups.behaviors.map(behavior => {
+              {behaviors.map(behavior => {
                 return (
                   <React.Fragment key={"behavior_" + behavior.id}>
                     <FormControlLabel
@@ -180,7 +177,6 @@ export default function ExperienceDiagnosis(props) {
 }
 
 ExperienceDiagnosis.propTypes = {
-  lookupUrl: PropTypes.string.isRequired,
   diagnoseFunc: PropTypes.func.isRequired,
   weekNum: PropTypes.number.isRequired,
   weekText: PropTypes.string.isRequired

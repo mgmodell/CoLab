@@ -31,22 +31,23 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useEndpointStore } from "./infrastructure/EndPointStore";
 import UserCourseList from "./UserCourseList";
 import ResearchParticipationList from "./ResearchParticipationList";
 import UserActivityList from "./UserActivityList";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { useUserStore } from "./infrastructure/UserStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from './infrastructure/StatusActions';
 import { Grid, Link } from "@material-ui/core";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function ProfileDataAdmin(props) {
   const endpointSet = "profile";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const endpoints = useTypedSelector( state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector( state=>state['resources']['endpoints_loaded'])
   //const { t, i18n } = useTranslation('profiles' );
-  const [user, userActions] = useUserStore();
-  const [status, statusActions] = useStatusStore();
+  const user = useTypedSelector(state=>state['login'].profile)
+  const dispatch = useDispatch();
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);
@@ -111,7 +112,7 @@ export default function ProfileDataAdmin(props) {
 
   const getStates = countryCode => {
     if ("" != statesForUrl) {
-      statusActions.startTask();
+      dispatch( startTask() );
       const url = statesForUrl + countryCode + ".json";
       fetch(url, {
         method: "GET",
@@ -119,7 +120,6 @@ export default function ProfileDataAdmin(props) {
         headers: {
           "Content-Type": "application/json",
           Accepts: "application/json",
-          "X-CSRF-Token": props.token
         }
       })
         .then(response => {
@@ -144,7 +144,7 @@ export default function ProfileDataAdmin(props) {
             setProfileHomeState(foundSelectedStates[0].id);
             setDirty(true);
           }
-          statusActions.endTask("loading");
+          dispatch( endTask("loading") );
         });
     }
   };
@@ -185,15 +185,14 @@ export default function ProfileDataAdmin(props) {
   };
   const getProfile = () => {
     setDirty(true);
-    const url = endpoints.endpoints[endpointSet].baseUrl + ".json";
-    statusActions.startTask();
+    const url = endpoints['baseUrl'] + ".json";
+    dispatch( startTask() );
     fetch(url, {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -227,13 +226,13 @@ export default function ProfileDataAdmin(props) {
 
         setProfileFields(profile);
 
-        statusActions.endTask("loading");
+        dispatch( endTask("loading") );
         setDirty(false);
       });
   };
   const saveProfile = () => {
-    statusActions.startTask("saving");
-    const url = endpoints.endpoints[endpointSet].baseUrl + ".json";
+    dispatch( startTask("saving") );
+    const url = endpoints['baseUrl'] + ".json";
     console.log(url);
 
     fetch(url, {
@@ -242,7 +241,6 @@ export default function ProfileDataAdmin(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         user: {
@@ -282,7 +280,7 @@ export default function ProfileDataAdmin(props) {
           return response.json();
         } else {
           console.log("error");
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         }
       })
       .then(data => {
@@ -296,30 +294,21 @@ export default function ProfileDataAdmin(props) {
           setShowErrors(true);
           setDirty(false);
           setMessages(data.messages);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         } else {
           setShowErrors(true);
           setMessages(data.messages);
-          statusActions.endTask("saving");
+          dispatch( endTask("saving") );
         }
       });
   };
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-      statusActions.startTask();
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
-      statusActions.endTask("loading");
+    if (endpointStatus) {
+      dispatch( endTask("loading") );
       getProfile();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   useEffect(() => {
     if (user.loaded) {
@@ -403,7 +392,6 @@ export default function ProfileDataAdmin(props) {
             <Grid item xs={12}>
               {0 < profileEmails.length ? (
                 <UserEmailList
-                  token={props.token}
                   emailList={profileEmails}
                   emailListUpdateFunc={setProfileEmails}
                   addMessagesFunc={setMessages}
@@ -841,7 +829,6 @@ export default function ProfileDataAdmin(props) {
       {"details" === curTab ? detailsComponent : null}
       {"courses" === curTab ? (
         <UserCourseList
-          token={props.token}
           retrievalUrl={coursePerformanceUrl + ".json"}
           coursesList={courses}
           coursesListUpdateFunc={setCourses}
@@ -850,7 +837,6 @@ export default function ProfileDataAdmin(props) {
       ) : null}
       {"history" === curTab ? (
         <UserActivityList
-          token={props.token}
           retrievalUrl={activitiesUrl + ".json"}
           activitiesList={activities}
           activitiesListUpdateFunc={setActivities}
@@ -859,7 +845,6 @@ export default function ProfileDataAdmin(props) {
       ) : null}
       {"research" === curTab ? (
         <ResearchParticipationList
-          token={props.token}
           retrievalUrl={consentFormsUrl + ".json"}
           consentFormList={consentForms}
           consentFormListUpdateFunc={setConsentForms}
@@ -871,7 +856,5 @@ export default function ProfileDataAdmin(props) {
 }
 
 ProfileDataAdmin.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   profileId: PropTypes.number
 };

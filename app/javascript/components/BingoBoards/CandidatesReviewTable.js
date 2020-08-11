@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from "react";
+import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
@@ -13,19 +14,20 @@ import Typography from "@material-ui/core/Typography";
 import { SortDirection } from "react-virtualized";
 import RemoteAutosuggest from "../RemoteAutosuggest";
 
-import { useEndpointStore } from "../infrastructure/EndPointStore";
-import { useStatusStore } from "../infrastructure/StatusStore";
 import { useTranslation } from "react-i18next";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import MUIDataTable from "mui-datatables";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
+import { useTypedSelector } from "../infrastructure/AppReducers";
+import {startTask, endTask} from '../infrastructure/StatusActions'
 
 export default function CandidatesReviewTable(props) {
   const { t } = useTranslation("bingo_games");
   const endpointSet = "candidate_review";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
 
   const [candidates, setCandidates] = useState([]);
   const [candidateLists, setCandidateLists] = useState([]);
@@ -41,8 +43,8 @@ export default function CandidatesReviewTable(props) {
   const [uniqueConcepts, setUniqueConcepts] = useState(0);
   const [acceptableUniqueConcepts, setAcceptableUniqueConcepts] = useState(0);
 
+  const dispatch = useDispatch( )
   const [dirty, setDirty] = useState(false);
-  const [status, statusActions] = useStatusStore();
 
   useEffect(() => {
     setDirty(true);
@@ -153,7 +155,7 @@ export default function CandidatesReviewTable(props) {
                 itemId={value}
                 enteredValue={candidate.concept.name}
                 controlId={"concept_4_" + candidate.id}
-                dataUrl={endpoints.endpoints[endpointSet].conceptUrl}
+                dataUrl={endpoints.conceptUrl}
                 setFunction={conceptSet}
               />
             );
@@ -167,16 +169,10 @@ export default function CandidatesReviewTable(props) {
   const review_complete_lbl = "Review completed";
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-  }, []);
-
-  useEffect(() => {
-    if ("loaded" === endpoints.endpointStatus[endpointSet]) {
+    if ( endpointStatus ) {
       getData();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   const setCompleted = (item, options) => {
     //This use feedbackOpts from state
@@ -226,18 +222,17 @@ export default function CandidatesReviewTable(props) {
   };
 
   const getData = () => {
-    statusActions.startTask();
+    dispatch(startTask() );
     setReviewStatus("Loading data");
 
     fetch(
-      `${endpoints.endpoints[endpointSet].baseUrl}${props.bingoGameId}.json`,
+      `${endpoints.baseUrl}${props.bingoGameId}.json`,
       {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
           Accepts: "application/json",
-          "X-CSRF-Token": props.token
         }
       }
     )
@@ -278,18 +273,18 @@ export default function CandidatesReviewTable(props) {
 
         setReviewStatus("Data loaded");
         setDirty(false);
-        statusActions.endTask();
+        dispatch( endTask() );
         updateProgress();
       });
   };
   // conceptStats() {}
   const saveFeedback = () => {
     setDirty(false);
-    statusActions.startTask("saving");
+    dispatch( startTask("saving") );
     setReviewStatus("Saving feedback.");
 
     fetch(
-      `${endpoints.endpoints[endpointSet].reviewSaveUrl}${
+      `${endpoints.reviewSaveUrl}${
         props.bingoGameId
       }.json`,
       {
@@ -302,7 +297,6 @@ export default function CandidatesReviewTable(props) {
         headers: {
           "Content-Type": "application/json",
           Accepts: "application/json",
-          "X-CSRF-Token": props.token
         }
       }
     )
@@ -319,7 +313,7 @@ export default function CandidatesReviewTable(props) {
       })
       .then(data => {
         setDirty(typeof data.success !== "undefined");
-        statusActions.endTask("saving");
+        dispatch( endTask("saving") );
         setReviewStatus(data.notice);
       });
   };
@@ -449,7 +443,5 @@ export default function CandidatesReviewTable(props) {
   );
 }
 CandidatesReviewTable.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   bingoGameId: PropTypes.number.isRequired
 };

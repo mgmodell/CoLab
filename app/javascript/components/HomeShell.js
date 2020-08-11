@@ -12,9 +12,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import luxonPlugin from "@fullcalendar/luxon";
 
-import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useUserStore } from "./infrastructure/UserStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask } from './infrastructure/StatusActions';
 
 import DecisionEnrollmentsTable from "./DecisionEnrollmentsTable";
 import DecisionInvitationsTable from "./DecisionInvitationsTable";
@@ -24,16 +23,21 @@ import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import TaskList from "./TaskList";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function HomeShell(props) {
   const endpointSet = "home";
-  const [endpoints, endpointsActions] = useEndpointStore();
-  const [user, userActions] = useUserStore();
-  const [status, statusActions] = useStatusStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources']['endpoints_loaded'])
+  const dispatch = useDispatch( );
   const { t, i18n } = useTranslation();
   const history = useHistory();
 
   const [curTab, setCurTab] = useState("list");
+
+  const isLoggedIn = useTypedSelector(state=>state['login'].isLoggedIn)
+  const user = useTypedSelector(state=>state['login'].profile)
+  Settings.defaultZoneName = user.timezone;
 
   //Initialising to null
   const [tasks, setTasks] = useState();
@@ -41,9 +45,9 @@ export default function HomeShell(props) {
   const [waitingRosters, setWaitingRosters] = useState();
 
   const getTasks = () => {
-    var url = endpoints.endpoints[endpointSet].taskListUrl + ".json";
+    var url = endpoints.taskListUrl + ".json";
 
-    statusActions.startTask();
+    dispatch( startTask() );
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -51,7 +55,6 @@ export default function HomeShell(props) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -82,46 +85,29 @@ export default function HomeShell(props) {
         setConsentLogs(data.consent_logs);
         setWaitingRosters(data.waiting_rosters);
 
-        statusActions.endTask();
+        dispatch( endTask() );
       });
   };
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] !== "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] === "loaded") {
+    if (endpointStatus) {
       getTasks();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
-  useEffect(() => {
-    if (user.loaded) {
-      Settings.defaultZoneName = user.timezone;
-    }
-  }, [user.loaded]);
 
   var pageContent = <Skeleton variant="rect" />;
   if (undefined !== consentLogs) {
     if (consentLogs.length > 0) {
       pageContent = (
         <ConsentLog
-          token={props.token}
-          getEndpointsUrl={props.getEndpointsUrl}
           consentFormId={consentLogs[0].consent_form_id}
           parentUpdateFunc={getTasks}
         />
       );
-    } else if (user.loaded && !user.welcomed) {
+    } else if (isLoggedIn && !user.welcomed) {
       pageContent = (
         <ProfileDataAdmin
-          token={props.token}
-          getEndpointsUrl={props.getEndpointsUrl}
           profileId={user.id}
         />
       );
@@ -180,12 +166,11 @@ export default function HomeShell(props) {
   return (
     <Paper>
       <Grid container spacing={3}>
-        {"loaded" === endpoints.endpointStatus[endpointSet] ? (
+        {endpointStatus ? ( 
           <React.Fragment>
             <Grid item xs={12}>
               {undefined !== waitingRosters && waitingRosters.length > 0 ? (
                 <DecisionInvitationsTable
-                  token={props.token}
                   invitations={waitingRosters}
                   parentUpdateFunc={getTasks}
                 />
@@ -193,11 +178,8 @@ export default function HomeShell(props) {
             </Grid>
             <Grid item xs={12}>
               <DecisionEnrollmentsTable
-                token={props.token}
-                init_url={endpoints.endpoints[endpointSet].courseRegRequestsUrl}
-                update_url={
-                  endpoints.endpoints[endpointSet].courseRegUpdatesUrl
-                }
+                init_url={endpoints['courseRegRequestsUrl']}
+                update_url={endpoints['courseRegUpdatesUrl']}
               />
             </Grid>
           </React.Fragment>
@@ -211,6 +193,4 @@ export default function HomeShell(props) {
 }
 
 HomeShell.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired
 };

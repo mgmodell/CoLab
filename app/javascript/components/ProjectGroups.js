@@ -173,7 +173,6 @@ class ProjectGroups extends React.Component {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
       }
     })
       .then(response => {
@@ -208,7 +207,6 @@ class ProjectGroups extends React.Component {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
       },
       body: JSON.stringify({
         group_id: group_id
@@ -246,7 +244,6 @@ class ProjectGroups extends React.Component {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
       }
     })
       .then(response => {
@@ -286,7 +283,6 @@ class ProjectGroups extends React.Component {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
       }
     })
       .then(response => {
@@ -382,7 +378,6 @@ class ProjectGroups extends React.Component {
                     ) : null}
                     <DiversityScore
                       groupId={group.id}
-                      token={this.props.token}
                       parentDirty={this.state.dirty}
                       documented={
                         this.state.groups_raw[group.id].diversity || 0
@@ -446,7 +441,6 @@ class ProjectGroups extends React.Component {
 }
 
 ProjectGroups.propTypes = {
-  token: PropTypes.string.isRequired,
   projectId: PropTypes.number.isRequired,
   groupsUrl: PropTypes.string.isRequired,
   diversityCheckUrl: PropTypes.string.isRequired,

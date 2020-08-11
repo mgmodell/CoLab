@@ -10,14 +10,14 @@ import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
 import GridOffIcon from "@material-ui/icons/GridOff";
 import TuneIcon from "@material-ui/icons/Tune";
 
-import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useUserStore } from "./infrastructure/UserStore";
 import MUIDataTable from "mui-datatables";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function TaskList(props) {
-  const endpointSet = "home";
-  const [endpoints, endpointsActions] = useEndpointStore();
-  const [user, userActions] = useUserStore();
+  //const endpointSet = "home";
+  //const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  //const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const user = useTypedSelector(state=>state['login'].profile)
   const history = useHistory();
 
   const columns = [

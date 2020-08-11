@@ -3,17 +3,18 @@ import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@material-ui/core/Paper";
 import { iconForType } from "./ActivityLib";
-import { useStatusStore } from "./infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from './infrastructure/StatusActions';
 
 import MUIDataTable from "mui-datatables";
 
 export default function UserCourseList(props) {
   // const [addUsersPath, setAddUsersPath] = useState("");
   // const [procRegReqPath, setProcRegReqPath] = useState("");
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
 
   const getActivities = () => {
-    statusActions.startTask();
+    dispatch( startTask() );
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -21,7 +22,6 @@ export default function UserCourseList(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -35,7 +35,7 @@ export default function UserCourseList(props) {
         console.log(data);
         //MetaData and Infrastructure
         props.activitiesListUpdateFunc(data);
-        statusActions.endTask();
+        dispatch( endTask() );
       });
   };
 
@@ -107,7 +107,6 @@ export default function UserCourseList(props) {
 }
 
 UserCourseList.propTypes = {
-  token: PropTypes.string.isRequired,
   retrievalUrl: PropTypes.string.isRequired,
   activitiesList: PropTypes.array,
   activitiesListUpdateFunc: PropTypes.func.isRequired,

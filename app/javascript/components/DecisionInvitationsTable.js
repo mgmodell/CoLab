@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from "react";
+import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Fab from "@material-ui/core/Fab";
@@ -10,9 +11,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
-import { useUserStore } from "./infrastructure/UserStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
 
+import {startTask, endTask} from './infrastructure/StatusActions';
 import MUIDataTable from "mui-datatables";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
@@ -21,15 +21,9 @@ import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 
 export default function DecisionInvitationsTable(props) {
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
   const { t, i18n } = useTranslation();
-  const [user, userActions] = useUserStore();
-
-  useEffect(() => {
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
+  const user = useTypedSelector(state=>state['login'].profile)
 
   const columns = [
     {
@@ -49,7 +43,7 @@ export default function DecisionInvitationsTable(props) {
                   aria-label={t("accept")}
                   onClick={event => {
                     const url = invitation.acceptPath + ".json";
-                    statusActions.startTask("accepting");
+                    dispatch( startTask("accepting") );
                     fetch(url, {
                       method: "GET",
                       credentials: "include",
@@ -57,7 +51,6 @@ export default function DecisionInvitationsTable(props) {
                       headers: {
                         "Content-Type": "application/json",
                         Accept: "application/json",
-                        "X-CSRF-Token": props.token
                       }
                     })
                       .then(response => {
@@ -70,7 +63,7 @@ export default function DecisionInvitationsTable(props) {
                       .then(data => {
                         //Process the data
                         props.parentUpdateFunc();
-                        statusActions.endTask("accepting");
+                        dispatch( endTask("accepting") );
                       });
                   }}
                 >
@@ -83,7 +76,7 @@ export default function DecisionInvitationsTable(props) {
                   aria-label={t("decline")}
                   onClick={event => {
                     const url = invitation.declinePath + ".json";
-                    statusActions.startTask("declining");
+                    dispatch( startTask("declining") );
                     fetch(url, {
                       method: "GET",
                       credentials: "include",
@@ -91,7 +84,6 @@ export default function DecisionInvitationsTable(props) {
                       headers: {
                         "Content-Type": "application/json",
                         Accept: "application/json",
-                        "X-CSRF-Token": props.token
                       }
                     })
                       .then(response => {
@@ -104,7 +96,7 @@ export default function DecisionInvitationsTable(props) {
                       .then(data => {
                         //Process the data
                         props.parentUpdateFunc();
-                        statusActions.endTask("declining");
+                        dispatch( endTask("declining") );
                       });
                   }}
                 >
@@ -170,7 +162,6 @@ export default function DecisionInvitationsTable(props) {
   );
 }
 DecisionInvitationsTable.propTypes = {
-  token: PropTypes.string.isRequired,
   invitations: PropTypes.array.isRequired,
   parentUpdateFunc: PropTypes.func.isRequired
 };

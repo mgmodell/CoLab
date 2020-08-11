@@ -11,7 +11,6 @@ export default function Quote(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -35,5 +34,4 @@ export default function Quote(props) {
 }
 Quote.propTypes = {
   url: PropTypes.string,
-  token: PropTypes.string
 };

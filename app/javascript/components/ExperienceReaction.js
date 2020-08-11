@@ -14,7 +14,7 @@ import TextField from "@material-ui/core/TextField";
 
 import { useTranslation } from "react-i18next";
 import { i18n } from "./infrastructure/i18n";
-import { useLookupStore } from "./infrastructure/LookupStore";
+import {useTypedLookup, useTypedSelector} from './infrastructure/AppReducers';
 
 import Radio from "@material-ui/core/Radio";
 import Grid from "@material-ui/core/Grid";
@@ -28,11 +28,7 @@ export default function ExperienceReaction(props) {
   const [improvements, setImprovements] = useState("");
   const dirtyStatus = useSelector( state =>{ return state.dirtyState['reaction'] });
   const dispatch = useDispatch( );
-  const [lookup, lookupActions] = useLookupStore();
-
-  useEffect(() => {
-    lookupActions.fetch(["behaviors"], props.lookupUrl, props.token);
-  }, []);
+  const behaviors = useTypedSelector(state=>state.resources.lookups.behaviors)
 
   const getById = (list, id) => {
     return list.filter(item => {
@@ -43,7 +39,7 @@ export default function ExperienceReaction(props) {
   const detailNeeded =
     0 === behaviorId
       ? true
-      : getById(lookup.lookups.behaviors, behaviorId).needs_detail;
+      : getById(behaviors, behaviorId).needs_detail;
   const detailPresent = otherName.length > 0;
   const improvementsPresent = improvements.length > 0;
   const saveButton = (
@@ -63,7 +59,7 @@ export default function ExperienceReaction(props) {
   );
   const otherPnl =
     0 !== behaviorId &&
-    getById(lookup.lookups.behaviors, behaviorId).needs_detail ? (
+    getById(behaviors, behaviorId).needs_detail ? (
       <TextField
         variant="filled"
         label={t("next.other")}
@@ -99,7 +95,7 @@ export default function ExperienceReaction(props) {
         </Grid>
         <Grid item xs={12} >
           <FormLabel>{t("reaction.dom_behavior")}</FormLabel>
-          {lookup.lookups.behaviors !== undefined ? (
+          {behaviors !== undefined ? (
             <RadioGroup
               aria-label="behavior"
               value={behaviorId}
@@ -108,7 +104,7 @@ export default function ExperienceReaction(props) {
                 setBehaviorId(Number(event.target.value));
               }}
             >
-              {lookup.lookups.behaviors.map(behavior => {
+              {behaviors.map(behavior => {
                 return (
                   <React.Fragment key={"behavior_" + behavior.id}>
                     <FormControlLabel
@@ -151,6 +147,5 @@ export default function ExperienceReaction(props) {
 }
 
 ExperienceReaction.propTypes = {
-  lookupUrl: PropTypes.string.isRequired,
   reactionFunc: PropTypes.func.isRequired
 };

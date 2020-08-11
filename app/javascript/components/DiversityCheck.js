@@ -46,7 +46,6 @@ class DiversityCheck extends React.Component {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
       },
       body: JSON.stringify({
         emails: this.state.emails
@@ -167,7 +166,6 @@ class DiversityCheck extends React.Component {
 }
 
 DiversityCheck.propTypes = {
-  token: PropTypes.string.isRequired,
   diversityScoreFor: PropTypes.string.isRequired
 };
 export default DiversityCheck;

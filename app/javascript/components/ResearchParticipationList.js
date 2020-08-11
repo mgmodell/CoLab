@@ -3,15 +3,17 @@ import PropTypes from "prop-types";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 
-import { useStatusStore } from "./infrastructure/StatusStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from './infrastructure/StatusActions';
 
 import MUIDataTable from "mui-datatables";
 
 export default function UserCourseList(props) {
-  const [status, statusActions] = useStatusStore();
+
+  const dispatch = useDispatch( );
 
   const getCourses = () => {
-    statusActions.startTask();
+    dispatch( startTask() );
     var url = props.retrievalUrl;
     fetch(url, {
       method: "GET",
@@ -19,7 +21,6 @@ export default function UserCourseList(props) {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -32,7 +33,7 @@ export default function UserCourseList(props) {
       .then(data => {
         //MetaData and Infrastructure
         props.consentFormListUpdateFunc(data);
-        statusActions.endTask();
+        dispatch( endTask() );
       });
   };
 
@@ -118,7 +119,6 @@ export default function UserCourseList(props) {
 }
 
 UserCourseList.propTypes = {
-  token: PropTypes.string.isRequired,
   retrievalUrl: PropTypes.string.isRequired,
   consentFormList: PropTypes.array,
   consentFormListUpdateFunc: PropTypes.func.isRequired,

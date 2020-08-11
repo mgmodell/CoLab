@@ -17,11 +17,10 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import { SortDirection } from "react-virtualized";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
 
-import { useEndpointStore } from "./infrastructure/EndPointStore";
-//import { useStatusStore } from "./infrastructure/StatusStore";
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';
 
@@ -51,8 +50,8 @@ const styles = theme => ({
 });
 export default function ConceptsTable(props) {
   const endpointSet = "concept";
-  const [endpoints, endpointsActions] = useEndpointStore();
-  //const [status, statusActions] = useStatusStore();
+  const endpoints = useTypedSelector( state => {return state['resources'].endpoints[endpointSet]})
+  const endpointStatus = useTypedSelector( state => {return state['resources']['endpoints_loaded']})
   const dispatch = useDispatch( );
 
   const [conceptsRaw, setConceptsRaw] = useState([]);
@@ -103,17 +102,12 @@ export default function ConceptsTable(props) {
     }
   ];
 
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
+    if (endpointStatus ){
       getConcepts();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   const setName = newName => {
     setConceptName(newName);
@@ -123,13 +117,12 @@ export default function ConceptsTable(props) {
   const getConcepts = () => {
     dispatch( startTask( 'load' ) );
     //statusActions.startTask("load");
-    fetch(endpoints.endpoints[endpointSet].baseUrl + ".json", {
+    fetch(endpoints.baseUrl + ".json", {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -178,13 +171,12 @@ export default function ConceptsTable(props) {
   const updateConcept = (id, name) => {
     dispatch( startTask( 'load' ) );
     //statusActions.startTask("load");
-    fetch(endpoints.endpoints[endpointSet].baseUrl + "/" + id + ".json", {
+    fetch(endpoints.baseUrl + "/" + id + ".json", {
       method: "PATCH",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       },
       body: JSON.stringify({
         concept: {
@@ -265,7 +257,3 @@ export default function ConceptsTable(props) {
     </React.Fragment>
   );
 }
-ConceptsTable.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired
-};

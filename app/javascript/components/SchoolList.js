@@ -12,22 +12,24 @@ import Settings from "luxon/src/settings.js";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 
-import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
-import { useUserStore } from "./infrastructure/UserStore";
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from './infrastructure/StatusActions';
+
 import MUIDataTable from "mui-datatables";
 import Collapse from "@material-ui/core/Collapse";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function SchoolList(props) {
   const endpointSet = "school";
-  const [endpoints, endpointsActions] = useEndpointStore();
-  const [user, userActions] = useUserStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const user = useTypedSelector(state=>state['login'].profile)
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
   let { path, url } = useRouteMatch();
   const history = useHistory( );
 
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
   const columns = [
     {
       label: "Name",
@@ -89,9 +91,9 @@ export default function SchoolList(props) {
   const [schools, setSchools] = useState([]);
 
   const getSchools = () => {
-    const url = endpoints.endpoints[endpointSet].baseUrl + ".json";
+    const url = endpoints.baseUrl + ".json";
 
-    statusActions.startTask();
+    dispatch( startTask() );
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -99,7 +101,6 @@ export default function SchoolList(props) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -112,25 +113,16 @@ export default function SchoolList(props) {
       .then(data => {
         //Process the data
         setSchools(data);
-        statusActions.endTask("loading");
+        dispatch( endTask("loading") );
       });
   };
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.startTask();
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
+    if (endpointStatus ){
       getSchools();
-      statusActions.endTask("loading");
+      dispatch( endTask("loading") );
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   useEffect(() => {
     if (user.loaded) {
@@ -170,13 +162,8 @@ export default function SchoolList(props) {
         ),
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
-            const link =
-              endpoints.endpoints[endpointSet].baseUrl +
-              "/" +
-              schools[cellMeta.dataIndex].id;
-            if (null != link) {
-              window.location.href = link;
-            }
+            const id = schools[cellMeta.dataIndex].id;
+            history.push( `${path}/${id}` )
           }
         },
         selectableRows: "none"
@@ -210,6 +197,4 @@ export default function SchoolList(props) {
 }
 
 SchoolList.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired
 };

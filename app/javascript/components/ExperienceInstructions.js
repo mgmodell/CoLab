@@ -15,15 +15,13 @@ import Collapse from "@material-ui/core/Collapse";
 import CloseIcon from "@material-ui/icons/Close";
 //For debug purposes
 
-import { useUserStore } from "./infrastructure/UserStore";
-import { useLookupStore } from "./infrastructure/LookupStore";
+import {useTypedSelector} from './infrastructure/AppReducers';
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 import LinkedSliders from "./LinkedSliders";
 
 export default function Experience(props) {
-  const [lookup, lookupActions] = useLookupStore();
 
   const [t, i18n] = useTranslation("experiences");
 
@@ -114,7 +112,6 @@ export default function Experience(props) {
 }
 
 Experience.propTypes = {
-  token: PropTypes.string.isRequired,
   acknowledgeFunc: PropTypes.func.isRequired,
   lookupUrl: PropTypes.string.isRequired
 };

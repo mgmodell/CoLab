@@ -104,7 +104,6 @@ class RemoteAutoSuggest extends React.Component {
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
       }
     })
       .then(response => {

@@ -30,12 +30,11 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import { useStatusStore } from "./infrastructure/StatusStore";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
-import {emailSignIn, signOut } from './infrastructure/AuthenticationActions';
+import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
 import {useTypedSelector} from './infrastructure/AppReducers'
 
 export default function SignIn(props) {
@@ -65,7 +64,7 @@ export default function SignIn(props) {
   );
   const oauthBtn =  (
     <Button variant="contained" onClick={()=>{
-      //Auth.oAuthSignIn({provider: 'google'});
+      dispatch( oAuthSignIn( 'google') );
     }}>
       Log In with Google
     </Button>

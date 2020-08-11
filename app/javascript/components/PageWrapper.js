@@ -23,7 +23,7 @@ import AppStatusBar from "./AppStatusBar";
 import SignIn from './SignIn';
 //import Auth from 'j-toker'
 import ProtectedRoute from './infrastructure/ProtectedRoute';
-import AuthInit from './infrastructure/AuthInit'
+import AppInit from './infrastructure/AppInit'
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -34,13 +34,13 @@ export default function PageWrapper(props) {
   
   return (
     <Provider store={store}>
-      <AuthInit />
+      <AppInit
+          endpointsUrl={props.getEndpointsUrl}
+      />
 
     <Router>
       <Suspense fallback={<Skeleton variant="rect" height={50} />}>
         <AppHeader
-          token={props.token}
-          getEndpointsUrl={props.getEndpointsUrl}
         />
       </Suspense>
       <br />
@@ -50,20 +50,14 @@ export default function PageWrapper(props) {
         <Switch>
           <ProtectedRoute path="/profile">
             <ProfileDataAdmin
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl}
             />
           </ProtectedRoute>
           <Route path="/demo">
             <DemoWrapper
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl}
             />
           </Route>
           <ProtectedRoute path="/admin">
             <Admin
-              token={props.token}
-              getEndpointsUrl={props.getEndpointsUrl}
             />
           </ProtectedRoute>
           <ProtectedRoute
@@ -71,8 +65,6 @@ export default function PageWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <InstallmentReport
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   installmentId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -83,8 +75,6 @@ export default function PageWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <CandidateListEntry
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   bingoGameId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -95,8 +85,6 @@ export default function PageWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <CandidatesReviewTable
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   bingoGameId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -107,8 +95,6 @@ export default function PageWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <BingoBuilder
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   bingoGameId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -119,8 +105,6 @@ export default function PageWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <Experience
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   experienceId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -131,8 +115,6 @@ export default function PageWrapper(props) {
             render={routeProps => (
               <React.Fragment>
                 <ConsentLog
-                  token={props.token}
-                  getEndpointsUrl={props.getEndpointsUrl}
                   consentFormId={Number(routeProps.match.params.id)}
                 />
               </React.Fragment>
@@ -141,8 +123,6 @@ export default function PageWrapper(props) {
           <ProtectedRoute exact path="/"
             render={routeProps =>(
               <HomeShell
-                token={props.token}
-                getEndpointsUrl={props.getEndpointsUrl}
               />
             ) }
           />
@@ -159,6 +139,4 @@ export default function PageWrapper(props) {
 }
 
 PageWrapper.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired
 };

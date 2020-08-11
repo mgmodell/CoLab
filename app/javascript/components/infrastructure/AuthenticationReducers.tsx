@@ -22,7 +22,7 @@ interface AuthRootState {
   };
 }
 
-export const useTypedAuthSelector: TypedUseSelectorHook<AuthRootState> = useSelector
+// export const useTypedAuthSelector: TypedUseSelectorHook<AuthRootState> = useSelector
 
 const initialState = {
     isLoggingIn: false,

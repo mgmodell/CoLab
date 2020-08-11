@@ -32,7 +32,6 @@ import FindInPageIcon from "@material-ui/icons/FindInPage";
 import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 
 import DiversityCheck from "./DiversityCheck";
-//import { useUserStore } from "./infrastructure/UserStore";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
@@ -166,7 +165,6 @@ export default function MainMenu(props) {
             <ListItemText>{t("profile")}</ListItemText>
           </ListItem>
           <DiversityCheck
-            token={props.token}
             diversityScoreFor={props.diversityScoreFor}
           />
         </React.Fragment>
@@ -182,10 +180,28 @@ export default function MainMenu(props) {
             <ListItemIcon>
               <HomeIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>{t("home.login")}</ListItemText>
+            <ListItemText>{t("home.title")}</ListItemText>
           </ListItem>
 
     )
+    const logoutItem = isLoggedIn ? 
+    (
+          <ListItem
+            id="logout-menu-item"
+            button
+            onClick={() => {
+              dispatch( signOut( ))
+              //window.location.href = props.logoutUrl;
+            }}
+          >
+            <ListItemIcon>
+              <ExitToAppIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t("logout")}</ListItemText>
+          </ListItem>
+
+    ) : null;
+    
 
   return (
     <React.Fragment>
@@ -207,6 +223,17 @@ export default function MainMenu(props) {
         <List id="main-menu-list">
         {basicOpts}
           {adminItems}
+          <Divider />
+          <ListItem
+            id="demo-menu-item"
+            button
+            onClick={() => navTo('/demo')}
+          >
+            <ListItemIcon>
+              <RateReviewIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t("titles.demonstration")}</ListItemText>
+          </ListItem>
           <ListItem
             id="support-menu-item"
             button
@@ -217,7 +244,6 @@ export default function MainMenu(props) {
             </ListItemIcon>
             <ListItemText>{t("support_menu")}</ListItemText>
           </ListItem>
-          <Divider />
           <ListItem
             id="about-menu-item"
             button
@@ -230,29 +256,7 @@ export default function MainMenu(props) {
             </ListItemIcon>
             <ListItemText>{t("about")}</ListItemText>
           </ListItem>
-          <ListItem
-            id="demo-menu-item"
-            button
-            onClick={() => navTo('/demo')}
-          >
-            <ListItemIcon>
-              <RateReviewIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("titles.demonstration")}</ListItemText>
-          </ListItem>
-          <ListItem
-            id="logout-menu-item"
-            button
-            onClick={() => {
-              dispatch( signOut( ))
-              //window.location.href = props.logoutUrl;
-            }}
-          >
-            <ListItemIcon>
-              <ExitToAppIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("logout")}</ListItemText>
-          </ListItem>
+          {logoutItem}
         </List>
       </SwipeableDrawer>
     </React.Fragment>
@@ -260,7 +264,6 @@ export default function MainMenu(props) {
 }
 
 MainMenu.propTypes = {
-  token: PropTypes.string.isRequired,
   diversityScoreFor: PropTypes.string.isRequired,
   reportingUrl: PropTypes.string,
   supportAddress: PropTypes.string.isRequired,

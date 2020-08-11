@@ -20,13 +20,13 @@ import ConsentFormList from "./Consent/ConsentFormList";
 import ConsentFormDataAdmin from "./Consent/ConsentFormDataAdmin";
 import ConceptsTable from './ConceptsTable';
 
-import { useUserStore } from "./infrastructure/UserStore";
 import Collapse from "@material-ui/core/Collapse";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function Admin(props) {
   let { path, url } = useRouteMatch();
 
-  const [user] = useUserStore();
+  const user = useTypedSelector(state=>state['login'].profile)
 
   const [showErrors, setShowErrors] = useState(false);
 
@@ -45,42 +45,26 @@ export default function Admin(props) {
       <WorkingIndicator id="admin_save" />
       <Switch>
         <Route path={`${path}/courses`}>
-          <CourseAdmin
-            token={props.token}
-            getEndpointsUrl={props.getEndpointsUrl}
-          />
+          <CourseAdmin />
         </Route>
         <Route exact path={`${path}/schools`}>
-          <SchoolList
-            token={props.token}
-            getEndpointsUrl={props.getEndpointsUrl}
-          />
+          <SchoolList />
         </Route>
         <Route path={`${path}/schools/:id`}>
           <SchoolDataAdmin
-            token={props.token}
-            getEndpointsUrl={props.getEndpointsUrl}
             schoolId={"new" === id ? null : id}
           />
         </Route>
         <Route exact path={`${path}/consent_forms`}>
-          <ConsentFormList
-            token={props.token}
-            getEndpointsUrl={props.getEndpointsUrl}
-          />
+          <ConsentFormList />
         </Route>
         <Route path={`${path}/consent_forms/:id`}>
           <ConsentFormDataAdmin
-            token={props.token}
-            getEndpointsUrl={props.getEndpointsUrl}
             schoolId={id === "new" ? null : id}
           />
         </Route>
         <Route path={`${path}/concepts`}>
-          <ConceptsTable
-            token={props.token}
-            getEndpointsUrl={props.getEndpointsUrl}
-          />
+          <ConceptsTable />
         </Route>
         <Route path={`${path}`}>
           <Redirect to={`${path}/courses`} />
@@ -91,6 +75,4 @@ export default function Admin(props) {
 }
 
 Admin.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired
 };

@@ -10,19 +10,13 @@ import Quote from "./Quote";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { useEndpointStore } from "./infrastructure/EndPointStore";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function AppHeader(props) {
   const { t, i18n } = useTranslation();
-  //const [endpoints, setEndpoints] = useState({})
   const endpointSet = "home";
-  const [endpoints, endpointsActions] = useEndpointStore();
-
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-  }, []);
+  const endpoints = useTypedSelector( state =>state['resources'].endpoints[endpointSet])
+  const endpointsLoaded = useTypedSelector( state =>state['resources']['endpoints_loaded']  );
 
   return (
     <React.Fragment>
@@ -31,35 +25,25 @@ export default function AppHeader(props) {
           <Suspense
             fallback={<Skeleton variant="rect" width={32} height={32} />}
           >
-            {endpoints.endpointStatus["home"] == "loaded" ? (
+            {endpointsLoaded ? (
               <MainMenu
-                token={props.token}
-                homeUrl={endpoints.endpoints["home"].homeUrl}
-                profileUrl={endpoints.endpoints["home"].profileUrl}
                 diversityScoreFor={
-                  endpoints.endpoints["home"].diversityScoreFor
+                  endpoints.diversityScoreFor
                 }
-                adminUrl={endpoints.endpoints["home"].adminUrl}
-                coursesUrl={endpoints.endpoints["home"].coursesPath}
-                schoolsUrl={endpoints.endpoints["home"].schoolsPath}
-                consentFormsUrl={endpoints.endpoints["home"].consentFormsPath}
-                conceptsUrl={endpoints.endpoints["home"].conceptsPath}
-                reportingUrl={endpoints.endpoints["home"].reportingUrl}
-                demoUrl={endpoints.endpoints["home"].demoUrl}
-                logoutUrl={endpoints.endpoints["home"].logoutUrl}
-                supportAddress={endpoints.endpoints["home"].supportAddress}
-                moreInfoUrl={endpoints.endpoints["home"].moreInfoUrl}
+                reportingUrl={endpoints.reportingUrl}
+                supportAddress={endpoints.supportAddress}
+                moreInfoUrl={endpoints.moreInfoUrl}
               />
             ) : (
               <Skeleton variant="rect" width={32} height={32} />
             )}
           </Suspense>
-          {endpoints.endpointStatus["home"] == "loaded" ? (
+            {endpointsLoaded ? (
             <Suspense
               fallback={<Skeleton variant="rect" width={32} height={32} />}
             >
               <img
-                src={endpoints.endpoints["home"].logoPath}
+                src={endpoints.logoPath}
                 style={{ width: 32, height: 32 }}
                 alt="CoLab Logo"
               />
@@ -68,24 +52,22 @@ export default function AppHeader(props) {
             <Skeleton variant="rect" width={32} height={32} />
           )}
 
-          {endpoints.endpointStatus["home"] == "loaded" ? (
+            { endpointsLoaded ? (
             <Suspense fallback={<Skeleton variant="text" />}>
               <Typography>
                 {t("title")}
                 <br />
                 <Quote
-                  token={props.token}
-                  url={endpoints.endpoints["home"].quotePath}
+                  url={endpoints.quotePath}
                 />
               </Typography>
             </Suspense>
           ) : (
             <Skeleton variant="text" />
           )}
-          {endpoints.endpointStatus["home"] == "loaded" ? (
+            {endpointsLoaded ? (
             <HelpMenu
-              token={props.token}
-              lookupUrl={endpoints.endpoints[endpointSet].lookupsUrl}
+              lookupUrl={endpoints.lookupsUrl}
             />
           ) : (
             <Skeleton variant="circle" />
@@ -98,6 +80,4 @@ export default function AppHeader(props) {
 }
 
 AppHeader.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {useDispatch} from 'react-redux';
 import BingoBoard from "./BingoBoard";
 import ConceptChips from "../ConceptChips";
 import ScoredGameDataTable from "../ScoredGameDataTable";
@@ -14,10 +15,11 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import GridList, { GridListTile } from "@material-ui/core/GridList";
 
-import { useEndpointStore } from "../infrastructure/EndPointStore";
-import { useStatusStore } from "../infrastructure/StatusStore";
 import { i18n } from "../infrastructure/i18n";
 import { useTranslation } from "react-i18next";
+import { useTypedSelector } from "../infrastructure/AppReducers";
+
+import { startTask, endTask } from '../infrastructure/StatusActions';
 
 const styles = createMuiTheme({
   typography: {
@@ -26,10 +28,12 @@ const styles = createMuiTheme({
 });
 export default function BingoBuilder(props) {
   const endpointSet = "candidate_results";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
   const { t, i18n } = useTranslation();
 
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch()
+  
   const [curTab, setCurTab] = useState("builder");
 
   const [saveStatus, setSaveStatus] = useState("");
@@ -50,19 +54,12 @@ export default function BingoBuilder(props) {
   });
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-  }, []);
-
-  useEffect(() => {
-    if ("loaded" === endpoints.endpointStatus[endpointSet]) {
-      console.log(endpoints.endpoints[endpointSet]);
+    if (endpointStatus ){
       getConcepts();
       getMyResults();
       getBoard();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   const randomizeTiles = () => {
     var selectedConcepts = {};
@@ -105,17 +102,16 @@ export default function BingoBuilder(props) {
   };
 
   const getConcepts = () => {
-    statusActions.startTask();
+    dispatch( startTask());
     console.log("concepts");
     fetch(
-      `${endpoints.endpoints[endpointSet].conceptsUrl}${bingoGameId}.json`,
+      `${endpoints.conceptsUrl}${bingoGameId}.json`,
       {
         method: "GET",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
           Accepts: "application/json",
-          "X-CSRF-Token": props.token
         }
       }
     )
@@ -129,19 +125,18 @@ export default function BingoBuilder(props) {
       })
       .then(data => {
         setConcepts(data);
-        statusActions.endTask();
+        dispatch( endTask() );
       });
   };
 
   const getMyResults = () => {
-    statusActions.startTask();
-    fetch(`${endpoints.endpoints[endpointSet].baseUrl}${bingoGameId}.json`, {
+    dispatch( startTask() );
+    fetch(`${endpoints.baseUrl}${bingoGameId}.json`, {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -157,18 +152,17 @@ export default function BingoBuilder(props) {
         setCandidateList(data.candidate_list);
         setCandidates(data.candidates);
         //}, this.randomizeTiles );
-        statusActions.endTask();
+        dispatch( endTask());
       });
   };
   const getBoard = () => {
-    statusActions.startTask();
-    fetch(`${endpoints.endpoints[endpointSet].boardUrl}${bingoGameId}.json`, {
+    dispatch( startTask());
+    fetch(`${endpoints.boardUrl}${bingoGameId}.json`, {
       method: "GET",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -184,22 +178,21 @@ export default function BingoBuilder(props) {
         data.iteration = 0;
         setBoard(data);
         //}, this.randomizeTiles );
-        statusActions.endTask();
+        dispatch( endTask());
       });
   };
 
   const saveBoard = () => {
-    statusActions.startTask("saving");
+    dispatch( startTask("saving"));
     board.bingo_cells_attributes = board.bingo_cells;
     delete board.bingo_cells;
-    fetch(`${endpoints.endpoints[endpointSet].boardUrl}${bingoGameId}.json`, {
+    fetch(`${endpoints.boardUrl}${bingoGameId}.json`, {
       method: "PATCH",
       credentials: "include",
       body: JSON.stringify({ bingo_board: board }),
       headers: {
         "Content-Type": "application/json",
         Accepts: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -227,14 +220,14 @@ export default function BingoBuilder(props) {
           setSaveStatus("Save failed. Please try again or contact support");
           setBoard(board);
         }
-        statusActions.endTask("saving");
+        dispatch( endTask("saving") );
       });
   };
   const getWorksheet = () => {
-    open(`${endpoints.endpoints[endpointSet].worksheetUrl}${bingoGameId}.pdf`);
+    open(`${endpoints.worksheetUrl}${bingoGameId}.pdf`);
   };
   const getPrintableBoard = () => {
-    open(`${endpoints.endpoints[endpointSet].boardUrl}${bingoGameId}.pdf`);
+    open(`${endpoints.boardUrl}${bingoGameId}.pdf`);
   };
 
   //This nested ternary operator is ugly, but it works. At some point
@@ -375,7 +368,5 @@ export default function BingoBuilder(props) {
   );
 }
 BingoBuilder.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired,
   bingoGameId: PropTypes.number.isRequired
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {useDispatch} from 'react-redux';
 import { useHistory, useRouteMatch } from "react-router-dom";
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
@@ -13,22 +14,22 @@ import BookIcon from "@material-ui/icons/Book";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 
-import { useEndpointStore } from "./infrastructure/EndPointStore";
-import { useUserStore } from "./infrastructure/UserStore";
-import { useStatusStore } from "./infrastructure/StatusStore";
 import CopyActivityButton from "./CopyActivityButton";
 import MUIDataTable from "mui-datatables";
 import Collapse from "@material-ui/core/Collapse";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
+import { useTypedSelector } from "./infrastructure/AppReducers";
+import {startTask, endTask} from './infrastructure/StatusActions';
 
 export default function CourseList(props) {
   const endpointSet = "course";
-  const [endpoints, endpointsActions] = useEndpointStore();
+  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded );
 
   const history = useHistory();
   const { path, url } = useRouteMatch();
 
-  const [user, userActions] = useUserStore();
+  const user = useTypedSelector(state=>state['login'].profile)
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
@@ -36,7 +37,7 @@ export default function CourseList(props) {
     return <Paper {...props} />;
   }
 
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
   const columns = [
     {
       label: "Number",
@@ -148,9 +149,9 @@ export default function CourseList(props) {
             return value == item.id;
           });
           const scoresUrl =
-            endpoints.endpoints[endpointSet].scoresUrl + value + ".csv";
+            endpoints.scoresUrl + value + ".csv";
           const copyUrl =
-            endpoints.endpoints[endpointSet].courseCopyUrl + value + ".json";
+            endpoints.courseCopyUrl + value + ".json";
           return (
             <React.Fragment>
               <Tooltip title="Download Scores to CSV">
@@ -166,8 +167,7 @@ export default function CourseList(props) {
                 </IconButton>
               </Tooltip>
               <CopyActivityButton
-                token={props.token}
-                copyUrl={endpoints.endpoints[endpointSet].courseCopyUrl}
+                copyUrl={endpoints.courseCopyUrl}
                 itemId={value}
                 itemUpdateFunc={getCourses}
                 startDate={new Date(course["start_date"])}
@@ -184,8 +184,8 @@ export default function CourseList(props) {
   const [newStartDate, setNewStartDate] = useState(DateTime.local().toISO());
 
   const getCourses = () => {
-    const url = endpoints.endpoints[endpointSet].baseUrl + ".json";
-    statusActions.startTask("loading");
+    const url = endpoints.baseUrl + ".json";
+    dispatch( startTask("loading") );
 
     fetch(url, {
       method: "GET",
@@ -194,7 +194,6 @@ export default function CourseList(props) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "X-CSRF-Token": props.token
       }
     })
       .then(response => {
@@ -207,25 +206,16 @@ export default function CourseList(props) {
       .then(data => {
         //Process the data
         setCourses(data);
-        statusActions.endTask("loading");
+        dispatch( endTask("loading") );
       });
   };
-  useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] != "loaded") {
-      statusActions.startTask("loading");
-      endpointsActions.fetch(endpointSet, props.getEndpointsUrl, props.token);
-    }
-    if (!user.loaded) {
-      userActions.fetch(props.token);
-    }
-  }, []);
 
   useEffect(() => {
-    if (endpoints.endpointStatus[endpointSet] == "loaded") {
-      statusActions.endTask("loading");
+    if (endpointStatus) {
+      dispatch( endTask("loading") );
       getCourses();
     }
-  }, [endpoints.endpointStatus[endpointSet]]);
+  }, [endpointStatus]);
 
   useEffect(() => {
     if (user.loaded) {
@@ -303,6 +293,4 @@ export default function CourseList(props) {
 }
 
 CourseList.propTypes = {
-  token: PropTypes.string.isRequired,
-  getEndpointsUrl: PropTypes.string.isRequired
 };

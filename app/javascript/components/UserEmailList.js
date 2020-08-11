@@ -21,14 +21,15 @@ import StarBorderIcon from "@material-ui/icons/StarBorder";
 import Link from "@material-ui/core/Link";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
-import { useStatusStore } from "./infrastructure/StatusStore";
+
+import {useDispatch} from 'react-redux';
+import {startTask, endTask} from './infrastructure/StatusActions';
 
 export default function UserEmailList(props) {
   const [addUsersPath, setAddUsersPath] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newEmail, setNewEmail] = useState("");
-
-  const [status, statusActions] = useStatusStore();
+  const dispatch = useDispatch( );
 
   const emailColumns = [
     {
@@ -60,7 +61,7 @@ export default function UserEmailList(props) {
               <IconButton
                 aria-label={lbl}
                 onClick={event => {
-                  statusActions.startTask("updating");
+                  dispatch( startTask("updating") );
                   const url = props.primaryEmailUrl + value + ".json";
                   fetch(url, {
                     method: "GET",
@@ -68,7 +69,6 @@ export default function UserEmailList(props) {
                     headers: {
                       "Content-Type": "application/json",
                       Accepts: "application/json",
-                      "X-CSRF-Token": props.token
                     }
                   })
                     .then(response => {
@@ -81,7 +81,7 @@ export default function UserEmailList(props) {
                     .then(data => {
                       props.emailListUpdateFunc(data.emails);
                       props.addMessagesFunc(data.messages);
-                      statusActions.endTask("updating");
+                      dispatch( endTask("updating") );
                     });
                 }}
               >
@@ -118,14 +118,13 @@ export default function UserEmailList(props) {
                 aria-label={lbl2}
                 onClick={event => {
                   const url = props.removeEmailUrl + value + ".json";
-                  statusActions.startTask("removing");
+                  dispatch( startTask("removing") );
                   fetch(url, {
                     method: "GET",
                     credentials: "include",
                     headers: {
                       "Content-Type": "application/json",
                       Accepts: "application/json",
-                      "X-CSRF-Token": props.token
                     }
                   })
                     .then(response => {
@@ -138,7 +137,7 @@ export default function UserEmailList(props) {
                     .then(data => {
                       props.emailListUpdateFunc(data.emails);
                       props.addMessagesFunc(data.messages);
-                      statusActions.endTask("removing");
+                      dispatch( endTask("removing") );
                     });
                 }}
               >
@@ -199,14 +198,13 @@ export default function UserEmailList(props) {
                     </Button>
                     <Button
                       onClick={() => {
-                        statusActions.startTask("updating");
+                        dispatch( startTask("updating") );
                         fetch(props.addEmailUrl + ".json", {
                           method: "PUT",
                           credentials: "include",
                           headers: {
                             "Content-Type": "application/json",
                             Accepts: "application/json",
-                            "X-CSRF-Token": props.token
                           },
                           body: JSON.stringify({
                             email_address: newEmail
@@ -223,7 +221,7 @@ export default function UserEmailList(props) {
                             //getUsers();
                             props.emailListUpdateFunc(data.emails);
                             props.addMessagesFunc(data.messages);
-                            statusActions.endTask("updating");
+                            dispatch( endTask("updating") );
                           });
                         closeDialog();
                       }}
@@ -267,7 +265,6 @@ export default function UserEmailList(props) {
 }
 
 UserEmailList.propTypes = {
-  token: PropTypes.string.isRequired,
   emailList: PropTypes.array,
   emailListUpdateFunc: PropTypes.func.isRequired,
 

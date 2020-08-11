@@ -5,10 +5,10 @@ require 'forgery'
 class BingoGamesController < ApplicationController
   layout 'admin', except: %i[review_candidates update_review_candidates
                              review_candidates_demo game_results ]
-  skip_before_action :authenticate_user!,
-                     only: %i[review_candidates_demo
-                              demo_update_review_candidates
-                              demo_my_results ]
+  # skip_before_action :authenticate_user!,
+  #                    only: %i[review_candidates_demo
+  #                             demo_update_review_candidates
+  #                             demo_my_results ]
   before_action :demo_user, only: %i[ review_candidates_demo
                                       demo_update_review_candidates ]
 
