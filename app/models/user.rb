@@ -122,10 +122,14 @@ class User < ApplicationRecord
   end
 
   def is_instructor?
+    instructor
+  end
+
+  def update_instructor
     if admin || rosters.instructor.count > 0
-      true
+      self.instructor = true
     else
-      false
+      self.instructor = false
     end
   end
 

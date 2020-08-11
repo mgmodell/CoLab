@@ -50,5 +50,7 @@ class Roster < ApplicationRecord
         end
       end
     end
+    user.update_instructor
+    user.save
   end
 end

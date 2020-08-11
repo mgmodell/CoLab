@@ -28,7 +28,7 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 export default function HomeShell(props) {
   const endpointSet = "home";
   const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources']['endpoints_loaded'])
+  const endpointsLoaded = useTypedSelector(state=>state['resources']['endpoints_loaded'])
   const dispatch = useDispatch( );
   const { t, i18n } = useTranslation();
   const history = useHistory();
@@ -90,10 +90,10 @@ export default function HomeShell(props) {
   };
 
   useEffect(() => {
-    if (endpointStatus) {
+    if (endpointsLoaded) {
       getTasks();
     }
-  }, [endpointStatus]);
+  }, [endpointsLoaded]);
 
 
   var pageContent = <Skeleton variant="rect" />;
@@ -166,7 +166,7 @@ export default function HomeShell(props) {
   return (
     <Paper>
       <Grid container spacing={3}>
-        {endpointStatus ? ( 
+        {endpointsLoaded ? ( 
           <React.Fragment>
             <Grid item xs={12}>
               {undefined !== waitingRosters && waitingRosters.length > 0 ? (

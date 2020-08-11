@@ -67,7 +67,7 @@ export default function MainMenu(props) {
   };
 
 
-  const adminItems = user.is_admin ? (
+  const adminItems = user.is_instructor ? (
     <React.Fragment>
       <Divider />
       <ListItem
@@ -94,6 +94,29 @@ export default function MainMenu(props) {
           </ListItemIcon>
           <ListItemText>{t("courses_edit")}</ListItemText>
         </ListItem>
+      <ListItem
+        button
+        id="admin_rpt-menu"
+        onClick={() => navTo(props.reportingUrl)}
+      >
+        <ListItemIcon>
+          <MultilineChartIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{t("reporting")}</ListItemText>
+      </ListItem>
+      { user.is_admin
+          ? (
+            <React.Fragment>
+        <ListItem
+          button
+          id="concepts-menu-item"
+          onClick={() => navTo('/admin/concepts')}
+        >
+          <ListItemIcon>
+            <DynamicFeedIcon fontSize='small' />
+          </ListItemIcon>
+          <ListItemText>{t("concepts_edit")}</ListItemText>
+        </ListItem>
         <ListItem
           button
           id="schools-menu-item"
@@ -114,29 +137,14 @@ export default function MainMenu(props) {
           </ListItemIcon>
           <ListItemText>{t("consent_forms_edit")}</ListItemText>
         </ListItem>
-        <ListItem
-          button
-          id="concepts-menu-item"
-          onClick={() => navTo('/admin/concepts')}
-        >
-          <ListItemIcon>
-            <DynamicFeedIcon fontSize='small' />
-          </ListItemIcon>
-          <ListItemText>{t("concepts_edit")}</ListItemText>
-        </ListItem>
+            </React.Fragment>
+
+          ) : null
+
+      }
 
         <Divider />
       </Collapse>
-      <ListItem
-        button
-        id="admin_rpt-menu"
-        onClick={() => navTo(props.reportingUrl)}
-      >
-        <ListItemIcon>
-          <MultilineChartIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{t("reporting")}</ListItemText>
-      </ListItem>
     </React.Fragment>
   ) : null;
 
@@ -191,7 +199,7 @@ export default function MainMenu(props) {
             button
             onClick={() => {
               dispatch( signOut( ))
-              //window.location.href = props.logoutUrl;
+              setMenuOpen(false);
             }}
           >
             <ListItemIcon>

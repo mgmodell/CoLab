@@ -6,6 +6,11 @@ namespace :migratify do
     behavior.needs_detail = true
     behavior.save
 
+    User.all.each do |u|
+      u.update_instructor
+      u.save
+    end
+
   end
 
   desc 'Applying changes to Candidate Feedback options'

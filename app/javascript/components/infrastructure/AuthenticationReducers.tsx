@@ -17,6 +17,7 @@ interface AuthRootState {
     timezone: string;
     language: string;
     is_admin: boolean;
+    is_instructor: boolean,
     welcomed: boolean;
     email: string;
   };
@@ -35,6 +36,7 @@ const initialState = {
       timezone: "UTC",
       language: "en",
       is_admin: false,
+      is_instructor: false,
       welcomed: false,
       email: ''
     }
@@ -63,6 +65,7 @@ export function login(state: AuthRootState = initialState, action) {
         timezone: action.timezone || 'UTC',
         language: action.language || "en",
         is_admin: action.is_admin,
+        is_instructor: action.is_instructor,
         welcomed: action.welcomed,
         email: action.email,
       }

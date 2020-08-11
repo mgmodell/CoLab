@@ -17,19 +17,19 @@ export function authClear() {
   return { type: AUTH_CLEAR }
 }
 
-export function authSuccess( email, id, first_name, last_name, theme, welcomed, timezone, language,  is_admin ) {
-  return { type: AUTH_SUCCESS, email, id, first_name, last_name, theme, welcomed, timezone, language,  is_admin }
+export function authSuccess( email, id, first_name, last_name, theme, welcomed, timezone, language,  is_admin, is_instructor ) {
+  return { type: AUTH_SUCCESS, email, id, first_name, last_name, theme, welcomed, timezone, language,  is_admin, is_instructor }
 }
 
 export function authConfig( apiUrl = '/api/v1' ){
   return(dispatch)=>{
     dispatch( authInit( ) );
     const auth = Auth.configure({ apiUrl: apiUrl, })
-      .then( out =>{
-        dispatch(authSuccess( out.uid, 
-          out.id, out.first_name, out.last_name,
-          out.theme_id, out.welcomed, out.timezone, out.language,
-          out.admin ) );
+      .then( user =>{
+        dispatch(authSuccess( user.uid, 
+          user.id, user.first_name, user.last_name,
+          user.theme_id, user.welcomed, user.timezone, user.language,
+          user.admin, user.instructor ) );
         dispatch( reloadEndpoints( ) );
         dispatch( reloadLookups( ) )
         //dispatch( addMessage( "Successfully logged in", new Date(), Priorities.LOW ))
@@ -51,7 +51,10 @@ export function emailSignIn( email, password ){
           password: password
         })
           .then(user =>{
-            dispatch( authSuccess( user.email ) );
+            dispatch(authSuccess( user.uid, 
+              user.id, user.first_name, user.last_name,
+              user.theme_id, user.welcomed, user.timezone, user.language,
+              user.admin, user.instructor ) );
             dispatch( reloadEndpoints( ) );
             dispatch( addMessage( 'Successfully logged in', new Date( ), Priorities.LOW))
 
@@ -74,7 +77,10 @@ export function oAuthSignIn( provider ){
           provider: provider
         })
           .then(user =>{
-            dispatch( authSuccess( user.email ) );
+            dispatch(authSuccess( user.uid, 
+              user.id, user.first_name, user.last_name,
+              user.theme_id, user.welcomed, user.timezone, user.language,
+              user.admin, user.instructor ) );
             dispatch( reloadEndpoints( ) );
             dispatch( addMessage( 'Successfully logged in', new Date( ), Priorities.LOW))
 
