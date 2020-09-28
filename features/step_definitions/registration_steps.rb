@@ -34,7 +34,8 @@ Given(/^a user has signed up$/) do
     school: School.find(1),
     theme_id: 1
   )
-  @user.confirm
+  byebug
+  # @user.confirm
   @user.save
   log @user.errors.full_messages if @user.errors.present?
   @user.name(true).should_not be ', '
