@@ -1,5 +1,7 @@
 #/bin/bash
 
+sudo apt autoremove
+
 if ! grep -q "S3_BUCKET_NAME" ~/.zshrc; then
 	echo "export S3_BUCKET_NAME=colab-dev" >> ~/.zshrc
 	echo "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.zshrc
