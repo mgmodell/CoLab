@@ -9,6 +9,7 @@ class Diagnosis < ApplicationRecord
 
   validate :validate_other_name
   validate :validate_unique
+  validates_length_of :other_name, :maximum => 255
 
   def validate_other_name
     if !behavior_id.nil? &&

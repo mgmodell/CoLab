@@ -45,6 +45,7 @@ export default function HomeShell(props) {
   const [waitingRosters, setWaitingRosters] = useState();
 
   const getTasks = () => {
+    console.log( endpoints );
     var url = endpoints.taskListUrl + ".json";
 
     dispatch( startTask() );

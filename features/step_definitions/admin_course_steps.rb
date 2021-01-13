@@ -363,8 +363,8 @@ Then 'the user sees {string}' do |string|
 end
 
 Then 'the user submits credentials' do
-  fill_in 'user[email]', with: @user.email
-  fill_in 'user[password]', with: 'password'
+  fill_in 'email', with: @user.email
+  fill_in 'password', with: 'password'
 
   click_link_or_button 'Log in'
 end

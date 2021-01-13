@@ -113,9 +113,11 @@ end
 
 When(/^the user logs in$/) do
   visit '/'
-  fill_in 'user[email]', with: @user.email
-  fill_in 'user[password]', with: 'password'
+  fill_in 'email', with: @user.email
+  fill_in 'password', with: 'password'
 
   click_link_or_button 'Log in'
+  byebug
   wait_for_render
+  byebug
 end

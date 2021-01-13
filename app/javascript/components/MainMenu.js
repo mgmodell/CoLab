@@ -245,7 +245,7 @@ export default function MainMenu(props) {
           <ListItem
             id="support-menu-item"
             button
-            onClick={() => navTo("mailto:" + props.supportAddress)}
+            onClick={() => { window.location = "mailto:" + props.supportAddress }}
           >
             <ListItemIcon>
               <ContactSupportIcon fontSize="small" />

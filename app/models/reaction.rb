@@ -11,6 +11,8 @@ class Reaction < ApplicationRecord
 
   validate :thorough_completion
 
+  validates_length_of :other_name, :maximum => 255
+
   def next_week
     week = nil
 

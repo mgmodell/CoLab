@@ -21,7 +21,7 @@ const initialState = {
   endpoint_url: '/endpoints',
   endpoints_loaded: false,
   endpoints: { },
-  lookup_url: '/lookups',
+  lookup_url: '/infra/lookups',
   lookups_loaded: false,
   lookups: { }
 }

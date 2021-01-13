@@ -25,12 +25,15 @@ import SignIn from './SignIn';
 import ProtectedRoute from './infrastructure/ProtectedRoute';
 import AppInit from './infrastructure/AppInit'
 
-const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+//const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 
 export default function PageWrapper(props) {
   const store = createStore(appStatus,
-    composeEnhancer( applyMiddleware( thunk ) ) );
+    //composeEnhancer( 
+      applyMiddleware( thunk ) 
+    //  ) 
+    );
   
   return (
     <Provider store={store}>

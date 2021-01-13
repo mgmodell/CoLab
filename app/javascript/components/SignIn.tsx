@@ -59,7 +59,7 @@ export default function SignIn(props) {
     <Button disabled={'' === email || '' === password } variant="contained" onClick={()=>{
       dispatch( emailSignIn( email, password ) )
     }}>
-      Log In
+      Log in
     </Button>
   );
   const oauthBtn =  (
