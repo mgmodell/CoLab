@@ -50,7 +50,8 @@ class Candidate < ApplicationRecord
     if concept_id_changed? && concept_id_was.present?
       # Caching solution - candidate mentions are automatic
       # TODO: verify that the previous owner is updated properly.
-      old_concept = Concept.find(concept_id_was).includes(:bingo_games, :coureses)
+      puts "prior concept: #{concept_id_was}"
+      old_concept = Concept.includes(:bingo_games, :courses).find( concept_id_was )
       old_concept.bingo_games_count = old_concept.bingo_games.uniq.size
       old_concept.courses_count = old_concept.courses.uniq.size
       old_concept.save
