@@ -49,7 +49,7 @@ can help you set them up if you run into difficulty.
       it is a significant difference from other shells. Also, I recommend installing
       [Oh my zsh](http://ohmyz.sh/) as it will provide lots of nice little shortcuts and
       enhancements. Feel free to ask me about this if you're interested.
-    * `/bin/sh setup` [enter your password when it is requested]
+    * `/bin/sh setup_part_1` [enter your password when it is requested]
 
 
 
