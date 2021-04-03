@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '2.7.1'
+ruby '2.7.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.3.3'
+gem 'rails', '~> 6.1.3.1'
 
 gem 'puma', '~> 5.0'
 # Use mysql as the database for Active Record
@@ -42,9 +42,9 @@ gem 'country_select'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
-gem 'devise'
-gem 'devise-multi_email', path: '~/dev/devise-multi_email'
-gem 'devise_token_auth', path: '~/dev/devise_token_auth'
+gem 'devise', git: 'https://github.com/heartcombo/devise'
+gem 'devise-multi_email'
+gem 'devise_token_auth', git: 'https://github.com/mgmodell/devise_token_auth'
 gem 'email_address'
 gem 'forgery'
 gem 'image_processing', '~> 1.0'
@@ -89,7 +89,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 0.79', require: false
+  gem 'rubocop', '~> 1.12.0', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
