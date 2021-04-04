@@ -45,7 +45,7 @@ export default function HomeShell(props) {
   const [waitingRosters, setWaitingRosters] = useState();
 
   const getTasks = () => {
-    console.log( endpoints );
+    console.log( 'and then' );
     var url = endpoints.taskListUrl + ".json";
 
     dispatch( startTask() );
@@ -62,6 +62,7 @@ export default function HomeShell(props) {
         if (response.ok) {
           return response.json();
         } else {
+          console.log( response );
           console.log("error");
         }
       })
@@ -92,6 +93,7 @@ export default function HomeShell(props) {
 
   useEffect(() => {
     if (endpointsLoaded) {
+      console.log( 'first...' );
       getTasks();
     }
   }, [endpointsLoaded]);
@@ -178,10 +180,13 @@ export default function HomeShell(props) {
               ) : null}
             </Grid>
             <Grid item xs={12}>
-              <DecisionEnrollmentsTable
-                init_url={endpoints['courseRegRequestsUrl']}
-                update_url={endpoints['courseRegUpdatesUrl']}
-              />
+              {undefined !== endpoints['courseRegRequestsUrl'] &&
+	       undefined !== endpoints['courseRegUpdatesUrl'] ? (
+              	<DecisionEnrollmentsTable
+                	init_url={endpoints['courseRegRequestsUrl']}
+                	update_url={endpoints['courseRegUpdatesUrl']}
+              	/>
+              ) : null}
             </Grid>
           </React.Fragment>
         ) : null}

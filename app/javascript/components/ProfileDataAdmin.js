@@ -480,7 +480,7 @@ export default function ProfileDataAdmin(props) {
                   <Switch
                     checked={profileResearcher}
                     onChange={event =>
-                      setProfileResearcher(!Boolean(event.target.value))
+                      setProfileResearcher(!profileResearcher)
                     }
                     name="researcher"
                   />

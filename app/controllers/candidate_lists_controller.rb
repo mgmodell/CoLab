@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CandidateListsController < ApplicationController
-  # skip_before_action :authenticate_user!, only: %i[demo_play demo_entry]
+  skip_before_action :authenticate_user!, only: %i[demo_play demo_entry]
   before_action :demo_user, only: %i[demo_play demo_entry]
 
   before_action :set_candidate_list, only: %i[edit show update request_collaboration list_stats]

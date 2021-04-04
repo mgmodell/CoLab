@@ -5,9 +5,9 @@ class BingoBoardsController < ApplicationController
                 except: %i[index update board_for_game board_for_game_demo
                            update_demo demo_worksheet_for_game worksheet_for_game ]
   before_action :check_editor, only: %i[worksheet_results score_worksheet]
-  # skip_before_action :authenticate_user!,
-  #                    only: %i[board_for_game_demo update_demo
-  #                             demo_worksheet_for_game]
+  skip_before_action :authenticate_user!,
+                     only: %i[board_for_game_demo update_demo
+                              demo_worksheet_for_game]
   before_action :demo_user,
                 only: %i[board_for_game_demo update_demo demo_worksheet_for_game]
 

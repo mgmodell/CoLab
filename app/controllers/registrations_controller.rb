@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RegistrationsController < Devise::RegistrationsController
+class RegistrationsController < DeviseTokenAuth::RegistrationsController
   before_action :set_email, only: %i[set_primary_email remove_email]
 
   def set_primary_email

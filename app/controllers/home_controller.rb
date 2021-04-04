@@ -2,7 +2,7 @@
 
 class HomeController < ApplicationController
   # protect_from_forgery except: [:get_quote]
-  # skip_before_action :authenticate_user!, only: %i[index endpoints demo_start get_quote]
+  skip_before_action :authenticate_user!, only: %i[index lookups endpoints demo_start get_quote]
 
   def index
     # The first thing we want to do is make sure they've had an opportunity to
@@ -63,6 +63,8 @@ class HomeController < ApplicationController
   end
 
   def endpoints
+    puts "signed in? #{user_signed_in?}"
+
     ep_hash = {
       home:{
         supportAddress: 'Support@CoLab.online',

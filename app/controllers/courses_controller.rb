@@ -13,7 +13,7 @@ class CoursesController < ApplicationController
   before_action :check_viewer, except: %i[next diagnose react accept_roster
                                           decline_roster
                                           self_reg_confirm self_reg qr]
-  # skip_before_action :authenticate_user!, only: %i[qr get_quote]
+  skip_before_action :authenticate_user!, only: %i[qr get_quote]
 
   def show
     @title = t('.title')

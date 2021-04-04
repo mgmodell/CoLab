@@ -113,7 +113,6 @@ export default function SignIn(props) {
       </Grid>
       {enterLoginBtn}
       {oauthBtn}
-      {signOutBtn}
     </Paper>
   );
 }

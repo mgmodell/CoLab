@@ -62,7 +62,7 @@ export function emailSignIn( email, password ){
           .fail(resp =>{
             dispatch( authClear( ) );
             dispatch( reloadEndpoints( ) );
-            dispatch( addMessage( 'Authentication failure: ' + resp.errors.join(' '), new Date( ), Priorities.HIGH))
+            dispatch( addMessage( 'Authentication failure: ' + resp.reason +  resp.data.errors.join(' '), new Date( ), Priorities.HIGH))
 
           })
     
@@ -98,9 +98,7 @@ export function oAuthSignIn( provider ){
 export function signOut( ){
 
   return (dispatch)=>{
-    console.log( 'signing in' )
     Auth.signOut( );
-    console.log( 'signed out', auth );
     dispatch( authClear( ) );
     dispatch( reloadEndpoints( ) );
     

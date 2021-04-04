@@ -5,8 +5,8 @@ class ConceptsController < ApplicationController
   before_action :set_concept, only: %i[show edit update destroy]
   before_action :check_admin,
                 except: %i[concepts_for_game concepts_for_game_demo]
-  # skip_before_action :authenticate_user!,
-  #                    only: %i[concepts_for_game_demo]
+  skip_before_action :authenticate_user!,
+                     only: %i[concepts_for_game_demo]
   before_action :demo_user,
                 only: %i[concepts_for_game_demo]
 

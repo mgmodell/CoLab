@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class InstallmentsController < ApplicationController
-  # skip_before_action :authenticate_user!, only: %i[demo_complete]
+  skip_before_action :authenticate_user!, only: %i[demo_complete]
   before_action :demo_user, only: %i[demo_complete]
 
   include Demoable

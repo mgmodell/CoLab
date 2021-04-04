@@ -5,6 +5,8 @@ require 'forgery'
 class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
   include DeviseTokenAuth::Concerns::ResourceFinder
+  include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
+
   has_many :emails, inverse_of: :user, dependent: :destroy
 
   devise :multi_email_authenticatable, :registerable,
