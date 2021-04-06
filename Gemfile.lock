@@ -430,7 +430,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-support (3.10.2)
-    rubocop (1.12.0)
+    rubocop (1.12.1)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -608,7 +608,7 @@ DEPENDENCIES
   reek
   report_builder
   rspec
-  rubocop (~> 1.12.0)
+  rubocop (~> 1.12.1)
   rubocop-performance
   rubocop-rails
   rubocop-thread_safety
@@ -628,7 +628,7 @@ DEPENDENCIES
   webpacker
 
 RUBY VERSION
-   ruby 2.7.2p137
+   ruby 3.0.0p0
 
 BUNDLED WITH
-   2.1.4
+   2.2.15
