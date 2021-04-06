@@ -27,9 +27,11 @@ can help you set them up if you run into difficulty.
 * [Learn Cucumber](https://cucumber.io/docs)
 * [Xcode -- if you're using Mac](https://developer.apple.com/xcode/)
 * Set up your environment:
-    * Install Ubuntu on [WSL](https://wiki.ubuntu.com/WSL) - use the Windows Store if you can
-    * Install [VcXsrv](https://sourceforge.net/projects/vcxsrv)
-    * Launch Ubuntu (set up a username/password)
+    * Windows 10 (only)
+        * Install Ubuntu on [WSL](https://wiki.ubuntu.com/WSL) - use the Windows Store if you can
+        * Install [VcXsrv](https://sourceforge.net/projects/vcxsrv)
+        * Launch Ubuntu (set up a username/password)
+
     * `mkdir dev`
     * `cd dev`
     * `ssh-keygen` (press enter for all questions)
