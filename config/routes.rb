@@ -151,13 +151,8 @@ Rails.application.routes.draw do
   get 'courses/remove_instructor/:roster_id' => 'courses#remove_instructor',
       as: :remove_instructor
 
-  devise_for :users, controllers:
-    { omniauth_callbacks: 'users/omniauth_callbacks',
-      registrations: 'registrations' }
 
   # token auth routes available at /api/v1/auth
-  namespace :api do
-    scope :v1 do
       mount_devise_token_auth_for 'User', at: 'auth', controllers:
       {
         omniauth_callbacks: 'users/omniauth_callbacks',
@@ -165,8 +160,6 @@ Rails.application.routes.draw do
         registrations: 'registrations'
       }
 
-    end
-  end
 
   as :user do
     get 'users/remove_email/:email_id', to: 'registrations#remove_email',

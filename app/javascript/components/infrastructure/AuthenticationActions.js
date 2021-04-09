@@ -21,7 +21,7 @@ export function authSuccess( email, id, first_name, last_name, theme, welcomed, 
   return { type: AUTH_SUCCESS, email, id, first_name, last_name, theme, welcomed, timezone, language,  is_admin, is_instructor }
 }
 
-export function authConfig( apiUrl = '/api/v1' ){
+export function authConfig( apiUrl = '' ){
   return(dispatch)=>{
     dispatch( authInit( ) );
     const auth = Auth.configure({ apiUrl: apiUrl, })
