@@ -1,0 +1,72 @@
+#/bin/bash
+
+INST="sudo apt -y"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  INST="brew "
+fi
+
+$INST install curl wget
+
+if [[ "$OSTYPE" != "darwin"* ]]; then
+  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+  sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+  curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+fi
+
+
+$INST update
+$INST upgrade
+gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+
+if [[ "$OSTYPE" != "darwin"* ]]; then
+  $INST  install curl zsh mariadb imagemagick libmysqlclient-dev yarn asdf
+else
+  $INST  install curl zsh software-properties-common mariadb-server imagemagick libmysqlclient-dev firefox google-chrome-stable x11-apps nodejs yarn asdf
+fi
+
+chsh -s $(which zsh)
+echo 'Start the DB'
+if [[ "$OSTYPE" != "darwin"* ]]; then
+  brew service start mariadb
+else
+  sudo service mysql start
+fi
+
+echo 'setting up DB users'
+sudo mysql < ./initDBs.sql
+
+if ! grep -q "S3_BUCKET_NAME" ~/.profile; then
+	echo "export S3_BUCKET_NAME=colab-dev" >> ~/.profile
+	echo "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.profile
+	echo "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.profile
+	echo "export AWS_REGION=ap-northeast-2" >> ~/.profile
+	echo "export DISPLAY=:0" >> ~/.profile
+	echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.profile
+fi
+
+if ! grep -q "S3_BUCKET_NAME" ~/.zshrc; then
+  echo "export S3_BUCKET_NAME=colab-dev" >> ~/.zshrc
+  echo "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.zshrc
+  echo "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.zshrc
+  echo "export AWS_REGION=ap-northeast-2" >> ~/.zshrc
+  echo "export DISPLAY=:0" >> ~/.zshrc
+  echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.zshrc
+fi
+
+asdf plugin add ruby nodejs
+asdf install ruby 2.7.2
+asdf install nodejs latest
+
+gem install bundler
+gem install foreman
+bundle install
+yarn install
+
+rake db:create db:schema:load
+
+echo 'Done!'
+echo 'Happy CoLab-orating!'
+echo '(           ^^ see what I did just there?)'

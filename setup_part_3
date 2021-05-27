@@ -1,9 +1,0 @@
-#/bin/bash
-gem install bundler
-gem install foreman
-bundle install
-yarn install
-rake db:create db:schema:load
-echo 'Done!'
-echo 'Happy CoLab-orating!'
-echo '(           ^^ see what I did just there?)'

@@ -79,5 +79,8 @@
     "@types/react-router-dom": "^5.1.5",
     "webpack-cli": "^3.3.8",
     "webpack-dev-server": "^3.8.0"
+  },
+  "resolutions": {
+  "electron": "^11.0.1"
   }
 }
