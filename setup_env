@@ -3,6 +3,7 @@
 INST="sudo apt -y"
 if [[ "$OSTYPE" == "darwin"* ]]; then
   INST="brew "
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
 $INST install curl wget
