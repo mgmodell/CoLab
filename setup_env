@@ -72,6 +72,7 @@ bundle install
 yarn install
 
 rake db:create db:schema:load
+mysql colab_dev -u test -ptest < db/test_db.sql
 
 echo 'Done!'
 echo 'Happy CoLab-orating!'
