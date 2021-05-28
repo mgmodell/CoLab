@@ -6,7 +6,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-$INST install curl wget
+$INST install curl wget gnupg
 
 if [[ "$OSTYPE" != "darwin"* ]]; then
   wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -23,17 +23,17 @@ $INST upgrade
 gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 
 if [[ "$OSTYPE" != "darwin"* ]]; then
-  $INST  install curl zsh mariadb imagemagick libmysqlclient-dev yarn asdf
+  $INST  install zsh software-properties-common mariadb-server imagemagick libmysqlclient-dev firefox google-chrome-stable x11-apps nodejs yarn asdf
 else
-  $INST  install curl zsh software-properties-common mariadb-server imagemagick libmysqlclient-dev firefox google-chrome-stable x11-apps nodejs yarn asdf
+  $INST  install zsh mariadb imagemagick libmysqlclient-dev yarn asdf
 fi
 
 chsh -s $(which zsh)
 echo 'Start the DB'
 if [[ "$OSTYPE" != "darwin"* ]]; then
-  brew service start mariadb
-else
   sudo service mysql start
+else
+  brew service start mariadb
 fi
 
 echo 'setting up DB users'

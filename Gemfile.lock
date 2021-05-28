@@ -1,15 +1,4 @@
 GIT
-  remote: https://github.com/heartcombo/devise
-  revision: c82e4cf47b02002b2fd7ca31d441cf1043fc634c
-  specs:
-    devise (4.8.0)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 4.1.0)
-      responders
-      warden (~> 1.2.3)
-
-GIT
   remote: https://github.com/mgmodell/devise_token_auth
   revision: ae5e344b6d2103badd0c886bdf15891cbd8bb172
   specs:
@@ -215,6 +204,12 @@ GEM
       activerecord (>= 3.0, < 6.2)
       delayed_job (>= 3.0, < 5)
     descriptive_statistics (2.5.1)
+    devise (4.8.0)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
     devise-multi_email (3.0.0)
       devise
     diff-lcs (1.4.4)
@@ -586,7 +581,7 @@ DEPENDENCIES
   debase (= 0.2.5.beta2)
   delayed_job_active_record
   descriptive_statistics (~> 2.5.1)
-  devise!
+  devise
   devise-multi_email
   devise_token_auth!
   email_address
