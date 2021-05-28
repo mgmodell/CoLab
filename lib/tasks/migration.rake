@@ -13,6 +13,25 @@ namespace :migratify do
 
   end
 
+  desc 'Update the quotes again'
+  task quotes: :environment do
+    # Quote seed data
+    class Quote_
+      attr_accessor :text_en, :attribution
+    end
+    read_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
+    read_data.each do |quote|
+      quote.text_en = quote.text_en.strip
+      q = Quote.where(text_en: quote.text_en).take
+      q = Quote.new if q.nil?
+      q.text_en = quote.text_en unless q.text_en == quote.text_en
+      q.attribution = quote.attribution unless q.attribution == quote.attribution
+      q.save
+    end
+
+  end
+
+  # older tasks
   desc 'Applying changes to Candidate Feedback options'
   task cf_updates: :environment do
 
@@ -72,7 +91,6 @@ namespace :migratify do
       end
 
     end
-
 
   end
   
@@ -153,6 +171,7 @@ namespace :migratify do
       cl.save
     end
   end
+
 
 
   desc 'Update the quotes again'
