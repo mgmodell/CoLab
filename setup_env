@@ -62,6 +62,10 @@ asdf plugin add ruby
 asdf install ruby 3.0.0
 asdf install nodejs latest
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  echo -e "\n. $(brew --prefix asdf)/asdf.sh" >> ~/.zprofile
+fi
+
 gem install bundler
 gem install foreman
 bundle install
