@@ -33,6 +33,7 @@
     "city-timezones": "^1.2.0",
     "draft-js": "^0.11.1",
     "draftjs-to-html": "^0.9.0",
+    "electron": "^11.0.1",
     "html-to-draftjs": "^1.4.0",
     "html2canvas": "^1.0.0-alpha.11",
     "i18next": "^20.1.0",
@@ -81,6 +82,6 @@
     "webpack-dev-server": "^3.8.0"
   },
   "resolutions": {
-  "electron": "^11.0.1"
+    "electron": "^11.0.1"
   }
 }
