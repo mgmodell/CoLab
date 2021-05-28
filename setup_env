@@ -20,12 +20,12 @@ fi
 
 $INST update
 $INST upgrade
-gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 
 if [[ "$OSTYPE" != "darwin"* ]]; then
+  gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
   $INST  install zsh software-properties-common mariadb-server imagemagick libmysqlclient-dev firefox google-chrome-stable x11-apps nodejs yarn asdf
 else
-  $INST  install zsh mariadb imagemagick libmysqlclient-dev yarn asdf
+  $INST  install zsh mariadb imagemagick yarn asdf
 fi
 
 chsh -s $(which zsh)
@@ -33,7 +33,7 @@ echo 'Start the DB'
 if [[ "$OSTYPE" != "darwin"* ]]; then
   sudo service mysql start
 else
-  brew service start mariadb
+  brew services start mariadb
 fi
 
 echo 'setting up DB users'
@@ -57,8 +57,9 @@ if ! grep -q "S3_BUCKET_NAME" ~/.zshrc; then
   echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.zshrc
 fi
 
-asdf plugin add ruby nodejs
-asdf install ruby 2.7.2
+asdf plugin add nodejs
+asdf plugin add ruby
+asdf install ruby 3.0.0
 asdf install nodejs latest
 
 gem install bundler
