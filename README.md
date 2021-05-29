@@ -29,7 +29,10 @@ can help you set them up if you run into difficulty.
 * Set up your environment:
     * Install Ubuntu on [WSL](https://wiki.ubuntu.com/WSL) - use the Windows Store if you can
     * Install [VcXsrv](https://sourceforge.net/projects/vcxsrv)
-    * Launch Ubuntu (set up a username/password)
+    * Open a terminal window
+        * On Windows launch Ubuntu (set up a username/password)
+        * On Mac, open the Terminal app
+        * On Linux, open any terminal app
     * `mkdir dev`
     * `cd dev`
     * `ssh-keygen` (press enter for all questions)
@@ -41,7 +44,7 @@ can help you set them up if you run into difficulty.
 * Add Key
 * Paste the output into the window
 * Save
-* Back in Ubuntu:
+* Back in Terminal:
     * `git clone git@bitbucket.org:_performance/colab.git`
     * `cd colab`
     * __NOTE:__ The following installer will change your shell to zsh. If you are already
@@ -53,9 +56,11 @@ can help you set them up if you run into difficulty.
       you have something like:
       `plugins=(rails git rake rake-fast yarn bundler)`
       Feel free to ask me about this if you're interested. 
-    * `/bin/sh setup` [enter your password when it is requested]
+    * `/bin/sh setup_env` [enter your password when it is requested]
 
-
+# Launch the server
+* `foreman start -f Procfile.dev`
+* Open a browser window on [the test server](http://localhost:3000)
 
 # Contribution instructions #
 * Review the issues
@@ -64,14 +69,6 @@ can help you set them up if you run into difficulty.
 * Start working in your own branch
     * `git branch <enter_new_branch_name>`
     * `git checkout <enter_new_branch_name>`
-* On WSL (Windows), use `sudo service mysql start` to start the database
-  server
-* Use `foreman start -f Procfile.dev` to run the server
-    * If this gives an error, try the following:
-        1. `yarn install` (this sets up the JavaScript packages)
-        1. `bundle install` (this sets up the ruby gems/packages)
-        1. `rails db:migrate` (this sets up the database)
-        1. try again
 * Open [the test server](http://localhost:3000)
 * Play with it to understand the problem
     * Create your own user account
