@@ -69,15 +69,14 @@ can help you set them up if you run into difficulty.
 * Start working in your own branch
     * `git branch <enter_new_branch_name>`
     * `git checkout <enter_new_branch_name>`
+* Create what you need
+    * Create your own user account (if auth is working)
+    * `rake testing:set_admin['true','<email>']` will create new admin accounts with password 'password'
+    * `rake testing:examples['<email>']` will create some courses and activities for the specified user
 * Open [the test server](http://localhost:3000)
 * Play with it to understand the problem
-    * Create your own user account
-    * Execute `rake testing:set_admin['true','<your email>']` to make yourself an admin
-      (if you're using [Oh my zsh](http://ohmyz.sh/), you'll run `brake
-      testing:set_admin['true','<your email>']`)
-    * Look in `app/javascript/components` for UI materials
 * Start writing tests
-* Run your tests (this currently will not work on WSL)
+* Run your tests (this may not work on all systems)
     * `rake cucumber:rerun`
 * Check in your code
     * `git add <file name>`
