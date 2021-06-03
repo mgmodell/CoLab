@@ -134,8 +134,19 @@ namespace :testing do
       args.extras.each do |email|
         user = User.joins(:emails).where(emails: { email: email }).take
         if user.nil?
-          puts "User with email <#{email}> not found"
-        else
+          user = User.new(
+            first_name: 'f_name',
+            last_name: 'l_name',
+            password: 'password',
+            password_confirmation: 'password',
+            email: email,
+            timezone: 'UTC',
+            school: School.find( 1 ),
+            theme_id: 1
+          )
+          # puts "User with email <#{email}> not found"
+        end
+        #else
           user.admin = admin_value
           user.save
           if !user.errors.nil? && user.errors.count > 0
@@ -143,7 +154,7 @@ namespace :testing do
           else
             puts "#{user.name(false)} <#{email}> is admin? #{admin_value}"
           end
-        end
+        #end
       end
     end
   end
