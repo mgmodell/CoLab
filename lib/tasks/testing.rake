@@ -148,6 +148,7 @@ namespace :testing do
         end
         #else
           user.admin = admin_value
+          user.skip_confirmation!
           user.save
           if !user.errors.nil? && user.errors.count > 0
             puts user.errors.full_messages
