@@ -60,11 +60,13 @@ fi
 asdf plugin add nodejs
 asdf plugin add ruby
 asdf install ruby 3.0.0
-asdf install nodejs latest
+asdf install nodejs 15.6.0
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   echo -e "\n. $(brew --prefix asdf)/asdf.sh" >> ~/.zprofile
 fi
+
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/
 
 gem install bundler
 gem install foreman
