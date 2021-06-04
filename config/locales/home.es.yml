@@ -149,15 +149,15 @@ en:
   assistant: asistente
   enrolled_student: estudiante inscrito
   invited_student: estudiante invitado
-  declined_student: declined student
-  dropped_student: dropped student
-  no_projects: No projects
-  exps: Experiences
-  terms_lists: Terms Lists
-  terms_list: Terms List
-  terms_review: Terms Review
-  course: Course
-  school: School
+  declined_student: estudiante rechazado
+  dropped_student: estudiante caido
+  no_projects: No hay proyectos pendientes
+  exps: Experiencia
+  terms_lists: Listas de términos
+  terms_list: Lista de términos
+  terms_review: Revisión de terminos
+  course: Curso
+  school: Escuela
   schools_edit: Schools
   consent_forms_edit: Consent Forms
   courses_edit: Courses
