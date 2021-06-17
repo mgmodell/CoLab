@@ -33,7 +33,7 @@ return(
   xmlns="http://www.w3.org/2000/svg">
   <linearGradient id="bg_grad" x1="-5" y1="493" x2="975" y2="493"
   gradientUnits="userSpaceOnUse" >>
-    <stop offset="0" stopColor="#ffffff" stopOpacity="0%"/>
+    <stop offset="0" stopColor="#ffffff" stopOpacity="25%"/>
     <stop offset="1" stopColor="#c8c8c8" stopOpacity="100%"/>
   </linearGradient>
   <circle id="background" cx="485" cy="493" r="490" fill="url('#bg_grad')" />
