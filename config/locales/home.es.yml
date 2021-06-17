@@ -147,46 +147,46 @@ en:
   #roles
   instructor: instructor
   assistant: asistente
-  enrolled_student: estudiante inscrito
-  invited_student: estudiante invitado
-  declined_student: estudiante rechazado
-  dropped_student: estudiante caido
+  enrolled_student: Estudiante Inscrito
+  invited_student: Estudiante Invitado
+  declined_student: Estudiante Rechazado
+  dropped_student: Estudiante Caido
   no_projects: No hay proyectos pendientes
   exps: Experiencia
-  terms_lists: Listas de términos
-  terms_list: Lista de términos
-  terms_review: Revisión de terminos
+  terms_lists: Listas de Términos
+  terms_list: Lista de Términos
+  terms_review: Revisión de Términos
   course: Curso
   school: Escuela
-  schools_edit: Schools
-  consent_forms_edit: Consent Forms
-  courses_edit: Courses
-  reporting: Reporting Center
-  experiences_edit: Experiences
-  bingo_games_edit: Terms lists
-  projects_edit: Projects
-  concepts_edit: Concepts
-  active: Active
-  inactive: Inactive
-  details: Details
-  description: Description
-  for: For
-  name: Name
-  family_name: Family Name
-  given_name: Given Name
-  number: Number
-  member: Team Member
+  schools_edit: Escuelas
+  consent_forms_edit: Formas de Consentimentos
+  courses_edit: Cursos
+  reporting: Centro de Informes
+  experiences_edit: Experiencia
+  bingo_games_edit: Lista de Términos
+  projects_edit: Proyectos
+  concepts_edit: Conceptos
+  active: Activo
+  inactive: Inactivo
+  details: Detalles
+  description: Descripción
+  for: Para
+  name: Nombre
+  family_name: Nombre de Familia 
+  given_name: Nombre de Pila
+  number: Numero 
+  member: Miembro de Equipo 
   titles:
     demonstration: Demonstration
   home:
-    title: Home
-    your_tasks: Your Tasks
-    invited: You've been invited!
+    title: Pagina de Inicio
+    your_tasks: Tus Tareas 
+    invited: !Has sido Invitado!
     greeting: Hello {{name}}
-    greeting_unknown: Hello!
-    instructor_tasks: Instructor Tasks
-    student_tasks: Tasks for Class
-    task_type: Task Type
+    greeting_unknown: Hola!
+    instructor_tasks: Tarea de Instructor 
+    student_tasks: Tarea para la Clase Tasks for Class
+    task_type: Tipo de Tarea 
     sapa: Self- and Peer-Assessment
     terms_list: Terms list submission
     course_confirm: >
