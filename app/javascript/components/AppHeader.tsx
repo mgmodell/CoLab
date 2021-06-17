@@ -4,6 +4,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
+import Logo from "./Logo";
 import MainMenu from "./MainMenu";
 import HelpMenu from "./HelpMenu";
 import Quote from "./Quote";
@@ -38,19 +39,7 @@ export default function AppHeader(props) {
               <Skeleton variant="rect" width={32} height={32} />
             )}
           </Suspense>
-            {endpointsLoaded ? (
-            <Suspense
-              fallback={<Skeleton variant="rect" width={32} height={32} />}
-            >
-              <img
-                src={endpoints.logoPath}
-                style={{ width: 32, height: 32 }}
-                alt="CoLab Logo"
-              />
-            </Suspense>
-          ) : (
-            <Skeleton variant="rect" width={32} height={32} />
-          )}
+            <Logo height={32} width={32}/>
 
             { endpointsLoaded ? (
             <Suspense fallback={<Skeleton variant="text" />}>
