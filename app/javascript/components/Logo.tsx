@@ -10,7 +10,16 @@ const width = props.width || 72;
 const viewBox = [0, 0, 1000, 1000].join(' ')
 
 const [colors, setColors] = useState(
-  ['#00FF00', '#FF2A2A', '#FFFF00', '#FF6600', '#FF00FF' ]);
+  ['#00FF00', '#FF2A2A', '#FFFF00', '#FF6600', '#FF00FF' ]
+ );
+const center = {x: 450, y: 455 };
+const [points, setPoints] =
+  useState( [ {x: 124, y: 135},
+              {x: 568, y: 134},
+              {x: 790, y: 530},
+              {x: 610, y: 790},
+              {x: 120, y: 710} ] );
+
 const [green, setGreen] = useState( colors[ 0 ] );
 
 function sleep(ms) {
@@ -38,18 +47,18 @@ return(
   </linearGradient>
   <circle id="background" cx="485" cy="493" r="490" fill="url('#bg_grad')" />
   <g id="circles" stroke="black" strokeWidth="30">
-    <line x1="450" y1="455" x2="124" y2="135"/>
-    <line x1="450" y1="455" x2="568" y2="134"/>
-    <line x1="450" y1="455" x2="790" y2="530"/>
-    <line x1="450" y1="455" x2="610" y2="790"/>
-    <line x1="450" y1="455" x2="120" y2="710"/>
-    <circle id="desk" cx="450" cy="455" r="160" fill="#00FFFF"/>
+    <line x1={center.x} y1={center.y} x2={points[0].x} y2={points[0].y}/>
+    <line x1={center.x} y1={center.y} x2={points[1].x} y2={points[1].y}/>
+    <line x1={center.x} y1={center.y} x2={points[2].x} y2={points[2].y}/>
+    <line x1={center.x} y1={center.y} x2={points[3].x} y2={points[3].y}/>
+    <line x1={center.x} y1={center.y} x2={points[4].x} y2={points[4].y}/>
+    <circle id="desk" cx={center.y} cy={center.y} r="160" fill="#00FFFF"/>
     <g id="teammates" strokeWidth="20">
-      <circle id="green" cx="124" cy="135" r="82" fill={green} />
-      <circle id="red" cx="568" cy="134" r="80" fill={colors[1]} />
-      <circle id="yellow" cx="790" cy="530" r="85" fill={colors[2]}/>
-      <circle id="orange" cx="610" cy="790" r="81" fill={colors[3]}/>
-      <circle id="purple" cx="120" cy="710" r="80" fill={colors[4]}/>
+      <circle id="green" cx={points[0].x} cy={points[0].y} r="82" fill={green} />
+      <circle id="red" cx={points[1].x} cy={points[1].y} r="80" fill={colors[1]} />
+      <circle id="yellow" cx={points[2].x} cy={points[2].y} r="85" fill={colors[2]}/>
+      <circle id="orange" cx={points[3].x} cy={points[3].y} r="81" fill={colors[3]}/>
+      <circle id="purple" cx={points[4].x} cy={points[4].y} r="80" fill={colors[4]}/>
     </g>
   </g>
 
