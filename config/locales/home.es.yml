@@ -145,8 +145,8 @@ en:
   students: Estudiantes
   student: Estudiante
   #roles
-  instructor: instructor
-  assistant: asistente
+  instructor: Instructor
+  assistant: Asistente
   enrolled_student: Estudiante Inscrito
   invited_student: Estudiante Invitado
   declined_student: Estudiante Rechazado
@@ -182,14 +182,15 @@ en:
     title: Pagina de Inicio
     your_tasks: Tus Tareas 
     invited: !Has sido Invitado!
-    greeting: Hello {{name}}
+    greeting: Hola {{name}}
     greeting_unknown: Hola!
     instructor_tasks: Tarea de Instructor 
-    student_tasks: Tarea para la Clase Tasks for Class
+    student_tasks: Tarea para la Clase
     task_type: Tipo de Tarea 
-    sapa: Self- and Peer-Assessment
-    terms_list: Terms list submission
+    sapa: Auto evaluación y evaluación por pares
+    terms_list: Envío de lista de términos
     course_confirm: >
+    
       You've been added to {{course_list_text}}, but sometimes instructors make
       mistakes, so please do confirm that you are actually enrolled in
       {{proper_course_list}} listed below
