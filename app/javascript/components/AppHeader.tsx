@@ -16,8 +16,8 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 export default function AppHeader(props) {
   const { t, i18n } = useTranslation();
   const endpointSet = "home";
-  const endpoints = useTypedSelector( state =>state['resources'].endpoints[endpointSet])
-  const endpointsLoaded = useTypedSelector( state =>state['resources']['endpoints_loaded']  );
+  const endpoints = useTypedSelector( state =>state['context'].endpoints[endpointSet])
+  const endpointsLoaded = useTypedSelector( state =>state['context']['status']['endpointsLoaded']  );
 
   return (
     <React.Fragment>

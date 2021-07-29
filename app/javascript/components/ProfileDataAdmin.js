@@ -43,10 +43,20 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function ProfileDataAdmin(props) {
   const endpointSet = "profile";
-  const endpoints = useTypedSelector( state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector( state=>state['resources']['endpoints_loaded'])
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
+
+  const timezones = useTypedSelector(state=>state.context.lookups['timezones'] );
+  const countries = useTypedSelector(state=>state.context.lookups['countries'] );
+  const states = useTypedSelector(state=>state.context.lookups['states'] );
+  const cipCodes = useTypedSelector(state=>state.context.lookups['cipCodes'] );
+  const genders = useTypedSelector(state=>state.context.lookups['genders'] );
+  const schools = useTypedSelector(state=>state.context.lookups['schools'] );
+  const languages = useTypedSelector(state=>state.context.lookups['languages'] );
+  const themes = useTypedSelector(state=>state.context.lookups['themes'] );
+
   //const { t, i18n } = useTranslation('profiles' );
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector(state=>state.login.profile );
   const dispatch = useDispatch();
 
   const [curTab, setCurTab] = useState("details");
@@ -96,15 +106,6 @@ export default function ProfileDataAdmin(props) {
   const [consentForms, setConsentForms] = useState();
 
   const [profileTimezone, setProfileTimezone] = useState("0");
-
-  const [timezones, setTimezones] = useState([]);
-  const [countries, setCountries] = useState([]);
-  const [states, setStates] = useState([]);
-  const [cipCodes, setCipCodes] = useState([]);
-  const [genders, setGenders] = useState([]);
-  const [schools, setSchools] = useState([]);
-  const [languages, setLanguages] = useState([]);
-  const [themes, setThemes] = useState([]);
 
   const handlePanelClick = newPanel => {
     setCurPanel(newPanel != curPanel ? newPanel : "");
@@ -216,13 +217,13 @@ export default function ProfileDataAdmin(props) {
         setActivitiesUrl(data.activitiesUrl);
         setConsentFormsUrl(data.consentFormsUrl);
 
-        setTimezones(data.timezones);
-        setCountries(data.countries);
-        setLanguages(data.languages);
-        setCipCodes(data.cipCodes);
-        setGenders(data.genders);
-        setThemes(data.themes);
-        setSchools(data.schools);
+        //setTimezones(data.timezones);
+        //setCountries(data.countries);
+        //setLanguages(data.languages);
+        //setCipCodes(data.cipCodes);
+        //setGenders(data.genders);
+        //setThemes(data.themes);
+        //setSchools(data.schools);
 
         setProfileFields(profile);
 

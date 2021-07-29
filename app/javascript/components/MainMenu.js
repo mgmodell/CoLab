@@ -44,7 +44,7 @@ export default function MainMenu(props) {
   const [adminOpen, setAdminOpen] = useState(false);
   const [t, i18n] = useTranslation();
   const isLoggedIn = useTypedSelector( state => { return state['login'].isLoggedIn }) 
-  const user = useTypedSelector( state => { return state['login'].profile }) 
+  const user = useTypedSelector( state => state.profile.user ) 
   const dispatch = useDispatch( );
 
   const toggleDrawer = event => {

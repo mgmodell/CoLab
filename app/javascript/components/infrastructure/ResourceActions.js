@@ -27,7 +27,7 @@ export function reloadEndpoints( url ){
     } else {
       dispatch( setEndpointUrl( endpointsUrl ) );
     }
-    //useTypedSelector( state => { return state['resources'].endpointsUrl })
+    //useTypedSelector( state => { return state['context'].endpointsUrl })
 
         fetch(endpointsUrl + ".json", {
           method: "GET",
@@ -45,7 +45,7 @@ export function reloadEndpoints( url ){
             }
           })
           .then(data => {
-            dispatch( setEndpoints( data ) )
+            dispatch( setEndpoints( data.endpoints ) )
             dispatch( endTask( 'init' ) )
           });
     

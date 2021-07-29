@@ -33,8 +33,8 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function SchoolDataAdmin(props) {
   const endpointSet = "school";
-  const endpoints = useTypedSelector( state => {return state['resources'].endpoints[endpointSet]})
-  const endpointStatus = useTypedSelector( state => {return state['resources'].endpoints_loaded})
+  const endpoints = useTypedSelector( state => {return state['context'].endpoints[endpointSet]})
+  const endpointStatus = useTypedSelector( state => {return state['context'].endpointsLoaded})
   //const { t, i18n } = useTranslation('schools' );
   const user = useTypedSelector(state=>state['login'].profile)
 

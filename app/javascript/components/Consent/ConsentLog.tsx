@@ -15,8 +15,8 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 export default function ConsentLog(props) {
   const { t } = useTranslation("consent_logs");
   const endpointSet = "consent_log";
-  const endpoints = useTypedSelector(state=>state['resources'][endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources']['endpointStatus'])
+  const endpoints = useTypedSelector(state=>state['context'][endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['context']['endpointStatus'])
   const dispatch = useDispatch( );
   const [logId, setLogId] = useState();
   const [formName, setFormName] = useState("");

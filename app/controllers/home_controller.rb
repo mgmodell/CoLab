@@ -149,15 +149,21 @@ class HomeController < ApplicationController
       end
     end
 
+    resources = {
+      logged_in: user_signed_in?,
+      endpoints: ep_hash,
+      lookups: get_lookups
+    }
+
     # Provide the endpoints
     respond_to do |format|
       format.json do
-        render json: ep_hash.as_json
+        render json: resources.as_json
       end
     end
   end
 
-  def lookups
+  def get_lookups
       lookups = {
         behaviors: Behavior.all.collect { |behavior|
           {
@@ -173,7 +179,7 @@ class HomeController < ApplicationController
             name: country.name,
             code: country.code
           }
-      },
+        },
         languages: Language.all.collect { |language|
           {
             id: language.id,
@@ -210,7 +216,12 @@ class HomeController < ApplicationController
             timezone: school.timezone
           }
         }
-        }
+      }
+  end
+
+
+  def lookups
+    lookups = get_lookups
     respond_to do |format|
       format.json do
         render json: lookups.as_json
@@ -231,6 +242,7 @@ class HomeController < ApplicationController
                       impairment_motor impairment_cognitive
                       impairment_other primary_language_id ]
           ),
+
           coursePerformanceUrl: user_courses_path,
           activitiesUrl: user_activities_path,
           consentFormsUrl: user_consents_path,
@@ -241,51 +253,11 @@ class HomeController < ApplicationController
           passwordResetUrl: initiate_password_reset_path,
           # infrastructure
           statesForUrl: states_for_path(country_code: ''),
-          countries: HomeCountry.all.collect do |country|
-            {
-              id: country.id,
-              name: country.name,
-              code: country.code
-            }
-          end,
-          languages: Language.all.collect do |language|
-            {
-              id: language.id,
-              name: language.name,
-              code: language.code
-            }
-          end,
-          cipCodes: CipCode.all.collect do |cip_code|
-            {
-              id: cip_code.id,
-              code: cip_code.gov_code,
-              name: cip_code.name
-            }
-          end,
-          genders: Gender.all.collect do |gender|
-            {
-              id: gender.id,
-              name: gender.name,
-              code: gender.code
-            }
-          end,
-          themes: Theme.all.collect do |theme|
-            {
-              id: theme.id,
-              code: theme.code,
-              name: theme.name
-            }
-          end,
-          timezones: HomeController::TIMEZONES,
-          schools: School.all.collect do |school|
-            {
-              id: school.id,
-              name: school.name,
-              timezone: school.timezone
-            }
-          end
 
         }
+        profile_hash[:user][:is_instructor] = current_user.is_instructor?
+        profile_hash[:user][:is_admin] = current_user.is_admin?
+
         profile_hash[:user][:emails] = current_user.emails.as_json(
           only: %i[id email primary],
           methods: ['confirmed?']

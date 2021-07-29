@@ -29,8 +29,8 @@ export default function ProjectDataAdmin(props) {
   const cityTimezones = require("city-timezones");
 
   const endpointSet = "project";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);

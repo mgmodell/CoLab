@@ -29,8 +29,8 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 
 export default function CandidateListEntry(props) {
   const endpointSet = "candidate_list";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
   const { t, i18n } = useTranslation("candidate_lists");
   const user = useTypedSelector(state=>state['login'].profile)
 

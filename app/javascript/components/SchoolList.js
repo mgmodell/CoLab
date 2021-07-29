@@ -21,8 +21,8 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function SchoolList(props) {
   const endpointSet = "school";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
   const user = useTypedSelector(state=>state['login'].profile)
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);

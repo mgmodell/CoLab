@@ -36,8 +36,8 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 
 export default function ConsentFormDataAdmin(props) {
   const endpointSet = "consent_form";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
   //const { t, i18n } = useTranslation('schools' );
   const user = useTypedSelector(state=>state['login'].profile)
 

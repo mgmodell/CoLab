@@ -25,8 +25,8 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function Experience(props) {
   const endpointSet = "experience";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
   const dispatch = useDispatch( );
   const [t, i18n] = useTranslation("installments");
   const history = useHistory();

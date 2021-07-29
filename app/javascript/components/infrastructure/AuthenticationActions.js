@@ -17,8 +17,8 @@ export function authClear() {
   return { type: AUTH_CLEAR }
 }
 
-export function authSuccess( email, id, first_name, last_name, theme, welcomed, timezone, language,  is_admin, is_instructor ) {
-  return { type: AUTH_SUCCESS, email, id, first_name, last_name, theme, welcomed, timezone, language,  is_admin, is_instructor }
+export function authSuccess( email, id, first_name, last_name, theme, welcomed, timezone, language, is_admin, is_instructor ) {
+  return { type: AUTH_SUCCESS, email, id, first_name, last_name, theme, welcomed, timezone, language, is_admin, is_instructor }
 }
 
 export function authConfig( apiUrl = '' ){

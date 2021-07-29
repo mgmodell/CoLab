@@ -6,7 +6,8 @@ import {dirtyState} from './DirtyReducers';
 import {statusMessages} from './MessageReducers';
 import {login} from './AuthenticationReducers';
 import {resources} from './ResourceReducers';
-
+import {context} from './ContextReducers';
+import {profile} from './ProfileReducers';
 
 const appStatus = combineReducers({
   tasks: tasks,
@@ -14,7 +15,8 @@ const appStatus = combineReducers({
   statusMessages: statusMessages,
   login: login,
   resources: resources,
-
+  context: context,
+  profile: profile
 })
 
 export default appStatus;

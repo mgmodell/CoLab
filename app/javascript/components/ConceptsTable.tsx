@@ -50,8 +50,8 @@ const styles = theme => ({
 });
 export default function ConceptsTable(props) {
   const endpointSet = "concept";
-  const endpoints = useTypedSelector( state => {return state['resources'].endpoints[endpointSet]})
-  const endpointStatus = useTypedSelector( state => {return state['resources']['endpoints_loaded']})
+  const endpoints = useTypedSelector( state => {return state['context'].endpoints[endpointSet]})
+  const endpointStatus = useTypedSelector( state => {return state['context']['status']['endpointsLoaded']})
   const dispatch = useDispatch( );
 
   const [conceptsRaw, setConceptsRaw] = useState([]);

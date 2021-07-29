@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
@@ -27,16 +28,17 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function HomeShell(props) {
   const endpointSet = "home";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointsLoaded = useTypedSelector(state=>state['resources']['endpoints_loaded'])
+  //const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
   const dispatch = useDispatch( );
   const { t, i18n } = useTranslation();
   const history = useHistory();
 
   const [curTab, setCurTab] = useState("list");
 
-  const isLoggedIn = useTypedSelector(state=>state['login'].isLoggedIn)
-  const user = useTypedSelector(state=>state['login'].profile)
+  const isLoggedIn = useTypedSelector(state=>state.context.status.loggedIn)
+  const user = useTypedSelector(state=>state.login.profile );
   Settings.defaultZoneName = user.timezone;
 
   //Initialising to null
@@ -49,6 +51,33 @@ export default function HomeShell(props) {
     var url = endpoints.taskListUrl + ".json";
 
     dispatch( startTask() );
+    axios.get( url,{
+
+    })
+      .then( (data) =>{
+        //Process the data
+        data.tasks.forEach((value, index, array) => {
+          switch (value.type) {
+            case "assessment":
+              value.title = value.group_name + " for (" + value.name + ")";
+              break;
+            case "bingo_game":
+              value.title = value.name;
+              break;
+            case "experience":
+              value.title = value.name;
+              break;
+          }
+          value.url = value.link;
+          value.start = value.next_date;
+        });
+        setTasks(data.tasks);
+        setConsentLogs(data.consent_logs);
+        setWaitingRosters(data.waiting_rosters);
+
+        dispatch( endTask() );
+      });
+      /*
     fetch(url, {
       method: "GET",
       credentials: "include",
@@ -89,6 +118,7 @@ export default function HomeShell(props) {
 
         dispatch( endTask() );
       });
+      */
   };
 
   useEffect(() => {

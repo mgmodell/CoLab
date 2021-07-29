@@ -8,7 +8,7 @@ import {
 
 interface ResourcesRootState {
   endpoint_url: string;
-  endpoints_loaded: boolean;
+  endpointsLoaded: boolean;
   endpoints: { };
   lookup_url: string;
   lookups_loaded: boolean;
@@ -19,7 +19,7 @@ interface ResourcesRootState {
 
 const initialState = {
   endpoint_url: '/endpoints',
-  endpoints_loaded: false,
+  endpointsLoaded: false,
   endpoints: { },
   lookup_url: '/infra/lookups',
   lookups_loaded: false,
@@ -36,7 +36,7 @@ export function resources(state: ResourcesRootState = initialState, action) {
       return newState;
     case SET_ENDPOINTS:
       newState.endpoints = action.endpoints;
-      newState.endpoints_loaded = true;
+      newState.endpointsLoaded = true;
       return newState;
     case SET_LOOKUP_URL:
       newState.lookup_url = action.url;
