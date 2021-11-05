@@ -1,7 +1,7 @@
 import axios from 'axios';
 //import {addMessage, startTask, endTask, Priorities } from './StatusActions';
 
-import {fetchProfile, setProfile} from './ProfileActions';
+import {fetchProfile, setProfile, clearProfile} from './ProfileActions';
 
 export const SET_LOGGING_IN = 'SET_LOGGING_IN';
 export const SET_LOGGED_IN = 'SET_LOGGED_IN';
@@ -147,6 +147,8 @@ const CONFIG = {
                     dispatch( setLoggedOut(
                         resp['data']['lookups'],
                         resp['data']['endpoints'] ) );
+                    dispatch( clearProfile );
+                    CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
                 }
 
             })
@@ -232,10 +234,11 @@ export function signOut( ){
             axios.delete( CONFIG.SIGN_OUT_PATH, {} )
             .then( resp=>{
                 console.log( 'logged out', resp );
+                dispatch( clearProfile() );
+                CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
                 CONFIG.retrieveResources( dispatch, getState )
                 //TODO: Finish this
                 // Wipe out the existing cookies/localStorage
-                CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
 
             })
         }

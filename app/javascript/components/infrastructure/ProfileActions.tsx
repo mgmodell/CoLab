@@ -8,6 +8,7 @@ export const SET_PROFILE_LANGUAGE = 'SET_PROFILE_LANGUAGE';
 export const SET_ANONYMIZE = 'SET_ANONYMIZE';
 export const SET_PROFILE_TIMEZONE = 'SET_PROFILE_TIMEZONE';
 export const SET_PROFILE_THEME = 'SET_PROFILE_THEME';
+export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 
 
 import { addMessage, startTask, endTask, Priorities } from './StatusActions';
@@ -31,6 +32,10 @@ export function setProfileTimezone( timezone: string ) {
 
 export function setProfileTheme( theme_id: number ) {
   return { type: SET_PROFILE_THEME, theme_id }
+}
+
+export function clearProfile( ) {
+  return { type: CLEAR_PROFILE }
 }
 
 //Middleware async functions
