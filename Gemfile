@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 ruby '3.0.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.3.1'
+gem 'rails', '~> 6.1.4.1'
 
 gem 'puma', '~> 5.0'
 # Use mysql as the database for Active Record
@@ -90,14 +90,14 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.18.4', require: false
+  gem 'rubocop', '~> 1.22.2', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'selenium-webdriver'
   gem 'solargraph'
-  gem 'webdrivers', '~> 4.0'
+  gem 'webdrivers', '~> 5.0'
 end
 
 group :test do

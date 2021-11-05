@@ -55,6 +55,7 @@ class HomeController < ApplicationController
                          }
                        end
     }
+    puts "*********** finished with task list"
     respond_to do |format|
       format.json do
         render json: resp_hash
@@ -74,6 +75,9 @@ class HomeController < ApplicationController
         diversityScoreFor: check_diversity_score_path,
         lookupsUrl: lookups_path
       }
+    }
+    ep_hash[:profile] = {
+      baseUrl: full_profile_path
     }
     if user_signed_in?
       ep_hash[:home][ :taskListUrl] = task_list_path
@@ -100,9 +104,6 @@ class HomeController < ApplicationController
         baseUrl: next_experience_path(experience_id: ''),
         diagnosisUrl: diagnose_path,
         reactionUrl: react_path
-      }
-      ep_hash[:profile] = {
-        baseUrl: full_profile_path
       }
       ep_hash[:consent_log] = {
         baseUrl: edit_consent_log_path(consent_form_id: ''),
@@ -154,6 +155,9 @@ class HomeController < ApplicationController
       endpoints: ep_hash,
       lookups: get_lookups
     }
+    if user_signed_in?
+      resources[:profile] = get_profile_hash
+    end
 
     # Provide the endpoints
     respond_to do |format|
@@ -229,40 +233,46 @@ class HomeController < ApplicationController
     end
   end
 
+  def get_profile_hash
+    profile_hash = {
+      user: current_user.as_json(
+        only: %i[ id first_name last_name gender_id country
+                  timezone theme_id school_id language_id
+                  date_of_birth home_state_id cip_code_id
+                  primary_language_id started_school researcher
+                  impairment_visual impairment_auditory
+                  impairment_motor impairment_cognitive
+                  impairment_other primary_language_id,
+                  welcomed ]
+      ),
+
+      coursePerformanceUrl: user_courses_path,
+      activitiesUrl: user_activities_path,
+      consentFormsUrl: user_consents_path,
+
+      addEmailUrl: add_registered_email_path,
+      removeEmailUrl: remove_registered_email_path(email_id: ''),
+      setPrimaryEmailUrl: set_primary_registered_email_path(email_id: ''),
+      passwordResetUrl: initiate_password_reset_path,
+      # infrastructure
+      statesForUrl: states_for_path(country_code: ''),
+
+    }
+    profile_hash[:user][:is_instructor] = current_user.is_instructor?
+    profile_hash[:user][:is_admin] = current_user.is_admin?
+
+    profile_hash[:user][:emails] = current_user.emails.as_json(
+      only: %i[id email primary],
+      methods: ['confirmed?']
+    )
+    profile_hash
+
+  end
+
   def full_profile
     respond_to do |format|
       format.json do
-        profile_hash = {
-          user: current_user.as_json(
-            only: %i[ id first_name last_name gender_id country
-                      timezone theme_id school_id language_id
-                      date_of_birth home_state_id cip_code_id
-                      primary_language_id started_school researcher
-                      impairment_visual impairment_auditory
-                      impairment_motor impairment_cognitive
-                      impairment_other primary_language_id ]
-          ),
-
-          coursePerformanceUrl: user_courses_path,
-          activitiesUrl: user_activities_path,
-          consentFormsUrl: user_consents_path,
-
-          addEmailUrl: add_registered_email_path,
-          removeEmailUrl: remove_registered_email_path(email_id: ''),
-          setPrimaryEmailUrl: set_primary_registered_email_path(email_id: ''),
-          passwordResetUrl: initiate_password_reset_path,
-          # infrastructure
-          statesForUrl: states_for_path(country_code: ''),
-
-        }
-        profile_hash[:user][:is_instructor] = current_user.is_instructor?
-        profile_hash[:user][:is_admin] = current_user.is_admin?
-
-        profile_hash[:user][:emails] = current_user.emails.as_json(
-          only: %i[id email primary],
-          methods: ['confirmed?']
-        )
-        render json: profile_hash
+        render json: get_profile_hash
       end
     end
   end

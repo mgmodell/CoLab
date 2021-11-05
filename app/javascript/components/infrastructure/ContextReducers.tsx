@@ -14,8 +14,8 @@ export interface ContextRootState {
     status: {
         loggingIn: boolean;
         loggedIn: boolean;
-        initialised: boolean;
         endpointsLoaded: boolean;
+        lookupsLoaded: boolean;
     };
     config: {
         localStorage?: boolean;
@@ -37,8 +37,8 @@ const initialState : ContextRootState = {
     status: {
         loggingIn: false,
         loggedIn: false,
-        initialised: false,
         endpointsLoaded: false,
+        lookupsLoaded: false,
     },
     config: {
         localStorage: null,
@@ -67,6 +67,7 @@ export function context(state: ContextRootState = initialState, action){
             newState.lookups = action.lookups;
             newState.endpoints = action.endpoints;
             newState.status.endpointsLoaded = true;
+            newState.status.lookupsLoaded = true;
             return newState;
         case LOGIN_FAILED:
             newState.status.loggingIn = false;
@@ -77,13 +78,14 @@ export function context(state: ContextRootState = initialState, action){
             newState.lookups = action.lookups;
             newState.endpoints = action.endpoints;
             newState.status.endpointsLoaded = true;
-            console.log( 'lo', newState );
             return newState;
         case SET_ENDPOINTS:
             newState.endpoints = action.endpoints;
+            newState.status.endpointsLoaded = true;
             return newState;
         case SET_LOOKUPS:
             newState.lookups = action.lookups;
+            newState.status.lookupsLoaded = true;
             return newState;
         default:
             return state;

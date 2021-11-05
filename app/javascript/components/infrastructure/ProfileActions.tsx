@@ -43,7 +43,8 @@ export function fetchProfile( reset: boolean = false  ){
     })
       .then( (response)=>{
         console.log( 'user', response );
-        const user: ProfilesRootState = response['data']['user'];
+        const user: ProfilesRootState = response['user']['user'];
+        console.log( 'user data', response, user );
         dispatch( setProfile( user ) );
         dispatch( endTask( 'loading' ) );
       } )

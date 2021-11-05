@@ -5,7 +5,7 @@ import { useTypedSelector } from "./AppReducers";
 
 export default function WorkingIndicator(props) {
 
-  const working = useTypedSelector( state =>{
+  const working = useTypedSelector( (state) =>{
     let accum = 0;
     if( undefined === props.identifier ){
       accum = state['tasks'][ props.identifier ];

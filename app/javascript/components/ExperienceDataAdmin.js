@@ -28,7 +28,7 @@ export default function ExperienceDataAdmin(props) {
   const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
   const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
   //const { t, i18n } = useTranslation('experiences' );
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector(state=>state.profile.user );
 
   const [curTab, setCurTab] = useState("details");
   const [dirty, setDirty] = useState(false);

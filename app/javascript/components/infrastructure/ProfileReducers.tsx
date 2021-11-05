@@ -18,6 +18,7 @@ export interface ProfilesRootState {
     primary: boolean;
   }];
 
+  welcomed: boolean;
   is_instructor: boolean;
   is_admin: boolean;
   country_id: number;
@@ -57,6 +58,7 @@ const initialState = {
   emails: [
   ],
 
+  welcomed: false,
   is_instructor: false,
   is_admin: false,
   country_id: null,
@@ -92,6 +94,7 @@ export function profile(state: ProfileRootState = initialState, action) {
   switch (action.type) {
     case SET_PROFILE:
       Object.assign( newState.user = action.user );
+      newState.lastRetrieved = Date.now();
       return newState;
     case SET_PROFILE_LANGUAGE:
       newState.user.language_id = action.language_id;

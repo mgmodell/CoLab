@@ -38,7 +38,7 @@ export default function HomeShell(props) {
   const [curTab, setCurTab] = useState("list");
 
   const isLoggedIn = useTypedSelector(state=>state.context.status.loggedIn)
-  const user = useTypedSelector(state=>state.login.profile );
+  const user = useTypedSelector(state=>state.profile.user );
   Settings.defaultZoneName = user.timezone;
 
   //Initialising to null
@@ -56,7 +56,9 @@ export default function HomeShell(props) {
     })
       .then( (data) =>{
         //Process the data
-        data.tasks.forEach((value, index, array) => {
+        console.log( 'tasks', data, data['tasks'] );
+        data = data['data'];
+        data['tasks'].forEach((value, index, array) => {
           switch (value.type) {
             case "assessment":
               value.title = value.group_name + " for (" + value.name + ")";
@@ -77,56 +79,14 @@ export default function HomeShell(props) {
 
         dispatch( endTask() );
       });
-      /*
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log( response );
-          console.log("error");
-        }
-      })
-      .then(data => {
-        //Process the data
-        data.tasks.forEach((value, index, array) => {
-          switch (value.type) {
-            case "assessment":
-              value.title = value.group_name + " for (" + value.name + ")";
-              break;
-            case "bingo_game":
-              value.title = value.name;
-              break;
-            case "experience":
-              value.title = value.name;
-              break;
-          }
-          value.url = value.link;
-          value.start = value.next_date;
-        });
-        setTasks(data.tasks);
-        setConsentLogs(data.consent_logs);
-        setWaitingRosters(data.waiting_rosters);
-
-        dispatch( endTask() );
-      });
-      */
   };
 
   useEffect(() => {
-    if (endpointsLoaded) {
+    if (endpointsLoaded && isLoggedIn ) {
       console.log( 'first...' );
       getTasks();
     }
-  }, [endpointsLoaded]);
+  }, [endpointsLoaded, isLoggedIn]);
 
 
   var pageContent = <Skeleton variant="rect" />;

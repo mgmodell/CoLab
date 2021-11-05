@@ -23,7 +23,7 @@ import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 export default function DecisionInvitationsTable(props) {
   const dispatch = useDispatch( );
   const { t, i18n } = useTranslation();
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector(state=>state.profile.user );
 
   const columns = [
     {

@@ -10,10 +10,10 @@ import PropTypes from "prop-types";
 export default function AppInit(props) {
   const dispatch = useDispatch( );
 
-  const isLoggedIn = useTypedSelector( state => state.context.status.loggedIn );
-  const endpointsLoaded = useTypedSelector( state => state.context.status.endpointsLoaded );
+  const isLoggedIn = useTypedSelector( (state) => state.context.status.loggedIn );
+  const endpointsLoaded = useTypedSelector( (state) => state.context.status.endpointsLoaded );
 
-  const endpoints = useTypedSelector( state => state.context.endpoints );
+  const endpoints = useTypedSelector( (state) => state.context.endpoints );
 
   useEffect( ()=> {
     //dispatch( authConfig()  )

@@ -1,7 +1,7 @@
 import axios from 'axios';
 //import {addMessage, startTask, endTask, Priorities } from './StatusActions';
 
-import {fetchProfile} from './ProfileActions';
+import {fetchProfile, setProfile} from './ProfileActions';
 
 export const SET_LOGGING_IN = 'SET_LOGGING_IN';
 export const SET_LOGGED_IN = 'SET_LOGGED_IN';
@@ -52,7 +52,7 @@ const CONFIG = {
             config['headers'][key] =  storedHeaders[key];
           }
         }
-        console.log( 'appended', config );
+        //console.log( 'appended', config );
         return config;
 
     },
@@ -83,7 +83,7 @@ const CONFIG = {
 
 
         };
-        console.log( 'storing', response );
+        //console.log( 'storing', response );
         return response;
     },
 
@@ -97,6 +97,7 @@ const CONFIG = {
 
         //Add Cookie support later
         val = localStorage.getItem(key);
+        //console.log( ' retrieved:', val )
 
         // if value is a simple string, the parser will fail. in that case, simply
         // unescape the quotes and return the string.
@@ -116,6 +117,17 @@ const CONFIG = {
         //Add Cookie support later
         localStorage.setItem(key, data);
 
+        //console.log( ' persisted:', data )
+
+    },
+
+    deleteData: function( key : string ){
+
+        //Add Cookie support later
+        localStorage.removeItem(key);
+
+        //console.log( ' persisted:', data )
+
     },
 
     retrieveResources: function( dispatch: Function, getState: Function ){
@@ -129,7 +141,8 @@ const CONFIG = {
                     dispatch( setLoggedIn(
                         resp['data']['lookups'],
                         resp['data']['endpoints'] ) );
-                    dispatch( fetchProfile( ) );
+                    dispatch( setProfile( resp['data']['profile']['user']) )
+                    //dispatch( fetchProfile( ) );
                 } else {
                     dispatch( setLoggedOut(
                         resp['data']['lookups'],
@@ -198,9 +211,10 @@ export function emailLogin( email: string, password: string ){
                   password: password } )
                 .then( resp=>{
                     console.log( 'login', resp );
-                    CONFIG.retrieveResources( dispatch, getState );
-                    dispatch( fetchProfile( ) );
-                    CONFIG.retrieveResources( dispatch, getState );
+                    CONFIG.retrieveResources( dispatch, getState )
+                        .then( response =>{
+                            dispatch( fetchProfile( ) );
+                        });
                 })
                 .catch( error=>{
                     console.log( 'error', error );
@@ -212,3 +226,19 @@ export function emailLogin( email: string, password: string ){
 }
 
 
+export function signOut( ){
+    return( dispatch, getState ) =>{
+        if( getState().context.status.loggedIn){
+            axios.delete( CONFIG.SIGN_OUT_PATH, {} )
+            .then( resp=>{
+                console.log( 'logged out', resp );
+                CONFIG.retrieveResources( dispatch, getState )
+                //TODO: Finish this
+                // Wipe out the existing cookies/localStorage
+                CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
+
+            })
+        }
+
+    }
+}

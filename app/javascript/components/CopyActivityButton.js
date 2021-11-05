@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
@@ -83,25 +84,10 @@ export default function CopyActivityButton(props) {
               onClick={event => {
                 dispatch( startTask("copying") );
                 console.log(newStartDate);
-                fetch(props.copyUrl, {
-                  method: "POST",
-                  credentials: "include",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Accepts: "application/json",
-                  },
-                  body: JSON.stringify({
-                    start_date: newStartDate
-                  })
+                axios.post( props.copyUrl,{
+                  start_date: newStartDate,
                 })
-                  .then(response => {
-                    if (response.ok) {
-                      return response.json();
-                    } else {
-                      console.log("Error");
-                    }
-                  })
-                  .then(data => {
+                  .then( data =>{
                     props.addMessagesFunc(data.messages);
                     if (Boolean(props.itemUpdateFunc)) {
                       props.itemUpdateFunc();
@@ -109,7 +95,12 @@ export default function CopyActivityButton(props) {
                     setNewStartDate(DateTime.local().toISO());
                     setCopyData(null);
                     dispatch( endTask("copying") );
-                  });
+                  })
+                  .catch( error =>{
+                    console.log( 'error:', error)
+
+                    dispatch( endTask("copying") );
+                  })
               }}
             >
               Make a Copy

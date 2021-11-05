@@ -34,7 +34,7 @@ import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 //import { useTranslation } from 'react-i18next';
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
-import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
+//import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
 import {emailLogin} from './infrastructure/ContextActions';
 import {useTypedSelector} from './infrastructure/AppReducers'
 
@@ -48,16 +48,17 @@ export default function SignIn(props) {
   const [showPassword, setShowPassword] = useState( false );
   const [from, setFrom] = useState( props.from || '/'  );
   const isLoggedIn = useTypedSelector( state => state.context.status.loggedIn );
+  const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
 
   const signOutBtn =  (
     <Button disabled={false} variant="contained" onClick={()=>{
-      dispatch( signOut( email, password ) )
+      //dispatch( signOut( email, password ) )
     }}>
       Log Out
     </Button>
   );
   const enterLoginBtn =  (
-    <Button disabled={'' === email || '' === password } variant="contained" onClick={()=>{
+    <Button disabled={'' === email || '' === password || !endpointsLoaded } variant="contained" onClick={()=>{
       dispatch( emailLogin( email, password ) )
     }}>
       Log in
@@ -65,12 +66,11 @@ export default function SignIn(props) {
   );
   const oauthBtn =  (
     <Button variant="contained" onClick={()=>{
-      dispatch( oAuthSignIn( 'google') );
+      //dispatch( oAuthSignIn( 'google') );
     }}>
       Log In with Google
     </Button>
   );
-  console.log( 'from:', from );
 
   if( isLoggedIn ){
     return <Redirect to={from} />
