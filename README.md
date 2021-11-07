@@ -56,7 +56,7 @@ can help you set them up if you run into difficulty.
       you have something like:
       `plugins=(rails git rake rake-fast yarn bundler)`
       Feel free to ask me about this if you're interested. 
-    * `/bin/sh setup_env` [enter your password when it is requested]
+    * `./setup_env` [enter your password when it is requested]
 
 # Launch the server
 * `foreman start -f Procfile.dev`
