@@ -46,7 +46,6 @@ export default function MainMenu(props) {
   const isLoggedIn = useTypedSelector( (state) => state.context.status.loggedIn ) 
   const user = useTypedSelector( (state) => state.profile.user );
 
-  console.log( 'user', user );
   const dispatch = useDispatch( );
 
   const toggleDrawer = event => {

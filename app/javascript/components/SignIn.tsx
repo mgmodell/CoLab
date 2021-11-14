@@ -35,7 +35,7 @@ import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import Grid from "@material-ui/core/Grid";
 import Input from "@material-ui/core/Input";
 //import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
-import {emailLogin} from './infrastructure/ContextActions';
+import {emailSignIn, oAuthSignIn} from './infrastructure/ContextActions';
 import {useTypedSelector} from './infrastructure/AppReducers'
 
 export default function SignIn(props) {
@@ -59,14 +59,14 @@ export default function SignIn(props) {
   );
   const enterLoginBtn =  (
     <Button disabled={'' === email || '' === password || !endpointsLoaded } variant="contained" onClick={()=>{
-      dispatch( emailLogin( email, password ) )
+      dispatch( emailSignIn( email, password ) )
     }}>
       Log in
     </Button>
   );
   const oauthBtn =  (
     <Button variant="contained" onClick={()=>{
-      //dispatch( oAuthSignIn( 'google') );
+      dispatch( oAuthSignIn( 'google' ) );
     }}>
       Log In with Google
     </Button>
