@@ -1,7 +1,8 @@
+import { RootRef } from '@material-ui/core';
 import axios from 'axios';
 //import {addMessage, startTask, endTask, Priorities } from './StatusActions';
 
-import {fetchProfile, setProfile} from './ProfileActions';
+import {fetchProfile, setProfile, clearProfile} from './ProfileActions';
 
 export const SET_LOGGING_IN = 'SET_LOGGING_IN';
 export const SET_LOGGED_IN = 'SET_LOGGED_IN';
@@ -16,6 +17,7 @@ const CONFIG = {
     API_URL:            '/api',
     SIGN_OUT_PATH:      '/auth/sign_out',
     EMAIL_SIGNIN_PATH:  '/auth/sign_in',
+    GOOGLE_AUTH_PATH:   '/auth/omniauth',
 
     tokenFormat: {
         "access-token": "{{ access-token }}",
@@ -23,6 +25,10 @@ const CONFIG = {
         client:         "{{ client }}",
         expiry:         "{{ expiry }}",
         uid:            "{{ uid }}"
+    },
+
+    authProviderPaths: {
+        google: '/auth/google_oauth2'
     },
 
     parseExpiry: function(headers){
@@ -136,7 +142,6 @@ const CONFIG = {
         axios.get( endPointsUrl + '.json',
             { withCredentials: true } )
             .then( resp =>{
-
                 if( resp['data'][ 'logged_in'] ){
                     dispatch( setLoggedIn(
                         resp['data']['lookups'],
@@ -147,10 +152,32 @@ const CONFIG = {
                     dispatch( setLoggedOut(
                         resp['data']['lookups'],
                         resp['data']['endpoints'] ) );
+                    dispatch( clearProfile );
+                    CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
                 }
 
             })
 
+    },
+
+    buildOAuthURL: function( configName: string,
+                            params: {[key: string],
+                            string}, providerPath: string ){
+
+        let oAuthUrl: string = CONFIG.API_URL + providerPath;
+        oAuthUrl += '?auth_origin_url=' + encodeURIComponent( location.href );
+        oAuthUrl += '&config_name=' + encodeURIComponent(configName );
+        oAuthUrl += "&omniauth_window_type=newWindow";
+
+        if( params ){
+            for( var key in params ){
+                oAuthUrl += '&';
+                oAuthUrl += encodeURIComponent( key );
+                oAuthUrl += '=';
+                oAuthUrl += encodeURIComponent(params[key])
+            }
+        }
+        return oAuthUrl;
     }
 
 
@@ -199,7 +226,7 @@ export function getContext( endPointsUrl: string ){
 
 }
 
-export function emailLogin( email: string, password: string ){
+export function emailSignIn( email: string, password: string ){
     return( dispatch, getState ) =>{
         dispatch( setLoggingIn);
 
@@ -225,6 +252,25 @@ export function emailLogin( email: string, password: string ){
 
 }
 
+export function oAuthSignIn( provider: string ){
+    return( dispatch, getState ) =>{
+        dispatch( setLoggingIn );
+        //Get the URL
+        const providerPath = CONFIG.authProviderPaths[ provider ];
+        let url: string = CONFIG.buildOAuthURL( provider, {}, providerPath );
+
+        if( true /*load here*/ ){
+            window.location.replace( url )
+
+        }else {
+            var popup = this.open( url );
+            //build a listenFoCredentials function
+        }
+
+    }
+    
+}
+
 
 export function signOut( ){
     return( dispatch, getState ) =>{
@@ -232,10 +278,11 @@ export function signOut( ){
             axios.delete( CONFIG.SIGN_OUT_PATH, {} )
             .then( resp=>{
                 console.log( 'logged out', resp );
+                dispatch( clearProfile() );
+                CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
                 CONFIG.retrieveResources( dispatch, getState )
                 //TODO: Finish this
                 // Wipe out the existing cookies/localStorage
-                CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
 
             })
         }

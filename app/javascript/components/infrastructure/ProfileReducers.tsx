@@ -4,7 +4,8 @@ import {
   SET_PROFILE_LANGUAGE,
   SET_ANONYMIZE,
   SET_PROFILE_TIMEZONE,
-  SET_PROFILE_THEME
+  SET_PROFILE_THEME,
+  CLEAR_PROFILE
 } from './ProfileActions'
 
 export interface ProfilesRootState {
@@ -107,6 +108,9 @@ export function profile(state: ProfileRootState = initialState, action) {
       return newState;
     case SET_PROFILE_THEME:
       newState.user.theme_id = action.theme_id;
+      return newState;
+    case CLEAR_PROFILE:
+      Object.assign( newState, initialState );
       return newState;
     default:
       return state;
