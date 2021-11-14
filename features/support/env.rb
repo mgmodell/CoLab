@@ -58,7 +58,7 @@ Capybara.register_driver(:chrome) do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: capabilities
+    # desired_capabilities: capabilities
   )
 end
 
