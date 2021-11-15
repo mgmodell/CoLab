@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {useDispatch} from 'react-redux';
 import { useHistory, useRouteMatch } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -23,13 +24,13 @@ import {startTask, endTask} from './infrastructure/StatusActions';
 
 export default function CourseList(props) {
   const endpointSet = "course";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded );
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpointStatus = useTypedSelector(state=>state.context.endpointsLoaded );
 
   const history = useHistory();
   const { path, url } = useRouteMatch();
 
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector(state=>state.profile.user );
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
@@ -187,27 +188,18 @@ export default function CourseList(props) {
     const url = endpoints.baseUrl + ".json";
     dispatch( startTask("loading") );
 
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      }
+    axios.get( url, {
+
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
-      .then(data => {
+      .then( data =>{
         //Process the data
         setCourses(data);
         dispatch( endTask("loading") );
-      });
+
+      })
+      .catch( error =>{
+        console.log( 'error', error )
+      })
   };
 
   useEffect(() => {

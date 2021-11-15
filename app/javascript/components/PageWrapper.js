@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import {Provider} from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import appStatus from './infrastructure/AppReducers';
 
@@ -26,14 +26,14 @@ import ProtectedRoute from './infrastructure/ProtectedRoute';
 import AppInit from './infrastructure/AppInit'
 
 //const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 
 
 export default function PageWrapper(props) {
-  const store = createStore(appStatus,
-    //composeEnhancer( 
+  const store = createStore(appStatus, /* preloadedState, */ composeEnhancers(
       applyMiddleware( thunk ) 
-    //  ) 
-    );
+    ));
   
   return (
     <Provider store={store}>
@@ -125,8 +125,9 @@ export default function PageWrapper(props) {
           />
           <ProtectedRoute exact path="/"
             render={routeProps =>(
-              <HomeShell
-              />
+              <React.Fragment>
+                <HomeShell />
+              </React.Fragment>
             ) }
           />
           <Route path='/login'

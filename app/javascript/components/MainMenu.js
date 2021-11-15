@@ -36,15 +36,16 @@ import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import {signOut} from './infrastructure/AuthenticationActions'
+import {signOut} from './infrastructure/ContextActions';
 
 export default function MainMenu(props) {
   const history = useHistory();
   const [menuOpen, setMenuOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [t, i18n] = useTranslation();
-  const isLoggedIn = useTypedSelector( state => { return state['login'].isLoggedIn }) 
-  const user = useTypedSelector( state => { return state['login'].profile }) 
+  const isLoggedIn = useTypedSelector( (state) => state.context.status.loggedIn ) 
+  const user = useTypedSelector( (state) => state.profile.user );
+
   const dispatch = useDispatch( );
 
   const toggleDrawer = event => {
@@ -67,7 +68,7 @@ export default function MainMenu(props) {
   };
 
 
-  const adminItems = user.is_instructor ? (
+  const adminItems = isLoggedIn && (user.is_instructor || user.is_admin ) ? (
     <React.Fragment>
       <Divider />
       <ListItem

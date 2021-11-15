@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   useRouteMatch,
   Switch,
@@ -52,9 +53,9 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function CourseDataAdmin(props) {
   const endpointSet = "course";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
-  const user = useTypedSelector(state=>state['login'].profile)
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpointStatus = useTypedSelector(state=>state.context.endpointsLoaded);
+  const user = useTypedSelector(state=>state.profile.user );
 
   const history = useHistory();
   const { path, url } = useRouteMatch();
@@ -102,22 +103,11 @@ export default function CourseDataAdmin(props) {
     } else {
       url = url + courseId + ".json";
     }
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
+
+    axios.get( url, { 
+
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
-      .then(data => {
+      .then( data =>{
         //MetaData and Infrastructure
         setTimezones(data.timezones);
         setSchools(data.schools);
@@ -160,8 +150,15 @@ export default function CourseDataAdmin(props) {
 
         dispatch( endTask( 'loading') );
         dispatch( setClean( 'course' ) );
-      });
+
+      })
+      .catch( error =>{
+        console.log( 'error:', error );
+        dispatch( endTask( 'loading') );
+        
+      })
   };
+
   const saveCourse = () => {
     const method = null == courseId ? "POST" : "PATCH";
     dispatch( startTask( 'saving' ) ) ;
@@ -172,32 +169,21 @@ export default function CourseDataAdmin(props) {
       (Boolean(courseId) ? courseId : props.courseId) +
       ".json";
 
-    fetch(url, {
-      method: method,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
-      body: JSON.stringify({
-        course: {
-          name: courseName,
-          number: courseNumber,
-          course_id: props.courseId,
-          description: courseDescription,
-          start_date: courseStartDate,
-          end_date: courseEndDate,
-          school_id: courseSchoolId,
-          consent_form_id: courseConsentFormId,
-          timezone: courseTimezone
-        }
-      })
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
+      axios({
+        method: method,
+        url: url,
+        data: {
+          course: {
+            name: courseName,
+            number: courseNumber,
+            course_id: props.courseId,
+            description: courseDescription,
+            start_date: courseStartDate,
+            end_date: courseEndDate,
+            school_id: courseSchoolId,
+            consent_form_id: courseConsentFormId,
+            timezone: courseTimezone
+          }
         }
       })
       .then(data => {
@@ -224,7 +210,11 @@ export default function CourseDataAdmin(props) {
           dispatch( setClean( 'course' ) );
         }
         postNewMessage(data.messages);
-      });
+      })
+      .catch( error =>{
+        console.log('error:', error );
+        dispatch( endTask( 'saving' ) );
+      })
   };
 
   useEffect(() => {
@@ -509,26 +499,19 @@ export default function CourseDataAdmin(props) {
                 aria-label={lbl}
                 onClick={event => {
                   dispatch( startTask( 'deleting' ) );
-                  fetch(user.drop_link, {
-                    method: "DESTROY",
-                    credentials: "include",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Accepts: "application/json",
-                    }
+                  
+                  axios.delete( user.drop_link, {
+
                   })
-                    .then(response => {
-                      if (response.ok) {
-                        return response.json();
-                      } else {
-                        console.log("error");
-                      }
-                    })
                     .then(data => {
                       getCourse();
                       setMessages(data.messages);
                       dispatch( endTask("deleting") );
-                    });
+                    })
+                    .catch( error =>{
+                      console.log( 'error:', error );
+                      dispatch( endTask("deleting") );
+                    })
                 }}
               >
                 <DeleteForeverIcon />

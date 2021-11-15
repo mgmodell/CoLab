@@ -24,8 +24,8 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import LinkedSliders from "./LinkedSliders";
 export default function InstallmentReport(props) {
   const endpointSet = "installment";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const endpoints = useTypedSelector((state)=>state.context.endpoints[endpointSet])
+  const endpointStatus = useTypedSelector((state)=>state.context.status.endpointsLoaded)
 
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);

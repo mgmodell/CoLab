@@ -5,7 +5,7 @@ import { useTypedSelector } from "./AppReducers";
 
 export default function ProtectedRoute ({ component: Component, ...rest }) {
 
-    const isLoggedIn = useTypedSelector( state => { return state.login.isLoggedIn })
+    const isLoggedIn = useTypedSelector( (state) => state.context.status.loggedIn )
 
     return(
         <Route

@@ -43,10 +43,21 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function ProfileDataAdmin(props) {
   const endpointSet = "profile";
-  const endpoints = useTypedSelector( state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector( state=>state['resources']['endpoints_loaded'])
+  const endpoints = useTypedSelector((state)=>state.context.endpoints[endpointSet]);
+  const endpointStatus = useTypedSelector((state)=>state.context.status.endpointsLoaded );
+  const lookupStatus = useTypedSelector((state)=>state.context.status.lookupsLoaded );
+
+  const timezones = useTypedSelector((state)=>state.context.lookups['timezones'] );
+  const countries = useTypedSelector((state)=>state.context.lookups['countries'] );
+  //const states = useTypedSelector((state)=>state.context.lookups['states'] );
+  const cipCodes = useTypedSelector((state)=>state.context.lookups['cip_codes'] );
+  const genders = useTypedSelector((state)=>state.context.lookups['genders'] );
+  const schools = useTypedSelector((state)=>state.context.lookups['schools'] );
+  const languages = useTypedSelector((state)=>state.context.lookups['languages'] );
+  const themes = useTypedSelector((state)=>state.context.lookups['themes'] );
+
   //const { t, i18n } = useTranslation('profiles' );
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector((state)=>state.profile.user );
   const dispatch = useDispatch();
 
   const [curTab, setCurTab] = useState("details");
@@ -84,7 +95,9 @@ export default function ProfileDataAdmin(props) {
   const [removeEmailUrl, setRemoveEmailUrl] = useState("");
   const [primaryEmailUrl, setPrimaryEmailUrl] = useState("");
   const [passwordResetUrl, setPasswordResetUrl] = useState("");
+
   const [statesForUrl, setStatesForUrl] = useState("");
+  const [states, setStates] = useState( [] );
 
   const [coursePerformanceUrl, setCoursePerformanceUrl] = useState("");
   const [courses, setCourses] = useState();
@@ -96,15 +109,6 @@ export default function ProfileDataAdmin(props) {
   const [consentForms, setConsentForms] = useState();
 
   const [profileTimezone, setProfileTimezone] = useState("0");
-
-  const [timezones, setTimezones] = useState([]);
-  const [countries, setCountries] = useState([]);
-  const [states, setStates] = useState([]);
-  const [cipCodes, setCipCodes] = useState([]);
-  const [genders, setGenders] = useState([]);
-  const [schools, setSchools] = useState([]);
-  const [languages, setLanguages] = useState([]);
-  const [themes, setThemes] = useState([]);
 
   const handlePanelClick = newPanel => {
     setCurPanel(newPanel != curPanel ? newPanel : "");
@@ -216,13 +220,13 @@ export default function ProfileDataAdmin(props) {
         setActivitiesUrl(data.activitiesUrl);
         setConsentFormsUrl(data.consentFormsUrl);
 
-        setTimezones(data.timezones);
-        setCountries(data.countries);
-        setLanguages(data.languages);
-        setCipCodes(data.cipCodes);
-        setGenders(data.genders);
-        setThemes(data.themes);
-        setSchools(data.schools);
+        //setTimezones(data.timezones);
+        //setCountries(data.countries);
+        //setLanguages(data.languages);
+        //setCipCodes(data.cipCodes);
+        //setGenders(data.genders);
+        //setThemes(data.themes);
+        //setSchools(data.schools);
 
         setProfileFields(profile);
 
@@ -347,7 +351,7 @@ export default function ProfileDataAdmin(props) {
     </Button>
   ) : null;
 
-  const detailsComponent = (
+  const detailsComponent = lookupStatus ? (
     <Paper>
       <Accordion expanded>
         <AccordionSummary id="profile">
@@ -573,7 +577,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileCipCode(Number(event.target.value))
                   }
                 >
-                  <MenuItem value={0}>None Selected</MenuItem>
+                  <MenuItem key={0} value={0}>None Selected</MenuItem>
                   {cipCodes.map(cipCode => {
                     return (
                       <MenuItem key={cipCode.code} value={cipCode.id}>
@@ -793,7 +797,7 @@ export default function ProfileDataAdmin(props) {
       <br />
       {saveButton}
     </Paper>
-  );
+  ) : null ;
 
   return (
     <Paper>
@@ -826,7 +830,7 @@ export default function ProfileDataAdmin(props) {
         <Tab label="History" value="history" />
         <Tab label="Research Participation" value="research" />
       </Tabs>
-      {"details" === curTab ? detailsComponent : null}
+      {lookupStatus && "details" === curTab ? detailsComponent : null}
       {"courses" === curTab ? (
         <UserCourseList
           retrievalUrl={coursePerformanceUrl + ".json"}

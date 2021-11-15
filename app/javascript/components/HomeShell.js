@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
@@ -27,16 +28,17 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function HomeShell(props) {
   const endpointSet = "home";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointsLoaded = useTypedSelector(state=>state['resources']['endpoints_loaded'])
+  //const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
   const dispatch = useDispatch( );
   const { t, i18n } = useTranslation();
   const history = useHistory();
 
   const [curTab, setCurTab] = useState("list");
 
-  const isLoggedIn = useTypedSelector(state=>state['login'].isLoggedIn)
-  const user = useTypedSelector(state=>state['login'].profile)
+  const isLoggedIn = useTypedSelector(state=>state.context.status.loggedIn)
+  const user = useTypedSelector(state=>state.profile.user );
   Settings.defaultZoneName = user.timezone;
 
   //Initialising to null
@@ -49,26 +51,14 @@ export default function HomeShell(props) {
     var url = endpoints.taskListUrl + ".json";
 
     dispatch( startTask() );
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      }
+    axios.get( url,{
+
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log( response );
-          console.log("error");
-        }
-      })
-      .then(data => {
+      .then( (data) =>{
         //Process the data
-        data.tasks.forEach((value, index, array) => {
+        console.log( 'tasks', data, data['tasks'] );
+        data = data['data'];
+        data['tasks'].forEach((value, index, array) => {
           switch (value.type) {
             case "assessment":
               value.title = value.group_name + " for (" + value.name + ")";
@@ -92,11 +82,11 @@ export default function HomeShell(props) {
   };
 
   useEffect(() => {
-    if (endpointsLoaded) {
+    if (endpointsLoaded && isLoggedIn ) {
       console.log( 'first...' );
       getTasks();
     }
-  }, [endpointsLoaded]);
+  }, [endpointsLoaded, isLoggedIn]);
 
 
   var pageContent = <Skeleton variant="rect" />;

@@ -14,7 +14,7 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 export default function CourseAdmin(props) {
   let match = useRouteMatch();
 
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector(state=>state.profile.user)
 
   useEffect(() => {
     if (user.loaded) {

@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
 
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :set_locale, if: :user_signed_in?
+  around_action :switch_locale
 
   protected
 
@@ -32,9 +32,13 @@ class ApplicationController < ActionController::Base
                  impairment_other])
   end
 
-  def set_locale
-    # TODO: remove this once we are no longer tied to the interface - maybe
-    # Time.zone = current_user.timezone if current_user.timezone
-    I18n.locale = current_user.language_code || params[:lang] || I18n.default_locale
+  def switch_locale(&action)
+    locale = if user_signed_in?
+      current_user.language_code
+    else
+      params[:lang] || I18n.default_locale
+    end
+    I18n.with_locale( locale, &action )
+
   end
 end

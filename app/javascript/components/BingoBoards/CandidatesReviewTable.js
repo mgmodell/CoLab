@@ -26,8 +26,8 @@ import {startTask, endTask} from '../infrastructure/StatusActions'
 export default function CandidatesReviewTable(props) {
   const { t } = useTranslation("bingo_games");
   const endpointSet = "candidate_review";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
 
   const [candidates, setCandidates] = useState([]);
   const [candidateLists, setCandidateLists] = useState([]);

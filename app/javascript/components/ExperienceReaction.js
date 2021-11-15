@@ -28,7 +28,7 @@ export default function ExperienceReaction(props) {
   const [improvements, setImprovements] = useState("");
   const dirtyStatus = useSelector( state =>{ return state.dirtyState['reaction'] });
   const dispatch = useDispatch( );
-  const behaviors = useTypedSelector(state=>state.resources.lookups.behaviors)
+  const behaviors = useTypedSelector(state=>state.context.lookups.behaviors);
 
   const getById = (list, id) => {
     return list.filter(item => {

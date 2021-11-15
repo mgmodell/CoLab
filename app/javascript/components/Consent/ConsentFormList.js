@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
@@ -18,8 +19,8 @@ import {startTask, endTask} from '../infrastructure/StatusActions';
 
 export default function ConsentFormList(props) {
   const endpointSet = "consent_form";
-  const endpoints = useTypedSelector(state=>state['resources'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['resources'].endpoints_loaded)
+  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
   const dispatch = useDispatch( );
 
   const history = useHistory();

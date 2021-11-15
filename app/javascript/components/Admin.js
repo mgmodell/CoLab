@@ -26,7 +26,7 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 export default function Admin(props) {
   let { path, url } = useRouteMatch();
 
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector((state)=>state.profile.user)
 
   const [showErrors, setShowErrors] = useState(false);
 

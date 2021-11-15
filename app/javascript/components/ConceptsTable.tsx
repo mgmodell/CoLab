@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import classNames from "classnames";
@@ -50,8 +51,8 @@ const styles = theme => ({
 });
 export default function ConceptsTable(props) {
   const endpointSet = "concept";
-  const endpoints = useTypedSelector( state => {return state['resources'].endpoints[endpointSet]})
-  const endpointStatus = useTypedSelector( state => {return state['resources']['endpoints_loaded']})
+  const endpoints = useTypedSelector( state =>  state.context.endpoints[endpointSet])
+  const endpointStatus = useTypedSelector( state => state.context.status['endpointsLoaded'])
   const dispatch = useDispatch( );
 
   const [conceptsRaw, setConceptsRaw] = useState([]);
@@ -117,28 +118,19 @@ export default function ConceptsTable(props) {
   const getConcepts = () => {
     dispatch( startTask( 'load' ) );
     //statusActions.startTask("load");
-    fetch(endpoints.baseUrl + ".json", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
-      .then(data => {
+    axios.get( endpoints.baseUrl + '.json', {})
+      .then( (response) =>{
         setConcepts(data);
         setConceptsRaw(data);
         dispatch( endTask( 'load' ) );
-        //statusActions.endTask("load");
-      });
+
+      })
+      .catch( (error) =>{
+        console.log( error );
+        return [{ id: -1, name: "no data" }];
+        dispatch( endTask( 'load' ) );
+      })
+
   };
   const filter = function(event) {
     var filtered = conceptsRaw.filter(concept =>
@@ -171,29 +163,15 @@ export default function ConceptsTable(props) {
   const updateConcept = (id, name) => {
     dispatch( startTask( 'load' ) );
     //statusActions.startTask("load");
-    fetch(endpoints.baseUrl + "/" + id + ".json", {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
-      body: JSON.stringify({
+    axios.patch( endpoints.baseUrl + '/' + id + '.json',
+    {
         concept: {
           id: id,
           name: name
         }
-      })
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
-      .then(data => {
+
+    } )
+      .then( (data) =>{
         const tmpConcepts = Object.assign([], conceptsRaw);
         const updatedObject = tmpConcepts.find(element => element.id == id);
         updatedObject.name = data.name;
@@ -204,7 +182,13 @@ export default function ConceptsTable(props) {
         dispatch( endTask( 'load' ) );
         //statusActions.endTask("load");
         setEditing(false);
-      });
+
+      })
+      .catch( error=>{
+          console.log("error:", error);
+          return [{ id: -1, name: "no data" }];
+
+      })
   };
   return (
     <React.Fragment>

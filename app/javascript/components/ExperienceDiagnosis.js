@@ -51,7 +51,7 @@ export default function ExperienceDiagnosis(props) {
     })[0];
   };
 
-  const behaviors = useTypedSelector(state => state.resources.lookups.behaviors)
+  const behaviors = useTypedSelector(state => state.context.lookups.behaviors)
 
   const detailNeeded =
     0 === behaviorId
