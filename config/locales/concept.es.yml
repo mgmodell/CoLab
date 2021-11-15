@@ -1,0 +1,27 @@
+es:
+  concepts:
+    index:
+      title: Lista de conceptos
+    edit:
+      title: Editar concepto
+    show:
+      title: Detalles del concepto
+      edit_string: Editar detalles del concepto
+    new:
+      title: Nuevo concepto
+    create_success: El concepto se creo con exito!
+    destroy_success: El concepto fue destruido con exito!
+    update_success: El concepto se actualizo con exito!
+    back: Volver a la lista de conceptos
+    use_count: Tiempos sugeridos
+    courses: Apariciones en el curso 
+    games: Apariciones de Bingo!
+    course_count:
+      one: El concepto solo se identifico para un curso
+      other: El concepto fue identificado para %{count} cursos.
+    game_count:
+      one: El concepto solo se identifico para un juego.
+      other: El concepto fue identificado para %{count} juegos.
+    candidate_count:
+      one: El concepto solo se sugirio una vez.
+      other: El concepto fue sugerido %{count} veces.

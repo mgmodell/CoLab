@@ -1,0 +1,24 @@
+es:
+  consent_forms:
+    new_title: Nuevo formulario de consentimiento
+    title: Actualizar la respuesta de consentimiento
+    multiple: Partcipacion en investigacion
+    not_for_research: No para la investigacion
+    consent_form: Formulario de consentimiento de investigacion
+    edit:
+      title: Formulario de consentimiento 
+    index:
+      title: Listado de formularios de consentimiento
+    show:
+      name: Nombre del estudio
+      lead_admin: Administradora principal del estudio
+      applicable_lbl: Proyectos Cubiertos
+      applicable_txt: Este formulario de consentimiento se aplica a todos los usuarios del sistema.
+      form_text_lbl: Texto del formulario de consentimiento
+      form_text: >
+        El texto a continuacion se presentara a todos los posibles 
+        participantes del estudio. Utilice html basico para formatear su texto.
+      date_summ: >
+        Este formulario de consentimiento se aplica entre <strong>%{start_date}</strong> y 
+        <strong>%{end_date}</strong>.
+
