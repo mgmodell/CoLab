@@ -23,8 +23,9 @@ es:
       not_reviewed: Esto no ha sido revisado.
     new:
       title: Nuevo juego de Bingo!
-    create_success: Juego de Bingo! creado con exito!
-    destroy_success:Juego de Bingo! destruido con exito!
+    create_success: >
+      Juego de Bingo! creado con exito!
+      destroy_success:Juego de Bingo! destruido con exito!
     update_success: Juego de Bingo! actualizado con exito!
     review_success: Review data successfully saved
     review_problems: There were problems with the review and it could not be saved
