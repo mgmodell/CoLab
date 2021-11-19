@@ -44,7 +44,16 @@ const initialState : ContextRootState = {
         localStorage: null,
         endpoint_url: null,
     },
-    lookups: { },
+    lookups: {
+        behaviors: { },
+        countries: { },
+        languages: { },
+        cip_codes: { },
+        genders: { },
+        themes: { },
+        timezones: { },
+        schools: { },
+     },
     endpoints: { },
 }
 

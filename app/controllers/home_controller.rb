@@ -77,7 +77,17 @@ class HomeController < ApplicationController
       }
     }
     ep_hash[:profile] = {
-      baseUrl: full_profile_path
+      baseUrl: full_profile_path,
+      coursePerformanceUrl: user_courses_path,
+      activitiesUrl: user_activities_path,
+      consentFormsUrl: user_consents_path,
+
+      addEmailUrl: add_registered_email_path,
+      removeEmailUrl: remove_registered_email_path(email_id: ''),
+      setPrimaryEmailUrl: set_primary_registered_email_path(email_id: ''),
+      passwordResetUrl: initiate_password_reset_path,
+      # infrastructure
+      statesForUrl: states_for_path(country_code: ''),
     }
     if user_signed_in?
       ep_hash[:home][ :taskListUrl] = task_list_path
@@ -246,16 +256,6 @@ class HomeController < ApplicationController
                   welcomed ]
       ),
 
-      coursePerformanceUrl: user_courses_path,
-      activitiesUrl: user_activities_path,
-      consentFormsUrl: user_consents_path,
-
-      addEmailUrl: add_registered_email_path,
-      removeEmailUrl: remove_registered_email_path(email_id: ''),
-      setPrimaryEmailUrl: set_primary_registered_email_path(email_id: ''),
-      passwordResetUrl: initiate_password_reset_path,
-      # infrastructure
-      statesForUrl: states_for_path(country_code: ''),
 
     }
     profile_hash[:user][:is_instructor] = current_user.is_instructor?

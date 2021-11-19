@@ -22,7 +22,7 @@ export interface ProfilesRootState {
   welcomed: boolean;
   is_instructor: boolean;
   is_admin: boolean;
-  country_id: number;
+  country: string;
   timezone: string;
   language_id: number;
   theme_id: number;
@@ -62,7 +62,7 @@ const initialState = {
   welcomed: false,
   is_instructor: false,
   is_admin: false,
-  country_id: null,
+  country: null,
   timezone: 'UTC',
   language_id: 40,
   theme_id: 0,

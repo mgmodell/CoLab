@@ -47,7 +47,6 @@ export default function HomeShell(props) {
   const [waitingRosters, setWaitingRosters] = useState();
 
   const getTasks = () => {
-    console.log( 'and then' );
     var url = endpoints.taskListUrl + ".json";
 
     dispatch( startTask() );
@@ -56,7 +55,6 @@ export default function HomeShell(props) {
     })
       .then( (data) =>{
         //Process the data
-        console.log( 'tasks', data, data['tasks'] );
         data = data['data'];
         data['tasks'].forEach((value, index, array) => {
           switch (value.type) {
@@ -83,7 +81,6 @@ export default function HomeShell(props) {
 
   useEffect(() => {
     if (endpointsLoaded && isLoggedIn ) {
-      console.log( 'first...' );
       getTasks();
     }
   }, [endpointsLoaded, isLoggedIn]);

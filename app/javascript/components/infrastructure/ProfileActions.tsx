@@ -10,7 +10,6 @@ export const SET_PROFILE_TIMEZONE = 'SET_PROFILE_TIMEZONE';
 export const SET_PROFILE_THEME = 'SET_PROFILE_THEME';
 export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 
-
 import { addMessage, startTask, endTask, Priorities } from './StatusActions';
 
 //Base redux functions

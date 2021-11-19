@@ -40,6 +40,7 @@ import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';
 import { Grid, Link } from "@material-ui/core";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import { fetchProfile, saveProfile, setProfile } from "./infrastructure/ProfileActions";
 
 export default function ProfileDataAdmin(props) {
   const endpointSet = "profile";
@@ -47,14 +48,33 @@ export default function ProfileDataAdmin(props) {
   const endpointStatus = useTypedSelector((state)=>state.context.status.endpointsLoaded );
   const lookupStatus = useTypedSelector((state)=>state.context.status.lookupsLoaded );
 
-  const timezones = useTypedSelector((state)=>state.context.lookups['timezones'] );
-  const countries = useTypedSelector((state)=>state.context.lookups['countries'] );
+  const timezones = useTypedSelector((state)=>state.context.lookups.timezones );
+  const countries = useTypedSelector((state)=>state.context.lookups.countries );
   //const states = useTypedSelector((state)=>state.context.lookups['states'] );
-  const cipCodes = useTypedSelector((state)=>state.context.lookups['cip_codes'] );
-  const genders = useTypedSelector((state)=>state.context.lookups['genders'] );
-  const schools = useTypedSelector((state)=>state.context.lookups['schools'] );
-  const languages = useTypedSelector((state)=>state.context.lookups['languages'] );
-  const themes = useTypedSelector((state)=>state.context.lookups['themes'] );
+  const cipCodes = useTypedSelector((state)=>state.context.lookups.cip_codes );
+  const genders = useTypedSelector((state)=>state.context.lookups.genders );
+  const schools = useTypedSelector((state)=>state.context.lookups.schools );
+  const languages = useTypedSelector((state)=>state.context.lookups.languages );
+  const themes = useTypedSelector((state)=>state.context.lookups.themes );
+
+  /*
+  const addEmailUrl = endpoints['addEmailUrl'];
+  const removeEmailUrl = endpoints['removeEmailUrl'];
+  const primaryEmailUrl = endpoints['primaryEmailUrl'];
+  const passwordResetUrl = endpoints['passwordResetUrl'];
+
+  const statesForUrl = endpoints['statesForUrl'];
+  */
+  const [states, setStates] = useState( [] );
+
+  //const coursePerformanceUrl = endpoints['coursePerformanceUrl'];
+  const [courses, setCourses] = useState();
+
+  //const activitiesUrl = endpoints['activitiesUrl'];
+  const [activities, setActivities] = useState();
+
+  //const consentFormsUrl = endpoints['consentFormsUrl'];
+  const [consentForms, setConsentForms] = useState();
 
   //const { t, i18n } = useTranslation('profiles' );
   const user = useTypedSelector((state)=>state.profile.user );
@@ -66,58 +86,143 @@ export default function ProfileDataAdmin(props) {
   const [showErrors, setShowErrors] = useState(false);
   const [curPanel, setCurPanel] = useState("");
 
-  const [profileId, setProfileId] = useState(props.profileId);
-  const [profileFirstName, setProfileFirstName] = useState("");
-  const [profileLastName, setProfileLastName] = useState("");
-  const [profileEmails, setProfileEmails] = useState([]);
+  const setProfileFirstName = (first_name) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.first_name = first_name;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileLastName = (last_name) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.last_name = last_name;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileEmails = (emails) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.emails = emails;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileTimezone = (timezone) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.timezone = timezone;
+    dispatch( setProfile( temp ) );
+  };
   //Demographics
-  const [profileGender, setProfileGender] = useState(0);
-  const [profileHomeCountry, setProfileHomeCountry] = useState("");
-  const [profileHomeState, setProfileHomeState] = useState(0);
-  const [profileSchool, setProfileSchool] = useState(0);
-  const [profileHomeLanguage, setProfileHomeLanguage] = useState(0);
-  const [profileCipCode, setProfileCipCode] = useState(0);
-  const [profileDOB, setProfileDOB] = useState(new Date());
-  const [profileStartedSchool, setProfileStartedSchool] = useState(new Date());
+  const setProfileGender = (gender) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.gender = gender;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileHomeCountry = (homeCountry) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.country = homeCountry;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileHomeState = (home_state_id) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.home_state_id = home_state_id;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileSchool = (school_id) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.school_id = school_id;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileHomeLanguage = (language_id) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.primary_language_id = language_id;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileCipCode = (cip_code_id) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.cip_code_id = cip_code_id;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileDOB = (date_of_birth) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.date_of_birth = date_of_birth;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileStartedSchool = (started_school) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.started_school = started_school;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileImpVisual = (impairment_visual) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.impairment_visual = impairment_visual;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileImpAuditory = (impairment_auditory) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.impairment_auditory = impairment_auditory;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileImpMotor = (impairment_motor) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.impairment_motor = impairment_motor;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileImpCognitive = (impairment_cognitive) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.impairment_cognitive = impairment_cognitive;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileImpOther = (impairment_other) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.impairment_other = impairment_other;
+    dispatch( setProfile( temp ) );
+  };
 
-  const [profileImpVisual, setProfileImpVisual] = useState(false);
-  const [profileImpAuditory, setProfileImpAuditory] = useState(false);
-  const [profileImpMotor, setProfileImpMotor] = useState(false);
-  const [profileImpCognitive, setProfileImpCognitive] = useState(false);
-  const [profileImpOther, setProfileImpOther] = useState(false);
 
   //Display
-  const [profileTheme, setProfileTheme] = useState(0);
-  const [profileLanguage, setProfileLanguage] = useState(0);
-  const [profileResearcher, setProfileResearcher] = useState(false);
+  const setProfileLanguage = (language_id) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.language_id = language_id;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileTheme = (theme_id) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.theme_id = theme_id;
+    dispatch( setProfile( temp ) );
+  };
+  const setProfileResearcher = (researcher) =>{
+    const temp = { };
+    Object.assign( temp, user );
+    temp.researcher = researcher;
+    dispatch( setProfile( temp ) );
+  };
 
-  const [addEmailUrl, setAddEmailUrl] = useState("");
-  const [removeEmailUrl, setRemoveEmailUrl] = useState("");
-  const [primaryEmailUrl, setPrimaryEmailUrl] = useState("");
-  const [passwordResetUrl, setPasswordResetUrl] = useState("");
-
-  const [statesForUrl, setStatesForUrl] = useState("");
-  const [states, setStates] = useState( [] );
-
-  const [coursePerformanceUrl, setCoursePerformanceUrl] = useState("");
-  const [courses, setCourses] = useState();
-
-  const [activitiesUrl, setActivitiesUrl] = useState("");
-  const [activities, setActivities] = useState();
-
-  const [consentFormsUrl, setConsentFormsUrl] = useState("");
-  const [consentForms, setConsentForms] = useState();
-
-  const [profileTimezone, setProfileTimezone] = useState("0");
 
   const handlePanelClick = newPanel => {
     setCurPanel(newPanel != curPanel ? newPanel : "");
   };
 
   const getStates = countryCode => {
-    if ("" != statesForUrl) {
+    console.log( 'endpoints', endpoints );
+    console.log( user );
+    console.log( countryCode );
+    if ("" != endpoints.statesForUrl) {
       dispatch( startTask() );
-      const url = statesForUrl + countryCode + ".json";
+      const url = endpoints.statesForUrl + countryCode + ".json";
       fetch(url, {
         method: "GET",
         credentials: "include",
@@ -138,7 +243,7 @@ export default function ProfileDataAdmin(props) {
           //Find the selected state in the retrieved list
           const foundSelectedStates = data.filter(item => {
             return (
-              profileHomeState === item.id || item.code === "__:" + countryCode
+              user.home_state_id === item.id || item.code === "__:" + countryCode
             );
           });
 
@@ -153,158 +258,11 @@ export default function ProfileDataAdmin(props) {
     }
   };
 
-  const setProfileFields = profile => {
-    setProfileFirstName(profile.first_name || "");
-    setProfileLastName(profile.last_name || "");
-
-    //Display
-    setProfileTimezone(profile.timezone || "UTC");
-    setProfileTheme(profile.theme_id);
-    setProfileLanguage(profile.language_id);
-    setProfileResearcher(profile.researcher || false);
-
-    //Demographics
-    setProfileGender(profile.gender_id || "");
-    setProfileDOB(profile.date_of_birth);
-    if (null != profile.emails) {
-      setProfileEmails(profile.emails);
-    }
-
-    setProfileHomeLanguage(profile.primary_language_id);
-    setProfileHomeCountry(profile.country);
-    setProfileHomeState(profile.home_state_id);
-    //getStates( profile.home_state_id );
-
-    setProfileSchool(profile.school_id);
-    setProfileCipCode(profile.cip_code_id);
-    setProfileGender(profile.gender_id);
-    setProfileStartedSchool(profile.started_school);
-
-    //Impairments
-    setProfileImpVisual(profile.impairment_visual);
-    setProfileImpAuditory(profile.impairment_auditory);
-    setProfileImpCognitive(profile.impairment_cognitive);
-    setProfileImpMotor(profile.impairment_motor);
-    setProfileImpOther(profile.impairment_other);
-  };
   const getProfile = () => {
-    setDirty(true);
-    const url = endpoints['baseUrl'] + ".json";
-    dispatch( startTask() );
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return response.json();
-        }
-      })
-      .then(data => {
-        const profile = data.user;
-
-        setAddEmailUrl(data.addEmailUrl);
-        setRemoveEmailUrl(data.removeEmailUrl);
-        setPrimaryEmailUrl(data.setPrimaryEmailUrl);
-        setPasswordResetUrl(data.passwordResetUrl);
-        setStatesForUrl(data.statesForUrl);
-
-        setCoursePerformanceUrl(data.coursePerformanceUrl);
-        setActivitiesUrl(data.activitiesUrl);
-        setConsentFormsUrl(data.consentFormsUrl);
-
-        //setTimezones(data.timezones);
-        //setCountries(data.countries);
-        //setLanguages(data.languages);
-        //setCipCodes(data.cipCodes);
-        //setGenders(data.genders);
-        //setThemes(data.themes);
-        //setSchools(data.schools);
-
-        setProfileFields(profile);
-
-        dispatch( endTask("loading") );
-        setDirty(false);
-      });
+    dispatch( fetchProfile );
   };
   const saveProfile = () => {
-    dispatch( startTask("saving") );
-    const url = endpoints['baseUrl'] + ".json";
-    console.log(url);
-
-    fetch(url, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
-      body: JSON.stringify({
-        user: {
-          //Display
-          first_name: profileFirstName,
-          last_name: profileLastName,
-
-          //Display
-          timezone: profileTimezone,
-          language_id: profileLanguage,
-          theme_id: profileTheme,
-          researcher: profileLanguage,
-
-          //Demographics -background
-          gender_id: profileGender,
-          date_of_birth: profileDOB,
-          primary_language_id: profileHomeLanguage,
-          country: profileHomeCountry,
-          home_state_id: profileHomeState,
-
-          //Demographics - school
-          school_id: profileSchool,
-          cip_code_id: profileCipCode,
-          started_school: profileStartedSchool,
-
-          //Demographics - impairments
-          impairment_visual: profileImpVisual,
-          impairment_auditory: profileImpAuditory,
-          impairment_cognitive: profileImpCognitive,
-          impairment_motor: profileImpMotor,
-          impairment_other: profileImpOther
-        }
-      })
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          dispatch( endTask("saving") );
-        }
-      })
-      .then(data => {
-        console.log(data);
-
-        if (data.messages != null && Object.keys(data.messages).length < 2) {
-          const profile = data.user;
-
-          setProfileFields(profile);
-
-          setShowErrors(true);
-          setDirty(false);
-          setMessages(data.messages);
-          dispatch( endTask("saving") );
-        } else {
-          setShowErrors(true);
-          setMessages(data.messages);
-          dispatch( endTask("saving") );
-        }
-      });
+    dispatch( saveProfile( ) );
   };
 
   useEffect(() => {
@@ -321,33 +279,15 @@ export default function ProfileDataAdmin(props) {
   }, [user.loaded]);
 
   useEffect(() => setDirty(true), [
-    profileFirstName,
-    profileLastName,
-    profileTimezone,
-    profileTheme,
-    profileResearcher,
-    profileLanguage,
+    user,
     //Demographics
-    profileGender,
-    profileCipCode,
-    profileSchool,
-    profileHomeCountry,
-    profileHomeState,
-    profileDOB,
-    profileHomeLanguage,
-    profileStartedSchool,
-    profileImpAuditory,
-    profileImpCognitive,
-    profileImpMotor,
-    profileImpVisual,
-    profileImpOther
   ]);
 
-  useEffect(() => getStates(profileHomeCountry), [profileHomeCountry]);
+  useEffect(() => getStates(user.country), [user.country]);
 
   const saveButton = dirty ? (
     <Button variant="contained" onClick={saveProfile}>
-      {null == profileId ? "Create" : "Save"} Profile
+      {null == user.id ? "Create" : "Save"} Profile
     </Button>
   ) : null;
 
@@ -363,7 +303,7 @@ export default function ProfileDataAdmin(props) {
               <TextField
                 label="First Name"
                 id="first-name"
-                value={profileFirstName}
+                value={user.first_name}
                 fullWidth
                 onChange={event => setProfileFirstName(event.target.value)}
                 error={null != messages["first_name"]}
@@ -374,7 +314,7 @@ export default function ProfileDataAdmin(props) {
               <TextField
                 label="Last Name"
                 id="last-name"
-                value={profileLastName}
+                value={user.last_name}
                 fullWidth
                 onChange={event => setProfileLastName(event.target.value)}
                 error={null != messages["last_name"]}
@@ -394,19 +334,19 @@ export default function ProfileDataAdmin(props) {
         <AccordionDetails>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              {0 < profileEmails.length ? (
+              {0 < user.emails.length ? (
                 <UserEmailList
-                  emailList={profileEmails}
+                  emailList={user.emails}
                   emailListUpdateFunc={setProfileEmails}
                   addMessagesFunc={setMessages}
-                  addEmailUrl={addEmailUrl}
-                  removeEmailUrl={removeEmailUrl}
-                  primaryEmailUrl={primaryEmailUrl}
+                  addEmailUrl={endpoints['addEmailUrl']}
+                  removeEmailUrl={endpoints['removeEmailUrl']}
+                  primaryEmailUrl={endpoints['setPrimaryEmailUrl']}
                 />
               ) : null}
             </Grid>
             <Grid item xs={12}>
-              <Link href={passwordResetUrl}>
+              <Link href={endpoints['passwordResetUrl']}>
                 Want to change your password? Click here and we'll email
                 instructions.
               </Link>
@@ -430,7 +370,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_theme"
-                  value={profileTheme}
+                  value={user.theme_id}
                   onChange={event =>
                     setProfileTheme(Number(event.target.value))
                   }
@@ -459,7 +399,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_language"
-                  value={profileLanguage}
+                  value={user.language_id}
                   onChange={event =>
                     setProfileLanguage(Number(event.target.value))
                   }
@@ -482,7 +422,7 @@ export default function ProfileDataAdmin(props) {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={profileResearcher}
+                    checked={user.researcher}
                     onChange={event =>
                       setProfileResearcher(!profileResearcher)
                     }
@@ -502,7 +442,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_timezone"
-                  value={profileTimezone}
+                  value={user.timezone}
                   onChange={event =>
                     setProfileTimezone(String(event.target.value))
                   }
@@ -532,7 +472,7 @@ export default function ProfileDataAdmin(props) {
           expandIcon={<ExpandMoreIcon />}
           id="demographics"
         >
-          Tell us about yourself, {profileFirstName} (optional)
+          Tell us about yourself, {user.first_name} (optional)
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3}>
@@ -543,7 +483,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_school"
-                  value={profileSchool}
+                  value={user.school_id}
                   onChange={event =>
                     setProfileSchool(Number(event.target.value))
                   }
@@ -572,7 +512,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_cip_code"
-                  value={profileCipCode}
+                  value={user.cip_code_id}
                   onChange={event =>
                     setProfileCipCode(Number(event.target.value))
                   }
@@ -601,7 +541,7 @@ export default function ProfileDataAdmin(props) {
               <LocalizationProvider dateAdapter={LuxonUtils}>
                 <DatePicker
                   clearable
-                  value={profileStartedSchool}
+                  value={user.started_school}
                   placeholder="Enter Date"
                   onChange={date => setProfileStartedSchool(date)}
                   inputFormat="MM/dd/yyyy"
@@ -618,7 +558,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_country"
-                  value={profileHomeCountry}
+                  value={user.country}
                   onChange={event => {
                     const country = String(event.target.value);
                     setProfileHomeCountry(country);
@@ -643,7 +583,7 @@ export default function ProfileDataAdmin(props) {
                 <FormControl fullWidth>
                   <Select
                     id="profile_state"
-                    value={profileHomeState}
+                    value={user.home_state_id}
                     onChange={event => {
                       setProfileHomeState(Number(event.target.value));
                     }}
@@ -672,7 +612,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_language"
-                  value={profileHomeLanguage}
+                  value={user.primary_language_id}
                   onChange={event =>
                     setProfileHomeLanguage(Number(event.target.value))
                   }
@@ -698,7 +638,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_gender"
-                  value={profileGender}
+                  value={user.gender_id}
                   onChange={event =>
                     setProfileGender(Number(event.target.value))
                   }
@@ -727,7 +667,7 @@ export default function ProfileDataAdmin(props) {
               <LocalizationProvider dateAdapter={LuxonUtils}>
                 <DatePicker
                   clearable
-                  value={profileDOB}
+                  value={user.date_of_birth}
                   placeholder="Enter Date"
                   onChange={date => setProfileDOB(date)}
                   inputFormat="MM/dd/yyyy"
@@ -744,7 +684,7 @@ export default function ProfileDataAdmin(props) {
               <ToggleButtonGroup id="impairments">
                 <ToggleButton
                   value="visual"
-                  selected={profileImpVisual}
+                  selected={user.impairment_visual}
                   onClick={() => {
                     setProfileImpVisual(!profileImpVisual);
                   }}
@@ -753,7 +693,7 @@ export default function ProfileDataAdmin(props) {
                 </ToggleButton>
                 <ToggleButton
                   value="auditory"
-                  selected={profileImpAuditory}
+                  selected={user.impairment_auditory}
                   onClick={() => {
                     setProfileImpAuditory(!profileImpAuditory);
                   }}
@@ -762,7 +702,7 @@ export default function ProfileDataAdmin(props) {
                 </ToggleButton>
                 <ToggleButton
                   value="cognitive"
-                  selected={profileImpCognitive}
+                  selected={user.impairment_cognitive}
                   onClick={() => {
                     setProfileImpCognitive(!profileImpCognitive);
                   }}
@@ -771,7 +711,7 @@ export default function ProfileDataAdmin(props) {
                 </ToggleButton>
                 <ToggleButton
                   value="motor"
-                  selected={profileImpMotor}
+                  selected={user.impairment_motor}
                   onClick={() => {
                     setProfileImpMotor(!profileImpMotor);
                   }}
@@ -780,7 +720,7 @@ export default function ProfileDataAdmin(props) {
                 </ToggleButton>
                 <ToggleButton
                   value="other"
-                  selected={profileImpOther}
+                  selected={user.impairment_other}
                   onClick={() => {
                     setProfileImpOther(!profileImpOther);
                   }}
@@ -833,7 +773,7 @@ export default function ProfileDataAdmin(props) {
       {lookupStatus && "details" === curTab ? detailsComponent : null}
       {"courses" === curTab ? (
         <UserCourseList
-          retrievalUrl={coursePerformanceUrl + ".json"}
+          retrievalUrl={endpoints['coursePerformanceUrl'] + ".json"}
           coursesList={courses}
           coursesListUpdateFunc={setCourses}
           addMessagesFunc={setMessages}
@@ -841,7 +781,7 @@ export default function ProfileDataAdmin(props) {
       ) : null}
       {"history" === curTab ? (
         <UserActivityList
-          retrievalUrl={activitiesUrl + ".json"}
+          retrievalUrl={endpoints['activitiesUrl'] + ".json"}
           activitiesList={activities}
           activitiesListUpdateFunc={setActivities}
           addMessagesFunc={setMessages}
@@ -849,7 +789,7 @@ export default function ProfileDataAdmin(props) {
       ) : null}
       {"research" === curTab ? (
         <ResearchParticipationList
-          retrievalUrl={consentFormsUrl + ".json"}
+          retrievalUrl={endpoints['consentFormsUrl'] + ".json"}
           consentFormList={consentForms}
           consentFormListUpdateFunc={setConsentForms}
           addMessagesFunc={setMessages}
