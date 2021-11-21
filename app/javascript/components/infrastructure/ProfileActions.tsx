@@ -4,7 +4,6 @@ import {ProfilesRootState} from './ProfileReducers';
 
 // Action Messages
 export const SET_PROFILE = 'SET_PROFILE';
-export const SET_PROFILE_LANGUAGE = 'SET_PROFILE_LANGUAGE';
 export const SET_ANONYMIZE = 'SET_ANONYMIZE';
 export const SET_PROFILE_TIMEZONE = 'SET_PROFILE_TIMEZONE';
 export const SET_PROFILE_THEME = 'SET_PROFILE_THEME';
@@ -15,10 +14,6 @@ import { addMessage, startTask, endTask, Priorities } from './StatusActions';
 //Base redux functions
 export function setProfile( user: ProfilesRootState ) {
   return { type: SET_PROFILE, user }
-}
-
-export function setProfileLanguage( language_id: number ) {
-  return { type: SET_PROFILE_LANGUAGE, language_id }
 }
 
 export function setAnonymize( anonymize: boolean ) {
@@ -38,6 +33,18 @@ export function clearProfile( ) {
 }
 
 //Middleware async functions
+export function setLocalLanguage( language_id: number ){
+  console.log( language_id );
+  return( dispatch, getState)=>{
+    const language = getState().context.lookups.languages[ language_id ];
+    console.log( language );
+    const user = Object.assign( {}, getState().profile.user );
+    user.language_id = language_id;
+    dispatch( setProfile( user ) );
+  }
+
+}
+
 export function fetchProfile( reset: boolean = false  ){
   return(dispatch,getState)=>{
     const url = getState().context.endpoints[ 'profile' ]['baseUrl'] + '.json';
@@ -58,7 +65,7 @@ export function fetchProfile( reset: boolean = false  ){
   }
 }
 
-export function saveProfile( ){
+export function persistProfile( ){
   return( dispatch, getState )=>{
     dispatch( startTask( 'saving' ) );
     const url = getState().context.endpoints[ 'profile' ]['baseUrl'] + '.json';
@@ -71,11 +78,35 @@ export function saveProfile( ){
         'Content-Type': 'application/json',
         Accepts: "application/json",
       },
-      body: JSON.stringify( user )
+      body: {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        timezone: user.timezone,
+        language_id: user.language_id,
+        theme_id: user.theme_id,
+        researcher: user.researcher,
+        gender_id: user.gender_id,
+        date_of_birth: user.date_of_birth, 
+        primary_language_id: user.primary_language_id,
+        country: user.country,
+        home_state_id: user.home_state_id,
+        school_id: user.school_id,
+        cip_code_id: user.cip_code_id,
+        started_school: user.started_school,
+        impairment_visual: user.impairment_visual,
+        impairment_auditory: user.impairment_auditory, 
+        impairment_cognitive: user.impairment_cognitive, 
+        impairment_motor: user.impairment_motor, 
+        impairment_other: user.impairment_other
+
+      } 
 
     } )
       .then( (data) =>{
-        user = data['user'];
+        console.log( 'data', data['data'] );
+        user = data['data']['user'];
+        console.log( 'user', user );
+
         dispatch( setProfile( user ) );
         dispatch( endTask( 'loading' ) );
       } )

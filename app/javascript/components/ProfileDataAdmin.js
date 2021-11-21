@@ -40,7 +40,8 @@ import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';
 import { Grid, Link } from "@material-ui/core";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { fetchProfile, saveProfile, setProfile } from "./infrastructure/ProfileActions";
+import { fetchProfile, setProfile, persistProfile, setLocalLanguage } from "./infrastructure/ProfileActions";
+import { Skeleton } from "@material-ui/lab";
 
 export default function ProfileDataAdmin(props) {
   const endpointSet = "profile";
@@ -193,10 +194,7 @@ export default function ProfileDataAdmin(props) {
 
   //Display
   const setProfileLanguage = (language_id) =>{
-    const temp = { };
-    Object.assign( temp, user );
-    temp.language_id = language_id;
-    dispatch( setProfile( temp ) );
+    dispatch( setLocalLanguage( language_id ) );
   };
   const setProfileTheme = (theme_id) =>{
     const temp = { };
@@ -217,6 +215,8 @@ export default function ProfileDataAdmin(props) {
   };
 
   const getStates = countryCode => {
+    if( endpointStatus ){
+
     console.log( 'endpoints', endpoints );
     console.log( user );
     console.log( countryCode );
@@ -256,18 +256,22 @@ export default function ProfileDataAdmin(props) {
           dispatch( endTask("loading") );
         });
     }
+    }
   };
 
   const getProfile = () => {
+    console.log( endpoints );
     dispatch( fetchProfile );
   };
   const saveProfile = () => {
-    dispatch( saveProfile( ) );
+    dispatch( persistProfile( ) );
   };
 
   useEffect(() => {
+    console.log( endpointStatus );
     if (endpointStatus) {
       dispatch( endTask("loading") );
+      console.log( 'init it' );
       getProfile();
     }
   }, [endpointStatus]);
@@ -770,6 +774,8 @@ export default function ProfileDataAdmin(props) {
         <Tab label="History" value="history" />
         <Tab label="Research Participation" value="research" />
       </Tabs>
+      { endpointStatus && lookupStatus && (user.id > 0) ?
+      <React.Fragment>
       {lookupStatus && "details" === curTab ? detailsComponent : null}
       {"courses" === curTab ? (
         <UserCourseList
@@ -795,6 +801,8 @@ export default function ProfileDataAdmin(props) {
           addMessagesFunc={setMessages}
         />
       ) : null}
+      </React.Fragment>
+      : <Skeleton variant="rect" heght={300}/>}
     </Paper>
   );
 }

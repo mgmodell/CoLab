@@ -36,10 +36,6 @@ const CONFIG = {
         return (parseInt(headers['expiry'], 10) * 1000) || null;
     },
 
-    authProviderPaths: {
-        google:    '/auth/google_oauth2'
-    },
-
     /**
      * This function is used as an axios send interceptor.
      * 
@@ -138,6 +134,8 @@ const CONFIG = {
 
     retrieveResources: function( dispatch: Function, getState: Function ){
         const endPointsUrl = getState()['context']['config']['endpoint_url'];
+
+        console.log( endPointsUrl );
 
         axios.get( endPointsUrl + '.json',
             { withCredentials: true } )

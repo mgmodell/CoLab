@@ -1,7 +1,6 @@
 import {useSelector, TypedUseSelectorHook } from 'react-redux';
 import {
   SET_PROFILE,
-  SET_PROFILE_LANGUAGE,
   SET_ANONYMIZE,
   SET_PROFILE_TIMEZONE,
   SET_PROFILE_THEME,
@@ -96,9 +95,6 @@ export function profile(state: ProfileRootState = initialState, action) {
     case SET_PROFILE:
       Object.assign( newState.user = action.user );
       newState.lastRetrieved = Date.now();
-      return newState;
-    case SET_PROFILE_LANGUAGE:
-      newState.user.language_id = action.language_id;
       return newState;
     case SET_ANONYMIZE:
       newState.user.anonymize = action.anonymize;

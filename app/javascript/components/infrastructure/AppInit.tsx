@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
-//import { authConfig } from './AuthenticationActions';
 import {getContext} from './ContextActions';
 import { useTypedSelector } from "./AppReducers";
-//import { setEndpointUrl, reloadEndpoints, reloadLookups } from './ResourceActions';
 
 import PropTypes from "prop-types";
 

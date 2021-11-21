@@ -283,18 +283,8 @@ class HomeController < ApplicationController
     if current_user.update(params)
       notice = 'Profile successfully updated'
       respond_to do |format|
-        response = {
-          user: current_user.as_json(
-            only: %i[ id first_name last_name gender_id country
-                      timezone theme_id school_id language_id
-                      date_of_birth home_state_id cip_code_id
-                      primary_language_id started_school researcher
-                      impairment_visual impairment_auditory
-                      impairment_motor impairment_cognitive
-                      impairment_other primary_language_id ]
-          ),
-          messages: { main: notice }
-        }
+        response = get_profile_hash( )
+        response [:messages] = {main: notice}
         format.json do
           render json: response
         end
@@ -527,10 +517,13 @@ class HomeController < ApplicationController
   private
 
   def profile_params
-    params.require(:user).permit(:first_name, :last_name,
+    params.require(:body).permit(
+                                :first_name, :last_name,
                                  :timezone, :language_id, :theme_id, :researcher,
                                  :gender_id, :date_of_birth, :primary_language_id, :country, :home_state_id,
                                  :school_id, :cip_code_id, :started_school,
-                                 :impairment_visual, :impairment_auditory, :impairment_cognitive, :impairment_motor, :impairment_other)
+                                 :impairment_visual, :impairment_auditory, :impairment_cognitive, :impairment_motor, :impairment_other
+
+    )
   end
 end
