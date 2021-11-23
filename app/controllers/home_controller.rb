@@ -123,7 +123,7 @@ class HomeController < ApplicationController
         baseUrl: get_candidate_list_path(bingo_game_id: '')
       }
 
-      if current_user.is_instructor?
+      if current_user.is_admin? || current_user.is_instructor?
         ep_hash[ :project] = {
           baseUrl: projects_path,
           activateProjectUrl: activate_project_path,

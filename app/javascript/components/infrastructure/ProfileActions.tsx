@@ -1,4 +1,5 @@
-import {useTypedSelector} from './AppReducers';
+//import {useTypedSelector} from './AppReducers';
+import i18n from "./i18n";
 import axios from 'axios';
 import {ProfilesRootState} from './ProfileReducers';
 
@@ -38,6 +39,7 @@ export function setLocalLanguage( language_id: number ){
   return( dispatch, getState)=>{
     const language = getState().context.lookups.languages[ language_id ];
     console.log( language );
+    i18n.changeLanguage( language.code );
     const user = Object.assign( {}, getState().profile.user );
     user.language_id = language_id;
     dispatch( setProfile( user ) );

@@ -217,8 +217,6 @@ export default function ProfileDataAdmin(props) {
   const getStates = countryCode => {
     if( endpointStatus ){
 
-    console.log( 'endpoints', endpoints );
-    console.log( user );
     console.log( countryCode );
     if ("" != endpoints.statesForUrl) {
       dispatch( startTask() );
@@ -260,7 +258,6 @@ export default function ProfileDataAdmin(props) {
   };
 
   const getProfile = () => {
-    console.log( endpoints );
     dispatch( fetchProfile );
   };
   const saveProfile = () => {
@@ -268,10 +265,8 @@ export default function ProfileDataAdmin(props) {
   };
 
   useEffect(() => {
-    console.log( endpointStatus );
     if (endpointStatus) {
       dispatch( endTask("loading") );
-      console.log( 'init it' );
       getProfile();
     }
   }, [endpointStatus]);

@@ -33,6 +33,7 @@ import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import { useTypedSelector } from "../infrastructure/AppReducers";
+import { useParams } from "react-router-dom";
 
 export default function ConsentFormDataAdmin(props) {
   const endpointSet = "consent_form";
@@ -48,7 +49,8 @@ export default function ConsentFormDataAdmin(props) {
 
   const [curTab, setCurTab] = useState("en");
 
-  const [consentFormId, setConsentFormId] = useState(props.consentFormId);
+  const { id } = useParams( );
+  const [consentFormId, setConsentFormId] = useState( id );
   const [consentFormName, setConsentFormName] = useState("");
   const [consentFormActive, setConsentFormActive] = useState(false);
   const [consentFormStartDate, setConsentFormStartDate] = useState(new Date());
@@ -379,6 +381,3 @@ export default function ConsentFormDataAdmin(props) {
   );
 }
 
-ConsentFormDataAdmin.propTypes = {
-  consentFormId: PropTypes.number
-};

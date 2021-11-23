@@ -38,8 +38,6 @@ export default function Admin(props) {
     }
   }, [user.loaded]);
 
-  let { id } = useParams();
-
   return (
     <React.Fragment>
       <WorkingIndicator id="admin_save" />
@@ -52,7 +50,6 @@ export default function Admin(props) {
         </Route>
         <Route path={`${path}/schools/:id`}>
           <SchoolDataAdmin
-            schoolId={"new" === id ? null : id}
           />
         </Route>
         <Route exact path={`${path}/consent_forms`}>
@@ -60,7 +57,6 @@ export default function Admin(props) {
         </Route>
         <Route path={`${path}/consent_forms/:id`}>
           <ConsentFormDataAdmin
-            schoolId={id === "new" ? null : id}
           />
         </Route>
         <Route path={`${path}/concepts`}>

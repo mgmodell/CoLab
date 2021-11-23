@@ -54,7 +54,6 @@ const CONFIG = {
             config['headers'][key] =  storedHeaders[key];
           }
         }
-        //console.log( 'appended', config );
         return config;
 
     },
@@ -85,7 +84,6 @@ const CONFIG = {
 
 
         };
-        //console.log( 'storing', response );
         return response;
     },
 
@@ -99,7 +97,6 @@ const CONFIG = {
 
         //Add Cookie support later
         val = localStorage.getItem(key);
-        //console.log( ' retrieved:', val )
 
         // if value is a simple string, the parser will fail. in that case, simply
         // unescape the quotes and return the string.
@@ -119,7 +116,6 @@ const CONFIG = {
         //Add Cookie support later
         localStorage.setItem(key, data);
 
-        //console.log( ' persisted:', data )
 
     },
 
@@ -128,14 +124,11 @@ const CONFIG = {
         //Add Cookie support later
         localStorage.removeItem(key);
 
-        //console.log( ' persisted:', data )
 
     },
 
     retrieveResources: function( dispatch: Function, getState: Function ){
         const endPointsUrl = getState()['context']['config']['endpoint_url'];
-
-        console.log( endPointsUrl );
 
         axios.get( endPointsUrl + '.json',
             { withCredentials: true } )
@@ -235,7 +228,6 @@ export function emailSignIn( email: string, password: string ){
                 { email: email,
                   password: password } )
                 .then( resp=>{
-                    console.log( 'login', resp );
                     CONFIG.retrieveResources( dispatch, getState )
                         .then( response =>{
                             dispatch( fetchProfile( ) );
@@ -275,7 +267,6 @@ export function signOut( ){
         if( getState().context.status.loggedIn){
             axios.delete( CONFIG.SIGN_OUT_PATH, {} )
             .then( resp=>{
-                console.log( 'logged out', resp );
                 dispatch( clearProfile() );
                 CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
                 CONFIG.retrieveResources( dispatch, getState )

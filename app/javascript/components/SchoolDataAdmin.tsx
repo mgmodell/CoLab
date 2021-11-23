@@ -8,6 +8,7 @@ import {
   setClean,
   addMessage,
   acknowledgeMsg} from './infrastructure/StatusActions';
+import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
@@ -30,13 +31,14 @@ import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 //import { useTranslation } from 'react-i18next';
 import { TextareaAutosize } from "@material-ui/core";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import axios from "axios";
 
 export default function SchoolDataAdmin(props) {
   const endpointSet = "school";
-  const endpoints = useTypedSelector( state => {return state['context'].endpoints[endpointSet]})
-  const endpointStatus = useTypedSelector( state => {return state['context'].endpointsLoaded})
+  const endpoints = useTypedSelector( state => {return state.context.endpoints[endpointSet]})
+  const endpointStatus = useTypedSelector( state => {return state.context.status.endpointsLoaded})
   //const { t, i18n } = useTranslation('schools' );
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector(state=>state.profile.user )
 
   const dirty = useTypedSelector( state => state['dirtyState'][ 'school' ] );
   const dispatch = useDispatch( );
@@ -44,14 +46,13 @@ export default function SchoolDataAdmin(props) {
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
-  const [schoolId, setSchoolId] = useState(props.schoolId);
+  let {id} = useParams( );
+  const [schoolId, setSchoolId] = useState( id );
   const [schoolName, setSchoolName] = useState("");
   const [schoolDescription, setSchoolDescription] = useState("");
   const [schoolTimezone, setSchoolTimezone] = useState("UTC");
 
-
-
-  const [timezones, setTimezones] = useState([]);
+  const timezones = useTypedSelector( state => {return state.context.lookups['timezones'] })
 
   const getSchool = () => {
     dispatch( startTask() );
@@ -62,26 +63,9 @@ export default function SchoolDataAdmin(props) {
     } else {
       url = url + schoolId + ".json";
     }
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return response.json();
-        }
-      })
-      .then(data => {
-        const school = data.school;
-
-        setTimezones(data.timezones);
+    axios.get( url, { } )
+      .then( (response) =>{
+        const school = response.data.school;
 
         setSchoolName(school.name || "");
         setSchoolDescription(school.description || "");
@@ -89,7 +73,11 @@ export default function SchoolDataAdmin(props) {
 
         dispatch( endTask() );
         dispatch( setClean('school') );
-      });
+
+      } )
+      .catch( error => {
+        console.log( 'error', error )
+      })
   };
   const saveSchool = () => {
     const method = null == schoolId ? "POST" : "PATCH";
@@ -101,31 +89,19 @@ export default function SchoolDataAdmin(props) {
       (null == schoolId ? props.schoolId : schoolId) +
       ".json";
 
-    fetch(url, {
+    axios({
       method: method,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
-      body: JSON.stringify({
+      url: url,
+      data: {
         school: {
           name: schoolName,
-          //school_id: schoolId,
           description: schoolDescription,
           timezone: schoolTimezone
         }
-      })
+      }
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          dispatch( endTask("saving") );
-        }
-      })
-      .then(data => {
+      .then(resp => {
+        const data = resp['data'];
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const school = data.school;
           setSchoolId(school.id);
@@ -143,6 +119,9 @@ export default function SchoolDataAdmin(props) {
           setMessages(data.messages);
           dispatch( endTask("saving") );
         }
+      })
+      .catch( error => {
+        console.log( 'error', error )
       });
   };
 
@@ -172,7 +151,7 @@ export default function SchoolDataAdmin(props) {
     </Button>
   ) : null;
 
-  const detailsComponent = (
+  const detailsComponent = endpointStatus ? (
     <Paper>
       <TextField
         label="School Name"
@@ -208,8 +187,8 @@ export default function SchoolDataAdmin(props) {
         id="school-description"
         placeholder="Enter a description of the school"
         multiline={true}
-        rows={2}
-        rowsMax={4}
+        minRows={2}
+        maxRows={4}
         label="Description"
         value={schoolDescription}
         onChange={event => setSchoolDescription(event.target.value)}
@@ -221,7 +200,7 @@ export default function SchoolDataAdmin(props) {
       <br />
       {saveButton}
     </Paper>
-  );
+  ) : null;
 
   return (
     <Paper>
@@ -248,7 +227,3 @@ export default function SchoolDataAdmin(props) {
     </Paper>
   );
 }
-
-SchoolDataAdmin.propTypes = {
-  schoolId: PropTypes.number
-};
