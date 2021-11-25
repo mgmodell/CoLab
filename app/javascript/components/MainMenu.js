@@ -68,6 +68,9 @@ export default function MainMenu(props) {
   };
 
 
+  console.log( 'isLoggedIn: ', isLoggedIn ? 'true' : 'false' );
+  console.log( 'isInstructor: ', user.is_instructor ? 'true' : 'false' );
+  console.log( 'isAdmin: ', user.is_admin ? 'true' : 'false' );
   const adminItems = isLoggedIn && (user.is_instructor || user.is_admin ) ? (
     <React.Fragment>
       <Divider />

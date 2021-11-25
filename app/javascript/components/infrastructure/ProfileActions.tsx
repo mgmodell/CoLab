@@ -35,10 +35,10 @@ export function clearProfile( ) {
 
 //Middleware async functions
 export function setLocalLanguage( language_id: number ){
-  console.log( language_id );
   return( dispatch, getState)=>{
-    const language = getState().context.lookups.languages[ language_id ];
-    console.log( language );
+    const language = getState().context.lookups.languages
+      .find( lang => lang.id === language_id );
+    i18n.loadLanguages( language.code );
     i18n.changeLanguage( language.code );
     const user = Object.assign( {}, getState().profile.user );
     user.language_id = language_id;

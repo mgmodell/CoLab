@@ -5,6 +5,7 @@ class Roster < ApplicationRecord
   belongs_to :user, inverse_of: :rosters
 
   after_update :clean_up_dropped
+  after_create :set_instructor
 
   enum role: { instructor: 1, assistant: 2, enrolled_student: 3,
                invited_student: 4, declined_student: 5,
@@ -50,6 +51,11 @@ class Roster < ApplicationRecord
         end
       end
     end
+    user.update_instructor
+    user.save
+  end
+
+  def set_instructor
     user.update_instructor
     user.save
   end

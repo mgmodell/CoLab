@@ -194,6 +194,7 @@ export default function ProfileDataAdmin(props) {
 
   //Display
   const setProfileLanguage = (language_id) =>{
+    console.log( language_id );
     dispatch( setLocalLanguage( language_id ) );
   };
   const setProfileTheme = (theme_id) =>{
