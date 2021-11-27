@@ -45,7 +45,6 @@ export default function SchoolDataAdmin(props) {
   const dirty = useTypedSelector( state => state['dirtyState'][ 'school' ] );
   const dispatch = useDispatch( );
 
-  const [showErrors, setShowErrors] = useState(false);
 
   let {id} = useParams( );
   const [schoolId, setSchoolId] = useState( id );
@@ -112,17 +111,15 @@ export default function SchoolDataAdmin(props) {
           setSchoolDescription(school.description);
           setSchoolTimezone(school.timezone);
 
-          setShowErrors(true);
           setDirty(false);
           dispatch( setClean('school') );
-          dispatch( addMessage( data.messages, new Date( ), Priorities.INFORMATION ) );
+          dispatch( addMessage( data.messages.main, new Date( ), Priorities.INFO ) );
           //setMessages(data.messages);
           dispatch( endTask("saving") );
         } else {
           console.log( 'data', data );
           console.log( 'messages', data.messages );
-          setShowErrors(true, new Date( ), Priorities.ERROR);
-          dispatch( addMessage( data.messages ) );
+          dispatch( addMessage( data.messages.main, new Date( ), Priorities.ERROR ) );
           setMessages(data.messages);
           dispatch( endTask("saving") );
         }
@@ -211,25 +208,6 @@ export default function SchoolDataAdmin(props) {
 
   return (
     <Paper>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              id="error-close"
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"]}
-        </Alert>
-      </Collapse>
       {detailsComponent}
     </Paper>
   );

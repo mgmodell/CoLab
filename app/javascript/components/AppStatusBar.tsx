@@ -16,6 +16,7 @@ export default function AppStatusBar(props) {
 
   const messages = useTypedSelector( state => { return state.status.messages } )
   const dispatch = useDispatch( );
+  console.log( 'messages', messages );
 
   return (
     <React.Fragment>
@@ -23,10 +24,12 @@ export default function AppStatusBar(props) {
         return (
           <Collapse key={`collapse_${index}`} in={!message["dismissed"]}>
             <Alert
+              severity={message.priority}
               id={`alert_${index}`}
               action={
                 <IconButton
-                  aria-label="close"
+                  aria-label={`${message.priority}-close`}
+                  id={`${message.priority}-close`}
                   color="inherit"
                   size="small"
                   onClick={() => {

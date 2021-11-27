@@ -38,7 +38,6 @@ Then 'the user selects {string} as the {string}' do |value, field|
 end
 
 Then 'the user will dismiss the error {string}' do |error_message|
-  byebug
   page.should have_content error_message
   find(:xpath, "//button[@id='error-close']").click
 end

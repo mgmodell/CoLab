@@ -38,18 +38,22 @@ export function status(state: StatusRootState = initialState, action) {
     case END_TASK:
       newState[ taskName ] = Math.max(0, (newState[ taskName] || 0) - 1);
       return newState;
-    case ADD_MESSAGE:
-      newState.messages.push(
+    case ADD_MESSAGE: {
+      const newMessages = newState.messages.map( (x) => x );
+      newMessages.push(
           {
             text: action.text,
             priority: action.priority,
             msgTime: action.msgTime,
             dismissed: false
           }
-      )
+      );
+      newState.messages = newMessages;
       return newState;
-    case ACKNOWLEDGE_MSG:
-      newState.messages.map ((message, index) => {
+
+    }
+    case ACKNOWLEDGE_MSG: {
+      const newMessages = newState.messages.map ((message, index) => {
         if (index === action.index) {
           return Object.assign({}, message, {
             dismissed: true
@@ -57,7 +61,10 @@ export function status(state: StatusRootState = initialState, action) {
         }
         return message;
       })
+      newState.messages = newMessages;
       return newState;
+
+    }
     default:
       return state;
   }

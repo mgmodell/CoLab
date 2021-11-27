@@ -113,7 +113,7 @@ class SchoolsController < ApplicationController
         end
         format.json do
           messages = @school.errors.to_hash
-          messages.store(:main, 'Please review the errors below')
+          messages.store(:main, 'Unable to save. Please resolve the issues and try again.')
           response = {
             messages: messages
           }

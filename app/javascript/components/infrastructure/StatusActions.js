@@ -6,9 +6,9 @@ export const ADD_MESSAGE = 'ADD_MESSAGE';
 export const ACKNOWLEDGE_MSG = 'ACKNOWLEDGE_MSG';
 
 export const Priorities = {
-  ERROR: 'ERROR',
-  INFORMATION: 'INFORMATION',
-  WARNING: 'WARNING'
+  ERROR: 'error',
+  INFO: 'info',
+  WARNING: 'warning'
 }
 
 export function startTask(task) {
