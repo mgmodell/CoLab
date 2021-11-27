@@ -25,7 +25,6 @@ import SignIn from './SignIn';
 import ProtectedRoute from './infrastructure/ProtectedRoute';
 import AppInit from './infrastructure/AppInit'
 
-//const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 

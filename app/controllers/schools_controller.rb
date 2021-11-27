@@ -112,7 +112,8 @@ class SchoolsController < ApplicationController
           render :edit
         end
         format.json do
-          messages = @school.errors.to_hash.store(:main, 'Please review the errors below')
+          messages = @school.errors.to_hash
+          messages.store(:main, 'Please review the errors below')
           response = {
             messages: messages
           }

@@ -14,7 +14,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 export default function AppStatusBar(props) {
 
-  const messages = useTypedSelector( state => { return state.statusMessages.messages } )
+  const messages = useTypedSelector( state => { return state.status.messages } )
   const dispatch = useDispatch( );
 
   return (

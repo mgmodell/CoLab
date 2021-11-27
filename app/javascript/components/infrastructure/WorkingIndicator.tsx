@@ -8,7 +8,7 @@ export default function WorkingIndicator(props) {
   const working = useTypedSelector( (state) =>{
     let accum = 0;
     if( undefined === props.identifier ){
-      accum = state['tasks'][ props.identifier ];
+      accum = state.status.tasks[ props.identifier ];
     } else {
       accum = Number(
         Object.values( state['tasks'] ).reduce(

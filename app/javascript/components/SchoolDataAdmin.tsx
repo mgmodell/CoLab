@@ -7,7 +7,9 @@ import {
   setDirty,
   setClean,
   addMessage,
-  acknowledgeMsg} from './infrastructure/StatusActions';
+  acknowledgeMsg,
+  Priorities
+      } from './infrastructure/StatusActions';
 import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
@@ -43,7 +45,6 @@ export default function SchoolDataAdmin(props) {
   const dirty = useTypedSelector( state => state['dirtyState'][ 'school' ] );
   const dispatch = useDispatch( );
 
-  const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
   let {id} = useParams( );
@@ -51,6 +52,7 @@ export default function SchoolDataAdmin(props) {
   const [schoolName, setSchoolName] = useState("");
   const [schoolDescription, setSchoolDescription] = useState("");
   const [schoolTimezone, setSchoolTimezone] = useState("UTC");
+  const [messages, setMessages] = useState( { } );
 
   const timezones = useTypedSelector( state => {return state.context.lookups['timezones'] })
 
@@ -102,6 +104,7 @@ export default function SchoolDataAdmin(props) {
     })
       .then(resp => {
         const data = resp['data'];
+        console.log( 'response', data );
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const school = data.school;
           setSchoolId(school.id);
@@ -112,10 +115,14 @@ export default function SchoolDataAdmin(props) {
           setShowErrors(true);
           setDirty(false);
           dispatch( setClean('school') );
-          setMessages(data.messages);
+          dispatch( addMessage( data.messages, new Date( ), Priorities.INFORMATION ) );
+          //setMessages(data.messages);
           dispatch( endTask("saving") );
         } else {
-          setShowErrors(true);
+          console.log( 'data', data );
+          console.log( 'messages', data.messages );
+          setShowErrors(true, new Date( ), Priorities.ERROR);
+          dispatch( addMessage( data.messages ) );
           setMessages(data.messages);
           dispatch( endTask("saving") );
         }
