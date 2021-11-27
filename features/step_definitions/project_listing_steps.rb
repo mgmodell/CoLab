@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 require 'chronic'
 
 Given(/^there is a course with an assessed project$/) do
   @course = School.find(1).courses.new(
-    name: "#{Forgery::Name.industry} Course",
-    number: Forgery::Basic.number,
+    name: "#{Faker::Company.industry} Course",
+    number: Faker::Number.within(range: 100..5000),
     timezone: 'UTC',
     start_date: 4.months.ago,
     end_date: 2.months.from_now
@@ -14,7 +14,7 @@ Given(/^there is a course with an assessed project$/) do
   @course.save
   log @course.errors.full_messages if @course.errors.present?
   @project = @course.projects.new(
-    name: "#{Forgery::Name.industry} Project",
+    name: "#{Faker::Company.industry} Project",
     start_dow: 1,
     end_dow: 2,
     style: Style.find(1)
@@ -42,16 +42,16 @@ end
 
 Given(/^the project has a group with (\d+) confirmed users$/) do |user_count|
   @group = @project.groups.new(
-    name: "#{Forgery::Basic.text} Group"
+    name: "#{Faker::Hobby.activity} Group"
   )
   @users = []
   user_count.to_i.times do
     user = @group.users.new(
-      first_name: Forgery::Name.first_name,
-      last_name: Forgery::Name.last_name,
+      first_name: Faker::Name.first_name,
+      last_name: Faker::Name.last_name,
       password: 'password',
       password_confirmation: 'password',
-      email: Forgery::Internet.email_address,
+      email: Faker::Internet.email,
       timezone: 'UTC',
       school: School.find(1),
       theme_id: 1

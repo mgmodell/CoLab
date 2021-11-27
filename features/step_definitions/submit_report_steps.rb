@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 
 Given(/^the project measures (\d+) factors$/) do |num_factors|
   bp = FactorPack.new(
-    name: "#{Forgery::Name.industry}-#{Forgery::Basic.color} Factor Pack",
-    description: Forgery::Basic.text
+    name: "#{Faker::Company.industry}-#{Faker::Color.color_name} Factor Pack",
+    description: Faker::Company.bs
   )
   num_factors.to_i.times do
     factor = bp.factors.new(
-      name: "#{Forgery::Address.street_number}-#{Forgery::Name.industry} Factor",
-      description: Forgery::Basic.text
+      name: "#{Faker::Job.key_skill} Factor",
+      description: Faker::Company.catch_phrase
     )
     factor.save
     log factor.errors.full_messages if factor.errors.present?

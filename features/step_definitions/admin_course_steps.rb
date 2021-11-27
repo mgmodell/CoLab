@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'chronic'
-require 'forgery'
+require 'faker'
 Given 'the project started {string} and ends {string}' do |start_date, end_date|
   @project.start_date = Chronic.parse(start_date)
   @project.end_date = Chronic.parse(end_date)
@@ -388,11 +388,11 @@ end
 Given('the course adds {int} {string} users') do |count, role|
   count.times do
     user = User.new(
-      first_name: Forgery::Name.first_name,
-      last_name: Forgery::Name.last_name,
+      first_name: Faker::Name.first_name,
+      last_name: Faker::Name.last_name,
       password: 'password',
       password_confirmation: 'password',
-      email: Forgery::Internet.email_address,
+      email: Faker::Internet.email,
       timezone: 'UTC',
       school: School.find(1),
       theme_id: 1

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 
 Then(/^the user will see the task listing page$/) do
   page.should have_content 'Your Tasks'
@@ -24,11 +24,11 @@ end
 
 Given(/^a user has signed up$/) do
   @user = User.new(
-    first_name: Forgery::Name.first_name,
-    last_name: Forgery::Name.last_name,
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
     password: 'password',
     password_confirmation: 'password',
-    email: Forgery::Internet.email_address,
+    email: Faker::Internet.email,
     timezone: 'UTC',
     language: Language.find_by(code: 'en'),
     school: School.find(1),
@@ -84,11 +84,11 @@ end
 
 When(/^the new user registers$/) do
   click_link_or_button 'Signup'
-  email = Forgery::Internet.email_address
+  email = Faker::Internet.email
 
   fill_in 'user[email]', with: email
-  fill_in 'user[first_name]', with: Forgery::Name.first_name
-  fill_in 'user[last_name]', with: Forgery::Name.last_name
+  fill_in 'user[first_name]', with: Faker::Name.first_name
+  fill_in 'user[last_name]', with: Faker::Name.last_name
   fill_in 'user[password]', with: 'password'
 
   # These aren't working in capybara
@@ -112,11 +112,11 @@ Given(/^(\d+) users$/) do |user_count|
   @users = []
   user_count.to_i.times do
     u = User.new(
-      first_name: Forgery::Name.first_name,
-      last_name: Forgery::Name.last_name,
+      first_name: Faker::Name.first_name,
+      last_name: Faker::Name.last_name,
       password: 'password',
       password_confirmation: 'password',
-      email: Forgery::Internet.email_address,
+      email: Faker::Internet.email,
       timezone: 'UTC',
       theme_id: 1
     )
@@ -128,8 +128,8 @@ end
 
 Given(/^a course$/) do
   @course = School.find(1).courses.new(
-    name: "#{Forgery::Name.industry} Course",
-    number: Forgery::Basic.number,
+    name: "#{Faker::Company.industry} Course",
+    number: Faker::Number.witn(range: 100..6000),
     timezone: 'UTC',
     start_date: 4.months.ago,
     end_date: 2.months.from_now

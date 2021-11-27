@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 
 Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
@@ -30,8 +30,8 @@ end
 
 Given(/^the course has a Bingo! game$/) do
   @bingo = @course.bingo_games.new(
-    topic: Forgery::Name.industry + ' Topic',
-    description: Forgery::Basic.text,
+    topic: Faker::Company.industry + ' Topic',
+    description: Faker::Company.bs,
     lead_time: 2,
     individual_count: 20,
     group_discount: 0,

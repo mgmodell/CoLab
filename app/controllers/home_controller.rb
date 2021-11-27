@@ -55,7 +55,6 @@ class HomeController < ApplicationController
                          }
                        end
     }
-    puts "*********** finished with task list"
     respond_to do |format|
       format.json do
         render json: resp_hash
@@ -64,7 +63,6 @@ class HomeController < ApplicationController
   end
 
   def endpoints
-    puts "signed in? #{user_signed_in?}"
 
     ep_hash = {
       home:{

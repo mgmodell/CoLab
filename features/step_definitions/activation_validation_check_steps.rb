@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 
 When(/^the project is activated$/) do
   @project.active = true
@@ -18,11 +18,11 @@ end
 
 Given(/^an additional user is in each group of the project$/) do
   user = User.new(
-    first_name: Forgery::Name.first_name,
-    last_name: Forgery::Name.last_name,
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
     password: 'password',
     password_confirmation: 'password',
-    email: Forgery::Internet.email_address,
+    email: Faker::Internet.email,
     timezone: 'UTC',
     theme_id: 1
   )

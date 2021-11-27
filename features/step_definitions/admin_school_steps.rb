@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'chronic'
-require 'forgery'
 
 Then 'retrieve the latest school from the db' do
   @orig_school = @school

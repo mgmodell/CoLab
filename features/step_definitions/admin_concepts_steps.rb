@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 
 Given('{int} multi-word concepts have been added to the system') do |word_count|
   check_uniq = {}
   while check_uniq.keys.count <= word_count
-    c_name = Forgery::Name.industry
+    c_name = Faker::Company.industry
     check_uniq[c_name.downcase] = true
   end
   check_uniq.keys.each do |c_name|

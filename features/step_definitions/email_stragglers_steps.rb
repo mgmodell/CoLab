@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 
 Given(/^the email queue is empty$/) do
   ActionMailer::Base.deliveries = []
@@ -45,7 +45,7 @@ end
 
 Given(/^the user is in a group on the project with (\d+) other users$/) do |user_count|
   @group = Group.new(
-    name: "#{Forgery::Basic.text} Group"
+    name: "#{Faker::Inudustry.sub_sector} Group"
   )
   r = Roster.new
   r.user = @user
@@ -56,11 +56,11 @@ Given(/^the user is in a group on the project with (\d+) other users$/) do |user
   @group.users << @user
   user_count.to_i.times do
     user = @group.users.new(
-      first_name: Forgery::Name.first_name,
-      last_name: Forgery::Name.last_name,
+      first_name: Faker::Name.first_name,
+      last_name: Faker::Name.last_name,
       password: 'password',
       password_confirmation: 'password',
-      email: Forgery::Internet.email_address,
+      email: Faker::Internet.email,
       timezone: 'UTC',
       school: School.find(1),
       theme_id: 1

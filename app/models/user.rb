@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 
 class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
@@ -387,18 +387,18 @@ class User < ApplicationRecord
     if gender.present? && gender.changed?
       case gender.code
       when 'm'
-        self.anon_first_name = Forgery::Name.male_first_name
-        self.anon_last_name = Forgery::Name.last_name
+        self.anon_first_name = Faker::Name.male_first_name
+        self.anon_last_name = Faker::Name.last_name
       when 'f'
-        self.anon_first_name = Forgery::Name.female_first_name
-        self.anon_last_name = Forgery::Name.last_name
+        self.anon_first_name = Faker::Name.female_first_name
+        self.anon_last_name = Faker::Name.last_name
       else
-        self.anon_first_name = Forgery::Name.first_name
-        self.anon_last_name = Forgery::Name.last_name
+        self.anon_first_name = Faker::Name.first_name
+        self.anon_last_name = Faker::Name.last_name
         end
     elsif !persisted?
-      self.anon_first_name = Forgery::Name.first_name
-      self.anon_last_name = Forgery::Name.last_name
+      self.anon_first_name = Faker::Name.first_name
+      self.anon_last_name = Faker::Name.last_name
     end
   end
 end

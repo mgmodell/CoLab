@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 class BingoGame < ApplicationRecord
   include TimezonesSupportConcern
 
@@ -335,6 +335,6 @@ class BingoGame < ApplicationRecord
 
   def anonymize
     trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
-    self.anon_topic = "#{Forgery::Name.company_name} #{trans.sample} #{Forgery::Name.job_title}"
+    self.anon_topic = "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
   end
 end

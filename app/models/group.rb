@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 class Group < ApplicationRecord
   around_update :update_history
   after_initialize :store_load_state
@@ -159,6 +159,6 @@ class Group < ApplicationRecord
   end
 
   def anonymize
-    self.anon_name = "#{rand < rand ? Forgery::Personal.language : Forgery::Name.location} #{Forgery::Name.company_name}s"
+    self.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s"
   end
 end

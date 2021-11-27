@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 
 class BingoGamesController < ApplicationController
   layout 'admin', except: %i[review_candidates update_review_candidates
@@ -300,14 +300,14 @@ end
     groups =
       [Group.new(
         id: -1,
-        name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
-        anon_name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
+        name: "#{Faker::Color.color_name} #{Faker::Lorem.words(number: 1, supplemental: true)[0]}",
+        anon_name: "#{Faker::Color.color_name} #{Faker::Lorem.words(number: 1, supplemental: true)[0]}",
         project_id: -1
       ),
        Group.new(
          id: -2,
-         name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
-         anon_name: "#{Forgery::Basic.frequency} #{Forgery::Basic.color}",
+         name: "#{Faker::Color.color_name} #{Faker::Lorem.words(number: 1, supplemental: true)[0]}",
+         kanon_name: "#{Faker::Color.color_name} #{Faker::Lorem.words(number: 1, supplemental: true)[0]}",
          project_id: -1
        )]
 
@@ -329,10 +329,10 @@ end
     0.downto(-3) do |index|
       u = User.new
       u.id = index
-      u.first_name = Forgery::Name.first_name
-      u.anon_first_name = Forgery::Name.first_name
-      u.last_name = Forgery::Name.last_name
-      u.anon_last_name = Forgery::Name.last_name
+      u.first_name = Faker::Name.first_name
+      u.anon_first_name = Faker::Name.first_name
+      u.last_name = Faker::Name.last_name
+      u.anon_last_name = Faker::Name.last_name
       u.email = 'test@mailinator.com'
 
       groups[0].users << u
@@ -342,10 +342,10 @@ end
     -4.downto(-7) do |index|
       u = User.new
       u.id = index
-      u.first_name = Forgery::Name.first_name
-      u.anon_first_name = Forgery::Name.first_name
-      u.last_name = Forgery::Name.last_name
-      u.anon_last_name = Forgery::Name.last_name
+      u.first_name = Faker::Name.first_name
+      u.anon_first_name = Faker::Name.first_name
+      u.last_name = Faker::Name.last_name
+      u.anon_last_name = Faker::Name.last_name
       u.email = 'test@mailinator.com'
 
       cl = CandidateList.new

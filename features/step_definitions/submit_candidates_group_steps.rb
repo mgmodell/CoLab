@@ -84,9 +84,9 @@ When(/^the user populates (\d+) additional "([^"]*)" entries$/) do |count, field
       @entries_list[existing_count + index] = { 'term' => '', 'definition' => '' }
     end
     @entries_list[existing_count + index][field] = if field == 'term'
-                                                     Forgery::Name.industry
+                                                     Faker::Company.industry
                                                    else
-                                                     Forgery::Basic.text
+                                                     Faker::Company.bs
 end
     page.fill_in("#{field}_#{existing_count + index}",
                  with: @entries_list[existing_count + index][field])
@@ -102,9 +102,9 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
     existing_term = page.find(:xpath, "//input[@id='term_#{index}']").value
     log "term: #{existing_term.inspect}"
     new_val = if field == 'term'
-                Forgery::Name.industry
+                Faker::Company.industry
               else
-                Forgery::Basic.text
+                Faker::Company.bs
 end
 
     @entries_list[index] = {} if @entries_list[index].blank?

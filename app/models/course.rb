@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 class Course < ApplicationRecord
   belongs_to :school, inverse_of: :courses, counter_cache: true
   has_many :projects, inverse_of: :course, dependent: :destroy
@@ -318,7 +318,7 @@ class Course < ApplicationRecord
 
   def anonymize
     levels = %w[Beginning Intermediate Advanced]
-    self.anon_name = "#{levels.sample} #{Forgery::Name.industry}"
+    self.anon_name = "#{levels.sample} #{Faker::Company.industry}"
     dpts = %w[BUS MED ENG RTG MSM LEH EDP
               GEO IST MAT YOW GFB RSV CSV MBV]
     self.anon_number = "#{dpts.sample}-#{rand(100..700)}"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 
 Given(/^the Bingo! game required (\d+) day of lead time$/) do |lead_time|
   @bingo.lead_time = lead_time
@@ -69,9 +69,9 @@ When(/^the user populates (\d+) of the "([^"]*)" entries$/) do |count, field|
   count.to_i.times do |index|
     @entries_list[index] = {} if @entries_list[index].nil?
     @entries_list[index][field] = if field == 'term'
-                                    "#{Forgery::Name.industry}_#{index}"
+                                    "#{Faker::Company.industry}_#{index}"
                                   else
-                                    Forgery::Basic.text
+                                    Faker::Company.bs
 end
     page.fill_in("#{field}_#{index}",
                  with: @entries_list[index][field])

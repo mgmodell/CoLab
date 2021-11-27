@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 class Experience < ApplicationRecord
   include TimezonesSupportConcern
 
@@ -274,6 +274,6 @@ class Experience < ApplicationRecord
   end
 
   def anonymize
-    self.anon_name = Forgery::Name.company_name.to_s
+    self.anon_name = "#{Faker.Company.industry} #{Faker::Company.suffix}"
   end
 end

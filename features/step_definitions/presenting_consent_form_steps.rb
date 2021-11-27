@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'chronic'
-require 'forgery'
+require 'faker'
 
 Given(/^reset time clock to now$/) do
   travel_back
@@ -9,7 +9,7 @@ end
 
 Given(/^there is a global consent form$/) do
   @consent_form = ConsentForm.new(
-    name: Forgery::Name.location,
+    name: Faker::Nation.nationality,
     user: User.find(1)
   )
   @consent_form.pdf.attach(io: File.open(
@@ -24,7 +24,7 @@ end
 Given(/^the course has a consent form$/) do
   @consent_form = ConsentForm.new(
     user: User.find(1),
-    name: Forgery::Name.location
+    name: Faker::Nation.nationality,
   )
   @consent_form.pdf.attach(io: File.open(
     Rails.root.join('db', 'ConsentForms_consolidated.pdf')

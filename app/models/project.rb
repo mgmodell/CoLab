@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 class Project < ApplicationRecord
   include TimezonesSupportConcern
   after_save :build_assessment
@@ -282,6 +282,13 @@ class Project < ApplicationRecord
   end
 
   def anonymize
-    self.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"
+    locations = [
+      Faker::Games::Pokemon,
+      Faker::Games::Touhou,
+      Faker::Games::Overwatch,
+      Faker::Movies::HowToTrainYourDragon,
+      Faker::Fantasy::Tolkien
+    ]
+    self.anon_name = "#{locations.sample.location} #{Faker::Job.field}"
   end
 end
