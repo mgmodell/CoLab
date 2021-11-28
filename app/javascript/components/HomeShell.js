@@ -108,7 +108,7 @@ export default function HomeShell(props) {
           <p>
             {t("home.greeting", { name: user.first_name })},<br />
             {t("home.task_interval", {
-              postProcess: "interval",
+              postProcess: 'interval',
               count: tasks.length
             })}
           </p>

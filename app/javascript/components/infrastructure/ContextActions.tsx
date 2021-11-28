@@ -1,8 +1,7 @@
-import { RootRef } from '@material-ui/core';
 import axios from 'axios';
-//import {addMessage, startTask, endTask, Priorities } from './StatusActions';
 
 import {fetchProfile, setProfile, clearProfile} from './ProfileActions';
+import {addMessage, Priorities} from './StatusActions';
 
 export const SET_LOGGING_IN = 'SET_LOGGING_IN';
 export const SET_LOGGED_IN = 'SET_LOGGED_IN';
@@ -228,6 +227,8 @@ export function emailSignIn( email: string, password: string ){
                 { email: email,
                   password: password } )
                 .then( resp=>{
+                    //TODO resp contains the full user info
+                    dispatch( addMessage( 'Signed in successfully.', new Date(), Priorities.INFO ))
                     CONFIG.retrieveResources( dispatch, getState )
                         .then( response =>{
                             dispatch( fetchProfile( ) );
