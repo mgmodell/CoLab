@@ -9,6 +9,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import SortIcon from "@material-ui/icons/Sort";
 
 import { SortDirection } from "react-virtualized";
+import axios from "axios";
 
 class DiversityScore extends React.Component {
   constructor(props) {
@@ -85,29 +86,21 @@ class DiversityScore extends React.Component {
     student_list.forEach((item, index) => {
       emails.push(item.email);
     });
-    fetch(this.props.scoreReviewUrl + ".json", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
+    axios.post( this.props.scoreReviewUrl + '.json',
+    {
       body: JSON.stringify({
         emails: emails.join()
       })
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
       .then(data => {
         this.setState({
           calculated: data.diversity_score
         });
+      })
+      .catch( error =>{
+          console.log("error", error);
+          return [{ id: -1, name: "no data" }];
+
       });
   }
 }

@@ -44,21 +44,7 @@ export default function CourseUsersList(props) {
   const getUsers = () => {
     dispatch( startTask() );
     var url = props.retrievalUrl;
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         //MetaData and Infrastructure
         if ("student" == props.userType) {
@@ -70,6 +56,9 @@ export default function CourseUsersList(props) {
         props.usersListUpdateFunc(data.users);
 
         dispatch( endTask() );
+      })
+      .catch( error=>{
+        console.log( 'error', error );
       });
   };
 
@@ -224,24 +213,13 @@ export default function CourseUsersList(props) {
                     aria-label={lbl}
                     onClick={event => {
                       dispatch( startTask("inviting") );
-                      fetch(user.reinvite_link, {
-                        method: "GET",
-                        credentials: "include",
-                        headers: {
-                          "Content-Type": "application/json",
-                          Accepts: "application/json",
-                        }
-                      })
-                        .then(response => {
-                          if (response.ok) {
-                            return response.json();
-                          } else {
-                            console.log("error");
-                          }
-                        })
+                      axios.get( user.reinvite_link, { } )
                         .then(data => {
                           refreshFunc(data.messages);
                           dispatch( endTask("inviting") );
+                        })
+                        .catch( error =>{
+                          console.log( 'error', error );
                         });
                     }}
                   >
@@ -270,28 +248,18 @@ export default function CourseUsersList(props) {
                     aria-label={lbl}
                     onClick={event => {
                       dispatch( startTask("accepting_student") );
-                      fetch(procRegReqPath, {
-                        method: "PATCH",
-                        credentials: "include",
-                        headers: {
-                          "Content-Type": "application/json",
-                          Accepts: "application/json",
-                        },
+                      axios.patch( procRegReqPath, {
                         body: JSON.stringify({
                           roster_id: user.id,
                           decision: true
                         })
                       })
-                        .then(response => {
-                          if (response.ok) {
-                            return response.json();
-                          } else {
-                            console.log("error");
-                          }
-                        })
                         .then(data => {
                           refreshFunc(data.messages);
                           dispatch( endTask("accepting_student") );
+                        })
+                        .catch( error =>{
+                          console.log( 'error', error );
                         });
                     }}
                   >
@@ -305,28 +273,18 @@ export default function CourseUsersList(props) {
                     aria-label={lbl2}
                     onClick={event => {
                       dispatch( startTask("decline_student") );
-                      fetch(procRegReqPath, {
-                        method: "PATCH",
-                        credentials: "include",
-                        headers: {
-                          "Content-Type": "application/json",
-                          Accepts: "application/json",
-                        },
+                      axios.patch( procRegReqPath, {
                         body: JSON.stringify({
                           roster_id: user.id,
                           decision: false
                         })
                       })
-                        .then(response => {
-                          if (response.ok) {
-                            return response.json();
-                          } else {
-                            console.log("error");
-                          }
-                        })
                         .then(data => {
                           refreshFunc(data.messages);
                           dispatch( endTask("decline_student") );
+                        })
+                        .catch( error=>{
+                          console.log( 'error', error );
                         });
                     }}
                   >
@@ -345,27 +303,18 @@ export default function CourseUsersList(props) {
                     aria-label={lbl}
                     onClick={event => {
                       dispatch( startTask("re-adding") );
-                      fetch(addUsersPath, {
-                        method: "PUT",
-                        credentials: "include",
-                        headers: {
-                          "Content-Type": "application/json",
-                          Accepts: "application/json",
-                        },
+                      axios.put( addUsersPath, {
                         body: JSON.stringify({
                           addresses: user.email
                         })
+
                       })
-                        .then(response => {
-                          if (response.ok) {
-                            return response.json();
-                          } else {
-                            console.log("error");
-                          }
-                        })
                         .then(data => {
                           refreshFunc(data.messages);
                           dispatch( endTask("re-adding") );
+                        })
+                        .catch( error =>{
+                          console.log( 'error', error );
                         });
                     }}
                   >

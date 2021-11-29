@@ -117,14 +117,10 @@ export default function ProjectDataAdmin(props) {
       (null == projectId ? props.courseId : projectId) +
       ".json";
 
-    fetch(url, {
+    axios({
       method: method,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
-      body: JSON.stringify({
+      url: url,
+      data: {
         project: {
           name: projectName,
           course_id: props.courseId,
@@ -137,16 +133,9 @@ export default function ProjectDataAdmin(props) {
           factor_pack_id: projectFactorPackId,
           style_id: projectStyleId
         }
-      })
+
+      }
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          setMessages(data.messages);
-          console.log("error");
-        }
-      })
       .then(data => {
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const project = data.project;
@@ -176,7 +165,11 @@ export default function ProjectDataAdmin(props) {
           setMessages(data.messages);
           dispatch( endTask("saving") );
         }
-      });
+      })
+      .catch( error => {
+        console.log( 'error', error );
+      })
+      ;
   };
   useEffect(() => {
     daysOfWeek.unshift(daysOfWeek.pop());

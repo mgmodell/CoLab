@@ -34,6 +34,7 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function ConsentFormDataAdmin(props) {
   const endpointSet = "consent_form";
@@ -67,22 +68,7 @@ export default function ConsentFormDataAdmin(props) {
     } else {
       url = url + consentFormId + ".json";
     }
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return response.json();
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         const consentForm = data.consent_form;
 
@@ -109,6 +95,9 @@ export default function ConsentFormDataAdmin(props) {
 
         dispatch( endTask() );
         setDirty(false);
+      })
+      .catch( error =>{
+        console.log( 'error', error );
       });
   };
   const saveConsentForm = () => {
@@ -121,13 +110,9 @@ export default function ConsentFormDataAdmin(props) {
       (null == consentFormId ? props.schoolId : consentFormId) +
       ".json";
 
-    fetch(url, {
+    axios( {
       method: method,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
+      url: url,
       body: JSON.stringify({
         consent_form: {
           id: consentFormId,
@@ -136,14 +121,6 @@ export default function ConsentFormDataAdmin(props) {
         }
       })
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          dispatch( endTask("saving") );
-        }
-      })
       .then(data => {
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const consentForm = data.school;
@@ -167,6 +144,11 @@ export default function ConsentFormDataAdmin(props) {
           setMessages(data.messages);
           dispatch( endTask("saving") );
         }
+      })
+      .catch( error =>{
+        console.log( 'error', error );
+        dispatch( endTask("saving") );
+
       });
   };
 

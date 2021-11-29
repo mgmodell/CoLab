@@ -11,6 +11,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import { DialogActions, Button, Collapse } from "@material-ui/core";
+import axios from "axios";
 
 export default function DropUserButton(props) {
   const [showDialog, setShowDialog] = useState(false);
@@ -42,24 +43,13 @@ export default function DropUserButton(props) {
         </Button>
         <Button
           onClick={event => {
-            fetch(props.dropUrl, {
-              method: "GET",
-              credentials: "include",
-              headers: {
-                "Content-Type": "application/json",
-                Accepts: "application/json",
-              }
-            })
-              .then(response => {
-                if (response.ok) {
-                  return response.json();
-                } else {
-                  console.log("error");
-                }
-              })
+            axios.get( props.dropUrl, { } )
               .then(data => {
                 props.refreshFunc(data.messages);
                 setShowDialog(false);
+              })
+              .catch( error =>{
+                console.log( 'error', error );
               });
           }}
           color="primary"

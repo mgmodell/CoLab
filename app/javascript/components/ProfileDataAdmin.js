@@ -42,6 +42,7 @@ import { Grid, Link } from "@material-ui/core";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { fetchProfile, setProfile, persistProfile, setLocalLanguage } from "./infrastructure/ProfileActions";
 import { Skeleton } from "@material-ui/lab";
+import axios from "axios";
 
 export default function ProfileDataAdmin(props) {
   const endpointSet = "profile";
@@ -222,22 +223,7 @@ export default function ProfileDataAdmin(props) {
     if ("" != endpoints.statesForUrl) {
       dispatch( startTask() );
       const url = endpoints.statesForUrl + countryCode + ".json";
-      fetch(url, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Accepts: "application/json",
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            console.log("error");
-            return response.json();
-          }
-        })
+      axios.get( url, { } )
         .then(data => {
           //Find the selected state in the retrieved list
           const foundSelectedStates = data.filter(item => {
@@ -253,6 +239,9 @@ export default function ProfileDataAdmin(props) {
             setDirty(true);
           }
           dispatch( endTask("loading") );
+        })
+        .catch( error =>{
+          console.log( 'error', error );
         });
     }
     }

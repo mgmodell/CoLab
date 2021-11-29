@@ -22,6 +22,7 @@ import MUIDataTable from "mui-datatables";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import {startTask, endTask} from '../infrastructure/StatusActions'
+import axios from "axios";
 
 export default function CandidatesReviewTable(props) {
   const { t } = useTranslation("bingo_games");
@@ -225,24 +226,8 @@ export default function CandidatesReviewTable(props) {
     dispatch(startTask() );
     setReviewStatus("Loading data");
 
-    fetch(
-      `${endpoints.baseUrl}${props.bingoGameId}.json`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Accepts: "application/json",
-        }
-      }
-    )
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return [{ id: -1, name: "no data" }];
-        }
-      })
+    const url = `${endpoints.baseUrl}${props.bingoGameId}.json`;
+    axios.get( url, { } )
       .then(data => {
         // Add a non-response for the UI
         data.feedback_opts.unshift({
@@ -275,6 +260,9 @@ export default function CandidatesReviewTable(props) {
         setDirty(false);
         dispatch( endTask() );
         updateProgress();
+      })
+      .catch( error =>{
+        console.log( 'error', error );
       });
   };
   // conceptStats() {}
@@ -283,38 +271,26 @@ export default function CandidatesReviewTable(props) {
     dispatch( startTask("saving") );
     setReviewStatus("Saving feedback.");
 
-    fetch(
-      `${endpoints.reviewSaveUrl}${
-        props.bingoGameId
-      }.json`,
-      {
-        method: "PATCH",
-        credentials: "include",
+    const url = `${endpoints.reviewSaveUrl}${ props.bingoGameId }.json`;
+
+    axios.patch( url, {
         body: JSON.stringify({
           candidates: candidates.filter(c => 0 < c.completed),
           reviewed: reviewComplete
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Accepts: "application/json",
-        }
-      }
-    )
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
+        })
+    })
+      .then(data => {
+        setDirty(typeof data.success !== "undefined");
+        dispatch( endTask("saving") );
+        setReviewStatus(data.notice);
+      })
+      .catch( error =>{
           const fail_data = new Object();
           fail_data.notice = "The operation failed";
           fail_data.success = false;
           console.log("error");
           return fail_data;
-        }
-      })
-      .then(data => {
-        setDirty(typeof data.success !== "undefined");
-        dispatch( endTask("saving") );
-        setReviewStatus(data.notice);
+
       });
   };
 

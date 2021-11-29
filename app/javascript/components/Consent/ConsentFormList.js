@@ -57,27 +57,15 @@ export default function ConsentFormList(props) {
     const url = endpoints.baseUrl + ".json";
     dispatch( startTask("loading") );
 
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         //Process the data
         setSchools(data);
         dispatch( endTask("loading") );
-      });
+      })
+      .catch( error =>{
+        console.log( 'error', error );
+      } );
   };
 
   useEffect(() => {

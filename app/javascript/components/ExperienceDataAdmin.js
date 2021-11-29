@@ -22,6 +22,7 @@ import {startTask, endTask} from './infrastructure/StatusActions';
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import axios from "axios";
 
 export default function ExperienceDataAdmin(props) {
   const endpointSet = "experience_admin";
@@ -62,21 +63,7 @@ export default function ExperienceDataAdmin(props) {
     } else {
       url = url + experienceId + ".json";
     }
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         const experience = data.experience;
         const course = data.course;
@@ -101,6 +88,9 @@ export default function ExperienceDataAdmin(props) {
 
         dispatch( endTask() );
         setDirty(false);
+      })
+      .catch( error=>{
+        console.log( 'error', error );
       });
   };
   const saveExperience = () => {
@@ -113,13 +103,9 @@ export default function ExperienceDataAdmin(props) {
       (null == experienceId ? props.courseId : experienceId) +
       ".json";
 
-    fetch(url, {
+    axios({
+      url: url,
       method: method,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
       body: JSON.stringify({
         experience: {
           name: experienceName,
@@ -131,14 +117,6 @@ export default function ExperienceDataAdmin(props) {
         }
       })
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          setMessages(data.messages);
-          console.log("error");
-        }
-      })
       .then(data => {
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const experience = data.experience;
@@ -163,6 +141,10 @@ export default function ExperienceDataAdmin(props) {
           setMessages(data.messages);
           dispatch( endTask("saving") );
         }
+      })
+      .catch( error =>{
+        console.log( 'error', error );
+        setMessages(data.messages);
       });
   };
 

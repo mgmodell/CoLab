@@ -9,6 +9,7 @@ import MUIDataTable from "mui-datatables";
 
 import Link from "@material-ui/core/Link";
 import { Container } from "@material-ui/core";
+import axios from "axios";
 
 export default function ReactionsList(props) {
   const [anchorEl, setAnchorEl] = useState();
@@ -18,26 +19,15 @@ export default function ReactionsList(props) {
   const getReactions = () => {
     var url = props.retrievalUrl + ".json";
     dispatch( startTask() );
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         //MetaData and Infrastructure
         props.reactionsListUpdateFunc(data.reactions);
 
         dispatch( endTask() );
+      })
+      .catch( error =>{
+        console.log( 'error', error );
       });
   };
 

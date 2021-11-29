@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 export default function Quote(props) {
   const [quote, setQuote] = useState({ text: "", attribution: "" });
 
   const updateQuote = () => {
-    fetch(props.url, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
+    axios.get( props.url + '.json', { } )
       .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
-      .then(data => {
+        const data = response.data;
         setQuote({ text: data.text_en, attribution: data.attribution });
+      })
+      .catch( error =>{
+        console.log( 'error', error );
       });
   };
   useEffect(() => updateQuote(), []);

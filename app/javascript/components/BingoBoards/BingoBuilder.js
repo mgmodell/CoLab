@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
 import { startTask, endTask } from '../infrastructure/StatusActions';
+import axios from "axios";
 
 const styles = createTheme({
   typography: {
@@ -104,81 +105,48 @@ export default function BingoBuilder(props) {
   const getConcepts = () => {
     dispatch( startTask());
     console.log("concepts");
-    fetch(
-      `${endpoints.conceptsUrl}${bingoGameId}.json`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Accepts: "application/json",
-        }
-      }
-    )
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
+    const url =  `${endpoints.conceptsUrl}${bingoGameId}.json`;
+    axios.get( url, { } )
       .then(data => {
         setConcepts(data);
         dispatch( endTask() );
+      })
+      .catch( error =>{
+          console.log("error");
+          return [{ id: -1, name: "no data" }];
       });
   };
 
   const getMyResults = () => {
     dispatch( startTask() );
-    fetch(`${endpoints.baseUrl}${bingoGameId}.json`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
+    const url = `${endpoints.baseUrl}${bingoGameId}.json`;
+    axios.get( url, { } )
       .then(data => {
         console.log(data);
         setCandidateList(data.candidate_list);
         setCandidates(data.candidates);
         //}, this.randomizeTiles );
         dispatch( endTask());
+      })
+      .catch( error =>{
+          console.log("error");
+          return [{ id: -1, name: "no data" }];
       });
   };
   const getBoard = () => {
     dispatch( startTask());
-    fetch(`${endpoints.boardUrl}${bingoGameId}.json`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
+    const url = `${endpoints.boardUrl}${bingoGameId}.json`;
+    axios.get( url, { } )
       .then(data => {
         data.initialised = data.id != null;
         data.iteration = 0;
         setBoard(data);
         //}, this.randomizeTiles );
         dispatch( endTask());
+      })
+      .catch( error =>{
+          console.log("error");
+          return [{ id: -1, name: "no data" }];
       });
   };
 
@@ -186,23 +154,10 @@ export default function BingoBuilder(props) {
     dispatch( startTask("saving"));
     board.bingo_cells_attributes = board.bingo_cells;
     delete board.bingo_cells;
-    fetch(`${endpoints.boardUrl}${bingoGameId}.json`, {
-      method: "PATCH",
-      credentials: "include",
-      body: JSON.stringify({ bingo_board: board }),
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
+    const url = `${endpoints.boardUrl}${bingoGameId}.json`;
+    axios.patch( url, {
+      body: JSON.stringify({ bingo_board: board })
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return {};
-        }
-      })
       .then(data => {
         data.initialised = true;
         data.iteration = 0;
@@ -221,6 +176,9 @@ export default function BingoBuilder(props) {
           setBoard(board);
         }
         dispatch( endTask("saving") );
+      })
+      .catch( error =>{
+        console.log( 'error', error );
       });
   };
   const getWorksheet = () => {

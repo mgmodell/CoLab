@@ -16,6 +16,7 @@ import WrappedVirtualizedTable from "../components/WrappedVirtualizedTable";
 
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import axios from "axios";
 
 const styles = theme => ({
   table: {
@@ -135,28 +136,17 @@ class DecisionEnrollmentsTable extends React.Component {
     this.getRequests();
   }
   getRequests() {
-    fetch(this.props.init_url + ".json", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
+    axios.get(this.props.init_url + ".json", { } )
       .then(data => {
         this.setState({
           requests: data,
           requests_raw: data,
           working: false
         });
+      })
+      .catch( error =>{
+          console.log("error", error );
+          return [{ id: -1, name: "no data" }];
       });
   }
   filter = function(event) {
@@ -193,29 +183,13 @@ class DecisionEnrollmentsTable extends React.Component {
 
   decision(id, accept) {
     this.setState({ working: true });
-    fetch(this.props.update_url + ".json", {
-      method: "PATCH",
-      credentials: "include",
+    const url = this.props.update_url + ".json";
+    axios.patch( url, {
       body: JSON.stringify({
         roster_id: id,
         decision: accept
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          const fail_data = new Object();
-          fail_data.notice = "The operation failed";
-          fail_data.success = false;
-          console.log("error");
-          return fail_data;
-        }
       })
+    })
       .then(data => {
         console.log( 'got enrollments', data )
         this.setState({
@@ -223,6 +197,13 @@ class DecisionEnrollmentsTable extends React.Component {
           requests_raw: data,
           working: false
         });
+      })
+      .catch( error=>{
+          const fail_data = new Object();
+          fail_data.notice = "The operation failed";
+          fail_data.success = false;
+          console.log("error");
+          return fail_data;
       });
   }
 

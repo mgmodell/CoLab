@@ -7,6 +7,7 @@ import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';
 
 import MUIDataTable from "mui-datatables";
+import axios from "axios";
 
 export default function UserCourseList(props) {
   // const [addUsersPath, setAddUsersPath] = useState("");
@@ -16,26 +17,15 @@ export default function UserCourseList(props) {
   const getActivities = () => {
     dispatch( startTask() );
     var url = props.retrievalUrl;
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         console.log(data);
         //MetaData and Infrastructure
         props.activitiesListUpdateFunc(data);
         dispatch( endTask() );
+      })
+      .catch( error =>{
+        console.log( 'error', error );
       });
   };
 

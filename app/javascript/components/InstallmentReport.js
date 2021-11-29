@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 import LinkedSliders from "./LinkedSliders";
+import axios from "axios";
 export default function InstallmentReport(props) {
   const endpointSet = "installment";
   const endpoints = useTypedSelector((state)=>state.context.endpoints[endpointSet])
@@ -102,22 +103,7 @@ export default function InstallmentReport(props) {
       props.installmentId
     }.json`;
     dispatch( startTask() );
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          setMessages({});
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         console.log(data);
         setFactors(data.factors);
@@ -146,6 +132,9 @@ export default function InstallmentReport(props) {
         data.installment.group_id = data.group.id;
         setProject(data.installment.project);
         dispatch(endTask() );
+      })
+      .catch( error =>{
+        console.log( 'error', error );
       });
   };
   //Store what we've got
@@ -156,26 +145,14 @@ export default function InstallmentReport(props) {
       (Boolean(installment.id) ? `/${installment.id}` : ``) +
       ".json";
     const method = Boolean(installment.id) ? "PATCH" : "POST";
-    fetch(url, {
+    axios( {
+      url: url,
       method: method,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
       body: JSON.stringify({
         contributions: contributions,
         installment: installment
       })
     })
-      .then(response => {
-        if (response.ok) {
-          setMessages({});
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
       .then(data => {
         //Process Contributions
         if (!data.error) {
@@ -201,6 +178,9 @@ export default function InstallmentReport(props) {
         setShowAlerts(true);
         dispatch( endTask("saving") );
         setDirty(false);
+      })
+      .catch( error =>{
+        console.log( 'error', errog );
       });
   };
 

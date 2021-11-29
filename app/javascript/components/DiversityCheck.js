@@ -21,6 +21,7 @@ import { i18n } from "./infrastructure/i18n";
 import { Translation } from "react-i18next";
 
 import CompareIcon from "@material-ui/icons/Compare";
+import axios from "axios";
 
 //const t = get_i18n("base");
 
@@ -40,30 +41,22 @@ class DiversityCheck extends React.Component {
     this.calcDiversity = this.calcDiversity.bind(this);
   }
   calcDiversity() {
-    fetch(this.props.diversityScoreFor + ".json", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
+    const url = this.props.diversityScoreFor + ".json";
+    axios.post( url,{
       body: JSON.stringify({
         emails: this.state.emails
       })
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
       .then(data => {
         this.setState({
           diversity_score: data.diversity_score,
           found_users: data.found_users
         });
+      })
+      .catch( error =>{
+          console.log("error", error );
+          return [{ id: -1, name: "no data" }];
+
       });
   }
   handleClear(event) {

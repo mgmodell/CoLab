@@ -26,6 +26,7 @@ import {startTask, endTask} from '../infrastructure/StatusActions';
 import { TextareaAutosize, Grid, Link } from "@material-ui/core";
 import { updateExternalModuleReference } from "typescript";
 import { useTypedSelector } from "../infrastructure/AppReducers";
+import axios from "axios";
 
 export default function CandidateListEntry(props) {
   const endpointSet = "candidate_list";
@@ -57,22 +58,7 @@ export default function CandidateListEntry(props) {
     setDirty(true);
     var url =
       endpoints.baseUrl + props.bingoGameId + ".json";
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return response.json();
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         setCandidateListId(data.id);
         setTopic(data.topic);
@@ -90,6 +76,9 @@ export default function CandidateListEntry(props) {
 
         dispatch( endTask() );
         setDirty(false);
+      })
+      .catch( error => {
+        console.log( 'error', error );
       });
   };
   const prepCandidates = (candidates, expectedCount) => {
@@ -126,13 +115,7 @@ export default function CandidateListEntry(props) {
     const url =
       endpoints.baseUrl + props.bingoGameId + ".json";
 
-    fetch(url, {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
+    axios.put( url, {
       body: JSON.stringify({
         candidates: candidates.filter(item => {
           return !(
@@ -142,15 +125,8 @@ export default function CandidateListEntry(props) {
           );
         })
       })
+
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          dispatch( endTask("saving") );
-        }
-      })
       .then(data => {
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           setCandidateListId(data.id);
@@ -170,6 +146,11 @@ export default function CandidateListEntry(props) {
           setMessages(data.messages);
           dispatch( endTask("saving") );
         }
+      })
+      .catch(error=>{
+          console.log("error", error);
+          dispatch( endTask("saving") );
+
       });
   };
 
@@ -196,22 +177,7 @@ export default function CandidateListEntry(props) {
   const colabResponse = decision => {
     dispatch( startTask("updating") );
     const url = `${requestCollaborationUrl}${decision}.json`;
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          dispatch( endTask("updating") );
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         setCandidateListId(data.id);
         setIsGroup(data.is_group);
@@ -222,6 +188,10 @@ export default function CandidateListEntry(props) {
         setOthersRequestedHelp(data.others_requested_help);
         setDirty(false);
         dispatch( endTask("updating") );
+      })
+      .catch( error =>{
+          console.log("error", error );
+          dispatch( endTask("updating") );
       });
   };
 

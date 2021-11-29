@@ -8,6 +8,7 @@ import MUIDataTable from "mui-datatables";
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';
+import axios from "axios";
 
 export default function UserCourseList(props) {
   const dispatch = useDispatch( );
@@ -15,25 +16,14 @@ export default function UserCourseList(props) {
   const getCourses = () => {
     dispatch( startTask() );
     var url = props.retrievalUrl;
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         //MetaData and Infrastructure
         props.coursesListUpdateFunc(data);
         dispatch( endTask() );
+      })
+      .catch( error =>{
+        console.log( 'error', error );
       });
   };
 

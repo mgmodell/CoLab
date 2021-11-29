@@ -36,6 +36,7 @@ import ConceptChips from "../ConceptChips";
 import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import {startTask, endTask} from '../infrastructure/StatusActions';
+import axios from "axios";
 
 const useStyles = makeStyles({
   container: {
@@ -134,13 +135,9 @@ export default function BingoGameDataAdmin(props) {
 
     // Save
     setSaveStatus(t("save_status"));
-    fetch(url, {
+    axios({
+      url: url,
       method: method,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
       body: JSON.stringify({
         bingo_game: {
           course_id: props.courseId,
@@ -160,14 +157,6 @@ export default function BingoGameDataAdmin(props) {
         }
       })
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return {};
-        }
-      })
       .then(data => {
         //TODO: handle save errors
         setSaveStatus(data["notice"]);
@@ -176,26 +165,17 @@ export default function BingoGameDataAdmin(props) {
         dispatch( endTask("saving") );
 
         getBingoGameData();
+      })
+      .catch( error=>{
+        console.log( 'error', error );
       });
   };
 
   const initResultData = () => {
     if (bingoGameId > 0) {
       dispatch( startTask( ));
-      fetch(
-        endpoints.gameResultsUrl +
-          "/" +
-          bingoGameId +
-          ".json",
-        {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Accepts: "application/json",
-          }
-        }
-      )
+      const url = endpoints.gameResultsUrl + "/" + bingoGameId + ".json";
+      axios.get( url, { } )
         .then(response => {
           if (response.ok) {
             return response.json();
@@ -207,6 +187,9 @@ export default function BingoGameDataAdmin(props) {
         .then(data => {
           setResultData(data);
           dispatch( endTask() );
+        })
+        .catch( error=>{
+          console.log( 'error', error );
         });
     }
   };
@@ -220,22 +203,7 @@ export default function BingoGameDataAdmin(props) {
     } else {
       url = url + bingoGameId + ".json";
     }
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         const projects = new Array({ id: -1, name: "None Selected" }).concat(
           data.projects
@@ -274,6 +242,10 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupProjectId(bingo_game.project_id);
         setDirty(false);
         dispatch( endTask() );
+      })
+      .catch( error=>{
+          console.log("error", error);
+          return [{ id: -1, name: "no data" }];
       });
   };
 

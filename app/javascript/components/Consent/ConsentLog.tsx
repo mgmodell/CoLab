@@ -11,6 +11,7 @@ import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import { FormControlLabel, Checkbox } from "@material-ui/core";
 import { useTypedSelector } from "../infrastructure/AppReducers";
+import axios from "axios";
 
 export default function ConsentLog(props) {
   const { t } = useTranslation("consent_logs");
@@ -31,22 +32,7 @@ export default function ConsentLog(props) {
       endpoints['baseUrl'] + props.consentFormId + ".json";
 
     dispatch( startTask("loading") );
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
+    axios.get( url, { } )
       .then(data => {
         //Process the data
         console.log(data);
@@ -59,6 +45,9 @@ export default function ConsentLog(props) {
         setLogLastUpdated(new Date(data.consent_log.updatedAt));
 
         dispatch( endTask("loading") );
+      })
+      .catch( error =>{
+        console.log( 'error', error );
       });
   };
 
@@ -69,27 +58,13 @@ export default function ConsentLog(props) {
 
     console.log("update", url);
 
-    fetch(url, {
-      method: "PATCH",
-      credentials: "include",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+    axios.patch( url, {
       body: JSON.stringify({
         consent_log: {
           accepted: formAccepted
         }
       })
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
       .then(data => {
         //Process the data
         setFormAccepted(data.accepted);
@@ -100,6 +75,9 @@ export default function ConsentLog(props) {
         }
 
         dispatch( endTask("saving") );
+      })
+      .catch( error =>{
+        console.log( 'error', error )
       });
   };
 

@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import axios from "axios";
 
 export default function DecisionInvitationsTable(props) {
   const dispatch = useDispatch( );
@@ -44,26 +45,14 @@ export default function DecisionInvitationsTable(props) {
                   onClick={event => {
                     const url = invitation.acceptPath + ".json";
                     dispatch( startTask("accepting") );
-                    fetch(url, {
-                      method: "GET",
-                      credentials: "include",
-                      cache: "no-cache",
-                      headers: {
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                      }
-                    })
-                      .then(response => {
-                        if (response.ok) {
-                          return response.json();
-                        } else {
-                          console.log("error");
-                        }
-                      })
+                    axios.get( url, { } )
                       .then(data => {
                         //Process the data
                         props.parentUpdateFunc();
                         dispatch( endTask("accepting") );
+                      })
+                      .catch( error =>{
+                        console.log( 'error', error );
                       });
                   }}
                 >
@@ -77,26 +66,14 @@ export default function DecisionInvitationsTable(props) {
                   onClick={event => {
                     const url = invitation.declinePath + ".json";
                     dispatch( startTask("declining") );
-                    fetch(url, {
-                      method: "GET",
-                      credentials: "include",
-                      cache: "no-cache",
-                      headers: {
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                      }
-                    })
-                      .then(response => {
-                        if (response.ok) {
-                          return response.json();
-                        } else {
-                          console.log("error");
-                        }
-                      })
+                    axios.get( url, { } )
                       .then(data => {
                         //Process the data
                         props.parentUpdateFunc();
                         dispatch( endTask("declining") );
+                      })
+                      .catch( error =>{
+                        console.log( 'error', error );
                       });
                   }}
                 >

@@ -22,6 +22,7 @@ import ExperienceInstructions from "./ExperienceInstructions";
 import ExperienceDiagnosis from "./ExperienceDiagnosis";
 import ExperienceReaction from "./ExperienceReaction";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import axios from "axios";
 
 export default function Experience(props) {
   const endpointSet = "experience";
@@ -56,22 +57,7 @@ export default function Experience(props) {
       props.experienceId
     }.json`;
     dispatch( startTask() );
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          //setMessages({});
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
+    axios( url, { } )
       .then(data => {
         setWeekId(data.week_id);
         setWeekNum(data.week_num);
@@ -81,19 +67,17 @@ export default function Experience(props) {
         setInstructed(data.instructed);
 
         dispatch( endTask() );
+      })
+      .catch( error =>{
+        console.log( 'error', error );
+      })
       });
   };
   //Store what we've got
   const saveDiagnosis = (behaviorId, otherName, comment, resetFunc) => {
     dispatch( startTask( 'saving' ) );
     const url = endpoints.diagnosisUrl;
-    fetch(url, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
+    axios.patch( url, {
       body: JSON.stringify({
         diagnosis: {
           behavior_id: behaviorId,
@@ -103,14 +87,8 @@ export default function Experience(props) {
           comment: comment
         }
       })
+
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
       .then(data => {
         //Process Contributions
         setWeekId(data.week_id);
@@ -121,6 +99,10 @@ export default function Experience(props) {
         dispatch( addMessage( data.messages.main, Date.now( ), 1 ) )
         dispatch( endTask( 'saving' ) );
         dispatch( setClean('diagnosis') );
+      })
+      .catch( error =>{
+        console.log( 'error', error );
+      })
       });
   };
 
@@ -128,13 +110,7 @@ export default function Experience(props) {
   const saveReaction = (behaviorId, otherName, improvements, resetFunc) => {
     dispatch( startTask( 'saving' ) );
     const url = endpoints.reactionUrl;
-    fetch(url, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      },
+    axios.patch( url, { 
       body: JSON.stringify({
         reaction: {
           id: reactionId,
@@ -144,13 +120,6 @@ export default function Experience(props) {
         }
       })
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
       .then(data => {
         //Process Experience
         resetFunc();
@@ -158,6 +127,10 @@ export default function Experience(props) {
         dispatch( endTask( 'saving' ) );
         dispatch( setClean( 'reaction' ) );
         history.push("/");
+      })
+      .catch( error =>{
+        console.log( 'error', error );
+      })
       });
   };
 

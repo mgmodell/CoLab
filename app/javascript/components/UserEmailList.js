@@ -24,6 +24,7 @@ import IconButton from "@material-ui/core/IconButton";
 
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';
+import axios from "axios";
 
 export default function UserEmailList(props) {
   const [addUsersPath, setAddUsersPath] = useState("");
@@ -63,25 +64,14 @@ export default function UserEmailList(props) {
                 onClick={event => {
                   dispatch( startTask("updating") );
                   const url = props.primaryEmailUrl + value + ".json";
-                  fetch(url, {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Accepts: "application/json",
-                    }
-                  })
-                    .then(response => {
-                      if (response.ok) {
-                        return response.json();
-                      } else {
-                        console.log("error");
-                      }
-                    })
+                  axios.get( url, { } )
                     .then(data => {
                       props.emailListUpdateFunc(data.emails);
                       props.addMessagesFunc(data.messages);
                       dispatch( endTask("updating") );
+                    })
+                    .then( error => {
+                      console.log( 'error', error );
                     });
                 }}
               >
@@ -119,25 +109,14 @@ export default function UserEmailList(props) {
                 onClick={event => {
                   const url = props.removeEmailUrl + value + ".json";
                   dispatch( startTask("removing") );
-                  fetch(url, {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Accepts: "application/json",
-                    }
-                  })
-                    .then(response => {
-                      if (response.ok) {
-                        return response.json();
-                      } else {
-                        console.log("error");
-                      }
-                    })
+                  axios.get( url, { } )
                     .then(data => {
                       props.emailListUpdateFunc(data.emails);
                       props.addMessagesFunc(data.messages);
                       dispatch( endTask("removing") );
+                    })
+                    .catch( error =>{
+                      console.log( 'error', error );
                     });
                 }}
               >
@@ -199,29 +178,20 @@ export default function UserEmailList(props) {
                     <Button
                       onClick={() => {
                         dispatch( startTask("updating") );
-                        fetch(props.addEmailUrl + ".json", {
-                          method: "PUT",
-                          credentials: "include",
-                          headers: {
-                            "Content-Type": "application/json",
-                            Accepts: "application/json",
-                          },
+                        axios.put( props.addEmailUrl + '.json', 
+                        {
                           body: JSON.stringify({
                             email_address: newEmail
                           })
                         })
-                          .then(response => {
-                            if (response.ok) {
-                              return response.json();
-                            } else {
-                              console.log("error");
-                            }
-                          })
                           .then(data => {
                             //getUsers();
                             props.emailListUpdateFunc(data.emails);
                             props.addMessagesFunc(data.messages);
                             dispatch( endTask("updating") );
+                          })
+                          .catch( error =>{
+                            console.log( 'error', error );
                           });
                         closeDialog();
                       }}
