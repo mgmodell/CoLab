@@ -70,7 +70,6 @@ export default function Experience(props) {
       })
       .catch( error =>{
         console.log( 'error', error );
-      })
       });
   };
   //Store what we've got
@@ -102,7 +101,6 @@ export default function Experience(props) {
       })
       .catch( error =>{
         console.log( 'error', error );
-      })
       });
   };
 
@@ -130,7 +128,6 @@ export default function Experience(props) {
       })
       .catch( error =>{
         console.log( 'error', error );
-      })
       });
   };
 
