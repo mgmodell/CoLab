@@ -107,6 +107,7 @@ export function profile(state: ProfileRootState = initialState, action) {
       return newState;
     case CLEAR_PROFILE:
       Object.assign( newState, initialState );
+      newState.lastRetrieved = null;
       return newState;
     default:
       return state;

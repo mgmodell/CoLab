@@ -4,7 +4,9 @@ import {
   END_TASK,
   ADD_MESSAGE,
   ACKNOWLEDGE_MSG,
-  Priorities
+  Priorities,
+  SET_DIRTY,
+  SET_CLEAN
 } from './StatusActions'
 
 interface StatusRootState {
@@ -18,12 +20,16 @@ interface StatusRootState {
       date: Date,
       acknowledged: boolean
     }
-  ]
+  ],
+  dirtyStatus: {
+    [taskName: string] : boolean;
+  }
 }
 
 const initialState : StatusRootState = {
   tasks: {},
-  messages: []
+  messages: [],
+  dirtyStatus: { }
 }
 
 
@@ -38,6 +44,18 @@ export function status(state: StatusRootState = initialState, action) {
     case END_TASK:
       newState[ taskName ] = Math.max(0, (newState[ taskName] || 0) - 1);
       return newState;
+    case SET_DIRTY: {
+      const dirtyStatus = Object.assign( {}, newState.dirtyStatus );
+      dirtyStatus[ action.task ] = true;
+      newState.dirtyStatus = dirtyStatus;
+      return newState;
+    }
+    case SET_CLEAN: {
+      const dirtyStatus = Object.assign( {}, newState.dirtyStatus );
+      dirtyStatus[ action.task ] = false;
+      newState.dirtyStatus = dirtyStatus;
+      return newState;
+    }
     case ADD_MESSAGE: {
       const newMessages = newState.messages.map( (x) => x );
       newMessages.push(

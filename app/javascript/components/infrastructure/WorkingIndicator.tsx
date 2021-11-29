@@ -11,7 +11,7 @@ export default function WorkingIndicator(props) {
       accum = state.status.tasks[ props.identifier ];
     } else {
       accum = Number(
-        Object.values( state['tasks'] ).reduce(
+        Object.values( state.status.tasks ).reduce(
           (accum, nextVal) => {return Number(accum) + Number(nextVal) },
           accum
         )

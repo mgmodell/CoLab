@@ -4,26 +4,20 @@ import { useDispatch } from 'react-redux';
 import {
   startTask,
   endTask,
-  setDirty,
-  setClean,
   addMessage,
-  acknowledgeMsg,
-  Priorities
+  Priorities,
+  setDirty,
+  setClean
       } from './infrastructure/StatusActions';
 import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
-import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
-import IconButton from "@material-ui/core/IconButton";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import Collapse from "@material-ui/core/Collapse";
-import Alert from "@material-ui/lab/Alert";
-import CloseIcon from "@material-ui/icons/Close";
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
@@ -36,13 +30,15 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 
 export default function SchoolDataAdmin(props) {
-  const endpointSet = "school";
-  const endpoints = useTypedSelector( state => {return state.context.endpoints[endpointSet]})
+  const category = "school";
+  const endpoints = useTypedSelector( state => {return state.context.endpoints[category]})
   const endpointStatus = useTypedSelector( state => {return state.context.status.endpointsLoaded})
   //const { t, i18n } = useTranslation('schools' );
-  const user = useTypedSelector(state=>state.profile.user )
+  const user = useTypedSelector(state=>state.profile.user );
+  const userLoaded = useTypedSelector(state=>{ return (null != state.profile.lastRetrieved) } );
 
-  const dirty = useTypedSelector( state => state['dirtyState'][ 'school' ] );
+  const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus['endpointSet']) } );
+
   const dispatch = useDispatch( );
 
 
@@ -57,7 +53,6 @@ export default function SchoolDataAdmin(props) {
 
   const getSchool = () => {
     dispatch( startTask() );
-    dispatch( setDirty('school') );
     var url = endpoints.baseUrl + "/";
     if (null == schoolId) {
       url = url + "new.json";
@@ -72,12 +67,14 @@ export default function SchoolDataAdmin(props) {
         setSchoolDescription(school.description || "");
         setSchoolTimezone(school.timezone || "UTC");
 
-        dispatch( endTask() );
-        dispatch( setClean('school') );
 
       } )
       .catch( error => {
         console.log( 'error', error )
+      })
+      .finally(()=>{
+        dispatch( endTask() );
+        dispatch( setClean( category ) );
       })
   };
   const saveSchool = () => {
@@ -103,7 +100,6 @@ export default function SchoolDataAdmin(props) {
     })
       .then(resp => {
         const data = resp['data'];
-        console.log( 'response', data );
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const school = data.school;
           setSchoolId(school.id);
@@ -111,14 +107,11 @@ export default function SchoolDataAdmin(props) {
           setSchoolDescription(school.description);
           setSchoolTimezone(school.timezone);
 
-          setDirty(false);
-          dispatch( setClean('school') );
+          dispatch( setClean( category ) );
           dispatch( addMessage( data.messages.main, new Date( ), Priorities.INFO ) );
           //setMessages(data.messages);
           dispatch( endTask("saving") );
         } else {
-          console.log( 'data', data );
-          console.log( 'messages', data.messages );
           dispatch( addMessage( data.messages.main, new Date( ), Priorities.ERROR ) );
           setMessages(data.messages);
           dispatch( endTask("saving") );
@@ -136,21 +129,21 @@ export default function SchoolDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (user.loaded) {
+    if (userLoaded) {
       Settings.defaultZoneName = user.timezone;
     }
-  }, [user.loaded]);
+  }, [userLoaded]);
 
   useEffect(() => {
-    dispatch( setDirty('school' ) )
+    dispatch( setDirty( category ) );
   }, [
+    schoolTimezone,
     schoolName,
-    schoolDescription,
-    schoolTimezone
+    schoolDescription
   ]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveSchool}>
+    <Button variant="contained" onClick={saveSchool} disabled={!dirty} >
       {schoolId > 0 ? 'Save' : 'Create'} School
     </Button>
   ) : null;
