@@ -31,6 +31,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DropUserButton from "./DropUserButton";
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
 import {startTask, endTask} from './infrastructure/StatusActions';
+import axios from "axios";
 
 export default function CourseUsersList(props) {
   const [addUsersPath, setAddUsersPath] = useState("");
@@ -501,27 +502,17 @@ export default function CourseUsersList(props) {
                     <Button
                       onClick={() => {
                         dispatch( startTask("adding_email") );
-                        fetch(addUsersPath, {
-                          method: "PUT",
-                          credentials: "include",
-                          headers: {
-                            "Content-Type": "application/json",
-                            Accepts: "application/json",
-                          },
+
+                        axios.put( addUsersPath, {
                           body: JSON.stringify({
                             id: props.courseId,
                             addresses: newUserAddresses
                           })
-                        })
+
+                        } )
                           .then(response => {
-                            if (response.ok) {
-                              return response.json();
-                            } else {
-                              console.log("error");
-                            }
-                          })
-                          .then(data => {
                             getUsers();
+                            const data = response.data;
                             props.addMessagesFunc(data.messages);
                             dispatch( endTask("adding_email") );
                           });

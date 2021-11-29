@@ -2,6 +2,9 @@ import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  startTask,
+  endTask,
+  addMessage,
   setDirty,
   setClean
 } from './infrastructure/StatusActions';

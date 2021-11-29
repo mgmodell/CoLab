@@ -37,7 +37,7 @@ export default function SchoolDataAdmin(props) {
   const user = useTypedSelector(state=>state.profile.user );
   const userLoaded = useTypedSelector(state=>{ return (null != state.profile.lastRetrieved) } );
 
-  const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus['endpointSet']) } );
+  const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category]) } );
 
   const dispatch = useDispatch( );
 
@@ -66,6 +66,7 @@ export default function SchoolDataAdmin(props) {
         setSchoolName(school.name || "");
         setSchoolDescription(school.description || "");
         setSchoolTimezone(school.timezone || "UTC");
+        dispatch( setClean( category ) );
 
 
       } )

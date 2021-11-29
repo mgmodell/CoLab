@@ -25,7 +25,7 @@ import {startTask, endTask} from './infrastructure/StatusActions';
 export default function CourseList(props) {
   const endpointSet = "course";
   const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
-  const endpointStatus = useTypedSelector(state=>state.context.endpointsLoaded );
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
 
   const history = useHistory();
   const { path, url } = useRouteMatch();
@@ -188,12 +188,10 @@ export default function CourseList(props) {
     const url = endpoints.baseUrl + ".json";
     dispatch( startTask("loading") );
 
-    axios.get( url, {
-
-    })
-      .then( data =>{
+    axios.get( url, { })
+      .then( response =>{
         //Process the data
-        setCourses(data);
+        setCourses( response.data);
         dispatch( endTask("loading") );
 
       })
@@ -245,11 +243,8 @@ export default function CourseList(props) {
         ),
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
-            console.log(path);
             const course_id = courses[cellMeta.dataIndex].id;
-            console.log(course_id);
             const location = path + "/" + course_id;
-            console.log(location);
             history.push(location);
           }
         },

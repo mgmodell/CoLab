@@ -15,7 +15,8 @@ import {
   setDirty,
   setClean,
   addMessage,
-  acknowledgeMsg} from './infrastructure/StatusActions';
+  acknowledgeMsg,
+  Priorities} from './infrastructure/StatusActions';
 import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
@@ -50,22 +51,25 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import IconButton from "@material-ui/core/IconButton";
 import Link from "@material-ui/core/Link";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import { Skeleton } from "@material-ui/lab";
 
 export default function CourseDataAdmin(props) {
-  const endpointSet = "course";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
-  const endpointStatus = useTypedSelector(state=>state.context.endpointsLoaded);
+  const category = "course";
+  const endpoints = useTypedSelector(state=>state.context.endpoints[category]);
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
   const user = useTypedSelector(state=>state.profile.user );
 
   const history = useHistory();
   const { path, url } = useRouteMatch();
 
   const [curTab, setCurTab] = useState("details");
-
-  const dirty = useSelector( state => state.dirtyState[ 'course' ] );
+  const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category]) } );
   const [messages, setMessages] = useState({});
-  const [showErrors, setShowErrors] = useState(false);
-  const [courseId, setCourseId] = useState(props.courseId);
+
+  let {course_id} = useParams( );
+
+
+  const [courseId, setCourseId] = useState(parseInt( course_id) );
   const [courseName, setCourseName] = useState("");
   const [courseNumber, setCourseNumber] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
@@ -81,13 +85,12 @@ export default function CourseDataAdmin(props) {
       .toISO()
   );
   const [courseSchoolId, setCourseSchoolId] = useState(0);
-  // const [courseSchoolId, setCourseSchoolId] = useState<Number>(0);
   const [courseTimezone, setCourseTimezone] = useState("");
   const [courseConsentFormId, setCourseConsentFormId] = useState(0);
   const [courseRegImage, setCourseRegImage] = useState(null);
 
-  const [schools, setSchools] = useState([]);
-  const [timezones, setTimezones] = useState([]);
+  const schools = useTypedSelector(state=>state.context.lookups['schools']);
+  const timezones = useTypedSelector(state=>state.context.lookups['timezones']);
   const [consentForms, setConsentForms] = useState([]);
   const [newActivityLinks, setNewActivityLinks] = useState([]);
   const [schoolTzHash, setSchoolTzHash] = useState({});
@@ -96,7 +99,7 @@ export default function CourseDataAdmin(props) {
 
   const getCourse = () => {
     dispatch( startTask( ));
-    dispatch( setDirty( 'course' ) );
+    dispatch( setDirty( category ) );
     var url = endpoints.baseUrl + "/";
     if (null == courseId) {
       url = url + "new.json";
@@ -104,16 +107,11 @@ export default function CourseDataAdmin(props) {
       url = url + courseId + ".json";
     }
 
-    axios.get( url, { 
-
-    })
-      .then( data =>{
+    axios.get( url, { })
+      .then( response =>{
+        const data = response.data;
         //MetaData and Infrastructure
-        setTimezones(data.timezones);
-        setSchools(data.schools);
-        data.schools.map(schoolData => {
-          schoolTzHash[schoolData.id] = schoolData.timezone;
-        });
+        //setSchools(data.schools);
         setConsentForms(data.consent_forms);
         setNewActivityLinks(data.new_activity_links);
 
@@ -149,7 +147,7 @@ export default function CourseDataAdmin(props) {
         setCourseSchoolId(course.school_id || 0);
 
         dispatch( endTask( 'loading') );
-        dispatch( setClean( 'course' ) );
+        dispatch( setClean( category ) );
 
       })
       .catch( error =>{
@@ -161,6 +159,7 @@ export default function CourseDataAdmin(props) {
 
   const saveCourse = () => {
     const method = null == courseId ? "POST" : "PATCH";
+    console.log( courseId, method );
     dispatch( startTask( 'saving' ) ) ;
 
     const url =
@@ -176,7 +175,7 @@ export default function CourseDataAdmin(props) {
           course: {
             name: courseName,
             number: courseNumber,
-            course_id: props.courseId,
+            course_id: courseId,
             description: courseDescription,
             start_date: courseStartDate,
             end_date: courseEndDate,
@@ -186,28 +185,32 @@ export default function CourseDataAdmin(props) {
           }
         }
       })
-      .then(data => {
+      .then(response => {
+        console.log( 'response', response );
+        const data = response.data;
         if (Object.keys(data.messages).length < 2) {
-          setCourseId(data.id);
-          setCourseName(data.name);
-          setCourseNumber(data.number);
-          setCourseDescription(data.description);
-          setCourseTimezone(data.timezone);
-          setCourseConsentFormId(data.consent_form_id);
-          setCourseSchoolId(data.school_id);
+          setCourseId(data.course.id);
+          setCourseName(data.course.name);
+          setCourseNumber(data.course.number);
+          setCourseDescription(data.course.description);
+          setCourseTimezone(data.course.timezone);
+          setCourseConsentFormId(data.course.consent_form_id || 0);
+          setCourseSchoolId(data.course.school_id);
 
-          var receivedDate = DateTime.fromISO(data.start_date).setZone(
+          var receivedDate = DateTime.fromISO(data.course.start_date).setZone(
             courseTimezone
           );
+          console.log( 'rdate', receivedDate );
           setCourseStartDate(receivedDate);
 
-          receivedDate = DateTime.fromISO(data.end_date).setZone(
+          receivedDate = DateTime.fromISO(data.course.end_date).setZone(
             courseTimezone
           );
+          console.log( 'rdate', receivedDate );
           setCourseEndDate(receivedDate);
 
           dispatch( endTask( 'saving' ) );
-          dispatch( setClean( 'course' ) );
+          dispatch( setClean( category ) );
         }
         postNewMessage(data.messages);
       })
@@ -216,6 +219,15 @@ export default function CourseDataAdmin(props) {
         dispatch( endTask( 'saving' ) );
       })
   };
+
+  useEffect(() => {
+    if( schools.length > 0 ){
+        schools.map(schoolData => {
+          schoolTzHash[schoolData.id] = schoolData.timezone;
+        });
+    }
+  }, [schools] );
+
 
   useEffect(() => {
     if (endpointStatus) {
@@ -231,7 +243,7 @@ export default function CourseDataAdmin(props) {
   }, [user.loaded]);
 
   useEffect(() => {
-    dispatch( setDirty('course' ) )
+    dispatch( setDirty(category ) )
   }, [
     courseName,
     courseDescription,
@@ -243,9 +255,8 @@ export default function CourseDataAdmin(props) {
   ]);
 
   const postNewMessage = msgs => {
-    dispatch( addMessage( msgs.main, Date.now( ), 1))
+    dispatch( addMessage( msgs.main, Date.now( ), Priorities.INFO))
     setMessages(msgs);
-    setShowErrors(true);
   };
 
   const saveButton = dirty ? (
@@ -294,6 +305,8 @@ export default function CourseDataAdmin(props) {
         <InputLabel htmlFor="course_school" id="course_school_lbl">
           School
         </InputLabel>
+        {schools.length > 0 ?
+          (
         <Select
           id="course_school"
           value={courseSchoolId}
@@ -312,6 +325,11 @@ export default function CourseDataAdmin(props) {
             );
           })}
         </Select>
+
+          ) : (
+            <Skeleton variant="rect" height={20} />
+          )
+        }
         <FormHelperText>Error schtuff</FormHelperText>
       </FormControl>
 
@@ -319,6 +337,8 @@ export default function CourseDataAdmin(props) {
         <InputLabel htmlFor="course_timezone" id="course_timezone_lbl">
           Time Zone
         </InputLabel>
+        {timezones.length > 0 ?
+        (
         <Select
           id="course_timezone"
           value={courseTimezone}
@@ -332,6 +352,12 @@ export default function CourseDataAdmin(props) {
             );
           })}
         </Select>
+
+        ):(
+            <Skeleton variant="rect" height={20} />
+
+        )
+        }
         <FormHelperText>More Error Schtuff</FormHelperText>
       </FormControl>
 
@@ -640,7 +666,3 @@ export default function CourseDataAdmin(props) {
     </Switch>
   );
 }
-
-CourseDataAdmin.propTypes = {
-  courseId: PropTypes.number
-};

@@ -18,6 +18,7 @@ import {startTask, endTask} from './infrastructure/StatusActions';
 import MUIDataTable from "mui-datatables";
 import Collapse from "@material-ui/core/Collapse";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import axios from "axios";
 
 export default function SchoolList(props) {
   const endpointSet = "school";
@@ -94,25 +95,10 @@ export default function SchoolList(props) {
     const url = endpoints.baseUrl + ".json";
 
     dispatch( startTask() );
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      }
-    })
+    axios.get( url, { } )
       .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
-      .then(data => {
         //Process the data
-        setSchools(data);
+        setSchools(response.data);
         dispatch( endTask("loading") );
       });
   };

@@ -20,10 +20,17 @@ import Settings from "luxon/src/settings.js";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import {useDispatch} from 'react-redux';
-import {startTask, endTask} from './infrastructure/StatusActions';
+import {startTask,
+        endTask,
+        setDirty,
+        setClean,
+        addMessage,
+        Priorities
+      } from './infrastructure/StatusActions';
 
 import ProjectGroups from "./ProjectGroups";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import axios from "axios";
 
 export default function ProjectDataAdmin(props) {
   const cityTimezones = require("city-timezones");
@@ -33,7 +40,6 @@ export default function ProjectDataAdmin(props) {
   const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
 
   const [curTab, setCurTab] = useState("details");
-  const [dirty, setDirty] = useState(false);
   const dispatch = useDispatch( );
   const [messages, setMessages] = useState({});
   const [factorPacks, setFactorPacks] = useState([
@@ -63,30 +69,16 @@ export default function ProjectDataAdmin(props) {
 
   const getProject = () => {
     dispatch( startTask() );
-    setDirty(true);
+    dispatch( setDirty( 'project' ) );
     var url = endpoints.baseUrl + "/";
     if (null == projectId) {
       url = url + "new/" + props.courseId + ".json";
     } else {
       url = url + projectId + ".json";
     }
-    fetch(url, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      }
-    })
+    axios.get( url, { } )
       .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-        }
-      })
-      .then(data => {
-        const project = data.project;
+        const project = response.data.project;
         setFactorPacks(factorPacks.concat(data.factorPacks));
         setStyles(styles.concat(data.styles));
 

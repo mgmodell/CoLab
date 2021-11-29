@@ -26,10 +26,6 @@ class CoursesController < ApplicationController
                       school_id start_date end_date
                       consent_form_id ]
           ),
-          timezones: HomeController::TIMEZONES,
-          schools: School.all.as_json(
-            only: %i[id name timezone]
-          ),
           consent_forms: ConsentForm.where(active: true).as_json(
             only: %i[id name]
           )
