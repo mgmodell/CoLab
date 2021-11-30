@@ -70,6 +70,7 @@ Feature: School Administration
      And the user sets the "Name" field to "Off"
      And the user sets the "Description" field to "blue is the best"
     Then the user clicks "Save School"
+    Then the user waits to see "School was updated successfully"
     Then retrieve the latest school from the db
      And the school "Name" field is "Off"
      And the school "Description" field is "blue is the best"

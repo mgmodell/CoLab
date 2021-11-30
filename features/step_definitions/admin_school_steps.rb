@@ -40,3 +40,14 @@ Then 'the user will dismiss the error {string}' do |error_message|
   page.should have_content error_message
   find(:xpath, "//button[@id='error-close']").click
 end
+
+Then(/^the user waits to see "([^"]*)"$/) do |wait_msg|
+  wait_for_render
+
+  counter = 0
+  while !page.has_text? wait_msg
+    sleep 1
+    counter += 1
+    break if counter > 60
+  end
+end
