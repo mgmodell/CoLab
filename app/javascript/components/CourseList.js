@@ -220,7 +220,7 @@ export default function CourseList(props) {
 
   const muiDatTab = (
     <MUIDataTable
-      title="Courses"
+      title="Available Courses"
       data={courses}
       columns={columns}
       options={{

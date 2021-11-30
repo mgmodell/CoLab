@@ -18,6 +18,8 @@ Feature: Administration: user
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
+     And the user waits to see "Available Courses"
     Then the user sees 2 course
 
 @javascript
@@ -26,6 +28,8 @@ Feature: Administration: user
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
+     And the user waits to see "Available Courses"
     Then the user sees 2 course
 
 @javascript
@@ -35,6 +39,7 @@ Feature: Administration: user
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user selects the 'Courses' menu item
+     And the user waits to see "Available Courses"
     Then the user sees 1 course
 
 @javascript
@@ -44,6 +49,7 @@ Feature: Administration: user
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user selects the 'Courses' menu item
+     And the user waits to see "Available Courses"
     Then the user sees 1 course
 
 @javascript
@@ -53,4 +59,5 @@ Feature: Administration: user
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user selects the 'Courses' menu item
+     And the user waits to see "Available Courses"
     Then the user sees 1 course
