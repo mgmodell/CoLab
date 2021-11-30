@@ -18,7 +18,7 @@ Feature: School Administration
      And the user sets the "Name" field to "hard knocks"
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
     Then the user clicks "Create School"
-     And the user will see "successfully"
+     And the user waits to see "successfully"
     Then retrieve the latest school from the db
      And the school "Name" field is "hard knocks"
      And the school "Timezone" field is "UTC"
@@ -42,7 +42,7 @@ Feature: School Administration
      And the user sets the "Name" field to "life"
     Then the user clicks "Create School"
      #We should have success now
-     And the user will see "successfully"
+     And the user waits to see "successfully"
     Then retrieve the latest school from the db
      And the school "Name" field is "life"
      And the school "Description" field is "I love to eat peas and carrots all day long"
