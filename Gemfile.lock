@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/faker-ruby/faker.git
-  revision: 2a6f0cc9bbde4b6b857505028fcaf10ca79d8e65
+  revision: fce4a8d0f98778ce274cc195363e4f5d5c5f2cbe
   branch: master
   specs:
     faker (2.19.0)
@@ -97,16 +97,16 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.534.0)
-    aws-sdk-core (3.123.0)
+    aws-partitions (1.537.0)
+    aws-sdk-core (3.124.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.51.0)
+    aws-sdk-kms (1.52.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.107.0)
+    aws-sdk-s3 (1.109.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
@@ -154,8 +154,8 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.9)
     connection_pool (2.2.5)
-    countries (4.0.1)
-      i18n_data (~> 0.13.0)
+    countries (4.1.0)
+      i18n_data (~> 0.13.1)
       sixarm_ruby_unaccent (~> 1.1)
     country_select (6.0.0)
       countries (~> 4.0)
@@ -260,7 +260,7 @@ GEM
     htmlentities (4.3.4)
     i18n (1.8.11)
       concurrent-ruby (~> 1.0)
-    i18n_data (0.13.0)
+    i18n_data (0.13.1)
     image_processing (1.12.1)
       mini_magick (>= 4.9.5, < 5)
       ruby-vips (>= 2.0.17, < 3)
@@ -340,7 +340,7 @@ GEM
     parallel (1.21.0)
     parallel_tests (3.7.3)
       parallel
-    parser (3.0.3.0)
+    parser (3.0.3.1)
       ast (~> 2.4.1)
     pdf-core (0.9.0)
     prawn (2.4.0)
@@ -567,7 +567,8 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yard (0.9.26)
+    yard (0.9.27)
+      webrick (~> 1.7.0)
     zeitwerk (2.5.1)
 
 PLATFORMS
@@ -643,7 +644,7 @@ DEPENDENCIES
   webpacker
 
 RUBY VERSION
-   ruby 3.0.1p64
+   ruby 3.0.3p157
 
 BUNDLED WITH
-   2.2.31
+   2.2.32
