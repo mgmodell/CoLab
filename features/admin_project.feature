@@ -33,7 +33,7 @@ Feature: Project Administration
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
-    Then the user will see "success"
+     And the user waits to see "success"
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -63,7 +63,7 @@ Feature: Project Administration
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
-    Then the user will see "success"
+     And the user waits to see "success"
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -94,7 +94,7 @@ Feature: Project Administration
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Save Project"
-    Then the user will see "success"
+     And the user waits to see "success"
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -125,7 +125,7 @@ Feature: Project Administration
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
-    Then the user will see "success"
+     And the user waits to see "success"
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -145,7 +145,7 @@ Feature: Project Administration
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Save Project"
-    Then the user will see "success"
+     And the user waits to see "success"
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -178,7 +178,7 @@ Feature: Project Administration
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
-    Then the user will see "success"
+     And the user waits to see "success"
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -200,7 +200,7 @@ Feature: Project Administration
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Save Project"
-    Then the user will see "success"
+     And the user waits to see "success"
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -233,7 +233,7 @@ Feature: Project Administration
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
-    Then the user will see "success"
+     And the user waits to see "success"
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -253,7 +253,7 @@ Feature: Project Administration
     # Then the user selects "Sliders (simple)" as "Style"
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Save Project"
-    Then the user will see "success"
+     And the user waits to see "success"
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then the project "Name" is "Cool beans"
@@ -283,7 +283,7 @@ Feature: Project Administration
     Then the user clicks "Add Group"
     Then the user sets the "g_-1" field to "my group"
     Then the user clicks "Save"
-    Then the user will see "success"
+     And the user waits to see "success"
     Then the user clicks "Add Group"
     # Because the above was saved, this one is -1 again
     Then the user sets the "g_-1" field to "your group"
@@ -292,13 +292,13 @@ Feature: Project Administration
     Then the user sets the project "start" date to "yesterday"
     Then the user sets the project "end" date to "tomorrow"
     Then the user clicks "Save"
-    Then the user will see "success"
+     And the user waits to see "success"
 
     #Edit the groups
     Then the user switches to the "Groups" tab
     Then set user 1 to group "my group"
     Then the user clicks "Save"
-    Then the user will see "success"
+     And the user waits to see "success"
     Then retrieve the latest project from the db
     Then the project "start" date is "yesterday"
     Then the project "end" date is "tomorrow"
@@ -312,7 +312,7 @@ Feature: Project Administration
     Then set user 3 to group "your group"
     Then set user 4 to group "your group"
     Then the user clicks "Save"
-    Then the user will see "success"
+     And the user waits to see "success"
     Then retrieve the latest project from the db
     Then group "my group" has 2 user
     Then group "your group" has 2 user

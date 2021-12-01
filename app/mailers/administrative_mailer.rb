@@ -2,6 +2,7 @@
 
 class AdministrativeMailer < ApplicationMailer
   default from: 'support@CoLab.online'
+  has_history
 
   def remind(user)
     @user = user
@@ -9,7 +10,6 @@ class AdministrativeMailer < ApplicationMailer
       category: ['reminder']
     }.to_json
 
-    track user: user
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
          subject: 'CoLab Assessment reminder email')
   end
@@ -23,7 +23,6 @@ class AdministrativeMailer < ApplicationMailer
       category: ['reporting']
     }.to_json
 
-    track user: user
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
          subject: "CoLab: #{@name}")
   end
@@ -34,7 +33,6 @@ class AdministrativeMailer < ApplicationMailer
       category: ['re-invite']
     }.to_json
 
-    track user: user
     mail(to: user.email.to_s,
          subject: 'Invitation to CoLab')
   end
@@ -46,7 +44,6 @@ class AdministrativeMailer < ApplicationMailer
       category: ['availability']
     }.to_json
 
-    track user: user
     mail(to: "#{user.first_name} #{user.last_name} <#{user.email}>",
          subject: "CoLab: #{activity} is available")
   end

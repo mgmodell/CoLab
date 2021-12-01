@@ -10,7 +10,6 @@ class ProjectsController < ApplicationController
                                           set_groups]
   before_action :check_viewer, only: %i[show index]
 
-  skip_before_action :set_locale
 
   def show
     @title = t('.title')

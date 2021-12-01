@@ -35,15 +35,17 @@ import axios from "axios";
 export default function ProjectDataAdmin(props) {
   const cityTimezones = require("city-timezones");
 
-  const endpointSet = "project";
-  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
+  const category = "project";
+  const endpoints = useTypedSelector(state=>state['context'].endpoints[category])
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded)
 
   const [curTab, setCurTab] = useState("details");
-  const dispatch = useDispatch( );
+  const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category])} );
   const [messages, setMessages] = useState({});
+  const dispatch = useDispatch( );
+
   const [factorPacks, setFactorPacks] = useState([
-    { id: 0, name_en: "none selected" }
+    { id: 0, name: "none selected" }
   ]);
   const [styles, setStyles] = useState([{ id: 0, name_en: "none selected" }]);
   const [projectId, setProjectId] = useState(props.projectId);
@@ -69,7 +71,7 @@ export default function ProjectDataAdmin(props) {
 
   const getProject = () => {
     dispatch( startTask() );
-    dispatch( setDirty( 'project' ) );
+    dispatch( setDirty( category ) );
     var url = endpoints.baseUrl + "/";
     if (null == projectId) {
       url = url + "new/" + props.courseId + ".json";
@@ -78,6 +80,7 @@ export default function ProjectDataAdmin(props) {
     }
     axios.get( url, { } )
       .then(response => {
+        const data = response.data;
         const project = response.data.project;
         setFactorPacks(factorPacks.concat(data.factorPacks));
         setStyles(styles.concat(data.styles));
@@ -104,7 +107,7 @@ export default function ProjectDataAdmin(props) {
         setProjectStartDOW(project.start_dow);
         setProjectEndDOW(project.end_dow);
         dispatch( endTask() );
-        setDirty(false);
+        dispatch( setClean( category ) ) ;
       });
   };
   const saveProject = () => {
@@ -136,7 +139,9 @@ export default function ProjectDataAdmin(props) {
 
       }
     })
-      .then(data => {
+      .then(response => {
+        console.log( 'resp', response );
+        const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const project = data.project;
           setProjectId(project.id);
@@ -159,7 +164,7 @@ export default function ProjectDataAdmin(props) {
           const course = data.course;
           setCourseName(course.name);
           dispatch( endTask("saving") );
-          setDirty(false);
+          dispatch( setClean( category ) ) ;
           setMessages(data.messages);
         } else {
           setMessages(data.messages);
@@ -182,7 +187,9 @@ export default function ProjectDataAdmin(props) {
     }
   }, [endpointStatus ]);
 
-  useEffect(() => setDirty(true), [
+  useEffect(() => {
+    dispatch( setDirty( category ) );
+  }, [
     projectName,
     projectDescription,
     projectActive,
@@ -333,7 +340,6 @@ export default function ProjectDataAdmin(props) {
       </Select>
       <br />
       {saveButton}
-      {messages.status}
     </Paper>
   );
   return (

@@ -63,7 +63,7 @@ export default function CourseDataAdmin(props) {
   const { path, url } = useRouteMatch();
 
   const [curTab, setCurTab] = useState("details");
-  const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category]) } );
+  const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category])} );
   const [messages, setMessages] = useState({});
 
   let {course_id} = useParams( );
