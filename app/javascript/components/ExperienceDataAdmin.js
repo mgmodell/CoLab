@@ -18,21 +18,28 @@ import ReactionsList from "./ReactionsList";
 
 import LuxonUtils from "@material-ui/pickers/adapter/luxon";
 import {useDispatch} from 'react-redux';
-import {startTask, endTask} from './infrastructure/StatusActions';
+import {startTask,
+  endTask,
+  setDirty,
+  setClean,
+  addMessage,
+  Priorities
+} from './infrastructure/StatusActions';
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 
 export default function ExperienceDataAdmin(props) {
-  const endpointSet = "experience_admin";
-  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
+  const category = "experience_admin";
+  const endpoints = useTypedSelector(state=>state.context.endpoints[category])
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded)
   //const { t, i18n } = useTranslation('experiences' );
   const user = useTypedSelector(state=>state.profile.user );
+  const userLoaded = useTypedSelector(state=>{ return (null != state.profile.lastRetrieved) } );
 
   const [curTab, setCurTab] = useState("details");
-  const [dirty, setDirty] = useState(false);
+  const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category])} );
   const dispatch = useDispatch();
   const [messages, setMessages] = useState({});
   const [experienceId, setExperienceId] = useState(props.experienceId);
@@ -56,7 +63,7 @@ export default function ExperienceDataAdmin(props) {
 
   const getExperience = () => {
     dispatch( startTask() );
-    setDirty(true);
+    dispatch( setDirty(category) );
     var url = endpoints.baseUrl + "/";
     if (null == experienceId) {
       url = url + "new/" + props.courseId + ".json";
@@ -64,7 +71,8 @@ export default function ExperienceDataAdmin(props) {
       url = url + experienceId + ".json";
     }
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         const experience = data.experience;
         const course = data.course;
 
@@ -87,10 +95,13 @@ export default function ExperienceDataAdmin(props) {
         setExperienceEndDate(receivedDate.toISO());
 
         dispatch( endTask() );
-        setDirty(false);
+        dispatch( setClean( category ) );
       })
       .catch( error=>{
         console.log( 'error', error );
+      })
+      .finally(()=>{
+        dispatch( setClean( category ) );
       });
   };
   const saveExperience = () => {
@@ -103,10 +114,13 @@ export default function ExperienceDataAdmin(props) {
       (null == experienceId ? props.courseId : experienceId) +
       ".json";
 
+      console.log( 'url', url );
+      console.log( 'exp', experienceId );
+      console.log( 'cid', props.courseId );
     axios({
       url: url,
       method: method,
-      body: JSON.stringify({
+      data: {
         experience: {
           name: experienceName,
           course_id: props.courseId,
@@ -115,9 +129,12 @@ export default function ExperienceDataAdmin(props) {
           start_date: experienceStartDate,
           end_date: experienceEndDate
         }
-      })
+
+      }
     })
-      .then(data => {
+      .then(response => {
+        console.log( 'resp', response );
+        const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const experience = data.experience;
           setExperienceId(experience.id);
@@ -135,16 +152,19 @@ export default function ExperienceDataAdmin(props) {
           const course = data.course;
           setCourseName(course.name);
           dispatch( endTask("saving") );
-          setDirty(false);
+          dispatch( addMessage( data.messages.status, new Date( ), Priorities.INFO ) );
           setMessages(data.messages);
+          dispatch( setClean( category ) );
         } else {
           setMessages(data.messages);
+          dispatch( addMessage( data.messages.status, new Date( ), Priorities.ERROR ) );
           dispatch( endTask("saving") );
         }
       })
       .catch( error =>{
         console.log( 'error', error );
         setMessages(data.messages);
+        dispatch( addMessage( data.messages.status, new Date( ), Priorities.ERROR ) );
       });
   };
 
@@ -155,12 +175,12 @@ export default function ExperienceDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (user.loaded) {
+    if (userLoaded) {
       Settings.defaultZoneName = user.timezone;
     }
-  }, [user.loaded]);
+  }, [userLoaded]);
 
-  useEffect(() => setDirty(true), [
+  useEffect(() => dispatch( setDirty(category) ), [
     experienceName,
     experienceLeadTime,
     experienceActive,
@@ -255,7 +275,6 @@ export default function ExperienceDataAdmin(props) {
 
       <br />
       {saveButton}
-      {messages.status}
     </Paper>
   );
 
