@@ -306,8 +306,6 @@ class ExperiencesController < ApplicationController
   end
 
   def experience_params
-    puts "\n\n\n\t*******"
-    puts "\t\t#{params}"
     params.require(:experience).permit(:course_id, :name, :active,
                                        :lead_time, :start_date, :end_date)
   end

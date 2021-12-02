@@ -26,7 +26,7 @@ Feature: Experience Administration
     Then the user sets the "Name" field to "Jimmy Hendrix"
     Then the user sets the "Days for instructor prep" field to "5"
     Then the user clicks "Create Experience"
-    Then the user will see "success"
+     And the user waits to see "success"
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Jimmy Hendrix"
@@ -44,7 +44,7 @@ Feature: Experience Administration
     Then the user creates a new "New Group Experience"
     Then the user sets the "Name" field to "Jimmy Hendrix"
     Then the user clicks "Create Experience"
-    Then the user will see "success"
+     And the user waits to see "success"
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Jimmy Hendrix"
@@ -64,7 +64,7 @@ Feature: Experience Administration
     Then the user sets the experience "start" date to "2/29/1980"
     Then the user sets the experience "end" date to "7/10/2008"
     Then the user clicks "Create Experience"
-    Then the user will see "success"
+     And the user waits to see "success"
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Jimmy Hendrix"
@@ -83,7 +83,7 @@ Feature: Experience Administration
     Then the user sets the experience "start" date to "2/29/1980"
     Then the user sets the experience "end" date to "7/10/2008"
     Then the user clicks "Save Experience"
-    Then the user will see "success"
+     And the user waits to see "success"
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Bob Marley"
@@ -104,7 +104,7 @@ Feature: Experience Administration
     Then the user sets the experience "end" date to "7/10/2008"
     Then the user sets the "Days for instructor prep" field to "5"
     Then the user clicks "Save Experience"
-    Then the user will see "success"
+     And the user waits to see "success"
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Bob Marley"
