@@ -35,8 +35,8 @@ import axios from "axios";
 export default function ProjectDataAdmin(props) {
   const cityTimezones = require("city-timezones");
 
-  const category = "project";
-  const endpoints = useTypedSelector(state=>state['context'].endpoints[category])
+  const category = "project_admin";
+  const endpoints = useTypedSelector(state=>state.context.endpoints[category])
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded)
 
   const [curTab, setCurTab] = useState("details");
@@ -166,8 +166,10 @@ export default function ProjectDataAdmin(props) {
           dispatch( endTask("saving") );
           dispatch( setClean( category ) ) ;
           setMessages(data.messages);
+          dispatch( addMessage( data.messages, new Date( ), Priorities.INFO))
         } else {
           setMessages(data.messages);
+          dispatch( addMessage( data.messages, new Date( ), Priorities.ERROR))
           dispatch( endTask("saving") );
         }
       })
