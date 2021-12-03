@@ -6,6 +6,7 @@
 	],
 	"settings": {
 		"ruby.rubocop.useBundler": true,
-		"ruby.useLanguageServer": true
+		"ruby.useLanguageServer": true,
+		"git.autofetch": true
 	}
 }

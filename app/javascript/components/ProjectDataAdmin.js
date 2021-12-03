@@ -35,7 +35,7 @@ import axios from "axios";
 export default function ProjectDataAdmin(props) {
   const cityTimezones = require("city-timezones");
 
-  const category = "project_admin";
+  const category = "project";
   const endpoints = useTypedSelector(state=>state.context.endpoints[category])
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded)
 
@@ -166,10 +166,10 @@ export default function ProjectDataAdmin(props) {
           dispatch( endTask("saving") );
           dispatch( setClean( category ) ) ;
           setMessages(data.messages);
-          dispatch( addMessage( data.messages, new Date( ), Priorities.INFO))
+          dispatch( addMessage( data.messages.status, new Date( ), Priorities.INFO))
         } else {
           setMessages(data.messages);
-          dispatch( addMessage( data.messages, new Date( ), Priorities.ERROR))
+          dispatch( addMessage( data.messages.status, new Date( ), Priorities.ERROR))
           dispatch( endTask("saving") );
         }
       })
@@ -218,7 +218,7 @@ export default function ProjectDataAdmin(props) {
     <Paper>
       <TextField
         label="Project Name"
-        id="project-name"
+        id="name"
         value={projectName}
         fullWidth={true}
         onChange={event => setProjectName(event.target.value)}
@@ -227,7 +227,7 @@ export default function ProjectDataAdmin(props) {
       />
       <TextField
         label="Project Description"
-        id="project-description"
+        id="description"
         value={projectDescription}
         fullWidth={true}
         onChange={event => setProjectDescription(event.target.value)}
