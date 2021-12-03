@@ -16,7 +16,6 @@ export default function AppStatusBar(props) {
 
   const messages = useTypedSelector( state => { return state.status.messages } )
   const dispatch = useDispatch( );
-  console.log( 'messages', messages );
 
   return (
     <React.Fragment>
