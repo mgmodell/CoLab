@@ -3,6 +3,7 @@ import axios from 'axios';
 import {fetchProfile, setProfile, clearProfile} from './ProfileActions';
 import {addMessage, Priorities} from './StatusActions';
 
+export const SET_INITIALISED = 'SET_INITIALISED';
 export const SET_LOGGING_IN = 'SET_LOGGING_IN';
 export const SET_LOGGED_IN = 'SET_LOGGED_IN';
 export const SET_LOGGED_OUT = 'SET_LOGGED_OUT';
@@ -129,7 +130,7 @@ const CONFIG = {
     retrieveResources: function( dispatch: Function, getState: Function ){
         const endPointsUrl = getState()['context']['config']['endpoint_url'];
 
-        axios.get( endPointsUrl + '.json',
+        return axios.get( endPointsUrl + '.json',
             { withCredentials: true } )
             .then( resp =>{
                 if( resp['data'][ 'logged_in'] ){
@@ -174,6 +175,9 @@ const CONFIG = {
 }
 
 
+export function setInitialised( ){
+    return{ type: SET_INITIALISED };
+}
 export function setLoggingIn( ){
     return{ type: SET_LOGGING_IN };
 }
@@ -211,7 +215,10 @@ export function getContext( endPointsUrl: string ){
         //Add ProcessLocationBar later
         
         //Pull the resources
-        CONFIG.retrieveResources( dispatch, getState );
+        CONFIG.retrieveResources( dispatch, getState )
+            .then( () =>{
+                dispatch( setInitialised( ) );
+            });
     }
 
 }

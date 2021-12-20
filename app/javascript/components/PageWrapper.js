@@ -28,7 +28,6 @@ import AppInit from './infrastructure/AppInit'
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 
-
 export default function PageWrapper(props) {
   const store = createStore(appStatus, /* preloadedState, */ composeEnhancers(
       applyMiddleware( thunk ) 
@@ -38,8 +37,7 @@ export default function PageWrapper(props) {
     <Provider store={store}>
       <AppInit
           endpointsUrl={props.getEndpointsUrl}
-      />
-
+      >
     <Router>
       <Suspense fallback={<Skeleton variant="rect" height={50} />}>
         <AppHeader
@@ -72,6 +70,7 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
+          {/* Perhaps subgroup under Bingo */}
           <ProtectedRoute
             path={`/enter_candidates/:id`}
             render={routeProps => (
@@ -103,6 +102,15 @@ export default function PageWrapper(props) {
             )}
           />
           <ProtectedRoute
+            path={`/score_bingo/:id`}
+            render={routeProps => (
+              <React.Fragment>
+                Score the Bingo Component
+              </React.Fragment>
+            )}
+          />
+          {/* Perhaps subgroup under Bingo */}
+          <ProtectedRoute
             path={`/experience/:id`}
             render={routeProps => (
               <React.Fragment>
@@ -122,6 +130,22 @@ export default function PageWrapper(props) {
               </React.Fragment>
             )}
           />
+          <ProtectedRoute
+            path={`/course/:course_id/confirm`}
+            render={routeProps => (
+              <React.Fragment>
+                Confirm me in #{routeProps.match.params.course_id}
+              </React.Fragment>
+            )}
+          />
+          <ProtectedRoute
+            path={`/course/:course_id/enroll`}
+            render={routeProps => (
+              <React.Fragment>
+                Enroll me in #{routeProps.match.params.course_id}
+              </React.Fragment>
+            )}
+          />
           <ProtectedRoute exact path="/"
             render={routeProps =>(
               <React.Fragment>
@@ -137,6 +161,8 @@ export default function PageWrapper(props) {
         </Switch>
       </Suspense>
     </Router>
+        </AppInit>
+
     </Provider>
   );
 }

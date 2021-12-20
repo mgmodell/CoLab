@@ -1,6 +1,7 @@
 import {useSelector, TypedUseSelectorHook} from 'react-redux';
 
 import {
+    SET_INITIALISED,
     SET_LOGGING_IN,
     SET_LOGGED_IN,
     SET_LOGGED_OUT,
@@ -12,6 +13,7 @@ import {
 
 export interface ContextRootState {
     status: {
+        initialised: boolean;
         loggingIn: boolean;
         loggedIn: boolean;
         endpointsLoaded: boolean;
@@ -35,6 +37,7 @@ export interface ContextRootState {
 
 const initialState : ContextRootState = {
     status: {
+        initialised: false,
         loggingIn: false,
         loggedIn: false,
         endpointsLoaded: false,
@@ -62,6 +65,9 @@ export function context(state: ContextRootState = initialState, action){
 
 
     switch( action.type){
+        case SET_INITIALISED:
+            newState.status.initialised = true;
+            return newState;
         case SET_ENDPOINT_URL:
             newState.config.endpoint_url = action.url;
             return newState;

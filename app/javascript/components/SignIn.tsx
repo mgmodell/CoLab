@@ -37,6 +37,7 @@ import Input from "@material-ui/core/Input";
 //import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
 import {emailSignIn, oAuthSignIn} from './infrastructure/ContextActions';
 import {useTypedSelector} from './infrastructure/AppReducers'
+import Skeleton from "@material-ui/lab/Skeleton";
 
 export default function SignIn(props) {
   //const { t, i18n } = useTranslation('schools' );
@@ -48,6 +49,8 @@ export default function SignIn(props) {
   const [showPassword, setShowPassword] = useState( false );
   const [from, setFrom] = useState( props.from || '/'  );
   const isLoggedIn = useTypedSelector( state => state.context.status.loggedIn );
+  const loggingIn = useTypedSelector( (state) => state.context.status.loggingIn )
+
   const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
 
   const signOutBtn =  (
@@ -72,7 +75,10 @@ export default function SignIn(props) {
     </Button>
   );
 
-  if( isLoggedIn ){
+  if( loggingIn ){
+    return <Skeleton variant="rect" height="300" />
+
+  } else if( isLoggedIn ){
     return <Redirect to={from} />
   }
 
