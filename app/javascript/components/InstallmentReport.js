@@ -37,15 +37,18 @@ export default function InstallmentReport(props) {
   const [curPanel, setCurPanel] = useState(0);
   const [showAlerts, setShowAlerts] = useState(false);
   const [commentPanelOpen, setCommentPanelOpen] = useState(false);
-  const [factors, setFactors] = useState({});
   const [group, setGroup] = useState({});
+  const [factors, setFactors] = useState( {} );
+
+  const [bob, setBob] = useState( );
+
   const [project, setProject] = useState({});
   const [sliderSum, setSliderSum] = useState(0);
 
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState({ comments: "" });
 
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector(state=>state.profile.user );
 
   const updateSlice = (id, update) => {
     const lContributions = Object.assign({}, contributions);
@@ -60,6 +63,7 @@ export default function InstallmentReport(props) {
   };
 
   useEffect(() => setDirty(true), [contributions, installment]);
+
 
 
   useEffect(() => {
@@ -99,14 +103,19 @@ export default function InstallmentReport(props) {
 
   //Retrieve the latest data
   const getContributions = () => {
-    const url = `${endpoints.baseUrl}/${
+    const url = `${endpoints.baseUrl}${
       props.installmentId
     }.json`;
+
+
     dispatch( startTask() );
     axios.get( url, { } )
-      .then(data => {
-        console.log(data);
-        setFactors(data.factors);
+      .then(response => {
+        const data = response.data;
+        const factorsData = Object.assign( {}, data.factors );
+        setFactors( factorsData );
+        setBob( factorsData );
+
         setSliderSum(data.sliderSum);
 
         //Process Contributions
@@ -130,6 +139,7 @@ export default function InstallmentReport(props) {
         setDirty(false);
         setGroup(data.group);
         data.installment.group_id = data.group.id;
+
         setProject(data.installment.project);
         dispatch(endTask() );
       })
@@ -173,7 +183,6 @@ export default function InstallmentReport(props) {
           );
           setContributions(receivedContributions);
         }
-        console.log(data.messages);
         setMessages(data.messages);
         setShowAlerts(true);
         dispatch( endTask("saving") );
@@ -212,7 +221,7 @@ export default function InstallmentReport(props) {
               group_name: group.name,
               project_name: project.name,
               member_count: Object.keys(group.users || {}).length,
-              factor_count: factors.length
+              factor_count: Object.keys( factors || {} ).length
             })
           }}
         />
