@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/faker-ruby/faker.git
-  revision: c98ab3beb693c2a1d56224c492751704f69fe27c
+  revision: 869641999b268ef154e6e112dd21cb7b2ba9a09e
   branch: master
   specs:
     faker (2.19.0)
@@ -106,8 +106,8 @@ GEM
     aws-sdk-kms (1.53.0)
       aws-sdk-core (~> 3, >= 3.125.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.109.0)
-      aws-sdk-core (~> 3, >= 3.122.0)
+    aws-sdk-s3 (1.110.0)
+      aws-sdk-core (~> 3, >= 3.125.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
     aws-sigv4 (1.4.0)
