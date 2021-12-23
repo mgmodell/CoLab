@@ -9,7 +9,7 @@ Given(/^the project measures (\d+) factors$/) do |num_factors|
   )
   num_factors.to_i.times do
     factor = bp.factors.new(
-      name: "#{Faker::Job.key_skill} Factor",
+      name: "#{Faker::Job.unique.key_skill} Factor",
       description: Faker::Company.catch_phrase
     )
     factor.save

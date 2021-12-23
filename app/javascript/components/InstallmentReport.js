@@ -189,7 +189,7 @@ export default function InstallmentReport(props) {
         setDirty(false);
       })
       .catch( error =>{
-        console.log( 'error', errog );
+        console.log( 'error', error );
       });
   };
 
