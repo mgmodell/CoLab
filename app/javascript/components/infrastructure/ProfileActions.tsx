@@ -55,9 +55,7 @@ export function fetchProfile( reset: boolean = false  ){
     axios.get( url, {
     })
       .then( (response)=>{
-        console.log( 'user', response );
         const user: ProfilesRootState = response['user']['user'];
-        console.log( 'user data', response, user );
         dispatch( setProfile( user ) );
         dispatch( endTask( 'loading' ) );
       } )
@@ -105,9 +103,7 @@ export function persistProfile( ){
 
     } )
       .then( (data) =>{
-        console.log( 'data', data['data'] );
         user = data['data']['user'];
-        console.log( 'user', user );
 
         dispatch( setProfile( user ) );
         dispatch( endTask( 'loading' ) );

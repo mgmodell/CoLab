@@ -26,5 +26,6 @@ end
 
 Then(/^user sees the assessed project in the history$/) do
   find(:xpath, "//button[contains(.,'History')]").click
+  wait_for_render
   page.should have_content(@project.get_name(false))
 end

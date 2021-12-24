@@ -17,7 +17,8 @@ export default function UserCourseList(props) {
     dispatch( startTask() );
     var url = props.retrievalUrl;
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         //MetaData and Infrastructure
         props.consentFormListUpdateFunc(data);
         dispatch( endTask() );

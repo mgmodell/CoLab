@@ -359,7 +359,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_theme"
-                  value={user.theme_id}
+                  value={user.theme_id || 0}
                   onChange={event =>
                     setProfileTheme(Number(event.target.value))
                   }
@@ -388,7 +388,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_language"
-                  value={user.language_id}
+                  value={user.language_id || 0}
                   onChange={event =>
                     setProfileLanguage(Number(event.target.value))
                   }
@@ -472,7 +472,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_school"
-                  value={user.school_id}
+                  value={user.school_id || 0}
                   onChange={event =>
                     setProfileSchool(Number(event.target.value))
                   }
@@ -501,7 +501,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_cip_code"
-                  value={user.cip_code_id}
+                  value={user.cip_code_id || 0}
                   onChange={event =>
                     setProfileCipCode(Number(event.target.value))
                   }
@@ -547,7 +547,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_country"
-                  value={user.country}
+                  value={user.country || 0}
                   onChange={event => {
                     const country = String(event.target.value);
                     setProfileHomeCountry(country);
@@ -601,7 +601,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_language"
-                  value={user.primary_language_id}
+                  value={user.primary_language_id || 0}
                   onChange={event =>
                     setProfileHomeLanguage(Number(event.target.value))
                   }
@@ -627,7 +627,7 @@ export default function ProfileDataAdmin(props) {
                 </InputLabel>
                 <Select
                   id="profile_gender"
-                  value={user.gender_id}
+                  value={user.gender_id || 0}
                   onChange={event =>
                     setProfileGender(Number(event.target.value))
                   }

@@ -33,6 +33,7 @@ export default function InstallmentReport(props) {
   const [debug, setDebug] = useState(false);
   const [t, i18n] = useTranslation("installments");
 
+  const [initialised, setInitialised] = useState( false );
   const [messages, setMessages] = useState({});
   const [curPanel, setCurPanel] = useState(0);
   const [showAlerts, setShowAlerts] = useState(false);
@@ -135,12 +136,14 @@ export default function InstallmentReport(props) {
         );
         delete data.installment.values;
         setInstallment(data.installment);
+
         setContributions(contributions);
         setDirty(false);
         setGroup(data.group);
         data.installment.group_id = data.group.id;
 
         setProject(data.installment.project);
+        setInitialised( true );
         dispatch(endTask() );
       })
       .catch( error =>{
@@ -155,16 +158,21 @@ export default function InstallmentReport(props) {
       (Boolean(installment.id) ? `/${installment.id}` : ``) +
       ".json";
     const method = Boolean(installment.id) ? "PATCH" : "POST";
+
+    const body = 
+      {
+        contributions: contributions,
+        installment: installment
+      }
     axios( {
       url: url,
       method: method,
-      body: JSON.stringify({
-        contributions: contributions,
-        installment: installment
-      })
+      data: body,
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         //Process Contributions
+        console.log( 'data:', data );
         if (!data.error) {
           setInstallment(data.installment);
           const receivedContributions = data.installment.values.reduce(
