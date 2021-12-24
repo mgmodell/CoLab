@@ -89,7 +89,6 @@ class InstallmentsController < ApplicationController
         installment = nil
         begin
           ActiveRecord::Base.transaction do
-            puts params.inspect
             installment_hash = params[:installment]
             installment = Installment.new(
               assessment_id: installment_hash[:assessment_id],

@@ -31,6 +31,7 @@ end
 
 When(/^the user submits the installment$/) do
   click_link_or_button('Submit Weekly Installment')
+  wait_for_render
 end
 
 Then(/^there should be no error$/) do
@@ -44,6 +45,7 @@ end
 
 When(/^user clicks the link to the project$/) do
   find(:xpath, "//td[contains(.,'#{@project.group_for_user(@user).name}')]").click
+  wait_for_render
 end
 
 Then(/^the user should enter values summing to (\d+), "(.*?)" across each column$/) do |column_points, distribution|

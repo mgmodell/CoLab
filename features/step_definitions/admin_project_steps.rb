@@ -79,6 +79,7 @@ Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
   rescue Capybara::ElementNotFound => e
     find(:xpath, "//button/span[text()='#{tab}']").click
   end
+  wait_for_render
 end
 
 Then 'the user enables the {string} table view option' do |view_option|
