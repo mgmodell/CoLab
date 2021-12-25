@@ -16,8 +16,8 @@ import axios from "axios";
 export default function ConsentLog(props) {
   const { t } = useTranslation("consent_logs");
   const endpointSet = "consent_log";
-  const endpoints = useTypedSelector(state=>state['context'][endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['context']['endpointStatus'])
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet])
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
   const dispatch = useDispatch( );
   const [logId, setLogId] = useState();
   const [formName, setFormName] = useState("");
@@ -28,12 +28,15 @@ export default function ConsentLog(props) {
   const [logLastUpdated, setLogLastUpdated] = useState(new Date());
 
   const getLog = () => {
+    console.log( props );
     var url =
       endpoints['baseUrl'] + props.consentFormId + ".json";
 
+    console.log( url );
     dispatch( startTask("loading") );
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         //Process the data
         console.log(data);
         setLogId(data.consent_log.id);
@@ -65,7 +68,8 @@ export default function ConsentLog(props) {
         }
       })
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         //Process the data
         setFormAccepted(data.accepted);
         if (null != props.parentUpdateFunc) {
@@ -83,6 +87,7 @@ export default function ConsentLog(props) {
 
   useEffect(() => {
     if (endpointStatus ){
+      console.log( 'loading' );
       getLog();
     }
   }, [endpointStatus]);
