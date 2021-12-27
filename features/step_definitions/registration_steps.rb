@@ -195,7 +195,6 @@ end
 
 Then(/^the user sees (\d+) invitation$/) do |invitation_count|
   check_count = 0
-  byebug
   while check_count < 5 && !all(:xpath, "//*[@id='waiting']").empty?
     sleep(0.01)
     check_count += 1
