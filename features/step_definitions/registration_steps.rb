@@ -19,6 +19,7 @@ When(/^the user "(.*?)" provide consent$/) do |does_or_does_not|
 end
 
 Then(/^the user will see a request for demographics$/) do
+  wait_for_render
   page.should have_content 'Edit your profile'
 end
 
@@ -194,6 +195,7 @@ end
 
 Then(/^the user sees (\d+) invitation$/) do |invitation_count|
   check_count = 0
+  byebug
   while check_count < 5 && !all(:xpath, "//*[@id='waiting']").empty?
     sleep(0.01)
     check_count += 1

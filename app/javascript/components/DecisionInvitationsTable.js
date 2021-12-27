@@ -11,6 +11,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 
 import {startTask, endTask} from './infrastructure/StatusActions';
 import MUIDataTable from "mui-datatables";
