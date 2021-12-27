@@ -143,6 +143,7 @@ Then(/^the user logs out$/) do
   wait_for_render
   find(:xpath, '//*[@id="main-menu-button"]').click
   find(:xpath, '//*[@id="logout-menu-item"]').click
+  wait_for_render
 end
 
 Then(/^there should be an error$/) do
