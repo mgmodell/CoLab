@@ -117,7 +117,5 @@ When(/^the user logs in$/) do
   fill_in 'password', with: 'password'
 
   click_link_or_button 'Log in'
-  # byebug
   wait_for_render
-  # byebug
 end
