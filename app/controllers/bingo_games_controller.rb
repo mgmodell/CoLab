@@ -18,7 +18,6 @@ class BingoGamesController < ApplicationController
 
   before_action :check_viewer, only: %i[show index]
 
-  skip_before_action :set_locale
 
   include Demoable
 

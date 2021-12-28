@@ -58,9 +58,9 @@ export default function BingoGameDataAdmin(props) {
   const classes = useStyles();
 
   const endpointSet = "bingo_game";
-  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
-  const user = useTypedSelector(state=>state['login'].profile)
+  const endpoints = useTypedSelector(state=>state.context.endpoints[ endpointSet ] );
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
+  const user = useTypedSelector(state=>state.profile.user)
   const dispatch = useDispatch( );
 
   const { t, i18n } = useTranslation("bingo_games");
@@ -138,7 +138,7 @@ export default function BingoGameDataAdmin(props) {
     axios({
       url: url,
       method: method,
-      body: JSON.stringify({
+      data: {
         bingo_game: {
           course_id: props.courseId,
           topic: gameTopic,
@@ -155,9 +155,11 @@ export default function BingoGameDataAdmin(props) {
           group_discount: gameGroupDiscount,
           project_id: gameGroupProjectId
         }
-      })
+
+      }
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         //TODO: handle save errors
         setSaveStatus(data["notice"]);
         setDirty(false);
@@ -177,14 +179,7 @@ export default function BingoGameDataAdmin(props) {
       const url = endpoints.gameResultsUrl + "/" + bingoGameId + ".json";
       axios.get( url, { } )
         .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            console.log("error");
-            return [{ id: -1, name: "no data" }];
-          }
-        })
-        .then(data => {
+          const data = response.data;
           setResultData(data);
           dispatch( endTask() );
         })
@@ -204,7 +199,8 @@ export default function BingoGameDataAdmin(props) {
       url = url + bingoGameId + ".json";
     }
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         const projects = new Array({ id: -1, name: "None Selected" }).concat(
           data.projects
         );
