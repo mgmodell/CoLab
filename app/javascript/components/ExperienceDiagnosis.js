@@ -42,7 +42,7 @@ export default function ExperienceDiagnosis(props) {
   const [comments, setComments] = useState("");
   const [showComments, setShowComments] = useState(false);
 
-  const dirtyStatus = useTypedSelector( state => state.dirtyState['diagnosis'] );
+  const dirtyStatus = useTypedSelector( state => state.status.dirtyStatus['diagnosis'] );
   const dispatch = useDispatch( );
 
   const getById = (list, id) => {

@@ -29,7 +29,7 @@ export default function ExperienceReaction(props) {
   const [behaviorId, setBehaviorId] = useState(0);
   const [otherName, setOtherName] = useState("");
   const [improvements, setImprovements] = useState("");
-  const dirtyStatus = useSelector( state =>{ return state.dirtyState['reaction'] });
+  const dirtyStatus = useSelector( state =>{ return state.status.dirtyStatus['reaction'] });
   const dispatch = useDispatch( );
   const behaviors = useTypedSelector(state=>state.context.lookups.behaviors);
 

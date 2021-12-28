@@ -156,7 +156,7 @@ export default function BingoBuilder(props) {
     delete board.bingo_cells;
     const url = `${endpoints.boardUrl}${bingoGameId}.json`;
     axios.patch( url, {
-      body: JSON.stringify({ bingo_board: board })
+      bingo_board: board
     })
       .then(data => {
         data.initialised = true;

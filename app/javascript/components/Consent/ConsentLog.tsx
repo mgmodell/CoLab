@@ -62,11 +62,9 @@ export default function ConsentLog(props) {
     console.log("update", url);
 
     axios.patch( url, {
-      body: JSON.stringify({
         consent_log: {
           accepted: formAccepted
         }
-      })
     })
       .then(response => {
         const data = response.data;

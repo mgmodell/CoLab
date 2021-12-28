@@ -25,15 +25,11 @@ export default function Experience(props) {
 
   const [t, i18n] = useTranslation("experiences");
 
-  useEffect(() => {
-    lookupActions.fetch(["behaviors"], props.lookupUrl, props.token);
-  }, []);
+  const behaviors = useTypedSelector( (state) => state.context.lookups.behaviors );
 
   const saveButton = (
     <Button variant="contained" onClick={() => props.acknowledgeFunc()}>
-      <Suspense fallback={<Skeleton variant="text" />}>
         {t("instructions.next")}
-      </Suspense>
     </Button>
   );
 
@@ -68,7 +64,7 @@ export default function Experience(props) {
       </Suspense>
       <Suspense fallback={<Skeleton variant="rect" />}>
         <dl>
-          {(lookup.lookups.behaviors || []).map(behavior => {
+          {(behaviors || []).map(behavior => {
             return (
               <React.Fragment key={behavior.id}>
                 <dt>{behavior.name}</dt>
@@ -112,6 +108,5 @@ export default function Experience(props) {
 }
 
 Experience.propTypes = {
-  acknowledgeFunc: PropTypes.func.isRequired,
-  lookupUrl: PropTypes.string.isRequired
+  acknowledgeFunc: PropTypes.func.isRequired
 };

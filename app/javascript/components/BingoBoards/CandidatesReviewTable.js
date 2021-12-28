@@ -274,10 +274,8 @@ export default function CandidatesReviewTable(props) {
     const url = `${endpoints.reviewSaveUrl}${ props.bingoGameId }.json`;
 
     axios.patch( url, {
-        body: JSON.stringify({
           candidates: candidates.filter(c => 0 < c.completed),
           reviewed: reviewComplete
-        })
     })
       .then(data => {
         setDirty(typeof data.success !== "undefined");

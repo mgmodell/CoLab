@@ -249,10 +249,8 @@ export default function CourseUsersList(props) {
                     onClick={event => {
                       dispatch( startTask("accepting_student") );
                       axios.patch( procRegReqPath, {
-                        body: JSON.stringify({
                           roster_id: user.id,
                           decision: true
-                        })
                       })
                         .then(data => {
                           refreshFunc(data.messages);
@@ -274,10 +272,8 @@ export default function CourseUsersList(props) {
                     onClick={event => {
                       dispatch( startTask("decline_student") );
                       axios.patch( procRegReqPath, {
-                        body: JSON.stringify({
                           roster_id: user.id,
                           decision: false
-                        })
                       })
                         .then(data => {
                           refreshFunc(data.messages);

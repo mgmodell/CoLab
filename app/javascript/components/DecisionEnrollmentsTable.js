@@ -185,10 +185,8 @@ class DecisionEnrollmentsTable extends React.Component {
     this.setState({ working: true });
     const url = this.props.update_url + ".json";
     axios.patch( url, {
-      body: JSON.stringify({
         roster_id: id,
         decision: accept
-      })
     })
       .then(data => {
         console.log( 'got enrollments', data )

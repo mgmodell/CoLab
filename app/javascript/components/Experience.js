@@ -10,6 +10,7 @@ import {
   setDirty,
   setClean,
   addMessage,
+  Priorities,
   acknowledgeMsg} from './infrastructure/StatusActions';
 
 import Button from "@material-ui/core/Button";
@@ -27,7 +28,8 @@ import axios from "axios";
 export default function Experience(props) {
   const endpointSet = "experience";
   const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state.context.endpointsLoaded );
+  const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
+
   const dispatch = useDispatch( );
   const [t, i18n] = useTranslation("installments");
   const history = useHistory();
@@ -40,10 +42,10 @@ export default function Experience(props) {
   const [weekText, setWeekText] = useState("");
 
   useEffect(() => {
-    if (endpointStatus ){
+    if (endpointsLoaded ){
       getNext();
     }
-  }, [endpointStatus]);
+  }, [endpointsLoaded]);
 
   const saveButton = (
     <Button variant="contained" onClick={() => saveDiagnosis()}>
@@ -58,7 +60,9 @@ export default function Experience(props) {
     }.json`;
     dispatch( startTask() );
     axios( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
+        console.log( 'getNext:', data );
         setWeekId(data.week_id);
         setWeekNum(data.week_num);
         setWeekText(data.week_text);
@@ -75,9 +79,9 @@ export default function Experience(props) {
   //Store what we've got
   const saveDiagnosis = (behaviorId, otherName, comment, resetFunc) => {
     dispatch( startTask( 'saving' ) );
-    const url = endpoints.diagnosisUrl;
+    const url = endpoints.diagnosisUrl + '.json';
+    console.log( url );
     axios.patch( url, {
-      body: JSON.stringify({
         diagnosis: {
           behavior_id: behaviorId,
           reaction_id: reactionId,
@@ -85,17 +89,17 @@ export default function Experience(props) {
           other_name: otherName,
           comment: comment
         }
-      })
 
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         //Process Contributions
         setWeekId(data.week_id);
         setWeekNum(data.week_num);
         setWeekText(data.week_text);
 
         resetFunc();
-        dispatch( addMessage( data.messages.main, Date.now( ), 1 ) )
+        dispatch( addMessage( data.messages.main, Date.now( ), Priorities.INFO ) )
         dispatch( endTask( 'saving' ) );
         dispatch( setClean('diagnosis') );
       })
@@ -107,21 +111,22 @@ export default function Experience(props) {
   //React
   const saveReaction = (behaviorId, otherName, improvements, resetFunc) => {
     dispatch( startTask( 'saving' ) );
-    const url = endpoints.reactionUrl;
+    const url = endpoints.reactionUrl + '.json';
+    console.log( url );
     axios.patch( url, { 
-      body: JSON.stringify({
         reaction: {
           id: reactionId,
           behavior_id: behaviorId,
           other_name: otherName,
           improvements: improvements
         }
-      })
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
+        console.log( 'saveReaction:', data );
         //Process Experience
         resetFunc();
-        dispatch( addMessage( data.messages.main, Date.now( ), 1 ) )
+        dispatch( addMessage( data.messages.main, Date.now( ), Priorities.INFO ) )
         dispatch( endTask( 'saving' ) );
         dispatch( setClean( 'reaction' ) );
         history.push("/");
@@ -132,26 +137,24 @@ export default function Experience(props) {
   };
 
   var output = null;
-  if (endpointStatus) {
+
+  if (!endpointsLoaded) {
     output = <Skeleton variant="rect" />;
   } else if (!instructed) {
     output = (
       <ExperienceInstructions
-        lookupUrl={endpoints.lookupsUrl}
         acknowledgeFunc={getNext}
       />
     );
   } else if (undefined === weekNum) {
     output = (
       <ExperienceReaction
-        lookupUrl={endpoints.lookupsUrl}
         reactionFunc={saveReaction}
       />
     );
   } else {
     output = (
       <ExperienceDiagnosis
-        lookupUrl={endpoints.lookupsUrl}
         diagnoseFunc={saveDiagnosis}
         weekNum={weekNum}
         weekText={weekText}

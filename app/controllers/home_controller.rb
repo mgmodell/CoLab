@@ -515,7 +515,7 @@ class HomeController < ApplicationController
   private
 
   def profile_params
-    params.require(:body).permit(
+    params.permit(
                                 :first_name, :last_name,
                                  :timezone, :language_id, :theme_id, :researcher,
                                  :gender_id, :date_of_birth, :primary_language_id, :country, :home_state_id,
