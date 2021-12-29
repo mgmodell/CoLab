@@ -108,7 +108,7 @@ class CoursesController < ApplicationController
 
   def qr
     require 'rqrcode'
-    qrcode = RQRCode::QRCode.new(self_reg_url)
+    qrcode = RQRCode::QRCode.new("#{root_url}course/#{params[:id]}/enroll")
     png = qrcode.as_png(
       bit_depth: 1,
       border_modules: 4,
