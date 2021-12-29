@@ -45,7 +45,8 @@ export default function CourseUsersList(props) {
     dispatch( startTask() );
     var url = props.retrievalUrl;
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         //MetaData and Infrastructure
         if ("student" == props.userType) {
           setAddUsersPath(data.add_function.students + ".json");
@@ -214,7 +215,8 @@ export default function CourseUsersList(props) {
                     onClick={event => {
                       dispatch( startTask("inviting") );
                       axios.get( user.reinvite_link, { } )
-                        .then(data => {
+                        .then(response => {
+                          const data = response.data;
                           refreshFunc(data.messages);
                           dispatch( endTask("inviting") );
                         })
@@ -252,7 +254,8 @@ export default function CourseUsersList(props) {
                           roster_id: user.id,
                           decision: true
                       })
-                        .then(data => {
+                        .then(response => {
+                          const data = response.data;
                           refreshFunc(data.messages);
                           dispatch( endTask("accepting_student") );
                         })
@@ -275,7 +278,8 @@ export default function CourseUsersList(props) {
                           roster_id: user.id,
                           decision: false
                       })
-                        .then(data => {
+                        .then(response => {
+                          const data = response.data;
                           refreshFunc(data.messages);
                           dispatch( endTask("decline_student") );
                         })
@@ -305,7 +309,8 @@ export default function CourseUsersList(props) {
                         })
 
                       })
-                        .then(data => {
+                        .then(response => {
+                          const data = response.data;
                           refreshFunc(data.messages);
                           dispatch( endTask("re-adding") );
                         })
