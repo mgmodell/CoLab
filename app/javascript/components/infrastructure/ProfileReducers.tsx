@@ -13,6 +13,7 @@ export interface ProfilesRootState {
   id: number;
   first_name: string;
   last_name: string;
+  name: string;
   emails: [{
     email: string;
     primary: boolean;
@@ -55,6 +56,7 @@ const initialState = {
   id: -1,
   first_name: '',
   last_name: '',
+  name: '',
   emails: [
   ],
 

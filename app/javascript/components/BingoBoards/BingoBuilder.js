@@ -29,8 +29,8 @@ const styles = createTheme({
 });
 export default function BingoBuilder(props) {
   const endpointSet = "candidate_results";
-  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
   const { t, i18n } = useTranslation();
 
   const dispatch = useDispatch()

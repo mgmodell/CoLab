@@ -29,6 +29,7 @@ When(/^the user clicks the link to the candidate list$/) do
 end
 
 Then(/^the user should see the Bingo candidate list$/) do
+  wait_for_render
   page.should have_content('Topic')
   page.should have_content(@bingo.topic)
   page.should have_content('For')

@@ -1,39 +1,29 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
-import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
 import IconButton from "@material-ui/core/IconButton";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
 import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import Alert from "@material-ui/lab/Alert";
 import CloseIcon from "@material-ui/icons/Close";
 
-import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import LuxonUtils from "@material-ui/pickers/adapter/luxon";
-import i18n from "../infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from '../infrastructure/StatusActions';
 import { TextareaAutosize, Grid, Link } from "@material-ui/core";
-import { updateExternalModuleReference } from "typescript";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 
 export default function CandidateListEntry(props) {
   const endpointSet = "candidate_list";
-  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
   const { t, i18n } = useTranslation("candidate_lists");
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector(state=>state.profile.user)
 
   const [dirty, setDirty] = useState(false);
   const dispatch = useDispatch( );

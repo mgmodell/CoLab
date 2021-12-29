@@ -27,8 +27,8 @@ import axios from "axios";
 export default function CandidatesReviewTable(props) {
   const { t } = useTranslation("bingo_games");
   const endpointSet = "candidate_review";
-  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
 
   const [candidates, setCandidates] = useState([]);
   const [candidateLists, setCandidateLists] = useState([]);

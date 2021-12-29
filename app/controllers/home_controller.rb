@@ -260,6 +260,7 @@ class HomeController < ApplicationController
     }
     profile_hash[:user][:is_instructor] = current_user.is_instructor?
     profile_hash[:user][:is_admin] = current_user.is_admin?
+    profile_hash[:user][:name] = current_user.name( false )
 
     profile_hash[:user][:emails] = current_user.emails.as_json(
       only: %i[id email primary],

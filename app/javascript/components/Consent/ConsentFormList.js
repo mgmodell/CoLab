@@ -19,14 +19,14 @@ import {startTask, endTask} from '../infrastructure/StatusActions';
 
 export default function ConsentFormList(props) {
   const endpointSet = "consent_form";
-  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
   const dispatch = useDispatch( );
 
   const history = useHistory();
   const { path, url } = useRouteMatch();
 
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector(state=>state.profile.user)
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 

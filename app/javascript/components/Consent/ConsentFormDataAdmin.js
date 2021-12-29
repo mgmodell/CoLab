@@ -38,10 +38,10 @@ import axios from "axios";
 
 export default function ConsentFormDataAdmin(props) {
   const endpointSet = "consent_form";
-  const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
   //const { t, i18n } = useTranslation('schools' );
-  const user = useTypedSelector(state=>state['login'].profile)
+  const user = useTypedSelector(state=>state.profile.user)
 
   const dispatch = useDispatch( );
   const [dirty, setDirty] = useState(false);
