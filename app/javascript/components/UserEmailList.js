@@ -65,7 +65,8 @@ export default function UserEmailList(props) {
                   dispatch( startTask("updating") );
                   const url = props.primaryEmailUrl + value + ".json";
                   axios.get( url, { } )
-                    .then(data => {
+                    .then(response => {
+                      const data = response.data;
                       props.emailListUpdateFunc(data.emails);
                       props.addMessagesFunc(data.messages);
                       dispatch( endTask("updating") );
@@ -110,7 +111,8 @@ export default function UserEmailList(props) {
                   const url = props.removeEmailUrl + value + ".json";
                   dispatch( startTask("removing") );
                   axios.get( url, { } )
-                    .then(data => {
+                    .then(response => {
+                      const data = response.data;
                       props.emailListUpdateFunc(data.emails);
                       props.addMessagesFunc(data.messages);
                       dispatch( endTask("removing") );
@@ -184,7 +186,8 @@ export default function UserEmailList(props) {
                             email_address: newEmail
                           })
                         })
-                          .then(data => {
+                          .then(response => {
+                            const data = response.data;
                             //getUsers();
                             props.emailListUpdateFunc(data.emails);
                             props.addMessagesFunc(data.messages);

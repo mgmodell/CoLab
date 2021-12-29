@@ -107,7 +107,8 @@ export default function BingoBuilder(props) {
     console.log("concepts");
     const url =  `${endpoints.conceptsUrl}${bingoGameId}.json`;
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         setConcepts(data);
         dispatch( endTask() );
       })
@@ -121,7 +122,8 @@ export default function BingoBuilder(props) {
     dispatch( startTask() );
     const url = `${endpoints.baseUrl}${bingoGameId}.json`;
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         console.log(data);
         setCandidateList(data.candidate_list);
         setCandidates(data.candidates);
@@ -137,7 +139,8 @@ export default function BingoBuilder(props) {
     dispatch( startTask());
     const url = `${endpoints.boardUrl}${bingoGameId}.json`;
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         data.initialised = data.id != null;
         data.iteration = 0;
         setBoard(data);
@@ -158,7 +161,8 @@ export default function BingoBuilder(props) {
     axios.patch( url, {
       bingo_board: board
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         data.initialised = true;
         data.iteration = 0;
         if (data.id > 0) {

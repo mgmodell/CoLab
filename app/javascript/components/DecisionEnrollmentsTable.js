@@ -137,7 +137,8 @@ class DecisionEnrollmentsTable extends React.Component {
   }
   getRequests() {
     axios.get(this.props.init_url + ".json", { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         this.setState({
           requests: data,
           requests_raw: data,
@@ -188,7 +189,8 @@ class DecisionEnrollmentsTable extends React.Component {
         roster_id: id,
         decision: accept
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         console.log( 'got enrollments', data )
         this.setState({
           requests: data,

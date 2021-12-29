@@ -47,7 +47,8 @@ export default function DecisionInvitationsTable(props) {
                     const url = invitation.acceptPath + ".json";
                     dispatch( startTask("accepting") );
                     axios.get( url, { } )
-                      .then(data => {
+                      .then(response => {
+                        const data = response.data;
                         //Process the data
                         props.parentUpdateFunc();
                         dispatch( endTask("accepting") );
@@ -68,7 +69,8 @@ export default function DecisionInvitationsTable(props) {
                     const url = invitation.declinePath + ".json";
                     dispatch( startTask("declining") );
                     axios.get( url, { } )
-                      .then(data => {
+                      .then(response => {
+                        const data = response.data;
                         //Process the data
                         props.parentUpdateFunc();
                         dispatch( endTask("declining") );

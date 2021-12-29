@@ -59,7 +59,8 @@ export default function CandidateListEntry(props) {
     var url =
       endpoints.baseUrl + props.bingoGameId + ".json";
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         setCandidateListId(data.id);
         setTopic(data.topic);
         setDescription(data.description);
@@ -127,7 +128,8 @@ export default function CandidateListEntry(props) {
       })
 
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           setCandidateListId(data.id);
           setIsGroup(data.is_group);
@@ -178,7 +180,8 @@ export default function CandidateListEntry(props) {
     dispatch( startTask("updating") );
     const url = `${requestCollaborationUrl}${decision}.json`;
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         setCandidateListId(data.id);
         setIsGroup(data.is_group);
         setExpectedCount(data.expected_count);

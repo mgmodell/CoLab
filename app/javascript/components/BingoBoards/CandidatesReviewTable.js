@@ -228,7 +228,8 @@ export default function CandidatesReviewTable(props) {
 
     const url = `${endpoints.baseUrl}${props.bingoGameId}.json`;
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         // Add a non-response for the UI
         data.feedback_opts.unshift({
           credit: 0,
@@ -277,7 +278,8 @@ export default function CandidatesReviewTable(props) {
           candidates: candidates.filter(c => 0 < c.completed),
           reviewed: reviewComplete
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         setDirty(typeof data.success !== "undefined");
         dispatch( endTask("saving") );
         setReviewStatus(data.notice);

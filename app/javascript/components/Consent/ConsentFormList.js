@@ -58,7 +58,8 @@ export default function ConsentFormList(props) {
     dispatch( startTask("loading") );
 
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         //Process the data
         setSchools(data);
         dispatch( endTask("loading") );

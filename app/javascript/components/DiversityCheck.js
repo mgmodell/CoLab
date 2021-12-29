@@ -47,7 +47,8 @@ class DiversityCheck extends React.Component {
         emails: this.state.emails
       })
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         this.setState({
           diversity_score: data.diversity_score,
           found_users: data.found_users

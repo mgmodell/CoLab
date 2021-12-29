@@ -69,7 +69,8 @@ export default function ConsentFormDataAdmin(props) {
       url = url + consentFormId + ".json";
     }
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         const consentForm = data.consent_form;
 
         setConsentFormName(consentForm.name || "");
@@ -121,7 +122,8 @@ export default function ConsentFormDataAdmin(props) {
         }
       })
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const consentForm = data.school;
           setConsentFormId(consentForm.id);

@@ -87,7 +87,8 @@ export default function CopyActivityButton(props) {
                 axios.post( props.copyUrl,{
                   start_date: newStartDate,
                 })
-                  .then( data =>{
+                  .then( response =>{
+                    const data = response.data;
                     props.addMessagesFunc(data.messages);
                     if (Boolean(props.itemUpdateFunc)) {
                       props.itemUpdateFunc();

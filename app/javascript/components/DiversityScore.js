@@ -92,7 +92,8 @@ class DiversityScore extends React.Component {
         emails: emails.join()
       })
     })
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         this.setState({
           calculated: data.diversity_score
         });

@@ -529,7 +529,8 @@ export default function CourseDataAdmin(props) {
                   axios.delete( user.drop_link, {
 
                   })
-                    .then(data => {
+                    .then(response => {
+                      const data = response.data;
                       getCourse();
                       setMessages(data.messages);
                       dispatch( endTask("deleting") );

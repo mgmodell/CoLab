@@ -20,7 +20,8 @@ export default function ReactionsList(props) {
     var url = props.retrievalUrl + ".json";
     dispatch( startTask() );
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         //MetaData and Infrastructure
         props.reactionsListUpdateFunc(data.reactions);
 

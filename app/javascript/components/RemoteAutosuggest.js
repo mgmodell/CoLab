@@ -102,7 +102,8 @@ class RemoteAutoSuggest extends React.Component {
     const url = this.props.dataUrl + ".json?search_string=" + value;
 
     axios.get( url, { } )
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         let suggestions = [];
         data.map(item => {
           suggestions.push({ label: item.name });

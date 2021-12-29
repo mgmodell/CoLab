@@ -224,7 +224,8 @@ export default function ProfileDataAdmin(props) {
       dispatch( startTask() );
       const url = endpoints.statesForUrl + countryCode + ".json";
       axios.get( url, { } )
-        .then(data => {
+        .then(response => {
+          const data = response.data;
           //Find the selected state in the retrieved list
           const foundSelectedStates = data.filter(item => {
             return (
