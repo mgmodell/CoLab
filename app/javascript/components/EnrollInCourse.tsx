@@ -65,13 +65,9 @@ export default function EnrollInCourse(props) {
     </Button>
   );
 
-  console.log( 'loaded', String( endpointsLoaded ) );
-  console.log( 'endpoints_all', epts );
-  console.log( 'endpoints', endpoints );
 
   useEffect(() =>{
     if( endpointsLoaded ){
-      console.log( 'inside endpoints', endpoints );
       const url = `${endpoints.courseBaseUrl}/${props.courseId}.json`;
       dispatch( startTask( ) );
       axios.get( url, { } )
