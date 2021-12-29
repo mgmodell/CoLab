@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 Rails.application.routes.draw do
-  # get 'admin' => 'courses#index'
 
   scope 'api-backend' do
     post 'courses/copy/:id' => 'courses#new_from_template',
@@ -180,9 +179,8 @@ Rails.application.routes.draw do
         constraints: ->(req) { req.format == :json }
 
   #self registration
-  get 'course/enroll/:id', to: 'courses#self_reg', as: :self_reg
-  get 'course/enroll_confirm/:id', to: 'courses#self_reg_confirm', as:
-  :self_reg_confirm
+  get 'course/enroll_confirm/:id', to: 'courses#self_reg_confirm', as: :self_reg_confirm,
+    constraints: ->(req) {req.format == :json }
 
   # Consent log paths
   get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', as: :edit_consent_log

@@ -21,6 +21,7 @@ import Admin from "./Admin";
 import DemoWrapper from "./DemoWrapper";
 import AppStatusBar from "./AppStatusBar";
 import SignIn from './SignIn';
+import EnrollInCourse from './EnrollInCourse';
 //import Auth from 'j-toker'
 import ProtectedRoute from './infrastructure/ProtectedRoute';
 import AppInit from './infrastructure/AppInit'
@@ -142,7 +143,9 @@ export default function PageWrapper(props) {
             path={`/course/:course_id/enroll`}
             render={routeProps => (
               <React.Fragment>
-                Enroll me in #{routeProps.match.params.course_id}
+                <EnrollInCourse
+                  courseId={Number(routeProps.match.params.course_id)}
+                  />
               </React.Fragment>
             )}
           />

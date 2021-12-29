@@ -27,9 +27,9 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function HomeShell(props) {
-  const endpointSet = "home";
+  const category = "home";
   //const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpoints = useTypedSelector(state=>state.context.endpoints[category]);
   const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
   const dispatch = useDispatch( );
   const { t, i18n } = useTranslation();

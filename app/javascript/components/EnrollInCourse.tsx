@@ -1,0 +1,116 @@
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+//Redux store stuff
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  startTask,
+  endTask,
+  setDirty,
+  setClean,
+  addMessage,
+  acknowledgeMsg} from './infrastructure/StatusActions';
+import Button from "@material-ui/core/Button";
+import PropTypes from "prop-types";
+
+import Settings from "luxon/src/settings.js";
+
+import LuxonUtils from "@material-ui/pickers/adapter/luxon";
+import { useTranslation } from 'react-i18next';
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import {useTypedSelector} from './infrastructure/AppReducers'
+import axios from "axios";
+
+export default function EnrollInCourse(props) {
+
+  const category = 'home';
+  const dispatch = useDispatch( );
+  const epts = useTypedSelector((state)=>state.context.endpoints);
+  const endpoints = useTypedSelector((state)=>state.context.endpoints[category]);
+  const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
+  const [t, i18n] = useTranslation( category );
+  const history = useHistory( );
+
+  const [courseName, setCourseName] = useState( 'loading' );
+  const [courseNumber, setCourseNumber] = useState( 'loading' );
+
+
+  const enrollConfirm = (confirm:boolean) => {
+    if( confirm ){
+      const url = `${endpoints.selfRegConfirmUrl}/${props.courseId}.json`;
+      axios.get( url, {} )
+        .then( response =>{
+          //success
+
+        })
+        .catch( error =>{
+          console.log( 'error', error );
+        })
+    }
+    history.push( '/' );
+  }
+
+  const enrollButton =  (
+    <Button disabled={!endpointsLoaded} variant="contained" onClick={()=>{
+      enrollConfirm( true );
+    }}>
+      {t('self_enroll')}
+    </Button>
+  );
+  const cancelButton =  (
+    <Button variant="contained" onClick={()=>{
+      enrollConfirm( true );
+    }}>
+      {t('self_enroll_cancel')}
+    </Button>
+  );
+
+  console.log( 'loaded', String( endpointsLoaded ) );
+  console.log( 'endpoints_all', epts );
+  console.log( 'endpoints', endpoints );
+
+  useEffect(() =>{
+    if( endpointsLoaded ){
+      console.log( 'inside endpoints', endpoints );
+      const url = `${endpoints.courseBaseUrl}/${props.courseId}.json`;
+      dispatch( startTask( ) );
+      axios.get( url, { } )
+        .then( response =>{
+          const data = response.data;
+          setCourseName( data.course.name );
+          setCourseNumber( data.course.number );
+        })
+        .catch( error =>{
+          console.log( 'error', error );
+        })
+        .finally( () =>{
+          dispatch( endTask ( ) );
+        })
+    }
+  },[endpointsLoaded])
+
+
+  return (
+    <Paper>
+      <h1>{t('enroll_title')}</h1>
+      <p>
+        {t('self_enroll_question',
+        {
+          course_name: courseName,
+          course_number: courseNumber
+        })}
+      </p>
+      <Grid container>
+        <Grid item xs={12} sm={6} >
+          {enrollButton}
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          {cancelButton}
+        </Grid>
+      </Grid>
+    </Paper>
+  );
+}
+EnrollInCourse.propTypes = {
+  courseId: PropTypes.number.isRequired
+}

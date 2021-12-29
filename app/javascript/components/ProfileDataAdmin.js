@@ -45,8 +45,8 @@ import { Skeleton } from "@material-ui/lab";
 import axios from "axios";
 
 export default function ProfileDataAdmin(props) {
-  const endpointSet = "profile";
-  const endpoints = useTypedSelector((state)=>state.context.endpoints[endpointSet]);
+  const category = "profile";
+  const endpoints = useTypedSelector((state)=>state.context.endpoints[category]);
   const endpointStatus = useTypedSelector((state)=>state.context.status.endpointsLoaded );
   const lookupStatus = useTypedSelector((state)=>state.context.status.lookupsLoaded );
 

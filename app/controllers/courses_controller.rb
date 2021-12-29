@@ -30,29 +30,31 @@ class CoursesController < ApplicationController
             only: %i[id name]
           )
         }
-        if @course.id && @course.id > 0
-          response[:new_activity_links] = [
-            { name: 'Group Experience', link: 'experience' },
-            { name: 'Project', link: 'project' },
-            { name: 'Terms List', link: 'bingo_game' }
-          ]
-          activities = @course.get_activities.collect do |activity|
-            {
-              id: activity.id,
-              name: activity.get_name(@anon),
-              active: activity.active,
-              type: activity.type,
-              start_date: activity.start_date,
-              end_date: activity.end_date,
-              link: activity.get_link
-            }
-          end
-          response[:course][:activities] = activities
-          response[:course][:reg_link] = course_reg_qr_path(id: @course.id)
-        else
-          response[:new_activity_links] = []
-          response[:course][:activities] = []
+        if current_user.is_instructor?
+          if @course.id && @course.id > 0
+            response[:new_activity_links] = [
+              { name: 'Group Experience', link: 'experience' },
+              { name: 'Project', link: 'project' },
+              { name: 'Terms List', link: 'bingo_game' }
+            ]
+            activities = @course.get_activities.collect do |activity|
+              {
+                id: activity.id,
+                name: activity.get_name(@anon),
+                active: activity.active,
+                type: activity.type,
+                start_date: activity.start_date,
+                end_date: activity.end_date,
+                link: activity.get_link
+              }
+            end
+            response[:course][:activities] = activities
+            response[:course][:reg_link] = course_reg_qr_path(id: @course.id)
+          else
+            response[:new_activity_links] = []
+            response[:course][:activities] = []
 
+          end
         end
         response[:messages] = {}
         render json: response
@@ -123,8 +125,6 @@ class CoursesController < ApplicationController
               type: 'image/png',
               disposition: 'inline'
   end
-
-  def self_reg; end
 
   def self_reg_confirm
     roster = Roster.where(user: current_user, course: @course).take
@@ -558,9 +558,7 @@ class CoursesController < ApplicationController
                   Course.includes(:users).find(params[:id])
                 end
     else
-      @course = current_user
-                .rosters.instructor
-                .where(course_id: params[:id]).take.course
+      @course = Course.find_by_id params[:id]
       # TODO: This can't be right and must be fixed for security later
       redirect_to :show if @course.nil?
     end

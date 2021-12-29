@@ -355,11 +355,13 @@ Then('the user sees self-registration image') do
 end
 
 Then 'the user opens the self-registration link for the course' do
-  visit(self_reg_path(@course))
+  self_reg_url = "course/#{@course.id}/enroll"
+  visit( self_reg_url )
 end
 
 Then 'the user sees {string}' do |string|
-  page.has_text? string
+  wait_for_render
+  page.should have_content string
 end
 
 Then 'the user submits credentials' do

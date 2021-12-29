@@ -91,6 +91,8 @@ class HomeController < ApplicationController
       ep_hash[:home][ :taskListUrl] = task_list_path
       ep_hash[:home][ :courseRegRequestsUrl] = course_reg_requests_path
       ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path
+      ep_hash[:home][ :selfRegConfirmUrl] = self_reg_confirm_path( id: '')
+      ep_hash[:home][ :courseBaseUrl] = courses_path
 
       ep_hash[:candidate_review] = {
         baseUrl: review_bingo_candidates_path(id: ''),
@@ -135,7 +137,7 @@ class HomeController < ApplicationController
           courseCreateUrl: new_course_path,
           courseUsersUrl: get_users_path(id: ''),
           scoresUrl: course_scores_path(id: ''),
-          courseCopyUrl: copy_course_path(id: '')
+          courseCopyUrl: copy_course_path(id: ''),
         }
         ep_hash[ :school ] = {
           baseUrl: schools_path,
