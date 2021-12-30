@@ -45,7 +45,7 @@ end
 
 Given(/^the user is in a group on the project with (\d+) other users$/) do |user_count|
   @group = Group.new(
-    name: "#{Faker::Inudustry.sub_sector} Group"
+    name: "#{Faker::IndustrySegments.sub_sector} Group"
   )
   r = Roster.new
   r.user = @user
