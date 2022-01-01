@@ -9,10 +9,10 @@ class CoursesController < ApplicationController
   before_action :check_admin, only: %i[new create]
   before_action :check_editor, except: %i[next diagnose react accept_roster
                                           decline_roster show index
-                                          self_reg_confirm self_reg qr]
+                                          self_reg_confirm self_reg qr reg_requests]
   before_action :check_viewer, except: %i[next diagnose react accept_roster
                                           decline_roster
-                                          self_reg_confirm self_reg qr]
+                                          self_reg_confirm self_reg qr reg_requests]
   skip_before_action :authenticate_user!, only: %i[qr get_quote]
 
   def show

@@ -136,7 +136,8 @@ class DecisionEnrollmentsTable extends React.Component {
     this.getRequests();
   }
   getRequests() {
-    axios.get(this.props.init_url + ".json", { } )
+    const url = `${this.props.init_url}.json`
+    axios.get( url, { } )
       .then(response => {
         const data = response.data;
         this.setState({
@@ -191,7 +192,6 @@ class DecisionEnrollmentsTable extends React.Component {
     })
       .then(response => {
         const data = response.data;
-        console.log( 'got enrollments', data )
         this.setState({
           requests: data,
           requests_raw: data,
@@ -202,7 +202,7 @@ class DecisionEnrollmentsTable extends React.Component {
           const fail_data = new Object();
           fail_data.notice = "The operation failed";
           fail_data.success = false;
-          console.log("error");
+          console.log("error", error);
           return fail_data;
       });
   }
@@ -211,6 +211,10 @@ class DecisionEnrollmentsTable extends React.Component {
     if (0 < this.state.requests.length) {
       return (
         <Paper style={{ height: 450, width: "100%" }}>
+          <h1>Decision Enrollment Requests</h1>
+          <p>
+            The following students are trying to enroll in your course. Please accept or decline each enrollment.
+          </p>
           <Toolbar>
             <InputBase placeholder="Search requests" onChange={this.filter} />
             <SearchIcon />
