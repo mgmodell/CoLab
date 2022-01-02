@@ -304,10 +304,7 @@ export default function CourseUsersList(props) {
                     onClick={event => {
                       dispatch( startTask("re-adding") );
                       axios.put( addUsersPath, {
-                        body: JSON.stringify({
                           addresses: user.email
-                        })
-
                       })
                         .then(response => {
                           const data = response.data;
@@ -454,11 +451,8 @@ export default function CourseUsersList(props) {
                         dispatch( startTask("adding_email") );
 
                         axios.put( addUsersPath, {
-                          body: JSON.stringify({
                             id: props.courseId,
                             addresses: newUserAddresses
-                          })
-
                         } )
                           .then(response => {
                             getUsers();

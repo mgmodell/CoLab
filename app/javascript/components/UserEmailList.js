@@ -182,9 +182,7 @@ export default function UserEmailList(props) {
                         dispatch( startTask("updating") );
                         axios.put( props.addEmailUrl + '.json', 
                         {
-                          body: JSON.stringify({
                             email_address: newEmail
-                          })
                         })
                           .then(response => {
                             const data = response.data;

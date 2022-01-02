@@ -43,9 +43,7 @@ class DiversityCheck extends React.Component {
   calcDiversity() {
     const url = this.props.diversityScoreFor + ".json";
     axios.post( url,{
-      body: JSON.stringify({
         emails: this.state.emails
-      })
     })
       .then(response => {
         const data = response.data;

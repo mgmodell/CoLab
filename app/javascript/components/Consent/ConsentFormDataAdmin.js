@@ -114,13 +114,11 @@ export default function ConsentFormDataAdmin(props) {
     axios( {
       method: method,
       url: url,
-      body: JSON.stringify({
         consent_form: {
           id: consentFormId,
           name: consentFormName,
           start_date: consentFormStartDate
         }
-      })
     })
       .then(response => {
         const data = response.data;

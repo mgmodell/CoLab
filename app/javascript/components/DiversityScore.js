@@ -88,9 +88,7 @@ class DiversityScore extends React.Component {
     });
     axios.post( this.props.scoreReviewUrl + '.json',
     {
-      body: JSON.stringify({
         emails: emails.join()
-      })
     })
       .then(response => {
         const data = response.data;
