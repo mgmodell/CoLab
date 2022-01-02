@@ -107,14 +107,12 @@ export default function CandidateListEntry(props) {
       endpoints.baseUrl + props.bingoGameId + ".json";
 
     axios.put( url, {
-      body: JSON.stringify({
         candidates: candidates.filter(item => {
           return !(
             null === item.id &&
             "" === item.term &&
             "" === item.definition
           );
-        })
       })
 
     })
