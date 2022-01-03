@@ -179,7 +179,9 @@ Rails.application.routes.draw do
         constraints: ->(req) { req.format == :json }
 
   #self registration
-  get 'course/enroll_confirm/:id', to: 'courses#self_reg_confirm', as: :self_reg_confirm,
+  get 'course/enroll/:id', to: 'courses#self_reg_init', as: :self_reg_init,
+    constraints: ->(req) {req.format == :json }
+  post 'course/enroll/:id', to: 'courses#self_reg_confirm', as: :self_reg_confirm,
     constraints: ->(req) {req.format == :json }
 
   # Consent log paths

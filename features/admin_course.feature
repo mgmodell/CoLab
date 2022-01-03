@@ -34,7 +34,7 @@ Feature: Course Administration
     Given the user is the instructor for the course
     Given the user logs in
      Then the user opens the self-registration link for the course
-     Then the user sees "You cannot enroll in your own course"
+     Then the user sees "you cannot enroll in your own course"
      Then the course has 12 "enrolled student" users
      Then the course has 0 "requesting student" users
 

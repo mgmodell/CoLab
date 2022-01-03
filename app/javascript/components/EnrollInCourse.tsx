@@ -34,14 +34,17 @@ export default function EnrollInCourse(props) {
   const [courseName, setCourseName] = useState( 'loading' );
   const [courseNumber, setCourseNumber] = useState( 'loading' );
 
+  const [enrollable, setEnrollable] = useState( false );
+  const [messageHeader, setMessageHeader] = useState( 'Enrollment' );
+  const [message, setMessage] = useState( 'Loading...' );
+
 
   const enrollConfirm = (confirm:boolean) => {
     if( confirm ){
-      const url = `${endpoints.selfRegConfirmUrl}/${props.courseId}.json`;
-      axios.get( url, {} )
+      const url = `${endpoints.selfRegUrl}/${props.courseId}.json`;
+      axios.post( url, {} )
         .then( response =>{
-          //success
-
+          // Success!
         })
         .catch( error =>{
           console.log( 'error', error );
@@ -51,7 +54,7 @@ export default function EnrollInCourse(props) {
   }
 
   const enrollButton =  (
-    <Button disabled={!endpointsLoaded} variant="contained" onClick={()=>{
+    <Button disabled={!endpointsLoaded || !enrollable} variant="contained" onClick={()=>{
       enrollConfirm( true );
     }}>
       {t('self_enroll')}
@@ -68,13 +71,17 @@ export default function EnrollInCourse(props) {
 
   useEffect(() =>{
     if( endpointsLoaded ){
-      const url = `${endpoints.courseBaseUrl}/${props.courseId}.json`;
+      const url = `${endpoints.selfRegUrl}/${props.courseId}.json`;
       dispatch( startTask( ) );
       axios.get( url, { } )
         .then( response =>{
+          console.log( 'response', response );
           const data = response.data;
           setCourseName( data.course.name );
           setCourseNumber( data.course.number );
+          setEnrollable( data.enrollable );
+          setMessageHeader( data.message_header );
+          setMessage( data.message );
         })
         .catch( error =>{
           console.log( 'error', error );
@@ -88,9 +95,10 @@ export default function EnrollInCourse(props) {
 
   return (
     <Paper>
-      <h1>{t('enroll_title')}</h1>
+      
+      <h1>{t(messageHeader)}</h1>
       <p>
-        {t('self_enroll_question',
+        {t(message,
         {
           course_name: courseName,
           course_number: courseNumber

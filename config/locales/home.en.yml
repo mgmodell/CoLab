@@ -201,8 +201,20 @@ en:
     test_many: many
     task_interval: (0)[You do not currently have any tasks due. Check back later or contact your instructor.];(1)[You've got one task at the moment.];(2-inf)[You've got {{count}} tasks today.]
     enroll_title: Enrollment confirmation
-    self_enroll_question: >
+    enroll_failed_title: Enrollment not possible
+    self_enroll_body: >
       Would you like to join the {{course_name}} ({{course_number}})
       course?
+    self_enroll_already_rejected_body: >
+      Please see the instructor for {{course_name}} ({{course_number}})
+      as they previously declined your enrollment request and they must
+      confirm your enrollment themselves.
+    self_enroll_already_enrolled_body: >
+      You are already enrolled in {{course_name}} ({{course_number}}).
+      Now you must simply wait for an instructor to accept the
+      enrollment.
+    self_enroll_instructor_body: >
+      You are already an instructor (or assistant) in {{course_name}} ({{course_number}})
+      and you cannot enroll in your own course.
     self_enroll: Enroll me!
     self_enroll_cancel: Cancel

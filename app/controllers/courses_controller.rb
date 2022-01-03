@@ -5,7 +5,7 @@ class CoursesController < ApplicationController
   before_action :set_course, only: %i[show edit update destroy
                                       add_students add_instructors calendar
                                       new_from_template get_users ]
-  before_action :set_reg_course, only: %i[self_reg self_reg_confirm]
+  before_action :set_reg_course, only: %i[self_reg self_reg_confirm self_reg_init]
   before_action :check_admin, only: %i[new create]
   before_action :check_editor, except: %i[next diagnose react accept_roster
                                           decline_roster show index
@@ -142,6 +142,42 @@ class CoursesController < ApplicationController
     logger.debug roster.errors.full_messages unless roster.errors.empty?
 
     redirect_to controller: 'home', action: 'index'
+  end
+
+  def self_reg_init
+    roster = Roster.includes( :course ).where( user: current_user, course: @course ).take
+
+    response = {
+      course: @course.as_json(
+        only: %i[ id name number description ]
+      ),
+      enrollable: false
+    }
+    if( roster.nil? || roster.dropped_student? ||
+        roster.invited_student? || roster.declined_student? )
+
+        response[ :enrollable ] = true
+        response[ :message_header ] = 'enroll_title'
+        response[ :message ] = 'self_enroll_body'
+
+    elsif( roster.instructor? || roster.assistant? )
+        response[ :message_header ] = 'enroll_failed_title'
+        response[ :message ] = 'self_enroll_instructor_body'
+
+    elsif( roster.requesting_student? )
+        response[ :message_header ] = 'enroll_title'
+        response[ :message ] = 'self_enroll_already_enrolled_body'
+
+    elsif( roster.rejected_student? )
+        response[ :message_header ] = 'enroll_failed_title'
+        response[ :message ] = 'self_enroll_already_rejected_body'
+
+    end
+    respond_to do |format|
+      format.json do
+        render json: response
+      end
+    end
   end
 
   def score_sheet
