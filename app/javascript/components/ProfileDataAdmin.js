@@ -52,30 +52,18 @@ export default function ProfileDataAdmin(props) {
 
   const timezones = useTypedSelector((state)=>state.context.lookups.timezones );
   const countries = useTypedSelector((state)=>state.context.lookups.countries );
-  //const states = useTypedSelector((state)=>state.context.lookups['states'] );
   const cipCodes = useTypedSelector((state)=>state.context.lookups.cip_codes );
   const genders = useTypedSelector((state)=>state.context.lookups.genders );
   const schools = useTypedSelector((state)=>state.context.lookups.schools );
   const languages = useTypedSelector((state)=>state.context.lookups.languages );
   const themes = useTypedSelector((state)=>state.context.lookups.themes );
 
-  /*
-  const addEmailUrl = endpoints['addEmailUrl'];
-  const removeEmailUrl = endpoints['removeEmailUrl'];
-  const primaryEmailUrl = endpoints['primaryEmailUrl'];
-  const passwordResetUrl = endpoints['passwordResetUrl'];
-
-  const statesForUrl = endpoints['statesForUrl'];
-  */
   const [states, setStates] = useState( [] );
 
-  //const coursePerformanceUrl = endpoints['coursePerformanceUrl'];
   const [courses, setCourses] = useState();
 
-  //const activitiesUrl = endpoints['activitiesUrl'];
   const [activities, setActivities] = useState();
 
-  //const consentFormsUrl = endpoints['consentFormsUrl'];
   const [consentForms, setConsentForms] = useState();
 
   //const { t, i18n } = useTranslation('profiles' );
@@ -219,8 +207,7 @@ export default function ProfileDataAdmin(props) {
   const getStates = countryCode => {
     if( endpointStatus ){
 
-    console.log( countryCode );
-    if ("" != endpoints.statesForUrl) {
+    if ( !endpoints.statesForUrl || null !== countryCode) {
       dispatch( startTask() );
       const url = endpoints.statesForUrl + countryCode + ".json";
       axios.get( url, { } )
@@ -244,6 +231,8 @@ export default function ProfileDataAdmin(props) {
         .catch( error =>{
           console.log( 'error', error );
         });
+    } else {
+      setStates( [] );
     }
     }
   };
