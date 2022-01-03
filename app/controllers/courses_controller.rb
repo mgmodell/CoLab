@@ -9,10 +9,12 @@ class CoursesController < ApplicationController
   before_action :check_admin, only: %i[new create]
   before_action :check_editor, except: %i[next diagnose react accept_roster
                                           decline_roster show index
-                                          self_reg_confirm self_reg qr reg_requests]
+                                          self_reg_confirm self_reg qr reg_requests
+                                          self_reg_init ]
   before_action :check_viewer, except: %i[next diagnose react accept_roster
                                           decline_roster
-                                          self_reg_confirm self_reg qr reg_requests]
+                                          self_reg_confirm self_reg qr reg_requests
+                                          self_reg_init ]
   skip_before_action :authenticate_user!, only: %i[qr get_quote]
 
   def show
@@ -165,6 +167,10 @@ class CoursesController < ApplicationController
         response[ :message ] = 'self_enroll_instructor_body'
 
     elsif( roster.requesting_student? )
+        response[ :message_header ] = 'enroll_title'
+        response[ :message ] = 'self_enroll_already_requested_body'
+
+    elsif( roster.enrolled_student? )
         response[ :message_header ] = 'enroll_title'
         response[ :message ] = 'self_enroll_already_enrolled_body'
 

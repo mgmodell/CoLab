@@ -158,7 +158,7 @@ export default function PageWrapper(props) {
           />
           <Route path='/login'
             render={routeProps => (
-                  <SignIn />
+                  <SignIn {...routeProps} />
             )}
           />
         </Switch>

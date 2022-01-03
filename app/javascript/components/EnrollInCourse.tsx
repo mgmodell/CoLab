@@ -75,7 +75,6 @@ export default function EnrollInCourse(props) {
       dispatch( startTask( ) );
       axios.get( url, { } )
         .then( response =>{
-          console.log( 'response', response );
           const data = response.data;
           setCourseName( data.course.name );
           setCourseNumber( data.course.number );

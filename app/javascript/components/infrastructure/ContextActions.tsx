@@ -230,7 +230,7 @@ export function emailSignIn( email: string, password: string ){
         if( !email || !password ){
             dispatch( setLoginFailed( ) );
         } else {
-            axios.post( CONFIG.EMAIL_SIGNIN_PATH,
+            return axios.post( CONFIG.EMAIL_SIGNIN_PATH,
                 { email: email,
                   password: password } )
                 .then( resp=>{

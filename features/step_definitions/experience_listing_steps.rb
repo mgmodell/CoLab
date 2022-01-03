@@ -43,6 +43,7 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
       email: Faker::Internet.email,
       timezone: 'UTC',
       school: School.find(1),
+      welcomed: true,
       theme_id: 1
     )
     user.skip_confirmation!

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Redirect} from 'react-router-dom';
+import {Redirect, useHistory} from 'react-router-dom';
 //Redux store stuff
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -43,11 +43,11 @@ export default function SignIn(props) {
   //const { t, i18n } = useTranslation('schools' );
 
   const dispatch = useDispatch( );
+  const history = useHistory( );
 
   const [email, setEmail] = useState( '' );
   const [password, setPassword] = useState( '' );
   const [showPassword, setShowPassword] = useState( false );
-  const [from, setFrom] = useState( props.from || '/'  );
   const isLoggedIn = useTypedSelector( state => state.context.status.loggedIn );
   const loggingIn = useTypedSelector( (state) => state.context.status.loggingIn )
 
@@ -60,9 +60,15 @@ export default function SignIn(props) {
       Log Out
     </Button>
   );
+
+  const from = (undefined != props.location.state) ? 
+                 props.location.state.from :
+                 '/';
+
   const enterLoginBtn =  (
     <Button disabled={'' === email || '' === password || !endpointsLoaded } variant="contained" onClick={()=>{
       dispatch( emailSignIn( email, password ) )
+        .then( history.push( from ) );
     }}>
       Log in
     </Button>
@@ -74,6 +80,7 @@ export default function SignIn(props) {
       Log In with Google
     </Button>
   );
+
 
   if( loggingIn ){
     return <Skeleton variant="rect" height="300" />
@@ -125,5 +132,4 @@ export default function SignIn(props) {
   );
 }
 SignIn.propTypes = {
-  from: PropTypes.string
 }

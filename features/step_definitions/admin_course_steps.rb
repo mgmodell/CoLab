@@ -357,6 +357,7 @@ end
 Then 'the user opens the self-registration link for the course' do
   self_reg_url = "course/#{@course.id}/enroll"
   visit( self_reg_url )
+  wait_for_render
 end
 
 Then 'the user sees {string}' do |string|
