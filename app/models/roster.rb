@@ -52,11 +52,11 @@ class Roster < ApplicationRecord
       end
     end
     user.update_instructor
-    user.save
+    user.save!
   end
 
   def set_instructor
     user.update_instructor
-    user.save
+    user.save!
   end
 end

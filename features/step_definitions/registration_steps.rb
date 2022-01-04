@@ -211,3 +211,9 @@ end
 Then(/^the user does not see a task listing$/) do
   page.should have_no_content 'Your Tasks'
 end
+
+Then('the user will see no enabled {string} button') do |button_name|
+  xpath_string =  "/button[not(@disabled)]/*[contains(text(),\"#{button_name}\")]/parent::button"
+  buttons = find_all(:xpath, xpath_string )
+  buttons.size.should eq 0
+end

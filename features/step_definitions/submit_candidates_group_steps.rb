@@ -100,7 +100,6 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
 
   count.to_i.times do |index|
     existing_term = page.find(:xpath, "//input[@id='term_#{index}']").value
-    log "term: #{existing_term.inspect}"
     new_val = if field == 'term'
                 Faker::Company.industry
               else
@@ -109,10 +108,7 @@ end
 
     @entries_list[index] = {} if @entries_list[index].blank?
     @entries_list.each do |entry|
-      log "checking #{entry['term']}"
       next unless entry['term'] == existing_term
-
-      log 'setting'
 
       entry[field] = new_val
       page.fill_in("#{field}_#{index}",

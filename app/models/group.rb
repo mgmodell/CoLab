@@ -150,7 +150,7 @@ class Group < ApplicationRecord
     end
     if changed? || @dirty
       project.active = false
-      project.save
+      project.save!
     end
   end
 

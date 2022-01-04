@@ -147,37 +147,44 @@ class CoursesController < ApplicationController
   end
 
   def self_reg_init
-    roster = Roster.includes( :course ).where( user: current_user, course: @course ).take
-
     response = {
       course: @course.as_json(
         only: %i[ id name number description ]
       ),
       enrollable: false
     }
-    if( roster.nil? || roster.dropped_student? ||
-        roster.invited_student? || roster.declined_student? )
 
-        response[ :enrollable ] = true
-        response[ :message_header ] = 'enroll_title'
-        response[ :message ] = 'self_enroll_body'
+    if @course.end_date < Time.now
+      response[ :message_header ] = 'enroll_failed_title'
+      response[ :message ] = 'self_enroll_course_closed_body'
 
-    elsif( roster.instructor? || roster.assistant? )
-        response[ :message_header ] = 'enroll_failed_title'
-        response[ :message ] = 'self_enroll_instructor_body'
+    else
+      roster = Roster.includes( :course ).where( user: current_user, course: @course ).take
 
-    elsif( roster.requesting_student? )
-        response[ :message_header ] = 'enroll_title'
-        response[ :message ] = 'self_enroll_already_requested_body'
+      if( roster.nil? || roster.dropped_student? ||
+          roster.invited_student? || roster.declined_student? )
 
-    elsif( roster.enrolled_student? )
-        response[ :message_header ] = 'enroll_title'
-        response[ :message ] = 'self_enroll_already_enrolled_body'
+          response[ :enrollable ] = true
+          response[ :message_header ] = 'enroll_title'
+          response[ :message ] = 'self_enroll_body'
 
-    elsif( roster.rejected_student? )
-        response[ :message_header ] = 'enroll_failed_title'
-        response[ :message ] = 'self_enroll_already_rejected_body'
+      elsif( roster.instructor? || roster.assistant? )
+          response[ :message_header ] = 'enroll_failed_title'
+          response[ :message ] = 'self_enroll_instructor_body'
 
+      elsif( roster.requesting_student? )
+          response[ :message_header ] = 'enroll_title'
+          response[ :message ] = 'self_enroll_already_requested_body'
+
+      elsif( roster.enrolled_student? )
+          response[ :message_header ] = 'enroll_title'
+          response[ :message ] = 'self_enroll_already_enrolled_body'
+
+      elsif( roster.rejected_student? )
+          response[ :message_header ] = 'enroll_failed_title'
+          response[ :message ] = 'self_enroll_already_rejected_body'
+
+      end
     end
     respond_to do |format|
       format.json do

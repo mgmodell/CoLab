@@ -215,6 +215,9 @@ en:
       accept the enrollment.
     self_enroll_already_enrolled_body: >
       You are already enrolled in {{course_name}} ({{course_number}}).
+    self_enroll_course_closed_body: >
+      The course {{course_name}} ({{course_number}}) is not currently
+      available and therefore you cannot enroll in it.
     self_enroll_instructor_body: >
       You are already an instructor (or assistant) in {{course_name}} ({{course_number}})
       and you cannot enroll in your own course.

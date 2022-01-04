@@ -63,7 +63,6 @@ Then(/^the user clicks "([^"]*)"$/) do |link_or_button|
     btn = find(:xpath, "//input[@value='#{link_or_button}']",
                visible: :all)
   end
-  wait_for_render
   begin
     retries ||= 0
     btn.click
@@ -71,6 +70,7 @@ Then(/^the user clicks "([^"]*)"$/) do |link_or_button|
     log e.inspect
     retry if (retries += 1) < 4
   end
+  wait_for_render
 end
 
 Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
