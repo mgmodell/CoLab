@@ -11,13 +11,13 @@ Given(/^there is a course with an experience$/) do
     start_date: 4.months.ago,
     end_date: 2.months.from_now
   )
-  @course.save
+  @course.save!
   @experience = @course.experiences.new(
     name: "#{Faker::Company.industry} Experience",
     start_date: DateTime.yesterday,
     end_date: DateTime.tomorrow
   )
-  @experience.save
+  @experience.save!
   log @experience.errors.full_messages if @experience.errors.present?
 
   @course.get_name(true).should_not be_nil
@@ -28,7 +28,7 @@ end
 
 Given(/^the experience "([^"]*)" been activated$/) do |has_or_has_not|
   @experience.active = has_or_has_not == 'has'
-  @experience.save
+  @experience.save!
   log @experience.errors.full_messages if @experience.errors.present?
 end
 
@@ -47,14 +47,14 @@ Given(/^the course has (\d+) confirmed users$/) do |user_count|
       theme_id: 1
     )
     user.skip_confirmation!
-    user.save
+    user.save!
     log user.errors.full_messages unless user.errors.empty?
     @users << user
     r = user.rosters.new(
       course: @course,
       role: Roster.roles[:enrolled_student]
     )
-    r.save
+    r.save!
     log r.errors.full_messages if r.errors.present?
   end
 end
@@ -66,7 +66,7 @@ Given(/^the experience started "([^"]*)" and ends "([^"]*)"$/) do |start_date, e
   @experience.start_date = course_tz.local(d.year, d.month, d.day)
   d = Chronic.parse(end_date)
   @experience.end_date = course_tz.local(d.year, d.month, d.day)
-  @experience.save
+  @experience.save!
   log @experience.errors.full_messages if @experience.errors.present?
 end
 
@@ -101,7 +101,7 @@ Given(/^the course has an assessed project$/) do
     end_date: DateTime.tomorrow,
     style: Style.find(1)
   )
-  @project.save
+  @project.save!
   if @project.persisted?
     @project.get_name(true).should_not be_nil
     @project.get_name(true).length.should be > 0
@@ -127,22 +127,22 @@ Given(/^the user is in a group on the project$/) do
       theme_id: 1
     )
     u.skip_confirmation!
-    u.save
+    u.save!
     log u.errors.full_messages if u.errors.present?
     r = u.rosters.new(
       course: @project.course,
       role: Roster.roles[:enrolled_student]
     )
-    u.save
-    r.save
+    u.save!
+    r.save!
     log r.errors.full_messages if r.errors.present?
   end
   @group.users << @user
-  @group.save
+  @group.save!
   @group.get_name(true).should_not be_nil
   @group.get_name(true).length.should be > 0
   log @group.errors.full_messages if @group.errors.present?
   @project.active = false
-  @project.save
+  @project.save!
   log @project.errors.full_messages if @project.errors.present?
 end

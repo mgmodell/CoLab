@@ -70,6 +70,7 @@ export default function CourseDataAdmin(props) {
 
 
   const [courseId, setCourseId] = useState(parseInt( course_id) );
+
   const [courseName, setCourseName] = useState("");
   const [courseNumber, setCourseNumber] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
@@ -100,12 +101,10 @@ export default function CourseDataAdmin(props) {
   const getCourse = () => {
     dispatch( startTask( ));
     dispatch( setDirty( category ) );
-    var url = endpoints.baseUrl + "/";
-    if (null == courseId) {
-      url = url + "new.json";
-    } else {
-      url = url + courseId + ".json";
-    }
+
+    const url = isNaN( courseId ) ?
+      `${endpoints.baseUrl}/new.json` :
+      `${endpoints.baseUrl}/${courseId}.json`;
 
     axios.get( url, { })
       .then( response =>{
@@ -158,15 +157,13 @@ export default function CourseDataAdmin(props) {
   };
 
   const saveCourse = () => {
-    const method = null == courseId ? "POST" : "PATCH";
-    console.log( courseId, method );
+    const method = isNaN( courseId ) ? "POST" : "PATCH";
     dispatch( startTask( 'saving' ) ) ;
 
-    const url =
-      endpoints.baseUrl +
-      "/" +
-      (Boolean(courseId) ? courseId : props.courseId) +
-      ".json";
+    const url = isNaN( courseId ) ?
+      `${endpoints.baseUrl}/new.json` :
+      `${endpoints.baseUrl}/${courseId}.json`;
+
 
       axios({
         method: method,
@@ -186,7 +183,6 @@ export default function CourseDataAdmin(props) {
         }
       })
       .then(response => {
-        console.log( 'response', response );
         const data = response.data;
         if (Object.keys(data.messages).length < 2) {
           setCourseId(data.course.id);
@@ -200,13 +196,11 @@ export default function CourseDataAdmin(props) {
           var receivedDate = DateTime.fromISO(data.course.start_date).setZone(
             courseTimezone
           );
-          console.log( 'rdate', receivedDate );
           setCourseStartDate(receivedDate);
 
           receivedDate = DateTime.fromISO(data.course.end_date).setZone(
             courseTimezone
           );
-          console.log( 'rdate', receivedDate );
           setCourseEndDate(receivedDate);
 
           dispatch( endTask( 'saving' ) );

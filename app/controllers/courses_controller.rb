@@ -32,7 +32,7 @@ class CoursesController < ApplicationController
             only: %i[id name]
           )
         }
-        if current_user.is_instructor?
+        if current_user.is_instructor? || current_user.is_admin?
           if @course.id && @course.id > 0
             response[:new_activity_links] = [
               { name: 'Group Experience', link: 'experience' },
