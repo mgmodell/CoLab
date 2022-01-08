@@ -23,7 +23,7 @@ import AppStatusBar from "./AppStatusBar";
 import SignIn from './SignIn';
 import EnrollInCourse from './EnrollInCourse';
 //import Auth from 'j-toker'
-import ProtectedRoute from './infrastructure/ProtectedRoute';
+import RequireAuth from './infrastructure/RequireAuth';
 import AppInit from './infrastructure/AppInit'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -49,111 +49,115 @@ export default function PageWrapper(props) {
 
       <Suspense fallback={<Skeleton variant="rect" height={600} />}>
         <Switch>
-          <ProtectedRoute path="/profile">
-            <ProfileDataAdmin
-            />
-          </ProtectedRoute>
+          <Route path="/profile">
+            <RequireAuth>
+              <ProfileDataAdmin
+              />
+            </RequireAuth>
+          </Route>
           <Route path="/demo">
             <DemoWrapper
             />
           </Route>
-          <ProtectedRoute path="/admin">
+          <Route path="/admin">
+            <RequireAuth>
             <Admin
             />
-          </ProtectedRoute>
-          <ProtectedRoute
+            </RequireAuth>
+          </Route>
+          <Route
             path={`/submit_installment/:id`}
             render={routeProps => (
-              <React.Fragment>
+              <RequireAuth>
                 <InstallmentReport
                   installmentId={Number(routeProps.match.params.id)}
                 />
-              </React.Fragment>
+              </RequireAuth>
             )}
           />
           {/* Perhaps subgroup under Bingo */}
-          <ProtectedRoute
+          <Route
             path={`/enter_candidates/:id`}
             render={routeProps => (
-              <React.Fragment>
+              <RequireAuth>
                 <CandidateListEntry
                   bingoGameId={Number(routeProps.match.params.id)}
                 />
-              </React.Fragment>
+              </RequireAuth>
             )}
           />
-          <ProtectedRoute
+          <Route
             path={`/review_candidates/:id`}
             render={routeProps => (
-              <React.Fragment>
+              <RequireAuth>
                 <CandidatesReviewTable
                   bingoGameId={Number(routeProps.match.params.id)}
                 />
-              </React.Fragment>
+              </RequireAuth>
             )}
           />
-          <ProtectedRoute
+          <Route
             path={`/candidate_results/:id`}
             render={routeProps => (
-              <React.Fragment>
+              <RequireAuth>
                 <BingoBuilder
                   bingoGameId={Number(routeProps.match.params.id)}
                 />
-              </React.Fragment>
+              </RequireAuth>
             )}
           />
-          <ProtectedRoute
+          <Route
             path={`/score_bingo/:id`}
             render={routeProps => (
-              <React.Fragment>
+              <RequireAuth>
                 Score the Bingo Component
-              </React.Fragment>
+              </RequireAuth>
             )}
           />
           {/* Perhaps subgroup under Bingo */}
-          <ProtectedRoute
+          <Route
             path={`/experience/:id`}
             render={routeProps => (
-              <React.Fragment>
+              <RequireAuth>
                 <Experience
                   experienceId={Number(routeProps.match.params.id)}
                 />
-              </React.Fragment>
+              </RequireAuth>
             )}
           />
-          <ProtectedRoute
+          <Route
             path={`/research_information/:id`}
             render={routeProps => (
-              <React.Fragment>
+              <RequireAuth>
                 <ConsentLog
                   consentFormId={Number(routeProps.match.params.id)}
                 />
-              </React.Fragment>
+              </RequireAuth>
             )}
           />
-          <ProtectedRoute
+          <Route
             path={`/course/:course_id/confirm`}
             render={routeProps => (
-              <React.Fragment>
+              <RequireAuth>
                 Confirm me in #{routeProps.match.params.course_id}
-              </React.Fragment>
+              </RequireAuth>
             )}
           />
-          <ProtectedRoute
+          <Route
             path={`/course/:course_id/enroll`}
             render={routeProps => (
-              <React.Fragment>
+              <RequireAuth>
                 <EnrollInCourse
                   courseId={Number(routeProps.match.params.course_id)}
                   />
-              </React.Fragment>
+              </RequireAuth>
             )}
           />
-          <ProtectedRoute exact path="/"
+          <Route exact path="/"
             render={routeProps =>(
-              <React.Fragment>
+              <RequireAuth>
                 <HomeShell />
-              </React.Fragment>
+              </RequireAuth>
             ) }
           />
           <Route path='/login'

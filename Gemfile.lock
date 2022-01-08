@@ -488,14 +488,11 @@ GEM
       tilt
     sdoc (2.2.0)
       rdoc (>= 5.0)
-    selenium-webdriver (4.1.0)
+    selenium-webdriver (4.0.3)
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
     semantic_range (3.0.0)
-    simple_form (5.1.0)
-      actionpack (>= 5.2)
-      activemodel (>= 5.2)
     simple_po_parser (1.1.5)
     simplecov (0.21.2)
       docile (~> 1.1)
@@ -638,8 +635,7 @@ DEPENDENCIES
   ruby-debug-ide
   sassc-rails
   sdoc
-  selenium-webdriver
-  simple_form
+  selenium-webdriver (~> 4.0.0)
   simplecov
   solargraph
   spring

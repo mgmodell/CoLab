@@ -59,7 +59,6 @@ gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
 gem 'react-rails'
 gem 'sassc-rails'
-gem 'simple_form'
 gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
 
@@ -95,7 +94,7 @@ group :development, :test do
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', "~>4.0.0"
   gem 'solargraph'
   gem 'webdrivers', '~> 5.0'
 end
