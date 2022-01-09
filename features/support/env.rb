@@ -8,6 +8,9 @@
 
 require 'cucumber/rails'
 require 'selenium/webdriver'
+require 'webdrivers'
+Webdrivers.cache_time = 86_400
+
 
 require 'simplecov'
 SimpleCov.start 'rails'

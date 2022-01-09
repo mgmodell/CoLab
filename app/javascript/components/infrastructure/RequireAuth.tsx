@@ -16,9 +16,9 @@ export default function RequireAuth({ children }) {
     return <Skeleton variant="rect" height={300} />
 
   } else {
-    const state = { from: location.pathname };
-    return <Navigate replace to='/login'
-              state={state}
+    return <Navigate to='/login'
+                    replace
+                    state={{ from: location.pathname}}
            />;
 
   }

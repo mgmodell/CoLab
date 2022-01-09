@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, useNavigate} from 'react-router-dom';
+import { Navigate, useNavigate, useLocation } from 'react-router-dom';
 //Redux store stuff
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -43,6 +43,7 @@ export default function SignIn(props) {
   //const { t, i18n } = useTranslation('schools' );
 
   const dispatch = useDispatch( );
+  const { state } = useLocation( );
   const navigate = useNavigate( );
 
   const [email, setEmail] = useState( '' );
@@ -61,8 +62,10 @@ export default function SignIn(props) {
     </Button>
   );
 
-  const from = (undefined != props.location.state) ? 
-                 props.location.state.from :
+  console.log( 'props', props );
+
+  const from = (undefined != state) ? 
+                 state.from :
                  '/';
 
   const enterLoginBtn =  (
@@ -86,7 +89,7 @@ export default function SignIn(props) {
     return <Skeleton variant="rect" height="300" />
 
   } else if( isLoggedIn ){
-    return <Navigate replace to={from} />
+    return <Navigate replace to={state?.from || "/" } />
   }
 
   return (

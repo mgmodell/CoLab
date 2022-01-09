@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import appStatus from './infrastructure/AppReducers';
 
 import Skeleton from "@material-ui/lab/Skeleton";
+import { ThemeProvider, createTheme } from "@material-ui/core";
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
 
@@ -33,9 +34,16 @@ export default function PageWrapper(props) {
   const store = createStore(appStatus, /* preloadedState, */ composeEnhancers(
       applyMiddleware( thunk ) 
     ));
+
+  const styles = createTheme({
+    typography: {
+      useNextVariants: true
+    }
+  });
   
   return (
     <Provider store={store}>
+      <ThemeProvider theme={styles} >
       <AppInit
           endpointsUrl={props.getEndpointsUrl}
       >
@@ -163,6 +171,7 @@ export default function PageWrapper(props) {
     </Router>
         </AppInit>
 
+    </ThemeProvider>
     </Provider>
   );
 }

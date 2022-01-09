@@ -6,7 +6,6 @@ import ConceptChips from "../ConceptChips";
 import ScoredGameDataTable from "../ScoredGameDataTable";
 import PropTypes from "prop-types";
 import { withTheme } from "@material-ui/core/styles";
-import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
@@ -23,11 +22,6 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from '../infrastructure/StatusActions';
 import axios from "axios";
 
-const styles = createTheme({
-  typography: {
-    useNextVariants: true
-  }
-});
 export default function BingoBuilder(props) {
   const endpointSet = "candidate_results";
   const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
@@ -264,7 +258,6 @@ export default function BingoBuilder(props) {
   ) : null;
 
   return (
-    <MuiThemeProvider theme={styles}>
       <Paper>
         <Typography>
           <strong>Topic:</strong> {board.bingo_game.topic}
@@ -326,7 +319,6 @@ export default function BingoBuilder(props) {
         {"results" == curTab && <ScoredGameDataTable candidates={candidates} />}
         {"concepts" == curTab && <ConceptChips concepts={concepts} />}
       </Paper>
-    </MuiThemeProvider>
   );
 }
 BingoBuilder.propTypes = {
