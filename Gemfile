@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.0.3'
+ruby '3.1.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.1.4.1'
@@ -94,9 +94,9 @@ group :development, :test do
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
-  gem 'selenium-webdriver', "~>4.0.0"
+  gem 'selenium-webdriver'
   gem 'solargraph'
-  gem 'webdrivers', '~> 5.0'
+  gem 'webdrivers', '~> 5.0', require: false
 end
 
 group :test do
