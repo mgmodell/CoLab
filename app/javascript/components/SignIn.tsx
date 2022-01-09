@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Redirect, useHistory} from 'react-router-dom';
+import { Navigate, useNavigate} from 'react-router-dom';
 //Redux store stuff
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -43,7 +43,7 @@ export default function SignIn(props) {
   //const { t, i18n } = useTranslation('schools' );
 
   const dispatch = useDispatch( );
-  const history = useHistory( );
+  const navigate = useNavigate( );
 
   const [email, setEmail] = useState( '' );
   const [password, setPassword] = useState( '' );
@@ -68,7 +68,7 @@ export default function SignIn(props) {
   const enterLoginBtn =  (
     <Button disabled={'' === email || '' === password || !endpointsLoaded } variant="contained" onClick={()=>{
       dispatch( emailSignIn( email, password ) )
-        .then( history.push( from ) );
+        .then( navigate( from ) );
     }}>
       Log in
     </Button>
@@ -86,7 +86,7 @@ export default function SignIn(props) {
     return <Skeleton variant="rect" height="300" />
 
   } else if( isLoggedIn ){
-    return <Redirect to={from} />
+    return <Navigate replace to={from} />
   }
 
   return (

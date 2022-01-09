@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 
@@ -18,6 +19,8 @@ export default function ConsentLog(props) {
   const endpointSet = "consent_log";
   const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet])
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
+  const {consentFormId} = useParams( );
+
   const dispatch = useDispatch( );
   const [logId, setLogId] = useState();
   const [formName, setFormName] = useState("");
@@ -30,7 +33,7 @@ export default function ConsentLog(props) {
   const getLog = () => {
     console.log( props );
     var url =
-      endpoints['baseUrl'] + props.consentFormId + ".json";
+      endpoints['baseUrl'] + consentFormId + ".json";
 
     console.log( url );
     dispatch( startTask("loading") );
@@ -133,6 +136,5 @@ export default function ConsentLog(props) {
 }
 
 ConsentLog.propTypes = {
-  consentFormId: PropTypes.number.isRequired,
   parentUpdateFunc: PropTypes.func
 };

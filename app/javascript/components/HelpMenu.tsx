@@ -1,5 +1,5 @@
 import React, { useState, Suspense, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
@@ -23,7 +23,7 @@ export default function HelpMenu(props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [t, i18n] = useTranslation();
 
-  const history = useHistory();
+  const location = useLocation();
   const [helpMe, setHelpMe] = useState(false);
 
   const endHelp = data => {
@@ -136,7 +136,7 @@ export default function HelpMenu(props) {
         aria-controls="help-menu"
         aria-haspopup="true"
         onClick={event => {
-          const pathComponents = history.location.pathname.split("/");
+          const pathComponents = location.pathname.split("/");
 
           switch (pathComponents[1]) {
             case "":

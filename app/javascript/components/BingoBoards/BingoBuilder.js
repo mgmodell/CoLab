@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {useDispatch} from 'react-redux';
 import BingoBoard from "./BingoBoard";
 import ConceptChips from "../ConceptChips";
@@ -31,6 +32,7 @@ export default function BingoBuilder(props) {
   const endpointSet = "candidate_results";
   const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
+  const {bingoGameId} = useParams( );
   const { t, i18n } = useTranslation();
 
   const dispatch = useDispatch()
@@ -39,8 +41,6 @@ export default function BingoBuilder(props) {
 
   const [saveStatus, setSaveStatus] = useState("");
 
-  const bingoGameId = props.bingoGameId;
-  //const [bingoGameId, setBingoGameId] = useState( props.bingoGameId );
   const [concepts, setConcepts] = useState([]);
   const [candidateList, setCandidateList] = useState();
   const [candidates, setCandidates] = useState([]);
@@ -330,5 +330,4 @@ export default function BingoBuilder(props) {
   );
 }
 BingoBuilder.propTypes = {
-  bingoGameId: PropTypes.number.isRequired
 };

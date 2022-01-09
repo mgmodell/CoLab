@@ -1,4 +1,5 @@
 import React, { Suspense, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
@@ -60,7 +61,8 @@ export default function BingoGameDataAdmin(props) {
   const endpointSet = "bingo_game";
   const endpoints = useTypedSelector(state=>state.context.endpoints[ endpointSet ] );
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
-  const user = useTypedSelector(state=>state.profile.user)
+  const user = useTypedSelector(state=>state.profile.user);
+  const {courseIdParam, bingoGameIdParam } = useParams( );
   const dispatch = useDispatch( );
 
   const { t, i18n } = useTranslation("bingo_games");
@@ -80,7 +82,7 @@ export default function BingoGameDataAdmin(props) {
       ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
     )
   );
-  const [bingoGameId, setBingoGameId] = useState(props.bingoGameId);
+  const [bingoGameId, setBingoGameId] = useState( 'new' === bingoGameIdParam ? null : bingoGameIdParam );
   const [gameSource, setGameSource] = useState("");
   const [gameTimezone, setGameTimezone] = useState("UTC");
   const [gameActive, setGameActive] = useState(false);
@@ -130,7 +132,7 @@ export default function BingoGameDataAdmin(props) {
     const url =
       endpoints.baseUrl +
       "/" +
-      (null === bingoGameId ? props.courseId : bingoGameId) +
+      (null === bingoGameId ? courseIdParam : bingoGameId) +
       ".json";
 
     // Save
@@ -140,7 +142,7 @@ export default function BingoGameDataAdmin(props) {
       method: method,
       data: {
         bingo_game: {
-          course_id: props.courseId,
+          course_id: courseIdParam,
           topic: gameTopic,
           description: draftToHtml(
             convertToRaw(gameDescriptionEditor.getCurrentContent())
@@ -194,7 +196,7 @@ export default function BingoGameDataAdmin(props) {
     dispatch( startTask( ));
     var url = endpoints.baseUrl + "/";
     if (null === bingoGameId) {
-      url = url + "new/" + props.courseId + ".json";
+      url = url + "new/" + courseIdParam + ".json";
     } else {
       url = url + bingoGameId + ".json";
     }
@@ -486,6 +488,4 @@ export default function BingoGameDataAdmin(props) {
 }
 
 BingoGameDataAdmin.propTypes = {
-  courseId: PropTypes.number.isRequired,
-  bingoGameId: PropTypes.number
 };

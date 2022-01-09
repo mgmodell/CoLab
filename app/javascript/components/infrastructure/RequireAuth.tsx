@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { Skeleton } from '@material-ui/lab';
 import { useTypedSelector } from './AppReducers';
 
@@ -16,12 +16,10 @@ export default function RequireAuth({ children }) {
     return <Skeleton variant="rect" height={300} />
 
   } else {
-    return <Redirect to={{
-                pathname: '/login',
-                state: {
-                  from: location.pathname
-                }
-            }} />;
+    const state = { from: location.pathname };
+    return <Navigate replace to='/login'
+              state={state}
+           />;
 
   }
 

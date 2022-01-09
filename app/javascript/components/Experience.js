@@ -1,5 +1,6 @@
 import React, { Suspense, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 //Redux store stuff
@@ -29,10 +30,11 @@ export default function Experience(props) {
   const endpointSet = "experience";
   const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet])
   const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
+  const {experienceId} = useParams( );
 
   const dispatch = useDispatch( );
   const [t, i18n] = useTranslation("installments");
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [reactionId, setReactionId] = useState();
   const [instructed, setInstructed] = useState(false);
@@ -56,7 +58,7 @@ export default function Experience(props) {
   //Retrieve the latest data
   const getNext = () => {
     const url = `${endpoints.baseUrl}${
-      props.experienceId
+      experienceId
     }.json`;
     dispatch( startTask() );
     axios( url, { } )
@@ -129,7 +131,7 @@ export default function Experience(props) {
         dispatch( addMessage( data.messages.main, Date.now( ), Priorities.INFO ) )
         dispatch( endTask( 'saving' ) );
         dispatch( setClean( 'reaction' ) );
-        history.push("/");
+        navigate("/");
       })
       .catch( error =>{
         console.log( 'error', error );
@@ -166,5 +168,4 @@ export default function Experience(props) {
 }
 
 Experience.propTypes = {
-  experienceId: PropTypes.number.isRequired
 };

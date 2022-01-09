@@ -1,9 +1,9 @@
 import React, { useState, Suspense } from "react";
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route,
-  useRouteMatch
+  useMatch
 } from "react-router-dom";
 import Skeleton from "@material-ui/lab/Skeleton";
 import PropTypes from "prop-types";
@@ -22,12 +22,12 @@ import Admin from "./Admin";
 import AppStatusBar from "./AppStatusBar";
 
 export default function DemoWrapper(props) {
-  let { path, url } = useRouteMatch();
+  let { path, url } = useMatch();
 
   return (
     <Router>
       <Suspense fallback={<Skeleton variant="rect" height={600} />}>
-        <Switch>
+        <Routes>
           <Route
             path={`${path}/submit_installment/:id`}
             render={routeProps => (
@@ -92,7 +92,7 @@ export default function DemoWrapper(props) {
             <HomeShell
             />
           </Route>
-        </Switch>
+        </Routes>
       </Suspense>
     </Router>
   );

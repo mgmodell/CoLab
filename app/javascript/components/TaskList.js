@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
@@ -18,7 +18,7 @@ export default function TaskList(props) {
   //const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
   //const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
   const user = useTypedSelector(state=>state.profile.user );
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const columns = [
     {
@@ -174,7 +174,7 @@ export default function TaskList(props) {
           const link = props.tasks[rowState.dataIndex].link;
           if (null != link) {
             // window.location.href = link;
-            history.push(link);
+            navigate(link);
           }
         },
         selectableRows: "none"

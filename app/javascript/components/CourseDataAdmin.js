@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
-  useRouteMatch,
-  Switch,
+  useMatch,
+  Routes,
   Route,
   useParams,
-  useHistory
+  useNavigate
 } from "react-router-dom";
 //Redux store stuff
 import { useSelector, useDispatch } from 'react-redux';
@@ -59,17 +59,17 @@ export default function CourseDataAdmin(props) {
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
   const user = useTypedSelector(state=>state.profile.user );
 
-  const history = useHistory();
-  const { path, url } = useRouteMatch();
+  const navigate = useNavigate();
+  const { path, url } = useMatch();
 
   const [curTab, setCurTab] = useState("details");
   const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category])} );
   const [messages, setMessages] = useState({});
 
-  let {course_id} = useParams( );
+  let {courseIdParam} = useParams( );
 
 
-  const [courseId, setCourseId] = useState(parseInt( course_id) );
+  const [courseId, setCourseId] = useState(parseInt( 'new' === courseIdParam ? null : courseIdParam ) );
 
   const [courseName, setCourseName] = useState("");
   const [courseNumber, setCourseNumber] = useState("");
@@ -570,7 +570,7 @@ export default function CourseDataAdmin(props) {
               key={linkData.name}
               onClick={event => {
                 setMenuAnchorEl(null);
-                history.push(`${url}/${linkData.link}/new`);
+                navigate(`${url}/${linkData.link}/new`);
                 // window.location.href = linkData.link;
               }}
             >
@@ -601,7 +601,7 @@ export default function CourseDataAdmin(props) {
             if ("link" != activityColumns[cellMeta.colIndex].name) {
               const link = courseActivities[cellMeta.dataIndex].link;
               const activityId = courseActivities[cellMeta.dataIndex].id;
-              history.push(`${url}/${link}/${activityId}`);
+              navigate(`${url}/${link}/${activityId}`);
             }
           }
         }}
@@ -611,7 +611,8 @@ export default function CourseDataAdmin(props) {
     );
 
   return (
-    <Switch>
+    <Routes>
+    {/* I think I don't need these Routes here */}
       <Route>
         <Paper>
           <Tabs
@@ -658,6 +659,6 @@ export default function CourseDataAdmin(props) {
           {messages["status"]}
         </Paper>
       </Route>
-    </Switch>
+    </Routes>
   );
 }

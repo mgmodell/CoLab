@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@material-ui/core/Paper";
@@ -33,7 +33,7 @@ export default function HomeShell(props) {
   const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
   const dispatch = useDispatch( );
   const { t, i18n } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [curTab, setCurTab] = useState("list");
 
@@ -142,7 +142,7 @@ export default function HomeShell(props) {
               displayEventTime={false}
               events={tasks}
               eventClick={info => {
-                history.push(info.event.url);
+                navigate(info.event.url);
               }}
               plugins={[dayGridPlugin, luxonPlugin]}
             />

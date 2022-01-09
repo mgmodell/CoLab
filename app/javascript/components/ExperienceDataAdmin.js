@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
@@ -37,12 +38,13 @@ export default function ExperienceDataAdmin(props) {
   //const { t, i18n } = useTranslation('experiences' );
   const user = useTypedSelector(state=>state.profile.user );
   const userLoaded = useTypedSelector(state=>{ return (null != state.profile.lastRetrieved) } );
+  const { experienceIdParam, courseIdParam } = useParams( );
 
   const [curTab, setCurTab] = useState("details");
   const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category])} );
   const dispatch = useDispatch();
   const [messages, setMessages] = useState({});
-  const [experienceId, setExperienceId] = useState(props.experienceId);
+  const [experienceId, setExperienceId] = useState('new' === experienceIdParam ? null : experienceIdParam );
   const [experienceName, setExperienceName] = useState("");
   const [experienceLeadTime, setExperienceLeadTime] = useState(0);
 
@@ -66,7 +68,7 @@ export default function ExperienceDataAdmin(props) {
     dispatch( setDirty(category) );
     var url = endpoints.baseUrl + "/";
     if (null == experienceId) {
-      url = url + "new/" + props.courseId + ".json";
+      url = url + "new/" + courseIdParam + ".json";
     } else {
       url = url + experienceId + ".json";
     }
@@ -111,19 +113,19 @@ export default function ExperienceDataAdmin(props) {
     const url =
       endpoints.baseUrl +
       "/" +
-      (null == experienceId ? props.courseId : experienceId) +
+      (null == experienceId ? courseIdParam : experienceId) +
       ".json";
 
       console.log( 'url', url );
       console.log( 'exp', experienceId );
-      console.log( 'cid', props.courseId );
+      console.log( 'cid', courseIdParam );
     axios({
       url: url,
       method: method,
       data: {
         experience: {
           name: experienceName,
-          course_id: props.courseId,
+          course_id: courseIdParam,
           lead_time: experienceLeadTime,
           active: experienceActive,
           start_date: experienceStartDate,
@@ -301,6 +303,4 @@ export default function ExperienceDataAdmin(props) {
 }
 
 ExperienceDataAdmin.propTypes = {
-  courseId: PropTypes.number.isRequired,
-  experienceId: PropTypes.number
 };

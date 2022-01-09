@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Route, Routes, useMatch } from "react-router-dom";
 import PropTypes from "prop-types";
 import Settings from "luxon/src/settings.js";
 
@@ -12,7 +12,7 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 
 export default function CourseAdmin(props) {
-  let match = useRouteMatch();
+  let match = useMatch();
 
   const user = useTypedSelector(state=>state.profile.user)
 
@@ -23,75 +23,30 @@ export default function CourseAdmin(props) {
   }, [user.loaded]);
 
   return (
-    <Switch>
+    <Routes>
       <Route
-        path={`${match.path}/:course_id/bingo_game/:id`}
-        render={routeProps => (
-          <React.Fragment>
-            <BingoGameDataAdmin
-              courseId={Number( routeProps.match.params.course_id )}
-              bingoGameId={
-                "new" === routeProps.match.params.id
-                  ? null
-                  : Number( routeProps.match.params.id )
-              }
-            />
-          </React.Fragment>
-        )}
+        path={`:courseIdParam/bingo_game/:bingoGameIdParam`}
+        element={ <BingoGameDataAdmin /> }
       />
       <Route
-        path={`${match.path}/:course_id/experience/:id`}
-        render={routeProps =>{
-        return (
-          <React.Fragment>
-            <ExperienceDataAdmin
-              courseId={Number( routeProps.match.params.course_id )}
-              experienceId={
-                "new" === routeProps.match.params.id
-                  ? null
-                  : Number(routeProps.match.params.id)
-              }
-            />
-          </React.Fragment>
-        )
-
-
+        path={`:courseIdParam/experience/:experienceIdParam`}
+        element={ <ExperienceDataAdmin /> }
+       />
+      <Route
+        path={`:courseIdParam/project/:projectIdParam`}
+        element={<ProjectDataAdmin />}
+      />
+      <Route
+        path={`:courseIdParam`}
+        element={
+            <CourseDataAdmin />
         }
-      } />
-      <Route
-        path={`${match.path}/:course_id/project/:id`}
-        render={routeProps => (
-          <React.Fragment>
-            <ProjectDataAdmin
-              courseId={Number( routeProps.match.params.course_id )}
-              projectId={
-                "new" === routeProps.match.params.id
-                  ? null
-                  : Number(routeProps.match.params.id)
-              }
-            />
-          </React.Fragment>
-        )}
       />
-      <Route
-        path={`${match.path}/:course_id`}
-        render={routeProps => (
-          <React.Fragment>
-            <CourseDataAdmin
-              courseId={
-                "new" === routeProps.match.params.course_id
-                  ? null
-                  : Number(routeProps.match.params.course_id)
-              }
-            />
-          </React.Fragment>
-        )}
-      />
-      <Route exact path={`${match.path}`}>
+      <Route exact path={`/`}>
         <CourseList
         />
       </Route>
-    </Switch>
+    </Routes>
   );
 }
 

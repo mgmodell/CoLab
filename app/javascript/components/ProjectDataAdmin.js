@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
@@ -38,6 +39,7 @@ export default function ProjectDataAdmin(props) {
   const category = "project";
   const endpoints = useTypedSelector(state=>state.context.endpoints[category])
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded)
+  const { courseIdParam, projectIdParam } = useParams( );
 
   const [curTab, setCurTab] = useState("details");
   const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category])} );
@@ -48,7 +50,7 @@ export default function ProjectDataAdmin(props) {
     { id: 0, name: "none selected" }
   ]);
   const [styles, setStyles] = useState([{ id: 0, name_en: "none selected" }]);
-  const [projectId, setProjectId] = useState(props.projectId);
+  const [projectId, setProjectId] = useState('new' === projectIdParam ? null : Number( projectIdParam));
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [projectStartDate, setProjectStartDate] = useState(
@@ -74,7 +76,7 @@ export default function ProjectDataAdmin(props) {
     dispatch( setDirty( category ) );
     var url = endpoints.baseUrl + "/";
     if (null == projectId) {
-      url = url + "new/" + props.courseId + ".json";
+      url = url + "new/" + courseIdParam + ".json";
     } else {
       url = url + projectId + ".json";
     }
@@ -117,7 +119,7 @@ export default function ProjectDataAdmin(props) {
     const url =
       endpoints.baseUrl +
       "/" +
-      (null == projectId ? props.courseId : projectId) +
+      (null == projectId ? courseIdParam : projectId) +
       ".json";
 
     axios({
@@ -126,7 +128,7 @@ export default function ProjectDataAdmin(props) {
       data: {
         project: {
           name: projectName,
-          course_id: props.courseId,
+          course_id: courseIdParam,
           description: projectDescription,
           active: projectActive,
           start_date: projectStartDate,

@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
@@ -29,6 +30,7 @@ export default function CandidatesReviewTable(props) {
   const endpointSet = "candidate_review";
   const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
+  const {bingoGameId } = useParams( );
 
   const [candidates, setCandidates] = useState([]);
   const [candidateLists, setCandidateLists] = useState([]);
@@ -226,7 +228,7 @@ export default function CandidatesReviewTable(props) {
     dispatch(startTask() );
     setReviewStatus("Loading data");
 
-    const url = `${endpoints.baseUrl}${props.bingoGameId}.json`;
+    const url = `${endpoints.baseUrl}${bingoGameId}.json`;
     axios.get( url, { } )
       .then(response => {
         const data = response.data;
@@ -272,7 +274,7 @@ export default function CandidatesReviewTable(props) {
     dispatch( startTask("saving") );
     setReviewStatus("Saving feedback.");
 
-    const url = `${endpoints.reviewSaveUrl}${ props.bingoGameId }.json`;
+    const url = `${endpoints.reviewSaveUrl}${ bingoGameId }.json`;
 
     axios.patch( url, {
           candidates: candidates.filter(c => 0 < c.completed),
@@ -419,5 +421,4 @@ export default function CandidatesReviewTable(props) {
   );
 }
 CandidatesReviewTable.propTypes = {
-  bingoGameId: PropTypes.number.isRequired
 };

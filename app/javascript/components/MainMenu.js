@@ -2,7 +2,7 @@ import React, { useState, Suspense, useEffect } from "react";
 import { useDispatch } from 'react-redux';
 
 import PropTypes from "prop-types";
-import { BrowserRouter as Router, useHistory } from "react-router-dom";
+import { BrowserRouter as Router, useNavigate } from "react-router-dom";
 
 import IconButton from "@material-ui/core/IconButton";
 import Collapse from "@material-ui/core/Collapse";
@@ -39,7 +39,7 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import {signOut} from './infrastructure/ContextActions';
 
 export default function MainMenu(props) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [t, i18n] = useTranslation();
@@ -63,7 +63,7 @@ export default function MainMenu(props) {
   };
 
   const navTo = url => {
-    history.push(url);
+    navigate(url);
     setMenuOpen(false);
   };
 

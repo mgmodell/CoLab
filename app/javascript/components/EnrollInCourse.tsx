@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 //Redux store stuff
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -25,11 +25,12 @@ export default function EnrollInCourse(props) {
 
   const category = 'home';
   const dispatch = useDispatch( );
-  const epts = useTypedSelector((state)=>state.context.endpoints);
   const endpoints = useTypedSelector((state)=>state.context.endpoints[category]);
   const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
   const [t, i18n] = useTranslation( category );
-  const history = useHistory( );
+  const { courseId } = useParams( );
+
+  const navigate = useNavigate( );
 
   const [courseName, setCourseName] = useState( 'loading' );
   const [courseNumber, setCourseNumber] = useState( 'loading' );
@@ -41,7 +42,7 @@ export default function EnrollInCourse(props) {
 
   const enrollConfirm = (confirm:boolean) => {
     if( confirm ){
-      const url = `${endpoints.selfRegUrl}/${props.courseId}.json`;
+      const url = `${endpoints.selfRegUrl}/${courseId}.json`;
       axios.post( url, {} )
         .then( response =>{
           // Success!
@@ -50,7 +51,7 @@ export default function EnrollInCourse(props) {
           console.log( 'error', error );
         })
     }
-    history.push( '/' );
+    navigate( '/' );
   }
 
   const enrollButton =  (
@@ -71,7 +72,7 @@ export default function EnrollInCourse(props) {
 
   useEffect(() =>{
     if( endpointsLoaded ){
-      const url = `${endpoints.selfRegUrl}/${props.courseId}.json`;
+      const url = `${endpoints.selfRegUrl}/${courseId}.json`;
       dispatch( startTask( ) );
       axios.get( url, { } )
         .then( response =>{
@@ -115,5 +116,4 @@ export default function EnrollInCourse(props) {
   );
 }
 EnrollInCourse.propTypes = {
-  courseId: PropTypes.number.isRequired
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
   Route,
-  Switch,
-  Redirect,
-  useRouteMatch,
+  Routes,
+  Navigate,
+  useMatch,
   useParams
 } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -24,7 +24,7 @@ import Collapse from "@material-ui/core/Collapse";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function Admin(props) {
-  let { path, url } = useRouteMatch();
+  let { path, url } = useMatch();
 
   const user = useTypedSelector((state)=>state.profile.user)
 
@@ -41,31 +41,34 @@ export default function Admin(props) {
   return (
     <React.Fragment>
       <WorkingIndicator id="admin_save" />
-      <Switch>
-        <Route path={`${path}/courses`}>
-          <CourseAdmin />
-        </Route>
-        <Route exact path={`${path}/schools`}>
-          <SchoolList />
-        </Route>
-        <Route path={`${path}/schools/:id`}>
-          <SchoolDataAdmin
+      <Routes>
+        <Route path={`courses/*`}
+          element={ <CourseAdmin /> }
+        />
+        <Route exact path={`schools`}
+          element={ <SchoolList /> }
           />
-        </Route>
-        <Route exact path={`${path}/consent_forms`}>
-          <ConsentFormList />
-        </Route>
-        <Route path={`${path}/consent_forms/:id`}>
-          <ConsentFormDataAdmin
-          />
-        </Route>
-        <Route path={`${path}/concepts`}>
-          <ConceptsTable />
-        </Route>
-        <Route path={`${path}`}>
-          <Redirect to={`${path}/courses`} />
-        </Route>
-      </Switch>
+        <Route path={`schools/:schoolIdParam`}
+          element={ <SchoolDataAdmin /> }
+        />
+        <Route exact path={`consent_forms`}
+          element={
+            <ConsentFormList />
+          } />
+        <Route path={`consent_forms/:consentFormIDParam`}
+          element={
+            <ConsentFormDataAdmin />
+          } />
+        <Route path={`concepts`}
+          element={
+            <ConceptsTable />
+          } />
+        <Route path={`/`}
+          element={
+            <Navigate to={`${path}/courses`} replace />
+
+          }/>
+      </Routes>
     </React.Fragment>
   );
 }

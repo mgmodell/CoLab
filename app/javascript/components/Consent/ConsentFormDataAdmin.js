@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
@@ -33,7 +34,6 @@ import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 
 export default function ConsentFormDataAdmin(props) {
@@ -42,6 +42,7 @@ export default function ConsentFormDataAdmin(props) {
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
   //const { t, i18n } = useTranslation('schools' );
   const user = useTypedSelector(state=>state.profile.user)
+  const { consentFormIDParam } = useParams( );
 
   const dispatch = useDispatch( );
   const [dirty, setDirty] = useState(false);
@@ -50,8 +51,7 @@ export default function ConsentFormDataAdmin(props) {
 
   const [curTab, setCurTab] = useState("en");
 
-  const { id } = useParams( );
-  const [consentFormId, setConsentFormId] = useState( id );
+  const [consentFormId, setConsentFormId] = useState( consentFormIDParam );
   const [consentFormName, setConsentFormName] = useState("");
   const [consentFormActive, setConsentFormActive] = useState(false);
   const [consentFormStartDate, setConsentFormStartDate] = useState(new Date());
@@ -108,7 +108,7 @@ export default function ConsentFormDataAdmin(props) {
     const url =
       endpoints.baseUrl +
       "/" +
-      (null == consentFormId ? props.schoolId : consentFormId) +
+      (null == consentFormId ? null : consentFormId) +
       ".json";
 
     axios( {

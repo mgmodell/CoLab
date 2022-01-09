@@ -1,5 +1,6 @@
 import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { useParams } from "react-router-dom";
 
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -13,7 +14,6 @@ import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 import Collapse from "@material-ui/core/Collapse";
 import CloseIcon from "@material-ui/icons/Close";
-//For debug purposes
 
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';
@@ -27,6 +27,9 @@ export default function InstallmentReport(props) {
   const endpointSet = "installment";
   const endpoints = useTypedSelector((state)=>state.context.endpoints[endpointSet])
   const endpointStatus = useTypedSelector((state)=>state.context.status.endpointsLoaded)
+  const user = useTypedSelector(state=>state.profile.user );
+
+  const { id } = useParams( );
 
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
@@ -49,7 +52,6 @@ export default function InstallmentReport(props) {
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState({ comments: "" });
 
-  const user = useTypedSelector(state=>state.profile.user );
 
   const updateSlice = (id, update) => {
     const lContributions = Object.assign({}, contributions);
@@ -105,7 +107,7 @@ export default function InstallmentReport(props) {
   //Retrieve the latest data
   const getContributions = () => {
     const url = `${endpoints.baseUrl}${
-      props.installmentId
+      installmentId
     }.json`;
 
 
@@ -309,5 +311,4 @@ export default function InstallmentReport(props) {
 }
 
 InstallmentReport.propTypes = {
-  installmentId: PropTypes.number
 };

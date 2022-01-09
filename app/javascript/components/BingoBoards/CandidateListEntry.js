@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
@@ -22,8 +23,10 @@ export default function CandidateListEntry(props) {
   const endpointSet = "candidate_list";
   const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
-  const { t, i18n } = useTranslation("candidate_lists");
   const user = useTypedSelector(state=>state.profile.user)
+  const { t, i18n } = useTranslation("candidate_lists");
+
+  const { id } = useParams( );
 
   const [dirty, setDirty] = useState(false);
   const dispatch = useDispatch( );
@@ -47,7 +50,7 @@ export default function CandidateListEntry(props) {
     dispatch( startTask() );
     setDirty(true);
     var url =
-      endpoints.baseUrl + props.bingoGameId + ".json";
+      endpoints.baseUrl + bingoGameId + ".json";
     axios.get( url, { } )
       .then(response => {
         const data = response.data;
@@ -104,7 +107,7 @@ export default function CandidateListEntry(props) {
     dispatch( startTask("saving") );
 
     const url =
-      endpoints.baseUrl + props.bingoGameId + ".json";
+      endpoints.baseUrl + bingoGameId + ".json";
 
     axios.put( url, {
         candidates: candidates.filter(item => {
@@ -308,5 +311,4 @@ export default function CandidateListEntry(props) {
 }
 
 CandidateListEntry.propTypes = {
-  bingoGameId: PropTypes.number.isRequired
 };

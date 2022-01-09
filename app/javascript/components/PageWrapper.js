@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {Provider} from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
@@ -48,124 +48,117 @@ export default function PageWrapper(props) {
       <AppStatusBar />
 
       <Suspense fallback={<Skeleton variant="rect" height={600} />}>
-        <Switch>
-          <Route path="/profile">
+        <Routes>
+          <Route path="profile" element={
             <RequireAuth>
-              <ProfileDataAdmin
-              />
+              <ProfileDataAdmin />
             </RequireAuth>
-          </Route>
-          <Route path="/demo">
+          } />
+          <Route path="demo" element={
             <DemoWrapper
             />
-          </Route>
-          <Route path="/admin">
+          }/>
+          <Route path="admin/*" element={
             <RequireAuth>
             <Admin
             />
             </RequireAuth>
-          </Route>
+
+          } />
           <Route
-            path={`/submit_installment/:id`}
-            render={routeProps => (
+            path={`submit_installment/:installmentId`}
+            element={
               <RequireAuth>
                 <InstallmentReport
-                  installmentId={Number(routeProps.match.params.id)}
                 />
               </RequireAuth>
-            )}
+            }
           />
           {/* Perhaps subgroup under Bingo */}
           <Route
-            path={`/enter_candidates/:id`}
-            render={routeProps => (
+            path={`enter_candidates/:bingoGameId`}
+            element={
               <RequireAuth>
                 <CandidateListEntry
-                  bingoGameId={Number(routeProps.match.params.id)}
                 />
               </RequireAuth>
-            )}
+            }
           />
           <Route
-            path={`/review_candidates/:id`}
-            render={routeProps => (
+            path={`review_candidates/:bingoGameId`}
+            element={
               <RequireAuth>
                 <CandidatesReviewTable
-                  bingoGameId={Number(routeProps.match.params.id)}
                 />
               </RequireAuth>
-            )}
+            }
           />
           <Route
-            path={`/candidate_results/:id`}
-            render={routeProps => (
+            path={`candidate_results/:bingoGameId`}
+            element={
               <RequireAuth>
                 <BingoBuilder
-                  bingoGameId={Number(routeProps.match.params.id)}
                 />
               </RequireAuth>
-            )}
+            }
           />
           <Route
-            path={`/score_bingo/:id`}
-            render={routeProps => (
+            path={`score_bingo/:id`}
+            element={
               <RequireAuth>
                 Score the Bingo Component
               </RequireAuth>
-            )}
+            }
           />
           {/* Perhaps subgroup under Bingo */}
           <Route
-            path={`/experience/:id`}
-            render={routeProps => (
+            path={`experience/:experienceId`}
+            element={
               <RequireAuth>
                 <Experience
-                  experienceId={Number(routeProps.match.params.id)}
                 />
               </RequireAuth>
-            )}
+            }
           />
           <Route
-            path={`/research_information/:id`}
-            render={routeProps => (
+            path={`research_information/:consentFormId`}
+            element={
               <RequireAuth>
                 <ConsentLog
-                  consentFormId={Number(routeProps.match.params.id)}
                 />
               </RequireAuth>
-            )}
+            }
           />
           <Route
-            path={`/course/:course_id/confirm`}
-            render={routeProps => (
+            path={`course/:course_id/confirm`}
+            element={
               <RequireAuth>
-                Confirm me in #{routeProps.match.params.course_id}
+                Confirm me, please - this must be built.
               </RequireAuth>
-            )}
+            }
           />
           <Route
-            path={`/course/:course_id/enroll`}
-            render={routeProps => (
+            path={`course/:courseId/enroll`}
+            element={
               <RequireAuth>
                 <EnrollInCourse
-                  courseId={Number(routeProps.match.params.course_id)}
                   />
               </RequireAuth>
-            )}
+            }
           />
-          <Route exact path="/"
-            render={routeProps =>(
+          <Route path="/"
+            element={
               <RequireAuth>
                 <HomeShell />
               </RequireAuth>
-            ) }
+            }
           />
-          <Route path='/login'
-            render={routeProps => (
-                  <SignIn {...routeProps} />
-            )}
+          <Route path='login'
+            element={
+                  <SignIn />
+            }
           />
-        </Switch>
+        </Routes>
       </Suspense>
     </Router>
         </AppInit>

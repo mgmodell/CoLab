@@ -42,8 +42,8 @@ export default function SchoolDataAdmin(props) {
   const dispatch = useDispatch( );
 
 
-  let {id} = useParams( );
-  const [schoolId, setSchoolId] = useState( id );
+  let {schoolIdParam} = useParams( );
+  const [schoolId, setSchoolId] = useState( schoolId );
   const [schoolName, setSchoolName] = useState("");
   const [schoolDescription, setSchoolDescription] = useState("");
   const [schoolTimezone, setSchoolTimezone] = useState("UTC");
