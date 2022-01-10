@@ -216,7 +216,6 @@ Then('the user selects the {string} menu item') do |menu_item|
 end
 
 Then('the user clicks the {string} button') do |button_name|
-  byebug
   elem = find(:xpath, "//button[@aria-label='#{button_name}']")
   elem.click
 end
