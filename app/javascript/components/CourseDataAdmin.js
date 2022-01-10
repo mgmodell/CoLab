@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
-  useMatch,
   Routes,
   Route,
   useParams,
@@ -60,7 +59,6 @@ export default function CourseDataAdmin(props) {
   const user = useTypedSelector(state=>state.profile.user );
 
   const navigate = useNavigate();
-  const { path, url } = useMatch();
 
   const [curTab, setCurTab] = useState("details");
   const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category])} );
@@ -611,9 +609,6 @@ export default function CourseDataAdmin(props) {
     );
 
   return (
-    <Routes>
-    {/* I think I don't need these Routes here */}
-      <Route>
         <Paper>
           <Tabs
             centered
@@ -658,7 +653,5 @@ export default function CourseDataAdmin(props) {
           {saveButton}
           {messages["status"]}
         </Paper>
-      </Route>
-    </Routes>
   );
 }

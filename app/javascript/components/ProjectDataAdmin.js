@@ -371,6 +371,4 @@ export default function ProjectDataAdmin(props) {
 }
 
 ProjectDataAdmin.propTypes = {
-  courseId: PropTypes.number.isRequired,
-  projectId: PropTypes.number
 };

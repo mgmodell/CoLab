@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
-  useMatch,
   useNavigate
 } from "react-router-dom";
 import Alert from "@material-ui/lab/Alert";
@@ -27,7 +26,6 @@ export default function SchoolList(props) {
   const user = useTypedSelector(state=>state.profile.user)
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
-  let { path, url } = useMatch();
   const navigate = useNavigate( );
 
   const dispatch = useDispatch( );
@@ -136,7 +134,7 @@ export default function SchoolList(props) {
             <IconButton
               id="new_school"
               onClick={event => {
-                navigate( path + '/new' );
+                navigate( 'new' );
                 //window.location.href =
                 //  endpoints.endpoints[endpointSet].schoolCreateUrl;
               }}
@@ -149,7 +147,7 @@ export default function SchoolList(props) {
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
             const id = schools[cellMeta.dataIndex].id;
-            navigate( `${path}/${id}` )
+            navigate( String( id ) )
           }
         },
         selectableRows: "none"

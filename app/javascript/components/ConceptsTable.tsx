@@ -120,6 +120,7 @@ export default function ConceptsTable(props) {
     //statusActions.startTask("load");
     axios.get( endpoints.baseUrl + '.json', {})
       .then( (response) =>{
+        const data = response.data;
         setConcepts(data);
         setConceptsRaw(data);
         dispatch( endTask( 'load' ) );

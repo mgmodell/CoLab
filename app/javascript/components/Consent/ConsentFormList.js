@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useMatch } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
@@ -24,7 +24,6 @@ export default function ConsentFormList(props) {
   const dispatch = useDispatch( );
 
   const navigate = useNavigate();
-  const { path, url } = useMatch();
 
   const user = useTypedSelector(state=>state.profile.user)
   const [messages, setMessages] = useState({});
@@ -108,7 +107,7 @@ export default function ConsentFormList(props) {
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
             const consent_form_id = consent_forms[cellMeta.dataIndex].id;
-            navigate(path + "/" + consent_form_id);
+            navigate( consent_form_id);
           }
         },
         selectableRows: "none"

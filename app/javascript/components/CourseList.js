@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {useDispatch} from 'react-redux';
-import { useNavigate, useMatch } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
@@ -28,7 +28,6 @@ export default function CourseList(props) {
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
 
   const navigate = useNavigate();
-  const { path, url } = useMatch();
 
   const user = useTypedSelector(state=>state.profile.user );
   const [messages, setMessages] = useState({});
@@ -233,7 +232,7 @@ export default function CourseList(props) {
             <IconButton
               id="new_course"
               onClick={event => {
-                navigate(path + "/new");
+                navigate('new');
               }}
               aria-label="New Course"
             >
@@ -244,7 +243,7 @@ export default function CourseList(props) {
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
             const course_id = courses[cellMeta.dataIndex].id;
-            const location = path + "/" + course_id;
+            const location =  String( course_id );
             navigate(location);
           }
         },

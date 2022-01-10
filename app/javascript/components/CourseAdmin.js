@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes, useMatch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import PropTypes from "prop-types";
 import Settings from "luxon/src/settings.js";
 
@@ -12,7 +12,6 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 
 export default function CourseAdmin(props) {
-  let match = useMatch();
 
   const user = useTypedSelector(state=>state.profile.user)
 
@@ -42,10 +41,13 @@ export default function CourseAdmin(props) {
             <CourseDataAdmin />
         }
       />
-      <Route exact path={`/`}>
+      <Route exact path={`/`}
+        element={
         <CourseList
         />
-      </Route>
+
+        }
+      />
     </Routes>
   );
 }

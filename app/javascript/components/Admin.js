@@ -3,8 +3,6 @@ import {
   Route,
   Routes,
   Navigate,
-  useMatch,
-  useParams
 } from "react-router-dom";
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
@@ -24,7 +22,6 @@ import Collapse from "@material-ui/core/Collapse";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function Admin(props) {
-  let { path, url } = useMatch();
 
   const user = useTypedSelector((state)=>state.profile.user)
 
@@ -65,7 +62,7 @@ export default function Admin(props) {
           } />
         <Route path={`/`}
           element={
-            <Navigate to={`${path}/courses`} replace />
+            <Navigate to='courses' replace />
 
           }/>
       </Routes>
