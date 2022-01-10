@@ -62,8 +62,6 @@ export default function SignIn(props) {
     </Button>
   );
 
-  console.log( 'props', props );
-
   const from = (undefined != state) ? 
                  state.from :
                  '/';

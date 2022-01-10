@@ -177,4 +177,5 @@ export default function PageWrapper(props) {
 }
 
 PageWrapper.propTypes = {
+  getEndpointsUrl: PropTypes.string.isRequired
 };
