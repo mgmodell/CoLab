@@ -20,7 +20,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import {useTypedSelector} from '../infrastructure/AppReducers'
 import axios from "axios";
-import { TableRow } from "@material-ui/core";
+import { TableRow, TextField } from "@material-ui/core";
 
 export default function ScoreBingoWorksheet(props) {
 
@@ -34,6 +34,7 @@ export default function ScoreBingoWorksheet(props) {
   const [topic, setTopic] = useState( 'loading' );
   const [description, setDescription] = useState( 'loading' );
   const [worksheetAnswers, setWorksheetAnswers] = useState( [ [ ] ] );
+  const [resultImgUrl, setResultImgUrl] = useState( null );
 
   const navigate = useNavigate( );
 
@@ -50,6 +51,7 @@ export default function ScoreBingoWorksheet(props) {
           setTopic( data.bingo_game.topic );
           setDescription( data.bingo_game.description );
           setWorksheetAnswers( data.practice_answers );
+          setResultImgUrl( data.bingo_game.result_url );
         })
         .catch( error =>{
           console.log( 'error', error );
@@ -59,6 +61,15 @@ export default function ScoreBingoWorksheet(props) {
         })
     }
   },[endpointsLoaded])
+
+
+  const resultImage = null === resultImgUrl ?
+    null :
+    (
+        <Grid item xs={12} sm={12}>
+                <img src={resultImgUrl} />
+        </Grid>
+    );
 
 
   return (
@@ -94,6 +105,19 @@ export default function ScoreBingoWorksheet(props) {
           </tbody>
         </table>
         </Grid>
+        <Grid item xs={12} sm={6} >
+          <label htmlFor='upload-photo'>
+            <input
+              style={{ display: 'none' }}
+              id='upload-photo'
+              name='upload-photo'
+              type="file" />
+          <Button
+            variant='contained'
+            component='span'>Upload Button</Button>
+          </label>
+        </Grid>
+        {resultImage}
       </Grid>
     </Paper>
   );

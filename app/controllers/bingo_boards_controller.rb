@@ -205,9 +205,11 @@ class BingoBoardsController < ApplicationController
       respond_to do |format|
         format.json do
           render json: {
-            bingo_game: @bingo_board.bingo_game.as_json(
-              only: %i[topic description]
-            ),
+            bingo_game: {
+              topic: bingo_game.topic,
+              description: bingo_game.description,
+              result_url: @bingo_board.result_img.present? ?  @bingo_board.result_img.url : nil
+            },
             practice_answers: @practice_answers.as_json
           }
         end
