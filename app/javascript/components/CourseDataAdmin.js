@@ -568,7 +568,7 @@ export default function CourseDataAdmin(props) {
               key={linkData.name}
               onClick={event => {
                 setMenuAnchorEl(null);
-                navigate(`${url}/${linkData.link}/new`);
+                navigate(`${linkData.link}/new`);
                 // window.location.href = linkData.link;
               }}
             >
@@ -599,7 +599,7 @@ export default function CourseDataAdmin(props) {
             if ("link" != activityColumns[cellMeta.colIndex].name) {
               const link = courseActivities[cellMeta.dataIndex].link;
               const activityId = courseActivities[cellMeta.dataIndex].id;
-              navigate(`${url}/${link}/${activityId}`);
+              navigate(`${link}/${activityId}`);
             }
           }
         }}

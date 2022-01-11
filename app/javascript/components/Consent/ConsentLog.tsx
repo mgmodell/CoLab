@@ -33,15 +33,15 @@ export default function ConsentLog(props) {
   const getLog = () => {
     console.log( props );
     var url =
-      endpoints['baseUrl'] + consentFormId + ".json";
+      endpoints['baseUrl'] + (consentFormId || props.consentFormId ) + ".json";
 
-    console.log( url );
+    console.log( 'get', url );
     dispatch( startTask("loading") );
     axios.get( url, { } )
       .then(response => {
         const data = response.data;
         //Process the data
-        console.log(data);
+        console.log('get-resp', response );
         setLogId(data.consent_log.id);
         setFormName(data.consent_log.name);
         setFormText(data.consent_log.formText);
@@ -136,5 +136,6 @@ export default function ConsentLog(props) {
 }
 
 ConsentLog.propTypes = {
+  consentFormId: PropTypes.number,
   parentUpdateFunc: PropTypes.func
 };
