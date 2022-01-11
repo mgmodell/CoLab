@@ -23,7 +23,7 @@ import DemoWrapper from "./DemoWrapper";
 import AppStatusBar from "./AppStatusBar";
 import SignIn from './SignIn';
 import EnrollInCourse from './EnrollInCourse';
-//import Auth from 'j-toker'
+import ScoreBingoWorksheet from './BingoBoards/ScoreBingoWorksheet';
 import RequireAuth from './infrastructure/RequireAuth';
 import AppInit from './infrastructure/AppInit'
 
@@ -111,10 +111,10 @@ export default function PageWrapper(props) {
             }
           />
           <Route
-            path={`score_bingo/:id`}
+            path={`score_bingo_worksheet/:worksheetIdParam`}
             element={
               <RequireAuth>
-                Score the Bingo Component
+                <ScoreBingoWorksheet />
               </RequireAuth>
             }
           />
@@ -134,14 +134,6 @@ export default function PageWrapper(props) {
               <RequireAuth>
                 <ConsentLog
                 />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path={`course/:course_id/confirm`}
-            element={
-              <RequireAuth>
-                Confirm me, please - this must be built.
               </RequireAuth>
             }
           />

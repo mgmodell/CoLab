@@ -75,7 +75,6 @@ Rails.application.routes.draw do
         as: :request_collaboration,
         constraints: ->(req) { req.format == :json }
 
-  end
 
   scope 'bingo' do
     resources :candidate_lists, only: [:create, :edit, :update, :show]
@@ -110,6 +109,33 @@ Rails.application.routes.draw do
     get 'worksheet/:bingo_game_id' => 'bingo_boards#worksheet_for_game',
         as: :worksheet_for_bingo
   end
+  get 'experiences/next/:experience_id' => 'experiences#next', as: :next_experience
+  patch 'exeriences/diagnose' => 'experiences#diagnose', as: :diagnose
+  patch 'exeriences/reaction' => 'experiences#react', as: :react
+
+  get 'course/users/:id' => 'courses#get_users', as: :get_users,
+        constraints: ->(req) { req.format == :json }
+  get 'experience/reactions/:id' => 'experiences#get_reactions', as: :get_reactions,
+        constraints: ->(req) { req.format == :json }
+  get 'course/accept/:roster_id' => 'courses#accept_roster', as: :accept_roster
+  get 'course/decline/:roster_id' => 'courses#decline_roster', as: :decline_roster
+  get 'courses/drop_student/:roster_id' => 'courses#drop_student', as: :drop_student
+  get 'courses/remove_instructor/:roster_id' => 'courses#remove_instructor',
+      as: :remove_instructor
+
+  get 'task_list' => 'home#task_list', as: :task_list,
+        constraints: ->(req) { req.format == :json }
+
+  #self registration
+  get 'course/enroll/:id', to: 'courses#self_reg_init', as: :self_reg_init,
+    constraints: ->(req) {req.format == :json }
+  post 'course/enroll/:id', to: 'courses#self_reg_confirm', as: :self_reg_confirm,
+    constraints: ->(req) {req.format == :json }
+
+  # Consent log paths
+  get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', as: :edit_consent_log
+  patch 'consent_logs/:id' => 'consent_logs#update', as: :consent_log
+  end
 
   scope 'infra' do
     get 'quote' => 'home#get_quote', as: :get_quote
@@ -136,19 +162,6 @@ Rails.application.routes.draw do
         constraints: ->(req) {req.format == :json }
   end
 
-  get 'experiences/next/:experience_id' => 'experiences#next', as: :next_experience
-  patch 'exeriences/diagnose' => 'experiences#diagnose', as: :diagnose
-  patch 'exeriences/reaction' => 'experiences#react', as: :react
-
-  get 'course/users/:id' => 'courses#get_users', as: :get_users,
-        constraints: ->(req) { req.format == :json }
-  get 'experience/reactions/:id' => 'experiences#get_reactions', as: :get_reactions,
-        constraints: ->(req) { req.format == :json }
-  get 'course/accept/:roster_id' => 'courses#accept_roster', as: :accept_roster
-  get 'course/decline/:roster_id' => 'courses#decline_roster', as: :decline_roster
-  get 'courses/drop_student/:roster_id' => 'courses#drop_student', as: :drop_student
-  get 'courses/remove_instructor/:roster_id' => 'courses#remove_instructor',
-      as: :remove_instructor
 
 
   # token auth routes available at /api/v1/auth
@@ -175,18 +188,6 @@ Rails.application.routes.draw do
   # root 'welcome#index'
   root to: 'home#index'
 
-  get 'task_list' => 'home#task_list', as: :task_list,
-        constraints: ->(req) { req.format == :json }
-
-  #self registration
-  get 'course/enroll/:id', to: 'courses#self_reg_init', as: :self_reg_init,
-    constraints: ->(req) {req.format == :json }
-  post 'course/enroll/:id', to: 'courses#self_reg_confirm', as: :self_reg_confirm,
-    constraints: ->(req) {req.format == :json }
-
-  # Consent log paths
-  get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', as: :edit_consent_log
-  patch 'consent_logs/:id' => 'consent_logs#update', as: :consent_log
 
   scope 'demo_support' do
   # Demo paths

@@ -5,27 +5,6 @@ class HomeController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[index lookups endpoints demo_start get_quote]
 
   def index
-    # The first thing we want to do is make sure they've had an opportunity to
-    # complete any waiting consent forms
-
-    # waiting_consent_logs = current_user.waiting_consent_logs
-
-    # if !waiting_consent_logs.empty?
-    #   redirect_to(controller: 'consent_logs',
-    #               action: 'edit',
-    #               consent_form_id: waiting_consent_logs[0].consent_form_id)
-    # elsif current_user.rosters.invited_student.count > 0
-    # if current_user.rosters.invited_student.count > 0
-    #   @waiting_rosters = current_user.rosters.invited_student
-    #   render :rsvp
-    # elsif !current_user.welcomed?
-    #   redirect_to edit_user_registration_path(current_user)
-    # end
-
-    # @first_name = current_user.first_name
-    # @waiting_student_tasks = current_user.waiting_student_tasks
-    # @waiting_instructor_tasks = current_user.waiting_instructor_tasks
-
     current_location = 'home'
   end
 
@@ -147,7 +126,9 @@ class HomeController < ApplicationController
         }
         ep_hash[:bingo_game] = {
           baseUrl: bingo_games_path,
-          gameResultsUrl: game_results_path(id: '')
+          gameResultsUrl: game_results_path(id: ''),
+          worksheetResultsUrl: ws_results_path( id: '' ),
+          worksheetScoreUrl: ws_score_path( id: '' )
         }
         ep_hash[:concept] = {
           baseUrl: concepts_path
