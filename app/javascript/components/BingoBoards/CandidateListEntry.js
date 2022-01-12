@@ -26,7 +26,7 @@ export default function CandidateListEntry(props) {
   const user = useTypedSelector(state=>state.profile.user)
   const { t, i18n } = useTranslation("candidate_lists");
 
-  const { id } = useParams( );
+  const { bingoGameId } = useParams( );
 
   const [dirty, setDirty] = useState(false);
   const dispatch = useDispatch( );
