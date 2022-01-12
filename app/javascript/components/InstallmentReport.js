@@ -29,7 +29,7 @@ export default function InstallmentReport(props) {
   const endpointStatus = useTypedSelector((state)=>state.context.status.endpointsLoaded)
   const user = useTypedSelector(state=>state.profile.user );
 
-  const { id } = useParams( );
+  const { installmentId } = useParams( );
 
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
