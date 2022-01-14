@@ -10,22 +10,22 @@ import {
   setClean
       } from './infrastructure/StatusActions';
 import { useParams } from "react-router-dom";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Paper from "@mui/material/Paper";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import LuxonUtils from "@material-ui/pickers/adapter/luxon";
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { TextareaAutosize } from "@material-ui/core";
+import { TextareaAutosize } from "@mui/material";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 

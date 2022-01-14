@@ -5,12 +5,12 @@ import {
   Navigate,
 } from "react-router-dom";
 import PropTypes from "prop-types";
-import Alert from "@material-ui/lab/Alert";
-import IconButton from "@material-ui/core/IconButton";
+import Alert from '@mui/material/Alert';
+import IconButton from "@mui/material/IconButton";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Settings from "luxon/src/settings.js";
 
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "@mui/icons-material/Close";
 import SchoolList from "./SchoolList";
 import CourseAdmin from "./CourseAdmin";
 import SchoolDataAdmin from "./SchoolDataAdmin";
@@ -18,7 +18,7 @@ import ConsentFormList from "./Consent/ConsentFormList";
 import ConsentFormDataAdmin from "./Consent/ConsentFormDataAdmin";
 import ConceptsTable from './ConceptsTable';
 
-import Collapse from "@material-ui/core/Collapse";
+import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function Admin(props) {

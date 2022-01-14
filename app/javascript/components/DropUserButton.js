@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import IconButton from "@material-ui/core/IconButton";
-import Paper from "@material-ui/core/Paper";
-import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Tooltip from "@mui/material/Tooltip";
 
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import { DialogActions, Button, Collapse } from "@material-ui/core";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import { DialogActions, Button, Collapse } from "@mui/material";
 import axios from "axios";
 
 export default function DropUserButton(props) {
@@ -70,7 +70,7 @@ export default function DropUserButton(props) {
           onClick={event => {
             setShowDialog(true);
           }}
-        >
+          size="large">
           <DeleteForeverIcon />
         </IconButton>
       </Tooltip>

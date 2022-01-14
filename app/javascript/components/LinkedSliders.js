@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import Slider from "@material-ui/core/Slider";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import Slider from "@mui/material/Slider";
 //For debug purposes
-import Input from "@material-ui/core/Input";
+import Input from "@mui/material/Input";
 
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 import PropTypes from "prop-types";
 

@@ -3,21 +3,21 @@ import axios from "axios";
 import {useDispatch} from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import Alert from "@material-ui/lab/Alert";
-import IconButton from "@material-ui/core/IconButton";
-import Paper from "@material-ui/core/Paper";
-import Tooltip from "@material-ui/core/Tooltip";
+import Alert from '@mui/material/Alert';
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Tooltip from "@mui/material/Tooltip";
 import { DateTime } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
-import BookIcon from "@material-ui/icons/Book";
-import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from "@material-ui/icons/Close";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import BookIcon from "@mui/icons-material/Book";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 
 import CopyActivityButton from "./CopyActivityButton";
 import MUIDataTable from "mui-datatables";
-import Collapse from "@material-ui/core/Collapse";
+import Collapse from "@mui/material/Collapse";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import {startTask, endTask} from './infrastructure/StatusActions';
@@ -162,7 +162,7 @@ export default function CourseList(props) {
                     event.preventDefault();
                   }}
                   aria-label="Download scores as CSV"
-                >
+                  size="large">
                   <CloudDownloadIcon />
                 </IconButton>
               </Tooltip>
@@ -235,7 +235,7 @@ export default function CourseList(props) {
                 navigate('new');
               }}
               aria-label="New Course"
-            >
+              size="large">
               <AddIcon />
             </IconButton>
           </Tooltip>

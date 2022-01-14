@@ -2,10 +2,10 @@ import React, { useState, Suspense, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import PropTypes from "prop-types";
-import IconButton from "@material-ui/core/IconButton";
+import IconButton from "@mui/material/IconButton";
 
 // Icons
-import HelpIcon from "@material-ui/icons/Help";
+import HelpIcon from "@mui/icons-material/Help";
 import Joyride, {
   CallBackProps,
   STATUS,
@@ -149,7 +149,7 @@ export default function HelpMenu(props) {
 
           setHelpMe(true);
         }}
-      >
+        size="large">
         <HelpIcon />
       </IconButton>
     </React.Fragment>

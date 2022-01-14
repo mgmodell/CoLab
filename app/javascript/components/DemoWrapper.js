@@ -5,7 +5,7 @@ import {
   Route,
   useMatch
 } from "react-router-dom";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from '@mui/material/Skeleton';
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
 import Joyride from "react-joyride";
@@ -26,7 +26,7 @@ export default function DemoWrapper(props) {
 
   return (
     <Router>
-      <Suspense fallback={<Skeleton variant="rect" height={600} />}>
+      <Suspense fallback={<Skeleton variant="rectangular" height={600} />}>
         <Routes>
           <Route
             path={`${path}/submit_installment/:id`}

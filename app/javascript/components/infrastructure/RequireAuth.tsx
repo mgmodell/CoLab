@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { Skeleton } from '@material-ui/lab';
+import { Skeleton } from '@mui/material';
 import { useTypedSelector } from './AppReducers';
 
 export default function RequireAuth({ children }) {
@@ -13,7 +13,7 @@ export default function RequireAuth({ children }) {
     return children;
 
   } else if( isLoggingIn ) {
-    return <Skeleton variant="rect" height={300} />
+    return <Skeleton variant="rectangular" height={300} />;
 
   } else {
     return <Navigate to='/login'

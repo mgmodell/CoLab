@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import Paper from "@material-ui/core/Paper";
-import Link from "@material-ui/core/Link";
+import Paper from "@mui/material/Paper";
+import Link from "@mui/material/Link";
 import { DateTime } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
-import GridOffIcon from "@material-ui/icons/GridOff";
-import TuneIcon from "@material-ui/icons/Tune";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
+import GridOffIcon from "@mui/icons-material/GridOff";
+import TuneIcon from "@mui/icons-material/Tune";
 
 import MUIDataTable from "mui-datatables";
 import { useTypedSelector } from "./infrastructure/AppReducers";

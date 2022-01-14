@@ -4,7 +4,7 @@ import {getContext, setInitialised} from './ContextActions';
 import { useTypedSelector } from "./AppReducers";
 
 import PropTypes from "prop-types";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from '@mui/material/Skeleton';
 
 type Props = {
   children?: React.ReactNode,
@@ -28,9 +28,7 @@ export default function AppInit(props: Props ) {
 
 
   if( !initialised || undefined === props.children ){
-    return(
-     <Skeleton variant="rect" height={300} />
-    )
+    return <Skeleton variant="rectangular" height={300} />;
   }else{
     return props.children;
 

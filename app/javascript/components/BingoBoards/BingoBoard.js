@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withTheme } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
+import withTheme from '@mui/styles/withTheme';
+import Paper from "@mui/material/Paper";
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
 class BingoBoard extends React.Component {
   constructor(props) {
     super(props);
@@ -13,7 +13,7 @@ class BingoBoard extends React.Component {
     const grid = this.props.board.initialised ? (
       this.props.board.bingo_cells.map(cell => {
         return (
-          <GridListTile
+          <ImageListItem
             key={cell.row + "-" + cell.column + "-" + cell.concept_id}
           >
             <center>
@@ -23,11 +23,11 @@ class BingoBoard extends React.Component {
               <br />
               <br />
             </center>
-          </GridListTile>
+          </ImageListItem>
         );
       })
     ) : (
-      <GridListTile />
+      <ImageListItem />
     );
     const gameDate = new Date(this.props.board.bingo_game.end_date);
     return (
@@ -37,9 +37,9 @@ class BingoBoard extends React.Component {
           {this.props.board.bingo_game.topic}&nbsp; ({gameDate.toDateString()})
         </center>
         <hr />
-        <GridList cols={this.props.board.bingo_game.size} cellHeight="auto">
+        <ImageList cols={this.props.board.bingo_game.size} cellHeight="auto">
           {grid}
-        </GridList>
+        </ImageList>
         <hr />
       </Paper>
     );

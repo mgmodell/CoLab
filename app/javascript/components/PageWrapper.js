@@ -5,8 +5,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import appStatus from './infrastructure/AppReducers';
 
-import Skeleton from "@material-ui/lab/Skeleton";
-import { ThemeProvider, createTheme } from "@material-ui/core";
+import Skeleton from '@mui/material/Skeleton';
+import { ThemeProvider, StyledEngineProvider, createTheme, adaptV4Theme } from "@mui/material";
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
 
@@ -35,135 +35,137 @@ export default function PageWrapper(props) {
       applyMiddleware( thunk ) 
     ));
 
-  const styles = createTheme({
+  const styles = createTheme(adaptV4Theme({
     typography: {
       useNextVariants: true
     }
-  });
+  }));
   
   return (
     <Provider store={store}>
-      <ThemeProvider theme={styles} >
-      <AppInit
-          endpointsUrl={props.getEndpointsUrl}
-      >
-    <Router>
-      <Suspense fallback={<Skeleton variant="rect" height={50} />}>
-        <AppHeader
-        />
-      </Suspense>
-      <br />
-      <AppStatusBar />
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={styles} >
+        <AppInit
+            endpointsUrl={props.getEndpointsUrl}
+        >
+      <Router>
+        <Suspense fallback={<Skeleton variant="rectangular" height={50} />}>
+          <AppHeader
+          />
+        </Suspense>
+        <br />
+        <AppStatusBar />
 
-      <Suspense fallback={<Skeleton variant="rect" height={600} />}>
-        <Routes>
-          <Route path="profile" element={
-            <RequireAuth>
-              <ProfileDataAdmin />
-            </RequireAuth>
-          } />
-          <Route path="demo" element={
-            <DemoWrapper
-            />
-          }/>
-          <Route path="admin/*" element={
-            <RequireAuth>
-            <Admin
-            />
-            </RequireAuth>
+        <Suspense fallback={<Skeleton variant="rectangular" height={600} />}>
+          <Routes>
+            <Route path="profile" element={
+              <RequireAuth>
+                <ProfileDataAdmin />
+              </RequireAuth>
+            } />
+            <Route path="demo" element={
+              <DemoWrapper
+              />
+            }/>
+            <Route path="admin/*" element={
+              <RequireAuth>
+              <Admin
+              />
+              </RequireAuth>
 
-          } />
-          <Route
-            path={`submit_installment/:installmentId`}
-            element={
-              <RequireAuth>
-                <InstallmentReport
-                />
-              </RequireAuth>
-            }
-          />
-          {/* Perhaps subgroup under Bingo */}
-          <Route
-            path={`enter_candidates/:bingoGameId`}
-            element={
-              <RequireAuth>
-                <CandidateListEntry
-                />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path={`review_candidates/:bingoGameId`}
-            element={
-              <RequireAuth>
-                <CandidatesReviewTable
-                />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path={`candidate_results/:bingoGameId`}
-            element={
-              <RequireAuth>
-                <BingoBuilder
-                />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path={`score_bingo_worksheet/:worksheetIdParam`}
-            element={
-              <RequireAuth>
-                <ScoreBingoWorksheet />
-              </RequireAuth>
-            }
-          />
-          {/* Perhaps subgroup under Bingo */}
-          <Route
-            path={`experience/:experienceId`}
-            element={
-              <RequireAuth>
-                <Experience
-                />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path={`research_information/:consentFormId`}
-            element={
-              <RequireAuth>
-                <ConsentLog
-                />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path={`course/:courseId/enroll`}
-            element={
-              <RequireAuth>
-                <EnrollInCourse
+            } />
+            <Route
+              path={`submit_installment/:installmentId`}
+              element={
+                <RequireAuth>
+                  <InstallmentReport
                   />
-              </RequireAuth>
-            }
-          />
-          <Route path="/"
-            element={
-              <RequireAuth>
-                <HomeShell />
-              </RequireAuth>
-            }
-          />
-          <Route path='login'
-            element={
-                  <SignIn />
-            }
-          />
-        </Routes>
-      </Suspense>
-    </Router>
-        </AppInit>
+                </RequireAuth>
+              }
+            />
+            {/* Perhaps subgroup under Bingo */}
+            <Route
+              path={`enter_candidates/:bingoGameId`}
+              element={
+                <RequireAuth>
+                  <CandidateListEntry
+                  />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={`review_candidates/:bingoGameId`}
+              element={
+                <RequireAuth>
+                  <CandidatesReviewTable
+                  />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={`candidate_results/:bingoGameId`}
+              element={
+                <RequireAuth>
+                  <BingoBuilder
+                  />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={`score_bingo_worksheet/:worksheetIdParam`}
+              element={
+                <RequireAuth>
+                  <ScoreBingoWorksheet />
+                </RequireAuth>
+              }
+            />
+            {/* Perhaps subgroup under Bingo */}
+            <Route
+              path={`experience/:experienceId`}
+              element={
+                <RequireAuth>
+                  <Experience
+                  />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={`research_information/:consentFormId`}
+              element={
+                <RequireAuth>
+                  <ConsentLog
+                  />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={`course/:courseId/enroll`}
+              element={
+                <RequireAuth>
+                  <EnrollInCourse
+                    />
+                </RequireAuth>
+              }
+            />
+            <Route path="/"
+              element={
+                <RequireAuth>
+                  <HomeShell />
+                </RequireAuth>
+              }
+            />
+            <Route path='login'
+              element={
+                    <SignIn />
+              }
+            />
+          </Routes>
+        </Suspense>
+      </Router>
+          </AppInit>
 
-    </ThemeProvider>
+      </ThemeProvider>
+      </StyledEngineProvider>
     </Provider>
   );
 }

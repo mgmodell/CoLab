@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import IconButton from "@material-ui/core/IconButton";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import Select from "@material-ui/core/Select";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Grid from "@material-ui/core/Grid";
-import Collapse from "@material-ui/core/Collapse";
-import Alert from "@material-ui/lab/Alert";
-import CloseIcon from "@material-ui/icons/Close";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import IconButton from "@mui/material/IconButton";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import Select from "@mui/material/Select";
+import Paper from "@mui/material/Paper";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import Grid from "@mui/material/Grid";
+import Collapse from "@mui/material/Collapse";
+import Alert from '@mui/material/Alert';
+import CloseIcon from "@mui/icons-material/Close";
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import LuxonUtils from "@material-ui/pickers/adapter/luxon";
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from '../infrastructure/StatusActions';
-import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { DatePicker, LocalizationProvider } from "@mui/lab/";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
@@ -180,7 +180,7 @@ export default function ConsentFormDataAdmin(props) {
   const detailsComponent = (
     <Paper>
       <Grid container spacing={3}>
-        <LocalizationProvider dateAdapter={LuxonUtils}>
+        <LocalizationProvider dateAdapter={AdapterLuxon}>
           <Grid item xs={12}>
             <TextField
               label="Name of the study"

@@ -1,36 +1,36 @@
 import React, { useState, useEffect } from "react";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import IconButton from "@material-ui/core/IconButton";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Select from "@material-ui/core/Select";
-import Switch from "@material-ui/core/Switch";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Collapse from "@material-ui/core/Collapse";
-import Alert from "@material-ui/lab/Alert";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import ToggleButton from "@material-ui/lab/ToggleButton";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import IconButton from "@mui/material/IconButton";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Select from "@mui/material/Select";
+import Switch from "@mui/material/Switch";
+import Paper from "@mui/material/Paper";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import Collapse from "@mui/material/Collapse";
+import Alert from '@mui/material/Alert';
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 import UserEmailList from "./UserEmailList";
 
-import CloseIcon from "@material-ui/icons/Close";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
+import { DatePicker, LocalizationProvider } from "@mui/lab/";
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import LuxonUtils from "@material-ui/pickers/adapter/luxon";
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
 import UserCourseList from "./UserCourseList";
 import ResearchParticipationList from "./ResearchParticipationList";
 import UserActivityList from "./UserActivityList";
@@ -38,10 +38,10 @@ import UserActivityList from "./UserActivityList";
 //import { useTranslation } from 'react-i18next';
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';
-import { Grid, Link } from "@material-ui/core";
+import { Grid, Link } from "@mui/material";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { fetchProfile, setProfile, persistProfile, setLocalLanguage } from "./infrastructure/ProfileActions";
-import { Skeleton } from "@material-ui/lab";
+import { Skeleton } from '@mui/material';
 import axios from "axios";
 
 export default function ProfileDataAdmin(props) {
@@ -517,7 +517,7 @@ export default function ProfileDataAdmin(props) {
               >
                 When did you begin your studies?
               </InputLabel>
-              <LocalizationProvider dateAdapter={LuxonUtils}>
+              <LocalizationProvider dateAdapter={AdapterLuxon}>
                 <DatePicker
                   clearable
                   value={user.started_school}
@@ -643,7 +643,7 @@ export default function ProfileDataAdmin(props) {
               >
                 When were you born?
               </InputLabel>
-              <LocalizationProvider dateAdapter={LuxonUtils}>
+              <LocalizationProvider dateAdapter={AdapterLuxon}>
                 <DatePicker
                   clearable
                   value={user.date_of_birth}
@@ -777,7 +777,7 @@ export default function ProfileDataAdmin(props) {
         />
       ) : null}
       </React.Fragment>
-      : <Skeleton variant="rect" heght={300}/>}
+      : <Skeleton variant="rectangular" heght={300}/>}
     </Paper>
   );
 }

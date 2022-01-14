@@ -2,32 +2,32 @@ import React, { useState, useEffect } from "react";
 import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import Paper from "@material-ui/core/Paper";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import Paper from "@mui/material/Paper";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 import MUIDataTable from "mui-datatables";
 
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import NotInterestedIcon from "@material-ui/icons/NotInterested";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
-import ClearIcon from "@material-ui/icons/Clear";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import NotInterestedIcon from "@mui/icons-material/NotInterested";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
+import ClearIcon from "@mui/icons-material/Clear";
 
-import EmailIcon from "@material-ui/icons/Email";
-import CheckIcon from "@material-ui/icons/Check";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import EmailIcon from "@mui/icons-material/Email";
+import CheckIcon from "@mui/icons-material/Check";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
-import Link from "@material-ui/core/Link";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
+import Link from "@mui/material/Link";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
 import DropUserButton from "./DropUserButton";
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
 import {startTask, endTask} from './infrastructure/StatusActions';
@@ -224,7 +224,7 @@ export default function CourseUsersList(props) {
                           console.log( 'error', error );
                         });
                     }}
-                  >
+                    size="large">
                     <EmailIcon />
                   </IconButton>
                 </Tooltip>
@@ -263,7 +263,7 @@ export default function CourseUsersList(props) {
                           console.log( 'error', error );
                         });
                     }}
-                  >
+                    size="large">
                     <CheckIcon />
                   </IconButton>
                 </Tooltip>
@@ -287,7 +287,7 @@ export default function CourseUsersList(props) {
                           console.log( 'error', error );
                         });
                     }}
-                  >
+                    size="large">
                     <ClearIcon />
                   </IconButton>
                 </Tooltip>
@@ -315,7 +315,7 @@ export default function CourseUsersList(props) {
                           console.log( 'error', error );
                         });
                     }}
-                  >
+                    size="large">
                     <PersonAddIcon />
                   </IconButton>
                 </Tooltip>
@@ -475,7 +475,7 @@ export default function CourseUsersList(props) {
                     onClick={event => {
                       setAddDialogOpen(true);
                     }}
-                  >
+                    size="large">
                     <GroupAddIcon />
                   </IconButton>
                 </Tooltip>

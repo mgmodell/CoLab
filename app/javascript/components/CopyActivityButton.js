@@ -2,24 +2,24 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
-import IconButton from "@material-ui/core/IconButton";
+import IconButton from "@mui/material/IconButton";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import Paper from "@material-ui/core/Paper";
-import Tooltip from "@material-ui/core/Tooltip";
-import TextField from "@material-ui/core/TextField";
+import Paper from "@mui/material/Paper";
+import Tooltip from "@mui/material/Tooltip";
+import TextField from "@mui/material/TextField";
 import { DateTime } from "luxon";
-import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
-import LuxonUtils from "@date-io/luxon";
+import { DatePicker, LocalizationProvider } from "@mui/lab/";
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
 
-import CollectionsBookmarkIcon from "@material-ui/icons/CollectionsBookmark";
+import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
-import Collapse from "@material-ui/core/Collapse";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
 
 import {startTask, endTask} from './infrastructure/StatusActions';
 
@@ -55,7 +55,7 @@ export default function CopyActivityButton(props) {
               shifted accordingly.
               <br />
             </DialogContentText>
-            <LocalizationProvider dateAdapter={LuxonUtils}>
+            <LocalizationProvider dateAdapter={AdapterLuxon}>
               <DatePicker
                 variant="inline"
                 autoOk={true}
@@ -128,7 +128,7 @@ export default function CopyActivityButton(props) {
             });
           }}
           aria-label="Make a Copy"
-        >
+          size="large">
           <CollectionsBookmarkIcon />
         </IconButton>
       </Tooltip>

@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Paper from "@material-ui/core/Paper";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import Typography from "@material-ui/core/Typography";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Paper from "@mui/material/Paper";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Typography from "@mui/material/Typography";
+import FormHelperText from "@mui/material/FormHelperText";
 
-import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
+import { DatePicker, LocalizationProvider } from "@mui/lab/";
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import LuxonUtils from "@material-ui/pickers/adapter/luxon";
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
 import {useDispatch} from 'react-redux';
 import {startTask,
         endTask,
@@ -244,7 +244,7 @@ export default function ProjectDataAdmin(props) {
       />
 
       <Typography>All dates shown in {courseTimezone} timezone.</Typography>
-      <LocalizationProvider dateAdapter={LuxonUtils}>
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
         <DatePicker
           disableToolbar
           variant="inline"
@@ -265,7 +265,7 @@ export default function ProjectDataAdmin(props) {
         <FormHelperText error={true}>{messages.start_date}</FormHelperText>
       ) : null}
 
-      <LocalizationProvider dateAdapter={LuxonUtils}>
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
         <DatePicker
           disableToolbar
           variant="inline"

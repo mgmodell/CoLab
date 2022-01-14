@@ -2,20 +2,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import Fab from "@material-ui/core/Fab";
-import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import InputBase from "@material-ui/core/InputBase";
+import Fab from "@mui/material/Fab";
+import withStyles from '@mui/styles/withStyles';
+import Paper from "@mui/material/Paper";
+import InputBase from "@mui/material/InputBase";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import SearchIcon from "@material-ui/icons/Search";
-import Toolbar from "@material-ui/core/Toolbar";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
+import SearchIcon from "@mui/icons-material/Search";
+import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import { SortDirection } from "react-virtualized";
 import WrappedVirtualizedTable from "../components/WrappedVirtualizedTable";
 
-import ThumbDownIcon from "@material-ui/icons/ThumbDown";
-import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import axios from "axios";
 
 const styles = theme => ({

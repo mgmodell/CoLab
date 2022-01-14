@@ -14,8 +14,8 @@ import {
   Priorities,
   acknowledgeMsg} from './infrastructure/StatusActions';
 
-import Button from "@material-ui/core/Button";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Button from "@mui/material/Button";
+import Skeleton from '@mui/material/Skeleton';
 
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
@@ -141,7 +141,7 @@ export default function Experience(props) {
   var output = null;
 
   if (!endpointsLoaded) {
-    output = <Skeleton variant="rect" />;
+    output = <Skeleton variant="rectangular" />;
   } else if (!instructed) {
     output = (
       <ExperienceInstructions

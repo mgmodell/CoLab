@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Suspense } from "react";
 import PropTypes from "prop-types";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 
 import Logo from "./Logo";
 import MainMenu from "./MainMenu";
@@ -10,7 +10,7 @@ import HelpMenu from "./HelpMenu";
 import Quote from "./Quote";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from '@mui/material/Skeleton';
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function AppHeader(props) {
@@ -24,7 +24,7 @@ export default function AppHeader(props) {
       <AppBar id="title_head" position="fixed">
         <Toolbar>
           <Suspense
-            fallback={<Skeleton variant="rect" width={32} height={32} />}
+            fallback={<Skeleton variant="rectangular" width={32} height={32} />}
           >
             {endpointsLoaded ? (
               <MainMenu
@@ -36,7 +36,7 @@ export default function AppHeader(props) {
                 moreInfoUrl={endpoints.moreInfoUrl}
               />
             ) : (
-              <Skeleton variant="rect" width={32} height={32} />
+              <Skeleton variant="rectangular" width={32} height={32} />
             )}
           </Suspense>
             <Logo height={32} width={32}/>
@@ -59,7 +59,7 @@ export default function AppHeader(props) {
               lookupUrl={endpoints.lookupsUrl}
             />
           ) : (
-            <Skeleton variant="circle" />
+            <Skeleton variant="circular" />
           )}
         </Toolbar>
       </AppBar>

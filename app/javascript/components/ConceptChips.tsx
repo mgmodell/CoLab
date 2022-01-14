@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Chip from "@material-ui/core/Chip";
-import Paper from "@material-ui/core/Paper";
+import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
 
 export default function ConceptChips(props) {
   var c = [{ id: 1, name: "nothing" }];

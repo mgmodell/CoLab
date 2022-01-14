@@ -2,18 +2,18 @@ import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import Paper from "@material-ui/core/Paper";
-import Skeleton from "@material-ui/lab/Skeleton";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import TextField from "@material-ui/core/TextField";
-import Alert from "@material-ui/lab/Alert";
-import Collapse from "@material-ui/core/Collapse";
-import CloseIcon from "@material-ui/icons/Close";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Skeleton from '@mui/material/Skeleton';
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import TextField from "@mui/material/TextField";
+import Alert from '@mui/material/Alert';
+import Collapse from "@mui/material/Collapse";
+import CloseIcon from "@mui/icons-material/Close";
 
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';
@@ -237,7 +237,7 @@ export default function InstallmentReport(props) {
         />
         <p>{t("slider.instructions")}</p>
       </Suspense>
-      <Suspense fallback={<Skeleton variant="rect" height={300} />}>
+      <Suspense fallback={<Skeleton variant="rectangular" height={300} />}>
         {Object.keys(contributions).map(sliceId => {
           return (
             <Accordion

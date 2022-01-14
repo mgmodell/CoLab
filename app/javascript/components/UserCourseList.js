@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import Paper from "@material-ui/core/Paper";
+import Paper from "@mui/material/Paper";
 
 import MUIDataTable from "mui-datatables";
 

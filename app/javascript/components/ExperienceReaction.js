@@ -10,20 +10,20 @@ import {
 } from './infrastructure/StatusActions';
 
 
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import Skeleton from "@material-ui/lab/Skeleton";
-import TextField from "@material-ui/core/TextField";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Skeleton from '@mui/material/Skeleton';
+import TextField from "@mui/material/TextField";
 
 import { useTranslation } from "react-i18next";
 import { i18n } from "./infrastructure/i18n";
 import {useTypedLookup, useTypedSelector} from './infrastructure/AppReducers';
 
-import Radio from "@material-ui/core/Radio";
-import Grid from "@material-ui/core/Grid";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormLabel from "@material-ui/core/FormLabel";
+import Radio from "@mui/material/Radio";
+import Grid from "@mui/material/Grid";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormLabel from "@mui/material/FormLabel";
 export default function ExperienceReaction(props) {
   const [t, i18n] = useTranslation("experiences");
   const [behaviorId, setBehaviorId] = useState(0);
@@ -88,7 +88,7 @@ export default function ExperienceReaction(props) {
           </Suspense>
         </Grid>
         <Grid item xs={12}>
-          <Suspense fallback={<Skeleton variant="rect" />}>
+          <Suspense fallback={<Skeleton variant="rectangular" />}>
             <p
               dangerouslySetInnerHTML={{
                 __html: t("reaction.instructions")
@@ -125,7 +125,7 @@ export default function ExperienceReaction(props) {
               })}
             </RadioGroup>
           ) : (
-            <Skeleton variant="rect" />
+            <Skeleton variant="rectangular" />
           )}
         </Grid>
         <Grid item xs={12} >

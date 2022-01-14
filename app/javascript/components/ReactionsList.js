@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import Paper from "@material-ui/core/Paper";
-import Popover from "@material-ui/core/Popover";
+import Paper from "@mui/material/Paper";
+import Popover from "@mui/material/Popover";
 
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';
 import MUIDataTable from "mui-datatables";
 
-import Link from "@material-ui/core/Link";
-import { Container } from "@material-ui/core";
+import Link from "@mui/material/Link";
+import { Container } from "@mui/material";
 import axios from "axios";
 
 export default function ReactionsList(props) {

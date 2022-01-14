@@ -1,7 +1,7 @@
 import React from "react";
-import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
-import GridOffIcon from "@material-ui/icons/GridOff";
-import TuneIcon from "@material-ui/icons/Tune";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
+import GridOffIcon from "@mui/icons-material/GridOff";
+import TuneIcon from "@mui/icons-material/Tune";
 
 export function iconForType(type) {
   var icon;

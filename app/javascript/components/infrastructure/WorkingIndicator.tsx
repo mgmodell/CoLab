@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import LinearProgress from "@mui/material/LinearProgress";
 import PropTypes from "prop-types";
 import { useTypedSelector } from "./AppReducers";
 

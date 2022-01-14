@@ -3,12 +3,12 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
 import { DateTime } from "luxon";
 import Settings from "luxon/src/settings.js";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import luxonPlugin from "@fullcalendar/luxon";
@@ -23,7 +23,7 @@ import ProfileDataAdmin from "./ProfileDataAdmin";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import TaskList from "./TaskList";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from '@mui/material/Skeleton';
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function HomeShell(props) {
@@ -86,7 +86,7 @@ export default function HomeShell(props) {
   }, [endpointsLoaded, isLoggedIn]);
 
 
-  var pageContent = <Skeleton variant="rect" />;
+  var pageContent = <Skeleton variant="rectangular" />;
   if (undefined !== consentLogs) {
     if (consentLogs.length > 0) {
       pageContent = (

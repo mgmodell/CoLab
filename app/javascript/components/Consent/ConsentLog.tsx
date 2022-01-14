@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 
 import { useTranslation } from "react-i18next";
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from '../infrastructure/StatusActions';
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
-import Paper from "@material-ui/core/Paper";
-import { FormControlLabel, Checkbox } from "@material-ui/core";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import { FormControlLabel, Checkbox } from "@mui/material";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 

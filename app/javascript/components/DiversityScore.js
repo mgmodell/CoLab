@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import TableSortLabel from "@mui/material/TableSortLabel";
 
-import CompareIcon from "@material-ui/icons/Compare";
-import SaveIcon from "@material-ui/icons/Save";
-import SortIcon from "@material-ui/icons/Sort";
+import CompareIcon from "@mui/icons-material/Compare";
+import SaveIcon from "@mui/icons-material/Save";
+import SortIcon from "@mui/icons-material/Sort";
 
 import { SortDirection } from "react-virtualized";
 import axios from "axios";

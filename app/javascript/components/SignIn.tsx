@@ -9,35 +9,35 @@ import {
   setClean,
   addMessage,
   acknowledgeMsg} from './infrastructure/StatusActions';
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Collapse from "@material-ui/core/Collapse";
-import Alert from "@material-ui/lab/Alert";
-import CloseIcon from "@material-ui/icons/Close";
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import Visibility from '@material-ui/icons/Visibility';
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Paper from "@mui/material/Paper";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import Collapse from "@mui/material/Collapse";
+import Alert from '@mui/material/Alert';
+import CloseIcon from "@mui/icons-material/Close";
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import LuxonUtils from "@material-ui/pickers/adapter/luxon";
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import Grid from "@material-ui/core/Grid";
-import Input from "@material-ui/core/Input";
+import Grid from "@mui/material/Grid";
+import Input from "@mui/material/Input";
 //import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
 import {emailSignIn, oAuthSignIn} from './infrastructure/ContextActions';
 import {useTypedSelector} from './infrastructure/AppReducers'
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from '@mui/material/Skeleton';
 
 export default function SignIn(props) {
   //const { t, i18n } = useTranslation('schools' );
@@ -84,7 +84,7 @@ export default function SignIn(props) {
 
 
   if( loggingIn ){
-    return <Skeleton variant="rect" height="300" />
+    return <Skeleton variant="rectangular" height="300" />;
 
   } else if( isLoggedIn ){
     return <Navigate replace to={state?.from || "/" } />
@@ -118,7 +118,7 @@ export default function SignIn(props) {
                   aria-label="toggle password visibility"
                   onClick={()=>{setShowPassword( !showPassword )}}
                   onMouseDown={(event)=>{event.preventDefault}}
-                >
+                  size="large">
                   {showPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>

@@ -4,32 +4,32 @@ import { useDispatch } from 'react-redux';
 import PropTypes from "prop-types";
 import { BrowserRouter as Router, useNavigate } from "react-router-dom";
 
-import IconButton from "@material-ui/core/IconButton";
-import Collapse from "@material-ui/core/Collapse";
+import IconButton from "@mui/material/IconButton";
+import Collapse from "@mui/material/Collapse";
 
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 // Icons
-import ListIcon from "@material-ui/icons/List";
-import HomeIcon from "@material-ui/icons/Home";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import InfoIcon from "@material-ui/icons/Info";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
-import MenuIcon from "@material-ui/icons/Menu";
-import MultilineChartIcon from "@material-ui/icons/MultilineChart";
-import ContactSupportIcon from "@material-ui/icons/ContactSupport";
-import RateReviewIcon from "@material-ui/icons/RateReview";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import SchoolIcon from "@material-ui/icons/School";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import FindInPageIcon from "@material-ui/icons/FindInPage";
-import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
+import ListIcon from "@mui/icons-material/List";
+import HomeIcon from "@mui/icons-material/Home";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import InfoIcon from "@mui/icons-material/Info";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
+import MenuIcon from "@mui/icons-material/Menu";
+import MultilineChartIcon from "@mui/icons-material/MultilineChart";
+import ContactSupportIcon from "@mui/icons-material/ContactSupport";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import SchoolIcon from "@mui/icons-material/School";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import FindInPageIcon from "@mui/icons-material/FindInPage";
+import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
 import DiversityCheck from "./DiversityCheck";
 import { i18n } from "./infrastructure/i18n";
@@ -220,7 +220,7 @@ export default function MainMenu(props) {
         aria-controls="main-menu"
         aria-haspopup="true"
         onClick={toggleDrawer}
-      >
+        size="large">
         <MenuIcon />
       </IconButton>
       <SwipeableDrawer

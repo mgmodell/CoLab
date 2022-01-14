@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import SelectInput from '@material-ui/core/Select/SelectInput';
 
 export default function Logo(props){
 

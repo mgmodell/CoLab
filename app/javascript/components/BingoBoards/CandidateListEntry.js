@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import Paper from "@material-ui/core/Paper";
-import Collapse from "@material-ui/core/Collapse";
-import Typography from "@material-ui/core/Typography";
-import Alert from "@material-ui/lab/Alert";
-import CloseIcon from "@material-ui/icons/Close";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Collapse from "@mui/material/Collapse";
+import Typography from "@mui/material/Typography";
+import Alert from '@mui/material/Alert';
+import CloseIcon from "@mui/icons-material/Close";
 
 import Settings from "luxon/src/settings.js";
 
 import { useTranslation } from "react-i18next";
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from '../infrastructure/StatusActions';
-import { TextareaAutosize, Grid, Link } from "@material-ui/core";
+import { TextareaAutosize, Grid, Link } from "@mui/material";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 

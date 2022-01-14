@@ -1,12 +1,12 @@
 import React from "react";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import ListItemText from "@material-ui/core/ListItemText";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import ListItemText from "@mui/material/ListItemText";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import PropTypes from "prop-types";
-import ViewColumnRounded from "@material-ui/icons/ViewColumnRounded";
+import ViewColumnRounded from "@mui/icons-material/ViewColumnRounded";
 class ColumnMenu extends React.Component {
   constructor(props) {
     super(props);
@@ -41,7 +41,7 @@ class ColumnMenu extends React.Component {
           aria-owns={anchorEl ? "column-menu" : undefined}
           aria-haspopup="true"
           onClick={this.handleClick}
-        >
+          size="large">
           <ViewColumnRounded />
         </IconButton>
         <Menu

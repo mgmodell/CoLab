@@ -16,41 +16,41 @@ import {
   addMessage,
   acknowledgeMsg,
   Priorities} from './infrastructure/StatusActions';
-import Alert from "@material-ui/lab/Alert";
-import Button from "@material-ui/core/Button";
-import Collapse from "@material-ui/core/Collapse";
+import Alert from '@mui/material/Alert';
+import Button from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
 import PropTypes from "prop-types";
-import TextField from "@material-ui/core/TextField";
-import Paper from "@material-ui/core/Paper";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import Typography from "@material-ui/core/Typography";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
-import Tooltip from "@material-ui/core/Tooltip";
+import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Typography from "@mui/material/Typography";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import Tooltip from "@mui/material/Tooltip";
 
 import { iconForType } from "./ActivityLib";
 
-import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
+import { DatePicker, LocalizationProvider } from "@mui/lab/";
 
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 import CourseUsersList from "./CourseUsersList";
 
-import LuxonUtils from "@material-ui/pickers/adapter/luxon";
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
 import MUIDataTable from "mui-datatables";
 
-import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from "@material-ui/icons/Close";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import IconButton from "@material-ui/core/IconButton";
-import Link from "@material-ui/core/Link";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { Skeleton } from "@material-ui/lab";
+import { Skeleton } from '@mui/material';
 
 export default function CourseDataAdmin(props) {
   const category = "course";
@@ -319,7 +319,7 @@ export default function CourseDataAdmin(props) {
         </Select>
 
           ) : (
-            <Skeleton variant="rect" height={20} />
+            <Skeleton variant="rectangular" height={20} />
           )
         }
         <FormHelperText>Error schtuff</FormHelperText>
@@ -346,7 +346,7 @@ export default function CourseDataAdmin(props) {
         </Select>
 
         ):(
-            <Skeleton variant="rect" height={20} />
+            <Skeleton variant="rectangular" height={20} />
 
         )
         }
@@ -375,7 +375,7 @@ export default function CourseDataAdmin(props) {
       </FormControl>
 
       <Typography>All dates shown in {courseTimezone} timezone.</Typography>
-      <LocalizationProvider dateAdapter={LuxonUtils}>
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
         <DatePicker
           variant="inline"
           autoOk={true}
@@ -393,7 +393,7 @@ export default function CourseDataAdmin(props) {
         <FormHelperText error={true}>{messages["start_date"]}</FormHelperText>
       ) : null}
 
-      <LocalizationProvider dateAdapter={LuxonUtils}>
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
         <DatePicker
           variant="inline"
           autoOk={true}
@@ -532,7 +532,7 @@ export default function CourseDataAdmin(props) {
                       dispatch( endTask("deleting") );
                     })
                 }}
-              >
+                size="large">
                 <DeleteForeverIcon />
               </IconButton>
             </Tooltip>
@@ -550,7 +550,7 @@ export default function CourseDataAdmin(props) {
           setMenuAnchorEl(event.currentTarget);
         }}
         aria-label="Add Activity"
-      >
+        size="large">
         <AddIcon />
       </IconButton>
       <Menu

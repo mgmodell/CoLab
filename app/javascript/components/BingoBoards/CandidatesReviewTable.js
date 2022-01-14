@@ -3,22 +3,22 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
-import Skeleton from "@material-ui/lab/Skeleton";
-import Checkbox from "@material-ui/core/Checkbox";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Skeleton from '@mui/material/Skeleton';
+import Checkbox from "@mui/material/Checkbox";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import { SortDirection } from "react-virtualized";
 import RemoteAutosuggest from "../RemoteAutosuggest";
 
 import { useTranslation } from "react-i18next";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import MUIDataTable from "mui-datatables";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -369,7 +369,7 @@ export default function CandidatesReviewTable(props) {
           </Grid>
         </Grid>
       ) : (
-        <Skeleton variant="rect" height={20} />
+        <Skeleton variant="rectangular" height={20} />
       )}
       <MUIDataTable
         data={candidates}
@@ -387,7 +387,7 @@ export default function CandidatesReviewTable(props) {
                 container
                 spacing={8}
                 direction="row"
-                justify="flex-end"
+                justifyContent="flex-end"
                 alignItems="stretch"
               >
                 <Grid item>

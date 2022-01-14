@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import Link from "@material-ui/core/Link";
-import Paper from "@material-ui/core/Paper";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
 
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';

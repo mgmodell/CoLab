@@ -2,26 +2,26 @@ import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
-import Paper from "@material-ui/core/Paper";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import InputLabel from "@mui/material/InputLabel";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from '@mui/material/Skeleton';
 
-import { DatePicker, LocalizationProvider } from "@material-ui/pickers";
+import { DatePicker, LocalizationProvider } from "@mui/lab/";
 
 import { DateTime } from "luxon";
-import LuxonUtils from "@material-ui/pickers/adapter/luxon";
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
@@ -31,7 +31,7 @@ import htmlToDraft from "html-to-draftjs";
 import { i18n } from "../infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 import ConceptChips from "../ConceptChips";
 import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
@@ -404,7 +404,7 @@ export default function BingoGameDataAdmin(props) {
                   helperText={messages.individual_count}
                 />
               </Grid>
-              <LocalizationProvider dateAdapter={LuxonUtils}>
+              <LocalizationProvider dateAdapter={AdapterLuxon}>
                 <Grid item xs={4}>
                   <DatePicker
                     variant="inline"

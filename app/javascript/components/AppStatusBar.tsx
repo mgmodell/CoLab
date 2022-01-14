@@ -4,12 +4,12 @@ import {useTypedSelector} from './infrastructure/AppReducers'
 
 import {acknowledgeMsg} from './infrastructure/StatusActions';
 
-import Alert from "@material-ui/lab/Alert";
-import IconButton from "@material-ui/core/IconButton";
-import Collapse from "@material-ui/core/Collapse";
+import Alert from '@mui/material/Alert';
+import IconButton from "@mui/material/IconButton";
+import Collapse from "@mui/material/Collapse";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "@mui/icons-material/Close";
 
 
 export default function AppStatusBar(props) {

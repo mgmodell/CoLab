@@ -3,19 +3,19 @@ import PropTypes from "prop-types";
 import {
   useNavigate
 } from "react-router-dom";
-import Alert from "@material-ui/lab/Alert";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
+import Alert from '@mui/material/Alert';
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import Settings from "luxon/src/settings.js";
 
-import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from "@material-ui/icons/Close";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from './infrastructure/StatusActions';
 
 import MUIDataTable from "mui-datatables";
-import Collapse from "@material-ui/core/Collapse";
+import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 
@@ -139,7 +139,7 @@ export default function SchoolList(props) {
                 //  endpoints.endpoints[endpointSet].schoolCreateUrl;
               }}
               aria-label="New School"
-            >
+              size="large">
               <AddIcon />
             </IconButton>
           </Tooltip>
