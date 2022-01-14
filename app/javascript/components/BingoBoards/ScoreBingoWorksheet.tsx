@@ -35,6 +35,9 @@ export default function ScoreBingoWorksheet(props) {
   const [description, setDescription] = useState( 'loading' );
   const [worksheetAnswers, setWorksheetAnswers] = useState( [ [ ] ] );
   const [resultImgUrl, setResultImgUrl] = useState( null );
+  const [newImg, setNewImg] = useState( null );
+
+  const imgFileDataId = 'result_photo';
 
   const navigate = useNavigate( );
 
@@ -60,6 +63,27 @@ export default function ScoreBingoWorksheet(props) {
         })
     }
   },[endpointsLoaded])
+
+  const handleFileSelect = (evt)=>{
+    const files = evt.target.files;
+    const file = files[0];
+
+    if (files && file) {
+        var reader = new FileReader();
+
+        reader.onload = function(readerEvt) {
+            const binaryString = readerEvt.target.result;
+            setNewImg( btoa(binaryString) );
+        };
+
+        reader.readAsBinaryString(file);
+    }
+  }
+  const submitScore = ()=>{
+
+    console.log( 'img', newImg );
+
+  }
 
 
   const resultImage = null === resultImgUrl ?
@@ -105,16 +129,28 @@ export default function ScoreBingoWorksheet(props) {
         </table>
         </Grid>
         <Grid item xs={12} sm={6} >
-          <label htmlFor='upload-photo'>
+          <TextField id='score' label={t('score') } />
+        </Grid>
+        <Grid item xs={12} sm={6} >
+          <label htmlFor={imgFileDataId}>
             <input
               style={{ display: 'none' }}
-              id='upload-photo'
-              name='upload-photo'
+              id={imgFileDataId}
+              name={imgFileDataId}
+              onChange={handleFileSelect}
               type="file" />
           <Button
             variant='contained'
-            component='span'>Upload Button</Button>
+            component='span'
+            >{t('file_select')}</Button>
           </label>
+        </Grid>
+        <Grid item xs={12} sm={12} >
+          <Button
+            variant='contained'
+            component='span'
+            onClick={submitScore}
+            >{t('submit_scores')}</Button>
         </Grid>
         {resultImage}
       </Grid>
