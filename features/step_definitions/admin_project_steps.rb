@@ -74,11 +74,10 @@ Then(/^the user clicks "([^"]*)"$/) do |link_or_button|
 end
 
 Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
-  # TODO: - this iteration should not be required, but I think it's an artifact of JQueryMobile
-  2.times do
+  begin
     click_link tab
   rescue Capybara::ElementNotFound => e
-    find(:xpath, "//button/span[text()='#{tab}']").click
+    find(:xpath, "//button[text()='#{tab}']").click
   end
   wait_for_render
 end
