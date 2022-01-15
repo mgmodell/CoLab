@@ -275,7 +275,7 @@ end
 
 Then 'the user adds the {string} users {string}' do |type, addresses|
   lbl = "#{type}s"
-  tab = find(:xpath, "//button/span[text()='#{lbl.capitalize}']")
+  tab = find(:xpath, "//button[text()='#{lbl.capitalize}']")
   tab.click
 
   btn = find(:xpath, "//button[@aria-label='Add #{lbl}']")
