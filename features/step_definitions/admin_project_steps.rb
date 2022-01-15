@@ -84,10 +84,25 @@ end
 
 Then 'the user enables the {string} table view option' do |view_option|
   find(:xpath, "//button[@aria-label='View Columns']").click
-  sleep 0.1
-  inpt = find(:xpath, "//label[contains(.,'#{view_option}')]/span/span/input", visible: :all)
+
+  begin
+    retries ||= 0
+    inpt = find(:xpath, "//label[contains(.,'#{view_option}')]", visible: :all)
+  rescue => exception
+    log e.inspect
+    sleep 0.1
+    retry if (retries += 1 ) < 2
+  end
   inpt.click unless inpt.checked?
-  sleep 0.1
+
+  begin
+    retries ||= 0
+    inpt = find(:xpath, "//label[contains(.,'#{view_option}')]", visible: :all)
+  rescue => exception
+    log e.inspect
+    sleep 0.1
+    retry if (retries += 1 ) < 2
+  end
   find(:xpath, '//body').click
 end
 
