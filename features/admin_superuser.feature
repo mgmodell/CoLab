@@ -34,6 +34,7 @@ Feature: Administration: user
 
 @javascript
   Scenario: Regular users do not see the Admin button 
+    Given the course started "4 months ago" and ended "2 months from now"
     Given the course has an assessed project
     Given the user logs in
     Then the user "does" see an Admin button
