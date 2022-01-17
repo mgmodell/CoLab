@@ -103,6 +103,7 @@ class DecisionEnrollmentsTable extends React.Component {
                       this.decision(id, true);
                     }}
                     aria-label="Accept"
+                    label="Accept"
                     size="small"
                     disabled={this.state.working}
                   >
@@ -116,6 +117,7 @@ class DecisionEnrollmentsTable extends React.Component {
                       this.decision(id, false);
                     }}
                     aria-label="Reject"
+                    label="Reject"
                     size="small"
                     disabled={this.state.working}
                   >

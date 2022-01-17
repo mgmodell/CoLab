@@ -418,7 +418,7 @@ Given('the course adds {int} {string} users') do |count, role|
 end
 
 Then('the user sees {int} enrollment request') do |count|
-  expect(all(:xpath, '//button[@title=\'Accept\']').size).to eq count
+  expect(all(:xpath, '//button[@label=\'Accept\']').size).to eq count
 end
 
 Then('the user {string} {int} enrollment request') do |decision, count|
