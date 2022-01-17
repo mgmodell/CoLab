@@ -66,6 +66,9 @@ Then(/^the user clicks "([^"]*)"$/) do |link_or_button|
   begin
     retries ||= 0
     btn.click
+  rescue NoMethodError => e 
+    log e.inspect
+
   rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
     log e.inspect
     retry if (retries += 1) < 4
