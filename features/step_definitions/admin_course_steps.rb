@@ -306,12 +306,11 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
   # step 'the user enables the "Email" table view option'
   if addresses == 'user_list'
     @users.each do |_address|
-      step 'the user enables the "Email" table view option'
       elem = find(:xpath,
                   "//tr[td[contains(.,'#{_address.email}')]]//button[@aria-label='Drop Student']")
       elem.click
       find(:xpath,
-           "//button/span[contains(.,'Drop the Student')]").click
+           "//button[text()='Drop the Student']").click
       sleep(0.01) until all(:xpath, "//*[@id='waiting']").empty?
     end
   else
@@ -319,7 +318,7 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
                 "//tr[td[contains(.,'#{addresses}')]]//button[@aria-label='Drop Student']")
     elem.click
     find(:xpath,
-         "//button/span[contains(.,'Drop the Student')]").click
+         "//button[text()='Drop the Student']").click
     sleep(0.01) until all(:xpath, "//*[@id='waiting']").empty?
   end
 end
