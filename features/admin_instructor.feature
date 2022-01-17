@@ -15,6 +15,7 @@ Feature: Administration: instructor
 
 @javascript
   Scenario: Instructors see admin buttons with a project
+    Given the course started "4 months ago" and ended "2 months from now"
     Given the course has an assessed project
     Given the user logs in
     Then the user "does" see an Admin button

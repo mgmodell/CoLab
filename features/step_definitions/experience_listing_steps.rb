@@ -93,12 +93,15 @@ Given(/^the user is "(.*?)" user$/) do |which|
 end
 
 Given(/^the course has an assessed project$/) do
+  yesterday = DateTime.yesterday
+  tomorrow = DateTime.tomorrow
+
   @project = @course.projects.new(
     name: "#{Faker::Company.industry} Project",
     start_dow: 1,
     end_dow: 2,
-    start_date: DateTime.yesterday,
-    end_date: DateTime.tomorrow,
+    start_date: yesterday,
+    end_date: tomorrow,
     style: Style.find(1)
   )
   @project.save!
