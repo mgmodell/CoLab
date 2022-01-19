@@ -87,7 +87,7 @@ class Course < ApplicationRecord
 
   def copy_from_template(new_start:)
     # Timezone checking here
-    course_tz = ActiveSupport::TimeZone.new(timezone)
+    course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC' )
     new_start = course_tz.utc_to_local(new_start).beginning_of_day
     d = start_date
     date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
@@ -325,7 +325,7 @@ class Course < ApplicationRecord
   end
 
   def timezone_adjust_comprehensive
-    course_tz = ActiveSupport::TimeZone.new(timezone)
+    course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC' )
     # TODO: must handle changing timezones at some point
 
     # TZ corrections

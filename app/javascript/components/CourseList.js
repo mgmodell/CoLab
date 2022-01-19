@@ -147,7 +147,7 @@ export default function CourseList(props) {
         customBodyRender: (value, tableMeta, updateValue) => {
           const course = courses.filter(item => {
             return value == item.id;
-          });
+          })[ 0 ];
           const scoresUrl =
             endpoints.scoresUrl + value + ".csv";
           const copyUrl =

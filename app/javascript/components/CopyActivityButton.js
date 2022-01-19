@@ -8,7 +8,8 @@ import Paper from "@mui/material/Paper";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import { DateTime } from "luxon";
-import { DatePicker, LocalizationProvider } from "@mui/lab/";
+import DatePicker from "@mui/lab/DatePicker";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterLuxon from '@mui/lab/AdapterLuxon';
 
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
@@ -22,40 +23,41 @@ import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 
 import {startTask, endTask} from './infrastructure/StatusActions';
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function CopyActivityButton(props) {
-  const [copyData, setCopyData] = useState(null);
+  const endpointSet = "course";
+  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
   const dispatch = useDispatch( );
 
-  function PaperComponent(props) {
-    return <Paper {...props} />;
-  }
-
+  const [copyData, setCopyData] = useState(null);
   const [newStartDate, setNewStartDate] = useState(DateTime.local().toISO());
+  const [value, setValue] = useState( null );
+
 
   const copyDialog = (
     <Dialog
       open={null != copyData}
-      PaperComponent={PaperComponent}
       onClose={(event, reason) => {
-        setNewStartDate(DateTime.local().toISO());
         setNewStartDate(null);
         setCopyData(null);
       }}
     >
       {null != copyData ? (
         <React.Fragment>
+
+            <LocalizationProvider dateAdapter={AdapterLuxon}>
           <DialogTitle>Create a Copy</DialogTitle>
           <DialogContent>
             <WorkingIndicator identifier="copying_course" />
             <DialogContentText>
               This course started on{" "}
-              {copyData.startDate.toLocaleString(DateTime.DATE_SHORT)}. When
+              {props.startDate.toLocaleString(DateTime.DATE_SHORT)}. When
               would you like for the new copy to begin? Everything will be
               shifted accordingly.
               <br />
             </DialogContentText>
-            <LocalizationProvider dateAdapter={AdapterLuxon}>
               <DatePicker
                 variant="inline"
                 autoOk={true}
@@ -64,17 +66,17 @@ export default function CopyActivityButton(props) {
                 id="newCourseStartDate"
                 label="New course start date?"
                 value={newStartDate}
-                onChange={setNewStartDate}
+                onChange={newValue =>{
+                    setNewStartDate( newValue);
+                   }}
                 renderInput={props => <TextField {...props} />}
               />
-            </LocalizationProvider>
           </DialogContent>
           <DialogActions>
             <Button
               disabled={status.working}
               onClick={event => {
                 setNewStartDate(DateTime.local().toISO());
-                setNewStartDate(null);
                 setCopyData(null);
               }}
             >
@@ -83,9 +85,10 @@ export default function CopyActivityButton(props) {
             <Button
               disabled={status.working}
               onClick={event => {
-                dispatch( startTask("copying") );
-                console.log(newStartDate);
-                axios.post( props.copyUrl,{
+                dispatch( startTask("copying_course") );
+                const url = `${endpoints.courseCopyUrl}${props.itemId}.json`;
+
+                axios.post( url,{
                   start_date: newStartDate,
                 })
                   .then( response =>{
@@ -96,7 +99,7 @@ export default function CopyActivityButton(props) {
                     }
                     setNewStartDate(DateTime.local().toISO());
                     setCopyData(null);
-                    dispatch( endTask("copying") );
+                    dispatch( endTask("copying_course") );
                   })
                   .catch( error =>{
                     console.log( 'error:', error)
@@ -108,6 +111,7 @@ export default function CopyActivityButton(props) {
               Make a Copy
             </Button>
           </DialogActions>
+            </LocalizationProvider>
         </React.Fragment>
       ) : (
         <DialogContent />
@@ -138,7 +142,6 @@ export default function CopyActivityButton(props) {
 }
 
 CopyActivityButton.propTypes = {
-  copyUrl: PropTypes.string.isRequired,
   itemId: PropTypes.number.isRequired,
   itemUpdateFunc: PropTypes.func,
   startDate: PropTypes.instanceOf(Date).isRequired,
