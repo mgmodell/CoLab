@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {useDispatch} from 'react-redux';
 import PropTypes from "prop-types";
 import IconButton from "@mui/material/IconButton";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import Paper from "@mui/material/Paper";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import { DateTime } from "luxon";
@@ -20,7 +19,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import Collapse from "@mui/material/Collapse";
 
 import {startTask, endTask} from './infrastructure/StatusActions';
 import { useTypedSelector } from "./infrastructure/AppReducers";
