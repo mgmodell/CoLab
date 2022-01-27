@@ -22,7 +22,7 @@ gem 'coffee-rails'
 gem 'webpacker'
 
 # Use jquery as the JavaScript library
-gem 'jquery-rails'
+# gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 # gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -35,10 +35,11 @@ gem 'active_storage_validations'
 gem 'ahoy_email'
 gem 'aws-sdk-s3'
 gem 'bootsnap'
-gem 'bourbon'
+# gem 'bourbon'
 gem 'chronic'
 gem 'city-state'
 gem 'country_select'
+gem 'cucumber-rails'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
@@ -47,7 +48,7 @@ gem 'devise_token_auth', git: 'https://github.com/mgmodell/devise_token_auth'
 gem 'email_address'
 gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
 gem 'image_processing', '~> 1.0'
-gem 'jquery_mobile_rails'
+# gem 'jquery_mobile_rails'
 # gem 'kaminari'
 gem 'listen'
 gem 'net-smtp'
@@ -58,7 +59,7 @@ gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
 gem 'react-rails'
-gem 'sassc-rails'
+# gem 'sassc-rails'
 gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
 
@@ -75,7 +76,6 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'ruby-debug-ide'
   gem 'debase', '0.2.5.beta2'
