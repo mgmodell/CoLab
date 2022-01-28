@@ -25,7 +25,9 @@ import SignIn from './SignIn';
 import EnrollInCourse from './EnrollInCourse';
 import ScoreBingoWorksheet from './BingoBoards/ScoreBingoWorksheet';
 import RequireAuth from './infrastructure/RequireAuth';
-import AppInit from './infrastructure/AppInit'
+import Privacy from './Privacy';
+import TermsOfService from './TermsOfService';
+import AppInit from './infrastructure/AppInit';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -145,6 +147,20 @@ export default function PageWrapper(props) {
                   <EnrollInCourse
                     />
                 </RequireAuth>
+              }
+            />
+            <Route
+              path={`tos`}
+              element={
+                  <TermsOfService
+                    />
+              }
+            />
+            <Route
+              path={`privacy`}
+              element={
+                  <Privacy
+                    />
               }
             />
             <Route path="/"
