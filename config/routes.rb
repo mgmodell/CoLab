@@ -165,12 +165,14 @@ Rails.application.routes.draw do
 
 
   # token auth routes available at /api/v1/auth
-      mount_devise_token_auth_for 'User', at: 'auth', controllers:
-      {
-        omniauth_callbacks: 'users/omniauth_callbacks',
-        sessions: 'users/sessions',
-        registrations: 'registrations'
-      }
+  mount_devise_token_auth_for 'User', at: 'auth', skip: [:omniauth_callbacks], controllers:
+  {
+    # omniauth_callbacks: 'users/omniauth_callbacks',
+    sessions: 'users/sessions',
+    registrations: 'registrations'
+  }
+  post 'auth/validate', to: 'users/omniauth_callbacks#validate',
+    as: :validation
 
 
   as :user do

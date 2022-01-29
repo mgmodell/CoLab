@@ -30,6 +30,9 @@ class ApplicationController < ActionController::Base
                  impairment_visual impairment_auditory
                  impairment_motor impairment_cognitive
                  impairment_other])
+    devise_parameter_sanitizer.permit(:validate, keys:
+              %i[id_token] )
+
   end
 
   def switch_locale(&action)

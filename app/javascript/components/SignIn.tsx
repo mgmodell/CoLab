@@ -36,6 +36,7 @@ import Grid from "@mui/material/Grid";
 import Input from "@mui/material/Input";
 //import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
 import {emailSignIn, oAuthSignIn} from './infrastructure/ContextActions';
+import { GoogleLogin } from 'react-google-login';
 import {useTypedSelector} from './infrastructure/AppReducers'
 import Skeleton from '@mui/material/Skeleton';
 
@@ -53,6 +54,7 @@ export default function SignIn(props) {
   const loggingIn = useTypedSelector( (state) => state.context.status.loggingIn )
 
   const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
+  const oauth_client_ids = useTypedSelector(state=>state.context.lookups['oauth_ids'])
 
   const signOutBtn =  (
     <Button disabled={false} variant="contained" onClick={()=>{
@@ -74,12 +76,20 @@ export default function SignIn(props) {
       Log in
     </Button>
   );
+
+
+  const get_token_from_oauth = (response)=>{
+      console.log( 'success', response);
+      dispatch( oAuthSignIn( response.tokenId ) );
+  }
+
   const oauthBtn =  (
-    <Button variant="contained" onClick={()=>{
-      dispatch( oAuthSignIn( 'google' ) );
-    }}>
-      Log In with Google
-    </Button>
+    <GoogleLogin
+      clientId={oauth_client_ids['google']}
+      onSuccess={get_token_from_oauth}
+      onFailure={(response)=>{console.log( 'fail', response)} }
+      cookiePolicy="single_host_origin"
+    />
   );
 
 

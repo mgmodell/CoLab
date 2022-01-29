@@ -1,3 +1,7 @@
+/*
+ * This code was largely adapted from j-toker.
+ * https://github.com/lynndylanhurley/j-toker
+ */
 import axios from 'axios';
 
 import {fetchProfile, setProfile, clearProfile} from './ProfileActions';
@@ -14,10 +18,10 @@ export const SET_LOOKUPS = 'SET_LOOKUPS';
 
 const CONFIG = {
     SAVED_CREDS_KEY:    'colab_authHeaders',
-    API_URL:            '/api',
+    API_URL:            '/auth',
     SIGN_OUT_PATH:      '/auth/sign_out',
     EMAIL_SIGNIN_PATH:  '/auth/sign_in',
-    GOOGLE_AUTH_PATH:   '/auth/omniauth',
+    EMAIL_REGISTRATION_PATH: '/auth',
 
     tokenFormat: {
         "access-token": "{{ access-token }}",
@@ -25,10 +29,6 @@ const CONFIG = {
         client:         "{{ client }}",
         expiry:         "{{ expiry }}",
         uid:            "{{ uid }}"
-    },
-
-    authProviderPaths: {
-        google: '/auth/google_oauth2'
     },
 
     parseExpiry: function(headers){
@@ -151,26 +151,6 @@ const CONFIG = {
 
     },
 
-    buildOAuthURL: function( configName: string,
-                            params: {[key: string],
-                            string}, providerPath: string ){
-
-        let oAuthUrl: string = CONFIG.API_URL + providerPath;
-        oAuthUrl += '?auth_origin_url=' + encodeURIComponent( location.href );
-        oAuthUrl += '&config_name=' + encodeURIComponent(configName );
-        oAuthUrl += "&omniauth_window_type=newWindow";
-
-        if( params ){
-            for( var key in params ){
-                oAuthUrl += '&';
-                oAuthUrl += encodeURIComponent( key );
-                oAuthUrl += '=';
-                oAuthUrl += encodeURIComponent(params[key])
-            }
-        }
-        return oAuthUrl;
-    }
-
 
 }
 
@@ -242,6 +222,7 @@ export function emailSignIn( email: string, password: string ){
                         });
                 })
                 .catch( error=>{
+                    //Handle a failed login properly
                     console.log( 'error', error );
                 })
 
@@ -250,20 +231,60 @@ export function emailSignIn( email: string, password: string ){
 
 }
 
-export function oAuthSignIn( provider: string ){
+//Untested
+export function emailSignUp( email: string, password: string, password_confirmation: string ){
+    return( dispatch, getState ) =>{
+        dispatch( setLoggingIn);
+
+        if( !email || !password || !password_confirmation ){
+            dispatch( setLoginFailed( ) );
+        } else if( password_confirmation !== password ){
+            dispatch( setLoginFailed( ) );
+
+        } else {
+            return axios.post( CONFIG.EMAIL_REGISTRATION_PATH,
+                { email: email,
+                  password: password,
+                  password_confirmation: password_confirmation
+                 } )
+                .then( resp=>{
+                    //TODO resp contains the full user info
+                    dispatch( addMessage( 'Signed up successfully. Check your email.', new Date(), Priorities.INFO ))
+                    CONFIG.retrieveResources( dispatch, getState )
+                        .then( response =>{
+                            dispatch( fetchProfile( ) );
+                        });
+                })
+                .catch( error=>{
+                    console.log( 'error', error );
+                })
+
+        }
+    }
+
+}
+
+export function oAuthSignIn( token: string ){
     return( dispatch, getState ) =>{
         dispatch( setLoggingIn );
-        //Get the URL
-        const providerPath = CONFIG.authProviderPaths[ provider ];
-        let url: string = CONFIG.buildOAuthURL( provider, {}, providerPath );
 
-        if( true /*load here*/ ){
-            window.location.replace( url )
+        const url = getState().context.endpoints['home'].oauthValidate + '.json';
 
-        }else {
-            var popup = this.open( url );
-            //build a listenFoCredentials function
-        }
+        axios.post( url, {
+            id_token: token
+        })
+            .then( resp=>{
+                //TODO resp contains the full user info
+                dispatch( addMessage( resp.data['message'], new Date(), Priorities.INFO ))
+                CONFIG.retrieveResources( dispatch, getState )
+                    .then( response =>{
+                        dispatch( fetchProfile( ) );
+                    });
+            })
+            .catch( error=>{
+                //Handle a failed login properly
+                console.log( 'error', error );
+            })
 
     }
     

@@ -50,7 +50,8 @@ class HomeController < ApplicationController
         quotePath: get_quote_path,
         moreInfoUrl: 'http://PeerAssess.info',
         diversityScoreFor: check_diversity_score_path,
-        lookupsUrl: lookups_path
+        lookupsUrl: lookups_path,
+        oauthValidate: validation_path
       }
     }
     ep_hash[:profile] = {
@@ -203,6 +204,9 @@ class HomeController < ApplicationController
           }
         },
         timezones: HomeController::TIMEZONES,
+        oauth_ids: {
+          google: Rails.configuration.omniauth[:google_client_id]
+        },
         schools: School.all.collect { |school|
           {
             id: school.id,

@@ -307,12 +307,14 @@ class User < ApplicationRecord
   end
 
   def self.from_omniauth(access_token)
-    data = access_token.info
+    data = access_token
     user = User.joins(:emails).where(emails: { email: data['email'] }).first
 
     user ||= User.create(
       email: data['email'],
       password: Devise.friendly_token[0, 20],
+      first_name: data['given_name'],
+      last_name: data['family_name'],
       timezone: 'UTC'
     )
     user.confirm
