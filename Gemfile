@@ -39,7 +39,6 @@ gem 'bootsnap'
 gem 'chronic'
 gem 'city-state'
 gem 'country_select'
-gem 'cucumber-rails'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
@@ -76,6 +75,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
+  gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'ruby-debug-ide'
   gem 'debase', '0.2.5.beta2'
