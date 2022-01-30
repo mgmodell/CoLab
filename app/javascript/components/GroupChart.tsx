@@ -5,7 +5,7 @@ import { scaleLinear } from "@vx/scale";
 import { curveMonotoneX } from "@vx/curve";
 import { Text } from "@vx/text";
 
-export default function BingoDataRepresentation(props) {
+export default function GroupChart(props) {
   const getAvg = valueArray => {
     var total = 0;
     for (var i = 0; i < valueArray.length; i++) {

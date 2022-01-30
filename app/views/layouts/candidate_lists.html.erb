@@ -7,7 +7,6 @@
     <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= javascript_include_tag "installments_manifest" %>
-    <%= javascript_pack_tag 'application' %>
     <%= csrf_meta_tags %>
     <% working = !( @diagnosis.nil? && @reaction.nil? ) %>
   </head>

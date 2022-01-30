@@ -37,11 +37,11 @@ export default function PageWrapper(props) {
       applyMiddleware( thunk ) 
     ));
 
-  const styles = createTheme(adaptV4Theme({
+  const styles = createTheme({
     typography: {
       useNextVariants: true
     }
-  }));
+  });
   
   return (
     <Provider store={store}>
