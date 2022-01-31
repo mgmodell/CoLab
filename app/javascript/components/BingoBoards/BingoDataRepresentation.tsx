@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { LinePath } from "@vx/shape";
-import { scaleLinear } from "@vx/scale";
-import { curveMonotoneX } from "@vx/curve";
-import { Text } from "@vx/text";
+import { LinePath } from "@visx/shape";
+import { scaleLinear } from "@visx/scale";
+import { curveMonotoneX } from "@visx/curve";
+import { Text } from "@visx/text";
 
 export default function BingoDataRepresentation(props) {
   const getAvg = valueArray => {
