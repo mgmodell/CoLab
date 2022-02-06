@@ -5,6 +5,7 @@ import axios from "axios";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Skeleton, Switch, Typography } from "@mui/material";
+import SubjectChart from "./SubjectChart";
 
 export default function ChartContainer(props) {
 
@@ -28,6 +29,8 @@ export default function ChartContainer(props) {
   const [selectedProject, setSelectedProject] = useState( -1 );
   const [subjects, setSubjects] = useState( [] );
   const [selectedSubject, setSelectedSubject] = useState( -1 );
+
+  const [charts, setCharts] = useState( {} );
 
   const getSubjectsForProject = (projectId )=>{
     if( 0 < selectedProject ){
@@ -91,6 +94,25 @@ export default function ChartContainer(props) {
   }, [projects])
 
 
+  const selectSubject = (subjectId) =>{
+    if( 0 < subjectId ){
+
+      const chartsCopy = Object.assign( {}, charts );
+      const chart = chartsCopy[ subjectId ];
+      if( null == chart ){
+        chartsCopy[ subjectId ] = {
+          index: Object.keys( charts ).length + 1,
+          hidden: false,
+          subjectId: subjectId
+        }
+      } else {
+        chart.hidden = false;
+      }
+      setCharts( chartsCopy );
+    }
+    setSelectedSubject( subjectId );
+
+  }
   const subjectSelect = ()=>{
           if( null == selectedProject ){
             return(
@@ -113,7 +135,7 @@ export default function ChartContainer(props) {
                   id={`${unit_code}`}
                   labelId={`${props.unitOfAnalysis}_label`}
                   value={selectedSubject}
-                  onChange={(evt)=>{setSelectedSubject( evt.target.value )}}
+                  onChange={(evt)=>{selectSubject( evt.target.value )}}
                   >
                   <MenuItem value={-1}>{t('none')}</MenuItem>
                   { subjects.map( (subject) =>{
@@ -128,7 +150,7 @@ export default function ChartContainer(props) {
   }
 
   const projectSelect = ()=>{
-          if( null == projects ){
+          if( null == projects || 0 == projects.length ){
             return (<Skeleton variant="text" />)
           }
           else if( 1 < projects.length ){
@@ -149,9 +171,7 @@ export default function ChartContainer(props) {
                   })}
                   </Select>
               </FormControl>
-                
-          )
-          } else {
+          )} else {
             return(
               <React.Fragment>
                 Data for <strong>{projects[ 0 ].name}</strong>
@@ -188,11 +208,28 @@ export default function ChartContainer(props) {
     <Grid container>
       {forResearchBlock}
       {anonymizeBlock}
-      <Grid item xs={12} m={3}>
+      <Grid item xs={12} sm={6}>
         {projectSelect( )}
       </Grid>
-      <Grid item xs={12} m={3}>
+      <Grid item xs={12} sm={6}>
         {subjectSelect( )}
+      </Grid>
+      <Grid item xs={12}>
+        {Object.values( charts )
+          .sort( (a,b)=>{ a.index - b.index })
+          .map( chart =>{
+            return (
+              <SubjectChart
+                key={chart.index}
+                subjectId={chart.subjectId}
+                projectId={selectedProject}
+                unitOfAnalysis={props.unitOfAnalysis}
+                forResearch={props.forResearch}
+                anonymize={props.anonymize}
+              />
+            )
+        })}
+
       </Grid>
     </Grid>
   );

@@ -37,6 +37,8 @@ class GraphingController < ApplicationController
                             .uniq.to_a
                    end
     project_list.collect! { |project| { id: project.id, name: project.get_name(anonymize) } }
+
+    project_list.sort!{ |a,b| a[:name] <=> b[:name] }
     respond_to do |format|
       format.json { render json: project_list }
     end
@@ -65,6 +67,7 @@ class GraphingController < ApplicationController
 
     end
 
+    subjects.sort!{|a,b| a[:name] <=> b[:name]}
     # Return the retrieved data
     respond_to do |format|
       format.json { render json: subjects }

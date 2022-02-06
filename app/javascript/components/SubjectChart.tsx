@@ -5,6 +5,7 @@ import { scaleLinear } from "@visx/scale";
 import { curveMonotoneX } from "@visx/curve";
 import { Text } from "@visx/text";
 import axios from "axios";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function SubjectChart(props) {
 
@@ -37,15 +38,14 @@ export default function SubjectChart(props) {
 
   return (
     <React.Fragment>
-      <svg width={props.width} height={props.height}>
+      {props.subjectId}
+      <svg width='100%'>
       </svg>
     </React.Fragment>
   );
 }
 
 SubjectChart.propTypes = {
-  height: PropTypes.number.isRequired,
-  width: PropTypes.number.isRequired,
   subjectId: PropTypes.number.isRequired,
   projectId: PropTypes.number.isRequired,
   unitOfAnalysis: PropTypes.oneOf( ['individual', 'group'] ),
