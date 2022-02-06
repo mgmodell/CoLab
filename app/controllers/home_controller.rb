@@ -138,6 +138,11 @@ class HomeController < ApplicationController
           baseUrl: consent_forms_path,
           consentFormCreateUrl: new_consent_form_path
         }
+        ep_hash[:graphing] = {
+          dataUrl: graphing_data_path,
+          subjectsUrl: graphing_subjects_path,
+          projectsUrl: graphing_projects_path
+        }
       end
     end
 

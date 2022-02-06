@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
@@ -11,6 +11,8 @@ import Select from "@mui/material/Select";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import TabPanel from "@mui/lab/TabPanel";
+import TabContext from "@mui/lab/TabContext";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 
@@ -30,8 +32,10 @@ import {startTask,
       } from './infrastructure/StatusActions';
 
 import ProjectGroups from "./ProjectGroups";
+import ChartContainer from './ChartContainer';
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
+import { Grid, Skeleton } from "@mui/material";
 
 export default function ProjectDataAdmin(props) {
   const cityTimezones = require("city-timezones");
@@ -41,7 +45,7 @@ export default function ProjectDataAdmin(props) {
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded)
   const { courseIdParam, projectIdParam } = useParams( );
 
-  const [curTab, setCurTab] = useState("details");
+  const [curTab, setCurTab] = useState('details');
   const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category])} );
   const [messages, setMessages] = useState({});
   const dispatch = useDispatch( );
@@ -346,14 +350,36 @@ export default function ProjectDataAdmin(props) {
       {saveButton}
     </Paper>
   );
+  const chartContainer = 0 < projectId ?
+  (
+    <React.Fragment>
+        <Suspense fallback={<Skeleton variant='rectangular' height={300} />}>
+        <ChartContainer
+          unitOfAnalysis='group'
+          anonymize={false}
+          forResearch={false}
+          projects={[
+            {id: projectId, name: projectName}
+          ]}
+          />
+        </Suspense>
+    </React.Fragment>
+  ) : null;
+
   return (
     <Paper>
+      <TabContext value={curTab} >
+
       <Tabs value={curTab} onChange={(event, value) => setCurTab(value)}>
         <Tab label="Details" value="details" />
         <Tab label="Groups" value="groups" disabled={null == projectId} />
+        <Tab label="Reporting" value='rpt' disabled={null == projectId} />
       </Tabs>
-      {"details" == curTab ? detailsComponent : null}
-      {"groups" == curTab ? (
+      <TabPanel value='details'>
+        {detailsComponent}
+
+      </TabPanel>
+      <TabPanel value='groups'>
         <ProjectGroups
           projectId={projectId}
           groupsUrl={endpoints.groupsUrl}
@@ -365,7 +391,11 @@ export default function ProjectDataAdmin(props) {
             endpoints.diversityRescoreGroups
           }
         />
-      ) : null}
+      </TabPanel>
+      <TabPanel value='rpt'>
+        {chartContainer }
+      </TabPanel>
+      </TabContext>
     </Paper>
   );
 }

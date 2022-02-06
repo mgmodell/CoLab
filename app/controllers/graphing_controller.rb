@@ -58,12 +58,13 @@ class GraphingController < ApplicationController
                        .where(consent_logs: { accepted: true }, projects: { id: project_id })
                        .collect { |user| [user.name(anonymize), user.id] }
                  else
-                   Project.find(project_id).users.collect { |user| [user.name(anonymize), user.id] }
+                   Project.find(project_id).users.collect { |user| {name: user.name(anonymize), id: user.id} }
                  end
     when Unit_Of_Analysis[:group]
-      subjects = Project.find(project_id).groups.collect { |group| [group.get_name(anonymize), group.id] }
+      subjects = Project.find(project_id).groups.collect { |group| { name: group.get_name(anonymize), id: group.id} }
 
     end
+
     # Return the retrieved data
     respond_to do |format|
       format.json { render json: subjects }

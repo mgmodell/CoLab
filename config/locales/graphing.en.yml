@@ -1,7 +1,13 @@
 en:
   graphing:
     # Reporting terms
+    consent_switch: Limit to consenting users only
+    anon_switch: Anonymize data
     anon_confirm: This will remove all the charts below. Are you sure?
+    projects_list: Select a project
+    group_list: Select a group
+    individual_list: Select an individual
+    none: None Selected
     date: Date
     contribution_lvl: Contribution Level
     chart_dwn_warn: >
