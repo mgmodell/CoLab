@@ -223,12 +223,16 @@ Rails.application.routes.draw do
   resources :installments, only: %i[update create]
 
   get 'graphing/index' => 'graphing#index', as: :'graphing'
-  get 'graphing/data/:unit_of_analysis/:subject/:project/:for_research/:anonymous' =>
-          'graphing#data', as: :graphing_data
-  get 'graphing/projects/:for_research/:anonymous' =>
+  # Pull the available projects
+  post 'graphing/projects' => #/:for_research/:anonymous' =>
           'graphing#projects', as: :graphing_projects
-  get 'graphing/subjects/:unit_of_analysis/:project_id/:for_research/:anonymous' =>
+  # Pull the available groups or students
+  post 'graphing/subjects' => #/:unit_of_analysis/:project_id/:for_research/:anonymous' =>
           'graphing#subjects', as: :graphing_subjects
+
+  # Pull the data
+  post 'graphing/data' => #/:unit_of_analysis/:subject/:project/:for_research/:anonymous' =>
+          'graphing#data', as: :graphing_data
 
   match '*path', to: 'home#index', via: :all
 end
