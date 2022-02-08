@@ -1,22 +1,14 @@
 import React, {useState, useEffect} from "react";
 import PropTypes from "prop-types";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { i18n } from "./infrastructure/i18n";
+import { i18n } from "../infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Skeleton, Switch, Typography } from "@mui/material";
-import SubjectChart from "./SubjectChart";
+import SubjectChart, {unit_codes, code_units} from "./SubjectChart";
 
 export default function ChartContainer(props) {
 
-  const unit_codes ={
-    group: 2,
-    individual: 1
-  };
-
-  const code_units=[
-    'individual', 'group'
-  ]
 
   const category = "graphing";
   const endpoints = useTypedSelector(state=>state.context.endpoints[category]);

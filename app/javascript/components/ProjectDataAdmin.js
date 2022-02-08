@@ -32,7 +32,7 @@ import {startTask,
       } from './infrastructure/StatusActions';
 
 import ProjectGroups from "./ProjectGroups";
-import ChartContainer from './ChartContainer';
+import ChartContainer from './Reports/ChartContainer';
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 import { Grid, Skeleton } from "@mui/material";
