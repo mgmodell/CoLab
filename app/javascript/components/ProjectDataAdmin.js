@@ -45,7 +45,7 @@ export default function ProjectDataAdmin(props) {
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded)
   const { courseIdParam, projectIdParam } = useParams( );
 
-  const [curTab, setCurTab] = useState('details');
+  const [curTab, setCurTab] = useState('rpt');
   const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category])} );
   const [messages, setMessages] = useState({});
   const dispatch = useDispatch( );
@@ -350,7 +350,7 @@ export default function ProjectDataAdmin(props) {
       {saveButton}
     </Paper>
   );
-  const chartContainer = 0 < projectId ?
+  const chartContainer = (0 < projectId) && ('' !== projectName) ?
   (
     <React.Fragment>
         <Suspense fallback={<Skeleton variant='rectangular' height={300} />}>
