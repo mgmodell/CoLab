@@ -9,6 +9,8 @@ import {
   XYChart,
   Tooltip
   } from '@visx/xychart';
+import {curveLinearClosed } from '@visx/curve';
+import { Polygon, LinePath } from '@visx/shape';
 import axios from "axios";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { timeParse } from 'd3-time-format';
@@ -47,11 +49,13 @@ export default function SubjectChart(props) {
   const parseTime = timeParse( "%Y-%m-%dT%H:%M:%S.%L%Z" );
   const yScale = scaleLinear({
     domain: [0,6000],
-    rangeRound: [ (chartHeight - margin.top - margin.bottom), 0 ]
+    range: [ (chartHeight - margin.top - margin.bottom), 0 ],
+    round: true,
   })
   const xScale = scaleTime({
     domain: xDateDomain,
-    rangeRound: [ 0, ( chartWidth - margin.left - margin.right ) ],
+    range: [ 0, ( chartWidth - margin.left - margin.right ) ],
+    round: true,
   })
 
 
@@ -142,6 +146,46 @@ export default function SubjectChart(props) {
             <circle cx={0} cy={0} r={17} stroke='red' fill="white" />
             <line x1={10} y1={-10} x2={-10} y2={10} strokeWidth={2} stroke="black" />
             <line x1={-10} y1={-10} x2={10} y2={10} strokeWidth={2} stroke="black" />
+          </g>
+          <g transform='translate( 0, 45)' >
+            <circle
+              cx={0}
+              cy={0}
+              r={17}
+              stroke="red"
+              fill="white"
+              />
+              <rect
+                x={-2.5}
+                y={-12}
+                width={5}
+                height={14}
+                fill="black"
+                stroke="black"
+                />
+              <rect
+                x={-9}
+                y={8}
+                width={18}
+                height={3}
+                fill="black"
+                stroke="black"
+                />
+              <LinePath
+                curve={curveLinearClosed}
+                data={[
+                  { x: -8, y: -3 },
+                  { x: 0, y: 6 },
+                  { x: 8, y: -3 } ]}
+                fill='black'
+                stroke="black"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1}
+                x={ (d)=> d.x}
+                y={ (d)=> d.y}
+              />
+
           </g>
         </g>
 
