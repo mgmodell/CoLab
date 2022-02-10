@@ -117,6 +117,8 @@ export default function SubjectChart(props) {
   const factor_legend_rows = Math.round( factor_count / 2 );
   return (
     <div ref={ref} >
+      {
+        ( props.hidden || false ) ? null : (
       <XYChart height={height} xScale={xScale}  yScale={yScale} >
         <AnimatedAxis orientation='bottom' />
         <AnimatedAxis orientation='left' />
@@ -129,16 +131,28 @@ export default function SubjectChart(props) {
 
 
         </g>
+        {
+          ( undefined === props.hideFunc ) ? null :
+          (
         <g
           className='buttonBar'
           transform={`translate( ${ chartWidth - 25 }, 25 )`}
         >
-          <circle cx={0} cy={0} r={17} stroke='red' fill="white" />
-          <line x1={10} y1={-10} x2={-10} y2={10} strokeWidth={2} stroke="black" />
-          <line x1={-10} y1={-10} x2={10} y2={10} strokeWidth={2} stroke="black" />
+          <g className="closeButton" onClick={props.hideFunc}>
+            <circle cx={0} cy={0} r={17} stroke='red' fill="white" />
+            <line x1={10} y1={-10} x2={-10} y2={10} strokeWidth={2} stroke="black" />
+            <line x1={-10} y1={-10} x2={10} y2={10} strokeWidth={2} stroke="black" />
+          </g>
         </g>
 
+          )
+        }
+
       </XYChart>
+
+        )
+
+      }
     </div>
   );
 }
@@ -148,5 +162,7 @@ SubjectChart.propTypes = {
   projectId: PropTypes.number.isRequired,
   unitOfAnalysis: PropTypes.oneOf( ['individual', 'group'] ).isRequired,
   forResearch: PropTypes.bool,
-  anonymize: PropTypes.bool
+  anonymize: PropTypes.bool,
+  hideFunc: PropTypes.func,
+  hidden: PropTypes.bool
 };

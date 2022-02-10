@@ -86,7 +86,7 @@ export default function ChartContainer(props) {
   }, [projects])
 
 
-  const selectSubject = (subjectId) =>{
+  const selectSubject = (subjectId : number ) =>{
     if( 0 < subjectId ){
 
       const chartsCopy = Object.assign( {}, charts );
@@ -105,6 +105,13 @@ export default function ChartContainer(props) {
     setSelectedSubject( subjectId );
 
   }
+
+  const hideChart = (subjectId : number ) =>{
+    const chartsCopy = Object.assign( {}, charts );
+    chartsCopy[ subjectId ]['hidden'] = true;
+    setCharts( chartsCopy );
+  }
+
   const subjectSelect = ()=>{
           if( null == selectedProject ){
             return(
@@ -218,6 +225,8 @@ export default function ChartContainer(props) {
                 unitOfAnalysis={props.unitOfAnalysis}
                 forResearch={props.forResearch}
                 anonymize={props.anonymize}
+                hideFunc={()=>hideChart(chart.subjectId)}
+                hidden={chart.hidden}
               />
             )
         })}
