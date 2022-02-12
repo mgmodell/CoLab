@@ -10,9 +10,11 @@ import {
   Tooltip
   } from '@visx/xychart';
 import {curveLinearClosed } from '@visx/curve';
-import { Polygon, LinePath } from '@visx/shape';
+import { Pie, LinePath, arc } from '@visx/shape';
 import axios from "axios";
 import { useTypedSelector } from "../infrastructure/AppReducers";
+import {range} from 'd3-array';
+import {hsl} from 'd3-color';
 import { timeParse } from 'd3-time-format';
 import { identity } from "lodash";
 
@@ -26,6 +28,9 @@ import { identity } from "lodash";
   ]
 
 export default function SubjectChart(props) {
+  const π = Math.PI;
+  const τ = .35 * π;
+  const n = 500;
 
   const endpointSet = "graphing";
   const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
@@ -147,7 +152,7 @@ export default function SubjectChart(props) {
             <line x1={10} y1={-10} x2={-10} y2={10} strokeWidth={2} stroke="black" />
             <line x1={-10} y1={-10} x2={10} y2={10} strokeWidth={2} stroke="black" />
           </g>
-          <g transform='translate( 0, 45)' >
+          <g className="export" transform='translate( 0, 45)' >
             <circle
               cx={0}
               cy={0}
@@ -179,6 +184,64 @@ export default function SubjectChart(props) {
                   { x: 8, y: -3 } ]}
                 fill='black'
                 stroke="black"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1}
+                x={ (d)=> d.x}
+                y={ (d)=> d.y}
+              />
+          </g>
+          <g className="focus" transform="translate( 0, 100 )">
+              <LinePath
+                curve={curveLinearClosed}
+                data={[
+                  { x: -40, y: 0 },
+                  { x: 0, y: -1.5 },
+                  { x: 0, y: 1.5 } ]}
+                fill='orange'
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1}
+                x={ (d)=> d.x}
+                y={ (d)=> d.y}
+              />
+              <Pie
+                className="rainbow"
+                data={ range( 0, τ, τ / n  ) }
+                outerRadius={40}
+                innerRadius={3}
+                startAngle={-π}
+                endAngle={π}
+                fill={ (d)=>{
+                  return hsl(d * 360 / τ, 1, .5)
+                }
+                }
+
+              />
+              <LinePath
+                curve={curveLinearClosed}
+                data={[
+                  { x: 0, y: -15 },
+                  { x: 3, y: 18 },
+                  { x: -18, y: 13 } ]}
+                fill='steelblue'
+                stroke="black"
+                opacity={0.6}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1}
+                x={ (d)=> d.x}
+                y={ (d)=> d.y}
+              />
+              <LinePath
+                curve={curveLinearClosed}
+                data={[
+                  { x: 0, y: -15 },
+                  { x: 3, y: 18 },
+                  { x: 18, y: 13 } ]}
+                fill='lightsteelblue'
+                stroke="black"
+                opacity={0.4}
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={1}
