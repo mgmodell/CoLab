@@ -10,7 +10,7 @@ import {
   Tooltip
   } from '@visx/xychart';
 import {curveLinearClosed } from '@visx/curve';
-import { Pie, LinePath, arc } from '@visx/shape';
+import { arc, Pie, LinePath, Arc } from '@visx/shape';
 import axios from "axios";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import {range} from 'd3-array';
@@ -124,6 +124,17 @@ export default function SubjectChart(props) {
   const factor_count = Object.keys( factors ).length;
   const factor_legend_width = factor_count > 1 ? ( 2 * lbw ) : lbw;
   const factor_legend_rows = Math.round( factor_count / 2 );
+
+  const rainbow = [
+    'red',
+    'orange',
+    'yellow',
+    'green',
+    'blue',
+    'indigo',
+    'violet'
+  ];
+  const rainbowStep = 1 / rainbow.length;
   return (
     <div ref={ref} >
       {
@@ -205,19 +216,21 @@ export default function SubjectChart(props) {
                 x={ (d)=> d.x}
                 y={ (d)=> d.y}
               />
-              <Pie
-                className="rainbow"
-                data={ range( 0, τ, τ / n  ) }
-                outerRadius={40}
-                innerRadius={3}
-                startAngle={-π}
-                endAngle={π}
-                fill={ (d)=>{
-                  return hsl(d * 360 / τ, 1, .5)
-                }
-                }
+              {
+                rainbow.map( (color, index) =>{
+                  return(
+                    <Arc
+                      className="rainbow"
+                      startAngle={1 + ( index * rainbowStep ) }
+                      endAngle={1 + ( ( 1 + index ) * rainbowStep )}
+                      outerRadius={40}
+                      innerRadius={3}
+                      fill={color}
+                    />
+                  )
+                })
 
-              />
+              }
               <LinePath
                 curve={curveLinearClosed}
                 data={[
