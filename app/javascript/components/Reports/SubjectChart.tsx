@@ -28,10 +28,6 @@ import { identity } from "lodash";
   ]
 
 export default function SubjectChart(props) {
-  const π = Math.PI;
-  const τ = .35 * π;
-  const n = 500;
-
   const endpointSet = "graphing";
   const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
@@ -125,16 +121,6 @@ export default function SubjectChart(props) {
   const factor_legend_width = factor_count > 1 ? ( 2 * lbw ) : lbw;
   const factor_legend_rows = Math.round( factor_count / 2 );
 
-  const rainbow = [
-    'red',
-    'orange',
-    'yellow',
-    'green',
-    'blue',
-    'indigo',
-    'violet'
-  ];
-  const rainbowStep = 1 / rainbow.length;
   return (
     <div ref={ref} >
       {
@@ -217,17 +203,19 @@ export default function SubjectChart(props) {
                 y={ (d)=> d.y}
               />
               {
-                rainbow.map( (color, index) =>{
+                range( 130, 470, 5 ).map( ( val, index ) =>{
                   return(
                     <Arc
+                      key={`arc-${index}`}
                       className="rainbow"
-                      startAngle={1 + ( index * rainbowStep ) }
-                      endAngle={1 + ( ( 1 + index ) * rainbowStep )}
+                      startAngle={1.05 + ( index / 80 ) }
+                      endAngle={1.05 + ( ( 1 + index ) / 80 )}
                       outerRadius={40}
                       innerRadius={3}
-                      fill={color}
+                      fill={hsl( val, 100, 50 ).toString( )}
                     />
                   )
+
                 })
 
               }
