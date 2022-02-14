@@ -36,6 +36,8 @@ export default function SubjectChart(props) {
   const [factors, setFactors] = useState( { } );
   const [users, setUsers] = useState( { } );
 
+  const [subject, setSubject ] = useState( '' );
+
 
   const height = 400;
   const [ref, chartWidth, chartHeight] = useResizeObserver( );
@@ -99,6 +101,7 @@ export default function SubjectChart(props) {
             index++
           }
           setUsers( data.users );
+          setSubject( data.subject );
 
         })
         .catch( (error) =>{
@@ -115,6 +118,8 @@ export default function SubjectChart(props) {
   }, [endpointStatus])
 
 
+  const titleX = chartWidth / 2;
+  const titleY = 0 + ( margin.top / 2);
   const lbw = 170; //Legend Base Width
   const lbh = 20; //Legend Base Height
   const factorCount = Object.keys( factors ).length;
@@ -132,6 +137,21 @@ export default function SubjectChart(props) {
       <XYChart height={height} xScale={xScale}  yScale={yScale} >
         <AnimatedAxis orientation='bottom' />
         <AnimatedAxis orientation='left' />
+        <g
+          transform={ `translate( ${titleX}, ${titleY})`}
+          className="title"
+        >
+          <text
+            x={0}
+            y={0}
+            textAnchor="middle"
+            fontSize="16px"
+            textDecoration="underline"
+          >
+            {props.unitOfAnalysis} chart for {subject}
+          </text>
+
+        </g>
         <g
           className='userLegend'
           transform={`translate( 50, 40 )`}
@@ -158,6 +178,15 @@ export default function SubjectChart(props) {
                   >
                     {user.name}
                   </text>
+                  <line
+                    x1={10 + (index %2 * lbw )}
+                    y1={15 + Math.floor( index / 2 ) * lbh }
+                    x2={ lbw + (index %2 * lbw ) - 30 }
+                    y2={15 + Math.floor( index / 2 ) * lbh }
+                    stroke="black"
+                    strokeWidth={3}
+                    strokeDasharray={ `${( index * 5 )} ${(index * 5)}` }
+                  />
                 </React.Fragment>
               )
             })
