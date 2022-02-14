@@ -117,9 +117,13 @@ export default function SubjectChart(props) {
 
   const lbw = 170; //Legend Base Width
   const lbh = 20; //Legend Base Height
-  const factor_count = Object.keys( factors ).length;
-  const factor_legend_width = factor_count > 1 ? ( 2 * lbw ) : lbw;
-  const factor_legend_rows = Math.round( factor_count / 2 );
+  const factorCount = Object.keys( factors ).length;
+  const factorLegendWidth = factorCount > 1 ? ( 2 * lbw ) : lbw;
+  const factorLegendRows = Math.round( factorCount / 2 );
+
+  const userCount = Object.keys( users ).length;
+  const userLegendWidth =  userCount > 1 ? (2 * lbw ) : lbw;
+  const userLegendRows = Math.round( userCount / 2 );
 
   return (
     <div ref={ref} >
@@ -129,13 +133,74 @@ export default function SubjectChart(props) {
         <AnimatedAxis orientation='bottom' />
         <AnimatedAxis orientation='left' />
         <g
-          className='factorLegend'
-          transform={`translate( ${chartWidth - 50 - factor_legend_width}, 40 )`}
-          factorlegendwidth={factor_legend_width}
+          className='userLegend'
+          transform={`translate( 50, 40 )`}
+          factorlegendwidth={userLegendWidth}
           opacity={0.7}
         >
-
-
+          <rect
+            x1={0}
+            y={0}
+            width={userLegendWidth}
+            height={userLegendRows * lbh}
+            fill="oldlace"
+            stroke="black"
+          />
+          {
+            Object.values( users ).map( (user,index) =>{
+              return(
+                <React.Fragment key={`user_legend_${index}`}>
+                  <text
+                    x={10 + (index %2 * lbw )}
+                    y={13 + Math.floor( index / 2 ) * lbh }
+                    fill="black"
+                    fontSize='10px'
+                  >
+                    {user.name}
+                  </text>
+                </React.Fragment>
+              )
+            })
+          }
+        </g>
+        <g
+          className='factorLegend'
+          transform={`translate( ${chartWidth - 50 - factorLegendWidth}, 40 )`}
+          factorlegendwidth={factorLegendWidth}
+          opacity={0.7}
+        >
+          <rect
+            x1={0}
+            y={0}
+            width={factorLegendWidth}
+            height={factorLegendRows * lbh}
+            fill="oldlace"
+            stroke="black"
+          />
+          {
+            Object.values( factors ).map( (factor,index) =>{
+              return(
+                <React.Fragment key={`factor_legend_${index}`}>
+                  <circle
+                    cx={10 + (index %2 * lbw )}
+                    cy={10 + Math.floor(index /2) * lbh }
+                    r={7}
+                    stroke="black"
+                    strokeWidth={1}
+                    fill={ hsl( (index * 60 ) , 40, 30)}
+                  />
+                  <text
+                    x={24 + (index %2 * lbw )}
+                    y={13 + Math.floor( index / 2 ) * lbh }
+                    fill="black"
+                    fontSize='10px'
+                  >
+                    {factor.name}
+                  </text>
+                </React.Fragment>
+              )
+            })
+          }
         </g>
         {
           ( undefined === props.hideFunc ) ? null :
