@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { i18n } from "../infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Skeleton, Switch, Typography } from "@mui/material";
 import SubjectChart, {unit_codes, code_units} from "./SubjectChart";

@@ -13,6 +13,7 @@ import {curveLinearClosed } from '@visx/curve';
 import { arc, Pie, LinePath, Arc } from '@visx/shape';
 import axios from "axios";
 import { useTypedSelector } from "../infrastructure/AppReducers";
+import { useTranslation } from "react-i18next";
 import {range} from 'd3-array';
 import {hsl} from 'd3-color';
 import { timeParse } from 'd3-time-format';
@@ -28,15 +29,17 @@ import { identity } from "lodash";
   ]
 
 export default function SubjectChart(props) {
-  const endpointSet = "graphing";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const category = "graphing";
+  const endpoints = useTypedSelector(state=>state.context.endpoints[category]);
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
+  const { t, i18n } = useTranslation( category );
 
   const [ xDateDomain, setTimeRange ] = useState( [ new Date( ), new Date( ) ] );
   const [factors, setFactors] = useState( { } );
   const [users, setUsers] = useState( { } );
 
   const [subject, setSubject ] = useState( '' );
+  const [projectName, setProjectName ] = useState( '' );
 
 
   const height = 400;
@@ -102,6 +105,7 @@ export default function SubjectChart(props) {
           }
           setUsers( data.users );
           setSubject( data.subject );
+          setProjectName( data.project_name );
 
         })
         .catch( (error) =>{
@@ -148,7 +152,16 @@ export default function SubjectChart(props) {
             fontSize="16px"
             textDecoration="underline"
           >
-            {props.unitOfAnalysis} chart for {subject}
+            {t(`chart_for_${props.unitOfAnalysis}`)} {subject}
+          </text>
+          <text
+            x={0}
+            y={15}
+            textAnchor="middle"
+            fontSize="10px"
+            textDecoration="underline"
+          >
+            {t("chart_for_project")}: {projectName}
           </text>
 
         </g>
