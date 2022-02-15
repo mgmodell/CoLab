@@ -32,7 +32,7 @@
     "@visx/xychart": "^2.9.0",
     "add": "^2.0.6",
     "autosuggest-highlight": "^3.1.1",
-    "axios": "^0.25.0",
+    "axios": "^0.26.0",
     "babel-loader": "^8.0.6",
     "babel-preset-react": "^6.24.1",
     "city-timezones": "^1.2.0",
