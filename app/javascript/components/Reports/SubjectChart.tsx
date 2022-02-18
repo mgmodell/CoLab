@@ -9,7 +9,7 @@ import {
   XYChart,
   Tooltip
   } from '@visx/xychart';
-import {curveLinearClosed } from '@visx/curve';
+import {curveLinearClosed, curveNatural } from '@visx/curve';
 import { arc, Pie, LinePath, Arc } from '@visx/shape';
 import axios from "axios";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -40,10 +40,11 @@ export default function SubjectChart(props) {
 
   const [subject, setSubject ] = useState( '' );
   const [projectName, setProjectName ] = useState( '' );
+  const [streams, setStreams] = useState( { } );
 
 
-  const height = 400;
-  const [ref, chartWidth, chartHeight] = useResizeObserver( );
+  const chartHeight = 400;
+  const [ref, chartWidth, discard] = useResizeObserver( );
 
   const margin ={
     top: 40,
@@ -106,6 +107,7 @@ export default function SubjectChart(props) {
           setUsers( data.users );
           setSubject( data.subject );
           setProjectName( data.project_name );
+          setStreams( data.streams );
 
         })
         .catch( (error) =>{
@@ -124,7 +126,7 @@ export default function SubjectChart(props) {
 
   const titleX = chartWidth / 2;
   const titleY = 0 + ( margin.top / 2);
-  const lbw = 170; //Legend Base Width
+  const lbw = 160; //Legend Base Width
   const lbh = 20; //Legend Base Height
   const factorCount = Object.keys( factors ).length;
   const factorLegendWidth = factorCount > 1 ? ( 2 * lbw ) : lbw;
@@ -134,13 +136,66 @@ export default function SubjectChart(props) {
   const userLegendWidth =  userCount > 1 ? (2 * lbw ) : lbw;
   const userLegendRows = Math.round( userCount / 2 );
 
+  const accessors = {
+    xAccessor: d => parseTime( d.date ),
+    yAccessor: d => d.value,
+  };
+
+
   return (
     <div ref={ref} >
       {
         ( props.hidden || false ) ? null : (
-      <XYChart height={height} xScale={xScale}  yScale={yScale} >
-        <AnimatedAxis orientation='bottom' />
-        <AnimatedAxis orientation='left' />
+          <React.Fragment>
+
+      <XYChart height={chartHeight} 
+        margin={ margin } /*xScale={xScale}  yScale={yScale} */
+        xScale={{ type: "time"}}
+        yScale={{ type: "linear" }} >
+          <AnimatedGrid
+            columns={false}
+            numTicks={4}
+            strokeDasharray="0, 4"
+          />
+        <AnimatedAxis orientation='bottom' label="Date" />
+        <AnimatedAxis orientation='right' label="Contribution Level" />
+        <g className="data">
+        {Object.values( streams ).map( (stream)=>{
+          console.log( 'stream', stream );
+          return(
+            <React.Fragment key={`stream-target-${stream.target_id}`}>
+              {
+                Object.values( stream.sub_streams ).map( (subStream) =>{
+                  return(
+                    <React.Fragment key={`sub-assessor-${subStream.assessor_id}`}>
+                      {
+                          Object.values( subStream.factor_streams).map( (factorStream)=>{
+                            const datakey = `${subStream.assessor_name} - ${factorStream.factor_name}`;
+                            return(
+                              <AnimatedLineSeries
+                                data={ factorStream.values }
+                                dataKey={ datakey }
+                                key={ `factor-${factorStream.factor_id}` }
+                                {...accessors}
+                                curve={curveNatural}
+                              />
+                            )
+
+                          } )
+
+                      }
+                    </React.Fragment>
+                  )
+                }
+                )
+              }
+            </React.Fragment>
+          )
+
+          } )
+        }
+
+        </g>
         <g
           transform={ `translate( ${titleX}, ${titleY})`}
           className="title"
@@ -364,6 +419,7 @@ export default function SubjectChart(props) {
         }
 
       </XYChart>
+          </React.Fragment>
 
         )
 
