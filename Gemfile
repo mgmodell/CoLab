@@ -72,7 +72,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  gem 'cucumber-rails', require: false
+  gem 'cucumber-rails', require: false, git: 'https://github.com/mgmodell/cucumber-rails'
   gem 'database_cleaner'
   gem 'ruby-debug-ide'
   gem 'debase', '0.2.5.beta2'
