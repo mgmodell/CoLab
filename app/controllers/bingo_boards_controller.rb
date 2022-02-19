@@ -392,12 +392,20 @@ class BingoBoardsController < ApplicationController
 
     # image processing
     unless params[:bingo_board][:result_img].empty?
+      ext = params[:bingo_board][:img_ext ]
+      temp_file = Tempfile.new( ['score_img', ".#{ext}" ], binmode: true )
+      temp_file.write( 
+        Base64.decode64( params[:bingo_board][:result_img] )
+      )
+      temp_file.rewind
       proc_image = ImageProcessing::Vips
-                   .source(params[:bingo_board][:result_img].tempfile.path)
+                   .source( temp_file ) 
                    .resize_to_limit!(800, 800)
 
       @bingo_board.result_img.attach(io: File.open(proc_image.path),
                                      filename: File.basename(proc_image.path))
+      temp_file.close
+      temp_file.unlink
     end
 
     if @bingo_board.save

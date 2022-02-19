@@ -34,8 +34,10 @@ export default function ScoreBingoWorksheet(props) {
   const [topic, setTopic] = useState( 'loading' );
   const [description, setDescription] = useState( 'loading' );
   const [worksheetAnswers, setWorksheetAnswers] = useState( [ [ ] ] );
+  const [performance, setPerformance] = useState( 0 );
   const [resultImgUrl, setResultImgUrl] = useState( null );
   const [newImg, setNewImg] = useState( null );
+  const [newImgExt, setNewImgExt] = useState( null );
 
   const imgFileDataId = 'result_photo';
 
@@ -45,6 +47,11 @@ export default function ScoreBingoWorksheet(props) {
 
   useEffect(() =>{
     if( endpointsLoaded ){
+      getWorksheetData( );
+    }
+  },[endpointsLoaded])
+
+  const getWorksheetData = ()=>{
       const url = `${endpoints.worksheetResultsUrl}/${worksheetIdParam}.json`;
       dispatch( startTask( ) );
       axios.get( url, { } )
@@ -61,8 +68,8 @@ export default function ScoreBingoWorksheet(props) {
         .finally( () =>{
           dispatch( endTask ( ) );
         })
-    }
-  },[endpointsLoaded])
+
+  }
 
   const handleFileSelect = (evt)=>{
     const files = evt.target.files;
@@ -70,10 +77,11 @@ export default function ScoreBingoWorksheet(props) {
 
     if (files && file) {
         var reader = new FileReader();
+        setNewImgExt( file.name.split(".").pop( ) );
 
         reader.onload = function(readerEvt) {
             const binaryString = readerEvt.target.result;
-            setNewImg( btoa(binaryString) );
+            setNewImg( Buffer.from(binaryString).toString('base64') );
         };
 
         reader.readAsBinaryString(file);
@@ -81,8 +89,26 @@ export default function ScoreBingoWorksheet(props) {
   }
   const submitScore = ()=>{
 
-    console.log( 'img', newImg );
-
+    const url = `${endpoints.worksheetScoreUrl}/${worksheetIdParam}.json`;
+    axios.patch( url, {
+      bingo_board: {
+        performance: performance,
+        result_img: newImg,
+        img_ext: newImgExt
+      } } )
+        .then( response =>{
+          const data = response.data;
+          setTopic( data.bingo_game.topic );
+          setDescription( data.bingo_game.description );
+          setWorksheetAnswers( data.practice_answers );
+          setResultImgUrl( data.bingo_game.result_url );
+        })
+        .catch( error =>{
+          console.log( 'error', error );
+        })
+        .finally( () =>{
+          dispatch( endTask ( ) );
+        })
   }
 
 
@@ -129,7 +155,11 @@ export default function ScoreBingoWorksheet(props) {
         </table>
         </Grid>
         <Grid item xs={12} sm={6} >
-          <TextField id='score' label={t('score') } />
+          <TextField id='score'
+                    label={t('score')}
+                    value={performance}
+                    type='number'
+                    onChange={event=>{setPerformance(event.target.value)}} />
         </Grid>
         <Grid item xs={12} sm={6} >
           <label htmlFor={imgFileDataId}>

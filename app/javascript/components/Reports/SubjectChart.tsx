@@ -1,21 +1,23 @@
 import React, {useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import useResizeObserver from 'resize-observer-hook';
-import {scaleLinear, scaleTime} from '@visx/scale';
+import {scaleLinear, scaleOrdinal, scaleTime} from '@visx/scale';
 import {
   AnimatedAxis,
   AnimatedGrid,
   AnimatedLineSeries,
+  AnimatedGlyphSeries,
   XYChart,
   Tooltip
   } from '@visx/xychart';
-import {curveLinearClosed, curveNatural } from '@visx/curve';
+import {curveLinearClosed, curveMonotoneX, curveNatural } from '@visx/curve';
 import { arc, Pie, LinePath, Arc } from '@visx/shape';
 import axios from "axios";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 import {range} from 'd3-array';
 import {hsl} from 'd3-color';
+import {schemeCategory10 as factorColors } from 'd3-scale-chromatic';
 import { timeParse } from 'd3-time-format';
 import { identity } from "lodash";
 
@@ -47,7 +49,7 @@ export default function SubjectChart(props) {
   const [ref, chartWidth, discard] = useResizeObserver( );
 
   const margin ={
-    top: 40,
+    top: 100,
     bottom: 40,
     left: 40,
     right: 40
@@ -57,11 +59,6 @@ export default function SubjectChart(props) {
   const yScale = scaleLinear({
     domain: [0,6000],
     range: [ (chartHeight - margin.top - margin.bottom), 0 ],
-    round: true,
-  })
-  const xScale = scaleTime({
-    domain: xDateDomain,
-    range: [ 0, ( chartWidth - margin.left - margin.right ) ],
     round: true,
   })
 
@@ -84,16 +81,16 @@ export default function SubjectChart(props) {
             [ parseTime( data.start_date ), parseTime( data.end_date ) ]
           );
 
-          const factorColor = scaleLinear( {
+          const factorColor = scaleOrdinal( {
             domain: [ 0, Object.keys( factors ).length ],
-            range: ['red', 'orange', 'yellow', 'green', 'purple', 'blue'],
+            range: factorColors,
           });
 
           let index : number = 0;
 
           //Set up the factors
           for( let id of Object.keys( data.factors ) ){
-            data.factors[ id ][ 'color' ] = factorColor( index );
+            data.factors[id]['color'] = factorColor( index );
             index ++;
           };
           setFactors( data.factors );
@@ -102,8 +99,10 @@ export default function SubjectChart(props) {
           index = 0;
           for( let id of Object.keys( data.users ) ){
             data.users[ id ][ 'index' ] = index;
+            data.users[ id ][ 'dasharray' ] = `${( index * 5 )} ${(index * 5)}`;
             index++
           }
+          console.log( data.users );
           setUsers( data.users );
           setSubject( data.subject );
           setProjectName( data.project_name );
@@ -125,7 +124,7 @@ export default function SubjectChart(props) {
 
 
   const titleX = chartWidth / 2;
-  const titleY = 0 + ( margin.top / 2);
+  const titleY = 20;
   const lbw = 160; //Legend Base Width
   const lbh = 20; //Legend Base Height
   const factorCount = Object.keys( factors ).length;
@@ -150,18 +149,24 @@ export default function SubjectChart(props) {
 
       <XYChart height={chartHeight} 
         margin={ margin } /*xScale={xScale}  yScale={yScale} */
-        xScale={{ type: "time"}}
-        yScale={{ type: "linear" }} >
-          <AnimatedGrid
-            columns={false}
-            numTicks={4}
-            strokeDasharray="0, 4"
-          />
+        xScale={{ type: "time", domain: xDateDomain }}
+        yScale={{ type: "linear", domain: [0, 6000] }} >
         <AnimatedAxis orientation='bottom' label="Date" />
-        <AnimatedAxis orientation='right' label="Contribution Level" />
+        <AnimatedAxis orientation='left' label="Contribution Level" numTicks={6} />
+          <Tooltip
+            detectBounds
+            debounce={300}
+            snapTooltipToDatumX
+            snapTooltipToDatumY
+            renderTooltip={({ tooltipData, colorScale }) =>{
+              console.log( tooltipData );
+            return (
+              <h1>hi there!</h1>
+          )
+        } }
+          />
         <g className="data">
         {Object.values( streams ).map( (stream)=>{
-          console.log( 'stream', stream );
           return(
             <React.Fragment key={`stream-target-${stream.target_id}`}>
               {
@@ -172,13 +177,24 @@ export default function SubjectChart(props) {
                           Object.values( subStream.factor_streams).map( (factorStream)=>{
                             const datakey = `${subStream.assessor_name} - ${factorStream.factor_name}`;
                             return(
+                              <React.Fragment
+                                key={ `factor-${factorStream.factor_id}` }
+                                >
                               <AnimatedLineSeries
                                 data={ factorStream.values }
                                 dataKey={ datakey }
-                                key={ `factor-${factorStream.factor_id}` }
                                 {...accessors}
-                                curve={curveNatural}
+                                curve={curveMonotoneX}
+                                stroke={ factors[ factorStream.factor_id]['color']}
+                                strokeDasharray={users[ stream.target_id ].dasharray}
                               />
+                              <AnimatedGlyphSeries
+                                data={ factorStream.values }
+                                dataKey={ `glyph-${datakey}` }
+                                {...accessors}
+                                stroke={ factors[ factorStream.factor_id]['color']}
+                              />
+                              </React.Fragment>
                             )
 
                           } )
@@ -221,8 +237,13 @@ export default function SubjectChart(props) {
 
         </g>
         <g
+          className='legends'
+          transform='translate( 0, 45 )'
+        >
+
+        <g
           className='userLegend'
-          transform={`translate( 50, 40 )`}
+          transform={`translate( 50, 0 )`}
           factorlegendwidth={userLegendWidth}
           opacity={0.7}
         >
@@ -262,7 +283,7 @@ export default function SubjectChart(props) {
         </g>
         <g
           className='factorLegend'
-          transform={`translate( ${chartWidth - 50 - factorLegendWidth}, 40 )`}
+          transform={`translate( ${chartWidth - 50 - factorLegendWidth}, 0 )`}
           factorlegendwidth={factorLegendWidth}
           opacity={0.7}
         >
@@ -284,7 +305,7 @@ export default function SubjectChart(props) {
                     r={7}
                     stroke="black"
                     strokeWidth={1}
-                    fill={ hsl( (index * 60 ) , 40, 30)}
+                    fill={ factor.color }
                   />
                   <text
                     x={24 + (index %2 * lbw )}
@@ -298,6 +319,7 @@ export default function SubjectChart(props) {
               )
             })
           }
+        </g>
         </g>
         {
           ( undefined === props.hideFunc ) ? null :
