@@ -43,6 +43,7 @@ export default function SubjectChart(props) {
   const [subject, setSubject ] = useState( '' );
   const [projectName, setProjectName ] = useState( '' );
   const [streams, setStreams] = useState( { } );
+  const [comments, setComments ] = useState( {} );
 
 
   const chartHeight = 400;
@@ -56,11 +57,6 @@ export default function SubjectChart(props) {
   }
 
   const parseTime = timeParse( "%Y-%m-%dT%H:%M:%S.%L%Z" );
-  const yScale = scaleLinear({
-    domain: [0,6000],
-    range: [ (chartHeight - margin.top - margin.bottom), 0 ],
-    round: true,
-  })
 
 
   // Retrieve data
@@ -102,11 +98,11 @@ export default function SubjectChart(props) {
             data.users[ id ][ 'dasharray' ] = `${( index * 5 )} ${(index * 5)}`;
             index++
           }
-          console.log( data.users );
           setUsers( data.users );
           setSubject( data.subject );
           setProjectName( data.project_name );
           setStreams( data.streams );
+          setComments( data.comments );
 
         })
         .catch( (error) =>{
@@ -135,8 +131,13 @@ export default function SubjectChart(props) {
   const userLegendWidth =  userCount > 1 ? (2 * lbw ) : lbw;
   const userLegendRows = Math.round( userCount / 2 );
 
+  const today = Date.now( );
+
   const accessors = {
-    xAccessor: d => parseTime( d.date ),
+    xAccessor: d => {
+      //return parseTime( undefined != d ? d.date : today );
+      return parseTime( d.date );
+    },
     yAccessor: d => d.value,
   };
 
@@ -148,70 +149,11 @@ export default function SubjectChart(props) {
           <React.Fragment>
 
       <XYChart height={chartHeight} 
-        margin={ margin } /*xScale={xScale}  yScale={yScale} */
+        margin={ margin } 
         xScale={{ type: "time", domain: xDateDomain }}
         yScale={{ type: "linear", domain: [0, 6000] }} >
         <AnimatedAxis orientation='bottom' label="Date" />
         <AnimatedAxis orientation='left' label="Contribution Level" numTicks={6} />
-          <Tooltip
-            detectBounds
-            debounce={300}
-            snapTooltipToDatumX
-            snapTooltipToDatumY
-            renderTooltip={({ tooltipData, colorScale }) =>{
-              console.log( tooltipData );
-            return (
-              <h1>hi there!</h1>
-          )
-        } }
-          />
-        <g className="data">
-        {Object.values( streams ).map( (stream)=>{
-          return(
-            <React.Fragment key={`stream-target-${stream.target_id}`}>
-              {
-                Object.values( stream.sub_streams ).map( (subStream) =>{
-                  return(
-                    <React.Fragment key={`sub-assessor-${subStream.assessor_id}`}>
-                      {
-                          Object.values( subStream.factor_streams).map( (factorStream)=>{
-                            const datakey = `${subStream.assessor_name} - ${factorStream.factor_name}`;
-                            return(
-                              <React.Fragment
-                                key={ `factor-${factorStream.factor_id}` }
-                                >
-                              <AnimatedLineSeries
-                                data={ factorStream.values }
-                                dataKey={ datakey }
-                                {...accessors}
-                                curve={curveMonotoneX}
-                                stroke={ factors[ factorStream.factor_id]['color']}
-                                strokeDasharray={users[ stream.target_id ].dasharray}
-                              />
-                              <AnimatedGlyphSeries
-                                data={ factorStream.values }
-                                dataKey={ `glyph-${datakey}` }
-                                {...accessors}
-                                stroke={ factors[ factorStream.factor_id]['color']}
-                              />
-                              </React.Fragment>
-                            )
-
-                          } )
-
-                      }
-                    </React.Fragment>
-                  )
-                }
-                )
-              }
-            </React.Fragment>
-          )
-
-          } )
-        }
-
-        </g>
         <g
           transform={ `translate( ${titleX}, ${titleY})`}
           className="title"
@@ -439,6 +381,73 @@ export default function SubjectChart(props) {
 
           )
         }
+        {
+          <Tooltip
+            detectBounds
+            snapTooltipToDatumX
+            snapTooltipToDatumY
+            showVerticalCrosshair
+            renderTooltip={({ tooltipData, colorScale }) =>{
+              const comment = comments[ tooltipData.nearestDatum.datum.installment_id ];
+              return (
+                <div>
+                  <p>
+                    <strong>Teammate:</strong> {comment.commentor}<br />
+                    {comment.comment}
+                  </p>
+                </div>
+              )
+            } }
+          />
+        }
+        <g className="data">
+        {Object.values( streams ).map( (stream)=>{
+          return(
+            <React.Fragment key={`stream-target-${stream.target_id}`}>
+              {
+                Object.values( stream.sub_streams ).map( (subStream) =>{
+                  return(
+                    <React.Fragment key={`sub-assessor-${subStream.assessor_id}`}>
+                      {
+                          Object.values( subStream.factor_streams).map( (factorStream)=>{
+                            const datakey = `${subStream.assessor_name} - ${factorStream.factor_name}`;
+                            return(
+                              <React.Fragment
+                                key={ `factor-${factorStream.factor_id}` }
+                                >
+                              <AnimatedLineSeries
+                                data={ factorStream.values }
+                                dataKey={ datakey }
+                                {...accessors}
+                                curve={curveMonotoneX}
+                                stroke={ factors[ factorStream.factor_id]['color']}
+                                strokeDasharray={users[ stream.target_id ].dasharray}
+                              />
+                              <AnimatedGlyphSeries
+                                data={ factorStream.values }
+                                dataKey={ `glyph-${datakey}` }
+                                {...accessors}
+                                stroke={ factors[ factorStream.factor_id]['color']}
+                                
+                              />
+                              </React.Fragment>
+                            )
+
+                          } )
+
+                      }
+                    </React.Fragment>
+                  )
+                }
+                )
+              }
+            </React.Fragment>
+          )
+
+          } )
+        }
+
+        </g>
 
       </XYChart>
           </React.Fragment>
