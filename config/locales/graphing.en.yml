@@ -1,6 +1,9 @@
 en:
   graphing:
     # Reporting terms
+    instruction: >
+      Please use this page to visualise the data available for your
+      students.
     consent_switch: Limit to consenting users only
     anon_switch: Anonymize data
     anon_confirm: This will remove all the charts below. Are you sure?

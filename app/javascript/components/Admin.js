@@ -17,6 +17,7 @@ import SchoolDataAdmin from "./SchoolDataAdmin";
 import ConsentFormList from "./Consent/ConsentFormList";
 import ConsentFormDataAdmin from "./Consent/ConsentFormDataAdmin";
 import ConceptsTable from './ConceptsTable';
+import ReportingAdmin from './Reports/ReportingAdmin';
 
 import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "./infrastructure/AppReducers";
@@ -59,6 +60,10 @@ export default function Admin(props) {
         <Route path={`concepts`}
           element={
             <ConceptsTable />
+          } />
+        <Route path={'reporting'}
+          element={
+            <ReportingAdmin />
           } />
         <Route path={`/`}
           element={

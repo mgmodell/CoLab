@@ -98,7 +98,7 @@ export default function MainMenu(props) {
       <ListItem
         button
         id="admin_rpt-menu"
-        onClick={() => navTo(props.reportingUrl)}
+        onClick={() => navTo('/admin/reporting')}
       >
         <ListItemIcon>
           <MultilineChartIcon fontSize="small" />
