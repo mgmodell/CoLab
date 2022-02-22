@@ -1,17 +1,16 @@
 import React, {useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import useResizeObserver from 'resize-observer-hook';
-import {scaleLinear, scaleOrdinal, scaleTime} from '@visx/scale';
+import {scaleOrdinal} from '@visx/scale';
 import {
   AnimatedAxis,
-  AnimatedGrid,
-  AnimatedLineSeries,
-  AnimatedGlyphSeries,
+  LineSeries,
+  GlyphSeries,
   XYChart,
   Tooltip
   } from '@visx/xychart';
 import {curveLinearClosed, curveMonotoneX, curveNatural } from '@visx/curve';
-import { arc, Pie, LinePath, Arc } from '@visx/shape';
+import { LinePath, Arc } from '@visx/shape';
 import axios from "axios";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
@@ -19,7 +18,6 @@ import {range} from 'd3-array';
 import {hsl} from 'd3-color';
 import {schemeCategory10 as factorColors } from 'd3-scale-chromatic';
 import { timeParse } from 'd3-time-format';
-import { identity } from "lodash";
 
   export const unit_codes ={
     group: 2,
@@ -50,7 +48,7 @@ export default function SubjectChart(props) {
   const [ref, chartWidth, discard] = useResizeObserver( );
 
   const margin ={
-    top: 100,
+    top: 60,
     bottom: 40,
     left: 40,
     right: 40
@@ -135,8 +133,8 @@ export default function SubjectChart(props) {
 
   const accessors = {
     xAccessor: d => {
-      //return parseTime( undefined != d ? d.date : today );
-      return parseTime( d.date );
+      return parseTime( undefined != d ? d.date : today );
+      //return parseTime( d.date );
     },
     yAccessor: d => d.value,
   };
@@ -152,8 +150,38 @@ export default function SubjectChart(props) {
         margin={ margin } 
         xScale={{ type: "time", domain: xDateDomain }}
         yScale={{ type: "linear", domain: [0, 6000] }} >
-        <AnimatedAxis orientation='bottom' label="Date" />
-        <AnimatedAxis orientation='left' label="Contribution Level" numTicks={6} />
+        <AnimatedAxis
+          orientation='bottom'
+          label="Date" />
+        <AnimatedAxis
+          orientation='left'
+          label="Contribution Level"
+          numTicks={userCount} />
+        {
+          <Tooltip
+            detectBounds
+            snapTooltipToDatumX
+            debounce={300}
+            snapTooltipToDatumY
+            showVerticalCrosshair
+            renderTooltip={({ tooltipData, colorScale }) =>{
+              const comment = comments[ tooltipData.nearestDatum.datum.installment_id ];
+              if( '<no comment>' === comment.comment ){
+                return ( null );
+              } else {
+              return (
+                <div>
+                  <p>
+                    <strong>Teammate:</strong> {comment.commentor}<br />
+                    {comment.comment}
+                  </p>
+                </div>
+              )
+
+              }
+            } }
+          />
+        }
         <g
           transform={ `translate( ${titleX}, ${titleY})`}
           className="title"
@@ -381,25 +409,6 @@ export default function SubjectChart(props) {
 
           )
         }
-        {
-          <Tooltip
-            detectBounds
-            snapTooltipToDatumX
-            snapTooltipToDatumY
-            showVerticalCrosshair
-            renderTooltip={({ tooltipData, colorScale }) =>{
-              const comment = comments[ tooltipData.nearestDatum.datum.installment_id ];
-              return (
-                <div>
-                  <p>
-                    <strong>Teammate:</strong> {comment.commentor}<br />
-                    {comment.comment}
-                  </p>
-                </div>
-              )
-            } }
-          />
-        }
         <g className="data">
         {Object.values( streams ).map( (stream)=>{
           return(
@@ -415,20 +424,36 @@ export default function SubjectChart(props) {
                               <React.Fragment
                                 key={ `factor-${factorStream.factor_id}` }
                                 >
-                              <AnimatedLineSeries
+                              <GlyphSeries
+                                data={ factorStream.values }
+                                dataKey={ `glyph-${datakey}` }
+                                {...accessors}
+                                colorAccessor={(d)=>{
+                                  const comment = comments[ d.installment_id ];
+                                  if( '<no comment>' === comment.comment ){
+                                    return 'black';
+                                  } else {
+                                    return 'yellow'
+                                  }
+                                }}
+                                size={11}
+                              />
+                              <GlyphSeries
+                                data={ factorStream.values }
+                                dataKey={ `glyph-${datakey}` }
+                                {...accessors}
+                                colorAccessor={(d)=>{
+                                  return( factors[ factorStream.factor_id]['color']);
+                                }}
+                                size={7}
+                              />
+                              <LineSeries
                                 data={ factorStream.values }
                                 dataKey={ datakey }
                                 {...accessors}
                                 curve={curveMonotoneX}
                                 stroke={ factors[ factorStream.factor_id]['color']}
                                 strokeDasharray={users[ stream.target_id ].dasharray}
-                              />
-                              <AnimatedGlyphSeries
-                                data={ factorStream.values }
-                                dataKey={ `glyph-${datakey}` }
-                                {...accessors}
-                                stroke={ factors[ factorStream.factor_id]['color']}
-                                
                               />
                               </React.Fragment>
                             )
