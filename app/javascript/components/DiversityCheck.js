@@ -42,9 +42,10 @@ class DiversityCheck extends React.Component {
   }
   calcDiversity() {
     const url = this.props.diversityScoreFor + ".json";
-    axios.post( url,{
+    axios
+      .post(url, {
         emails: this.state.emails
-    })
+      })
       .then(response => {
         const data = response.data;
         this.setState({
@@ -52,10 +53,9 @@ class DiversityCheck extends React.Component {
           found_users: data.found_users
         });
       })
-      .catch( error =>{
-          console.log("error", error );
-          return [{ id: -1, name: "no data" }];
-
+      .catch(error => {
+        console.log("error", error);
+        return [{ id: -1, name: "no data" }];
       });
   }
   handleClear(event) {

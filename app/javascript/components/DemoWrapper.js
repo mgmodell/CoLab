@@ -5,7 +5,7 @@ import {
   Route,
   useMatch
 } from "react-router-dom";
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
 import Joyride from "react-joyride";
@@ -72,9 +72,7 @@ export default function DemoWrapper(props) {
             path={`${path}/experience/:id`}
             render={routeProps => (
               <React.Fragment>
-                <Experience
-                  experienceId={Number(routeProps.match.params.id)}
-                />
+                <Experience experienceId={Number(routeProps.match.params.id)} />
               </React.Fragment>
             )}
           />
@@ -89,8 +87,7 @@ export default function DemoWrapper(props) {
             )}
           />
           <Route exact path={`${path}/`}>
-            <HomeShell
-            />
+            <HomeShell />
           </Route>
         </Routes>
       </Suspense>
@@ -98,5 +95,4 @@ export default function DemoWrapper(props) {
   );
 }
 
-DemoWrapper.propTypes = {
-};
+DemoWrapper.propTypes = {};

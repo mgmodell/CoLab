@@ -55,7 +55,7 @@ class Project < ApplicationRecord
   end
 
   def get_performance(user)
-    installments_count = installments.where(user: user).count
+    installments_count = installments.where(user:).count
     assessments.count == 0 ? 100 : 100 * installments_count / assessments.count
   end
 
@@ -103,13 +103,11 @@ class Project < ApplicationRecord
                      ' (work)'
                    else
                      ' (SAPA)'
-                                end
+                   end
+                 elsif day < end_dow && day > start_dow
+                   ' (work)'
                  else
-                   if day < end_dow && day > start_dow
-                     ' (work)'
-                   else
-                     ' (SAPA)'
-                                end
+                   ' (SAPA)'
                  end
     o_string + add_string
   end
@@ -142,7 +140,7 @@ class Project < ApplicationRecord
       else
 
         is_available = true unless init_day < start_dow && end_dow < init_day
-       end
+      end
     end
     is_available
   end
@@ -201,8 +199,8 @@ class Project < ApplicationRecord
         start: start_date,
         end: end_date,
         backgroundColor: '#FF9999',
-        edit_url: edit_url,
-        destroy_url: destroy_url,
+        edit_url:,
+        destroy_url:,
 
         startTime: '00:00',
         endTime: { day: days.size },
@@ -255,7 +253,7 @@ class Project < ApplicationRecord
       get_user_appearance_counts.each do |user_id, count|
         # Check the users
         user = User.find(user_id)
-        if Roster.enrolled.where(user: user, course: course).count < 1
+        if Roster.enrolled.where(user:, course:).count < 1
           errors.add(:active, "#{user.name false} does not appear to be enrolled in this course.")
         elsif count > 1
           errors.add(:active, "#{user.name false} appears #{count} times in your project.")

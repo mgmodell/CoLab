@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {useDispatch} from 'react-redux';
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import IconButton from "@mui/material/IconButton";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import { DateTime } from "luxon";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import AdapterLuxon from '@mui/lab/AdapterLuxon';
+import AdapterLuxon from "@mui/lab/AdapterLuxon";
 
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 
@@ -20,19 +20,22 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { startTask, endTask } from "./infrastructure/StatusActions";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function CopyActivityButton(props) {
   const endpointSet = "course";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
-  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
-  const dispatch = useDispatch( );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const dispatch = useDispatch();
 
   const [copyData, setCopyData] = useState(null);
   const [newStartDate, setNewStartDate] = useState(DateTime.local().toISO());
-  const [value, setValue] = useState( null );
-
+  const [value, setValue] = useState(null);
 
   const copyDialog = (
     <Dialog
@@ -44,18 +47,17 @@ export default function CopyActivityButton(props) {
     >
       {null != copyData ? (
         <React.Fragment>
-
-            <LocalizationProvider dateAdapter={AdapterLuxon}>
-          <DialogTitle>Create a Copy</DialogTitle>
-          <DialogContent>
-            <WorkingIndicator identifier="copying_course" />
-            <DialogContentText>
-              This course started on{" "}
-              {props.startDate.toLocaleString(DateTime.DATE_SHORT)}. When
-              would you like for the new copy to begin? Everything will be
-              shifted accordingly.
-              <br />
-            </DialogContentText>
+          <LocalizationProvider dateAdapter={AdapterLuxon}>
+            <DialogTitle>Create a Copy</DialogTitle>
+            <DialogContent>
+              <WorkingIndicator identifier="copying_course" />
+              <DialogContentText>
+                This course started on{" "}
+                {props.startDate.toLocaleString(DateTime.DATE_SHORT)}. When
+                would you like for the new copy to begin? Everything will be
+                shifted accordingly.
+                <br />
+              </DialogContentText>
               <DatePicker
                 variant="inline"
                 autoOk={true}
@@ -64,52 +66,53 @@ export default function CopyActivityButton(props) {
                 id="newCourseStartDate"
                 label="New course start date?"
                 value={newStartDate}
-                onChange={newValue =>{
-                    setNewStartDate( newValue);
-                   }}
+                onChange={newValue => {
+                  setNewStartDate(newValue);
+                }}
                 renderInput={props => <TextField {...props} />}
               />
-          </DialogContent>
-          <DialogActions>
-            <Button
-              disabled={status.working}
-              onClick={event => {
-                setNewStartDate(DateTime.local().toISO());
-                setCopyData(null);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              disabled={status.working}
-              onClick={event => {
-                dispatch( startTask("copying_course") );
-                const url = `${endpoints.courseCopyUrl}${props.itemId}.json`;
+            </DialogContent>
+            <DialogActions>
+              <Button
+                disabled={status.working}
+                onClick={event => {
+                  setNewStartDate(DateTime.local().toISO());
+                  setCopyData(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={status.working}
+                onClick={event => {
+                  dispatch(startTask("copying_course"));
+                  const url = `${endpoints.courseCopyUrl}${props.itemId}.json`;
 
-                axios.post( url,{
-                  start_date: newStartDate,
-                })
-                  .then( response =>{
-                    const data = response.data;
-                    props.addMessagesFunc(data.messages);
-                    if (Boolean(props.itemUpdateFunc)) {
-                      props.itemUpdateFunc();
-                    }
-                    setNewStartDate(DateTime.local().toISO());
-                    setCopyData(null);
-                    dispatch( endTask("copying_course") );
-                  })
-                  .catch( error =>{
-                    console.log( 'error:', error)
+                  axios
+                    .post(url, {
+                      start_date: newStartDate
+                    })
+                    .then(response => {
+                      const data = response.data;
+                      props.addMessagesFunc(data.messages);
+                      if (Boolean(props.itemUpdateFunc)) {
+                        props.itemUpdateFunc();
+                      }
+                      setNewStartDate(DateTime.local().toISO());
+                      setCopyData(null);
+                      dispatch(endTask("copying_course"));
+                    })
+                    .catch(error => {
+                      console.log("error:", error);
 
-                    dispatch( endTask("copying") );
-                  })
-              }}
-            >
-              Make a Copy
-            </Button>
-          </DialogActions>
-            </LocalizationProvider>
+                      dispatch(endTask("copying"));
+                    });
+                }}
+              >
+                Make a Copy
+              </Button>
+            </DialogActions>
+          </LocalizationProvider>
         </React.Fragment>
       ) : (
         <DialogContent />
@@ -130,7 +133,8 @@ export default function CopyActivityButton(props) {
             });
           }}
           aria-label="Make a Copy"
-          size="large">
+          size="large"
+        >
           <CollectionsBookmarkIcon />
         </IconButton>
       </Tooltip>

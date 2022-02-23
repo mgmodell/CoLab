@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from "react";
-import {useDispatch} from 'react-redux';
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Fab from "@mui/material/Fab";
-import withStyles from '@mui/styles/withStyles';
+import withStyles from "@mui/styles/withStyles";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
@@ -13,7 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { startTask, endTask } from "./infrastructure/StatusActions";
 import MUIDataTable from "mui-datatables";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
@@ -23,9 +23,9 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import axios from "axios";
 
 export default function DecisionInvitationsTable(props) {
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
-  const user = useTypedSelector(state=>state.profile.user );
+  const user = useTypedSelector(state => state.profile.user);
 
   const columns = [
     {
@@ -45,16 +45,17 @@ export default function DecisionInvitationsTable(props) {
                   aria-label={t("accept")}
                   onClick={event => {
                     const url = invitation.acceptPath + ".json";
-                    dispatch( startTask("accepting") );
-                    axios.get( url, { } )
+                    dispatch(startTask("accepting"));
+                    axios
+                      .get(url, {})
                       .then(response => {
                         const data = response.data;
                         //Process the data
                         props.parentUpdateFunc();
-                        dispatch( endTask("accepting") );
+                        dispatch(endTask("accepting"));
                       })
-                      .catch( error =>{
-                        console.log( 'error', error );
+                      .catch(error => {
+                        console.log("error", error);
                       });
                   }}
                 >
@@ -67,16 +68,17 @@ export default function DecisionInvitationsTable(props) {
                   aria-label={t("decline")}
                   onClick={event => {
                     const url = invitation.declinePath + ".json";
-                    dispatch( startTask("declining") );
-                    axios.get( url, { } )
+                    dispatch(startTask("declining"));
+                    axios
+                      .get(url, {})
                       .then(response => {
                         const data = response.data;
                         //Process the data
                         props.parentUpdateFunc();
-                        dispatch( endTask("declining") );
+                        dispatch(endTask("declining"));
                       })
-                      .catch( error =>{
-                        console.log( 'error', error );
+                      .catch(error => {
+                        console.log("error", error);
                       });
                   }}
                 >

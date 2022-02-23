@@ -44,7 +44,7 @@ class CandidateList < ApplicationRecord
   end
 
   def get_by_feedback(candidate_feedback)
-    candidates.where(candidate_feedback: candidate_feedback)
+    candidates.where(candidate_feedback:)
   end
 
   def get_accepted_terms

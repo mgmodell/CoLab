@@ -20,9 +20,9 @@ class Experience < ApplicationRecord
                     }
 
   def get_user_reaction(user)
-    reaction = reactions.includes(narrative: { scenario: :behavior }).find_by(user: user)
+    reaction = reactions.includes(narrative: { scenario: :behavior }).find_by(user:)
 
-    reaction = Reaction.create(user: user, experience: self, instructed: false) if reaction.nil?
+    reaction = Reaction.create(user:, experience: self, instructed: false) if reaction.nil?
     reaction
   end
 
@@ -74,8 +74,8 @@ class Experience < ApplicationRecord
         end: end_date,
         allDay: true,
         backgroundColor: '#99CC99',
-        edit_url: edit_url,
-        destroy_url: destroy_url,
+        edit_url:,
+        destroy_url:,
         activities: [
           {
             type: 'sim_exp',
@@ -124,18 +124,18 @@ class Experience < ApplicationRecord
                    end
 
     {
-      id: id,
+      id:,
       type: :experience,
       name: get_name(false),
       group_name: 'N/A',
       status: status_for_user(current_user),
       course_name: course.get_name(false),
-      start_date: start_date,
-      end_date: end_date,
-      next_deadline: next_deadline,
-      link: link,
-      consent_link: consent_link,
-      active: active
+      start_date:,
+      end_date:,
+      next_deadline:,
+      link:,
+      consent_link:,
+      active:
     }
   end
 
@@ -175,7 +175,8 @@ class Experience < ApplicationRecord
         exp = include_ids - narrative_counts.keys
         world = exp - Reaction.group(:narrative_id).count.keys
 
-        i = Narrative.includes(scenario: :behavior).joins(:reactions).where('scenario_id NOT IN (?)', scenario_counts.keys)
+        i = Narrative.includes(scenario: :behavior).joins(:reactions).where('scenario_id NOT IN (?)',
+                                                                            scenario_counts.keys)
                      .where(reactions: { narrative_id: exp })
                      .group(:narrative_id).count
         narrative = if include_ids.empty?

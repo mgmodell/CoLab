@@ -1,5 +1,5 @@
 import React, { useState, Suspense, useEffect } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 
 import PropTypes from "prop-types";
 import { BrowserRouter as Router, useNavigate } from "react-router-dom";
@@ -29,24 +29,24 @@ import SchoolIcon from "@mui/icons-material/School";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
-import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
+import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
 
 import DiversityCheck from "./DiversityCheck";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import {signOut} from './infrastructure/ContextActions';
+import { signOut } from "./infrastructure/ContextActions";
 
 export default function MainMenu(props) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [t, i18n] = useTranslation();
-  const isLoggedIn = useTypedSelector( (state) => state.context.status.loggedIn ) 
-  const user = useTypedSelector( (state) => state.profile.user );
+  const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
+  const user = useTypedSelector(state => state.profile.user);
 
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
 
   const toggleDrawer = event => {
     if (
@@ -67,150 +67,123 @@ export default function MainMenu(props) {
     setMenuOpen(false);
   };
 
-
-  const adminItems = isLoggedIn && (user.is_instructor || user.is_admin ) ? (
-    <React.Fragment>
-      <Divider />
-      <ListItem
-        button
-        id="administration-menu"
-        onClick={() => setAdminOpen(!adminOpen)}
-      >
-        <ListItemIcon>
-          <SettingsApplicationsIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>
-          {t("administration")} {adminOpen ? <ExpandLess /> : <ExpandMore />}
-        </ListItemText>
-      </ListItem>
-      <Collapse in={adminOpen} timeout="auto" unmountOnExit>
+  const adminItems =
+    isLoggedIn && (user.is_instructor || user.is_admin) ? (
+      <React.Fragment>
         <Divider />
         <ListItem
           button
-          id="courses-menu-item"
-          onClick={()=> navTo('/admin/courses')}
+          id="administration-menu"
+          onClick={() => setAdminOpen(!adminOpen)}
         >
           <ListItemIcon>
-            <SchoolIcon fontSize="small" />
+            <SettingsApplicationsIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{t("courses_edit")}</ListItemText>
+          <ListItemText>
+            {t("administration")} {adminOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemText>
         </ListItem>
-      <ListItem
-        button
-        id="admin_rpt-menu"
-        onClick={() => navTo('/admin/reporting')}
-      >
-        <ListItemIcon>
-          <MultilineChartIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{t("reporting")}</ListItemText>
-      </ListItem>
-      { user.is_admin
-          ? (
+        <Collapse in={adminOpen} timeout="auto" unmountOnExit>
+          <Divider />
+          <ListItem
+            button
+            id="courses-menu-item"
+            onClick={() => navTo("/admin/courses")}
+          >
+            <ListItemIcon>
+              <SchoolIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t("courses_edit")}</ListItemText>
+          </ListItem>
+          <ListItem
+            button
+            id="admin_rpt-menu"
+            onClick={() => navTo("/admin/reporting")}
+          >
+            <ListItemIcon>
+              <MultilineChartIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t("reporting")}</ListItemText>
+          </ListItem>
+          {user.is_admin ? (
             <React.Fragment>
-        <ListItem
-          button
-          id="concepts-menu-item"
-          onClick={() => navTo('/admin/concepts')}
-        >
-          <ListItemIcon>
-            <DynamicFeedIcon fontSize='small' />
-          </ListItemIcon>
-          <ListItemText>{t("concepts_edit")}</ListItemText>
-        </ListItem>
-        <ListItem
-          button
-          id="schools-menu-item"
-          onClick={() => navTo('/admin/schools')}
-        >
-          <ListItemIcon>
-            <AccountBoxIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{t("schools_edit")}</ListItemText>
-        </ListItem>
-        <ListItem
-          button
-          id="consent_forms-menu-item"
-          onClick={() => navTo('/admin/consent_forms')}
-        >
-          <ListItemIcon>
-            <FindInPageIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{t("consent_forms_edit")}</ListItemText>
-        </ListItem>
+              <ListItem
+                button
+                id="concepts-menu-item"
+                onClick={() => navTo("/admin/concepts")}
+              >
+                <ListItemIcon>
+                  <DynamicFeedIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{t("concepts_edit")}</ListItemText>
+              </ListItem>
+              <ListItem
+                button
+                id="schools-menu-item"
+                onClick={() => navTo("/admin/schools")}
+              >
+                <ListItemIcon>
+                  <AccountBoxIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{t("schools_edit")}</ListItemText>
+              </ListItem>
+              <ListItem
+                button
+                id="consent_forms-menu-item"
+                onClick={() => navTo("/admin/consent_forms")}
+              >
+                <ListItemIcon>
+                  <FindInPageIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{t("consent_forms_edit")}</ListItemText>
+              </ListItem>
             </React.Fragment>
+          ) : null}
 
-          ) : null
-
-      }
-
-        <Divider />
-      </Collapse>
-    </React.Fragment>
-  ) : null;
-
-  const basicOpts = isLoggedIn
-    ? (
-        <React.Fragment>
-
-          <ListItem
-            id="home-menu-item"
-            button
-            onClick={() => navTo('/')}
-          >
-            <ListItemIcon>
-              <HomeIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("home.title")}</ListItemText>
-          </ListItem>
-          <ListItem
-            id="profile-menu-item"
-            button
-            onClick={() => navTo('/profile')}
-          >
-            <ListItemIcon>
-              <AccountBoxIcon />
-            </ListItemIcon>
-            <ListItemText>{t("profile")}</ListItemText>
-          </ListItem>
-          <DiversityCheck
-            diversityScoreFor={props.diversityScoreFor}
-          />
-        </React.Fragment>
-
-    )
-    :
-    (
-          <ListItem
-            id="home-menu-item"
-            button
-            onClick={() => navTo('/')}
-          >
-            <ListItemIcon>
-              <HomeIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("home.title")}</ListItemText>
-          </ListItem>
-
-    )
-    const logoutItem = isLoggedIn ? 
-    (
-          <ListItem
-            id="logout-menu-item"
-            button
-            onClick={() => {
-              dispatch( signOut( ))
-              setMenuOpen(false);
-            }}
-          >
-            <ListItemIcon>
-              <ExitToAppIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{t("logout")}</ListItemText>
-          </ListItem>
-
+          <Divider />
+        </Collapse>
+      </React.Fragment>
     ) : null;
-    
+
+  const basicOpts = isLoggedIn ? (
+    <React.Fragment>
+      <ListItem id="home-menu-item" button onClick={() => navTo("/")}>
+        <ListItemIcon>
+          <HomeIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{t("home.title")}</ListItemText>
+      </ListItem>
+      <ListItem id="profile-menu-item" button onClick={() => navTo("/profile")}>
+        <ListItemIcon>
+          <AccountBoxIcon />
+        </ListItemIcon>
+        <ListItemText>{t("profile")}</ListItemText>
+      </ListItem>
+      <DiversityCheck diversityScoreFor={props.diversityScoreFor} />
+    </React.Fragment>
+  ) : (
+    <ListItem id="home-menu-item" button onClick={() => navTo("/")}>
+      <ListItemIcon>
+        <HomeIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{t("home.title")}</ListItemText>
+    </ListItem>
+  );
+  const logoutItem = isLoggedIn ? (
+    <ListItem
+      id="logout-menu-item"
+      button
+      onClick={() => {
+        dispatch(signOut());
+        setMenuOpen(false);
+      }}
+    >
+      <ListItemIcon>
+        <ExitToAppIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{t("logout")}</ListItemText>
+    </ListItem>
+  ) : null;
 
   return (
     <React.Fragment>
@@ -220,7 +193,8 @@ export default function MainMenu(props) {
         aria-controls="main-menu"
         aria-haspopup="true"
         onClick={toggleDrawer}
-        size="large">
+        size="large"
+      >
         <MenuIcon />
       </IconButton>
       <SwipeableDrawer
@@ -230,14 +204,10 @@ export default function MainMenu(props) {
         onOpen={toggleDrawer}
       >
         <List id="main-menu-list">
-        {basicOpts}
+          {basicOpts}
           {adminItems}
           <Divider />
-          <ListItem
-            id="demo-menu-item"
-            button
-            onClick={() => navTo('/demo')}
-          >
+          <ListItem id="demo-menu-item" button onClick={() => navTo("/demo")}>
             <ListItemIcon>
               <RateReviewIcon fontSize="small" />
             </ListItemIcon>
@@ -246,7 +216,9 @@ export default function MainMenu(props) {
           <ListItem
             id="support-menu-item"
             button
-            onClick={() => { window.location = "mailto:" + props.supportAddress }}
+            onClick={() => {
+              window.location = "mailto:" + props.supportAddress;
+            }}
           >
             <ListItemIcon>
               <ContactSupportIcon fontSize="small" />

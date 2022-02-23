@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import MenuItem from "@mui/material/MenuItem";
 import Popper from "@mui/material/Popper";
-import withStyles from '@mui/styles/withStyles';
+import withStyles from "@mui/styles/withStyles";
 import axios from "axios";
 function renderInputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
@@ -101,7 +101,8 @@ class RemoteAutoSuggest extends React.Component {
   getData = function(value) {
     const url = this.props.dataUrl + ".json?search_string=" + value;
 
-    axios.get( url, { } )
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         let suggestions = [];
@@ -112,9 +113,9 @@ class RemoteAutoSuggest extends React.Component {
           suggestions: suggestions
         });
       })
-      .catch( error=>{
-          console.log("error", error );
-          return [{ id: -1, name: "no data" }];
+      .catch(error => {
+        console.log("error", error);
+        return [{ id: -1, name: "no data" }];
       });
   };
   render() {

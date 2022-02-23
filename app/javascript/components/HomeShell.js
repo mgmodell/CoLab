@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
@@ -13,8 +13,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import luxonPlugin from "@fullcalendar/luxon";
 
-import {useDispatch} from 'react-redux';
-import {startTask, endTask } from './infrastructure/StatusActions';
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "./infrastructure/StatusActions";
 
 import DecisionEnrollmentsTable from "./DecisionEnrollmentsTable";
 import DecisionInvitationsTable from "./DecisionInvitationsTable";
@@ -23,22 +23,26 @@ import ProfileDataAdmin from "./ProfileDataAdmin";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import TaskList from "./TaskList";
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function HomeShell(props) {
   const category = "home";
   //const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
-  const endpoints = useTypedSelector(state=>state.context.endpoints[category]);
-  const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
-  const dispatch = useDispatch( );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[category]
+  );
+  const endpointsLoaded = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
   const [curTab, setCurTab] = useState("list");
 
-  const isLoggedIn = useTypedSelector(state=>state.context.status.loggedIn)
-  const user = useTypedSelector(state=>state.profile.user );
+  const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
+  const user = useTypedSelector(state => state.profile.user);
   Settings.defaultZoneName = user.timezone;
 
   //Initialising to null
@@ -49,42 +53,38 @@ export default function HomeShell(props) {
   const getTasks = () => {
     var url = endpoints.taskListUrl + ".json";
 
-    dispatch( startTask() );
-    axios.get( url,{
-
-    })
-      .then( (data) =>{
-        //Process the data
-        data = data['data'];
-        data['tasks'].forEach((value, index, array) => {
-          switch (value.type) {
-            case "assessment":
-              value.title = value.group_name + " for (" + value.name + ")";
-              break;
-            case "bingo_game":
-              value.title = value.name;
-              break;
-            case "experience":
-              value.title = value.name;
-              break;
-          }
-          value.url = value.link;
-          value.start = value.next_date;
-        });
-        setTasks(data.tasks);
-        setConsentLogs(data.consent_logs);
-        setWaitingRosters(data.waiting_rosters);
-
-        dispatch( endTask() );
+    dispatch(startTask());
+    axios.get(url, {}).then(data => {
+      //Process the data
+      data = data["data"];
+      data["tasks"].forEach((value, index, array) => {
+        switch (value.type) {
+          case "assessment":
+            value.title = value.group_name + " for (" + value.name + ")";
+            break;
+          case "bingo_game":
+            value.title = value.name;
+            break;
+          case "experience":
+            value.title = value.name;
+            break;
+        }
+        value.url = value.link;
+        value.start = value.next_date;
       });
+      setTasks(data.tasks);
+      setConsentLogs(data.consent_logs);
+      setWaitingRosters(data.waiting_rosters);
+
+      dispatch(endTask());
+    });
   };
 
   useEffect(() => {
-    if (endpointsLoaded && isLoggedIn ) {
+    if (endpointsLoaded && isLoggedIn) {
       getTasks();
     }
   }, [endpointsLoaded, isLoggedIn]);
-
 
   var pageContent = <Skeleton variant="rectangular" />;
   if (undefined !== consentLogs) {
@@ -96,11 +96,7 @@ export default function HomeShell(props) {
         />
       );
     } else if (isLoggedIn && !user.welcomed) {
-      pageContent = (
-        <ProfileDataAdmin
-          profileId={user.id}
-        />
-      );
+      pageContent = <ProfileDataAdmin profileId={user.id} />;
     } else {
       pageContent = (
         <React.Fragment>
@@ -108,7 +104,7 @@ export default function HomeShell(props) {
           <p>
             {t("home.greeting", { name: user.first_name })},<br />
             {t("home.task_interval", {
-              postProcess: 'interval',
+              postProcess: "interval",
               count: tasks.length
             })}
           </p>
@@ -156,7 +152,7 @@ export default function HomeShell(props) {
   return (
     <Paper>
       <Grid container spacing={3}>
-        {endpointsLoaded ? ( 
+        {endpointsLoaded ? (
           <React.Fragment>
             <Grid item xs={12}>
               {undefined !== waitingRosters && waitingRosters.length > 0 ? (
@@ -167,12 +163,12 @@ export default function HomeShell(props) {
               ) : null}
             </Grid>
             <Grid item xs={12}>
-              {undefined !== endpoints['courseRegRequestsUrl'] &&
-	       undefined !== endpoints['courseRegUpdatesUrl'] ? (
-              	<DecisionEnrollmentsTable
-                	init_url={endpoints['courseRegRequestsUrl']}
-                	update_url={endpoints['courseRegUpdatesUrl']}
-              	/>
+              {undefined !== endpoints["courseRegRequestsUrl"] &&
+              undefined !== endpoints["courseRegUpdatesUrl"] ? (
+                <DecisionEnrollmentsTable
+                  init_url={endpoints["courseRegRequestsUrl"]}
+                  update_url={endpoints["courseRegUpdatesUrl"]}
+                />
               ) : null}
             </Grid>
           </React.Fragment>
@@ -185,5 +181,4 @@ export default function HomeShell(props) {
   );
 }
 
-HomeShell.propTypes = {
-};
+HomeShell.propTypes = {};

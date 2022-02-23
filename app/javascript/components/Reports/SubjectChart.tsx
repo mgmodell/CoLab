@@ -424,10 +424,12 @@ export default function SubjectChart(props) {
         {Object.values( streams ).map( (stream)=>{
           return(
             <React.Fragment key={`stream-target-${stream.target_id}`}>
+              STREAM: {stream.target_id}
               {
                 Object.values( stream.sub_streams ).map( (subStream) =>{
                   return(
                     <React.Fragment key={`sub-assessor-${subStream.assessor_id}`}>
+                      SUBSTREAM: {subStream.assessor_id}
                       {
                           Object.values( subStream.factor_streams).map( (factorStream)=>{
                             const datakey = `${subStream.assessor_name} - ${factorStream.factor_name}`;
@@ -435,6 +437,7 @@ export default function SubjectChart(props) {
                               <React.Fragment
                                 key={ `factor-${factorStream.factor_id}` }
                                 >
+                                  {factorStream.factor_name}
                               <GlyphSeries
                                 data={ factorStream.values }
                                 dataKey={ `glyph-${datakey}` }

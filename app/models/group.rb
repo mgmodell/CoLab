@@ -51,7 +51,7 @@ class Group < ApplicationRecord
                           :cip_code, reactions: :narrative,
                                      home_state: [:home_country])
 
-    Group.calc_diversity_score_for_group users: users
+    Group.calc_diversity_score_for_group users:
   end
 
   def self.calc_diversity_score_for_group(users:)

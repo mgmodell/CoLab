@@ -36,7 +36,7 @@ class CandidateListsController < ApplicationController
         render :show
       elsif !@candidate_list.bingo_game.is_open?
         notice = t('candidate_lists.no_longer_available')
-        redirect_to :root_path, notice: notice
+        redirect_to :root_path, notice:
       end
     end
   end
@@ -130,8 +130,8 @@ class CandidateListsController < ApplicationController
 
           if id.blank?
             candidate = @candidate_list.candidates.build(
-              term: term,
-              definition: definition,
+              term:,
+              definition:,
               user: current_user
             )
           else
@@ -147,7 +147,7 @@ class CandidateListsController < ApplicationController
           notice = t 'candidate_lists.update_success'
           format.html do
             redirect_to edit_candidate_list_path(@candidate_list),
-                        notice: notice
+                        notice:
           end
           format.json do
             render json: {
@@ -177,7 +177,7 @@ class CandidateListsController < ApplicationController
               ),
               others_requested_help: @candidate_list.others_requested_help,
               help_requested: @candidate_list.group_requested,
-              messages: messages
+              messages:
             }
           end
         end

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 //Redux store stuff
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
@@ -8,7 +8,7 @@ import {
   Priorities,
   setDirty,
   setClean
-      } from './infrastructure/StatusActions';
+} from "./infrastructure/StatusActions";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -22,7 +22,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import AdapterLuxon from '@mui/lab/AdapterLuxon';
+import AdapterLuxon from "@mui/lab/AdapterLuxon";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { TextareaAutosize } from "@mui/material";
@@ -31,59 +31,67 @@ import axios from "axios";
 
 export default function SchoolDataAdmin(props) {
   const category = "school";
-  const endpoints = useTypedSelector( state => {return state.context.endpoints[category]})
-  const endpointStatus = useTypedSelector( state => {return state.context.status.endpointsLoaded})
+  const endpoints = useTypedSelector(state => {
+    return state.context.endpoints[category];
+  });
+  const endpointStatus = useTypedSelector(state => {
+    return state.context.status.endpointsLoaded;
+  });
   //const { t, i18n } = useTranslation('schools' );
-  const user = useTypedSelector(state=>state.profile.user );
-  const userLoaded = useTypedSelector(state=>{ return (null != state.profile.lastRetrieved) } );
+  const user = useTypedSelector(state => state.profile.user);
+  const userLoaded = useTypedSelector(state => {
+    return null != state.profile.lastRetrieved;
+  });
 
-  const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category]) } );
+  const dirty = useTypedSelector(state => {
+    return state.status.dirtyStatus[category];
+  });
 
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
 
-
-  let {schoolIdParam} = useParams( );
-  const [schoolId, setSchoolId] = useState( schoolIdParam );
+  let { schoolIdParam } = useParams();
+  const [schoolId, setSchoolId] = useState(schoolIdParam);
   const [schoolName, setSchoolName] = useState("");
   const [schoolDescription, setSchoolDescription] = useState("");
   const [schoolTimezone, setSchoolTimezone] = useState("UTC");
-  const [messages, setMessages] = useState( { } );
+  const [messages, setMessages] = useState({});
 
-  const timezones = useTypedSelector( state => {return state.context.lookups['timezones'] })
+  const timezones = useTypedSelector(state => {
+    return state.context.lookups["timezones"];
+  });
 
   const getSchool = () => {
-    dispatch( startTask() );
+    dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null == schoolId) {
       url = url + "new.json";
     } else {
       url = url + schoolId + ".json";
     }
-    axios.get( url, { } )
-      .then( (response) =>{
+    axios
+      .get(url, {})
+      .then(response => {
         const school = response.data.school;
 
         setSchoolName(school.name || "");
         setSchoolDescription(school.description || "");
         setSchoolTimezone(school.timezone || "UTC");
-        dispatch( setClean( category ) );
-
-
-      } )
-      .catch( error => {
-        console.log( 'error', error )
+        dispatch(setClean(category));
       })
-      .finally(()=>{
-        dispatch( endTask() );
-        dispatch( setClean( category ) );
+      .catch(error => {
+        console.log("error", error);
       })
+      .finally(() => {
+        dispatch(endTask());
+        dispatch(setClean(category));
+      });
   };
   const saveSchool = () => {
     const method = null == schoolId ? "POST" : "PATCH";
-    dispatch( startTask("saving") );
+    dispatch(startTask("saving"));
 
     const url =
-      endpoints['baseUrl'] +
+      endpoints["baseUrl"] +
       "/" +
       (null == schoolId ? props.schoolId : schoolId) +
       ".json";
@@ -100,7 +108,7 @@ export default function SchoolDataAdmin(props) {
       }
     })
       .then(resp => {
-        const data = resp['data'];
+        const data = resp["data"];
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const school = data.school;
           setSchoolId(school.id);
@@ -108,18 +116,20 @@ export default function SchoolDataAdmin(props) {
           setSchoolDescription(school.description);
           setSchoolTimezone(school.timezone);
 
-          dispatch( setClean( category ) );
-          dispatch( addMessage( data.messages.main, new Date( ), Priorities.INFO ) );
+          dispatch(setClean(category));
+          dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
           //setMessages(data.messages);
-          dispatch( endTask("saving") );
+          dispatch(endTask("saving"));
         } else {
-          dispatch( addMessage( data.messages.main, new Date( ), Priorities.ERROR ) );
+          dispatch(
+            addMessage(data.messages.main, new Date(), Priorities.ERROR)
+          );
           setMessages(data.messages);
-          dispatch( endTask("saving") );
+          dispatch(endTask("saving"));
         }
       })
-      .catch( error => {
-        console.log( 'error', error )
+      .catch(error => {
+        console.log("error", error);
       });
   };
 
@@ -136,16 +146,12 @@ export default function SchoolDataAdmin(props) {
   }, [userLoaded]);
 
   useEffect(() => {
-    dispatch( setDirty( category ) );
-  }, [
-    schoolTimezone,
-    schoolName,
-    schoolDescription
-  ]);
+    dispatch(setDirty(category));
+  }, [schoolTimezone, schoolName, schoolDescription]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveSchool} disabled={!dirty} >
-      {schoolId > 0 ? 'Save' : 'Create'} School
+    <Button variant="contained" onClick={saveSchool} disabled={!dirty}>
+      {schoolId > 0 ? "Save" : "Create"} School
     </Button>
   ) : null;
 
@@ -200,9 +206,5 @@ export default function SchoolDataAdmin(props) {
     </Paper>
   ) : null;
 
-  return (
-    <Paper>
-      {detailsComponent}
-    </Paper>
-  );
+  return <Paper>{detailsComponent}</Paper>;
 }

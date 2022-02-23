@@ -16,11 +16,11 @@ import Paper from "@mui/material/Paper";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import Collapse from "@mui/material/Collapse";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ToggleButton from "@mui/material/ToggleButton";
 import UserEmailList from "./UserEmailList";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -30,35 +30,46 @@ import { DatePicker, LocalizationProvider } from "@mui/lab/";
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import AdapterLuxon from '@mui/lab/AdapterLuxon';
+import AdapterLuxon from "@mui/lab/AdapterLuxon";
 import UserCourseList from "./UserCourseList";
 import ResearchParticipationList from "./ResearchParticipationList";
 import UserActivityList from "./UserActivityList";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import {useDispatch} from 'react-redux';
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "./infrastructure/StatusActions";
 import { Grid, Link } from "@mui/material";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { fetchProfile, setProfile, persistProfile, setLocalLanguage } from "./infrastructure/ProfileActions";
-import { Skeleton } from '@mui/material';
+import {
+  fetchProfile,
+  setProfile,
+  persistProfile,
+  setLocalLanguage
+} from "./infrastructure/ProfileActions";
+import { Skeleton } from "@mui/material";
 import axios from "axios";
 
 export default function ProfileDataAdmin(props) {
   const category = "profile";
-  const endpoints = useTypedSelector((state)=>state.context.endpoints[category]);
-  const endpointStatus = useTypedSelector((state)=>state.context.status.endpointsLoaded );
-  const lookupStatus = useTypedSelector((state)=>state.context.status.lookupsLoaded );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[category]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const lookupStatus = useTypedSelector(
+    state => state.context.status.lookupsLoaded
+  );
 
-  const timezones = useTypedSelector((state)=>state.context.lookups.timezones );
-  const countries = useTypedSelector((state)=>state.context.lookups.countries );
-  const cipCodes = useTypedSelector((state)=>state.context.lookups.cip_codes );
-  const genders = useTypedSelector((state)=>state.context.lookups.genders );
-  const schools = useTypedSelector((state)=>state.context.lookups.schools );
-  const languages = useTypedSelector((state)=>state.context.lookups.languages );
-  const themes = useTypedSelector((state)=>state.context.lookups.themes );
+  const timezones = useTypedSelector(state => state.context.lookups.timezones);
+  const countries = useTypedSelector(state => state.context.lookups.countries);
+  const cipCodes = useTypedSelector(state => state.context.lookups.cip_codes);
+  const genders = useTypedSelector(state => state.context.lookups.genders);
+  const schools = useTypedSelector(state => state.context.lookups.schools);
+  const languages = useTypedSelector(state => state.context.lookups.languages);
+  const themes = useTypedSelector(state => state.context.lookups.themes);
 
-  const [states, setStates] = useState( [] );
+  const [states, setStates] = useState([]);
 
   const [courses, setCourses] = useState();
 
@@ -67,7 +78,7 @@ export default function ProfileDataAdmin(props) {
   const [consentForms, setConsentForms] = useState();
 
   //const { t, i18n } = useTranslation('profiles' );
-  const user = useTypedSelector((state)=>state.profile.user );
+  const user = useTypedSelector(state => state.profile.user);
   const dispatch = useDispatch();
 
   const [curTab, setCurTab] = useState("details");
@@ -76,177 +87,176 @@ export default function ProfileDataAdmin(props) {
   const [showErrors, setShowErrors] = useState(false);
   const [curPanel, setCurPanel] = useState("");
 
-  const setProfileFirstName = (first_name) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileFirstName = first_name => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.first_name = first_name;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileLastName = (last_name) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileLastName = last_name => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.last_name = last_name;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileEmails = (emails) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileEmails = emails => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.emails = emails;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileTimezone = (timezone) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileTimezone = timezone => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.timezone = timezone;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
   //Demographics
-  const setProfileGender = (gender) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileGender = gender => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.gender = gender;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileHomeCountry = (homeCountry) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileHomeCountry = homeCountry => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.country = homeCountry;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileHomeState = (home_state_id) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileHomeState = home_state_id => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.home_state_id = home_state_id;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileSchool = (school_id) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileSchool = school_id => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.school_id = school_id;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileHomeLanguage = (language_id) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileHomeLanguage = language_id => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.primary_language_id = language_id;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileCipCode = (cip_code_id) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileCipCode = cip_code_id => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.cip_code_id = cip_code_id;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileDOB = (date_of_birth) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileDOB = date_of_birth => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.date_of_birth = date_of_birth;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileStartedSchool = (started_school) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileStartedSchool = started_school => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.started_school = started_school;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileImpVisual = (impairment_visual) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileImpVisual = impairment_visual => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.impairment_visual = impairment_visual;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileImpAuditory = (impairment_auditory) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileImpAuditory = impairment_auditory => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.impairment_auditory = impairment_auditory;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileImpMotor = (impairment_motor) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileImpMotor = impairment_motor => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.impairment_motor = impairment_motor;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileImpCognitive = (impairment_cognitive) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileImpCognitive = impairment_cognitive => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.impairment_cognitive = impairment_cognitive;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileImpOther = (impairment_other) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileImpOther = impairment_other => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.impairment_other = impairment_other;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-
 
   //Display
-  const setProfileLanguage = (language_id) =>{
-    console.log( language_id );
-    dispatch( setLocalLanguage( language_id ) );
+  const setProfileLanguage = language_id => {
+    console.log(language_id);
+    dispatch(setLocalLanguage(language_id));
   };
-  const setProfileTheme = (theme_id) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileTheme = theme_id => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.theme_id = theme_id;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-  const setProfileResearcher = (researcher) =>{
-    const temp = { };
-    Object.assign( temp, user );
+  const setProfileResearcher = researcher => {
+    const temp = {};
+    Object.assign(temp, user);
     temp.researcher = researcher;
-    dispatch( setProfile( temp ) );
+    dispatch(setProfile(temp));
   };
-
 
   const handlePanelClick = newPanel => {
     setCurPanel(newPanel != curPanel ? newPanel : "");
   };
 
   const getStates = countryCode => {
-    if( endpointStatus ){
+    if (endpointStatus) {
+      if (!endpoints.statesForUrl || null !== countryCode) {
+        dispatch(startTask());
+        const url = endpoints.statesForUrl + countryCode + ".json";
+        axios
+          .get(url, {})
+          .then(response => {
+            const data = response.data;
+            //Find the selected state in the retrieved list
+            const foundSelectedStates = data.filter(item => {
+              return (
+                user.home_state_id === item.id ||
+                item.code === "__:" + countryCode
+              );
+            });
 
-    if ( !endpoints.statesForUrl || null !== countryCode) {
-      dispatch( startTask() );
-      const url = endpoints.statesForUrl + countryCode + ".json";
-      axios.get( url, { } )
-        .then(response => {
-          const data = response.data;
-          //Find the selected state in the retrieved list
-          const foundSelectedStates = data.filter(item => {
-            return (
-              user.home_state_id === item.id || item.code === "__:" + countryCode
-            );
+            setStates(data);
+
+            if (1 === foundSelectedStates.length) {
+              setProfileHomeState(foundSelectedStates[0].id);
+              setDirty(true);
+            }
+            dispatch(endTask("loading"));
+          })
+          .catch(error => {
+            console.log("error", error);
           });
-
-          setStates(data);
-
-          if (1 === foundSelectedStates.length) {
-            setProfileHomeState(foundSelectedStates[0].id);
-            setDirty(true);
-          }
-          dispatch( endTask("loading") );
-        })
-        .catch( error =>{
-          console.log( 'error', error );
-        });
-    } else {
-      setStates( [] );
-    }
+      } else {
+        setStates([]);
+      }
     }
   };
 
   const getProfile = () => {
-    dispatch( fetchProfile );
+    dispatch(fetchProfile);
   };
   const saveProfile = () => {
-    dispatch( persistProfile( ) );
+    dispatch(persistProfile());
   };
 
   useEffect(() => {
     if (endpointStatus) {
-      dispatch( endTask("loading") );
+      dispatch(endTask("loading"));
       getProfile();
     }
   }, [endpointStatus]);
@@ -258,7 +268,7 @@ export default function ProfileDataAdmin(props) {
   }, [user.loaded]);
 
   useEffect(() => setDirty(true), [
-    user,
+    user
     //Demographics
   ]);
 
@@ -273,9 +283,7 @@ export default function ProfileDataAdmin(props) {
   const detailsComponent = lookupStatus ? (
     <Paper>
       <Accordion expanded>
-        <AccordionSummary id="profile">
-          Edit your profile
-        </AccordionSummary>
+        <AccordionSummary id="profile">Edit your profile</AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3}>
             <Grid item sm={6} xs={12}>
@@ -318,14 +326,14 @@ export default function ProfileDataAdmin(props) {
                   emailList={user.emails}
                   emailListUpdateFunc={setProfileEmails}
                   addMessagesFunc={setMessages}
-                  addEmailUrl={endpoints['addEmailUrl']}
-                  removeEmailUrl={endpoints['removeEmailUrl']}
-                  primaryEmailUrl={endpoints['setPrimaryEmailUrl']}
+                  addEmailUrl={endpoints["addEmailUrl"]}
+                  removeEmailUrl={endpoints["removeEmailUrl"]}
+                  primaryEmailUrl={endpoints["setPrimaryEmailUrl"]}
                 />
               ) : null}
             </Grid>
             <Grid item xs={12}>
-              <Link href={endpoints['passwordResetUrl']}>
+              <Link href={endpoints["passwordResetUrl"]}>
                 Want to change your password? Click here and we'll email
                 instructions.
               </Link>
@@ -402,9 +410,7 @@ export default function ProfileDataAdmin(props) {
                 control={
                   <Switch
                     checked={user.researcher}
-                    onChange={event =>
-                      setProfileResearcher(!profileResearcher)
-                    }
+                    onChange={event => setProfileResearcher(!profileResearcher)}
                     name="researcher"
                   />
                 }
@@ -447,10 +453,7 @@ export default function ProfileDataAdmin(props) {
         expanded={"demographics" === curPanel}
         onChange={() => handlePanelClick("demographics")}
       >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          id="demographics"
-        >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} id="demographics">
           Tell us about yourself, {user.first_name} (optional)
         </AccordionSummary>
         <AccordionDetails>
@@ -496,7 +499,9 @@ export default function ProfileDataAdmin(props) {
                     setProfileCipCode(Number(event.target.value))
                   }
                 >
-                  <MenuItem key={0} value={0}>None Selected</MenuItem>
+                  <MenuItem key={0} value={0}>
+                    None Selected
+                  </MenuItem>
                   {cipCodes.map(cipCode => {
                     return (
                       <MenuItem key={cipCode.code} value={cipCode.id}>
@@ -716,7 +721,7 @@ export default function ProfileDataAdmin(props) {
       <br />
       {saveButton}
     </Paper>
-  ) : null ;
+  ) : null;
 
   return (
     <Paper>
@@ -749,35 +754,37 @@ export default function ProfileDataAdmin(props) {
         <Tab label="History" value="history" />
         <Tab label="Research Participation" value="research" />
       </Tabs>
-      { endpointStatus && lookupStatus && (user.id > 0) ?
-      <React.Fragment>
-      {lookupStatus && "details" === curTab ? detailsComponent : null}
-      {"courses" === curTab ? (
-        <UserCourseList
-          retrievalUrl={endpoints['coursePerformanceUrl'] + ".json"}
-          coursesList={courses}
-          coursesListUpdateFunc={setCourses}
-          addMessagesFunc={setMessages}
-        />
-      ) : null}
-      {"history" === curTab ? (
-        <UserActivityList
-          retrievalUrl={endpoints['activitiesUrl'] + ".json"}
-          activitiesList={activities}
-          activitiesListUpdateFunc={setActivities}
-          addMessagesFunc={setMessages}
-        />
-      ) : null}
-      {"research" === curTab ? (
-        <ResearchParticipationList
-          retrievalUrl={endpoints['consentFormsUrl'] + ".json"}
-          consentFormList={consentForms}
-          consentFormListUpdateFunc={setConsentForms}
-          addMessagesFunc={setMessages}
-        />
-      ) : null}
-      </React.Fragment>
-      : <Skeleton variant="rectangular" heght={300}/>}
+      {endpointStatus && lookupStatus && user.id > 0 ? (
+        <React.Fragment>
+          {lookupStatus && "details" === curTab ? detailsComponent : null}
+          {"courses" === curTab ? (
+            <UserCourseList
+              retrievalUrl={endpoints["coursePerformanceUrl"] + ".json"}
+              coursesList={courses}
+              coursesListUpdateFunc={setCourses}
+              addMessagesFunc={setMessages}
+            />
+          ) : null}
+          {"history" === curTab ? (
+            <UserActivityList
+              retrievalUrl={endpoints["activitiesUrl"] + ".json"}
+              activitiesList={activities}
+              activitiesListUpdateFunc={setActivities}
+              addMessagesFunc={setMessages}
+            />
+          ) : null}
+          {"research" === curTab ? (
+            <ResearchParticipationList
+              retrievalUrl={endpoints["consentFormsUrl"] + ".json"}
+              consentFormList={consentForms}
+              consentFormListUpdateFunc={setConsentForms}
+              addMessagesFunc={setMessages}
+            />
+          ) : null}
+        </React.Fragment>
+      ) : (
+        <Skeleton variant="rectangular" heght={300} />
+      )}
     </Paper>
   );
 }

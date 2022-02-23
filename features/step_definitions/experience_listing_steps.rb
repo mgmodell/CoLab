@@ -6,7 +6,7 @@ require 'faker'
 Given(/^there is a course with an experience$/) do
   @course = School.find(1).courses.new(
     name: "#{Faker::Company.industry} Course",
-    number: Faker::Number.within(range:100..6000),
+    number: Faker::Number.within(range: 100..6000),
     timezone: 'UTC',
     start_date: 4.months.ago,
     end_date: 2.months.from_now

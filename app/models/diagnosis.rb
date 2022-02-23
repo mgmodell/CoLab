@@ -9,7 +9,7 @@ class Diagnosis < ApplicationRecord
 
   validate :validate_other_name
   validate :validate_unique
-  validates_length_of :other_name, :maximum => 255
+  validates :other_name, length: { maximum: 255 }
 
   def validate_other_name
     if !behavior_id.nil? &&
@@ -21,8 +21,6 @@ class Diagnosis < ApplicationRecord
   end
 
   def validate_unique
-    if Diagnosis.where(reaction: reaction, week_id: week_id).exists?
-      errors[:base] << I18n.t('diagnosis.duplicate_entry')
-    end
+    errors[:base] << I18n.t('diagnosis.duplicate_entry') if Diagnosis.where(reaction:, week_id:).exists?
   end
 end

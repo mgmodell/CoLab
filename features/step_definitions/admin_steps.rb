@@ -3,7 +3,7 @@
 Given(/^there is a course$/) do
   @course = School.find(1).courses.new(
     name: "#{Faker::Company.industry} Course",
-    number: Faker::Number.within( range: 100..5000),
+    number: Faker::Number.within(range: 100..5000),
     timezone: 'UTC',
     start_date: 4.months.ago,
     end_date: 2.months.from_now

@@ -6,13 +6,14 @@ export default function Quote(props) {
   const [quote, setQuote] = useState({ text: "", attribution: "" });
 
   const updateQuote = () => {
-    axios.get( props.url + '.json', { } )
+    axios
+      .get(props.url + ".json", {})
       .then(response => {
         const data = response.data;
         setQuote({ text: data.text_en, attribution: data.attribution });
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
   useEffect(() => updateQuote(), []);
@@ -24,5 +25,5 @@ export default function Quote(props) {
   );
 }
 Quote.propTypes = {
-  url: PropTypes.string,
+  url: PropTypes.string
 };

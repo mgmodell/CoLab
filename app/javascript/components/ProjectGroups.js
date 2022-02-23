@@ -168,7 +168,8 @@ class ProjectGroups extends React.Component {
     this.setState({
       working: true
     });
-    axios.get( url, { } )
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         this.setState({
@@ -179,10 +180,9 @@ class ProjectGroups extends React.Component {
           students: Object.values(data.students)
         });
       })
-      .catch( error =>{
-        console.log( 'error', error );
-      })
-      ;
+      .catch(error => {
+        console.log("error", error);
+      });
   }
 
   rescoreGroup(event, group_id) {
@@ -193,10 +193,11 @@ class ProjectGroups extends React.Component {
       group_id: group_id
     };
 
-    const url = this.props.diversityRescoreGroup + this.props.projectId + ".json";
-    axios.post( url, {
+    const url =
+      this.props.diversityRescoreGroup + this.props.projectId + ".json";
+    axios
+      .post(url, {
         group_id: group_id
-      
       })
       .then(response => {
         const data = response.data;
@@ -208,22 +209,23 @@ class ProjectGroups extends React.Component {
           students: Object.values(data.students)
         });
       })
-      .catch( error =>{
-          const fail_data = new Object();
-          fail_data.notice = "The operation failed";
-          fail_data.success = false;
-          console.log("error", error );
-          return fail_data;
-
-      }) ;
+      .catch(error => {
+        const fail_data = new Object();
+        fail_data.notice = "The operation failed";
+        fail_data.success = false;
+        console.log("error", error);
+        return fail_data;
+      });
   }
 
   recalcDiversity() {
     this.setState({
       working: true
     });
-    const url = this.props.diversityRescoreGroups + this.props.projectId + ".json"
-    axios.post( url, { } )
+    const url =
+      this.props.diversityRescoreGroups + this.props.projectId + ".json";
+    axios
+      .post(url, {})
       .then(response => {
         const data = response.data;
         this.setState({
@@ -234,14 +236,13 @@ class ProjectGroups extends React.Component {
           students: Object.values(data.students)
         });
       })
-      .catch( error =>{
-          const fail_data = new Object();
-          fail_data.notice = "The operation failed";
-          fail_data.success = false;
-          console.log("error", error );
-          return fail_data;
-
-      }) ;
+      .catch(error => {
+        const fail_data = new Object();
+        fail_data.notice = "The operation failed";
+        fail_data.success = false;
+        console.log("error", error);
+        return fail_data;
+      });
   }
 
   saveGroups() {
@@ -250,10 +251,10 @@ class ProjectGroups extends React.Component {
       message: "Saving..."
     });
     const url = this.props.groupsUrl + this.props.projectId + ".json";
-    axios.patch( url, {
+    axios
+      .patch(url, {
         groups: this.state.groups_raw,
         students: this.state.students_raw
-
       })
       .then(response => {
         const data = response.data;
@@ -266,14 +267,13 @@ class ProjectGroups extends React.Component {
           message: data.message == null ? "" : data.message
         });
       })
-      .catch( error =>{
-          const fail_data = new Object();
-          fail_data.notice = "The operation failed";
-          fail_data.success = false;
-          console.log("error", error );
-          return fail_data;
-
-      }) ;
+      .catch(error => {
+        const fail_data = new Object();
+        fail_data.notice = "The operation failed";
+        fail_data.success = false;
+        console.log("error", error);
+        return fail_data;
+      });
   }
 
   render() {

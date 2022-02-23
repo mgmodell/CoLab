@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import {
-  useNavigate
-} from "react-router-dom";
-import Alert from '@mui/material/Alert';
+import { useNavigate } from "react-router-dom";
+import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Settings from "luxon/src/settings.js";
@@ -11,8 +9,8 @@ import Settings from "luxon/src/settings.js";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 
-import {useDispatch} from 'react-redux';
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "./infrastructure/StatusActions";
 
 import MUIDataTable from "mui-datatables";
 import Collapse from "@mui/material/Collapse";
@@ -21,14 +19,18 @@ import axios from "axios";
 
 export default function SchoolList(props) {
   const endpointSet = "school";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
-  const user = useTypedSelector(state=>state.profile.user)
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const user = useTypedSelector(state => state.profile.user);
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
-  const navigate = useNavigate( );
+  const navigate = useNavigate();
 
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
   const columns = [
     {
       label: "Name",
@@ -92,19 +94,18 @@ export default function SchoolList(props) {
   const getSchools = () => {
     const url = endpoints.baseUrl + ".json";
 
-    dispatch( startTask() );
-    axios.get( url, { } )
-      .then(response => {
-        //Process the data
-        setSchools(response.data);
-        dispatch( endTask("loading") );
-      });
+    dispatch(startTask());
+    axios.get(url, {}).then(response => {
+      //Process the data
+      setSchools(response.data);
+      dispatch(endTask("loading"));
+    });
   };
 
   useEffect(() => {
-    if (endpointStatus ){
+    if (endpointStatus) {
       getSchools();
-      dispatch( endTask("loading") );
+      dispatch(endTask("loading"));
     }
   }, [endpointStatus]);
 
@@ -134,12 +135,13 @@ export default function SchoolList(props) {
             <IconButton
               id="new_school"
               onClick={event => {
-                navigate( 'new' );
+                navigate("new");
                 //window.location.href =
                 //  endpoints.endpoints[endpointSet].schoolCreateUrl;
               }}
               aria-label="New School"
-              size="large">
+              size="large"
+            >
               <AddIcon />
             </IconButton>
           </Tooltip>
@@ -147,7 +149,7 @@ export default function SchoolList(props) {
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
             const id = schools[cellMeta.dataIndex].id;
-            navigate( String( id ) )
+            navigate(String(id));
           }
         },
         selectableRows: "none"
@@ -180,5 +182,4 @@ export default function SchoolList(props) {
   );
 }
 
-SchoolList.propTypes = {
-};
+SchoolList.propTypes = {};

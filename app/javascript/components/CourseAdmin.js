@@ -10,10 +10,8 @@ import ExperienceDataAdmin from "./ExperienceDataAdmin";
 import ProjectDataAdmin from "./ProjectDataAdmin";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
-
 export default function CourseAdmin(props) {
-
-  const user = useTypedSelector(state=>state.profile.user)
+  const user = useTypedSelector(state => state.profile.user);
 
   useEffect(() => {
     if (user.loaded) {
@@ -25,32 +23,20 @@ export default function CourseAdmin(props) {
     <Routes>
       <Route
         path={`:courseIdParam/bingo_game/:bingoGameIdParam`}
-        element={ <BingoGameDataAdmin /> }
+        element={<BingoGameDataAdmin />}
       />
       <Route
         path={`:courseIdParam/experience/:experienceIdParam`}
-        element={ <ExperienceDataAdmin /> }
-       />
+        element={<ExperienceDataAdmin />}
+      />
       <Route
         path={`:courseIdParam/project/:projectIdParam`}
         element={<ProjectDataAdmin />}
       />
-      <Route
-        path={`:courseIdParam`}
-        element={
-            <CourseDataAdmin />
-        }
-      />
-      <Route exact path={`/`}
-        element={
-        <CourseList
-        />
-
-        }
-      />
+      <Route path={`:courseIdParam`} element={<CourseDataAdmin />} />
+      <Route exact path={`/`} element={<CourseList />} />
     </Routes>
   );
 }
 
-CourseAdmin.propTypes = {
-};
+CourseAdmin.propTypes = {};

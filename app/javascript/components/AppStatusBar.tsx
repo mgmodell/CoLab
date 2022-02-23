@@ -1,21 +1,21 @@
 import React from "react";
-import {useDispatch} from "react-redux";
-import {useTypedSelector} from './infrastructure/AppReducers'
+import { useDispatch } from "react-redux";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
-import {acknowledgeMsg} from './infrastructure/StatusActions';
+import { acknowledgeMsg } from "./infrastructure/StatusActions";
 
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 import CloseIcon from "@mui/icons-material/Close";
 
-
 export default function AppStatusBar(props) {
-
-  const messages = useTypedSelector( state => { return state.status.messages } )
-  const dispatch = useDispatch( );
+  const messages = useTypedSelector(state => {
+    return state.status.messages;
+  });
+  const dispatch = useDispatch();
 
   return (
     <React.Fragment>
@@ -32,7 +32,7 @@ export default function AppStatusBar(props) {
                   color="inherit"
                   size="small"
                   onClick={() => {
-                    dispatch(acknowledgeMsg( index ));
+                    dispatch(acknowledgeMsg(index));
                     //statusActions.acknowledge(index);
                   }}
                 >

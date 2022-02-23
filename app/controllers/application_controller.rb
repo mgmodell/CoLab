@@ -31,17 +31,15 @@ class ApplicationController < ActionController::Base
                  impairment_motor impairment_cognitive
                  impairment_other])
     devise_parameter_sanitizer.permit(:validate, keys:
-              %i[id_token] )
-
+              %i[id_token])
   end
 
   def switch_locale(&action)
     locale = if user_signed_in?
-      current_user.language_code
-    else
-      params[:lang] || I18n.default_locale
-    end
-    I18n.with_locale( locale, &action )
-
+               current_user.language_code
+             else
+               params[:lang] || I18n.default_locale
+             end
+    I18n.with_locale(locale, &action)
   end
 end

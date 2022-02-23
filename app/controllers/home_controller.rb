@@ -16,7 +16,7 @@ class HomeController < ApplicationController
     waiting_rosters = current_user.rosters.invited_student
 
     resp_hash = {
-      tasks: waiting_tasks.collect { |t| t.task_data(current_user: current_user) },
+      tasks: waiting_tasks.collect { |t| t.task_data(current_user:) },
       consent_logs: waiting_consent_logs.collect do |cl|
                       {
                         id: cl.id,
@@ -42,9 +42,8 @@ class HomeController < ApplicationController
   end
 
   def endpoints
-
     ep_hash = {
-      home:{
+      home: {
         supportAddress: 'Support@CoLab.online',
         logoPath: ActionController::Base.helpers.asset_path('CoLab_small.png'),
         quotePath: get_quote_path,
@@ -65,13 +64,13 @@ class HomeController < ApplicationController
       setPrimaryEmailUrl: set_primary_registered_email_path(email_id: ''),
       passwordResetUrl: initiate_password_reset_path,
       # infrastructure
-      statesForUrl: states_for_path(country_code: ''),
+      statesForUrl: states_for_path(country_code: '')
     }
     if user_signed_in?
       ep_hash[:home][ :taskListUrl] = task_list_path
       ep_hash[:home][ :courseRegRequestsUrl] = course_reg_requests_path
       ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path
-      ep_hash[:home][ :selfRegUrl] = self_reg_init_path(id: '' )
+      ep_hash[:home][ :selfRegUrl] = self_reg_init_path(id: '')
 
       ep_hash[:candidate_review] = {
         baseUrl: review_bingo_candidates_path(id: ''),
@@ -116,7 +115,7 @@ class HomeController < ApplicationController
           courseCreateUrl: new_course_path,
           courseUsersUrl: get_users_path(id: ''),
           scoresUrl: course_scores_path(id: ''),
-          courseCopyUrl: copy_course_path(id: ''),
+          courseCopyUrl: copy_course_path(id: '')
         }
         ep_hash[ :school ] = {
           baseUrl: schools_path,
@@ -128,8 +127,8 @@ class HomeController < ApplicationController
         ep_hash[:bingo_game] = {
           baseUrl: bingo_games_path,
           gameResultsUrl: game_results_path(id: ''),
-          worksheetResultsUrl: ws_results_path( id: '' ),
-          worksheetScoreUrl: ws_score_path( id: '' )
+          worksheetResultsUrl: ws_results_path(id: ''),
+          worksheetScoreUrl: ws_score_path(id: '')
         }
         ep_hash[:concept] = {
           baseUrl: concepts_path
@@ -151,9 +150,7 @@ class HomeController < ApplicationController
       endpoints: ep_hash,
       lookups: get_lookups
     }
-    if user_signed_in?
-      resources[:profile] = get_profile_hash
-    end
+    resources[:profile] = get_profile_hash if user_signed_in?
 
     # Provide the endpoints
     respond_to do |format|
@@ -164,64 +161,63 @@ class HomeController < ApplicationController
   end
 
   def get_lookups
-      lookups = {
-        behaviors: Behavior.all.collect { |behavior|
-          {
-            id: behavior.id,
-            name: behavior.name,
-            description: behavior.description,
-            needs_detail: behavior.needs_detail
-          }
-        },
-        countries: HomeCountry.all.collect { |country|
-          {
-            id: country.id,
-            name: country.name,
-            code: country.code
-          }
-        },
-        languages: Language.all.collect { |language|
-          {
-            id: language.id,
-            name: language.name,
-            code: language.code
-          }
-        },
-        cip_codes: CipCode.all.collect { |cip_code|
-          {
-            id: cip_code.id,
-            code: cip_code.gov_code,
-            name: cip_code.name
-          }
-        },
-        genders: Gender.all.collect { |gender|
-          {
-            id: gender.id,
-            name: gender.name,
-            code: gender.code
-          }
-        },
-        themes: Theme.all.collect {  |theme|
-          {
-            id: theme.id,
-            code: theme.code,
-            name: theme.name
-          }
-        },
-        timezones: HomeController::TIMEZONES,
-        oauth_ids: {
-          google: Rails.configuration.omniauth[:google_client_id]
-        },
-        schools: School.all.collect { |school|
-          {
-            id: school.id,
-            name: school.name,
-            timezone: school.timezone
-          }
+    lookups = {
+      behaviors: Behavior.all.collect do |behavior|
+        {
+          id: behavior.id,
+          name: behavior.name,
+          description: behavior.description,
+          needs_detail: behavior.needs_detail
         }
-      }
+      end,
+      countries: HomeCountry.all.collect do |country|
+        {
+          id: country.id,
+          name: country.name,
+          code: country.code
+        }
+      end,
+      languages: Language.all.collect do |language|
+        {
+          id: language.id,
+          name: language.name,
+          code: language.code
+        }
+      end,
+      cip_codes: CipCode.all.collect do |cip_code|
+        {
+          id: cip_code.id,
+          code: cip_code.gov_code,
+          name: cip_code.name
+        }
+      end,
+      genders: Gender.all.collect do |gender|
+        {
+          id: gender.id,
+          name: gender.name,
+          code: gender.code
+        }
+      end,
+      themes: Theme.all.collect do |theme|
+        {
+          id: theme.id,
+          code: theme.code,
+          name: theme.name
+        }
+      end,
+      timezones: HomeController::TIMEZONES,
+      oauth_ids: {
+        google: Rails.configuration.omniauth[:google_client_id]
+      },
+      schools: School.all.collect do |school|
+        {
+          id: school.id,
+          name: school.name,
+          timezone: school.timezone
+        }
+      end
+    }
   end
-
 
   def lookups
     lookups = get_lookups
@@ -241,22 +237,20 @@ class HomeController < ApplicationController
                   primary_language_id started_school researcher
                   impairment_visual impairment_auditory
                   impairment_motor impairment_cognitive
-                  impairment_other primary_language_id,
+                  impairment_other primary_language_id
                   welcomed ]
-      ),
-
+      )
 
     }
     profile_hash[:user][:is_instructor] = current_user.is_instructor?
     profile_hash[:user][:is_admin] = current_user.is_admin?
-    profile_hash[:user][:name] = current_user.name( false )
+    profile_hash[:user][:name] = current_user.name(false)
 
     profile_hash[:user][:emails] = current_user.emails.as_json(
       only: %i[id email primary],
       methods: ['confirmed?']
     )
     profile_hash
-
   end
 
   def full_profile
@@ -273,8 +267,8 @@ class HomeController < ApplicationController
     if current_user.update(params)
       notice = 'Profile successfully updated'
       respond_to do |format|
-        response = get_profile_hash( )
-        response [:messages] = {main: notice}
+        response = get_profile_hash
+        response [:messages] = { main: notice }
         format.json do
           render json: response
         end
@@ -285,7 +279,7 @@ class HomeController < ApplicationController
         format.json do
           messages = current_user.errors.to_hash.store(:main, 'Please review the errors below')
           response = {
-            messages: messages
+            messages:
           }
           render json: response
         end
@@ -364,7 +358,7 @@ class HomeController < ApplicationController
                        current_user.get_assessment_performance(course_id: activity.course.id)
                      when 'Group Experience'
                        current_user.get_experience_performance(course_id: activity.course.id)
-                      end,
+                     end,
         other: case activity.type
                when 'Terms List'
                  activity.candidate_list_for_user(current_user).get_concepts.size
@@ -372,7 +366,7 @@ class HomeController < ApplicationController
                  activity.get_performance(current_user)
                when 'Group Experience'
                  activity.get_user_reaction(current_user).status
-                      end,
+               end,
         link: case activity.type
               when 'Terms List'
                 bingo_list_stats_path(activity.candidate_list_for_user(current_user))
@@ -380,7 +374,7 @@ class HomeController < ApplicationController
                 nil
               when 'Group Experience'
                 nil
-                      end
+              end
       }
     end
     respond_to do |format|
@@ -435,9 +429,8 @@ class HomeController < ApplicationController
 
   # Data transport class
   class Event_
-    attr_accessor :name, :task_link, :task_name_post, :type, :status, :group_name
-    attr_accessor :course_name, :start_time, :close_date
-    attr_accessor :instructor_task
+    attr_accessor :name, :task_link, :task_name_post, :type, :status, :group_name, :course_name, :start_time,
+                  :close_date, :instructor_task
   end
 
   def demo_start
@@ -508,12 +501,11 @@ class HomeController < ApplicationController
 
   def profile_params
     params.permit(
-                                :first_name, :last_name,
-                                 :timezone, :language_id, :theme_id, :researcher,
-                                 :gender_id, :date_of_birth, :primary_language_id, :country, :home_state_id,
-                                 :school_id, :cip_code_id, :started_school,
-                                 :impairment_visual, :impairment_auditory, :impairment_cognitive, :impairment_motor, :impairment_other
-
+      :first_name, :last_name,
+      :timezone, :language_id, :theme_id, :researcher,
+      :gender_id, :date_of_birth, :primary_language_id, :country, :home_state_id,
+      :school_id, :cip_code_id, :started_school,
+      :impairment_visual, :impairment_auditory, :impairment_cognitive, :impairment_motor, :impairment_other
     )
   end
 end

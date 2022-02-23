@@ -2,7 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import withStyles from '@mui/styles/withStyles';
+import withStyles from "@mui/styles/withStyles";
 import TableCell from "@mui/material/TableCell";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { AutoSizer, Column, SortDirection, Table } from "react-virtualized";

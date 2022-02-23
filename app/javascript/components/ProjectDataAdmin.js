@@ -21,18 +21,19 @@ import { DatePicker, LocalizationProvider } from "@mui/lab/";
 import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
-import AdapterLuxon from '@mui/lab/AdapterLuxon';
-import {useDispatch} from 'react-redux';
-import {startTask,
-        endTask,
-        setDirty,
-        setClean,
-        addMessage,
-        Priorities
-      } from './infrastructure/StatusActions';
+import AdapterLuxon from "@mui/lab/AdapterLuxon";
+import { useDispatch } from "react-redux";
+import {
+  startTask,
+  endTask,
+  setDirty,
+  setClean,
+  addMessage,
+  Priorities
+} from "./infrastructure/StatusActions";
 
 import ProjectGroups from "./ProjectGroups";
-import ChartContainer from './Reports/ChartContainer';
+import ChartContainer from "./Reports/ChartContainer";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 import { Grid, Skeleton } from "@mui/material";
@@ -41,20 +42,28 @@ export default function ProjectDataAdmin(props) {
   const cityTimezones = require("city-timezones");
 
   const category = "project";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[category])
-  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded)
-  const { courseIdParam, projectIdParam } = useParams( );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[category]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const { courseIdParam, projectIdParam } = useParams();
 
-  const [curTab, setCurTab] = useState('rpt');
-  const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category])} );
+  const [curTab, setCurTab] = useState("rpt");
+  const dirty = useTypedSelector(state => {
+    return state.status.dirtyStatus[category];
+  });
   const [messages, setMessages] = useState({});
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
 
   const [factorPacks, setFactorPacks] = useState([
     { id: 0, name: "none selected" }
   ]);
   const [styles, setStyles] = useState([{ id: 0, name_en: "none selected" }]);
-  const [projectId, setProjectId] = useState('new' === projectIdParam ? null : Number( projectIdParam));
+  const [projectId, setProjectId] = useState(
+    "new" === projectIdParam ? null : Number(projectIdParam)
+  );
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [projectStartDate, setProjectStartDate] = useState(
@@ -76,49 +85,48 @@ export default function ProjectDataAdmin(props) {
   const [courseTimezone, setCourseTimezone] = useState("UTC");
 
   const getProject = () => {
-    dispatch( startTask() );
-    dispatch( setDirty( category ) );
+    dispatch(startTask());
+    dispatch(setDirty(category));
     var url = endpoints.baseUrl + "/";
     if (null == projectId) {
       url = url + "new/" + courseIdParam + ".json";
     } else {
       url = url + projectId + ".json";
     }
-    axios.get( url, { } )
-      .then(response => {
-        const data = response.data;
-        const project = response.data.project;
-        setFactorPacks(factorPacks.concat(data.factorPacks));
-        setStyles(styles.concat(data.styles));
+    axios.get(url, {}).then(response => {
+      const data = response.data;
+      const project = response.data.project;
+      setFactorPacks(factorPacks.concat(data.factorPacks));
+      setStyles(styles.concat(data.styles));
 
-        const course = data.course;
-        setCourseName(course.name);
-        setCourseTimezone(course.timezone);
-        Settings.defaultZoneName = course.timezone;
+      const course = data.course;
+      setCourseName(course.name);
+      setCourseTimezone(course.timezone);
+      Settings.defaultZoneName = course.timezone;
 
-        setProjectName(project.name || "");
-        setProjectDescription(project.description || "");
-        setProjectActive(project.active);
+      setProjectName(project.name || "");
+      setProjectDescription(project.description || "");
+      setProjectActive(project.active);
 
-        var receivedDate = DateTime.fromISO(project.start_date).setZone(
-          course.timezone
-        );
-        setProjectStartDate(receivedDate.toISO());
-        receivedDate = DateTime.fromISO(project.end_date).setZone(
-          course.timezone
-        );
-        setProjectEndDate(receivedDate.toISO());
-        setProjectFactorPackId(project.factor_pack_id);
-        setProjectStyleId(project.style_id);
-        setProjectStartDOW(project.start_dow);
-        setProjectEndDOW(project.end_dow);
-        dispatch( endTask() );
-        dispatch( setClean( category ) ) ;
-      });
+      var receivedDate = DateTime.fromISO(project.start_date).setZone(
+        course.timezone
+      );
+      setProjectStartDate(receivedDate.toISO());
+      receivedDate = DateTime.fromISO(project.end_date).setZone(
+        course.timezone
+      );
+      setProjectEndDate(receivedDate.toISO());
+      setProjectFactorPackId(project.factor_pack_id);
+      setProjectStyleId(project.style_id);
+      setProjectStartDOW(project.start_dow);
+      setProjectEndDOW(project.end_dow);
+      dispatch(endTask());
+      dispatch(setClean(category));
+    });
   };
   const saveProject = () => {
     const method = null == projectId ? "POST" : "PATCH";
-    dispatch( startTask("saving") );
+    dispatch(startTask("saving"));
 
     const url =
       endpoints.baseUrl +
@@ -142,11 +150,10 @@ export default function ProjectDataAdmin(props) {
           factor_pack_id: projectFactorPackId,
           style_id: projectStyleId
         }
-
       }
     })
       .then(response => {
-        console.log( 'resp', response );
+        console.log("resp", response);
         const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const project = data.project;
@@ -169,20 +176,23 @@ export default function ProjectDataAdmin(props) {
 
           const course = data.course;
           setCourseName(course.name);
-          dispatch( endTask("saving") );
-          dispatch( setClean( category ) ) ;
+          dispatch(endTask("saving"));
+          dispatch(setClean(category));
           setMessages(data.messages);
-          dispatch( addMessage( data.messages.status, new Date( ), Priorities.INFO))
+          dispatch(
+            addMessage(data.messages.status, new Date(), Priorities.INFO)
+          );
         } else {
           setMessages(data.messages);
-          dispatch( addMessage( data.messages.status, new Date( ), Priorities.ERROR))
-          dispatch( endTask("saving") );
+          dispatch(
+            addMessage(data.messages.status, new Date(), Priorities.ERROR)
+          );
+          dispatch(endTask("saving"));
         }
       })
-      .catch( error => {
-        console.log( 'error', error );
-      })
-      ;
+      .catch(error => {
+        console.log("error", error);
+      });
   };
   useEffect(() => {
     daysOfWeek.unshift(daysOfWeek.pop());
@@ -190,13 +200,13 @@ export default function ProjectDataAdmin(props) {
   }, []);
 
   useEffect(() => {
-    if (endpointStatus ){
+    if (endpointStatus) {
       getProject();
     }
-  }, [endpointStatus ]);
+  }, [endpointStatus]);
 
   useEffect(() => {
-    dispatch( setDirty( category ) );
+    dispatch(setDirty(category));
   }, [
     projectName,
     projectDescription,
@@ -350,55 +360,42 @@ export default function ProjectDataAdmin(props) {
       {saveButton}
     </Paper>
   );
-  const chartContainer = (0 < projectId) && ('' !== projectName) ?
-  (
-    <React.Fragment>
-        <Suspense fallback={<Skeleton variant='rectangular' height={300} />}>
-        <ChartContainer
-          unitOfAnalysis='group'
-          anonymize={false}
-          forResearch={false}
-          projects={[
-            {id: projectId, name: projectName}
-          ]}
+  const chartContainer =
+    0 < projectId && "" !== projectName ? (
+      <React.Fragment>
+        <Suspense fallback={<Skeleton variant="rectangular" height={300} />}>
+          <ChartContainer
+            unitOfAnalysis="group"
+            anonymize={false}
+            forResearch={false}
+            projects={[{ id: projectId, name: projectName }]}
           />
         </Suspense>
-    </React.Fragment>
-  ) : null;
+      </React.Fragment>
+    ) : null;
 
   return (
     <Paper>
-      <TabContext value={curTab} >
-
-      <Tabs value={curTab} onChange={(event, value) => setCurTab(value)}>
-        <Tab label="Details" value="details" />
-        <Tab label="Groups" value="groups" disabled={null == projectId} />
-        <Tab label="Reporting" value='rpt' disabled={null == projectId} />
-      </Tabs>
-      <TabPanel value='details'>
-        {detailsComponent}
-
-      </TabPanel>
-      <TabPanel value='groups'>
-        <ProjectGroups
-          projectId={projectId}
-          groupsUrl={endpoints.groupsUrl}
-          diversityCheckUrl={endpoints.diversityCheckUrl}
-          diversityRescoreGroup={
-            endpoints.diversityRescoreGroup
-          }
-          diversityRescoreGroups={
-            endpoints.diversityRescoreGroups
-          }
-        />
-      </TabPanel>
-      <TabPanel value='rpt'>
-        {chartContainer }
-      </TabPanel>
+      <TabContext value={curTab}>
+        <Tabs value={curTab} onChange={(event, value) => setCurTab(value)}>
+          <Tab label="Details" value="details" />
+          <Tab label="Groups" value="groups" disabled={null == projectId} />
+          <Tab label="Reporting" value="rpt" disabled={null == projectId} />
+        </Tabs>
+        <TabPanel value="details">{detailsComponent}</TabPanel>
+        <TabPanel value="groups">
+          <ProjectGroups
+            projectId={projectId}
+            groupsUrl={endpoints.groupsUrl}
+            diversityCheckUrl={endpoints.diversityCheckUrl}
+            diversityRescoreGroup={endpoints.diversityRescoreGroup}
+            diversityRescoreGroups={endpoints.diversityRescoreGroups}
+          />
+        </TabPanel>
+        <TabPanel value="rpt">{chartContainer}</TabPanel>
       </TabContext>
     </Paper>
   );
 }
 
-ProjectDataAdmin.propTypes = {
-};
+ProjectDataAdmin.propTypes = {};

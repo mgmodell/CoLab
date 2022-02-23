@@ -10,7 +10,6 @@ class ProjectsController < ApplicationController
                                           set_groups]
   before_action :check_viewer, only: %i[show index]
 
-
   def show
     @title = t('.title')
     respond_to do |format|
@@ -69,9 +68,9 @@ class ProjectsController < ApplicationController
                      t('projects.create_success')
                    else
                      t('projects.create_success_inactive')
-end
+                   end
           redirect_to project_path(@project,
-                                   notice: notice,
+                                   notice:,
                                    format: params[:format])
         end
         format.json do
@@ -112,8 +111,8 @@ end
                      t('projects.update_success')
                    else
                      t('projects.update_success_inactive')
-end
-          redirect_to @project, notice: notice
+                   end
+          redirect_to @project, notice:
         end
         format.json do
           response = {
@@ -129,7 +128,7 @@ end
                         t('projects.update_success')
                       else
                         t('projects.update_success_inactive')
-end
+                      end
             }
           }
           render json: response
@@ -182,9 +181,9 @@ end
       end
     rescue StandardError => e
       # Post back a JSON error
-      get_groups_helper project: project, message: t('projects.group_save_failure')
+      get_groups_helper project:, message: t('projects.group_save_failure')
     else
-      get_groups_helper project: project, message: t('projects.group_save_success')
+      get_groups_helper project:, message: t('projects.group_save_success')
     end
   end
 
@@ -194,7 +193,7 @@ end
                      .left_outer_joins(groups: :users)
                      .find_by(id: params[:id])
 
-    get_groups_helper project: project
+    get_groups_helper project:
   end
 
   def get_groups_helper(project:, message: nil)
@@ -224,9 +223,9 @@ end
     respond_to do |format|
       format.json do
         render json: {
-          message: message,
-          groups: groups,
-          students: students
+          message:,
+          groups:,
+          students:
         }
       end
     end
@@ -311,13 +310,11 @@ end
 
     if current_user.is_admin?
       @project = p_test
+    elsif p_test.course.rosters.instructor.where(user: current_user).nil?
+      @course = @project.course
+      redirect_to @course if @project.nil?
     else
-      if p_test.course.rosters.instructor.where(user: current_user).nil?
-        @course = @project.course
-        redirect_to @course if @project.nil?
-      else
-        @project = p_test
-      end
+      @project = p_test
     end
   end
 

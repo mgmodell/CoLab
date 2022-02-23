@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Fab from "@mui/material/Fab";
-import withStyles from '@mui/styles/withStyles';
+import withStyles from "@mui/styles/withStyles";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
@@ -138,8 +138,9 @@ class DecisionEnrollmentsTable extends React.Component {
     this.getRequests();
   }
   getRequests() {
-    const url = `${this.props.init_url}.json`
-    axios.get( url, { } )
+    const url = `${this.props.init_url}.json`;
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         this.setState({
@@ -148,9 +149,9 @@ class DecisionEnrollmentsTable extends React.Component {
           working: false
         });
       })
-      .catch( error =>{
-          console.log("error", error );
-          return [{ id: -1, name: "no data" }];
+      .catch(error => {
+        console.log("error", error);
+        return [{ id: -1, name: "no data" }];
       });
   }
   filter = function(event) {
@@ -188,10 +189,11 @@ class DecisionEnrollmentsTable extends React.Component {
   decision(id, accept) {
     this.setState({ working: true });
     const url = this.props.update_url + ".json";
-    axios.patch( url, {
+    axios
+      .patch(url, {
         roster_id: id,
         decision: accept
-    })
+      })
       .then(response => {
         const data = response.data;
         this.setState({
@@ -200,12 +202,12 @@ class DecisionEnrollmentsTable extends React.Component {
           working: false
         });
       })
-      .catch( error=>{
-          const fail_data = new Object();
-          fail_data.notice = "The operation failed";
-          fail_data.success = false;
-          console.log("error", error);
-          return fail_data;
+      .catch(error => {
+        const fail_data = new Object();
+        fail_data.notice = "The operation failed";
+        fail_data.success = false;
+        console.log("error", error);
+        return fail_data;
       });
   }
 
@@ -215,7 +217,8 @@ class DecisionEnrollmentsTable extends React.Component {
         <Paper style={{ height: 450, width: "100%" }}>
           <h1>Decision Enrollment Requests</h1>
           <p>
-            The following students are trying to enroll in your course. Please accept or decline each enrollment.
+            The following students are trying to enroll in your course. Please
+            accept or decline each enrollment.
           </p>
           <Toolbar>
             <InputBase placeholder="Search requests" onChange={this.filter} />
@@ -243,7 +246,7 @@ class DecisionEnrollmentsTable extends React.Component {
 }
 DecisionEnrollmentsTable.propTypes = {
   init_url: PropTypes.string.isRequired,
-  update_url: PropTypes.string.isRequired,
+  update_url: PropTypes.string.isRequired
 };
 
 export default DecisionEnrollmentsTable;

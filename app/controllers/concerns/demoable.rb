@@ -65,8 +65,8 @@ module Demoable
       cl.candidates << Candidate.new(
         id: - index,
         concept: Concept.new(name: concept),
-        definition: definition,
-        term: term,
+        definition:,
+        term:,
         candidate_feedback: feedback
       )
     end
@@ -104,10 +104,7 @@ module Demoable
   end
 
   class InstallmentStub
-    attr_accessor :id, :user_id
-    attr_accessor :assessment, :assessment_id
-    attr_accessor :group, :group_id
-    attr_accessor :values, :inst_date
+    attr_accessor :id, :user_id, :assessment, :assessment_id, :group, :group_id, :values, :inst_date
 
     def values_build(factor:, user:, value:)
       self.values = values || []
@@ -120,15 +117,19 @@ module Demoable
       values << v
     end
   end
+
   class AssessmentStub
     attr_accessor :id, :project
   end
+
   class UserStub
     attr_accessor :id, :first_name, :last_name
+
     def name
       last_name + ', ' + first_name
     end
   end
+
   class ProjStub
     attr_accessor :id, :style, :name, :description, :factor_pack
 
@@ -136,6 +137,7 @@ module Demoable
       name
     end
   end
+
   class GroupStub
     attr_accessor :id, :name, :users, :project
 

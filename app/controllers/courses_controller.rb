@@ -90,7 +90,7 @@ class CoursesController < ApplicationController
       }
     end
     response = {
-      users: users,
+      users:,
       add_function: {
         proc_self_reg: proc_course_reg_requests_path,
         instructor: add_instructors_path,
@@ -132,13 +132,11 @@ class CoursesController < ApplicationController
     roster = Roster.where(user: current_user, course: @course).take
     if roster.nil?
       roster = @course.rosters.create(role: Roster.roles[:requesting_student], user: current_user)
-    else
-      if !((roster.enrolled_student? || roster.invited_student? ||
+    elsif !((roster.enrolled_student? || roster.invited_student? ||
               roster.instructor? || roster.assistant?))
-        roster.requesting_student!
-      elsif roster.invited_student?
-        roster.enrolled_student!
-      end
+      roster.requesting_student!
+    elsif roster.invited_student?
+      roster.enrolled_student!
     end
     roster.save
     logger.debug roster.errors.full_messages unless roster.errors.empty?
@@ -149,40 +147,40 @@ class CoursesController < ApplicationController
   def self_reg_init
     response = {
       course: @course.as_json(
-        only: %i[ id name number description ]
+        only: %i[id name number description]
       ),
       enrollable: false
     }
 
     if @course.end_date < Time.now
-      response[ :message_header ] = 'enroll_failed_title'
-      response[ :message ] = 'self_enroll_course_closed_body'
+      response[:message_header] = 'enroll_failed_title'
+      response[:message] = 'self_enroll_course_closed_body'
 
     else
-      roster = Roster.includes( :course ).where( user: current_user, course: @course ).take
+      roster = Roster.includes(:course).where(user: current_user, course: @course).take
 
-      if( roster.nil? || roster.dropped_student? ||
-          roster.invited_student? || roster.declined_student? )
+      if roster.nil? || roster.dropped_student? ||
+         roster.invited_student? || roster.declined_student?
 
-          response[ :enrollable ] = true
-          response[ :message_header ] = 'enroll_title'
-          response[ :message ] = 'self_enroll_body'
+        response[:enrollable] = true
+        response[:message_header] = 'enroll_title'
+        response[:message] = 'self_enroll_body'
 
-      elsif( roster.instructor? || roster.assistant? )
-          response[ :message_header ] = 'enroll_failed_title'
-          response[ :message ] = 'self_enroll_instructor_body'
+      elsif roster.instructor? || roster.assistant?
+        response[:message_header] = 'enroll_failed_title'
+        response[:message] = 'self_enroll_instructor_body'
 
-      elsif( roster.requesting_student? )
-          response[ :message_header ] = 'enroll_title'
-          response[ :message ] = 'self_enroll_already_requested_body'
+      elsif roster.requesting_student?
+        response[:message_header] = 'enroll_title'
+        response[:message] = 'self_enroll_already_requested_body'
 
-      elsif( roster.enrolled_student? )
-          response[ :message_header ] = 'enroll_title'
-          response[ :message ] = 'self_enroll_already_enrolled_body'
+      elsif roster.enrolled_student?
+        response[:message_header] = 'enroll_title'
+        response[:message] = 'self_enroll_already_enrolled_body'
 
-      elsif( roster.rejected_student? )
-          response[ :message_header ] = 'enroll_failed_title'
-          response[ :message ] = 'self_enroll_already_rejected_body'
+      elsif roster.rejected_student?
+        response[:message_header] = 'enroll_failed_title'
+        response[:message] = 'self_enroll_already_rejected_body'
 
       end
     end
@@ -378,7 +376,7 @@ class CoursesController < ApplicationController
       notice = t('courses.create_success')
       respond_to do |format|
         format.html do
-          redirect_to courses_url, notice: notice
+          redirect_to courses_url, notice:
         end
         format.json do
           response = {
@@ -402,7 +400,7 @@ class CoursesController < ApplicationController
           messages = @course.errors.as_json
           messages[:main] = 'Please review the problems below'
           render json: {
-            messages: messages
+            messages:
           }
         end
       end
@@ -416,7 +414,7 @@ class CoursesController < ApplicationController
       respond_to do |format|
         format.html do
           @course.school = School.find(@course.school_id)
-          redirect_to course_path(@course), notice: notice
+          redirect_to course_path(@course), notice:
         end
         format.json do
           response = {
@@ -439,7 +437,7 @@ class CoursesController < ApplicationController
         format.json do
           messages = @course.errors.to_hash.store(:main, 'Please review the problems below')
           response = {
-            messages: messages
+            messages:
           }
           render json: response
         end
@@ -454,7 +452,7 @@ class CoursesController < ApplicationController
 
   def add_students
     count = @course.add_students_by_email params[:addresses]
-    msg = t('courses.students_invited', count: count)
+    msg = t('courses.students_invited', count:)
     respond_to do |format|
       format.html do
         redirect_to @course, notice: msg
@@ -467,7 +465,7 @@ class CoursesController < ApplicationController
 
   def add_instructors
     count = @course.add_instructors_by_email params[:addresses]
-    msg = t('courses.instructor_invited', count: count)
+    msg = t('courses.instructor_invited', count:)
     respond_to do |format|
       format.html do
         redirect_to @course, notice: msg

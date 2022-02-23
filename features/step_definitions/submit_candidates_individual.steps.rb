@@ -73,7 +73,7 @@ When(/^the user populates (\d+) of the "([^"]*)" entries$/) do |count, field|
                                     "#{Faker::Company.industry}_#{index}"
                                   else
                                     Faker::Company.bs
-end
+                                  end
     page.fill_in("#{field}_#{index}",
                  with: @entries_list[index][field])
   end
@@ -87,7 +87,7 @@ Then(/^the candidate list properties will match the list$/) do
 end
 
 Then(/^the candidate list entries should match the list$/) do
-  field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]") .count
+  field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]").count
 
   field_count.times do |index|
     t_query = "//input[@id='term_#{index}']"

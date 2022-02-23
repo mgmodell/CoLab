@@ -58,10 +58,8 @@ class Candidate < ApplicationRecord
   end
 
   def concept_assigned
-    if candidate_list.bingo_game.reviewed && (term.present? || definition.present?)
-      unless CandidateFeedback.find(candidate_feedback_id).term_prob
-        errors.add(:concept, "Unless there's a problem with the term, you must assign a concept.") if concept_id.nil?
-      end
+    if candidate_list.bingo_game.reviewed && (term.present? || definition.present?) && !CandidateFeedback.find(candidate_feedback_id).term_prob && concept_id.nil?
+      errors.add(:concept, "Unless there's a problem with the term, you must assign a concept.")
     end
   end
 end

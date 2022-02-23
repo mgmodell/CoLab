@@ -4,6 +4,7 @@ export const SET_DIRTY = 'SET_DIRTY';
 export const SET_CLEAN = 'SET_CLEAN';
 export const ADD_MESSAGE = 'ADD_MESSAGE';
 export const ACKNOWLEDGE_MSG = 'ACKNOWLEDGE_MSG';
+export const CLEAN_UP_MSGS = 'CLEAN_UP_MSGS';
 
 export const Priorities = {
   ERROR: 'error',
@@ -33,4 +34,8 @@ export function addMessage(text, msgTime, priority) {
 
 export function acknowledgeMsg(index) {
   return { type: ACKNOWLEDGE_MSG, index }
+}
+
+export function cleanUpMsgs( age ) {
+  return { type: CLEAN_UP_MSGS }
 }

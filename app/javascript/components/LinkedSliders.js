@@ -6,7 +6,7 @@ import Slider from "@mui/material/Slider";
 //For debug purposes
 import Input from "@mui/material/Input";
 
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 
 import PropTypes from "prop-types";
 

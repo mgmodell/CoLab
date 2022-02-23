@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Routes,
-  Route,
-  useParams,
-  useNavigate
-} from "react-router-dom";
+import { Routes, Route, useParams, useNavigate } from "react-router-dom";
 //Redux store stuff
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
@@ -15,8 +10,9 @@ import {
   setClean,
   addMessage,
   acknowledgeMsg,
-  Priorities} from './infrastructure/StatusActions';
-import Alert from '@mui/material/Alert';
+  Priorities
+} from "./infrastructure/StatusActions";
+import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import PropTypes from "prop-types";
@@ -41,7 +37,7 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 import CourseUsersList from "./CourseUsersList";
 
-import AdapterLuxon from '@mui/lab/AdapterLuxon';
+import AdapterLuxon from "@mui/lab/AdapterLuxon";
 import MUIDataTable from "mui-datatables";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -50,24 +46,31 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { Skeleton } from '@mui/material';
+import { Skeleton } from "@mui/material";
 
 export default function CourseDataAdmin(props) {
   const category = "course";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[category]);
-  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
-  const user = useTypedSelector(state=>state.profile.user );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[category]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const user = useTypedSelector(state => state.profile.user);
 
   const navigate = useNavigate();
 
   const [curTab, setCurTab] = useState("details");
-  const dirty = useTypedSelector(state=>{ return (state.status.dirtyStatus[category])} );
+  const dirty = useTypedSelector(state => {
+    return state.status.dirtyStatus[category];
+  });
   const [messages, setMessages] = useState({});
 
-  let {courseIdParam} = useParams( );
+  let { courseIdParam } = useParams();
 
-
-  const [courseId, setCourseId] = useState(parseInt( 'new' === courseIdParam ? null : courseIdParam ) );
+  const [courseId, setCourseId] = useState(
+    parseInt("new" === courseIdParam ? null : courseIdParam)
+  );
 
   const [courseName, setCourseName] = useState("");
   const [courseNumber, setCourseNumber] = useState("");
@@ -88,8 +91,10 @@ export default function CourseDataAdmin(props) {
   const [courseConsentFormId, setCourseConsentFormId] = useState(0);
   const [courseRegImage, setCourseRegImage] = useState(null);
 
-  const schools = useTypedSelector(state=>state.context.lookups['schools']);
-  const timezones = useTypedSelector(state=>state.context.lookups['timezones']);
+  const schools = useTypedSelector(state => state.context.lookups["schools"]);
+  const timezones = useTypedSelector(
+    state => state.context.lookups["timezones"]
+  );
   const [consentForms, setConsentForms] = useState([]);
   const [newActivityLinks, setNewActivityLinks] = useState([]);
   const [schoolTzHash, setSchoolTzHash] = useState({});
@@ -97,15 +102,16 @@ export default function CourseDataAdmin(props) {
   const dispatch = useDispatch();
 
   const getCourse = () => {
-    dispatch( startTask( ));
-    dispatch( setDirty( category ) );
+    dispatch(startTask());
+    dispatch(setDirty(category));
 
-    const url = isNaN( courseId ) ?
-      `${endpoints.baseUrl}/new.json` :
-      `${endpoints.baseUrl}/${courseId}.json`;
+    const url = isNaN(courseId)
+      ? `${endpoints.baseUrl}/new.json`
+      : `${endpoints.baseUrl}/${courseId}.json`;
 
-    axios.get( url, { })
-      .then( response =>{
+    axios
+      .get(url, {})
+      .then(response => {
         const data = response.data;
         //MetaData and Infrastructure
         //setSchools(data.schools);
@@ -143,43 +149,40 @@ export default function CourseDataAdmin(props) {
         setCourseConsentFormId(course.consent_form_id || 0);
         setCourseSchoolId(course.school_id || 0);
 
-        dispatch( endTask( 'loading') );
-        dispatch( setClean( category ) );
-
+        dispatch(endTask("loading"));
+        dispatch(setClean(category));
       })
-      .catch( error =>{
-        console.log( 'error:', error );
-        dispatch( endTask( 'loading') );
-        
-      })
+      .catch(error => {
+        console.log("error:", error);
+        dispatch(endTask("loading"));
+      });
   };
 
   const saveCourse = () => {
-    const method = isNaN( courseId ) ? "POST" : "PATCH";
-    dispatch( startTask( 'saving' ) ) ;
+    const method = isNaN(courseId) ? "POST" : "PATCH";
+    dispatch(startTask("saving"));
 
-    const url = isNaN( courseId ) ?
-      `${endpoints.baseUrl}/new.json` :
-      `${endpoints.baseUrl}/${courseId}.json`;
+    const url = isNaN(courseId)
+      ? `${endpoints.baseUrl}/new.json`
+      : `${endpoints.baseUrl}/${courseId}.json`;
 
-
-      axios({
-        method: method,
-        url: url,
-        data: {
-          course: {
-            name: courseName,
-            number: courseNumber,
-            course_id: courseId,
-            description: courseDescription,
-            start_date: courseStartDate,
-            end_date: courseEndDate,
-            school_id: courseSchoolId,
-            consent_form_id: courseConsentFormId,
-            timezone: courseTimezone
-          }
+    axios({
+      method: method,
+      url: url,
+      data: {
+        course: {
+          name: courseName,
+          number: courseNumber,
+          course_id: courseId,
+          description: courseDescription,
+          start_date: courseStartDate,
+          end_date: courseEndDate,
+          school_id: courseSchoolId,
+          consent_form_id: courseConsentFormId,
+          timezone: courseTimezone
         }
-      })
+      }
+    })
       .then(response => {
         const data = response.data;
         if (Object.keys(data.messages).length < 2) {
@@ -201,29 +204,28 @@ export default function CourseDataAdmin(props) {
           );
           setCourseEndDate(receivedDate);
 
-          dispatch( endTask( 'saving' ) );
-          dispatch( setClean( category ) );
+          dispatch(endTask("saving"));
+          dispatch(setClean(category));
         }
         postNewMessage(data.messages);
       })
-      .catch( error =>{
-        console.log('error:', error );
-        dispatch( endTask( 'saving' ) );
-      })
+      .catch(error => {
+        console.log("error:", error);
+        dispatch(endTask("saving"));
+      });
   };
 
   useEffect(() => {
-    if( schools.length > 0 ){
-        schools.map(schoolData => {
-          schoolTzHash[schoolData.id] = schoolData.timezone;
-        });
+    if (schools.length > 0) {
+      schools.map(schoolData => {
+        schoolTzHash[schoolData.id] = schoolData.timezone;
+      });
     }
-  }, [schools] );
-
+  }, [schools]);
 
   useEffect(() => {
     if (endpointStatus) {
-      dispatch( endTask( 'loading' ) );
+      dispatch(endTask("loading"));
       getCourse();
     }
   }, [endpointStatus]);
@@ -235,7 +237,7 @@ export default function CourseDataAdmin(props) {
   }, [user.loaded]);
 
   useEffect(() => {
-    dispatch( setDirty(category ) )
+    dispatch(setDirty(category));
   }, [
     courseName,
     courseDescription,
@@ -247,7 +249,7 @@ export default function CourseDataAdmin(props) {
   ]);
 
   const postNewMessage = msgs => {
-    dispatch( addMessage( msgs.main, Date.now( ), Priorities.INFO))
+    dispatch(addMessage(msgs.main, Date.now(), Priorities.INFO));
     setMessages(msgs);
   };
 
@@ -297,31 +299,28 @@ export default function CourseDataAdmin(props) {
         <InputLabel htmlFor="course_school" id="course_school_lbl">
           School
         </InputLabel>
-        {schools.length > 0 ?
-          (
-        <Select
-          id="course_school"
-          value={courseSchoolId}
-          onChange={event => {
-            const changeTo = Number(event.target.value);
-            setCourseSchoolId(changeTo);
-            setCourseTimezone(schoolTzHash[changeTo]);
-          }}
-        >
-          <MenuItem value={0}>None Selected</MenuItem>
-          {schools.map(school => {
-            return (
-              <MenuItem key={"school_" + school.id} value={school.id}>
-                {school.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-
-          ) : (
-            <Skeleton variant="rectangular" height={20} />
-          )
-        }
+        {schools.length > 0 ? (
+          <Select
+            id="course_school"
+            value={courseSchoolId}
+            onChange={event => {
+              const changeTo = Number(event.target.value);
+              setCourseSchoolId(changeTo);
+              setCourseTimezone(schoolTzHash[changeTo]);
+            }}
+          >
+            <MenuItem value={0}>None Selected</MenuItem>
+            {schools.map(school => {
+              return (
+                <MenuItem key={"school_" + school.id} value={school.id}>
+                  {school.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        ) : (
+          <Skeleton variant="rectangular" height={20} />
+        )}
         <FormHelperText>Error schtuff</FormHelperText>
       </FormControl>
 
@@ -329,27 +328,23 @@ export default function CourseDataAdmin(props) {
         <InputLabel htmlFor="course_timezone" id="course_timezone_lbl">
           Time Zone
         </InputLabel>
-        {timezones.length > 0 ?
-        (
-        <Select
-          id="course_timezone"
-          value={courseTimezone}
-          onChange={event => setCourseTimezone(String(event.target.value))}
-        >
-          {timezones.map(timezone => {
-            return (
-              <MenuItem key={timezone.name} value={timezone.name}>
-                {timezone.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-
-        ):(
-            <Skeleton variant="rectangular" height={20} />
-
-        )
-        }
+        {timezones.length > 0 ? (
+          <Select
+            id="course_timezone"
+            value={courseTimezone}
+            onChange={event => setCourseTimezone(String(event.target.value))}
+          >
+            {timezones.map(timezone => {
+              return (
+                <MenuItem key={timezone.name} value={timezone.name}>
+                  {timezone.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        ) : (
+          <Skeleton variant="rectangular" height={20} />
+        )}
         <FormHelperText>More Error Schtuff</FormHelperText>
       </FormControl>
 
@@ -516,23 +511,23 @@ export default function CourseDataAdmin(props) {
               <IconButton
                 aria-label={lbl}
                 onClick={event => {
-                  dispatch( startTask( 'deleting' ) );
-                  
-                  axios.delete( user.drop_link, {
+                  dispatch(startTask("deleting"));
 
-                  })
+                  axios
+                    .delete(user.drop_link, {})
                     .then(response => {
                       const data = response.data;
                       getCourse();
                       setMessages(data.messages);
-                      dispatch( endTask("deleting") );
+                      dispatch(endTask("deleting"));
                     })
-                    .catch( error =>{
-                      console.log( 'error:', error );
-                      dispatch( endTask("deleting") );
-                    })
+                    .catch(error => {
+                      console.log("error:", error);
+                      dispatch(endTask("deleting"));
+                    });
                 }}
-                size="large">
+                size="large"
+              >
                 <DeleteForeverIcon />
               </IconButton>
             </Tooltip>
@@ -550,7 +545,8 @@ export default function CourseDataAdmin(props) {
           setMenuAnchorEl(event.currentTarget);
         }}
         aria-label="Add Activity"
-        size="large">
+        size="large"
+      >
         <AddIcon />
       </IconButton>
       <Menu
@@ -609,49 +605,41 @@ export default function CourseDataAdmin(props) {
     );
 
   return (
-        <Paper>
-          <Tabs
-            centered
-            value={curTab}
-            onChange={(event, value) => setCurTab(value)}
-          >
-            <Tab label="Details" value="details" />
-            <Tab value="instructors" label="Instructors" />
-            <Tab value="students" label="Students" />
-            <Tab value="activities" label="Activities" />
-          </Tabs>
-          {"details" == curTab ? detailsComponent : null}
-          {"instructors" == curTab ? (
-            <CourseUsersList
-              courseId={courseId}
-              retrievalUrl={
-                endpoints.courseUsersUrl +
-                courseId +
-                ".json"
-              }
-              usersList={courseUsersList}
-              usersListUpdateFunc={setCourseUsersList}
-              userType="instructor"
-              addMessagesFunc={postNewMessage}
-            />
-          ) : null}
-          {"students" == curTab ? (
-            <CourseUsersList
-              courseId={courseId}
-              retrievalUrl={
-                endpoints.courseUsersUrl +
-                courseId +
-                ".json"
-              }
-              usersList={courseUsersList}
-              usersListUpdateFunc={setCourseUsersList}
-              userType="student"
-              addMessagesFunc={postNewMessage}
-            />
-          ) : null}
-          {"activities" == curTab ? activityList : null}
-          {saveButton}
-          {messages["status"]}
-        </Paper>
+    <Paper>
+      <Tabs
+        centered
+        value={curTab}
+        onChange={(event, value) => setCurTab(value)}
+      >
+        <Tab label="Details" value="details" />
+        <Tab value="instructors" label="Instructors" />
+        <Tab value="students" label="Students" />
+        <Tab value="activities" label="Activities" />
+      </Tabs>
+      {"details" == curTab ? detailsComponent : null}
+      {"instructors" == curTab ? (
+        <CourseUsersList
+          courseId={courseId}
+          retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
+          usersList={courseUsersList}
+          usersListUpdateFunc={setCourseUsersList}
+          userType="instructor"
+          addMessagesFunc={postNewMessage}
+        />
+      ) : null}
+      {"students" == curTab ? (
+        <CourseUsersList
+          courseId={courseId}
+          retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
+          usersList={courseUsersList}
+          usersListUpdateFunc={setCourseUsersList}
+          userType="student"
+          addMessagesFunc={postNewMessage}
+        />
+      ) : null}
+      {"activities" == curTab ? activityList : null}
+      {saveButton}
+      {messages["status"]}
+    </Paper>
   );
 }

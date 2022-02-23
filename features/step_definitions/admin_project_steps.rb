@@ -66,9 +66,8 @@ Then(/^the user clicks "([^"]*)"$/) do |link_or_button|
   begin
     retries ||= 0
     btn.click
-  rescue NoMethodError => e 
+  rescue NoMethodError => e
     log e.inspect
-
   rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
     log e.inspect
     retry if (retries += 1) < 4
@@ -91,10 +90,10 @@ Then 'the user enables the {string} table view option' do |view_option|
   begin
     retries ||= 0
     inpt = find(:xpath, "//label[contains(.,'#{view_option}')]/span/input", visible: :all)
-  rescue => exception
+  rescue StandardError => e
     log e.inspect
     sleep 0.1
-    retry if (retries += 1 ) < 2
+    retry if (retries += 1) < 2
   end
   inpt.click unless inpt.checked?
 

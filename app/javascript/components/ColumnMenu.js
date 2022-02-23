@@ -41,7 +41,8 @@ class ColumnMenu extends React.Component {
           aria-owns={anchorEl ? "column-menu" : undefined}
           aria-haspopup="true"
           onClick={this.handleClick}
-          size="large">
+          size="large"
+        >
           <ViewColumnRounded />
         </IconButton>
         <Menu

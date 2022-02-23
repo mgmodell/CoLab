@@ -55,26 +55,22 @@ class User < ApplicationRecord
   def name(anonymous)
     if anonymous
       name = "#{anon_last_name}, #{anon_first_name}"
+    elsif last_name.nil? && first_name.nil?
+      name = email
     else
-      if last_name.nil? && first_name.nil?
-        name = email
-      else
-        name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
-        name += (!first_name.nil? ? first_name : '[No First Name Given]')
-      end
+      name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
+      name += (!first_name.nil? ? first_name : '[No First Name Given]')
     end
   end
 
   def informal_name(anonymous)
     if anonymous
       name = "#{anon_first_name} #{anon_last_name}"
+    elsif last_name.nil? && first_name.nil?
+      name = email
     else
-      if last_name.nil? && first_name.nil?
-        name = email
-      else
-        name = (!first_name.nil? ? first_name : '[No First Name Given]') + ' '
-        name += (!last_name.nil? ? last_name : '[No Last Name Given]')
-      end
+      name = (!first_name.nil? ? first_name : '[No First Name Given]') + ' '
+      name += (!last_name.nil? ? last_name : '[No Last Name Given]')
     end
   end
 
@@ -129,11 +125,11 @@ class User < ApplicationRecord
   end
 
   def update_instructor
-    if admin || rosters.instructor.count > 0
-      self.instructor = true
-    else
-      self.instructor = false
-    end
+    self.instructor = if admin || rosters.instructor.count > 0
+                        true
+                      else
+                        false
+                      end
   end
 
   def is_researcher?
@@ -181,7 +177,7 @@ class User < ApplicationRecord
                   bingo_game: :project)
         .joins(:bingo_game)
         .where(bingo_games:
-                              { reviewed: true, course_id: course_id })
+                              { reviewed: true, course_id: })
         .to_a
 
     else
@@ -214,7 +210,7 @@ class User < ApplicationRecord
                   bingo_game: :project)
         .joins(:bingo_game)
         .where(bingo_games:
-                              { reviewed: true, course_id: course_id })
+                              { reviewed: true, course_id: })
         .to_a
 
     else
@@ -243,7 +239,7 @@ class User < ApplicationRecord
     my_reactions = []
     my_reactions = if course_id > 0
                      reactions.includes(:narrative).joins(:experience)
-                              .where(experiences: { course_id: course_id })
+                              .where(experiences: { course_id: })
                    else
                      reactions
                    end
@@ -258,7 +254,7 @@ class User < ApplicationRecord
   def get_assessment_performance(course_id: 0)
     my_projects = []
     my_projects = if course_id > 0
-                    projects.includes(:assessments).where(course_id: course_id)
+                    projects.includes(:assessments).where(course_id:)
                   else
                     projects.includes(:assessments)
                   end
@@ -397,7 +393,7 @@ class User < ApplicationRecord
       else
         self.anon_first_name = Faker::Name.first_name
         self.anon_last_name = Faker::Name.last_name
-        end
+      end
     elsif !persisted?
       self.anon_first_name = Faker::Name.first_name
       self.anon_last_name = Faker::Name.last_name

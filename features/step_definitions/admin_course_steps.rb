@@ -356,7 +356,7 @@ end
 
 Then 'the user opens the self-registration link for the course' do
   self_reg_url = "course/#{@course.id}/enroll"
-  visit( self_reg_url )
+  visit(self_reg_url)
   wait_for_render
 end
 
@@ -404,7 +404,7 @@ Given('the course adds {int} {string} users') do |count, role|
     user.save
     log user.errors.full_messages unless user.errors.empty?
 
-    roster = @course.rosters.create(user: user)
+    roster = @course.rosters.create(user:)
     case role
     when 'requesting student'
       roster.requesting_student!

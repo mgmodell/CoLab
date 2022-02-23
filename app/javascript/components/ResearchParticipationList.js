@@ -3,28 +3,28 @@ import PropTypes from "prop-types";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 
-import {useDispatch} from 'react-redux';
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "./infrastructure/StatusActions";
 
 import MUIDataTable from "mui-datatables";
 import axios from "axios";
 
 export default function UserCourseList(props) {
-
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
 
   const getCourses = () => {
-    dispatch( startTask() );
+    dispatch(startTask());
     var url = props.retrievalUrl;
-    axios.get( url, { } )
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         //MetaData and Infrastructure
         props.consentFormListUpdateFunc(data);
-        dispatch( endTask() );
+        dispatch(endTask());
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
 

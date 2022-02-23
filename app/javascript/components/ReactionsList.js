@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 
-import {useDispatch} from 'react-redux';
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "./infrastructure/StatusActions";
 import MUIDataTable from "mui-datatables";
 
 import Link from "@mui/material/Link";
@@ -15,20 +15,21 @@ export default function ReactionsList(props) {
   const [anchorEl, setAnchorEl] = useState();
   const [popMsg, setPopMsg] = useState();
 
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
   const getReactions = () => {
     var url = props.retrievalUrl + ".json";
-    dispatch( startTask() );
-    axios.get( url, { } )
+    dispatch(startTask());
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         //MetaData and Infrastructure
         props.reactionsListUpdateFunc(data.reactions);
 
-        dispatch( endTask() );
+        dispatch(endTask());
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
 

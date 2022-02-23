@@ -1,16 +1,13 @@
 import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  setDirty,
-  setClean
-} from './infrastructure/StatusActions';
+import { useSelector, useDispatch } from "react-redux";
+import { setDirty, setClean } from "./infrastructure/StatusActions";
 
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 import FormControl from "@mui/material/FormControlLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -20,14 +17,14 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TextField from "@mui/material/TextField";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
 //For debug purposes
 
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
-import {useTypedSelector} from './infrastructure/AppReducers';
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 import Radio from "@mui/material/Radio";
 import Grid from "@mui/material/Grid";
@@ -42,8 +39,10 @@ export default function ExperienceDiagnosis(props) {
   const [comments, setComments] = useState("");
   const [showComments, setShowComments] = useState(false);
 
-  const dirtyStatus = useTypedSelector( state => state.status.dirtyStatus['diagnosis'] );
-  const dispatch = useDispatch( );
+  const dirtyStatus = useTypedSelector(
+    state => state.status.dirtyStatus["diagnosis"]
+  );
+  const dispatch = useDispatch();
 
   const getById = (list, id) => {
     return list.filter(item => {
@@ -51,12 +50,10 @@ export default function ExperienceDiagnosis(props) {
     })[0];
   };
 
-  const behaviors = useTypedSelector(state => state.context.lookups.behaviors)
+  const behaviors = useTypedSelector(state => state.context.lookups.behaviors);
 
   const detailNeeded =
-    0 === behaviorId
-      ? true
-      : getById(behaviors, behaviorId).needs_detail;
+    0 === behaviorId ? true : getById(behaviors, behaviorId).needs_detail;
   const detailPresent = otherName.length > 0;
   const saveButton = (
     <Button
@@ -113,7 +110,7 @@ export default function ExperienceDiagnosis(props) {
             />
           </Suspense>
         </Grid>
-        <Grid item xs={12} >
+        <Grid item xs={12}>
           <FormLabel>{t("next.prompt")}</FormLabel>
           {behaviors !== undefined ? (
             <RadioGroup
@@ -121,7 +118,7 @@ export default function ExperienceDiagnosis(props) {
               aria-label="behavior"
               value={behaviorId}
               onChange={event => {
-                dispatch( setDirty( 'diagnosis' ) );
+                dispatch(setDirty("diagnosis"));
                 setBehaviorId(Number(event.target.value));
               }}
             >

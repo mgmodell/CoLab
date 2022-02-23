@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@mui/material/Paper";
 import { iconForType } from "./ActivityLib";
-import {useDispatch} from 'react-redux';
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "./infrastructure/StatusActions";
 
 import MUIDataTable from "mui-datatables";
 import axios from "axios";
@@ -12,29 +12,30 @@ import axios from "axios";
 export default function UserCourseList(props) {
   // const [addUsersPath, setAddUsersPath] = useState("");
   // const [procRegReqPath, setProcRegReqPath] = useState("");
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
 
   const getActivities = () => {
-    dispatch( startTask() );
-    console.log( 'loading' );
+    dispatch(startTask());
+    console.log("loading");
     var url = props.retrievalUrl;
-    console.log( url );
-    axios.get( url, { } )
+    console.log(url);
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
-        console.log('data', data);
+        console.log("data", data);
         //MetaData and Infrastructure
         props.activitiesListUpdateFunc(data);
-        dispatch( endTask() );
+        dispatch(endTask());
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
 
   useEffect(() => {
-    console.log( 'hello' );
-    if ( true ) {
+    console.log("hello");
+    if (true) {
       getActivities();
     }
   }, []);

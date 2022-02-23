@@ -1,23 +1,22 @@
 import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
   addMessage,
   setDirty,
   setClean
-} from './infrastructure/StatusActions';
-
+} from "./infrastructure/StatusActions";
 
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 import TextField from "@mui/material/TextField";
 
 import { useTranslation } from "react-i18next";
 import { i18n } from "./infrastructure/i18n";
-import {useTypedLookup, useTypedSelector} from './infrastructure/AppReducers';
+import { useTypedLookup, useTypedSelector } from "./infrastructure/AppReducers";
 
 import Radio from "@mui/material/Radio";
 import Grid from "@mui/material/Grid";
@@ -29,9 +28,11 @@ export default function ExperienceReaction(props) {
   const [behaviorId, setBehaviorId] = useState(0);
   const [otherName, setOtherName] = useState("");
   const [improvements, setImprovements] = useState("");
-  const dirtyStatus = useSelector( state =>{ return state.status.dirtyStatus['reaction'] });
-  const dispatch = useDispatch( );
-  const behaviors = useTypedSelector(state=>state.context.lookups.behaviors);
+  const dirtyStatus = useSelector(state => {
+    return state.status.dirtyStatus["reaction"];
+  });
+  const dispatch = useDispatch();
+  const behaviors = useTypedSelector(state => state.context.lookups.behaviors);
 
   const getById = (list, id) => {
     return list.filter(item => {
@@ -40,9 +41,7 @@ export default function ExperienceReaction(props) {
   };
 
   const detailNeeded =
-    0 === behaviorId
-      ? true
-      : getById(behaviors, behaviorId).needs_detail;
+    0 === behaviorId ? true : getById(behaviors, behaviorId).needs_detail;
   const detailPresent = otherName.length > 0;
   const improvementsPresent = improvements.length > 0;
   const saveButton = (
@@ -61,8 +60,7 @@ export default function ExperienceReaction(props) {
     </Button>
   );
   const otherPnl =
-    0 !== behaviorId &&
-    getById(behaviors, behaviorId).needs_detail ? (
+    0 !== behaviorId && getById(behaviors, behaviorId).needs_detail ? (
       <TextField
         variant="filled"
         label={t("next.other")}
@@ -96,14 +94,14 @@ export default function ExperienceReaction(props) {
             />
           </Suspense>
         </Grid>
-        <Grid item xs={12} >
+        <Grid item xs={12}>
           <FormLabel>{t("reaction.dom_behavior")}</FormLabel>
           {behaviors !== undefined ? (
             <RadioGroup
               aria-label="behavior"
               value={behaviorId}
               onChange={event => {
-                dispatch( setDirty( 'reaction' ) );
+                dispatch(setDirty("reaction"));
                 setBehaviorId(Number(event.target.value));
               }}
             >
@@ -128,7 +126,7 @@ export default function ExperienceReaction(props) {
             <Skeleton variant="rectangular" />
           )}
         </Grid>
-        <Grid item xs={12} >
+        <Grid item xs={12}>
           {otherPnl}
         </Grid>
         <Grid item xs={12}>

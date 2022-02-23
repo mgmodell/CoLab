@@ -45,7 +45,7 @@ class BingoBoardsController < ApplicationController
     end
 
     bingo_board = BingoBoard.new(
-      bingo_game: bingo_game,
+      bingo_game:,
       user: current_user,
       iteration: 0,
       performance: 88
@@ -63,26 +63,26 @@ class BingoBoardsController < ApplicationController
           )
       end
     end
-    board_for_game_helper bingo_board: bingo_board, bingo_game: bingo_game
+    board_for_game_helper bingo_board:, bingo_game:
   end
 
   def board_for_game
     bingo_game_id = params[:bingo_game_id]
-    bingo_game = BingoGame .find(params[:bingo_game_id])
+    bingo_game = BingoGame.find(params[:bingo_game_id])
     bingo_board = bingo_game.bingo_boards.playable
                             .includes(:bingo_game, bingo_cells: :concept)
                             .where(user_id: current_user.id).take
     worksheet = bingo_game.bingo_boards.worksheet
                           .where(user_id: current_user.id).take
-    board_for_game_helper bingo_board: bingo_board,
-                          worksheet: worksheet,
-                          bingo_game: bingo_game,
+    board_for_game_helper bingo_board:,
+                          worksheet:,
+                          bingo_game:,
                           acceptable_count: bingo_game.candidates
                                                       .where(candidate_feedback_id: 1)
                                                       .group(:concept_id).length
   end
 
-  def board_for_game_helper(bingo_board: nil, bingo_game:,
+  def board_for_game_helper(bingo_game:, bingo_board: nil,
                             acceptable_count: 42,
                             worksheet: nil)
     # TODO: Maybe this can be simplified?
@@ -118,12 +118,12 @@ class BingoBoardsController < ApplicationController
       format.json do
         resp = bingo_board.as_json(
           only: %i[id size topic description bingo_game_id performance],
-          include: [:bingo_game, bingo_cells: {
+          include: [:bingo_game, { bingo_cells: {
             only: %i[id bingo_board_id row column
                      selected concept_id],
             include:
                  [concept: { only: %i[id name] }]
-          }]
+          } }]
         )
         resp[:acceptable] = acceptable_count
         resp[:playable] = bingo_game.playable?
@@ -138,7 +138,7 @@ class BingoBoardsController < ApplicationController
         render json: resp
       end
       format.pdf do
-        pdf = WorksheetPdf.new(bingo_board, url: url)
+        pdf = WorksheetPdf.new(bingo_board, url:)
         send_data pdf.render, filename: 'bingo_game.pdf', type: 'application/pdf'
       end
     end
@@ -154,7 +154,7 @@ class BingoBoardsController < ApplicationController
       user_id: current_user.id,
       user: current_user,
       bingo_cells: [],
-      bingo_game: bingo_game,
+      bingo_game:,
       board_type: :worksheet
     )
 
@@ -171,8 +171,8 @@ class BingoBoardsController < ApplicationController
                       ((row + column) == 1)
         end
         wksheet.bingo_cells << BingoCell.new(
-          row: row,
-          column: column,
+          row:,
+          column:,
           concept: Concept.new(name: c[0])
         )
         next unless is_answer
@@ -208,7 +208,7 @@ class BingoBoardsController < ApplicationController
             bingo_game: {
               topic: bingo_game.topic,
               description: bingo_game.description,
-              result_url: @bingo_board.result_img.present? ?  @bingo_board.result_img.url : nil
+              result_url: @bingo_board.result_img.present? ? @bingo_board.result_img.url : nil
             },
             practice_answers: @practice_answers.as_json
           }
@@ -224,7 +224,7 @@ class BingoBoardsController < ApplicationController
 
   def worksheet_for_game
     bingo_game_id = params[:bingo_game_id]
-    bingo_game = BingoGame .find(params[:bingo_game_id])
+    bingo_game = BingoGame.find(params[:bingo_game_id])
     wksheet = bingo_game.bingo_boards.worksheet
                         .includes(:bingo_game, bingo_cells: %i[concept candidate])
                         .where(user_id: current_user.id).take
@@ -244,7 +244,7 @@ class BingoBoardsController < ApplicationController
         iteration: 0,
         user_id: current_user.id,
         user: current_user,
-        bingo_game: bingo_game,
+        bingo_game:,
         board_type: :worksheet
       )
 
@@ -264,11 +264,11 @@ class BingoBoardsController < ApplicationController
             c = star
             c = cells.delete(cells.sample) unless row == 2 && column == 2
             wksheet.bingo_cells.build(
-              row: row,
-              column: column,
-              concept: c.class == Concept ? c : c.concept,
-              candidate: c.class == Concept ? nil : c,
-              indeks: c.class == Concept ? nil : indices.delete(indices.sample)
+              row:,
+              column:,
+              concept: c.instance_of?(Concept) ? c : c.concept,
+              candidate: c.instance_of?(Concept) ? nil : c,
+              indeks: c.instance_of?(Concept) ? nil : indices.delete(indices.sample)
             )
           end
         end
@@ -279,7 +279,7 @@ class BingoBoardsController < ApplicationController
 
     respond_to do |format|
       format.pdf do
-        # TODO fix the ws_results_url here
+        # TODO: fix the ws_results_url here
         pdf = WorksheetPdf.new(wksheet,
                                url: ws_results_url(wksheet))
         send_data pdf.render, filename: 'bingo_practice.pdf', type: 'application/pdf'
@@ -333,13 +333,13 @@ class BingoBoardsController < ApplicationController
     bingo_game_id = params[:bingo_game_id]
     @board = BingoBoard.playable.where(
       user_id: current_user.id,
-      bingo_game_id: bingo_game_id
+      bingo_game_id:
     ).take
     if @board.nil?
       @board = BingoBoard.new(
         user_id: current_user.id,
         user: current_user,
-        bingo_game_id: bingo_game_id
+        bingo_game_id:
       )
     end
 
@@ -370,7 +370,7 @@ class BingoBoardsController < ApplicationController
                .find(@board.id)
 
       board_for_game_helper bingo_board: @board,
-                            bingo_game: bingo_game,
+                            bingo_game:,
                             acceptable_count: bingo_game.candidates
                                                         .where(candidate_feedback_id: 1)
                                                         .group(:concept_id).length
@@ -392,14 +392,14 @@ class BingoBoardsController < ApplicationController
 
     # image processing
     unless params[:bingo_board][:result_img].empty?
-      ext = params[:bingo_board][:img_ext ]
-      temp_file = Tempfile.new( ['score_img', ".#{ext}" ], binmode: true )
-      temp_file.write( 
-        Base64.decode64( params[:bingo_board][:result_img] )
+      ext = params[:bingo_board][:img_ext]
+      temp_file = Tempfile.new(['score_img', ".#{ext}"], binmode: true)
+      temp_file.write(
+        Base64.decode64(params[:bingo_board][:result_img])
       )
       temp_file.rewind
       proc_image = ImageProcessing::Vips
-                   .source( temp_file ) 
+                   .source(temp_file)
                    .resize_to_limit!(800, 800)
 
       @bingo_board.result_img.attach(io: File.open(proc_image.path),
@@ -423,11 +423,11 @@ class BingoBoardsController < ApplicationController
       format.json do
         render json: @board.to_json(
           only: %i[id size topic bingo_game_id], include:
-               [:bingo_game, bingo_cells:
+               [:bingo_game, { bingo_cells:
                { only: [:id, :bingo_board_id,
                         :row, :column, :selected, 'concept_id'],
                  include:
-                 [concept: { only: %i[id name] }] }]
+                 [concept: { only: %i[id name] }] } }]
         )
       end
     end

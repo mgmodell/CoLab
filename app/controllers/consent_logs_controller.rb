@@ -21,7 +21,7 @@ class ConsentLogsController < ApplicationController
           consent_log: @consent_log.as_json(
             only: %i[id accepted]
           ),
-          messages: messages
+          messages:
         }
       end
     end

@@ -60,9 +60,9 @@ Then(/^the "([^"]*)" of the "([^"]*)" "([^"]*)" user is "([^"]*)"$/) do |demogra
   when 'cip'
     u.cip_code = CipCode.where(gov_code: code).take
   when 'gender'
-    u.gender = Gender.where(code: code).take
+    u.gender = Gender.where(code:).take
   when 'language'
-    u.primary_language = Language.where(code: code).take
+    u.primary_language = Language.where(code:).take
   when 'uni_date'
     u.started_school = Chronic.parse code
   when 'dob'

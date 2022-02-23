@@ -5,18 +5,18 @@ import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TextField from "@mui/material/TextField";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
 
-import {useDispatch} from 'react-redux';
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "./infrastructure/StatusActions";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
@@ -25,33 +25,36 @@ import LinkedSliders from "./LinkedSliders";
 import axios from "axios";
 export default function InstallmentReport(props) {
   const endpointSet = "installment";
-  const endpoints = useTypedSelector((state)=>state.context.endpoints[endpointSet])
-  const endpointStatus = useTypedSelector((state)=>state.context.status.endpointsLoaded)
-  const user = useTypedSelector(state=>state.profile.user );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const user = useTypedSelector(state => state.profile.user);
 
-  const { installmentId } = useParams( );
+  const { installmentId } = useParams();
 
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
   const [debug, setDebug] = useState(false);
   const [t, i18n] = useTranslation("installments");
 
-  const [initialised, setInitialised] = useState( false );
+  const [initialised, setInitialised] = useState(false);
   const [messages, setMessages] = useState({});
   const [curPanel, setCurPanel] = useState(0);
   const [showAlerts, setShowAlerts] = useState(false);
   const [commentPanelOpen, setCommentPanelOpen] = useState(false);
   const [group, setGroup] = useState({});
-  const [factors, setFactors] = useState( {} );
+  const [factors, setFactors] = useState({});
 
-  const [bob, setBob] = useState( );
+  const [bob, setBob] = useState();
 
   const [project, setProject] = useState({});
   const [sliderSum, setSliderSum] = useState(0);
 
   const [contributions, setContributions] = useState({});
   const [installment, setInstallment] = useState({ comments: "" });
-
 
   const updateSlice = (id, update) => {
     const lContributions = Object.assign({}, contributions);
@@ -67,14 +70,11 @@ export default function InstallmentReport(props) {
 
   useEffect(() => setDirty(true), [contributions, installment]);
 
-
-
   useEffect(() => {
     if (endpointStatus) {
       getContributions();
     }
   }, [endpointStatus]);
-
 
   //Use this to sort team members with the user on top
   const userCompare = (a, b) => {
@@ -106,18 +106,16 @@ export default function InstallmentReport(props) {
 
   //Retrieve the latest data
   const getContributions = () => {
-    const url = `${endpoints.baseUrl}${
-      installmentId
-    }.json`;
+    const url = `${endpoints.baseUrl}${installmentId}.json`;
 
-
-    dispatch( startTask() );
-    axios.get( url, { } )
+    dispatch(startTask());
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
-        const factorsData = Object.assign( {}, data.factors );
-        setFactors( factorsData );
-        setBob( factorsData );
+        const factorsData = Object.assign({}, data.factors);
+        setFactors(factorsData);
+        setBob(factorsData);
 
         setSliderSum(data.sliderSum);
 
@@ -145,36 +143,35 @@ export default function InstallmentReport(props) {
         data.installment.group_id = data.group.id;
 
         setProject(data.installment.project);
-        setInitialised( true );
-        dispatch(endTask() );
+        setInitialised(true);
+        dispatch(endTask());
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
   //Store what we've got
   const saveContributions = () => {
-    dispatch(startTask("saving") );
+    dispatch(startTask("saving"));
     const url =
       endpoints.saveInstallmentUrl +
       (Boolean(installment.id) ? `/${installment.id}` : ``) +
       ".json";
     const method = Boolean(installment.id) ? "PATCH" : "POST";
 
-    const body = 
-      {
-        contributions: contributions,
-        installment: installment
-      }
-    axios( {
+    const body = {
+      contributions: contributions,
+      installment: installment
+    };
+    axios({
       url: url,
       method: method,
-      data: body,
+      data: body
     })
       .then(response => {
         const data = response.data;
         //Process Contributions
-        console.log( 'data:', data );
+        console.log("data:", data);
         if (!data.error) {
           setInstallment(data.installment);
           const receivedContributions = data.installment.values.reduce(
@@ -195,11 +192,11 @@ export default function InstallmentReport(props) {
         }
         setMessages(data.messages);
         setShowAlerts(true);
-        dispatch( endTask("saving") );
+        dispatch(endTask("saving"));
         setDirty(false);
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
 
@@ -231,7 +228,7 @@ export default function InstallmentReport(props) {
               group_name: group.name,
               project_name: project.name,
               member_count: Object.keys(group.users || {}).length,
-              factor_count: Object.keys( factors || {} ).length
+              factor_count: Object.keys(factors || {}).length
             })
           }}
         />
@@ -245,10 +242,7 @@ export default function InstallmentReport(props) {
               onChange={() => setPanel(sliceId)}
               key={sliceId}
             >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                id={sliceId}
-              >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} id={sliceId}>
                 {factors[sliceId].name}
               </AccordionSummary>
               <AccordionDetails>
@@ -310,5 +304,4 @@ export default function InstallmentReport(props) {
   );
 }
 
-InstallmentReport.propTypes = {
-};
+InstallmentReport.propTypes = {};

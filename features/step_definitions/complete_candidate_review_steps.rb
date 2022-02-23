@@ -122,7 +122,7 @@ Given(/^the user assigns "([^"]*)" feedback to all candidates$/) do |feedback_ty
                []
              else
                Concept.where('id > 0').collect(&:name)
-end
+             end
 
   concept_count.upto(concept_count + 3) do |counter|
     concepts << 'concept ' + counter.to_s
@@ -133,7 +133,7 @@ end
   @feedback_list = {}
   @bingo.candidates.completed.each do |candidate|
     feedback = feedbacks.sample
-    @feedback_list[candidate.id] = { feedback: feedback }
+    @feedback_list[candidate.id] = { feedback: }
     concept = nil
     if feedback.critique == 'term_problem'
       @feedback_list[candidate.id][:concept] = ''

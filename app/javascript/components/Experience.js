@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 //Redux store stuff
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
@@ -12,10 +12,11 @@ import {
   setClean,
   addMessage,
   Priorities,
-  acknowledgeMsg} from './infrastructure/StatusActions';
+  acknowledgeMsg
+} from "./infrastructure/StatusActions";
 
 import Button from "@mui/material/Button";
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
@@ -28,11 +29,15 @@ import axios from "axios";
 
 export default function Experience(props) {
   const endpointSet = "experience";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet])
-  const endpointsLoaded = useTypedSelector(state=>state.context.status.endpointsLoaded );
-  const {experienceId} = useParams( );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointsLoaded = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const { experienceId } = useParams();
 
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
   const [t, i18n] = useTranslation("installments");
   const navigate = useNavigate();
 
@@ -44,7 +49,7 @@ export default function Experience(props) {
   const [weekText, setWeekText] = useState("");
 
   useEffect(() => {
-    if (endpointsLoaded ){
+    if (endpointsLoaded) {
       getNext();
     }
   }, [endpointsLoaded]);
@@ -57,14 +62,12 @@ export default function Experience(props) {
 
   //Retrieve the latest data
   const getNext = () => {
-    const url = `${endpoints.baseUrl}${
-      experienceId
-    }.json`;
-    dispatch( startTask() );
-    axios( url, { } )
+    const url = `${endpoints.baseUrl}${experienceId}.json`;
+    dispatch(startTask());
+    axios(url, {})
       .then(response => {
         const data = response.data;
-        console.log( 'getNext:', data );
+        console.log("getNext:", data);
         setWeekId(data.week_id);
         setWeekNum(data.week_num);
         setWeekText(data.week_text);
@@ -72,18 +75,19 @@ export default function Experience(props) {
         setReactionId(data.reaction_id);
         setInstructed(data.instructed);
 
-        dispatch( endTask() );
+        dispatch(endTask());
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
   //Store what we've got
   const saveDiagnosis = (behaviorId, otherName, comment, resetFunc) => {
-    dispatch( startTask( 'saving' ) );
-    const url = endpoints.diagnosisUrl + '.json';
-    console.log( url );
-    axios.patch( url, {
+    dispatch(startTask("saving"));
+    const url = endpoints.diagnosisUrl + ".json";
+    console.log(url);
+    axios
+      .patch(url, {
         diagnosis: {
           behavior_id: behaviorId,
           reaction_id: reactionId,
@@ -91,8 +95,7 @@ export default function Experience(props) {
           other_name: otherName,
           comment: comment
         }
-
-    })
+      })
       .then(response => {
         const data = response.data;
         //Process Contributions
@@ -101,40 +104,41 @@ export default function Experience(props) {
         setWeekText(data.week_text);
 
         resetFunc();
-        dispatch( addMessage( data.messages.main, Date.now( ), Priorities.INFO ) )
-        dispatch( endTask( 'saving' ) );
-        dispatch( setClean('diagnosis') );
+        dispatch(addMessage(data.messages.main, Date.now(), Priorities.INFO));
+        dispatch(endTask("saving"));
+        dispatch(setClean("diagnosis"));
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
 
   //React
   const saveReaction = (behaviorId, otherName, improvements, resetFunc) => {
-    dispatch( startTask( 'saving' ) );
-    const url = endpoints.reactionUrl + '.json';
-    console.log( url );
-    axios.patch( url, { 
+    dispatch(startTask("saving"));
+    const url = endpoints.reactionUrl + ".json";
+    console.log(url);
+    axios
+      .patch(url, {
         reaction: {
           id: reactionId,
           behavior_id: behaviorId,
           other_name: otherName,
           improvements: improvements
         }
-    })
+      })
       .then(response => {
         const data = response.data;
-        console.log( 'saveReaction:', data );
+        console.log("saveReaction:", data);
         //Process Experience
         resetFunc();
-        dispatch( addMessage( data.messages.main, Date.now( ), Priorities.INFO ) )
-        dispatch( endTask( 'saving' ) );
-        dispatch( setClean( 'reaction' ) );
+        dispatch(addMessage(data.messages.main, Date.now(), Priorities.INFO));
+        dispatch(endTask("saving"));
+        dispatch(setClean("reaction"));
         navigate("/");
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
 
@@ -143,17 +147,9 @@ export default function Experience(props) {
   if (!endpointsLoaded) {
     output = <Skeleton variant="rectangular" />;
   } else if (!instructed) {
-    output = (
-      <ExperienceInstructions
-        acknowledgeFunc={getNext}
-      />
-    );
+    output = <ExperienceInstructions acknowledgeFunc={getNext} />;
   } else if (undefined === weekNum) {
-    output = (
-      <ExperienceReaction
-        reactionFunc={saveReaction}
-      />
-    );
+    output = <ExperienceReaction reactionFunc={saveReaction} />;
   } else {
     output = (
       <ExperienceDiagnosis
@@ -167,5 +163,4 @@ export default function Experience(props) {
   return output;
 }
 
-Experience.propTypes = {
-};
+Experience.propTypes = {};

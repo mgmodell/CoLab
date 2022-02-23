@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {useDispatch} from 'react-redux';
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Tooltip from "@mui/material/Tooltip";
@@ -20,16 +20,20 @@ import MUIDataTable from "mui-datatables";
 import Collapse from "@mui/material/Collapse";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { startTask, endTask } from "./infrastructure/StatusActions";
 
 export default function CourseList(props) {
   const endpointSet = "course";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
-  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
 
   const navigate = useNavigate();
 
-  const user = useTypedSelector(state=>state.profile.user );
+  const user = useTypedSelector(state => state.profile.user);
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
@@ -37,7 +41,7 @@ export default function CourseList(props) {
     return <Paper {...props} />;
   }
 
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
   const columns = [
     {
       label: "Number",
@@ -147,11 +151,9 @@ export default function CourseList(props) {
         customBodyRender: (value, tableMeta, updateValue) => {
           const course = courses.filter(item => {
             return value == item.id;
-          })[ 0 ];
-          const scoresUrl =
-            endpoints.scoresUrl + value + ".csv";
-          const copyUrl =
-            endpoints.courseCopyUrl + value + ".json";
+          })[0];
+          const scoresUrl = endpoints.scoresUrl + value + ".csv";
+          const copyUrl = endpoints.courseCopyUrl + value + ".json";
           return (
             <React.Fragment>
               <Tooltip title="Download Scores to CSV">
@@ -162,7 +164,8 @@ export default function CourseList(props) {
                     event.preventDefault();
                   }}
                   aria-label="Download scores as CSV"
-                  size="large">
+                  size="large"
+                >
                   <CloudDownloadIcon />
                 </IconButton>
               </Tooltip>
@@ -185,23 +188,23 @@ export default function CourseList(props) {
 
   const getCourses = () => {
     const url = endpoints.baseUrl + ".json";
-    dispatch( startTask("loading") );
+    dispatch(startTask("loading"));
 
-    axios.get( url, { })
-      .then( response =>{
+    axios
+      .get(url, {})
+      .then(response => {
         //Process the data
-        setCourses( response.data);
-        dispatch( endTask("loading") );
-
+        setCourses(response.data);
+        dispatch(endTask("loading"));
       })
-      .catch( error =>{
-        console.log( 'error', error )
-      })
+      .catch(error => {
+        console.log("error", error);
+      });
   };
 
   useEffect(() => {
     if (endpointStatus) {
-      dispatch( endTask("loading") );
+      dispatch(endTask("loading"));
       getCourses();
     }
   }, [endpointStatus]);
@@ -232,10 +235,11 @@ export default function CourseList(props) {
             <IconButton
               id="new_course"
               onClick={event => {
-                navigate('new');
+                navigate("new");
               }}
               aria-label="New Course"
-              size="large">
+              size="large"
+            >
               <AddIcon />
             </IconButton>
           </Tooltip>
@@ -243,7 +247,7 @@ export default function CourseList(props) {
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
             const course_id = courses[cellMeta.dataIndex].id;
-            const location =  String( course_id );
+            const location = String(course_id);
             navigate(location);
           }
         },
@@ -278,5 +282,4 @@ export default function CourseList(props) {
   );
 }
 
-CourseList.propTypes = {
-};
+CourseList.propTypes = {};

@@ -30,15 +30,14 @@ Then(/^the user presses hidden "([^"]*)"$/) do |linkOrButtonName|
 end
 
 Then(/^the user presses "([^"]*)"$/) do |linkOrButtonName|
-  begin
-    click_link_or_button linkOrButtonName
-  rescue Capybara::ElementNotFound => exception
-    byebug
-  end
+  click_link_or_button linkOrButtonName
+rescue Capybara::ElementNotFound => e
+  byebug
 end
 
 Then(/^they open the drawer for additional comments$/) do
-  find(:xpath, "//div[contains(text(),'Click here if you have additional comments for us regarding this narrative.')]").click
+  find(:xpath,
+       "//div[contains(text(),'Click here if you have additional comments for us regarding this narrative.')]").click
 end
 
 Then(/^they enter "([^"]*)" in extant field "([^"]*)"$/) do |txt, fld|
@@ -122,7 +121,7 @@ Then(/^the database will show a reaction with improvements of "([^"]*)"$/) do |i
 end
 
 Then(/^the database will show a reaction for the user with improvements of "([^"]*)"$/) do |improvements|
-  Reaction.where(user: @user, improvements: improvements).count.should be >= 1
+  Reaction.where(user: @user, improvements:).count.should be >= 1
 end
 
 Then(/^there will be (\d+) reactions from at least (\d+) different narratives recorded$/) do |reaction_count, narrative_diversity|

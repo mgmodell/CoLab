@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Given(/^the Bingo! is group\-enabled with the project and a (\d+) percent group discount$/) do |group_discount|
+Given(/^the Bingo! is group-enabled with the project and a (\d+) percent group discount$/) do |group_discount|
   @bingo.group_option = true
   @project.should_not be_nil
   @bingo.project = @project
@@ -87,7 +87,7 @@ When(/^the user populates (\d+) additional "([^"]*)" entries$/) do |count, field
                                                      Faker::Company.industry
                                                    else
                                                      Faker::Company.bs
-end
+                                                   end
     page.fill_in("#{field}_#{existing_count + index}",
                  with: @entries_list[existing_count + index][field])
   end
@@ -104,7 +104,7 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
                 Faker::Company.industry
               else
                 Faker::Company.bs
-end
+              end
 
     @entries_list[index] = {} if @entries_list[index].blank?
     @entries_list.each do |entry|

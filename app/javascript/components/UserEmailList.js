@@ -22,15 +22,15 @@ import Link from "@mui/material/Link";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 
-import {useDispatch} from 'react-redux';
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "./infrastructure/StatusActions";
 import axios from "axios";
 
 export default function UserEmailList(props) {
   const [addUsersPath, setAddUsersPath] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newEmail, setNewEmail] = useState("");
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
 
   const emailColumns = [
     {
@@ -62,20 +62,22 @@ export default function UserEmailList(props) {
               <IconButton
                 aria-label={lbl}
                 onClick={event => {
-                  dispatch( startTask("updating") );
+                  dispatch(startTask("updating"));
                   const url = props.primaryEmailUrl + value + ".json";
-                  axios.get( url, { } )
+                  axios
+                    .get(url, {})
                     .then(response => {
                       const data = response.data;
                       props.emailListUpdateFunc(data.emails);
                       props.addMessagesFunc(data.messages);
-                      dispatch( endTask("updating") );
+                      dispatch(endTask("updating"));
                     })
-                    .then( error => {
-                      console.log( 'error', error );
+                    .then(error => {
+                      console.log("error", error);
                     });
                 }}
-                size="large">
+                size="large"
+              >
                 <StarBorderIcon />
               </IconButton>
             </Tooltip>
@@ -109,19 +111,21 @@ export default function UserEmailList(props) {
                 aria-label={lbl2}
                 onClick={event => {
                   const url = props.removeEmailUrl + value + ".json";
-                  dispatch( startTask("removing") );
-                  axios.get( url, { } )
+                  dispatch(startTask("removing"));
+                  axios
+                    .get(url, {})
                     .then(response => {
                       const data = response.data;
                       props.emailListUpdateFunc(data.emails);
                       props.addMessagesFunc(data.messages);
-                      dispatch( endTask("removing") );
+                      dispatch(endTask("removing"));
                     })
-                    .catch( error =>{
-                      console.log( 'error', error );
+                    .catch(error => {
+                      console.log("error", error);
                     });
                 }}
-                size="large">
+                size="large"
+              >
                 <DeleteForeverIcon />
               </IconButton>
             </Tooltip>
@@ -179,20 +183,20 @@ export default function UserEmailList(props) {
                     </Button>
                     <Button
                       onClick={() => {
-                        dispatch( startTask("updating") );
-                        axios.put( props.addEmailUrl + '.json', 
-                        {
+                        dispatch(startTask("updating"));
+                        axios
+                          .put(props.addEmailUrl + ".json", {
                             email_address: newEmail
-                        })
+                          })
                           .then(response => {
                             const data = response.data;
                             //getUsers();
                             props.emailListUpdateFunc(data.emails);
                             props.addMessagesFunc(data.messages);
-                            dispatch( endTask("updating") );
+                            dispatch(endTask("updating"));
                           })
-                          .catch( error =>{
-                            console.log( 'error', error );
+                          .catch(error => {
+                            console.log("error", error);
                           });
                         closeDialog();
                       }}
@@ -209,7 +213,8 @@ export default function UserEmailList(props) {
                     onClick={event => {
                       setAddDialogOpen(true);
                     }}
-                    size="large">
+                    size="large"
+                  >
                     <AddIcon />
                   </IconButton>
                 </Tooltip>

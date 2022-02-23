@@ -58,7 +58,7 @@ class SchoolsController < ApplicationController
       notice = t('schools.create_success')
       respond_to do |format|
         format.html do
-          redirect_to schools_url, notice: notice
+          redirect_to schools_url, notice:
         end
         format.json do
           response = {
@@ -80,7 +80,7 @@ class SchoolsController < ApplicationController
           messages = @school.errors.as_json
           messages[:main] = 'Please review the problems below'
           render json: {
-            messages: messages
+            messages:
           }
         end
       end
@@ -93,7 +93,7 @@ class SchoolsController < ApplicationController
       notice = t('schools.update_success')
       respond_to do |format|
         format.html do
-          redirect_to school_path(@school), notice: notice
+          redirect_to school_path(@school), notice:
         end
         format.json do
           response = {
@@ -115,7 +115,7 @@ class SchoolsController < ApplicationController
           messages = @school.errors.to_hash
           messages.store(:main, 'Unable to save. Please resolve the issues and try again.')
           response = {
-            messages: messages
+            messages:
           }
           render json: response
         end

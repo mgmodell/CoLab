@@ -27,7 +27,11 @@ export default function HelpMenu(props) {
   const [helpMe, setHelpMe] = useState(false);
 
   const endHelp = data => {
-    if (data.action === ACTIONS.RESET || data.action === ACTIONS.CLOSE || data.action === ACTIONS.STOP) {
+    if (
+      data.action === ACTIONS.RESET ||
+      data.action === ACTIONS.CLOSE ||
+      data.action === ACTIONS.STOP
+    ) {
       setHelpMe(false);
     }
   };
@@ -149,12 +153,12 @@ export default function HelpMenu(props) {
 
           setHelpMe(true);
         }}
-        size="large">
+        size="large"
+      >
         <HelpIcon />
       </IconButton>
     </React.Fragment>
   );
 }
 
-HelpMenu.propTypes = {
-};
+HelpMenu.propTypes = {};

@@ -86,20 +86,19 @@ class DiversityScore extends React.Component {
     student_list.forEach((item, index) => {
       emails.push(item.email);
     });
-    axios.post( this.props.scoreReviewUrl + '.json',
-    {
+    axios
+      .post(this.props.scoreReviewUrl + ".json", {
         emails: emails.join()
-    })
+      })
       .then(response => {
         const data = response.data;
         this.setState({
           calculated: data.diversity_score
         });
       })
-      .catch( error =>{
-          console.log("error", error);
-          return [{ id: -1, name: "no data" }];
-
+      .catch(error => {
+        console.log("error", error);
+        return [{ id: -1, name: "no data" }];
       });
   }
 }

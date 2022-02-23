@@ -43,14 +43,15 @@ export default function DropUserButton(props) {
         </Button>
         <Button
           onClick={event => {
-            axios.get( props.dropUrl, { } )
+            axios
+              .get(props.dropUrl, {})
               .then(response => {
                 const data = response.data;
                 props.refreshFunc(data.messages);
                 setShowDialog(false);
               })
-              .catch( error =>{
-                console.log( 'error', error );
+              .catch(error => {
+                console.log("error", error);
               });
           }}
           color="primary"
@@ -70,7 +71,8 @@ export default function DropUserButton(props) {
           onClick={event => {
             setShowDialog(true);
           }}
-          size="large">
+          size="large"
+        >
           <DeleteForeverIcon />
         </IconButton>
       </Tooltip>

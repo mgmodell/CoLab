@@ -50,7 +50,7 @@ class ConsentFormsController < ApplicationController
     respond_to do |format|
       if @consent_form.save
         notice = 'Consent form was successfully created.'
-        format.html { redirect_to @consent_form, notice: notice }
+        format.html { redirect_to @consent_form, notice: }
         format.json { render :show, status: :created, location: @consent_form }
         format.json do
           response = {
@@ -70,7 +70,7 @@ class ConsentFormsController < ApplicationController
           messages = @consent_form.errors.as_json
           messages[:main] = 'Please review the problems below'
           render json: {
-            messages: messages
+            messages:
           }
         end
       end
@@ -83,7 +83,7 @@ class ConsentFormsController < ApplicationController
     if @consent_form.update(consent_form_params)
       notice = 'Consent form was successfully updated.'
       respond_to do |format|
-        format.html { redirect_to @consent_form, notice: notice }
+        format.html { redirect_to @consent_form, notice: }
         format.json do
           response = {
             consent_form: @consent_form.as_json(
@@ -103,7 +103,7 @@ class ConsentFormsController < ApplicationController
           messages = @consent_form.errors.to_hash
           messages[:main] = 'Please review the problems below.'
           response = {
-            messages: messages
+            messages:
           }
           render json: response
         end

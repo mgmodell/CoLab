@@ -38,7 +38,7 @@ class GraphingController < ApplicationController
                    end
     project_list.collect! { |project| { id: project.id, name: project.get_name(anonymize) } }
 
-    project_list.sort!{ |a,b| a[:name] <=> b[:name] }
+    project_list.sort! { |a, b| a[:name] <=> b[:name] }
     respond_to do |format|
       format.json { render json: project_list }
     end
@@ -60,14 +60,14 @@ class GraphingController < ApplicationController
                        .where(consent_logs: { accepted: true }, projects: { id: project_id })
                        .collect { |user| [user.name(anonymize), user.id] }
                  else
-                   Project.find(project_id).users.collect { |user| {name: user.name(anonymize), id: user.id} }
+                   Project.find(project_id).users.collect { |user| { name: user.name(anonymize), id: user.id } }
                  end
     when Unit_Of_Analysis[:group]
-      subjects = Project.find(project_id).groups.collect { |group| { name: group.get_name(anonymize), id: group.id} }
+      subjects = Project.find(project_id).groups.collect { |group| { name: group.get_name(anonymize), id: group.id } }
 
     end
 
-    subjects.sort!{|a,b| a[:name] <=> b[:name]}
+    subjects.sort! { |a, b| a[:name] <=> b[:name] }
     # Return the retrieved data
     respond_to do |format|
       format.json { render json: subjects }
@@ -108,7 +108,7 @@ class GraphingController < ApplicationController
         dataset[:subject_id] = user.id
         dataset[:subject] = user.informal_name(anonymize)
         values = Value.joins(installment: :assessment)
-                      .where('assessments.project_id': project, user: user)
+                      .where('assessments.project_id': project, user:)
                       .includes(:factor, installment: %i[user group])
                       .order('installments.inst_date')
 

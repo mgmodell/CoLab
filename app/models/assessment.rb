@@ -35,17 +35,17 @@ class Assessment < ApplicationRecord
                      )
                    end
     {
-      id: id,
+      id:,
       type: :assessment,
       name: project.get_name(false),
       group_name: group.get_name(false),
       status: is_completed_by_user(current_user) ? 100 : 0,
       course_name: course.get_name(false),
-      start_date: start_date,
-      end_date: end_date,
-      next_deadline: next_deadline,
-      link: link,
-      consent_link: consent_link,
+      start_date:,
+      end_date:,
+      next_deadline:,
+      link:,
+      consent_link:,
       active: project.active
     }
   end
@@ -139,7 +139,7 @@ class Assessment < ApplicationRecord
                project.end_dow - project.start_dow
              else
                7 - project.start_dow + project.end_dow
-end
+             end
 
     assessment.end_date = assessment.start_date + period.days
     assessment.end_date = tz.parse(assessment.end_date.to_s).end_of_day.change(sec: 0)

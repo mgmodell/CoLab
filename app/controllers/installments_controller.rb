@@ -20,15 +20,15 @@ class InstallmentsController < ApplicationController
       group = assessment.group_for_user current_user
       @factors = project.factors
       @installment = Installment.includes(values: %i[factor user], assessment: :project)
-                                .where(assessment: assessment,
+                                .where(assessment:,
                                        user: current_user,
-                                       group: group).first
+                                       group:).first
       if @installment.nil?
         @installment = Installment.new(
-          assessment: assessment,
+          assessment:,
           user: current_user,
           inst_date: DateTime.current.in_time_zone(project.course.timezone),
-          group: group
+          group:
         )
 
         cell_value = Installment::TOTAL_VAL / group.users.size
@@ -39,7 +39,7 @@ class InstallmentsController < ApplicationController
         end
       end
       submit_helper(
-        factors: @factors, group: group, installment: @installment
+        factors: @factors, group:, installment: @installment
       )
     end
   end
@@ -87,59 +87,58 @@ class InstallmentsController < ApplicationController
     respond_to do |format|
       format.json do
         installment = nil
-        begin
-          ActiveRecord::Base.transaction do
-            installment_hash = params[:installment]
-            installment = Installment.new(
-              assessment_id: installment_hash[:assessment_id],
-              group_id: installment_hash[:group_id],
-              user: current_user,
-              inst_date: installment_hash[:inst_date],
-              comments: installment_hash[:comments]
-            )
-            installment.save!
-            if installment.errors.empty?
-              params[:contributions].values.each do |contribution|
-                contribution.each do |value|
-                  installment.values.create!(
-                    user_id: value[:userId],
-                    factor_id: value[:factorId],
-                    value: value[:value]
-                  )
-                end
+
+        ActiveRecord::Base.transaction do
+          installment_hash = params[:installment]
+          installment = Installment.new(
+            assessment_id: installment_hash[:assessment_id],
+            group_id: installment_hash[:group_id],
+            user: current_user,
+            inst_date: installment_hash[:inst_date],
+            comments: installment_hash[:comments]
+          )
+          installment.save!
+          if installment.errors.empty?
+            params[:contributions].values.each do |contribution|
+              contribution.each do |value|
+                installment.values.create!(
+                  user_id: value[:userId],
+                  factor_id: value[:factorId],
+                  value: value[:value]
+                )
               end
-              installment.reload
-              render json: {
-                error: false,
-                messages: {
-                  status: t('success')
-                },
-                installment: {
-                  id: installment.id,
-                  assessment_id: installment.assessment_id,
-                  group_id: installment.group_id,
-                  comments: installment.comments,
-                  values: installment.values
-                                     .collect do |item|
-                            {
-                              id: item[:id],
-                              user_id: item[:userId],
-                              factor_id: item[:factorId],
-                              name: item[:name],
-                              value: item[:value]
-                            }
-                          end
-                }
-              }
             end
-          rescue ActiveRecord::RecordInvalid => e
+            installment.reload
             render json: {
+              error: false,
               messages: {
-                status: e.message
+                status: t('success')
               },
-              error: true
+              installment: {
+                id: installment.id,
+                assessment_id: installment.assessment_id,
+                group_id: installment.group_id,
+                comments: installment.comments,
+                values: installment.values
+                                   .collect do |item|
+                          {
+                            id: item[:id],
+                            user_id: item[:userId],
+                            factor_id: item[:factorId],
+                            name: item[:name],
+                            value: item[:value]
+                          }
+                        end
+              }
             }
           end
+        rescue ActiveRecord::RecordInvalid => e
+          render json: {
+            messages: {
+              status: e.message
+            },
+            error: true
+          }
         end
       end
     end
@@ -158,7 +157,7 @@ class InstallmentsController < ApplicationController
           @installment = Installment.find(id)
           if @installment.update(i_params)
             notice = t('installments.success')
-            redirect_to root_url, notice: notice
+            redirect_to root_url, notice:
           else
             logger.debug @installment.errors.full_messages unless @installment.errors.empty?
             @group = Group.find(@installment.group)
@@ -206,7 +205,7 @@ class InstallmentsController < ApplicationController
                 status: t('installments.demo_success')
               },
               installment: {
-                id: id,
+                id:,
                 assessment_id: params[:assessment_id],
                 group_id: params[:group_id],
                 values: params[:contributions].values
@@ -252,7 +251,7 @@ class InstallmentsController < ApplicationController
               status: t('success')
             },
             installment: {
-              id: id,
+              id:,
               assessment_id: params[:assessment_id],
               group_id: params[:group_id],
               values: params[:contributions].values

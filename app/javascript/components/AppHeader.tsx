@@ -10,14 +10,18 @@ import HelpMenu from "./HelpMenu";
 import Quote from "./Quote";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function AppHeader(props) {
   const { t, i18n } = useTranslation();
   const endpointSet = "home";
-  const endpoints = useTypedSelector( state =>state.context.endpoints[endpointSet])
-  const endpointsLoaded = useTypedSelector( state =>state.context.status.endpointsLoaded );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointsLoaded = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
 
   return (
     <React.Fragment>
@@ -28,9 +32,7 @@ export default function AppHeader(props) {
           >
             {endpointsLoaded ? (
               <MainMenu
-                diversityScoreFor={
-                  endpoints.diversityScoreFor
-                }
+                diversityScoreFor={endpoints.diversityScoreFor}
                 reportingUrl={endpoints.reportingUrl}
                 supportAddress={endpoints.supportAddress}
                 moreInfoUrl={endpoints.moreInfoUrl}
@@ -39,25 +41,21 @@ export default function AppHeader(props) {
               <Skeleton variant="rectangular" width={32} height={32} />
             )}
           </Suspense>
-            <Logo height={32} width={32}/>
+          <Logo height={32} width={32} />
 
-            { endpointsLoaded ? (
+          {endpointsLoaded ? (
             <Suspense fallback={<Skeleton variant="text" />}>
               <Typography>
                 {t("title")}
                 <br />
-                <Quote
-                  url={endpoints.quotePath}
-                />
+                <Quote url={endpoints.quotePath} />
               </Typography>
             </Suspense>
           ) : (
             <Skeleton variant="text" />
           )}
-            {endpointsLoaded ? (
-            <HelpMenu
-              lookupUrl={endpoints.lookupsUrl}
-            />
+          {endpointsLoaded ? (
+            <HelpMenu lookupUrl={endpoints.lookupsUrl} />
           ) : (
             <Skeleton variant="circular" />
           )}
@@ -68,5 +66,4 @@ export default function AppHeader(props) {
   );
 }
 
-AppHeader.propTypes = {
-};
+AppHeader.propTypes = {};

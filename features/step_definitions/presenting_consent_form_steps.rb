@@ -24,7 +24,7 @@ end
 Given(/^the course has a consent form$/) do
   @consent_form = ConsentForm.new(
     user: User.find(1),
-    name: Faker::Nation.nationality,
+    name: Faker::Nation.nationality
   )
   @consent_form.pdf.attach(io: File.open(
     Rails.root.join('db', 'ConsentForms_consolidated.pdf')
@@ -70,7 +70,7 @@ end
 
 Given(/^the consent form "(.*?)" been presented to the user$/) do |has_or_has_not|
   presented = has_or_has_not == 'has'
-  consent_log = ConsentLog.create(presented: presented,
+  consent_log = ConsentLog.create(presented:,
                                   user_id: @user.id,
                                   consent_form_id: @consent_form.id)
 end

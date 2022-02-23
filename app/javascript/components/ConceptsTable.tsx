@@ -4,7 +4,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
 import classNames from "classnames";
-import withStyles from '@mui/styles/withStyles';
+import withStyles from "@mui/styles/withStyles";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -22,8 +22,8 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
 
-import {useDispatch} from 'react-redux';
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "./infrastructure/StatusActions";
 
 const styles = theme => ({
   table: {
@@ -51,9 +51,13 @@ const styles = theme => ({
 });
 export default function ConceptsTable(props) {
   const endpointSet = "concept";
-  const endpoints = useTypedSelector( state =>  state.context.endpoints[endpointSet])
-  const endpointStatus = useTypedSelector( state => state.context.status['endpointsLoaded'])
-  const dispatch = useDispatch( );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status["endpointsLoaded"]
+  );
+  const dispatch = useDispatch();
 
   const [conceptsRaw, setConceptsRaw] = useState([]);
   const [concepts, setConcepts] = useState([]);
@@ -103,9 +107,8 @@ export default function ConceptsTable(props) {
     }
   ];
 
-
   useEffect(() => {
-    if (endpointStatus ){
+    if (endpointStatus) {
       getConcepts();
     }
   }, [endpointStatus]);
@@ -116,22 +119,21 @@ export default function ConceptsTable(props) {
   };
 
   const getConcepts = () => {
-    dispatch( startTask( 'load' ) );
+    dispatch(startTask("load"));
     //statusActions.startTask("load");
-    axios.get( endpoints.baseUrl + '.json', {})
-      .then( (response) =>{
+    axios
+      .get(endpoints.baseUrl + ".json", {})
+      .then(response => {
         const data = response.data;
         setConcepts(data);
         setConceptsRaw(data);
-        dispatch( endTask( 'load' ) );
-
+        dispatch(endTask("load"));
       })
-      .catch( (error) =>{
-        console.log( error );
+      .catch(error => {
+        console.log(error);
         return [{ id: -1, name: "no data" }];
-        dispatch( endTask( 'load' ) );
-      })
-
+        dispatch(endTask("load"));
+      });
   };
   const filter = function(event) {
     var filtered = conceptsRaw.filter(concept =>
@@ -162,17 +164,16 @@ export default function ConceptsTable(props) {
     setDirty(false);
   };
   const updateConcept = (id, name) => {
-    dispatch( startTask( 'load' ) );
+    dispatch(startTask("load"));
     //statusActions.startTask("load");
-    axios.patch( endpoints.baseUrl + '/' + id + '.json',
-    {
+    axios
+      .patch(endpoints.baseUrl + "/" + id + ".json", {
         concept: {
           id: id,
           name: name
         }
-
-    } )
-      .then( (data) =>{
+      })
+      .then(data => {
         const tmpConcepts = Object.assign([], conceptsRaw);
         const updatedObject = tmpConcepts.find(element => element.id == id);
         updatedObject.name = data.name;
@@ -180,16 +181,14 @@ export default function ConceptsTable(props) {
 
         setConcepts(tmpConcepts);
         setConceptsRaw(tmpConcepts);
-        dispatch( endTask( 'load' ) );
+        dispatch(endTask("load"));
         //statusActions.endTask("load");
         setEditing(false);
-
       })
-      .catch( error=>{
-          console.log("error:", error);
-          return [{ id: -1, name: "no data" }];
-
-      })
+      .catch(error => {
+        console.log("error:", error);
+        return [{ id: -1, name: "no data" }];
+      });
   };
   return (
     <React.Fragment>

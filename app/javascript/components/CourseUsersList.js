@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {useDispatch} from 'react-redux';
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@mui/material/Paper";
@@ -30,7 +30,7 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import DropUserButton from "./DropUserButton";
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
-import {startTask, endTask} from './infrastructure/StatusActions';
+import { startTask, endTask } from "./infrastructure/StatusActions";
 import axios from "axios";
 
 export default function CourseUsersList(props) {
@@ -39,12 +39,13 @@ export default function CourseUsersList(props) {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newUserAddresses, setNewUserAddresses] = useState("");
 
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
 
   const getUsers = () => {
-    dispatch( startTask() );
+    dispatch(startTask());
     var url = props.retrievalUrl;
-    axios.get( url, { } )
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         //MetaData and Infrastructure
@@ -56,10 +57,10 @@ export default function CourseUsersList(props) {
         setProcRegReqPath(data.add_function.proc_self_reg + ".json");
         props.usersListUpdateFunc(data.users);
 
-        dispatch( endTask() );
+        dispatch(endTask());
       })
-      .catch( error=>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
 
@@ -213,18 +214,20 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      dispatch( startTask("inviting") );
-                      axios.get( user.reinvite_link, { } )
+                      dispatch(startTask("inviting"));
+                      axios
+                        .get(user.reinvite_link, {})
                         .then(response => {
                           const data = response.data;
                           refreshFunc(data.messages);
-                          dispatch( endTask("inviting") );
+                          dispatch(endTask("inviting"));
                         })
-                        .catch( error =>{
-                          console.log( 'error', error );
+                        .catch(error => {
+                          console.log("error", error);
                         });
                     }}
-                    size="large">
+                    size="large"
+                  >
                     <EmailIcon />
                   </IconButton>
                 </Tooltip>
@@ -249,21 +252,23 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      dispatch( startTask("accepting_student") );
-                      axios.patch( procRegReqPath, {
+                      dispatch(startTask("accepting_student"));
+                      axios
+                        .patch(procRegReqPath, {
                           roster_id: user.id,
                           decision: true
-                      })
+                        })
                         .then(response => {
                           const data = response.data;
                           refreshFunc(data.messages);
-                          dispatch( endTask("accepting_student") );
+                          dispatch(endTask("accepting_student"));
                         })
-                        .catch( error =>{
-                          console.log( 'error', error );
+                        .catch(error => {
+                          console.log("error", error);
                         });
                     }}
-                    size="large">
+                    size="large"
+                  >
                     <CheckIcon />
                   </IconButton>
                 </Tooltip>
@@ -273,21 +278,23 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl2}
                     onClick={event => {
-                      dispatch( startTask("decline_student") );
-                      axios.patch( procRegReqPath, {
+                      dispatch(startTask("decline_student"));
+                      axios
+                        .patch(procRegReqPath, {
                           roster_id: user.id,
                           decision: false
-                      })
+                        })
                         .then(response => {
                           const data = response.data;
                           refreshFunc(data.messages);
-                          dispatch( endTask("decline_student") );
+                          dispatch(endTask("decline_student"));
                         })
-                        .catch( error=>{
-                          console.log( 'error', error );
+                        .catch(error => {
+                          console.log("error", error);
                         });
                     }}
-                    size="large">
+                    size="large"
+                  >
                     <ClearIcon />
                   </IconButton>
                 </Tooltip>
@@ -302,20 +309,22 @@ export default function CourseUsersList(props) {
                   <IconButton
                     aria-label={lbl}
                     onClick={event => {
-                      dispatch( startTask("re-adding") );
-                      axios.put( addUsersPath, {
+                      dispatch(startTask("re-adding"));
+                      axios
+                        .put(addUsersPath, {
                           addresses: user.email
-                      })
+                        })
                         .then(response => {
                           const data = response.data;
                           refreshFunc(data.messages);
-                          dispatch( endTask("re-adding") );
+                          dispatch(endTask("re-adding"));
                         })
-                        .catch( error =>{
-                          console.log( 'error', error );
+                        .catch(error => {
+                          console.log("error", error);
                         });
                     }}
-                    size="large">
+                    size="large"
+                  >
                     <PersonAddIcon />
                   </IconButton>
                 </Tooltip>
@@ -448,17 +457,18 @@ export default function CourseUsersList(props) {
                     </Button>
                     <Button
                       onClick={() => {
-                        dispatch( startTask("adding_email") );
+                        dispatch(startTask("adding_email"));
 
-                        axios.put( addUsersPath, {
+                        axios
+                          .put(addUsersPath, {
                             id: props.courseId,
                             addresses: newUserAddresses
-                        } )
+                          })
                           .then(response => {
                             getUsers();
                             const data = response.data;
                             props.addMessagesFunc(data.messages);
-                            dispatch( endTask("adding_email") );
+                            dispatch(endTask("adding_email"));
                           });
                         closeDialog();
                       }}
@@ -475,7 +485,8 @@ export default function CourseUsersList(props) {
                     onClick={event => {
                       setAddDialogOpen(true);
                     }}
-                    size="large">
+                    size="large"
+                  >
                     <GroupAddIcon />
                   </IconButton>
                 </Tooltip>

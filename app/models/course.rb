@@ -23,16 +23,13 @@ class Course < ApplicationRecord
 
   def pretty_name(anonymous = false)
     prettyName = ''
-    prettyName = if anonymous
-                   "#{anon_name} (#{anon_number})"
-                 else
-                   if number.present?
-                     "#{name} (#{number})"
-                   else
-                     name
-                   end
-                 end
-    prettyName
+    if anonymous
+      "#{anon_name} (#{anon_number})"
+    elsif number.present?
+      "#{name} (#{number})"
+    else
+      name
+    end
   end
 
   def get_activities
@@ -47,10 +44,10 @@ class Course < ApplicationRecord
 
     unless consent_form_id.nil? || !consent_form.is_active?
       log = consent_form.consent_logs
-                        .find_by(user: user)
+                        .find_by(user:)
       if log.nil?
         log = user.consent_logs.create(
-          consent_form_id: consent_form_id,
+          consent_form_id:,
           presented: false
         )
       end
@@ -67,27 +64,27 @@ class Course < ApplicationRecord
   end
 
   def set_user_role(user, role)
-    roster = rosters.find_by(user: user)
-    roster = Roster.new(user: user, course: self) if roster.nil?
+    roster = rosters.find_by(user:)
+    roster = Roster.new(user:, course: self) if roster.nil?
     roster.role = role
     roster.save
     logger.debug roster.errors.full_messages unless roster.errors.empty?
   end
 
   def drop_student(user)
-    roster = Roster.find_by(user: user, course: self)
+    roster = Roster.find_by(user:, course: self)
     roster.role = Roster.roles[:dropped_student]
     roster.save
   end
 
   def get_user_role(user)
-    roster = rosters.find_by(user: user)
+    roster = rosters.find_by(user:)
     roster.nil? ? nil : roster.role
   end
 
   def copy_from_template(new_start:)
     # Timezone checking here
-    course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC' )
+    course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC')
     new_start = course_tz.utc_to_local(new_start).beginning_of_day
     d = start_date
     date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
@@ -99,8 +96,8 @@ class Course < ApplicationRecord
       new_course = school.courses.new(
         name: "Copy of #{name}",
         number: "Copy of #{number}",
-        description: description,
-        timezone: timezone,
+        description:,
+        timezone:,
         start_date: start_date + date_difference,
         end_date: end_date + date_difference
       )
@@ -169,7 +166,7 @@ class Course < ApplicationRecord
     max_actual = 1000
     results = {
       student_count: students.size,
-      combinations: combinations,
+      combinations:,
       actual: max_actual >= combinations
     }
 
@@ -207,24 +204,22 @@ class Course < ApplicationRecord
       passwd = (0...8).map { rand(65..90).chr }.join
 
       if user.nil?
-        user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school)
+        user = User.create(email: user_email, admin: false, timezone:, password: passwd, school:)
         logger.debug user.errors.full_messages unless user.errors.empty?
       end
 
       unless user.nil?
-        existing_roster = Roster.find_by(course: self, user: user)
+        existing_roster = Roster.find_by(course: self, user:)
         if existing_roster.nil?
-          Roster.create(user: user, course: self, role: role)
+          Roster.create(user:, course: self, role:)
           ret_val = true
-        else
-          if instructor || existing_roster.enrolled_student!
-            existing_roster.role = role
-            existing_roster.save
-            if existing_roster.errors.empty?
-              ret_val = true
-            else
-              logger.debug existing_roster.errors.full_messages
-            end
+        elsif instructor || existing_roster.enrolled_student!
+          existing_roster.role = role
+          existing_roster.save
+          if existing_roster.errors.empty?
+            ret_val = true
+          else
+            logger.debug existing_roster.errors.full_messages
           end
         end
         # TODO: Let's add course invitation emails here in the future
@@ -325,7 +320,7 @@ class Course < ApplicationRecord
   end
 
   def timezone_adjust_comprehensive
-    course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC' )
+    course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC')
     # TODO: must handle changing timezones at some point
 
     # TZ corrections

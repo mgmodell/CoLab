@@ -47,7 +47,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
             t('devise.registrations.email_added')
           else
             t('devise.registrations.email_not_added')
-end
+          end
     # redirect_to edit_user_registration_path, notice: notice
 
     resp = {

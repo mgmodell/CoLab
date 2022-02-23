@@ -11,7 +11,6 @@ require 'selenium/webdriver'
 require 'webdrivers'
 Webdrivers.cache_time = 86_400
 
-
 require 'simplecov'
 SimpleCov.start 'rails'
 
@@ -33,7 +32,7 @@ Capybara.register_driver :headless_firefox do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    profile: profile,
+    profile:,
     http_client: client,
     options: browser_options
   )
@@ -47,7 +46,7 @@ Capybara.register_driver :firefox do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    profile: profile,
+    profile:,
     http_client: client,
     options: browser_options
   )
@@ -60,7 +59,7 @@ Capybara.register_driver(:chrome) do |app|
 
   Capybara::Selenium::Driver.new(
     app,
-    browser: :chrome,
+    browser: :chrome
     # desired_capabilities: capabilities
   )
 end

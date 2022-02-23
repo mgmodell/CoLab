@@ -18,7 +18,6 @@ class BingoGamesController < ApplicationController
 
   before_action :check_viewer, only: %i[show index]
 
-
   include Demoable
 
   def show
@@ -48,8 +47,8 @@ class BingoGamesController < ApplicationController
     end
 
     render json: {
-      candidate_list: candidate_list,
-      candidates: candidates
+      candidate_list:,
+      candidates:
     }
   end
 
@@ -70,9 +69,9 @@ class BingoGamesController < ApplicationController
                          cl.current_candidate_list
                        else
                          cl
-end
+                       end
 
-      candidates = Candidate.completed.where(candidate_list: candidate_list)
+      candidates = Candidate.completed.where(candidate_list:)
                             .includes(%i[concept candidate_feedback])
 
     end
@@ -95,7 +94,7 @@ end
         group_id: candidate_list.group_id,
         user_id: candidate_list.user_id
       },
-      candidates: candidates
+      candidates:
     }
   end
 
@@ -155,12 +154,12 @@ end
                                                 .reject do |c|
             c.candidate_feedback.present? &&
               CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name
-          end .count
+          end.count
           resp[user_id][:term_problems] = cl.candidates
                                             .reject do |c|
             c.candidate_feedback.present? &&
               CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name
-          end .count
+          end.count
           resp[user_id][:performance] = cl.performance
           candidates = []
           cl.candidates.reviewed.each do |c|
@@ -183,12 +182,12 @@ end
                               .reject do |c|
           c.candidate_feedback.present? &&
             CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name
-        end .count
+        end.count
         term_problems = cl.candidates
                           .reject do |c|
           c.candidate_feedback.present? &&
             CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name
-        end .count
+        end.count
         performance = cl.performance
         candidates = []
         cl.candidates.completed.each do |c|
@@ -379,7 +378,7 @@ end
                       c[1]
                     else
                       demo_concepts[Random.rand(demo_concepts.count)][1]
-end,
+                    end,
         user: u,
         user_id: u.id
       )
@@ -391,10 +390,10 @@ end,
       format.json do
         review_helper(
           bingo_game: @bingo_game,
-          users: users,
-          groups: groups,
-          candidate_lists: candidate_lists,
-          candidates: candidates
+          users:,
+          groups:,
+          candidate_lists:,
+          candidates:
         )
       end
       format.html { render :review_candidates }
@@ -585,7 +584,7 @@ end,
           project_id ])
     resp[:topic] = bingo_game.get_topic(current_user.anonymize?)
     resp[:reviewed] = bingo_game.reviewed?
-    resp[:course] = { timezone: timezone }
+    resp[:course] = { timezone: }
 
     resp = {
       bingo_game: resp
@@ -596,14 +595,14 @@ end,
         id: p.id,
         name: p.get_name(current_user.anonymize?)
       }
-    end .as_json
+    end.as_json
     resp[:concepts] = bingo_game.get_concepts
                                 .collect do |c|
       {
         id: c.id,
         name: c.name
       }
-    end .as_json
+    end.as_json
     resp
   end
 
@@ -615,7 +614,8 @@ end,
       bg_test.start_date = course.start_date
       bg_test.end_date = course.end_date
     else
-      bg_test = BingoGame.joins(:course).includes(candidate_lists: { candidates: :concept }, course: :projects).find(params[:id])
+      bg_test = BingoGame.joins(:course).includes(candidate_lists: { candidates: :concept },
+                                                  course: :projects).find(params[:id])
     end
 
     if current_user.is_admin?
