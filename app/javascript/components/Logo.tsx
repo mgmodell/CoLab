@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 
 export default function Logo(props){
@@ -25,18 +25,36 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function rotateColors() {
-  for(let index = 0; index < 15; index++ ){
+function rotateColors() {
     colors.push( colors.shift( ) );
     setColors( colors );
     setGreen( colors[ 0 ] );
-    await sleep( Math.log( index, 1000 ) * 100 )
+}
 
+async function spinning( ){
+  while( true ){
+    if( props.spinning ){
+      rotateColors( );
+    }
+    await sleep( 100 )
+  }
+}
+
+useEffect( () => {
+  spinning( );
+}, [ ] )
+
+async function spinIt() {
+  if( !props.spinning ){
+    for(let index = 0; index < 15; index++ ){
+      rotateColors( )
+      await sleep( Math.log( index, 1000 ) * 100 )
+    }
   }
 }
 
 return(
-<svg height={height} width={width} onClick={rotateColors}
+<svg height={height} width={width} onClick={spinIt}
   viewBox={viewBox} preserveAspectRatio="xMidYMid meet"
   xmlns="http://www.w3.org/2000/svg">
   <linearGradient id="bg_grad" x1="-5" y1="493" x2="975" y2="493"
@@ -65,5 +83,6 @@ return(
 
 Logo.propTypes = {
   height: PropTypes.number,
-  width: PropTypes.number
+  width: PropTypes.number,
+  spinning: PropTypes.bool
 };}

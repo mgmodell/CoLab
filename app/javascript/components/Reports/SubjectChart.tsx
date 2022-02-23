@@ -18,6 +18,7 @@ import {range} from 'd3-array';
 import {hsl} from 'd3-color';
 import {schemeCategory10 as factorColors } from 'd3-scale-chromatic';
 import { timeParse } from 'd3-time-format';
+import Logo from '../Logo';
 
   export const unit_codes ={
     group: 2,
@@ -193,8 +194,18 @@ export default function SubjectChart(props) {
             fontSize="16px"
             textDecoration="underline"
           >
-            {t(`chart_for_${props.unitOfAnalysis}`)} {subject}
+            { Object.keys( streams ).length < 1 ? t( 'loading' ) : t(`chart_for_${props.unitOfAnalysis}`, { subject: subject } )}
           </text>
+          { Object.keys( streams ).length < 1 ? (
+            <g transform={ `translate( 0, ${titleY + 100})`} >
+              <Logo
+                height={100}
+                width={100}
+                spinning
+              />
+            </g>
+
+          ) : null }
           <text
             x={0}
             y={15}

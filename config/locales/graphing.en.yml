@@ -17,8 +17,9 @@ en:
     projects_list: Select a project
     group_list: Select a group
     individual_list: Select an individual
-    chart_for_group: Group chart for
-    chart_for_individual: Individual chart for
+    loading: Data is loading
+    chart_for_group: Group chart for {{subject}}
+    chart_for_individual: Individual chart for {{subject}}
     chart_for_project: for project 
     none: None Selected
     date: Date
