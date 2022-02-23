@@ -169,13 +169,6 @@ GEM
     city-state (0.1.0)
       rubyzip (>= 1.1)
     climate_control (0.2.0)
-    coffee-rails (5.0.0)
-      coffee-script (>= 2.2.0)
-      railties (>= 5.2.0)
-    coffee-script (2.4.1)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.12.2)
     concurrent-ruby (1.1.9)
     connection_pool (2.2.5)
     countries (4.2.2)
@@ -532,8 +525,6 @@ GEM
     ttfunk (1.7.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.0)
-      execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8)
@@ -579,7 +570,6 @@ DEPENDENCIES
   byebug
   chronic
   city-state
-  coffee-rails
   country_select
   cucumber-rails!
   d3-rails
@@ -629,7 +619,6 @@ DEPENDENCIES
   spring
   stopwords-filter
   traco
-  uglifier (>= 1.3.0)
   web-console
   webdrivers (~> 5.0)
   webpacker
