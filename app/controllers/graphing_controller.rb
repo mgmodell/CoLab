@@ -24,8 +24,8 @@ class GraphingController < ApplicationController
   end
 
   def projects
-    for_research = params[:for_research] == 'true'
-    anon_req = params[:anonymous] == 'true'
+    for_research = params[:for_research]
+    anon_req = params[:anonymous]
     anonymize = current_user.anonymize? || current_user.is_researcher? || anon_req
     projects = []
     project_list = if current_user.admin || current_user.is_researcher?
@@ -48,8 +48,8 @@ class GraphingController < ApplicationController
   def subjects
     unit_of_analysis = params[:unit_of_analysis].to_i
     project_id = params[:project_id]
-    for_research = params[:for_research] == 'true'
-    anon_req = params[:anonymous] == 'true'
+    for_research = params[:for_research]
+    anon_req = params[:anonymous]
     anonymize = current_user.anonymize? || anon_req
 
     subjects = []
