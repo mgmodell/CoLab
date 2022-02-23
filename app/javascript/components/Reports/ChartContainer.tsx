@@ -3,8 +3,18 @@ import PropTypes from "prop-types";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Skeleton, Switch, Typography } from "@mui/material";
+import {
+  FormControl,
+  FormControlLabel,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Skeleton,
+  Switch,
+  Typography } from "@mui/material";
 import SubjectChart, {unit_codes, code_units} from "./SubjectChart";
+import ConfirmDialog from "./ConfirmDialog";
 
 export default function ChartContainer(props) {
 
@@ -14,14 +24,17 @@ export default function ChartContainer(props) {
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
   const { t, i18n } = useTranslation( category );
 
-  const [anonymize, setAnonymize] = useState( props.anonymize || false );
-  const [forResearch, setForResearch] = useState( props.forResearch || false );
   const [projects, setProjects] = useState( props.projects || [] );
   const [selectedProject, setSelectedProject] = useState( -1 );
   const [subjects, setSubjects] = useState( [] );
   const [selectedSubject, setSelectedSubject] = useState( -1 );
+  const [anonymizeOpen, setAnonymizeOpen] = useState( false );
+  const [forResearchOpen, setForResearchOpen] = useState( false );
+  const [anonymize, setAnonymize] = useState( props.anonymize || false );
+  const [forResearch, setForResearch] = useState( props.anonymize || false );
 
   const [charts, setCharts] = useState( {} );
+  const [open, setOpen] = useState( false );
 
   const getSubjectsForProject = (projectId )=>{
     if( 0 < selectedProject ){
@@ -60,7 +73,7 @@ export default function ChartContainer(props) {
   useEffect( () =>{
     if( endpointStatus ){
       if( null == props.projects){
-        getProjects( );
+        clearCharts( );
       } else {
         if( 1 === props.projects.length){
           setSelectedProject( props.projects[ 0 ].id );
@@ -68,7 +81,17 @@ export default function ChartContainer(props) {
         }
       }
     }
-  }, [endpointStatus])
+  }, [endpointStatus, forResearch, anonymize ])
+
+  const clearCharts = ( ) =>{
+    if( endpointStatus ){
+        setCharts( { } );
+        setSelectedSubject( -1 );
+        setSelectedProject( -1 );
+        getProjects( );
+        setSubjects( [] );
+    }
+  }
 
   useEffect( () =>{
     if( endpointStatus ){
@@ -178,28 +201,53 @@ export default function ChartContainer(props) {
           }
   }
 
+  const closeForResearch = (agree) =>{
+    if( agree ){
+      clearCharts( );
+      setForResearch( !forResearch );
+    } 
+    setForResearchOpen( false );
+  }
+
+    
   const forResearchBlock = null == props.forResearch ?
   (
       <Grid item xs={6}>
         <FormControlLabel label={t('consent_switch') } control={
           <Switch
-            value={forResearch}
-            onChange={ (evt)=>{setForResearch( evt.target.checked )} }/>
+            checked={forResearch}
+            onChange={ () => setForResearchOpen( true ) }/>
         }/>
+        <ConfirmDialog
+          isOpen={forResearchOpen}
+          closeFunc={closeForResearch}
+          />
       </Grid>
 
   ) : null;
+
+
+  const closeAnonymize = (agree) =>{
+    if( agree ){
+      clearCharts( );
+      setAnonymize( !anonymize );
+    } 
+    setAnonymizeOpen( false );
+  }
 
   const anonymizeBlock = null == props.anonymize ?
   (
       <Grid item xs={6}>
         <FormControlLabel label={t('anon_switch') } control={
           <Switch
-            value={anonymize}
-            onChange={(evt)=>{setAnonymize( evt.target.checked )}}/>
+            checked={anonymize}
+            onChange={()=>{setAnonymizeOpen( true )}}/>
         }/>
+        <ConfirmDialog
+          isOpen={anonymizeOpen}
+          closeFunc={closeAnonymize}
+          />
       </Grid>
-
   ) : null;
 
   return (
