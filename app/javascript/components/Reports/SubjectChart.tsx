@@ -49,13 +49,25 @@ export default function SubjectChart(props) {
   const [ref, chartWidth, discard] = useResizeObserver( );
 
   const margin ={
-    top: 60,
+    top: 105,
     bottom: 40,
     left: 40,
     right: 40
   }
 
   const parseTime = timeParse( "%Y-%m-%dT%H:%M:%S.%L%Z" );
+
+  const flipFactorVisibility = ( id: number )=>{
+    const newFactors = Object.assign( {}, factors );
+    newFactors[ id ].visible = !newFactors[ id ].visible;
+    setFactors( newFactors );
+  }
+
+  const flipUserVisibility = ( id: number )=>{
+    const newUsers = Object.assign( {}, users );
+    newUsers[ id ].visible = !newUsers[ id ].visible;
+    setUsers( newUsers );
+  }
 
 
   // Retrieve data
@@ -86,6 +98,7 @@ export default function SubjectChart(props) {
           //Set up the factors
           for( let id of Object.keys( data.factors ) ){
             data.factors[id]['color'] = factorColor( index );
+            data.factors[id]['visible'] = true;
             index ++;
           };
           setFactors( data.factors );
@@ -95,6 +108,7 @@ export default function SubjectChart(props) {
           for( let id of Object.keys( data.users ) ){
             data.users[ id ][ 'index' ] = index;
             data.users[ id ][ 'dasharray' ] = `${( index * 5 )} ${(index * 5)}`;
+            data.users[ id ][ 'visible' ] = true;
             index++
           }
           setUsers( data.users );
@@ -158,6 +172,77 @@ export default function SubjectChart(props) {
           orientation='left'
           label="Contribution Level"
           numTicks={userCount} />
+        <g className="data">
+        {Object.values( streams ).map( (stream)=>{
+          const streamKey = `stream-target-${stream.target_id}`;
+          return(
+            <g className={streamKey} key={streamKey}>
+              {
+                Object.values( stream.sub_streams ).map( (subStream) =>{
+                  const substreamKey =`${stream.target_id}-${subStream.assessor_id}`;
+                  return(
+                    <g className={substreamKey} key={substreamKey} >
+                      {
+                          Object.values( subStream.factor_streams).map( (factorStream)=>{
+                            const dataKey = `${substreamKey}-${factorStream.factor_id}`;
+                            const opacity =
+                              factors[factorStream.factor_id].visible && users[stream.target_id].visible ?  1 : .2;
+                            return(
+                              <g
+                                className={dataKey}
+                                key={ dataKey }
+                                opacity={opacity}
+                                >
+                                  {factorStream.factor_name}
+                              <GlyphSeries
+                                data={ factorStream.values }
+                                dataKey={ `glyph-${dataKey}` }
+                                {...accessors}
+                                colorAccessor={(d)=>{
+                                  const comment = comments[ d.installment_id ];
+                                  if( '<no comment>' === comment.comment ){
+                                    return 'black';
+                                  } else {
+                                    return 'yellow'
+                                  }
+                                }}
+                                size={11}
+                              />
+                              <GlyphSeries
+                                data={ factorStream.values }
+                                dataKey={ `glyph-${dataKey}` }
+                                {...accessors}
+                                colorAccessor={(d)=>{
+                                  return( factors[ factorStream.factor_id]['color']);
+                                }}
+                                size={7}
+                              />
+                              <LineSeries
+                                data={ factorStream.values }
+                                dataKey={ dataKey }
+                                {...accessors}
+                                curve={curveMonotoneX}
+                                stroke={ factors[ factorStream.factor_id]['color']}
+                                strokeDasharray={users[ stream.target_id ].dasharray}
+                              />
+                              </g>
+                            )
+
+                          } )
+
+                      }
+                    </g>
+                  )
+                }
+                )
+              }
+            </g>
+          )
+
+          } )
+        }
+
+        </g>
         {
           <Tooltip
             detectBounds
@@ -238,8 +323,12 @@ export default function SubjectChart(props) {
           />
           {
             Object.values( users ).map( (user,index) =>{
+              const opacity = user.visible ? 1 : 0.7;
               return(
-                <React.Fragment key={`user_legend_${index}`}>
+                <g
+                  onClick={() => flipUserVisibility( user.id )}
+                  opacity={opacity}
+                  key={`user_legend_${index}`}>
                   <text
                     x={10 + (index %2 * lbw )}
                     y={13 + Math.floor( index / 2 ) * lbh }
@@ -257,7 +346,7 @@ export default function SubjectChart(props) {
                     strokeWidth={3}
                     strokeDasharray={ `${( index * 5 )} ${(index * 5)}` }
                   />
-                </React.Fragment>
+                </g>
               )
             })
           }
@@ -278,8 +367,12 @@ export default function SubjectChart(props) {
           />
           {
             Object.values( factors ).map( (factor,index) =>{
+              const opacity = factor.visible ? 1 : 0.7;
               return(
-                <React.Fragment key={`factor_legend_${index}`}>
+                <g
+                  onClick={() =>flipFactorVisibility( factor.id )}
+                  opacity={opacity}
+                  key={`factor_legend_${index}`}>
                   <circle
                     cx={10 + (index %2 * lbw )}
                     cy={10 + Math.floor(index /2) * lbh }
@@ -296,7 +389,7 @@ export default function SubjectChart(props) {
                   >
                     {factor.name}
                   </text>
-                </React.Fragment>
+                </g>
               )
             })
           }
@@ -420,73 +513,6 @@ export default function SubjectChart(props) {
 
           )
         }
-        <g className="data">
-        {Object.values( streams ).map( (stream)=>{
-          return(
-            <React.Fragment key={`stream-target-${stream.target_id}`}>
-              STREAM: {stream.target_id}
-              {
-                Object.values( stream.sub_streams ).map( (subStream) =>{
-                  return(
-                    <React.Fragment key={`sub-assessor-${subStream.assessor_id}`}>
-                      SUBSTREAM: {subStream.assessor_id}
-                      {
-                          Object.values( subStream.factor_streams).map( (factorStream)=>{
-                            const datakey = `${subStream.assessor_name} - ${factorStream.factor_name}`;
-                            return(
-                              <React.Fragment
-                                key={ `factor-${factorStream.factor_id}` }
-                                >
-                                  {factorStream.factor_name}
-                              <GlyphSeries
-                                data={ factorStream.values }
-                                dataKey={ `glyph-${datakey}` }
-                                {...accessors}
-                                colorAccessor={(d)=>{
-                                  const comment = comments[ d.installment_id ];
-                                  if( '<no comment>' === comment.comment ){
-                                    return 'black';
-                                  } else {
-                                    return 'yellow'
-                                  }
-                                }}
-                                size={11}
-                              />
-                              <GlyphSeries
-                                data={ factorStream.values }
-                                dataKey={ `glyph-${datakey}` }
-                                {...accessors}
-                                colorAccessor={(d)=>{
-                                  return( factors[ factorStream.factor_id]['color']);
-                                }}
-                                size={7}
-                              />
-                              <LineSeries
-                                data={ factorStream.values }
-                                dataKey={ datakey }
-                                {...accessors}
-                                curve={curveMonotoneX}
-                                stroke={ factors[ factorStream.factor_id]['color']}
-                                strokeDasharray={users[ stream.target_id ].dasharray}
-                              />
-                              </React.Fragment>
-                            )
-
-                          } )
-
-                      }
-                    </React.Fragment>
-                  )
-                }
-                )
-              }
-            </React.Fragment>
-          )
-
-          } )
-        }
-
-        </g>
 
       </XYChart>
           </React.Fragment>
@@ -502,8 +528,8 @@ SubjectChart.propTypes = {
   subjectId: PropTypes.number.isRequired,
   projectId: PropTypes.number.isRequired,
   unitOfAnalysis: PropTypes.oneOf( ['individual', 'group'] ).isRequired,
-  forResearch: PropTypes.bool,
-  anonymize: PropTypes.bool,
+  forResearch: PropTypes.bool.isRequired,
+  anonymize: PropTypes.bool.isRequired,
   hideFunc: PropTypes.func,
   hidden: PropTypes.bool
 };

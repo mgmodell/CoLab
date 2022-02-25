@@ -78,8 +78,8 @@ class GraphingController < ApplicationController
     unit_of_analysis = params[:unit_of_analysis].to_i
     project = Project.find(params[:project])
     subject = params[:subject]
-    for_research = params[:for_research] == 'true'
-    anon_req = params[:anonymous] == 'true'
+    for_research = params[:for_research]
+    anon_req = params[:anonymous]
     anonymize = current_user.anonymize? || anon_req
 
     dataset = {

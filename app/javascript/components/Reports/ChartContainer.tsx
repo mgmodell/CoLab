@@ -31,7 +31,7 @@ export default function ChartContainer(props) {
   const [anonymizeOpen, setAnonymizeOpen] = useState( false );
   const [forResearchOpen, setForResearchOpen] = useState( false );
   const [anonymize, setAnonymize] = useState( props.anonymize || false );
-  const [forResearch, setForResearch] = useState( props.anonymize || false );
+  const [forResearch, setForResearch] = useState( props.forResearch || false );
 
   const [charts, setCharts] = useState( {} );
   const [open, setOpen] = useState( false );
@@ -203,7 +203,6 @@ export default function ChartContainer(props) {
 
   const closeForResearch = (agree) =>{
     if( agree ){
-      clearCharts( );
       setForResearch( !forResearch );
     } 
     setForResearchOpen( false );
@@ -215,6 +214,7 @@ export default function ChartContainer(props) {
       <Grid item xs={6}>
         <FormControlLabel label={t('consent_switch') } control={
           <Switch
+            disabled={2 > projects.length}
             checked={forResearch}
             onChange={ () => setForResearchOpen( true ) }/>
         }/>
@@ -229,7 +229,6 @@ export default function ChartContainer(props) {
 
   const closeAnonymize = (agree) =>{
     if( agree ){
-      clearCharts( );
       setAnonymize( !anonymize );
     } 
     setAnonymizeOpen( false );
@@ -240,6 +239,7 @@ export default function ChartContainer(props) {
       <Grid item xs={6}>
         <FormControlLabel label={t('anon_switch') } control={
           <Switch
+            disabled={2 > projects.length}
             checked={anonymize}
             onChange={()=>{setAnonymizeOpen( true )}}/>
         }/>
@@ -270,8 +270,8 @@ export default function ChartContainer(props) {
                 subjectId={chart.subjectId}
                 projectId={selectedProject}
                 unitOfAnalysis={props.unitOfAnalysis}
-                forResearch={props.forResearch}
-                anonymize={props.anonymize}
+                forResearch={forResearch}
+                anonymize={anonymize}
                 hideFunc={()=>hideChart(chart.subjectId)}
                 hidden={chart.hidden}
               />
