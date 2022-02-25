@@ -12,9 +12,10 @@ class Concept < ApplicationRecord
     name.split.map(&:capitalize).*' '
   end
 
+
   private
 
   def standardize
-    self.name = Concept.standardize_name name: if new_record? || name_changed?
+    self.name = Concept.standardize_name name: name if new_record? || name_changed?
   end
 end
