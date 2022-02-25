@@ -6,7 +6,8 @@ import {
   ACKNOWLEDGE_MSG,
   Priorities,
   SET_DIRTY,
-  SET_CLEAN
+  SET_CLEAN,
+  CLEAN_UP_MSGS
 } from './StatusActions'
 
 interface StatusRootState {
@@ -82,6 +83,18 @@ export function status(state: StatusRootState = initialState, action) {
       newState.messages = newMessages;
       return newState;
 
+    }
+    case CLEAN_UP_MSGS: {
+      const newMessages = newState.messages.map ((message, index) => {
+        if( message.msgTime < (Date.now( ) - 60000) ){
+          return Object.assign({}, message, {
+            dismissed: true
+          })
+        }
+        return message;
+      })
+      newState.messages = newMessages;
+      return newState;
     }
     default:
       return state;

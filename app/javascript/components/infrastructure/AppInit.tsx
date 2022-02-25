@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
 import {getContext, setInitialised} from './ContextActions';
+import {cleanUpMsgs} from './StatusActions';
 import { useTypedSelector } from "./AppReducers";
 
 import PropTypes from "prop-types";
@@ -23,6 +24,10 @@ export default function AppInit(props: Props ) {
   useEffect( ()=> {
     //dispatch( authConfig()  )
     dispatch( getContext( props.endpointsUrl ) );
+    setInterval(function(){ 
+      //this code runs every minute 
+      dispatch( cleanUpMsgs( ) );
+  }, 6000);
     
   }, [] )
 
