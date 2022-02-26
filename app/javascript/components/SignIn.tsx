@@ -73,6 +73,14 @@ export default function SignIn(props) {
     </Button>
   );
 
+  const submitOnEnter = (evt) => {
+    if( endpointsLoaded && evt.key === 'Enter' ){
+      dispatch(emailSignIn(email, password)).then(navigate(from));
+      evt.preventDefault( );
+    }
+  }
+
+
   const from = undefined != state ? state.from : "/";
 
   const enterLoginBtn = (
@@ -107,53 +115,57 @@ export default function SignIn(props) {
     return <Skeleton variant="rectangular" height="300" />;
   } else if (isLoggedIn) {
     return <Navigate replace to={state.from || "/"} />;
-  }
+  } else {
 
-  return (
-    <Paper>
-      <Grid container>
-        <Grid item xs={12}>
-          <FormControl>
-            <InputLabel htmlFor="email">Email</InputLabel>
-            <Input
-              id="email"
-              type="text"
-              value={email}
-              onChange={event => setEmail(event.target.value)}
-            />
-          </FormControl>
+    return (
+      <Paper>
+        <Grid container>
+          <Grid item xs={12}>
+            <FormControl>
+              <InputLabel htmlFor="email">Email</InputLabel>
+              <Input
+                id="email"
+                type="text"
+                value={email}
+                autoFocus
+                onChange={event => setEmail(event.target.value)}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            <FormControl>
+              <InputLabel htmlFor="password">Password</InputLabel>
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={event => setPassword(event.target.value)}
+                onKeyDown={submitOnEnter}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => {
+                        setShowPassword(!showPassword);
+                      }}
+                      onMouseDown={event => {
+                        event.preventDefault;
+                      }}
+                      size="large"
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={9}>
-          <FormControl>
-            <InputLabel htmlFor="password">Password</InputLabel>
-            <Input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={event => setPassword(event.target.value)}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
-                    onMouseDown={event => {
-                      event.preventDefault;
-                    }}
-                    size="large"
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-        </Grid>
-      </Grid>
-      {enterLoginBtn}
-      {oauthBtn}
-    </Paper>
-  );
+        {enterLoginBtn}
+        {oauthBtn}
+      </Paper>
+    );
+
+  }
 }
 SignIn.propTypes = {};
