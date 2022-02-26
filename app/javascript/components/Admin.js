@@ -35,17 +35,25 @@ export default function Admin(props) {
     <React.Fragment>
       <WorkingIndicator id="admin_save" />
       <Routes>
-        <Route path={`courses/*`} element={<CourseAdmin />} />
-        <Route exact path={`schools`} element={<SchoolList />} />
-        <Route path={`schools/:schoolIdParam`} element={<SchoolDataAdmin />} />
-        <Route exact path={`consent_forms`} element={<ConsentFormList />} />
-        <Route
-          path={`consent_forms/:consentFormIDParam`}
-          element={<ConsentFormDataAdmin />}
-        />
-        <Route path={`concepts`} element={<ConceptsTable />} />
-        <Route path={"reporting"} element={<ReportingAdmin />} />
-        <Route path={`/`} element={<Navigate to="courses" replace />} />
+        {user.is_instructor || user.is_admin ? 
+        (
+          <React.Fragment>
+            <Route path={`courses/*`} element={<CourseAdmin />} />
+            <Route exact path={`schools`} element={<SchoolList />} />
+            <Route path={`schools/:schoolIdParam`} element={<SchoolDataAdmin />} />
+            <Route exact path={`consent_forms`} element={<ConsentFormList />} />
+            <Route
+              path={`consent_forms/:consentFormIDParam`}
+              element={<ConsentFormDataAdmin />}
+            />
+            <Route path={`concepts`} element={<ConceptsTable />} />
+            <Route path={"reporting"} element={<ReportingAdmin />} />
+            <Route path={`/`} element={<Navigate to="courses" replace />} />
+          </React.Fragment>
+        ) :
+        (
+            <Route path={`/*`} element={<Navigate to="/" replace />} />
+        )}
       </Routes>
     </React.Fragment>
   );

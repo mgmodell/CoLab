@@ -30,6 +30,7 @@ import SignIn from "./SignIn";
 import EnrollInCourse from "./EnrollInCourse";
 import ScoreBingoWorksheet from "./BingoBoards/ScoreBingoWorksheet";
 import RequireAuth from "./infrastructure/RequireAuth";
+import RequireInstructor from './infrastructure/RequireInstructor';
 import Privacy from "./Privacy";
 import TermsOfService from "./TermsOfService";
 import AppInit from "./infrastructure/AppInit";
@@ -120,7 +121,9 @@ export default function PageWrapper(props) {
                     path={`score_bingo_worksheet/:worksheetIdParam`}
                     element={
                       <RequireAuth>
-                        <ScoreBingoWorksheet />
+                        <RequireInstructor>
+                          <ScoreBingoWorksheet />
+                        </RequireInstructor>
                       </RequireAuth>
                     }
                   />
