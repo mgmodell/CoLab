@@ -40,6 +40,10 @@ import { emailSignIn, oAuthSignIn } from "./infrastructure/ContextActions";
 import { GoogleLogin } from "react-google-login";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import Skeleton from "@mui/material/Skeleton";
+import TabsContext from "@mui/lab/TabContext";
+import TabPanel from '@mui/lab/TabPanel';
+import TabList from "@mui/lab/TabList";
+import { Tab } from "@mui/material";
 
 export default function SignIn(props) {
   //const { t, i18n } = useTranslation('schools' );
@@ -53,6 +57,7 @@ export default function SignIn(props) {
   const [showPassword, setShowPassword] = useState(false);
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const loggingIn = useTypedSelector(state => state.context.status.loggingIn);
+  const [curTab, setCurTab] = useState( 'login' );
 
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -119,6 +124,13 @@ export default function SignIn(props) {
 
     return (
       <Paper>
+        <TabsContext value={curTab} >
+          <TabList onChange={(evt,newVal) => { setCurTab(newVal ); }} >
+            <Tab label='Log In' value='login' />
+            <Tab label='Register' value='register' />
+            <Tab label='Password Reset' value='password' />
+          </TabList>
+        <TabPanel value='login'>
         <Grid container>
           <Grid item xs={12}>
             <FormControl>
@@ -163,6 +175,40 @@ export default function SignIn(props) {
         </Grid>
         {enterLoginBtn}
         {oauthBtn}
+        </TabPanel>
+        <TabPanel value="register" >
+        <Grid container>
+          <Grid item xs={12}>
+            <FormControl>
+              <InputLabel htmlFor="email">Email</InputLabel>
+              <Input
+                id="email"
+                type="text"
+                value={email}
+                autoFocus
+                onChange={event => setEmail(event.target.value)}
+              />
+            </FormControl>
+          </Grid>
+          </Grid>
+        </TabPanel>
+        <TabPanel value="password" >
+        <Grid container>
+          <Grid item xs={12}>
+            <FormControl>
+              <InputLabel htmlFor="email">Email</InputLabel>
+              <Input
+                id="email"
+                type="text"
+                value={email}
+                autoFocus
+                onChange={event => setEmail(event.target.value)}
+              />
+            </FormControl>
+          </Grid>
+          </Grid>
+        </TabPanel>
+        </TabsContext>
       </Paper>
     );
 
