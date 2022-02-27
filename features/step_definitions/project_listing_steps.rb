@@ -87,7 +87,7 @@ Given(/^the project has been activated$/) do
 end
 
 Then(/^the user should see a successful login message$/) do
-  page.should have_content 'Signed in successfully.'
+  page.should have_content 'signed in successfully.'
 end
 
 Then(/^user should see (\d+) open task$/) do |open_project_count|
@@ -117,7 +117,7 @@ When(/^the user logs in$/) do
   fill_in 'email', with: @user.email
   fill_in 'password', with: 'password'
 
-  click_link_or_button 'Log in'
+  click_link_or_button 'Log in!'
   wait_for_render
-  page.should have_content 'Signed in successfully'
+  page.should have_content 'signed in successfully'
 end
