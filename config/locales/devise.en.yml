@@ -48,7 +48,7 @@ en:
         on how to reset your password in a few minutes. Please log out and use the
         link in the email to reset your password.
       send_paranoid_instructions: >
-        If your email address exists in our database, you will receive a password
+        If that email address exists in our database, you will receive a password
         recovery link at your primary email address in a few minutes. When you
         receive it, be sure to log out before clicking the reset link.
       updated: "Your password has been changed successfully. You are now signed in."
@@ -60,7 +60,7 @@ en:
       hint: "%{min} characters minimum"
       forgot_title: Forgot your password?
       forgot_submit: Send me reset password instructions
-      reset_tab: Password Reset
+      reset_tab: Forgot your password?
     registrations:
       signup: Sign up
       signup_tab: Sign up

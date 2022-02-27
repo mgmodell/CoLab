@@ -177,7 +177,7 @@ Rails.application.routes.draw do
     get 'users/set_primary_email/:email_id', to: 'registrations#set_primary_email',
                                              as: :set_primary_registered_email
     post 'users/add_email', to: 'registrations#add_email', as: :add_registered_email
-    get 'users/password/send_reset', to: 'registrations#initiate_password_reset',
+    post 'users/password/send_reset', to: 'registrations#initiate_password_reset',
                                      as: :initiate_password_reset
     get 'user/logout', to: 'devise/sessions#destroy', as: :logout
   end

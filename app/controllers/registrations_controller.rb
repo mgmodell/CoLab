@@ -2,7 +2,7 @@
 
 class RegistrationsController < DeviseTokenAuth::RegistrationsController
   before_action :set_email, only: %i[set_primary_email remove_email]
-  skip_before_action :authenticate_user!, only: :create
+  skip_before_action :authenticate_user!, only: %i[ create initiate_password_reset ]
 
   def set_primary_email
     found = false
@@ -119,8 +119,24 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
   end
 
   def initiate_password_reset
-    current_user.send_reset_password_instructions
-    redirect_to root_url, notice: t('devise.passwords.send_instructions')
+
+    resp = {
+      message: current_user.present? ? 'passwords.send_instructions' : 'passwords.send_paranoid_instructions'
+    }
+
+    reset_user = if current_user.present? 
+      current_user 
+    else
+      User.find_by_email params[:email]
+    end
+
+    reset_user.send_reset_password_instructions if reset_user.present?
+
+    respond_to do |format|
+      format.json do
+        render json: resp
+      end
+    end
   end
 
   protected

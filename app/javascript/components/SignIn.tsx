@@ -7,6 +7,7 @@ import {
   endTask,
   setDirty,
   setClean,
+  Priorities,
   addMessage,
   acknowledgeMsg
 } from "./infrastructure/StatusActions";
@@ -45,6 +46,7 @@ import TabsContext from "@mui/lab/TabContext";
 import TabPanel from '@mui/lab/TabPanel';
 import TabList from "@mui/lab/TabList";
 import { Tab } from "@mui/material";
+import axios from "axios";
 
 export default function SignIn(props) {
   const category = "devise";
@@ -63,6 +65,9 @@ export default function SignIn(props) {
 
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
+  );
+  const profileEndpoints = useTypedSelector(
+    state =>  state.context.endpoints[ 'profile' ]
   );
   const oauth_client_ids = useTypedSelector(
     state => state.context.lookups["oauth_ids"]
@@ -100,6 +105,30 @@ export default function SignIn(props) {
       }}
     >
       {t( 'registrations.signup_btn')}
+    </Button>
+  );
+
+  const passwordResetBtn = (
+    <Button
+      disabled={"" === email || !endpointsLoaded}
+      variant="contained"
+      onClick={() => {
+        const url = profileEndpoints.passwordResetUrl + '.json';
+
+        axios.post( url, {
+          email: email
+        })
+        .then( resp=>{
+          const data = resp.data;
+          dispatch( addMessage( t( data.message), new Date( ), Priorities.INFO  ))
+
+        })
+        .catch( error=>{
+          console.log( 'error', error );
+        })
+      }}
+    >
+      {t( 'passwords.forgot_submit')}
     </Button>
   );
 
@@ -209,6 +238,7 @@ export default function SignIn(props) {
         <TabPanel value="password" >
         <Grid container>
           {emailField}
+          {passwordResetBtn}
           {clearBtn}
           </Grid>
         </TabPanel>
