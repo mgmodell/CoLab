@@ -10,6 +10,7 @@ import {
   addMessage,
   acknowledgeMsg
 } from "./infrastructure/StatusActions";
+import EmailValidator from 'email-validator';
 import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
@@ -32,11 +33,11 @@ import Settings from "luxon/src/settings.js";
 
 import AdapterLuxon from "@mui/lab/AdapterLuxon";
 //import i18n from './i18n';
-//import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import Grid from "@mui/material/Grid";
 import Input from "@mui/material/Input";
 //import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
-import { emailSignIn, oAuthSignIn } from "./infrastructure/ContextActions";
+import { emailSignIn, oAuthSignIn, emailSignUp } from "./infrastructure/ContextActions";
 import { GoogleLogin } from "react-google-login";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import Skeleton from "@mui/material/Skeleton";
@@ -46,7 +47,8 @@ import TabList from "@mui/lab/TabList";
 import { Tab } from "@mui/material";
 
 export default function SignIn(props) {
-  //const { t, i18n } = useTranslation('schools' );
+  const category = "devise";
+  const { t, i18n } = useTranslation( category );
 
   const dispatch = useDispatch();
   const { state } = useLocation();
@@ -66,18 +68,8 @@ export default function SignIn(props) {
     state => state.context.lookups["oauth_ids"]
   );
 
-  const signOutBtn = (
-    <Button
-      disabled={false}
-      variant="contained"
-      onClick={() => {
-        //dispatch( signOut( email, password ) )
-      }}
-    >
-      Log Out
-    </Button>
-  );
-
+  //Code to trap an 'enter' press and submit
+  //It gets placed on the password field
   const submitOnEnter = (evt) => {
     if( endpointsLoaded && evt.key === 'Enter' ){
       dispatch(emailSignIn(email, password)).then(navigate(from));
@@ -85,18 +77,42 @@ export default function SignIn(props) {
     }
   }
 
-
   const from = undefined != state ? state.from : "/";
 
   const enterLoginBtn = (
     <Button
-      disabled={"" === email || "" === password || !endpointsLoaded}
+      disabled={"" === email || "" === password || !endpointsLoaded || !EmailValidator.validate( email )}
       variant="contained"
       onClick={() => {
         dispatch(emailSignIn(email, password)).then(navigate(from));
       }}
     >
-      Log in
+      {t( 'sessions.login_submit')}
+    </Button>
+  );
+
+  const registerBtn = (
+    <Button
+      disabled={"" === email || !endpointsLoaded}
+      variant="contained"
+      onClick={() => {
+        dispatch(emailSignUp(email)).then(navigate(from));
+      }}
+    >
+      {t( 'registrations.signup_btn')}
+    </Button>
+  );
+
+  const clearBtn = (
+    <Button
+      disabled={"" === email && "" === password}
+      variant="contained"
+      onClick={() => {
+        setPassword( '' );
+        setEmail( '' );
+      }}
+    >
+      {t( 'reset_btn')}
     </Button>
   );
 
@@ -116,6 +132,21 @@ export default function SignIn(props) {
     />
   );
 
+  const emailField = (
+          <Grid item xs={12}>
+              <TextField
+                label='Email'
+                id='email'
+                autoFocus
+                value={email}
+                onChange={event => setEmail(event.target.value)}
+                error={ '' !== email && !EmailValidator.validate( email ) }
+                helperText={('' === email || EmailValidator.validate( email ) ) ? null : 'Must be a valid email address' }
+                variant='standard'
+              />
+          </Grid>
+  )
+
   if (loggingIn) {
     return <Skeleton variant="rectangular" height="300" />;
   } else if (isLoggedIn) {
@@ -126,34 +157,24 @@ export default function SignIn(props) {
       <Paper>
         <TabsContext value={curTab} >
           <TabList onChange={(evt,newVal) => { setCurTab(newVal ); }} >
-            <Tab label='Log In' value='login' />
-            <Tab label='Register' value='register' />
-            <Tab label='Password Reset' value='password' />
+            <Tab label={t('sessions.login')} value='login' />
+            <Tab label={t('registrations.signup_tab')} value='register' />
+            <Tab label={t('passwords.reset_tab')} value='password' />
           </TabList>
         <TabPanel value='login'>
         <Grid container>
-          <Grid item xs={12}>
-            <FormControl>
-              <InputLabel htmlFor="email">Email</InputLabel>
-              <Input
-                id="email"
-                type="text"
-                value={email}
-                autoFocus
-                onChange={event => setEmail(event.target.value)}
-              />
-            </FormControl>
-          </Grid>
+          {emailField}
           <Grid item xs={12} sm={9}>
-            <FormControl>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Input
-                id="password"
-                type={showPassword ? "text" : "password"}
+              <TextField
+                label='Password'
+                id='password'
                 value={password}
+                variant='standard'
                 onChange={event => setPassword(event.target.value)}
                 onKeyDown={submitOnEnter}
-                endAdornment={
+                type={showPassword ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment:(
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
@@ -168,44 +189,27 @@ export default function SignIn(props) {
                       {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
-                }
+
+                  )
+                }}
               />
-            </FormControl>
           </Grid>
         </Grid>
         {enterLoginBtn}
+        {clearBtn}
         {oauthBtn}
         </TabPanel>
         <TabPanel value="register" >
         <Grid container>
-          <Grid item xs={12}>
-            <FormControl>
-              <InputLabel htmlFor="email">Email</InputLabel>
-              <Input
-                id="email"
-                type="text"
-                value={email}
-                autoFocus
-                onChange={event => setEmail(event.target.value)}
-              />
-            </FormControl>
-          </Grid>
+          {emailField}
+          {registerBtn}
+          {clearBtn}
           </Grid>
         </TabPanel>
         <TabPanel value="password" >
         <Grid container>
-          <Grid item xs={12}>
-            <FormControl>
-              <InputLabel htmlFor="email">Email</InputLabel>
-              <Input
-                id="email"
-                type="text"
-                value={email}
-                autoFocus
-                onChange={event => setEmail(event.target.value)}
-              />
-            </FormControl>
-          </Grid>
+          {emailField}
+          {clearBtn}
           </Grid>
         </TabPanel>
         </TabsContext>

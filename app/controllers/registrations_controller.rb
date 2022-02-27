@@ -2,6 +2,7 @@
 
 class RegistrationsController < DeviseTokenAuth::RegistrationsController
   before_action :set_email, only: %i[set_primary_email remove_email]
+  skip_before_action :authenticate_user!, only: :create
 
   def set_primary_email
     found = false
@@ -81,6 +82,40 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
         render json: resp
       end
     end
+  end
+
+  # Initiate self-registration without a password
+  # pulled from: https://stackoverflow.com/questions/31535526/email-only-signup-using-devise-rails
+  def create
+    build_resource
+    @resource.password = SecureRandom.hex( 10 ) #sets the password
+    @resource.save
+
+    resp = {
+      message: 'registrations.signup_failed'
+    }
+    yield @resource if block_given?
+    if @resource.persisted?
+      @resource.send_reset_password_instructions #send them instructions how to reset their password
+
+      if @resource.active_for_authentication?
+        sign_up( @resource_name, @resource )
+      else
+        expire_data_after_sign_in!
+        resp[:message] = 'registrations.signed_up_but_inactive'
+      end
+    else
+      resp[:message] = @resource.errors.full_messages
+      clean_up_passwords resource
+      set_minimum_password_length
+    end
+
+    respond_to do |format|
+      format.json do
+        render json: resp
+      end
+    end
+
   end
 
   def initiate_password_reset

@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import {fetchProfile, setProfile, clearProfile} from './ProfileActions';
 import {addMessage, Priorities} from './StatusActions';
+import i18n from '../infrastructure/i18n';
 
 export const SET_INITIALISED = 'SET_INITIALISED';
 export const SET_LOGGING_IN = 'SET_LOGGING_IN';
@@ -15,6 +16,10 @@ export const LOGIN_FAILED = 'SET_LOGIN_FAILED';
 export const SET_ENDPOINT_URL = 'SET_ENDPOINT_URL';
 export const SET_ENDPOINTS = 'SET_ENDPOINTS';
 export const SET_LOOKUPS = 'SET_LOOKUPS';
+
+const category = 'devise';
+const t = i18n.getFixedT( null, category );
+
 
 const CONFIG = {
     SAVED_CREDS_KEY:    'colab_authHeaders',
@@ -204,6 +209,7 @@ export function getContext( endPointsUrl: string ){
 }
 
 export function emailSignIn( email: string, password: string ){
+
     return( dispatch, getState ) =>{
         dispatch( setLoggingIn);
 
@@ -215,7 +221,7 @@ export function emailSignIn( email: string, password: string ){
                   password: password } )
                 .then( resp=>{
                     //TODO resp contains the full user info
-                    dispatch( addMessage( 'Signed in successfully.', new Date(), Priorities.INFO ))
+                    dispatch( addMessage( t( 'sessions.signed_in'), new Date(), Priorities.INFO ))
                     CONFIG.retrieveResources( dispatch, getState )
                         .then( response =>{
                             dispatch( fetchProfile( ) );
@@ -232,28 +238,22 @@ export function emailSignIn( email: string, password: string ){
 }
 
 //Untested
-export function emailSignUp( email: string, password: string, password_confirmation: string ){
+export function emailSignUp( email: string ){
+
     return( dispatch, getState ) =>{
         dispatch( setLoggingIn);
 
-        if( !email || !password || !password_confirmation ){
-            dispatch( setLoginFailed( ) );
-        } else if( password_confirmation !== password ){
+        if( !email ){
             dispatch( setLoginFailed( ) );
 
         } else {
-            return axios.post( CONFIG.EMAIL_REGISTRATION_PATH,
-                { email: email,
-                  password: password,
-                  password_confirmation: password_confirmation
+            return axios.post( CONFIG.EMAIL_REGISTRATION_PATH + '.json',
+                {
+                    email: email,
                  } )
                 .then( resp=>{
-                    //TODO resp contains the full user info
-                    dispatch( addMessage( 'Signed up successfully. Check your email.', new Date(), Priorities.INFO ))
-                    CONFIG.retrieveResources( dispatch, getState )
-                        .then( response =>{
-                            dispatch( fetchProfile( ) );
-                        });
+                    const data = resp.data;
+                    dispatch( addMessage( t( data.message ), new Date(), Priorities.INFO ))
                 })
                 .catch( error=>{
                     console.log( 'error', error );

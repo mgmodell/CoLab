@@ -10,7 +10,6 @@ import {
   ThemeProvider,
   StyledEngineProvider,
   createTheme,
-  adaptV4Theme
 } from "@mui/material";
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
