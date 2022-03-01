@@ -369,7 +369,7 @@ Then 'the user submits credentials' do
   fill_in 'email', with: @user.email
   fill_in 'password', with: 'password'
 
-  click_link_or_button 'Log in'
+  click_link_or_button 'Log in!'
 end
 
 Given('the user has {string} the course') do |action|
