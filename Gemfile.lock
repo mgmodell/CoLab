@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/mgmodell/cucumber-rails
-  revision: 4919c18b89dcb476a908b667a3ee85ccafe7d249
+  revision: 9d8f2e687d155a7da37e00d53504880b1b2ef9a8
   specs:
     cucumber-rails (2.4.0)
       capybara (>= 2.18, < 4)
@@ -26,9 +26,8 @@ GIT
     devise-multi_email (3.0.0)
       devise
 
-GIT
-  remote: https://github.com/mgmodell/devise_token_auth
-  revision: b2dd86a7c1cf6ea64050967bd6b26acf661c9b2a
+PATH
+  remote: /Users/micah/dev/devise_token_auth
   specs:
     devise_token_auth (1.2.0)
       bcrypt (~> 3.0)
@@ -123,7 +122,7 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.559.0)
+    aws-partitions (1.560.0)
     aws-sdk-core (3.127.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
@@ -216,9 +215,6 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    debase (0.2.5.beta2)
-      debase-ruby_core_source (>= 0.10.12)
-    debase-ruby_core_source (0.10.14)
     delayed_job (4.1.10)
       activesupport (>= 3.0, < 8.0)
     delayed_job_active_record (4.1.7)
@@ -465,8 +461,6 @@ GEM
       rubocop (>= 1.7.0, < 2.0)
     rubocop-thread_safety (0.4.4)
       rubocop (>= 0.53.0)
-    ruby-debug-ide (0.7.3)
-      rake (>= 0.8.1)
     ruby-graphviz (1.2.5)
       rexml
     ruby-progressbar (1.11.0)
@@ -574,7 +568,6 @@ DEPENDENCIES
   cucumber-rails!
   d3-rails
   database_cleaner
-  debase (= 0.2.5.beta2)
   delayed_job_active_record
   descriptive_statistics (~> 2.5.1)
   devise-multi_email!
@@ -611,7 +604,6 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-thread_safety
-  ruby-debug-ide
   sdoc
   selenium-webdriver
   simplecov
@@ -624,7 +616,7 @@ DEPENDENCIES
   webpacker
 
 RUBY VERSION
-   ruby 3.1.0p0
+   ruby 3.1.1p18
 
 BUNDLED WITH
    2.3.4
