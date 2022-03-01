@@ -177,7 +177,7 @@ class User < ApplicationRecord
                   bingo_game: :project)
         .joins(:bingo_game)
         .where(bingo_games:
-                              { reviewed: true, course_id: })
+                              { reviewed: true, course_id: course_id })
         .to_a
 
     else
@@ -210,7 +210,7 @@ class User < ApplicationRecord
                   bingo_game: :project)
         .joins(:bingo_game)
         .where(bingo_games:
-                              { reviewed: true, course_id: })
+                              { reviewed: true, course_id: course_id})
         .to_a
 
     else
@@ -239,7 +239,7 @@ class User < ApplicationRecord
     my_reactions = []
     my_reactions = if course_id > 0
                      reactions.includes(:narrative).joins(:experience)
-                              .where(experiences: { course_id: })
+                              .where(experiences: { course_id: course_id})
                    else
                      reactions
                    end
@@ -254,7 +254,7 @@ class User < ApplicationRecord
   def get_assessment_performance(course_id: 0)
     my_projects = []
     my_projects = if course_id > 0
-                    projects.includes(:assessments).where(course_id:)
+                    projects.includes(:assessments).where(course_id: course_id)
                   else
                     projects.includes(:assessments)
                   end
