@@ -5,6 +5,7 @@ en:
     bingo_performance: Bingo! Performance
     experience_performance: Experience Participation Level
     assessment_performance: Assessment Participation Level
+    email_fld: Email
     reset_btn: Clear
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
@@ -15,6 +16,10 @@ en:
         If your email address exists in our database, you will receive an
         email with instructions for how to confirm your email address in a few minutes.
       no_instructions: "Didn't receive confirmation instructions?"
+      no_token: >
+        You can't access this page without coming from a confirmation email. If
+        you do have a confirmation email, please make sure you used the
+        full URL provided.
     failure:
       already_authenticated: "You are already signed in."
       inactive: "Your account is not activated yet."
@@ -62,9 +67,11 @@ en:
       forgot_submit: Send me reset password instructions
       reset_tab: Forgot your password?
     registrations:
+      first_name_fld: First name
+      last_name_fld: Last name
       signup: Sign up
       signup_tab: Sign up
-      signup_btn: Sign up!
+      signup_btn: Sign me up!
       my_courses: My Courses
       my_courses_count:
         zero: You've not yet been involved in a CoLab course.
@@ -115,8 +122,9 @@ en:
       destroyed: "Bye! Your account has been successfully cancelled. We hope to see you again soon."
       signed_up: "Welcome! You have signed up successfully."
       signup_failed: >
-        We're sorry, but we were unable to create your account. Please contact support
-        for assistance.
+        We're sorry, but we were unable to create your account. Perhaps
+        the address is already signed up or the address itself is
+        invalid? Please contact support for assistance.
       signed_up_but_inactive: >
         You have signed up successfully and your account is reserved. However, we could
         not sign you in because your account is not yet activated.  Please check your

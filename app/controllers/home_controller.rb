@@ -63,6 +63,7 @@ class HomeController < ApplicationController
       removeEmailUrl: remove_registered_email_path(email_id: ''),
       setPrimaryEmailUrl: set_primary_registered_email_path(email_id: ''),
       passwordResetUrl: initiate_password_reset_path,
+      passwordUpdateUrl: password_change_path,
       # infrastructure
       statesForUrl: states_for_path(country_code: '')
     }

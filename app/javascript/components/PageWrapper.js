@@ -1,5 +1,9 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useParams } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
@@ -33,6 +37,7 @@ import RequireInstructor from './infrastructure/RequireInstructor';
 import Privacy from "./Privacy";
 import TermsOfService from "./TermsOfService";
 import AppInit from "./infrastructure/AppInit";
+import PasswordEdit from './PasswordEdit';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -149,6 +154,12 @@ export default function PageWrapper(props) {
                       <RequireAuth>
                         <EnrollInCourse />
                       </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path="user/password/edit"
+                    element={
+                        <PasswordEdit />
                     }
                   />
                   <Route path={`tos`} element={<TermsOfService />} />

@@ -221,6 +221,7 @@ export function emailSignIn( email: string, password: string ){
                   password: password } )
                 .then( resp=>{
                     //TODO resp contains the full user info
+
                     dispatch( addMessage( t( 'sessions.signed_in'), new Date(), Priorities.INFO ))
                     CONFIG.retrieveResources( dispatch, getState )
                         .then( response =>{
@@ -238,7 +239,7 @@ export function emailSignIn( email: string, password: string ){
 }
 
 //Untested
-export function emailSignUp( email: string ){
+export function emailSignUp( email: string, firstName, lastName ){
 
     return( dispatch, getState ) =>{
         dispatch( setLoggingIn);
@@ -250,10 +251,13 @@ export function emailSignUp( email: string ){
             return axios.post( CONFIG.EMAIL_REGISTRATION_PATH + '.json',
                 {
                     email: email,
+                    first_name: firstName,
+                    last_name: lastName
                  } )
                 .then( resp=>{
                     const data = resp.data;
-                    dispatch( addMessage( t( data.message ), new Date(), Priorities.INFO ))
+                    const priority = data.error ? Priorities.ERROR : Priorities.INFO;
+                    dispatch( addMessage( t( data.message ), new Date(), priority ))
                 })
                 .catch( error=>{
                     console.log( 'error', error );

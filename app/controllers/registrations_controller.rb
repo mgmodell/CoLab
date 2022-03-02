@@ -2,7 +2,8 @@
 
 class RegistrationsController < DeviseTokenAuth::RegistrationsController
   before_action :set_email, only: %i[set_primary_email remove_email]
-  skip_before_action :authenticate_user!, only: %i[ create initiate_password_reset ]
+  skip_before_action :authenticate_user!,
+    only: %i[ create initiate_password_reset confirm password_change]
 
   def set_primary_email
     found = false
@@ -87,27 +88,28 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
   # Initiate self-registration without a password
   # pulled from: https://stackoverflow.com/questions/31535526/email-only-signup-using-devise-rails
   def create
-    build_resource
-    @resource.password = SecureRandom.hex( 10 ) #sets the password
-    @resource.save
-
     resp = {
+      error: true,
       message: 'registrations.signup_failed'
     }
-    yield @resource if block_given?
-    if @resource.persisted?
-      @resource.send_reset_password_instructions #send them instructions how to reset their password
-
-      if @resource.active_for_authentication?
-        sign_up( @resource_name, @resource )
-      else
-        expire_data_after_sign_in!
-        resp[:message] = 'registrations.signed_up_but_inactive'
+    user_email = params[:email]
+    if EmailAddress.valid? user_email
+      user = User.find_by_email user_email
+      if user.nil?
+        passwd = SecureRandom.alphanumeric( 10 )
+        user = User.create(
+          email: user_email,
+          first_name: params[:first_name],
+          last_name: params[:last_name],
+          admin: false,
+          password: passwd
+        )
+        if user.persisted?
+          user.send_confirmation_instructions
+          resp[:error] = false
+          resp[:message] = 'registrations.signed_up_but_inactive'
+        end
       end
-    else
-      resp[:message] = @resource.errors.full_messages
-      clean_up_passwords resource
-      set_minimum_password_length
     end
 
     respond_to do |format|
@@ -115,7 +117,20 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
         render json: resp
       end
     end
+  end
 
+  def confirm
+    resp = {
+      message: 'confirmations.no_token'
+    }
+    token = params[:confirmation_token]
+
+    # Because I'm using devise_multi-email, this will return
+    # an email object
+    email = User.confirm_by_token token
+    token = email.user.send_reset_password_instructions
+
+    redirect_to password_edit_path reset_password_token: token
   end
 
   def initiate_password_reset
@@ -137,6 +152,39 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
         render json: resp
       end
     end
+  end
+
+  def password_change
+    resp = {
+      error: true,
+      message: 'passwords.no_token'
+    }
+    token = params[:reset_password_token]
+    password = params[:password]
+    password_confirmation = params[:password_confirmation]
+
+    unless token.empty? || password.empty? || password_confirmation.empty? || password != password_confirmation
+      user = User.reset_password_by_token(
+        {
+          reset_password_token: token,
+          password: password,
+          password_confirmation: password_confirmation
+        }
+      )
+      sign_in( user )
+      tokens = user.create_new_auth_token
+      user.save
+      set_headers( tokens )
+      puts "sign in result for #{u}: #{x}"
+      resp[:error] = false
+      resp[:message] = 'passwords.updated'
+    end
+    respond_to do |format|
+      format.json do
+        render json: resp
+      end
+    end
+
   end
 
   protected

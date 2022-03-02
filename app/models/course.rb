@@ -201,7 +201,7 @@ class Course < ApplicationRecord
       # Searching for the student and:
       user = User.joins(:emails).find_by(emails: { email: user_email })
 
-      passwd = (0...8).map { rand(65..90).chr }.join
+      passwd = SecureRandom.alphanumeric( 10 ) #creates a password
 
       if user.nil?
         user = User.create(email: user_email, admin: false, timezone:, password: passwd, school:)

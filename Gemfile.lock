@@ -26,8 +26,9 @@ GIT
     devise-multi_email (3.0.0)
       devise
 
-PATH
-  remote: /Users/micah/dev/devise_token_auth
+GIT
+  remote: https://github.com/mgmodell/devise_token_auth
+  revision: b2dd86a7c1cf6ea64050967bd6b26acf661c9b2a
   specs:
     devise_token_auth (1.2.0)
       bcrypt (~> 3.0)

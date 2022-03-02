@@ -179,7 +179,11 @@ Rails.application.routes.draw do
     post 'users/add_email', to: 'registrations#add_email', as: :add_registered_email
     post 'users/password/send_reset', to: 'registrations#initiate_password_reset',
                                      as: :initiate_password_reset
+    get 'user/password/edit', to: 'home#index', as: :password_edit
     get 'user/logout', to: 'devise/sessions#destroy', as: :logout
+    get 'user/confirm', to: 'registrations#confirm', as: :confirm_me
+    patch 'auth/password_change', to: 'registrations#password_change',
+                                as: 'password_change'
   end
 
   # You can have the root of your site routed with "root"

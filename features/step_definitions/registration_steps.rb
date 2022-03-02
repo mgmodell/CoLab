@@ -84,13 +84,13 @@ When(/^the user "(.*?)" fill in demographics data$/) do |does_or_does_not|
 end
 
 When(/^the new user registers$/) do
-  click_link_or_button 'Signup'
+  click_link_or_button 'Sign me up!'
   email = Faker::Internet.email
 
-  fill_in 'user[email]', with: email
-  fill_in 'user[first_name]', with: Faker::Name.first_name
-  fill_in 'user[last_name]', with: Faker::Name.last_name
-  fill_in 'user[password]', with: 'password'
+  fill_in 'email', with: email
+  fill_in 'first_name', with: Faker::Name.first_name
+  fill_in 'first_name', with: Faker::Name.last_name
+  # fill_in 'user[password]', with: 'password'
 
   # These aren't working in capybara
   # page.select('Male', from: 'user_gender_id')
@@ -98,10 +98,6 @@ When(/^the new user registers$/) do
   # page.select('Belize', from: 'country')
   # page.select('Avestan', from: 'user_primary_language_id')
 
-  new_date = Date.parse('10-05-1976')
-  page.find('#user_date_of_birth').set(new_date)
-  new_date = Date.parse('10-09-2016')
-  page.find('#user_date_of_birth').set(new_date)
   click_button 'Create my profile'
   email = Email.where email: email
   expect(email.size).to eq(1)

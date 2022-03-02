@@ -57,6 +57,8 @@ export default function SignIn(props) {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
@@ -96,19 +98,43 @@ export default function SignIn(props) {
     </Button>
   );
 
-  const registerBtn = (
+  const registerBlock = (
+    <React.Fragment>
+
+          <Grid item xs={12} sm={6}>
+              <TextField
+                label={t( 'registrations.first_name_fld')}
+                id='first_name'
+                value={firstName}
+                onChange={event => setFirstName(event.target.value)}
+                variant='standard'
+              />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+              <TextField
+                label={t( 'registrations.last_name_fld')}
+                id='last_name'
+                value={lastName}
+                onChange={event => setLastName(event.target.value)}
+                variant='standard'
+              />
+          </Grid>
+          <Grid item xs={12} sm={6}>
     <Button
       disabled={"" === email || !endpointsLoaded}
       variant="contained"
       onClick={() => {
-        dispatch(emailSignUp(email)).then(navigate(from));
+        dispatch(emailSignUp(email, firstName, lastName )).then(navigate(from));
       }}
     >
       {t( 'registrations.signup_btn')}
     </Button>
+    </Grid>
+    </React.Fragment>
   );
 
   const passwordResetBtn = (
+          <Grid item xs={12} sm={6}>
     <Button
       disabled={"" === email || !endpointsLoaded}
       variant="contained"
@@ -130,9 +156,11 @@ export default function SignIn(props) {
     >
       {t( 'passwords.forgot_submit')}
     </Button>
+    </Grid>
   );
 
   const clearBtn = (
+          <Grid item xs={12} sm={6}>
     <Button
       disabled={"" === email && "" === password}
       variant="contained"
@@ -143,6 +171,8 @@ export default function SignIn(props) {
     >
       {t( 'reset_btn')}
     </Button>
+
+          </Grid>
   );
 
   const get_token_from_oauth = response => {
@@ -164,7 +194,7 @@ export default function SignIn(props) {
   const emailField = (
           <Grid item xs={12}>
               <TextField
-                label='Email'
+                label={t('email_fld')}
                 id='email'
                 autoFocus
                 value={email}
@@ -231,7 +261,7 @@ export default function SignIn(props) {
         <TabPanel value="register" >
         <Grid container>
           {emailField}
-          {registerBtn}
+          {registerBlock}
           {clearBtn}
           </Grid>
         </TabPanel>
