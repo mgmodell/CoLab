@@ -50,7 +50,7 @@ export default function ProjectDataAdmin(props) {
   );
   const { courseIdParam, projectIdParam } = useParams();
 
-  const [curTab, setCurTab] = useState("rpt");
+  const [curTab, setCurTab] = useState("details");
   const dirty = useTypedSelector(state => {
     return state.status.dirtyStatus[category];
   });
