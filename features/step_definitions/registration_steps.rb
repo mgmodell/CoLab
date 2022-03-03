@@ -84,7 +84,7 @@ When(/^the user "(.*?)" fill in demographics data$/) do |does_or_does_not|
 end
 
 When(/^the new user registers$/) do
-  click_link_or_button 'Sign me up!'
+  click_link_or_button 'Sign up'
   email = Faker::Internet.email
 
   fill_in 'email', with: email
@@ -98,7 +98,8 @@ When(/^the new user registers$/) do
   # page.select('Belize', from: 'country')
   # page.select('Avestan', from: 'user_primary_language_id')
 
-  click_button 'Create my profile'
+  click_button 'Sign me up!'
+  wait_for_render
   email = Email.where email: email
   expect(email.size).to eq(1)
   @user = email[0].user
