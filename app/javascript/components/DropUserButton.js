@@ -44,7 +44,7 @@ export default function DropUserButton(props) {
         <Button
           onClick={event => {
             axios
-              .get(props.dropUrl, {})
+              .get( `${props.dropUrl}.json`, {})
               .then(response => {
                 const data = response.data;
                 props.refreshFunc(data.messages);
