@@ -430,8 +430,8 @@ class HomeController < ApplicationController
 
   # Data transport class
   class Event_
-    attr_accessor :name, :task_link, :task_name_post, :type, :status, :group_name, :course_name, :start_time,
-                  :close_date, :instructor_task
+    attr_accessor :id, :name, :task_link, :task_name_post, :type, :status, :group_name, :course_name, :start_time,
+                  :close_date, :instructor_task, :next_date, :link
   end
 
   def demo_start
@@ -443,59 +443,82 @@ class HomeController < ApplicationController
     end
 
     e = Event_.new
+    e.id = -42
     e.name = t(:demo_group)
-    e.task_link = assessment_demo_complete_path
     e.task_name_post = '<br>' + "(#{t :project}: #{t(:demo_project)})"
-    e.type = t 'home.sapa'
+    e.type = :assessment
     e.status = t :not_started
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
     e.start_time = 1.day.ago
     e.close_date = 3.days.from_now.end_of_day
+    e.next_date = 1.day.ago
+    e.link = "/submit_installment/#{e.id}"
     e.instructor_task = false
 
     @events = [e]
     e = Event_.new
+    e.id = -11
     e.name = t('candidate_lists.enter', task: t('candidate_lists.demo_topic'))
-    e.task_link = terms_demo_entry_path
+    e.task_link = terms_demo_entry_path( -1 )
     e.task_name_post = ''
-    e.type = t 'candidate_lists.submission'
+    e.type = :bingo_game
     e.status = '50%'
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
     e.start_time = 1.week.ago
     e.close_date = 4.days.from_now.end_of_day
+    e.next_date = e.close_date
+    e.link = "/enter_candidates/#{e.id}"
     e.instructor_task = false
     @events << e
 
     e = Event_.new
+    e.id = -77
     e.name = t('candidate_lists.review', task:
       t('candidate_lists.demo_review_topic'))
-    e.task_link = bingo_demo_review_path
+    e.task_link = bingo_demo_review_path( -1 )
     e.task_name_post = ''
-    e.type = t :terms_list
+    e.type = :bingo_game
     e.status = '0'
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
     e.start_time = 3.weeks.ago
     e.close_date = Date.today.end_of_day
+    e.next_date = e.close_date
+    e.link = "/review_candidates/#{e.id}"
     e.instructor_task = true
     # TODO: Enable the candidate review demo
     @events << e
 
     e = Event_.new
+    e.id = -42
     e.name = t('candidate_lists.play', task:
       t('candidate_lists.demo_bingo_topic'))
     e.task_link = bingo_demo_play_path
     e.task_name_post = ''
-    e.type = t 'candidate_lists.distilled'
+    e.type = :bingo_game
     e.status = '42 concepts'
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
     e.start_time = 2.weeks.ago
     e.close_date = 1.day.from_now.end_of_day
+    e.next_date = e.close_date
+    e.link = "/candidate_results/#{e.id}"
     e.instructor_task = false
     @events << e
+    
+    #Let's output this to JSON
+    resp_hash = {
+      tasks: @events,
+      current_user: current_user,
+      consent_logs: { }
+    }
+    respond_to do |format|
+      format.json do
+        render json: resp_hash
+      end
+    end
   end
 
   private

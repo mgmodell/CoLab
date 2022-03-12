@@ -1,25 +1,14 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense } from "react";
 import PropTypes from "prop-types";
 
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Skeleton from "@mui/material/Skeleton";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import TextField from "@mui/material/TextField";
-import Alert from "@mui/material/Alert";
-import Collapse from "@mui/material/Collapse";
-import CloseIcon from "@mui/icons-material/Close";
 //For debug purposes
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
-import LinkedSliders from "./LinkedSliders";
 
 export default function Experience(props) {
   const [t, i18n] = useTranslation("experiences");

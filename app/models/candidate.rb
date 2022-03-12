@@ -27,9 +27,13 @@ class Candidate < ApplicationRecord
     @@filter
   end
 
+  def self.clean_term term
+    Candidate.filter.filter(term.strip.split.map(&:downcase)).join(' ')
+  end
+
   def clean_data
     self.term = term.nil? ? '' : term.strip.split.map(&:capitalize) * ' '
-    self.filtered_consistent = term.nil? ? '' : Candidate.filter.filter(term.strip.split.map(&:downcase)).join(' ')
+    self.filtered_consistent = term.nil? ? '' : Candidate.clean_term( term )
     definition.strip!
 
     # Reset the performance data on the List

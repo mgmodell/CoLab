@@ -98,8 +98,11 @@ export default function BingoBuilder(props) {
 
   const getConcepts = () => {
     dispatch( startTask());
-    console.log("concepts");
-    const url =  `${endpoints.conceptsUrl}${bingoGameId}.json`;
+
+    const url = props.rootPath === undefined ?
+      `${endpoints.conceptsUrl}${bingoGameId}.json` :
+      `/${props.rootPath}${endpoints.conceptsUrl}${bingoGameId}.json`;
+
     axios.get( url, { } )
       .then(response => {
         const data = response.data;
@@ -114,7 +117,9 @@ export default function BingoBuilder(props) {
 
   const getMyResults = () => {
     dispatch( startTask() );
-    const url = `${endpoints.baseUrl}${bingoGameId}.json`;
+    const url = props.rootPath === undefined ?
+      `${endpoints.baseUrl}${bingoGameId}.json` :
+      `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
     axios.get( url, { } )
       .then(response => {
         const data = response.data;
@@ -131,7 +136,9 @@ export default function BingoBuilder(props) {
   };
   const getBoard = () => {
     dispatch( startTask());
-    const url = `${endpoints.boardUrl}${bingoGameId}.json`;
+    const url = props.rootPath === undefined ?
+      `${endpoints.boardUrl}${bingoGameId}.json` :
+      `/${props.rootPath}${endpoints.boardUrl}${bingoGameId}.json`;
     axios.get( url, { } )
       .then(response => {
         const data = response.data;
@@ -322,4 +329,5 @@ export default function BingoBuilder(props) {
   );
 }
 BingoBuilder.propTypes = {
+  rootPath: PropTypes.string
 };

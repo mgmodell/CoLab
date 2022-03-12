@@ -186,7 +186,7 @@ class BingoBoardsController < ApplicationController
     respond_to do |format|
       format.pdf do
         pdf = WorksheetPdf.new(wksheet,
-                               url: ws_results_url(wksheet))
+                               url: root_url )
         send_data pdf.render, filename: 'demo_bingo_practice.pdf', type: 'application/pdf'
       end
     end
@@ -224,6 +224,10 @@ class BingoBoardsController < ApplicationController
 
   def worksheet_for_game
     bingo_game_id = params[:bingo_game_id]
+    if '-42' == bingo_game_id
+      demo_worksheet_for_game
+
+    else
     bingo_game = BingoGame.find(params[:bingo_game_id])
     wksheet = bingo_game.bingo_boards.worksheet
                         .includes(:bingo_game, bingo_cells: %i[concept candidate])
@@ -284,6 +288,7 @@ class BingoBoardsController < ApplicationController
                                url: ws_results_url(wksheet))
         send_data pdf.render, filename: 'bingo_practice.pdf', type: 'application/pdf'
       end
+    end
     end
   end
 

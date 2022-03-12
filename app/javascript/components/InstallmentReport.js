@@ -21,7 +21,8 @@ import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
-import LinkedSliders from "./LinkedSliders";
+// import LinkedSliders from './LinkedSliders';
+import LinkedSliders from "linked-sliders";
 import axios from "axios";
 export default function InstallmentReport(props) {
   const endpointSet = "installment";
@@ -106,8 +107,11 @@ export default function InstallmentReport(props) {
 
   //Retrieve the latest data
   const getContributions = () => {
-    const url = `${endpoints.baseUrl}${installmentId}.json`;
+    const url = props.rootPath === undefined ?
+      `${endpoints.baseUrl}${installmentId}.json` :
+      `/${props.rootPath}${endpoints.baseUrl}${installmentId}.json`;
 
+    console.log( url );
     dispatch(startTask());
     axios
       .get(url, {})
@@ -304,4 +308,6 @@ export default function InstallmentReport(props) {
   );
 }
 
-InstallmentReport.propTypes = {};
+InstallmentReport.propTypes = {
+  rootPath: PropTypes.string
+};

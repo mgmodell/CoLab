@@ -257,3 +257,9 @@ Then 'the installment will successfully save' do
     waits.should be < 3
   end
 end
+
+Then(/^user will be presented with the installment form$/) do
+  wait_for_render
+  page.should have_content 'Your weekly installment'
+  page.should have_content @project.name
+end

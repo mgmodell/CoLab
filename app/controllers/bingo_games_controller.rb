@@ -305,7 +305,7 @@ class BingoGamesController < ApplicationController
        Group.new(
          id: -2,
          name: "#{Faker::Color.color_name} #{Faker::Lorem.words(number: 1, supplemental: true)[0]}",
-         kanon_name: "#{Faker::Color.color_name} #{Faker::Lorem.words(number: 1, supplemental: true)[0]}",
+         anon_name: "#{Faker::Color.color_name} #{Faker::Lorem.words(number: 1, supplemental: true)[0]}",
          project_id: -1
        )]
 

@@ -75,12 +75,6 @@ Given(/^the consent form "(.*?)" been presented to the user$/) do |has_or_has_no
                                   consent_form_id: @consent_form.id)
 end
 
-Then(/^user will be presented with the installment form$/) do
-  wait_for_render
-  page.should have_content 'Your weekly installment'
-  page.should have_content @project.name
-end
-
 Then(/^user should not see a consent form listed for the open project$/) do
   page.should have_content 'Not for Research'
 end

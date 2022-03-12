@@ -49,8 +49,10 @@ export default function CandidateListEntry(props) {
   const getCandidateList = () => {
     dispatch( startTask() );
     setDirty(true);
-    var url =
-      endpoints.baseUrl + bingoGameId + ".json";
+    const url = props.rootPath === undefined ?
+      `${endpoints.baseUrl}${bingoGameId}.json` :
+      `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
+
     axios.get( url, { } )
       .then(response => {
         const data = response.data;
@@ -311,4 +313,5 @@ export default function CandidateListEntry(props) {
 }
 
 CandidateListEntry.propTypes = {
+  rootPath: PropTypes.string
 };

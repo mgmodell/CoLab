@@ -213,51 +213,44 @@ class CandidateListsController < ApplicationController
   end
 
   def demo_entry
-    @title = t 'demo_title',
-               orig: (t 'candidate_lists.edit.title')
-    demo_group = Group.new
-    demo_group.name = t :demo_group
-    demo_group.users = [current_user]
-    @candidate_list = CandidateList.new(id: -1,
-                                        contributor_count: 1,
-                                        is_group: false)
-    @candidate_list.group = demo_group
-    @candidate_list.user = current_user
-    demo_project = Project.new(id: -1,
-                               name: (t :demo_project),
-                               course_id: -1)
-    demo_project.groups << demo_group
+    name = (t :demo_project),
 
-    @candidate_list.bingo_game = BingoGame.new(id: -1,
-                                               topic: (t 'candidate_lists.demo_topic'),
-                                               description: (t 'candidate_lists.demo_description'),
-                                               end_date: 4.days.from_now.end_of_day,
-                                               group_option: true,
-                                               project: demo_project,
-                                               group_discount: 33,
-                                               individual_count: 10)
-
-    @candidate_list.candidates = []
+    candidates = []
 
     6.times do |index|
-      @candidate_list.candidates << Candidate.new(id: 0, term: (t "candidate_lists.demo_term#{index + 1}"),
-                                                  definition: (t "candidate_lists.demo_def#{index + 1}"),
-                                                  candidate_list: @candidate_list)
+      candidates << {
+        id: 0,
+        term: (t "candidate_lists.demo_term#{index + 1}"),
+        definition: (t "candidate_lists.demo_def#{index + 1}"),
+        filtered_consistent: Candidate.clean_term( t "candidate_lists.demo_term#{index + 1}"),
+        candidate_feedback_id: 0
+      }
     end
+    puts "caandidates #{candidates.inspect}"
 
-    # Add in the remainder elements
-    4.times do
-      @candidate_list.candidates.build(term: '', definition: '',
-                                       user_id: current_user.id)
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          id: -1,
+          topic: (t 'candidate_lists.demo_topic'),
+          description: (t 'candidate_lists.demo_bingo_description'),
+          group_option: true,
+          end_date: 4.days.from_now.end_of_day,
+          group_name: ( t :demo_group ),
+          is_group: false,
+          expected_count: 10,
+          candidates: candidates.as_json(
+            only: %i[id term definition filtered_consistent candidate_feedback_id]
+          ),
+          others_requested_help: false,
+          help_requested: false,
+          request_collaboration_url: request_collaboration_path(
+            bingo_game_id: -1, desired: ''
+          )
+        }
+      end
     end
-
-    @term_counts = {}
-    @candidate_list.candidates.each do |candidate|
-      candidate.clean_data
-      @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
-    end
-
-    render :edit
   end
 
   # present as a hack to support the demo

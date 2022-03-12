@@ -180,7 +180,6 @@ export default function CandidatesReviewTable(props) {
   const setCompleted = (item, options) => {
     //This use feedbackOpts from state
     const fb_id = item.candidate_feedback_id;
-    console.log(" in completed:", item, fb_id);
     if (fb_id != null) {
       item.completed = 100;
       const fb = getById(options, fb_id);
@@ -228,7 +227,10 @@ export default function CandidatesReviewTable(props) {
     dispatch(startTask() );
     setReviewStatus("Loading data");
 
-    const url = `${endpoints.baseUrl}${bingoGameId}.json`;
+    const url = props.rootPath === undefined ?
+      `${endpoints.baseUrl}${bingoGameId}.json` :
+      `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
+
     axios.get( url, { } )
       .then(response => {
         const data = response.data;
@@ -297,7 +299,6 @@ export default function CandidatesReviewTable(props) {
   };
 
   const conceptSet = (id, value) => {
-    console.log("concept setting:", id, value);
     const candidates_temp = [...candidates];
     const candidate = getById(candidates_temp, id);
     candidate.concept.name = value;
@@ -421,4 +422,5 @@ export default function CandidatesReviewTable(props) {
   );
 }
 CandidatesReviewTable.propTypes = {
+  rootPath: PropTypes.string
 };

@@ -51,12 +51,14 @@ export default function HomeShell(props) {
   const [waitingRosters, setWaitingRosters] = useState();
 
   const getTasks = () => {
-    var url = endpoints.taskListUrl + ".json";
+    const url = props.rootPath !== undefined ?
+      `${props.rootPath}${endpoints.taskListUrl}.json` :
+      `${endpoints.taskListUrl}.json`;
 
     dispatch(startTask());
-    axios.get(url, {}).then(data => {
+    axios.get(url, {}).then(resp => {
       //Process the data
-      data = data["data"];
+      const data = resp.data;
       data["tasks"].forEach((value, index, array) => {
         switch (value.type) {
           case "assessment":
@@ -69,7 +71,13 @@ export default function HomeShell(props) {
             value.title = value.name;
             break;
         }
-        value.url = value.link;
+        if( props.rootPath === undefined ){
+          value.url = value.link
+        } else {
+          const url = `/${props.rootPath}${value.link}`;
+          value.url = url;
+          value.link = url;
+        }
         value.start = value.next_date;
       });
       setTasks(data.tasks);
@@ -81,7 +89,7 @@ export default function HomeShell(props) {
   };
 
   useEffect(() => {
-    if (endpointsLoaded && isLoggedIn) {
+    if (props.rootPath !== undefined || ( endpointsLoaded && isLoggedIn) ) {
       getTasks();
     }
   }, [endpointsLoaded, isLoggedIn]);
@@ -181,4 +189,6 @@ export default function HomeShell(props) {
   );
 }
 
-HomeShell.propTypes = {};
+HomeShell.propTypes = {
+  rootPath: PropTypes.string
+};

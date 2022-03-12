@@ -66,7 +66,6 @@ export default function TaskList(props) {
                 console.log("filter not found: " + location);
             }
 
-            console.log(location, filters);
             return false;
           }
         }
@@ -109,27 +108,23 @@ export default function TaskList(props) {
     },
     {
       label: "Open Date",
-      name: "start_date",
+      name: "start_time",
       options: {
         filter: false,
         display: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value, {
-            zone: Settings.defaultZoneName
-          });
+          const dt = DateTime.fromISO(value);
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }
       }
     },
     {
       label: "Close Date",
-      name: "end_date",
+      name: "close_date",
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value, {
-            zone: Settings.defaultZoneName
-          });
+          const dt = DateTime.fromISO(value);
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }
       }

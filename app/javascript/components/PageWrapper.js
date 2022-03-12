@@ -27,7 +27,6 @@ import BingoBuilder from "./BingoBoards/BingoBuilder";
 import Experience from "./Experience";
 import ConsentLog from "./Consent/ConsentLog";
 import Admin from "./Admin";
-import DemoWrapper from "./DemoWrapper";
 import AppStatusBar from "./AppStatusBar";
 import SignIn from "./SignIn";
 import EnrollInCourse from "./EnrollInCourse";
@@ -38,6 +37,7 @@ import Privacy from "./Privacy";
 import TermsOfService from "./TermsOfService";
 import AppInit from "./infrastructure/AppInit";
 import PasswordEdit from './PasswordEdit';
+import Demo from "./Demo";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -79,7 +79,6 @@ export default function PageWrapper(props) {
                       </RequireAuth>
                     }
                   />
-                  <Route path="demo" element={<DemoWrapper />} />
                   <Route
                     path="admin/*"
                     element={
@@ -170,6 +169,14 @@ export default function PageWrapper(props) {
                       <RequireAuth>
                         <HomeShell />
                       </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path="demo/*"
+                    element={
+                        <Demo
+                          rootPath="demo"
+                        />
                     }
                   />
                   <Route path="login" element={<SignIn />} />

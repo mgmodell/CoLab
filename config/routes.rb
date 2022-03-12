@@ -190,31 +190,31 @@ Rails.application.routes.draw do
   # root 'welcome#index'
   root to: 'home#index'
 
-  scope 'demo_support' do
+  scope 'demo' do
+    # get '' => 'home#demo_start'
+    scope 'api-backend' do
     # Demo paths
-    get 'installments/complete' => 'installments#demo_complete', as: :assessment_demo_complete
-    get 'candidate_lists/entry' => 'candidate_lists#demo_entry', as: :terms_demo_entry
+    get 'task_list' => 'home#demo_start', as: :demo_task_list
+
+    get 'installments/edit/:id' => 'installments#demo_complete', as: :assessment_demo_complete
+    get 'candidate_lists/:id' => 'candidate_lists#demo_entry', as: :terms_demo_entry
     get 'candidate_lists/play' => 'candidate_lists#demo_play', as: :bingo_demo_play
-    get 'home/start' => 'home#demo_start', as: :demo_start
-    get '' => 'home#demo_start'
-    get 'bingo_board_demo/:bingo_game_id' => 'bingo_boards#board_for_game_demo',
+    get 'bingo/bingo_board/:bingo_game_id' => 'bingo_boards#board_for_game_demo',
         as: 'board_for_game_demo'
     patch 'update_board_demo/:bingo_game_id' => 'bingo_boards#update_demo',
           as: 'update_board_demo'
-    get 'concepts_for_game_demo/:id' => 'concepts#concepts_for_game_demo',
+    get 'bingo/concepts_for_game/:id' => 'concepts#concepts_for_game_demo',
         as: :bingo_concepts_demo,
         constraints: ->(req) { req.format == :json }
-    get 'candidates_review_demo/-11' => 'bingo_games#review_candidates_demo',
+    get 'bingo/candidates_review/:id' => 'bingo_games#review_candidates_demo',
         as: :bingo_demo_review
     patch 'candidates_review/-11' => 'bingo_games#demo_update_review_candidates',
           as: :demo_update_bingo_candidates_review,
           constraints: ->(req) { req.format == :json }
-    get 'worksheet/-42' => 'bingo_boards#demo_worksheet_for_game',
-        as: :worksheet_for_bingo_demo,
-        constraints: ->(req) { req.format == :pdf }
-    get 'my_results/:id' => 'bingo_games#demo_my_results',
+    get 'bingo/my_results/:id' => 'bingo_games#demo_my_results',
         as: 'my_results_demo',
         constraints: ->(req) { req.format == :json }
+  end
   end
 
   get 'installments/edit/:assessment_id' => 'installments#submit_installment', as: :edit_installment
