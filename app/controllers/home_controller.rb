@@ -50,6 +50,7 @@ class HomeController < ApplicationController
         moreInfoUrl: 'http://PeerAssess.info',
         diversityScoreFor: check_diversity_score_path,
         lookupsUrl: lookups_path,
+        taskListUrl: task_list_path,
         oauthValidate: validation_path
       }
     }
@@ -67,21 +68,17 @@ class HomeController < ApplicationController
       # infrastructure
       statesForUrl: states_for_path(country_code: '')
     }
-    if user_signed_in?
-      ep_hash[:home][ :taskListUrl] = task_list_path
-      ep_hash[:home][ :courseRegRequestsUrl] = course_reg_requests_path
-      ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path
-      ep_hash[:home][ :selfRegUrl] = self_reg_init_path(id: '')
-
+    ep_hash[:installment] = {
+      baseUrl: edit_installment_path(assessment_id: ''),
+      saveInstallmentUrl: installments_path
+    }
+      ep_hash[:candidate_list] = {
+        baseUrl: get_candidate_list_path(bingo_game_id: '')
+      }
       ep_hash[:candidate_review] = {
         baseUrl: review_bingo_candidates_path(id: ''),
         reviewSaveUrl: update_bingo_candidates_review_path(id: ''),
         conceptUrl: bingo_concepts_path(0)
-      }
-      ep_hash[:installment] = {
-        baseUrl: edit_installment_path(assessment_id: ''),
-        saveInstallmentUrl: installments_path
-
       }
       ep_hash[:candidate_results] = {
         baseUrl: my_results_path(id: ''),
@@ -89,6 +86,11 @@ class HomeController < ApplicationController
         conceptsUrl: bingo_concepts_path(id: ''),
         worksheetUrl: worksheet_for_bingo_path(bingo_game_id: '')
       }
+    if user_signed_in?
+      ep_hash[:home][ :courseRegRequestsUrl] = course_reg_requests_path
+      ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path
+      ep_hash[:home][ :selfRegUrl] = self_reg_init_path(id: '')
+
       ep_hash[:experience] = {
         baseUrl: next_experience_path(experience_id: ''),
         diagnosisUrl: diagnose_path,
@@ -97,9 +99,6 @@ class HomeController < ApplicationController
       ep_hash[:consent_log] = {
         baseUrl: edit_consent_log_path(consent_form_id: ''),
         consentLogSaveUrl: consent_log_path(id: '')
-      }
-      ep_hash[:candidate_list] = {
-        baseUrl: get_candidate_list_path(bingo_game_id: '')
       }
 
       if current_user.is_admin? || current_user.is_instructor?
@@ -124,12 +123,6 @@ class HomeController < ApplicationController
         }
         ep_hash[:experience_admin] = {
           baseUrl: experiences_path
-        }
-        ep_hash[:bingo_game] = {
-          baseUrl: bingo_games_path,
-          gameResultsUrl: game_results_path(id: ''),
-          worksheetResultsUrl: ws_results_path(id: ''),
-          worksheetScoreUrl: ws_score_path(id: '')
         }
         ep_hash[:concept] = {
           baseUrl: concepts_path

@@ -123,7 +123,6 @@ export default function BingoBuilder(props) {
     axios.get( url, { } )
       .then(response => {
         const data = response.data;
-        console.log(data);
         setCandidateList(data.candidate_list);
         setCandidates(data.candidates);
         //}, this.randomizeTiles );
