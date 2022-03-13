@@ -226,7 +226,6 @@ class CandidateListsController < ApplicationController
         candidate_feedback_id: 0
       }
     end
-    puts "caandidates #{candidates.inspect}"
 
 
     respond_to do |format|
