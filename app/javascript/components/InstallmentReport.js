@@ -78,7 +78,7 @@ export default function InstallmentReport(props) {
   }, [endpointStatus]);
 
   //Use this to sort team members with the user on top
-  const userCompare = (a, b) => {
+  const userCompare = (b, a) => {
     var retVal = 0;
     if (user.id == a.userId) {
       retVal = +1;
@@ -111,7 +111,6 @@ export default function InstallmentReport(props) {
       `${endpoints.baseUrl}${installmentId}.json` :
       `/${props.rootPath}${endpoints.baseUrl}${installmentId}.json`;
 
-    console.log( url );
     dispatch(startTask());
     axios
       .get(url, {})

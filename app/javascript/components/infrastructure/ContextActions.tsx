@@ -316,7 +316,7 @@ export function oAuthSignIn( token: string ){
 export function signOut( ){
     return( dispatch, getState ) =>{
         if( getState().context.status.loggedIn){
-            axios.delete( CONFIG.SIGN_OUT_PATH, {} )
+            return axios.delete( CONFIG.SIGN_OUT_PATH, {} )
             .then( resp=>{
                 dispatch( clearProfile() );
                 CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
