@@ -176,7 +176,6 @@ export default function SignIn(props) {
   );
 
   const get_token_from_oauth = response => {
-    console.log("success", response);
     dispatch(oAuthSignIn(response.tokenId));
   };
 
