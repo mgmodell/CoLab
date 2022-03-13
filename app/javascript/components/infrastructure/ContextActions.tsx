@@ -3,7 +3,7 @@
  * https://github.com/lynndylanhurley/j-toker
  */
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import {Cookies} from 'react-cookie-consent';
 
 import {fetchProfile, setProfile, clearProfile} from './ProfileActions';
 import {addMessage, Priorities} from './StatusActions';
