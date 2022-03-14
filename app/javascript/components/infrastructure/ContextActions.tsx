@@ -3,6 +3,7 @@
  * https://github.com/lynndylanhurley/j-toker
  */
 import axios from 'axios';
+import {Cookies} from 'react-cookie-consent';
 
 import {fetchProfile, setProfile, clearProfile} from './ProfileActions';
 import {addMessage, Priorities} from './StatusActions';
@@ -19,7 +20,7 @@ export const SET_LOOKUPS = 'SET_LOOKUPS';
 
 const category = 'devise';
 const t = i18n.getFixedT( null, category );
-
+const cookiesEnabled = navigator.cookieEnabled;
 
 const CONFIG = {
     SAVED_CREDS_KEY:    'colab_authHeaders',
@@ -27,6 +28,10 @@ const CONFIG = {
     SIGN_OUT_PATH:      '/auth/sign_out',
     EMAIL_SIGNIN_PATH:  '/auth/sign_in',
     EMAIL_REGISTRATION_PATH: '/auth',
+
+    //Cooke paths
+    cookieExpiry:       14,
+    cookiePath:         '/',
 
     tokenFormat: {
         "access-token": "{{ access-token }}",
@@ -100,8 +105,12 @@ const CONFIG = {
     retrieveData( key ){
         var val = null;
 
-        //Add Cookie support later
-        val = localStorage.getItem(key);
+        if( cookiesEnabled ){
+            val = Cookies.get( key );
+
+        } else {
+            val = localStorage.getItem(key);
+        }
 
         // if value is a simple string, the parser will fail. in that case, simply
         // unescape the quotes and return the string.
@@ -118,15 +127,24 @@ const CONFIG = {
     persistData: function( key : string, val ){
         let data = JSON.stringify( val );
 
-        //Add Cookie support later
-        localStorage.setItem(key, data);
+        if( cookiesEnabled ){
+            Cookies.set( key, data,
+                {
+                    expires: CONFIG.cookieExpiry,
+                    path: CONFIG.cookiePath
+                } )
+        } else {
+            localStorage.setItem(key, data);
+        }
 
 
     },
 
     deleteData: function( key : string ){
 
-        //Add Cookie support later
+        if( cookiesEnabled ){
+            Cookies.remove( key )
+        }
         localStorage.removeItem(key);
 
 
@@ -298,13 +316,14 @@ export function oAuthSignIn( token: string ){
 export function signOut( ){
     return( dispatch, getState ) =>{
         if( getState().context.status.loggedIn){
-            axios.delete( CONFIG.SIGN_OUT_PATH, {} )
+            return axios.delete( CONFIG.SIGN_OUT_PATH, {} )
             .then( resp=>{
                 dispatch( clearProfile() );
                 CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
                 CONFIG.retrieveResources( dispatch, getState )
-                //TODO: Finish this
-                // Wipe out the existing cookies/localStorage
+                    .then( () =>{
+                        dispatch( setInitialised( ) );
+                    });
 
             })
         }

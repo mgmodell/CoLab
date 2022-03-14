@@ -175,7 +175,6 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
       tokens = user.create_new_auth_token
       user.save
       set_headers( tokens )
-      puts "sign in result for #{u}: #{x}"
       resp[:error] = false
       resp[:message] = 'passwords.updated'
     end

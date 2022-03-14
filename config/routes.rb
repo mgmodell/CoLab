@@ -106,7 +106,8 @@ Rails.application.routes.draw do
           as: :bingo_concepts,
           constraints: ->(req) { req.format == :json }
       get 'worksheet/:bingo_game_id' => 'bingo_boards#worksheet_for_game',
-          as: :worksheet_for_bingo
+          as: :worksheet_for_bingo,
+        constraints: ->(req) { req.format == :pdf }
     end
     get 'experiences/next/:experience_id' => 'experiences#next', as: :next_experience
     patch 'exeriences/diagnose' => 'experiences#diagnose', as: :diagnose
@@ -211,6 +212,9 @@ Rails.application.routes.draw do
     patch 'candidates_review/-11' => 'bingo_games#demo_update_review_candidates',
           as: :demo_update_bingo_candidates_review,
           constraints: ->(req) { req.format == :json }
+    get 'bingo/worksheet/:id' => 'bingo_boards#demo_worksheet_for_game',
+        as: :worksheet_for_bingo_demo,
+        constraints: ->(req) { req.format == :pdf }
     get 'bingo/my_results/:id' => 'bingo_games#demo_my_results',
         as: 'my_results_demo',
         constraints: ->(req) { req.format == :json }

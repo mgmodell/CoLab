@@ -37,7 +37,7 @@ class BingoBoard extends React.Component {
           {this.props.board.bingo_game.topic}&nbsp; ({gameDate.toDateString()})
         </center>
         <hr />
-        <ImageList cols={this.props.board.bingo_game.size} cellHeight="auto">
+        <ImageList cols={this.props.board.bingo_game.size} rowHeight="auto">
           {grid}
         </ImageList>
         <hr />

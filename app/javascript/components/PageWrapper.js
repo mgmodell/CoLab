@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
+import CookieConsent from "react-cookie-consent";
 
 import HomeShell from "./HomeShell";
 import ProfileDataAdmin from "./ProfileDataAdmin";
@@ -58,6 +59,7 @@ export default function PageWrapper(props) {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={styles}>
           <AppInit endpointsUrl={props.getEndpointsUrl}>
+            <CookieConsent>This website uses cookies to enhance the user experience.</CookieConsent>
             <Router>
               <Suspense
                 fallback={<Skeleton variant="rectangular" height={50} />}

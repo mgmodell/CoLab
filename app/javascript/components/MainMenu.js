@@ -174,7 +174,10 @@ export default function MainMenu(props) {
       id="logout-menu-item"
       button
       onClick={() => {
-        dispatch(signOut());
+        dispatch(signOut())
+          .then( ()=>{
+            navTo( '/' );
+          })
         setMenuOpen(false);
       }}
     >
