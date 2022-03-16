@@ -121,6 +121,12 @@ class HomeController < ApplicationController
           baseUrl: schools_path,
           schoolCreateUrl: new_school_path
         }
+        ep_hash[:bingo_game] = {
+          baseUrl: bingo_games_path,
+          gameResultsUrl: game_results_path(id: ''),
+          worksheetResultsUrl: ws_results_path(id: ''),
+          worksheetScoreUrl: ws_score_path(id: '')
+        }
         ep_hash[:experience_admin] = {
           baseUrl: experiences_path
         }
