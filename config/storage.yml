@@ -1,6 +1,6 @@
 dev:
   service: Disk
-  root: <%= Rails.root.join("tmp/storage/test") %>
+  root: <%= Rails.root.join("tmp/storage/dev") %>
 #  service: S3
 #  access_key_id: <%= ENV.fetch('AWS_ACCESS_KEY_ID') %>
 #  secret_access_key: <%= ENV.fetch('AWS_SECRET_ACCESS_KEY') %>

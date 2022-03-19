@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {useTypedSelector} from '../infrastructure/AppReducers'
-import axios from "axios";
+import axios, {post} from "axios";
 import { TableRow, TextField } from "@mui/material";
 
 export default function ScoreBingoWorksheet(props) {
@@ -56,6 +56,7 @@ export default function ScoreBingoWorksheet(props) {
       dispatch( startTask( ) );
       axios.get( url, { } )
         .then( response =>{
+          console.log( response.data );
           const data = response.data;
           setTopic( data.bingo_game.topic );
           setDescription( data.bingo_game.description );
@@ -72,35 +73,32 @@ export default function ScoreBingoWorksheet(props) {
   }
 
   const handleFileSelect = (evt)=>{
-    const files = evt.target.files;
-    const file = files[0];
+    const file = evt.target.files[0];
 
-    if (files && file) {
-        var reader = new FileReader();
+    if (file) {
         setNewImgExt( file.name.split(".").pop( ) );
-
-        reader.onload = function(readerEvt) {
-            const binaryString = readerEvt.target.result;
-            setNewImg( Buffer.from(binaryString).toString('base64') );
-        };
-
-        reader.readAsBinaryString(file);
+        setNewImg( file );
     }
   }
   const submitScore = ()=>{
+    const formData = new FormData( );
+    if( newImg ){
+      formData.append( 'result_img', newImg );
+    }
 
-    const url = `${endpoints.worksheetScoreUrl}/${worksheetIdParam}.json`;
-    axios.patch( url, {
-      bingo_board: {
-        performance: performance,
-        result_img: newImg,
-        img_ext: newImgExt
-      } } )
+    formData.append( 'performance', performance );
+    formData.append( 'img_ext', newImgExt );
+
+    const url = `${endpoints.worksheetScoreUrl}${worksheetIdParam}.json`;
+
+
+    post( url, formData, {
+      headers:{ 
+        'content-type': 'multipart/form-data'
+      }
+    })
         .then( response =>{
           const data = response.data;
-          setTopic( data.bingo_game.topic );
-          setDescription( data.bingo_game.description );
-          setWorksheetAnswers( data.practice_answers );
           setResultImgUrl( data.bingo_game.result_url );
         })
         .catch( error =>{

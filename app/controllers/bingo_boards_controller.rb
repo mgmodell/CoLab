@@ -208,7 +208,7 @@ class BingoBoardsController < ApplicationController
             bingo_game: {
               topic: bingo_game.topic,
               description: bingo_game.description,
-              result_url: @bingo_board.result_img.present? ? @bingo_board.result_img.url : nil
+              result_url: @bingo_board.result_img.present? ? url_for( @bingo_board.result_img ) : nil
             },
             practice_answers: @practice_answers.as_json
           }
@@ -393,31 +393,30 @@ class BingoBoardsController < ApplicationController
 
   def score_worksheet
     require 'image_processing/vips'
-    @bingo_board.performance = params[:bingo_board][:performance]
+    puts "params: #{params}"
+
+    @bingo_board.performance = params[:performance]
 
     # image processing
-    unless params[:bingo_board][:result_img].empty?
-      ext = params[:bingo_board][:img_ext]
-      temp_file = Tempfile.new(['score_img', ".#{ext}"], binmode: true)
-      temp_file.write(
-        Base64.decode64(params[:bingo_board][:result_img])
-      )
-      temp_file.rewind
+    unless params[:result_img].nil?
       proc_image = ImageProcessing::Vips
-                   .source(temp_file)
-                   .resize_to_limit!(800, 800)
+        .source( params[:result_img].tempfile.path)
+        .resize_to_limit!(800,800)
+
 
       @bingo_board.result_img.attach(io: File.open(proc_image.path),
                                      filename: File.basename(proc_image.path))
-      temp_file.close
-      temp_file.unlink
     end
 
-    if @bingo_board.save
-      redirect_to ws_results_path(@bingo_board)
-    else
-      logger.debug @bingo_board.errors.full_message unless @bingo_board.errors.empty?
-      redirect_to root_path
+    resp_hash = {
+      msg: @bingo_board.errors.empty? ? t( 'scored_success' ) : 
+        @bingo_board.errors.full_message,
+      result_url: url_for( @bingo_board.result_img )
+    }
+    respond_to do |format|
+      format.json do
+        render json: resp_hash
+      end
     end
   end
 

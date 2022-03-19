@@ -34,11 +34,13 @@ import EnrollInCourse from "./EnrollInCourse";
 import ScoreBingoWorksheet from "./BingoBoards/ScoreBingoWorksheet";
 import RequireAuth from "./infrastructure/RequireAuth";
 import RequireInstructor from './infrastructure/RequireInstructor';
-import Privacy from "./Privacy";
-import TermsOfService from "./TermsOfService";
+import Privacy from "./info/Privacy";
+import TermsOfService from "./info/TermsOfService";
+import WhatIsIt from './info/WhatIsIt';
 import AppInit from "./infrastructure/AppInit";
 import PasswordEdit from './PasswordEdit';
 import Demo from "./Demo";
+import { WhatsApp } from "@mui/icons-material";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -163,6 +165,7 @@ export default function PageWrapper(props) {
                         <PasswordEdit />
                     }
                   />
+                  <Route path={`what_is_colab`} element={<WhatIsIt />} />
                   <Route path={`tos`} element={<TermsOfService />} />
                   <Route path={`privacy`} element={<Privacy />} />
                   <Route

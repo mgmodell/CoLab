@@ -74,4 +74,6 @@ en:
     end_date_err: >
       The bingo game cannot begin after the course has ended
       (%{end_date} > %{course_end_date})
+    scored_success: >
+      The score was successfully saved.
 
