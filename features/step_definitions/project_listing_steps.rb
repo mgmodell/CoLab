@@ -120,5 +120,9 @@ When(/^the user logs in$/) do
   click_link_or_button 'Log in!'
   wait_for_render
   page.should have_content 'signed in successfully'
-  click_link_or_button 'I understand'
+  
+
+  if has_content? 'I understand'
+    click_link_or_button 'I understand'
+  end
 end
