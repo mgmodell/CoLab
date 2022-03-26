@@ -4,6 +4,7 @@ import {Parallax, ParallaxLayer} from '@react-spring/parallax';
 import {useSpring, animated} from 'react-spring';
 import Logo from "../Logo";
 import NormallyFunctioningGroup from "../svgs/NormallyFunctioningGroup";
+import SocialLoafing from "../svgs/SocialLoafing";
 /*
  * 
  * https://www.privacypolicygenerator.info/
@@ -35,6 +36,13 @@ export default function WhatIsIt(props) {
           width: '95%',
           position: 'relative'
         }}>
+        <div style={{
+          position: 'relative',
+          msTransform: 'translate(15%,20%)',
+          transform: 'translate(15%,20%)'
+        }} >
+          <SocialLoafing height={225} width={350} />
+        </div>
         <div style={{
           position: 'relative',
           msTransform: 'translate(65%,40%)',
