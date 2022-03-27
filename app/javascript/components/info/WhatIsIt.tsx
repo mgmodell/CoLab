@@ -5,6 +5,7 @@ import {useSpring, animated} from 'react-spring';
 import Logo from "../Logo";
 import NormallyFunctioningGroup from "../svgs/NormallyFunctioningGroup";
 import SocialLoafing from "../svgs/SocialLoafing";
+import GroupDomination from "../svgs/GroupDomination";
 /*
  * 
  * https://www.privacypolicygenerator.info/
@@ -42,6 +43,13 @@ export default function WhatIsIt(props) {
           transform: 'translate(15%,20%)'
         }} >
           <SocialLoafing height={225} width={350} />
+        </div>
+        <div style={{
+          position: 'relative',
+          msTransform: 'translate(15%,60%)',
+          transform: 'translate(15%,60%)'
+        }} >
+          <GroupDomination height={225} width={350} />
         </div>
         <div style={{
           position: 'relative',
