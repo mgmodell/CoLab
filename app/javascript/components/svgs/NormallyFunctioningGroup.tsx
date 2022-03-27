@@ -5,6 +5,7 @@ export default function NormallyFunctioningGroup(props) {
   const height = props.height || 72;
   const width = props.width || 72;
   const mounted = useRef(false);
+  const framed = props.framed || true;
 
   const viewBox = [0, 0, 6761, 5583].join(" ");
 
@@ -17,6 +18,18 @@ export default function NormallyFunctioningGroup(props) {
       xmlns="http://www.w3.org/2000/svg"
     >
       <g id="vectorized">
+        <g
+          fill="none"
+          strokeWidth={7}
+          stroke="#000000"
+          opacity={framed ? 100 : 0}
+          id="frame"
+        >
+          <path
+            d="m 171.70579,223.21753 c 0,0 25.75587,2412.46637 17.17058,2661.43977 -8.58529,248.9734 -25.75587,1605.4492 8.58529,1905.9343 34.34116,300.4852 -8.58529,506.5321 -8.58529,575.2144 0,0 1871.59313,60.097 2051.88423,42.9265 180.2911,-17.1706 1768.5697,-34.3412 1948.8607,-17.1706 180.2911,17.1706 1038.8201,25.7559 1210.5259,17.1706 171.7058,-8.5853 1004.4789,-42.9265 1176.1846,-25.7559 0,0 -42.9264,-1863.0079 -34.3411,-2043.2989 8.5853,-180.2911 60.097,-1210.5259 42.9264,-1519.5963 -17.1705,-309.0704 -17.1705,-1390.81692 -8.5852,-1605.44916 0,0 -2000.3725,51.51174 -2300.8577,34.34116 C 3974.9891,231.80282 3580.0658,171.70579 2893.2426,206.04695 2206.4194,240.38811 386.33803,248.9734 171.70579,223.21753 Z"
+            id="path1318"
+          />
+        </g>
         <g id="LBoy" fill="none" stroke="#000000" strokeWidth={7}>
           <path
             d="m 1081.0795,1879.3886 c 0,0 -253.45888,32.76 -281.0462,96.5557 -11.64072,26.9192 19.1804,168.4647 45.65518,327.1745 36.26784,217.4169 74.95968,465.5332 81.93634,481.4799"
@@ -1518,6 +1531,6 @@ export default function NormallyFunctioningGroup(props) {
   NormallyFunctioningGroup.propTypes = {
     height: PropTypes.number,
     width: PropTypes.number,
-    spinning: PropTypes.bool
+    framed: PropTypes.bool
   };
 }
