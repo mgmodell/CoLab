@@ -8,6 +8,7 @@ import SocialLoafing from "../svgs/SocialLoafing";
 import GroupDomination from "../svgs/GroupDomination";
 import StudentConcern from "../svgs/StudentConcern";
 import DivisionOfLabor from "../svgs/DivisionOfLabor";
+import LeaveItToGeorge from "../svgs/LeaveItToGeorge";
 /*
  * 
  * https://www.privacypolicygenerator.info/
@@ -39,6 +40,13 @@ export default function WhatIsIt(props) {
           width: '95%',
           position: 'relative'
         }}>
+        <div style={{
+          position: 'relative',
+          msTransform: 'translate(55%,45%)',
+          transform: 'translate(55%,45%)'
+        }} >
+          <LeaveItToGeorge height={225} width={350} />
+        </div>
         <div style={{
           position: 'relative',
           msTransform: 'translate(55%,45%)',
