@@ -17,16 +17,15 @@ export default function GroupThink(props) {
       preserveAspectRatio="xMidYMid meet"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g id="vectorized"
+      <g
+        id="vectorized"
         stroke="#000000"
         fill="none"
         strokeWidth={7}
-        strokeLinecap='butt'
+        strokeLinecap="butt"
         strokeLinejoin="miter"
       >
-        <g id="frame"
-          opacity={framed ? 100 : 0}
-        >
+        <g id="frame" opacity={framed ? 100 : 0}>
           <path
             d="m 203.91017,155.9313 c 0,0 2626.84273,11.99472 2710.80573,-11.99471 83.963,-23.98943 1343.4082,-23.98943 1523.3289,-11.99472 179.9207,11.99472 2111.07,11.99472 2111.07,11.99472 0,0 14.2044,1706.32211 -0.3646,1822.87381 -14.569,116.5517 -7.2845,1850.2587 7.2845,1952.2414 14.5689,101.9828 -7.2845,1398.6208 21.8534,1471.4656 0,0 -1231.0776,-50.9914 -1354.9138,-14.569 -123.8362,36.4224 -1289.3535,21.8535 -1413.1897,7.2845 -123.8362,-14.5689 -1588.0173,0 -1711.8535,14.569 -123.8362,14.5689 -1289.35349,7.2845 -1333.06039,-21.8535 -43.7069,-29.1379 -495.34484,14.569 -539.05174,14.569 0,0 7.28449,-1566.1638 -14.56896,-1675.4311 -21.85345,-109.2672 -29.13794,-1296.638 7.28448,-1464.1811 36.42241,-167.5431 7.17378,-1968.18053 -14.62432,-2094.9739 z"
             id="path950"
@@ -383,7 +382,7 @@ export default function GroupThink(props) {
               <path
                 strokeWidth={45.35433197}
                 strokeMiterlimit={9}
-                strokeLinecap='round'
+                strokeLinecap="round"
                 d="m 1221.6353,2371.8941 c 0,0 73.2066,66.801 86.0177,124.4512 12.8112,57.6502 10.066,172.0355 11.8961,192.1673"
                 id="path2239"
               />
@@ -654,11 +653,12 @@ export default function GroupThink(props) {
             />
           </g>
           <g id="MHead">
-            <g id="MHair"
+            <g
+              id="MHair"
               fill="#000000"
               stroke="none"
               strokeWidth={45.3543}
-              strokeLinecap='round'
+              strokeLinecap="round"
             >
               <path
                 stroke="none"
@@ -737,7 +737,7 @@ export default function GroupThink(props) {
             />
             <ellipse
               fill="#000000"
-              stroke='none'
+              stroke="none"
               id="path4059"
               cx="3330.4746"
               cy="3340.5042"
@@ -746,7 +746,7 @@ export default function GroupThink(props) {
             />
             <ellipse
               fill="#000000"
-              stroke='none'
+              stroke="none"
               id="path4061"
               cx="2181.2102"
               cy="3598.5552"
@@ -909,7 +909,7 @@ export default function GroupThink(props) {
               id="path4254"
             />
             <path
-            strokeWidth={37.7953}
+              strokeWidth={37.7953}
               d="m 3790.5148,2192.0572 c 10.2328,4.9401 41.1567,47.6466 87.9414,73.9243 30.2676,17.0004 90.5139,19.8669 105.578,23.7072"
               id="path4538"
             />
@@ -1102,8 +1102,8 @@ export default function GroupThink(props) {
               />
             </g>
             <ellipse
-                fill="#000000"
-                stroke="none"
+              fill="#000000"
+              stroke="none"
               id="path7080"
               cx="5644.8125"
               cy="3270.3142"
@@ -1112,8 +1112,8 @@ export default function GroupThink(props) {
               transform="matrix(1,0,-0.31622777,0.9486833,0,0)"
             />
             <ellipse
-                fill="#000000"
-                stroke="none"
+              fill="#000000"
+              stroke="none"
               id="path7082"
               cx="5542.3999"
               cy="3213.7954"

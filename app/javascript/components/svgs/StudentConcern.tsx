@@ -419,11 +419,7 @@ export default function StudentConcern(props) {
           />
         </g>
       </g>
-      <g id="student"
-        fill="none"
-        stroke="#000000"
-        strokeWidth={7}
-      >
+      <g id="student" fill="none" stroke="#000000" strokeWidth={7}>
         <g id="g3119">
           <path
             d="m 2311.7337,2737.787 c 0,0 7.8898,49.3117 -9.8624,74.9538 -17.7522,25.6421 -32.6999,27.7619 -36.1007,41.365"
@@ -655,11 +651,7 @@ export default function StudentConcern(props) {
           />
         </g>
       </g>
-      <g id="teacher"
-        fill="none"
-        stroke="#000000"
-        strokeWidth={7}
-      >
+      <g id="teacher" fill="none" stroke="#000000" strokeWidth={7}>
         <g id="skirt">
           <path
             d="m 4281.781,5365.611 c 0,0 33.9513,-91.4074 40.4804,-104.4656"
@@ -903,12 +895,13 @@ export default function StudentConcern(props) {
           </g>
         </g>
       </g>
-      <g id="frame"
+      <g
+        id="frame"
         opacity={framed ? 100 : 0}
         strokeWidth={7}
-        stroke='#000000'
-        fill='none'
-        >
+        stroke="#000000"
+        fill="none"
+      >
         <path
           d="m 215.12565,148.36252 c 0,0 2129.00205,37.09062 2403.47275,14.83625 274.4707,-22.25438 1587.4789,-29.67251 1728.4233,-14.83625 140.9444,14.83625 2091.9115,22.25437 2218.0196,0"
           id="path3585"

@@ -25,9 +25,7 @@ export default function GroupDomination(props) {
         fill="none"
         strokeLinejoin="miter"
       >
-        <g id="frame"
-          opacity={framed ? 100 : 0}
-        >
+        <g id="frame" opacity={framed ? 100 : 0}>
           <path
             d="m 428.05001,2764.447 c 0,0 25.6263,-773.3121 25.6263,-881.3303 0,-108.0181 -17.26991,-1512.58296 -17.26991,-1636.09421 0,0 2988.9722,32.93634 3268.931,8.23409 279.9588,-24.70225 3071.313,49.40449 3227.7606,32.93633 0,0 -24.7023,1251.58059 8.234,1539.77349 32.9364,288.193 -15.3085,1092.8566 -2.1911,1276.5012"
             id="path4516"
@@ -1568,6 +1566,6 @@ export default function GroupDomination(props) {
   GroupDomination.propTypes = {
     height: PropTypes.number,
     width: PropTypes.number,
-    framed: PropTypes.bool,
+    framed: PropTypes.bool
   };
 }

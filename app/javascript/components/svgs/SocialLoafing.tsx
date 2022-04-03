@@ -26,9 +26,7 @@ export default function SocialLoafing(props) {
         strokeLinecap="butt"
         strokeLinejoin="miter"
       >
-        <g id="frame"
-          opacity={framed ? 100 : 0}
-        >
+        <g id="frame" opacity={framed ? 100 : 0}>
           <path
             d="m 349.93743,331.51968 c 0,0 27.62664,1703.64282 18.41776,1887.82032 -9.20888,184.1776 -64.46215,1565.5096 -46.04439,1731.2695 18.41776,165.7598 -9.20888,1141.9011 0,1233.9899"
             id="path1015"
