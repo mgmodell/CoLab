@@ -7,7 +7,7 @@ export default function GroupThink(props) {
   const mounted = useRef(false);
   const framed = props.framed || true;
 
-  const viewBox = [0, 0, 6753, 5590].join(" ");
+  const viewBox = [0, 0, 6780, 5568].join(" ");
 
   return (
     <svg
