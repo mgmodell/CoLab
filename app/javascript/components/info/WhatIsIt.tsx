@@ -9,6 +9,7 @@ import GroupDomination from "../svgs/GroupDomination";
 import StudentConcern from "../svgs/StudentConcern";
 import DivisionOfLabor from "../svgs/DivisionOfLabor";
 import LeaveItToGeorge from "../svgs/LeaveItToGeorge";
+import GroupThink from "../svgs/GroupThink";
 /*
  * 
  * https://www.privacypolicygenerator.info/
@@ -46,6 +47,13 @@ export default function WhatIsIt(props) {
           transform: 'translate(55%,45%)'
         }} >
           <LeaveItToGeorge height={225} width={350} />
+        </div>
+        <div style={{
+          position: 'relative',
+          msTransform: 'translate(25%,45%)',
+          transform: 'translate(25%,45%)'
+        }} >
+          <GroupThink height={225} width={350} />
         </div>
         <div style={{
           position: 'relative',
