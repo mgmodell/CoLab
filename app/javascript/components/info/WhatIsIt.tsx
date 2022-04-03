@@ -10,6 +10,7 @@ import StudentConcern from "../svgs/StudentConcern";
 import DivisionOfLabor from "../svgs/DivisionOfLabor";
 import LeaveItToGeorge from "../svgs/LeaveItToGeorge";
 import GroupThink from "../svgs/GroupThink";
+import Farrago from "../svgs/Farrago";
 /*
  * 
  * https://www.privacypolicygenerator.info/
@@ -47,6 +48,13 @@ export default function WhatIsIt(props) {
           transform: 'translate(55%,45%)'
         }} >
           <LeaveItToGeorge height={225} width={350} />
+        </div>
+        <div style={{
+          position: 'relative',
+          msTransform: 'translate(15%,45%)',
+          transform: 'translate(15%,45%)'
+        }} >
+          <Farrago height={225} width={350} />
         </div>
         <div style={{
           position: 'relative',
