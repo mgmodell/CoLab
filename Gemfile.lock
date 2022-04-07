@@ -171,12 +171,6 @@ GEM
     climate_control (0.2.0)
     concurrent-ruby (1.1.10)
     connection_pool (2.2.5)
-    countries (5.0.0)
-      i18n_data (~> 0.16.0)
-      sixarm_ruby_unaccent (~> 1.1)
-    country_select (7.0.0)
-      countries (~> 5.0)
-      sort_alphabetical (~> 1.1)
     crass (1.0.6)
     cucumber (7.1.0)
       builder (~> 3.2, >= 3.2.4)
@@ -245,7 +239,7 @@ GEM
     globalid (1.0.0)
       activesupport (>= 5.0)
     hashie (5.0.0)
-    htmlbeautifier (1.4.1)
+    htmlbeautifier (1.4.2)
     htmlentities (4.3.4)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
@@ -485,7 +479,6 @@ GEM
     simplecov_json_formatter (0.1.4)
     simpleidn (0.2.1)
       unf (~> 0.1.4)
-    sixarm_ruby_unaccent (1.2.0)
     solargraph (0.44.3)
       backport (~> 1.2)
       benchmark
@@ -501,8 +494,6 @@ GEM
       thor (~> 1.0)
       tilt (~> 2.0)
       yard (~> 0.9, >= 0.9.24)
-    sort_alphabetical (1.1.0)
-      unicode_utils (>= 1.2.2)
     spring (4.0.0)
     stopwords-filter (0.7.0)
     strscan (3.0.1)
@@ -522,7 +513,6 @@ GEM
       unf_ext
     unf_ext (0.0.8.1)
     unicode-display_width (2.1.0)
-    unicode_utils (1.4.0)
     uniform_notifier (1.16.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -563,7 +553,6 @@ DEPENDENCIES
   byebug
   chronic
   city-state
-  country_select
   cucumber-rails!
   d3-rails
   database_cleaner
