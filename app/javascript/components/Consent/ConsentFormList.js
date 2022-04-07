@@ -105,9 +105,10 @@ export default function ConsentFormList(props) {
           </Tooltip>
         ),
         onCellClick: (colData, cellMeta) => {
+
           if ("Actions" != columns[cellMeta.colIndex].label) {
             const consent_form_id = consent_forms[cellMeta.dataIndex].id;
-            navigate( consent_form_id);
+            navigate( String( consent_form_id ));
           }
         },
         selectableRows: "none"

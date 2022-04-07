@@ -21,8 +21,7 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import AdapterLuxon from '@mui/lab/AdapterLuxon';
-//import i18n from './i18n';
-//import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from '../infrastructure/StatusActions';
 import { DatePicker, LocalizationProvider } from "@mui/lab/";
@@ -37,10 +36,10 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 
 export default function ConsentFormDataAdmin(props) {
-  const endpointSet = "consent_form";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
+  const category = "consent_form";
+  const endpoints = useTypedSelector(state=>state.context.endpoints[category]);
   const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
-  //const { t, i18n } = useTranslation('schools' );
+  const { t } = useTranslation( `${category}s` );
   const user = useTypedSelector(state=>state.profile.user)
   const { consentFormIDParam } = useParams( );
 
@@ -58,6 +57,17 @@ export default function ConsentFormDataAdmin(props) {
   const [consentFormEndDate, setConsentFormEndDate] = useState(new Date());
   const [consentFormFormTextEn, setConsentFormFormTextEn] = useState("");
   const [consentFormFormTextKo, setConsentFormFormTextKo] = useState("");
+  const [consentFormDoc, setConsentFormDoc] = useState( null );
+
+  const consentFormDataId = 'consent_form';
+
+  const handleFileSelect = (evt)=>{
+    const file = evt.target.files[0];
+
+    if (file) {
+        setConsentFormDoc( file );
+    }
+  }
 
   const getConsentForm = () => {
     dispatch( startTask() );
@@ -111,6 +121,10 @@ export default function ConsentFormDataAdmin(props) {
       (null == consentFormId ? null : consentFormId) +
       ".json";
 
+    const formData = FormData( );
+    if( consentFormDoc ){
+      formData.append
+    }
     axios( {
       method: method,
       url: url,
@@ -331,6 +345,18 @@ export default function ConsentFormDataAdmin(props) {
         />
       ) : null}
       &nbsp;
+          <label htmlFor={consentFormDataId}>
+            <input
+              style={{ display: 'none' }}
+              id={consentFormDataId}
+              name={consentFormDataId}
+              onChange={handleFileSelect}
+              type="file" />
+          <Button
+            variant='contained'
+            component='span'
+            >{t('file_select')}</Button>
+          </label>
       <br />
       <br />
       {saveButton}

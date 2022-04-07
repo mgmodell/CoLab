@@ -19,7 +19,7 @@ gem 'mysql2'
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
 # https://github.com/rails/webpacker
-gem 'webpacker'
+gem 'shakapacker'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
