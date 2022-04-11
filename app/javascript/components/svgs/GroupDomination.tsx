@@ -1563,9 +1563,9 @@ export default function GroupDomination(props) {
     </svg>
   );
 
+}
   GroupDomination.propTypes = {
     height: PropTypes.number,
     width: PropTypes.number,
     framed: PropTypes.bool
   };
-}

@@ -1,71 +1,33 @@
-module.exports = function(api) {
-  var validEnv = ['development', 'test', 'production']
-  var currentEnv = api.env()
-  var isDevelopmentEnv = api.env('development')
-  var isProductionEnv = api.env('production')
-  var isTestEnv = api.env('test')
+// babel.config.js
+module.exports = function (api) {
+  const defaultConfigFunc = require('shakapacker/package/babel/preset.js')
+  const resultConfig = defaultConfigFunc(api)
+  const isDevelopmentEnv = api.env('development')
+  const isProductionEnv = api.env('production')
+  const isTestEnv = api.env('test')
 
-  if (!validEnv.includes(currentEnv)) {
-    throw new Error(
-      'Please specify a valid `NODE_ENV` or ' +
-        '`BABEL_ENV` environment variables. Valid values are "development", ' +
-        '"test", and "production". Instead, received: ' +
-        JSON.stringify(currentEnv) +
-        '.'
-    )
-  }
-
-  return {
+  const changesOnDefault = {
     presets: [
-      isTestEnv && [
-        '@babel/preset-env',
+      [
+        '@babel/preset-react',
         {
-          targets: {
-            node: 'current'
-          }
-        }
-      ],
-      (isProductionEnv || isDevelopmentEnv) && [
-        '@babel/preset-env',
-        {
-          forceAllTransforms: true,
-          useBuiltIns: 'entry',
-          corejs: 3,
-          modules: false,
-          exclude: ['transform-typeof-symbol']
-        }
-      ],
-      ['@babel/preset-typescript', { 'allExtensions': true, 'isTSX': true }]
+          development: isDevelopmentEnv || isTestEnv,
+          useBuiltIns: true
+        } 
+      ]
     ].filter(Boolean),
     plugins: [
-      'babel-plugin-macros',
-      '@babel/plugin-syntax-dynamic-import',
-      isTestEnv && 'babel-plugin-dynamic-import-node',
-      '@babel/plugin-transform-destructuring',
-      [
-        '@babel/plugin-proposal-class-properties',
-        {
-          loose: true
+      isProductionEnv && ['babel-plugin-transform-react-remove-prop-types', 
+        { 
+          removeImport: true 
         }
       ],
-      [
-        '@babel/plugin-proposal-object-rest-spread',
-        {
-          useBuiltIns: true
-        }
-      ],
-      [
-        '@babel/plugin-transform-runtime',
-        {
-          helpers: false
-        }
-      ],
-      [
-        '@babel/plugin-transform-regenerator',
-        {
-          async: false
-        }
-      ]
-    ].filter(Boolean)
+      process.env.WEBPACK_SERVE && 'react-refresh/babel'
+    ].filter(Boolean),
   }
+
+  resultConfig.presets = [...resultConfig.presets, ...changesOnDefault.presets]
+  resultConfig.plugins = [...resultConfig.plugins, ...changesOnDefault.plugins ]
+
+  return resultConfig
 }
