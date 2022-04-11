@@ -234,7 +234,7 @@ GEM
     faraday (2.2.0)
       faraday-net_http (~> 2.0)
       ruby2_keywords (>= 0.0.4)
-    faraday-net_http (2.0.1)
+    faraday-net_http (2.0.2)
     ffi (1.15.5)
     globalid (1.0.0)
       activesupport (>= 5.0)
@@ -408,7 +408,7 @@ GEM
       kwalify (~> 0.7.0)
       parser (~> 3.1.0)
       rainbow (>= 2.0, < 4.0)
-    regexp_parser (2.2.1)
+    regexp_parser (2.3.0)
     report_builder (1.9)
       json (>= 2.3.0)
     responders (3.0.1)
@@ -443,7 +443,7 @@ GEM
       rubocop-ast (>= 1.16.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.16.0)
+    rubocop-ast (1.17.0)
       parser (>= 3.1.1.0)
     rubocop-performance (1.13.3)
       rubocop (>= 1.7.0, < 2.0)
@@ -594,7 +594,7 @@ DEPENDENCIES
   rubocop-thread_safety
   sdoc
   selenium-webdriver
-  shakapacker
+  shakapacker (= 6.2.0)
   simplecov
   solargraph
   spring
