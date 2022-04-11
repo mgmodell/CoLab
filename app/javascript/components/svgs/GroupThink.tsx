@@ -1279,9 +1279,9 @@ export default function GroupThink(props) {
     </svg>
   );
 
+}
   GroupThink.propTypes = {
     height: PropTypes.number,
     width: PropTypes.number,
     framed: PropTypes.bool
   };
-}

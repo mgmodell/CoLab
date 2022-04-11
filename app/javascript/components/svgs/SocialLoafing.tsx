@@ -1258,10 +1258,10 @@ export default function SocialLoafing(props) {
     </svg>
   );
 
+}
   SocialLoafing.propTypes = {
     height: PropTypes.number,
     width: PropTypes.number,
     framed: PropTypes.bool,
     oliveColor: PropTypes.string
   };
-}

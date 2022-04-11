@@ -33,7 +33,6 @@ import { DateTime, Info } from "luxon";
 import Settings from "luxon/src/settings.js";
 
 import AdapterLuxon from "@mui/lab/AdapterLuxon";
-//import i18n from './i18n';
 import { useTranslation } from 'react-i18next';
 import Grid from "@mui/material/Grid";
 import Input from "@mui/material/Input";
@@ -50,7 +49,7 @@ import axios from "axios";
 
 export default function SignIn(props) {
   const category = "devise";
-  const { t, i18n } = useTranslation( category );
+  const { t }: {t:any}  = useTranslation( category );
 
   const dispatch = useDispatch();
   const { state } = useLocation();

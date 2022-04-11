@@ -1528,9 +1528,9 @@ export default function NormallyFunctioningGroup(props) {
     </svg>
   );
 
+}
   NormallyFunctioningGroup.propTypes = {
     height: PropTypes.number,
     width: PropTypes.number,
     framed: PropTypes.bool
   };
-}
