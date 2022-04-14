@@ -8,7 +8,11 @@ import Grid from "@mui/material/Grid";
 import { DateTime } from "luxon";
 import Settings from "luxon/src/settings.js";
 import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
+import {
+  TabList,
+  TabContext,
+  TabPanel
+} from "@mui/lab";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import luxonPlugin from "@fullcalendar/luxon";
@@ -25,6 +29,7 @@ import { useTranslation } from "react-i18next";
 import TaskList from "./TaskList";
 import Skeleton from "@mui/material/Skeleton";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import { Box } from "@mui/material";
 
 export default function HomeShell(props) {
   const category = "home";
@@ -94,6 +99,10 @@ export default function HomeShell(props) {
     }
   }, [endpointsLoaded, isLoggedIn]);
 
+  const handleTabChange = (event, newValue ) =>{
+    setCurTab( newValue );
+  }
+
   var pageContent = <Skeleton variant="rectangular" />;
   if (undefined !== consentLogs) {
     if (consentLogs.length > 0) {
@@ -116,16 +125,17 @@ export default function HomeShell(props) {
               count: tasks.length
             })}
           </p>
-          <Tabs
-            value={curTab}
-            onChange={(event, newValue) => {
-              setCurTab(newValue);
-            }}
-          >
-            <Tab label="Task View" value="list" />
-            <Tab label="Calendar View" value="calendar" />
-          </Tabs>
-          {"calendar" === curTab ? (
+          <TabContext value={curTab} >
+            <Box >
+              <TabList onChange={(event,newValue) =>
+                setCurTab( newValue )
+              } >
+                <Tab label="Task View" value="list" />
+                <Tab label="Calendar View" value="calendar" />
+              </TabList>
+            </Box>
+
+          <TabPanel value='calendar' >
             <FullCalendar
               headerToolbar={{
                 center: "thisWeek,dayGridMonth"
@@ -150,8 +160,12 @@ export default function HomeShell(props) {
               }}
               plugins={[dayGridPlugin, luxonPlugin]}
             />
-          ) : null}
-          {"list" === curTab ? <TaskList tasks={tasks} /> : null}
+
+          </TabPanel>
+          <TabPanel value="list">
+            <TaskList tasks={tasks} />
+          </TabPanel>
+          </TabContext>
         </React.Fragment>
       );
     }
