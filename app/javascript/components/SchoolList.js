@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import Settings from "luxon/src/settings.js";
+import { Settings } from "luxon";
 
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";

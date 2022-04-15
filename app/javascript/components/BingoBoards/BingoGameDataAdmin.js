@@ -9,7 +9,6 @@ import Grid from "@mui/material/Grid";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
@@ -18,7 +17,13 @@ import Switch from "@mui/material/Switch";
 
 import Skeleton from '@mui/material/Skeleton';
 
-import { DatePicker, LocalizationProvider } from "@mui/lab/";
+import {
+  DatePicker,
+  LocalizationProvider,
+  TabContext,
+  TabList,
+  TabPanel
+} from "@mui/lab/";
 
 import { DateTime } from "luxon";
 import AdapterLuxon from '@mui/lab/AdapterLuxon';
@@ -38,6 +43,7 @@ import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import {startTask, endTask} from '../infrastructure/StatusActions';
 import axios from "axios";
+import { Box } from "@mui/material";
 
 const useStyles = makeStyles({
   container: {
@@ -313,11 +319,15 @@ export default function BingoGameDataAdmin(props) {
   return (
     <Suspense fallback={<Skeleton variant="text" />}>
       <Paper style={{ height: "95%", width: "100%" }}>
-        <Tabs value={curTab} onChange={changeTab} centered>
-          <Tab value="details" label={t("game_details_pnl")} />
-          <Tab value="results" label={t("response_pnl")} />
-        </Tabs>
-        {"details" == curTab && (
+        <TabContext value={curTab} >
+          <Box>
+
+            <TabList value={curTab} onChange={changeTab} centered>
+              <Tab value="details" label={t("game_details_pnl")} />
+              <Tab value="results" label={t("response_pnl")} />
+            </TabList>
+          </Box>
+          <TabPanel value='details'>
           <React.Fragment>
             <Grid container spacing={3}>
               <Grid item xs={12}>
@@ -471,17 +481,20 @@ export default function BingoGameDataAdmin(props) {
             {save_btn} {messages.status}
             <Typography>{saveStatus}</Typography>
           </React.Fragment>
-        )}
-        {"results" == curTab && (
-          <Grid container style={{ height: "100%" }}>
-            <Grid item xs={5}>
-              <ConceptChips concepts={concepts} />
+
+          </TabPanel>
+          <TabPanel value="results" >
+            <Grid container style={{ height: "100%" }}>
+              <Grid item xs={5}>
+                <ConceptChips concepts={concepts} />
+              </Grid>
+              <Grid item xs={7}>
+                <BingoGameDataAdminTable results_raw={resultData} />
+              </Grid>
             </Grid>
-            <Grid item xs={7}>
-              <BingoGameDataAdminTable results_raw={resultData} />
-            </Grid>
-          </Grid>
-        )}
+
+          </TabPanel>
+        </TabContext>
       </Paper>
     </Suspense>
   );

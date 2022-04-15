@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
-import { DateTime } from "luxon";
-import Settings from "luxon/src/settings.js";
+import { DateTime, Settings } from "luxon";
 
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import GridOffIcon from "@mui/icons-material/GridOff";

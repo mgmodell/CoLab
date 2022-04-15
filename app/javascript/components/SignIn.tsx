@@ -1,49 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
 //Redux store stuff
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
-  startTask,
-  endTask,
-  setDirty,
-  setClean,
   Priorities,
-  addMessage,
-  acknowledgeMsg
-} from "./infrastructure/StatusActions";
+  addMessage} from "./infrastructure/StatusActions";
 import EmailValidator from 'email-validator';
 import Button from "@mui/material/Button";
-import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import Paper from "@mui/material/Paper";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
-import Collapse from "@mui/material/Collapse";
-import Alert from "@mui/material/Alert";
-import CloseIcon from "@mui/icons-material/Close";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 
-import { DateTime, Info } from "luxon";
-import Settings from "luxon/src/settings.js";
 
-import AdapterLuxon from "@mui/lab/AdapterLuxon";
 import { useTranslation } from 'react-i18next';
 import Grid from "@mui/material/Grid";
-import Input from "@mui/material/Input";
 //import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
 import { emailSignIn, oAuthSignIn, emailSignUp } from "./infrastructure/ContextActions";
 import { GoogleLogin } from "react-google-login";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import Skeleton from "@mui/material/Skeleton";
-import TabsContext from "@mui/lab/TabContext";
-import TabPanel from '@mui/lab/TabPanel';
-import TabList from "@mui/lab/TabList";
+import {
+  TabContext,
+  TabPanel,
+  TabList
+} from '@mui/lab';
 import { Tab } from "@mui/material";
 import axios from "axios";
 
@@ -212,7 +195,7 @@ export default function SignIn(props) {
 
     return (
       <Paper>
-        <TabsContext value={curTab} >
+        <TabContext value={curTab} >
           <TabList onChange={(evt,newVal) => { setCurTab(newVal ); }} >
             <Tab label={t('sessions.login')} value='login' />
             <Tab label={t('registrations.signup_tab')} value='register' />
@@ -270,7 +253,7 @@ export default function SignIn(props) {
           {clearBtn}
           </Grid>
         </TabPanel>
-        </TabsContext>
+        </TabContext>
       </Paper>
     );
 

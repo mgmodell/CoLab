@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { DateTime } from "luxon";
-import Settings from "luxon/src/settings.js";
+import { Settings } from "luxon";
 import Tab from "@mui/material/Tab";
 import {
   TabList,
@@ -24,7 +22,6 @@ import DecisionEnrollmentsTable from "./DecisionEnrollmentsTable";
 import DecisionInvitationsTable from "./DecisionInvitationsTable";
 import ConsentLog from "./Consent/ConsentLog";
 import ProfileDataAdmin from "./ProfileDataAdmin";
-import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import TaskList from "./TaskList";
 import Skeleton from "@mui/material/Skeleton";

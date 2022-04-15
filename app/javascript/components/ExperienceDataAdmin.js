@@ -7,14 +7,18 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
+import { Box } from "@mui/material";
+import {
+  TabList,
+  TabContext,
+  TabPanel
+} from '@mui/lab';
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 
 import { DatePicker, LocalizationProvider } from "@mui/lab/";
 
-import { DateTime, Info } from "luxon";
-import Settings from "luxon/src/settings.js";
+import { DateTime, Settings } from "luxon";
 import ReactionsList from "./ReactionsList";
 
 import AdapterLuxon from "@mui/lab/AdapterLuxon";
@@ -93,7 +97,7 @@ export default function ExperienceDataAdmin(props) {
         setCourseName(course.name);
         setCourseTimezone(course.timezone);
         setReactionsUrl(data.reactionsUrl);
-        Settings.defaultZoneName = course.timezone;
+        Settings.defaultZone = course.timezone;
 
         setExperienceName(experience.name || "");
         setExperienceActive(experience.active || false);
@@ -195,7 +199,7 @@ export default function ExperienceDataAdmin(props) {
 
   useEffect(() => {
     if (userLoaded) {
-      Settings.defaultZoneName = user.timezone;
+      Settings.defaultZone = user.timezone;
     }
   }, [userLoaded]);
 
@@ -309,12 +313,20 @@ export default function ExperienceDataAdmin(props) {
     );
   return (
     <Paper>
-      <Tabs value={curTab} onChange={(event, value) => setCurTab(value)}>
-        <Tab label="Details" value="details" />
-        <Tab label="Results" value="results" disabled={null == experienceId} />
-      </Tabs>
-      {"details" == curTab ? detailsComponent : null}
-      {"results" == curTab ? reactionListing : null}
+      <TabContext value={curTab}>
+        <Box>
+          <TabList value={curTab} onChange={(event, value) => setCurTab(value)}>
+            <Tab label="Details" value="details" />
+            <Tab label="Results" value="results" disabled={null == experienceId} />
+          </TabList>
+        </Box>
+        <TabPanel value='details'>
+          {detailsComponent}
+        </TabPanel>
+        <TabPanel value='results'>
+          {reactionListing}
+        </TabPanel>
+      </TabContext>
     </Paper>
   );
 }

@@ -17,7 +17,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import Collapse from "@mui/material/Collapse";
 import Alert from "@mui/material/Alert";
-import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -26,9 +25,14 @@ import UserEmailList from "./UserEmailList";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { DatePicker, LocalizationProvider } from "@mui/lab/";
-import { DateTime, Info } from "luxon";
-import Settings from "luxon/src/settings.js";
+import {
+  DatePicker,
+  LocalizationProvider,
+  TabList,
+  TabContext,
+  TabPanel
+  } from "@mui/lab/";
+import { Settings } from "luxon";
 
 import AdapterLuxon from "@mui/lab/AdapterLuxon";
 import UserCourseList from "./UserCourseList";
@@ -38,7 +42,7 @@ import UserActivityList from "./UserActivityList";
 //import { useTranslation } from 'react-i18next';
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusActions";
-import { Grid, Link } from "@mui/material";
+import { Box, Grid, Link } from "@mui/material";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import {
   fetchProfile,
@@ -60,6 +64,10 @@ export default function ProfileDataAdmin(props) {
   const lookupStatus = useTypedSelector(
     state => state.context.status.lookupsLoaded
   );
+  const user = useTypedSelector(state => state.profile.user);
+
+  const profileReady = endpointStatus && lookupStatus;
+  const existingProfile = profileReady && undefined != user && user.id > 0;
 
   const timezones = useTypedSelector(state => state.context.lookups.timezones);
   const countries = useTypedSelector(state => state.context.lookups.countries);
@@ -78,7 +86,6 @@ export default function ProfileDataAdmin(props) {
   const [consentForms, setConsentForms] = useState();
 
   //const { t, i18n } = useTranslation('profiles' );
-  const user = useTypedSelector(state => state.profile.user);
   const dispatch = useDispatch();
 
   const [curTab, setCurTab] = useState("details");
@@ -744,47 +751,54 @@ export default function ProfileDataAdmin(props) {
           {messages["main"]}
         </Alert>
       </Collapse>
-      <Tabs
+      <TabContext value={curTab}>
+
+        <Box>
+      <TabList
         centered
         value={curTab}
         onChange={(event, value) => setCurTab(value)}
       >
-        <Tab label="Details" value="details" />
-        <Tab label="My Courses" value="courses" />
-        <Tab label="History" value="history" />
-        <Tab label="Research Participation" value="research" />
-      </Tabs>
-      {endpointStatus && lookupStatus && user.id > 0 ? (
-        <React.Fragment>
-          {lookupStatus && "details" === curTab ? detailsComponent : null}
-          {"courses" === curTab ? (
+        <Tab label="Details" value="details" disabled={!profileReady} />
+        <Tab label="My Courses" value="courses" disabled={!existingProfile} />
+        <Tab label="History" value="history" disabled={!existingProfile} />
+        <Tab label="Research Participation" value="research" disabled={!existingProfile} />
+      </TabList>
+        </Box>
+        <TabPanel value="details">
+          { profileReady ?
+          detailsComponent :
+        (<Skeleton variant="rectangular" heght={300} />)
+
+        }
+        </TabPanel>
+        <TabPanel value="courses">
+
             <UserCourseList
               retrievalUrl={endpoints["coursePerformanceUrl"] + ".json"}
               coursesList={courses}
               coursesListUpdateFunc={setCourses}
               addMessagesFunc={setMessages}
             />
-          ) : null}
-          {"history" === curTab ? (
+        </TabPanel>
+        <TabPanel value='history'>
             <UserActivityList
               retrievalUrl={endpoints["activitiesUrl"] + ".json"}
               activitiesList={activities}
               activitiesListUpdateFunc={setActivities}
               addMessagesFunc={setMessages}
             />
-          ) : null}
-          {"research" === curTab ? (
+        </TabPanel>
+        <TabPanel value="research">
             <ResearchParticipationList
               retrievalUrl={endpoints["consentFormsUrl"] + ".json"}
               consentFormList={consentForms}
               consentFormListUpdateFunc={setConsentForms}
               addMessagesFunc={setMessages}
             />
-          ) : null}
-        </React.Fragment>
-      ) : (
-        <Skeleton variant="rectangular" heght={300} />
-      )}
+
+        </TabPanel>
+      </TabContext>
     </Paper>
   );
 }

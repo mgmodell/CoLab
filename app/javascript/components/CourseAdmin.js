@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import PropTypes from "prop-types";
-import Settings from "luxon/src/settings.js";
+import { Settings } from "luxon";
 
 import CourseList from "./CourseList";
 import CourseDataAdmin from "./CourseDataAdmin";

@@ -10,16 +10,17 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import TabPanel from "@mui/lab/TabPanel";
-import TabContext from "@mui/lab/TabContext";
+import {
+  TabList,
+  TabPanel,
+  TabContext
+ } from "@mui/lab";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 
 import { DatePicker, LocalizationProvider } from "@mui/lab/";
 
-import { DateTime, Info } from "luxon";
-import Settings from "luxon/src/settings.js";
+import { DateTime, Info, Settings } from "luxon";
 
 import AdapterLuxon from "@mui/lab/AdapterLuxon";
 import { useDispatch } from "react-redux";
@@ -377,11 +378,11 @@ export default function ProjectDataAdmin(props) {
   return (
     <Paper>
       <TabContext value={curTab}>
-        <Tabs value={curTab} onChange={(event, value) => setCurTab(value)}>
+        <TabList value={curTab} onChange={(event, value) => setCurTab(value)}>
           <Tab label="Details" value="details" />
           <Tab label="Groups" value="groups" disabled={null == projectId} />
           <Tab label="Reporting" value="rpt" disabled={null == projectId} />
-        </Tabs>
+        </TabList>
         <TabPanel value="details">{detailsComponent}</TabPanel>
         <TabPanel value="groups">
           <ProjectGroups

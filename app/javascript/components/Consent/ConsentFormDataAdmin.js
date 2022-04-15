@@ -1,39 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
-import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
-import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import Select from "@mui/material/Select";
 import Paper from "@mui/material/Paper";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
 import Grid from "@mui/material/Grid";
 import Collapse from "@mui/material/Collapse";
 import Alert from '@mui/material/Alert';
 import CloseIcon from "@mui/icons-material/Close";
 
-import { DateTime, Info } from "luxon";
-import Settings from "luxon/src/settings.js";
+import { Settings } from 'luxon';
 
 import AdapterLuxon from '@mui/lab/AdapterLuxon';
 import { useTranslation } from 'react-i18next';
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from '../infrastructure/StatusActions';
-import { DatePicker, LocalizationProvider } from "@mui/lab/";
-import Tabs from "@mui/material/Tabs";
+import {
+  DatePicker,
+  LocalizationProvider,
+  TabContext,
+  TabList,
+  TabPanel
+  } from "@mui/lab/";
 import Tab from "@mui/material/Tab";
 
-import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { EditorState, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
-import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
+import { Box } from "@mui/material";
 
 export default function ConsentFormDataAdmin(props) {
   const category = "consent_form";
@@ -254,11 +252,15 @@ export default function ConsentFormDataAdmin(props) {
           </Grid>
         </LocalizationProvider>
       </Grid>
-      <Tabs value={curTab} onChange={(event, name) => setCurTab(name)} centered>
-        <Tab value="en" label="English" />
-        <Tab value="ko" label="Korean" />
-      </Tabs>
-      {"en" === curTab ? (
+      <TabContext value={curTab} >
+        <Box>
+          <TabList value={curTab} onChange={(event, name) => setCurTab(name)} centered>
+            <Tab value="en" label="English" />
+            <Tab value="ko" label="Korean" />
+          </TabList>
+
+        </Box>
+      <TabPanel value='en'>
         <Editor
           wrapperId="English Form"
           label={"en_form"}
@@ -300,8 +302,10 @@ export default function ConsentFormDataAdmin(props) {
           }}
           editorState={consentFormFormTextEn}
         />
-      ) : null}
-      {"ko" === curTab ? (
+
+      </TabPanel>
+      <TabPanel value="ko">
+
         <Editor
           wrapperId="Korean Form"
           label={"ko_form"}
@@ -343,7 +347,8 @@ export default function ConsentFormDataAdmin(props) {
           }}
           editorState={consentFormFormTextKo}
         />
-      ) : null}
+      </TabPanel>
+      </TabContext>
       &nbsp;
           <label htmlFor={consentFormDataId}>
             <input

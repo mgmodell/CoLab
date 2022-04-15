@@ -19,13 +19,10 @@ import Paper from "@mui/material/Paper";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 
-import { DateTime, Info } from "luxon";
-import Settings from "luxon/src/settings.js";
+import { Settings } from "luxon";
 
-import AdapterLuxon from "@mui/lab/AdapterLuxon";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { TextareaAutosize } from "@mui/material";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 

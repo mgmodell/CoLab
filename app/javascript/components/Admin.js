@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import PropTypes from "prop-types";
-import Alert from "@mui/material/Alert";
-import IconButton from "@mui/material/IconButton";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import Settings from "luxon/src/settings.js";
+import { Settings } from "luxon";
 
-import CloseIcon from "@mui/icons-material/Close";
 import SchoolList from "./SchoolList";
 import CourseAdmin from "./CourseAdmin";
 import SchoolDataAdmin from "./SchoolDataAdmin";
@@ -15,7 +11,6 @@ import ConsentFormDataAdmin from "./Consent/ConsentFormDataAdmin";
 import ConceptsTable from "./ConceptsTable";
 import ReportingAdmin from "./Reports/ReportingAdmin";
 
-import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function Admin(props) {

@@ -10,7 +10,6 @@ import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import ImageList, { ImageListItem } from "@mui/material/ImageList";
@@ -21,6 +20,11 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 
 import { startTask, endTask } from '../infrastructure/StatusActions';
 import axios from "axios";
+import {
+  TabContext,
+  TabList,
+  TabPanel
+} from "@mui/lab";
 
 export default function BingoBuilder(props) {
   const endpointSet = "candidate_results";
@@ -283,47 +287,56 @@ export default function BingoBuilder(props) {
           </Typography>
         )}
         <hr />
-        <Tabs
-          value={curTab}
-          onChange={(event, value) => setCurTab(value)}
-          centered
-        >
-          <Tab value="builder" label="Bingo game builder" />
-          <Tab value="results" label="Your performance" />
-          <Tab
-            value="worksheet"
-            label="Worksheet result"
-            disabled={
-              !board.practicable ||
-              null == board.worksheet ||
-              (null == board.worksheet.performance &&
-                null == board.worksheet.result_img)
-            }
-          />
-          <Tab value="concepts" label="Concepts found by class" />
-        </Tabs>
-        {"worksheet" == curTab && (
-          <Paper square={false}>
-            <Typography>
-              <strong>Score:</strong>&nbsp;
-              {board.worksheet.performance}
+        <TabContext value={curTab} >
+          <TabList
+            value={curTab}
+            onChange={(event, value) => setCurTab(value)}
+            centered
+          >
+            <Tab value="builder" label="Bingo game builder" />
+            <Tab value="results" label="Your performance" />
+            <Tab
+              value="worksheet"
+              label="Worksheet result"
+              disabled={
+                !board.practicable ||
+                null == board.worksheet ||
+                (null == board.worksheet.performance &&
+                  null == board.worksheet.result_img)
+              }
+            />
+            <Tab value="concepts" label="Concepts found by class" />
+          </TabList>
+          <TabPanel value="worksheet">
+              <Paper square={false}>
+                <Typography>
+                  <strong>Score:</strong>&nbsp;
+                  {board.worksheet.performance}
+                  <br />
+                </Typography>
+                <img src={board.worksheet.result_img} />
+              </Paper>
+
+          </TabPanel>
+          <TabPanel value="builder">
+            <Paper square={false}>
               <br />
-            </Typography>
-            <img src={board.worksheet.result_img} />
-          </Paper>
-        )}
-        {"builder" == curTab && (
-          <Paper square={false}>
-            <br />
-            <ol>
-              {workSheetInstr}
-              {playableInstr}
-            </ol>
-            {builder}
-          </Paper>
-        )}
-        {"results" == curTab && <ScoredGameDataTable candidates={candidates} />}
-        {"concepts" == curTab && <ConceptChips concepts={concepts} />}
+              <ol>
+                {workSheetInstr}
+                {playableInstr}
+              </ol>
+              {builder}
+            </Paper>
+
+          </TabPanel>
+          <TabPanel value="results">
+            <ScoredGameDataTable candidates={candidates} />
+          </TabPanel>
+          <TabPanel value="concepts">
+            <ConceptChips concepts={concepts} />
+          </TabPanel>
+
+        </TabContext>
       </Paper>
   );
 }

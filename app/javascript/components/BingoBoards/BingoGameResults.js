@@ -8,8 +8,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
-import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import {
+  TabList,
+  TabContext,
+  TabPanel
+} from '@mui/lab';
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -17,6 +21,7 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 
 import ScoredGameDataTable from "../ScoredGameDataTable";
+import { Box } from "@mui/material";
 
 function PaperComponent(props) {
   return (
@@ -80,14 +85,21 @@ class BingoGameResults extends React.Component {
           Results for {this.props.student}
         </DialogTitle>
         <DialogContent>
-          <Tabs value={this.state.curTab} onChange={this.changeTab} centered>
-            <Tab value="results" label="Scored Results" />
-            <Tab value="key" label="Answer Key" />
-          </Tabs>
-          {"key" == this.state.curTab && this.renderBoard(this.props.board)}
-          {"results" == this.state.curTab && (
-            <ScoredGameDataTable candidates={this.props.candidates} />
-          )}
+          <TabContext value={curTab}>
+            <Box>
+              <TabList value={this.state.curTab} onChange={this.changeTab} centered>
+                <Tab value="results" label="Scored Results" />
+                <Tab value="key" label="Answer Key" />
+              </TabList>
+
+            </Box>
+            <TabPanel value='key'>
+              {this.renderBoard(this.props.board)}
+            </TabPanel>
+            <TabPanel value='results'>
+              <ScoredGameDataTable candidates={this.props.candidates} />
+            </TabPanel>
+          </TabContext>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.close}>Done</Button>

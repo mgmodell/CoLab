@@ -7,8 +7,7 @@ import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Tooltip from "@mui/material/Tooltip";
-import { DateTime } from "luxon";
-import Settings from "luxon/src/settings.js";
+import { DateTime, Settings } from 'luxon';
 
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import BookIcon from "@mui/icons-material/Book";

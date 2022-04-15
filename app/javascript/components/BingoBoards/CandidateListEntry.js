@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import Alert from '@mui/material/Alert';
 import CloseIcon from "@mui/icons-material/Close";
 
-import Settings from "luxon/src/settings.js";
+import { Settings } from 'luxon';
 
 import { useTranslation } from "react-i18next";
 import {useDispatch} from 'react-redux';

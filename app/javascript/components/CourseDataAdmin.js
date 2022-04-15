@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Routes, Route, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 //Redux store stuff
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
   setDirty,
   setClean,
   addMessage,
-  acknowledgeMsg,
   Priorities
 } from "./infrastructure/StatusActions";
-import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
-import Collapse from "@mui/material/Collapse";
-import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
@@ -31,22 +26,26 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { iconForType } from "./ActivityLib";
 
-import { DatePicker, LocalizationProvider } from "@mui/lab/";
+import {
+  DatePicker,
+  LocalizationProvider,
+  TabPanel,
+  TabList,
+  TabContext
+} from "@mui/lab/";
 
-import { DateTime, Info } from "luxon";
-import Settings from "luxon/src/settings.js";
+import { DateTime, Settings } from "luxon";
 import CourseUsersList from "./CourseUsersList";
 
 import AdapterLuxon from "@mui/lab/AdapterLuxon";
 import MUIDataTable from "mui-datatables";
 
 import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from "@mui/icons-material/Close";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { Skeleton } from "@mui/material";
+import { Box, Skeleton } from "@mui/material";
 
 export default function CourseDataAdmin(props) {
   const category = "course";
@@ -606,7 +605,11 @@ export default function CourseDataAdmin(props) {
 
   return (
     <Paper>
-      <Tabs
+      <TabContext value={curTab}>
+
+      <Box >
+
+      <TabList
         centered
         value={curTab}
         onChange={(event, value) => setCurTab(value)}
@@ -615,9 +618,12 @@ export default function CourseDataAdmin(props) {
         <Tab value="instructors" label="Instructors" />
         <Tab value="students" label="Students" />
         <Tab value="activities" label="Activities" />
-      </Tabs>
-      {"details" == curTab ? detailsComponent : null}
-      {"instructors" == curTab ? (
+      </TabList>
+      </Box>
+      <TabPanel value='details'>
+        {detailsComponent}
+      </TabPanel>
+      <TabPanel value='instructors'>
         <CourseUsersList
           courseId={courseId}
           retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
@@ -626,8 +632,9 @@ export default function CourseDataAdmin(props) {
           userType="instructor"
           addMessagesFunc={postNewMessage}
         />
-      ) : null}
-      {"students" == curTab ? (
+
+      </TabPanel>
+      <TabPanel value='students'>
         <CourseUsersList
           courseId={courseId}
           retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
@@ -636,8 +643,13 @@ export default function CourseDataAdmin(props) {
           userType="student"
           addMessagesFunc={postNewMessage}
         />
-      ) : null}
-      {"activities" == curTab ? activityList : null}
+
+      </TabPanel>
+      <TabPanel value='activities'>
+        {activityList}
+
+      </TabPanel>
+      </TabContext>
       {saveButton}
       {messages["status"]}
     </Paper>
