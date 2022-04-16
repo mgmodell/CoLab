@@ -7,19 +7,6 @@ GIT
       i18n (>= 1.8.11, < 2)
 
 GIT
-  remote: https://github.com/mgmodell/cucumber-rails
-  revision: 9d8f2e687d155a7da37e00d53504880b1b2ef9a8
-  specs:
-    cucumber-rails (2.4.0)
-      capybara (>= 2.18, < 4)
-      cucumber (>= 3.2, < 8)
-      mime-types (~> 3.3)
-      nokogiri (~> 1.10)
-      railties (>= 5.0, < 8)
-      rexml (~> 3.0)
-      webrick (~> 1.7)
-
-GIT
   remote: https://github.com/mgmodell/devise-multi_email.git
   revision: 6c027b5a4f4a61b8975d41838b8dd318755bc6cb
   specs:
@@ -198,6 +185,14 @@ GEM
     cucumber-html-formatter (17.0.0)
       cucumber-messages (~> 17.1, >= 17.1.0)
     cucumber-messages (17.1.1)
+    cucumber-rails (2.5.1)
+      capybara (>= 2.18, < 4)
+      cucumber (>= 3.2, < 8)
+      mime-types (~> 3.3)
+      nokogiri (~> 1.10)
+      railties (>= 5.0, < 8)
+      rexml (~> 3.0)
+      webrick (~> 1.7)
     cucumber-tag-expressions (4.1.0)
     cucumber-wire (6.2.1)
       cucumber-core (~> 10.1, >= 10.1.0)
@@ -553,7 +548,7 @@ DEPENDENCIES
   byebug
   chronic
   city-state
-  cucumber-rails!
+  cucumber-rails
   d3-rails
   database_cleaner
   delayed_job_active_record
