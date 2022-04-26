@@ -17,6 +17,7 @@ const options = {
     new ReactRefreshWebpackPlugin(),
   ],
   resolve: {
+    fallback: { url: require.resolve('url') },
     extensions:
     ['.tsx','.ts','.js','.svg','.png','.jpg','.jpeg','.gif']
   }
