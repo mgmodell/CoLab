@@ -67,8 +67,8 @@ fi
 
 asdf plugin add nodejs
 asdf plugin add ruby
-asdf install ruby 3.0.0
-asdf install nodejs 15.6.0
+asdf plugin add noedjs
+asdf install
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   echo -e "\n. $(brew --prefix asdf)/asdf.sh" >> ~/.zprofile
