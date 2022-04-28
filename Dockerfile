@@ -6,11 +6,23 @@ RUN apt -y install \
   imagemagick \
   libvips \
   make \
-  ruby-dev \
+  ruby-build \
+  vim \
   git \
   bash \
   libmysqlclient-dev \
   yarn 
+
+RUN apt autoremove && \
+    apt clean
+
+RUN groupadd -r colab && \
+  useradd --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
+
+USER colab
+
+RUN mkdir -p /home/colab/src/app
+WORKDIR /home/colab/src/app
 
 SHELL ["/bin/bash", "-l", "-c"]
 
@@ -22,22 +34,19 @@ RUN echo -e "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo -e "export DISPLAY=:0" >> ~/.bashrc &&\
   echo -e "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc
 
-RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0
-RUN echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.bashrc && \
-  echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.profile
+RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0 &&\
+    echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.bashrc && \
+    echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.profile
 RUN source ~/.bashrc && \
   asdf plugin add ruby && \
   asdf plugin add nodejs && \
   asdf plugin add yarn
 
-RUN mkdir /usr/src/app
+USER root
 
+RUN mkdir /home/colab/.asdf/installs && \
+  chown colab:colab /home/colab/.asdf/installs
 
-
-#RUN gem install bundler \
-#  bundle install \
-#  yarn install
-
-WORKDIR /usr/src/app
+USER colab
 
 CMD /bin/bash

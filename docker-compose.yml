@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  app:
+    image: colab_test
+    volumes:
+      - type: bind
+        source: ~/.ssh
+        target: /home/colab/.ssh
+      - src:/home/colab/src/app
+      - asdf-installs:/home/colab/.asdf/installs
+  db:
+    image: mariadb:10.7.3
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: colab_test_
+  browser:
+    image: seleniarm/standalone-chromium
+    ports:
+      - 4444:4444
+      - 7900:7900
+
+volumes:
+  src:
+  asdf-installs:
+

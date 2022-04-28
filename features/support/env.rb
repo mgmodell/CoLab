@@ -52,6 +52,19 @@ Capybara.register_driver :firefox do |app|
   )
 end
 
+Capybara.register_driver(:remote_chrome) do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w[disable-gpu] }
+  )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    url: 'http://browser:4444/wd/hub'
+    # desired_capabilities: capabilities
+  )
+end
+
 Capybara.register_driver(:chrome) do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     chromeOptions: { args: %w[disable-gpu] }
@@ -65,6 +78,8 @@ Capybara.register_driver(:chrome) do |app|
 end
 
 Capybara.javascript_driver = case ENV['DRIVER']
+                             when 'docker'
+                               :remote_chrome
                              when 'chrome'
                                :chrome
                              when 'ff'
