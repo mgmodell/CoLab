@@ -1,17 +1,10 @@
 GIT
   remote: https://github.com/faker-ruby/faker.git
-  revision: a00b4c6388c69fdafb7e12cbacdb6d8a9927fba5
+  revision: b78a47e64d79863dfb2a987c84157a8b0de3a037
   branch: master
   specs:
     faker (2.20.0)
       i18n (>= 1.8.11, < 2)
-
-GIT
-  remote: https://github.com/mgmodell/devise-multi_email.git
-  revision: 6c027b5a4f4a61b8975d41838b8dd318755bc6cb
-  specs:
-    devise-multi_email (3.0.0)
-      devise
 
 GIT
   remote: https://github.com/mgmodell/devise_token_auth
@@ -217,6 +210,8 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    devise-multi_email (3.0.1)
+      devise
     diff-lcs (1.5.0)
     digest (3.1.0)
     docile (1.4.0)
@@ -258,7 +253,7 @@ GEM
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    loofah (2.16.0)
+    loofah (2.17.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -513,6 +508,8 @@ GEM
     ttfunk (1.7.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
+    tzinfo-data (1.2022.1)
+      tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.1)
@@ -557,7 +554,7 @@ DEPENDENCIES
   database_cleaner
   delayed_job_active_record
   descriptive_statistics (~> 2.5.1)
-  devise-multi_email!
+  devise-multi_email
   devise_token_auth!
   email_address
   faker!
@@ -599,6 +596,7 @@ DEPENDENCIES
   spring
   stopwords-filter
   traco
+  tzinfo-data
   web-console
   webdrivers (~> 5.0)
 

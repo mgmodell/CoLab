@@ -41,7 +41,7 @@ gem 'city-state'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
-gem 'devise-multi_email', git: 'https://github.com/mgmodell/devise-multi_email.git'
+gem 'devise-multi_email'
 gem 'devise_token_auth', git: 'https://github.com/mgmodell/devise_token_auth'
 gem 'email_address'
 gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
@@ -58,6 +58,7 @@ gem 'rails_12factor', group: :production
 gem 'react-rails'
 gem 'stopwords-filter', require: 'stopwords'
 gem 'traco'
+gem 'tzinfo-data'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
