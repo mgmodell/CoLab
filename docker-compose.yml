@@ -2,6 +2,8 @@ version: "3.7"
 services:
   app:
     image: colab_test
+    ports:
+      - '31337:31337'
     volumes:
       - type: bind
         source: ~/.ssh
@@ -17,6 +19,7 @@ services:
     image: seleniarm/standalone-chromium
     ports:
       - 4444:4444
+      - 5900:5900
       - 7900:7900
 
 volumes:

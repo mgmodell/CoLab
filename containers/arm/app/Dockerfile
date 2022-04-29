@@ -36,7 +36,9 @@ RUN echo -e "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
 
 RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0 &&\
     echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.bashrc && \
-    echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.profile
+    echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.profile && \
+     echo 'bundler' >> ~/.default-gems
+
 RUN source ~/.bashrc && \
   asdf plugin add ruby && \
   asdf plugin add nodejs && \

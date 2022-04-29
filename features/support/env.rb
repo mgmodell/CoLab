@@ -79,6 +79,9 @@ end
 
 Capybara.javascript_driver = case ENV['DRIVER']
                              when 'docker'
+                               Capybara.server_host = `hostname -s`.strip
+                               Capybara.server_port = '31337'
+                               Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
                                :remote_chrome
                              when 'chrome'
                                :chrome
