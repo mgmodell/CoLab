@@ -11,12 +11,9 @@ services:
       - src:/home/colab/src/app
       - asdf-installs:/home/colab/.asdf/installs
   db:
-    image: mariadb:10.7.3
-    environment:
-      MYSQL_ROOT_PASSWORD: test
-      MYSQL_DATABASE: colab_test_
+    image: colab_db
   browser:
-    image: seleniarm/standalone-chromium
+    image: colab_browser
     ports:
       - 4444:4444
       - 5900:5900
