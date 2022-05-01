@@ -46,6 +46,9 @@ RUN source ~/.bashrc && \
 
 USER root
 
+RUN mkdir /home/colab/.ssh && \
+  chown colab:colab /home/colab/.ssh
+
 RUN mkdir /home/colab/.asdf/installs && \
   chown colab:colab /home/colab/.asdf/installs
 

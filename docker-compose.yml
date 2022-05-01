@@ -6,7 +6,7 @@ services:
       - '31337:31337'
     volumes:
       - type: bind
-        source: ~/.ssh
+        source: ~${USER}/.ssh
         target: /home/colab/.ssh
       - src:/home/colab/src/app
       - asdf-installs:/home/colab/.asdf/installs
