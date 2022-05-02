@@ -24,6 +24,8 @@ USER colab
 RUN mkdir -p /home/colab/src/app
 WORKDIR /home/colab/src/app
 
+RUN mkdir /home/colab/.ssh 
+
 SHELL ["/bin/bash", "-l", "-c"]
 
 # COPY containers/asdf-install-toolset /usr/local/bin
@@ -45,9 +47,6 @@ RUN source ~/.bashrc && \
   asdf plugin add yarn
 
 USER root
-
-RUN mkdir /home/colab/.ssh && \
-  chown colab:colab /home/colab/.ssh
 
 RUN mkdir /home/colab/.asdf/installs && \
   chown colab:colab /home/colab/.asdf/installs

@@ -21,6 +21,8 @@ RUN groupadd -r colab && \
 
 USER colab
 
+RUN mkdir /home/colab/.ssh 
+
 RUN mkdir -p /home/colab/src/app
 WORKDIR /home/colab/src/app
 
@@ -45,9 +47,6 @@ RUN source ~/.bashrc && \
   asdf plugin add yarn
 
 USER root
-
-RUN mkdir /home/colab/.ssh && \
-  chown colab:colab /home/colab/.ssh
 
 RUN mkdir /home/colab/.asdf/installs && \
   chown colab:colab /home/colab/.asdf/installs
