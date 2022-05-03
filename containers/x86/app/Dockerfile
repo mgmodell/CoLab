@@ -23,6 +23,7 @@ USER colab
 
 
 WORKDIR /home/colab
+RUN mkdir .ssh/
 COPY containers/id_rsa .ssh/
 
 RUN mkdir -p /home/colab/src/app
