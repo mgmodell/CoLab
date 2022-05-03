@@ -19,11 +19,13 @@ RUN apt autoremove && \
 RUN groupadd -r colab && \
   useradd --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
 
-USER colab
 
 WORKDIR /home/colab
 RUN mkdir .ssh
 COPY containers/id_rsa .ssh/
+RUN chown -R colab:colab .ssh
+
+USER colab
 
 RUN mkdir -p /home/colab/src/app
 WORKDIR /home/colab/src/app
