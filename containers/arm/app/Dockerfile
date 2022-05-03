@@ -21,7 +21,8 @@ RUN groupadd -r colab && \
 
 USER colab
 
-RUN mkdir -p ~/.ssh && ln -s /run/secrets/ssh_key ~/.ssh/id_rsa
+WORKDIR /home/colab
+COPY containers/id_rsa .ssh/
 
 RUN mkdir -p /home/colab/src/app
 WORKDIR /home/colab/src/app
