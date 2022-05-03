@@ -21,14 +21,13 @@ RUN groupadd -r colab && \
 
 USER colab
 
-RUN mkdir /home/colab/.ssh 
+RUN mkdir -p ~/.ssh && ln -s /run/secrets/ssh_key ~/.ssh/id_rsa
 
 RUN mkdir -p /home/colab/src/app
 WORKDIR /home/colab/src/app
 
 SHELL ["/bin/bash", "-l", "-c"]
 
-# COPY containers/asdf-install-toolset /usr/local/bin
 RUN echo -e "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo -e "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.bashrc &&\
   echo -e "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.bashrc &&\
