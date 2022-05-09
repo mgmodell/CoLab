@@ -37,12 +37,14 @@ RUN echo -e "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo -e "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.bashrc &&\
   echo -e "export AWS_REGION=ap-northeast-2" >> ~/.bashrc &&\
   echo -e "export DISPLAY=:0" >> ~/.bashrc &&\
-  echo -e "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc
+  echo -e "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
+  echo -e "export RAILS_ENV=docker" >> ~/.bashrc && \
+  echo -e "export CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec" >> ~/.bashrc
 
 RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0 &&\
     echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.bashrc && \
     echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.profile && \
-     echo 'bundler' >> ~/.default-gems
+    echo 'bundler' >> ~/.default-gems
 
 RUN source ~/.bashrc && \
   asdf plugin add ruby && \
@@ -58,4 +60,13 @@ RUN mkdir /home/colab/.asdf/shims && \
 
 USER colab
 
-CMD /bin/bash
+RUN echo "git pull" >> entrypoint.sh && \
+  echo "bundle install" >> entrypoint.sh && \
+  echo "yarn install" >> entrypoint.sh && \
+  echo "rails cucumber:rerun" >> entrypoint.sh && \
+  chmod u+x entrypoint.sh
+
+ENV RAILS_ENV docker
+ENV CUCUMBER_PUBLISH_TOKEN caa67d94-0eab-4593-90c7-6032772d86ec
+
+CMD entrypoint.sh
