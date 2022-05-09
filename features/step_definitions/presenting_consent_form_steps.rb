@@ -5,6 +5,7 @@ require 'faker'
 
 Given(/^reset time clock to now$/) do
   travel_back
+  page.execute_script "Date = TimeShift.OriginalDate( );"
 end
 
 Given(/^there is a global consent form$/) do

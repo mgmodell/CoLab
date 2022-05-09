@@ -3078,9 +3078,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.4.118:
-  version "1.4.136"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.136.tgz#b6a3595a9c29d6d8f60e092d40ac24f997e4e7ef"
-  integrity sha512-GnITX8rHnUrIVnTxU9UlsTnSemHUA2iF+6QrRqxFbp/mf0vfuSc/goEyyQhUX3TUUCE3mv/4BNuXOtaJ4ur0eA==
+  version "1.4.137"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.137.tgz#186180a45617283f1c012284458510cd99d6787f"
+  integrity sha512-0Rcpald12O11BUogJagX3HsCN3FE83DSqWjgXoHo5a72KUKMSfI39XBgJpgNNxS9fuGzytaFjE06kZkiVFy2qA==
 
 email-validator@^2.0.4:
   version "2.0.4"
@@ -3621,9 +3621,9 @@ i18next-localstorage-cache@^1.1.1:
   integrity sha1-V1JWzDXoyy2IFI91R2b90tJLsbc=
 
 i18next@^21.6.14:
-  version "21.7.1"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.7.1.tgz#3b63390fa7c2eb22440f80ef8c7f4d7e4f8187e8"
-  integrity sha512-uNt0BM+HV7wgWrrTE+Z4qinQFTONB21hK3I5V/LayhquPv78WchnO4hjF2PWY/OZocahHBDbzbe0/o1rp/RcWQ==
+  version "21.8.0"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.8.0.tgz#2ad46a882fe1b793e499c47a934bb115b7c618b3"
+  integrity sha512-opNd7cQj0PDlUX15hPjtzReRxy5/Rn405YvHTBEm1nf1YJhsqYFFFhHMwuU4NEHZNlrepHk5uK+CJbFtB+KO3w==
   dependencies:
     "@babel/runtime" "^7.17.2"
 
@@ -5671,6 +5671,11 @@ thunky@^1.0.2:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/thunky/-/thunky-1.1.0.tgz#5abaf714a9405db0504732bbccd2cedd9ef9537d"
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
+
+timeshift@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/timeshift/-/timeshift-0.0.2.tgz#a48be295d297e27922ef1efef95d9dd24f7eb2f1"
+  integrity sha512-/anBRRWdb+1nZ/5xGYdAAm9x2FiOfYIJ2swhcZVR1nivChNa6Dry+6laTY3NWJDE5UpiwxKpSIXf7rh/XwNq8A==
 
 tiny-warning@^1.0.2:
   version "1.0.3"

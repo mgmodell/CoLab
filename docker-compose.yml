@@ -7,6 +7,7 @@ services:
     volumes:
       - src:/home/colab/src/app
       - asdf-installs:/home/colab/.asdf/installs
+      - asdf-shims:/home/colab/.asdf/shims
   db:
     image: colab_db
     volumes:
@@ -21,5 +22,6 @@ services:
 volumes:
   src:
   asdf-installs:
+  asdf-shims:
   mariadb-data:
 
