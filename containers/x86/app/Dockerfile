@@ -59,13 +59,7 @@ RUN mkdir /home/colab/.asdf/shims && \
 
 USER colab
 
-RUN echo "git pull" >> entrypoint.sh && \
-  echo "bundle install" >> entrypoint.sh && \
-  echo "yarn install" >> entrypoint.sh && \
-  echo "rails cucumber:rerun" >> entrypoint.sh && \
-  chmod u+x entrypoint.sh
-
 ENV RAILS_ENV docker
 ENV CUCUMBER_PUBLISH_TOKEN caa67d94-0eab-4593-90c7-6032772d86ec
 
-CMD entrypoint.sh
+CMD run_cukes.sh
