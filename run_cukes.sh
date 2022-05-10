@@ -1,5 +1,6 @@
 #/bin/sh
 
+ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
 git pull
 bundle install
 yarn install
