@@ -47,6 +47,7 @@ RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.
 
 RUN source ~/.bashrc && \
   asdf plugin add ruby && \
+  asdf plugin add bundler && \
   asdf plugin add nodejs && \
   asdf plugin add yarn
 

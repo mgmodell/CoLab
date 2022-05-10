@@ -2,6 +2,8 @@
 
 ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
 git pull
+asdf reshim
+asdf install
 bundle install
 yarn install
 
