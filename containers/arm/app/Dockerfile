@@ -64,4 +64,4 @@ USER colab
 ENV RAILS_ENV docker
 ENV CUCUMBER_PUBLISH_TOKEN caa67d94-0eab-4593-90c7-6032772d86ec
 
-CMD run_cukes.sh
+CMD ls && ./run_cukes.sh
