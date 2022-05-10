@@ -37,7 +37,7 @@ RUN echo -e "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo -e "export AWS_REGION=ap-northeast-2" >> ~/.bashrc &&\
   echo -e "export DISPLAY=:0" >> ~/.bashrc &&\
   echo -e "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.bashrc && \
-  echo -e "export RAILS_ENV=docker" >> ~/.bashrc && \
+  echo -e "export DRIVER=docker" >> ~/.bashrc && \
   echo -e "export CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec" >> ~/.bashrc
 
 RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0 &&\
@@ -60,7 +60,7 @@ RUN mkdir /home/colab/.asdf/shims && \
 
 USER colab
 
-ENV RAILS_ENV docker
+ENV DRIVER docker
 ENV CUCUMBER_PUBLISH_TOKEN caa67d94-0eab-4593-90c7-6032772d86ec
 
 CMD ls && ./run_cukes.sh
