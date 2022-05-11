@@ -462,7 +462,7 @@ GEM
     rubyzip (2.3.2)
     safely_block (0.3.0)
       errbase (>= 0.1.1)
-    sdoc (2.3.2)
+    sdoc (2.4.0)
       rdoc (>= 5.0)
     selenium-webdriver (4.1.0)
       childprocess (>= 0.5, < 5.0)
