@@ -17,20 +17,20 @@ Given(/^the user timezone is "([^"]*)"$/) do |timezone|
 end
 
 Given(/^the user sees (\d+) assessment every hour of the day$/) do |assessment_count|
-  page.execute_script "Date = TimeShift.Date;"
+  page.evaluate_script "Date = TimeShift.Date;"
   24.times do |_index|
     step "that the system's set_up_assessments process runs"
     visit '/'
     step "user should see #{assessment_count} open task"
     dest_date = DateTime.current + 30.minutes
     travel_to( dest_date )
-    page.execute_script "TimeShift.setTime( #{dest_date.to_i} );"
+    page.evaluate_script "TimeShift.setTime( #{dest_date.to_i} );"
 
     step "that the system's set_up_assessments process runs"
     visit '/'
     step "user should see #{assessment_count} open task"
     dest_date = DateTime.current + 30.minutes
     travel_to( dest_date )
-    page.execute_script "TimeShift.setTime( #{dest_date.to_i} );"
+    page.evaluate_script "TimeShift.setTime( #{dest_date.to_i} );"
   end
 end
