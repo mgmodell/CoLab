@@ -4,8 +4,10 @@ Given(/^today is "(.*?)"$/) do |destination_time|
   # Chronic.time_class = Time.zone
   dest_date = Chronic.parse(destination_time).utc
   travel_to dest_date
-  page.evaluate_script "Date = TimeShift.Date;"
-  page.evaluate_script "TimeShift.setTime( #{dest_date.to_i} );"
+  if :rack_test != Capybara.current_driver
+    page.execute_script "Date = TimeShift.Date;"
+    page.execute_script "TimeShift.setTime( #{dest_date.to_i} );"
+  end
 
   # The following line is often useful for debugging date issues
   # log "Date is now: #{Date.today}"

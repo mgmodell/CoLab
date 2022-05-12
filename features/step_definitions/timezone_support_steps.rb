@@ -17,20 +17,26 @@ Given(/^the user timezone is "([^"]*)"$/) do |timezone|
 end
 
 Given(/^the user sees (\d+) assessment every hour of the day$/) do |assessment_count|
-  page.evaluate_script "Date = TimeShift.Date;"
+  if :rack_test != Capybara.current_driver
+    page.execute_script "Date = TimeShift.Date;"
+  end
   24.times do |_index|
     step "that the system's set_up_assessments process runs"
     visit '/'
     step "user should see #{assessment_count} open task"
     dest_date = DateTime.current + 30.minutes
     travel_to( dest_date )
-    page.evaluate_script "TimeShift.setTime( #{dest_date.to_i} );"
+    if :rack_test != Capybara.current_driver
+      page.execute_script "TimeShift.setTime( #{dest_date.to_i} );"
+    end
 
     step "that the system's set_up_assessments process runs"
     visit '/'
     step "user should see #{assessment_count} open task"
     dest_date = DateTime.current + 30.minutes
     travel_to( dest_date )
-    page.evaluate_script "TimeShift.setTime( #{dest_date.to_i} );"
+    if :rack_test != Capybara.current_driver
+      page.execute_script "TimeShift.setTime( #{dest_date.to_i} );"
+    end
   end
 end
