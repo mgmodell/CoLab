@@ -8,7 +8,9 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Support component names relative to this directory:
-import "timeshift";
+import TimeShift from "timeshift";
+
+Window.TimeShift = TimeShift;
 /*
 import "promise-polyfill/src/polyfill";
 import "whatwg-fetch";
