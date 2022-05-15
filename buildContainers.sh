@@ -2,7 +2,7 @@
 
 cp ~/.ssh/id_rsa containers/id_rsa
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ $OSTYPE == 'darwin'* ]]; then
   echo 'building for arm'
   docker build -f ./containers/arm/db/Dockerfile -t colab_db .
   docker build -f ./containers/arm/app/Dockerfile -t colab_app .
