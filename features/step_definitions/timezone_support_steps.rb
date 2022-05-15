@@ -27,7 +27,8 @@ Given(/^the user sees (\d+) assessment every hour of the day$/) do |assessment_c
     dest_date = DateTime.current + 30.minutes
     travel_to( dest_date )
     if :rack_test != Capybara.current_driver
-      page.execute_script "Window.TimeShift.setTime( #{dest_date.to_i} );"
+      fill_in 'newTimeVal', with: dest_date.to_i.to_s
+      click_button 'setTimeBtn'
     end
 
     step "that the system's set_up_assessments process runs"
@@ -36,7 +37,8 @@ Given(/^the user sees (\d+) assessment every hour of the day$/) do |assessment_c
     dest_date = DateTime.current + 30.minutes
     travel_to( dest_date )
     if :rack_test != Capybara.current_driver
-      page.execute_script "Window.TimeShift.setTime( #{dest_date.to_i} );"
+      fill_in 'newTimeVal', with: dest_date.to_i.to_s
+      click_button 'setTimeBtn'
     end
   end
 end

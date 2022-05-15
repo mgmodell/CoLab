@@ -6,7 +6,7 @@ require 'faker'
 Given(/^reset time clock to now$/) do
   travel_back
   if :rack_test != Capybara.current_driver
-    page.execute_script "Date = Window.TimeShift.OriginalDate( );"
+    click_button 'resetTimeBtn'
   end
 end
 

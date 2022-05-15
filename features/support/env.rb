@@ -177,11 +177,17 @@ After('@javascript') do |_scenario|
   DatabaseCleaner.clean
   loadData
   travel_back
+  if :rack_test != Capybara.current_driver
+    click_button 'resetTimeBtn'
+  end
 end
 
 After('not @javascript') do |_scenario|
   DatabaseCleaner.clean
   travel_back
+  if :rack_test != Capybara.current_driver
+    click_button 'resetTimeBtn'
+  end
 end
 
 scenario_times = {}

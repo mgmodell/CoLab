@@ -7,22 +7,20 @@
     <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Roboto:300,400,500' %>
-    <% if true # && Rails.env.test? # %>
-      <%= javascript_pack_tag 'application', 'testing' %>
-    <% else %>
-      <%= javascript_pack_tag 'application' %>
-    <% end %>
+
+    <%= javascript_pack_tag 'application' %>
     <%= stylesheet_pack_tag 'application' %>
     <%= csrf_meta_tags %>
   </head>
   <body>
-    <div data-role="page" data-theme="<%= theme_code %>">
       <%= react_component "PageWrapper", {
           token: form_authenticity_token,
           getEndpointsUrl: endpoints_path
 
       }%>
-      <div data-role="content">
+    <% if true # && Rails.env.test? # %>
+      <%= react_component "TimeSetter", { } %>
+    <% end %>
         <% if flash[:error] -%>
           <p class='error'><%=h flash[:error] %></p>
         <% end -%>
@@ -30,8 +28,6 @@
           <p class='notice'><%=h flash[:notice] %></p>
         <% end -%>
         <%= yield %>
-      </div>
-    </div>
     <%= render 'layouts/shared/footer', working: false %>
   </body>
 </html>

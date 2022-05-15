@@ -5,8 +5,8 @@ Given(/^today is "(.*?)"$/) do |destination_time|
   dest_date = Chronic.parse(destination_time).utc
   travel_to dest_date
   if :rack_test != Capybara.current_driver
-    page.execute_script "Date = Window.TimeShift.Date;"
-    page.execute_script "Window.TimeShift.setTime( #{dest_date.to_i} );"
+    fill_in 'newTimeVal', with: dest_date.to_i.to_s
+    click_button 'setTimeBtn'
   end
 
   # The following line is often useful for debugging date issues
