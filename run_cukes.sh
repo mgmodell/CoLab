@@ -15,7 +15,7 @@ while getopts "hsnb:f:" opt; do
     s)
       echo "Showing Rerun File" >&2
       cat rerun.txt
-      exit 0;;
+      ;;
     b)
       echo "Checking out branch $OPTARG" >&2
       git checkout $OPTARG
@@ -26,7 +26,11 @@ while getopts "hsnb:f:" opt; do
       ;;
     n)
       echo "Removing Rerun File" >&2
-      # rm rerun.txt
+      rm rerun.txt
+      ;;
+    r)
+      echo "Rerun recent failures" >&2
+      # NOOP
       ;;
     h|\?) #Invalid option
       echo "RunCukes: Script to launch automated tests"
@@ -35,6 +39,7 @@ while getopts "hsnb:f:" opt; do
       echo " -b [branch]    Switch to [branch]"
       echo " -f [features]  Specify specific features"
       echo " -n             Start fresh"
+      echo " -r             Rerun previous failed tests with latest code"
 
       exit 1;;
   esac
@@ -42,6 +47,7 @@ done
 
 DRIVER=docker
 RAILS_ENV=docker
+CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
 
 asdf install
 bundle install
