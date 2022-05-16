@@ -70,7 +70,7 @@ gem 'tzinfo-data'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-group :development, :test do
+group :development, :test, :docker do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
@@ -98,7 +98,7 @@ group :development, :test do
   gem 'webdrivers', '~> 5.0', require: false
 end
 
-group :test do
+group :test, :docker do
   gem 'simplecov', require: false
 end
 
