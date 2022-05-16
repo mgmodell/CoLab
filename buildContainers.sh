@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 cp ~/.ssh/id_rsa containers/id_rsa
 

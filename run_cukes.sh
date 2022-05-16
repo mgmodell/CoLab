@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
 git pull
