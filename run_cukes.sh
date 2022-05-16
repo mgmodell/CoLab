@@ -4,14 +4,14 @@ ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
 git pull
 asdf reshim
 
-if [[ $OSTYPE == 'darwin'* ]]; then
-  echo 'building for arm'
-else
-  echo 'building for x86'
-fi
+DRIVER=docker
 
-while getopts "hsnb:f:" opt; do
+while getopts "hsnb:f:d:" opt; do
   case $opt in
+    d)
+      echo "Setting driver to $OPTARG" >&2
+      DRIVER=$OPTARG
+      ;;
     s)
       echo "Showing Rerun File" >&2
       cat rerun.txt
@@ -45,7 +45,6 @@ while getopts "hsnb:f:" opt; do
   esac
 done
 
-DRIVER=docker
 RAILS_ENV=docker
 CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
 

@@ -2,17 +2,16 @@ import React, {
   useState,
   Fragment } from "react";
 import PropTypes from "prop-types";
-import TimeShift from "timeshift";
+import MockDate from 'mockdate';
 
 export default function TimeSetter(props) {
   const [newTime, setNewTime] = useState( '' );
 
   const setTime = () => {
-    Date = TimeShift.Date;
-    TimeShift.setTime( newTime );
+    MockDate.set( new Date( newTime ) );
   }
   const resetTime = ( ) => {
-    Date = TimeShift.setTime( undefined );
+    MockDate.reset( );
   }
 
   return (

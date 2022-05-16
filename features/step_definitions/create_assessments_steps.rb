@@ -2,10 +2,10 @@
 
 Given(/^today is "(.*?)"$/) do |destination_time|
   # Chronic.time_class = Time.zone
-  dest_date = Chronic.parse(destination_time).utc
-  travel_to dest_date
-  if :rack_test != Capybara.current_driver
-    fill_in 'newTimeVal', with: dest_date.to_i.to_s
+  @dest_date = Chronic.parse(destination_time).utc
+  travel_to @dest_date
+  if :rack_test != Capybara.current_driver && current_url.start_with?( 'http' )
+    fill_in 'newTimeVal', with: @dest_date.to_i.to_s
     click_button 'setTimeBtn'
   end
 
