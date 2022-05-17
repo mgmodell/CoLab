@@ -1,6 +1,8 @@
 #!/bin/bash
 
 ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
+#pull in the asdf code
+/home/colab/.asdf/asdf.sh
 #set the current working directory
 cd /home/colab/src/app
 
