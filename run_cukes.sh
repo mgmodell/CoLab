@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
-whoami
-source ~/.bashrc
-#set the current working directory
-cd /home/colab/src/app
+echo "Settingthe current working directory"
+. $HOME/.asdf/asdf.sh
+
+cd $HOME/src/app
 
 git pull
 asdf reshim
