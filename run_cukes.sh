@@ -1,6 +1,9 @@
 #!/bin/bash
 
 ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
+#set the current working directory
+cd /home/colab/src/app
+
 git pull
 asdf reshim
 

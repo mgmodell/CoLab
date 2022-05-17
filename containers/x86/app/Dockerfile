@@ -63,5 +63,5 @@ USER colab
 ENV DRIVER docker
 ENV CUCUMBER_PUBLISH_TOKEN caa67d94-0eab-4593-90c7-6032772d86ec
 
-ENTRYPOINT  ["./run_cukes.sh"]
-CMD [ "-r"]
+ENTRYPOINT  ["/home/colab/src/app/run_cukes.sh"]
+CMD -r
