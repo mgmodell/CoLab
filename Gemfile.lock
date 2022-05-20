@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/faker-ruby/faker.git
-  revision: 7fa13f2bb1d837b182ec33ef951a9e6b5258f3e7
+  revision: 7846d10edaa0786a7b7df707533dbc7e995d3299
   branch: master
   specs:
     faker (2.21.0)
@@ -109,7 +109,7 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.588.0)
+    aws-partitions (1.589.0)
     aws-sdk-core (3.131.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
@@ -469,7 +469,7 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
     semantic_range (3.0.0)
-    shakapacker (6.2.1)
+    shakapacker (6.3.0)
       activesupport (>= 5.2)
       rack-proxy (>= 0.6.1)
       railties (>= 5.2)
@@ -595,7 +595,7 @@ DEPENDENCIES
   rubocop-thread_safety
   sdoc
   selenium-webdriver
-  shakapacker (= 6.2.1)
+  shakapacker (= 6.3.0)
   simplecov
   solargraph
   spring
