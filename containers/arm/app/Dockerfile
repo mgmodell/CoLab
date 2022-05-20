@@ -27,8 +27,6 @@ RUN chown -R colab:colab .ssh
 
 USER colab
 
-RUN mkdir -p /home/colab/src/app
-WORKDIR /home/colab/src/app
 
 SHELL ["/bin/bash", "-l", "-c"]
 
@@ -61,8 +59,13 @@ RUN mkdir /home/colab/.asdf/shims && \
 
 USER colab
 
+#Set up the app materials
+RUN mkdir -p /home/colab/src/app
+COPY containers/entrypoint.sh /home/colab/src/
+WORKDIR /home/colab/src/app
+
 ENV DRIVER docker
 ENV CUCUMBER_PUBLISH_TOKEN caa67d94-0eab-4593-90c7-6032772d86ec
 
-ENTRYPOINT  ["/home/colab/src/app/run_cukes.sh"]
+ENTRYPOINT  ["/home/colab/src/entrypoint.sh"]
 CMD -r
