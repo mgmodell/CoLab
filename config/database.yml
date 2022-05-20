@@ -29,9 +29,8 @@ test: &test
   <<: *default
   database: colab_test_<%= ENV['TEST_ENV_NUMBER'] %>
 
-docker: &test
-  <<: *default
-  database: colab_test_<%= ENV['TEST_ENV_NUMBER'] %>
+docker: &docker
+  <<: *test
   host: db
 
 # As with config/secrets.yml, you never want to store sensitive information,
