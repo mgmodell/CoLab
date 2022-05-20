@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
-echo "Settingthe current working directory"
+# ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
+echo "Setting the current working directory"
 . $HOME/.asdf/asdf.sh
 
 cd $HOME/src/app
@@ -57,4 +57,4 @@ asdf install
 bundle install
 yarn install
 
-rails cucumber:rerun 
+rails cucumber:rerun RAILS_ENV=$RAILS_ENV
