@@ -39,3 +39,11 @@ yarn-debug.log*
 .yarn-integrity
 
 /config/master.key
+
+/config/credentials/production.key
+
+/config/credentials/test.key
+
+/config/credentials/docker.key
+
+/config/credentials/development.key
