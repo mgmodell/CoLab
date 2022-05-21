@@ -8,6 +8,9 @@ services:
       - src:/home/colab/src/app
       - asdf-installs:/home/colab/.asdf/installs
       - asdf-shims:/home/colab/.asdf/shims
+    depends_on:
+      - db
+      - browser
   db:
     image: colab_db
     volumes:

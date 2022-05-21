@@ -58,6 +58,6 @@ production:
   username: peerasse_colab_p
   password: <%= ENV['COLAB_DATABASE_PASSWORD'] %>
 
-# cucumber:
-#   <<: *test
+cucumber:
+  <<: *test
 

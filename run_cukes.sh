@@ -58,6 +58,5 @@ asdf install
 bundle install
 yarn install
 
-echo "TEST Execution: rails cucumber:rerun RAILS_ENV=$RAILS_ENV"
-rails db:create RAILS_ENV=$RAILS_ENV
+echo "TEST Execution: rails cucumber:rerun"
 rails cucumber:rerun RAILS_ENV=$RAILS_ENV
