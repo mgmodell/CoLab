@@ -59,5 +59,5 @@ bundle install
 yarn install
 
 echo $RAILS_ENV
-echo "rails cucumber:rerun RAILS_ENV=$RAILS_ENV"
+echo "\n TEST Execution: rails cucumber:rerun RAILS_ENV=$RAILS_ENV \n"
 rails cucumber:rerun RAILS_ENV=$RAILS_ENV
