@@ -20,7 +20,7 @@ while getopts "hsnb:f:d:" opt; do
     s)
       echo "Showing Rerun File" >&2
       cat rerun.txt
-      ;;
+      exit 0;;
     b)
       echo "Checking out branch $OPTARG" >&2
       git checkout $OPTARG
@@ -32,7 +32,7 @@ while getopts "hsnb:f:d:" opt; do
     n)
       echo "Removing Rerun File" >&2
       rm rerun.txt
-      ;;
+      exit 0;;
     r)
       echo "Rerun recent failures" >&2
       # NOOP
@@ -46,7 +46,7 @@ while getopts "hsnb:f:d:" opt; do
       echo " -n             Start fresh"
       echo " -r             Rerun previous failed tests with latest code"
 
-      exit 1;;
+      exit 0;;
   esac
 done
 
