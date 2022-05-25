@@ -72,6 +72,7 @@ asdf plugin add ruby
 asdf plugin add yarn
 asdf plugin add bundler
 asdf install
+gem install bundler foreman
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   echo -e "\n. $(brew --prefix asdf)/asdf.sh" >> ~/.zprofile
