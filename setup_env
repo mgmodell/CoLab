@@ -47,7 +47,7 @@ else
 fi
 
 echo 'setting up DB users'
-sudo mysql < ./initDBs.sql
+sudo mysql < ./containers/initDBs.sql
 
 if ! grep -q "S3_BUCKET_NAME" ~/.profile; then
 	echo "export S3_BUCKET_NAME=colab-dev" >> ~/.profile
