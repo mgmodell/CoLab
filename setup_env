@@ -67,7 +67,8 @@ fi
 
 asdf plugin add nodejs
 asdf plugin add ruby
-asdf plugin add noedjs
+asdf plugin add yarn
+asdf plugin add bundler
 asdf install
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
