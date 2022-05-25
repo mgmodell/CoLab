@@ -43,7 +43,7 @@ while getopts "hsnb:f:d:" opt; do
       echo " -s             Show the failures from previous run"
       echo " -b [branch]    Switch to [branch]"
       echo " -f [features]  Specify specific features"
-      echo " -n             Start fresh"
+      echo " -n             Wipe previous runs"
       echo " -r             Rerun previous failed tests with latest code"
 
       exit 0;;
