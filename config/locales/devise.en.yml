@@ -2,6 +2,7 @@
 
 en:
   devise:
+    change_password_intro: Enter and confirm your new password
     bingo_performance: Bingo! Performance
     experience_performance: Experience Participation Level
     assessment_performance: Assessment Participation Level

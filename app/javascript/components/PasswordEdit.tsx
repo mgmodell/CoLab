@@ -81,7 +81,7 @@ export default function PasswordEdit(props){
     return(
         <Paper>
         <Grid container>
-            <h1>Enter and confirm your new password</h1>
+            <h1>{t("change_password_intro" )}</h1>
           <Grid item xs={12} sm={9}>
               <TextField
                 label='Password'
