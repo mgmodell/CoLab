@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# MOVE THIS PULL AND RISK STAGNATION
+git pull
+asdf reshim
+
 print_help( ){
   echo "RunCukes: Script to launch automated tests"
   echo "Valid options:"
@@ -85,9 +89,6 @@ if [ "$CLEAR_RERUN" = true ]; then
 fi
 
 # Set up run context
-git pull
-asdf reshim
-
 RAILS_ENV=docker
 CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
 #RAILS_MASTER_KEY=4e2027b76f8638d77d05a617c748d877
