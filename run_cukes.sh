@@ -14,7 +14,7 @@ print_help( ){
   echo "                code"
   echo " -h             Show this help and terminate"
   
-  exit 0;;
+  exit 0;
 
 }
 
