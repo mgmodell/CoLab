@@ -1,10 +1,14 @@
 #!/bin/bash
 
 # MOVE THIS PULL AND RISK STAGNATION
+echo "Setting the current working directory"
+# . $HOME/.asdf/asdf.sh
+cd $HOME/src/app
+
 git pull
 asdf reshim
 
-print_help( ){
+print_help ( ) {
   echo "RunCukes: Script to launch automated tests"
   echo "Valid options:"
   echo " -s             Show the failures from previous run only"
@@ -76,9 +80,6 @@ if [ "$SHOW_HELP" = true ]; then
   print_help
 fi
 
-echo "Setting the current working directory"
-. $HOME/.asdf/asdf.sh
-cd $HOME/src/app
 
 # Show previous failures
 if [ "$SHOW_FAILS" = true ]; then
