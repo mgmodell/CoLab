@@ -2,9 +2,8 @@
 
 # MOVE THIS PULL AND RISK STAGNATION
 echo "Setting the current working directory"
-# . $HOME/.asdf/asdf.sh
+. $HOME/.asdf/asdf.sh
 cd $HOME/src/app
-
 git pull
 asdf reshim
 
