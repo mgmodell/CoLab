@@ -22,6 +22,9 @@ print_help( ){
 
 }
 
+echo "Argument count: $#"
+echo "Argments: '$@'"
+
 if [ "$#" -lt 1 ]; then
   echo "Please specify options"
   print_help
