@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 namespace :testing do
+  desc 'Initialise the Testing DB'
+  task :db_init => [:environment] do |_t, args|
+    sql = File.read('db/test_db.sql')
+    statements = sql.split(/;$/)
+    statements.pop # remote empty line
+    ActiveRecord::Base.transaction do
+      statements.each do |statement|
+        ActiveRecord::Base.connection.execute(statement)
+      end
+    end
+  end
+
   desc 'Set up some simple, current objects for testing'
   task :examples, [:tester] => [:environment] do |_t, args|
     require 'forgery'
