@@ -100,9 +100,7 @@ Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false
 
 def loadData
-  sql = File.read('db/test_db.sql')
-  statements = sql.split(/;$/)
-  statements.pop # remote empty line
+  require 'rake'
   Rake::Task["testing:db_init"].invoke
 end
 
