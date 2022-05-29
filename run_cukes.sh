@@ -106,6 +106,7 @@ yarn install --silent
 if [ "$DB_RESET" = true ]; then
   # Reset database
   echo "Setting up database" >&2
+  rails db:create RAILS_ENV=$RAILS_ENV
   rails testing:db_init RAILS_ENV=$RAILS_ENV
 else
   # Run the tests
