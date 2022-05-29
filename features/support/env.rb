@@ -103,7 +103,7 @@ def loadData
   sql = File.read('db/test_db.sql')
   statements = sql.split(/;$/)
   statements.pop # remote empty line
-  Rake:Task["testing:db_init"].invoke
+  Rake::Task["testing:db_init"].invoke
 end
 
 # Capybara defaults to CSS3 selectors rather than XPath.
