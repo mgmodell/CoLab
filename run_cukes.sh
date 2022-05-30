@@ -16,7 +16,7 @@ print_help ( ) {
   echo " -d [driver]    Set the browser driver for this run"
   echo " -c             Initialise the database"
   echo " -f [features]  Specify specific features to run"
-  echo " -n             Wipe previous runs"
+  echo " -n             Wipe previous runs and terminate"
   echo " -r             Rerun previous failed tests with latest"
   echo "                code"
   echo " -h             Show this help and terminate"
@@ -88,6 +88,7 @@ fi
 # Clear previous failures
 if [ "$CLEAR_RERUN" = true ]; then
   rm rerun.txt
+  exit 0;
 fi
 
 # Set up run context
