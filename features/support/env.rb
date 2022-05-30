@@ -101,6 +101,7 @@ Cucumber::Rails::Database.autorun_database_cleaner = false
 
 def loadData
   require 'rake'
+  Colab::Application.load_tasks
   Rake::Task["testing:db_init"].invoke
 end
 
@@ -175,9 +176,6 @@ After('@javascript') do |_scenario|
   DatabaseCleaner.clean
   loadData
   travel_back
-  if :rack_test != Capybara.current_driver
-    click_button 'resetTimeBtn'
-  end
 end
 
 After('not @javascript') do |_scenario|

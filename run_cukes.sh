@@ -25,7 +25,6 @@ print_help ( ) {
 
 }
 
-echo "Argument count: $#"
 echo "Argments: '$@'"
 
 if [ "$#" -lt 1 ]; then
@@ -108,6 +107,7 @@ if [ "$DB_RESET" = true ]; then
   echo "Setting up database" >&2
   rails db:create RAILS_ENV=$RAILS_ENV
   rails testing:db_init RAILS_ENV=$RAILS_ENV
+  echo "Database initialised "
 else
   # Run the tests
   echo "Begin the test execution" >&2

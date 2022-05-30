@@ -11,7 +11,7 @@ namespace :testing do
         ActiveRecord::Base.connection.execute(statement)
       end
     end
-    Rake::Task["db:environment:set"].invoke
+    Rake::Task["db:environment:set"].execute
   end
 
   desc 'Set up some simple, current objects for testing'
