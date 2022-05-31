@@ -19,6 +19,7 @@ import Typography from "@mui/material/Typography";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import { SortDirection } from "react-virtualized";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTranslation } from "react-i18next";
 
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
 
@@ -50,9 +51,9 @@ const styles = theme => ({
   }
 });
 export default function ConceptsTable(props) {
-  const endpointSet = "concept";
+  const category = "concept";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status["endpointsLoaded"]
@@ -70,6 +71,7 @@ export default function ConceptsTable(props) {
   const [dirty, setDirty] = useState(false);
   const [conceptName, setConceptName] = useState("");
   const [conceptId, setConceptId] = useState(-1);
+  const { t } = useTranslation( category );
 
   const columns = [
     {

@@ -12,9 +12,13 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import { DialogActions, Button, Collapse } from "@mui/material";
 import axios from "axios";
+import {useTranslation} from 'react-i18next';
 
 export default function DropUserButton(props) {
   const [showDialog, setShowDialog] = useState(false);
+
+  const category = 'course';
+  const { t } = useTranslation( category );
 
   function PaperComponent(props) {
     return <Paper {...props} />;

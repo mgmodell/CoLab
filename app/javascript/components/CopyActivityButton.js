@@ -22,15 +22,17 @@ import Button from "@mui/material/Button";
 
 import { startTask, endTask } from "./infrastructure/StatusActions";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTranslation } from 'react-i18next';
 
 export default function CopyActivityButton(props) {
-  const endpointSet = "course";
+  const category = "course";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+  const{ t } = useTranslation( category );
   const dispatch = useDispatch();
 
   const [copyData, setCopyData] = useState(null);
