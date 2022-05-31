@@ -9,6 +9,9 @@ import {
   setDirty,
   setClean
 } from "./infrastructure/StatusActions";
+import {
+  refreshSchools
+} from "./infrastructure/ContextActions";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -116,6 +119,7 @@ export default function SchoolDataAdmin(props) {
           dispatch(setClean(category));
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
           //setMessages(data.messages);
+          dispatch( refreshSchools( ) );
           dispatch(endTask("saving"));
         } else {
           dispatch(

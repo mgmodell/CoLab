@@ -226,6 +226,13 @@ export function getContext( endPointsUrl: string ){
 
 }
 
+//TODO: Inefficient, but should be OK for now
+export function refreshSchools( ){
+    return( dispatch, getState ) =>{
+        CONFIG.retrieveResources( dispatch, getState );
+    }
+}
+
 export function emailSignIn( email: string, password: string ){
 
     return( dispatch, getState ) =>{
