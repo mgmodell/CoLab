@@ -37,6 +37,7 @@ SHOW_FAILS=false
 DB_RESET=false
 CLEAR_RERUN=false
 SHOW_HELP=false
+SPEC_FEATURE=false
 
 while getopts "chsnb:f:d:" opt; do
   case $opt in
@@ -57,6 +58,7 @@ while getopts "chsnb:f:d:" opt; do
       ;;
     f)
       echo "Features Specified $OPTARG" >&2
+      SPEC_FEATURE=true
       FEATURE=$OPTARG
       ;;
     n)
@@ -109,9 +111,12 @@ if [ "$DB_RESET" = true ]; then
   rails db:create RAILS_ENV=$RAILS_ENV
   rails testing:db_init RAILS_ENV=$RAILS_ENV
   echo "Database initialised "
+elif [ "$SPEC_FEATURE" = true ]; then
+  # Run the specialised tests
+  echo "Begin the specified test executions" >&2
+  rails cucumber:rerun RAILS_ENV=$RAILS_ENV FEATURE=$FEATURE
 else
   # Run the tests
-  echo "Begin the test execution" >&2
+  echo "Begin the remaining test executions" >&2
   rails cucumber:rerun RAILS_ENV=$RAILS_ENV
 fi
-
