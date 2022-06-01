@@ -113,8 +113,8 @@ if [ "$DB_RESET" = true ]; then
   echo "Database initialised "
 elif [ "$SPEC_FEATURE" = true ]; then
   # Run the specialised tests
-  echo "Begin the specified test executions" >&2
-  rails cucumber:rerun RAILS_ENV=$RAILS_ENV FEATURE=$FEATURE
+  echo "Begin the specified test executions: $FEATURE" >&2
+  rails cucumber RAILS_ENV=$RAILS_ENV FEATURE=$FEATURE
 else
   # Run the tests
   echo "Begin the remaining test executions" >&2
