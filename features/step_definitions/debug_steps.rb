@@ -18,3 +18,16 @@ Then(/^show the entries list$/) do
     log term + ' | ' + definition
   end
 end
+
+Then('the environment matches that set') do
+  log "Set Environment: #{ENV['RAILS_ENV']}"
+  log "Rails Environment: #{Rails.env}"
+  ENV['RAILS_ENV'].should eq Rails.env
+end
+
+Then('the AWS keys are available') do
+  Rails.application.credentials.aws.access_key_id.should_not be_blank
+  Rails.application.credentials.aws.secret_access_key.should_not be_blank
+  Rails.application.credentials.aws.region.should_not be_blank
+  Rails.application.credentials.aws.s3_bucket_name.should_not be_blank
+end
