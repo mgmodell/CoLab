@@ -5,7 +5,7 @@ Then(/^we debug$/) do
 end
 
 Then(/^show me the page$/) do
-  log page.body
+  puts  page.body
 end
 
 Then(/^show the entries list$/) do
@@ -20,8 +20,8 @@ Then(/^show the entries list$/) do
 end
 
 Then('the environment matches that set') do
-  log "Set Environment: #{ENV['RAILS_ENV']}"
-  log "Rails Environment: #{Rails.env}"
+  puts  "Input RAILS_ENV: #{ENV['RAILS_ENV']}"
+  puts  "Rails.env      : #{Rails.env}"
   ENV['RAILS_ENV'].should eq Rails.env
 end
 
