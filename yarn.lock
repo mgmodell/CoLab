@@ -1714,9 +1714,9 @@
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^18.0.0":
-  version "18.0.10"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.10.tgz#5692944d4a45e204fb7a981eb1388afe919cf4d0"
-  integrity sha512-dIugadZuIPrRzvIEevIu7A1smqOAjkSMv8qOfwPt9Ve6i6JT/FQcCHyk2qIAxwsQNKZt5/oGR0T4z9h2dXRAkg==
+  version "18.0.11"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.11.tgz#94c9b62020caff17d117374d724de853ec711d21"
+  integrity sha512-JxSwm54IgMW4XTR+zFF5QpNx4JITmFbB4WHR2J0vg9RpjNeyqEMlODXsD2e64br6GX70TL0UYjZJETpyyC1WdA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -2764,10 +2764,10 @@ cssesc@^3.0.0:
   resolved "https://registry.yarnpkg.com/cssesc/-/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
   integrity sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==
 
-cssnano-preset-default@^5.2.10:
-  version "5.2.10"
-  resolved "https://registry.yarnpkg.com/cssnano-preset-default/-/cssnano-preset-default-5.2.10.tgz#6dfffe6cc3b13f3bb356a42c49a334a98700ef45"
-  integrity sha512-H8TJRhTjBKVOPltp9vr9El9I+IfYsOMhmXdK0LwdvwJcxYX9oWkY7ctacWusgPWAgQq1vt/WO8v+uqpfLnM7QA==
+cssnano-preset-default@^5.2.11:
+  version "5.2.11"
+  resolved "https://registry.yarnpkg.com/cssnano-preset-default/-/cssnano-preset-default-5.2.11.tgz#28350471bc1af9df14052472b61340347f453a53"
+  integrity sha512-4PadR1NtuaIK8MvLNuY7MznK4WJteldGlzCiMaaTiOUP+apeiIvUDIXykzUOoqgOOUAHrU64ncdD90NfZR3LSQ==
   dependencies:
     css-declaration-sorter "^6.2.2"
     cssnano-utils "^3.1.0"
@@ -2793,7 +2793,7 @@ cssnano-preset-default@^5.2.10:
     postcss-normalize-unicode "^5.1.0"
     postcss-normalize-url "^5.1.0"
     postcss-normalize-whitespace "^5.1.1"
-    postcss-ordered-values "^5.1.1"
+    postcss-ordered-values "^5.1.2"
     postcss-reduce-initial "^5.1.0"
     postcss-reduce-transforms "^5.1.0"
     postcss-svgo "^5.1.0"
@@ -2805,11 +2805,11 @@ cssnano-utils@^3.1.0:
   integrity sha512-JQNR19/YZhz4psLX/rQ9M83e3z2Wf/HdJbryzte4a3NSuafyp9w/I4U+hx5C2S9g41qlstH7DEWnZaaj83OuEA==
 
 cssnano@^5.1.8:
-  version "5.1.10"
-  resolved "https://registry.yarnpkg.com/cssnano/-/cssnano-5.1.10.tgz#fc6ddd9a4d7d238f320634326ed814cf0abf6e1c"
-  integrity sha512-ACpnRgDg4m6CZD/+8SgnLcGCgy6DDGdkMbOawwdvVxNietTNLe/MtWcenp6qT0PRt5wzhGl6/cjMWCdhKXC9QA==
+  version "5.1.11"
+  resolved "https://registry.yarnpkg.com/cssnano/-/cssnano-5.1.11.tgz#3bb003380718c7948ce3813493370e8946caf04b"
+  integrity sha512-2nx+O6LvewPo5EBtYrKc8762mMkZRk9cMGIOP4UlkmxHm7ObxH+zvsJJ+qLwPkUc4/yumL/qJkavYi9NlodWIQ==
   dependencies:
-    cssnano-preset-default "^5.2.10"
+    cssnano-preset-default "^5.2.11"
     lilconfig "^2.0.3"
     yaml "^1.10.2"
 
@@ -3108,9 +3108,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.118:
-  version "1.4.145"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.145.tgz#5be3aa470cae3c2bccd20afc4d2a5efdca337b7b"
-  integrity sha512-g4VQCi61gA0t5fJHsalxAc8NpvxC/CEwLAGLfJ+DmkRXTEyntJA7H01771uVD6X6nnViv3GToPgb0QOVA8ivOQ==
+  version "1.4.146"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.146.tgz#fd20970c3def2f9e6b32ac13a2e7a6b64e1b0c48"
+  integrity sha512-4eWebzDLd+hYLm4csbyMU2EbBnqhwl8Oe9eF/7CBDPWcRxFmqzx4izxvHH+lofQxzieg8UbB8ZuzNTxeukzfTg==
 
 email-validator@^2.0.4:
   version "2.0.4"
@@ -3635,10 +3635,10 @@ i18next-browser-languagedetector@^6.1.4:
   dependencies:
     "@babel/runtime" "^7.14.6"
 
-i18next-fetch-backend@^4.1.1:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/i18next-fetch-backend/-/i18next-fetch-backend-4.1.2.tgz#de29e231f1ebc196de338906f41023f932d6781f"
-  integrity sha512-Tw2zjxHKZbhX8pXtw0KLG4oGqoXviMpF3SU5M0rmJStwOo6NtPLR5zWK2/a2YkTGiv6hR9sttDtSTKWkwCPOzA==
+i18next-fetch-backend@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/i18next-fetch-backend/-/i18next-fetch-backend-5.0.0.tgz#2e81725b15e33ee2d3cc7d3bd0b73cac7d7ad07a"
+  integrity sha512-sjeE6SFY0fteBnKPyigKeTSDCEXJyd2623enhQsj8KnSNW4LjpL7Lp5MqTpWQvCM0ywZLp4musHLkxMmIBUfwg==
 
 i18next-intervalplural-postprocessor@^3.0.0:
   version "3.0.0"
@@ -4692,10 +4692,10 @@ postcss-normalize-whitespace@^5.1.1:
   dependencies:
     postcss-value-parser "^4.2.0"
 
-postcss-ordered-values@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/postcss-ordered-values/-/postcss-ordered-values-5.1.1.tgz#0b41b610ba02906a3341e92cab01ff8ebc598adb"
-  integrity sha512-7lxgXF0NaoMIgyihL/2boNAEZKiW0+HkMhdKMTD93CjW8TdCy2hSdj8lsAo+uwm7EDG16Da2Jdmtqpedl0cMfw==
+postcss-ordered-values@^5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/postcss-ordered-values/-/postcss-ordered-values-5.1.2.tgz#daffacd4abf327d52d5ac570b59dfbcf4b836614"
+  integrity sha512-wr2avRbW4HS2XE2ZCqpfp4N/tDC6GZKZ+SVP8UBTOVS8QWrc4TD8MYrebJrvVVlGPKszmiSCzue43NDiVtgDmg==
   dependencies:
     cssnano-utils "^3.1.0"
     postcss-value-parser "^4.2.0"
