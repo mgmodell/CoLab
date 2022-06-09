@@ -47,5 +47,11 @@ en:
     re_invite: Re-Invite
     drop: Drop
     courses: Courses
-    drop_student_confirm: >
-      Are you sure you want to drop this student from the class?
+    drop_student_confirm_dlg: >
+      Are you sure you want to drop this user from this course? This can be
+      reversed later, but it may result in lost data and confusion on the
+      part of the student.
+    drop_confirm_title: Confirm dropping student from course  
+    drop_cancel_btn: Cancel
+    drop_tooltip_title: Drop Student
+    drop_tooltip_aria: Drop Student

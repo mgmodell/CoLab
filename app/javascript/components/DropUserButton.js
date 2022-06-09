@@ -32,18 +32,16 @@ export default function DropUserButton(props) {
       aria-describedby="alert-delete-confirm-description"
     >
       <DialogTitle id="alert-delete-confirm">
-        {"Confirm dropping student from course"}
+        {t("drop_confirm_title")}
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-delete-confirm-description">
-          Are you sure you want to drop this user from this course? This can be
-          reversed later, but it may result in lost data and confusion on the
-          part of the student.
+          {t("drop_student_confirm_dlg")}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={event => setShowDialog(false)} color="primary">
-          Cancel
+          {t("drop_cancel_btn")}
         </Button>
         <Button
           onClick={event => {
@@ -69,9 +67,9 @@ export default function DropUserButton(props) {
 
   return (
     <React.Fragment>
-      <Tooltip key="delete-forever" title={"Drop Student"}>
+      <Tooltip key="delete-forever" title={t('drop_tooltip_title')}>
         <IconButton
-          aria-label={"Drop Student"}
+          aria-label={t("drop_tolltip_aria")}
           onClick={event => {
             setShowDialog(true);
           }}
