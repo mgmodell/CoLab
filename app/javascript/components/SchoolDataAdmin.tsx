@@ -34,7 +34,7 @@ export default function SchoolDataAdmin(props) {
   const endpoints = useTypedSelector(state => {
     return state.context.endpoints[category];
   });
-  const { t } = useTranslation( category );
+  const { t } = useTranslation( `${category}s` );
   const endpointStatus = useTypedSelector(state => {
     return state.context.status.endpointsLoaded;
   });

@@ -71,7 +71,7 @@ export default function ConceptsTable(props) {
   const [dirty, setDirty] = useState(false);
   const [conceptName, setConceptName] = useState("");
   const [conceptId, setConceptId] = useState(-1);
-  const { t } = useTranslation( category );
+  const { t } = useTranslation( `${category}s` );
 
   const columns = [
     {

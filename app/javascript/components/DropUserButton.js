@@ -18,7 +18,7 @@ export default function DropUserButton(props) {
   const [showDialog, setShowDialog] = useState(false);
 
   const category = 'course';
-  const { t } = useTranslation( category );
+  const { t } = useTranslation( `${category}s` );
 
   function PaperComponent(props) {
     return <Paper {...props} />;
