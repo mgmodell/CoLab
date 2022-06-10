@@ -32,6 +32,9 @@ export default function CopyActivityButton(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+  const status = useTypedSelector(
+    state=> state.status.tasks
+  );
   const{ t } = useTranslation( category );
   const dispatch = useDispatch();
 
@@ -54,10 +57,9 @@ export default function CopyActivityButton(props) {
             <DialogContent>
               <WorkingIndicator identifier="copying_course" />
               <DialogContentText>
-                This course started on{" "}
-                {props.startDate.toLocaleString(DateTime.DATE_SHORT)}. When
-                would you like for the new copy to begin? Everything will be
-                shifted accordingly.
+                {t('copy_dlg',{
+                  start_date: props.startDate.toLocaleString( DateTime.DATE_SHORT )
+                })}
                 <br />
               </DialogContentText>
               <DatePicker
@@ -76,7 +78,7 @@ export default function CopyActivityButton(props) {
             </DialogContent>
             <DialogActions>
               <Button
-                disabled={status.working}
+                disabled={status[ 'copying_course' ] > 0}
                 onClick={event => {
                   setNewStartDate(DateTime.local().toISO());
                   setCopyData(null);
@@ -85,7 +87,7 @@ export default function CopyActivityButton(props) {
                 Cancel
               </Button>
               <Button
-                disabled={status.working}
+                disabled={status[ 'copying_course' ] > 0}
                 onClick={event => {
                   dispatch(startTask("copying_course"));
                   const url = `${endpoints.courseCopyUrl}${props.itemId}.json`;

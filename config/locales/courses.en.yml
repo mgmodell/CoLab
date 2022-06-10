@@ -23,6 +23,9 @@ en:
       title: New Course
     create_success: Course created successfully!
     destroy_success: Course destroyed successfully!
+    copy_dlg: >
+      This course started on {{start_date}}. When would you like for the
+      new copy to begin? Everything will be shifted accordingly.
     update_success: Course updated successfully!
     copy_success: Course successfully copied!
     copy_fail: >
