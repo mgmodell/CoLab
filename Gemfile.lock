@@ -102,7 +102,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
-    ahoy_email (2.1.2)
+    ahoy_email (2.1.3)
       actionmailer (>= 5)
       addressable (>= 2.3.2)
       nokogiri
@@ -370,7 +370,7 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-erd (1.7.0)
+    rails-erd (1.7.1)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
       choice (~> 0.2.0)
