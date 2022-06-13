@@ -50,7 +50,7 @@ export default function CopyActivityButton(props) {
       {null != copyData ? (
         <React.Fragment>
           <LocalizationProvider dateAdapter={AdapterLuxon}>
-            <DialogTitle>Create a Copy</DialogTitle>
+            <DialogTitle>{t(Dialog_Title)}</DialogTitle>
             <DialogContent>
               <WorkingIndicator identifier="copying_course" />
               <DialogContentText>
@@ -66,7 +66,7 @@ export default function CopyActivityButton(props) {
                 inputFormat="MM/dd/yyyy"
                 margin="normal"
                 id="newCourseStartDate"
-                label="New course start date?"
+                label={t(date_picker_label)}
                 value={newStartDate}
                 onChange={newValue => {
                   setNewStartDate(newValue);
@@ -82,7 +82,7 @@ export default function CopyActivityButton(props) {
                   setCopyData(null);
                 }}
               >
-                Cancel
+                {t(cancel_btn)}
               </Button>
               <Button
                 disabled={status.working}
@@ -111,7 +111,7 @@ export default function CopyActivityButton(props) {
                     });
                 }}
               >
-                Make a Copy
+                {t(aria_label_btn)}
               </Button>
             </DialogActions>
           </LocalizationProvider>
@@ -124,7 +124,7 @@ export default function CopyActivityButton(props) {
 
   return (
     <React.Fragment>
-      <Tooltip title="Create a copy based on this course" aria-label="Copy">
+      <Tooltip title={t(btn_tooltip_title)} aria-label="Copy">
         <IconButton
           id={"copy-" + props.itemId}
           onClick={event => {
@@ -134,8 +134,8 @@ export default function CopyActivityButton(props) {
               copyUrl: props.copyUrl + props.itemId + ".json"
             });
           }}
-          aria-label="Make a Copy"
-          size="large"
+          aria-label={t(aria_label_btn)}
+          size={t(size_btn)}
         >
           <CollectionsBookmarkIcon />
         </IconButton>
