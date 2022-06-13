@@ -34,6 +34,7 @@ export default function SchoolDataAdmin(props) {
   const endpoints = useTypedSelector(state => {
     return state.context.endpoints[category];
   });
+  const { t } = useTranslation( `${category}s` );
   const endpointStatus = useTypedSelector(state => {
     return state.context.status.endpointsLoaded;
   });
@@ -170,7 +171,7 @@ export default function SchoolDataAdmin(props) {
       &nbsp;
       <FormControl>
         <InputLabel htmlFor="school_timezone" id="school_timezone_lbl">
-          Time Zone
+          {t('time_zone')}
         </InputLabel>
         <Select
           id="school_timezone"

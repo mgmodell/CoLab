@@ -77,6 +77,7 @@ Capybara.register_driver(:chrome) do |app|
   )
 end
 
+#Fix docker-ization later
 Capybara.javascript_driver = case ENV['DRIVER']
                              when 'docker'
                                Capybara.server_host = `hostname -s`.strip

@@ -19,7 +19,7 @@ gem 'mysql2'
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
 # https://github.com/rails/webpacker
-gem 'shakapacker', '6.4.0'
+gem 'shakapacker', '6.4.1'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -70,7 +70,7 @@ gem 'tzinfo-data'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-group :development, :test, :docker do
+group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
@@ -98,7 +98,7 @@ group :development, :test, :docker do
   gem 'webdrivers', '~> 5.0', require: false
 end
 
-group :test, :docker do
+group :test do
   gem 'simplecov', require: false
 end
 

@@ -32,6 +32,9 @@ export default function CopyActivityButton(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+  const status = useTypedSelector(
+    state=> state.status.tasks
+  );
   const{ t } = useTranslation( category );
   const dispatch = useDispatch();
 
@@ -50,7 +53,7 @@ export default function CopyActivityButton(props) {
       {null != copyData ? (
         <React.Fragment>
           <LocalizationProvider dateAdapter={AdapterLuxon}>
-            <DialogTitle>{t(Dialog_Title)}</DialogTitle>
+            <DialogTitle>{t('Dialog_Title')}</DialogTitle>
             <DialogContent>
               <WorkingIndicator identifier="copying_course" />
               <DialogContentText>
@@ -66,7 +69,7 @@ export default function CopyActivityButton(props) {
                 inputFormat="MM/dd/yyyy"
                 margin="normal"
                 id="newCourseStartDate"
-                label={t(date_picker_label)}
+                label={t('date_picker_label')}
                 value={newStartDate}
                 onChange={newValue => {
                   setNewStartDate(newValue);
@@ -82,7 +85,7 @@ export default function CopyActivityButton(props) {
                   setCopyData(null);
                 }}
               >
-                {t(cancel_btn)}
+                {t('copy_cancel_btn')}
               </Button>
               <Button
                 disabled={status.working}
@@ -111,7 +114,7 @@ export default function CopyActivityButton(props) {
                     });
                 }}
               >
-                {t(aria_label_btn)}
+                {t('copy_btn_aria')}
               </Button>
             </DialogActions>
           </LocalizationProvider>
@@ -124,7 +127,7 @@ export default function CopyActivityButton(props) {
 
   return (
     <React.Fragment>
-      <Tooltip title={t(btn_tooltip_title)} aria-label="Copy">
+      <Tooltip title={t('btn_tooltip_title')} aria-label="Copy">
         <IconButton
           id={"copy-" + props.itemId}
           onClick={event => {
@@ -134,8 +137,8 @@ export default function CopyActivityButton(props) {
               copyUrl: props.copyUrl + props.itemId + ".json"
             });
           }}
-          aria-label={t(aria_label_btn)}
-          size={t(size_btn)}
+          aria-label={t('aria_label_btn')}
+          size={t('size_btn')}
         >
           <CollectionsBookmarkIcon />
         </IconButton>
