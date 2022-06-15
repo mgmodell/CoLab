@@ -101,9 +101,14 @@ Capybara.default_driver = :rack_test
 Cucumber::Rails::Database.autorun_database_cleaner = false
 
 def loadData
-  require 'rake'
-  Colab::Application.load_tasks
-  Rake::Task["testing:db_init"].invoke
+  sql = File.read('db/test_db.sql')
+  statements = sql.split(/;$/)
+  statements.pop # remote empty line
+  ActiveRecord::Base.transaction do
+    statements.each do |statement|
+      ActiveRecord::Base.connection.execute(statement)
+    end
+  end
 end
 
 # Capybara defaults to CSS3 selectors rather than XPath.
