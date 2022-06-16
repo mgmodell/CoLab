@@ -18,7 +18,7 @@
           getEndpointsUrl: endpoints_path
 
       }%>
-    <% if true # && Rails.env.test? # %>
+    <% if true && Rails.env.test? %>
       <%= react_component "TimeSetter", { } %>
     <% end %>
         <% if flash[:error] -%>

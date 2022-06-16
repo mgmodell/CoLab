@@ -93,7 +93,7 @@
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
     "mockdate": "^3.0.5",
-    "react-refresh": "^0.13.0",
+    "react-refresh": "^0.14.0",
     "webpack-dev-server": "^4.8.1"
   }
 }
