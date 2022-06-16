@@ -61,6 +61,7 @@
     "react-google-login": "^5.2.2",
     "react-i18next": "^11.16.2",
     "react-joyride": "^2.4.0",
+    "react-native-paper": "^4.12.1",
     "react-redux": "^8.0.1",
     "react-router-dom": "6",
     "react-spring": "^9.4.4",
