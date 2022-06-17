@@ -229,7 +229,7 @@ Then('the user clicks the {string} button') do |button_name|
 end
 
 Then('the user clicks the course {string} button') do |button_name|
-  xquery = "//tr[contains(.,'#{@course.get_name(false)}')]//button[@aria-label='#{button_name}']"
+  xquery = "//tr[contains(.,'#{@course.get_name(false)}')]//button[lower-case(@aria-label)='#{button_name.downcase}']"
   elem = find(:xpath, xquery)
   elem.click
 end
