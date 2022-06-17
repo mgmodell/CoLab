@@ -5,7 +5,7 @@ require 'faker'
 
 Given(/^reset time clock to now$/) do
   travel_back
-  if :rack_test != Capybara.current_driver && has_button? 'resetTimeBtn'
+  if :rack_test != Capybara.current_driver && has_button? ('resetTimeBtn')
     click_button 'resetTimeBtn'
   end
 end
