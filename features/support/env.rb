@@ -167,11 +167,11 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
-loadData
+# loadData
 
 Before do
   EmailAddress::Config.setting(:host_validation, :syntax)
-  # loadData
+  loadData
   DatabaseCleaner.start
   Chronic.time_class = Time.zone
   travel_to DateTime.now.beginning_of_day
@@ -180,7 +180,7 @@ end
 
 After('@javascript') do |_scenario|
   DatabaseCleaner.clean
-  # loadData
+  loadData
   travel_back
 end
 
