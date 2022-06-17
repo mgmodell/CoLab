@@ -35,7 +35,7 @@ export default function CopyActivityButton(props) {
   const status = useTypedSelector(
     state=> state.status.tasks
   );
-  const{ t } = useTranslation( category );
+  const{ t } = useTranslation( `${category}s` );
   const dispatch = useDispatch();
 
   const [copyData, setCopyData] = useState(null);
@@ -53,7 +53,7 @@ export default function CopyActivityButton(props) {
       {null != copyData ? (
         <React.Fragment>
           <LocalizationProvider dateAdapter={AdapterLuxon}>
-            <DialogTitle>{t('Dialog_Title')}</DialogTitle>
+            <DialogTitle>{t('dialog_title')}</DialogTitle>
             <DialogContent>
               <WorkingIndicator identifier="copying_course" />
               <DialogContentText>
