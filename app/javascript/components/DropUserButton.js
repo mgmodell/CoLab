@@ -69,7 +69,7 @@ export default function DropUserButton(props) {
     <React.Fragment>
       <Tooltip key="delete-forever" title={t('drop_tooltip_title')}>
         <IconButton
-          aria-label={t("drop_tolltip_aria")}
+          aria-label={t("drop_tooltip_aria")}
           onClick={event => {
             setShowDialog(true);
           }}
