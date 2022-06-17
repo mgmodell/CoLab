@@ -3,7 +3,7 @@ en:
     dialog_title: Create a copy
     btn_tooltip_title: Create a copy based on this course
     copy_btn_aria: Make a copy
-    copy_btn_txt: Make a copy
+    copy_btn_txt: Make a Copy
     size_btn: large
     date_picker_label: New course start date?
     copy_cancel_btn: Cancel
