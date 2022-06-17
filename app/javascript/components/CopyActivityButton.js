@@ -114,7 +114,7 @@ export default function CopyActivityButton(props) {
                     });
                 }}
               >
-                {t('copy_btn_aria')}
+                {t('copy_btn_txt')}
               </Button>
             </DialogActions>
           </LocalizationProvider>
@@ -137,7 +137,7 @@ export default function CopyActivityButton(props) {
               copyUrl: props.copyUrl + props.itemId + ".json"
             });
           }}
-          aria-label={t('aria_label_btn')}
+          aria-label={t('copy_btn_aria')}
           size={t('size_btn')}
         >
           <CollectionsBookmarkIcon />
