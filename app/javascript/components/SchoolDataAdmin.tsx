@@ -25,7 +25,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import { Settings } from "luxon";
 
 //import i18n from './i18n';
-//import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 
