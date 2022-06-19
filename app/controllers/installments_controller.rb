@@ -98,6 +98,7 @@ class InstallmentsController < ApplicationController
             comments: installment_hash[:comments]
           )
           installment.save!
+
           if installment.errors.empty?
             params[:contributions].values.each do |contribution|
               contribution.each do |value|
@@ -112,7 +113,7 @@ class InstallmentsController < ApplicationController
             render json: {
               error: false,
               messages: {
-                status: t('success')
+                status: t('installments.success')
               },
               installment: {
                 id: installment.id,

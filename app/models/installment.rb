@@ -66,9 +66,7 @@ class Installment < ApplicationRecord
   end
 
   def check_dates
-    puts '**********checking dates'
     if assessment.end_date.in_time_zone.end_of_day < Time.current.in_time_zone
-      puts 'date check failed'
       errors.add(:base, 'This assessment has expired and can no longer be ' \
                          "submit for this installment [expired: #{assessment.end_date.end_of_day}, now: #{Time.current}.]"
       )
