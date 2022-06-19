@@ -200,7 +200,6 @@ Feature: Submitting Reports
     Then the user should enter values summing to 600, "evenly" across each column
     Given today is "in 10 minutes"
     When the user submits the installment
-    Then we debug
     Then the user should see an error indicating that the installment request expired
 
   @javascript
