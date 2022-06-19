@@ -246,30 +246,39 @@ class InstallmentsController < ApplicationController
               value.save!
             end
           end
-          render json: {
-            messages: {
-              status: t('success')
-            },
-            installment: {
-              id:,
-              assessment_id: params[:assessment_id],
-              group_id: params[:group_id],
-              values: params[:contributions].values
-                                            .reduce([]) do |tmpArr, itemSet|
-                        tmpArr.concat(
-                          itemSet.collect do |item|
-                            {
-                              id: item[:id],
-                              user_id: item[:userId],
-                              factor_id: item[:factorId],
-                              name: item[:name],
-                              value: item[:value]
-                            }
-                          end
-                        )
-                      end
+          puts value.errors.full_messages unless value.errors.empty?
+          if value.errors.empty?
+            render json: {
+              messages: {
+                status: t('installments.success')
+              },
+              installment: {
+                id:,
+                assessment_id: params[:assessment_id],
+                group_id: params[:group_id],
+                values: params[:contributions].values
+                                              .reduce([]) do |tmpArr, itemSet|
+                          tmpArr.concat(
+                            itemSet.collect do |item|
+                              {
+                                id: item[:id],
+                                user_id: item[:userId],
+                                factor_id: item[:factorId],
+                                name: item[:name],
+                                value: item[:value]
+                              }
+                            end
+                          )
+                        end
+              }
             }
-          }
+          else
+            render json: {
+              messages: value.errors.full_messages,
+              error: true
+            }
+
+          end
         end
       end
     end
