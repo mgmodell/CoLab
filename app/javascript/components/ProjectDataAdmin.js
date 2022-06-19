@@ -18,7 +18,10 @@ import {
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 
-import { DatePicker, LocalizationProvider } from "@mui/lab/";
+import {
+  DatePicker,
+  LocalizationProvider
+} from '@mui/x-date-pickers';
 
 import { DateTime, Info, Settings } from "luxon";
 

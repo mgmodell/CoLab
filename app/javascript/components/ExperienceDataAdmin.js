@@ -16,7 +16,7 @@ import {
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 
-import { DatePicker, LocalizationProvider } from "@mui/lab/";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 
 import { DateTime, Settings } from "luxon";
 import ReactionsList from "./ReactionsList";
@@ -203,7 +203,9 @@ export default function ExperienceDataAdmin(props) {
     }
   }, [userLoaded]);
 
-  useEffect(() => dispatch(setDirty(category)), [
+  useEffect(() => {
+    dispatch(setDirty(category))
+  }, [
     experienceName,
     experienceLeadTime,
     experienceActive,
@@ -253,7 +255,8 @@ export default function ExperienceDataAdmin(props) {
       />
 
       <Typography>All dates shown in {courseTimezone} timezone.</Typography>
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
+      <LocalizationProvider
+        dateAdapter={AdapterLuxon}>
         <DatePicker
           disableToolbar
           variant="inline"

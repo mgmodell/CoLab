@@ -91,6 +91,7 @@
     "defaults"
   ],
   "devDependencies": {
+    "@mui/x-date-pickers": "^5.0.0-alpha.6",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
     "mockdate": "^3.0.5",
     "react-refresh": "^0.14.0",

@@ -7,8 +7,7 @@ import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import { DateTime } from "luxon";
-import DatePicker from "@mui/lab/DatePicker";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import AdapterLuxon from "@mui/lab/AdapterLuxon";
 
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
