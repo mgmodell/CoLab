@@ -19,7 +19,7 @@ print_help ( ) {
   echo " -n             Wipe previous runs and terminate"
   echo " -r             Rerun previous failed tests with latest"
   echo "                code"
-  echo " -t            Run a shell"
+  echo " -t             Run a shell"
   echo " -h             Show this help and terminate"
   
   exit 0;
