@@ -308,14 +308,23 @@ export default function BingoBuilder(props) {
             <Tab value="concepts" label="Concepts found by class" />
           </TabList>
           <TabPanel value="worksheet">
+            { null != board.worksheet ?
+              (
               <Paper square={false}>
                 <Typography>
                   <strong>Score:</strong>&nbsp;
-                  {board.worksheet.performance}
+                  { board.worksheet.performance || 0 }
                   <br />
                 </Typography>
-                <img src={board.worksheet.result_img} />
+                {
+                  null != board.worksheet.result_img && '' != board.worksheet.result_img ?
+                  (
+                    <img src={board.worksheet.result_img} />
+                  ) : null
+                }
               </Paper>
+              ) : 'No Worksheet'
+            }
 
           </TabPanel>
           <TabPanel value="builder">
