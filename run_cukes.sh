@@ -19,13 +19,14 @@ print_help ( ) {
   echo " -n             Wipe previous runs and terminate"
   echo " -r             Rerun previous failed tests with latest"
   echo "                code"
+  echo " -t            Run a shell"
   echo " -h             Show this help and terminate"
   
   exit 0;
 
 }
 
-echo "Argments: '$@'"
+echo "Arguments: '$@'"
 
 if [ "$#" -lt 1 ]; then
   echo "Please specify options"
@@ -39,7 +40,7 @@ CLEAR_RERUN=false
 SHOW_HELP=false
 SPEC_FEATURE=false
 
-while getopts "chsnb:f:d:" opt; do
+while getopts "chsnb:f:d:t" opt; do
   case $opt in
     c)
       DB_RESET=true
@@ -68,6 +69,10 @@ while getopts "chsnb:f:d:" opt; do
     r)
       echo "Rerun recent failures" >&2
       # NOOP
+      ;;
+    t)
+      /bin/bash -i
+      exit 0;
       ;;
     h|\?) #Invalid option
       SHOW_HELP=true
