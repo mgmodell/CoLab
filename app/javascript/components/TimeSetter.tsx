@@ -7,11 +7,16 @@ import MockDate from 'mockdate';
 
 export default function TimeSetter(props) {
   const [newTime, setNewTime] = useState( '' );
+  const [hitCount, setHitCount] = useState( 0 );
+
   const [date, setDate] = useState( new Date( ) );
 
   const setTime = () => {
-    MockDate.set( new Date( newTime ) );
-    setNewTime( '' );
+    if( newTime.length > 0 ){
+      MockDate.set( new Date( newTime ) );
+      setNewTime( '' );
+      setHitCount( hitCount + 1 );
+    }
   }
   const resetTime = ( ) => {
     MockDate.reset( );
@@ -34,7 +39,7 @@ export default function TimeSetter(props) {
       </input>
       <button id='setTimeBtn' onClick={setTime}>Set Time</button>
       <button id='resetTimeBtn' onClick={resetTime}>reSet Time</button>
-      {date.toLocaleTimeString( ) }
+      {date.toLocaleTimeString( ) } - {date.toLocaleDateString( ) } hits: {hitCount}
     </Fragment>
   );
 }

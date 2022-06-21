@@ -128,7 +128,7 @@ When(/^the user logs in$/) do
 
   # Set custom time if warranted
   if :rack_test != Capybara.current_driver && ! @dest_date.nil?
-    fill_in 'newTimeVal', with: @dest_date.to_i.to_s
+    fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end
 end
