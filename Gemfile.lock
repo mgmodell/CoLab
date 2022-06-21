@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/faker-ruby/faker.git
-  revision: e5268b34200009baab3ae5f21b454f7ffd5e61b7
+  revision: 1f5af81196adb56d4d2f387204b64f77273ac3b1
   branch: master
   specs:
     faker (2.21.0)
@@ -110,7 +110,7 @@ GEM
     ast (2.4.2)
     aws-eventstream (1.2.0)
     aws-partitions (1.600.0)
-    aws-sdk-core (3.131.1)
+    aws-sdk-core (3.131.2)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
@@ -276,7 +276,7 @@ GEM
     mini_magick (4.11.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.16.0)
+    minitest (5.16.1)
     msgpack (1.5.2)
     multi_json (1.15.0)
     multi_test (0.1.2)
