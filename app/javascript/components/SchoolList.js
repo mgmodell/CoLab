@@ -26,6 +26,7 @@ export default function SchoolList(props) {
     state => state.context.status.endpointsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
+  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
   const navigate = useNavigate();
@@ -110,10 +111,10 @@ export default function SchoolList(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (user.loaded) {
-      Settings.defaultZoneName = user.timezone;
+    if (null !== user.lastRetrieved && null !== tz_hash ) {
+      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
     }
-  }, [user.loaded]);
+  }, [user.lastRetrieved, tz_hash]);
 
   const postNewMessage = msgs => {
     setMessages(msgs);

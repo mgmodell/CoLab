@@ -45,7 +45,13 @@ export default function HomeShell(props) {
 
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
-  Settings.defaultZoneName = user.timezone;
+  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
+
+  useEffect(() => {
+    if (null !== user.lastRetrieved && null !== tz_hash ) {
+      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
+    }
+  }, [user.lastRetrieved, tz_hash]);
 
   //Initialising to null
   const [tasks, setTasks] = useState();

@@ -30,9 +30,12 @@ export default function CourseList(props) {
     state => state.context.status.endpointsLoaded
   );
 
+  // Settings.throwOnInvalid = true;
+
   const navigate = useNavigate();
 
   const user = useTypedSelector(state => state.profile.user);
+  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
@@ -80,9 +83,7 @@ export default function CourseList(props) {
         filter: false,
         display: true,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value, {
-            zone: Settings.defaultZoneName
-          });
+          const dt = DateTime.fromISO(value )
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }
       }
@@ -94,9 +95,7 @@ export default function CourseList(props) {
         filter: false,
         display: true,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value, {
-            zone: Settings.defaultZoneName
-          });
+          const dt = DateTime.fromISO(value )
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }
       }
@@ -208,11 +207,12 @@ export default function CourseList(props) {
     }
   }, [endpointStatus]);
 
+
   useEffect(() => {
-    if (user.loaded) {
-      Settings.defaultZoneName = user.timezone;
+    if (null !== user.lastRetrieved && null !== tz_hash ) {
+      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
     }
-  }, [user.loaded]);
+  }, [user.lastRetrieved, tz_hash]);
 
   const postNewMessage = msgs => {
     setMessages(msgs);
@@ -276,7 +276,12 @@ export default function CourseList(props) {
         </Alert>
       </Collapse>
       <WorkingIndicator identifier="courses_loading" />
-      <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
+      {
+        null !== user.lastRetrieved ?
+        (
+          <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
+        ) : null
+      }
     </React.Fragment>
   );
 }

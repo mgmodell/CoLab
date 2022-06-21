@@ -15,16 +15,17 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function Admin(props) {
   const user = useTypedSelector(state => state.profile.user);
+  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
 
   const [showErrors, setShowErrors] = useState(false);
 
   const [working] = useState(true);
 
   useEffect(() => {
-    if (user.loaded) {
-      Settings.defaultZoneName = user.timezone;
+    if (null !== user.lastRetrieved && null !== tz_hash ) {
+      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
     }
-  }, [user.loaded]);
+  }, [user.lastRetrieved, tz_hash]);
 
   return (
     <React.Fragment>

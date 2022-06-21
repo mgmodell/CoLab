@@ -206,6 +206,7 @@ class HomeController < ApplicationController
         }
       end,
       timezones: HomeController::TIMEZONES,
+      timezone_lookup: HomeController::TIMEZONE_HASH,
       oauth_ids: {
         google: Rails.configuration.omniauth[:google_client_id]
       },
@@ -294,6 +295,10 @@ class HomeController < ApplicationController
       stdName: tz.tzinfo.name
 
     }
+  end
+  TIMEZONE_HASH = TIMEZONES.inject( {} ) do |tz_hash,next_tz|
+    tz_hash[ next_tz[ :name ] ] = next_tz[:stdName]
+    tz_hash
   end
 
   def get_quote

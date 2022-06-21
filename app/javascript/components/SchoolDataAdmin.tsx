@@ -40,6 +40,7 @@ export default function SchoolDataAdmin(props) {
   });
   //const { t, i18n } = useTranslation('schools' );
   const user = useTypedSelector(state => state.profile.user);
+  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
   const userLoaded = useTypedSelector(state => {
     return null != state.profile.lastRetrieved;
   });
@@ -142,10 +143,10 @@ export default function SchoolDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (userLoaded) {
+    if (null !== user.lastRetrieved) {
       Settings.defaultZoneName = user.timezone;
     }
-  }, [userLoaded]);
+  }, [user.lastRetrieved]);
 
   useEffect(() => {
     dispatch(setDirty(category));

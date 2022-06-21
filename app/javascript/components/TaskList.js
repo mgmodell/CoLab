@@ -17,6 +17,7 @@ export default function TaskList(props) {
   //const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
   //const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
   const user = useTypedSelector(state => state.profile.user);
+  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
   const navigate = useNavigate();
 
   const columns = [
@@ -149,10 +150,10 @@ export default function TaskList(props) {
   ];
 
   useEffect(() => {
-    if (user.loaded) {
-      Settings.defaultZoneName = user.timezone;
+    if (null !== user.lastRetrieved && null !== tz_hash ) {
+      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
     }
-  }, [user.loaded]);
+  }, [user.lastRetrieved, tz_hash]);
 
   const muiDatTab = (
     <MUIDataTable

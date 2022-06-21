@@ -58,6 +58,7 @@ export default function CourseDataAdmin(props) {
     state => state.context.status.endpointsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
+  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
 
   const navigate = useNavigate();
 
@@ -231,11 +232,12 @@ export default function CourseDataAdmin(props) {
     }
   }, [endpointStatus]);
 
+
   useEffect(() => {
-    if (user.loaded) {
-      Settings.defaultZoneName = user.timezone;
+    if (null !== user.lastRetrieved && null !== tz_hash ) {
+      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
     }
-  }, [user.loaded]);
+  }, [user.lastRetrieved, tz_hash]);
 
   useEffect(() => {
     dispatch(setDirty(category));
@@ -479,9 +481,7 @@ export default function CourseDataAdmin(props) {
         filter: false,
         display: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value, {
-            zone: Settings.defaultZoneName
-          });
+          const dt = DateTime.fromISO(value );
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }
       }
@@ -492,9 +492,7 @@ export default function CourseDataAdmin(props) {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value, {
-            zone: Settings.defaultZoneName
-          });
+          const dt = DateTime.fromISO(value );
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }
       }

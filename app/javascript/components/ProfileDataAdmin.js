@@ -67,6 +67,7 @@ export default function ProfileDataAdmin(props) {
     state => state.context.status.lookupsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
+  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
 
   const profileReady = endpointStatus && lookupStatus;
   const existingProfile = profileReady && undefined != user && user.id > 0;
@@ -271,10 +272,10 @@ export default function ProfileDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (user.loaded) {
-      Settings.defaultZoneName = user.timezone;
+    if (null !== user.lastRetrieved && null !== tz_hash ) {
+      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
     }
-  }, [user.loaded]);
+  }, [user.lastRetrieved, tz_hash]);
 
   useEffect(() => setDirty(true), [
     user
