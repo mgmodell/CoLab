@@ -357,6 +357,10 @@ end
 Then 'the user opens the self-registration link for the course' do
   self_reg_url = "course/#{@course.id}/enroll"
   visit(self_reg_url)
+  if ! @dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?( 'http' )
+    fill_in 'newTimeVal', with: @dest_date.to_s
+    click_button 'setTimeBtn'
+  end
   wait_for_render
 end
 

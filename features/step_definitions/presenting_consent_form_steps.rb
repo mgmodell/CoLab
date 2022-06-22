@@ -6,6 +6,7 @@ require 'faker'
 Given(/^reset time clock to now$/) do
   travel_back
   if :rack_test != Capybara.current_driver 
+    @dest_date = nil
     click_button 'resetTimeBtn' if has_button? ('resetTimeBtn')
   end
 end
@@ -84,6 +85,10 @@ end
 
 When(/^the user visits the index$/) do
   visit '/'
+  if ! @dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?( 'http' )
+    fill_in 'newTimeVal', with: @dest_date.to_s
+    click_button 'setTimeBtn'
+  end
 end
 
 Given(/^the consent form started "([^"]*)" and ends "([^"]*)"$/) do |start_date, end_date|
