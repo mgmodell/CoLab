@@ -20,6 +20,8 @@ export default function TaskList(props) {
   const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
   const navigate = useNavigate();
 
+  Settings.throwOnInvalid = true;
+
   const columns = [
     {
       label: "Type",
@@ -113,8 +115,12 @@ export default function TaskList(props) {
         filter: false,
         display: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value);
-          return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+          var retVal = 'n/a';
+          if( null !== value ){
+            const dt = DateTime.fromISO(value);
+            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span> );
+          }
+          return retVal;
         }
       }
     },
@@ -124,8 +130,12 @@ export default function TaskList(props) {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value);
-          return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+          var retVal = 'n/a';
+          if( null !== value ){
+            const dt = DateTime.fromISO(value);
+            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span> );
+          }
+          return retVal;
         }
       }
     },
