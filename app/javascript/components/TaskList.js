@@ -20,7 +20,6 @@ export default function TaskList(props) {
   const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
   const navigate = useNavigate();
 
-  Settings.throwOnInvalid = true;
 
   const columns = [
     {
@@ -110,7 +109,7 @@ export default function TaskList(props) {
     },
     {
       label: "Open Date",
-      name: "start_time",
+      name: "start_date",
       options: {
         filter: false,
         display: false,
@@ -126,7 +125,7 @@ export default function TaskList(props) {
     },
     {
       label: "Close Date",
-      name: "close_date",
+      name: "next_date",
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {

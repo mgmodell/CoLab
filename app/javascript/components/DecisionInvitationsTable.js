@@ -22,6 +22,8 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import axios from "axios";
 
+import { DateTime } from "luxon";
+
 export default function DecisionInvitationsTable(props) {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
@@ -41,7 +43,6 @@ export default function DecisionInvitationsTable(props) {
             <React.Fragment>
               <Tooltip title={t("accept")}>
                 <Fab
-                  title={t("accept")}
                   aria-label={t("accept")}
                   onClick={event => {
                     const url = invitation.acceptPath + ".json";
@@ -64,7 +65,6 @@ export default function DecisionInvitationsTable(props) {
               </Tooltip>
               <Tooltip title={t("decline")}>
                 <Fab
-                  title={t("decline")}
                   aria-label={t("decline")}
                   onClick={event => {
                     const url = invitation.declinePath + ".json";
@@ -101,14 +101,30 @@ export default function DecisionInvitationsTable(props) {
       label: t("open_date"),
       name: "startDate",
       options: {
-        filter: false
+        filter: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          var retVal = 'n/a';
+          if( null !== value ){
+            const dt = DateTime.fromISO(value);
+            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span> );
+          }
+          return retVal;
+        }
       }
     },
     {
       label: t("close_date"),
       name: "endDate",
       options: {
-        filter: false
+        filter: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          var retVal = 'n/a';
+          if( null !== value ){
+            const dt = DateTime.fromISO(value);
+            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span> );
+          }
+          return retVal;
+        }
       }
     }
   ];
