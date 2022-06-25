@@ -16,6 +16,7 @@ print_help ( ) {
   echo " -d [driver]    Set the browser driver for this run"
   echo " -c             Initialise the database"
   echo " -f [features]  Specify specific features to run"
+  echo " -l             Clear out the log files"
   echo " -n             Wipe previous runs and terminate"
   echo " -r             Rerun previous failed tests with latest"
   echo "                code"
@@ -36,11 +37,12 @@ fi
 DRIVER=docker
 SHOW_FAILS=false
 DB_RESET=false
+CLEAR_LOG=false
 CLEAR_RERUN=false
 SHOW_HELP=false
 SPEC_FEATURE=false
 
-while getopts "chsnb:f:d:t" opt; do
+while getopts "chsnb:f:d:tl" opt; do
   case $opt in
     c)
       DB_RESET=true
@@ -61,6 +63,10 @@ while getopts "chsnb:f:d:t" opt; do
       echo "Features Specified $OPTARG" >&2
       SPEC_FEATURE=true
       FEATURE=$OPTARG
+      ;;
+    n)
+      echo "Removing log files" >&2
+      CLEAR_LOG=true
       ;;
     n)
       echo "Removing Rerun File" >&2
@@ -95,6 +101,12 @@ fi
 # Clear previous failures
 if [ "$CLEAR_RERUN" = true ]; then
   rm rerun.txt
+  exit 0;
+fi
+
+# Clear old log files
+if [ "$CLEAR_LOG" = true ]; then
+  rm log/*
   exit 0;
 fi
 
