@@ -64,7 +64,7 @@ while getopts "chsnb:f:d:tl" opt; do
       SPEC_FEATURE=true
       FEATURE=$OPTARG
       ;;
-    n)
+    l)
       echo "Removing log files" >&2
       CLEAR_LOG=true
       ;;
