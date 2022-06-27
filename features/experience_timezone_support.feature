@@ -20,7 +20,6 @@ Feature: Timezone Support for Experiences
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
-    Then we debug
     Then the user should see "Feb 15, 1980, 12:00 AM"
     #Rounding goes on here
     Then the user should see "Apr 12, 1980, 11:59 PM"
