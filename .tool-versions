@@ -1,4 +1,4 @@
-nodejs 16.2.0
+nodejs 18.4.0
 ruby 3.1.2
-yarn 1.22.18
-bundler 2.3.12
+yarn 1.22.19
+bundler 2.3.16
