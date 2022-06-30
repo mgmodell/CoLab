@@ -44,6 +44,7 @@ export default function DecisionInvitationsTable(props) {
               <Tooltip title={t("accept")}>
                 <Fab
                   aria-label={t("accept")}
+                  id="Accept"
                   onClick={event => {
                     const url = invitation.acceptPath + ".json";
                     dispatch(startTask("accepting"));
@@ -66,6 +67,7 @@ export default function DecisionInvitationsTable(props) {
               <Tooltip title={t("decline")}>
                 <Fab
                   aria-label={t("decline")}
+                  id="Decline"
                   onClick={event => {
                     const url = invitation.declinePath + ".json";
                     dispatch(startTask("declining"));
