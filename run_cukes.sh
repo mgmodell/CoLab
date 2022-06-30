@@ -123,6 +123,8 @@ bundle install --quiet
 echo "Installing yarn packages"
 yarn install --silent
 
+./bin/webpacker --progress
+
 if [ "$DB_RESET" = true ]; then
   # Reset database
   echo "Setting up database" >&2
