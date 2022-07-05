@@ -99,7 +99,7 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
   @entries_list = @entries_lists[@user]
 
   entries_array = [ ]
-  @entries.keys.each do |user_id|
+  @entries_lists.keys.each do |user_id|
     @entries_lists[ user_id ].each do |entry|
       entries_array.push entry
     end
