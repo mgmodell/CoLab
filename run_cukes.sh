@@ -123,7 +123,7 @@ bundle install --quiet
 echo "Installing yarn packages"
 yarn install --silent
 
-./bin/webpacker --progress
+rails webpacker:compile RAILS_ENV=$RAILS_ENV
 
 if [ "$DB_RESET" = true ]; then
   # Reset database

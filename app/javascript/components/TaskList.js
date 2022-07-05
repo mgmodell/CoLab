@@ -117,7 +117,7 @@ export default function TaskList(props) {
           var retVal = 'n/a';
           if( null !== value ){
             const dt = DateTime.fromISO(value);
-            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span> );
+            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)} ({dt.zoneName} )</span> );
           }
           return retVal;
         }
@@ -161,6 +161,8 @@ export default function TaskList(props) {
   useEffect(() => {
     if (null !== user.lastRetrieved && null !== tz_hash ) {
       Settings.defaultZoneName = tz_hash[ user.timezone ] ;
+      console.log( 'tz: ', Settings.defaultZoneName );
+      console.log( tz_hash[ user.timezone ] ) ;
     }
   }, [user.lastRetrieved, tz_hash]);
 
