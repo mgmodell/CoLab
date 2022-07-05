@@ -117,6 +117,7 @@ export default function TaskList(props) {
           var retVal = 'n/a';
           if( null !== value ){
             const dt = DateTime.fromISO(value);
+            dt.setZone( Settings.defaultZone );
             retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)} ({dt.zoneName} )</span> );
           }
           return retVal;
@@ -132,6 +133,7 @@ export default function TaskList(props) {
           var retVal = 'n/a';
           if( null !== value ){
             const dt = DateTime.fromISO(value);
+            dt.setZone( Settings.defaultZone );
             retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span> );
           }
           return retVal;
