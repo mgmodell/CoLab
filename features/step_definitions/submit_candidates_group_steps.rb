@@ -139,7 +139,6 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
           found = true
         end
 
-        puts "Entry (#{entry}) was found and updated" if found
         break if found
 
       end
