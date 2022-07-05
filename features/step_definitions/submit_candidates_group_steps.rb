@@ -98,21 +98,52 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
 
+  entries_array = [ ]
+  @entries.keys.each do |list|
+    list.each do |entry|
+      entries_array.push entry
+    end
+  end
+  field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]").count
+
+  puts "entries: #{entries_array}"
+  puts "entries i: #{entries_array.inspect}"
+  puts "fields: #{field_count}"
+
   count.to_i.times do |index|
-    existing_term = page.find(:xpath, "//input[@id='term_#{index}']").value
+    # Index to the field to change
+    rand_ind = Random.rand( field_count )
+    # Pull the existing values
+    existing_term = page.find(:xpath, "//input[@id='term_#{rand_ind}']").value
+    existing_def = page.find(:xpath, "//input[@id='definition_#{rand_ind}']").value
+
+    # Gen the new term
     new_val = if field == 'term'
                 Faker::Company.industry
               else
                 Faker::Company.bs
               end
 
-    @entries_list[index] = {} if @entries_list[index].blank?
-    @entries_list.each do |entry|
-      next unless entry['term'] == existing_term
+    if existing_term.blank? && existing_def.blank?
+      @entries_list.push( { field => new_val } )
+    else
+      found = false
+      entries_array.each do |entry|
+        if 'term' == field && entry['definition'] == existing_def
+          entry['term'] = new_val
+          page.fill_in("#{field}_#{rand_ind}",
+                       with: new_val )
+          found = true
+        elsif 'definition' == field && entry['term'] == existing_term
+          entry['definition'] = new_val
+          page.fill_in("#{field}_#{rand_ind}",
+                       with: new_val )
+          found = true
+        end
 
-      entry[field] = new_val
-      page.fill_in("#{field}_#{index}",
-                   with: @entries_list[index][field])
+        puts "Entry (#{entry}) was found and updated" if found
+
+      end
     end
   end
 end
