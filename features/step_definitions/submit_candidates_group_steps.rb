@@ -99,23 +99,30 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
   @entries_list = @entries_lists[@user]
 
   entries_array = [ ]
-  @entries.keys.each do |list|
-    list.each do |entry|
+  @entries.keys.each do |user_id|
+    @entries_lists[ user_id ].each do |entry|
       entries_array.push entry
     end
   end
   field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]").count
 
-  puts "entries: #{entries_array}"
-  puts "entries i: #{entries_array.inspect}"
   puts "fields: #{field_count}"
 
   count.to_i.times do |index|
     # Index to the field to change
     rand_ind = Random.rand( field_count )
-    # Pull the existing values
-    existing_term = page.find(:xpath, "//input[@id='term_#{rand_ind}']").value
-    existing_def = page.find(:xpath, "//input[@id='definition_#{rand_ind}']").value
+    begin
+      # Pull the existing values
+      existing_term = page.find(:xpath, "//input[@id='term_#{rand_ind}']").value
+      existing_def = page.find(:xpath, "//input[@id='definition_#{rand_ind}']").value
+    rescue => e
+      puts "Exception Class: #{ e.class.name }"
+      puts "Exception Message: #{ e.class.message }"
+      puts "Exception Backtrace: #{ e.class.backtrace }"
+        
+      byebug
+      
+    end
 
     # Gen the new term
     new_val = if field == 'term'
