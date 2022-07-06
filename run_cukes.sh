@@ -123,7 +123,8 @@ bundle install --quiet
 echo "Installing yarn packages"
 yarn install --silent
 
-rails webpacker:compile RAILS_ENV=$RAILS_ENV
+# This doesn't seem to work properly
+# rails webpacker:compile RAILS_ENV=$RAILS_ENV
 
 if [ "$DB_RESET" = true ]; then
   # Reset database

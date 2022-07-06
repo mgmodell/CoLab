@@ -11,6 +11,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 
 import MUIDataTable from "mui-datatables";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import Logo from './Logo';
 
 export default function TaskList(props) {
   //const endpointSet = "home";
@@ -195,7 +196,18 @@ export default function TaskList(props) {
 
   return (
     <Paper>
-      <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
+      <div style={{ maxWidth: "100%" }}>
+        {null !== user.lastRetrieved && null !== tz_hash ?
+         muiDatTab :
+         (
+              <Logo
+                height={100}
+                width={100}
+                spinning
+              />
+         )
+        }
+      </div>
     </Paper>
   );
 }
