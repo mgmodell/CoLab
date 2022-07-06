@@ -172,7 +172,8 @@ export default function TaskList(props) {
     }
   }, [user.lastRetrieved, tz_hash]);
 
-  const muiDatTab = (
+  const muiDatTab = null !== user.lastRetrieved && null !== tz_hash ?
+  (
     <MUIDataTable
       title="Tasks"
       data={props.tasks}
@@ -192,13 +193,7 @@ export default function TaskList(props) {
         selectableRows: "none"
       }}
     />
-  );
-
-  return (
-    <Paper>
-      <div style={{ maxWidth: "100%" }}>
-        {null !== user.lastRetrieved && null !== tz_hash ?
-         muiDatTab :
+  ) :
          (
               <Logo
                 height={100}
@@ -206,6 +201,13 @@ export default function TaskList(props) {
                 spinning
               />
          )
+  ;
+
+  return (
+    <Paper>
+      <div style={{ maxWidth: "100%" }}>
+        {
+         muiDatTab 
         }
       </div>
     </Paper>
