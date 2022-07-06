@@ -598,7 +598,7 @@ DEPENDENCIES
   rubocop-thread_safety
   sdoc
   selenium-webdriver
-  shakapacker (= 6.5)
+  shakapacker (= 6.5.0)
   simplecov
   solargraph
   spring

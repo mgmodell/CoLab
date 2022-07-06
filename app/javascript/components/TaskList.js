@@ -117,10 +117,10 @@ export default function TaskList(props) {
           var retVal = 'n/a';
           if( null !== value ){
             const dt = DateTime.fromISO(value);
-            console.log( dt.zoneName );
+            console.log( 'pre', dt.zoneName );
             dt.setZone( Settings.defaultZone );
-            console.log( Settings.defaultZone );
-            console.log( dt.zoneName );
+            console.log( 'default', Settings.defaultZone );
+            console.log( 'post', dt.zoneName );
             retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)} ({dt.zoneName} )</span> );
           }
           return retVal;
