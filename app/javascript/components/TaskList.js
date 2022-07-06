@@ -117,12 +117,14 @@ export default function TaskList(props) {
         customBodyRender: (value, tableMeta, updateValue) => {
           var retVal = 'n/a';
           if( null !== value ){
+            /*
             const dt = DateTime.fromISO(value);
             console.log( 'pre', dt.zoneName );
             dt.setZone( Settings.defaultZone );
             console.log( 'default', Settings.defaultZone );
             console.log( 'post', dt.zoneName );
-            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)} ({dt.zoneName} )</span> );
+            */
+            retVal = ( <span>{value.toLocaleString(DateTime.DATETIME_MED)} ({value.zoneName} )</span> );
           }
           return retVal;
         }
@@ -136,9 +138,11 @@ export default function TaskList(props) {
         customBodyRender: (value, tableMeta, updateValue) => {
           var retVal = 'n/a';
           if( null !== value ){
+            /*
             const dt = DateTime.fromISO(value);
             dt.setZone( Settings.defaultZone );
-            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span> );
+            */
+            retVal = ( <span>{value.toLocaleString(DateTime.DATETIME_MED)}</span> );
           }
           return retVal;
         }

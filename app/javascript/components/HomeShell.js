@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { Settings } from "luxon";
 import Tab from "@mui/material/Tab";
 import {
   TabList,
@@ -14,6 +13,7 @@ import {
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import luxonPlugin from "@fullcalendar/luxon";
+import { DateTime, Settings } from "luxon";
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusActions";
@@ -86,7 +86,14 @@ export default function HomeShell(props) {
           value.url = url;
           value.link = url;
         }
+        // Set the dates properly - close may need work
         value.start = value.next_date;
+        if( null !== value.next_date ){
+          value.next_date = DateTime.fromISO( value.next_date );
+        }
+        if( null !== value.start_date ){
+          value.start_date = DateTime.fromISO( value.start_date );
+        }
       });
       setTasks(data.tasks);
       setConsentLogs(data.consent_logs);
