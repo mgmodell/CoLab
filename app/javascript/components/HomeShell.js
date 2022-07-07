@@ -49,7 +49,17 @@ export default function HomeShell(props) {
 
   useEffect(() => {
     if (null !== user.lastRetrieved && null !== tz_hash ) {
-      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
+      const userZone = tz_hash[ user.timezone ];
+      Settings.defaultZoneName = tz_hash[ userZone ] ;
+      console.log( 'in the zone:', userZone, tasks );
+      if( undefined !== tasks ){
+        const newTasks = tasks;
+        newTasks.forEach( (value, index, array ) =>{
+          value.next_date = value.next_date.setZone( userZone )
+          value.start_date = value.start_date.setZone( userZone )
+        })
+
+      }
     }
   }, [user.lastRetrieved, tz_hash]);
 
