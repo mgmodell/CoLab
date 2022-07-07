@@ -65,4 +65,17 @@ en:
     drop_cancel_btn: Cancel
     drop_tooltip_title: Drop Student
     drop_tooltip_aria: Drop Student
-
+    first_name: First Name
+    last_name: Last Name
+    email: Email
+    bingo_progress: Bingo Progress
+    assessment_progress: Assessment Progress
+    assessment_performance: Assessment Performance
+    experience_progress: Experience Progress
+    experience_performance: Experience Performance
+    status: Status
+    drop_student: Drop Student
+    accept_student: Accept Student
+    decline_student: Decline Student
+    cancel: Cancel
+    save_course_warning: You must save the Course to have students assigned to it

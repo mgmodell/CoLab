@@ -77,25 +77,25 @@ export default function CourseUsersList(props) {
 
   var userColumns = [
     {
-      label: "First Name",
-      name: "first_name",
-      tag: "first_name",
+      label: t("first_name"),
+      name: t("first_name"),
+      tag: t("first_name"),
       options: {
         filter: false
       }
     },
     {
-      label: "Last Name",
-      name: "last_name",
-      tag: "last_name",
+      label: t("last_name"),
+      name: t("last_name"),
+      tag: t("last_name"),
       options: {
         filter: false
       }
     },
     {
-      label: "Email",
-      name: "email",
-      tag: "email",
+      label: t("email"),
+      name: t("email"),
+      tag: t("email"),
       options: {
         display: false,
         filter: false,
@@ -105,9 +105,9 @@ export default function CourseUsersList(props) {
       }
     },
     {
-      label: "Bingo Progress",
+      label: t("bingo_progress"),
       name: "id",
-      tag: "bingo_performance",
+      tag: t("bingo_progress"),
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
@@ -129,9 +129,9 @@ export default function CourseUsersList(props) {
       }
     },
     {
-      label: "Assessment Progress",
-      name: "assessment_performance",
-      tag: "assessment_performance",
+      label: t("assessment_progress"),
+      name: t("assessment_performance"),
+      tag: t("assessment_performance"),
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
@@ -140,9 +140,9 @@ export default function CourseUsersList(props) {
       }
     },
     {
-      label: "Experience Progress",
-      name: "experience_performance",
-      tag: "experience_performance",
+      label: t("experience_progress"),
+      name: t("experience_performance"),
+      tag: t("experience_performance"),
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
@@ -151,9 +151,9 @@ export default function CourseUsersList(props) {
       }
     },
     {
-      label: "Status",
-      name: "status",
-      tag: "status",
+      label: t("status"),
+      name: t("status"),
+      tag: t("status"),
       options: {
         display: true,
         customBodyRender: (value, tableMeta, updateValue) => {
@@ -235,7 +235,7 @@ export default function CourseUsersList(props) {
             case "instructor":
             case "assistant":
             case "enrolled_student":
-              lbl = "Drop Student";
+              lbl = t("drop_student");
               btns.push(
                 <DropUserButton
                   key="drop-student-button"
@@ -245,8 +245,8 @@ export default function CourseUsersList(props) {
               );
               break;
             case "requesting_student":
-              lbl = "Accept Student";
-              const lbl2 = "Decline Student";
+              lbl = t("accept_student");
+              const lbl2 = t("decline_student");
               btns.push(
                 <Tooltip key="accept" title={lbl}>
                   <IconButton
@@ -453,7 +453,7 @@ export default function CourseUsersList(props) {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={() => closeDialog()} color="primary">
-                      Cancel
+                      t("Cancel")
                     </Button>
                     <Button
                       onClick={() => {
@@ -506,7 +506,7 @@ export default function CourseUsersList(props) {
           <br />
         </React.Fragment>
       ) : (
-        "You must save the Course to have students assigned to it"
+        t("save_course_warning")
       )}
     </Paper>
   );
