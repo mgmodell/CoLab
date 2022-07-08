@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React from "react";
+import React, {useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Fab from "@mui/material/Fab";
@@ -17,6 +17,7 @@ import WrappedVirtualizedTable from "../components/WrappedVirtualizedTable";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const styles = theme => ({
   table: {
@@ -42,17 +43,17 @@ const styles = theme => ({
     cursor: "initial"
   }
 });
-class DecisionEnrollmentsTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      requests_raw: [],
-      requests: [],
-      search: "",
-      sortBy: "course_number",
-      working: true,
-      sortDirection: SortDirection.DESC,
-      columns: [
+export default function DecisionEnrollmentsTable(props){
+  const category = 'admin';
+  const {t } = useTranslation( category);
+
+  const [requests_raw, setRequestsRaw] = useState( [] );
+  const [requests, setRequests] = useState( [] );
+  const [search, setSearch] = useState( '' );
+  const [sortBy, setSortBy] = useState( 'course_number' );
+  const [working, setWorking] = useState( true );
+  const [sortDirection, setSortDirection] = useState( SortDirection.DESC );
+  const columns = [
         {
           width: 100,
           label: "First Name",
@@ -100,12 +101,12 @@ class DecisionEnrollmentsTable extends React.Component {
                 <Tooltip title="Accept" aria-label="accept">
                   <Fab
                     onClick={() => {
-                      this.decision(id, true);
+                      decision(id, true);
                     }}
                     aria-label="Accept"
                     label="Accept"
                     size="small"
-                    disabled={this.state.working}
+                    disabled={working}
                   >
                     <ThumbUpIcon />
                   </Fab>
@@ -114,12 +115,12 @@ class DecisionEnrollmentsTable extends React.Component {
                 <Tooltip title="Reject" aria-label="reject">
                   <Fab
                     onClick={() => {
-                      this.decision(id, false);
+                      decision(id, false);
                     }}
                     aria-label="Reject"
                     label="Reject"
                     size="small"
-                    disabled={this.state.working}
+                    disabled={working}
                   >
                     <ThumbDownIcon />
                   </Fab>
@@ -128,48 +129,45 @@ class DecisionEnrollmentsTable extends React.Component {
             );
           }
         }
-      ]
-    };
-    this.filter = this.filter.bind(this);
-    this.colSort = this.colSort.bind(this);
-  }
-  componentDidMount() {
+
+  ]
+
+  useEffect( () => {
     //Retrieve requests
-    this.getRequests();
-  }
-  getRequests() {
-    const url = `${this.props.init_url}.json`;
+    getRequests();
+  }, [] );
+
+  const getRequests = () => {
+    const url = `${props.init_url}.json`;
     axios
       .get(url, {})
       .then(response => {
         const data = response.data;
-        this.setState({
-          requests: data,
-          requests_raw: data,
-          working: false
-        });
+        setRequests( data );
+        setRequestsRaw( data );
+        setWorking( false );
       })
       .catch(error => {
         console.log("error", error);
         return [{ id: -1, name: "no data" }];
       });
   }
-  filter = function(event) {
-    var filtered = this.state.requests_raw.filter(
+  const filter = (event) => {
+    var filtered = requests_raw.filter(
       request =>
         null != request &&
         request.first_name.includes(event.target.value.toUpperCase())
     );
-    this.setState({ requests: filtered });
+    setRequests( filtered );
   };
 
-  colSort = function(event) {
-    let tmpArray = this.state.requests_raw;
+  const colSort = (event) => {
+    let tmpArray = requests_raw;
     let direction = SortDirection.DESC;
     let mod = 1;
     if (
-      event.sortBy == this.state.sortBy &&
-      direction == this.state.sortDirection
+      event.sortBy == sortBy &&
+      direction == sortDirection
     ) {
       direction = SortDirection.ASC;
       mod = -1;
@@ -179,16 +177,14 @@ class DecisionEnrollmentsTable extends React.Component {
       const b_prime = b[event.sortBy] == null ? "" : b[event.sortBy];
       return mod * a_prime.localeCompare(b_prime);
     });
-    this.setState({
-      requests: tmpArray,
-      sortDirection: direction,
-      sortBy: event.sortBy
-    });
+    setRequests( tmpArrayp );
+    setSortDirection( direction );
+    setSortBy( event.sortBy );
   };
 
-  decision(id, accept) {
-    this.setState({ working: true });
-    const url = this.props.update_url + ".json";
+  const decision = (id, accept) => {
+    setWorking( true );
+    const url = props.update_url + ".json";
     axios
       .patch(url, {
         roster_id: id,
@@ -196,11 +192,9 @@ class DecisionEnrollmentsTable extends React.Component {
       })
       .then(response => {
         const data = response.data;
-        this.setState({
-          requests: data,
-          requests_raw: data,
-          working: false
-        });
+        setRequests( data );
+        setRequestsRaw( data );
+        setWorking( false );
       })
       .catch(error => {
         const fail_data = new Object();
@@ -211,9 +205,9 @@ class DecisionEnrollmentsTable extends React.Component {
       });
   }
 
-  render() {
-    if (0 < this.state.requests.length) {
-      return (
+  return(
+    0 < requests.length ?
+    (
         <Paper style={{ height: 450, width: "100%" }}>
           <h1>Decision Enrollment Requests</h1>
           <p>
@@ -221,32 +215,30 @@ class DecisionEnrollmentsTable extends React.Component {
             accept or decline each enrollment.
           </p>
           <Toolbar>
-            <InputBase placeholder="Search requests" onChange={this.filter} />
+            <InputBase placeholder="Search requests" onChange={filter} />
             <SearchIcon />
             <Typography color="inherit">
-              Showing {this.state.requests.length} of{" "}
-              {this.state.requests_raw.length}
+              Showing {requests.length} of{" "}
+              {requests_raw.length}
             </Typography>
           </Toolbar>
           <WorkingIndicator identifier="loading_enrollments" />
           <WrappedVirtualizedTable
-            rowCount={this.state.requests.length}
-            rowGetter={({ index }) => this.state.requests[index]}
-            sort={this.colSort}
-            sortBy={this.state.sortBy}
-            sortDirection={this.state.sortDirection}
-            columns={this.state.columns}
+            rowCount={requests.length}
+            rowGetter={({ index }) => requests[index]}
+            sort={colSort}
+            sortBy={sortBy}
+            sortDirection={sortDirection}
+            columns={columns}
           />
         </Paper>
-      );
-    } else {
-      return null;
-    }
-  }
+      
+    ) : null
+
+  )
 }
 DecisionEnrollmentsTable.propTypes = {
   init_url: PropTypes.string.isRequired,
   update_url: PropTypes.string.isRequired
 };
 
-export default DecisionEnrollmentsTable;
