@@ -88,7 +88,7 @@ class DecisionEnrollmentsTable extends React.Component {
         },
         {
           width: 100,
-          label: "Accept/Decline",
+          label: t('accept_decline' ),
           dataKey: "id",
           numeric: false,
           disableSort: false,
