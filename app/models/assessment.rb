@@ -43,7 +43,7 @@ class Assessment < ApplicationRecord
       course_name: course.get_name(false),
       start_date:,
       end_date:,
-      next_deadline:,
+      next_date: next_deadline,
       link:,
       consent_link:,
       active: project.active

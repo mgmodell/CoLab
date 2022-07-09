@@ -162,8 +162,6 @@ export default function TaskList(props) {
   useEffect(() => {
     if (null !== user.lastRetrieved && null !== tz_hash ) {
       Settings.defaultZoneName = tz_hash[ user.timezone ] ;
-      console.log( 'tz: ', Settings.defaultZoneName );
-      console.log( tz_hash[ user.timezone ] ) ;
     }
   }, [user.lastRetrieved, tz_hash]);
 

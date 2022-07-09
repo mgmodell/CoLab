@@ -46,6 +46,7 @@ export default function HomeShell(props) {
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
   const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
+  const [tasks, setTasks] = useState();
 
   useEffect(() => {
     if (null !== user.lastRetrieved && null !== tz_hash ) {
@@ -59,12 +60,12 @@ export default function HomeShell(props) {
           value.start_date = value.start_date.setZone( userZone )
         })
 
+        setTasks( newTasks );
       }
     }
-  }, [user.lastRetrieved, tz_hash]);
+  }, [user.lastRetrieved, tz_hash, tasks]);
 
   //Initialising to null
-  const [tasks, setTasks] = useState();
   const [consentLogs, setConsentLogs] = useState();
   const [waitingRosters, setWaitingRosters] = useState();
 
@@ -77,6 +78,7 @@ export default function HomeShell(props) {
     axios.get(url, {}).then(resp => {
       //Process the data
       const data = resp.data;
+      console.log( 'tasks:', data['tasks'] );
       data["tasks"].forEach((value, index, array) => {
         switch (value.type) {
           case "assessment":
