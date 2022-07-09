@@ -43,7 +43,6 @@ import axios from "axios";
 import { Grid, Skeleton } from "@mui/material";
 
 export default function ProjectDataAdmin(props) {
-  const cityTimezones = require("city-timezones");
 
   const category = "project";
   const endpoints = useTypedSelector(
