@@ -94,8 +94,7 @@ fi
 
 # Show previous failures
 if [ "$SHOW_FAILS" = true ]; then
-  cat rerun.txt
-  echo -en "\n"
+  printf '%s\n' "$(cat rerun.txt)"
   exit 0;
 fi
 
