@@ -45,7 +45,7 @@
     "i18next-intervalplural-postprocessor": "^3.0.0",
     "i18next-localstorage-cache": "^1.1.1",
     "linked-sliders": "^0.2.0",
-    "luxon": "^2.3.1",
+    "luxon": "^3.0.1",
     "mini-css-extract-plugin": "^2.6.0",
     "mui-datatables": "^4.2.2",
     "promise-polyfill": "^8.2.3",
