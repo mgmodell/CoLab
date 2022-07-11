@@ -32,8 +32,12 @@ import DropUserButton from "./DropUserButton";
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
 import { startTask, endTask } from "./infrastructure/StatusActions";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 export default function CourseUsersList(props) {
+  const category = 'courses';
+  const { t } = useTranslation( category );
+
   const [addUsersPath, setAddUsersPath] = useState("");
   const [procRegReqPath, setProcRegReqPath] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -78,7 +82,7 @@ export default function CourseUsersList(props) {
   var userColumns = [
     {
       label: t("first_name"),
-      name: t("first_name"),
+      name: "first_name",
       tag: t("first_name"),
       options: {
         filter: false
@@ -86,7 +90,7 @@ export default function CourseUsersList(props) {
     },
     {
       label: t("last_name"),
-      name: t("last_name"),
+      name: "last_name",
       tag: t("last_name"),
       options: {
         filter: false
@@ -94,7 +98,7 @@ export default function CourseUsersList(props) {
     },
     {
       label: t("email"),
-      name: t("email"),
+      name: "email",
       tag: t("email"),
       options: {
         display: false,
@@ -130,7 +134,7 @@ export default function CourseUsersList(props) {
     },
     {
       label: t("assessment_progress"),
-      name: t("assessment_performance"),
+      name: "assessment_performance",
       tag: t("assessment_performance"),
       options: {
         filter: false,
@@ -141,7 +145,7 @@ export default function CourseUsersList(props) {
     },
     {
       label: t("experience_progress"),
-      name: t("experience_performance"),
+      name: "experience_performance",
       tag: t("experience_performance"),
       options: {
         filter: false,
@@ -152,7 +156,7 @@ export default function CourseUsersList(props) {
     },
     {
       label: t("status"),
-      name: t("status"),
+      name: "status",
       tag: t("status"),
       options: {
         display: true,
@@ -453,7 +457,7 @@ export default function CourseUsersList(props) {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={() => closeDialog()} color="primary">
-                      t("Cancel")
+                      {t("Cancel")}
                     </Button>
                     <Button
                       onClick={() => {
