@@ -31,17 +31,14 @@ export default function ConsentLog(props) {
   const [logLastUpdated, setLogLastUpdated] = useState(new Date());
 
   const getLog = () => {
-    console.log( props );
     var url =
       endpoints['baseUrl'] + (consentFormId || props.consentFormId ) + ".json";
 
-    console.log( 'get', url );
     dispatch( startTask("loading") );
     axios.get( url, { } )
       .then(response => {
         const data = response.data;
         //Process the data
-        console.log('get-resp', response );
         setLogId(data.consent_log.id);
         setFormName(data.consent_log.name);
         setFormText(data.consent_log.formText);
@@ -62,7 +59,6 @@ export default function ConsentLog(props) {
       endpoints['consentLogSaveUrl'] + logId + ".json";
     dispatch( startTask("saving") );
 
-    console.log("update", url);
 
     axios.patch( url, {
         consent_log: {
@@ -88,7 +84,6 @@ export default function ConsentLog(props) {
 
   useEffect(() => {
     if (endpointStatus ){
-      console.log( 'loading' );
       getLog();
     }
   }, [endpointStatus]);

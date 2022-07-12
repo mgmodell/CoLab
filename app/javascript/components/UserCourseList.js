@@ -59,7 +59,6 @@ export default function UserCourseList(props) {
           const course = props.coursesList.filter(item => {
             return value === item.id;
           })[0];
-          console.log(course);
           const data = course.bingo_data;
           return (
             <React.Fragment>

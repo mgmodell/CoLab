@@ -52,7 +52,6 @@ export default function HomeShell(props) {
     if (null !== user.lastRetrieved && null !== tz_hash ) {
       const userZone = tz_hash[ user.timezone ];
       Settings.defaultZoneName = tz_hash[ userZone ] ;
-      console.log( 'in the zone:', userZone, tasks );
       if( undefined !== tasks ){
         const newTasks = tasks;
         newTasks.forEach( (value, index, array ) =>{
@@ -78,7 +77,6 @@ export default function HomeShell(props) {
     axios.get(url, {}).then(resp => {
       //Process the data
       const data = resp.data;
-      console.log( 'tasks:', data['tasks'] );
       data["tasks"].forEach((value, index, array) => {
         switch (value.type) {
           case "assessment":

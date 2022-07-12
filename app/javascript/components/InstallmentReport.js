@@ -174,7 +174,6 @@ export default function InstallmentReport(props) {
       .then(response => {
         const data = response.data;
         //Process Contributions
-        console.log("data:", data);
         if (!data.error) {
           setInstallment(data.installment);
           const receivedContributions = data.installment.values.reduce(

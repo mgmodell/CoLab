@@ -67,7 +67,6 @@ export default function Experience(props) {
     axios(url, {})
       .then(response => {
         const data = response.data;
-        console.log("getNext:", data);
         setWeekId(data.week_id);
         setWeekNum(data.week_num);
         setWeekText(data.week_text);
@@ -85,7 +84,6 @@ export default function Experience(props) {
   const saveDiagnosis = (behaviorId, otherName, comment, resetFunc) => {
     dispatch(startTask("saving"));
     const url = endpoints.diagnosisUrl + ".json";
-    console.log(url);
     axios
       .patch(url, {
         diagnosis: {
@@ -117,7 +115,6 @@ export default function Experience(props) {
   const saveReaction = (behaviorId, otherName, improvements, resetFunc) => {
     dispatch(startTask("saving"));
     const url = endpoints.reactionUrl + ".json";
-    console.log(url);
     axios
       .patch(url, {
         reaction: {
@@ -129,7 +126,6 @@ export default function Experience(props) {
       })
       .then(response => {
         const data = response.data;
-        console.log("saveReaction:", data);
         //Process Experience
         resetFunc();
         dispatch(addMessage(data.messages.main, Date.now(), Priorities.INFO));

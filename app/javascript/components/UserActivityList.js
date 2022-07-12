@@ -16,14 +16,11 @@ export default function UserCourseList(props) {
 
   const getActivities = () => {
     dispatch(startTask());
-    console.log("loading");
     var url = props.retrievalUrl;
-    console.log(url);
     axios
       .get(url, {})
       .then(response => {
         const data = response.data;
-        console.log("data", data);
         //MetaData and Infrastructure
         props.activitiesListUpdateFunc(data);
         dispatch(endTask());
@@ -34,7 +31,6 @@ export default function UserCourseList(props) {
   };
 
   useEffect(() => {
-    console.log("hello");
     if (true) {
       getActivities();
     }

@@ -73,7 +73,6 @@ class ProjectGroups extends React.Component {
     const { groups_raw, students_raw, sortBy, sortDirection } = this.state;
     const students = Object.values(students_raw);
 
-    console.log(groups_raw);
     delete groups_raw[group_id];
 
     students.forEach(item => {

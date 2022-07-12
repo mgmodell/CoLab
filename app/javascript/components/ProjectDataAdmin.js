@@ -156,7 +156,6 @@ export default function ProjectDataAdmin(props) {
       }
     })
       .then(response => {
-        console.log("resp", response);
         const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const project = data.project;

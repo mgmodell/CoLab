@@ -82,7 +82,6 @@ export default function SubjectChart(props) {
         anonymous: props.anonymize
       })
         .then( (resp) =>{
-          console.log( 'graphing data', resp );
           const data = resp.data;
           setTimeRange( 
             [ parseTime( data.start_date ), parseTime( data.end_date ) ]

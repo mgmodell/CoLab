@@ -132,9 +132,6 @@ export default function ExperienceDataAdmin(props) {
       (null == experienceId ? courseIdParam : experienceId) +
       ".json";
 
-    console.log("url", url);
-    console.log("exp", experienceId);
-    console.log("cid", courseIdParam);
     axios({
       url: url,
       method: method,
@@ -150,7 +147,6 @@ export default function ExperienceDataAdmin(props) {
       }
     })
       .then(response => {
-        console.log("resp", response);
         const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
           const experience = data.experience;

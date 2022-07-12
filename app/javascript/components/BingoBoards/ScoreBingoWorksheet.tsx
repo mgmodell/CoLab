@@ -49,7 +49,6 @@ export default function ScoreBingoWorksheet(props) {
       dispatch( startTask( ) );
       axios.get( url, { } )
         .then( response =>{
-          console.log( response.data );
           const data = response.data;
           setTopic( data.bingo_game.topic );
           setDescription( data.bingo_game.description );

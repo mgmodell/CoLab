@@ -72,7 +72,6 @@ class DiversityCheck extends React.Component {
   }
 
   openDialog() {
-    console.log("hi");
     this.setState({
       dialogOpen: true
     });
