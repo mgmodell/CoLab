@@ -13,7 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { Settings } from 'luxon';
 
-import AdapterLuxon from '@mui/lab/AdapterLuxon';
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useTranslation } from 'react-i18next';
 import {useDispatch} from 'react-redux';
 import {startTask, endTask} from '../infrastructure/StatusActions';

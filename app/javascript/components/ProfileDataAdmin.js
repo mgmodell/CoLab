@@ -36,7 +36,7 @@ import {
   } from "@mui/lab/";
 import { Settings } from "luxon";
 
-import AdapterLuxon from "@mui/lab/AdapterLuxon";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import UserCourseList from "./UserCourseList";
 import ResearchParticipationList from "./ResearchParticipationList";
 import UserActivityList from "./UserActivityList";

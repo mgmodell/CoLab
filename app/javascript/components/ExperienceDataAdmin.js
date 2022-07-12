@@ -21,7 +21,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DateTime, Settings } from "luxon";
 import ReactionsList from "./ReactionsList";
 
-import AdapterLuxon from "@mui/lab/AdapterLuxon";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useDispatch } from "react-redux";
 import {
   startTask,

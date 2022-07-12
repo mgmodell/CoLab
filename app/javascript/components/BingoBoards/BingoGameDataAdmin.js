@@ -28,7 +28,7 @@ import {
 } from "@mui/lab/";
 
 import { DateTime } from "luxon";
-import AdapterLuxon from '@mui/lab/AdapterLuxon';
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";

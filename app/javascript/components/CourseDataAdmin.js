@@ -39,7 +39,7 @@ import {
 import { DateTime, Settings } from "luxon";
 import CourseUsersList from "./CourseUsersList";
 
-import AdapterLuxon from "@mui/lab/AdapterLuxon";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import MUIDataTable from "mui-datatables";
 
 import AddIcon from "@mui/icons-material/Add";
