@@ -36,7 +36,9 @@ Given(/^the course has a Bingo! game$/) do
     individual_count: 20,
     group_discount: 0,
     project: @project,
-    group_option: false
+    group_option: false,
+    start_date: @course.start_date,
+    end_date: @course.end_date
   )
   @bingo.save
   if @bingo.persisted?

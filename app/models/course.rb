@@ -18,7 +18,7 @@ class Course < ApplicationRecord
   validate :date_sanity
   validate :activity_date_check
 
-  before_validation :timezone_adjust_comprehensive
+  before_validation :timezone_adjust_comprehensive, on: :update
   before_create :anonymize
 
   def pretty_name(anonymous = false)
@@ -85,9 +85,11 @@ class Course < ApplicationRecord
   def copy_from_template(new_start:)
     # Timezone checking here
     course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC')
-    new_start = course_tz.utc_to_local(new_start).beginning_of_day
-    d = start_date
-    date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
+    new_start = new_start.getlocal(course_tz.utc_offset).beginning_of_day
+    # new_start = course_tz.utc_to_local(new_start).beginning_of_day
+    # date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
+    date_difference = ( new_start - start_date ) / 86400
+    # byebug
     new_course = nil
 
     Course.transaction do
@@ -98,8 +100,8 @@ class Course < ApplicationRecord
         number: "Copy of #{number}",
         description:,
         timezone:,
-        start_date: start_date + date_difference,
-        end_date: end_date + date_difference
+        start_date: start_date.advance( days: date_difference ),
+        end_date: end_date.advance( days: date_difference )
       )
 
       # copy the faculty rosters
@@ -118,8 +120,8 @@ class Course < ApplicationRecord
           name: project.name,
           style: project.style,
           factor_pack: project.factor_pack,
-          start_date: project.start_date + date_difference,
-          end_date: project.end_date + date_difference,
+          start_date: project.start_date.advance( days: date_difference ),
+          end_date: project.end_date.advance( days: date_difference ),
           start_dow: project.start_dow,
           end_dow: project.end_dow
         )
@@ -131,8 +133,8 @@ class Course < ApplicationRecord
       experiences.each do |experience|
         new_obj = new_course.experiences.new(
           name: experience.name,
-          start_date: experience.start_date + date_difference,
-          end_date: experience.end_date + date_difference
+          start_date: experience.start_date.advance( days: date_difference ),
+          end_date: experience.end_date.advance( days: date_difference )
         )
         new_obj.save!
       end
@@ -149,8 +151,8 @@ class Course < ApplicationRecord
           lead_time: bingo_game.lead_time,
           group_discount: bingo_game.group_discount,
           project: proj_hash[bingo_game.project],
-          start_date: bingo_game.start_date + date_difference,
-          end_date: bingo_game.end_date + date_difference
+          start_date: bingo_game.start_date.advance( days: date_difference ),
+          end_date: bingo_game.end_date.advance( days: date_difference )
         )
         new_obj.save!
       end
@@ -331,7 +333,7 @@ class Course < ApplicationRecord
     end
 
     if (end_date_changed? || timezone_changed?) && end_date.present?
-      new_date = course_tz.local(end_date.year, end_date.month, end_date.day)
+      new_date = course_tz.local(end_date.year, end_date.month, end_date.day).end_of_day
       self.end_date = new_date.end_of_day.change(sec: 0)
     end
 

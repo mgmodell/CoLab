@@ -83,7 +83,6 @@ export default function CourseList(props) {
         filter: false,
         display: true,
         customBodyRender: (value, tableMeta, updateValue) => {
-          console.log( 'open:', value );
           const dt = DateTime.fromISO(value )
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }
@@ -96,7 +95,6 @@ export default function CourseList(props) {
         filter: false,
         display: true,
         customBodyRender: (value, tableMeta, updateValue) => {
-          console.log( 'close:', value );
           const dt = DateTime.fromISO(value )
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }

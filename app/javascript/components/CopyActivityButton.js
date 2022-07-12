@@ -91,10 +91,11 @@ export default function CopyActivityButton(props) {
                 onClick={event => {
                   dispatch(startTask("copying_course"));
                   const url = `${endpoints.courseCopyUrl}${props.itemId}.json`;
+                  const sendDate = newStartDate.toSQLDate();
 
                   axios
                     .post(url, {
-                      start_date: newStartDate
+                      start_date: sendDate
                     })
                     .then(response => {
                       const data = response.data;

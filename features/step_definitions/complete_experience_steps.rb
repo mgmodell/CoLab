@@ -203,7 +203,9 @@ end
 
 Given(/^the course has an experience$/) do
   @experience = @course.experiences.new(
-    name: Faker::Company.industry + ' Experience'
+    name: Faker::Company.industry + ' Experience',
+    start_date: @course.start_date,
+    end_date: @course.end_date
   )
 
   @experience.save
