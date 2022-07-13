@@ -11,16 +11,17 @@ import TuneIcon from "@mui/icons-material/Tune";
 
 import MUIDataTable from "mui-datatables";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import Logo from './Logo';
+import Logo from "./Logo";
 
 export default function TaskList(props) {
   //const endpointSet = "home";
   //const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
   //const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
+  const tz_hash = useTypedSelector(
+    state => state.context.lookups.timezone_lookup
+  );
   const navigate = useNavigate();
-
 
   const columns = [
     {
@@ -115,10 +116,14 @@ export default function TaskList(props) {
         filter: false,
         display: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          var retVal = 'n/a';
-          if( null !== value ){
-            const dt = value.setZone( tz_hash[ user.timezone ])
-            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)} ({dt.zoneName} )</span> );
+          var retVal = "n/a";
+          if (null !== value) {
+            const dt = value.setZone(tz_hash[user.timezone]);
+            retVal = (
+              <span>
+                {dt.toLocaleString(DateTime.DATETIME_MED)} ({dt.zoneName} )
+              </span>
+            );
           }
           return retVal;
         }
@@ -130,10 +135,10 @@ export default function TaskList(props) {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          var retVal = 'n/a';
-          if( null !== value ){
-            const dt = value.setZone( tz_hash[ user.timezone ])
-            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span> );
+          var retVal = "n/a";
+          if (null !== value) {
+            const dt = value.setZone(tz_hash[user.timezone]);
+            retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
           }
           return retVal;
         }
@@ -160,49 +165,38 @@ export default function TaskList(props) {
   ];
 
   useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash ) {
-      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
+    if (null !== user.lastRetrieved && null !== tz_hash) {
+      Settings.defaultZoneName = tz_hash[user.timezone];
     }
   }, [user.lastRetrieved, tz_hash]);
 
-  const muiDatTab = null !== user.lastRetrieved && null !== tz_hash ?
-  (
-    <MUIDataTable
-      title="Tasks"
-      data={props.tasks}
-      columns={columns}
-      options={{
-        responsive: "standard",
-        filterType: "checkbox",
-        print: false,
-        download: false,
-        onRowClick: (rowData, rowState) => {
-          const link = props.tasks[rowState.dataIndex].link;
-          if (null != link) {
-            // window.location.href = link;
-            navigate(link);
-          }
-        },
-        selectableRows: "none"
-      }}
-    />
-  ) :
-         (
-              <Logo
-                height={100}
-                width={100}
-                spinning
-              />
-         )
-  ;
-
+  const muiDatTab =
+    null !== user.lastRetrieved && null !== tz_hash ? (
+      <MUIDataTable
+        title="Tasks"
+        data={props.tasks}
+        columns={columns}
+        options={{
+          responsive: "standard",
+          filterType: "checkbox",
+          print: false,
+          download: false,
+          onRowClick: (rowData, rowState) => {
+            const link = props.tasks[rowState.dataIndex].link;
+            if (null != link) {
+              // window.location.href = link;
+              navigate(link);
+            }
+          },
+          selectableRows: "none"
+        }}
+      />
+    ) : (
+      <Logo height={100} width={100} spinning />
+    );
   return (
     <Paper>
-      <div style={{ maxWidth: "100%" }}>
-        {
-         muiDatTab 
-        }
-      </div>
+      <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
     </Paper>
   );
 }

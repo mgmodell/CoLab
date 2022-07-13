@@ -8,11 +8,7 @@ import Switch from "@mui/material/Switch";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
 import { Box } from "@mui/material";
-import {
-  TabList,
-  TabContext,
-  TabPanel
-} from '@mui/lab';
+import { TabList, TabContext, TabPanel } from "@mui/lab";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 
@@ -200,7 +196,7 @@ export default function ExperienceDataAdmin(props) {
   }, [userLoaded]);
 
   useEffect(() => {
-    dispatch(setDirty(category))
+    dispatch(setDirty(category));
   }, [
     experienceName,
     experienceLeadTime,
@@ -251,8 +247,7 @@ export default function ExperienceDataAdmin(props) {
       />
 
       <Typography>All dates shown in {courseTimezone} timezone.</Typography>
-      <LocalizationProvider
-        dateAdapter={AdapterLuxon}>
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
         <DatePicker
           disableToolbar
           variant="inline"
@@ -316,15 +311,15 @@ export default function ExperienceDataAdmin(props) {
         <Box>
           <TabList value={curTab} onChange={(event, value) => setCurTab(value)}>
             <Tab label="Details" value="details" />
-            <Tab label="Results" value="results" disabled={null == experienceId} />
+            <Tab
+              label="Results"
+              value="results"
+              disabled={null == experienceId}
+            />
           </TabList>
         </Box>
-        <TabPanel value='details'>
-          {detailsComponent}
-        </TabPanel>
-        <TabPanel value='results'>
-          {reactionListing}
-        </TabPanel>
+        <TabPanel value="details">{detailsComponent}</TabPanel>
+        <TabPanel value="results">{reactionListing}</TabPanel>
       </TabContext>
     </Paper>
   );

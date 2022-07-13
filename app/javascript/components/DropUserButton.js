@@ -12,13 +12,13 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import { DialogActions, Button, Collapse } from "@mui/material";
 import axios from "axios";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 export default function DropUserButton(props) {
   const [showDialog, setShowDialog] = useState(false);
 
-  const category = 'course';
-  const { t } = useTranslation( `${category}s` );
+  const category = "course";
+  const { t } = useTranslation(`${category}s`);
 
   function PaperComponent(props) {
     return <Paper {...props} />;
@@ -46,7 +46,7 @@ export default function DropUserButton(props) {
         <Button
           onClick={event => {
             axios
-              .get( `${props.dropUrl}.json`, {})
+              .get(`${props.dropUrl}.json`, {})
               .then(response => {
                 const data = response.data;
                 props.refreshFunc(data.messages);
@@ -67,7 +67,7 @@ export default function DropUserButton(props) {
 
   return (
     <React.Fragment>
-      <Tooltip key="delete-forever" title={t('drop_tooltip_title')}>
+      <Tooltip key="delete-forever" title={t("drop_tooltip_title")}>
         <IconButton
           aria-label={t("drop_tooltip_aria")}
           onClick={event => {

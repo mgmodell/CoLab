@@ -35,8 +35,8 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 
 export default function CourseUsersList(props) {
-  const category = 'courses';
-  const { t } = useTranslation( category );
+  const category = "courses";
+  const { t } = useTranslation(category);
 
   const [addUsersPath, setAddUsersPath] = useState("");
   const [procRegReqPath, setProcRegReqPath] = useState("");

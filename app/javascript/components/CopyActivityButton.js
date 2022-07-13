@@ -8,7 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import { DateTime } from "luxon";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 
@@ -21,7 +21,7 @@ import Button from "@mui/material/Button";
 
 import { startTask, endTask } from "./infrastructure/StatusActions";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 export default function CopyActivityButton(props) {
   const category = "course";
@@ -31,10 +31,8 @@ export default function CopyActivityButton(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const status = useTypedSelector(
-    state=> state.status.tasks
-  );
-  const{ t } = useTranslation( `${category}s` );
+  const status = useTypedSelector(state => state.status.tasks);
+  const { t } = useTranslation(`${category}s`);
   const dispatch = useDispatch();
 
   const [copyData, setCopyData] = useState(null);
@@ -52,7 +50,7 @@ export default function CopyActivityButton(props) {
       {null != copyData ? (
         <React.Fragment>
           <LocalizationProvider dateAdapter={AdapterLuxon}>
-            <DialogTitle>{t('dialog_title')}</DialogTitle>
+            <DialogTitle>{t("dialog_title")}</DialogTitle>
             <DialogContent>
               <WorkingIndicator identifier="copying_course" />
               <DialogContentText>
@@ -68,7 +66,7 @@ export default function CopyActivityButton(props) {
                 inputFormat="MM/dd/yyyy"
                 margin="normal"
                 id="newCourseStartDate"
-                label={t('date_picker_label')}
+                label={t("date_picker_label")}
                 value={newStartDate}
                 onChange={newValue => {
                   setNewStartDate(newValue);
@@ -84,7 +82,7 @@ export default function CopyActivityButton(props) {
                   setCopyData(null);
                 }}
               >
-                {t('copy_cancel_btn')}
+                {t("copy_cancel_btn")}
               </Button>
               <Button
                 disabled={status.working}
@@ -114,7 +112,7 @@ export default function CopyActivityButton(props) {
                     });
                 }}
               >
-                {t('copy_btn_txt')}
+                {t("copy_btn_txt")}
               </Button>
             </DialogActions>
           </LocalizationProvider>
@@ -127,7 +125,7 @@ export default function CopyActivityButton(props) {
 
   return (
     <React.Fragment>
-      <Tooltip title={t('btn_tooltip_title')} aria-label="Copy">
+      <Tooltip title={t("btn_tooltip_title")} aria-label="Copy">
         <IconButton
           id={"copy-" + props.itemId}
           onClick={event => {
@@ -137,8 +135,8 @@ export default function CopyActivityButton(props) {
               copyUrl: props.copyUrl + props.itemId + ".json"
             });
           }}
-          aria-label={t('copy_btn_aria')}
-          size={t('size_btn')}
+          aria-label={t("copy_btn_aria")}
+          size={t("size_btn")}
         >
           <CollectionsBookmarkIcon />
         </IconButton>

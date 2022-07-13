@@ -26,15 +26,8 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { iconForType } from "./ActivityLib";
 
-import {
-  DatePicker,
-  LocalizationProvider
-} from '@mui/x-date-pickers';
-import {
-  TabPanel,
-  TabList,
-  TabContext
-} from "@mui/lab/";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { TabPanel, TabList, TabContext } from "@mui/lab/";
 
 import { DateTime, Settings } from "luxon";
 import CourseUsersList from "./CourseUsersList";
@@ -58,7 +51,9 @@ export default function CourseDataAdmin(props) {
     state => state.context.status.endpointsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
+  const tz_hash = useTypedSelector(
+    state => state.context.lookups.timezone_lookup
+  );
 
   const navigate = useNavigate();
 
@@ -232,10 +227,9 @@ export default function CourseDataAdmin(props) {
     }
   }, [endpointStatus]);
 
-
   useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash ) {
-      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
+    if (null !== user.lastRetrieved && null !== tz_hash) {
+      Settings.defaultZoneName = tz_hash[user.timezone];
     }
   }, [user.lastRetrieved, tz_hash]);
 
@@ -481,7 +475,7 @@ export default function CourseDataAdmin(props) {
         filter: false,
         display: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value );
+          const dt = DateTime.fromISO(value);
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }
       }
@@ -492,7 +486,7 @@ export default function CourseDataAdmin(props) {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value );
+          const dt = DateTime.fromISO(value);
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }
       }
@@ -606,49 +600,40 @@ export default function CourseDataAdmin(props) {
   return (
     <Paper>
       <TabContext value={curTab}>
-
-      <Box >
-
-      <TabList
-        centered
-        value={curTab}
-        onChange={(event, value) => setCurTab(value)}
-      >
-        <Tab label="Details" value="details" />
-        <Tab value="instructors" label="Instructors" />
-        <Tab value="students" label="Students" />
-        <Tab value="activities" label="Activities" />
-      </TabList>
-      </Box>
-      <TabPanel value='details'>
-        {detailsComponent}
-      </TabPanel>
-      <TabPanel value='instructors'>
-        <CourseUsersList
-          courseId={courseId}
-          retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
-          usersList={courseUsersList}
-          usersListUpdateFunc={setCourseUsersList}
-          userType="instructor"
-          addMessagesFunc={postNewMessage}
-        />
-
-      </TabPanel>
-      <TabPanel value='students'>
-        <CourseUsersList
-          courseId={courseId}
-          retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
-          usersList={courseUsersList}
-          usersListUpdateFunc={setCourseUsersList}
-          userType="student"
-          addMessagesFunc={postNewMessage}
-        />
-
-      </TabPanel>
-      <TabPanel value='activities'>
-        {activityList}
-
-      </TabPanel>
+        <Box>
+          <TabList
+            centered
+            value={curTab}
+            onChange={(event, value) => setCurTab(value)}
+          >
+            <Tab label="Details" value="details" />
+            <Tab value="instructors" label="Instructors" />
+            <Tab value="students" label="Students" />
+            <Tab value="activities" label="Activities" />
+          </TabList>
+        </Box>
+        <TabPanel value="details">{detailsComponent}</TabPanel>
+        <TabPanel value="instructors">
+          <CourseUsersList
+            courseId={courseId}
+            retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
+            usersList={courseUsersList}
+            usersListUpdateFunc={setCourseUsersList}
+            userType="instructor"
+            addMessagesFunc={postNewMessage}
+          />
+        </TabPanel>
+        <TabPanel value="students">
+          <CourseUsersList
+            courseId={courseId}
+            retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
+            usersList={courseUsersList}
+            usersListUpdateFunc={setCourseUsersList}
+            userType="student"
+            addMessagesFunc={postNewMessage}
+          />
+        </TabPanel>
+        <TabPanel value="activities">{activityList}</TabPanel>
       </TabContext>
       {saveButton}
       {messages["status"]}

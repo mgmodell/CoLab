@@ -2,11 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 //Redux store stuff
 import { useDispatch } from "react-redux";
-import {
-  startTask,
-  endTask} from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusActions";
 import Button from "@mui/material/Button";
-
 
 import { useTranslation } from "react-i18next";
 import Grid from "@mui/material/Grid";

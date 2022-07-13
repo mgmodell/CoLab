@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export default function Logo(props) {
   const height = props.height || 72;
   const width = props.width || 72;
-  const mounted = useRef( false );
+  const mounted = useRef(false);
 
   const viewBox = [0, 0, 1000, 1000].join(" ");
 
@@ -33,7 +33,7 @@ export default function Logo(props) {
   function rotateColors() {
     colors.push(colors.shift());
     setColors(colors);
-    if( mounted ){
+    if (mounted) {
       setGreen(colors[0]);
     }
   }
@@ -50,9 +50,9 @@ export default function Logo(props) {
   useEffect(() => {
     spinning();
     mounted.current = true;
-    return( )=>{
+    return () => {
       mounted.current = false;
-    }
+    };
   }, []);
 
   async function spinIt() {

@@ -12,11 +12,13 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function CourseAdmin(props) {
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
+  const tz_hash = useTypedSelector(
+    state => state.context.lookups.timezone_lookup
+  );
 
   useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash ) {
-      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
+    if (null !== user.lastRetrieved && null !== tz_hash) {
+      Settings.defaultZoneName = tz_hash[user.timezone];
     }
   }, [user.lastRetrieved, tz_hash]);
 

@@ -71,13 +71,13 @@ export default function ConceptsTable(props) {
   const [dirty, setDirty] = useState(false);
   const [conceptName, setConceptName] = useState("");
   const [conceptId, setConceptId] = useState(-1);
-  const { t } = useTranslation( `${category}s` );
+  const { t } = useTranslation(`${category}s`);
 
   const columns = [
     {
       width: 200,
       flexGrow: 1.0,
-      label: t('name'),
+      label: t("name"),
       dataKey: "name",
       numeric: false,
       disableSort: false,
@@ -85,7 +85,7 @@ export default function ConceptsTable(props) {
     },
     {
       width: 120,
-      label: t('use_count'),
+      label: t("use_count"),
       dataKey: "times",
       numeric: true,
       disableSort: true,
@@ -93,7 +93,7 @@ export default function ConceptsTable(props) {
     },
     {
       width: 120,
-      label: t('courses'),
+      label: t("courses"),
       dataKey: "courses",
       numeric: true,
       disableSort: true,
@@ -101,7 +101,7 @@ export default function ConceptsTable(props) {
     },
     {
       width: 120,
-      label: t('games'),
+      label: t("games"),
       dataKey: "bingos",
       numeric: true,
       disableSort: true,
@@ -218,9 +218,9 @@ export default function ConceptsTable(props) {
         aria-labelledby="edit"
       >
         <WorkingIndicator identifier="saving_concept" />
-        <DialogTitle> {t('edit.title')} </DialogTitle>
+        <DialogTitle> {t("edit.title")} </DialogTitle>
         <DialogContent>
-          <DialogContentText >{t('concept_name')} </DialogContentText>
+          <DialogContentText>{t("concept_name")} </DialogContentText>
           <TextField
             value={conceptName}
             onChange={event => setName(event.target.value)}
@@ -228,14 +228,14 @@ export default function ConceptsTable(props) {
 
           <DialogActions>
             <Button variant="contained" onClick={() => setEditing(false)}>
-             {t('cancel')}
+              {t("cancel")}
             </Button>
             <Button
               variant="contained"
               onClick={() => updateConcept(conceptId, conceptName)}
               disabled={!dirty}
             >
-              {t('update_con')}
+              {t("update_con")}
             </Button>
           </DialogActions>
         </DialogContent>

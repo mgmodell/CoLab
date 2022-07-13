@@ -25,15 +25,8 @@ import UserEmailList from "./UserEmailList";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import {
-  DatePicker,
-  LocalizationProvider
-} from '@mui/x-date-pickers';
-import {
-  TabList,
-  TabContext,
-  TabPanel
-  } from "@mui/lab/";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { TabList, TabContext, TabPanel } from "@mui/lab/";
 import { Settings } from "luxon";
 
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
@@ -67,7 +60,9 @@ export default function ProfileDataAdmin(props) {
     state => state.context.status.lookupsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
+  const tz_hash = useTypedSelector(
+    state => state.context.lookups.timezone_lookup
+  );
 
   const profileReady = endpointStatus && lookupStatus;
   const existingProfile = profileReady && undefined != user && user.id > 0;
@@ -271,8 +266,8 @@ export default function ProfileDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash ) {
-      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
+    if (null !== user.lastRetrieved && null !== tz_hash) {
+      Settings.defaultZoneName = tz_hash[user.timezone];
     }
   }, [user.lastRetrieved, tz_hash]);
 
@@ -754,51 +749,56 @@ export default function ProfileDataAdmin(props) {
         </Alert>
       </Collapse>
       <TabContext value={curTab}>
-
         <Box>
-      <TabList
-        centered
-        value={curTab}
-        onChange={(event, value) => setCurTab(value)}
-      >
-        <Tab label="Details" value="details" disabled={!profileReady} />
-        <Tab label="My Courses" value="courses" disabled={!existingProfile} />
-        <Tab label="History" value="history" disabled={!existingProfile} />
-        <Tab label="Research Participation" value="research" disabled={!existingProfile} />
-      </TabList>
+          <TabList
+            centered
+            value={curTab}
+            onChange={(event, value) => setCurTab(value)}
+          >
+            <Tab label="Details" value="details" disabled={!profileReady} />
+            <Tab
+              label="My Courses"
+              value="courses"
+              disabled={!existingProfile}
+            />
+            <Tab label="History" value="history" disabled={!existingProfile} />
+            <Tab
+              label="Research Participation"
+              value="research"
+              disabled={!existingProfile}
+            />
+          </TabList>
         </Box>
         <TabPanel value="details">
-          { profileReady ?
-          detailsComponent :
-        (<Skeleton variant="rectangular" heght={300} />)
-
-        }
+          {profileReady ? (
+            detailsComponent
+          ) : (
+            <Skeleton variant="rectangular" heght={300} />
+          )}
         </TabPanel>
         <TabPanel value="courses">
-
-            <UserCourseList
-              retrievalUrl={endpoints["coursePerformanceUrl"] + ".json"}
-              coursesList={courses}
-              coursesListUpdateFunc={setCourses}
-              addMessagesFunc={setMessages}
-            />
+          <UserCourseList
+            retrievalUrl={endpoints["coursePerformanceUrl"] + ".json"}
+            coursesList={courses}
+            coursesListUpdateFunc={setCourses}
+            addMessagesFunc={setMessages}
+          />
         </TabPanel>
-        <TabPanel value='history'>
-            <UserActivityList
-              retrievalUrl={endpoints["activitiesUrl"] + ".json"}
-              activitiesList={activities}
-              activitiesListUpdateFunc={setActivities}
-              addMessagesFunc={setMessages}
-            />
+        <TabPanel value="history">
+          <UserActivityList
+            retrievalUrl={endpoints["activitiesUrl"] + ".json"}
+            activitiesList={activities}
+            activitiesListUpdateFunc={setActivities}
+            addMessagesFunc={setMessages}
+          />
         </TabPanel>
         <TabPanel value="research">
-            <ResearchParticipationList
-              retrievalUrl={endpoints["consentFormsUrl"] + ".json"}
-              consentFormList={consentForms}
-              consentFormListUpdateFunc={setConsentForms}
-              addMessagesFunc={setMessages}
-            />
-
+          <ResearchParticipationList
+            retrievalUrl={endpoints["consentFormsUrl"] + ".json"}
+            consentFormList={consentForms}
+            consentFormListUpdateFunc={setConsentForms}
+            addMessagesFunc={setMessages}
+          />
         </TabPanel>
       </TabContext>
     </Paper>

@@ -105,10 +105,10 @@ export default function DecisionInvitationsTable(props) {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          var retVal = 'n/a';
-          if( null !== value ){
+          var retVal = "n/a";
+          if (null !== value) {
             const dt = DateTime.fromISO(value);
-            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span> );
+            retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
           }
           return retVal;
         }
@@ -120,10 +120,10 @@ export default function DecisionInvitationsTable(props) {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          var retVal = 'n/a';
-          if( null !== value ){
+          var retVal = "n/a";
+          if (null !== value) {
             const dt = DateTime.fromISO(value);
-            retVal = ( <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span> );
+            retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
           }
           return retVal;
         }

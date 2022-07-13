@@ -7,7 +7,7 @@ import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Tooltip from "@mui/material/Tooltip";
-import { DateTime, Settings } from 'luxon';
+import { DateTime, Settings } from "luxon";
 
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import BookIcon from "@mui/icons-material/Book";
@@ -35,7 +35,9 @@ export default function CourseList(props) {
   const navigate = useNavigate();
 
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
+  const tz_hash = useTypedSelector(
+    state => state.context.lookups.timezone_lookup
+  );
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
@@ -83,7 +85,7 @@ export default function CourseList(props) {
         filter: false,
         display: true,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value )
+          const dt = DateTime.fromISO(value);
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }
       }
@@ -95,7 +97,7 @@ export default function CourseList(props) {
         filter: false,
         display: true,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value )
+          const dt = DateTime.fromISO(value);
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
         }
       }
@@ -207,10 +209,9 @@ export default function CourseList(props) {
     }
   }, [endpointStatus]);
 
-
   useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash ) {
-      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
+    if (null !== user.lastRetrieved && null !== tz_hash) {
+      Settings.defaultZoneName = tz_hash[user.timezone];
     }
   }, [user.lastRetrieved, tz_hash]);
 
@@ -276,12 +277,9 @@ export default function CourseList(props) {
         </Alert>
       </Collapse>
       <WorkingIndicator identifier="courses_loading" />
-      {
-        null !== user.lastRetrieved ?
-        (
-          <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
-        ) : null
-      }
+      {null !== user.lastRetrieved ? (
+        <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
+      ) : null}
     </React.Fragment>
   );
 }

@@ -1,47 +1,51 @@
-import React, {
-  useState,
-  Fragment, 
-  useEffect} from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import PropTypes from "prop-types";
-import MockDate from 'mockdate';
+import MockDate from "mockdate";
 
 export default function TimeSetter(props) {
-  const [newTime, setNewTime] = useState( '' );
-  const [hitCount, setHitCount] = useState( 0 );
+  const [newTime, setNewTime] = useState("");
+  const [hitCount, setHitCount] = useState(0);
 
-  const [date, setDate] = useState( new Date( ) );
+  const [date, setDate] = useState(new Date());
 
   const setTime = () => {
-    if( newTime.length > 0 ){
-      MockDate.set( new Date( newTime ) );
-      setNewTime( '' );
-      setHitCount( hitCount + 1 );
+    if (newTime.length > 0) {
+      MockDate.set(new Date(newTime));
+      setNewTime("");
+      setHitCount(hitCount + 1);
     }
-  }
-  const resetTime = ( ) => {
-    MockDate.reset( );
-  }
+  };
+  const resetTime = () => {
+    MockDate.reset();
+  };
 
-  const refreshClock = () =>{
-    setDate( new Date( ) );
-  }
+  const refreshClock = () => {
+    setDate(new Date());
+  };
 
-  useEffect( ()=>{
-    const timerId = setInterval( refreshClock, 1000 );
-    return function cleanup( ){
-      clearInterval( timerId);
+  useEffect(() => {
+    const timerId = setInterval(refreshClock, 1000);
+    return function cleanup() {
+      clearInterval(timerId);
     };
-  }, [] );
+  }, []);
 
   return (
     <Fragment>
-      <input id='newTimeVal' type='text' value={newTime} onChange={(e)=>setNewTime(e.target.value)}>
-      </input>
-      <button id='setTimeBtn' onClick={setTime}>Set Time</button>
-      <button id='resetTimeBtn' onClick={resetTime}>reSet Time</button>
-      {date.toLocaleTimeString( ) } - {date.toLocaleDateString( ) } hits: {hitCount}
+      <input
+        id="newTimeVal"
+        type="text"
+        value={newTime}
+        onChange={e => setNewTime(e.target.value)}
+      />
+      <button id="setTimeBtn" onClick={setTime}>
+        Set Time
+      </button>
+      <button id="resetTimeBtn" onClick={resetTime}>
+        reSet Time
+      </button>
+      {date.toLocaleTimeString()} - {date.toLocaleDateString()} hits: {hitCount}
     </Fragment>
   );
 }
-TimeSetter.propTypes = {
-};
+TimeSetter.propTypes = {};

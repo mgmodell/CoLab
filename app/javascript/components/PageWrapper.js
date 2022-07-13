@@ -3,7 +3,8 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useParams } from "react-router-dom";
+  useParams
+} from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
@@ -13,7 +14,7 @@ import Skeleton from "@mui/material/Skeleton";
 import {
   ThemeProvider,
   StyledEngineProvider,
-  createTheme,
+  createTheme
 } from "@mui/material";
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
@@ -33,12 +34,12 @@ import SignIn from "./SignIn";
 import EnrollInCourse from "./EnrollInCourse";
 import ScoreBingoWorksheet from "./BingoBoards/ScoreBingoWorksheet";
 import RequireAuth from "./infrastructure/RequireAuth";
-import RequireInstructor from './infrastructure/RequireInstructor';
+import RequireInstructor from "./infrastructure/RequireInstructor";
 import Privacy from "./info/Privacy";
 import TermsOfService from "./info/TermsOfService";
-import WhatIsIt from './info/WhatIsIt';
+import WhatIsIt from "./info/WhatIsIt";
 import AppInit from "./infrastructure/AppInit";
-import PasswordEdit from './PasswordEdit';
+import PasswordEdit from "./PasswordEdit";
 import Demo from "./Demo";
 import { WhatsApp } from "@mui/icons-material";
 
@@ -61,7 +62,9 @@ export default function PageWrapper(props) {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={styles}>
           <AppInit endpointsUrl={props.getEndpointsUrl}>
-            <CookieConsent>This website uses cookies to enhance the user experience.</CookieConsent>
+            <CookieConsent>
+              This website uses cookies to enhance the user experience.
+            </CookieConsent>
             <Router>
               <Suspense
                 fallback={<Skeleton variant="rectangular" height={50} />}
@@ -159,12 +162,7 @@ export default function PageWrapper(props) {
                       </RequireAuth>
                     }
                   />
-                  <Route
-                    path="user/password/edit"
-                    element={
-                        <PasswordEdit />
-                    }
-                  />
+                  <Route path="user/password/edit" element={<PasswordEdit />} />
                   <Route path={`what_is_colab`} element={<WhatIsIt />} />
                   <Route path={`tos`} element={<TermsOfService />} />
                   <Route path={`privacy`} element={<Privacy />} />
@@ -176,14 +174,7 @@ export default function PageWrapper(props) {
                       </RequireAuth>
                     }
                   />
-                  <Route
-                    path="demo/*"
-                    element={
-                        <Demo
-                          rootPath="demo"
-                        />
-                    }
-                  />
+                  <Route path="demo/*" element={<Demo rootPath="demo" />} />
                   <Route path="login" element={<SignIn />} />
                 </Routes>
               </Suspense>

@@ -9,7 +9,6 @@ import Skeleton from "@mui/material/Skeleton";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 
-
 export default function Experience(props) {
   const [t, i18n] = useTranslation("experiences");
 

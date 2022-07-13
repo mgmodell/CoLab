@@ -9,9 +9,7 @@ import {
   setDirty,
   setClean
 } from "./infrastructure/StatusActions";
-import {
-  refreshSchools
-} from "./infrastructure/ContextActions";
+import { refreshSchools } from "./infrastructure/ContextActions";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -25,7 +23,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import { Settings } from "luxon";
 
 //import i18n from './i18n';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 
@@ -34,13 +32,15 @@ export default function SchoolDataAdmin(props) {
   const endpoints = useTypedSelector(state => {
     return state.context.endpoints[category];
   });
-  const { t } = useTranslation( `${category}s` );
+  const { t } = useTranslation(`${category}s`);
   const endpointStatus = useTypedSelector(state => {
     return state.context.status.endpointsLoaded;
   });
   //const { t, i18n } = useTranslation('schools' );
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
+  const tz_hash = useTypedSelector(
+    state => state.context.lookups.timezone_lookup
+  );
   const userLoaded = useTypedSelector(state => {
     return null != state.profile.lastRetrieved;
   });
@@ -121,7 +121,7 @@ export default function SchoolDataAdmin(props) {
           dispatch(setClean(category));
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
           //setMessages(data.messages);
-          dispatch( refreshSchools( ) );
+          dispatch(refreshSchools());
           dispatch(endTask("saving"));
         } else {
           dispatch(
@@ -172,7 +172,7 @@ export default function SchoolDataAdmin(props) {
       &nbsp;
       <FormControl>
         <InputLabel htmlFor="school_timezone" id="school_timezone_lbl">
-          {t('time_zone')}
+          {t("time_zone")}
         </InputLabel>
         <Select
           id="school_timezone"

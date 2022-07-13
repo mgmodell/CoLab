@@ -5,11 +5,7 @@ import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Tab from "@mui/material/Tab";
-import {
-  TabList,
-  TabContext,
-  TabPanel
-} from "@mui/lab";
+import { TabList, TabContext, TabPanel } from "@mui/lab";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import luxonPlugin from "@fullcalendar/luxon";
@@ -45,21 +41,23 @@ export default function HomeShell(props) {
 
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
+  const tz_hash = useTypedSelector(
+    state => state.context.lookups.timezone_lookup
+  );
   const [tasks, setTasks] = useState();
 
   useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash ) {
-      const userZone = tz_hash[ user.timezone ];
-      Settings.defaultZoneName = tz_hash[ userZone ] ;
-      if( undefined !== tasks ){
+    if (null !== user.lastRetrieved && null !== tz_hash) {
+      const userZone = tz_hash[user.timezone];
+      Settings.defaultZoneName = tz_hash[userZone];
+      if (undefined !== tasks) {
         const newTasks = tasks;
-        newTasks.forEach( (value, index, array ) =>{
-          value.next_date = value.next_date.setZone( userZone )
-          value.start_date = value.start_date.setZone( userZone )
-        })
+        newTasks.forEach((value, index, array) => {
+          value.next_date = value.next_date.setZone(userZone);
+          value.start_date = value.start_date.setZone(userZone);
+        });
 
-        setTasks( newTasks );
+        setTasks(newTasks);
       }
     }
   }, [user.lastRetrieved, tz_hash, tasks]);
@@ -69,9 +67,10 @@ export default function HomeShell(props) {
   const [waitingRosters, setWaitingRosters] = useState();
 
   const getTasks = () => {
-    const url = props.rootPath !== undefined ?
-      `${props.rootPath}${endpoints.taskListUrl}.json` :
-      `${endpoints.taskListUrl}.json`;
+    const url =
+      props.rootPath !== undefined
+        ? `${props.rootPath}${endpoints.taskListUrl}.json`
+        : `${endpoints.taskListUrl}.json`;
 
     dispatch(startTask());
     axios.get(url, {}).then(resp => {
@@ -89,8 +88,8 @@ export default function HomeShell(props) {
             value.title = value.name;
             break;
         }
-        if( props.rootPath === undefined ){
-          value.url = value.link
+        if (props.rootPath === undefined) {
+          value.url = value.link;
         } else {
           const url = `/${props.rootPath}${value.link}`;
           value.url = url;
@@ -98,11 +97,11 @@ export default function HomeShell(props) {
         }
         // Set the dates properly - close may need work
         value.start = value.next_date;
-        if( null !== value.next_date ){
-          value.next_date = DateTime.fromISO( value.next_date );
+        if (null !== value.next_date) {
+          value.next_date = DateTime.fromISO(value.next_date);
         }
-        if( null !== value.start_date ){
-          value.start_date = DateTime.fromISO( value.start_date );
+        if (null !== value.start_date) {
+          value.start_date = DateTime.fromISO(value.start_date);
         }
       });
       setTasks(data.tasks);
@@ -114,14 +113,14 @@ export default function HomeShell(props) {
   };
 
   useEffect(() => {
-    if (props.rootPath !== undefined || ( endpointsLoaded && isLoggedIn) ) {
+    if (props.rootPath !== undefined || (endpointsLoaded && isLoggedIn)) {
       getTasks();
     }
   }, [endpointsLoaded, isLoggedIn]);
 
-  const handleTabChange = (event, newValue ) =>{
-    setCurTab( newValue );
-  }
+  const handleTabChange = (event, newValue) => {
+    setCurTab(newValue);
+  };
 
   var pageContent = <Skeleton variant="rectangular" />;
   if (undefined !== consentLogs) {
@@ -145,46 +144,43 @@ export default function HomeShell(props) {
               count: tasks.length
             })}
           </p>
-          <TabContext value={curTab} >
-            <Box >
-              <TabList onChange={(event,newValue) =>
-                setCurTab( newValue )
-              } >
+          <TabContext value={curTab}>
+            <Box>
+              <TabList onChange={(event, newValue) => setCurTab(newValue)}>
                 <Tab label="Task View" value="list" />
                 <Tab label="Calendar View" value="calendar" />
               </TabList>
             </Box>
 
-          <TabPanel value='calendar' >
-            <FullCalendar
-              headerToolbar={{
-                center: "thisWeek,dayGridMonth"
-              }}
-              initialView="thisWeek"
-              views={{
-                thisWeek: {
-                  type: "dayGrid",
-                  duration: {
-                    weeks: 2
+            <TabPanel value="calendar">
+              <FullCalendar
+                headerToolbar={{
+                  center: "thisWeek,dayGridMonth"
+                }}
+                initialView="thisWeek"
+                views={{
+                  thisWeek: {
+                    type: "dayGrid",
+                    duration: {
+                      weeks: 2
+                    },
+                    buttonText: "Two Weeks"
                   },
-                  buttonText: "Two Weeks"
-                },
-                dayGridMonth: {
-                  buttonText: "One Month"
-                }
-              }}
-              displayEventTime={false}
-              events={tasks}
-              eventClick={info => {
-                navigate(info.event.url);
-              }}
-              plugins={[dayGridPlugin, luxonPlugin]}
-            />
-
-          </TabPanel>
-          <TabPanel value="list">
-            <TaskList tasks={tasks} />
-          </TabPanel>
+                  dayGridMonth: {
+                    buttonText: "One Month"
+                  }
+                }}
+                displayEventTime={false}
+                events={tasks}
+                eventClick={info => {
+                  navigate(info.event.url);
+                }}
+                plugins={[dayGridPlugin, luxonPlugin]}
+              />
+            </TabPanel>
+            <TabPanel value="list">
+              <TaskList tasks={tasks} />
+            </TabPanel>
           </TabContext>
         </React.Fragment>
       );

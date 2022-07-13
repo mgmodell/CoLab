@@ -107,9 +107,10 @@ export default function InstallmentReport(props) {
 
   //Retrieve the latest data
   const getContributions = () => {
-    const url = props.rootPath === undefined ?
-      `${endpoints.baseUrl}${installmentId}.json` :
-      `/${props.rootPath}${endpoints.baseUrl}${installmentId}.json`;
+    const url =
+      props.rootPath === undefined
+        ? `${endpoints.baseUrl}${installmentId}.json`
+        : `/${props.rootPath}${endpoints.baseUrl}${installmentId}.json`;
 
     dispatch(startTask());
     axios

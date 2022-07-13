@@ -10,18 +10,11 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
-import {
-  TabList,
-  TabPanel,
-  TabContext
- } from "@mui/lab";
+import { TabList, TabPanel, TabContext } from "@mui/lab";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 
-import {
-  DatePicker,
-  LocalizationProvider
-} from '@mui/x-date-pickers';
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 
 import { DateTime, Info, Settings } from "luxon";
 
@@ -43,7 +36,6 @@ import axios from "axios";
 import { Grid, Skeleton } from "@mui/material";
 
 export default function ProjectDataAdmin(props) {
-
   const category = "project";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
