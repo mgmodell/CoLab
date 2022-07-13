@@ -186,7 +186,7 @@ class BingoBoardsController < ApplicationController
     respond_to do |format|
       format.pdf do
         pdf = WorksheetPdf.new(wksheet,
-                               url: root_url )
+                               url: root_url)
         send_data pdf.render, filename: 'demo_bingo_practice.pdf', type: 'application/pdf'
       end
     end
@@ -208,7 +208,7 @@ class BingoBoardsController < ApplicationController
             bingo_game: {
               topic: bingo_game.topic,
               description: bingo_game.description,
-              result_url: @bingo_board.result_img.present? ? url_for( @bingo_board.result_img ) : nil
+              result_url: @bingo_board.result_img.present? ? url_for(@bingo_board.result_img) : nil
             },
             practice_answers: @practice_answers.as_json
           }
@@ -228,67 +228,67 @@ class BingoBoardsController < ApplicationController
       demo_worksheet_for_game
 
     else
-    bingo_game = BingoGame.find(params[:bingo_game_id])
-    wksheet = bingo_game.bingo_boards.worksheet
-                        .includes(:bingo_game, bingo_cells: %i[concept candidate])
-                        .where(user_id: current_user.id).take
+      bingo_game = BingoGame.find(params[:bingo_game_id])
+      wksheet = bingo_game.bingo_boards.worksheet
+                          .includes(:bingo_game, bingo_cells: %i[concept candidate])
+                          .where(user_id: current_user.id).take
 
-    if wksheet.blank?
-      candidates = bingo_game.candidates.acceptable.to_a
-      # Assuming 10 items
-      items = {}
+      if wksheet.blank?
+        candidates = bingo_game.candidates.acceptable.to_a
+        # Assuming 10 items
+        items = {}
 
-      while items.length < ITEM_COUNT && !candidates.empty?
-        candidate = candidates.sample
-        items[candidate.concept] = candidate
-        candidates.delete(candidate)
-      end
-
-      wksheet = BingoBoard.new(
-        iteration: 0,
-        user_id: current_user.id,
-        user: current_user,
-        bingo_game:,
-        board_type: :worksheet
-      )
-
-      # Distribute clues and board elements
-      concepts = bingo_game.concepts.to_a
-      if items.length == ITEM_COUNT && concepts.size > 25
-        cells = items.values
-        while cells.length < 24
-          c = concepts.delete(concepts.sample)
-          cells << c if items[c].nil?
+        while items.length < ITEM_COUNT && !candidates.empty?
+          candidate = candidates.sample
+          items[candidate.concept] = candidate
+          candidates.delete(candidate)
         end
-        # Initialise the indexes
-        indices = (1..10).to_a
-        star = Concept.find 0
-        0.upto(bingo_game.size - 1) do |row|
-          0.upto(bingo_game.size - 1) do |column|
-            c = star
-            c = cells.delete(cells.sample) unless row == 2 && column == 2
-            wksheet.bingo_cells.build(
-              row:,
-              column:,
-              concept: c.instance_of?(Concept) ? c : c.concept,
-              candidate: c.instance_of?(Concept) ? nil : c,
-              indeks: c.instance_of?(Concept) ? nil : indices.delete(indices.sample)
-            )
+
+        wksheet = BingoBoard.new(
+          iteration: 0,
+          user_id: current_user.id,
+          user: current_user,
+          bingo_game:,
+          board_type: :worksheet
+        )
+
+        # Distribute clues and board elements
+        concepts = bingo_game.concepts.to_a
+        if items.length == ITEM_COUNT && concepts.size > 25
+          cells = items.values
+          while cells.length < 24
+            c = concepts.delete(concepts.sample)
+            cells << c if items[c].nil?
+          end
+          # Initialise the indexes
+          indices = (1..10).to_a
+          star = Concept.find 0
+          0.upto(bingo_game.size - 1) do |row|
+            0.upto(bingo_game.size - 1) do |column|
+              c = star
+              c = cells.delete(cells.sample) unless row == 2 && column == 2
+              wksheet.bingo_cells.build(
+                row:,
+                column:,
+                concept: c.instance_of?(Concept) ? c : c.concept,
+                candidate: c.instance_of?(Concept) ? nil : c,
+                indeks: c.instance_of?(Concept) ? nil : indices.delete(indices.sample)
+              )
+            end
           end
         end
+        wksheet.save
+        logger.debug wksheet.errors.full_messages unless wksheet.errors.empty?
       end
-      wksheet.save
-      logger.debug wksheet.errors.full_messages unless wksheet.errors.empty?
-    end
 
-    respond_to do |format|
-      format.pdf do
-        # TODO: fix the ws_results_url here
-        pdf = WorksheetPdf.new(wksheet,
-                               url: ws_results_url(wksheet))
-        send_data pdf.render, filename: 'bingo_practice.pdf', type: 'application/pdf'
+      respond_to do |format|
+        format.pdf do
+          # TODO: fix the ws_results_url here
+          pdf = WorksheetPdf.new(wksheet,
+                                 url: ws_results_url(wksheet))
+          send_data pdf.render, filename: 'bingo_practice.pdf', type: 'application/pdf'
+        end
       end
-    end
     end
   end
 
@@ -400,18 +400,20 @@ class BingoBoardsController < ApplicationController
     # image processing
     unless params[:result_img].nil?
       proc_image = ImageProcessing::Vips
-        .source( params[:result_img].tempfile.path)
-        .resize_to_limit!(800,800)
-
+                   .source(params[:result_img].tempfile.path)
+                   .resize_to_limit!(800, 800)
 
       @bingo_board.result_img.attach(io: File.open(proc_image.path),
                                      filename: File.basename(proc_image.path))
     end
 
     resp_hash = {
-      msg: @bingo_board.errors.empty? ? t( 'scored_success' ) : 
-        @bingo_board.errors.full_message,
-      result_url: url_for( @bingo_board.result_img )
+      msg: if @bingo_board.errors.empty?
+             t('scored_success')
+           else
+             @bingo_board.errors.full_message
+           end,
+      result_url: url_for(@bingo_board.result_img)
     }
     respond_to do |format|
       format.json do

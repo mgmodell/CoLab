@@ -5,7 +5,7 @@ Then(/^we debug$/) do
 end
 
 Then(/^show me the page$/) do
-  puts  page.body
+  puts page.body
 end
 
 Then(/^show the entries list$/) do

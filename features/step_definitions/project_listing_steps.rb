@@ -122,12 +122,10 @@ When(/^the user logs in$/) do
   page.should have_content 'signed in successfully'
 
   # Blow away the cookies accept
-  if has_content? 'I understand'
-    click_link_or_button 'I understand'
-  end
+  click_link_or_button 'I understand' if has_content? 'I understand'
 
   # Set custom time if warranted
-  if :rack_test != Capybara.current_driver && ! @dest_date.nil?
+  if :rack_test != Capybara.current_driver && !@dest_date.nil?
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end

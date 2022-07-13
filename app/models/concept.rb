@@ -12,7 +12,6 @@ class Concept < ApplicationRecord
     name.split.map(&:capitalize).*' '
   end
 
-
   private
 
   def standardize

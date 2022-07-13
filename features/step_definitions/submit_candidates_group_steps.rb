@@ -98,18 +98,17 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
 
-  entries_array = [ ]
+  entries_array = []
   @entries_lists.keys.each do |user_id|
-    @entries_lists[ user_id ].each do |entry|
+    @entries_lists[user_id].each do |entry|
       entries_array.push entry
     end
   end
   field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]").count
 
-
-  count.to_i.times do |index|
+  count.to_i.times do |_index|
     # Index to the field to change
-    rand_ind = Random.rand( field_count )
+    rand_ind = Random.rand(field_count)
 
     # Pull the existing values
     existing_term = page.find(:xpath, "//input[@id='term_#{rand_ind}']").value
@@ -123,24 +122,23 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
               end
 
     if existing_term.blank? && existing_def.blank?
-      @entries_list.push( { field => new_val } )
+      @entries_list.push({ field => new_val })
     else
       found = false
       entries_array.each do |entry|
         if 'term' == field && entry['definition'] == existing_def
           entry['term'] = new_val
           page.fill_in("#{field}_#{rand_ind}",
-                       with: new_val )
+                       with: new_val)
           found = true
         elsif 'definition' == field && entry['term'] == existing_term
           entry['definition'] = new_val
           page.fill_in("#{field}_#{rand_ind}",
-                       with: new_val )
+                       with: new_val)
           found = true
         end
 
         break if found
-
       end
     end
   end

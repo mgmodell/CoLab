@@ -3,7 +3,7 @@
 class RegistrationsController < DeviseTokenAuth::RegistrationsController
   before_action :set_email, only: %i[set_primary_email remove_email]
   skip_before_action :authenticate_user!,
-    only: %i[ create initiate_password_reset confirm password_change]
+                     only: %i[create initiate_password_reset confirm password_change]
 
   def set_primary_email
     found = false
@@ -96,7 +96,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
     if EmailAddress.valid? user_email
       user = User.find_by_email user_email
       if user.nil?
-        passwd = SecureRandom.alphanumeric( 10 )
+        passwd = SecureRandom.alphanumeric(10)
         user = User.create(
           email: user_email,
           first_name: params[:first_name],
@@ -134,16 +134,11 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
   end
 
   def initiate_password_reset
-
     resp = {
       message: current_user.present? ? 'passwords.send_instructions' : 'passwords.send_paranoid_instructions'
     }
 
-    reset_user = if current_user.present? 
-      current_user 
-    else
-      User.find_by_email params[:email]
-    end
+    reset_user = current_user.presence || User.find_by_email(params[:email])
 
     reset_user.send_reset_password_instructions if reset_user.present?
 
@@ -167,14 +162,14 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
       user = User.reset_password_by_token(
         {
           reset_password_token: token,
-          password: password,
-          password_confirmation: password_confirmation
+          password:,
+          password_confirmation:
         }
       )
-      sign_in( user )
+      sign_in(user)
       tokens = user.create_new_auth_token
       user.save
-      set_headers( tokens )
+      set_headers(tokens)
       resp[:error] = false
       resp[:message] = 'passwords.updated'
     end
@@ -183,7 +178,6 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
         render json: resp
       end
     end
-
   end
 
   protected

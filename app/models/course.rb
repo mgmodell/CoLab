@@ -88,7 +88,7 @@ class Course < ApplicationRecord
     new_start = new_start.getlocal(course_tz.utc_offset).beginning_of_day
     # new_start = course_tz.utc_to_local(new_start).beginning_of_day
     # date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
-    date_difference = ( new_start - start_date ) / 86400
+    date_difference = (new_start - start_date) / 86_400
     # byebug
     new_course = nil
 
@@ -100,8 +100,8 @@ class Course < ApplicationRecord
         number: "Copy of #{number}",
         description:,
         timezone:,
-        start_date: start_date.advance( days: date_difference ),
-        end_date: end_date.advance( days: date_difference )
+        start_date: start_date.advance(days: date_difference),
+        end_date: end_date.advance(days: date_difference)
       )
 
       # copy the faculty rosters
@@ -120,8 +120,8 @@ class Course < ApplicationRecord
           name: project.name,
           style: project.style,
           factor_pack: project.factor_pack,
-          start_date: project.start_date.advance( days: date_difference ),
-          end_date: project.end_date.advance( days: date_difference ),
+          start_date: project.start_date.advance(days: date_difference),
+          end_date: project.end_date.advance(days: date_difference),
           start_dow: project.start_dow,
           end_dow: project.end_dow
         )
@@ -133,8 +133,8 @@ class Course < ApplicationRecord
       experiences.each do |experience|
         new_obj = new_course.experiences.new(
           name: experience.name,
-          start_date: experience.start_date.advance( days: date_difference ),
-          end_date: experience.end_date.advance( days: date_difference )
+          start_date: experience.start_date.advance(days: date_difference),
+          end_date: experience.end_date.advance(days: date_difference)
         )
         new_obj.save!
       end
@@ -151,8 +151,8 @@ class Course < ApplicationRecord
           lead_time: bingo_game.lead_time,
           group_discount: bingo_game.group_discount,
           project: proj_hash[bingo_game.project],
-          start_date: bingo_game.start_date.advance( days: date_difference ),
-          end_date: bingo_game.end_date.advance( days: date_difference )
+          start_date: bingo_game.start_date.advance(days: date_difference),
+          end_date: bingo_game.end_date.advance(days: date_difference)
         )
         new_obj.save!
       end
@@ -203,7 +203,7 @@ class Course < ApplicationRecord
       # Searching for the student and:
       user = User.joins(:emails).find_by(emails: { email: user_email })
 
-      passwd = SecureRandom.alphanumeric( 10 ) #creates a password
+      passwd = SecureRandom.alphanumeric(10) # creates a password
 
       if user.nil?
         user = User.create(email: user_email, admin: false, timezone:, password: passwd, school:)

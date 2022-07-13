@@ -31,7 +31,7 @@ class WorksheetPdf
       qrcode = RQRCode::QRCode.new(@url)
       move_down 44
       render_qr_code(qrcode)
-                     # pos: [0 - 3, top - 43])
+      # pos: [0 - 3, top - 43])
     end
     bounding_box([0, top], width: 210) do
       text "Player: #{@bingo_board.user.first_name} #{@bingo_board.user.last_name}"

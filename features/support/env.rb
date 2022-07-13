@@ -11,8 +11,8 @@ require 'selenium/webdriver'
 require 'webdrivers'
 Webdrivers.cache_time = 86_400
 
-#require 'simplecov'
-#SimpleCov.start 'rails'
+# require 'simplecov'
+# SimpleCov.start 'rails'
 
 def wait_for_render
   times = 3000
@@ -77,7 +77,7 @@ Capybara.register_driver(:chrome) do |app|
   )
 end
 
-#Fix docker-ization later
+# Fix docker-ization later
 Capybara.javascript_driver = case ENV['DRIVER']
                              when 'docker'
                                Capybara.server_host = `hostname -s`.strip
@@ -155,7 +155,6 @@ end
 #     DatabaseCleaner.strategy = :transaction
 #   end
 #
-
 
 Before '@javascript' do
   page.driver.browser.manage.window.resize_to(1024, 768)

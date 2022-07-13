@@ -215,18 +215,17 @@ class CandidateListsController < ApplicationController
   def demo_entry
     name = (t :demo_project),
 
-    candidates = []
+           candidates = []
 
     6.times do |index|
       candidates << {
         id: 0,
         term: (t "candidate_lists.demo_term#{index + 1}"),
         definition: (t "candidate_lists.demo_def#{index + 1}"),
-        filtered_consistent: Candidate.clean_term( t "candidate_lists.demo_term#{index + 1}"),
+        filtered_consistent: Candidate.clean_term(t("candidate_lists.demo_term#{index + 1}")),
         candidate_feedback_id: 0
       }
     end
-
 
     respond_to do |format|
       format.json do
@@ -236,7 +235,7 @@ class CandidateListsController < ApplicationController
           description: (t 'candidate_lists.demo_bingo_description'),
           group_option: true,
           end_date: 4.days.from_now.end_of_day,
-          group_name: ( t :demo_group ),
+          group_name: (t :demo_group),
           is_group: false,
           expected_count: 10,
           candidates: candidates.as_json(

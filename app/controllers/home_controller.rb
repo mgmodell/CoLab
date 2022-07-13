@@ -72,20 +72,20 @@ class HomeController < ApplicationController
       baseUrl: edit_installment_path(assessment_id: ''),
       saveInstallmentUrl: installments_path
     }
-      ep_hash[:candidate_list] = {
-        baseUrl: get_candidate_list_path(bingo_game_id: '')
-      }
-      ep_hash[:candidate_review] = {
-        baseUrl: review_bingo_candidates_path(id: ''),
-        reviewSaveUrl: update_bingo_candidates_review_path(id: ''),
-        conceptUrl: bingo_concepts_path(0)
-      }
-      ep_hash[:candidate_results] = {
-        baseUrl: my_results_path(id: ''),
-        boardUrl: board_for_game_path(bingo_game_id: ''),
-        conceptsUrl: bingo_concepts_path(id: ''),
-        worksheetUrl: worksheet_for_bingo_path(bingo_game_id: '')
-      }
+    ep_hash[:candidate_list] = {
+      baseUrl: get_candidate_list_path(bingo_game_id: '')
+    }
+    ep_hash[:candidate_review] = {
+      baseUrl: review_bingo_candidates_path(id: ''),
+      reviewSaveUrl: update_bingo_candidates_review_path(id: ''),
+      conceptUrl: bingo_concepts_path(0)
+    }
+    ep_hash[:candidate_results] = {
+      baseUrl: my_results_path(id: ''),
+      boardUrl: board_for_game_path(bingo_game_id: ''),
+      conceptsUrl: bingo_concepts_path(id: ''),
+      worksheetUrl: worksheet_for_bingo_path(bingo_game_id: '')
+    }
     if user_signed_in?
       ep_hash[:home][ :courseRegRequestsUrl] = course_reg_requests_path
       ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path
@@ -296,9 +296,8 @@ class HomeController < ApplicationController
 
     }
   end
-  TIMEZONE_HASH = TIMEZONES.inject( {} ) do |tz_hash,next_tz|
-    tz_hash[ next_tz[ :name ] ] = next_tz[:stdName]
-    tz_hash
+  TIMEZONE_HASH = TIMEZONES.each_with_object({}) do |next_tz, tz_hash|
+    tz_hash[next_tz[:name]] = next_tz[:stdName]
   end
 
   def get_quote
@@ -464,7 +463,7 @@ class HomeController < ApplicationController
     e = Event_.new
     e.id = -11
     e.name = t('candidate_lists.enter', task: t('candidate_lists.demo_topic'))
-    e.task_link = terms_demo_entry_path( -1 )
+    e.task_link = terms_demo_entry_path(-1)
     e.task_name_post = ''
     e.type = :bingo_game
     e.status = '50%'
@@ -481,7 +480,7 @@ class HomeController < ApplicationController
     e.id = -77
     e.name = t('candidate_lists.review', task:
       t('candidate_lists.demo_review_topic'))
-    e.task_link = bingo_demo_review_path( -1 )
+    e.task_link = bingo_demo_review_path(-1)
     e.task_name_post = ''
     e.type = :bingo_game
     e.status = '0'
@@ -511,12 +510,12 @@ class HomeController < ApplicationController
     e.link = "/candidate_results/#{e.id}"
     e.instructor_task = false
     @events << e
-    
-    #Let's output this to JSON
+
+    # Let's output this to JSON
     resp_hash = {
       tasks: @events,
-      current_user: current_user,
-      consent_logs: { }
+      current_user:,
+      consent_logs: {}
     }
     respond_to do |format|
       format.json do

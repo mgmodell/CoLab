@@ -21,6 +21,6 @@ class Diagnosis < ApplicationRecord
   end
 
   def validate_unique
-    errors.add( :base, I18n.t('diagnosis.duplicate_entry') ) if Diagnosis.where(reaction:, week_id:).exists?
+    errors.add(:base, I18n.t('diagnosis.duplicate_entry')) if Diagnosis.where(reaction:, week_id:).exists?
   end
 end
