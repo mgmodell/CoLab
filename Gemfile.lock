@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/faker-ruby/faker.git
-  revision: e36fb2bc4a75d8eb1116a6514c356c2bcf951538
+  revision: b98d32dcca8aa482525320d8463dff741af0d84d
   branch: master
   specs:
     faker (2.21.0)
@@ -109,7 +109,7 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.605.0)
+    aws-partitions (1.606.0)
     aws-sdk-core (3.131.2)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
@@ -237,7 +237,7 @@ GEM
     hashie (5.0.0)
     htmlbeautifier (1.4.2)
     htmlentities (4.3.4)
-    i18n (1.11.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     i18n_data (0.16.0)
       simple_po_parser (~> 1.1)
