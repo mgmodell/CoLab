@@ -89,7 +89,6 @@ class Course < ApplicationRecord
     # new_start = course_tz.utc_to_local(new_start).beginning_of_day
     # date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
     date_difference = (new_start - start_date) / 86_400
-    # byebug
     new_course = nil
 
     Course.transaction do
@@ -131,10 +130,11 @@ class Course < ApplicationRecord
 
       # copy the experiences
       experiences.each do |experience|
+        # puts "end date: #{experience.end_date.in_time_zone(course_tz)} => #{experience.end_date.advance(days: date_difference )}"
         new_obj = new_course.experiences.new(
           name: experience.name,
           start_date: experience.start_date.advance(days: date_difference),
-          end_date: experience.end_date.advance(days: date_difference)
+          end_date: experience.end_date.in_time_zone(course_tz).advance(days: date_difference)
         )
         new_obj.save!
       end
