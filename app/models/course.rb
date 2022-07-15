@@ -18,7 +18,7 @@ class Course < ApplicationRecord
   validate :date_sanity
   validate :activity_date_check
 
-  before_validation :timezone_adjust_comprehensive, on: :update
+  before_validation :timezone_adjust_comprehensive
   before_create :anonymize
 
   def pretty_name(anonymous = false)
@@ -333,7 +333,8 @@ class Course < ApplicationRecord
     end
 
     if (end_date_changed? || timezone_changed?) && end_date.present?
-      new_date = course_tz.local(end_date.year, end_date.month, end_date.day).end_of_day
+      d = end_date.in_time_zone( course_tz )
+      new_date = course_tz.local(d.year, d.month, d.day).end_of_day
       self.end_date = new_date.end_of_day.change(sec: 0)
     end
 
