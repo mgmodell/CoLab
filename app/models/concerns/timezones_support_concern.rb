@@ -41,9 +41,9 @@ module TimezonesSupportConcern
       self.end_date = course.end_date
     elsif end_date_changed?
 
-      tmp_date = end_date.in_time_zone(course_tz)
+      # tmp_date = end_date.in_time_zone(course_tz)
       proc_date = course_tz
-                  .local(tmp_date.year, tmp_date.month, tmp_date.day, 23, 59)
+                  .local(end_date.year, end_date.month, end_date.day, 23, 59)
       self.end_date = proc_date
     end
   end
