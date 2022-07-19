@@ -22,6 +22,34 @@ class Assessment < ApplicationRecord
     user.installments.where(assessment: self).count != 0
   end
 
+  def task_data(current_user:)
+    helpers = Rails.application.routes.url_helpers
+    # link = helpers.edit_installment_path(assessment_id: id)
+    link = "submit_installment/#{id}"
+    group = group_for_user(current_user)
+
+    log = course.get_consent_log(user: current_user)
+    consent_link = if log.present?
+                     helpers.edit_consent_log_path(
+                       consent_form_id: log.consent_form_id
+                     )
+                   end
+    {
+      id:,
+      type: :assessment,
+      name: project.get_name(false),
+      group_name: group.get_name(false),
+      status: is_completed_by_user(current_user) ? 100 : 0,
+      course_name: course.get_name(false),
+      start_date:,
+      end_date:,
+      next_date: next_deadline,
+      link:,
+      consent_link:,
+      active: project.active
+    }
+  end
+
   def next_deadline
     end_date
   end
@@ -107,9 +135,11 @@ class Assessment < ApplicationRecord
     assessment.start_date = tz.parse(assessment.start_date.to_s).beginning_of_day
 
     # calc period
-    period = project.end_dow > project.start_dow ?
-      project.end_dow - project.start_dow :
-      7 - project.start_dow + project.end_dow
+    period = if project.end_dow > project.start_dow
+               project.end_dow - project.start_dow
+             else
+               7 - project.start_dow + project.end_dow
+             end
 
     assessment.end_date = assessment.start_date + period.days
     assessment.end_date = tz.parse(assessment.end_date.to_s).end_of_day.change(sec: 0)
@@ -122,12 +152,11 @@ class Assessment < ApplicationRecord
 
     if existing_assessments.empty? &&
        assessment.start_date <= init_date &&
-       assessment.end_date >= init_date
+       assessment.end_date >= init_date &&
+       project.is_available?
       assessment.project = project
       assessment.save
-      unless assessment.errors.empty?
-        logger.debug assessment.errors.full_messages
-      end
+      logger.debug assessment.errors.full_messages unless assessment.errors.empty?
 
     elsif existing_assessments.count == 1
       existing_assessment = existing_assessments[0]

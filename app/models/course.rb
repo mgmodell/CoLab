@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 class Course < ApplicationRecord
-  belongs_to :school, inverse_of: :courses
+  belongs_to :school, inverse_of: :courses, counter_cache: true
   has_many :projects, inverse_of: :course, dependent: :destroy
   has_many :rosters, inverse_of: :course, dependent: :destroy
   has_many :bingo_games, inverse_of: :course, dependent: :destroy
@@ -23,16 +23,13 @@ class Course < ApplicationRecord
 
   def pretty_name(anonymous = false)
     prettyName = ''
-    prettyName = if anonymous
-                   "#{anon_name} (#{anon_number})"
-                 else
-                   if number.present?
-                     "#{name} (#{number})"
-                   else
-                     name
-                   end
-                 end
-    prettyName
+    if anonymous
+      "#{anon_name} (#{anon_number})"
+    elsif number.present?
+      "#{name} (#{number})"
+    else
+      name
+    end
   end
 
   def get_activities
@@ -47,10 +44,10 @@ class Course < ApplicationRecord
 
     unless consent_form_id.nil? || !consent_form.is_active?
       log = consent_form.consent_logs
-                        .find_by(user: user)
+                        .find_by(user:)
       if log.nil?
         log = user.consent_logs.create(
-          consent_form_id: consent_form_id,
+          consent_form_id:,
           presented: false
         )
       end
@@ -67,30 +64,31 @@ class Course < ApplicationRecord
   end
 
   def set_user_role(user, role)
-    roster = rosters.find_by(user: user)
-    roster = Roster.new(user: user, course: self) if roster.nil?
+    roster = rosters.find_by(user:)
+    roster = Roster.new(user:, course: self) if roster.nil?
     roster.role = role
     roster.save
     logger.debug roster.errors.full_messages unless roster.errors.empty?
   end
 
   def drop_student(user)
-    roster = Roster.find_by(user: user, course: self)
+    roster = Roster.find_by(user:, course: self)
     roster.role = Roster.roles[:dropped_student]
     roster.save
   end
 
   def get_user_role(user)
-    roster = rosters.find_by(user: user)
-    roster.role
+    roster = rosters.find_by(user:)
+    roster.nil? ? nil : roster.role
   end
 
   def copy_from_template(new_start:)
     # Timezone checking here
-    course_tz = ActiveSupport::TimeZone.new(timezone)
-    new_start = course_tz.utc_to_local(new_start).beginning_of_day
-    d = start_date
-    date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
+    course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC')
+    new_start = new_start.getlocal(course_tz.utc_offset).beginning_of_day
+    # new_start = course_tz.utc_to_local(new_start).beginning_of_day
+    # date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
+    date_difference = (new_start - start_date + course_tz.utc_offset) / 86_400
     new_course = nil
 
     Course.transaction do
@@ -99,10 +97,10 @@ class Course < ApplicationRecord
       new_course = school.courses.new(
         name: "Copy of #{name}",
         number: "Copy of #{number}",
-        description: description,
-        timezone: timezone,
-        start_date: start_date + date_difference,
-        end_date: end_date + date_difference
+        description:,
+        timezone:,
+        start_date: start_date.advance(days: date_difference),
+        end_date: end_date.advance(days: date_difference)
       )
 
       # copy the faculty rosters
@@ -121,8 +119,8 @@ class Course < ApplicationRecord
           name: project.name,
           style: project.style,
           factor_pack: project.factor_pack,
-          start_date: project.start_date + date_difference,
-          end_date: project.end_date + date_difference,
+          start_date: project.start_date.advance(days: date_difference),
+          end_date: project.end_date.advance(days: date_difference),
           start_dow: project.start_dow,
           end_dow: project.end_dow
         )
@@ -132,10 +130,11 @@ class Course < ApplicationRecord
 
       # copy the experiences
       experiences.each do |experience|
+        # puts "end date: #{experience.end_date.in_time_zone(course_tz)} => #{experience.end_date.advance(days: date_difference )}"
         new_obj = new_course.experiences.new(
           name: experience.name,
-          start_date: experience.start_date + date_difference,
-          end_date: experience.end_date + date_difference
+          start_date: experience.start_date.advance(days: date_difference),
+          end_date: experience.end_date.advance(days: date_difference)
         )
         new_obj.save!
       end
@@ -152,8 +151,8 @@ class Course < ApplicationRecord
           lead_time: bingo_game.lead_time,
           group_discount: bingo_game.group_discount,
           project: proj_hash[bingo_game.project],
-          start_date: bingo_game.start_date + date_difference,
-          end_date: bingo_game.end_date + date_difference
+          start_date: bingo_game.start_date.advance(days: date_difference),
+          end_date: bingo_game.end_date.advance(days: date_difference)
         )
         new_obj.save!
       end
@@ -169,7 +168,7 @@ class Course < ApplicationRecord
     max_actual = 1000
     results = {
       student_count: students.size,
-      combinations: combinations,
+      combinations:,
       actual: max_actual >= combinations
     }
 
@@ -204,26 +203,25 @@ class Course < ApplicationRecord
       # Searching for the student and:
       user = User.joins(:emails).find_by(emails: { email: user_email })
 
-      passwd = (0...8).map { rand(65..90).chr }.join
+      passwd = SecureRandom.alphanumeric(10) # creates a password
 
       if user.nil?
-        user = User.create(email: user_email, admin: false, timezone: timezone, password: passwd, school: school)
+        user = User.create(email: user_email, admin: false, timezone:, password: passwd, school:)
+        logger.debug user.errors.full_messages unless user.errors.empty?
       end
 
       unless user.nil?
-        existing_roster = Roster.find_by(course: self, user: user)
+        existing_roster = Roster.find_by(course: self, user:)
         if existing_roster.nil?
-          Roster.create(user: user, course: self, role: role)
+          Roster.create(user:, course: self, role:)
           ret_val = true
-        else
-          if instructor || existing_roster.enrolled_student!
-            existing_roster.role = role
-            existing_roster.save
-            if existing_roster.errors.empty?
-              ret_val = true
-            else
-              logger.debug existing_roster.errors.full_messages
-            end
+        elsif instructor || existing_roster.enrolled_student!
+          existing_roster.role = role
+          existing_roster.save
+          if existing_roster.errors.empty?
+            ret_val = true
+          else
+            logger.debug existing_roster.errors.full_messages
           end
         end
         # TODO: Let's add course invitation emails here in the future
@@ -317,14 +315,14 @@ class Course < ApplicationRecord
 
   def anonymize
     levels = %w[Beginning Intermediate Advanced]
-    self.anon_name = "#{levels.sample} #{Forgery::Name.industry}"
+    self.anon_name = "#{levels.sample} #{Faker::Company.industry}"
     dpts = %w[BUS MED ENG RTG MSM LEH EDP
               GEO IST MAT YOW GFB RSV CSV MBV]
     self.anon_number = "#{dpts.sample}-#{rand(100..700)}"
   end
 
   def timezone_adjust_comprehensive
-    course_tz = ActiveSupport::TimeZone.new(timezone)
+    course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC')
     # TODO: must handle changing timezones at some point
 
     # TZ corrections
@@ -335,7 +333,8 @@ class Course < ApplicationRecord
     end
 
     if (end_date_changed? || timezone_changed?) && end_date.present?
-      new_date = course_tz.local(end_date.year, end_date.month, end_date.day)
+      d = end_date.in_time_zone( course_tz )
+      new_date = course_tz.local(d.year, d.month, d.day).end_of_day
       self.end_date = new_date.end_of_day.change(sec: 0)
     end
 

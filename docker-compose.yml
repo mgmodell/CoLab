@@ -1,0 +1,30 @@
+version: "3.7"
+services:
+  app:
+    image: colab_app
+    ports:
+      - '31337:31337'
+    volumes:
+      - src:/home/colab/src/app
+      - asdf-installs:/home/colab/.asdf/installs
+      - asdf-shims:/home/colab/.asdf/shims
+    depends_on:
+      - db
+      - browser
+  db:
+    image: colab_db
+    volumes:
+      - mariadb-data:/var/lib/mysql
+  browser:
+    image: colab_browser
+    ports:
+      - 4444:4444
+      - 5900:5900
+      - 7900:7900
+
+volumes:
+  src:
+  asdf-installs:
+  asdf-shims:
+  mariadb-data:
+

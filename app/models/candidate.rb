@@ -27,9 +27,13 @@ class Candidate < ApplicationRecord
     @@filter
   end
 
+  def self.clean_term(term)
+    Candidate.filter.filter(term.strip.split.map(&:downcase)).join(' ')
+  end
+
   def clean_data
     self.term = term.nil? ? '' : term.strip.split.map(&:capitalize) * ' '
-    self.filtered_consistent = term.nil? ? '' : Candidate.filter.filter(term.strip.split.map(&:downcase)).join(' ')
+    self.filtered_consistent = term.nil? ? '' : Candidate.clean_term(term)
     definition.strip!
 
     # Reset the performance data on the List
@@ -59,12 +63,8 @@ class Candidate < ApplicationRecord
   end
 
   def concept_assigned
-    if candidate_list.bingo_game.reviewed && (term.present? || definition.present?)
-      unless CandidateFeedback.find(candidate_feedback_id).term_prob
-        if concept_id.nil?
-          errors.add(:concept, "Unless there's a problem with the term, you must assign a concept.")
-        end
-      end
+    if candidate_list.bingo_game.reviewed && (term.present? || definition.present?) && !CandidateFeedback.find(candidate_feedback_id).term_prob && concept_id.nil?
+      errors.add(:concept, "Unless there's a problem with the term, you must assign a concept.")
     end
   end
 end

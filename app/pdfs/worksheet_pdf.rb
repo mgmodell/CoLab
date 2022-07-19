@@ -29,8 +29,9 @@ class WorksheetPdf
           at: [450, top + 20]
     if @bingo_board.worksheet?
       qrcode = RQRCode::QRCode.new(@url)
-      render_qr_code(qrcode,
-                     pos: [0 - 3, top - 43])
+      move_down 44
+      render_qr_code(qrcode)
+      # pos: [0 - 3, top - 43])
     end
     bounding_box([0, top], width: 210) do
       text "Player: #{@bingo_board.user.first_name} #{@bingo_board.user.last_name}"
@@ -48,9 +49,7 @@ class WorksheetPdf
   def render_clues
     items = []
     @bingo_board.bingo_cells.each do |bc|
-      unless bc.candidate.nil?
-        items << [bc.indeks_as_letter, bc.candidate.definition, bc.concept]
-      end
+      items << [bc.indeks_as_letter, bc.candidate.definition, bc.concept] unless bc.candidate.nil?
     end
     items.sort! { |a, b| a[0] <=> b[0] }
 
@@ -74,12 +73,11 @@ class WorksheetPdf
     size = @bingo_board.bingo_game.size
     data = Array.new(size) { Array.new(size) }
     @bingo_board.bingo_cells.each do |bc|
-      if bc.concept.name == '*'
-        data[bc.row][ bc.column ] =
-          '<color rgb=\'FF00FF\'><font size=\'48\'>*</font></color>'
-      else
-        data[bc.row][ bc.column ] = bc.concept.name
-      end
+      data[bc.row][bc.column] = if bc.concept.name == '*'
+                                  '<color rgb=\'FF00FF\'><font size=\'48\'>*</font></color>'
+                                else
+                                  bc.concept.name
+                                end
     end
 
     table data, position: :center,

@@ -1,0 +1,198 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+es:
+  time:
+    formats:
+      tz_clarity: "%a, %b %-d at %-l:%M%P %Z"
+      short_date: "%a, %b %-d"
+      datestamp: "%Y%m%d"
+      date_field: "%Y-%m-%d"
+  title: CoLab
+  column_select: Show/Hide columns&hellip;
+  task_name: Nombre de la Tarea
+  email: Correo Electronico
+  email_redacted: [email redacted]
+  status: Estado
+  course_name: Nombre del Curso
+  student: Estudiante
+  student_names: Estudiante Nombres
+  group: Grupo
+  groups: Grupos
+  group_names: Nombres de grupo
+  history: Historia
+  about_you: About You
+  calc_diversity: Diversidad
+  users: Usuarios
+  diversity_score: Puntuación de Diversidad
+  calc_diversity_sub: Dime el puntaje!
+  calc_it: Calcular una puntación de diversidad
+  ds_emails_lbl: Ingrese los correos electrónicos de los miembros propuestos de equipo
+  dates: Fechas
+  open_date: Cita Abierta
+  start_date: Fecha de Inicio
+  close_date: Fecha de Cierre
+  completion_date: Fecha de Terminacion
+  individual: Individual
+  group: Grupo
+  type: Tipo
+  expired: Expirado
+  bingo_game: Bingo! Juego
+  experience: Experiencia grupal
+  other_info: Otra informatión
+  start_dow: Iniciar DOW
+  end_dow: Terminar DOW
+  end_date: Fecha Final
+  task_view: Vista de Tarea
+  month_view: Vista de Mes
+  week_view: Vista de Semana 
+  activities: Ocupaciones
+  consent_form: Formulario de consentimiento
+  actions: Acćions
+  activate: Activar?
+  back: Atras
+  next: Siguiente
+  note: Nota
+  show: Mostrar
+  edit: Editar
+  save: Salvar
+  add: Agregar!
+  submit: Enviar
+  #toolbar
+  profile: Perfil
+  c_panel: Admin&hellip;
+  reports: Informes
+  administration: Administratión
+  resp_summ: Resumen de Respuesta
+  resp_data: Datos de Respuesta
+  coming_soon: En breve!
+  logout: Cerrar sesión
+  login: Acceso
+  none_selected: Ninguna seleccionada
+  not_available: No disponible
+  #demo materials
+  demo_title: '%{orig} (DEMO)'
+  demo: Demo
+  demo_group: Superestrellas
+  demo_project: Trabajo de investigación
+  demo_project_description: >
+    Este proyecto involucra investigando el tema decidido en tu clase
+    y trabajar con su equipo para crear un articulo que detalle a fondo
+    todo lo que ha aprendido sobre un tema.
+  demo_course_name: Investigación colaborativa avanzada
+  #admin functions
+  about: Acerca de
+  back_to_course: De vuelta al curso
+  back_to_courses: Volver a la lista de cursos
+  support: Soporte
+  avail_body: >
+    El %{activity_name} ya esta disponible para usted en %{site_link}. Inicie
+    %{login_link} lo antes posible para echar un vistazo y completario.
+  course_invite_body: >
+    (1){You've been invited to participate in the following course:};
+    (2-inf){You've been invited to participate in the following {{count}} courses:}
+  course_invite_close: Por favor inicie session en %{site_link} aceptar o rechazar esta inscipción.
+  reminder_body: >
+    Este correo electrónico es un recordatorio amistoso de que tiene una tarea abierta
+    esperándolo en este momento. Por favor inicie session en %{site_link} lo antes
+    posible para completar lo que esta disponible.
+  summary_body: >
+    A continuación se muestra el informe de finalización de la tarea de sus estudiantes %{task_name} del
+    curso %{course_name} que se completó recientemente en %{site_link}.
+  enrolled_students:
+    one: Solo hay un estudiante inscrito en el curso.
+    other: Hay %{count} estudiantes inscritos en el curso.
+  email_close: Gracias!
+  support_formal: CoLab Soporte
+  support_menu: Soporte de contacto
+  demo_surname_1: John
+  demo_fam_name_1: Smith
+  demo_user_tz: Seoul
+  copy: Copiar
+  destroy: Destruir
+  remove: Quitar
+  confirmation: Estas seguro?
+  accept: Aceptar
+  decline: Rechazar
+  waiting: Esperando
+  project: Proyecto
+  complete: Completo
+  completed_at: Completado a los
+  incomplete: En Progreso
+  not_started: No empezado
+  n_a: N/A
+  not_given: <no dado>
+  not_set: No establecido
+  instructors: Instructores
+  students: Estudiantes
+  student: Estudiante
+  #roles
+  instructor: Instructor
+  assistant: Asistente
+  enrolled_student: Estudiante Inscrito
+  invited_student: Estudiante Invitado
+  declined_student: Estudiante Rechazado
+  dropped_student: Estudiante Caido
+  no_projects: No hay proyectos pendientes
+  exps: Experiencia
+  terms_lists: Listas de Términos
+  terms_list: Lista de Términos
+  terms_review: Revisión de Términos
+  course: Curso
+  school: Escuela
+  schools_edit: Escuelas
+  consent_forms_edit: Formas de Consentimentos
+  courses_edit: Cursos
+  reporting: Centro de Informes
+  experiences_edit: Experiencia
+  bingo_games_edit: Lista de Términos
+  projects_edit: Proyectos
+  concepts_edit: Conceptos
+  active: Activo
+  inactive: Inactivo
+  details: Detalles
+  description: Descripción
+  for: Para
+  name: Nombre
+  family_name: Nombre de Familia 
+  given_name: Nombre de Pila
+  number: Numero 
+  member: Miembro de Equipo 
+  titles:
+    demonstration: Demonstration
+  home:
+    title: Pagina de Inicio
+    your_tasks: Tus Tareas 
+    invited: !Has sido Invitado!
+    greeting: Hola {{name}}
+    greeting_unknown: Hola!
+    instructor_tasks: Tarea de Instructor 
+    student_tasks: Tarea para la Clase
+    task_type: Tipo de Tarea 
+    sapa: Auto evaluación y evaluación por pares
+    terms_list: Envío de lista de términos
+    course_confirm: >
+      Se le agrego al {{course_list_text}}, pero a veces los instructores cometen
+      errores, asi que confirme que realmente esta inscrito en 
+      {{proper_course_list}} que se enumera a continuacion.
+    courses_interval: (1)[a course];(2-inf)[ {{count}} courses]
+    courses_proper_interval: (1)[the course];(2-inf)[the {{count}} courses]
+    task_interval: (0)[You do not currently have any tasks due. Check back later or contact your instructor.];(1)[You've got one task at the moment.];(2-inf)[You've got {{count}} tasks today.]

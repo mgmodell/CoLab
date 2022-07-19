@@ -12,36 +12,42 @@ Feature: Users can complete 'experiences'
     When the user logs in
     Then the user should see a successful login message
 
+  @javascript
   Scenario: The student should not be able to proceed without selecting a behavior
     Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
     Given the consent form "is" active
     Given the consent form "has" been presented to the user
     When the user visits the index
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open experience
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
      And the user presses "Next"
     Then the user will see "Week 1"
-     And the user presses "Save and continue"
-    Then the user will see "Week 1"
-    Then the user will see "You must select a behavior"
+    Then the 'Save and continue' button will be disabled
+    # Then the user will see "Week 1"
+    # Then the user will see "You must select a behavior"
     Then user opens their profile
     Then the user sees the experience in the history
 
+@javascript
   Scenario: The student should not be able to proceed without selecting a behavior
+    Then the user switches to the "Task View" tab
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
      And the user presses "Next"
     Then the user will see "Week 1"
-     And the user presses "Save and continue"
-    Then the user will see "Week 1"
-    Then the user will see "You must select a behavior"
+    Then the 'Save and continue' button will be disabled
+    #Then the user will see "Week 1"
+    #Then the user will see "You must select a behavior"
     Then user opens their profile
     Then the user sees the experience in the history
 
+@javascript
   Scenario: The dropped student should not see an experience
     Then the user logs out
     Then the user is dropped from the course
@@ -49,17 +55,20 @@ Feature: Users can complete 'experiences'
     Then the user should see a successful login message
     Then user should see 0 open task
 
+@javascript
   Scenario: The participant should not be able to proceed without selecting a behavior and comments should remain
     Then user should see 1 open task
     Then the user clicks the link to the experience
     Then the user sees the experience instructions page
      And the user presses "Next"
+    Then they open the drawer for additional comments
     Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment" in extant field "Your comments"
-     And the user presses "Save and continue"
-    Then the user will see "Week 1"
-    Then the user will see "You must select a behavior"
+    Then the 'Save and continue' button will be disabled
+    # Then the user will see "Week 1"
+    # Then the user will see "You must select a behavior"
     Then in the field "Your comments" they will see "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
 
+@javascript
   Scenario: instructions are only presented when users first begin an experience
     Then user should see 1 open task
     Then the user clicks the link to the experience
@@ -74,6 +83,7 @@ Feature: Users can complete 'experiences'
     Then there will be 1 reactions from 1 different scenarios recorded
     Then there will be 1 reactions from 1 different narratives recorded
 
+  @javascript
   Scenario: Participant should be able to record Group domination
     Then user should see 1 open task
     Then the user clicks the link to the experience
@@ -84,6 +94,7 @@ Feature: Users can complete 'experiences'
     Then the user presses "Save and continue"
      And the database will show a new week 1 "Group domination" diagnosis from the user
 
+  @javascript
   Scenario: Participant should be able to record Equal participation
     Then user should see 1 open task
     Then the user clicks the link to the experience
@@ -94,6 +105,7 @@ Feature: Users can complete 'experiences'
     Then the user presses "Save and continue"
      And the database will show a new week 1 "Equal participation" diagnosis from the user
 
+  @javascript
   Scenario: Participant should be able to record Social loafing
     Then user should see 1 open task
     Then the user clicks the link to the experience
@@ -104,6 +116,7 @@ Feature: Users can complete 'experiences'
     Then the user presses "Save and continue"
      And the database will show a new week 1 "Social loafing" diagnosis from the user
 
+  @javascript
   Scenario: Participant should be able to record Ganging up on the task
     Then user should see 1 open task
     Then the user clicks the link to the experience
@@ -114,6 +127,7 @@ Feature: Users can complete 'experiences'
     Then the user presses "Save and continue"
      And the database will show a new week 1 "Ganging up on the task" diagnosis from the user
 
+  @javascript
   Scenario: Participant should be able to record I don't know
     Then user should see 1 open task
     Then the user clicks the link to the experience
@@ -124,6 +138,7 @@ Feature: Users can complete 'experiences'
     Then the user presses "Save and continue"
      And the database will show a new week 1 "I don't know" diagnosis from the user
 
+  @javascript
   Scenario: Participant should be able to record Other
     Then user should see 1 open task
     Then the user clicks the link to the experience
@@ -136,6 +151,7 @@ Feature: Users can complete 'experiences'
      And the database will show a new week 1 "Other" diagnosis from the user
      And the latest Diagnosis will show "super behavior" in the field "other_name"
 
+  @javascript
   Scenario: Participant completes fourteen weeks
     Then user should see 1 open task
     Then the user clicks the link to the experience
@@ -156,6 +172,7 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user completes a week
 
+  @javascript
   Scenario: Participant completes a full experience
     Then user should see 1 open task
     Then the user clicks the link to the experience
@@ -178,7 +195,7 @@ Feature: Users can complete 'experiences'
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
     Then they enter "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment" in extant field "Your suggestions:"
-    Then the user presses hidden "Submit"
+    Then the user presses "Submit"
      And the database will show a reaction with "Social loafing" as the behavior
      And the database will show a reaction with improvements of "super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment super comment"
     Then the user will see "Your reaction to the experience was recorded"
@@ -187,6 +204,7 @@ Feature: Users can complete 'experiences'
     Then there will be 1 reactions from 1 different scenarios recorded
     Then there will be 1 reactions from 1 different narratives recorded
 
+  @javascript
   Scenario: Participant cannot complete an experience without improvements
     Then user should see 1 open task
     Then the user clicks the link to the experience
@@ -208,9 +226,10 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
-    Then the user presses hidden "Submit"
-    Then the user will see "Reflection on possible improvements is required"
+    Then the 'Submit' button will be disabled
+    # Then the user will see "Reflection on possible improvements is required"
 
+  @javascript
   Scenario: Interleaved users
     Then the user logs out
     Given the user is "the first" user
@@ -260,12 +279,12 @@ Feature: Users can complete 'experiences'
     Then the user completes a week
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Social loafing" radio button
-    Then the user presses hidden "Submit"
-    Then the user will see "Reflection on possible improvements is required"
-    Then the user will see "Overall Group Behavior"
+    Then the 'Submit' button will be disabled
+    # Then the user will see "Reflection on possible improvements is required"
+    # Then the user will see "Overall Group Behavior"
     Then the user chooses the "Ganging up on the task" radio button
     Then they enter "first comment" in extant field "Your suggestions:"
-    Then the user presses hidden "Submit"
+    Then the user presses "Submit"
      And the database will show a reaction for the user with "Ganging up on the task" as the behavior
      And the database will show a reaction for the user with improvements of "first comment"
     Then the user will see "Your reaction to the experience was recorded"
@@ -292,7 +311,7 @@ Feature: Users can complete 'experiences'
     Then the user will see "Overall Group Behavior"
     Then the user chooses the "Group domination" radio button
     Then they enter "second comment" in extant field "Your suggestions:"
-    Then the user presses hidden "Submit"
+    Then the user presses "Submit"
      And the database will show a reaction with "Group domination" as the behavior
      And the database will show a reaction with improvements of "second comment"
     Then the user will see "Your reaction to the experience was recorded"
@@ -302,6 +321,7 @@ Feature: Users can complete 'experiences'
     Then there will be 2 reactions from 2 different narratives recorded
     Then there will be 2 reactions from 2 different scenarios recorded
 
+  @javascript
   Scenario: 12 students should be able to complete 14 different scenarios
      Then the user logs out
     #With 8 new students, we will have 12
@@ -312,6 +332,7 @@ Feature: Users can complete 'experiences'
     Then there will be 12 reactions from 12 different narratives recorded
     Then there will be 12 reactions from 3 different scenarios recorded
 
+  @javascript
   Scenario: 1 student completes experiences for 2 courses
      Then the user logs out
     Given the experience started "last month" and ends "4 days hence"
@@ -334,6 +355,7 @@ Feature: Users can complete 'experiences'
     Then there will be 2 reactions from 2 different narratives recorded
     Then there will be 2 reactions from 2 different scenarios recorded
 
+  @javascript
   Scenario: 1 student completes 2 experiences for 1 course
      Then the user logs out
     Given the course started "January 1, 2015" and ends "1 year hence"
@@ -361,6 +383,7 @@ Feature: Users can complete 'experiences'
     Then there will be 2 reactions from 2 different narratives recorded
     Then there will be 2 reactions from 2 different scenarios recorded
 
+  @javascript
   Scenario: 1 student completes 13 experiences
      Then the user logs out
     Given the course started "January 1, 2015" and ends "1 year hence"
@@ -516,6 +539,7 @@ Feature: Users can complete 'experiences'
     Then there will be 13 reactions from 12 different narratives recorded
     Then there will be 13 reactions from 3 different scenarios recorded
 
+  @javascript
   Scenario: More than 2 students complete 13 experiences between them
      Then the user logs out
     Given the user is "the first" user
@@ -694,6 +718,7 @@ Feature: Users can complete 'experiences'
     Then there will be 13 reactions from 3 different scenarios recorded
     Then no user will have reacted to the same narrative more than once
 
+  @javascript
   Scenario: More than 2 students complete 48 experiences between them
      Then the user logs out
     #With 44 new students, we will have 48
@@ -704,6 +729,7 @@ Feature: Users can complete 'experiences'
     Then there will be 48 reactions from 12 different narratives recorded
     Then there will be 48 reactions from 3 different scenarios recorded
 
+  @javascript
   Scenario: More than 2 students complete 96 experiences between 3 classes
      Then the user logs out
     #With 8 new students, we will have 12
@@ -728,6 +754,7 @@ Feature: Users can complete 'experiences'
     Then there will be 96 reactions from 12 different narratives recorded
     Then there will be 96 reactions from 3 different scenarios recorded
 
+  @javascript
   Scenario: A course with four users deploys 4 experiences will see 12 narratives and 3 scenarios recorded
      Then the user logs out
     Given the experience started "last month" and ends "4 days hence"

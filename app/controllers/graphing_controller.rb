@@ -6,37 +6,39 @@ class GraphingController < ApplicationController
   def index
     @title = 'Reports'
     @user = current_user
-    @current_users_projects = []
+    current_users_projects = []
 
     # Get the assessments administered by the current user
     if @user.is_instructor?
       if @user.is_admin?
-        @current_users_projects = Project.all
+        current_users_projects = Project.all
       elsif @user.is_instructor?
         Roster.instructor.where(user_id: @user.id).each do |roster|
-          @current_users_projects.concat roster.course.projects.to_a
+          current_users_projects.concat roster.course.projects.to_a
         end
       end
-      return @current_users_projects
+      current_users_projects
     else
       redirect_to root_url
     end
   end
 
   def projects
-    for_research = params[:for_research] == 'true'
-    anon_req = params[:anonymous] == 'true'
-    anonymize = @current_user.anonymize? || @current_user.is_researcher? || anon_req
+    for_research = params[:for_research]
+    anon_req = params[:anonymous]
+    anonymize = current_user.anonymize? || current_user.is_researcher? || anon_req
     projects = []
-    if @current_user.admin || @current_user.is_researcher?
-      project_list = Project.all.to_a
-    else
-      project_list = Project.joins(course: :rosters)
-                            .where('rosters.user': @current_user,
+    project_list = if current_user.admin || current_user.is_researcher?
+                     Project.all.to_a
+                   else
+                     Project.joins(course: :rosters)
+                            .where('rosters.user': current_user,
                                    'rosters.role': Roster.roles[:instructor])
                             .uniq.to_a
-    end
+                   end
     project_list.collect! { |project| { id: project.id, name: project.get_name(anonymize) } }
+
+    project_list.sort! { |a, b| a[:name] <=> b[:name] }
     respond_to do |format|
       format.json { render json: project_list }
     end
@@ -46,24 +48,26 @@ class GraphingController < ApplicationController
   def subjects
     unit_of_analysis = params[:unit_of_analysis].to_i
     project_id = params[:project_id]
-    for_research = params[:for_research] == 'true'
-    anon_req = params[:anonymous] == 'true'
-    anonymize = @current_user.anonymize? || anon_req
+    for_research = params[:for_research]
+    anon_req = params[:anonymous]
+    anonymize = current_user.anonymize? || anon_req
 
     subjects = []
     case unit_of_analysis
     when Unit_Of_Analysis[:individual]
-      if for_research
-        subjects = User.joins(:consent_logs, :projects)
+      subjects = if for_research
+                   User.joins(:consent_logs, :projects)
                        .where(consent_logs: { accepted: true }, projects: { id: project_id })
                        .collect { |user| [user.name(anonymize), user.id] }
-      else
-        subjects = Project.find(project_id).users.collect { |user| [user.name(anonymize), user.id] }
-      end
+                 else
+                   Project.find(project_id).users.collect { |user| { name: user.name(anonymize), id: user.id } }
+                 end
     when Unit_Of_Analysis[:group]
-      subjects = Project.find(project_id).groups.collect { |group| [group.get_name(anonymize), group.id] }
+      subjects = Project.find(project_id).groups.collect { |group| { name: group.get_name(anonymize), id: group.id } }
 
     end
+
+    subjects.sort! { |a, b| a[:name] <=> b[:name] }
     # Return the retrieved data
     respond_to do |format|
       format.json { render json: subjects }
@@ -74,9 +78,9 @@ class GraphingController < ApplicationController
     unit_of_analysis = params[:unit_of_analysis].to_i
     project = Project.find(params[:project])
     subject = params[:subject]
-    for_research = params[:for_research] == 'true'
-    anon_req = params[:anonymous] == 'true'
-    anonymize = @current_user.anonymize? || anon_req
+    for_research = params[:for_research]
+    anon_req = params[:anonymous]
+    anonymize = current_user.anonymize? || anon_req
 
     dataset = {
       unitOfAnalysis: nil,
@@ -91,8 +95,8 @@ class GraphingController < ApplicationController
     streams = dataset[:streams]
     users = {}
     # Security checks
-    if @current_user.is_admin? ||
-       project.course.instructors.include?(@current_user)
+    if current_user.is_admin? ||
+       project.course.instructors.include?(current_user)
       # Start pulling data
 
       groups = {}
@@ -104,7 +108,7 @@ class GraphingController < ApplicationController
         dataset[:subject_id] = user.id
         dataset[:subject] = user.informal_name(anonymize)
         values = Value.joins(installment: :assessment)
-                      .where('assessments.project_id': project, user: user)
+                      .where('assessments.project_id': project, user:)
                       .includes(:factor, installment: %i[user group])
                       .order('installments.inst_date')
 
@@ -234,18 +238,18 @@ class GraphingController < ApplicationController
   #
   def raw_data
     user = User.find(subject.to_i)
-    anonymize = @current_user.anonymize?
+    anonymize = current_user.anonymize?
 
     installments = Installment.joins(:assessment)
                               .where(user_id: subject.to_i, assessment: { project_id: assessment.to_i })
     @data = installments
     respond_to do |format|
       format.csv do
-        if anonymize
-          headers['Content-Disposition'] = "attachment; filename=\"#{user.anon_last_name}_#{user.anon_first_name}.csv\""
-        else
-          headers['Content-Disposition'] = "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
-        end
+        headers['Content-Disposition'] = if anonymize
+                                           "attachment; filename=\"#{user.anon_last_name}_#{user.anon_first_name}.csv\""
+                                         else
+                                           "attachment; filename=\"#{user.last_name}_#{user.first_name}.csv\""
+                                         end
         headers['Content-Type'] ||= 'text/csv'
       end
     end

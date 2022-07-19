@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'chronic'
-require 'forgery'
 
 Then 'retrieve the latest school from the db' do
   @orig_school = @school
@@ -17,7 +16,7 @@ Then 'the school {string} field is {string}' do |field_name, value|
   when 'timezone'
     @school.timezone.should eq value
   else
-    puts 'Not testing anything'
+    log 'Not testing anything'
   end
 end
 
@@ -27,9 +26,28 @@ end
 
 Then 'the user opens the school' do
   @school = School.last
-  click_link_or_button @school.name
+  row = find(:xpath, "//td[contains(.,'#{@school.name}')]")
+  row.click
 end
 
 Then 'the user selects {string} as the {string}' do |value, field|
-  select(value, from: field)
+  lbl = find(:xpath, "//label[text()='#{field}']")[:for]
+  elem = find(:xpath, "//*[@id='#{lbl}']").click
+  find(:xpath, "//li[text()='#{value}']").click
+end
+
+Then 'the user will dismiss the error {string}' do |error_message|
+  page.should have_content error_message
+  find(:xpath, "//button[@id='error-close']").click
+end
+
+Then(/^the user waits to see "([^"]*)"$/) do |wait_msg|
+  wait_for_render
+
+  counter = 0
+  until page.has_text? wait_msg
+    sleep 1
+    counter += 1
+    break if counter > 60
+  end
 end

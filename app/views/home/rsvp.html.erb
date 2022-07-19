@@ -1,7 +1,7 @@
 <h1><%= t :invited %></h2>
 <% theme_code = get_theme_code
    anonymize = get_anonymous %>
-<p><%= t 'home.greeting', name: @current_user.nil? ? "John" : @current_user.first_name %>,
+<p><%= t 'home.greeting', name: current_user.nil? ? "John" : current_user.first_name %>,
   <%= t 'home.course_confirm', 
           course_list_text: t( 'home.courses', count: @waiting_rosters.size),
           proper_course_list: t( 'home.courses_proper', count: @waiting_rosters.size ) %>:

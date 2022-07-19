@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 
 class User < ApplicationRecord
+  include DeviseTokenAuth::Concerns::User
+  include DeviseTokenAuth::Concerns::ResourceFinder
+  include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
+
   has_many :emails, inverse_of: :user, dependent: :destroy
 
   devise :multi_email_authenticatable, :registerable,
@@ -51,26 +55,22 @@ class User < ApplicationRecord
   def name(anonymous)
     if anonymous
       name = "#{anon_last_name}, #{anon_first_name}"
+    elsif last_name.nil? && first_name.nil?
+      name = email
     else
-      if last_name.nil? && first_name.nil?
-        name = email
-      else
-        name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
-        name += (!first_name.nil? ? first_name : '[No First Name Given]')
-      end
+      name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
+      name += (!first_name.nil? ? first_name : '[No First Name Given]')
     end
   end
 
   def informal_name(anonymous)
     if anonymous
       name = "#{anon_first_name} #{anon_last_name}"
+    elsif last_name.nil? && first_name.nil?
+      name = email
     else
-      if last_name.nil? && first_name.nil?
-        name = email
-      else
-        name = (!first_name.nil? ? first_name : '[No First Name Given]') + ' '
-        name += (!last_name.nil? ? last_name : '[No Last Name Given]')
-      end
+      name = (!first_name.nil? ? first_name : '[No First Name Given]') + ' '
+      name += (!last_name.nil? ? last_name : '[No Last Name Given]')
     end
   end
 
@@ -121,11 +121,15 @@ class User < ApplicationRecord
   end
 
   def is_instructor?
-    if admin || rosters.instructor.count > 0
-      true
-    else
-      false
-    end
+    instructor
+  end
+
+  def update_instructor
+    self.instructor = if admin || rosters.instructor.count > 0
+                        true
+                      else
+                        false
+                      end
   end
 
   def is_researcher?
@@ -173,7 +177,7 @@ class User < ApplicationRecord
                   bingo_game: :project)
         .joins(:bingo_game)
         .where(bingo_games:
-                              { reviewed: true, course_id: course_id })
+                              { reviewed: true, course_id: })
         .to_a
 
     else
@@ -206,7 +210,7 @@ class User < ApplicationRecord
                   bingo_game: :project)
         .joins(:bingo_game)
         .where(bingo_games:
-                              { reviewed: true, course_id: course_id })
+                              { reviewed: true, course_id: })
         .to_a
 
     else
@@ -235,7 +239,7 @@ class User < ApplicationRecord
     my_reactions = []
     my_reactions = if course_id > 0
                      reactions.includes(:narrative).joins(:experience)
-                              .where(experiences: { course_id: course_id })
+                              .where(experiences: { course_id: })
                    else
                      reactions
                    end
@@ -250,7 +254,7 @@ class User < ApplicationRecord
   def get_assessment_performance(course_id: 0)
     my_projects = []
     my_projects = if course_id > 0
-                    projects.includes(:assessments).where(course_id: course_id)
+                    projects.includes(:assessments).where(course_id:)
                   else
                     projects.includes(:assessments)
                   end
@@ -299,12 +303,14 @@ class User < ApplicationRecord
   end
 
   def self.from_omniauth(access_token)
-    data = access_token.info
+    data = access_token
     user = User.joins(:emails).where(emails: { email: data['email'] }).first
 
     user ||= User.create(
       email: data['email'],
       password: Devise.friendly_token[0, 20],
+      first_name: data['given_name'],
+      last_name: data['family_name'],
       timezone: 'UTC'
     )
     user.confirm
@@ -369,7 +375,7 @@ class User < ApplicationRecord
         # prey_u.destroy!
       end
     else
-      puts 'One or more user were not found. No work done.'
+      logger.debug 'One or more user were not found. No work done.'
     end
   end
 
@@ -379,18 +385,18 @@ class User < ApplicationRecord
     if gender.present? && gender.changed?
       case gender.code
       when 'm'
-        self.anon_first_name = Forgery::Name.male_first_name
-        self.anon_last_name = Forgery::Name.last_name
+        self.anon_first_name = Faker::Name.male_first_name
+        self.anon_last_name = Faker::Name.last_name
       when 'f'
-        self.anon_first_name = Forgery::Name.female_first_name
-        self.anon_last_name = Forgery::Name.last_name
+        self.anon_first_name = Faker::Name.female_first_name
+        self.anon_last_name = Faker::Name.last_name
       else
-        self.anon_first_name = Forgery::Name.first_name
-        self.anon_last_name = Forgery::Name.last_name
-        end
+        self.anon_first_name = Faker::Name.first_name
+        self.anon_last_name = Faker::Name.last_name
+      end
     elsif !persisted?
-      self.anon_first_name = Forgery::Name.first_name
-      self.anon_last_name = Forgery::Name.last_name
+      self.anon_first_name = Faker::Name.first_name
+      self.anon_last_name = Faker::Name.last_name
     end
   end
 end

@@ -4,11 +4,12 @@ import deburr from "lodash/deburr";
 import Autosuggest from "react-autosuggest";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
-import TextField from "@material-ui/core/TextField";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import Popper from "@material-ui/core/Popper";
-import { withStyles } from "@material-ui/core/styles";
+import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import MenuItem from "@mui/material/MenuItem";
+import Popper from "@mui/material/Popper";
+import withStyles from "@mui/styles/withStyles";
+import axios from "axios";
 function renderInputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
   return (
@@ -98,24 +99,12 @@ class RemoteAutoSuggest extends React.Component {
     });
   };
   getData = function(value) {
-    fetch(this.props.dataUrl + ".json?search_string=" + value, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-        "X-CSRF-Token": this.props.token
-      }
-    })
+    const url = this.props.dataUrl + ".json?search_string=" + value;
+
+    axios
+      .get(url, {})
       .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
-        }
-      })
-      .then(data => {
+        const data = response.data;
         let suggestions = [];
         data.map(item => {
           suggestions.push({ label: item.name });
@@ -123,6 +112,10 @@ class RemoteAutoSuggest extends React.Component {
         this.setState({
           suggestions: suggestions
         });
+      })
+      .catch(error => {
+        console.log("error", error);
+        return [{ id: -1, name: "no data" }];
       });
   };
   render() {

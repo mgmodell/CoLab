@@ -1,2 +1,4 @@
-ruby 2.6.5
-nodejs 15.6.0
+nodejs 18.4.0
+ruby 3.1.2
+yarn 1.22.19
+bundler 2.3.16

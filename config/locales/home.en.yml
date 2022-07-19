@@ -93,6 +93,10 @@ en:
   demo: Demo
   demo_group: SuperStars
   demo_project: Research Paper
+  demo_project_description: >
+    This project involves researching the topic decided in your class
+    and working with your team to author a paper thoroughly detailing
+    all you've learned on the topic.
   demo_course_name: Advanced Collaborative Research
   #admin functions
   about: About
@@ -103,9 +107,9 @@ en:
     The %{activity_name} is now available for you on %{site_link}. Please
     %{login_link} at your earliest convenience to have a look and complete
     it.
-  course_invite_body:
-    one: "You've been invited to participate in the following course:"
-    other: "You've been invited to participate in the following %{count} courses:"
+  course_invite_body: >
+    (1){You've been invited to participate in the following course:};
+    (2-inf){You've been invited to participate in the following {{count}} courses:}
   course_invite_close: Please log in to %{site_link} accept or decline this enrollment.
   reminder_body: >
     This email is to serve as a friendly reminder that you have an open
@@ -119,6 +123,7 @@ en:
     other: There are %{count} students enrolled in the course.
   email_close: Thank you!
   support_formal: CoLab Support
+  support_menu: Contact Support
   demo_surname_1: John
   demo_fam_name_1: Smith
   demo_user_tz: Seoul
@@ -155,7 +160,9 @@ en:
   course: Course
   school: School
   schools_edit: Schools
+  consent_forms_edit: Consent Forms
   courses_edit: Courses
+  reporting: Reporting Center
   experiences_edit: Experiences
   bingo_games_edit: Terms lists
   projects_edit: Projects
@@ -176,7 +183,7 @@ en:
     title: Home
     your_tasks: Your Tasks
     invited: You've been invited!
-    greeting: Hello %{name}
+    greeting: Hello {{name}}
     greeting_unknown: Hello!
     instructor_tasks: Instructor Tasks
     student_tasks: Tasks for Class
@@ -184,16 +191,35 @@ en:
     sapa: Self- and Peer-Assessment
     terms_list: Terms list submission
     course_confirm: >
-      You've been added to %{course_list_text}, but sometimes instructors make
+      You've been added to {{course_list_text}}, but sometimes instructors make
       mistakes, so please do confirm that you are actually enrolled in
-      %{proper_course_list} listed below
-    courses: 
-      one: a course
-      other: '%{count} courses'
-    courses_proper:
-      one: the course
-      other: the %{count} courses
-    tasks:
-      zero: You do not currently have any tasks due. Check back later or contact your instructor.
-      one: You've got one task at the moment.
-      other: You've got %{count} tasks today.
+      {{proper_course_list}} listed below
+    courses_interval: (1)[a course];(2-inf)[ {{count}} courses]
+    courses_proper_interval: (1)[the course];(2-inf)[the {{count}} courses]
+    test_zero: zilch
+    test_one: one
+    test_many: many
+    task_interval: (0)[You do not currently have any tasks due. Check back later or contact your instructor.];(1)[You've got one task at the moment.];(2-inf)[You've got {{count}} tasks today.]
+    enroll_title: Enrollment confirmation
+    enroll_failed_title: Enrollment not possible
+    self_enroll_body: >
+      Would you like to join the {{course_name}} ({{course_number}})
+      course?
+    self_enroll_already_rejected_body: >
+      Please see the instructor for {{course_name}} ({{course_number}})
+      as they previously declined your enrollment request and they must
+      confirm your enrollment themselves.
+    self_enroll_already_requested_body: >
+      You have already requested enrollment in {{course_name}}
+      ({{course_number}}).  Now you must simply wait for an instructor to
+      accept the enrollment.
+    self_enroll_already_enrolled_body: >
+      You are already enrolled in {{course_name}} ({{course_number}}).
+    self_enroll_course_closed_body: >
+      The course {{course_name}} ({{course_number}}) is not currently
+      available and therefore you cannot enroll in it.
+    self_enroll_instructor_body: >
+      You are already an instructor (or assistant) in {{course_name}} ({{course_number}})
+      and you cannot enroll in your own course.
+    self_enroll: Enroll me!
+    self_enroll_cancel: Cancel and Return Home

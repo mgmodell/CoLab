@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 class Project < ApplicationRecord
   include TimezonesSupportConcern
-
   after_save :build_assessment
 
   belongs_to :course, inverse_of: :projects
+  has_many :rosters, through: :course
   belongs_to :style, inverse_of: :projects
   belongs_to :factor_pack, inverse_of: :projects, optional: true
   has_many :groups, inverse_of: :project, dependent: :destroy
@@ -20,6 +20,7 @@ class Project < ApplicationRecord
   validates :name, :end_dow, :start_dow, presence: true
   validates :end_date, :start_date, presence: true
   before_create :anonymize
+  before_validation :init_dates
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
@@ -31,6 +32,20 @@ class Project < ApplicationRecord
   validate :dates_within_course
   validate :activation_status
 
+  # Set default values
+  after_initialize do
+    if new_record?
+      self.active = false
+      # Simple/Goldfinch factor pack is the default
+      self.factor_pack_id = 1
+      # Sliders style
+      self.style_id = 2
+      self.start_dow = 5
+      self.end_dow = 1
+
+    end
+  end
+
   def group_for_user(user)
     if id == -1 # This hack supports demonstration of group term lists
       Group.new(name: 'SuperStars', users: [user])
@@ -40,11 +55,17 @@ class Project < ApplicationRecord
   end
 
   def get_performance(user)
-    installments_count = installments.where(user: user).count
+    installments_count = installments.where(user:).count
     assessments.count == 0 ? 100 : 100 * installments_count / assessments.count
   end
 
   # TODO: Not ideal structuring for UI
+  def get_link
+    # helpers = Rails.application.routes.url_helpers
+    # helpers.project_path self
+    'project'
+  end
+
   def get_activity_begin
     start_date
   end
@@ -82,13 +103,11 @@ class Project < ApplicationRecord
                      ' (work)'
                    else
                      ' (SAPA)'
-                                end
+                   end
+                 elsif day < end_dow && day > start_dow
+                   ' (work)'
                  else
-                   if day < end_dow && day > start_dow
-                     ' (work)'
-                   else
-                     ' (SAPA)'
-                                end
+                   ' (SAPA)'
                  end
     o_string + add_string
   end
@@ -121,13 +140,13 @@ class Project < ApplicationRecord
       else
 
         is_available = true unless init_day < start_dow && end_dow < init_day
-       end
+      end
     end
     is_available
   end
 
   def type
-    'Self- and Peer-Assessed Project'
+    'Project'
   end
 
   def status_for_user(_user)
@@ -180,8 +199,8 @@ class Project < ApplicationRecord
         start: start_date,
         end: end_date,
         backgroundColor: '#FF9999',
-        edit_url: edit_url,
-        destroy_url: destroy_url,
+        edit_url:,
+        destroy_url:,
 
         startTime: '00:00',
         endTime: { day: days.size },
@@ -199,25 +218,26 @@ class Project < ApplicationRecord
   # Validation check code
   def date_sanity
     unless start_date.nil? || end_date.nil?
-      if start_date > end_date
-        errors.add(:start_dow, 'The start date must come before the end date')
-      end
+      errors.add(:start_dow, 'The start date must come before the end date') if start_date > end_date
       errors
     end
   end
 
+  def init_dates
+    self.start_date ||= course.start_date
+    self.end_date ||= course.end_date
+  end
+
   def dates_within_course
-    unless start_date.nil? || end_date.nil?
-      if start_date < course.start_date
-        msg = 'The project cannot begin before the course has begun '
-        msg += "(#{start_date} < #{course.start_date})"
-        errors.add(:start_date, msg)
-      end
-      if end_date > course.end_date
-        msg = 'The project cannot continue after the course has ended '
-        msg += "(#{end_date} > #{course.end_date})"
-        errors.add(:end_date, msg)
-      end
+    if self.start_date < course.start_date
+      msg = 'The project cannot begin before the course has begun '
+      msg += "(#{start_date} < #{course.start_date})"
+      errors.add(:start_date, msg)
+    end
+    if self.end_date > course.end_date
+      msg = 'The project cannot continue after the course has ended '
+      msg += "(#{end_date} > #{course.end_date})"
+      errors.add(:end_date, msg)
     end
     errors
   end
@@ -233,7 +253,7 @@ class Project < ApplicationRecord
       get_user_appearance_counts.each do |user_id, count|
         # Check the users
         user = User.find(user_id)
-        if Roster.enrolled.where(user: user, course: course).count < 1
+        if Roster.enrolled.where(user:, course:).count < 1
           errors.add(:active, "#{user.name false} does not appear to be enrolled in this course.")
         elsif count > 1
           errors.add(:active, "#{user.name false} appears #{count} times in your project.")
@@ -246,9 +266,7 @@ class Project < ApplicationRecord
           errors.add(:active, "#{group.name false} (group) appears #{count} times in your project.")
         end
       end
-      if factor_pack.nil?
-        errors.add(:factor_pack, 'Factor Pack must be set before a project can be activated')
-      end
+      errors.add(:factor_pack, 'Factor Pack must be set before a project can be activated') if factor_pack.nil?
       # If this is an activation, we need to set up any necessary weeklies
       Assessment.configure_current_assessment self
     end
@@ -261,9 +279,14 @@ class Project < ApplicationRecord
     Assessment.configure_current_assessment self if active?
   end
 
-  private
-
   def anonymize
-    self.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}"
+    locations = [
+      Faker::Games::Pokemon,
+      Faker::Games::Touhou,
+      Faker::Games::Overwatch,
+      Faker::Movies::HowToTrainYourDragon,
+      Faker::Fantasy::Tolkien
+    ]
+    self.anon_name = "#{locations.sample.location} #{Faker::Job.field}"
   end
 end

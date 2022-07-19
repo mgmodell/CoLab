@@ -5,6 +5,7 @@ class Roster < ApplicationRecord
   belongs_to :user, inverse_of: :rosters
 
   after_update :clean_up_dropped
+  after_create :set_instructor
 
   enum role: { instructor: 1, assistant: 2, enrolled_student: 3,
                invited_student: 4, declined_student: 5,
@@ -28,25 +29,34 @@ class Roster < ApplicationRecord
 
   private
 
-  # In this method, we will remove ou
+  # In this method, we will remove ourselves from any groups that are no longer valid for us
   def clean_up_dropped
     if dropped_student?
-      course.projects.includes(groups: :users).find_each do |project|
-        project.groups.each do |group|
-          next unless group.users.includes(user)
+      ActiveRecord::Base.transaction do
+        course.projects.includes(groups: :users).find_each do |project|
+          project.groups.each do |group|
+            next unless group.users.includes(user)
 
-          project = group.project
-          activation_status = project.active
-          group.users.delete(user)
-          group.save
-          logger.debug group.errors.full_messages unless group.errors.empty?
-          project = group.project
-          project.reload
-          project.active = activation_status
-          project.save
-          logger.debug project.errors.full_messages unless project.errors.empty?
+            project = group.project
+            activation_status = project.active
+            group.users.delete(user)
+            group.save!
+            logger.debug group.errors.full_messages unless group.errors.empty?
+            project = group.project
+            project.reload
+            project.active = activation_status
+            project.save!
+            logger.debug project.errors.full_messages unless project.errors.empty?
+          end
         end
       end
     end
+    user.update_instructor
+    user.save!
+  end
+
+  def set_instructor
+    user.update_instructor
+    user.save!
   end
 end

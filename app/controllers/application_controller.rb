@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  include DeviseTokenAuth::Concerns::SetUserByToken
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
+  skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
+
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :set_locale, if: :user_signed_in?
+  around_action :switch_locale
 
   protected
 
@@ -27,10 +30,16 @@ class ApplicationController < ActionController::Base
                  impairment_visual impairment_auditory
                  impairment_motor impairment_cognitive
                  impairment_other])
+    devise_parameter_sanitizer.permit(:validate, keys:
+              %i[id_token])
   end
 
-  def set_locale
-    Time.zone = current_user.timezone if current_user.timezone
-    I18n.locale = current_user.language_code || params[:lang] || I18n.default_locale
+  def switch_locale(&action)
+    locale = if user_signed_in?
+               current_user.language_code
+             else
+               params[:lang] || I18n.default_locale
+             end
+    I18n.with_locale(locale, &action)
   end
 end

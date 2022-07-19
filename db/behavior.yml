@@ -53,4 +53,5 @@
     This entry indicates a behavior that is not listed and I will enter
     it in myself.
   description_ko: 
+  needs_detail: true
 

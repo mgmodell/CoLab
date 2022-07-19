@@ -6,7 +6,7 @@
     <%= f.input :active %>
     <%= f.input :start_date %>
     <%= f.input :end_date %>
-    <%= f.association :user, label_method: :email, selected: @current_user.id %>
+    <%= f.association :user, label_method: :email, selected: current_user.id %>
     <%= f.input :pdf, as: :file %>
     <% #This will have to be fixed later %= f.association :courses, as: :checkboxes %>
     <div data-role="tabs" id="text-tab">

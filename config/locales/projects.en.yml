@@ -9,6 +9,8 @@ en:
     destroy_success: Project was successfully destroyed.
     factor_pack: Factor Pack
     group_create_success: Group successfully created.
+    group_save_success: Group data has been successfully updated.
+    group_save_failure: Failed to update group data. Contact an Support.
     tz_warn: This project occurs in the %{time_zone} time zone and all dates reflect this.
     start_date_lbl: Project start date
     end_date_lbl: Project end date

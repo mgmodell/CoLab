@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 class Group < ApplicationRecord
   around_update :update_history
   after_initialize :store_load_state
@@ -51,7 +51,7 @@ class Group < ApplicationRecord
                           :cip_code, reactions: :narrative,
                                      home_state: [:home_country])
 
-    Group.calc_diversity_score_for_group users: users
+    Group.calc_diversity_score_for_group users:
   end
 
   def self.calc_diversity_score_for_group(users:)
@@ -96,17 +96,13 @@ class Group < ApplicationRecord
       now = Date.current
       values = [].extend(DescriptiveStatistics)
       users.each do |user|
-        unless user.date_of_birth.nil?
-          values << now.year - user.date_of_birth.year
-        end
+        values << now.year - user.date_of_birth.year unless user.date_of_birth.nil?
       end
       age_sd = values.empty? ? 0 : values.standard_deviation
 
       values.clear
       users.each do |user|
-        unless user.started_school.nil?
-          values << now.year - user.started_school.year
-        end
+        values << now.year - user.started_school.year unless user.started_school.nil?
       end
       uni_years_sd = values.empty? ? 0 : values.standard_deviation
 
@@ -154,7 +150,7 @@ class Group < ApplicationRecord
     end
     if changed? || @dirty
       project.active = false
-      project.save
+      project.save!
     end
   end
 
@@ -163,6 +159,6 @@ class Group < ApplicationRecord
   end
 
   def anonymize
-    self.anon_name = "#{rand < rand ? Forgery::Personal.language : Forgery::Name.location} #{Forgery::Name.company_name}s"
+    self.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s"
   end
 end

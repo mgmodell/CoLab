@@ -21,25 +21,26 @@ Feature: Bingo Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "New Bingo! Game"
+    Then the user creates a new "New Terms List"
     Then the user sets the "Topic" field to "Privacy"
-    Then the user sets the "Days for instructor prep" field to "2"
+    Then the user sets the "Days for instructor review" field to "2"
     Then the user sets the "Entries per student" field to "15"
     Then the user checks "Make groups available?"
     Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
     Then the user sets the bingo "start" date to "02/29/1980"
     Then the user sets the bingo "end" date to "07/10/2008"
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Create Bingo game"
+    Then the user sets the rich "Description" field to "this is the coolest"
+    Then the user clicks "Create Bingo Game"
     Then the user will see "success"
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
     Then the bingo "topic" is "Privacy"
-    Then the bingo "description" is "this is the coolest"
+    Then the bingo "description" is "<p>this is the coolest</p>"
     Then the bingo "individual_count" is "15"
     Then the bingo "group_discount" is "30"
     Then the bingo "lead_time" is "2"
@@ -54,23 +55,24 @@ Feature: Bingo Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "New Bingo! Game"
+    Then the user creates a new "New Terms List"
     Then the user sets the "Topic" field to "Privacy"
-    Then the user sets the "Days for instructor prep" field to "2"
+    Then the user sets the "Days for instructor review" field to "2"
     Then the user sets the "Entries per student" field to "15"
     Then the user checks "Make groups available?"
     Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Create Bingo game"
+    Then the user sets the rich "Description" field to "this is the coolest"
+    Then the user clicks "Create Bingo Game"
     Then the user will see "success"
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
     Then the bingo "topic" is "Privacy"
-    Then the bingo "Description" is "this is the coolest"
+    Then the bingo "Description" is "<p>this is the coolest</p>"
     #check the dates
     Then the bingo "start" date is "05/10/1976"
     Then the bingo "end" date is "11/01/2012"
@@ -82,6 +84,7 @@ Feature: Bingo Administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
     Then the user clicks "Show" on the existing bingo game

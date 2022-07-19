@@ -11,6 +11,8 @@ class Reaction < ApplicationRecord
 
   validate :thorough_completion
 
+  validates :other_name, length: { maximum: 255 }
+
   def next_week
     week = nil
 
@@ -46,11 +48,12 @@ class Reaction < ApplicationRecord
       week = narrative.weeks.order('weeks.week_num').first
     else
       previous_diagnosis = diagnoses.joins(:week).order('weeks.week_num DESC').first
-      if previous_diagnosis.nil?
-        week = narrative.weeks.where(weeks: { week_num: 1 }).first
-      else
-        week = Week.where(narrative: previous_diagnosis.reaction.narrative, week_num: previous_diagnosis.week.week_num + 1).first
-      end
+      week = if previous_diagnosis.nil?
+               narrative.weeks.where(weeks: { week_num: 1 }).first
+             else
+               Week.where(narrative: previous_diagnosis.reaction.narrative,
+                          week_num: previous_diagnosis.week.week_num + 1).first
+             end
     end
     week
   end

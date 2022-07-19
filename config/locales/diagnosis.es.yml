@@ -1,0 +1,8 @@
+es:
+  diagnosis:
+    other_name_rqrd: >
+      Indique el nombre del comportamiento que identifica en esta
+      narrativa.
+    duplicate_entry: >
+      No utilice los botones de 'atras' y 'recargar'. Regresara
+      a la semana correcta.

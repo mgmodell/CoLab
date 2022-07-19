@@ -2,8 +2,9 @@
 
 The CoLab system provides instructor support for collaborative learning
 groups. In its current state, it deploys successfully to Heroku with
-Amazon SES & S3, Scheduler and JAWS Maria DB add-ons. It should run in a
-paid dyno with SSL enabled or a configuration change would be required.
+Amazon SES & S3 (using ActiveStorage), Scheduler and JAWS Maria DB add-ons with a libVips
+buildpack. It should run in a paid dyno with SSL enabled or a configuration
+change would be required.
 
 ## What is this repository for? ##
 
@@ -20,14 +21,18 @@ command line. That's just for context - GUIs can be powerful too and I
 can help you set them up if you run into difficulty.
 
 
-### Contributing ###
+### Setting up ###
 
+* [Visual Studio Code](https://code.visualstudio.com/download) - I recommend this for development
 * [Learn Cucumber](https://cucumber.io/docs)
 * [Xcode -- if you're using Mac](https://developer.apple.com/xcode/)
 * Set up your environment:
     * Install Ubuntu on [WSL](https://wiki.ubuntu.com/WSL) - use the Windows Store if you can
     * Install [VcXsrv](https://sourceforge.net/projects/vcxsrv)
-    * Launch Ubuntu (set up a username/password)
+    * Open a terminal window
+        * On Windows launch Ubuntu (set up a username/password)
+        * On Mac, open the Terminal app
+        * On Linux, open any terminal app
     * `mkdir dev`
     * `cd dev`
     * `ssh-keygen` (press enter for all questions)
@@ -39,12 +44,23 @@ can help you set them up if you run into difficulty.
 * Add Key
 * Paste the output into the window
 * Save
-* Back in Ubuntu:
+* Back in Terminal:
     * `git clone git@bitbucket.org:_performance/colab.git`
     * `cd colab`
-    * `/bin/sh setup` [enter your password when it is requested]
+    * __NOTE:__ The following installer will change your shell to zsh. If you are already
+      a *NIX user, you probably know this is the current trend in the industry, but that
+      it is a significant difference from other shells. Also, I recommend installing
+      [Oh my zsh](http://ohmyz.sh/) as it will provide lots of nice little shortcuts and
+      enhancements. Be sure to add `rails git rake rake-fast yarn bundler` following to
+      the `plugins` line in the file .zshrc in your home directory so that
+      you have something like:
+      `plugins=(rails git rake rake-fast yarn bundler)`
+      Feel free to ask me about this if you're interested. 
+    * `./setup_env` [enter your password when it is requested]
 
-
+# Launch the server
+* `foreman start -f Procfile.dev`
+* Open a browser window on [the test server](http://localhost:3000)
 
 # Contribution instructions #
 * Review the issues
@@ -53,17 +69,18 @@ can help you set them up if you run into difficulty.
 * Start working in your own branch
     * `git branch <enter_new_branch_name>`
     * `git checkout <enter_new_branch_name>`
-* Use `rails s` to run the server
+* Create what you need
+    * Create your own user account (if auth is working)
+    * `rake testing:set_admin['true','<email>']` will create new admin accounts with password 'password'
+    * `rake testing:examples['<email>']` will create some courses and activities for the specified user
 * Open [the test server](http://localhost:3000)
 * Play with it to understand the problem
-    * Create your own user account
-    * Execute `rake testing:set_admin['true','<your email>']` to make yourself an admin
 * Start writing tests
-* Run your tests
+* Run your tests (this may not work on all systems)
     * `rake cucumber:rerun`
 * Check in your code
     * `git add <file name>`
-    * `git commit -m ``<meaningful message>```
+    * ``git commit -m `<meaningful message>` ``
     * `git push`
 
 ### Who do I talk to? ###
