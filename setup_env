@@ -27,7 +27,8 @@ if [[ "$OSTYPE" != "darwin"* ]]; then
   $INST install gcc
   $INST install g++
   $INST install make
-  $INST  install software-properties-common mariadb-server imagemagick vips libmysqlclient-dev firefox google-chrome-stable x11-apps nodejs yarn 
+  $INST  install software-properties-common mariadb-server imagemagick
+  libvips libmysqlclient-dev firefox google-chrome-stable x11-apps nodejs yarn 
 else
   $INST  install zsh mariadb imagemagick yarn openssl
 fi
