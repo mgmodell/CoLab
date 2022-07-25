@@ -1,5 +1,5 @@
 es:
-courses:
+  courses:
     dialog_title: Crear Una Copia
     btn_tooltip_title: Crear una copia basado en este curso.
     copy_btn_aria: Hacer una copia
