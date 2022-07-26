@@ -13,8 +13,8 @@ services:
       - browser
   db:
     image: colab_db
-    volumes:
-      - mariadb-data:/var/lib/mysql
+    tmpfs:
+      - /var/lib/mysql
   browser:
     image: colab_browser
     ports:
