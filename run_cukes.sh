@@ -113,6 +113,7 @@ fi
 
 # Set up run context
 RAILS_ENV=test
+COLAB_DB=db
 CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec
 #RAILS_MASTER_KEY=4e2027b76f8638d77d05a617c748d877
 
@@ -130,15 +131,15 @@ yarn install --silent
 if [ "$DB_RESET" = true ]; then
   # Reset database
   echo "Setting up database" >&2
-  rails db:create RAILS_ENV=$RAILS_ENV
-  rails testing:db_init RAILS_ENV=$RAILS_ENV
+  rails db:create RAILS_ENV=$RAILS_ENV COLAB_DB=db
+  rails testing:db_init RAILS_ENV=$RAILS_ENV COLAB_DB=db
   echo "Database initialised "
 elif [ "$SPEC_FEATURE" = true ]; then
   # Run the specialised tests
   echo "Begin the specified test executions: $FEATURE" >&2
-  rails cucumber RAILS_ENV=$RAILS_ENV DRIVER=$DRIVER FEATURE=$FEATURE
+  rails cucumber RAILS_ENV=$RAILS_ENV DRIVER=$DRIVER FEATURE=$FEATURE COLAB_DB=db
 else
   # Run the tests
   echo "Begin the remaining test executions" >&2
-  rails cucumber:rerun RAILS_ENV=$RAILS_ENV DRIVER=$DRIVER
+  rails cucumber:rerun RAILS_ENV=$RAILS_ENV DRIVER=$DRIVER COLAB_DB=db
 fi
