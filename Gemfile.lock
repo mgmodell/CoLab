@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/faker-ruby/faker.git
-  revision: a3dd70c11ad5fc6695b9354a7e0a2df40c6b06c9
+  revision: efc6a90d845a25a34ddbcc9280ed951ecd346163
   branch: master
   specs:
-    faker (2.21.0)
+    faker (2.22.0)
       i18n (>= 1.8.11, < 2)
 
 GIT
@@ -109,8 +109,8 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.611.0)
-    aws-sdk-core (3.131.4)
+    aws-partitions (1.613.0)
+    aws-sdk-core (3.131.5)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
@@ -132,7 +132,7 @@ GEM
     bcrypt (3.1.18)
     benchmark (0.2.0)
     bindex (0.8.1)
-    bootsnap (1.12.0)
+    bootsnap (1.13.0)
       msgpack (~> 1.2)
     builder (3.2.4)
     bullet (7.0.2)
@@ -227,10 +227,10 @@ GEM
     errbase (0.2.2)
     erubi (1.10.0)
     execjs (2.8.1)
-    faraday (2.3.0)
+    faraday (2.4.0)
       faraday-net_http (~> 2.0)
       ruby2_keywords (>= 0.0.4)
-    faraday-net_http (2.0.3)
+    faraday-net_http (2.1.0)
     ffi (1.15.5)
     globalid (1.0.0)
       activesupport (>= 5.0)
