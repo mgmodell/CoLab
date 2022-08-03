@@ -21,8 +21,7 @@ module.exports = function (api) {
         { 
           removeImport: true 
         }
-      ],
-      process.env.WEBPACK_SERVE && 'react-refresh/babel'
+      ]
     ].filter(Boolean),
   }
 
