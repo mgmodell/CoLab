@@ -49,6 +49,7 @@
     "linked-sliders": "^0.2.0",
     "luxon": "^3.0.1",
     "mini-css-extract-plugin": "^2.6.0",
+    "mockdate": "^3.0.5",
     "mui-datatables": "^4.2.2",
     "promise-polyfill": "^8.2.3",
     "prop-types": "^15.8.1",
@@ -91,7 +92,6 @@
     "defaults"
   ],
   "devDependencies": {
-    "mockdate": "^3.0.5",
     "webpack-dev-server": "^4.8.1"
   }
 }
