@@ -82,6 +82,7 @@ group :development, :test do
   gem 'htmlbeautifier'
   gem 'htmlentities'
   gem 'i18n_data'
+  gem 'oj'
   gem 'paperclip'
   gem 'parallel_tests'
   gem 'railroady'
@@ -89,7 +90,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.32.0', require: false
+  gem 'rubocop', '~> 1.33.0', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
