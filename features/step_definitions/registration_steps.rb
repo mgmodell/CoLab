@@ -188,6 +188,7 @@ Then(/^the user "([^"]*)" enrollment in the course$/) do |accept|
   else
     click_link_or_button 'Decline'
   end
+  wait_for_render
 end
 
 Then(/^the user sees (\d+) invitation$/) do |invitation_count|
