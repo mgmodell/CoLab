@@ -50,6 +50,7 @@ gem 'listen'
 gem 'matrix'
 gem 'net-smtp'
 gem 'omniauth'
+#This one is currently preventing oauth2 up update
 gem 'omniauth-google-oauth2'
 gem 'oj'
 gem 'prawn'
@@ -90,7 +91,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.33.0', require: false
+  gem 'rubocop', '~> 1.34.1', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'

@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/faker-ruby/faker.git
-  revision: 45f77721df31780c3bb8a01bc4b03d50380f8e55
+  revision: 5eb00cfb65b7fb823f0f99c6996b61dafd18e2d9
   branch: master
   specs:
     faker (2.22.0)
@@ -109,8 +109,8 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.614.0)
-    aws-sdk-core (3.131.6)
+    aws-partitions (1.616.0)
+    aws-sdk-core (3.132.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
@@ -243,10 +243,10 @@ GEM
     errbase (0.2.2)
     erubi (1.11.0)
     execjs (2.8.1)
-    faraday (2.4.0)
-      faraday-net_http (~> 2.0)
+    faraday (2.5.1)
+      faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
-    faraday-net_http (2.1.0)
+    faraday-net_http (3.0.0)
     ffi (1.15.5)
     get_process_mem (0.2.7)
       ffi (~> 1.0)
@@ -328,7 +328,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
-    oj (3.13.19)
+    oj (3.13.20)
     omniauth (2.1.0)
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
@@ -351,7 +351,7 @@ GEM
     parallel (1.22.1)
     parallel_tests (3.11.1)
       parallel
-    parser (3.1.2.0)
+    parser (3.1.2.1)
       ast (~> 2.4.1)
     pdf-core (0.9.0)
     prawn (2.4.0)
@@ -456,17 +456,17 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
     rspec-support (3.11.0)
-    rubocop (1.33.0)
+    rubocop (1.34.1)
       json (~> 2.3)
       parallel (~> 1.10)
-      parser (>= 3.1.0.0)
+      parser (>= 3.1.2.1)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
-      rubocop-ast (>= 1.19.1, < 2.0)
+      rubocop-ast (>= 1.20.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.19.1)
+    rubocop-ast (1.21.0)
       parser (>= 3.1.1.0)
     rubocop-performance (1.14.3)
       rubocop (>= 1.7.0, < 2.0)
@@ -489,7 +489,7 @@ GEM
       errbase (>= 0.1.1)
     sdoc (2.4.0)
       rdoc (>= 5.0)
-    selenium-webdriver (4.3.0)
+    selenium-webdriver (4.4.0)
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -618,7 +618,7 @@ DEPENDENCIES
   reek
   report_builder
   rspec
-  rubocop (~> 1.33.0)
+  rubocop (~> 1.34.1)
   rubocop-performance
   rubocop-rails
   rubocop-thread_safety
@@ -638,4 +638,4 @@ RUBY VERSION
    ruby 3.1.2p20
 
 BUNDLED WITH
-   2.3.12
+   2.3.16
