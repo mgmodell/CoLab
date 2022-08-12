@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/mgmodell/devise_token_auth
-  revision: 022775892586f15fb793f89d13e4422c451738b1
+  revision: aee6b85b962cad3b927555aea181932408553614
   specs:
     devise_token_auth (1.2.0)
       bcrypt (~> 3.0)
@@ -109,7 +109,7 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.616.0)
+    aws-partitions (1.617.0)
     aws-sdk-core (3.132.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
@@ -243,7 +243,7 @@ GEM
     errbase (0.2.2)
     erubi (1.11.0)
     execjs (2.8.1)
-    faraday (2.5.1)
+    faraday (2.5.2)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.0)
@@ -539,7 +539,7 @@ GEM
     ttfunk (1.7.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
-    tzinfo-data (1.2022.1)
+    tzinfo-data (1.2022.2)
       tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
