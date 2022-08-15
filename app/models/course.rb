@@ -333,7 +333,7 @@ class Course < ApplicationRecord
     end
 
     if (end_date_changed? || timezone_changed?) && end_date.present?
-      d = end_date.in_time_zone( course_tz )
+      d = end_date.in_time_zone(course_tz)
       new_date = course_tz.local(d.year, d.month, d.day).end_of_day
       self.end_date = new_date.end_of_day.change(sec: 0)
     end

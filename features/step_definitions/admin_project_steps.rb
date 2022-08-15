@@ -155,9 +155,10 @@ end
 Then(/^the project "([^"]*)" date is "([^"]*)"$/) do |date_field_prefix, date_value|
   course_tz = ActiveSupport::TimeZone.new(@course.timezone)
 
-  date = Chronic.parse( date_value )
+  date = Chronic.parse(date_value)
   date = course_tz.local(
-    date.year, date.month, date.day )
+    date.year, date.month, date.day
+  )
 
   case date_field_prefix.downcase
   when 'start'
