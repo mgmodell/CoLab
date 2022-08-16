@@ -109,7 +109,7 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.618.0)
+    aws-partitions (1.619.0)
     aws-sdk-core (3.132.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
@@ -213,7 +213,7 @@ GEM
       delayed_job (>= 3.0, < 5)
     derailed (0.1.0)
       derailed_benchmarks
-    derailed_benchmarks (2.1.1)
+    derailed_benchmarks (2.1.2)
       benchmark-ips (~> 2)
       dead_end
       get_process_mem (~> 0)
@@ -539,7 +539,7 @@ GEM
     ttfunk (1.7.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
-    tzinfo-data (1.2022.2)
+    tzinfo-data (1.2022.3)
       tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
