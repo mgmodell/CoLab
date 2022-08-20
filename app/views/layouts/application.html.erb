@@ -1,7 +1,7 @@
 <% theme_code = get_theme_code %>
 <!DOCTYPE html>
 <html>
-  <%= favicon_link_tag %>
+  <%= favicon_link_tag '/assets/images/favicon.ico' %>
   <head>
     <%= render 'layouts/shared/google_analytics' %>
     <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
