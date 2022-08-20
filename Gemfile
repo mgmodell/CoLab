@@ -57,7 +57,6 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react-rails'
 gem 'stopwords-filter', require: 'stopwords',
   :git => 'https://github.com/mgmodell/stopwords-filter'
 gem 'traco'
@@ -114,3 +113,5 @@ group :development do
 end
 
 
+
+gem "react_on_rails", "= 13.0"
