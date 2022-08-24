@@ -1,41 +1,99 @@
-export const START_TASK = 'START_TASK';
-export const END_TASK = 'END_TASK';
-export const SET_DIRTY = 'SET_DIRTY';
-export const SET_CLEAN = 'SET_CLEAN';
-export const ADD_MESSAGE = 'ADD_MESSAGE';
-export const ACKNOWLEDGE_MSG = 'ACKNOWLEDGE_MSG';
-export const CLEAN_UP_MSGS = 'CLEAN_UP_MSGS';
+import {createSlice} from '@reduxjs/toolkit';
 
 export const Priorities = {
   ERROR: 'error',
   INFO: 'info',
   WARNING: 'warning'
 }
+/*
+interface StatusRootState {
+  tasks: {
+    [taskName: string] : string;
+  },
+  messages: [
+    {
+      priority: Priorities,
+      text: String,
+      date: Date,
+      acknowledged: boolean
+    }
+  ],
+  dirtyStatus: {
+    [taskName: string] : boolean;
+  }
+}
+*/
 
-export function startTask(task) {
-  return { type: START_TASK, task }
+//const initialState : StatusRootState = {
+const initialState  = {
+  tasks: {},
+  messages: [],
+  dirtyStatus: { }
 }
 
-export function endTask(task) {
-  return { type: END_TASK, task }
-}
+// Slice
+const statusSlice = createSlice( {
+  name: 'status',
+  initialState,
+  reducers:{
+    startTask: {
+      reducer: (state, action ) =>{
+        state[ action.payload ] = ( state[ action.payload ] || 0)  + 1
+      }
+    },
+    endTask: {
+      reducer: (state, action) =>{
+        state[ action.payload ] = Math.max( 0, state[ action.payload ] || 0)  - 1
+      }
+    },
+    setDirty: {
+      reducer: (state, action) =>{
+        state.dirtyStatus[ action.payload ] = true;
+      }
+    },
+    setClean: {
+      reducer: (state, action) =>{
+        state.dirtyStatus[ action.payload ] = false;
+      }
+    },
+    addMessage: {
+      reducer: (state, action) =>{
+        state.messages.push( action.payload);
+      },
+      prepare: (text, msgTime, priority) =>{
+        return{
+          payload: {
+            text: text,
+            priority: priority,
+            msgTime: msgTime,
+            dismissed: false
+          }
+        }
+      }
+    },
+    acknowledgeMsg: {
+      reducer: (state, action) => {
+        state.messages.map( (message, index) =>{
+          if( index === action.payload){
+            message.dismissed = true;
+          }
+        })
+      }
+    },
+    cleanUpMsgs: {
+      reducer: (state, action) => {
+        const curTime = Date.now( );
+        state.messages.map( (message, index) =>{
+          if( message.msgTime < (curTime - 60000)){
+            message.dismissed = true;
+          }
+        })
 
-export function setDirty(task) {
-  return { type: SET_DIRTY, task }
-}
+      }
+    }
+  }
+})
 
-export function setClean(task) {
-  return { type: SET_CLEAN, task }
-}
-
-export function addMessage(text, msgTime, priority) {
-  return { type: ADD_MESSAGE, text, msgTime, priority }
-}
-
-export function acknowledgeMsg(index) {
-  return { type: ACKNOWLEDGE_MSG, index }
-}
-
-export function cleanUpMsgs( age ) {
-  return { type: CLEAN_UP_MSGS }
-}
+const {actions, reducer} = statusSlice;
+export const { startTask, endTask, setDirty, setClean, addMessage, acknowledgeMsg, cleanUpMsgs } = actions;
+export default reducer;

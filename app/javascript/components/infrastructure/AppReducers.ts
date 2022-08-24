@@ -1,12 +1,12 @@
 import { useSelector, TypedUseSelectorHook } from 'react-redux'
 
 import { combineReducers } from 'redux'
-import {status} from './StatusReducers';
+import statusReducer from './StatusActions';
 import {context} from './ContextReducers';
 import {profile} from './ProfileReducers';
 
 const appStatus = combineReducers({
-  status: status,
+  status: statusReducer,
   context: context,
   profile: profile
 })
