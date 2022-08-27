@@ -8,8 +8,8 @@ import {
   Priorities,
   setDirty,
   setClean
-} from "./infrastructure/StatusActions";
-import { refreshSchools } from "./infrastructure/ContextActions";
+} from "./infrastructure/StatusSlice";
+import { refreshSchools } from "./infrastructure/ContextSlice";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";

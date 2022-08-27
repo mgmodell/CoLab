@@ -13,7 +13,7 @@ import {
   addMessage,
   Priorities,
   acknowledgeMsg
-} from "./infrastructure/StatusActions";
+} from "./infrastructure/StatusSlice";
 
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";

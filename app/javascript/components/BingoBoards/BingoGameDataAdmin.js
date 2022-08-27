@@ -43,7 +43,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import ConceptChips from "../ConceptChips";
 import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import {startTask, endTask} from '../infrastructure/StatusActions';
+import {startTask, endTask} from '../infrastructure/StatusSlice';
 import axios from "axios";
 import { Box } from "@mui/material";
 

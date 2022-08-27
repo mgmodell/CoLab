@@ -4,7 +4,7 @@ import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
 
 import MUIDataTable from "mui-datatables";
 import axios from "axios";

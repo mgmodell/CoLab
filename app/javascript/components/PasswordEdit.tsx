@@ -7,7 +7,7 @@ import {
   Button
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { Priorities, addMessage } from "./infrastructure/StatusActions";
+import { Priorities, addMessage } from "./infrastructure/StatusSlice";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import React, { useState } from "react";

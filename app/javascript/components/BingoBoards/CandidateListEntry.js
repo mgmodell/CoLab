@@ -14,7 +14,7 @@ import { Settings } from 'luxon';
 
 import { useTranslation } from "react-i18next";
 import {useDispatch} from 'react-redux';
-import {startTask, endTask} from '../infrastructure/StatusActions';
+import {startTask, endTask} from '../infrastructure/StatusSlice';
 import { TextareaAutosize, Grid, Link } from "@mui/material";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";

@@ -2,7 +2,7 @@ import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { useSelector, useDispatch } from "react-redux";
-import { setDirty, setClean } from "./infrastructure/StatusActions";
+import { setDirty, setClean } from "./infrastructure/StatusSlice";
 
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";

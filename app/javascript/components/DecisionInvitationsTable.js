@@ -13,7 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
 import MUIDataTable from "mui-datatables";
 import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";

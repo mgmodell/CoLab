@@ -27,7 +27,7 @@ import {
   setClean,
   addMessage,
   Priorities
-} from "./infrastructure/StatusActions";
+} from "./infrastructure/StatusSlice";
 
 import ProjectGroups from "./ProjectGroups";
 import ChartContainer from "./Reports/ChartContainer";

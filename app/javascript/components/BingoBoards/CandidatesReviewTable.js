@@ -22,7 +22,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MUIDataTable from "mui-datatables";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import {startTask, endTask} from '../infrastructure/StatusActions'
+import {startTask, endTask} from '../infrastructure/StatusSlice'
 import axios from "axios";
 
 export default function CandidatesReviewTable(props) {

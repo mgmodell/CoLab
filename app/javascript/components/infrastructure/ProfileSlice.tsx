@@ -1,6 +1,6 @@
 import i18n from "./i18n";
 import axios from 'axios';
-import { addMessage, startTask, endTask, Priorities } from './StatusActions';
+import { addMessage, startTask, endTask, Priorities } from './StatusSlice';
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export interface ProfilesRootState {

@@ -16,7 +16,7 @@ import { Settings } from 'luxon';
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useTranslation } from 'react-i18next';
 import {useDispatch} from 'react-redux';
-import {startTask, endTask} from '../infrastructure/StatusActions';
+import {startTask, endTask} from '../infrastructure/StatusSlice';
 import {
   DatePicker,
   LocalizationProvider

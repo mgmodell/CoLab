@@ -7,7 +7,7 @@ import {
   addMessage,
   setDirty,
   setClean
-} from "./infrastructure/StatusActions";
+} from "./infrastructure/StatusSlice";
 
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";

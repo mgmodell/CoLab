@@ -5,9 +5,9 @@
 import axios from 'axios';
 import {Cookies} from 'react-cookie-consent';
 
-import {fetchProfile, setProfile, clearProfile} from './ProfileActions';
-import {addMessage, Priorities} from './StatusActions';
-import i18n from '../infrastructure/i18n';
+import {fetchProfile, setProfile, clearProfile} from './ProfileSlice';
+import {addMessage, Priorities} from './StatusSlice';
+import i18n from './i18n';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 

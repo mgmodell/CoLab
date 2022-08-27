@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
 //Redux store stuff
 import { useDispatch } from "react-redux";
-import { Priorities, addMessage } from "./infrastructure/StatusActions";
+import { Priorities, addMessage } from "./infrastructure/StatusSlice";
 import EmailValidator from "email-validator";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -19,7 +19,7 @@ import {
   emailSignIn,
   oAuthSignIn,
   emailSignUp
-} from "./infrastructure/ContextActions";
+} from "./infrastructure/ContextSlice";
 import { GoogleLogin } from "react-google-login";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import Skeleton from "@mui/material/Skeleton";

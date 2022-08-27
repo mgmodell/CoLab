@@ -36,7 +36,7 @@ import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { signOut } from "./infrastructure/ContextActions";
+import { signOut } from "./infrastructure/ContextSlice";
 
 export default function MainMenu(props) {
   const navigate = useNavigate();

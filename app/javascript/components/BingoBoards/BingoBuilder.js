@@ -18,7 +18,7 @@ import { i18n } from "../infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-import { startTask, endTask } from '../infrastructure/StatusActions';
+import { startTask, endTask } from '../infrastructure/StatusSlice';
 import axios from "axios";
 import {
   TabContext,

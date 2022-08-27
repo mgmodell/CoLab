@@ -4,7 +4,7 @@ import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
 import MUIDataTable from "mui-datatables";
 
 import Link from "@mui/material/Link";

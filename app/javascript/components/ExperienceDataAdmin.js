@@ -26,7 +26,7 @@ import {
   setClean,
   addMessage,
   Priorities
-} from "./infrastructure/StatusActions";
+} from "./infrastructure/StatusSlice";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useTypedSelector } from "./infrastructure/AppReducers";

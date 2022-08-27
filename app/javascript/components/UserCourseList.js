@@ -7,7 +7,7 @@ import MUIDataTable from "mui-datatables";
 
 import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
 import axios from "axios";
 
 export default function UserCourseList(props) {

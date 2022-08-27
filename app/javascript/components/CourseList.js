@@ -19,7 +19,7 @@ import MUIDataTable from "mui-datatables";
 import Collapse from "@mui/material/Collapse";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
 
 export default function CourseList(props) {
   const endpointSet = "course";

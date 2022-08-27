@@ -1,9 +1,9 @@
 import { useSelector, TypedUseSelectorHook } from 'react-redux'
 
 import { combineReducers } from 'redux'
-import statusReducer from './StatusActions';
-import contextReducer from './ContextActions';
-import profileReducer from './ProfileActions';
+import statusReducer from './StatusSlice';
+import contextReducer from './ContextSlice';
+import profileReducer from './ProfileSlice';
 
 const appStatus = combineReducers({
   status: statusReducer,

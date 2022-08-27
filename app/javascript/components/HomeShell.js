@@ -12,7 +12,7 @@ import luxonPlugin from "@fullcalendar/luxon";
 import { DateTime, Settings } from "luxon";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
 
 import DecisionEnrollmentsTable from "./DecisionEnrollmentsTable";
 import DecisionInvitationsTable from "./DecisionInvitationsTable";

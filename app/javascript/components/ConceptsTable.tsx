@@ -24,7 +24,7 @@ import { useTranslation } from "react-i18next";
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
 
 const styles = theme => ({
   table: {
