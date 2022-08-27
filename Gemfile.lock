@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/faker-ruby/faker.git
-  revision: 4ffc714029c1fe22eb0cf091295afa26cb5fa70c
+  revision: 9093f59f212fe9d72287cdee7eb03f121347c516
   branch: master
   specs:
     faker (2.22.0)
@@ -109,8 +109,8 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.621.0)
-    aws-sdk-core (3.133.0)
+    aws-partitions (1.622.0)
+    aws-sdk-core (3.136.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
@@ -270,7 +270,7 @@ GEM
       activesupport (>= 5.0.0)
     jmespath (1.6.1)
     json (2.6.2)
-    jwt (2.4.1)
+    jwt (2.5.0)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
@@ -299,7 +299,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
     minitest (5.16.3)
-    msgpack (1.5.5)
+    msgpack (1.5.6)
     multi_json (1.15.0)
     multi_test (0.1.2)
     multi_xml (0.6.0)
@@ -365,7 +365,7 @@ GEM
     psych (4.0.4)
       stringio
     public_suffix (5.0.0)
-    puma (5.6.4)
+    puma (5.6.5)
       nio4r (~> 2.0)
     racc (1.6.0)
     rack (2.2.4)

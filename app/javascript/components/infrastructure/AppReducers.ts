@@ -2,13 +2,13 @@ import { useSelector, TypedUseSelectorHook } from 'react-redux'
 
 import { combineReducers } from 'redux'
 import statusReducer from './StatusActions';
-import {context} from './ContextReducers';
-import {profile} from './ProfileReducers';
+import contextReducer from './ContextActions';
+import profileReducer from './ProfileActions';
 
 const appStatus = combineReducers({
   status: statusReducer,
-  context: context,
-  profile: profile
+  context: contextReducer,
+  profile: profileReducer
 })
 
 export default appStatus;

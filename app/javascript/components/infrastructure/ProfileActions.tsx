@@ -1,41 +1,131 @@
-//import {useTypedSelector} from './AppReducers';
 import i18n from "./i18n";
 import axios from 'axios';
-import {ProfilesRootState} from './ProfileReducers';
-
-// Action Messages
-export const SET_PROFILE = 'SET_PROFILE';
-export const SET_ANONYMIZE = 'SET_ANONYMIZE';
-export const SET_PROFILE_TIMEZONE = 'SET_PROFILE_TIMEZONE';
-export const SET_PROFILE_THEME = 'SET_PROFILE_THEME';
-export const CLEAR_PROFILE = 'CLEAR_PROFILE';
-
 import { addMessage, startTask, endTask, Priorities } from './StatusActions';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-//Base redux functions
-export function setProfile( user: ProfilesRootState ) {
-  return { type: SET_PROFILE, user }
+export interface ProfilesRootState {
+  lastRetrieved: Date;
+  user: {
+  id: number;
+  first_name: string;
+  last_name: string;
+  name: string;
+  emails: [{
+    email: string;
+    primary: boolean;
+  }];
+
+  welcomed: boolean;
+  is_instructor: boolean;
+  is_admin: boolean;
+  country: string;
+  timezone: string;
+  language_id: number;
+  theme_id: number;
+  admin: boolean;
+  researcher: boolean;
+  anonymize: boolean;
+
+  gender_id: number;
+  date_of_birth: Date;
+  home_state_id: number;
+  primary_language_id: number;
+
+  school_id: number;
+  started_school: Date;
+  cip_code_id: number;
+
+  impairment_visual: boolean;
+  impairment_auditory: boolean;
+  impairment_motor: boolean;
+  impairment_cognitive: boolean;
+  impairment_other: boolean;
+
+  }
+
 }
 
-export function setAnonymize( anonymize: boolean ) {
-  return { type: SET_ANONYMIZE, anonymize }
+const initialState = {
+  lastRetrieved: null,
+  user: {
+  id: -1,
+  first_name: '',
+  last_name: '',
+  name: '',
+  emails: [
+  ],
+
+  welcomed: false,
+  is_instructor: false,
+  is_admin: false,
+  country: null,
+  timezone: 'UTC',
+  language_id: 40,
+  theme_id: 0,
+  admin: false,
+  researcher: false,
+  anonymize: false,
+
+  gender_id: null,
+  date_of_birth: null ,
+  home_state_id: null,
+  primary_language_id: null,
+
+  school_id: null,
+  started_school: null,
+  cip_code_id: null,
+
+  impairment_visual: false,
+  impairment_auditory: false,
+  impairment_motor: false,
+  impairment_cognitive: false,
+  impairment_other: false,
+
+  }
 }
 
-export function setProfileTimezone( timezone: string ) {
-  return { type: SET_PROFILE_TIMEZONE, timezone }
-}
+const profileSlice = createSlice({
+  name: 'profile',
+  initialState: initialState,
+  reducers: {
+    setProfile: {
+      reducer: (state, action) =>{
+        state.user = action.payload;
+        state.lastRetrieved = Date.now( );
+      }
+    },
+    setAnonymize: {
+      reducer: (state, action) => {
+        state.user.anonymize = action.payload;
+      }
+    },
+    setProfileTimezone: {
+      reducer: (state, action) =>{
+         state.user.timezone = action.payload;
+      }
+    },
+    setProfileTheme: {
+      reducer: (state, action) =>{
+        state.user.theme_id = action.payload;
+      }
+    },
+    clearProfile: {
+      reducer: (state, action) => {
+        state = initialState;
+        state.lastRetrieved = null;
+      }
+    }
+  }
+})
 
-export function setProfileTheme( theme_id: number ) {
-  return { type: SET_PROFILE_THEME, theme_id }
-}
-
-export function clearProfile( ) {
-  return { type: CLEAR_PROFILE }
-}
 
 //Middleware async functions
-export function setLocalLanguage( language_id: number ){
-  return( dispatch, getState)=>{
+export const setLocalLanguage = createAsyncThunk( 
+  'profile/setLocalLanguage',
+  async (language_id: number, thunkAPI ) =>{
+    const dispatch = thunkAPI.dispatch;
+    const getState = thunkAPI.getState;
+
     const language = getState().context.lookups.languages
       .find( lang => lang.id === language_id );
     i18n.loadLanguages( language.code );
@@ -43,13 +133,18 @@ export function setLocalLanguage( language_id: number ){
     const user = Object.assign( {}, getState().profile.user );
     user.language_id = language_id;
     dispatch( setProfile( user ) );
+
   }
 
-}
+)
 
-export function fetchProfile( reset: boolean = false  ){
-  return(dispatch,getState)=>{
-    const url = getState().context.endpoints[ 'profile' ]['baseUrl'] + '.json';
+export const fetchProfile = createAsyncThunk(
+  'profile/fetchProfile',
+  async (reset: boolean = false, thunkAPI ) => {
+    const dispatch = thunkAPI.dispatch;
+    const getState = thunkAPI.getState;
+
+    const url = getState()['context']['endpoints'][ 'profile' ]['baseUrl'] + '.json';
     dispatch( startTask( 'init' ) )
 
     axios.get( url, {
@@ -62,11 +157,13 @@ export function fetchProfile( reset: boolean = false  ){
       .catch( error =>{
         console.log( 'error', error );
       })
-  }
-}
 
-export function persistProfile( ){
-  return( dispatch, getState )=>{
+  }
+)
+
+export const persistProfile = createAsyncThunk(
+  'profile/persistProfile',
+  async( thunkAPI ) => {
     dispatch( startTask( 'saving' ) );
     const url = getState().context.endpoints[ 'profile' ]['baseUrl'] + '.json';
     let user: ProfilesRootState = getState().profile.user;
@@ -112,4 +209,8 @@ export function persistProfile( ){
         console.log( 'error', error );
       })
   }
-}
+)
+
+const {actions, reducer} = profileSlice;
+export const { setProfile, setAnonymize, setProfileTheme, setProfileTimezone, clearProfile } = actions;
+export default reducer;

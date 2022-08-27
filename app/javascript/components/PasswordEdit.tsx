@@ -37,7 +37,7 @@ export default function PasswordEdit(props) {
   //It gets placed on the password field
   const submitOnEnter = evt => {
     if (endpointsLoaded && evt.key === "Enter") {
-      dispatch(emailSignIn(email, password)).then(navigate(from));
+      dispatch(emailSignIn( {email: string , password: string })).then(navigate(from));
       evt.preventDefault();
     }
   };
