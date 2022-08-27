@@ -6,8 +6,7 @@ import {
   useParams
 } from "react-router-dom";
 import { Provider } from "react-redux";
-import { createStore, applyMiddleware, compose } from "redux";
-import thunk from "redux-thunk";
+import { configureStore } from "@reduxjs/toolkit";
 import appStatus from "./infrastructure/AppReducers";
 
 import Skeleton from "@mui/material/Skeleton";
@@ -43,13 +42,10 @@ import PasswordEdit from "./PasswordEdit";
 import Demo from "./Demo";
 import { WhatsApp } from "@mui/icons-material";
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
 export default function PageWrapper(props) {
-  const store = createStore(
-    appStatus,
-    /* preloadedState, */ composeEnhancers(applyMiddleware(thunk))
-  );
+  const store = configureStore({
+    reducer: appStatus
+  })
 
   const styles = createTheme({
     typography: {
