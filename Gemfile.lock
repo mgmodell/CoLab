@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/faker-ruby/faker.git
-  revision: d113aabf335ca0bbea2223a8136c2161b7f43659
+  revision: f54db334a271b22121e54de77a3a231b5f3c4ca9
   branch: master
   specs:
-    faker (2.22.0)
+    faker (2.23.0)
       i18n (>= 1.8.11, < 2)
 
 GIT
@@ -109,8 +109,8 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.623.0)
-    aws-sdk-core (3.136.0)
+    aws-partitions (1.626.0)
+    aws-sdk-core (3.140.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
@@ -322,25 +322,26 @@ GEM
     nokogiri (1.13.8)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    oauth2 (1.4.10)
+    oauth2 (2.0.8)
       faraday (>= 0.17.3, < 3.0)
       jwt (>= 1.0, < 3.0)
-      multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
+      snaky_hash (~> 2.0)
+      version_gem (~> 1.1)
     oj (3.13.21)
     omniauth (2.1.0)
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
       rack-protection
-    omniauth-google-oauth2 (1.0.1)
+    omniauth-google-oauth2 (1.1.0)
       jwt (>= 2.0)
-      oauth2 (~> 1.1)
+      oauth2 (~> 2.0.6)
       omniauth (~> 2.0)
-      omniauth-oauth2 (~> 1.7.1)
-    omniauth-oauth2 (1.7.3)
+      omniauth-oauth2 (~> 1.8.0)
+    omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
-      omniauth (>= 1.9, < 3)
+      omniauth (~> 2.0)
     orm_adapter (0.5.0)
     paperclip (6.1.0)
       activemodel (>= 4.2.0)
@@ -349,7 +350,7 @@ GEM
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
     parallel (1.22.1)
-    parallel_tests (3.11.1)
+    parallel_tests (3.12.0)
       parallel
     parser (3.1.2.1)
       ast (~> 2.4.1)
@@ -456,7 +457,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
     rspec-support (3.11.0)
-    rubocop (1.35.1)
+    rubocop (1.36.0)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.2.1)
@@ -509,6 +510,9 @@ GEM
     simplecov_json_formatter (0.1.4)
     simpleidn (0.2.1)
       unf (~> 0.1.4)
+    snaky_hash (2.0.0)
+      hashie
+      version_gem (~> 1.1)
     solargraph (0.46.0)
       backport (~> 1.2)
       benchmark
@@ -546,6 +550,7 @@ GEM
     unf_ext (0.0.8.2)
     unicode-display_width (2.2.0)
     uniform_notifier (1.16.0)
+    version_gem (1.1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.0)
@@ -618,7 +623,7 @@ DEPENDENCIES
   reek
   report_builder
   rspec
-  rubocop (~> 1.35.0)
+  rubocop (~> 1.36.0)
   rubocop-performance
   rubocop-rails
   rubocop-thread_safety
