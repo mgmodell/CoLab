@@ -65,7 +65,7 @@ const statusSlice = createSlice( {
           payload: {
             text: text,
             priority: priority,
-            msgTime: msgTime,
+            msgTime: msgTime.toJSON( ),
             dismissed: false
           }
         }
@@ -84,7 +84,7 @@ const statusSlice = createSlice( {
       reducer: (state, action) => {
         const curTime = Date.now( );
         state.messages.map( (message, index) =>{
-          if( message.msgTime < (curTime - 60000)){
+          if( new Date( message.msgTime ) < (curTime - 60000)){
             message.dismissed = true;
           }
         })

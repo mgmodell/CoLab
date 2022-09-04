@@ -112,7 +112,6 @@ const profileSlice = createSlice({
     clearProfile: {
       reducer: (state, action) => {
         state = initialState;
-        state.lastRetrieved = null;
       }
     }
   }
@@ -163,7 +162,7 @@ export const fetchProfile = createAsyncThunk(
 
 export const persistProfile = createAsyncThunk(
   'profile/persistProfile',
-  async( thunkAPI ) => {
+  async( _, thunkAPI ) => {
     dispatch( startTask( 'saving' ) );
     const url = getState().context.endpoints[ 'profile' ]['baseUrl'] + '.json';
     let user: ProfilesRootState = getState().profile.user;

@@ -67,6 +67,12 @@ export default function MainMenu(props) {
     setMenuOpen(false);
   };
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navTo( '/' );
+    }
+  }, [isLoggedIn]);
+
   const adminItems =
     isLoggedIn && (user.is_instructor || user.is_admin) ? (
       <React.Fragment>
@@ -174,9 +180,7 @@ export default function MainMenu(props) {
       id="logout-menu-item"
       button
       onClick={() => {
-        dispatch(signOut()).then(() => {
-          navTo("/");
-        });
+        dispatch(signOut());
         setMenuOpen(false);
       }}
     >

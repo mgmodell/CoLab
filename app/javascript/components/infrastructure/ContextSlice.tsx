@@ -156,9 +156,9 @@ const CONFIG = {
                     dispatch( setProfile( resp['data']['profile']['user']) )
                     //dispatch( fetchProfile( ) );
                 } else {
-                    dispatch( setLoggedOut(
-                        resp['data']['lookups'],
-                        resp['data']['endpoints'] ) );
+                    dispatch( setLoggedOut( ) );
+                    dispatch( setLookups( resp['data']['lookups']));
+                    dispatch( setEndPoints( resp['data']['endpoints']));
                     dispatch( clearProfile );
                     CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
                 }
@@ -267,15 +267,10 @@ const contextSlice = createSlice({
             reducer: (state, action) =>{
                 state.status.loggingIn = false;
                 state.status.loggedIn = false;
-                state.lookups = action.payload.lookups;
-                state.endpoints = action.payload.endpoints;
+                state.lookups = {};
+                state.endpoints = {};
                 state.status.endpointsLoaded = true;
-            },
-            prepare: (lookups: object, endpoints: object ) =>{
-                return{
-                    lookups: lookups,
-                    endpoints: endpoints
-                }
+                state.status.initialised = false;
             }
         },
         setEndPoints: {
@@ -319,7 +314,7 @@ export const getContext = createAsyncThunk(
 //TODO: Inefficient, but should be OK for now
 export const refreshSchools = createAsyncThunk (
     'context/refreshSchools',
-    async ( thunkAPI) => {
+    async ( _, thunkAPI) => {
         const dispatch = thunkAPI.dispatch;
         const getState = thunkAPI.getState;
         CONFIG.retrieveResources( dispatch, getState );
@@ -422,14 +417,17 @@ export const oAuthSignIn = createAsyncThunk(
 
 export const signOut = createAsyncThunk(
     'context/signOut',
-    async( thunkAPI ) => {
+    async( _, thunkAPI ) => {
+        var count = 0;
         const dispatch = thunkAPI.dispatch;
         const getState = thunkAPI.getState;
 
         if( getState().context.status.loggedIn){
             return axios.delete( CONFIG.SIGN_OUT_PATH, {} )
             .then( resp=>{
+                var counter = 0;
                 dispatch( clearProfile() );
+                dispatch( setLoggedOut( ) );
                 CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
                 CONFIG.retrieveResources( dispatch, getState )
                     .then( () =>{
