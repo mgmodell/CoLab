@@ -58,7 +58,7 @@ export default function SignIn(props) {
   //It gets placed on the password field
   const submitOnEnter = evt => {
     if (endpointsLoaded && evt.key === "Enter") {
-      dispatch(emailSignIn({email: string, password: string})).then(navigate(from));
+      dispatch(emailSignIn({email, password})).then(navigate(from));
       evt.preventDefault();
     }
   };
@@ -75,7 +75,7 @@ export default function SignIn(props) {
       }
       variant="contained"
       onClick={() => {
-        dispatch(emailSignIn({email: string, password: string})).then(navigate(from));
+        dispatch(emailSignIn({email, password})).then(navigate(from));
       }}
     >
       {t("sessions.login_submit")}
