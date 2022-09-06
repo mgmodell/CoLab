@@ -59,6 +59,7 @@ while getopts "chsnb:f:d:tl" opt; do
       echo "Checking out branch $OPTARG" >&2
       git checkout $OPTARG
       git pull
+      echo "Checked out branch $OPTARG" >&2
       exit 0;
       ;;
     f)
