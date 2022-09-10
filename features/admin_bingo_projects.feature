@@ -37,6 +37,7 @@ Feature: Bingo Administration
     Then the user sets the rich "Description" field to "this is the coolest"
     Then the user clicks "Create Bingo Game"
     Then the user will see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
     Then the bingo "topic" is "Privacy"
@@ -69,6 +70,7 @@ Feature: Bingo Administration
     Then the user sets the rich "Description" field to "this is the coolest"
     Then the user clicks "Create Bingo Game"
     Then the user will see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest Bingo! game from the db
     Then the bingo "topic" is "Privacy"

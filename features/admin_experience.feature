@@ -27,6 +27,7 @@ Feature: Experience Administration
     Then the user sets the "Days for instructor prep" field to "5"
     Then the user clicks "Create Experience"
      And the user waits to see "success"
+     Then close all messages
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Jimmy Hendrix"
@@ -45,6 +46,7 @@ Feature: Experience Administration
     Then the user sets the "Name" field to "Jimmy Hendrix"
     Then the user clicks "Create Experience"
      And the user waits to see "success"
+     Then close all messages
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Jimmy Hendrix"
@@ -65,6 +67,7 @@ Feature: Experience Administration
     Then the user sets the experience "end" date to "7/10/2008"
     Then the user clicks "Create Experience"
      And the user waits to see "success"
+     Then close all messages
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Jimmy Hendrix"
@@ -84,6 +87,7 @@ Feature: Experience Administration
     Then the user sets the experience "end" date to "7/10/2008"
     Then the user clicks "Save Experience"
      And the user waits to see "success"
+     Then close all messages
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Bob Marley"
@@ -105,6 +109,7 @@ Feature: Experience Administration
     Then the user sets the "Days for instructor prep" field to "5"
     Then the user clicks "Save Experience"
      And the user waits to see "success"
+     Then close all messages
     #Let's check the values stored
     Then retrieve the latest Experience from the db
      And the experience "name" is "Bob Marley"

@@ -445,3 +445,7 @@ Then('the user {string} {int} enrollment request') do |decision, count|
     end
   end
 end
+
+Then('close all messages') do
+  ack_messages
+end

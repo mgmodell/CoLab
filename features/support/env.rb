@@ -23,6 +23,13 @@ def wait_for_render
   end
 end
 
+def ack_messages
+  all(:xpath, "//button[@id='info-close']").each do |close_btn|
+    close_btn.click
+
+  end
+end
+
 Capybara.register_driver :headless_firefox do |app|
   profile = Selenium::WebDriver::Firefox::Profile.new
   client = Selenium::WebDriver::Remote::Http::Default.new

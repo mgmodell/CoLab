@@ -88,6 +88,7 @@ end
 
 Then(/^the user should see a successful login message$/) do
   page.should have_content 'signed in successfully.'
+  ack_messages
 end
 
 Then(/^user should see (\d+) open task$/) do |open_project_count|
