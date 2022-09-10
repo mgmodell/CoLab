@@ -102,7 +102,7 @@ export default function Experience(props) {
         setWeekText(data.week_text);
 
         resetFunc();
-        dispatch(addMessage(data.messages.main, Date.now(), Priorities.INFO));
+        dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
         dispatch(endTask("saving"));
         dispatch(setClean("diagnosis"));
       })
@@ -128,7 +128,7 @@ export default function Experience(props) {
         const data = response.data;
         //Process Experience
         resetFunc();
-        dispatch(addMessage(data.messages.main, Date.now(), Priorities.INFO));
+        dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
         dispatch(endTask("saving"));
         dispatch(setClean("reaction"));
         navigate("/");
