@@ -103,7 +103,7 @@ fi
 
 # Clear previous failures
 if [ "$CLEAR_RERUN" = true ]; then
-  rm rerun.txt
+  > rerun.txt
   exit 0;
 fi
 
