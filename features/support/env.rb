@@ -61,7 +61,7 @@ end
 
 Capybara.register_driver(:remote_chrome) do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[disable-gpu] }
+    chromeOptions: { args: %w[] }
   )
 
   Capybara::Selenium::Driver.new(
@@ -72,9 +72,21 @@ Capybara.register_driver(:remote_chrome) do |app|
   )
 end
 
+Capybara.register_driver(:headless_chrome) do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w[ headless disable-extensions ] }
+  )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome
+    # desired_capabilities: capabilities
+  )
+end
+
 Capybara.register_driver(:chrome) do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[disable-gpu] }
+    chromeOptions: { args: %w[ disable-extensions ] }
   )
 
   Capybara::Selenium::Driver.new(
@@ -91,6 +103,8 @@ Capybara.javascript_driver = case ENV['DRIVER']
                                Capybara.server_port = '31337'
                                Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
                                :remote_chrome
+                             when 'chrome_h'
+                               :headless_chrome
                              when 'chrome'
                                :chrome
                              when 'ff'
