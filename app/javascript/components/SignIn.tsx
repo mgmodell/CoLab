@@ -170,7 +170,7 @@ export default function SignIn(props) {
       clientId={oauth_client_ids["google"]}
       onSuccess={get_token_from_oauth}
       onFailure={response => {
-        console.log("login fail", response);
+        console.log("Google login fail", response);
       }}
       cookiePolicy="single_host_origin"
     />

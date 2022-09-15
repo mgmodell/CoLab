@@ -102,6 +102,7 @@ Then(/^the user completes a week$/) do
   wait_for_render
   step_text = 'the database will show a new week ' + week.week_num.to_s + ' "' + behavior.name_en + '" diagnosis from the user'
   step step_text
+  ack_messages
 end
 
 Then(/^the database will show a reaction with "([^"]*)" as the behavior$/) do |behavior|

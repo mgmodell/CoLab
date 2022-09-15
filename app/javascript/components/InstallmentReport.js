@@ -49,8 +49,6 @@ export default function InstallmentReport(props) {
   const [group, setGroup] = useState({});
   const [factors, setFactors] = useState({});
 
-  const [bob, setBob] = useState();
-
   const [project, setProject] = useState({});
   const [sliderSum, setSliderSum] = useState(0);
 
@@ -119,7 +117,6 @@ export default function InstallmentReport(props) {
         const data = response.data;
         const factorsData = Object.assign({}, data.factors);
         setFactors(factorsData);
-        setBob(factorsData);
 
         setSliderSum(data.sliderSum);
 
