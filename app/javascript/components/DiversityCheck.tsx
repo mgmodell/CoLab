@@ -122,7 +122,7 @@ export default function DiversityCheck (props){
                       variant="contained"
                       onClick={handleClear}
                     >
-                      Clear
+                      {t('clear')}
                     </Button>
                   </DialogActions>
                 </DialogContent>
