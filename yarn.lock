@@ -1000,38 +1000,38 @@
     "@babel/helper-validator-identifier" "^7.18.6"
     to-fast-properties "^2.0.0"
 
-"@date-io/core@^2.15.0":
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/@date-io/core/-/core-2.15.0.tgz#8133860c8ce163b8d0cca3c1caed8d5d1fbfb14e"
-  integrity sha512-3CRvQUEK7aF87NUOwcTtmJ2Rc1kN0D4jFQUfRoanuAnE4o5HzHx4E2YenjaKjSPWeZYiWG6ZhDomx5hp1AaCJA==
+"@date-io/core@^2.15.0", "@date-io/core@^2.16.0":
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@date-io/core/-/core-2.16.0.tgz#7871bfc1d9bca9aa35ad444a239505589d0f22f6"
+  integrity sha512-DYmSzkr+jToahwWrsiRA2/pzMEtz9Bq1euJwoOuYwuwIYXnZFtHajY2E6a1VNVDc9jP8YUXK1BvnZH9mmT19Zg==
 
 "@date-io/date-fns@^2.15.0":
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/@date-io/date-fns/-/date-fns-2.15.0.tgz#2541144f4fc40365efd7d0b7affa5d77dbe59102"
-  integrity sha512-hkVeLm0jijHS2F9YVQcf0LSlD55w9xPvvIfuxDE0XWNXOTcRAAhqw2aqOxyeGbmHxc5U4HqyPZaqs9tfeTsomQ==
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@date-io/date-fns/-/date-fns-2.16.0.tgz#bd5e09b6ecb47ee55e593fc3a87e7b2caaa3da40"
+  integrity sha512-bfm5FJjucqlrnQcXDVU5RD+nlGmL3iWgkHTq3uAZWVIuBu6dDmGa3m8a6zo2VQQpu8ambq9H22UyUpn7590joA==
   dependencies:
-    "@date-io/core" "^2.15.0"
+    "@date-io/core" "^2.16.0"
 
 "@date-io/dayjs@^2.15.0":
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/@date-io/dayjs/-/dayjs-2.15.0.tgz#474a42586e67be1108a6f68b0a2e5e6088620fb6"
-  integrity sha512-wgYzwaXr9KxkHNYxrOb1t8fYLfAdjIf0Q86qdVCwANObcvyGcPBm0uFtpPK7ApeE4DJUlbuG0IX75TtO+uITwQ==
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@date-io/dayjs/-/dayjs-2.16.0.tgz#0d2c254ad8db1306fdc4b8eda197cb53c9af89dc"
+  integrity sha512-y5qKyX2j/HG3zMvIxTobYZRGnd1FUW2olZLS0vTj7bEkBQkjd2RO7/FEwDY03Z1geVGlXKnzIATEVBVaGzV4Iw==
   dependencies:
-    "@date-io/core" "^2.15.0"
+    "@date-io/core" "^2.16.0"
 
 "@date-io/luxon@^2.15.0":
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/@date-io/luxon/-/luxon-2.15.0.tgz#ad5bea9c46b46230bd780dc91413f31d1967830f"
-  integrity sha512-CxTRCo5AM96ainnYaTpe1NS9GiA78SIgXBScgeAresCS20AvMcOd5XKerDj+y/KLhbSQbU6WUDqG9QcsrImXyQ==
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@date-io/luxon/-/luxon-2.16.0.tgz#97773d56532706c1a68113a1de07eecd0d41bebb"
+  integrity sha512-L8UXHa/9VbfRqP4KB7JUZwFgOVxo22rONVod1o7GMN2Oku4PzJ0k1kXc+nLP9lRlF1UAA28oQsQqn85Y/PdBZw==
   dependencies:
-    "@date-io/core" "^2.15.0"
+    "@date-io/core" "^2.16.0"
 
 "@date-io/moment@^2.15.0":
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/@date-io/moment/-/moment-2.15.0.tgz#d6c2c88b58534d0c44644abcfefc27cb32182dd8"
-  integrity sha512-AcYBjl3EnEGsByaM5ir644CKbhgJsgc1iWFa9EXfdb4fQexxOC8oCdPAurK2ZDTwg62odyyKa/05YE7ElYh5ag==
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@date-io/moment/-/moment-2.16.0.tgz#a6658c05e14e7fcc57adeda675462e0b6750542d"
+  integrity sha512-wvu/40k128kF6P0jPbiyZcPR14VjJAgYEs+mYtsXz/AyWpC2DEJKly7ub+dpevUywbTzzpZysyCxCdzLzxD/uw==
   dependencies:
-    "@date-io/core" "^2.15.0"
+    "@date-io/core" "^2.16.0"
 
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.7"
@@ -1519,10 +1519,10 @@
     redux-thunk "^2.4.1"
     reselect "^4.1.5"
 
-"@remix-run/router@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.0.0.tgz#a2189335a5f6428aa904ccc291988567018b6e01"
-  integrity sha512-SCR1cxRSMNKjaVYptCzBApPDqGwa3FGdjVHc+rOToocNPHQdIYLZBfv/3f+KvYuXDkUGVIW9IAzmPNZDRL1I4A==
+"@remix-run/router@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.0.1.tgz#88d7ac31811ab0cef14aaaeae2a0474923b278bc"
+  integrity sha512-eBV5rvW4dRFOU1eajN7FmYxjAIVz/mRHgUE9En9mBn6m3mulK3WTR5C3iQhL9MZ14rWAq+xOlEaCkDiW0/heOg==
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
@@ -1732,9 +1732,9 @@
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^18.0.0":
-  version "18.0.20"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.20.tgz#e4c36be3a55eb5b456ecf501bd4a00fd4fd0c9ab"
-  integrity sha512-MWul1teSPxujEHVwZl4a5HxQ9vVNsjTchVA+xRqv/VYGCuKGAU6UhfrTdF5aBefwD1BHUD8i/zq+O/vyCm/FrA==
+  version "18.0.21"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.21.tgz#b8209e9626bb00a34c76f55482697edd2b43cc67"
+  integrity sha512-7QUCOxvFgnD5Jk8ZKlUAhVcRj7GuJRjnjjiY/IUBWKgOlnvDvTMLD4RTF7NPyVmbRhNrbomZiOepg7M/2Kj1mA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -2461,9 +2461,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001400:
-  version "1.0.30001406"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001406.tgz#d0146e7919635479f873b4507517b627f66ab269"
-  integrity sha512-bWTlaXUy/rq0BBtYShc/jArYfBPjEV95euvZ8JVtO43oQExEN/WquoqpufFjNu4kSpi5cy5kMbNvzztWDfv1Jg==
+  version "1.0.30001409"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001409.tgz#6135da9dcab34cd9761d9cdb12a68e6740c5e96e"
+  integrity sha512-V0mnJ5dwarmhYv8/MzhJ//aW68UpvnQBXv8lJ2QUsvn2pHcmAuNtu8hQEDz37XnA1iE+lRR9CIfGWWpgJ5QedQ==
 
 chalk@^2.0.0:
   version "2.4.2"
@@ -3090,9 +3090,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.251:
-  version "1.4.254"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.254.tgz#c6203583890abf88dfc0be046cd72d3b48f8beb6"
-  integrity sha512-Sh/7YsHqQYkA6ZHuHMy24e6TE4eX6KZVsZb9E/DvU1nQRIrH4BflO/4k+83tfdYvDl+MObvlqHPRICzEdC9c6Q==
+  version "1.4.258"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.258.tgz#44c5456f487be082f038282fbcfd7b06ae99720d"
+  integrity sha512-vutF4q0dTUXoAFI7Vbtdwen/BJVwPgj8GRg/SElOodfH7VTX+svUe62A5BG41QRQGk5HsZPB0M++KH1lAlOt0A==
 
 email-validator@^2.0.4:
   version "2.0.4"
@@ -4927,18 +4927,19 @@ react-redux@^8.0.1:
     use-sync-external-store "^1.0.0"
 
 react-router-dom@6:
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.4.0.tgz#a7d7c394c9e730b045cdd4f5d6c2d1ccb9e26947"
-  integrity sha512-4Aw1xmXKeleYYQ3x0Lcl2undHR6yMjXZjd9DKZd53SGOYqirrUThyUb0wwAX5VZAyvSuzjNJmZlJ3rR9+/vzqg==
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.4.1.tgz#99c9b7c4967890701c888517475aa5d54d25760e"
+  integrity sha512-MY7NJCrGNVJtGp8ODMOBHu20UaIkmwD2V3YsAOUQoCXFk7Ppdwf55RdcGyrSj+ycSL9Uiwrb3gTLYSnzcRoXww==
   dependencies:
-    react-router "6.4.0"
+    "@remix-run/router" "1.0.1"
+    react-router "6.4.1"
 
-react-router@6.4.0:
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.4.0.tgz#68449c23dc893fc7a57db068c19987be1de72edb"
-  integrity sha512-B+5bEXFlgR1XUdHYR6P94g299SjrfCBMmEDJNcFbpAyRH1j1748yt9NdDhW3++nw1lk3zQJ6aOO66zUx3KlTZg==
+react-router@6.4.1:
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.4.1.tgz#dd9cc4dfa264751d143a4b6c9d4faa60ab3ce26c"
+  integrity sha512-OJASKp5AykDWFewgWUim1vlLr7yfD4vO/h+bSgcP/ix8Md+LMHuAjovA74MQfsfhQJGGN1nHRhwS5qQQbbBt3A==
   dependencies:
-    "@remix-run/router" "1.0.0"
+    "@remix-run/router" "1.0.1"
 
 react-sortable-tree-patch-react-17@^2.9.0:
   version "2.9.0"
@@ -5145,9 +5146,9 @@ regjsparser@^0.9.1:
     jsesc "~0.5.0"
 
 remove-accents@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/remove-accents/-/remove-accents-0.4.2.tgz#0a43d3aaae1e80db919e07ae254b285d9e1c7bb5"
-  integrity sha512-7pXIJqJOq5tFgG1A2Zxti3Ht8jJF337m4sowbuHsW30ZnkQFnDzy9qBNhgzX8ZLW4+UBcXiiR7SwR6pokHsxiA==
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/remove-accents/-/remove-accents-0.4.3.tgz#c2c6fdcef51337746677eebc8c63c2c9a5cb9386"
+  integrity sha512-bwzzFccF6RgWWt+KrcEpCDMw9uCwz5GCdyo+r4p2hu6PhqtlEMOXEO0uPAw6XmVYAnODxHaqLanhUY1lqmsNFw==
 
 require-from-string@^2.0.2:
   version "2.0.2"
@@ -5935,9 +5936,9 @@ wrappy@1:
   integrity sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==
 
 ws@^8.4.2:
-  version "8.8.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.8.1.tgz#5dbad0feb7ade8ecc99b830c1d77c913d4955ff0"
-  integrity sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA==
+  version "8.9.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.9.0.tgz#2a994bb67144be1b53fe2d23c53c028adeb7f45e"
+  integrity sha512-Ja7nszREasGaYUYCI2k4lCKIRTt+y7XuqVoHR44YpI49TtryyqbqvDMn5eqfW7e6HzTukDRIsXqzVHScqRcafg==
 
 yallist@^4.0.0:
   version "4.0.0"
