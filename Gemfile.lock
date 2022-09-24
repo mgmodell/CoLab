@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/faker-ruby/faker.git
-  revision: 4f4c1a330963de84ea188f97de12e6895217eac3
+  revision: 91342802553bf5df9320f1a6758fd8b0dd9b20aa
   branch: master
   specs:
     faker (2.23.0)
@@ -109,8 +109,8 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.635.0)
-    aws-sdk-core (3.153.0)
+    aws-partitions (1.636.0)
+    aws-sdk-core (3.154.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
@@ -510,9 +510,9 @@ GEM
     simplecov_json_formatter (0.1.4)
     simpleidn (0.2.1)
       unf (~> 0.1.4)
-    snaky_hash (2.0.0)
+    snaky_hash (2.0.1)
       hashie
-      version_gem (~> 1.1)
+      version_gem (~> 1.1, >= 1.1.1)
     solargraph (0.46.0)
       backport (~> 1.2)
       benchmark
@@ -615,7 +615,7 @@ DEPENDENCIES
   prawn-table
   puma (~> 5.0)
   railroady
-  rails (~> 7.0.3)
+  rails (~> 7.0.4)
   rails-erd
   rails_12factor
   rb-readline
