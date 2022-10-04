@@ -29,7 +29,7 @@
     "@visx/shape": "^2.4.0",
     "@visx/xychart": "^2.9.0",
     "autosuggest-highlight": "^3.2.1",
-    "axios": "^0.27.0",
+    "axios": "^1.0.0",
     "babel-loader": "^8.2.4",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "compression-webpack-plugin": "^10.0.0",
