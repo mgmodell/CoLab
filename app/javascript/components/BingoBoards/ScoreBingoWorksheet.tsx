@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {useTypedSelector} from '../infrastructure/AppReducers'
-import axios, {post} from "axios";
+import axios from "axios";
 import { TextField } from "@mui/material";
 
 export default function ScoreBingoWorksheet(props) {
@@ -84,7 +84,7 @@ export default function ScoreBingoWorksheet(props) {
     const url = `${endpoints.worksheetScoreUrl}${worksheetIdParam}.json`;
 
 
-    post( url, formData, {
+    axios.post( url, formData, {
       headers:{ 
         'content-type': 'multipart/form-data'
       }
