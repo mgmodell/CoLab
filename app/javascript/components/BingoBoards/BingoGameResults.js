@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Draggable from "react-draggable";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
@@ -31,16 +31,11 @@ function PaperComponent(props) {
   );
 }
 
-class BingoGameResults extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      curTab: "key"
-    };
-    this.changeTab = this.changeTab.bind(this);
-  }
+export default function BingoGameResults (props){
 
-  renderBoard(board) {
+  const [curTab, setCurTab] = useState( 'key' );
+
+  const renderBoard = (board) => {
     if (board == null || board.length == 0) {
       return <p>No board available</p>;
     } else {
@@ -48,12 +43,12 @@ class BingoGameResults extends React.Component {
         <React.Fragment>
           <Typography>
             <b>Score: </b>
-            {null == this.props.score ? "unscored" : this.props.score}
+            {null == props.score ? "unscored" : props.score}
             <br />
           </Typography>
           <Table>
             <TableBody>
-              {this.props.board.map((row, r_ind) => (
+              {props.board.map((row, r_ind) => (
                 <TableRow key={r_ind}>
                   {row.map((col, c_ind) => (
                     <TableCell key={r_ind + "_" + c_ind}>{col}</TableCell>
@@ -67,46 +62,39 @@ class BingoGameResults extends React.Component {
     }
   }
 
-  changeTab(event, name) {
-    this.setState({
-      curTab: name
-    });
-  }
 
-  render() {
     return (
       <Dialog
-        open={this.props.open}
-        onClose={this.props.close}
+        open={props.open}
+        onClose={props.close}
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
       >
         <DialogTitle id="draggable-dialog-title">
-          Results for {this.props.student}
+          Results for {props.student}
         </DialogTitle>
         <DialogContent>
           <TabContext value={curTab}>
             <Box>
-              <TabList value={this.state.curTab} onChange={this.changeTab} centered>
+              <TabList value={curTab} onChange={setCurTab} centered>
                 <Tab value="results" label="Scored Results" />
                 <Tab value="key" label="Answer Key" />
               </TabList>
 
             </Box>
             <TabPanel value='key'>
-              {this.renderBoard(this.props.board)}
+              {renderBoard(props.board)}
             </TabPanel>
             <TabPanel value='results'>
-              <ScoredGameDataTable candidates={this.props.candidates} />
+              <ScoredGameDataTable candidates={props.candidates} />
             </TabPanel>
           </TabContext>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.close}>Done</Button>
+          <Button onClick={props.close}>Done</Button>
         </DialogActions>
       </Dialog>
     );
-  }
 }
 
 BingoGameResults.propTypes = {
@@ -127,4 +115,3 @@ BingoGameResults.propTypes = {
   )
 };
 
-export default BingoGameResults;
