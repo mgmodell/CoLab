@@ -28,12 +28,14 @@ import {
   addMessage,
   Priorities
 } from "./infrastructure/StatusSlice";
-
-import ProjectGroups from "./ProjectGroups";
-import ChartContainer from "./Reports/ChartContainer";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 import { Grid, Skeleton } from "@mui/material";
+
+const ProjectGroups = React.lazy( () =>
+  import( "./ProjectGroups" ));
+const ChartContainer = React.lazy( () =>
+  import( "./Reports/ChartContainer" ));
 
 export default function ProjectDataAdmin(props) {
   const category = "project";

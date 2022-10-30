@@ -3,13 +3,20 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import { Settings } from "luxon";
 
-import SchoolList from "./SchoolList";
-import CourseAdmin from "./CourseAdmin";
-import SchoolDataAdmin from "./SchoolDataAdmin";
-import ConsentFormList from "./Consent/ConsentFormList";
-import ConsentFormDataAdmin from "./Consent/ConsentFormDataAdmin";
-import ConceptsTable from "./ConceptsTable";
-import ReportingAdmin from "./Reports/ReportingAdmin";
+const SchoolList = React.lazy( () => 
+  import( "./SchoolList" ) );
+const CourseAdmin = React.lazy( () =>
+  import(  "./CourseAdmin" ) );
+const SchoolDataAdmin  = React.lazy( () => 
+  import( "./SchoolDataAdmin" ) );
+const ConsentFormList  = React.lazy( () =>
+  import( "./Consent/ConsentFormList" ) );
+const ConsentFormDataAdmin = React.lazy( () =>
+  import( "./Consent/ConsentFormDataAdmin" ) );
+const ConceptsTable = React.lazy( () =>
+  import( "./ConceptsTable" ) );
+const ReportingAdmin =React.lazy( () =>
+  import( "./Reports/ReportingAdmin"));
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
 

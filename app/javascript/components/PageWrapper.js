@@ -18,29 +18,48 @@ import {
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
 import CookieConsent from "react-cookie-consent";
-
-import HomeShell from "./HomeShell";
-import ProfileDataAdmin from "./ProfileDataAdmin";
-import InstallmentReport from "./InstallmentReport";
-import CandidateListEntry from "./BingoBoards/CandidateListEntry";
-import CandidatesReviewTable from "./BingoBoards/CandidatesReviewTable";
-import BingoBuilder from "./BingoBoards/BingoBuilder";
-import Experience from "./Experience";
-import ConsentLog from "./Consent/ConsentLog";
-import Admin from "./Admin";
+import { WhatsApp } from "@mui/icons-material";
 import AppStatusBar from "./AppStatusBar";
-import SignIn from "./SignIn";
-import EnrollInCourse from "./EnrollInCourse";
-import ScoreBingoWorksheet from "./BingoBoards/ScoreBingoWorksheet";
 import RequireAuth from "./infrastructure/RequireAuth";
 import RequireInstructor from "./infrastructure/RequireInstructor";
-import Privacy from "./info/Privacy";
-import TermsOfService from "./info/TermsOfService";
-import WhatIsIt from "./info/WhatIsIt";
-import AppInit from "./infrastructure/AppInit";
-import PasswordEdit from "./PasswordEdit";
-import Demo from "./Demo";
-import { WhatsApp } from "@mui/icons-material";
+
+
+import HomeShell from "./HomeShell";
+const ProfileDataAdmin = React.lazy(() =>
+  import ( "./ProfileDataAdmin" ));
+const InstallmentReport = React.lazy( () =>
+  import( "./InstallmentReport" ));
+const CandidateListEntry = React.lazy( () =>
+  import( "./BingoBoards/CandidateListEntry" ));
+const CandidatesReviewTable = React.lazy( () =>
+  import( "./BingoBoards/CandidatesReviewTable" ));
+const BingoBuilder = React.lazy( () =>
+  import( "./BingoBoards/BingoBuilder" ));
+const Experience = React.lazy( () =>
+  import( "./Experience" ));
+const ConsentLog = React.lazy( () =>
+  import ( "./Consent/ConsentLog" ));
+const Admin = React.lazy( () =>
+  import( "./Admin" ));
+const SignIn = React.lazy( () =>
+  import( "./SignIn" ));
+const EnrollInCourse = React.lazy( () =>
+  import( "./EnrollInCourse" ));
+const ScoreBingoWorksheet = React.lazy( () =>
+  import( "./BingoBoards/ScoreBingoWorksheet" ));
+
+const Privacy = React.lazy( () =>
+  import( "./info/Privacy" ));
+const TermsOfService = React.lazy( () =>
+  import( "./info/TermsOfService" ));
+const WhatIsIt = React.lazy( () =>
+  import( "./info/WhatIsIt" ));
+const AppInit = React.lazy( () =>
+  import( "./infrastructure/AppInit" ));
+const PasswordEdit = React.lazy( () =>
+  import( "./PasswordEdit" ));
+const Demo = React.lazy( () =>
+  import( "./Demo" ));
 
 export default function PageWrapper(props) {
   const store = configureStore({

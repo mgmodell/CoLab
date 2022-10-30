@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
+import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Tab from "@mui/material/Tab";
 import { TabList, TabContext, TabPanel } from "@mui/lab";
@@ -10,19 +11,23 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import luxonPlugin from "@fullcalendar/luxon";
 import { DateTime, Settings } from "luxon";
+import Skeleton from "@mui/material/Skeleton";
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
-
-import DecisionEnrollmentsTable from "./DecisionEnrollmentsTable";
-import DecisionInvitationsTable from "./DecisionInvitationsTable";
-import ConsentLog from "./Consent/ConsentLog";
-import ProfileDataAdmin from "./ProfileDataAdmin";
-import { useTranslation } from "react-i18next";
-import TaskList from "./TaskList";
-import Skeleton from "@mui/material/Skeleton";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { Box } from "@mui/material";
+import { useTranslation } from "react-i18next";
+
+const DecisionEnrollmentsTable = React.lazy( () =>
+  import(  "./DecisionEnrollmentsTable"));
+const DecisionInvitationsTable = React.lazy( () =>
+  import ( "./DecisionInvitationsTable"));
+const ConsentLog = React.lazy( () =>
+  import( "./Consent/ConsentLog" ));
+const ProfileDataAdmin = React.lazy( () =>
+  import ( "./ProfileDataAdmin" ));
+const TaskList = React.lazy( () =>
+  import ( "./TaskList"));
 
 export default function HomeShell(props) {
   const category = "home";

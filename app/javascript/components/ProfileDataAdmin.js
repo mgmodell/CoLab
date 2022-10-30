@@ -30,9 +30,12 @@ import { TabList, TabContext, TabPanel } from "@mui/lab/";
 import { Settings } from "luxon";
 
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import UserCourseList from "./UserCourseList";
-import ResearchParticipationList from "./ResearchParticipationList";
-import UserActivityList from "./UserActivityList";
+const UserCourseList = React.lazy( () =>
+  import( "./UserCourseList" ));
+const ResearchParticipationList = React.lazy( () =>
+  import( "./ResearchParticipationList" ));
+const UserActivityList = React.lazy( () =>
+  import( "./UserActivityList" ));
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useDispatch } from "react-redux";
