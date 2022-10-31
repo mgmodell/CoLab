@@ -5,6 +5,7 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "module": "esnext",
     "lib": ["es6", "dom"],
     "module": "es6",
     "moduleResolution": "node",
