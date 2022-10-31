@@ -17,12 +17,12 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
-import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 // import LinkedSliders from './LinkedSliders';
-import LinkedSliders from "linked-sliders";
+const LinkedSliders = React.lazy( () =>
+  import( "linked-sliders" ));
 import axios from "axios";
 export default function InstallmentReport(props) {
   const endpointSet = "installment";

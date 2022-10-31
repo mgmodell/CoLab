@@ -1,8 +1,8 @@
-import React, { useState, Suspense, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import PropTypes from "prop-types";
-import { BrowserRouter as Router, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
@@ -14,7 +14,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 // Icons
-import ListIcon from "@mui/icons-material/List";
 import HomeIcon from "@mui/icons-material/Home";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import InfoIcon from "@mui/icons-material/Info";
@@ -24,15 +23,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 import MultilineChartIcon from "@mui/icons-material/MultilineChart";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import RateReviewIcon from "@mui/icons-material/RateReview";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import SchoolIcon from "@mui/icons-material/School";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
 import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
 
-import DiversityCheck from "./DiversityCheck";
-import { i18n } from "./infrastructure/i18n";
+const DiversityCheck = React.lazy( () =>
+  import( "./DiversityCheck" ));
 import { useTranslation } from "react-i18next";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";

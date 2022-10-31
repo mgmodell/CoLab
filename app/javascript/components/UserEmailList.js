@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@mui/material/Paper";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -21,6 +20,9 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import Link from "@mui/material/Link";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
+
+const WorkingIndicator = React.lazy( () =>
+  import( "./infrastructure/WorkingIndicator" ));
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";

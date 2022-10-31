@@ -1,24 +1,19 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
-  setDirty,
   setClean,
   addMessage,
-  Priorities,
-  acknowledgeMsg
-} from "./infrastructure/StatusSlice";
+  Priorities} from "./infrastructure/StatusSlice";
 
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
 
-import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 const ExperienceInstructions = React.lazy( () =>

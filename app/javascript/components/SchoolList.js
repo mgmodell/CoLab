@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";

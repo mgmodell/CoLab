@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -6,20 +6,21 @@ import {
   useMatch
 } from "react-router-dom";
 import Skeleton from "@mui/material/Skeleton";
-import PropTypes from "prop-types";
-import AppHeader from "./AppHeader";
-import Joyride from "react-joyride";
 
-import HomeShell from "./HomeShell";
-import ProfileDataAdmin from "./ProfileDataAdmin";
-import InstallmentReport from "./InstallmentReport";
-import CandidateListEntry from "./BingoBoards/CandidateListEntry";
-import CandidatesReviewTable from "./BingoBoards/CandidatesReviewTable";
-import BingoBuilder from "./BingoBoards/BingoBuilder";
-import Experience from "./Experience";
-import ConsentLog from "./Consent/ConsentLog";
-import Admin from "./Admin";
-import AppStatusBar from "./AppStatusBar";
+const HomeShell = React.lazy( () =>
+  import( "./HomeShell" ));
+const InstallmentReport = React.lazy( () =>
+  import( "./InstallmentReport" ));
+const CandidateListEntry = React.lazy( () =>
+  import( "./BingoBoards/CandidateListEntry" ));
+const CandidatesReviewTable = React.lazy( () =>
+  import( "./BingoBoards/CandidatesReviewTable" ));
+const BingoBuilder = React.lazy( () =>
+  import( "./BingoBoards/BingoBuilder" ));
+const Experience = React.lazy( () =>
+  import( "./Experience" ));
+const ConsentLog = React.lazy( () =>
+  import( "./Consent/ConsentLog" ));
 
 export default function DemoWrapper(props) {
   let { path, url } = useMatch();

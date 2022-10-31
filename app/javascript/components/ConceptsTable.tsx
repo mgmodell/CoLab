@@ -13,12 +13,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import Toolbar from "@mui/material/Toolbar";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import { SortDirection } from "react-virtualized";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
+const WorkingIndicator = React.lazy( () =>
+  import( "./infrastructure/WorkingIndicator" ));
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";

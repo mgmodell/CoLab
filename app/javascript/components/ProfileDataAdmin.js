@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -24,6 +23,8 @@ import UserEmailList from "./UserEmailList";
 
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+const WorkingIndicator = React.lazy( () =>
+  import( "./infrastructure/WorkingIndicator" ));
 
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TabList, TabContext, TabPanel } from "@mui/lab/";

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import { Settings } from "luxon";
+const WorkingIndicator = React.lazy( () =>
+  import( "./infrastructure/WorkingIndicator" ));
 
 const SchoolList = React.lazy( () => 
   import( "./SchoolList" ) );

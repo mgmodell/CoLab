@@ -8,7 +8,7 @@ import { startTask, endTask } from "./infrastructure/StatusSlice";
 import MUIDataTable from "mui-datatables";
 
 import Link from "@mui/material/Link";
-import { Container } from "@mui/material";
+import Container from "@mui/material/Container";
 import axios from "axios";
 
 export default function ReactionsList(props) {

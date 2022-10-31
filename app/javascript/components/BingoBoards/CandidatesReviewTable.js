@@ -20,10 +20,12 @@ import { useTranslation } from "react-i18next";
 const RemoteAutosuggest = React.lazy( () =>
   import( "../RemoteAutosuggest" ));
 import MUIDataTable from "mui-datatables";
-import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import {startTask, endTask} from '../infrastructure/StatusSlice'
 import axios from "axios";
+
+const WorkingIndicator = React.lazy( () =>
+  import( "../infrastructure/WorkingIndicator" ));
 
 export default function CandidatesReviewTable(props) {
   const { t } = useTranslation("bingo_games");
@@ -394,7 +396,7 @@ export default function CandidatesReviewTable(props) {
                 <Grid item>
                   <CircularProgress
                     size={10}
-                    variant={progress > 0 ? "static" : "indeterminate"}
+                    variant={progress > 0 ? "determinate" : "indeterminate"}
                     value={progress}
                   />
                   &nbsp;

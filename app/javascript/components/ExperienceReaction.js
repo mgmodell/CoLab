@@ -1,13 +1,8 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  startTask,
-  endTask,
-  addMessage,
-  setDirty,
-  setClean
-} from "./infrastructure/StatusSlice";
+  setDirty} from "./infrastructure/StatusSlice";
 
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -15,8 +10,7 @@ import Skeleton from "@mui/material/Skeleton";
 import TextField from "@mui/material/TextField";
 
 import { useTranslation } from "react-i18next";
-import { i18n } from "./infrastructure/i18n";
-import { useTypedLookup, useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 import Radio from "@mui/material/Radio";
 import Grid from "@mui/material/Grid";

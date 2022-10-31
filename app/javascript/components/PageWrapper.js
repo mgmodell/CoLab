@@ -1,10 +1,8 @@
-import React, { useEffect, useState, Suspense } from "react";
+import React, { Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
-  Route,
-  useParams
-} from "react-router-dom";
+  Route} from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import appStatus from "./infrastructure/AppReducers";
@@ -18,13 +16,13 @@ import {
 import PropTypes from "prop-types";
 import AppHeader from "./AppHeader";
 import CookieConsent from "react-cookie-consent";
-import { WhatsApp } from "@mui/icons-material";
 import AppStatusBar from "./AppStatusBar";
 import RequireAuth from "./infrastructure/RequireAuth";
 import RequireInstructor from "./infrastructure/RequireInstructor";
 
 
-import HomeShell from "./HomeShell";
+const HomeShell = React.lazy( () =>
+  import( "./HomeShell" ));
 const ProfileDataAdmin = React.lazy(() =>
   import ( "./ProfileDataAdmin" ));
 const InstallmentReport = React.lazy( () =>

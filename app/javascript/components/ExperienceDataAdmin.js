@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
-import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import { TabList, TabContext, TabPanel } from "@mui/lab";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";

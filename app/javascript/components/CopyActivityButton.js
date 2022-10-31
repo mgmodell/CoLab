@@ -3,7 +3,6 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import IconButton from "@mui/material/IconButton";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import { DateTime } from "luxon";
@@ -22,6 +21,8 @@ import Button from "@mui/material/Button";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
+const WorkingIndicator = React.lazy( () =>
+  import( "./infrastructure/WorkingIndicator" ));
 
 export default function CopyActivityButton(props) {
   const category = "course";

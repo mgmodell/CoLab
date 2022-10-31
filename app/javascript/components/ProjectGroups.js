@@ -16,11 +16,10 @@ import TextField from "@mui/material/TextField";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
-import CompareIcon from "@mui/icons-material/Compare";
-import SortIcon from "@mui/icons-material/Sort";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
-import DiversityScore from "../components/DiversityScore";
+const DiversityScore = React.lazy( ()=>
+  import( "../components/DiversityScore" ));
 
 import { SortDirection } from "react-virtualized";
 import axios from "axios";

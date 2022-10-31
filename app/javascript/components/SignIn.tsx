@@ -11,21 +11,23 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Paper from "@mui/material/Paper";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
+import Grid from "@mui/material/Grid";
+import Skeleton from "@mui/material/Skeleton";
+import Tab from "@mui/material/Tab";
 
 import { useTranslation } from "react-i18next";
-import Grid from "@mui/material/Grid";
 //import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
 import {
   emailSignIn,
   oAuthSignIn,
   emailSignUp
 } from "./infrastructure/ContextSlice";
-import { GoogleLogin } from "react-google-login";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import Skeleton from "@mui/material/Skeleton";
 import { TabContext, TabPanel, TabList } from "@mui/lab";
-import { Tab } from "@mui/material";
 import axios from "axios";
+
+const GoogleLogin = React.lazy( ()=>
+  import( './infrastructure/reactGoogleLogin'));
 
 export default function SignIn(props) {
   const category = "devise";

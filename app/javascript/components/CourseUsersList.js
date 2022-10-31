@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@mui/material/Paper";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -11,7 +10,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-import MUIDataTable from "mui-datatables";
+const MUIDataTable = React.lazy( () =>
+  import( "mui-datatables" ));
+const WorkingIndicator = React.lazy( () =>
+  import( "./infrastructure/WorkingIndicator" ));
 
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
@@ -28,11 +30,15 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import Link from "@mui/material/Link";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-import DropUserButton from "./DropUserButton";
-import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
+
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+
+const DropUserButton = React.lazy( () =>
+  import( "./DropUserButton" ));
+const BingoDataRepresentation = React.lazy( () =>
+  import( "./BingoBoards/BingoDataRepresentation" ));
 
 export default function CourseUsersList(props) {
   const category = "courses";
