@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import Draggable from "react-draggable";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
@@ -20,8 +20,8 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 
-import ScoredGameDataTable from "../ScoredGameDataTable";
-import { Box } from "@mui/material";
+const ScoredGameDataTable = React.lazy( () =>
+  import( "../ScoredGameDataTable" ));
 
 function PaperComponent(props) {
   return (

@@ -1,8 +1,8 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {useDispatch} from 'react-redux';
-import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
+import Box from '@mui/material/Box';
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -31,21 +31,23 @@ import { DateTime } from "luxon";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
-import { Editor } from "react-draft-wysiwyg";
+const Editor = React.lazy( () =>
+  import('./reactDraftWysiwygEditor' ) );
+
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
-import { i18n } from "../infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 import makeStyles from '@mui/styles/makeStyles';
 
 import ConceptChips from "../ConceptChips";
-import BingoGameDataAdminTable from "./BingoGameDataAdminTable";
+const BingoGameDataAdminTable = React.lazy( () =>
+  import( "./BingoGameDataAdminTable" ));
+
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import {startTask, endTask} from '../infrastructure/StatusSlice';
 import axios from "axios";
-import { Box } from "@mui/material";
 
 const useStyles = makeStyles({
   container: {

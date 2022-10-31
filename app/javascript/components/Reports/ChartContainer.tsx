@@ -3,18 +3,18 @@ import PropTypes from "prop-types";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import {
-  FormControl,
-  FormControlLabel,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  Skeleton,
-  Switch,
-  Typography } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Grid from "@mui/material/Grid";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from '@mui/material/Select';
+import Skeleton from "@mui/material/Skeleton";
+import Switch from "@mui/material/Switch";
+
 import SubjectChart, {unit_codes, code_units} from "./SubjectChart";
-import ConfirmDialog from "./ConfirmDialog";
+const ConfirmDialog = React.lazy( ()=>
+  import( "./ConfirmDialog" ));
 
 export default function ChartContainer(props) {
 

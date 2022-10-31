@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -10,6 +11,7 @@ import Grid from "@mui/material/Grid";
 import Collapse from "@mui/material/Collapse";
 import Alert from '@mui/material/Alert';
 import CloseIcon from "@mui/icons-material/Close";
+import Tab from "@mui/material/Tab";
 
 import { Settings } from 'luxon';
 
@@ -26,14 +28,14 @@ import {
   TabList,
   TabPanel
   } from "@mui/lab/";
-import Tab from "@mui/material/Tab";
 
 import { EditorState, ContentState } from "draft-js";
-import { Editor } from "react-draft-wysiwyg";
+const Editor = React.lazy( () =>
+  import( '../BingoBoards/reactDraftWysiwygEditor'));
+
 import htmlToDraft from "html-to-draftjs";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { Box } from "@mui/material";
 
 export default function ConsentFormDataAdmin(props) {
   const category = "consent_form";
