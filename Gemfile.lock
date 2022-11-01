@@ -138,10 +138,6 @@ GEM
       aws-sigv4 (~> 1.4)
     aws-sigv4 (1.5.2)
       aws-eventstream (~> 1, >= 1.0.2)
-    babel-source (5.8.35)
-    babel-transpiler (0.7.0)
-      babel-source (>= 4.0, < 6)
-      execjs (~> 2.0)
     backport (1.2.0)
     bcrypt (3.1.18)
     benchmark (0.2.0)
@@ -413,12 +409,13 @@ GEM
     rb-readline (0.5.5)
     rdoc (6.4.0)
       psych (>= 4.0.0)
-    react-rails (2.6.2)
-      babel-transpiler (>= 0.7.0)
+    react_on_rails (12.0.0)
+      addressable
       connection_pool
-      execjs
-      railties (>= 3.2)
-      tilt
+      execjs (~> 2.5)
+      rails (>= 3.2)
+      rainbow (~> 3.0)
+      webpacker (>= 4.0)
     reek (6.1.1)
       kwalify (~> 0.7.0)
       parser (~> 3.1.0)
@@ -553,6 +550,11 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
       selenium-webdriver (~> 4.0)
+    webpacker (5.4.3)
+      activesupport (>= 5.2)
+      rack-proxy (>= 0.6.1)
+      railties (>= 5.2)
+      semantic_range (>= 2.3.0)
     webrick (1.7.0)
     websocket (1.2.9)
     websocket-driver (0.7.5)
@@ -611,7 +613,7 @@ DEPENDENCIES
   rails-erd
   rails_12factor
   rb-readline
-  react-rails
+  react_on_rails (= 12.0.0)
   reek
   report_builder
   rspec
