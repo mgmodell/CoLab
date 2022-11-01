@@ -34,6 +34,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
      And the user waits to see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -64,6 +65,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
      And the user waits to see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -95,6 +97,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Save Project"
      And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -126,6 +129,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
      And the user waits to see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -146,6 +150,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Save Project"
      And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -179,6 +184,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
      And the user waits to see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -201,6 +207,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Save Project"
      And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then retrieve the latest project from the db
@@ -234,6 +241,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Create Project"
      And the user waits to see "success"
+    Then close all messages
     #Let's check the values stored
     Then retrieve the latest project from the db
     Then the project "Name" is "Cool-yo!"
@@ -254,6 +262,7 @@ Feature: Project Administration
     Then the user sets the "Description" field to "this is the coolest"
     Then the user clicks "Save Project"
      And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     #Let's check the values stored
     Then the project "Name" is "Cool beans"
@@ -284,6 +293,7 @@ Feature: Project Administration
     Then the user sets the "g_-1" field to "my group"
     Then the user clicks "Save"
      And the user waits to see "success"
+    Then close all messages
     Then the user clicks "Add Group"
     # Because the above was saved, this one is -1 again
     Then the user sets the "g_-1" field to "your group"
@@ -299,6 +309,7 @@ Feature: Project Administration
     Then set user 1 to group "my group"
     Then the user clicks "Save"
      And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     Then the project "start" date is "yesterday"
     Then the project "end" date is "tomorrow"
@@ -313,6 +324,7 @@ Feature: Project Administration
     Then set user 4 to group "your group"
     Then the user clicks "Save"
      And the user waits to see "success"
+    Then close all messages
     Then retrieve the latest project from the db
     Then group "my group" has 2 user
     Then group "your group" has 2 user

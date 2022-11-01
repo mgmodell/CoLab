@@ -67,6 +67,7 @@ Feature: Course Administration
      And the timezone "isn't" "Mexico City"
     Then the user clicks "Create Course"
      And the user will see "successfully"
+     Then close all messages
     Then retrieve the latest course from the db
      And the course "Name" field is "Off"
      And the course "Number" field is "099"
@@ -92,6 +93,7 @@ Feature: Course Administration
      And the timezone "isn't" "Mexico City"
     Then the user clicks "Create Course"
      And the user will see "Please review the problems below"
+     Then close all messages
      #no start date
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to "099"
@@ -99,6 +101,7 @@ Feature: Course Administration
      And the user sets the start date to "" and the end date to "next month"
     Then the user clicks "Create Course"
      And the user will see "Please review the problems below"
+     Then close all messages
      #no end date
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to "099"
@@ -108,6 +111,7 @@ Feature: Course Administration
      And the timezone "isn't" "Mexico City"
     Then the user clicks "Create Course"
      And the user will see "Please review the problems below"
+     Then close all messages
      #no number or description
      And the user sets the "Name" field to "Off"
      And the user sets the "Number" field to ""
@@ -118,6 +122,7 @@ Feature: Course Administration
     Then the user clicks "Create Course"
      #We should have success now
      And the user will see "successfully"
+     Then close all messages
     Then retrieve the latest course from the db
      And the course "Name" field is "Off"
      And the course "Number" field is ""
@@ -153,6 +158,7 @@ Feature: Course Administration
      And the user sets the course timezone to "Nairobi"
     Then the user clicks "Save Course"
      And the user will see "successfully"
+     Then close all messages
     Then retrieve the latest course from the db
      And the course "Name" field is "Off"
      And the course "Number" field is "099"
@@ -278,15 +284,15 @@ Feature: Course Administration
     Then the user adds the 'instructor' users 'me@mailinator.com<'
     Then there are 1 instructors in the course
      And the user will see "Was there a typo?"
+    Then close all messages
     Then the user adds the 'instructor' users 'me@mailinator.com>'
     Then there are 1 instructors in the course
      And the user will see "Was there a typo?"
-    # Then the user adds the 'instructor' users 'me@12221.341.24412.2412211'
-    # Then there are 1 instructors in the course
-    #  And the user will see "Was there a typo?"
+    Then close all messages
     Then the user adds the 'instructor' users 'me@mailinator'
     Then there are 1 instructors in the course
      And the user will see "Was there a typo?"
+    Then close all messages
     Then the user adds the 'instructor' users 'lme@mailinator.com eweq.wer'
     Then there are 2 instructors in the course
      And the user will see "One instructor has been invited"
@@ -355,6 +361,7 @@ Feature: Course Administration
      And the user executes the copy
     #Let's check what we've got
      And the user will see "successfully"
+     Then close all messages
     Then the user sees 2 course
     Then retrieve the latest course from the db
      And the course "Name" field is "Copy of to dup"
@@ -412,6 +419,7 @@ Feature: Course Administration
      And the user executes the copy
     #Let's check what we've got
      And the user will see "successfully"
+     Then close all messages
     Then the user sees 2 course
     Then retrieve the latest course from the db
      And the course "Name" field is "Copy of to dup"

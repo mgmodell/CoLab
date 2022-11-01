@@ -3,11 +3,16 @@ import { Route, Routes } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Settings } from "luxon";
 
-import CourseList from "./CourseList";
-import CourseDataAdmin from "./CourseDataAdmin";
-import BingoGameDataAdmin from "./BingoBoards/BingoGameDataAdmin";
-import ExperienceDataAdmin from "./ExperienceDataAdmin";
-import ProjectDataAdmin from "./ProjectDataAdmin";
+const CourseList = React.lazy( () =>
+  import( "./CourseList" ));
+const CourseDataAdmin = React.lazy( () =>
+  import( "./CourseDataAdmin" ));
+const BingoGameDataAdmin = React.lazy( () =>
+  import( "./BingoBoards/BingoGameDataAdmin" ));
+const ExperienceDataAdmin = React.lazy( () =>
+  import( "./ExperienceDataAdmin" ));
+const ProjectDataAdmin = React.lazy( () =>
+  import( "./ProjectDataAdmin" ));
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function CourseAdmin(props) {

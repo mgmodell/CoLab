@@ -88,6 +88,7 @@ end
 
 Then(/^the user should see a successful login message$/) do
   page.should have_content 'signed in successfully.'
+  ack_messages
 end
 
 Then(/^user should see (\d+) open task$/) do |open_project_count|
@@ -118,6 +119,7 @@ When(/^the user logs in$/) do
   fill_in 'password', with: 'password'
 
   click_link_or_button 'Log in!'
+
   wait_for_render
   page.should have_content 'signed in successfully'
 
@@ -129,4 +131,5 @@ When(/^the user logs in$/) do
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end
+  ack_messages
 end

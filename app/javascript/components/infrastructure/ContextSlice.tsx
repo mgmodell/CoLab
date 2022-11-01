@@ -5,18 +5,11 @@
 import axios from 'axios';
 import {Cookies} from 'react-cookie-consent';
 
-import {fetchProfile, setProfile, clearProfile} from './ProfileActions';
-import {addMessage, Priorities} from './StatusActions';
-import i18n from '../infrastructure/i18n';
+import {fetchProfile, setProfile, clearProfile} from './ProfileSlice';
+import {addMessage, Priorities} from './StatusSlice';
+import i18n from './i18n';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-export const SET_INITIALISED = 'SET_INITIALISED';
-export const SET_LOGGING_IN = 'SET_LOGGING_IN';
-export const SET_LOGGED_IN = 'SET_LOGGED_IN';
-export const SET_LOGGED_OUT = 'SET_LOGGED_OUT';
-export const LOGIN_FAILED = 'SET_LOGIN_FAILED';
-export const SET_ENDPOINT_URL = 'SET_ENDPOINT_URL';
-export const SET_ENDPOINTS = 'SET_ENDPOINTS';
-export const SET_LOOKUPS = 'SET_LOOKUPS';
 
 const category = 'devise';
 const t = i18n.getFixedT( null, category );
@@ -163,9 +156,9 @@ const CONFIG = {
                     dispatch( setProfile( resp['data']['profile']['user']) )
                     //dispatch( fetchProfile( ) );
                 } else {
-                    dispatch( setLoggedOut(
-                        resp['data']['lookups'],
-                        resp['data']['endpoints'] ) );
+                    dispatch( setLoggedOut( ) );
+                    dispatch( setLookups( resp['data']['lookups']));
+                    dispatch( setEndPoints( resp['data']['endpoints']));
                     dispatch( clearProfile );
                     CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
                 }
@@ -177,41 +170,133 @@ const CONFIG = {
 
 }
 
-
-export function setInitialised( ){
-    return{ type: SET_INITIALISED };
-}
-export function setLoggingIn( ){
-    return{ type: SET_LOGGING_IN };
-}
-export function setLoggedIn( lookups: object, endpoints: object ){
-    return{ type: SET_LOGGED_IN, lookups, endpoints };
-}
-
-export function setLoggedOut( lookups: object, endpoints: object ){
-    return{ type: SET_LOGGED_OUT, lookups, endpoints };
-}
-
-export function setLoginFailed( ){
-    return{ type: LOGIN_FAILED };
-}
-
-export function setEndPointUrl( url : string ){
-    return { type: SET_ENDPOINT_URL, url };
-}
-
-export function setEndPoints( endpoints : object ){
-    return { type: SET_ENDPOINTS, endpoints };
+export interface ContextRootState {
+    status: {
+        initialised: boolean;
+        loggingIn: boolean;
+        loggedIn: boolean;
+        endpointsLoaded: boolean;
+        lookupsLoaded: boolean;
+    };
+    config: {
+        localStorage?: boolean;
+        endpoint_url?: string;
+    };
+    lookups: { 
+        [key: string]: {
+            [key: string]: Object;
+        };
+    };
+    endpoints: { 
+        [key: string]: {
+            [key: string]: string;
+        };
+    };
 }
 
-export function setLookups( lookups: object ){
-    return { type: SET_LOOKUPS, lookups };
+const initialState : ContextRootState = {
+    status: {
+        initialised: false,
+        loggingIn: false,
+        loggedIn: false,
+        endpointsLoaded: false,
+        lookupsLoaded: false,
+    },
+    config: {
+        localStorage: null,
+        endpoint_url: null,
+    },
+    lookups: {
+        behaviors: { },
+        countries: { },
+        languages: { },
+        cip_codes: { },
+        genders: { },
+        themes: { },
+        timezones: { },
+        schools: { },
+     },
+    endpoints: { },
 }
 
-export function getContext( endPointsUrl: string ){
-    return( dispatch, getState ) =>{
+const contextSlice = createSlice({
+    name: 'context',
+    initialState: initialState,
+    reducers: {
+        setInitialised: {
+            reducer: (state, action) => {
+                state.status.initialised = true;
+            }
+        },
+        setEndPointUrl: {
+            reducer: (state, action ) =>{
+                state.config.endpoint_url = action.payload;
+            }
+        },
+        setLoggingIn: {
+            reducer: (state, action ) => {
+                state.status.loggingIn = true;
+                state.status.loggedIn = false;
+            }
+        },
+        setLoggedIn: {
+            reducer: (state, action ) =>{
+
+                state.status.loggingIn = false;
+                state.status.loggedIn = true;
+                state.lookups = action.payload.lookups;
+                state.endpoints = action.payload.endpoints;
+                state.status.endpointsLoaded = true;
+                state.status.lookupsLoaded = true;
+            },
+            prepare: (lookups: object, endpoints: object ) =>{
+                return{
+                    payload:{
+                        lookups: lookups,
+                        endpoints: endpoints
+                    }
+                }
+            }
+        },
+        setLoginFailed: {
+            reducer: (state, action ) => {
+                state.status.loggingIn = false;
+            }
+        },
+        setLoggedOut: {
+            reducer: (state, action) =>{
+                state.status.loggingIn = false;
+                state.status.loggedIn = false;
+                state.lookups = {};
+                state.endpoints = {};
+                state.status.endpointsLoaded = true;
+                state.status.initialised = false;
+            }
+        },
+        setEndPoints: {
+            reducer: (state, action) => {
+                state.endpoints = action.payload;
+                state.status.endpointsLoaded = true;
+            }
+        },
+        setLookups: {
+            reducer: (state, action) => {
+                state.lookups = action.payload;
+                state.status.lookupsLoaded = true;
+            }
+        }
+    }
+})
+
+export const getContext = createAsyncThunk(
+    'context/getContext',
+    async ( endPointsUrl: string, thunkAPI ) => {
+        const dispatch = thunkAPI.dispatch;
+        const getState = thunkAPI.getState;
+
         dispatch( setEndPointUrl( endPointsUrl ) );
-        dispatch( setLoggingIn( ) );
+
+        dispatch( setLoggingIn( {} ) );
         axios.interceptors.request.use( CONFIG.appendAuthHeaders );
         axios.interceptors.response.use( CONFIG.storeRetrievedCredentials );
 
@@ -220,30 +305,36 @@ export function getContext( endPointsUrl: string ){
         //Pull the resources
         CONFIG.retrieveResources( dispatch, getState )
             .then( () =>{
-                dispatch( setInitialised( ) );
+                dispatch( setInitialised( {} ) );
             });
     }
+)
 
-}
 
 //TODO: Inefficient, but should be OK for now
-export function refreshSchools( ){
-    return( dispatch, getState ) =>{
+export const refreshSchools = createAsyncThunk (
+    'context/refreshSchools',
+    async ( _, thunkAPI) => {
+        const dispatch = thunkAPI.dispatch;
+        const getState = thunkAPI.getState;
         CONFIG.retrieveResources( dispatch, getState );
     }
-}
+)
 
-export function emailSignIn( email: string, password: string ){
+export const emailSignIn = createAsyncThunk(
+    'context/emailSignIn',
+    async ( params, thunkAPI  ) => {
+        const dispatch = thunkAPI.dispatch;
+        const getState = thunkAPI.getState;
 
-    return( dispatch, getState ) =>{
         dispatch( setLoggingIn);
 
-        if( !email || !password ){
+        if( !params.email || !params.password ){
             dispatch( setLoginFailed( ) );
         } else {
             return axios.post( CONFIG.EMAIL_SIGNIN_PATH,
-                { email: email,
-                  password: password } )
+                { email: params.email,
+                  password: params.password } )
                 .then( resp=>{
                     //TODO resp contains the full user info
 
@@ -260,24 +351,26 @@ export function emailSignIn( email: string, password: string ){
 
         }
     }
-
-}
+)
 
 //Untested
-export function emailSignUp( email: string, firstName, lastName ){
+export const emailSignUp = createAsyncThunk(
+    'context/emailSignUp',
+    async ( params, thunkAPI  ) => {
+        const dispatch = thunkAPI.dispatch;
+        const getState = thunkAPI.getState;
 
-    return( dispatch, getState ) =>{
         dispatch( setLoggingIn);
 
-        if( !email ){
+        if( !params.email ){
             dispatch( setLoginFailed( ) );
 
         } else {
             return axios.post( CONFIG.EMAIL_REGISTRATION_PATH + '.json',
                 {
-                    email: email,
-                    first_name: firstName,
-                    last_name: lastName
+                    email: params.email,
+                    first_name: params.firstName,
+                    last_name: params.lastName
                  } )
                 .then( resp=>{
                     const data = resp.data;
@@ -290,11 +383,13 @@ export function emailSignUp( email: string, firstName, lastName ){
 
         }
     }
+)
 
-}
-
-export function oAuthSignIn( token: string ){
-    return( dispatch, getState ) =>{
+export const oAuthSignIn = createAsyncThunk(
+    'context/oAuthSignIn',
+    async ( token: string, thunkAPI) => {
+        const dispatch = thunkAPI.dispatch;
+        const getState = thunkAPI.getState;
         dispatch( setLoggingIn );
 
         const url = getState().context.endpoints['home'].oauthValidate + '.json';
@@ -317,15 +412,22 @@ export function oAuthSignIn( token: string ){
 
     }
     
-}
+)
 
 
-export function signOut( ){
-    return( dispatch, getState ) =>{
+export const signOut = createAsyncThunk(
+    'context/signOut',
+    async( _, thunkAPI ) => {
+        var count = 0;
+        const dispatch = thunkAPI.dispatch;
+        const getState = thunkAPI.getState;
+
         if( getState().context.status.loggedIn){
             return axios.delete( CONFIG.SIGN_OUT_PATH, {} )
             .then( resp=>{
+                var counter = 0;
                 dispatch( clearProfile() );
+                dispatch( setLoggedOut( ) );
                 CONFIG.deleteData( CONFIG.SAVED_CREDS_KEY );
                 CONFIG.retrieveResources( dispatch, getState )
                     .then( () =>{
@@ -336,4 +438,9 @@ export function signOut( ){
         }
 
     }
-}
+)
+
+const {actions, reducer} = contextSlice;
+export const { setEndPoints, setAnonymize, setEndPointUrl, setLoggedIn, setLoggedOut,
+    setLoggingIn, setLookups, setInitialised, setLoginFailed } = actions;
+export default reducer;

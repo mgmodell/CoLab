@@ -19,6 +19,7 @@ Feature: School Administration
      And the user sets the "Description" field to "I love to eat peas and carrots all day long"
     Then the user clicks "Create School"
      And the user waits to see "successfully"
+    Then close all messages
     Then retrieve the latest school from the db
      And the school "Name" field is "hard knocks"
      And the school "Timezone" field is "UTC"
@@ -43,6 +44,7 @@ Feature: School Administration
     Then the user clicks "Create School"
      #We should have success now
      And the user waits to see "successfully"
+    Then close all messages
     Then retrieve the latest school from the db
      And the school "Name" field is "life"
      And the school "Description" field is "I love to eat peas and carrots all day long"
@@ -71,6 +73,7 @@ Feature: School Administration
      And the user sets the "Description" field to "blue is the best"
     Then the user clicks "Save School"
     Then the user waits to see "School was updated successfully"
+   Then close all messages
     Then retrieve the latest school from the db
      And the school "Name" field is "Off"
      And the school "Description" field is "blue is the best"

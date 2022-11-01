@@ -164,6 +164,7 @@ Feature: Submitting Candidate words for Bingo!
       And the user populates 3 of the "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then the user logs out
      #user 3
      When group user 3 logs in
@@ -173,6 +174,7 @@ Feature: Submitting Candidate words for Bingo!
       And the user populates 3 of the "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      When the user requests collaboration
     Given the user logs out
     #Let's have everyone accept now
@@ -251,6 +253,7 @@ Feature: Submitting Candidate words for Bingo!
       And the user populates 3 of the "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out
@@ -266,6 +269,7 @@ Feature: Submitting Candidate words for Bingo!
       And the user populates 4 of the "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out
@@ -281,6 +285,7 @@ Feature: Submitting Candidate words for Bingo!
       And the user populates 4 additional "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out
@@ -296,6 +301,7 @@ Feature: Submitting Candidate words for Bingo!
      When the user changes the first 4 "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out

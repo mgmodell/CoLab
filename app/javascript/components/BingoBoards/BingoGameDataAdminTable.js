@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import React from "react";
 import PropTypes from "prop-types";
-import BingoGameResults from "./BingoGameResults";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
@@ -9,6 +8,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { SortDirection } from "react-virtualized";
 import WrappedVirtualizedTable from "../WrappedVirtualizedTable";
+
+const BingoGameResults = React.lazy( () =>
+  import( "./BingoGameResults" ));
 
 class BingoGameDataAdminTable extends React.Component {
   constructor(props) {

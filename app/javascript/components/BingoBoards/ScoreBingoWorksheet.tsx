@@ -4,16 +4,17 @@ import {  useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import {
   startTask,
-  endTask} from '../infrastructure/StatusActions';
-import Button from "@mui/material/Button";
-
+  endTask} from '../infrastructure/StatusSlice';
 
 import { useTranslation } from 'react-i18next';
+
+import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+
 import {useTypedSelector} from '../infrastructure/AppReducers'
-import axios, {post} from "axios";
-import { TextField } from "@mui/material";
+import axios from "axios";
 
 export default function ScoreBingoWorksheet(props) {
 
@@ -84,7 +85,7 @@ export default function ScoreBingoWorksheet(props) {
     const url = `${endpoints.worksheetScoreUrl}${worksheetIdParam}.json`;
 
 
-    post( url, formData, {
+    axios.post( url, formData, {
       headers:{ 
         'content-type': 'multipart/form-data'
       }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
-import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
@@ -27,13 +26,15 @@ import {
   setClean,
   addMessage,
   Priorities
-} from "./infrastructure/StatusActions";
-
-import ProjectGroups from "./ProjectGroups";
-import ChartContainer from "./Reports/ChartContainer";
+} from "./infrastructure/StatusSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
-import { Grid, Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
+
+const ProjectGroups = React.lazy( () =>
+  import( "./ProjectGroups" ));
+const ChartContainer = React.lazy( () =>
+  import( "./Reports/ChartContainer" ));
 
 export default function ProjectDataAdmin(props) {
   const category = "project";

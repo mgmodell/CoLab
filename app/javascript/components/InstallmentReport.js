@@ -16,13 +16,13 @@ import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusActions";
-import { i18n } from "./infrastructure/i18n";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 // import LinkedSliders from './LinkedSliders';
-import LinkedSliders from "linked-sliders";
+const LinkedSliders = React.lazy( () =>
+  import( "linked-sliders" ));
 import axios from "axios";
 export default function InstallmentReport(props) {
   const endpointSet = "installment";
@@ -48,8 +48,6 @@ export default function InstallmentReport(props) {
   const [commentPanelOpen, setCommentPanelOpen] = useState(false);
   const [group, setGroup] = useState({});
   const [factors, setFactors] = useState({});
-
-  const [bob, setBob] = useState();
 
   const [project, setProject] = useState({});
   const [sliderSum, setSliderSum] = useState(0);
@@ -119,7 +117,6 @@ export default function InstallmentReport(props) {
         const data = response.data;
         const factorsData = Object.assign({}, data.factors);
         setFactors(factorsData);
-        setBob(factorsData);
 
         setSliderSum(data.sliderSum);
 

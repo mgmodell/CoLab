@@ -1,12 +1,10 @@
-import React, { Suspense } from "react";
+import React, {useState, Suspense } from "react";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Table from "@mui/material/Table";
-import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -17,103 +15,82 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-import { i18n } from "./infrastructure/i18n";
-import { Translation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import CompareIcon from "@mui/icons-material/Compare";
 import axios from "axios";
 
-//const t = get_i18n("base");
+export default function DiversityCheck (props){
 
-class DiversityCheck extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dialogOpen: false,
-      emails: "",
-      diversity_score: null,
-      found_users: []
-    };
-    this.openDialog = this.openDialog.bind(this);
-    this.closeDialog = this.closeDialog.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClear = this.handleClear.bind(this);
-    this.calcDiversity = this.calcDiversity.bind(this);
-  }
-  calcDiversity() {
-    const url = this.props.diversityScoreFor + ".json";
+  const [emails, setEmails] = useState( '' );
+  const [dialogOpen, setDialogOpen] = useState( false );
+  const [diversityScore, setDiversityScore] = useState( null );
+  const [foundUsers, setFoundUsers ] = useState( [] );
+
+  const [ t ] = useTranslation( );
+
+  function calcDiversity() {
+    const url = props.diversityScoreFor + ".json";
     axios
       .post(url, {
-        emails: this.state.emails
+        emails: emails
       })
       .then(response => {
         const data = response.data;
-        this.setState({
-          diversity_score: data.diversity_score,
-          found_users: data.found_users
-        });
+        setDiversityScore( data.diversity_score );
+        setFoundUsers( data.found_users );
       })
       .catch(error => {
         console.log("error", error);
         return [{ id: -1, name: "no data" }];
       });
   }
-  handleClear(event) {
-    this.setState({
-      emails: "",
-      diversity_score: null,
-      found_users: []
-    });
-  }
-  handleChange(event) {
-    this.setState({
-      emails: event.target.value
-    });
+  function handleClear() {
+    setEmails( '' );
+    setDiversityScore( null );
+    setFoundUsers( [] );
   }
 
-  openDialog() {
-    this.setState({
-      dialogOpen: true
-    });
+  function openDialog() {
+    setDialogOpen( true );
   }
 
-  closeDialog() {
-    this.setState({
-      dialogOpen: false
-    });
+  function closeDialog() {
+    setDialogOpen( false );
   }
 
-  render() {
+  function handleChange( event ){
+    setEmails( event.target.value );
+  }
+
     return (
       <Suspense fallback={<div>Loading...</div>}>
-        <Translation>
-          {t => (
             <React.Fragment>
-              <ListItem button onClick={() => this.openDialog()}>
+              <ListItem button onClick={() => openDialog()}>
                 <ListItemIcon>
                   <CompareIcon fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>{t("calc_diversity")}</ListItemText>
               </ListItem>
               <Dialog
-                open={this.state.dialogOpen}
-                onClose={() => this.closeDialog()}
+                open={dialogOpen}
+                onClose={() => closeDialog()}
                 aria-labelledby={t("calc_it")}
               >
                 <DialogTitle>{t("calc_it")}</DialogTitle>
                 <DialogContent>
                   <DialogContentText>{t("ds_emails_lbl")}</DialogContentText>
                   <TextField
-                    value={this.state.emails}
-                    onChange={() => this.handleChange(event)}
+                    value={emails}
+                    onChange={handleChange}
                   />
 
-                  {this.state.found_users.length > 0 ? (
+                  {foundUsers.length > 0 ? (
                     <Table>
                       <TableBody>
                         <TableRow>
                           <TableCell>
-                            {this.state.found_users.map(user => {
+                            {foundUsers.map(user => {
                               return (
                                 <a
                                   key={user.email}
@@ -126,7 +103,7 @@ class DiversityCheck extends React.Component {
                             })}
                           </TableCell>
                           <TableCell valign="middle" align="center">
-                            {this.state.diversity_score}
+                            {diversityScore}
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -135,28 +112,24 @@ class DiversityCheck extends React.Component {
                   <DialogActions>
                     <Button
                       variant="contained"
-                      onClick={() => this.calcDiversity()}
+                      onClick={calcDiversity}
                     >
                       {t("calc_diversity_sub")}
                     </Button>
                     <Button
                       variant="contained"
-                      onClick={() => this.handleClear()}
+                      onClick={handleClear}
                     >
-                      Clear
+                      {t('clear')}
                     </Button>
                   </DialogActions>
                 </DialogContent>
               </Dialog>
             </React.Fragment>
-          )}
-        </Translation>
       </Suspense>
     );
-  }
 }
 
 DiversityCheck.propTypes = {
   diversityScoreFor: PropTypes.string.isRequired
 };
-export default DiversityCheck;

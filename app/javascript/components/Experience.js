@@ -1,29 +1,27 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import {
   startTask,
   endTask,
-  setDirty,
   setClean,
   addMessage,
-  Priorities,
-  acknowledgeMsg
-} from "./infrastructure/StatusActions";
+  Priorities} from "./infrastructure/StatusSlice";
 
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
 
-import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
-import ExperienceInstructions from "./ExperienceInstructions";
-import ExperienceDiagnosis from "./ExperienceDiagnosis";
-import ExperienceReaction from "./ExperienceReaction";
+const ExperienceInstructions = React.lazy( () =>
+  import( "./ExperienceInstructions" ));
+const ExperienceDiagnosis = React.lazy( () =>
+  import( "./ExperienceDiagnosis" ));
+const ExperienceReaction = React.lazy( () =>
+  import( "./ExperienceReaction" ));
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 
@@ -102,7 +100,7 @@ export default function Experience(props) {
         setWeekText(data.week_text);
 
         resetFunc();
-        dispatch(addMessage(data.messages.main, Date.now(), Priorities.INFO));
+        dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
         dispatch(endTask("saving"));
         dispatch(setClean("diagnosis"));
       })
@@ -128,7 +126,7 @@ export default function Experience(props) {
         const data = response.data;
         //Process Experience
         resetFunc();
-        dispatch(addMessage(data.messages.main, Date.now(), Priorities.INFO));
+        dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
         dispatch(endTask("saving"));
         dispatch(setClean("reaction"));
         navigate("/");

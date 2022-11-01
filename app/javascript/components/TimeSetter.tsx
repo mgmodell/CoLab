@@ -1,5 +1,4 @@
 import React, { useState, Fragment, useEffect } from "react";
-import PropTypes from "prop-types";
 import MockDate from "mockdate";
 
 export default function TimeSetter(props) {

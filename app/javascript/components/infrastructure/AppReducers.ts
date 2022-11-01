@@ -1,15 +1,14 @@
 import { useSelector, TypedUseSelectorHook } from 'react-redux'
 
-import { combineReducers } from 'redux'
-import {status} from './StatusReducers';
-import {context} from './ContextReducers';
-import {profile} from './ProfileReducers';
+import statusReducer from './StatusSlice';
+import contextReducer from './ContextSlice';
+import profileReducer from './ProfileSlice';
 
-const appStatus = combineReducers({
-  status: status,
-  context: context,
-  profile: profile
-})
+const appStatus = {
+  status: statusReducer,
+  context: contextReducer,
+  profile: profileReducer
+}
 
 export default appStatus;
 export type RootState = ReturnType<typeof appStatus>

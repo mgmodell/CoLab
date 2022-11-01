@@ -1,8 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import ChartContainer from "./ChartContainer";
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
+
+const ChartContainer = React.lazy( () =>
+  import('./ChartContainer'));
 
 export default function ReportingAdmin(props) {
   const category = "graphing";

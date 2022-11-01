@@ -13,7 +13,7 @@ import MUIDataTable from "mui-datatables";
 import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import {useDispatch} from 'react-redux';
-import {startTask, endTask} from '../infrastructure/StatusActions';
+import {startTask, endTask} from '../infrastructure/StatusSlice';
 
 export default function ConsentFormList(props) {
   const endpointSet = "consent_form";

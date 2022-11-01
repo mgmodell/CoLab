@@ -1,15 +1,12 @@
 import React, {useState, useEffect} from "react";
 import { PropTypes } from "prop-types";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-    } from "@mui/material";
-
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
 
   export default function ConfirmDialog( props ){
   const category = "graphing";

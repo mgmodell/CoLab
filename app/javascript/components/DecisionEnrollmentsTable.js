@@ -1,18 +1,17 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import classNames from "classnames";
 import Fab from "@mui/material/Fab";
-import withStyles from "@mui/styles/withStyles";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import SearchIcon from "@mui/icons-material/Search";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { SortDirection } from "react-virtualized";
 import WrappedVirtualizedTable from "../components/WrappedVirtualizedTable";
+const WorkingIndicator = React.lazy( () =>
+  import( "./infrastructure/WorkingIndicator" ));
 
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";

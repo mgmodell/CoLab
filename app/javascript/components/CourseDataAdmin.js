@@ -10,8 +10,9 @@ import {
   setClean,
   addMessage,
   Priorities
-} from "./infrastructure/StatusActions";
+} from "./infrastructure/StatusSlice";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
@@ -22,7 +23,10 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import Skeleton from "@mui/material/Skeleton";
 import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 
 import { iconForType } from "./ActivityLib";
 
@@ -30,17 +34,15 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TabPanel, TabList, TabContext } from "@mui/lab/";
 
 import { DateTime, Settings } from "luxon";
-import CourseUsersList from "./CourseUsersList";
+const CourseUsersList = React.lazy( () =>
+  import( "./CourseUsersList" ));
 
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import MUIDataTable from "mui-datatables";
 
 import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { Box, Skeleton } from "@mui/material";
 
 export default function CourseDataAdmin(props) {
   const category = "course";
@@ -246,7 +248,7 @@ export default function CourseDataAdmin(props) {
   ]);
 
   const postNewMessage = msgs => {
-    dispatch(addMessage(msgs.main, Date.now(), Priorities.INFO));
+    dispatch(addMessage(msgs.main, new Date(), Priorities.INFO));
     setMessages(msgs);
   };
 

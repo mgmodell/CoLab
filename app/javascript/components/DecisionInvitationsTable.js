@@ -1,21 +1,14 @@
 /* eslint-disable no-console */
-import React, { useState, useEffect } from "react";
+import React, {  } from "react";
 import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import classNames from "classnames";
 import Fab from "@mui/material/Fab";
-import withStyles from "@mui/styles/withStyles";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
-import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
-import { useTypedSelector } from "./infrastructure/AppReducers";
 
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { useTypedSelector } from "./infrastructure/AppReducers";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
+
 import MUIDataTable from "mui-datatables";
-import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";

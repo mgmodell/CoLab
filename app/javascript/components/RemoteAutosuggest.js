@@ -1,13 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
-import deburr from "lodash/deburr";
-import Autosuggest from "react-autosuggest";
+import deburr from 'lodash/deburr';
+
+const Autosuggest = React.lazy( () =>
+  import( "react-autosuggest" ));
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
+
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import MenuItem from "@mui/material/MenuItem";
-import Popper from "@mui/material/Popper";
 import withStyles from "@mui/styles/withStyles";
 import axios from "axios";
 function renderInputComponent(inputProps) {

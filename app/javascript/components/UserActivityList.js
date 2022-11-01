@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@mui/material/Paper";
 import { iconForType } from "./ActivityLib";
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
+const WorkingIndicator = React.lazy( () =>
+  import( "./infrastructure/WorkingIndicator" ));
 
 import MUIDataTable from "mui-datatables";
 import axios from "axios";

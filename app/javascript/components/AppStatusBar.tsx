@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
-import { acknowledgeMsg } from "./infrastructure/StatusActions";
+import { acknowledgeMsg } from "./infrastructure/StatusSlice";
 
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";

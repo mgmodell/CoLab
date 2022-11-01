@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -24,19 +23,24 @@ import UserEmailList from "./UserEmailList";
 
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+const WorkingIndicator = React.lazy( () =>
+  import( "./infrastructure/WorkingIndicator" ));
 
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TabList, TabContext, TabPanel } from "@mui/lab/";
 import { Settings } from "luxon";
 
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import UserCourseList from "./UserCourseList";
-import ResearchParticipationList from "./ResearchParticipationList";
-import UserActivityList from "./UserActivityList";
+const UserCourseList = React.lazy( () =>
+  import( "./UserCourseList" ));
+const ResearchParticipationList = React.lazy( () =>
+  import( "./ResearchParticipationList" ));
+const UserActivityList = React.lazy( () =>
+  import( "./UserActivityList" ));
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
 import { Box, Grid, Link } from "@mui/material";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import {
@@ -44,7 +48,7 @@ import {
   setProfile,
   persistProfile,
   setLocalLanguage
-} from "./infrastructure/ProfileActions";
+} from "./infrastructure/ProfileSlice";
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 

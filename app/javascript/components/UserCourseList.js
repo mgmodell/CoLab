@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import Paper from "@mui/material/Paper";
 
 import MUIDataTable from "mui-datatables";
 
-import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
 import axios from "axios";
 
+const WorkingIndicator = React.lazy( () =>
+  import( "./infrastructure/WorkingIndicator" ));
+const BingoDataRepresentation = React.lazy( () =>
+  import( "./BingoBoards/BingoDataRepresentation" ));
 export default function UserCourseList(props) {
   const dispatch = useDispatch();
 

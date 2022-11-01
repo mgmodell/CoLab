@@ -6,8 +6,8 @@ import {
   InputAdornment,
   Button
 } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
-import { Priorities, addMessage } from "./infrastructure/StatusActions";
+import { useDispatch } from "react-redux";
+import { Priorities, addMessage } from "./infrastructure/StatusSlice";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import React, { useState } from "react";
@@ -37,7 +37,7 @@ export default function PasswordEdit(props) {
   //It gets placed on the password field
   const submitOnEnter = evt => {
     if (endpointsLoaded && evt.key === "Enter") {
-      dispatch(emailSignIn(email, password)).then(navigate(from));
+      dispatch(emailSignIn( {email: string , password: string })).then(navigate(from));
       evt.preventDefault();
     }
   };

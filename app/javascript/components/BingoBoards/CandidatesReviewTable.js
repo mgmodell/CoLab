@@ -12,18 +12,20 @@ import Skeleton from '@mui/material/Skeleton';
 import Checkbox from "@mui/material/Checkbox";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { SortDirection } from "react-virtualized";
-import RemoteAutosuggest from "../RemoteAutosuggest";
-
-import { useTranslation } from "react-i18next";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+
+import { useTranslation } from "react-i18next";
+const RemoteAutosuggest = React.lazy( () =>
+  import( "../RemoteAutosuggest" ));
 import MUIDataTable from "mui-datatables";
-import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import {startTask, endTask} from '../infrastructure/StatusActions'
+import {startTask, endTask} from '../infrastructure/StatusSlice'
 import axios from "axios";
+
+const WorkingIndicator = React.lazy( () =>
+  import( "../infrastructure/WorkingIndicator" ));
 
 export default function CandidatesReviewTable(props) {
   const { t } = useTranslation("bingo_games");
@@ -394,7 +396,7 @@ export default function CandidatesReviewTable(props) {
                 <Grid item>
                   <CircularProgress
                     size={10}
-                    variant={progress > 0 ? "static" : "indeterminate"}
+                    variant={progress > 0 ? "determinate" : "indeterminate"}
                     value={progress}
                   />
                   &nbsp;

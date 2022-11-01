@@ -1,23 +1,16 @@
-import React, { useState, Suspense, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import PropTypes from "prop-types";
 import IconButton from "@mui/material/IconButton";
 
 // Icons
 import HelpIcon from "@mui/icons-material/Help";
 import Joyride, {
-  CallBackProps,
-  STATUS,
-  Step,
-  StoreHelpers,
   ACTIONS
 } from "react-joyride";
 
-import { i18n } from "./infrastructure/i18n";
 import { useTranslation } from "react-i18next";
 
-import ExperienceInstructions from "./ExperienceInstructions";
 
 export default function HelpMenu(props) {
   const [menuOpen, setMenuOpen] = useState(false);

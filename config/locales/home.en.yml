@@ -44,6 +44,7 @@ en:
   users: Users
   diversity_score: Diversity Score
   calc_diversity_sub: Tell me the score!
+  clear: Clear
   calc_it: Calculate a Diversity Score
   ds_emails_lbl: Enter the emails of the proposed team members
   dates: Dates

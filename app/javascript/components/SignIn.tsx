@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
 //Redux store stuff
 import { useDispatch } from "react-redux";
-import { Priorities, addMessage } from "./infrastructure/StatusActions";
+import { Priorities, addMessage } from "./infrastructure/StatusSlice";
 import EmailValidator from "email-validator";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -11,21 +11,23 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Paper from "@mui/material/Paper";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
+import Grid from "@mui/material/Grid";
+import Skeleton from "@mui/material/Skeleton";
+import Tab from "@mui/material/Tab";
 
 import { useTranslation } from "react-i18next";
-import Grid from "@mui/material/Grid";
 //import {emailSignIn, oAuthSignIn, signOut } from './infrastructure/AuthenticationActions';
 import {
   emailSignIn,
   oAuthSignIn,
   emailSignUp
-} from "./infrastructure/ContextActions";
-import { GoogleLogin } from "react-google-login";
+} from "./infrastructure/ContextSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import Skeleton from "@mui/material/Skeleton";
 import { TabContext, TabPanel, TabList } from "@mui/lab";
-import { Tab } from "@mui/material";
 import axios from "axios";
+
+const GoogleLogin = React.lazy( ()=>
+  import( './infrastructure/reactGoogleLogin'));
 
 export default function SignIn(props) {
   const category = "devise";
@@ -58,7 +60,7 @@ export default function SignIn(props) {
   //It gets placed on the password field
   const submitOnEnter = evt => {
     if (endpointsLoaded && evt.key === "Enter") {
-      dispatch(emailSignIn(email, password)).then(navigate(from));
+      dispatch(emailSignIn({email, password})).then(navigate(from));
       evt.preventDefault();
     }
   };
@@ -75,7 +77,7 @@ export default function SignIn(props) {
       }
       variant="contained"
       onClick={() => {
-        dispatch(emailSignIn(email, password)).then(navigate(from));
+        dispatch(emailSignIn({email, password})).then(navigate(from));
       }}
     >
       {t("sessions.login_submit")}
@@ -107,7 +109,7 @@ export default function SignIn(props) {
           disabled={"" === email || !endpointsLoaded}
           variant="contained"
           onClick={() => {
-            dispatch(emailSignUp(email, firstName, lastName)).then(
+            dispatch(emailSignUp({email: string, firstName: string, lastName: string})).then(
               navigate(from)
             );
           }}
@@ -170,7 +172,7 @@ export default function SignIn(props) {
       clientId={oauth_client_ids["google"]}
       onSuccess={get_token_from_oauth}
       onFailure={response => {
-        console.log("login fail", response);
+        console.log("Google login fail", response);
       }}
       cookiePolicy="single_host_origin"
     />

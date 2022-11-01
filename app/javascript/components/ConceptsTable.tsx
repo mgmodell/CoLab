@@ -1,10 +1,7 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
-import classNames from "classnames";
-import withStyles from "@mui/styles/withStyles";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -16,15 +13,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import Toolbar from "@mui/material/Toolbar";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import { SortDirection } from "react-virtualized";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
+const WorkingIndicator = React.lazy( () =>
+  import( "./infrastructure/WorkingIndicator" ));
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusActions";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
 
 const styles = theme => ({
   table: {

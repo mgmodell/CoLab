@@ -12,7 +12,7 @@ print_help ( ) {
   echo "Valid options:"
   echo " -s             Show the failures from previous run only"
   echo "                (Do not run any tests. Ignore -c or -n.)"
-  echo " -b [branch]    Switch to [branch]"
+  echo " -b [branch]    Switch to [branch] and terminate"
   echo " -d [driver]    Set the browser driver for this run"
   echo " -c             Initialise the database"
   echo " -f [features]  Specify specific features to run"
@@ -59,6 +59,8 @@ while getopts "chsnb:f:d:tl" opt; do
       echo "Checking out branch $OPTARG" >&2
       git checkout $OPTARG
       git pull
+      echo "Checked out branch $OPTARG" >&2
+      exit 0;
       ;;
     f)
       echo "Features Specified $OPTARG" >&2
@@ -101,7 +103,7 @@ fi
 
 # Clear previous failures
 if [ "$CLEAR_RERUN" = true ]; then
-  rm rerun.txt
+  > rerun.txt
   exit 0;
 fi
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
-import {getContext, setInitialised} from './ContextActions';
-import {cleanUpMsgs} from './StatusActions';
+import {getContext, setInitialised} from './ContextSlice';
+import {cleanUpMsgs} from './StatusSlice';
 import { useTypedSelector } from "./AppReducers";
 
 import PropTypes from "prop-types";

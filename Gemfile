@@ -4,9 +4,9 @@ source 'https://rubygems.org'
 ruby '3.1.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.3'
+gem 'rails', '~> 7.0.4'
 
-gem 'puma', '~> 5.0'
+gem 'puma', '~> 6.0'
 # Use mysql as the database for Active Record
 #gem 'mysql2', '>= 0.3.18', '< 0.5'
 gem 'mysql2'
@@ -19,7 +19,7 @@ gem 'mysql2'
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
 # https://github.com/rails/webpacker
-gem 'shakapacker', '6.5.1'
+gem 'shakapacker', '6.5.2'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -76,6 +76,7 @@ group :development, :test do
   gem 'bullet'
   gem 'byebug'
   gem 'cucumber-rails', require: false
+  gem 'capybara', :git => 'https://github.com/teamcapybara/capybara'
   gem 'database_cleaner'
   gem 'derailed'
   # gem 'ruby-debug-ide'
@@ -90,7 +91,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.35.0', require: false
+  gem 'rubocop', '~> 1.37.0', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'

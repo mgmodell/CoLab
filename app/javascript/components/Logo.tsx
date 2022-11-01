@@ -81,7 +81,6 @@ export default function Logo(props) {
         y2="493"
         gradientUnits="userSpaceOnUse"
       >
-        >
         <stop offset="0" stopColor="#ffffff" stopOpacity="25%" />
         <stop offset="1" stopColor="#c8c8c8" stopOpacity="100%" />
       </linearGradient>
