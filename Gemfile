@@ -79,7 +79,8 @@ group :development, :test do
   gem 'bullet'
   gem 'byebug'
   gem 'cucumber-rails', require: false
-  gem 'capybara', :git => 'https://github.com/teamcapybara/capybara'
+  # gem 'capybara', :git => 'https://github.com/teamcapybara/capybara'
+  gem 'capybara'
   gem 'database_cleaner'
   gem 'derailed'
   # gem 'ruby-debug-ide'
