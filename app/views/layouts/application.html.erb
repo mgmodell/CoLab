@@ -1,4 +1,3 @@
-<% theme_code = get_theme_code %>
 <!DOCTYPE html>
 <html>
   <%= favicon_link_tag '/assets/images/favicon.ico' %>
@@ -8,17 +7,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Roboto:300,400,500' %>
 
-    <%= javascript_pack_tag 'application' %>
+    <% if true && Rails.env.test? %>
+      <%= javascript_pack_tag 'application', 'testing' %>
+    <% else %>
+      <%= javascript_pack_tag 'application' %>
+    <% end %>
     <%= stylesheet_pack_tag 'application' %>
     <%= csrf_meta_tags %>
-    <%= javascript_pack_tag "application" %>
   </head>
   <body>
-      <%= react_component "PageWrapper", {
+      <%= react_component "PageWrapper", props: {
           token: form_authenticity_token,
           getEndpointsUrl: endpoints_path
 
-      }%>
+      }
+      %>
     <% if true && Rails.env.test? %>
       <%= react_component "TimeSetter", { } %>
     <% end %>
