@@ -19,7 +19,7 @@ gem 'mysql2'
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
 # https://github.com/rails/webpacker
-gem 'shakapacker', '6.5.2'
+gem 'shakapacker', '6.5.4'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -79,7 +79,6 @@ group :development, :test do
   gem 'bullet'
   gem 'byebug'
   gem 'cucumber-rails', require: false
-  # gem 'capybara', :git => 'https://github.com/teamcapybara/capybara'
   gem 'capybara'
   gem 'database_cleaner'
   gem 'derailed'
