@@ -23,4 +23,4 @@ import TimeSetter from '../components/TimeSetter';
 
 ReactOnRails.register({
   TimeSetter,
-  });
+});
