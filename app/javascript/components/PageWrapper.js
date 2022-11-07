@@ -1,8 +1,5 @@
 import React, { Suspense } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import appStatus from "./infrastructure/AppReducers";
@@ -20,49 +17,36 @@ import AppStatusBar from "./AppStatusBar";
 import RequireAuth from "./infrastructure/RequireAuth";
 import RequireInstructor from "./infrastructure/RequireInstructor";
 
+const HomeShell = React.lazy(() => import("./HomeShell"));
+const ProfileDataAdmin = React.lazy(() => import("./ProfileDataAdmin"));
+const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
+const CandidateListEntry = React.lazy(() =>
+  import("./BingoBoards/CandidateListEntry")
+);
+const CandidatesReviewTable = React.lazy(() =>
+  import("./BingoBoards/CandidatesReviewTable")
+);
+const BingoBuilder = React.lazy(() => import("./BingoBoards/BingoBuilder"));
+const Experience = React.lazy(() => import("./Experience"));
+const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
+const Admin = React.lazy(() => import("./Admin"));
+const SignIn = React.lazy(() => import("./SignIn"));
+const EnrollInCourse = React.lazy(() => import("./EnrollInCourse"));
+const ScoreBingoWorksheet = React.lazy(() =>
+  import("./BingoBoards/ScoreBingoWorksheet")
+);
 
-const HomeShell = React.lazy( () =>
-  import( "./HomeShell" ));
-const ProfileDataAdmin = React.lazy(() =>
-  import ( "./ProfileDataAdmin" ));
-const InstallmentReport = React.lazy( () =>
-  import( "./InstallmentReport" ));
-const CandidateListEntry = React.lazy( () =>
-  import( "./BingoBoards/CandidateListEntry" ));
-const CandidatesReviewTable = React.lazy( () =>
-  import( "./BingoBoards/CandidatesReviewTable" ));
-const BingoBuilder = React.lazy( () =>
-  import( "./BingoBoards/BingoBuilder" ));
-const Experience = React.lazy( () =>
-  import( "./Experience" ));
-const ConsentLog = React.lazy( () =>
-  import ( "./Consent/ConsentLog" ));
-const Admin = React.lazy( () =>
-  import( "./Admin" ));
-const SignIn = React.lazy( () =>
-  import( "./SignIn" ));
-const EnrollInCourse = React.lazy( () =>
-  import( "./EnrollInCourse" ));
-const ScoreBingoWorksheet = React.lazy( () =>
-  import( "./BingoBoards/ScoreBingoWorksheet" ));
-
-const Privacy = React.lazy( () =>
-  import( "./info/Privacy" ));
-const TermsOfService = React.lazy( () =>
-  import( "./info/TermsOfService" ));
-const WhatIsIt = React.lazy( () =>
-  import( "./info/WhatIsIt" ));
-const AppInit = React.lazy( () =>
-  import( "./infrastructure/AppInit" ));
-const PasswordEdit = React.lazy( () =>
-  import( "./PasswordEdit" ));
-const Demo = React.lazy( () =>
-  import( "./Demo" ));
+const Privacy = React.lazy(() => import("./info/Privacy"));
+const TermsOfService = React.lazy(() => import("./info/TermsOfService"));
+const WhatIsIt = React.lazy(() => import("./info/WhatIsIt"));
+const AppInit = React.lazy(() => import("./infrastructure/AppInit"));
+const PasswordEdit = React.lazy(() => import("./PasswordEdit"));
+const Demo = React.lazy(() => import("./Demo"));
 
 export default function PageWrapper(props) {
   const store = configureStore({
     reducer: appStatus
-  })
+  });
 
   const styles = createTheme({
     typography: {

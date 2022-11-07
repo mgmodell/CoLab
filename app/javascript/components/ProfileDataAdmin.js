@@ -23,20 +23,20 @@ import UserEmailList from "./UserEmailList";
 
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-const WorkingIndicator = React.lazy( () =>
-  import( "./infrastructure/WorkingIndicator" ));
+const WorkingIndicator = React.lazy(() =>
+  import("./infrastructure/WorkingIndicator")
+);
 
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TabList, TabContext, TabPanel } from "@mui/lab/";
 import { Settings } from "luxon";
 
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-const UserCourseList = React.lazy( () =>
-  import( "./UserCourseList" ));
-const ResearchParticipationList = React.lazy( () =>
-  import( "./ResearchParticipationList" ));
-const UserActivityList = React.lazy( () =>
-  import( "./UserActivityList" ));
+const UserCourseList = React.lazy(() => import("./UserCourseList"));
+const ResearchParticipationList = React.lazy(() =>
+  import("./ResearchParticipationList")
+);
+const UserActivityList = React.lazy(() => import("./UserActivityList"));
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useDispatch } from "react-redux";

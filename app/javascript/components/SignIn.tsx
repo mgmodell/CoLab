@@ -26,8 +26,9 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import { TabContext, TabPanel, TabList } from "@mui/lab";
 import axios from "axios";
 
-const GoogleLogin = React.lazy( ()=>
-  import( './infrastructure/reactGoogleLogin'));
+const GoogleLogin = React.lazy(() =>
+  import("./infrastructure/reactGoogleLogin")
+);
 
 export default function SignIn(props) {
   const category = "devise";
@@ -60,7 +61,7 @@ export default function SignIn(props) {
   //It gets placed on the password field
   const submitOnEnter = evt => {
     if (endpointsLoaded && evt.key === "Enter") {
-      dispatch(emailSignIn({email, password})).then(navigate(from));
+      dispatch(emailSignIn({ email, password })).then(navigate(from));
       evt.preventDefault();
     }
   };
@@ -77,7 +78,7 @@ export default function SignIn(props) {
       }
       variant="contained"
       onClick={() => {
-        dispatch(emailSignIn({email, password})).then(navigate(from));
+        dispatch(emailSignIn({ email, password })).then(navigate(from));
       }}
     >
       {t("sessions.login_submit")}
@@ -109,9 +110,13 @@ export default function SignIn(props) {
           disabled={"" === email || !endpointsLoaded}
           variant="contained"
           onClick={() => {
-            dispatch(emailSignUp({email: string, firstName: string, lastName: string})).then(
-              navigate(from)
-            );
+            dispatch(
+              emailSignUp({
+                email: string,
+                firstName: string,
+                lastName: string
+              })
+            ).then(navigate(from));
           }}
         >
           {t("registrations.signup_btn")}

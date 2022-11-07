@@ -14,8 +14,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 
 import { DateTime, Settings } from "luxon";
-const ReactionsList = React.lazy( () =>
-  import( "./ReactionsList" ));
+const ReactionsList = React.lazy(() => import("./ReactionsList"));
 
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useDispatch } from "react-redux";

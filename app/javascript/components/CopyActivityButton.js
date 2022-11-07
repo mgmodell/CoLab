@@ -21,8 +21,9 @@ import Button from "@mui/material/Button";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
-const WorkingIndicator = React.lazy( () =>
-  import( "./infrastructure/WorkingIndicator" ));
+const WorkingIndicator = React.lazy(() =>
+  import("./infrastructure/WorkingIndicator")
+);
 
 export default function CopyActivityButton(props) {
   const category = "course";

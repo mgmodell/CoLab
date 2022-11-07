@@ -7,20 +7,17 @@ import {
 } from "react-router-dom";
 import Skeleton from "@mui/material/Skeleton";
 
-const HomeShell = React.lazy( () =>
-  import( "./HomeShell" ));
-const InstallmentReport = React.lazy( () =>
-  import( "./InstallmentReport" ));
-const CandidateListEntry = React.lazy( () =>
-  import( "./BingoBoards/CandidateListEntry" ));
-const CandidatesReviewTable = React.lazy( () =>
-  import( "./BingoBoards/CandidatesReviewTable" ));
-const BingoBuilder = React.lazy( () =>
-  import( "./BingoBoards/BingoBuilder" ));
-const Experience = React.lazy( () =>
-  import( "./Experience" ));
-const ConsentLog = React.lazy( () =>
-  import( "./Consent/ConsentLog" ));
+const HomeShell = React.lazy(() => import("./HomeShell"));
+const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
+const CandidateListEntry = React.lazy(() =>
+  import("./BingoBoards/CandidateListEntry")
+);
+const CandidatesReviewTable = React.lazy(() =>
+  import("./BingoBoards/CandidatesReviewTable")
+);
+const BingoBuilder = React.lazy(() => import("./BingoBoards/BingoBuilder"));
+const Experience = React.lazy(() => import("./Experience"));
+const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 
 export default function DemoWrapper(props) {
   let { path, url } = useMatch();

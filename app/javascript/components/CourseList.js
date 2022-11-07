@@ -19,8 +19,9 @@ import MUIDataTable from "mui-datatables";
 import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
-const WorkingIndicator = React.lazy( () =>
-  import( "./infrastructure/WorkingIndicator" ));
+const WorkingIndicator = React.lazy(() =>
+  import("./infrastructure/WorkingIndicator")
+);
 
 export default function CourseList(props) {
   const endpointSet = "course";

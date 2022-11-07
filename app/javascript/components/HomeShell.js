@@ -18,16 +18,15 @@ import { startTask, endTask } from "./infrastructure/StatusSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 
-const DecisionEnrollmentsTable = React.lazy( () =>
-  import(  "./DecisionEnrollmentsTable"));
-const DecisionInvitationsTable = React.lazy( () =>
-  import ( "./DecisionInvitationsTable"));
-const ConsentLog = React.lazy( () =>
-  import( "./Consent/ConsentLog" ));
-const ProfileDataAdmin = React.lazy( () =>
-  import ( "./ProfileDataAdmin" ));
-const TaskList = React.lazy( () =>
-  import ( "./TaskList"));
+const DecisionEnrollmentsTable = React.lazy(() =>
+  import("./DecisionEnrollmentsTable")
+);
+const DecisionInvitationsTable = React.lazy(() =>
+  import("./DecisionInvitationsTable")
+);
+const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
+const ProfileDataAdmin = React.lazy(() => import("./ProfileDataAdmin"));
+const TaskList = React.lazy(() => import("./TaskList"));
 
 export default function HomeShell(props) {
   const category = "home";

@@ -10,8 +10,9 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { SortDirection } from "react-virtualized";
 import WrappedVirtualizedTable from "../components/WrappedVirtualizedTable";
-const WorkingIndicator = React.lazy( () =>
-  import( "./infrastructure/WorkingIndicator" ));
+const WorkingIndicator = React.lazy(() =>
+  import("./infrastructure/WorkingIndicator")
+);
 
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";

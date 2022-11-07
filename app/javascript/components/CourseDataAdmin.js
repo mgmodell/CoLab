@@ -34,8 +34,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TabPanel, TabList, TabContext } from "@mui/lab/";
 
 import { DateTime, Settings } from "luxon";
-const CourseUsersList = React.lazy( () =>
-  import( "./CourseUsersList" ));
+const CourseUsersList = React.lazy(() => import("./CourseUsersList"));
 
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import MUIDataTable from "mui-datatables";

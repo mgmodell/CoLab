@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { Settings } from "luxon";
-const WorkingIndicator = React.lazy( () =>
-  import( "./infrastructure/WorkingIndicator" ));
+const WorkingIndicator = React.lazy(() =>
+  import("./infrastructure/WorkingIndicator")
+);
 
-const SchoolList = React.lazy( () => 
-  import( "./SchoolList" ) );
-const CourseAdmin = React.lazy( () =>
-  import(  "./CourseAdmin" ) );
-const SchoolDataAdmin  = React.lazy( () => 
-  import( "./SchoolDataAdmin" ) );
-const ConsentFormList  = React.lazy( () =>
-  import( "./Consent/ConsentFormList" ) );
-const ConsentFormDataAdmin = React.lazy( () =>
-  import( "./Consent/ConsentFormDataAdmin" ) );
-const ConceptsTable = React.lazy( () =>
-  import( "./ConceptsTable" ) );
-const ReportingAdmin =React.lazy( () =>
-  import( "./Reports/ReportingAdmin"));
+const SchoolList = React.lazy(() => import("./SchoolList"));
+const CourseAdmin = React.lazy(() => import("./CourseAdmin"));
+const SchoolDataAdmin = React.lazy(() => import("./SchoolDataAdmin"));
+const ConsentFormList = React.lazy(() => import("./Consent/ConsentFormList"));
+const ConsentFormDataAdmin = React.lazy(() =>
+  import("./Consent/ConsentFormDataAdmin")
+);
+const ConceptsTable = React.lazy(() => import("./ConceptsTable"));
+const ReportingAdmin = React.lazy(() => import("./Reports/ReportingAdmin"));
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
 

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, {  } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import Fab from "@mui/material/Fab";

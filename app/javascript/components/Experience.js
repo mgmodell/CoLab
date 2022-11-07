@@ -9,19 +9,19 @@ import {
   endTask,
   setClean,
   addMessage,
-  Priorities} from "./infrastructure/StatusSlice";
+  Priorities
+} from "./infrastructure/StatusSlice";
 
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
 
 import { useTranslation } from "react-i18next";
 
-const ExperienceInstructions = React.lazy( () =>
-  import( "./ExperienceInstructions" ));
-const ExperienceDiagnosis = React.lazy( () =>
-  import( "./ExperienceDiagnosis" ));
-const ExperienceReaction = React.lazy( () =>
-  import( "./ExperienceReaction" ));
+const ExperienceInstructions = React.lazy(() =>
+  import("./ExperienceInstructions")
+);
+const ExperienceDiagnosis = React.lazy(() => import("./ExperienceDiagnosis"));
+const ExperienceReaction = React.lazy(() => import("./ExperienceReaction"));
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 
