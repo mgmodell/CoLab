@@ -217,10 +217,10 @@ class Project < ApplicationRecord
 
   # Validation check code
   def date_sanity
-    unless start_date.nil? || end_date.nil?
-      errors.add(:start_dow, 'The start date must come before the end date') if start_date > end_date
-      errors
-    end
+    return if start_date.nil? || end_date.nil?
+
+    errors.add(:start_dow, 'The start date must come before the end date') if start_date > end_date
+    errors
   end
 
   def init_dates

@@ -296,10 +296,10 @@ class BingoGame < ApplicationRecord
 
   # validation methods
   def date_sanity
-    unless start_date.nil? || end_date.nil?
-      errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
-      errors
-    end
+    return if start_date.nil? || end_date.nil?
+
+    errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
+    errors
   end
 
   def dates_within_course
@@ -321,17 +321,17 @@ class BingoGame < ApplicationRecord
   end
 
   def review_completed
-    if reviewed && candidates.reviewed.count < candidates.completed.count
-      errors.add(:reviewed, I18n.t('bingo_games.reviewed_err'))
-    end
+    return unless reviewed && candidates.reviewed.count < candidates.completed.count
+
+    errors.add(:reviewed, I18n.t('bingo_games.reviewed_err'))
   end
 
   # We must validate group components {project and discount}
   def group_components
-    if group_option
-      errors.add(:project_id, I18n.t('bingo_games.group_requires_project')) if project.nil?
-      errors.add(:group_discount, I18n.t('bingo_games.group_requires_discount')) if group_discount.nil?
-    end
+    return unless group_option
+
+    errors.add(:project_id, I18n.t('bingo_games.group_requires_project')) if project.nil?
+    errors.add(:group_discount, I18n.t('bingo_games.group_requires_discount')) if group_discount.nil?
   end
 
   def anonymize

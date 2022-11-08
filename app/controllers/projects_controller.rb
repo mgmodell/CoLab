@@ -325,10 +325,10 @@ class ProjectsController < ApplicationController
   end
 
   def check_editor
-    unless current_user.is_admin? || current_user.is_instructor?
-      redirect_to root_path
-      # TODO: handle JSON response
-    end
+    return if current_user.is_admin? || current_user.is_instructor?
+
+    redirect_to root_path
+    # TODO: handle JSON response
   end
 
   def project_params

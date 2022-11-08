@@ -248,16 +248,16 @@ class Experience < ApplicationRecord
   end
 
   def date_sanity
-    unless start_date.nil? || end_date.nil?
-      errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
-      errors
-    end
+    return if start_date.nil? || end_date.nil?
+
+    errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
+    errors
   end
 
   def end_date_optimization
-    if student_end_date.nil? || end_date_changed? || lead_time_changed?
-      self.student_end_date = end_date - (1 + lead_time).days
-    end
+    return unless student_end_date.nil? || end_date_changed? || lead_time_changed?
+
+    self.student_end_date = end_date - (1 + lead_time).days
   end
 
   def dates_within_course

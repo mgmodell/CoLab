@@ -148,10 +148,10 @@ class Group < ApplicationRecord
       errors.add(:project,
                  'It is not possible to move a group from one project to another.')
     end
-    if changed? || @dirty
-      project.active = false
-      project.save!
-    end
+    return unless changed? || @dirty
+
+    project.active = false
+    project.save!
   end
 
   def set_dirty(_user)

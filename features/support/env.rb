@@ -26,7 +26,6 @@ end
 def ack_messages
   all(:xpath, "//button[@id='info-close']").each do |close_btn|
     close_btn.click
-
   end
 end
 
@@ -74,7 +73,7 @@ end
 
 Capybara.register_driver(:headless_chrome) do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[ headless disable-extensions ] }
+    chromeOptions: { args: %w[headless disable-extensions] }
   )
 
   Capybara::Selenium::Driver.new(
@@ -86,7 +85,7 @@ end
 
 Capybara.register_driver(:chrome) do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[ disable-extensions ] }
+    chromeOptions: { args: %w[disable-extensions] }
   )
 
   Capybara::Selenium::Driver.new(
