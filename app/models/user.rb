@@ -58,7 +58,7 @@ class User < ApplicationRecord
     elsif last_name.nil? && first_name.nil?
       name = email
     else
-      name = (!last_name.nil? ? last_name : '[No Last Name Given]') + ', '
+      name = "#{!last_name.nil? ? last_name : '[No Last Name Given]'}, "
       name += (!first_name.nil? ? first_name : '[No First Name Given]')
     end
   end
@@ -69,7 +69,7 @@ class User < ApplicationRecord
     elsif last_name.nil? && first_name.nil?
       name = email
     else
-      name = (!first_name.nil? ? first_name : '[No First Name Given]') + ' '
+      name = "#{!first_name.nil? ? first_name : '[No First Name Given]'} "
       name += (!last_name.nil? ? last_name : '[No Last Name Given]')
     end
   end
@@ -125,7 +125,7 @@ class User < ApplicationRecord
   end
 
   def update_instructor
-    self.instructor = if admin || rosters.instructor.count > 0
+    self.instructor = if admin || rosters.instructor.count.positive?
                         true
                       else
                         false
@@ -171,7 +171,7 @@ class User < ApplicationRecord
 
   def get_bingo_performance(course_id: 0)
     my_candidate_lists = []
-    if course_id > 0
+    if course_id.positive?
       my_candidate_lists.concat candidate_lists
         .includes(candidates: :candidate_feedback,
                   bingo_game: :project)
@@ -204,7 +204,7 @@ class User < ApplicationRecord
 
   def get_bingo_data(course_id: 0)
     my_candidate_lists = []
-    if course_id > 0
+    if course_id.positive?
       my_candidate_lists.concat candidate_lists
         .includes(candidates: :candidate_feedback,
                   bingo_game: :project)
@@ -237,7 +237,7 @@ class User < ApplicationRecord
 
   def get_experience_performance(course_id: 0)
     my_reactions = []
-    my_reactions = if course_id > 0
+    my_reactions = if course_id.positive?
                      reactions.includes(:narrative).joins(:experience)
                               .where(experiences: { course_id: })
                    else
@@ -248,12 +248,12 @@ class User < ApplicationRecord
     my_reactions.includes(:behavior).find_each do |reaction|
       total += reaction.status
     end
-    my_reactions.count == 0 ? 100 : (total / my_reactions.count)
+    my_reactions.count.zero? ? 100 : (total / my_reactions.count)
   end
 
   def get_assessment_performance(course_id: 0)
     my_projects = []
-    my_projects = if course_id > 0
+    my_projects = if course_id.positive?
                     projects.includes(:assessments).where(course_id:)
                   else
                     projects.includes(:assessments)
@@ -263,7 +263,7 @@ class User < ApplicationRecord
     my_projects.each do |project|
       total += project.get_performance(self)
     end
-    my_projects.count == 0 ? 100 : (total / my_projects.count)
+    my_projects.count.zero? ? 100 : (total / my_projects.count)
   end
 
   def waiting_student_tasks
@@ -383,17 +383,15 @@ class User < ApplicationRecord
 
   def anonymize
     if gender.present? && gender.changed?
-      case gender.code
-      when 'm'
-        self.anon_first_name = Faker::Name.male_first_name
-        self.anon_last_name = Faker::Name.last_name
-      when 'f'
-        self.anon_first_name = Faker::Name.female_first_name
-        self.anon_last_name = Faker::Name.last_name
-      else
-        self.anon_first_name = Faker::Name.first_name
-        self.anon_last_name = Faker::Name.last_name
-      end
+      self.anon_first_name = case gender.code
+                             when 'm'
+                               Faker::Name.male_first_name
+                             when 'f'
+                               Faker::Name.female_first_name
+                             else
+                               Faker::Name.first_name
+                             end
+      self.anon_last_name = Faker::Name.last_name
     elsif !persisted?
       self.anon_first_name = Faker::Name.first_name
       self.anon_last_name = Faker::Name.last_name

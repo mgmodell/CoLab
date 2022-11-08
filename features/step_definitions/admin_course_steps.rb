@@ -295,9 +295,9 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
   step 'the user enables the "Email" table view option'
   # step 'the user enables the "Actions" table view option'
   url = if type == 'student'
-          add_students_path + '?'
+          "#{add_students_path}?"
         else
-          add_instructors_path + '?'
+          "#{add_instructors_path}?"
         end
   find(:xpath, '//div[@id="pagination-rows"]').click
   find(:xpath, '//li[text()="100"]').click
@@ -357,7 +357,7 @@ end
 Then 'the user opens the self-registration link for the course' do
   self_reg_url = "course/#{@course.id}/enroll"
   visit(self_reg_url)
-  if !@dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?('http')
+  if !@dest_date.nil? && Capybara.current_driver != :rack_test && current_url.start_with?('http')
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end

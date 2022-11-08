@@ -39,7 +39,7 @@ class BingoGame < ApplicationRecord
 
   def status
     completed = candidates.completed.count
-    if completed > 0
+    if completed.positive?
       100 * candidates.reviewed.count / candidates.completed.count
     else
       0
@@ -243,11 +243,11 @@ class BingoGame < ApplicationRecord
       bingo.course.enrolled_students.each do |student|
         candidate_list = bingo.candidate_list_for_user(student)
         completion_hash[student.email] = { name: student.name(false),
-                                           status: candidate_list.percent_completed.to_s + '%' }
+                                           status: "#{candidate_list.percent_completed}%" }
       end
 
       bingo.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(bingo.get_name(false) + ' (terms list)',
+        AdministrativeMailer.summary_report("#{bingo.get_name(false)} (terms list)",
                                             bingo.course.pretty_name,
                                             instructor,
                                             completion_hash).deliver_later
@@ -260,7 +260,7 @@ class BingoGame < ApplicationRecord
   end
 
   def candidate_list_for_user(user)
-    cl = candidate_lists.find_by_user_id user.id
+    cl = candidate_lists.find_by user_id: user.id
     if cl.nil?
       cl = CandidateList.new
       cl.user_id = user.id

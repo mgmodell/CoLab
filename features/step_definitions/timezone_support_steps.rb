@@ -23,7 +23,7 @@ Given(/^the user sees (\d+) assessment every hour of the day$/) do |assessment_c
     step "user should see #{assessment_count} open task"
     @dest_date = DateTime.current + 30.minutes
     travel_to(@dest_date)
-    if :rack_test != Capybara.current_driver
+    if Capybara.current_driver != :rack_test
       fill_in 'newTimeVal', with: @dest_date.to_s
       click_button 'setTimeBtn'
     end
@@ -33,7 +33,7 @@ Given(/^the user sees (\d+) assessment every hour of the day$/) do |assessment_c
     step "user should see #{assessment_count} open task"
     @dest_date = DateTime.current + 30.minutes
     travel_to(@dest_date)
-    if :rack_test != Capybara.current_driver
+    if Capybara.current_driver != :rack_test
       fill_in 'newTimeVal', with: @dest_date.to_s
       click_button 'setTimeBtn'
     end

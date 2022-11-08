@@ -126,7 +126,7 @@ end
 
 Then(/^the user sets the project "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
-  page.find('#project_' + date_field_prefix + '_date').set(new_date)
+  page.find("#project_#{date_field_prefix}_date").set(new_date)
 end
 
 Then(/^the user selects "([^"]*)" as "([^"]*)"$/) do |value, field|
@@ -168,7 +168,7 @@ Then(/^the project "([^"]*)" date is "([^"]*)"$/) do |date_field_prefix, date_va
     date = date.end_of_day.utc
     @project.end_date.change(sec: 0).should eq date.change(sec: 0)
   else
-    log "We didn't test anything there: " + date_field_prefix + ' not found'
+    log "We didn't test anything there: #{date_field_prefix} not found"
   end
 end
 
@@ -179,7 +179,7 @@ Then(/^the project "([^"]*)" is "([^"]*)"$/) do |field, value|
   when 'description'
     @project.description.should eq value
   else
-    log "We didn't test anything there: " + field + ' not found'
+    log "We didn't test anything there: #{field} not found"
   end
 end
 
@@ -208,7 +208,7 @@ end
 Then(/^set user (\d+) to group "([^"]*)"$/) do |user_number, group_name|
   user = User.all[1 + user_number.to_i]
   group = Group.where(name: group_name).take
-  button_id = 'user_group_' + user.id.to_s + '_' + group.id.to_s
+  button_id = "user_group_#{user.id}_#{group.id}"
 
   find(:xpath, "//input[@id='#{button_id}']", visible: :all).click
 end

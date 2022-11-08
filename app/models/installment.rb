@@ -74,7 +74,7 @@ class Installment < ApplicationRecord
   end
 
   def anonymize_comments
-    return unless comments.present?
+    return if comments.blank?
 
     working_space = comments.dup
 
@@ -123,7 +123,7 @@ class Installment < ApplicationRecord
     values_by_factor.each do |_factor, au_hash|
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }
 
-      au_hash.values.each do |v|
+      au_hash.each_value do |v|
         prelim = (Installment::TOTAL_VAL * v.value) / total
         v.value = if prelim.nan?
                     (Installment::TOTAL_VAL / v.installment.values.count).round

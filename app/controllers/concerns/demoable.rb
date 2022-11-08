@@ -127,7 +127,7 @@ module Demoable
     attr_accessor :id, :first_name, :last_name
 
     def name
-      last_name + ', ' + first_name
+      "#{last_name}, #{first_name}"
     end
   end
 

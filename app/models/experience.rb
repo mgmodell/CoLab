@@ -182,11 +182,11 @@ class Experience < ApplicationRecord
         narrative = if include_ids.empty?
                       Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where('id NOT IN (?)', narrative_counts.keys).sample
-                    elsif world.count > 0
+                    elsif world.count.positive?
                       Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: world).sample
 
-                    elsif exp.count > 0
+                    elsif exp.count.positive?
                       Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: world).sample
                     else
@@ -228,7 +228,7 @@ class Experience < ApplicationRecord
       end
 
       experience.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(experience.name + ' (experience)',
+        AdministrativeMailer.summary_report("#{experience.name} (experience)",
                                             experience.course.pretty_name,
                                             instructor,
                                             completion_hash).deliver_later

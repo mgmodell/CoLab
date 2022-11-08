@@ -21,9 +21,9 @@ Given(/^there is a course with an experience$/) do
   log @experience.errors.full_messages if @experience.errors.present?
 
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
+  @course.get_name(true).length.should be.positive?
   @experience.get_name(true).should_not be_nil
-  @experience.get_name(true).length.should be > 0
+  @experience.get_name(true).length.should be.positive?
 end
 
 Given(/^the experience "([^"]*)" been activated$/) do |has_or_has_not|
@@ -107,7 +107,7 @@ Given(/^the course has an assessed project$/) do
   @project.save!
   if @project.persisted?
     @project.get_name(true).should_not be_nil
-    @project.get_name(true).length.should be > 0
+    @project.get_name(true).length.should be.positive?
   end
   log @project.errors.full_messages if @project.errors.present?
 end
@@ -143,7 +143,7 @@ Given(/^the user is in a group on the project$/) do
   @group.users << @user
   @group.save!
   @group.get_name(true).should_not be_nil
-  @group.get_name(true).length.should be > 0
+  @group.get_name(true).length.should be.positive?
   log @group.errors.full_messages if @group.errors.present?
   @project.active = false
   @project.save!

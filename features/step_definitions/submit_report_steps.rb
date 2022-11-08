@@ -154,19 +154,19 @@ Then(/^the installment values will match the submit ratio$/) do
   installment = Installment.last
   if @value_ratio == 'evenly'
     baseline = installment.values[0].value
-    installment.values.each do |value|
+    installment.each_value do |value|
       value.value.should eq baseline
     end
   else
     recorded_vals = {}
-    installment.values.each do |value|
+    installment.each_value do |value|
       factor_vals = recorded_vals[value.factor.id]
       factor_vals = [] if factor_vals.nil?
       factor_vals << [value.user_id, value.value]
       recorded_vals[value.factor.id] = factor_vals
     end
 
-    recorded_vals.keys.each do |factor_id|
+    recorded_vals.each_key do |factor_id|
       set_vals = @installment_values[factor_id]
       set_tot = set_vals.values.reduce(0) { |sum, x| sum + x.to_i }
       set_vals_a = []

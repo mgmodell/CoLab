@@ -8,7 +8,7 @@ Given('{int} multi-word concepts have been added to the system') do |word_count|
     c_name = Faker::Company.industry
     check_uniq[c_name.downcase] = true
   end
-  check_uniq.keys.each do |c_name|
+  check_uniq.each_key do |c_name|
     Concept.create name: c_name
   end
 end
@@ -27,22 +27,20 @@ Then('a concept name is set to {string}') do |concept_case|
   case concept_case
   when 'all lowercase'
     @concept_saved = @concept.name.downcase
-    @concept.name = @concept_saved
 
   when 'all uppercase'
     @concept_saved = @concept.name.upcase
-    @concept.name = @concept_saved
   else
     @concept_saved = @concept.name
     @concept_saved.length.times do |index|
-      @concept_saved[index] = if rand(2) > 0
+      @concept_saved[index] = if rand(2).positive?
                                 @concept_saved[index].upcase
                               else
                                 @concept_saved[index].downcase
                               end
     end
-    @concept.name = @concept_saved
   end
+  @concept.name = @concept_saved
   @concept.save
 end
 

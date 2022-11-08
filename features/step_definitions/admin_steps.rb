@@ -10,7 +10,7 @@ Given(/^there is a course$/) do
   )
   @course.save
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
+  @course.get_name(true).length.should be.positive?
 end
 
 Then(/^the user sets the project to the course's project$/) do

@@ -56,7 +56,7 @@ class Project < ApplicationRecord
 
   def get_performance(user)
     installments_count = installments.where(user:).count
-    assessments.count == 0 ? 100 : 100 * installments_count / assessments.count
+    assessments.count.zero? ? 100 : 100 * installments_count / assessments.count
   end
 
   # TODO: Not ideal structuring for UI

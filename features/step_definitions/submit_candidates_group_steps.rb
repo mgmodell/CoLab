@@ -16,7 +16,7 @@ Then(/^the user "([^"]*)" see collaboration was requested$/) do |collaboration_p
   when 'should not'
     page.should_not have_content link_text
   else
-    log "We didn't test anything there: " + collaboration_pending
+    log "We didn't test anything there: #{collaboration_pending}"
   end
 end
 
@@ -41,7 +41,7 @@ Then(/^the user "([^"]*)" see they're waiting on a collaboration response$/) do 
   when 'should not'
     page.should_not have_content 'awaiting a response to your group help request'
   else
-    log "We didn't test anything there: " + collaboration_pending
+    log "We didn't test anything there: #{collaboration_pending}"
   end
 end
 
@@ -55,7 +55,7 @@ Then(/^the user "([^"]*)" the collaboration request$/) do |accept_or_decline|
     btn = find(:xpath, "//a[text()='Decline']")
     # click_link_or_button 'Decline'
   else
-    log "We didn't test anything there: " + accept_or_decline
+    log "We didn't test anything there: #{accept_or_decline}"
   end
   btn.click
 end
@@ -67,7 +67,7 @@ Then(/^the user "([^"]*)" see collaboration request button$/) do |button_present
   when 'should not'
     page.should_not have_content 'Invite your group to help?'
   else
-    log "We didn't test anything there: " + button_present
+    log "We didn't test anything there: #{button_present}"
   end
 end
 
@@ -99,7 +99,7 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
   @entries_list = @entries_lists[@user]
 
   entries_array = []
-  @entries_lists.keys.each do |user_id|
+  @entries_lists.each_key do |user_id|
     @entries_lists[user_id].each do |entry|
       entries_array.push entry
     end
@@ -126,12 +126,12 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
     else
       found = false
       entries_array.each do |entry|
-        if 'term' == field && entry['definition'] == existing_def
+        if field == 'term' && entry['definition'] == existing_def
           entry['term'] = new_val
           page.fill_in("#{field}_#{rand_ind}",
                        with: new_val)
           found = true
-        elsif 'definition' == field && entry['term'] == existing_term
+        elsif field == 'definition' && entry['term'] == existing_term
           entry['definition'] = new_val
           page.fill_in("#{field}_#{rand_ind}",
                        with: new_val)

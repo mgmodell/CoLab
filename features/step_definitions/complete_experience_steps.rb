@@ -90,9 +90,9 @@ Then(/^the user completes a week$/) do
 
   wait_for_render
   behavior = Behavior.all.to_a.sample
-  step_text = 'the user will see "Week ' + week.week_num.to_s + '"'
+  step_text = "the user will see \"Week #{week.week_num}\""
   step step_text
-  step_text = 'the user chooses the "' + behavior.name_en + '" radio button'
+  step_text = "the user chooses the \"#{behavior.name_en}\" radio button"
   step step_text
   step_text = 'they enter "FUBAR" in extant field "What behavior did you see?"'
   # Only enter behavior name if 'Other' is selected
@@ -100,7 +100,7 @@ Then(/^the user completes a week$/) do
   step_text = 'the user presses "Save and continue"'
   step step_text
   wait_for_render
-  step_text = 'the database will show a new week ' + week.week_num.to_s + ' "' + behavior.name_en + '" diagnosis from the user'
+  step_text = "the database will show a new week #{week.week_num} \"#{behavior.name_en}\" diagnosis from the user"
   step step_text
   ack_messages
 end
@@ -143,7 +143,7 @@ end
 Then(/^no user will have reacted to the same narrative more than once$/) do
   User.all.each do |user|
     reaction_counts = user.reactions.group('narrative_id').count
-    reaction_counts.values.each do |val|
+    reaction_counts.each_value do |val|
       val.should <= 1
     end
   end
@@ -193,7 +193,7 @@ Given(/^the user enrolls in a new course$/) do
   )
   @course.save
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
+  @course.get_name(true).length.should be.positive?
   @course.rosters.new(
     user: @user,
     role: Roster.roles[:enrolled_student]
@@ -204,7 +204,7 @@ end
 
 Given(/^the course has an experience$/) do
   @experience = @course.experiences.new(
-    name: Faker::Company.industry + ' Experience',
+    name: "#{Faker::Company.industry} Experience",
     start_date: @course.start_date,
     end_date: @course.end_date
   )

@@ -134,13 +134,13 @@ Given(/^a course$/) do
   )
   @course.save
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
+  @course.get_name(true).length.should be.positive?
 end
 
 Then(/^the users are added to the course by email address$/) do
   email_list = ''
   @users.each do |user|
-    email_list += user.email + ', '
+    email_list += "#{user.email}, "
   end
   @course.add_students_by_email email_list
 end
@@ -148,7 +148,7 @@ end
 Then(/^the users are added to the course as instructors by email address$/) do
   email_list = ''
   @users.each do |user|
-    email_list += user.email + ', '
+    email_list += "#{user.email}, "
   end
   @course.add_instructors_by_email email_list
 end
@@ -202,7 +202,7 @@ Then(/^the user sees (\d+) invitation$/) do |invitation_count|
   if invitation_count.to_i == 1
     page.should have_content 'the course listed below'
   else
-    page.should have_content invitation_count.to_s + ' courses listed below'
+    page.should have_content "#{invitation_count} courses listed below"
   end
 end
 

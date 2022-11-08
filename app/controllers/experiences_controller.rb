@@ -282,16 +282,14 @@ class ExperiencesController < ApplicationController
       e_test = Experience.find(params[:id])
     end
 
-    if current_user.is_admin?
-      @experience = e_test
+    @experience = e_test
+    return if current_user.is_admin?
+
+    @course = @experience.course
+    if e_test.course.rosters.instructor.where(user: current_user).nil?
+      redirect_to @course if @experience.nil?
     else
       @experience = e_test
-      @course = @experience.course
-      if e_test.course.rosters.instructor.where(user: current_user).nil?
-        redirect_to @course if @experience.nil?
-      else
-        @experience = e_test
-      end
     end
   end
 

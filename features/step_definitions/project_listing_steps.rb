@@ -25,9 +25,9 @@ Given(/^there is a course with an assessed project$/) do
 
   # Check that the anonymous stuff got built
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
+  @course.get_name(true).length.should be.positive?
   @project.get_name(true).should_not be_nil
-  @project.get_name(true).length.should be > 0
+  @project.get_name(true).length.should be.positive?
 end
 
 Given(/^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes "(.*?)"$/) do |start_date, end_date, start_dow, end_dow|
@@ -70,7 +70,7 @@ Given(/^the project has a group with (\d+) confirmed users$/) do |user_count|
   end
   @group.save
   @group.get_name(true).should_not be_nil
-  @group.get_name(true).length.should be > 0
+  @group.get_name(true).length.should be.positive?
   log @group.errors.full_messages if @group.errors.present?
 end
 
@@ -98,7 +98,7 @@ Then(/^user should see (\d+) open task$/) do |open_project_count|
   when 1
     page.should have_content  'one task at the moment'
   else
-    page.should have_content(open_project_count.to_s + ' tasks today')
+    page.should have_content("#{open_project_count} tasks today")
   end
 end
 
@@ -127,7 +127,7 @@ When(/^the user logs in$/) do
   click_link_or_button 'I understand' if has_content? 'I understand'
 
   # Set custom time if warranted
-  if :rack_test != Capybara.current_driver && !@dest_date.nil?
+  if Capybara.current_driver != :rack_test && !@dest_date.nil?
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end
