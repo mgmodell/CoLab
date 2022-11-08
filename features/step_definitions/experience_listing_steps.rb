@@ -21,9 +21,9 @@ Given(/^there is a course with an experience$/) do
   log @experience.errors.full_messages if @experience.errors.present?
 
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be.positive?
+  @course.get_name(true).length.should be > 0
   @experience.get_name(true).should_not be_nil
-  @experience.get_name(true).length.should be.positive?
+  @experience.get_name(true).length.should be > 0
 end
 
 Given(/^the experience "([^"]*)" been activated$/) do |has_or_has_not|
