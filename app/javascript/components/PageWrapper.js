@@ -17,7 +17,8 @@ import AppStatusBar from "./AppStatusBar";
 import RequireAuth from "./infrastructure/RequireAuth";
 import RequireInstructor from "./infrastructure/RequireInstructor";
 
-const HomeShell = React.lazy(() => import("./HomeShell"));
+import HomeShell from "./HomeShell";
+
 const ProfileDataAdmin = React.lazy(() => import("./ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
 const CandidateListEntry = React.lazy(() =>

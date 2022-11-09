@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 // import LinkedSliders from './LinkedSliders';
-const LinkedSliders = React.lazy(() => import("linked-sliders"));
+import LinkedSliders from "linked-sliders/dist/LinkedSliders";
 import axios from "axios";
 export default function InstallmentReport(props) {
   const endpointSet = "installment";

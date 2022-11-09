@@ -11,9 +11,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 const MUIDataTable = React.lazy(() => import("mui-datatables"));
-const WorkingIndicator = React.lazy(() =>
-  import("./infrastructure/WorkingIndicator")
-);
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 

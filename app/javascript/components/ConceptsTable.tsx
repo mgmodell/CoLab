@@ -18,9 +18,7 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 
 import WrappedVirtualizedTable from "./WrappedVirtualizedTable";
-const WorkingIndicator = React.lazy(() =>
-  import("./infrastructure/WorkingIndicator")
-);
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";

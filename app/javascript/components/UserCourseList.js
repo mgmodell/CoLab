@@ -8,12 +8,8 @@ import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 import axios from "axios";
 
-const WorkingIndicator = React.lazy(() =>
-  import("./infrastructure/WorkingIndicator")
-);
-const BingoDataRepresentation = React.lazy(() =>
-  import("./BingoBoards/BingoDataRepresentation")
-);
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
+import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
 export default function UserCourseList(props) {
   const dispatch = useDispatch();
 

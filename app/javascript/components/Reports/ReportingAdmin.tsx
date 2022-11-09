@@ -2,8 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import Grid from '@mui/material/Grid';
 
-const ChartContainer = React.lazy( () =>
-  import('./ChartContainer'));
+import ChartContainer from "./ChartContainer";
 
 export default function ReportingAdmin(props) {
   const category = "graphing";

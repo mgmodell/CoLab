@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { Settings } from "luxon";
-const WorkingIndicator = React.lazy(() =>
-  import("./infrastructure/WorkingIndicator")
-);
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
+import CourseAdmin from "./CourseAdmin";
 const SchoolList = React.lazy(() => import("./SchoolList"));
-const CourseAdmin = React.lazy(() => import("./CourseAdmin"));
 const SchoolDataAdmin = React.lazy(() => import("./SchoolDataAdmin"));
 const ConsentFormList = React.lazy(() => import("./Consent/ConsentFormList"));
 const ConsentFormDataAdmin = React.lazy(() =>
