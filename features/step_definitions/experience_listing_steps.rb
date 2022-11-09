@@ -107,7 +107,7 @@ Given(/^the course has an assessed project$/) do
   @project.save!
   if @project.persisted?
     @project.get_name(true).should_not be_nil
-    @project.get_name(true).length.should be.positive?
+    @project.get_name(true).length.should be > 0?
   end
   log @project.errors.full_messages if @project.errors.present?
 end
@@ -143,7 +143,7 @@ Given(/^the user is in a group on the project$/) do
   @group.users << @user
   @group.save!
   @group.get_name(true).should_not be_nil
-  @group.get_name(true).length.should be.positive?
+  @group.get_name(true).length.should be > 0?
   log @group.errors.full_messages if @group.errors.present?
   @project.active = false
   @project.save!

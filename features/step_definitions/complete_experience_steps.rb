@@ -193,7 +193,7 @@ Given(/^the user enrolls in a new course$/) do
   )
   @course.save
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be.positive?
+  @course.get_name(true).length.should be > 0?
   @course.rosters.new(
     user: @user,
     role: Roster.roles[:enrolled_student]
