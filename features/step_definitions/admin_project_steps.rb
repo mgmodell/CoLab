@@ -43,6 +43,7 @@ Then(/^the user opens the course$/) do
 end
 
 Then(/^the user creates a new "([^"]*)"$/) do |link_or_button|
+  wait_for_render
   find(:xpath, '//button[@aria-label="Add Activity"]').click
   find(:xpath, "//li[contains(.,'#{link_or_button}')]").click
 end
