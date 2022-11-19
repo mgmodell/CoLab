@@ -5,24 +5,6 @@ export const Priorities = {
   INFO: 'info',
   WARNING: 'warning'
 }
-/*
-interface StatusRootState {
-  tasks: {
-    [taskName: string] : string;
-  },
-  messages: [
-    {
-      priority: Priorities,
-      text: String,
-      date: Date,
-      acknowledged: boolean
-    }
-  ],
-  dirtyStatus: {
-    [taskName: string] : boolean;
-  }
-}
-*/
 
 //const initialState : StatusRootState = {
 const initialState  = {

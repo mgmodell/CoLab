@@ -76,11 +76,7 @@ When(/^the user "(.*?)" fill in demographics data$/) do |does_or_does_not|
     # page.find('#user_date_of_birth').set(new_date)
   end
   click_button 'Save Profile'
-  count = 0
-  while !all(:xpath, '//*[@id="waiting"]').empty? && count < 3
-    sleep(0.1)
-    count += 1
-  end
+  wait_for_render
 end
 
 When(/^the new user registers$/) do

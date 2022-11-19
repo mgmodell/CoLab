@@ -287,7 +287,7 @@ Then 'the user adds the {string} users {string}' do |type, addresses|
 
   btn = find(:xpath, "//button[contains(.,'Add #{lbl}!')]")
   btn.click
-  sleep(0.01) until all(:xpath, "//*[@id='waiting']").empty?
+  wait_for_render
 end
 
 Then 'the user drops the {string} users {string}' do |type, addresses|
@@ -312,7 +312,7 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
       elem.click
       find(:xpath,
            "//button[text()='Drop the Student']").click
-      sleep(0.01) until all(:xpath, "//*[@id='waiting']").empty?
+      wait_for_render
     end
   else
     elem = find(:xpath,
@@ -320,7 +320,7 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
     elem.click
     find(:xpath,
          "//button[text()='Drop the Student']").click
-    sleep(0.01) until all(:xpath, "//*[@id='waiting']").empty?
+    wait_for_render
   end
 end
 
