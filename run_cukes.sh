@@ -50,7 +50,6 @@ while getopts "chsnb:f:d:tl" opt; do
   case $opt in
     c)
       DB_RESET=true
-      RUN_TESTS=false
       ;;
     d)
       echo "Setting driver to $OPTARG" >&2
@@ -106,11 +105,6 @@ if [ "$SHOW_HELP" = true ]; then
 fi
 
 
-# Show previous failures
-if [ "$SHOW_FAILS" = true ]; then
-  printf '%s\n' "$(cat rerun.txt)"
-fi
-
 # Clear previous failures
 if [ "$CLEAR_RERUN" = true ]; then
   > rerun.txt
@@ -141,6 +135,11 @@ if [ "$DB_RESET" = true ]; then
   rails db:create RAILS_ENV=$RAILS_ENV COLAB_DB=db
   rails testing:db_init RAILS_ENV=$RAILS_ENV COLAB_DB=db
   echo "Database initialised "
+fi
+
+# Show previous failures
+if [ "$SHOW_FAILS" = true ]; then
+  printf '%s\n' "$(cat rerun.txt)"
 fi
 
 #Run the tests according to the request
