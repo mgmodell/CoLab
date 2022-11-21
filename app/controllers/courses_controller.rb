@@ -33,7 +33,7 @@ class CoursesController < ApplicationController
           )
         }
         if current_user.is_instructor? || current_user.is_admin?
-          if @course.id && @course.id > 0
+          if @course.id&.positive?
             response[:new_activity_links] = [
               { name: 'Group Experience', link: 'experience' },
               { name: 'Project', link: 'project' },
@@ -152,7 +152,7 @@ class CoursesController < ApplicationController
       enrollable: false
     }
 
-    if @course.end_date < Time.now
+    if @course.end_date < Time.zone.now
       response[:message_header] = 'enroll_failed_title'
       response[:message] = 'self_enroll_course_closed_body'
 
@@ -605,7 +605,7 @@ class CoursesController < ApplicationController
                   Course.includes(:users).find(params[:id])
                 end
     else
-      @course = Course.find_by_id params[:id]
+      @course = Course.find_by id: params[:id]
       # TODO: This can't be right and must be fixed for security later
       redirect_to :show if @course.nil?
     end

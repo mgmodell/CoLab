@@ -166,7 +166,7 @@ Then(/^the installment values will match the submit ratio$/) do
       recorded_vals[value.factor.id] = factor_vals
     end
 
-    recorded_vals.keys.each do |factor_id|
+    recorded_vals.each_key do |factor_id|
       set_vals = @installment_values[factor_id]
       set_tot = set_vals.values.reduce(0) { |sum, x| sum + x.to_i }
       set_vals_a = []

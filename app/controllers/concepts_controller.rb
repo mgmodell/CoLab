@@ -67,7 +67,7 @@ class ConceptsController < ApplicationController
         index -= 1
         concepts << Concept.new(id: index, name: concept[0])
       end
-      concepts.select! { |c| c.name.downcase.include? search_string } if bingo_game_id == 0
+      concepts.select! { |c| c.name.downcase.include? search_string } if bingo_game_id.zero?
     end
 
     respond_to do |format|
@@ -80,7 +80,7 @@ class ConceptsController < ApplicationController
   def concepts_for_game
     concepts = []
     bingo_game_id = params[:id].to_i
-    if bingo_game_id > 0
+    if bingo_game_id.positive?
       concepts = BingoGame.find(bingo_game_id).concepts.where('concepts.id > 0').uniq.to_a
     elsif current_user.is_admin? || current_user.is_instructor?
       substring = params[:search_string].strip

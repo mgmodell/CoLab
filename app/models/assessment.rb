@@ -56,7 +56,7 @@ class Assessment < ApplicationRecord
 
   def group_for_user(user)
     groups = self.groups.joins(:users).where(users: { id: user })
-    if groups.nil? || groups.count == 0
+    if groups.nil? || groups.count.zero?
       groups = nil
     else
       logger.debug 'Too many groups for this assessment' if groups.count > 1
@@ -102,7 +102,7 @@ class Assessment < ApplicationRecord
       # Retrieve names of those who did not complete their assessments
       # InstructorNewsLetterMailer.inform( instructor ).deliver_later
       assessment.project.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(assessment.project.get_name(false) + ' (assessment)',
+        AdministrativeMailer.summary_report("#{assessment.project.get_name(false)} (assessment)",
                                             assessment.project.course.pretty_name(false),
                                             instructor,
                                             completion_hash).deliver_later
@@ -126,10 +126,10 @@ class Assessment < ApplicationRecord
     assessment.active = true
 
     day_delta = init_day - project.start_dow
-    if day_delta == 0
+    if day_delta.zero?
       assessment.start_date = init_date_in_tz.beginning_of_day
     else
-      day_delta = 7 + day_delta if day_delta < 0
+      day_delta = 7 + day_delta if day_delta.negative?
       assessment.start_date = (init_date_in_tz - day_delta.days)
     end
     assessment.start_date = tz.parse(assessment.start_date.to_s).beginning_of_day

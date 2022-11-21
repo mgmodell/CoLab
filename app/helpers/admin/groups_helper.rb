@@ -1,4 +1,6 @@
 # frozen_string_literal: true
 
-module Admin::GroupsHelper
+module Admin
+  module GroupsHelper
+  end
 end

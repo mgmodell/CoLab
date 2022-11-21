@@ -5,7 +5,7 @@ require 'faker'
 
 Given(/^reset time clock to now$/) do
   travel_back
-  if :rack_test != Capybara.current_driver
+  if Capybara.current_driver != :rack_test
     @dest_date = nil
     click_button 'resetTimeBtn' if has_button?('resetTimeBtn')
   end
@@ -63,9 +63,10 @@ When(/^user clicks the link to the project, they will be presented with the cons
 end
 
 Given(/^the user is the "(.*?)" user in the group$/) do |ordinal|
-  @user = if ordinal == 'last'
+  @user = case ordinal
+          when 'last'
             @group.users.last
-          elsif ordinal == 'first'
+          when 'first'
             @group.users[0]
           else
             @group.users.sample
@@ -85,7 +86,7 @@ end
 
 When(/^the user visits the index$/) do
   visit '/'
-  if !@dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?('http')
+  if !@dest_date.nil? && Capybara.current_driver != :rack_test && current_url.start_with?('http')
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end

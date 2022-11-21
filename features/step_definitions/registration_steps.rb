@@ -76,11 +76,7 @@ When(/^the user "(.*?)" fill in demographics data$/) do |does_or_does_not|
     # page.find('#user_date_of_birth').set(new_date)
   end
   click_button 'Save Profile'
-  count = 0
-  while !all(:xpath, '//*[@id="waiting"]').empty? && count < 3
-    sleep(0.1)
-    count += 1
-  end
+  wait_for_render
 end
 
 When(/^the new user registers$/) do
@@ -140,7 +136,7 @@ end
 Then(/^the users are added to the course by email address$/) do
   email_list = ''
   @users.each do |user|
-    email_list += user.email + ', '
+    email_list += "#{user.email}, "
   end
   @course.add_students_by_email email_list
 end
@@ -148,7 +144,7 @@ end
 Then(/^the users are added to the course as instructors by email address$/) do
   email_list = ''
   @users.each do |user|
-    email_list += user.email + ', '
+    email_list += "#{user.email}, "
   end
   @course.add_instructors_by_email email_list
 end
@@ -202,7 +198,7 @@ Then(/^the user sees (\d+) invitation$/) do |invitation_count|
   if invitation_count.to_i == 1
     page.should have_content 'the course listed below'
   else
-    page.should have_content invitation_count.to_s + ' courses listed below'
+    page.should have_content "#{invitation_count} courses listed below"
   end
 end
 

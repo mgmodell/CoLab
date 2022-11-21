@@ -44,7 +44,7 @@ Given(/^the users "([^"]*)" prep "([^"]*)"$/) do |completion_level, group_or_sol
   when 'don\'t'
     fields_to_complete = 0
   else
-    log "we didn't test anything here: " + completion_level
+    log "we didn't test anything here: #{completion_level}"
   end
 
   user_group.each do |user|
@@ -54,7 +54,7 @@ Given(/^the users "([^"]*)" prep "([^"]*)"$/) do |completion_level, group_or_sol
     step 'the user clicks the link to the candidate list'
     step "the user populates #{fields_to_complete} of the \"term\" entries"
     step "the user populates #{fields_to_complete} of the \"definition\" entries"
-    step 'the user clicks "Save"' if fields_to_complete > 0
+    step 'the user clicks "Save"' if fields_to_complete.positive?
     step 'the user will see "success"'
     step 'the user logs out'
   end
@@ -100,7 +100,7 @@ end
 
 Given(/^the user lowercases "([^"]*)" concepts$/) do |which_concepts|
   page.all(:xpath, "//input[contains(@id,'concept_4_')]").each do |concept_field|
-    next unless ('all'.eql? which_concepts) || (rand(2) > 0)
+    next unless ('all'.eql? which_concepts) || rand(2).positive?
 
     text = concept_field.value
     text.length.times do
@@ -125,10 +125,10 @@ Given(/^the user assigns "([^"]*)" feedback to all candidates$/) do |feedback_ty
              end
 
   concept_count.upto(concept_count + 3) do |counter|
-    concepts << 'concept ' + counter.to_s
+    concepts << "concept #{counter}"
   end
 
-  feedbacks = CandidateFeedback.unscoped.where('name_en like ?', feedback_type + '%')
+  feedbacks = CandidateFeedback.unscoped.where('name_en like ?', "#{feedback_type}%")
   error_msg = ''
   @feedback_list = {}
   @bingo.candidates.completed.each do |candidate|
@@ -156,7 +156,7 @@ Given(/^the user assigns "([^"]*)" feedback to all candidates$/) do |feedback_ty
 
     begin
       elem = page.find(:xpath,
-                       '//li[text()="' + feedback.name + '"]')
+                       "//li[text()=\"#{feedback.name}\"]")
       elem.scroll_to(elem)
       elem.send_keys :enter
 
@@ -167,21 +167,21 @@ Given(/^the user assigns "([^"]*)" feedback to all candidates$/) do |feedback_ty
       end
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       elem = page.find(:xpath,
-                       '//li[text()="' + feedback.name + '"]')
+                       "//li[text()=\"#{feedback.name}\"]")
       elem.scroll_to(elem)
       elem.click
 
-      error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries > 0
+      error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries.positive?
       error_msg += e.message
-      error_msg += "\t\t#{candidate.inspect}" unless retries > 0
+      error_msg += "\t\t#{candidate.inspect}" unless retries.positive?
       # elem.send_keys :escape
 
       (retries += 1).should be < 20, 'Too many retries'
       retry unless retries > 5
     rescue Capybara::ElementNotFound => e
-      error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries > 0
+      error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries.positive?
       error_msg += e.message
-      error_msg += "\t\t#{candidate.inspect}" unless retries > 0
+      error_msg += "\t\t#{candidate.inspect}" unless retries.positive?
       elem.send_keys :enter
     end
   end

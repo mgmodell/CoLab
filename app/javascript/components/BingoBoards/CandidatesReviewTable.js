@@ -24,8 +24,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import {startTask, endTask} from '../infrastructure/StatusSlice'
 import axios from "axios";
 
-const WorkingIndicator = React.lazy( () =>
-  import( "../infrastructure/WorkingIndicator" ));
+import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 export default function CandidatesReviewTable(props) {
   const { t } = useTranslation("bingo_games");

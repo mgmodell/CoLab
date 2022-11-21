@@ -31,10 +31,8 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 import { Skeleton } from "@mui/material";
 
-const ProjectGroups = React.lazy( () =>
-  import( "./ProjectGroups" ));
-const ChartContainer = React.lazy( () =>
-  import( "./Reports/ChartContainer" ));
+const ProjectGroups = React.lazy(() => import("./ProjectGroups"));
+const ChartContainer = React.lazy(() => import("./Reports/ChartContainer"));
 
 export default function ProjectDataAdmin(props) {
   const category = "project";

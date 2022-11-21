@@ -23,20 +23,17 @@ import UserEmailList from "./UserEmailList";
 
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-const WorkingIndicator = React.lazy( () =>
-  import( "./infrastructure/WorkingIndicator" ));
 
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TabList, TabContext, TabPanel } from "@mui/lab/";
 import { Settings } from "luxon";
 
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-const UserCourseList = React.lazy( () =>
-  import( "./UserCourseList" ));
-const ResearchParticipationList = React.lazy( () =>
-  import( "./ResearchParticipationList" ));
-const UserActivityList = React.lazy( () =>
-  import( "./UserActivityList" ));
+const UserCourseList = React.lazy(() => import("./UserCourseList"));
+const ResearchParticipationList = React.lazy(() =>
+  import("./ResearchParticipationList")
+);
+const UserActivityList = React.lazy(() => import("./UserActivityList"));
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
 import { useDispatch } from "react-redux";
@@ -64,6 +61,8 @@ export default function ProfileDataAdmin(props) {
     state => state.context.status.lookupsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
+  const lastRetrieved = useTypedSelector(state => state.profile.lastRetrieved);
+  const [initRetrieved, setInitRetrieved] = useState( lastRetrieved);
   const tz_hash = useTypedSelector(
     state => state.context.lookups.timezone_lookup
   );
@@ -160,13 +159,13 @@ export default function ProfileDataAdmin(props) {
   const setProfileDOB = date_of_birth => {
     const temp = {};
     Object.assign(temp, user);
-    temp.date_of_birth = date_of_birth;
+    temp.date_of_birth = date_of_birth.toISO( );
     dispatch(setProfile(temp));
   };
   const setProfileStartedSchool = started_school => {
     const temp = {};
     Object.assign(temp, user);
-    temp.started_school = started_school;
+    temp.started_school = started_school.toISO( );
     dispatch(setProfile(temp));
   };
   const setProfileImpVisual = impairment_visual => {
@@ -242,7 +241,6 @@ export default function ProfileDataAdmin(props) {
 
             if (1 === foundSelectedStates.length) {
               setProfileHomeState(foundSelectedStates[0].id);
-              setDirty(true);
             }
             dispatch(endTask("loading"));
           })
@@ -256,16 +254,21 @@ export default function ProfileDataAdmin(props) {
   };
 
   const getProfile = () => {
-    dispatch(fetchProfile);
+    dispatch(fetchProfile())
+      .then( setInitRetrieved( lastRetrieved ) )
+      .then( setDirty( false ) )
+      ;
   };
   const saveProfile = () => {
     dispatch(persistProfile());
+    setDirty( false );
   };
 
   useEffect(() => {
     if (endpointStatus) {
       dispatch(endTask("loading"));
       getProfile();
+
     }
   }, [endpointStatus]);
 
@@ -275,18 +278,22 @@ export default function ProfileDataAdmin(props) {
     }
   }, [user.lastRetrieved, tz_hash]);
 
-  useEffect(() => setDirty(true), [
-    user
-    //Demographics
-  ]);
+
+  useEffect(() => {
+    //TODO: Fix profiles are marked dirty on initial load.
+    if (initRetrieved !== lastRetrieved) {
+      setDirty(true);
+    }
+  }, [user]);
+
 
   useEffect(() => getStates(user.country), [user.country]);
 
-  const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveProfile}>
+  const saveButton = (
+    <Button variant="contained" onClick={saveProfile} disabled={!dirty}>
       {null == user.id ? "Create" : "Save"} Profile
     </Button>
-  ) : null;
+  );
 
   const detailsComponent = lookupStatus ? (
     <Paper>

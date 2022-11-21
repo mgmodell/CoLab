@@ -19,7 +19,7 @@ gem 'mysql2'
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
 # https://github.com/rails/webpacker
-gem 'shakapacker', '6.5.2'
+gem 'shakapacker', '6.5.4'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -57,6 +57,8 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
+gem 'react_on_rails', '13.1.0'
+
 gem 'stopwords-filter', require: 'stopwords',
   :git => 'https://github.com/mgmodell/stopwords-filter'
 gem 'traco'
@@ -76,7 +78,7 @@ group :development, :test do
   gem 'bullet'
   gem 'byebug'
   gem 'cucumber-rails', require: false
-  gem 'capybara', :git => 'https://github.com/teamcapybara/capybara'
+  gem 'capybara'
   gem 'database_cleaner'
   gem 'derailed'
   # gem 'ruby-debug-ide'
@@ -91,7 +93,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.37.0', require: false
+  gem 'rubocop', '~> 1.39.0', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
@@ -115,4 +117,3 @@ end
 
 
 
-gem "react_on_rails", "= 13.0"

@@ -17,17 +17,14 @@ Webdrivers.cache_time = 86_400
 def wait_for_render
   times = 3000
 
-  while !all(:xpath, "//*[@id='waiting']").empty? && times > 0
+  while !all(:xpath, "//*[@id='waiting']").empty? && times.positive?
     sleep(0.01)
     times -= 1
   end
 end
 
 def ack_messages
-  all(:xpath, "//button[@id='info-close']").each do |close_btn|
-    close_btn.click
-
-  end
+  all(:xpath, "//button[@id='info-close']").each(&:click)
 end
 
 Capybara.register_driver :headless_firefox do |app|
@@ -74,7 +71,7 @@ end
 
 Capybara.register_driver(:headless_chrome) do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[ headless disable-extensions ] }
+    chromeOptions: { args: %w[headless disable-extensions] }
   )
 
   Capybara::Selenium::Driver.new(
@@ -86,7 +83,7 @@ end
 
 Capybara.register_driver(:chrome) do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[ disable-extensions ] }
+    chromeOptions: { args: %w[disable-extensions] }
   )
 
   Capybara::Selenium::Driver.new(

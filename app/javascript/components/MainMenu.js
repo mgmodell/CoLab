@@ -29,8 +29,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
 import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
 
-const DiversityCheck = React.lazy( () =>
-  import( "./DiversityCheck" ));
+import DiversityCheck from "./DiversityCheck";
 import { useTranslation } from "react-i18next";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
@@ -67,7 +66,7 @@ export default function MainMenu(props) {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      navTo( '/' );
+      navTo("/");
     }
   }, [isLoggedIn]);
 

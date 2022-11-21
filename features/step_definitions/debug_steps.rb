@@ -15,7 +15,7 @@ Then(/^show the entries list$/) do
   @entries_list.each do |item|
     term = item['term'].presence || ''
     definition = item['definition'].presence || ''
-    log term + ' | ' + definition
+    log "#{term} | #{definition}"
   end
 end
 

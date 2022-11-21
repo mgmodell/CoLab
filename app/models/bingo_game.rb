@@ -39,7 +39,7 @@ class BingoGame < ApplicationRecord
 
   def status
     completed = candidates.completed.count
-    if completed > 0
+    if completed.positive?
       100 * candidates.reviewed.count / candidates.completed.count
     else
       0
@@ -243,11 +243,11 @@ class BingoGame < ApplicationRecord
       bingo.course.enrolled_students.each do |student|
         candidate_list = bingo.candidate_list_for_user(student)
         completion_hash[student.email] = { name: student.name(false),
-                                           status: candidate_list.percent_completed.to_s + '%' }
+                                           status: "#{candidate_list.percent_completed}%" }
       end
 
       bingo.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(bingo.get_name(false) + ' (terms list)',
+        AdministrativeMailer.summary_report("#{bingo.get_name(false)} (terms list)",
                                             bingo.course.pretty_name,
                                             instructor,
                                             completion_hash).deliver_later
@@ -260,7 +260,7 @@ class BingoGame < ApplicationRecord
   end
 
   def candidate_list_for_user(user)
-    cl = candidate_lists.find_by_user_id user.id
+    cl = candidate_lists.find_by user_id: user.id
     if cl.nil?
       cl = CandidateList.new
       cl.user_id = user.id
@@ -296,10 +296,10 @@ class BingoGame < ApplicationRecord
 
   # validation methods
   def date_sanity
-    unless start_date.nil? || end_date.nil?
-      errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
-      errors
-    end
+    return if start_date.nil? || end_date.nil?
+
+    errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
+    errors
   end
 
   def dates_within_course
@@ -321,17 +321,17 @@ class BingoGame < ApplicationRecord
   end
 
   def review_completed
-    if reviewed && candidates.reviewed.count < candidates.completed.count
-      errors.add(:reviewed, I18n.t('bingo_games.reviewed_err'))
-    end
+    return unless reviewed && candidates.reviewed.count < candidates.completed.count
+
+    errors.add(:reviewed, I18n.t('bingo_games.reviewed_err'))
   end
 
   # We must validate group components {project and discount}
   def group_components
-    if group_option
-      errors.add(:project_id, I18n.t('bingo_games.group_requires_project')) if project.nil?
-      errors.add(:group_discount, I18n.t('bingo_games.group_requires_discount')) if group_discount.nil?
-    end
+    return unless group_option
+
+    errors.add(:project_id, I18n.t('bingo_games.group_requires_project')) if project.nil?
+    errors.add(:group_discount, I18n.t('bingo_games.group_requires_discount')) if group_discount.nil?
   end
 
   def anonymize

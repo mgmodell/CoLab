@@ -338,20 +338,20 @@ class Course < ApplicationRecord
       self.end_date = new_date.end_of_day.change(sec: 0)
     end
 
-    if timezone_changed? && timezone_was.present?
-      orig_tz = ActiveSupport::TimeZone.new(timezone_was)
+    return unless timezone_changed? && timezone_was.present?
 
-      Course.transaction do
-        get_activities.each do |activity|
-          d = orig_tz.parse(activity.start_date.to_s)
-          d = course_tz.local(d.year, d.month, d.day)
-          activity.start_date = d.beginning_of_day
+    orig_tz = ActiveSupport::TimeZone.new(timezone_was)
 
-          d = orig_tz.parse(activity.end_date.to_s)
-          d = course_tz.local(d.year, d.month, d.day)
-          activity.end_date = d.end_of_day
-          activity.save!(validate: false)
-        end
+    Course.transaction do
+      get_activities.each do |activity|
+        d = orig_tz.parse(activity.start_date.to_s)
+        d = course_tz.local(d.year, d.month, d.day)
+        activity.start_date = d.beginning_of_day
+
+        d = orig_tz.parse(activity.end_date.to_s)
+        d = course_tz.local(d.year, d.month, d.day)
+        activity.end_date = d.end_of_day
+        activity.save!(validate: false)
       end
     end
   end

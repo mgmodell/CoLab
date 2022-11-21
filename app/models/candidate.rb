@@ -37,10 +37,10 @@ class Candidate < ApplicationRecord
     definition.strip!
 
     # Reset the performance data on the List
-    if concept_id_changed? || candidate_feedback_id_changed?
-      candidate_list.cached_performance = nil
-      candidate_list.save
-    end
+    return unless concept_id_changed? || candidate_feedback_id_changed?
+
+    candidate_list.cached_performance = nil
+    candidate_list.save
   end
 
   private
@@ -51,15 +51,15 @@ class Candidate < ApplicationRecord
       concept.bingo_games_count = concept.bingo_games.uniq.size
       concept.courses_count = concept.courses.uniq.size
     end
-    if concept_id_changed? && concept_id_was.present?
-      # Caching solution - candidate mentions are automatic
-      # TODO: verify that the previous owner is updated properly.
-      puts "prior concept: #{concept_id_was}"
-      old_concept = Concept.includes(:bingo_games, :courses).find(concept_id_was)
-      old_concept.bingo_games_count = old_concept.bingo_games.uniq.size
-      old_concept.courses_count = old_concept.courses.uniq.size
-      old_concept.save
-    end
+    return unless concept_id_changed? && concept_id_was.present?
+
+    # Caching solution - candidate mentions are automatic
+    # TODO: verify that the previous owner is updated properly.
+    Rails.logger.debug "prior concept: #{concept_id_was}"
+    old_concept = Concept.includes(:bingo_games, :courses).find(concept_id_was)
+    old_concept.bingo_games_count = old_concept.bingo_games.uniq.size
+    old_concept.courses_count = old_concept.courses.uniq.size
+    old_concept.save
   end
 
   def concept_assigned

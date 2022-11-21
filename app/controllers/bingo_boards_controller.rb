@@ -224,7 +224,7 @@ class BingoBoardsController < ApplicationController
 
   def worksheet_for_game
     bingo_game_id = params[:bingo_game_id]
-    if '-42' == bingo_game_id
+    if bingo_game_id == '-42'
       demo_worksheet_for_game
 
     else
@@ -393,7 +393,7 @@ class BingoBoardsController < ApplicationController
 
   def score_worksheet
     require 'image_processing/vips'
-    puts "params: #{params}"
+    Rails.logger.debug "params: #{params}"
 
     @bingo_board.performance = params[:performance]
 

@@ -94,7 +94,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
     }
     user_email = params[:email]
     if EmailAddress.valid? user_email
-      user = User.find_by_email user_email
+      user = User.find_by email: user_email
       if user.nil?
         passwd = SecureRandom.alphanumeric(10)
         user = User.create(
@@ -138,7 +138,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
       message: current_user.present? ? 'passwords.send_instructions' : 'passwords.send_paranoid_instructions'
     }
 
-    reset_user = current_user.presence || User.find_by_email(params[:email])
+    reset_user = current_user.presence || User.find_by(email: params[:email])
 
     reset_user.send_reset_password_instructions if reset_user.present?
 

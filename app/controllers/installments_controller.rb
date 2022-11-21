@@ -100,7 +100,7 @@ class InstallmentsController < ApplicationController
           installment.save!
 
           if installment.errors.empty?
-            params[:contributions].values.each do |contribution|
+            params[:contributions].each_value do |contribution|
               contribution.each do |value|
                 installment.values.create!(
                   user_id: value[:userId],
@@ -151,10 +151,10 @@ class InstallmentsController < ApplicationController
     respond_to do |format|
       format.html do
         @title = t 'installments.title'
-        if id < 0
+        if id.negative?
           flash[:notice] = t 'installments.demo_success'
           redirect_to root_url
-        elsif id > 0
+        elsif id.positive?
           @installment = Installment.find(id)
           if @installment.update(i_params)
             notice = t('installments.success')
@@ -199,7 +199,7 @@ class InstallmentsController < ApplicationController
         end
       end
       format.json do
-        if id < 0
+        if id.negative?
           valueArray =
             render json: {
               messages: {
@@ -247,7 +247,7 @@ class InstallmentsController < ApplicationController
               value.save!
             end
           end
-          puts value.errors.full_messages unless value.errors.empty?
+          Rails.logger.debug value.errors.full_messages unless value.errors.empty?
           if value.errors.empty?
             render json: {
               messages: {

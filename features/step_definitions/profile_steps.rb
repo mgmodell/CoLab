@@ -29,3 +29,24 @@ Then(/^user sees the assessed project in the history$/) do
   wait_for_render
   page.should have_content(@project.get_name(false))
 end
+
+When(/^the user logs in$/) do
+  visit '/'
+  fill_in 'email', with: @user.email
+  fill_in 'password', with: 'password'
+
+  click_link_or_button 'Log in!'
+
+  wait_for_render
+  page.should have_content 'signed in successfully'
+
+  # Blow away the cookies accept
+  click_link_or_button 'I understand' if has_content? 'I understand'
+
+  # Set custom time if warranted
+  if Capybara.current_driver != :rack_test && !@dest_date.nil?
+    fill_in 'newTimeVal', with: @dest_date.to_s
+    click_button 'setTimeBtn'
+  end
+  ack_messages
+end

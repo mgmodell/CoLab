@@ -56,7 +56,7 @@ class Project < ApplicationRecord
 
   def get_performance(user)
     installments_count = installments.where(user:).count
-    assessments.count == 0 ? 100 : 100 * installments_count / assessments.count
+    assessments.count.zero? ? 100 : 100 * installments_count / assessments.count
   end
 
   # TODO: Not ideal structuring for UI
@@ -217,10 +217,10 @@ class Project < ApplicationRecord
 
   # Validation check code
   def date_sanity
-    unless start_date.nil? || end_date.nil?
-      errors.add(:start_dow, 'The start date must come before the end date') if start_date > end_date
-      errors
-    end
+    return if start_date.nil? || end_date.nil?
+
+    errors.add(:start_dow, 'The start date must come before the end date') if start_date > end_date
+    errors
   end
 
   def init_dates

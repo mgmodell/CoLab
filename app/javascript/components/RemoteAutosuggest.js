@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import deburr from 'lodash/deburr';
+import deburr from "lodash/deburr";
 
-const Autosuggest = React.lazy( () =>
-  import( "react-autosuggest" ));
+const Autosuggest = React.lazy(() => import("react-autosuggest"));
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 

@@ -98,7 +98,7 @@ Then(/^user should see (\d+) open task$/) do |open_project_count|
   when 1
     page.should have_content  'one task at the moment'
   else
-    page.should have_content(open_project_count.to_s + ' tasks today')
+    page.should have_content("#{open_project_count} tasks today")
   end
 end
 
@@ -111,25 +111,4 @@ Given(/^the user "(.*?)" had demographics requested$/) do |with_demographics|
   @user.welcomed = demographics_requested
   @user.save!
   log @user.errors.full_messages if @user.errors.present?
-end
-
-When(/^the user logs in$/) do
-  visit '/'
-  fill_in 'email', with: @user.email
-  fill_in 'password', with: 'password'
-
-  click_link_or_button 'Log in!'
-
-  wait_for_render
-  page.should have_content 'signed in successfully'
-
-  # Blow away the cookies accept
-  click_link_or_button 'I understand' if has_content? 'I understand'
-
-  # Set custom time if warranted
-  if :rack_test != Capybara.current_driver && !@dest_date.nil?
-    fill_in 'newTimeVal', with: @dest_date.to_s
-    click_button 'setTimeBtn'
-  end
-  ack_messages
 end

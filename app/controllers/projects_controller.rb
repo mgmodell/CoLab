@@ -158,9 +158,9 @@ class ProjectsController < ApplicationController
                      .find_by(id: params[:id])
 
     group_hash = {}
-    params[:groups].values.each do |g|
+    params[:groups].each_value do |g|
       group = nil
-      if g[:id] > 0
+      if (g[:id]).positive?
         group = project.groups.find_by id: g[:id]
         group.name = g[:name]
       else
@@ -169,7 +169,7 @@ class ProjectsController < ApplicationController
       group.users = []
       group_hash[g[:id]] = group
     end
-    params[:students].values.each do |s|
+    params[:students].each_value do |s|
       student = project.rosters.find_by(user_id: s[:id]).user
       group = group_hash[s[:group_id]]
       group.users << student unless group.nil?
@@ -325,10 +325,10 @@ class ProjectsController < ApplicationController
   end
 
   def check_editor
-    unless current_user.is_admin? || current_user.is_instructor?
-      redirect_to root_path
-      # TODO: handle JSON response
-    end
+    return if current_user.is_admin? || current_user.is_instructor?
+
+    redirect_to root_path
+    # TODO: handle JSON response
   end
 
   def project_params

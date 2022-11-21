@@ -4,7 +4,7 @@ require 'faker'
 
 Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
-  elem = page.find(:id, 'bingo_game_' + date_field_prefix + '_date')
+  elem = page.find(:id, "bingo_game_#{date_field_prefix}_date")
   begin
     retries ||= 0
     elem.click
@@ -30,7 +30,7 @@ end
 
 Given(/^the course has a Bingo! game$/) do
   @bingo = @course.bingo_games.new(
-    topic: Faker::Company.industry + ' Topic',
+    topic: "#{Faker::Company.industry} Topic",
     description: Faker::Company.bs,
     lead_time: 2,
     individual_count: 20,
@@ -61,7 +61,7 @@ Then(/^the bingo "([^"]*)" is "([^"]*)"$/) do |field, value|
   when 'lead_time'
     @bingo.lead_time.should eq value.to_i
   else
-    log "We didn't test anything there: " + field + ' not found'
+    log "We didn't test anything there: #{field} not found"
     pending
   end
 end
@@ -95,7 +95,7 @@ Then(/^the bingo "([^"]*)" date is "([^"]*)"$/) do |date_field_prefix, date_valu
     date = course_tz.local(d.year, d.month, d.day).end_of_day
     @bingo.end_date.change(sec: 0).should eq date.change(sec: 0)
   else
-    log "We didn't test anything there: " + date_field_prefix + ' not found'
+    log "We didn't test anything there: #{date_field_prefix} not found"
   end
 end
 

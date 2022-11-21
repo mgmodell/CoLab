@@ -58,7 +58,7 @@ const initialState = {
   welcomed: false,
   is_instructor: false,
   is_admin: false,
-  country: null,
+  country: '',
   timezone: 'UTC',
   language_id: 40,
   theme_id: 0,
@@ -66,14 +66,14 @@ const initialState = {
   researcher: false,
   anonymize: false,
 
-  gender_id: null,
-  date_of_birth: null ,
-  home_state_id: null,
-  primary_language_id: null,
+  gender_id: '__',
+  date_of_birth: '' ,
+  home_state_id: '',
+  primary_language_id: '',
 
-  school_id: null,
-  started_school: null,
-  cip_code_id: null,
+  school_id: '',
+  started_school: '',
+  cip_code_id: '',
 
   impairment_visual: false,
   impairment_auditory: false,
@@ -88,10 +88,15 @@ const profileSlice = createSlice({
   name: 'profile',
   initialState: initialState,
   reducers: {
-    setProfile: {
+    setRetrievedProfile: {
       reducer: (state, action) =>{
         state.user = action.payload;
         state.lastRetrieved = Date.now( );
+      }
+    },
+    setProfile: {
+      reducer: (state, action) =>{
+        state.user = action.payload;
       }
     },
     setAnonymize: {
@@ -143,14 +148,14 @@ export const fetchProfile = createAsyncThunk(
     const dispatch = thunkAPI.dispatch;
     const getState = thunkAPI.getState;
 
-    const url = getState()['context']['endpoints'][ 'profile' ]['baseUrl'] + '.json';
+    const url = getState().context.endpoints[ 'profile' ]['baseUrl'] + '.json';
     dispatch( startTask( 'init' ) )
 
     axios.get( url, {
     })
       .then( (response)=>{
         const user: ProfilesRootState = response.data.user;
-        dispatch( setProfile( user ) );
+        dispatch( setRetrievedProfile( user ) );
         dispatch( endTask( 'loading' ) );
       } )
       .catch( error =>{
@@ -199,9 +204,10 @@ export const persistProfile = createAsyncThunk(
 
     } )
       .then( (data) =>{
+
         user = data['data']['user'];
 
-        dispatch( setProfile( user ) );
+        dispatch( setRetrievedProfile( user ) );
         dispatch( endTask( 'loading' ) );
       } )
       .catch( error =>{
@@ -211,5 +217,5 @@ export const persistProfile = createAsyncThunk(
 )
 
 const {actions, reducer} = profileSlice;
-export const { setProfile, setAnonymize, setProfileTheme, setProfileTimezone, clearProfile } = actions;
+export const { setProfile, setRetrievedProfile, setAnonymize, setProfileTheme, setProfileTimezone, clearProfile } = actions;
 export default reducer;

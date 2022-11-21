@@ -187,9 +187,9 @@ class CandidateListsController < ApplicationController
 
   def show
     @title = t '.title'
-    unless @candidate_list.bingo_game.reviewed
-      redirect_to :root_path, notice: (t 'candidate_lists.not_ready_for_review')
-    end
+    return if @candidate_list.bingo_game.reviewed
+
+    redirect_to :root_path, notice: (t 'candidate_lists.not_ready_for_review')
   end
 
   def demo_play

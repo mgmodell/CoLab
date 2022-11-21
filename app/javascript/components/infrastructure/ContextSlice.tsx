@@ -5,7 +5,7 @@
 import axios from 'axios';
 import {Cookies} from 'react-cookie-consent';
 
-import {fetchProfile, setProfile, clearProfile} from './ProfileSlice';
+import {fetchProfile, setRetrievedProfile, clearProfile} from './ProfileSlice';
 import {addMessage, Priorities} from './StatusSlice';
 import i18n from './i18n';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
@@ -153,7 +153,7 @@ const CONFIG = {
                     dispatch( setLoggedIn(
                         resp['data']['lookups'],
                         resp['data']['endpoints'] ) );
-                    dispatch( setProfile( resp['data']['profile']['user']) )
+                    dispatch( setRetrievedProfile( resp['data']['profile']['user']) )
                     //dispatch( fetchProfile( ) );
                 } else {
                     dispatch( setLoggedOut( ) );

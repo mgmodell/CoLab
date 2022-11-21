@@ -182,11 +182,11 @@ class Experience < ApplicationRecord
         narrative = if include_ids.empty?
                       Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where('id NOT IN (?)', narrative_counts.keys).sample
-                    elsif world.count > 0
+                    elsif world.count.positive?
                       Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: world).sample
 
-                    elsif exp.count > 0
+                    elsif exp.count.positive?
                       Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: world).sample
                     else
@@ -228,7 +228,7 @@ class Experience < ApplicationRecord
       end
 
       experience.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(experience.name + ' (experience)',
+        AdministrativeMailer.summary_report("#{experience.name} (experience)",
                                             experience.course.pretty_name,
                                             instructor,
                                             completion_hash).deliver_later
@@ -248,16 +248,16 @@ class Experience < ApplicationRecord
   end
 
   def date_sanity
-    unless start_date.nil? || end_date.nil?
-      errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
-      errors
-    end
+    return if start_date.nil? || end_date.nil?
+
+    errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
+    errors
   end
 
   def end_date_optimization
-    if student_end_date.nil? || end_date_changed? || lead_time_changed?
-      self.student_end_date = end_date - (1 + lead_time).days
-    end
+    return unless student_end_date.nil? || end_date_changed? || lead_time_changed?
+
+    self.student_end_date = end_date - (1 + lead_time).days
   end
 
   def dates_within_course

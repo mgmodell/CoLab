@@ -1,7 +1,0 @@
-<p id="notice"><%= notice %></p>
-<% theme_code = get_theme_code
-   anonymize = get_anonymous %>
-<%= react_component "ConceptsTable", {
-  getEndpointsUrl: endpoints_path( unit: '' ),
-  token: form_authenticity_token
-  } %>

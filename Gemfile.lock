@@ -21,20 +21,6 @@ GIT
   specs:
     stopwords-filter (0.7.0)
 
-GIT
-  remote: https://github.com/teamcapybara/capybara
-  revision: 2d05c203d79bca7b3b093c37f866ee41f294925b
-  specs:
-    capybara (3.38.0)
-      addressable
-      matrix
-      mini_mime (>= 0.1.3)
-      nokogiri (~> 1.8)
-      rack (>= 1.6.0)
-      rack-test (>= 0.6.3)
-      regexp_parser (>= 1.5, < 3.0)
-      xpath (~> 3.2)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -150,6 +136,15 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
+    capybara (3.38.0)
+      addressable
+      matrix
+      mini_mime (>= 0.1.3)
+      nokogiri (~> 1.8)
+      rack (>= 1.6.0)
+      rack-test (>= 0.6.3)
+      regexp_parser (>= 1.5, < 3.0)
+      xpath (~> 3.2)
     childprocess (4.1.0)
     choice (0.2.0)
     chronic (0.10.2)
@@ -409,7 +404,7 @@ GEM
     rb-readline (0.5.5)
     rdoc (6.4.0)
       psych (>= 4.0.0)
-    react_on_rails (13.0.0)
+    react_on_rails (13.1.0)
       addressable
       connection_pool
       execjs (~> 2.5)
@@ -445,7 +440,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-support (3.12.0)
-    rubocop (1.37.1)
+    rubocop (1.39.0)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.2.1)
@@ -484,7 +479,7 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     semantic_range (3.0.0)
-    shakapacker (6.5.2)
+    shakapacker (6.5.4)
       activesupport (>= 5.2)
       rack-proxy (>= 0.6.1)
       railties (>= 5.2)
@@ -571,7 +566,7 @@ DEPENDENCIES
   bootsnap
   bullet
   byebug
-  capybara!
+  capybara
   chronic
   city-state
   cucumber-rails
@@ -607,17 +602,17 @@ DEPENDENCIES
   rails-erd
   rails_12factor
   rb-readline
-  react_on_rails (= 13.0)
+  react_on_rails (= 13.1.0)
   reek
   report_builder
   rspec
-  rubocop (~> 1.37.0)
+  rubocop (~> 1.39.0)
   rubocop-performance
   rubocop-rails
   rubocop-thread_safety
   sdoc
   selenium-webdriver
-  shakapacker (= 6.5.2)
+  shakapacker (= 6.5.4)
   simplecov
   solargraph
   spring

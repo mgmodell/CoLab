@@ -5,12 +5,9 @@ import IconButton from "@mui/material/IconButton";
 
 // Icons
 import HelpIcon from "@mui/icons-material/Help";
-import Joyride, {
-  ACTIONS
-} from "react-joyride";
+import Joyride, { ACTIONS } from "react-joyride";
 
 import { useTranslation } from "react-i18next";
-
 
 export default function HelpMenu(props) {
   const [menuOpen, setMenuOpen] = useState(false);

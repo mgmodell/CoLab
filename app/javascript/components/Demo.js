@@ -2,18 +2,16 @@ import React, { useEffect, useState, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const HomeShell = React.lazy( () =>
-  import( "./HomeShell" ));
-const InstallmentReport = React.lazy( () =>
-  import( "./InstallmentReport" ));
-const CandidateListEntry = React.lazy( () =>
-  import( "./BingoBoards/CandidateListEntry" ));
-const CandidatesReviewTable = React.lazy( () =>
-  import( "./BingoBoards/CandidatesReviewTable" ));
-const BingoBuilder = React.lazy( () =>
-  import( "./BingoBoards/BingoBuilder" ));
-const Experience = React.lazy( () =>
-  import( "./Experience" ));
+import HomeShell from "./HomeShell";
+const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
+const CandidateListEntry = React.lazy(() =>
+  import("./BingoBoards/CandidateListEntry")
+);
+const CandidatesReviewTable = React.lazy(() =>
+  import("./BingoBoards/CandidatesReviewTable")
+);
+const BingoBuilder = React.lazy(() => import("./BingoBoards/BingoBuilder"));
+const Experience = React.lazy(() => import("./Experience"));
 
 export default function Demo(props) {
   return (

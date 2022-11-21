@@ -10,10 +10,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-const MUIDataTable = React.lazy( () =>
-  import( "mui-datatables" ));
-const WorkingIndicator = React.lazy( () =>
-  import( "./infrastructure/WorkingIndicator" ));
+const MUIDataTable = React.lazy(() => import("mui-datatables"));
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
@@ -35,10 +33,10 @@ import { startTask, endTask } from "./infrastructure/StatusSlice";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 
-const DropUserButton = React.lazy( () =>
-  import( "./DropUserButton" ));
-const BingoDataRepresentation = React.lazy( () =>
-  import( "./BingoBoards/BingoDataRepresentation" ));
+const DropUserButton = React.lazy(() => import("./DropUserButton"));
+const BingoDataRepresentation = React.lazy(() =>
+  import("./BingoBoards/BingoDataRepresentation")
+);
 
 export default function CourseUsersList(props) {
   const category = "courses";
