@@ -86,13 +86,7 @@ When(/^the new user registers$/) do
   fill_in 'email', with: email
   fill_in 'first_name', with: Faker::Name.first_name
   fill_in 'first_name', with: Faker::Name.last_name
-  # fill_in 'user[password]', with: 'password'
 
-  # These aren't working in capybara
-  # page.select('Male', from: 'user_gender_id')
-  # page.select('Education', from: 'user_cip_code_id')
-  # page.select('Belize', from: 'country')
-  # page.select('Avestan', from: 'user_primary_language_id')
 
   click_button 'Sign me up!'
   wait_for_render

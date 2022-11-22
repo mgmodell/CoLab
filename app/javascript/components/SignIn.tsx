@@ -112,9 +112,9 @@ export default function SignIn(props) {
           onClick={() => {
             dispatch(
               emailSignUp({
-                email: string,
-                firstName: string,
-                lastName: string
+                email,
+                firstName,
+                lastName
               })
             ).then(navigate(from));
           }}
