@@ -168,6 +168,9 @@ export const fetchProfile = createAsyncThunk(
 export const persistProfile = createAsyncThunk(
   'profile/persistProfile',
   async( _, thunkAPI ) => {
+    const dispatch = thunkAPI.dispatch;
+    const getState = thunkAPI.getState;
+
     dispatch( startTask( 'saving' ) );
     const url = getState().context.endpoints[ 'profile' ]['baseUrl'] + '.json';
     let user: ProfilesRootState = getState().profile.user;
