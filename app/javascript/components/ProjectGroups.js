@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import Fab from "@mui/material/Fab";
 import Paper from "@mui/material/Paper";
@@ -23,100 +23,84 @@ const DiversityScore = React.lazy(() => import("../components/DiversityScore"));
 import { SortDirection } from "react-virtualized";
 import axios from "axios";
 
-class ProjectGroups extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dirty: false,
-      working: true,
-      message: "",
-      filter_text: "",
-      sortBy: "last_name",
-      sortDirection: SortDirection.DESC,
-      groups_raw: {},
-      students_raw: {},
-      groups: [],
-      students: []
-    };
-    this.addGroup = this.addGroup.bind(this);
-    this.removeGroup = this.removeGroup.bind(this);
-    this.setGroup = this.setGroup.bind(this);
-    this.setGroupName = this.setGroupName.bind(this);
-    this.filter = this.filter.bind(this);
-    this.sortEvent = this.sortEvent.bind(this);
-    this.saveGroups = this.saveGroups.bind(this);
-    this.recalcDiversity = this.recalcDiversity.bind(this);
-    this.rescoreGroup = this.rescoreGroup.bind(this);
-  }
+export default function ProjectGroups(props){
 
-  addGroup() {
-    const { groups_raw } = this.state;
-    const group_ids = Object.keys(groups_raw).map(Number);
+  const [dirty, setDirty] = useState( false );
+  const [working, setWorking] = useState( true );
+  const [message, setMessage] = useState( '' );
+  const [filterText, setFilterText] = useState( '' );
+  const [sortBy, setSortBy] = useState( 'last_name' );
+  const [sortDirection, setSortDirection] = useState( SortDirection.DESC );
+  const [groupsRaw, setGroupsRaw] = useState( {} );
+  const [studentsRaw, setStudentsRaw] = useState( {} );
+  const [groups, setGroups] = useState( [] );
+  const [students, setStudents] = useState( [] );
+
+
+  const addGroup = ()=> {
+    const updatedGroups = Object.assign( {}, groupsRaw );
+    const group_ids = Object.keys(updatedGroups).map(Number);
     group_ids.push(0);
     const min_id = Math.min(...group_ids) - 1;
 
-    groups_raw[min_id] = {
+    updatedGroups[min_id] = {
       name: "Team " + min_id,
       id: min_id,
       diversity: 0
     };
-    this.setState({
-      dirty: true,
-      groups_raw: groups_raw,
-      groups: Object.values(groups_raw)
-    });
+    setDirty( true );
+    setGroupsRaw( updatedGroups );
+    setGroups( Object.values( updatedGroups ) );
   }
 
-  removeGroup(event, group_id) {
-    const { groups_raw, students_raw, sortBy, sortDirection } = this.state;
-    const students = Object.values(students_raw);
+  const removeGroup = (event, group_id) => {
+    const groupsUpdated = Object.assign( {}, groupsRaw );
+    const studentsUpdated = Object.assign( {}, studentsRaw );
 
-    delete groups_raw[group_id];
+    const students = Object.values(studentsUpdated);
+
+    delete groupsUpdated[group_id];
 
     students.forEach(item => {
       if (item.group_id == group_id) {
         item.group_id = null;
-        students_raw[item.id].group_id = null;
+        studentsUpdated[item.id].group_id = null;
       }
     });
-    this.sortStudents(sortBy, sortDirection, students);
-    this.setState({
-      groups_raw: groups_raw,
-      groups: Object.values(groups_raw),
-      students_raw: students_raw,
-      students: students
-    });
+    sortStudents(sortBy, sortDirection, students);
+    setGroupsRaw( groupsUpdated );
+    setGroups( Object.values( groupsUpdated ) );
+    setStudentsRaw( studentsUpdated );
+    setStudents( students );
   }
 
-  sortEvent(event, key) {
-    const { students, groups_raw, sortBy, sortDirection } = this.state;
+  const sortEvent = (event, key) => {
+    const studentsWS = [...students];
+
     let direction = SortDirection.DESC;
     if (key == sortBy && direction == sortDirection) {
       direction = SortDirection.ASC;
     }
-    this.sortStudents(key, direction, students);
-    this.setState({
-      students: students,
-      sortDirection: direction,
-      sortBy: key
-    });
+    sortStudents( key, direction, studentsWS );
+
+    setStudents( studentsWS );
+    setSortDirection( direction );
+    setSortBy( key );
   }
-  filter(event) {
-    const { sortBy, sortDirection, students_raw } = this.state;
+
+  const filter = (event) => {
     const filter_text = event.target.value;
-    const filtered = Object.values(students_raw).filter(student =>
+    const filtered = Object.values(studentsRaw).filter(student =>
       (student.first_name + " " + student.last_name)
         .toUpperCase()
         .includes(filter_text.toUpperCase())
     );
-    this.sortStudents(sortBy, sortDirection, filtered);
-    this.setState({
-      students: filtered,
-      filter_text: event.target.value
-    });
+    sortStudents(sortBy, sortDirection, filtered);
+    setStudents( filtered );
+    setFilterText( event.target.value );
   }
 
-  sortStudents(key, direction, students) {
+  const sortStudents = (key, direction, students) => {
     const mod = direction == SortDirection.ASC ? -1 : 1;
     if ("first_name" == key || "last_name" == key) {
       students.sort((a, b) => {
@@ -134,77 +118,67 @@ class ProjectGroups extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.getGroups();
+  useEffect( ()=>{
+    getGroups( );
+  },[ ] );
+
+
+  const setGroupName = (event, group_id) => {
+    const groupsWS = Object.assign( {}, groupsRaw );
+
+    groupsWS[group_id]["name"] = event.target.value;
+
+    setDirty( true );
+    setGroups( Object.values( groupsWS))
+    setGroupsRaw( groupsWS );
   }
 
-  setGroupName(event, group_id) {
-    const { sortBy, sortDirection } = this.state;
-    const groups = this.state.groups_raw;
-    groups[group_id]["name"] = event.target.value;
-    //this.sortStudents(sortBy, sortDirection, students);
-    this.setState({
-      dirty: true,
-      groups: Object.values(groups),
-      groups_raw: groups
-    });
+  const setGroup = (student_id, group_id) => {
+    const studentsWS = Object.assign( {}, studentsRaw );
+    studentsWS[student_id]["group_id"] = group_id;
+    setDirty( true );
+    setStudents( Object.values( studentsWS ) );
+    setStudentsRaw( studentsWS );
   }
 
-  setGroup(student_id, group_id) {
-    const students = this.state.students_raw;
-    students[student_id]["group_id"] = group_id;
-    this.setState({
-      dirty: true,
-      students: Object.values(students),
-      students_raw: students
-    });
-  }
-
-  getGroups() {
-    const url = this.props.groupsUrl + this.props.projectId + ".json";
-    this.setState({
-      working: true
-    });
+  const getGroups = () => {
+    const url = props.groupsUrl + props.projectId + ".json";
+    setWorking( true );
     axios
       .get(url, {})
       .then(response => {
         const data = response.data;
-        this.setState({
-          working: false,
-          groups_raw: data.groups,
-          students_raw: data.students,
-          groups: Object.values(data.groups),
-          students: Object.values(data.students)
-        });
+        setWorking( false );
+        setGroupsRaw( data.groups );
+        setStudentsRaw( data.students );
+        setGroups( Object.values( data.groups ) );
+        setStudents( Object.values( data.students ) );
       })
       .catch(error => {
         console.log("error", error);
       });
   }
 
-  rescoreGroup(event, group_id) {
-    this.setState({
-      working: true
-    });
+  const rescoreGroup = (event, group_id) => {
+    setWorking( true );
+
     const g_req = {
       group_id: group_id
     };
 
     const url =
-      this.props.diversityRescoreGroup + this.props.projectId + ".json";
+      props.diversityRescoreGroup + props.projectId + ".json";
     axios
       .post(url, {
         group_id: group_id
       })
       .then(response => {
         const data = response.data;
-        this.setState({
-          working: false,
-          groups_raw: data.groups,
-          students_raw: data.students,
-          groups: Object.values(data.groups),
-          students: Object.values(data.students)
-        });
+        setWorking( false );
+        setGroupsRaw( data.groups );
+        setStudentsRaw( data.students );
+        setGroups( Object.values( data.groups ) );
+        setStudents( Object.values( data.students ) );
       })
       .catch(error => {
         const fail_data = new Object();
@@ -215,23 +189,19 @@ class ProjectGroups extends React.Component {
       });
   }
 
-  recalcDiversity() {
-    this.setState({
-      working: true
-    });
+  const recalcDiversity = () => {
+    setWorking( true );
     const url =
-      this.props.diversityRescoreGroups + this.props.projectId + ".json";
+      props.diversityRescoreGroups + props.projectId + ".json";
     axios
       .post(url, {})
       .then(response => {
         const data = response.data;
-        this.setState({
-          working: false,
-          groups_raw: data.groups,
-          students_raw: data.students,
-          groups: Object.values(data.groups),
-          students: Object.values(data.students)
-        });
+        setWorking( false );
+        setGroupsRaw( data.groups );
+        setStudentsRaw( data.students );
+        setGroups( Object.values( data.groups ) );
+        setStudents( Object.values( data.students ) );
       })
       .catch(error => {
         const fail_data = new Object();
@@ -242,27 +212,24 @@ class ProjectGroups extends React.Component {
       });
   }
 
-  saveGroups() {
-    this.setState({
-      working: true,
-      message: "Saving..."
-    });
-    const url = this.props.groupsUrl + this.props.projectId + ".json";
+  const saveGroups = () => {
+    setWorking( true );
+    setMessage( 'Saving...');
+
+    const url = props.groupsUrl + props.projectId + ".json";
     axios
       .patch(url, {
-        groups: this.state.groups_raw,
-        students: this.state.students_raw
+        groups: groupsRaw,
+        students: studentsRaw
       })
       .then(response => {
         const data = response.data;
-        this.setState({
-          working: false,
-          groups_raw: data.groups,
-          students_raw: data.students,
-          groups: Object.values(data.groups),
-          students: Object.values(data.students),
-          message: data.message == null ? "" : data.message
-        });
+        setWorking( false );
+        setGroupsRaw( data.groups );
+        setStudentsRaw( data.students );
+        setGroups( Object.values( data.groups ) );
+        setStudents( Object.values( data.students ) );
+        setMessage( data.message == null ? "" : data.message );
       })
       .catch(error => {
         const fail_data = new Object();
@@ -273,32 +240,32 @@ class ProjectGroups extends React.Component {
       });
   }
 
-  render() {
-    const direction = {
-      [SortDirection.ASC]: "asc",
-      [SortDirection.DESC]: "desc"
-    };
+  const direction = {
+    [SortDirection.ASC]: "asc",
+    [SortDirection.DESC]: "desc"
+  };
+
     return (
       <Paper>
         <Toolbar>
-          <InputBase placeholder="Search Students" onChange={this.filter} />
+          <InputBase placeholder="Search Students" onChange={filter} value={filterText} />
           <SearchIcon />
           <Typography color="inherit">
             Showing{" "}
-            {this.state.students.length +
+            {students.length +
               " of " +
-              this.state.students_raw.length}
+              Object.values( studentsRaw ).length}
           </Typography>
-          {this.state.dirty ? (
-            <Fab variant="extended" onClick={this.saveGroups}>
+          {dirty ? (
+            <Fab variant="extended" onClick={saveGroups}>
               Save
             </Fab>
           ) : null}
-          <Typography color="inherit">{this.state.message}</Typography>
-          <Fab variant="extended" onClick={this.recalcDiversity}>
+          <Typography color="inherit">{message}</Typography>
+          <Fab variant="extended" onClick={recalcDiversity}>
             Recalculate Diversity
           </Fab>
-          <Fab variant="extended" onClick={() => this.addGroup()}>
+          <Fab variant="extended" onClick={() => addGroup()}>
             <GroupAddIcon />
             Add Group
           </Fab>
@@ -308,27 +275,27 @@ class ProjectGroups extends React.Component {
             <TableRow>
               <TableCell>
                 <TableSortLabel
-                  active={"first_name" == this.state.sortBy}
-                  direction={direction[this.state.sortDirection]}
-                  onClick={() => this.sortEvent(event, "first_name")}
+                  active={"first_name" == sortBy}
+                  direction={direction[sortDirection]}
+                  onClick={() => sortEvent(event, "first_name")}
                 >
                   Given Name
                 </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel
-                  active={"last_name" == this.state.sortBy}
-                  direction={direction[this.state.sortDirection]}
-                  onClick={() => this.sortEvent(event, "last_name")}
+                  active={"last_name" == sortBy}
+                  direction={direction[sortDirection]}
+                  onClick={() => sortEvent(event, "last_name")}
                 >
                   Family Name
                 </TableSortLabel>
               </TableCell>
-              {this.state.groups.map(group => {
+              {groups.map(group => {
                 return (
                   <TableCell align="center" key={group.id}>
                     <TextField
-                      onChange={() => this.setGroupName(event, group.id)}
+                      onChange={() => setGroupName(event, group.id)}
                       value={group.name}
                       id={"g_" + group.id}
                     />
@@ -336,32 +303,32 @@ class ProjectGroups extends React.Component {
                       <Fab
                         variant="extended"
                         size="small"
-                        onClick={() => this.removeGroup(event, group.id)}
+                        onClick={() => removeGroup(event, group.id)}
                       >
                         <DeleteIcon />
                       </Fab>
                     ) : null}
                     <DiversityScore
                       groupId={group.id}
-                      parentDirty={this.state.dirty}
+                      parentDirty={dirty}
                       documented={
-                        this.state.groups_raw[group.id].diversity || 0
+                        groupsRaw[group.id].diversity || 0
                       }
-                      scoreReviewUrl={this.props.diversityCheckUrl}
-                      rescoreGroup={this.rescoreGroup}
-                      students={this.state.students_raw}
-                      sortBy={this.state.sortBy}
-                      sortDirection={this.state.sortDirection}
-                      sortFunc={this.sortEvent}
+                      scoreReviewUrl={props.diversityCheckUrl}
+                      rescoreGroup={rescoreGroup}
+                      students={studentsRaw}
+                      sortBy={sortBy}
+                      sortDirection={sortDirection}
+                      sortFunc={sortEvent}
                     />
                   </TableCell>
                 );
               })}
               <TableCell align="center">
                 <TableSortLabel
-                  active={0 == this.state.sortBy}
-                  direction={direction[this.state.sortDirection]}
-                  onClick={() => this.sortEvent(event, 0)}
+                  active={0 == sortBy}
+                  direction={direction[sortDirection]}
+                  onClick={() => sortEvent(event, 0)}
                 >
                   No Group
                 </TableSortLabel>
@@ -369,19 +336,19 @@ class ProjectGroups extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.students.map(student => {
+            {students.map(student => {
               return (
                 <TableRow key={"stuRow-" + student.id}>
                   <TableCell>{student.first_name}</TableCell>
                   <TableCell>{student.last_name}</TableCell>
-                  {this.state.groups.map(group => {
+                  {groups.map(group => {
                     return (
                       <TableCell
                         align="center"
                         key={student.id + "-" + group.id}
                       >
                         <Radio
-                          onClick={() => this.setGroup(student.id, group.id)}
+                          onClick={() => setGroup(student.id, group.id)}
                           id={"user_group_" + student.id + "_" + group.id}
                           checked={group.id == student.group_id}
                         />
@@ -391,7 +358,7 @@ class ProjectGroups extends React.Component {
                   <TableCell>
                     <Radio
                       id={"stu-" + student.id}
-                      onClick={() => this.setGroup(student.id, null)}
+                      onClick={() => setGroup(student.id, null)}
                       checked={null == student.group_id}
                     />
                   </TableCell>
@@ -402,7 +369,6 @@ class ProjectGroups extends React.Component {
         </Table>
       </Paper>
     );
-  }
 }
 
 ProjectGroups.propTypes = {
@@ -412,4 +378,3 @@ ProjectGroups.propTypes = {
   diversityRescoreGroup: PropTypes.string.isRequired,
   diversityRescoreGroups: PropTypes.string.isRequired
 };
-export default ProjectGroups;

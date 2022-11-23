@@ -289,14 +289,14 @@ Feature: Project Administration
 
     Then the user clicks "Show" on the existing project
     Then the user switches to the "Groups" tab
-    Then the user clicks "Add Group"
-    Then the user sets the "g_-1" field to "my group"
+    Then the user adds a group named 'my group'
+    # Then the user sets the "g_-1" field to "my group"
     Then the user clicks "Save"
      And the user waits to see "success"
     Then close all messages
-    Then the user clicks "Add Group"
+    Then the user adds a group named 'your group'
     # Because the above was saved, this one is -1 again
-    Then the user sets the "g_-1" field to "your group"
+    # Then the user sets the "g_-1" field to "your group"
     Then the user clicks "Save"
     Then the user switches to the "Details" tab
     Then the user sets the project "start" date to "yesterday"

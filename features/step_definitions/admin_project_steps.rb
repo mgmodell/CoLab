@@ -68,12 +68,21 @@ Then(/^the user clicks "([^"]*)"$/) do |link_or_button|
     retries ||= 0
     btn.click
   rescue NoMethodError => e
-    log e.inspect
+    puts e.inspect
   rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-    log e.inspect
+    puts e.inspect
     retry if (retries += 1) < 4
   end
   wait_for_render
+end
+
+Then('the user adds a group named {string}') do |group_name|
+  button = 'Add Group'
+  btn = find(:xpath, "//button[contains(.,'#{button}')]",
+               match: :first,
+               visible: :all).click
+  elem = find_field('g_-1')
+  elem.set(group_name)
 end
 
 Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
