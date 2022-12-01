@@ -1,0 +1,36 @@
+es:
+  graphing:
+    # Reporting terms
+    anon_confirm: Esto eliminará todos los gráficos a continuacion. Esta seguro?
+    date: Fecha 
+    contribution_lvl: Nivel de contribución
+    chart_dwn_warn: >
+      Esta functión de gráfico es experimental y solo funciona en
+      Chrome. Además, es posible que deba volver a cargar el gráfico posteriormente.
+      Continuar?
+    chart_for: " chart for "
+    for_project: Para Proyecto
+    group: "Group "
+    and_group: " and Group "
+    wrote: " wrote"
+    value: Valor
+    ind_ad: Toda la Información
+    ind_ab: Promedio por Comportamiento
+    ind_ao: Media General
+    ind_ag_g: Acuerdo de Grupo
+    ind_ag_s: Acuerdo con uno mismo
+    ind_ag_m: Acuerdo sin uno mismo
+    g_ad: Toda la información
+    g_am: Promedio por Miembro
+    g_vb: Varianza por Comportamento
+    g_vm: Varianza por Miembro
+    g_ag_b: Acuerdo por Comportamento
+    g_ag_m: Acuerdo por Miembro
+    low: Bajo
+    high: Alto
+    click_for_more: Clic para ver fácilmente
+    index:
+      who: A quién te gustaria ver?
+      what_data: Que datos le gustaria ver?
+      which: Cual proyecto?
+

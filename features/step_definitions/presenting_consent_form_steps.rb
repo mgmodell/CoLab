@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
 require 'chronic'
-require 'forgery'
+require 'faker'
 
-Given /^reset time clock to now$/ do
+Given(/^reset time clock to now$/) do
   travel_back
+  if Capybara.current_driver != :rack_test
+    @dest_date = nil
+    click_button 'resetTimeBtn' if has_button?('resetTimeBtn')
+  end
 end
 
-Given /^there is a global consent form$/ do
+Given(/^there is a global consent form$/) do
   @consent_form = ConsentForm.new(
-    name: Forgery::Name.location,
+    name: Faker::Nation.nationality,
     user: User.find(1)
   )
   @consent_form.pdf.attach(io: File.open(
@@ -18,13 +22,13 @@ Given /^there is a global consent form$/ do
                            filename: 'cf.pdf',
                            content_type: 'application/pdf')
   @consent_form.save
-  puts @consent_form.errors.full_messages if @consent_form.errors.present?
+  log @consent_form.errors.full_messages if @consent_form.errors.present?
 end
 
-Given /^the course has a consent form$/ do
+Given(/^the course has a consent form$/) do
   @consent_form = ConsentForm.new(
     user: User.find(1),
-    name: Forgery::Name.location
+    name: Faker::Nation.nationality
   )
   @consent_form.pdf.attach(io: File.open(
     Rails.root.join('db', 'ConsentForms_consolidated.pdf')
@@ -32,10 +36,10 @@ Given /^the course has a consent form$/ do
                            filename: 'cf.pdf',
                            content_type: 'application/pdf')
   @consent_form.save
-  puts @consent_form.errors.full_messages if @consent_form.errors.present?
+  log @consent_form.errors.full_messages if @consent_form.errors.present?
   @course.consent_form = @consent_form
   @course.save
-  puts @course.errors.full_messages if @course.errors.present?
+  log @course.errors.full_messages if @course.errors.present?
 end
 
 Then('user should see a consent form listed for the open experience') do
@@ -48,55 +52,55 @@ Then('user should see a consent form listed for the open bingo') do
   page.should have_content @bingo.topic
 end
 
-Then /^user should see a consent form listed for the open project$/ do
+Then(/^user should see a consent form listed for the open project$/) do
   page.should have_content 'Research Consent Form'
   page.should have_content @project.name
 end
 
-When /^user clicks the link to the project, they will be presented with the consent form$/ do
+When(/^user clicks the link to the project, they will be presented with the consent form$/) do
   click_link_or_button @project.name
   page.should have_content 'Please review the document below.'
 end
 
-Given /^the user is the "(.*?)" user in the group$/ do |ordinal|
-  @user = if ordinal == 'last'
+Given(/^the user is the "(.*?)" user in the group$/) do |ordinal|
+  @user = case ordinal
+          when 'last'
             @group.users.last
-          elsif ordinal == 'first'
+          when 'first'
             @group.users[0]
           else
             @group.users.sample
           end
 end
 
-Given /^the consent form "(.*?)" been presented to the user$/ do |has_or_has_not|
+Given(/^the consent form "(.*?)" been presented to the user$/) do |has_or_has_not|
   presented = has_or_has_not == 'has'
-  consent_log = ConsentLog.create(presented: presented,
+  consent_log = ConsentLog.create(presented:,
                                   user_id: @user.id,
                                   consent_form_id: @consent_form.id)
 end
 
-Then /^user will be presented with the installment form$/ do
-  page.should have_content 'Your weekly installment'
-  page.should have_content @project.name
-end
-
-Then /^user should not see a consent form listed for the open project$/ do
+Then(/^user should not see a consent form listed for the open project$/) do
   page.should have_content 'Not for Research'
 end
 
-When /^the user visits the index$/ do
+When(/^the user visits the index$/) do
   visit '/'
+  if !@dest_date.nil? && Capybara.current_driver != :rack_test && current_url.start_with?('http')
+    fill_in 'newTimeVal', with: @dest_date.to_s
+    click_button 'setTimeBtn'
+  end
 end
 
-Given /^the consent form started "([^"]*)" and ends "([^"]*)"$/ do |start_date, end_date|
+Given(/^the consent form started "([^"]*)" and ends "([^"]*)"$/) do |start_date, end_date|
   @consent_form.start_date = Chronic.parse(start_date)
   @consent_form.end_date = end_date.casecmp('null').zero? ? nil : Chronic.parse(end_date)
   @consent_form.save
-  puts @consent_form.errors.full_messages unless @consent_form.errors.empty?
+  log @consent_form.errors.full_messages unless @consent_form.errors.empty?
 end
 
-Given /^the consent form "([^"]*)" active$/ do |is_active|
+Given(/^the consent form "([^"]*)" active$/) do |is_active|
   @consent_form.active = is_active == 'is'
   @consent_form.save
-  puts @consent_form.errors.full_messages unless @consent_form.errors.empty?
+  log @consent_form.errors.full_messages unless @consent_form.errors.empty?
 end

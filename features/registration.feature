@@ -7,6 +7,7 @@ Feature: User registration
     Given a user has signed up
     Given the email queue is empty
 
+  @javascript
   Scenario: Registered user provides consent and demographics.
     Given reset time clock to now
     Given there is a course with an assessed project
@@ -24,6 +25,7 @@ Feature: User registration
     When the user visits the index
     Then the user will see the task listing page
 
+  @javascript
   Scenario: Registered user does not provide consent
     Given reset time clock to now
     Given there is a course with an assessed project
@@ -83,6 +85,7 @@ Feature: User registration
     Then the course has 2 "Invited Student" users
     Then 0 emails will have been sent
 
+@javascript
   Scenario: A student accepts enrollment in a course
     Given 5 users
     Given the users are confirmed
@@ -96,12 +99,13 @@ Feature: User registration
     Then the course has 5 "Invited Student" users
     Then the user logs in
     Then the user sees 1 invitation
-    Then the user does not see a task listing
+    # Then the user does not see a task listing
     Then the user "accepts" enrollment in the course
     Then user should see 1 open task
     Then the course has 4 "Invited Student" users
     Then the course has 1 "Enrolled Student" users
 
+@javascript
   Scenario: A student declines enrollment in a course
     Given 5 users
     Given the users are confirmed
@@ -114,12 +118,13 @@ Feature: User registration
     Then the course has 5 "Invited Student" users
     Then the user logs in
     Then the user sees 1 invitation
-    Then the user does not see a task listing
+    # Then the user does not see a task listing
     Then the user "declines" enrollment in the course
     Then user should see 0 open task
     Then the course has 4 "Invited Student" users
     Then the course has 1 "Declined Student" users
 
+@javascript
   Scenario: A student is invited to 2 courses
     Given 5 users
     Given the users are confirmed
@@ -136,4 +141,4 @@ Feature: User registration
     Then the course has 5 "Invited Student" users
     Then the user logs in
     Then the user sees 2 invitation
-    Then the user does not see a task listing
+    # Then the user does not see a task listing

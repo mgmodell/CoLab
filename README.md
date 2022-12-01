@@ -2,8 +2,9 @@
 
 The CoLab system provides instructor support for collaborative learning
 groups. In its current state, it deploys successfully to Heroku with
-Amazon SES & S3, Scheduler and JAWS Maria DB add-ons. It should run in a
-paid dyno with SSL enabled or a configuration change would be required.
+Amazon SES & S3 (using ActiveStorage), Scheduler and JAWS Maria DB add-ons with a libVips
+buildpack. It should run in a paid dyno with SSL enabled or a configuration
+change would be required.
 
 ## What is this repository for? ##
 
@@ -13,70 +14,73 @@ research of Micah Gideon Modell, Ph.D.
 ## How do I get set up? ##
 
 This system can be set up for development and testing on any modern
-desktop OS. I am using both [Linux
-Mint](https://www.linuxmint.com/download.php) and [Bash on Ubuntu on
-Windows](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide)
-because I'm comfortable using the command line. That's just for context
-- GUIs can be powerful too and I can help you set them up if you run
-into difficulty.
+desktop OS. I am using [Mac OS](http://www.Apple.com), [Linux
+Mint](https://www.linuxmint.com/download.php) and [Ubuntu on
+Windows](https://wiki.ubuntu.com/WSL) because I'm comfortable using the
+command line. That's just for context - GUIs can be powerful too and I
+can help you set them up if you run into difficulty.
 
-At a minimum, you will need to install git and a text editor (I use vi,
-but there are tons of GUI editors like Notepad++ -- which is good and
-fee) to contribute. However, to do actual testing, you'll want ruby,
-ruby on rails, mariadb (mysql would also work). Deployment will require
-the Heroku toolbelt. Follow the installation instructions for your OS:
 
-### Contributing ###
+### Setting up ###
 
-* [Official git page](https://git-scm.com/) [Windows](https://git-for-windows.github.io/) (other platforms are easy and I can help, but they're not worth listing here).
-* [Notepad++](https://notepad-plus-plus.org/download/v7.3.3.html)
+* [Visual Studio Code](https://code.visualstudio.com/download) - I recommend this for development
 * [Learn Cucumber](https://cucumber.io/docs)
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 * [Xcode -- if you're using Mac](https://developer.apple.com/xcode/)
+* Set up your environment:
+    * Install Ubuntu on [WSL](https://wiki.ubuntu.com/WSL) - use the Windows Store if you can
+    * Install [VcXsrv](https://sourceforge.net/projects/vcxsrv)
+    * Open a terminal window
+        * On Windows launch Ubuntu (set up a username/password)
+        * On Mac, open the Terminal app
+        * On Linux, open any terminal app
+    * `mkdir dev`
+    * `cd dev`
+    * `ssh-keygen` (press enter for all questions)
+    * ``eval `ssh-agent` ``
+    * `ssh-add ~/.ssh/id_rsa`
+    * `cat ~/.ssh/id_rsa.pub`
+* Copy the output of the above command (`cat`)
+* Open [Bitbucket settings](https://bitbucket.org/account/settings/ssh-keys/)
+* Add Key
+* Paste the output into the window
+* Save
+* Back in Terminal:
+    * `git clone git@bitbucket.org:_performance/colab.git`
+    * `cd colab`
+    * __NOTE:__ The following installer will change your shell to zsh. If you are already
+      a *NIX user, you probably know this is the current trend in the industry, but that
+      it is a significant difference from other shells. Also, I recommend installing
+      [Oh my zsh](http://ohmyz.sh/) as it will provide lots of nice little shortcuts and
+      enhancements. Be sure to add `rails git rake rake-fast yarn bundler` following to
+      the `plugins` line in the file .zshrc in your home directory so that
+      you have something like:
+      `plugins=(rails git rake rake-fast yarn bundler)`
+      Feel free to ask me about this if you're interested. 
+    * `./setup_env` [enter your password when it is requested]
 
-### Testing ###
-* [rvm (does not work in regular Windows)](http://rvm.io/)
-* [ruby 2.4.2 (use rvm to install if not on Windows)](https://www.ruby-lang.org/en/downloads/)
-* [MariaDB](https://mariadb.org/download/)
-    * Create `colab_dev` and `colab_test` databases
-    * Create a `test` user with `test` for the password
-    * Make sure the user is enabled and has full access to the 'colab_dev' and `colab_test` databases
-* Make the following environment variables available (the following should work in a `.profile` (if you will actually need to test file attachments, contact me and we can look into setting up S3 buckets for you):
-    * export S3_BUCKET_NAME=colab-dev
-    * export AWS_ACCESS_KEY_ID=XXXXXXX
-    * export AWS_SECRET_ACCESS_KEY=XXXXXXX
-    * export AWS_REGION=ap-northeast-2
-
-* clone this repository 'git clone https://<your bitbucket ID>@bitbucket.org/_performance/colab.git'
-* Enter the new `CoLab` directory (type `cd colab`)
-* `gem install bundler`
-* `bundle install`
-* `rake db:create db:schema:load db:seed`
-
-### Deployment ###
-* [Heroku Toolbelt](https://devcenter.heroku.com/articles/heroku-cli)
-* [Configure an Amazon SES SMTP Account](https://www.sitepoint.com/deliver-the-mail-with-amazon-ses-and-rails/)
-    * heroku config:set SES_SMTP_USERNAME=<your username>
-    * heroku config:set SES_SMTP_PASSWORD=<your password>
+# Launch the server
+* `foreman start -f Procfile.dev`
+* Open a browser window on [the test server](http://localhost:3000)
 
 # Contribution instructions #
 * Review the issues
 * Find one that interests you
 * Assign it to yourself
 * Start working in your own branch
-    * `git br <enter_new_branch_name>`
-    * `git co <enter_new_branch_name>`
-* Use `rails s` to run the server
+    * `git branch <enter_new_branch_name>`
+    * `git checkout <enter_new_branch_name>`
+* Create what you need
+    * Create your own user account (if auth is working)
+    * `rake testing:set_admin['true','<email>']` will create new admin accounts with password 'password'
+    * `rake testing:examples['<email>']` will create some courses and activities for the specified user
 * Open [the test server](http://localhost:3000)
 * Play with it to understand the problem
-    * Create your own user account
-    * Execute `rake testing:set_admin['true','<your email>']` to make yourself an admin
 * Start writing tests
-* Run your tests
+* Run your tests (this may not work on all systems)
     * `rake cucumber:rerun`
 * Check in your code
     * `git add <file name>`
-    * `git checkin`
+    * ``git commit -m `<meaningful message>` ``
     * `git push`
 
 ### Who do I talk to? ###

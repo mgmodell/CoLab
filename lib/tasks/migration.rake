@@ -1,5 +1,100 @@
 namespace :migratify do
 
+  desc 'Applying for the react migration in the summer of 2020'
+  task react_su_2020: :environment do
+    behavior = Behavior.find_by_name_en( 'Other' )
+    behavior.needs_detail = true
+    behavior.save
+
+    User.all.each do |u|
+      u.update_instructor
+      u.save
+    end
+
+  end
+
+  desc 'Update the quotes again'
+  task quotes: :environment do
+    # Quote seed data
+    class Quote_
+      attr_accessor :text_en, :attribution
+    end
+    read_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
+    read_data.each do |quote|
+      quote.text_en = quote.text_en.strip
+      q = Quote.where(text_en: quote.text_en).take
+      q = Quote.new if q.nil?
+      q.text_en = quote.text_en unless q.text_en == quote.text_en
+      q.attribution = quote.attribution unless q.attribution == quote.attribution
+      q.save
+    end
+
+  end
+
+  # older tasks
+  desc 'Applying changes to Candidate Feedback options'
+  task cf_updates: :environment do
+
+    CandidateFeedback.transaction do
+      cf = CandidateFeedback.where name_en: 'Definition: Insufficient'
+      if 1 == cf.size
+        cf = cf[ 0 ]
+        cf.name_en = 'Definition: Almost correct'
+        cf.definition_en = 
+          "You've identified an important term related to the stated topic and " +
+          "provided a definition that is close to complete, but is lacking in " +
+          "some crucial way(s)."
+        cf.save
+      else
+        puts "Error on insufficient: #{cf.size} items found"
+      end
+
+      cf = CandidateFeedback.where name_en: 'Definition: Plagiarised'
+      if 1 == cf.size
+        cf = cf[ 0 ]
+        cf.name_en = 'Definition: Borrowed Word-for-Word'
+        cf.save
+      else
+        puts "Error on plagiarised: #{cf.size} items found"
+      end
+
+      remap_to_id = -1
+      cf = CandidateFeedback.where name_en: 'Term: Proper Name'
+      if 1 == cf.size
+        cf = cf[ 0 ]
+        remap_to_id = cf.id
+        cf.name_en = 'Term: Proper Name or Product Name'
+        cf.definition_en = 
+          "Proper names and products should not be used unless they are "+
+          "dominant to the point of being synonymous with a class of " +
+          "activity or a household name."
+        cf.save
+
+        cf = CandidateFeedback.where name_en: 'Term: Product Name'
+        if 1 == cf.size
+          remap_from_id = cf[0].id
+          # Remap 11 (proper name) to 12 (product name)
+          Candidate.where( candidate_feedback_id: remap_from_id )
+            .update_all( candidate_feedback_id: remap_to_id )
+          if 0 < CandidateFeedback.where( id: remap_from_id ).size
+            CandidateFeedback.destroy( remap_from_id )
+          end
+        end
+      else
+        puts "Error on proper: #{cf.size} items found"
+      end
+
+      #Standardize concept names
+      Concept.all.each do |concept|
+        concept.name = Concept.standardize_name name: concept.name
+        concept.save
+      end
+
+    end
+
+  end
+  
+
   desc 'Adding type to Candidate Feedback'
   task cf_type: :environment do
     CandidateFeedback.all.each do |cf|
@@ -76,6 +171,7 @@ namespace :migratify do
       cl.save
     end
   end
+
 
 
   desc 'Update the quotes again'
@@ -483,37 +579,44 @@ namespace :migratify do
     # Make sure the DB is primed and ready!
 
     User.find_each do |user|
-      user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
-      user.anon_last_name = Forgery::Name.last_name if user.anon_last_name.blank?
+      user.anon_first_name = Faker::Name.first_name if user.anon_first_name.blank?
+      user.anon_last_name = Faker::Name.last_name if user.anon_last_name.blank?
       user.researcher = false unless user.researcher.present?
       user.save
     end
 
     Group.find_each do |group|
-      group.anon_name = "#{rand < rand ? Forgery::Personal.language : Forgery::Name.location} #{Forgery::Name.company_name}s" if group.anon_name.blank?
+      group.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s" if group.anon_name.blank?
       group.save
     end
 
     BingoGame.find_each do |bingo_game|
       if bingo_game.anon_topic.blank? || (bingo_game.anon_topic.starts_with? 'Lorem')
         trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
-        bingo_game.anon_topic = "#{Forgery::Name.company_name} #{trans.sample} #{Forgery::Name.job_title}"
+        bingo_game.anon_topic = "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
         bingo_game.save
       end
     end
 
     Experience.find_each do |experience|
-      experience.anon_name = Forgery::Name.company_name.to_s if experience.anon_name.blank?
+      experience.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}" if experience.anon_name.blank?
       experience.save
     end
 
+    locations = [
+      Faker::Games::Pokemon,
+      Faker::Games::Touhou,
+      Faker::Games::Overwatch,
+      Faker::Movies::HowToTrainYourDragon,
+      Faker::Fantasy::Tolkien
+    ]
     Project.find_each do |project|
-      project.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}" if project.anon_name.blank?
+      project.anon_name = "#{locations.sample.location} #{Faker::Job.field}" if project.anon_name.blank?
       project.save
     end
 
     School.find_each do |school|
-      school.anon_name = "#{rand < rand ? Forgery::Name.location : Forgery::Name.company_name} institute" if school.anon_name.blank?
+      school.anon_name = "#{Faker::Color.color_name} #{Faker::Educator.university}" if school.anon_name.blank?
       school.save
     end
 
@@ -521,7 +624,7 @@ namespace :migratify do
                GEO IST MAT YOW GFB RSV CSV MBV]
     levels = %w[Beginning Intermediate Advanced]
     Course.find_each do |course|
-      course.anon_name = "#{levels.sample} #{Forgery::Name.industry}" if course.anon_name.blank?
+      course.anon_name = "#{levels.sample} #{Faker::Company.industry}" if course.anon_name.blank?
       course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
       course.save
     end

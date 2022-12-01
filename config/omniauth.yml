@@ -1,0 +1,12 @@
+default: &default
+  google_client_id: 338872466801-q4d7re3gvjtt6jd5gdic4sj98qo5rea7.apps.googleusercontent.com
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+

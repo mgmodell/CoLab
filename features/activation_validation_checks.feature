@@ -6,11 +6,6 @@ Feature: Activation Validation Checks
     Given there is a course with an assessed project
     Given the project has a group with 4 confirmed users
 
-  Scenario: It should not be possible to activate assesments where no Factor Pack is set
-    Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
-    When the project is activated
-    Then there should be 1 project save errors
-
   Scenario: It should be possible to activate assesments where no participants appear more than once
     Given the project started "last month" and ends "next month", opened "yesterday" and closes "tomorrow"
     Given the factor pack is set to "Original"

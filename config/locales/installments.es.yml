@@ -1,0 +1,31 @@
+es:
+  installments:
+    title: Comó trabajo su grupo juntos?
+    subtitle: Tu cuota semanal 
+    submit: Enviar cuota semanal 
+    success: Su respesta fue guardada 
+    err_unknown: No se pudo grabar su respuesta
+    demo_success: Su respuesta se habria guardado con éxito. La demostración está terminada.
+    err_not_member: >
+      No eres miembro de este grupo y, por lo tanto, no puedes
+      enviar esta entrega.
+    comment_prompt: Le gustaria agregar comentarios adicionales?
+    instructions: >
+      Por favor completa esta semanas la evaluación de esta semana para el grupo 
+      <em>{{group_name}}</em> (working with you on <em>{{project_name}}</em>)
+      indicando cuánto esfuerzo cada uno de los {{member_count}} miembros de
+      su grupo contribuyó a cada uno de los {{factor_count}} factores. 
+      Tenga en cuenta que <em>este informe <u>solo debe cubrir la
+      semana pasada </u> y ninguno del periodo anterior.</em>.
+    slider:
+      instructions: >
+        Utilice los controles deslizantes para aumentar o disminuir el esfuerzo de cada miembro
+        pone en cada factor. Observe que cuando aumenta un control deslizante, todos los demás
+        deslizantes caerán automáticamente de manera proporcional y viceversa. Vista cada
+        conjunto de factores antes de enviar su informe.
+    basic:
+      instructions: >
+        Cada columa a continuación debe sumar %{total_val} y la dila en a parte inferior indicará
+        el total actual. Además, el botón enviar solo estará disponible cuando los
+        totales sean iguales %{total_val}.
+      totals: Totales<br>(must equal %{total_val})

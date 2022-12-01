@@ -28,6 +28,7 @@ development:
 test: &test
   <<: *default
   database: colab_test_<%= ENV['TEST_ENV_NUMBER'] %>
+  host: <%= ENV['COLAB_DB'].present? ? ENV['COLAB_DB'] : '127.0.0.1' %>
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -48,11 +49,15 @@ test: &test
 #   production:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
-production:
+production: &production
   <<: *default
   database: peerasse_colab_prod
   username: peerasse_colab_p
   password: <%= ENV['COLAB_DATABASE_PASSWORD'] %>
 
+staging:
+  <<: *production
+
 cucumber:
   <<: *test
+

@@ -15,23 +15,28 @@ Feature: Timezone Support for Experiences
     Given the user is "a random" user
     Given the email queue is empty
 
+@javascript
   Scenario: Checking for open experiences bears correct time
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
-    Then the user should see "Fri, Feb 15 at 12:00am UTC"
+    Then the user enables the "Open Date" table view option
+    Then the user should see "Feb 15, 1980, 12:00 AM"
     #Rounding goes on here
-    Then the user should see "Sat, Apr 12 at 11:59pm UTC"
+    Then the user should see "Apr 12, 1980, 11:59 PM"
     
+@javascript
   Scenario: Checking that open projects reflect my timezone
     Given the user timezone is "Seoul"
     Given the course timezone is "UTC"
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
-    Then the user should see "Fri, Feb 15 at 9:00am KST"
-    Then the user should see "Sun, Apr 13 at 8:59am KST"
+    Then the user enables the "Open Date" table view option
+    Then the user should see "Feb 15, 1980, 9:00 AM"
+    Then the user should see "Apr 13, 1980, 8:59 AM"
     
+@javascript
   Scenario: Projects shouldn't open too soon
     Given today is "February 14, 1980 at 2:59pm"
     Given the course timezone is "Seoul"
@@ -40,12 +45,14 @@ Feature: Timezone Support for Experiences
     Then the user should see a successful login message
     Then user should see 0 open task
     
+@javascript
   Scenario: Projects times should reflect course timezones - New York
     Given the course timezone is "America/New_York"
     Given the user timezone is "UTC"
     When the user logs in
     Then the user should see a successful login message
     Then user should see 1 open task
-    Then the user should see "Fri, Feb 15 at 5:00am UTC"
-    Then the user should see "Sun, Apr 13 at 4:59am UTC"
+    Then the user enables the "Open Date" table view option
+    Then the user should see "Feb 15, 1980, 5:00 AM"
+    Then the user should see "Apr 13, 1980, 4:59 AM"
     

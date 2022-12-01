@@ -2,12 +2,59 @@
 
 class ExperiencesController < ApplicationController
   layout 'admin', except: %i[next diagnose react]
-  before_action :set_experience, only: %i[show edit update destroy]
+  before_action :set_experience, only: %i[show get_reactions edit update destroy]
   before_action :check_viewer, only: %i[show index]
-  before_action :check_editor, only: %i[edit update destroy]
+  before_action :check_editor, only: %i[edit get_reactions update destroy]
 
   def show
     @title = t('.title')
+    respond_to do |format|
+      format.html { render :show }
+      format.json do
+        course_hash = {
+          id: @experience.course_id,
+          name: @experience.course.name,
+          timezone: ActiveSupport::TimeZone.new(@experience.course.timezone).tzinfo.name
+        }
+        response = {
+          experience: @experience.as_json(
+            only: %i[id name active start_date end_date lead_time]
+          ),
+          course: course_hash,
+          reactionsUrl: @experience.id.nil? ? nil : get_reactions_path(@experience),
+          messages: {
+            status: params[:notice]
+          }
+        }
+        render json: response
+      end
+    end
+  end
+
+  def get_reactions
+    rosters_hash = @experience.course.rosters.students
+                              .index_by(&:user_id)
+
+    reactions = Reaction.includes([:behavior, { user: :emails }, { narrative: :scenario }])
+                        .where(experience_id: @experience.id, user_id: rosters_hash.values.collect(&:user_id))
+
+    render json: {
+      reactions: reactions.collect do |reaction|
+        {
+          user: {
+            email: reaction.user.email,
+            name: reaction.user.name(@anon)
+          },
+          student_status: rosters_hash[reaction.user_id].role,
+          status: reaction.status,
+          behavior: reaction.behavior.present? ? reaction.behavior.name : 'Incomplete',
+          narrative: reaction.narrative.member,
+          scenario: reaction.narrative.scenario.name,
+          other_name: reaction.other_name,
+          improvements: reaction.improvements || ''
+        }
+      end.as_json
+    }
   end
 
   def edit
@@ -17,42 +64,90 @@ class ExperiencesController < ApplicationController
   def index
     @title = t('.title')
     @experiences = []
-    if @current_user.is_admin?
+    if current_user.is_admin?
       @experiences = Experience.all
     else
-      rosters = @current_user.rosters.instructor
+      rosters = current_user.rosters.instructor
       rosters.each do |roster|
         @experiences.concat roster.course.experiences.to_a
       end
     end
   end
 
-  def new
-    @title = t('.title')
-    @experience = Course.find(params[:course_id]).experiences.new
-    @experience.start_date = @experience.course.start_date
-    @experience.end_date = @experience.course.end_date
-  end
-
   def create
+    @title = t('experiences.new.title')
     @experience = Experience.new(experience_params)
     @experience.course = Course.find(@experience.course_id)
     if @experience.save
-      redirect_to @experience, notice: t('experiences.create_success')
+      respond_to do |format|
+        format.html do
+          redirect_to @experience,
+                      notice: t('experiences.create_success')
+        end
+        format.json do
+          response = {
+            experience: @experience.as_json(
+              only: %i[id name active start_date end_date lead_time]
+            ),
+            course: @experience.course.as_json(
+              only: %i[id name timezone]
+            ),
+            messages: {
+              status: t('experiences.create_success')
+            }
+          }
+          render json: response
+        end
+      end
     else
       logger.debug @experience.errors.full_messages unless @experience.errors.empty?
-      @title = t('experiences.new.title')
-      render :new
+      respond_to do |format|
+        format.html do
+          render :new
+        end
+        format.json do
+          messages = @experience.errors.to_hash
+          messages[:status] = 'Error creating the Experience'
+          render json: { messages: }
+        end
+      end
     end
   end
 
   def update
+    @title = t('experiences.edit.title')
     if @experience.update(experience_params)
-      redirect_to @experience, notice: t('experiences.update_success')
+      respond_to do |format|
+        format.html do
+          redirect_to @experience, notice: t('experiences.update_success')
+        end
+        format.json do
+          response = {
+            experience: @experience.as_json(
+              only: %i[id name active start_date end_date lead_time]
+            ),
+            course: @experience.course.as_json(
+              only: %i[id name timezone]
+            ),
+            messages: {
+              status: t('experiences.update_success')
+            }
+          }
+          render json: response
+        end
+      end
     else
-      logger.debug @experience.errors.full_messages unless @experience.errors.empty?
-      @title = t('experiences.edit.title')
-      render :edit
+      logger.debug @experience.errors.full_messages @experience.errors.empty?
+      respond_to do |format|
+        format.html do
+          render :edit
+        end
+        format.json do
+          messages = @experience.errors.to_hash
+          messages[:status] = 'Error saving the Experience'
+          render json: { messages: }
+        end
+      end
     end
   end
 
@@ -67,35 +162,41 @@ class ExperiencesController < ApplicationController
     experience_id = params[:experience_id]
 
     experience = Experience.joins(course: { rosters: :user })
-                           .where(id: experience_id, users: { id: @current_user }).take
+                           .where(id: experience_id, users: { id: current_user }).take
 
-    consent_log = experience.course.get_consent_log user: @current_user
+    response = {
+      messages: {}
+    }
 
-    if consent_log.present? && !consent_log.presented?
-      redirect_to edit_consent_log_path(consent_form_id: consent_log.consent_form_id)
+    if experience.nil? && !experience.is_open
+      response[:messages][ :main ] = t('experiences.wrong_course')
 
-    elsif experience.nil? && !experience.is_open
-      redirect_to '/', notice: t('experiences.wrong_course')
     else
-      reaction = experience.get_user_reaction(@current_user)
+      reaction = experience.get_user_reaction(current_user)
       week = reaction.next_week
-      if !reaction.instructed?
+
+      response = response.merge({
+                                  reaction_id: reaction.id,
+                                  instructed: reaction.instructed
+                                })
+
+      if !reaction.instructed
         reaction.instructed = true
         reaction.save
+
         logger.debug reaction.errors.full_messages unless reaction.errors.empty?
-        @experience = experience
-        @title = t('experiences.instr_title')
-        render :instructions
-      else
-        if week.nil?
-          @reaction = reaction
-          # we just finished the last week
-          @title = t('experiences.react_title')
-          render :reaction
-        else
-          @diagnosis = reaction.diagnoses.new(week: week)
-        end
+      elsif !week.nil?
+        response = response.merge({
+                                    week_id: week.id,
+                                    week_num: week.week_num,
+                                    week_text: week.text
+                                  })
       end
+
+      respond_to do |format|
+        format.json { render json: response.as_json }
+      end
+
     end
   end
 
@@ -106,18 +207,32 @@ class ExperiencesController < ApplicationController
     logger.debug received_diagnosis.errors.full_messages unless received_diagnosis.errors.empty?
 
     week = received_diagnosis.reaction.next_week
+    response = {}
     if received_diagnosis.errors.any?
       @diagnosis = received_diagnosis
+      response[:messages] = @diagnosis.errors.to_hash
+      response[:messages][:main] = 'Unable to save your diagnosis. Please try again.'
     else
       reaction = received_diagnosis.reaction
-      @diagnosis = reaction.diagnoses.new(week: week)
+      @diagnosis = reaction.diagnoses.new(week:)
+      response[:messages] = { main: 'Diagnosis successfully saved.' }
     end
+
     if week.nil?
       # we just finished the last week
       @reaction = received_diagnosis.reaction
-      render :reaction
+      # render :reaction
     else
-      render :next
+      response = response.merge({
+                                  week_id: week.id,
+                                  week_num: week.week_num,
+                                  week_text: week.text
+                                })
+      # render :next
+    end
+
+    respond_to do |format|
+      format.json { render json: response.as_json }
     end
   end
 
@@ -128,21 +243,24 @@ class ExperiencesController < ApplicationController
                 else
                   Reaction.find(reaction_id)
                 end
+
+    response = { messages: { main: t('experiences.react_success') } }
+
+    unless @reaction.update(reaction_params)
+      response[:messages] = @reaction.errors.to_hash
+      response[:messages][:main] = t('experiences.react_fail')
+      logger.debug @reaction.errors.full_messages
+    end
+
     respond_to do |format|
-      if @reaction.update(reaction_params)
-        format.html { redirect_to root_path, notice: t('experiences.react_success') }
-        format.json { render :show, status: :ok, location: @reaction }
-      else
-        format.html { render :reaction, notice: t('experiences.react_fail') }
-        format.json { render json: @reaction.errors, status: :unprocessable_entity }
-      end
+      format.json { render json: response.as_json }
     end
   end
 
   def activate
     experience = Experience.find(params[:experience_id])
-    if @current_user.is_admin? ||
-       experience.course.get_roster_for_user(@current_user).role.instructor?
+    if current_user.is_admin? ||
+       experience.course.get_roster_for_user(current_user).role.instructor?
       experience.active = true
       experience.save
       logger.debug experience.errors.full_messages unless experience.errors.empty?
@@ -155,28 +273,34 @@ class ExperiencesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_experience
-    e_test = Experience.find(params[:id])
-    if @current_user.is_admin?
-      @experience = e_test
+    if params[:id].blank? || params[:id] == 'new'
+      course = Course.find(params[:course_id])
+      e_test = course.experiences.new
+      e_test.start_date = course.start_date
+      e_test.end_date = course.end_date
+    else
+      e_test = Experience.find(params[:id])
+    end
+
+    @experience = e_test
+    return if current_user.is_admin?
+
+    @course = @experience.course
+    if e_test.course.rosters.instructor.where(user: current_user).nil?
+      redirect_to @course if @experience.nil?
     else
       @experience = e_test
-      @course = @experience.course
-      if e_test.course.rosters.instructor.where(user: @current_user).nil?
-        redirect_to @course if @experience.nil?
-      else
-        @experience = e_test
-      end
     end
   end
 
   def check_viewer
-    redirect_to root_path unless @current_user.is_admin? ||
-                                 @current_user.is_instructor? ||
-                                 @current_user.is_researcher?
+    redirect_to root_path unless current_user.is_admin? ||
+                                 current_user.is_instructor? ||
+                                 current_user.is_researcher?
   end
 
   def check_editor
-    redirect_to root_path unless @current_user.is_admin? || @current_user.is_instructor?
+    redirect_to root_path unless current_user.is_admin? || current_user.is_instructor?
   end
 
   def experience_params

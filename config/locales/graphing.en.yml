@@ -1,7 +1,27 @@
 en:
   graphing:
     # Reporting terms
-    anon_confirm: This will remove all the charts below. Are you sure?
+    instruction: >
+      Please use this page to visualise the data available for your
+      students.
+    agree: Agree
+    disagree: Disagree
+    consent_switch: Limit to consenting users only
+    anon_switch: Anonymize data
+    anon_confirm_title: Clear Exisiting Charts?
+    anon_confirm: >
+      To prevent confusion, we do not show both research-focused and
+      teaching-focused charts simultaneously. Therefore, making this
+      change will remove all the charts below. Are you sure you want to
+      proceed?
+    projects_list: Select a project
+    group_list: Select a group
+    individual_list: Select an individual
+    loading: Data is loading
+    chart_for_group: Group chart for {{subject}}
+    chart_for_individual: Individual chart for {{subject}}
+    chart_for_project: for project 
+    none: None Selected
     date: Date
     contribution_lvl: Contribution Level
     chart_dwn_warn: >

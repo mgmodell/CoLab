@@ -1,10 +1,23 @@
 # frozen_string_literal: true
 
 namespace :testing do
+  desc 'Initialise the Testing DB'
+  task :db_init => [:environment] do |_t, args|
+    sql = File.read('db/test_db.sql')
+    statements = sql.split(/;$/)
+    statements.pop # remote empty line
+    ActiveRecord::Base.transaction do
+      statements.each do |statement|
+        ActiveRecord::Base.connection.execute(statement)
+      end
+    end
+    Rake::Task["db:environment:set"].execute
+  end
+
   desc 'Set up some simple, current objects for testing'
   task :examples, [:tester] => [:environment] do |_t, args|
-    require 'forgery'
-    if args[:tester].empty?
+    # require 'faker'
+    if args[:tester].nil? || args[:tester].empty?
       puts '  This task sets up example objects for testers in CoLab test environments'
       puts '   Usage:   rake testing:examples[<user email>]'
       puts '   Example: rake testing:examples[\'john_smith@gmail.com\']'
@@ -16,7 +29,7 @@ namespace :testing do
 
         course = Course.new
         course.school = School.find 1
-        course.name = "Advanced #{Forgery::Name.industry}"
+        course.name = "Advanced #{Faker::IndustrySegments.industry}"
         course.number = "TEST-#{rand(103..550)}"
         course.timezone = user.timezone
         course.start_date = 2.months.ago
@@ -30,7 +43,7 @@ namespace :testing do
 
         # Create an experience for the user
         experience = Experience.new
-        experience.name = "#{Forgery::Name.industry} Group Simulation"
+        experience.name = "#{Faker::IndustrySegments.industry} Group Simulation"
         experience.start_date = 1.weeks.ago
         experience.end_date = DateTime.tomorrow
         experience.active = true
@@ -42,7 +55,7 @@ namespace :testing do
 
         # Create Project with the user in a group
         project = Project.new
-        project.name = "#{Forgery::Name.job_title} project"
+        project.name = "#{Faker::Job.title} project"
         project.start_date = 1.months.ago
         project.end_date = 1.months.from_now
         project.start_dow = Date.yesterday.wday
@@ -56,16 +69,16 @@ namespace :testing do
 
         # Create a group
         group = Group.new
-        group.name = Forgery::Basic.text
+        group.name = Faker::Team.name
         group.project = project
         group.users << user
         3.times do
           u = User.new
-          u.first_name = Forgery::Name.first_name
-          u.last_name = Forgery::Name.last_name
+          u.first_name = Faker::Name.first_name
+          u.last_name = Faker::Name.last_name
           u.password = 'password'
           u.password_confirmation = 'password'
-          u.email = Forgery::Internet.email_address
+          u.email = Faker::Internet.email
           u.timezone = 'UTC'
           u.save
           puts u.errors.empty? ?
@@ -87,8 +100,8 @@ namespace :testing do
 
         # Create BingoGame
         bingo = BingoGame.new
-        bingo.topic = Forgery::Name.company_name
-        bingo.description = Forgery::LoremIpsum.text
+        bingo.topic = Faker::Company.name
+        bingo.description = Faker::Lorem.paragraph
         bingo.course = course
         bingo.start_date = 1.month.ago
         bingo.end_date = 4.days.from_now
@@ -103,8 +116,8 @@ namespace :testing do
 
         # Create BingoGame with a user group
         bingo = BingoGame.new
-        bingo.topic = Forgery::Name.company_name
-        bingo.description = Forgery::LoremIpsum.text
+        bingo.topic = Faker::Company.name
+        bingo.description = Faker::Lorem.paragraph
         bingo.course = course
         bingo.start_date = 1.month.ago
         bingo.end_date = 4.days.from_now
@@ -134,16 +147,28 @@ namespace :testing do
       args.extras.each do |email|
         user = User.joins(:emails).where(emails: { email: email }).take
         if user.nil?
-          puts "User with email <#{email}> not found"
-        else
+          user = User.new(
+            first_name: 'f_name',
+            last_name: 'l_name',
+            password: 'password',
+            password_confirmation: 'password',
+            email: email,
+            timezone: 'UTC',
+            school: School.find( 1 ),
+            theme_id: 1
+          )
+          # puts "User with email <#{email}> not found"
+        end
+        #else
           user.admin = admin_value
+          user.skip_confirmation!
           user.save
           if !user.errors.nil? && user.errors.count > 0
             puts user.errors.full_messages
           else
             puts "#{user.name(false)} <#{email}> is admin? #{admin_value}"
           end
-        end
+        #end
       end
     end
   end
@@ -156,6 +181,7 @@ namespace :testing do
         input_path: 'cucumber/',
         report_path: 'test_results',
         report_title: 'CoLab BDD Test Results',
+        report_types: [:json, :html],
         voice_commands: true
        }
       ReportBuilder.build_report options

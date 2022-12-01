@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "Debug Rails server",
+            "type": "Ruby",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "useBundler": true,
+            "pathToBundler": "/Users/micah/.rvm/gems/ruby-2.7.0@colab/wrappers/bundle",
+            "pathToRDebugIDE": "/Users/micah/.rvm/gems/ruby-2.7.0@colab/gems/ruby-debug-ide-0.7.0",
+            "program": "${workspaceRoot}/bin/rails",
+            "args": [
+                "server",
+                "-p",
+                "3000"
+            ]
+        },
+        {
+            "name": "cucumber:rerun",
+            "type": "Ruby",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/bin/rails",
+            "pathToRDebugIDE": "/Users/micah/.rvm/gems/ruby-2.7.0@colab/gems/ruby-debug-ide-0.7.0",
+            "pathToBundler": "/Users/micah/.rvm/gems/ruby-2.7.0@colab/wrappers/bundle",
+            "useBundler": true,
+            "args": ["cucumber:rerun"]
+        },
+        {
+            "name": "Start Rails server",
+            "type": "Ruby",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}/bin/rails",
+            "args": [
+                "server",
+                "-p",
+                "3000"
+            ]
+        },
+
+    ],
+}

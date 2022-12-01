@@ -1,0 +1,93 @@
+#!/bin/bash
+
+INST="sudo apt -y"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  INST="brew "
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+$INST install curl wget gnupg
+
+if [[ "$OSTYPE" != "darwin"* ]]; then
+  wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+  sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+  curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+fi
+
+
+$INST update
+$INST upgrade
+
+if [[ "$OSTYPE" != "darwin"* ]]; then
+  gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+  $INST install zsh
+  $INST install gcc
+  $INST install g++
+  $INST install make
+  $INST  install software-properties-common mariadb-server imagemagick libvips libmysqlclient-dev firefox google-chrome-stable x11-apps nodejs yarn 
+else
+  $INST  install zsh mariadb imagemagick yarn openssl
+fi
+
+# Set up ASDF
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.1
+echo ". $HOME/.asdf/asdf.sh" >> ~/.bashrc
+echo ". $HOME/.asdf/asdf.sh" >> ~/.zshrc
+source $HOME/.asdf/asdf.sh
+
+chsh -s $(which zsh)
+echo 'Start the DB'
+if [[ "$OSTYPE" != "darwin"* ]]; then
+  sudo service mysql start
+else
+  brew services start mariadb
+fi
+
+echo 'setting up DB users'
+sudo mysql < ./containers/initDBs.sql
+
+if ! grep -q "S3_BUCKET_NAME" ~/.profile; then
+	echo "export S3_BUCKET_NAME=colab-dev" >> ~/.profile
+	echo "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.profile
+	echo "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.profile
+	echo "export AWS_REGION=ap-northeast-2" >> ~/.profile
+	echo "export DISPLAY=:0" >> ~/.profile
+	echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.profile
+fi
+
+if ! grep -q "S3_BUCKET_NAME" ~/.zshrc; then
+  echo "export S3_BUCKET_NAME=colab-dev" >> ~/.zshrc
+  echo "export AWS_ACCESS_KEY_ID=XXXXXXX" >> ~/.zshrc
+  echo "export AWS_SECRET_ACCESS_KEY=XXXXXXX" >> ~/.zshrc
+  echo "export AWS_REGION=ap-northeast-2" >> ~/.zshrc
+  echo "export DISPLAY=:0" >> ~/.zshrc
+  echo "export LIBGL_ALWAYS_INDIRECT=1" >> ~/.zshrc
+fi
+
+asdf plugin add nodejs
+asdf plugin add ruby
+asdf plugin add yarn
+asdf plugin add bundler
+asdf install
+gem install bundler foreman
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  echo -e "\n. $(brew --prefix asdf)/asdf.sh" >> ~/.zprofile
+fi
+
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/
+
+gem install bundler
+gem install foreman
+bundle install
+yarn install
+
+rake db:create db:schema:load
+mysql colab_dev -u test -ptest < db/test_db.sql
+
+echo 'Done!'
+echo 'Happy CoLab-orating!'
+echo '(           ^^ see what I did just there?)'

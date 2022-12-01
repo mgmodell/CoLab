@@ -1,0 +1,29 @@
+{
+    "vscode-wds.configFileName": "./config/webpack/development.js",
+    "ruby.rubocop.useBundler": true,
+    "ruby.format": "rubocop",
+    "ruby.useBundler": true,
+    "ruby.useLanguageServer": true,
+    "sqltools.connections": [
+        {
+            "database": "colab_test_",
+            "dialect": "MariaDB",
+            "name": "test",
+            "password": "test",
+            "port": 3306,
+            "server": "localhost",
+            "username": "test"
+        },
+        {
+            "database": "colab_dev",
+            "dialect": "MariaDB",
+            "isActive": false,
+            "isConnected": false,
+            "name": "dev",
+            "password": "test",
+            "port": 3306,
+            "server": "localhost",
+            "username": "test"
+        }
+    ]
+}

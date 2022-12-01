@@ -1,4 +1,6 @@
 # frozen_string_literal: true
 
-module Admin::ExperiencesHelper
+module Admin
+  module ExperiencesHelper
+  end
 end

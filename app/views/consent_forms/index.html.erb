@@ -1,25 +1,4 @@
-<p id="notice"><%= notice %></p>
-<h1><%= t '.title' %></h1>
-<table>
-  <thead>
-    <tr>
-      <th><%= t :name %></th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @consent_forms.each do |consent_form| %>
-      <tr>
-        <td><%= consent_form.name %></td>
-        <td><%= link_to t( :show ), consent_form %></td>
-        <td><%= link_to t( :edit ), edit_consent_form_path(consent_form) %></td>
-        <td><%= link_to t( :destroy ),
-                      consent_form, method: :delete,
-                      data: { confirm: t( :confirmation ) } %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<br>
-<%= link_to 'New Consent form', new_consent_form_path %>
+<%= react_component "ConsentFormList", {
+  token: form_authenticity_token,
+  getEndpointsUrl: endpoints_path( unit: '' )
+} %>

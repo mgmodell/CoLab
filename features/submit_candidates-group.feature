@@ -17,6 +17,7 @@ Feature: Submitting Candidate words for Bingo!
     Given the user is the "first" user in the group
     Given the user "has" had demographics requested
 
+@javascript
   Scenario: All group members are informed of a collaboration request
     Given the user logs in
      Then user should see 1 open task
@@ -54,6 +55,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user "should" see collaboration was requested
     Given the user logs out
 
+@javascript
   Scenario: A single member declining collaboration cancels the request
     Given the user logs in
      Then user should see 1 open task
@@ -98,6 +100,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user "should not" see collaboration was requested
     Given the user logs out
 
+@javascript
   Scenario: If all group members accept collaboration, the CL is merged.
     Given the user logs in
      Then user should see 1 open task
@@ -151,6 +154,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the candidate entries should be empty
     Given the user logs out
 
+@javascript
   Scenario: If all group members accept collaboration, the CL is merged including their terms.
     Given the user logs in
      Then user should see 1 open task
@@ -160,6 +164,7 @@ Feature: Submitting Candidate words for Bingo!
       And the user populates 3 of the "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then the user logs out
      #user 3
      When group user 3 logs in
@@ -169,6 +174,7 @@ Feature: Submitting Candidate words for Bingo!
       And the user populates 3 of the "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      When the user requests collaboration
     Given the user logs out
     #Let's have everyone accept now
@@ -202,6 +208,7 @@ Feature: Submitting Candidate words for Bingo!
     Then the candidate list entries should match the list
 
 
+@javascript
   Scenario: All group members attached to a CL see and can change the CL
     Given the user logs in
      Then user should see 1 open task
@@ -246,6 +253,7 @@ Feature: Submitting Candidate words for Bingo!
       And the user populates 3 of the "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out
@@ -261,6 +269,7 @@ Feature: Submitting Candidate words for Bingo!
       And the user populates 4 of the "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out
@@ -276,6 +285,7 @@ Feature: Submitting Candidate words for Bingo!
       And the user populates 4 additional "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out
@@ -291,10 +301,12 @@ Feature: Submitting Candidate words for Bingo!
      When the user changes the first 4 "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
+     Then close all messages
      Then retrieve the latest Bingo! game from the db
      Then the candidate list entries should match the list
     Given the user logs out
 
+@javascript
   Scenario: A student who is not in a group will not see the group options
     Given the course has 4 confirmed users
     # A group user logs in
@@ -320,6 +332,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user "should not" see collaboration was requested
      Then the user "should not" see collaboration request button
 
+@javascript
   Scenario: A group user requests collaboration and astudent who is not in a group will not see the group options
     Given the course has 4 confirmed users
     # A group user logs in
@@ -346,6 +359,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user "should not" see collaboration was requested
      Then the user "should not" see collaboration request button
 
+@javascript
   Scenario: A student who is not in a group will not see the group options
     Given the course has 4 confirmed users
     # A non-group user logs in
@@ -361,6 +375,7 @@ Feature: Submitting Candidate words for Bingo!
      Then the user "should not" see collaboration was requested
      Then the user "should not" see collaboration request button
 
+@javascript
   Scenario: Moving a student between groups properly assigns their group buttons on current CLs
     #Basically, run through open CLs and make sure they see any group CLs 
     Given the user logs in

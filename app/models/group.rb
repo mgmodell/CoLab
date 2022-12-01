@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 class Group < ApplicationRecord
   around_update :update_history
   after_initialize :store_load_state
@@ -51,7 +51,7 @@ class Group < ApplicationRecord
                           :cip_code, reactions: :narrative,
                                      home_state: [:home_country])
 
-    Group.calc_diversity_score_for_group users: users
+    Group.calc_diversity_score_for_group users:
   end
 
   def self.calc_diversity_score_for_group(users:)
@@ -74,7 +74,7 @@ class Group < ApplicationRecord
             user.home_state.home_country.no_response == true
         end
         cip_hash[user.cip_code] += 1 unless
-            user.cip_code.nil? || user.cip_code.gov_code == 0
+            user.cip_code.nil? || user.cip_code.gov_code.zero?
         primary_lang_hash[user.primary_language] += 1 unless
             user.primary_language.nil? || user.primary_language.code == '__'
         gender_hash[user.gender] += 1 unless
@@ -121,7 +121,7 @@ class Group < ApplicationRecord
   def store_load_state
     @initial_member_state = ''
     user_ids.sort.each do |user_id|
-      @initial_member_state += user_id.to_s + ' '
+      @initial_member_state += "#{user_id} "
     end
   end
 
@@ -129,7 +129,7 @@ class Group < ApplicationRecord
   def update_history
     member_string = ''
     user_ids.sort.each do |user_id|
-      member_string += user_id.to_s + ' '
+      member_string += "#{user_id} "
     end
     if changed? || @initial_member_state != member_string
       gr = group_revisions.new(name: name_was, group: self, members: member_string)
@@ -148,10 +148,10 @@ class Group < ApplicationRecord
       errors.add(:project,
                  'It is not possible to move a group from one project to another.')
     end
-    if changed? || @dirty
-      project.active = false
-      project.save
-    end
+    return unless changed? || @dirty
+
+    project.active = false
+    project.save!
   end
 
   def set_dirty(_user)
@@ -159,6 +159,6 @@ class Group < ApplicationRecord
   end
 
   def anonymize
-    self.anon_name = "#{rand < rand ? Forgery::Personal.language : Forgery::Name.location} #{Forgery::Name.company_name}s"
+    self.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s"
   end
 end

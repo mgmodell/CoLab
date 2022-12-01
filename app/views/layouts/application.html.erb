@@ -1,29 +1,30 @@
-<% theme_code = get_theme_code %>
 <!DOCTYPE html>
 <html>
-  <%= favicon_link_tag %>
+  <%= favicon_link_tag '/assets/images/favicon.ico' %>
   <head>
     <%= render 'layouts/shared/google_analytics' %>
     <title><%= t :title %> <%= " : " + @title unless @title.nil? %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Roboto:300,400,500' %>
-    <%= stylesheet_link_tag    "application", :media => "all" %>
-    <%= javascript_include_tag "application" %>
-    <%= javascript_pack_tag 'application' %>
+
+    <% if true && Rails.env.test? %>
+      <%= javascript_pack_tag 'application', 'testing' %>
+    <% else %>
+      <%= javascript_pack_tag 'application' %>
+    <% end %>
+    <%= stylesheet_pack_tag 'application' %>
     <%= csrf_meta_tags %>
   </head>
   <body>
-    <div data-role="page" data-theme="<%= theme_code %>">
-      <div data-role="header" data-position="fixed" style="overflow:hidden;" >
-        <h1 id="title_head">
-          <%= t :title %> <%= " : " + @title unless @title.nil? %>
-          <%= image_tag 'CoLab_small.png', size: '32x32', alt: 'CoLab Logo' %>
-        </h1>
-        <%= react_component "Quote", {
-          url: get_quote_path,
-          token: form_authenticity_token } %>
-      </div>
-      <div data-role="content">
+      <%= react_component "PageWrapper", props: {
+          token: form_authenticity_token,
+          getEndpointsUrl: endpoints_path
+
+      }
+      %>
+    <% if true && Rails.env.test? %>
+      <%= react_component "TimeSetter", { } %>
+    <% end %>
         <% if flash[:error] -%>
           <p class='error'><%=h flash[:error] %></p>
         <% end -%>
@@ -31,8 +32,6 @@
           <p class='notice'><%=h flash[:notice] %></p>
         <% end -%>
         <%= yield %>
-      </div>
-    </div>
     <%= render 'layouts/shared/footer', working: false %>
   </body>
 </html>

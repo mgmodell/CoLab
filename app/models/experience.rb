@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
-require 'forgery'
+require 'faker'
 class Experience < ApplicationRecord
+  include TimezonesSupportConcern
+
   belongs_to :course, inverse_of: :experiences
   has_many :reactions, inverse_of: :experience, dependent: :destroy
 
   # validations
   validates :name, :end_date, :start_date, presence: true
   validate :date_sanity
-  before_validation :timezone_adjust
   before_create :anonymize
   before_save :reset_notification, :end_date_optimization
   validate :dates_within_course
@@ -19,10 +20,16 @@ class Experience < ApplicationRecord
                     }
 
   def get_user_reaction(user)
-    reaction = reactions.includes(narrative: { scenario: :behavior }).find_by(user: user)
+    reaction = reactions.includes(narrative: { scenario: :behavior }).find_by(user:)
 
-    reaction = Reaction.create(user: user, experience: self, instructed: false) if reaction.nil?
+    reaction = Reaction.create(user:, experience: self, instructed: false) if reaction.nil?
     reaction
+  end
+
+  def get_link
+    # helpers = Rails.application.routes.url_helpers
+    # helpers.experience_path self
+    'experience'
   end
 
   def get_type
@@ -30,7 +37,7 @@ class Experience < ApplicationRecord
   end
 
   def next_deadline
-    end_date
+    end_date - (1 + lead_time).days
   end
 
   def get_activity_on_date(date:, anon:)
@@ -67,8 +74,8 @@ class Experience < ApplicationRecord
         end: end_date,
         allDay: true,
         backgroundColor: '#99CC99',
-        edit_url: edit_url,
-        destroy_url: destroy_url,
+        edit_url:,
+        destroy_url:,
         activities: [
           {
             type: 'sim_exp',
@@ -91,7 +98,7 @@ class Experience < ApplicationRecord
   end
 
   def type
-    'Group work simulation'
+    'Group Experience'
   end
 
   def get_name(anonymous)
@@ -100,6 +107,36 @@ class Experience < ApplicationRecord
 
   def status_for_user(user)
     get_user_reaction(user).status
+  end
+
+  def task_data(current_user:)
+    helpers = Rails.application.routes.url_helpers
+    link = "experience/#{id}"
+    # link = if get_user_reaction(current_user).behavior.nil?
+    #          helpers.next_experience_path(experience_id: id)
+    #        end
+
+    log = course.get_consent_log(user: current_user)
+    consent_link = if log.present?
+                     helpers.edit_consent_log_path(
+                       consent_form_id: log.consent_form_id
+                     )
+                   end
+
+    {
+      id:,
+      type: :experience,
+      name: get_name(false),
+      group_name: 'N/A',
+      status: status_for_user(current_user),
+      course_name: course.get_name(false),
+      start_date:,
+      end_date:,
+      next_date: next_deadline,
+      link:,
+      consent_link:,
+      active:
+    }
   end
 
   def get_least_reviewed_narrative(include_ids = [])
@@ -124,7 +161,7 @@ class Experience < ApplicationRecord
           narrative = Narrative.includes(scenario: :behavior).find(possible.sample)
         else
           sorted =  narrative_counts.sort_by { |a| a[1] }
-          narrative = Narrative.includes(scenario: :behavior).find ( sorted[0][0])
+          narrative = Narrative.includes(scenario: :behavior).find(sorted[0][0])
         end
         # narrative = Narrative.where( id: include_ids).take
       end
@@ -138,23 +175,24 @@ class Experience < ApplicationRecord
         exp = include_ids - narrative_counts.keys
         world = exp - Reaction.group(:narrative_id).count.keys
 
-        i = Narrative.includes(scenario: :behavior).joins(:reactions).where('scenario_id NOT IN (?)', scenario_counts.keys)
+        i = Narrative.includes(scenario: :behavior).joins(:reactions).where('scenario_id NOT IN (?)',
+                                                                            scenario_counts.keys)
                      .where(reactions: { narrative_id: exp })
                      .group(:narrative_id).count
-        if include_ids.empty?
-          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
+        narrative = if include_ids.empty?
+                      Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where('id NOT IN (?)', narrative_counts.keys).sample
-        elsif world.count > 0
-          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
+                    elsif world.count.positive?
+                      Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: world).sample
 
-        elsif exp.count > 0
-          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
+                    elsif exp.count.positive?
+                      Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: world).sample
-        else
-          narrative = Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
+                    else
+                      Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where(id: include_ids).sample
-        end
+                    end
       end
 
       if narrative.nil?
@@ -190,7 +228,7 @@ class Experience < ApplicationRecord
       end
 
       experience.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report(experience.name + ' (experience)',
+        AdministrativeMailer.summary_report("#{experience.name} (experience)",
                                             experience.course.pretty_name,
                                             instructor,
                                             completion_hash).deliver_later
@@ -206,42 +244,20 @@ class Experience < ApplicationRecord
   private
 
   def reset_notification
-    if end_date_changed? && instructor_updated && DateTime.current <= end_date
-      self.instructor_updated = false
-    end
+    self.instructor_updated = false if end_date_changed? && instructor_updated && DateTime.current <= end_date
   end
 
   def date_sanity
-    unless start_date.nil? || end_date.nil?
-      if start_date > end_date
-        errors.add(:start_date, 'The start date must come before the end date')
-      end
-      errors
-    end
-  end
+    return if start_date.nil? || end_date.nil?
 
-  def timezone_adjust
-    course_tz = ActiveSupport::TimeZone.new(course.timezone)
-
-    if start_date.nil? || start_date.change(hour: 0) == course.start_date.change(hour: 0)
-      self.start_date = course.start_date
-    elsif start_date_changed?
-      proc_date = course_tz.local(start_date.year, start_date.month, start_date.day)
-      self.start_date = proc_date.beginning_of_day
-    end
-
-    if end_date.nil? || end_date.change(hour: 0) == course.end_date.change(hour: 0)
-      self.end_date = course.end_date
-    elsif end_date_changed?
-      proc_date = course_tz.local(end_date.year, end_date.month, end_date.day)
-      self.end_date = proc_date.end_of_day.change(sec: 0)
-    end
+    errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
+    errors
   end
 
   def end_date_optimization
-    if student_end_date.nil? || end_date_changed? || lead_time_changed?
-      self.student_end_date = end_date - (1 + lead_time).days
-    end
+    return unless student_end_date.nil? || end_date_changed? || lead_time_changed?
+
+    self.student_end_date = end_date - (1 + lead_time).days
   end
 
   def dates_within_course
@@ -259,6 +275,6 @@ class Experience < ApplicationRecord
   end
 
   def anonymize
-    self.anon_name = Forgery::Name.company_name.to_s
+    self.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}"
   end
 end

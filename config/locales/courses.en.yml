@@ -1,5 +1,12 @@
 en:
   courses:
+    dialog_title: Create a copy
+    btn_tooltip_title: Create a copy based on this course
+    copy_btn_aria: Make a copy
+    copy_btn_txt: Make a Copy
+    size_btn: large
+    date_picker_label: New course start date?
+    copy_cancel_btn: Cancel
     index:
       title: List of Courses
       submit_copy: Copy this Course
@@ -8,6 +15,7 @@ en:
       copy_new_start_lbl: New course start date?
     edit:
       title: Edit Course Details
+      self_reg_dwnld: Download self-registration code
     show:
       title: Course Details
       instructors: Course Instructors
@@ -22,6 +30,9 @@ en:
       title: New Course
     create_success: Course created successfully!
     destroy_success: Course destroyed successfully!
+    copy_dlg: >
+      This course started on {{start_date}}. When would you like for the
+      new copy to begin? Everything will be shifted accordingly.
     update_success: Course updated successfully!
     copy_success: Course successfully copied!
     copy_fail: >
@@ -46,5 +57,25 @@ en:
     re_invite: Re-Invite
     drop: Drop
     courses: Courses
-    drop_student_confirm: >
-      Are you sure you want to drop this student from the class?
+    drop_student_confirm_dlg: >
+      Are you sure you want to drop this user from this course? This can be
+      reversed later, but it may result in lost data and confusion on the
+      part of the student.
+    drop_confirm_title: Confirm dropping student from course  
+    drop_cancel_btn: Cancel
+    drop_tooltip_title: Drop Student
+    drop_tooltip_aria: Drop Student
+    first_name: First Name
+    last_name: Last Name
+    email: Email
+    bingo_progress: Bingo Progress
+    assessment_progress: Assessment Progress
+    assessment_performance: Assessment Performance
+    experience_progress: Experience Progress
+    experience_performance: Experience Performance
+    status: Status
+    drop_student: Drop Student
+    accept_student: Accept Student
+    decline_student: Decline Student
+    cancel: Cancel
+    save_course_warning: You must save the Course to have students assigned to it
