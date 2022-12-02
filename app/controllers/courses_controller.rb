@@ -45,8 +45,8 @@ class CoursesController < ApplicationController
                 name: activity.get_name(@anon),
                 active: activity.active,
                 type: activity.type,
-                start_date: activity.start_date,
-                end_date: activity.end_date,
+                start_date: @anon ? activity.start_date + @course.anon_offset : activity.start_date,
+                end_date: @anon ? activity.end_date + @course.anon_offset : activity.end_date,
                 link: activity.get_link
               }
             end

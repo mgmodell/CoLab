@@ -319,6 +319,8 @@ class Course < ApplicationRecord
     dpts = %w[BUS MED ENG RTG MSM LEH EDP
               GEO IST MAT YOW GFB RSV CSV MBV]
     self.anon_number = "#{dpts.sample}-#{rand(100..700)}"
+    # Data offset in days
+    self.anon_offset = - Random.rand(1000).days.to_i + 35
   end
 
   def timezone_adjust_comprehensive

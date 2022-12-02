@@ -82,13 +82,15 @@ class GraphingController < ApplicationController
     anon_req = params[:anonymous]
     anonymize = current_user.anonymize? || anon_req
 
+    offset = anonymize ? project.course.anon_offset : 0
+
     dataset = {
       unitOfAnalysis: nil,
       comments: {},
       project_name: project.get_name(anonymize),
       project_id: project.id,
-      start_date: project.start_date,
-      end_date: project.end_date,
+      start_date: project.start_date + offset,
+      end_date: project.end_date + offset,
       streams: {}
     }
     comments = dataset[:comments]
@@ -144,7 +146,7 @@ class GraphingController < ApplicationController
           factor_stream[:values] << {
             assessment_id: value.installment.assessment_id,
             installment_id: value.installment_id,
-            date: value.installment.inst_date,
+            date: value.installment.inst_date + offset,
             value: value.value
           }
           streams[value.installment.group_id] = group_vals
@@ -197,8 +199,8 @@ class GraphingController < ApplicationController
           factor_stream[:values] << {
             assessment_id: value.installment.assessment_id,
             installment_id: value.installment_id,
-            date: value.installment.inst_date,
-            close_date: value.installment.assessment.end_date,
+            date: value.installment.inst_date + offset,
+            close_date: value.installment.assessment.end_date + offset,
             factor: value.factor.name,
             value: value.value
           }

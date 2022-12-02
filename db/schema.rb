@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_01_214357) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -236,6 +236,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_26_235110) do
     t.string "anon_name"
     t.string "anon_number"
     t.integer "consent_form_id"
+    t.integer "anon_offset", default: 0, null: false
     t.index ["consent_form_id"], name: "fk_rails_469f90a775"
     t.index ["school_id"], name: "index_courses_on_school_id"
   end
