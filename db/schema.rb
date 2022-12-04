@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_01_214357) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -553,6 +553,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_01_214357) do
     t.string "uid", default: "", null: false
     t.text "tokens"
     t.boolean "instructor", default: false, null: false
+    t.boolean "active", default: true, null: false
     t.index ["cip_code_id"], name: "index_users_on_cip_code_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["gender_id"], name: "index_users_on_gender_id"
