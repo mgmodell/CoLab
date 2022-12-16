@@ -13,6 +13,9 @@ RUN apt -y install \
   libmysqlclient-dev \
   yarn 
 
+RUN apt -y install \
+  libyaml-dev
+
 RUN apt autoremove && \
     apt clean
 
