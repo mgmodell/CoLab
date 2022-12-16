@@ -1,4 +1,6 @@
 # frozen_string_literal: true
 
-module Admin::ProjectsHelper
+module Admin
+  module ProjectsHelper
+  end
 end

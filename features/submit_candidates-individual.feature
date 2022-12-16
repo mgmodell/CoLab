@@ -15,11 +15,13 @@ Feature: Submitting Candidate words for Bingo!
     Given the user is the "random" user in the group
     Given the user "has" had demographics requested
 
+  @javascript
   Scenario: User should not be able to closed list of candidates
     Given the Bingo! "has not" been activated
     Given the user logs in
     Then user should see 0 open task
 
+  @javascript
   Scenario: User should not be able to see a closed list of candidates
     Given the Bingo! game required 1 day of lead time
     Given the Bingo! started "last month" and ends "today"
@@ -27,6 +29,7 @@ Feature: Submitting Candidate words for Bingo!
     Given the user logs in
     Then user should see 0 open task
 
+@javascript
   Scenario: User should be able to open and save an unstarted list of candidates
     Given the user logs in
     Then user should see 1 open task
@@ -34,9 +37,10 @@ Feature: Submitting Candidate words for Bingo!
     Then the user should see the Bingo candidate list
     Then the user will see 7 term field sets
     Then the candidate entries should be empty
-    Then the user clicks "Save"
+    Then the "Save" button is not available
     Then the candidate properties should be empty
 
+@javascript
   Scenario: User should be able to enter candidates with an assigned course consent
     Given the course has a consent form
     Given the consent form started "1 month ago" and ends "1 month from now"
@@ -44,14 +48,17 @@ Feature: Submitting Candidate words for Bingo!
     Given the consent form "has" been presented to the user
     Given the user logs in
     Then user should see 1 open task
+    Then the user switches to the "Task View" tab
+    Then the user enables the "Consent Form" table view option
     Then user should see a consent form listed for the open bingo
     When the user clicks the link to the candidate list
     Then the user should see the Bingo candidate list
     Then the user will see 7 term field sets
     Then the candidate entries should be empty
-    Then the user clicks "Save"
+    Then the "Save" button is not available
     Then the candidate properties should be empty
 
+@javascript
   Scenario: User should be able to open update and then re-edit a list of candidates
     Given the user logs in
     Then user should see 1 open task
@@ -61,12 +68,14 @@ Feature: Submitting Candidate words for Bingo!
      And the user populates 3 of the "definition" entries
     Then the user clicks "Save"
     Then the user will see "success"
+    Then close all messages
     Then retrieve the latest Bingo! game from the db
     Then the candidate list entries should match the list
     When the user populates 7 of the "term" entries
      And the user populates 7 of the "definition" entries
     Then the user clicks "Save"
     Then the user will see "success"
+    Then close all messages
     Then the candidate list entries should match the list
     Then the user logs out
     Then the user logs in
@@ -84,6 +93,7 @@ Feature: Submitting Candidate words for Bingo!
      And the user populates 7 of the "definition" entries
     Then the user clicks "Save"
     Then the user will see "success"
+    Then close all messages
     Then the candidate list entries should match the list
     Then the user logs out
     Then the user logs in

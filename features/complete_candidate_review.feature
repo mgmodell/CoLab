@@ -85,7 +85,7 @@ Feature: Review Candidate words for Bingo!
      Then the saved reviews match the list
      Then there will be 4 concepts
      Then the user will see "success"
-     Then the user navigates to "Home"
+     Then the user navigates home
      Then user should see 0 open task
 
   @javascript
@@ -102,7 +102,7 @@ Feature: Review Candidate words for Bingo!
      Then the saved reviews match the list
      Then there will be 0 concepts
      Then the user will see "success"
-     Then the user navigates to "Home"
+     Then the user navigates home
      Then user should see 0 open task
 
   @javascript
@@ -120,7 +120,7 @@ Feature: Review Candidate words for Bingo!
      Then the saved reviews match the list
      Then there will be 4 concepts
      Then the user will see "success"
-     Then the user navigates to "Home"
+     Then the user navigates home
      Then user should see 0 open task
 
   @javascript
@@ -139,7 +139,7 @@ Feature: Review Candidate words for Bingo!
      Then the saved reviews match the list
      Then there will be 4 concepts
      Then the user will see "success"
-     Then the user navigates to "Home"
+     Then the user navigates home
      Then user should see 0 open task
 
   @javascript
@@ -165,7 +165,7 @@ Feature: Review Candidate words for Bingo!
      Then the saved reviews match the list
      Then there will be 4 concepts
      Then the user will see "success"
-     Then the user navigates to "Home"
+     Then the user navigates home
      Then user should see 0 open task
 
   @javascript
@@ -191,7 +191,7 @@ Feature: Review Candidate words for Bingo!
      Then the saved reviews match the list
      Then there will be 4 concepts
      Then the user will see "success"
-     Then the user navigates to "Home"
+     Then the user navigates home
      Then user should see 0 open task
 
   @javascript
@@ -209,7 +209,7 @@ Feature: Review Candidate words for Bingo!
      Then the saved reviews match the list
      Then there will be 4 concepts
      Then the user will see "success"
-     Then the user navigates to "Home"
+     Then the user navigates home
      Then user should see 0 open task
 
     #Create a new project
@@ -245,5 +245,5 @@ Feature: Review Candidate words for Bingo!
      Then the saved reviews match the list
      Then there will be 8 concepts
      Then the user will see "success"
-     Then the user navigates to "Home"
+     Then the user navigates home
      Then user should see 0 open task

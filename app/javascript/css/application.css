@@ -1,0 +1,9 @@
+body {
+	/* max-width: 50rem; */
+	padding: 1rem;
+	margin: auto;
+	background: hsl(35, 80%, 94%);
+	color: hsl(35, 50%, 20%);
+	text-shadow: 0 1px 1px white;
+	font: 120%/1.6 Baskerville, Palatino Linotype, Palatino, serif;
+}

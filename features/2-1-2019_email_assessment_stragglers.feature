@@ -27,6 +27,7 @@ Feature: Email assessment stragglers (for 2/1/2019 date)
     Then 3 emails will be sent
     Then 3 emails will be tracked
 
+  @javascript
   Scenario: Three students have open assessments waiting when we email the stragglers, but one does not - three emails are sent
     Given the email queue is empty
     Given the project measures 4 factors

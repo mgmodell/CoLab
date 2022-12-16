@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'chronic'
-require 'forgery'
+require 'faker'
 Given 'the project started {string} and ends {string}' do |start_date, end_date|
   @project.start_date = Chronic.parse(start_date)
   @project.end_date = Chronic.parse(end_date)
@@ -15,25 +15,34 @@ Given "the user's school is {string}" do |school_name|
 end
 
 Then 'the user sets the start date to {string} and the end date to {string}' do |start_date, end_date|
-  new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%Y-%m-%dT%T')
+  # new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%Y-%m-%dT%T')
+  new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%m-%d-%Y')
   page.find('#course_start_date').set(new_date)
-  new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%Y-%m-%dT%T')
+  # new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%Y-%m-%dT%T')
+  new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%m-%d-%Y')
   page.find('#course_end_date').set(new_date)
 end
 
 Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
-  field_lbl = 'course_timezone'
+  field_lbl = 'Time Zone'
+  lbl = find(:xpath, "//label[text()='#{field_lbl}']")
+  elem = find(:xpath, "//*[@id='#{lbl[:for]}']")
 
   if is_or_isnt == 'is'
-    page.find('#course_timezone').value.should eq timezone
+    elem.text.should eq timezone
   else
-    page.find('#course_timezone').value.should_not eq timezone
+    elem.text.should_not eq timezone
   end
 end
 
 Then 'the user sets the course timezone to {string}' do |timezone|
-  field_lbl = 'course_timezone'
-  page.select(timezone, from: field_lbl)
+  field_lbl = 'Time Zone'
+  lbl = find(:xpath, "//label[text()='#{field_lbl}']")
+  elem = find(:xpath, "//*[@id='#{lbl[:for]}']")
+  elem.click
+
+  menu_item = find(:xpath, "//li[text()='#{timezone}']")
+  menu_item.click
 end
 
 Then 'retrieve the latest course from the db' do
@@ -52,7 +61,7 @@ Then 'the course {string} field is {string}' do |field_name, value|
   when 'timezone'
     @course.timezone.should eq value
   else
-    puts 'Not testing anything'
+    log 'Not testing anything'
   end
 end
 
@@ -81,7 +90,7 @@ Then 'the course {string} is {string}' do |field_name, value|
   when 'timezone'
     @course.timezone = value
   else
-    puts "Not setting anything: #{value}"
+    log "Not setting anything: #{value}"
     pending
   end
   @course.save
@@ -96,7 +105,7 @@ Given 'the experience {string} is {string}' do |field_name, value|
   when 'name'
     @experience.name = value
   else
-    puts "Not setting anything: #{value}"
+    log "Not setting anything: #{value}"
     pending
   end
   @experience.save
@@ -111,7 +120,7 @@ Given 'the Bingo! {string} is {string}' do |field_name, value|
   when 'terms count'
     @bingo.individual_count = value
   else
-    puts "Not setting anything: #{value}"
+    log "Not setting anything: #{value}"
     pending
   end
   @bingo.save
@@ -122,7 +131,7 @@ Given 'the Bingo! {string} is {int}' do |field_name, value|
   when 'terms count'
     @bingo.individual_count = value
   else
-    puts "Not setting anything: #{value}"
+    log "Not setting anything: #{value}"
     pending
   end
   @bingo.save
@@ -149,8 +158,13 @@ Given 'the Bingo! is active' do
 end
 
 Then 'set the new course start date to {string}' do |new_date|
-  @new_date = new_date
-  fill_in 'New course start date?', with: @new_date
+  label = find(:xpath, "//label[text()='New course start date?']")
+  elem = find(:xpath, "//input[@id='#{label[:for]}']")
+
+  @new_date = Chronic.parse(new_date)
+
+  elem.click
+  elem.set(@new_date.strftime('%m/%d/%Y'))
 end
 
 Then 'the course has {int} instructor user' do |instructor_count|
@@ -158,9 +172,9 @@ Then 'the course has {int} instructor user' do |instructor_count|
 end
 
 Then 'the user executes the copy' do
-  url = copy_course_path + '?'
-  url += { start_date: @new_date, id: @course.id }.to_param
-  visit url
+  elem = find(:xpath, "//button[contains(.,'Make a Copy')]")
+  elem.click
+
   @orig_course = @course
   @course = Course.last
 end
@@ -188,7 +202,7 @@ Then 'the Experience {string} is {string}' do |field, value|
   when 'name'
     @experience.name.should eq value
   else
-    puts "no test for '#{field}'"
+    log "no test for '#{field}'"
     pending # Write code here that turns the phrase above into concrete
   end
 end
@@ -260,33 +274,53 @@ Then 'the new bingo metadata is the same as the old' do
 end
 
 Then 'the user adds the {string} users {string}' do |type, addresses|
-  url = if type == 'student'
-          add_students_path + '?'
-        else
-          add_instructors_path + '?'
-        end
-  addresses = @users.map(&:email).join(', ') if addresses == 'user_list'
+  lbl = "#{type}s"
+  tab = find(:xpath, "//button[text()='#{lbl.capitalize}']")
+  tab.click
 
-  url += { addresses: addresses, id: @course.id }.to_param
-  visit url
+  btn = find(:xpath, "//button[@aria-label='Add #{lbl}']")
+  btn.click
+
+  inpt = find(:xpath, "//input[@id='addresses']")
+  addresses = @users.map(&:email).join(', ') if addresses == 'user_list'
+  inpt.set addresses
+
+  btn = find(:xpath, "//button[contains(.,'Add #{lbl}!')]")
+  btn.click
+  wait_for_render
 end
 
 Then 'the user drops the {string} users {string}' do |type, addresses|
+  step 'the user switches to the "Students" tab'
+  step 'the user enables the "Email" table view option'
+  # step 'the user enables the "Actions" table view option'
   url = if type == 'student'
-          add_students_path + '?'
+          "#{add_students_path}?"
         else
-          add_instructors_path + '?'
+          "#{add_instructors_path}?"
         end
+  find(:xpath, '//div[@id="pagination-rows"]').click
+  find(:xpath, '//li[text()="100"]').click
+
+  step 'the user switches to the "Students" tab'
+  # step 'the user enables the "Email" table view option'
   if addresses == 'user_list'
-    @users.each do |address|
+    @users.each do |_address|
+      step 'the user enables the "Email" table view option'
       elem = find(:xpath,
-                  "//tr[td[contains(.,'#{address.email}')]]/td/a", text: 'Drop')
+                  "//tr[td[contains(.,'#{_address.email}')]]//button[@aria-label='Drop Student']")
       elem.click
+      find(:xpath,
+           "//button[text()='Drop the Student']").click
+      wait_for_render
     end
   else
     elem = find(:xpath,
-                "//tr[td[contains(.,'#{addresses}')]]/td/a", text: 'Drop')
+                "//tr[td[contains(.,'#{addresses}')]]//button[@aria-label='Drop Student']")
     elem.click
+    find(:xpath,
+         "//button[text()='Drop the Student']").click
+    wait_for_render
   end
 end
 
@@ -321,18 +355,25 @@ Then('the user sees self-registration image') do
 end
 
 Then 'the user opens the self-registration link for the course' do
-  visit(self_reg_path(@course))
+  self_reg_url = "course/#{@course.id}/enroll"
+  visit(self_reg_url)
+  if !@dest_date.nil? && Capybara.current_driver != :rack_test && current_url.start_with?('http')
+    fill_in 'newTimeVal', with: @dest_date.to_s
+    click_button 'setTimeBtn'
+  end
+  wait_for_render
 end
 
 Then 'the user sees {string}' do |string|
-  page.has_text? string
+  wait_for_render
+  page.should have_content string
 end
 
 Then 'the user submits credentials' do
-  fill_in 'user[email]', with: @user.email
-  fill_in 'user[password]', with: 'password'
+  fill_in 'email', with: @user.email
+  fill_in 'password', with: 'password'
 
-  click_link_or_button 'Log in'
+  click_link_or_button 'Log in!'
 end
 
 Given('the user has {string} the course') do |action|
@@ -344,53 +385,55 @@ Given('the user has {string} the course') do |action|
   when 'been invited to'
     roster.invited_student!
   else
-    puts "No '#{action}' option available"
+    log "No '#{action}' option available"
     expect(true).to be false
   end
   roster.save
-  puts roster.errors.full_messages unless roster.errors.empty?
+  log roster.errors.full_messages unless roster.errors.empty?
 end
 
 Given('the course adds {int} {string} users') do |count, role|
   count.times do
     user = User.new(
-      first_name: Forgery::Name.first_name,
-      last_name: Forgery::Name.last_name,
+      first_name: Faker::Name.first_name,
+      last_name: Faker::Name.last_name,
       password: 'password',
       password_confirmation: 'password',
-      email: Forgery::Internet.email_address,
+      email: Faker::Internet.email,
       timezone: 'UTC',
       school: School.find(1),
       theme_id: 1
     )
     user.skip_confirmation!
     user.save
-    puts user.errors.full_messages unless user.errors.empty?
+    log user.errors.full_messages unless user.errors.empty?
 
-    roster = @course.rosters.create(user: user)
+    roster = @course.rosters.create(user:)
     case role
     when 'requesting student'
       roster.requesting_student!
     else
-      puts "Unsupported role: #{role}"
+      log "Unsupported role: #{role}"
       expect(true).to be false
     end
     roster.save
-    puts roster.errors.full_messages unless roster.errors.empty?
+    log roster.errors.full_messages unless roster.errors.empty?
   end
 end
 
 Then('the user sees {int} enrollment request') do |count|
-  expect(all(:xpath, '//button[@title=\'Accept\']').size).to eq count
+  expect(all(:xpath, '//button[@label=\'Accept\']').size).to eq count
 end
 
 Then('the user {string} {int} enrollment request') do |decision, count|
   action = decision == 'approves' ? 'Accept' : 'Reject'
-  buttons = all(:xpath, "//button[@title='#{action}']")
+  # Using aria-labl instead of title because of some strange JavaScript
+  # error.
+  buttons = all(:xpath, "//button[@aria-label='#{action}']")
   unless buttons.size < count
 
     count.times do
-      button = all(:xpath, "//button[@title='#{action}']").sample
+      button = all(:xpath, "//button[@aria-label='#{action}']").sample
       button.click
       waits = 0
       until all(:xpath, "//div[@role='progressbar']").empty?
@@ -398,6 +441,11 @@ Then('the user {string} {int} enrollment request') do |decision, count|
         waits += 1
         waits.should be < 3
       end
+      sleep(0.3)
     end
   end
+end
+
+Then('close all messages') do
+  ack_messages
 end

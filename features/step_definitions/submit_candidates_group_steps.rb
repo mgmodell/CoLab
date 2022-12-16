@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-Given /^the Bingo! is group\-enabled with the project and a (\d+) percent group discount$/ do |group_discount|
+Given(/^the Bingo! is group-enabled with the project and a (\d+) percent group discount$/) do |group_discount|
   @bingo.group_option = true
   @project.should_not be_nil
   @bingo.project = @project
   @bingo.group_discount = group_discount
 end
 
-Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pending|
+Then(/^the user "([^"]*)" see collaboration was requested$/) do |collaboration_pending|
+  wait_for_render
   link_text = "Your teammates in #{@group.get_name(false)} want to collaborate"
   case collaboration_pending.downcase
   when 'should'
@@ -15,56 +16,62 @@ Then /^the user "([^"]*)" see collaboration was requested$/ do |collaboration_pe
   when 'should not'
     page.should_not have_content link_text
   else
-    puts "We didn't test anything there: " + collaboration_pending
+    log "We didn't test anything there: #{collaboration_pending}"
   end
 end
 
-When /^the user requests collaboration$/ do
+When(/^the user requests collaboration$/) do
+  wait_for_render
   link_text = "Invite your teammates in #{@group.get_name(false)} to help?"
-  page.should have_content link_text
-  click_link_or_button link_text
+  expect(page).to have_content link_text
+  link = find(:xpath, "//a[contains(.,'#{link_text}')]")
+  link.click
 end
 
-When /^group user (\d+) logs in$/ do |user_count|
+When(/^group user (\d+) logs in$/) do |user_count|
   @user = @group.users[user_count.to_i - 1]
   step 'the user "has" had demographics requested'
   step 'the user logs in'
 end
 
-Then /^the user "([^"]*)" see they're waiting on a collaboration response$/ do |collaboration_pending|
+Then(/^the user "([^"]*)" see they're waiting on a collaboration response$/) do |collaboration_pending|
   case collaboration_pending.downcase
   when 'should'
     page.should have_content 'awaiting a response to your group help request'
   when 'should not'
     page.should_not have_content 'awaiting a response to your group help request'
   else
-    puts "We didn't test anything there: " + collaboration_pending
+    log "We didn't test anything there: #{collaboration_pending}"
   end
 end
 
-Then /^the user "([^"]*)" the collaboration request$/ do |accept_or_decline|
+Then(/^the user "([^"]*)" the collaboration request$/) do |accept_or_decline|
+  wait_for_render
   case accept_or_decline.downcase
   when 'accepts'
-    click_link_or_button 'Accept'
+    btn = find(:xpath, "//a[text()='Accept']")
+    # click_link_or_button 'Accept'
   when 'declines'
-    click_link_or_button 'Decline'
+    btn = find(:xpath, "//a[text()='Decline']")
+    # click_link_or_button 'Decline'
   else
-    puts "We didn't test anything there: " + accept_or_decline
+    log "We didn't test anything there: #{accept_or_decline}"
   end
+  btn.click
 end
 
-Then /^the user "([^"]*)" see collaboration request button$/ do |button_present|
+Then(/^the user "([^"]*)" see collaboration request button$/) do |button_present|
   case button_present.downcase
   when 'should'
     page.should have_content 'Invite your group to help?'
   when 'should not'
     page.should_not have_content 'Invite your group to help?'
   else
-    puts "We didn't test anything there: " + button_present
+    log "We didn't test anything there: #{button_present}"
   end
 end
 
-When /^the user populates (\d+) additional "([^"]*)" entries$/ do |count, field|
+When(/^the user populates (\d+) additional "([^"]*)" entries$/) do |count, field|
   # required_term_count = @bingo.required_terms_for_group(@bingo.project.group_for_user(@user))
 
   @entries_lists = {} if @entries_lists.nil?
@@ -76,46 +83,75 @@ When /^the user populates (\d+) additional "([^"]*)" entries$/ do |count, field|
     if @entries_list[existing_count + index].blank?
       @entries_list[existing_count + index] = { 'term' => '', 'definition' => '' }
     end
-    @entries_list[existing_count + index][field] = field == 'term' ?
-                        Forgery::Name.industry :
-                        Forgery::Basic.text
-    page.fill_in("candidate_list_candidates_attributes_#{existing_count + index}_#{field}",
+    @entries_list[existing_count + index][field] = if field == 'term'
+                                                     Faker::Company.industry
+                                                   else
+                                                     Faker::Company.bs
+                                                   end
+    page.fill_in("#{field}_#{existing_count + index}",
                  with: @entries_list[existing_count + index][field])
   end
 end
 
-When /^the user changes the first (\d+) "([^"]*)" entries$/ do |count, field|
+When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
 
-  count.to_i.times do |index|
-    existing_term = page.find(:xpath, "//input[@id='candidate_list_candidates_attributes_#{index}_term']")
-    new_val = field == 'term' ?
-            Forgery::Name.industry :
-            Forgery::Basic.text
+  entries_array = []
+  @entries_lists.each_key do |user_id|
+    @entries_lists[user_id].each do |entry|
+      entries_array.push entry
+    end
+  end
+  field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]").count
 
-    @entries_list[index] = {} if @entries_list[index].blank?
-    @entries_list.each do |entry|
-      next unless entry['term'] == existing_term
+  count.to_i.times do |_index|
+    # Index to the field to change
+    rand_ind = Random.rand(field_count)
 
-      entry[field] = new_val
-      page.fill_in("candidate_list_candidates_attributes_#{index}_#{field}",
-                   with: @entries_list[index][field])
+    # Pull the existing values
+    existing_term = page.find(:xpath, "//input[@id='term_#{rand_ind}']").value
+    existing_def = page.find(:xpath, "//textarea[@id='definition_#{rand_ind}']").value
+
+    # Gen the new term
+    new_val = if field == 'term'
+                Faker::Company.industry
+              else
+                Faker::Company.bs
+              end
+
+    if existing_term.blank? && existing_def.blank?
+      @entries_list.push({ field => new_val })
+    else
+      found = false
+      entries_array.each do |entry|
+        if field == 'term' && entry['definition'] == existing_def
+          entry['term'] = new_val
+          page.fill_in("#{field}_#{rand_ind}",
+                       with: new_val)
+          found = true
+        elsif field == 'definition' && entry['term'] == existing_term
+          entry['definition'] = new_val
+          page.fill_in("#{field}_#{rand_ind}",
+                       with: new_val)
+          found = true
+        end
+
+        break if found
+      end
     end
   end
 end
 
-Then /^the candidate lists have been merged$/ do
+Then(/^the candidate lists have been merged$/) do
   @entries_lists = {} if @entries_lists.nil?
   combined_list = []
   @bingo.project.group_for_user(@user).users.each do |user|
     next if @entries_lists[user].blank?
 
     @entries_lists[user].each do |list_item|
-      if list_item['term'].present? || list_item['definition'].present?
-        combined_list << list_item
-      end
+      combined_list << list_item if list_item['term'].present? || list_item['definition'].present?
     end
   end
   @bingo.project.group_for_user(@user).users.each do |user|
@@ -123,7 +159,7 @@ Then /^the candidate lists have been merged$/ do
   end
 end
 
-Then /^all course users should see the terms list$/ do
+Then(/^all course users should see the terms list$/) do
   temp_user = @user
   @course.users.each do |user|
     @user = user

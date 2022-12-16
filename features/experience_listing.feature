@@ -8,6 +8,7 @@ Feature: Experience Listing
     Given the course has 4 confirmed users
     Given the users "have" had demographics requested
 
+@javascript
   Scenario: Checking for open experiences
     Given the experience started "last month" and ends "2 months hence"
     Given the experience "has" been activated
@@ -22,6 +23,7 @@ Feature: Experience Listing
     Then user should see 1 open task
     Then the user logs out
 
+@javascript
   Scenario: A student that drops the course won't see the experience
     Given the experience started "last month" and ends "2 months hence"
     Given the experience "has" been activated
@@ -31,6 +33,7 @@ Feature: Experience Listing
     Then the user should see a successful login message
     Then user should see 0 open task
 
+@javascript
   Scenario: We shouldn't see an experience that's not active
     Given the experience "has not" been activated
     Given the experience started "last month" and ends "2 months hence"
@@ -40,6 +43,7 @@ Feature: Experience Listing
     Then the user should see a successful login message
     Then user should see 0 open task
 
+@javascript
   Scenario: We shouldn't see an experience in instructor prep
     Given the experience "has not" been activated
     Given the experience started "last month" and ends "3 days hence"
@@ -50,6 +54,7 @@ Feature: Experience Listing
     Then the user should see a successful login message
     Then user should see 0 open task
 
+@javascript
   Scenario: Checking for experiences with opening today and closing tomorrow
     Given the experience started "today" and ends "tomorrow"
     Given the experience 'lead_time' is 0
@@ -59,6 +64,7 @@ Feature: Experience Listing
     Then the user should see a successful login message
     Then user should see 1 open task
     
+@javascript
   Scenario: Checking for experiences with one outside the date range
     Given the experience started "2 months ago" and ends "last month"
     Given the experience "has" been activated
@@ -67,6 +73,7 @@ Feature: Experience Listing
     Then the user should see a successful login message
     Then user should see 0 open task
     
+@javascript
   Scenario: Checking for assessments and projects together
     Given the experience started "yesterday" and ends "tomorrow"
     Given the experience 'lead_time' is 0

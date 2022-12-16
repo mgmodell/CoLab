@@ -7,6 +7,19 @@ class SchoolsController < ApplicationController
 
   def show
     @title = t '.title'
+    respond_to do |format|
+      format.html { render :show }
+      format.json do
+        response = {
+          school: @school.as_json(
+            only: %i[id name description timezone]
+          ),
+          timezones: HomeController::TIMEZONES,
+          messages: {}
+        }
+        render json: response
+      end
+    end
   end
 
   def edit
@@ -17,31 +30,96 @@ class SchoolsController < ApplicationController
   def index
     @title = t '.title'
     @schools = School.all
-  end
-
-  def new
-    @title = t '.title'
-    @school = School.new
+    respond_to do |format|
+      format.html do
+      end
+      format.json do
+        resp = @schools.collect do |school|
+          {
+            id: school.id,
+            name: school.get_name(@anon),
+            courses: school.courses.size,
+            students: school.enrolled_students.size,
+            instructors: school.instructors.size,
+            projects: school.projects.size,
+            experiences: school.projects.size,
+            terms_lists: school.bingo_games.size
+          }
+        end
+        render json: resp
+      end
+    end
   end
 
   def create
     @title = t '.title'
     @school = School.new(school_params)
     if @school.save
-      redirect_to schools_url, notice: t('schools.create_success')
+      notice = t('schools.create_success')
+      respond_to do |format|
+        format.html do
+          redirect_to schools_url, notice:
+        end
+        format.json do
+          response = {
+            school: @school.as_json(
+              only: %i[id name description timezone]
+            ),
+            messages: { main: notice }
+          }
+          render json: response
+        end
+      end
     else
       logger.debug @school.errors.full_messages unless @school.errors.empty?
-      render :new
+      respond_to do |format|
+        format.html do
+          render :new
+        end
+        format.json do
+          messages = @school.errors.as_json
+          messages[:main] = 'Please review the problems below'
+          render json: {
+            messages:
+          }
+        end
+      end
     end
   end
 
   def update
     @title = t '.title'
     if @school.update(school_params)
-      redirect_to school_path(@school), notice: t('schools.update_success')
+      notice = t('schools.update_success')
+      respond_to do |format|
+        format.html do
+          redirect_to school_path(@school), notice:
+        end
+        format.json do
+          response = {
+            school: @school.as_json(
+              only: %i[id name description timezone]
+            ),
+            messages: { main: notice }
+          }
+          render json: response
+        end
+      end
     else
-      logger.debug @school.errors.full_messages unless @school.errors.empty?
-      render :edit
+      logger.debug @school.errors.full_messages
+      respond_to do |format|
+        format.html do
+          render :edit
+        end
+        format.json do
+          messages = @school.errors.to_hash
+          messages.store(:main, 'Unable to save. Please resolve the issues and try again.')
+          response = {
+            messages:
+          }
+          render json: response
+        end
+      end
     end
   end
 
@@ -54,11 +132,17 @@ class SchoolsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_school
-    @school = School.find(params[:id])
+    @school = if params[:id].blank? || params[:id] == 'new'
+                School.new(
+                  timezone: current_user.timezone
+                )
+              else
+                School.find(params[:id])
+              end
   end
 
   def check_admin
-    redirect_to root_path unless @current_user.is_admin?
+    redirect_to root_path unless current_user.is_admin?
   end
 
   def school_params

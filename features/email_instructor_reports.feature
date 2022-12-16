@@ -149,6 +149,7 @@ Feature: Email experience stragglers
     Then 1 emails will be sent
     Then 5 emails will be tracked
 
+  @javascript
   Scenario: Check project reports when a student has completed an assessment
     Given the course has an assessed project
     Given the project has a group with 4 confirmed users

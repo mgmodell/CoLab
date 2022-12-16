@@ -120,6 +120,7 @@ Feature: Generate diversity scores (DS)
      When we update the group's diversity score
      Then the group's diversity score is 2
 
+  @javascript
   Scenario: 15 completed scenarios gives us a DS of 12
     Given the course has an experience
     Given the experience started "last month" and ends "4 days hence"
@@ -258,6 +259,7 @@ Feature: Generate diversity scores (DS)
      When we update the group's diversity score
      Then the group's diversity score is greater than 9
 
+  @javascript
   Scenario: 7 different scenarios gives us a DS of 7
     Given the course has an experience
     Given the experience started "last month" and ends "4 days hence"
@@ -328,6 +330,7 @@ Feature: Generate diversity scores (DS)
      When we update the group's diversity score
      Then the group's diversity score is greater than 5
 
+@javascript
   Scenario: 2 complete scenarios gives us a DS of 2
     Given the course has an experience
     Given the experience started "last month" and ends "next month"
@@ -352,6 +355,7 @@ Feature: Generate diversity scores (DS)
      When we update the group's diversity score
      Then the group's diversity score is 2
 
+@javascript
   Scenario: 3 different incomplete scenarios gives us a DS of 3
     Given the course has an experience
     Given the experience started "last month" and ends "next month"
@@ -504,6 +508,7 @@ Feature: Generate diversity scores (DS)
      When we update the group's diversity score
      Then the group's diversity score is 8
 
+@javascript
   Scenario: Diversity combination (full on)
     #2011, 2012, 2011, 2011
     Given the "dob" of the "first" "group" user is "5/28/2011"

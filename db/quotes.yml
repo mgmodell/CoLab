@@ -148,7 +148,7 @@
 - !ruby/object:Quote_
   text_en: >
     If you try and we lose, then it isn't your fault. But if you don't
-    try and we lose, then it's all your fault."
+    try and we lose, then it's all your fault.
   attribution: Orson Scott Card
 
 - !ruby/object:Quote_
@@ -294,3 +294,8 @@
     You may have the greatest bunch of individual stars in the world,
     but if they don't play together, the club won't be worth a dime.
   attribution: Babe Ruth
+
+- !ruby/object:Quote_
+  text_en: >
+    I am because we are.
+  attribution: Nguni Bantu term

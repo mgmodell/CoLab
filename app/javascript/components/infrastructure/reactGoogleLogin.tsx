@@ -1,0 +1,1 @@
+export { GoogleLogin as default } from "react-google-login";

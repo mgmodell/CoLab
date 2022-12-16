@@ -4,23 +4,26 @@ module Demoable
   extend ActiveSupport::Concern
 
   def demo_user
-    if @current_user.nil?
-      @current_user = User.new(first_name: t(:demo_surname_1),
-                               last_name: t(:demo_fam_name_1),
-                               timezone: t(:demo_user_tz))
-    end
+    return unless @current_user.nil?
+
+    @current_user = User.new(id: -7,
+                             first_name: t(:demo_surname_1),
+                             last_name: t(:demo_fam_name_1),
+                             timezone: t(:demo_user_tz))
   end
 
   def get_demo_project
     @project = ProjStub.new
     @project.style = Style.find(2)
     @project.name = t :demo_project
+    @project.description = t :demo_project_description
     @project.factor_pack = FactorPack.find(1).factors
     @project
   end
 
   def get_demo_group
     @group = GroupStub.new
+    @group.id = -1
     @group.name = t :demo_group
     user_names = [%w[Doe Robert],
                   %w[Jones Roberta], %w[Kim Janice]]
@@ -29,8 +32,8 @@ module Demoable
 
     @group.users << @current_user
 
-    user_names.each do |name|
-      u = User.new(last_name: name[0], first_name: name[1])
+    user_names.each_with_index do |name, idx|
+      u = User.new(id: -idx, last_name: name[0], first_name: name[1])
       @group.users << u
     end
     @group
@@ -63,8 +66,8 @@ module Demoable
       cl.candidates << Candidate.new(
         id: - index,
         concept: Concept.new(name: concept),
-        definition: definition,
-        term: term,
+        definition:,
+        term:,
         candidate_feedback: feedback
       )
     end
@@ -87,19 +90,55 @@ module Demoable
                   individual_count: 10)
   end
 
-  class UserStub
-    attr_accessor :id, :first_name, :last_name
-    def name
-      last_name + ', ' + first_name
+  def get_demo_installment
+    a = AssessmentStub.new
+    a.id = -1
+    a.project = get_demo_project
+
+    i = InstallmentStub.new
+    i.id = -42
+    i.user_id = -1
+    i.assessment = a
+    i.assessment_id = a.id
+    i.inst_date = DateTime.current.in_time_zone('UTC')
+    i
+  end
+
+  class InstallmentStub
+    attr_accessor :id, :user_id, :assessment, :assessment_id, :group, :group_id, :values, :inst_date
+
+    def values_build(factor:, user:, value:)
+      self.values = values || []
+      v = Value.new
+      v.factor = factor
+      v.factor_id = factor.id
+      v.user = user
+      v.user_id = user.id
+      v.value = value
+      values << v
     end
   end
+
+  class AssessmentStub
+    attr_accessor :id, :project
+  end
+
+  class UserStub
+    attr_accessor :id, :first_name, :last_name
+
+    def name
+      "#{last_name}, #{first_name}"
+    end
+  end
+
   class ProjStub
-    attr_accessor :id, :style, :name, :factor_pack
+    attr_accessor :id, :style, :name, :description, :factor_pack
 
     def get_name(_anon)
       name
     end
   end
+
   class GroupStub
     attr_accessor :id, :name, :users, :project
 

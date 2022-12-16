@@ -12,9 +12,9 @@ en:
     comment_prompt: Would you like to add additional comments?
     instructions: >
       Please complete this weeks' assessment for group 
-      <em>%{group_name}</em> (working with you on <em>%{project_name}</em>)
-      by indicating how much effort each of the %{member_count} members of 
-      your group contributed towards each of the %{factor_count} factors. 
+      <em>{{group_name}}</em> (working with you on <em>{{project_name}}</em>)
+      by indicating how much effort each of the {{member_count}} members of 
+      your group contributed towards each of the {{factor_count}} factors. 
       Please keep in mind that <em>this report <u>should only cover this 
       past week</u> and none of the period before</em>.
     slider:

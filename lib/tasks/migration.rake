@@ -1,5 +1,42 @@
 namespace :migratify do
 
+  desc 'Applying for the react migration in the summer of 2020'
+  task api_conversion: :environment do
+    behavior = Behavior.find_by_name_en( 'Other' )
+    behavior.needs_detail = true
+    behavior.save
+
+    User.all.each do |u|
+      u.update_instructor
+      u.save
+    end
+
+    Course.all.each do |c|
+      c.anon_offset = - Random.rand(1000).days.to_i + 35
+      c.save
+    end
+
+  end
+
+  desc 'Update the quotes again'
+  task quotes: :environment do
+    # Quote seed data
+    class Quote_
+      attr_accessor :text_en, :attribution
+    end
+    read_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
+    read_data.each do |quote|
+      quote.text_en = quote.text_en.strip
+      q = Quote.where(text_en: quote.text_en).take
+      q = Quote.new if q.nil?
+      q.text_en = quote.text_en unless q.text_en == quote.text_en
+      q.attribution = quote.attribution unless q.attribution == quote.attribution
+      q.save
+    end
+
+  end
+
+  # older tasks
   desc 'Applying changes to Candidate Feedback options'
   task cf_updates: :environment do
 
@@ -59,7 +96,6 @@ namespace :migratify do
       end
 
     end
-
 
   end
   
@@ -140,6 +176,7 @@ namespace :migratify do
       cl.save
     end
   end
+
 
 
   desc 'Update the quotes again'
@@ -547,37 +584,44 @@ namespace :migratify do
     # Make sure the DB is primed and ready!
 
     User.find_each do |user|
-      user.anon_first_name = Forgery::Name.first_name if user.anon_first_name.blank?
-      user.anon_last_name = Forgery::Name.last_name if user.anon_last_name.blank?
+      user.anon_first_name = Faker::Name.first_name if user.anon_first_name.blank?
+      user.anon_last_name = Faker::Name.last_name if user.anon_last_name.blank?
       user.researcher = false unless user.researcher.present?
       user.save
     end
 
     Group.find_each do |group|
-      group.anon_name = "#{rand < rand ? Forgery::Personal.language : Forgery::Name.location} #{Forgery::Name.company_name}s" if group.anon_name.blank?
+      group.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s" if group.anon_name.blank?
       group.save
     end
 
     BingoGame.find_each do |bingo_game|
       if bingo_game.anon_topic.blank? || (bingo_game.anon_topic.starts_with? 'Lorem')
         trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
-        bingo_game.anon_topic = "#{Forgery::Name.company_name} #{trans.sample} #{Forgery::Name.job_title}"
+        bingo_game.anon_topic = "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
         bingo_game.save
       end
     end
 
     Experience.find_each do |experience|
-      experience.anon_name = Forgery::Name.company_name.to_s if experience.anon_name.blank?
+      experience.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}" if experience.anon_name.blank?
       experience.save
     end
 
+    locations = [
+      Faker::Games::Pokemon,
+      Faker::Games::Touhou,
+      Faker::Games::Overwatch,
+      Faker::Movies::HowToTrainYourDragon,
+      Faker::Fantasy::Tolkien
+    ]
     Project.find_each do |project|
-      project.anon_name = "#{rand < rand ? Forgery::Address.country : Forgery::Name.location} #{Forgery::Name.job_title}" if project.anon_name.blank?
+      project.anon_name = "#{locations.sample.location} #{Faker::Job.field}" if project.anon_name.blank?
       project.save
     end
 
     School.find_each do |school|
-      school.anon_name = "#{rand < rand ? Forgery::Name.location : Forgery::Name.company_name} institute" if school.anon_name.blank?
+      school.anon_name = "#{Faker::Color.color_name} #{Faker::Educator.university}" if school.anon_name.blank?
       school.save
     end
 
@@ -585,7 +629,7 @@ namespace :migratify do
                GEO IST MAT YOW GFB RSV CSV MBV]
     levels = %w[Beginning Intermediate Advanced]
     Course.find_each do |course|
-      course.anon_name = "#{levels.sample} #{Forgery::Name.industry}" if course.anon_name.blank?
+      course.anon_name = "#{levels.sample} #{Faker::Company.industry}" if course.anon_name.blank?
       course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
       course.save
     end
