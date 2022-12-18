@@ -1,4 +1,4 @@
-FROM arm64v8/ubuntu
+FROM ubuntu
 
 RUN apt update && apt upgrade -y
 RUN apt -y install \
@@ -22,14 +22,12 @@ RUN apt autoremove && \
 RUN groupadd -r colab && \
   useradd --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
 
-
 WORKDIR /home/colab
 RUN mkdir .ssh
 COPY containers/id_rsa .ssh/
 RUN chown -R colab:colab .ssh
 
 USER colab
-
 
 SHELL ["/bin/bash", "-l", "-c"]
 
@@ -64,7 +62,7 @@ USER colab
 
 #Set up the app materials
 RUN mkdir -p /home/colab/src/app
-COPY containers/entrypoint.sh /home/colab/src/
+COPY containers/test_entrypoint.sh /home/colab/src/entrypoint.sh
 WORKDIR /home/colab/src/app
 
 ENV DRIVER docker
