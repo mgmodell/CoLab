@@ -10,9 +10,6 @@ print_help ( ) {
   echo " -d             Migrate the DB"
   echo " -m [task]      Run a migratify task (assumes -m)"
   echo ""
-  echo " *** NOT IMPLEMENTED YET ***"
-  echo " -r             Restart the server"
-  echo ""
   echo " -h             Show this help and terminate"
   
   exit 0;

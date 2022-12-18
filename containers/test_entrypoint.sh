@@ -11,7 +11,7 @@ fi
 
 cd $dir
 # Make sure we're working with the latest
-git pull
+git pull --all
 
-$HOME/src/app/run_cukes.sh "$@"
+$HOME/src/app/containers/test_env/run_cukes.sh "$@"
 
