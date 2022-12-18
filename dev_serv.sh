@@ -44,7 +44,7 @@ else
   echo "DB started"
 fi
 
-DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP --port=3306 | grep colab_dev | wc -l`
+DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP --port=31337 | grep colab_dev | wc -l`
 if [ $(($DB_COUNT)) = 0 ]; then
   echo "Creating the DB"
   docker-compose run --rm app "rails db:create COLAB_DB=db COLAB_DB_PORT=3306"
@@ -71,7 +71,7 @@ while getopts "tsxm:l:h" opt; do
     l)
       MIGRATE=true
       LOAD=true
-      LOAD_FILE=$OPTARG
+      LOAD_FILE="../../$OPTARG"
       ;;
     m)
       RUN_TASK=true
@@ -94,9 +94,17 @@ fi
 
 # Load a sql file
 if [ "$LOAD" = true ]; then
-  echo "Loading"
-  mysql colab_dev -u test -ptest --protocol=TCP --port=3306 < ../../$LOAD_FILE
-  echo "Loaded"
+  if test -f "$LOAD_FILE"; then
+    echo "Loading"
+    mysql colab_dev -u test -ptest --protocol=TCP --port=31337 < $LOAD_FILE
+    echo "Loaded"
+  else
+    echo "File does not exist: $LOAD_FILE"
+    ls ../../
+    echo "Exiting"
+    popd
+    exit
+  fi
 fi
 
 # Migrate the DB
@@ -105,7 +113,7 @@ if [ "$MIGRATE" = true ]; then
 fi
 
 # Run a migratify task
-if [ "$MIGRATE" = true ]; then
+if [ "$RUN_TASK" = true ]; then
   docker-compose run --rm app "rails migratify:$RUN_TASK_NAME COLAB_DB=db COLAB_DB_PORT=3306"
 fi
 
