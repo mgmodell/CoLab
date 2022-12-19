@@ -101,7 +101,7 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.678.0)
+    aws-partitions (1.679.0)
     aws-sdk-core (3.168.4)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -186,7 +186,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    date (3.3.1)
+    date (3.3.3)
     dead_end (4.0.0)
     delayed_job (4.1.11)
       activesupport (>= 3.0, < 8.0)
@@ -351,7 +351,7 @@ GEM
       nio4r (~> 2.0)
     racc (1.6.1)
     rack (2.2.4)
-    rack-protection (3.0.4)
+    rack-protection (3.0.5)
       rack
     rack-proxy (0.7.4)
       rack
