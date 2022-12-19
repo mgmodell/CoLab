@@ -20,40 +20,41 @@ support (native on MacOSX and Linux but may require additional
 download/installation on Windows).
 
 ### Setting up ###
-* (Recommended) Set up ssh-keys on [Bitbucket](https://bitbucket.org/account/settings/ssh-keys/)
-* Open a terminal and navigate to a directory where you'd like to
+1. (**Recommended**) Set up ssh-keys on [Bitbucket](https://bitbucket.org/account/settings/ssh-keys/)
+1. Open a terminal and navigate to a directory where you'd like to
   download the project.
-* Run `git clone git@bitbucket.org:_performance/colab.git`
-* Run `./buildContainers.sh`
+1. Run `git clone git@bitbucket.org:_performance/colab.git`
+1. Run `./buildContainers.sh`
 
 The following two scripts are used to launch the development/testing
 server for manual testing and to launch the automated tests
 (respectively). Running either without any parameters will give you a
 full guide::
+
 * `dev_serv.sh` - Get started by using the `-j` option to load a basic
   test dump and the `-s` option to start the server on
   [http://localhost:3000](http://localhost:3000).
 * `run_tests.sh` - Start with the `-c` option to make sure the database
-  exists, then the `-r` option will kick off the process - warning it
-  runs for nearly a day.
+  exists, then the `-r` option will kick off the process (*warning it
+  runs for nearly a day*).
 
 # Contribution instructions #
-* Review the issues
-* Find one that interests you
-* Assign it to yourself
-* Start working in your own branch
+1. Review the issues
+1. Find one that interests you
+1. Assign it to yourself
+1. Start working in your own branch
     * `git branch <enter_new_branch_name>`
     * `git checkout <enter_new_branch_name>`
-* Create what you need
+1. Create what you need
     * Create your own user account (if auth is working)
     * `rake testing:set_admin['true','<email>']` will create new admin accounts with password 'password'
     * `rake testing:examples['<email>']` will create some courses and activities for the specified user
-* Open [the test server](http://localhost:3000)
-* Play with it to understand the problem
-* Start writing tests
-* Run your tests (this may not work on all systems)
+1. Open [the test server](http://localhost:3000)
+1. Play with it to understand the problem
+1. Start writing tests
+1. Run your tests (this may not work on all systems)
     * `rake cucumber:rerun`
-* Check in your code
+1. Check in your code
     * `git add <file name>`
     * ``git commit -m `<meaningful message>` ``
     * `git push`
@@ -61,4 +62,4 @@ full guide::
 ### Who do I talk to? ###
 
 * @micah_gideon
-* Ask on [Slack](https://suny-k.slack.com/messages/G4DNHKPMM)
+* Ask on [Slack](https://mountsaintmarycollege.slack.com/archives/G01269L9DAT)
