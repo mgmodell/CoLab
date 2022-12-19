@@ -20,7 +20,7 @@ print_help ( ) {
   echo " -d [driver]    Set the browser driver for this run"
   echo " -f [features]  Specify specific features to run"
   echo " -r             Rerun previous failed tests with latest"
-  echo "                code (default)"
+  echo "                code (recommended)"
   echo " -t             Run a shell"
   echo " -e             Exit before running tests"
   echo " -h             Show this help and terminate"
