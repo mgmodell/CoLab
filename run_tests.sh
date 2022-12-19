@@ -13,6 +13,7 @@ print_help ( ) {
   echo " -l             Clear out the log files"
   echo " -n             Wipe previous runs"
   echo " -o		Show output (if running)"
+  echo " -x		Shut down support processes and terminate"
   echo "       Run-specific options:"
   echo " -d [driver]    Set the browser driver for this run"
   echo " -f [features]  Specify specific features to run"
@@ -32,8 +33,12 @@ if [ "$#" -lt 1 ]; then
 fi
 
 RUN_TERM=false
-while getopts "sob:clndfrteh" opt; do
+DROP_SUPPORT=false
+while getopts "soxb:clndfrteh" opt; do
   case $opt in
+    x) # Open up a terminal
+      DROP_SUPPORT=true
+      ;;
     t) # Open up a terminal
       RUN_TERM=true
       ;;
@@ -52,7 +57,10 @@ done
 pushd containers/test_env/
 if [ "$RUN_TERM" = true ]; then
   docker-compose run --rm --entrypoint='' app /bin/bash
-  # docker-compose run --rm app $@
+
+elif [ "$DROP_SUPPORT" = true ]; then
+  docker-compose down 
+
 else
   docker-compose run --rm -d app $@
 fi
