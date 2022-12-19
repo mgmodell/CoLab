@@ -14,53 +14,28 @@ research of Micah Gideon Modell, Ph.D.
 ## How do I get set up? ##
 
 This system can be set up for development and testing on any modern
-desktop OS. I am using [Mac OS](http://www.Apple.com), [Linux
-Mint](https://www.linuxmint.com/download.php) and [Ubuntu on
-Windows](https://wiki.ubuntu.com/WSL) because I'm comfortable using the
-command line. That's just for context - GUIs can be powerful too and I
-can help you set them up if you run into difficulty.
-
+desktop OS. It requires [Docker](https://www.docker.com/)
+[git](https://git-scm.com/) and [bash](https://www.gnu.org/software/bash/)
+support (native on MacOSX and Linux but may require additional
+download/installation on Windows).
 
 ### Setting up ###
+* (Recommended) Set up ssh-keys on [Bitbucket](https://bitbucket.org/account/settings/ssh-keys/)
+* Open a terminal and navigate to a directory where you'd like to
+  download the project.
+* Run `git clone git@bitbucket.org:_performance/colab.git`
+* Run `./buildContainers.sh`
 
-* [Visual Studio Code](https://code.visualstudio.com/download) - I recommend this for development
-* [Learn Cucumber](https://cucumber.io/docs)
-* [Xcode -- if you're using Mac](https://developer.apple.com/xcode/)
-* Set up your environment:
-    * (Windows only) Install Ubuntu on [WSL](https://wiki.ubuntu.com/WSL) - use the Windows Store if you can
-    * Install [VcXsrv](https://sourceforge.net/projects/vcxsrv)
-    * Open a terminal window
-        * On Windows launch Ubuntu (set up a username/password)
-        * On Mac, open the Terminal app
-        * On Linux, open any terminal app
-    * `mkdir dev`
-    * `cd dev`
-    * `ssh-keygen` (press enter for all questions)
-    * ``eval `ssh-agent` ``
-    * `ssh-add ~/.ssh/id_rsa`
-    * `cat ~/.ssh/id_rsa.pub`
-* Copy the output of the above command (`cat`)
-* Open [Bitbucket settings](https://bitbucket.org/account/settings/ssh-keys/)
-* Add Key
-* Paste the output into the window
-* Save
-* Back in Terminal:
-    * `git clone git@bitbucket.org:_performance/colab.git`
-    * `cd colab`
-    * __NOTE:__ The following installer will change your shell to zsh. If you are already
-      a *NIX user, you probably know this is the current trend in the industry, but that
-      it is a significant difference from other shells. Also, I recommend installing
-      [Oh my zsh](http://ohmyz.sh/) as it will provide lots of nice little shortcuts and
-      enhancements. Be sure to add `rails git rake rake-fast yarn bundler` following to
-      the `plugins` line in the file .zshrc in your home directory so that
-      you have something like:
-      `plugins=(rails git rake rake-fast yarn bundler)`
-      Feel free to ask me about this if you're interested. 
-    * `./setup_env` [enter your password when it is requested]
-
-# Launch the server
-* `foreman start -f Procfile.dev`
-* Open a browser window on [the test server](http://localhost:3000)
+The following two scripts are used to launch the development/testing
+server for manual testing and to launch the automated tests
+(respectively). Running either without any parameters will give you a
+full guide::
+* `dev_serv.sh` - Get started by using the `-j` option to load a basic
+  test dump and the `-s` option to start the server on
+  [http://localhost:3000](http://localhost:3000).
+* `run_tests.sh` - Start with the `-c` option to make sure the database
+  exists, then the `-r` option will kick off the process - warning it
+  runs for nearly a day.
 
 # Contribution instructions #
 * Review the issues

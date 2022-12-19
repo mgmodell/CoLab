@@ -7,6 +7,7 @@ print_help ( ) {
   echo " -x             Stop the server (cannot be combined)"
   echo ""
   echo " -l [sql dump]  Load DB from dump (assumes -m)"
+  echo " -j             Load latest test db dump (assumes -m)"
   echo " -d             Migrate the DB"
   echo " -o             Monitor the running server"
   echo " -t             Open up a terminal on the dev server"
@@ -55,7 +56,7 @@ if [ $(($DB_COUNT)) = 0 ]; then
   echo "Created the DB"
 fi
 
-while getopts "tosxm:l:h" opt; do
+while getopts "tosjxm:l:h" opt; do
   case $opt in
     t)
       docker-compose run --rm app /bin/bash
@@ -76,6 +77,11 @@ while getopts "tosxm:l:h" opt; do
       MIGRATE=true
       LOAD=true
       LOAD_FILE="../../$OPTARG"
+      ;;
+    j)
+      MIGRATE=true
+      LOAD=true
+      LOAD_FILE="../../db/test_db.sql"
       ;;
     o)
       WATCH=true
