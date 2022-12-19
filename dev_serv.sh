@@ -8,6 +8,8 @@ print_help ( ) {
   echo ""
   echo " -l [sql dump]  Load DB from dump (assumes -m)"
   echo " -d             Migrate the DB"
+  echo " -o             Monitor the running server"
+  echo " -t             Open up a terminal on the dev server"
   echo " -m [task]      Run a migratify task (assumes -m)"
   echo ""
   echo " -h             Show this help and terminate"
@@ -34,6 +36,8 @@ SHOW_HELP=false
 MIGRATE=false
 RUN_TASK=false
 LOAD=false
+WATCH=false
+STARTUP=false
 
 if lsof -Pi :31337 -sTCP:LISTEN -t >/dev/null; then
   echo "DB Running"
@@ -51,7 +55,7 @@ if [ $(($DB_COUNT)) = 0 ]; then
   echo "Created the DB"
 fi
 
-while getopts "tsxm:l:h" opt; do
+while getopts "tosxm:l:h" opt; do
   case $opt in
     t)
       docker-compose run --rm app /bin/bash
@@ -59,19 +63,22 @@ while getopts "tsxm:l:h" opt; do
       exit
       ;;
     s)
-      docker-compose run --rm --service-ports app "foreman start -f Procfile.dev"
-      popd
-      exit
+      STARTUP=true
       ;;
     x)
-      docker-compose down --remove-orphans
+      OUTPUT_HASH=`docker ps | grep dev_env_app | awk '{print $1;}'`
+      docker kill $OUTPUT_HASH
       popd
+      rm tmp/pids/server.pid
       exit
       ;;
     l)
       MIGRATE=true
       LOAD=true
       LOAD_FILE="../../$OPTARG"
+      ;;
+    o)
+      WATCH=true
       ;;
     m)
       RUN_TASK=true
@@ -115,6 +122,16 @@ fi
 # Run a migratify task
 if [ "$RUN_TASK" = true ]; then
   docker-compose run --rm app "rails migratify:$RUN_TASK_NAME COLAB_DB=db COLAB_DB_PORT=3306"
+fi
+
+# Start the server
+if [ "$STARTUP" = true ]; then
+  docker-compose run -d --rm --service-ports app "foreman start -f Procfile.dev"
+fi
+
+if [ "$WATCH" = true ]; then
+  OUTPUT_HASH=`docker ps | grep dev_env_app | awk '{print $1;}'`
+  docker logs -f $OUTPUT_HASH
 fi
 
 popd
