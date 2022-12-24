@@ -101,7 +101,7 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.679.0)
+    aws-partitions (1.684.0)
     aws-sdk-core (3.168.4)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -222,9 +222,9 @@ GEM
     email_address (0.2.4)
       simpleidn
     errbase (0.2.2)
-    erubi (1.11.0)
+    erubi (1.12.0)
     execjs (2.8.1)
-    faker (3.0.0)
+    faker (3.1.0)
       i18n (>= 1.8.11, < 2)
     faraday (2.7.2)
       faraday-net_http (>= 2.0, < 3.1)
@@ -253,7 +253,7 @@ GEM
       activesupport (>= 5.0.0)
     jmespath (1.6.2)
     json (2.6.3)
-    jwt (2.5.0)
+    jwt (2.6.0)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
@@ -283,14 +283,14 @@ GEM
     mini_histogram (0.3.1)
     mini_magick (4.12.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.0)
+    mini_portile2 (2.8.1)
     minitest (5.16.3)
     msgpack (1.6.0)
     multi_json (1.15.0)
     multi_test (1.1.0)
     multi_xml (0.6.0)
     mysql2 (0.5.4)
-    net-imap (0.3.2)
+    net-imap (0.3.4)
       date
       net-protocol
     net-pop (0.1.2)
@@ -347,9 +347,9 @@ GEM
     psych (5.0.1)
       stringio
     public_suffix (5.0.1)
-    puma (6.0.0)
+    puma (6.0.1)
       nio4r (~> 2.0)
-    racc (1.6.1)
+    racc (1.6.2)
     rack (2.2.4)
     rack-protection (3.0.5)
       rack
@@ -438,7 +438,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-support (3.12.0)
-    rubocop (1.40.0)
+    rubocop (1.41.1)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.2.1)
@@ -469,7 +469,7 @@ GEM
     rubyzip (2.3.2)
     safely_block (0.3.0)
       errbase (>= 0.1.1)
-    sdoc (2.4.0)
+    sdoc (2.5.0)
       rdoc (>= 5.0)
     selenium-webdriver (4.7.1)
       rexml (~> 3.2, >= 3.2.5)
@@ -482,7 +482,7 @@ GEM
       railties (>= 5.2)
       semantic_range (>= 2.3.0)
     simple_po_parser (1.1.6)
-    simplecov (0.21.2)
+    simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
@@ -493,7 +493,7 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
-    solargraph (0.47.2)
+    solargraph (0.48.0)
       backport (~> 1.2)
       benchmark
       bundler (>= 1.17.2)
@@ -603,7 +603,7 @@ DEPENDENCIES
   reek
   report_builder
   rspec
-  rubocop (~> 1.40.0)
+  rubocop (~> 1.41.0)
   rubocop-performance
   rubocop-rails
   rubocop-thread_safety
