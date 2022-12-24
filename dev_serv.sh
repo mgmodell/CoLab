@@ -9,9 +9,12 @@ print_help ( ) {
   echo " -l [sql dump]  Load DB from dump (assumes -m)"
   echo " -j             Load latest test db dump (assumes -m)"
   echo " -d             Migrate the DB"
+  echo " -c             Run the rails console (then terminate)"
   echo " -o             Monitor the running server"
   echo " -t             Open up a terminal on the dev server"
+  echo " -q             Open mysql terminal"
   echo " -m [task]      Run a migratify task (assumes -m)"
+  echo " -e [task]      Run a tEsting task (then terminate)"
   echo ""
   echo " -h             Show this help and terminate"
   
@@ -31,11 +34,13 @@ pushd containers/dev_env
 
 # Set up run context
 COLAB_DB=db
+COLAB_DB_PORT=3306
 
 DRIVER=docker
 SHOW_HELP=false
 MIGRATE=false
-RUN_TASK=false
+RUN_TASK_M=false
+RUN_TASK_E=false
 LOAD=false
 WATCH=false
 STARTUP=false
@@ -56,8 +61,18 @@ if [ $(($DB_COUNT)) = 0 ]; then
   echo "Created the DB"
 fi
 
-while getopts "tosjxm:l:h" opt; do
+while getopts "cqtosjxm:l:e:h" opt; do
   case $opt in
+    q)
+      mysql colab_dev -u test -ptest --protocol=TCP --port=31337
+      popd
+      exit
+      ;;
+    c)
+      docker-compose run --rm app "rails console"
+      popd
+      exit
+      ;;
     t)
       docker-compose run --rm app /bin/bash
       popd
@@ -86,10 +101,14 @@ while getopts "tosjxm:l:h" opt; do
     o)
       WATCH=true
       ;;
-    m)
-      RUN_TASK=true
-      RUN_TASK_NAME=$OPTARG
+    e)
+      RUN_TASK_E=true
+      RUN_TASK_E_NAME=$OPTARG
       MIGRATE=true
+      ;;
+    m)
+      RUN_TASK_M=true
+      RUN_TASK_M_NAME=$OPTARG
       ;;
     d)
       MIGRATE=true
@@ -126,8 +145,13 @@ if [ "$MIGRATE" = true ]; then
 fi
 
 # Run a migratify task
-if [ "$RUN_TASK" = true ]; then
-  docker-compose run --rm app "rails migratify:$RUN_TASK_NAME COLAB_DB=db COLAB_DB_PORT=3306"
+if [ "$RUN_TASK_M" = true ]; then
+  docker-compose run --rm app "rails migratify:$RUN_TASK_M_NAME COLAB_DB=db COLAB_DB_PORT=3306"
+fi
+
+# Run an admin task
+if [ "$RUN_TASK_E" = true ]; then
+  docker-compose run --rm app "rails testing:$RUN_TASK_E_NAME"
 fi
 
 # Start the server

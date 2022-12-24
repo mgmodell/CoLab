@@ -22,7 +22,8 @@ namespace :testing do
       puts '   Usage:   rake testing:examples[<user email>]'
       puts '   Example: rake testing:examples[\'john_smith@gmail.com\']'
     else
-      user = User.joins(:emails).where(emails: { email: args[:tester] }).take
+      email = args[:tester]
+      user = User.joins(:emails).where(emails: { email: email }).take
       if user.nil?
         puts "User with email <#{email}> not found"
       else
