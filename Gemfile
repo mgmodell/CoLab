@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.1.3'
+ruby '3.2.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 7.0.4'
@@ -19,7 +19,7 @@ gem 'mysql2'
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
 # https://github.com/rails/webpacker
-gem 'shakapacker', '6.5.4'
+gem 'shakapacker', '6.5.5'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -59,8 +59,7 @@ gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
 gem 'react_on_rails', '13.1.0'
 
-gem 'stopwords-filter', require: 'stopwords',
-  :git => 'https://github.com/mgmodell/stopwords-filter'
+gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
 gem 'tzinfo-data'
 
@@ -93,7 +92,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.41.0', require: false
+  gem 'rubocop', '~> 1.42.0', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
