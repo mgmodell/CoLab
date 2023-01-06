@@ -40,7 +40,7 @@ while getopts "soxb:clndfrteh" opt; do
     x) # Open up a terminal
       DROP_SUPPORT=true
       ;;
-    s) # Open up a terminal
+    s) # Show failures
       SHOW_FAILS=true
       ;;
     t) # Open up a terminal
@@ -63,7 +63,9 @@ if [ "$RUN_TERM" = true ]; then
   docker-compose run --rm --entrypoint='' app /bin/bash
 
 elif [ "$SHOW_FAILS" = true ]; then
+  echo "Show previous run failures"
   docker-compose run --rm --entrypoint='' app /bin/cat /home/colab/src/app/rerun.txt
+  echo -e "\nEnd failure listing\n"
 
 elif [ "$DROP_SUPPORT" = true ]; then
   docker-compose down 
