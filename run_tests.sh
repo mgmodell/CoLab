@@ -32,12 +32,16 @@ if [ "$#" -lt 1 ]; then
   print_help
 fi
 
+SHOW_FAILS=false
 RUN_TERM=false
 DROP_SUPPORT=false
 while getopts "soxb:clndfrteh" opt; do
   case $opt in
     x) # Open up a terminal
       DROP_SUPPORT=true
+      ;;
+    s) # Open up a terminal
+      SHOW_FAILS=true
       ;;
     t) # Open up a terminal
       RUN_TERM=true
@@ -57,6 +61,9 @@ done
 pushd containers/test_env/
 if [ "$RUN_TERM" = true ]; then
   docker-compose run --rm --entrypoint='' app /bin/bash
+
+elif [ "$SHOW_FAILS" = true ]; then
+  docker-compose run --rm --entrypoint='' app /bin/cat /home/colab/src/app/rerun.txt
 
 elif [ "$DROP_SUPPORT" = true ]; then
   docker-compose down 
