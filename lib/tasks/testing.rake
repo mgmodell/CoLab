@@ -46,7 +46,7 @@ namespace :testing do
         experience = Experience.new
         experience.name = "#{Faker::IndustrySegments.industry} Group Simulation"
         experience.start_date = 1.weeks.ago
-        experience.end_date = DateTime.tomorrow
+        experience.end_date = 1.weeks.from_now
         experience.active = true
         experience.course = course
         experience.save
@@ -86,6 +86,9 @@ namespace :testing do
               "New user: #{u.informal_name false}" :
               u.errors.full_messages
           course.add_user_by_email u.email
+          u.rosters.first.enrolled_student!
+          u.save
+
           group.users << u
         end
         group.save
