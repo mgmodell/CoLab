@@ -24,7 +24,13 @@ def wait_for_render
 end
 
 def ack_messages
-  all(:xpath, "//button[@id='info-close']").each(&:click)
+  begin
+    retries ||= 3
+    all(:xpath, "//button[@id='info-close']").each(&:click)
+  rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+    (retries += 1).should be < 10, 'Too many ack retries'
+    retry unless retries > 5
+  end
 end
 
 Capybara.register_driver :headless_firefox do |app|

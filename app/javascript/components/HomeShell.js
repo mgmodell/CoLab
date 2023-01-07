@@ -30,7 +30,6 @@ const TaskList = React.lazy(() => import("./TaskList"));
 
 export default function HomeShell(props) {
   const category = "home";
-  //const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
   );
