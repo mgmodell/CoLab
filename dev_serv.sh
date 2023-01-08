@@ -7,7 +7,7 @@ print_help ( ) {
   echo " -x             Stop the server (cannot be combined)"
   echo ""
   echo " -l [sql dump]  Load DB from dump (assumes -m)"
-  echo " -j             Load latest test db dump (assumes -m)"
+  echo " -j             Load latest dev db dump (assumes -m)"
   echo " -d             Migrate the DB"
   echo " -c             Run the rails console (then terminate)"
   echo " -o             Monitor the running server"
@@ -96,7 +96,7 @@ while getopts "cqtosjxm:l:e:h" opt; do
     j)
       MIGRATE=true
       LOAD=true
-      LOAD_FILE="../../db/test_db.sql"
+      LOAD_FILE="../../db/dev_db.sql"
       ;;
     o)
       WATCH=true
