@@ -139,6 +139,25 @@ namespace :testing do
     end
   end
 
+  desc 'Set email and password for user 1'
+  task :haccess, [:email] => [:environment] do | t, args |
+    if args[:email].blank?
+      puts '  This task sets up the initial admin user in CoLab dev environments'
+      puts '  It will set the password to \'password\''
+      puts '   Usage:   rake testing:haccess[<email>]'
+    else
+
+      if Rails.env.development?
+        user = User.find 1
+        user.email = args[:email]
+        user.password = 'password'
+        user.save
+      else
+        puts 'This only works in development'
+      end
+    end
+  end
+
   desc 'Promote a user to an admin'
   task :set_admin, [:admin] => [:environment] do |_t, args|
     if args[:admin] != 'true' && args[:admin] != 'false'
