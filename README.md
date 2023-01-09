@@ -25,6 +25,10 @@ download/installation on Windows).
   download the project.
 1. Run `git clone git@bitbucket.org:_performance/colab.git`
 1. Run `./buildContainers.sh`
+1. Run `./dev_serv.sh -j` to load up anonymized testing data.
+1. Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"` to set
+up the testing user with your email and a password of 'password' for
+testing purposes.
 
 The following two scripts are used to launch the development/testing
 server for manual testing and to launch the automated tests
