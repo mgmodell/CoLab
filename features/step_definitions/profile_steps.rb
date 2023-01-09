@@ -35,6 +35,7 @@ When(/^the user logs in$/) do
   fill_in 'email', with: @user.email
   fill_in 'password', with: 'password'
 
+  ack_messages
   click_link_or_button 'Log in!'
 
   wait_for_render
@@ -48,5 +49,4 @@ When(/^the user logs in$/) do
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end
-  ack_messages
 end

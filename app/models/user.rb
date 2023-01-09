@@ -136,6 +136,10 @@ class User < ApplicationRecord
     researcher
   end
 
+  def active_for_authentication?
+    super && self.active?
+  end
+
   def waiting_instructor_tasks
     waiting_tasks = []
 

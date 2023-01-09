@@ -7,9 +7,11 @@ dir="$HOME/src/app/"
 
 if [[ $(find ${dir} -type f  | wc -l) -lt 1 ]]; then
   git clone git@bitbucket.org:_performance/colab.git $dir
-  cd $dir
-  git pull
 fi
 
-$HOME/src/app/run_cukes.sh "$@"
+cd $dir
+# Make sure we're working with the latest
+git pull --all
+
+$HOME/src/app/containers/test_env/run_cukes.sh "$@"
 

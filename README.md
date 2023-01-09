@@ -14,71 +14,51 @@ research of Micah Gideon Modell, Ph.D.
 ## How do I get set up? ##
 
 This system can be set up for development and testing on any modern
-desktop OS. I am using [Mac OS](http://www.Apple.com), [Linux
-Mint](https://www.linuxmint.com/download.php) and [Ubuntu on
-Windows](https://wiki.ubuntu.com/WSL) because I'm comfortable using the
-command line. That's just for context - GUIs can be powerful too and I
-can help you set them up if you run into difficulty.
-
+desktop OS. It requires [Docker](https://www.docker.com/)
+[git](https://git-scm.com/) and [bash](https://www.gnu.org/software/bash/)
+support (native on MacOSX and Linux but may require additional
+download/installation on Windows).
 
 ### Setting up ###
+1. (**Recommended**) Set up ssh-keys on [Bitbucket](https://bitbucket.org/account/settings/ssh-keys/)
+1. Open a terminal and navigate to a directory where you'd like to
+  download the project.
+1. Run `git clone git@bitbucket.org:_performance/colab.git`
+1. Run `./buildContainers.sh`
+1. Run `./dev_serv.sh -j` to load up anonymized testing data.
+1. Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"` to set
+up the testing user with your email and a password of 'password' for
+testing purposes.
 
-* [Visual Studio Code](https://code.visualstudio.com/download) - I recommend this for development
-* [Learn Cucumber](https://cucumber.io/docs)
-* [Xcode -- if you're using Mac](https://developer.apple.com/xcode/)
-* Set up your environment:
-    * Install Ubuntu on [WSL](https://wiki.ubuntu.com/WSL) - use the Windows Store if you can
-    * Install [VcXsrv](https://sourceforge.net/projects/vcxsrv)
-    * Open a terminal window
-        * On Windows launch Ubuntu (set up a username/password)
-        * On Mac, open the Terminal app
-        * On Linux, open any terminal app
-    * `mkdir dev`
-    * `cd dev`
-    * `ssh-keygen` (press enter for all questions)
-    * ``eval `ssh-agent` ``
-    * `ssh-add ~/.ssh/id_rsa`
-    * `cat ~/.ssh/id_rsa.pub`
-* Copy the output of the above command (`cat`)
-* Open [Bitbucket settings](https://bitbucket.org/account/settings/ssh-keys/)
-* Add Key
-* Paste the output into the window
-* Save
-* Back in Terminal:
-    * `git clone git@bitbucket.org:_performance/colab.git`
-    * `cd colab`
-    * __NOTE:__ The following installer will change your shell to zsh. If you are already
-      a *NIX user, you probably know this is the current trend in the industry, but that
-      it is a significant difference from other shells. Also, I recommend installing
-      [Oh my zsh](http://ohmyz.sh/) as it will provide lots of nice little shortcuts and
-      enhancements. Be sure to add `rails git rake rake-fast yarn bundler` following to
-      the `plugins` line in the file .zshrc in your home directory so that
-      you have something like:
-      `plugins=(rails git rake rake-fast yarn bundler)`
-      Feel free to ask me about this if you're interested. 
-    * `./setup_env` [enter your password when it is requested]
+The following two scripts are used to launch the development/testing
+server for manual testing and to launch the automated tests
+(respectively). Running either without any parameters will give you a
+full guide::
 
-# Launch the server
-* `foreman start -f Procfile.dev`
-* Open a browser window on [the test server](http://localhost:3000)
+* `dev_serv.sh` - Get started by using the `-j` option to load a basic
+  test dump and the `-s` option to start the server on
+  [http://localhost:3000](http://localhost:3000).
+* `run_tests.sh` - Start with the `-c` option to make sure the database
+  exists, then the `-r` option will kick off the process (*warning it
+  runs for nearly a day*).
 
 # Contribution instructions #
-* Review the issues
-* Find one that interests you
-* Assign it to yourself
-* Start working in your own branch
+1. Review the issues
+1. Find one that interests you
+1. Assign it to yourself
+1. Start working in your own branch
     * `git branch <enter_new_branch_name>`
     * `git checkout <enter_new_branch_name>`
-* Create what you need
+1. Create what you need
     * Create your own user account (if auth is working)
     * `rake testing:set_admin['true','<email>']` will create new admin accounts with password 'password'
     * `rake testing:examples['<email>']` will create some courses and activities for the specified user
-* Open [the test server](http://localhost:3000)
-* Play with it to understand the problem
-* Start writing tests
-* Run your tests (this may not work on all systems)
+1. Open [the test server](http://localhost:3000)
+1. Play with it to understand the problem
+1. Start writing tests
+1. Run your tests (this may not work on all systems)
     * `rake cucumber:rerun`
-* Check in your code
+1. Check in your code
     * `git add <file name>`
     * ``git commit -m `<meaningful message>` ``
     * `git push`
@@ -86,4 +66,4 @@ can help you set them up if you run into difficulty.
 ### Who do I talk to? ###
 
 * @micah_gideon
-* Ask on [Slack](https://suny-k.slack.com/messages/G4DNHKPMM)
+* Ask on [Slack](https://mountsaintmarycollege.slack.com/archives/G01269L9DAT)

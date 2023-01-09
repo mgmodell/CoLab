@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.1.2'
+ruby '3.2.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 7.0.4'
@@ -19,7 +19,7 @@ gem 'mysql2'
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
 # https://github.com/rails/webpacker
-gem 'shakapacker', '6.5.4'
+gem 'shakapacker', '6.5.5'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -44,7 +44,7 @@ gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
 gem 'devise-multi_email'
 gem 'devise_token_auth', git: 'https://github.com/mgmodell/devise_token_auth'
 gem 'email_address'
-gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
+gem 'faker'
 gem 'image_processing', '~> 1.0'
 gem 'listen'
 gem 'matrix'
@@ -59,8 +59,7 @@ gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
 gem 'react_on_rails', '13.1.0'
 
-gem 'stopwords-filter', require: 'stopwords',
-  :git => 'https://github.com/mgmodell/stopwords-filter'
+gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
 gem 'tzinfo-data'
 
@@ -93,7 +92,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.39.0', require: false
+  gem 'rubocop', '~> 1.42.0', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'

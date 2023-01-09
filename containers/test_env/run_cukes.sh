@@ -19,8 +19,10 @@ print_help ( ) {
   echo "       Run-specific options:"
   echo " -d [driver]    Set the browser driver for this run"
   echo " -f [features]  Specify specific features to run"
-  echo " -r             Rerun previous failed tests with latest"
-  echo "                code (default)"
+  echo " -r             Run automated tests (recommended)."
+  echo "                If there were failures in a previous test,"
+  echo "                this will run only the previously failed tests."
+  echo " 		Use the -n option to start over."
   echo " -t             Run a shell"
   echo " -e             Exit before running tests"
   echo " -h             Show this help and terminate"
@@ -46,7 +48,7 @@ SPEC_FEATURE=false
 CHECKOUT_BRANCH=''
 RUN_TESTS=true
 
-while getopts "chsnb:f:d:tl" opt; do
+while getopts "ecrhsnb:f:d:tl" opt; do
   case $opt in
     c)
       DB_RESET=true
@@ -72,6 +74,9 @@ while getopts "chsnb:f:d:tl" opt; do
       echo "Features Specified $OPTARG" >&2
       SPEC_FEATURE=true
       FEATURE=$OPTARG
+      ;;
+    r)
+    echo "(re)Run the tests" >&2
       ;;
     l)
       echo "Removing log files" >&2

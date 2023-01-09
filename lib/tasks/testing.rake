@@ -22,7 +22,8 @@ namespace :testing do
       puts '   Usage:   rake testing:examples[<user email>]'
       puts '   Example: rake testing:examples[\'john_smith@gmail.com\']'
     else
-      user = User.joins(:emails).where(emails: { email: args[:tester] }).take
+      email = args[:tester]
+      user = User.joins(:emails).where(emails: { email: email }).take
       if user.nil?
         puts "User with email <#{email}> not found"
       else
@@ -45,7 +46,7 @@ namespace :testing do
         experience = Experience.new
         experience.name = "#{Faker::IndustrySegments.industry} Group Simulation"
         experience.start_date = 1.weeks.ago
-        experience.end_date = DateTime.tomorrow
+        experience.end_date = 1.weeks.from_now
         experience.active = true
         experience.course = course
         experience.save
@@ -85,6 +86,9 @@ namespace :testing do
               "New user: #{u.informal_name false}" :
               u.errors.full_messages
           course.add_user_by_email u.email
+          u.rosters.first.enrolled_student!
+          u.save
+
           group.users << u
         end
         group.save
@@ -131,6 +135,25 @@ namespace :testing do
         puts bingo.errors.empty? ?
             "New solo bingo: #{bingo.topic}" :
             bingo.full_messages
+      end
+    end
+  end
+
+  desc 'Set email and password for user 1'
+  task :haccess, [:email] => [:environment] do | t, args |
+    if args[:email].blank?
+      puts '  This task sets up the initial admin user in CoLab dev environments'
+      puts '  It will set the password to \'password\''
+      puts '   Usage:   rake testing:haccess[<email>]'
+    else
+
+      if Rails.env.development?
+        user = User.find 1
+        user.email = args[:email]
+        user.password = 'password'
+        user.save
+      else
+        puts 'This only works in development'
       end
     end
   end
@@ -187,4 +210,84 @@ namespace :testing do
       ReportBuilder.build_report options
     end
   end
+
+  desc 'Anonymize the current db contents'
+  task :anon_db_init => [:environment] do |_t, args|
+
+    Installment.transaction do
+      Installment.find_each do |installment|
+        installment.comments = installment.anon_comments
+        installment.anon_comments = ''
+        installment.save
+      end
+
+      School.find_each do |school|
+        school.name = school.anon_name
+        school.anon_name = "#{Faker::Color.color_name} #{Faker::Educator.university}" if school.anon_name.blank?
+        school.save
+      end
+
+      User.find_each do |user|
+        user.first_name = user.anon_first_name
+        user.last_name = user.anon_last_name
+        user.anon_first_name = Faker::Name.first_name if user.anon_first_name.blank?
+        user.anon_last_name = Faker::Name.last_name if user.anon_last_name.blank?
+        user.researcher = false unless user.researcher.present?
+        user.save
+      end
+
+      Email.find_each do |email|
+        email.email = Faker::Internet.safe_email
+        email.save
+      end
+
+      Group.find_each do |group|
+        group.name = group.anon_name
+        group.anon_name = "#{rand < rand ? Faker::Nation.language : Faker::Nation.nationality} #{Faker::Company.name}s" if group.anon_name.blank?
+        group.save
+      end
+
+      BingoGame.find_each do |bingo_game|
+        if bingo_game.anon_topic.blank? || (bingo_game.anon_topic.starts_with? 'Lorem')
+          trans = ['basics for a', 'for an expert', 'in the news with a novice', 'and Food Pyramids - for the']
+          bingo_game.topic = bingo_game.anon_topic
+          bingo_game.anon_topic = "#{Faker::Company.catch_phrase} #{trans.sample} #{Faker::Job.title}"
+          bingo_game.save
+        end
+      end
+
+      Experience.find_each do |experience|
+        experience.name = experience.anon_name
+        experience.anon_name = "#{Faker::Company.industry} #{Faker::Company.suffix}" if experience.anon_name.blank?
+        experience.save
+      end
+
+      locations = [
+        Faker::Games::Pokemon,
+        Faker::Games::Touhou,
+        Faker::Games::Overwatch,
+        Faker::Movies::HowToTrainYourDragon,
+        Faker::Fantasy::Tolkien
+      ]
+      Project.find_each do |project|
+        project.name = project.anon_name
+        project.anon_name = "#{locations.sample.location} #{Faker::Job.field}" if project.anon_name.blank?
+        project.save
+      end
+
+
+      depts = %w[BUS MED ENG RTG MSM LEH EDP
+                 GEO IST MAT YOW GFB RSV CSV MBV]
+      levels = %w[Beginning Intermediate Advanced]
+      Course.find_each do |course|
+        course.name = course.anon_name
+        course.number = course.anon_number
+        course.anon_name = "#{levels.sample} #{Faker::Company.industry}" if course.anon_name.blank?
+        course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
+        course.save
+      end
+    end
+
+  end
+
 end

@@ -1,25 +1,11 @@
 GIT
-  remote: https://github.com/faker-ruby/faker.git
-  revision: a7746b9576f9f035202defbf74ed437f86269121
-  branch: master
-  specs:
-    faker (2.23.0)
-      i18n (>= 1.8.11, < 2)
-
-GIT
   remote: https://github.com/mgmodell/devise_token_auth
-  revision: bf63ca84224cf87db5f65b3a7f241c4b40229af7
+  revision: c1c0aeb679b47578446ca8c4170d3b86a25250c7
   specs:
     devise_token_auth (1.2.1)
       bcrypt (~> 3.0)
       devise (> 3.5.2, < 5)
       rails (>= 4.2.0, < 7.1)
-
-GIT
-  remote: https://github.com/mgmodell/stopwords-filter
-  revision: 9bf9ae89b0ffcb64c7e6e8c2d8a5da512aa9b7ab
-  specs:
-    stopwords-filter (0.7.0)
 
 GEM
   remote: https://rubygems.org/
@@ -109,13 +95,13 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.669.0)
-    aws-sdk-core (3.168.2)
+    aws-partitions (1.687.0)
+    aws-sdk-core (3.168.4)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
       jmespath (~> 1, >= 1.6.1)
-    aws-sdk-kms (1.60.0)
+    aws-sdk-kms (1.61.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-s3 (1.117.2)
@@ -126,13 +112,13 @@ GEM
       aws-eventstream (~> 1, >= 1.0.2)
     backport (1.2.0)
     bcrypt (3.1.18)
-    benchmark (0.2.0)
+    benchmark (0.2.1)
     benchmark-ips (2.10.0)
     bindex (0.8.1)
     bootsnap (1.15.0)
       msgpack (~> 1.2)
     builder (3.2.4)
-    bullet (7.0.4)
+    bullet (7.0.7)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
@@ -145,7 +131,6 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
-    childprocess (4.1.0)
     choice (0.2.0)
     chronic (0.10.2)
     chunky_png (1.4.0)
@@ -195,6 +180,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
+    date (3.3.3)
     dead_end (4.0.0)
     delayed_job (4.1.11)
       activesupport (>= 3.0, < 8.0)
@@ -230,9 +216,11 @@ GEM
     email_address (0.2.4)
       simpleidn
     errbase (0.2.2)
-    erubi (1.11.0)
+    erubi (1.12.0)
     execjs (2.8.1)
-    faraday (2.7.1)
+    faker (3.1.0)
+      i18n (>= 1.8.11, < 2)
+    faraday (2.7.2)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
@@ -258,8 +246,8 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     jmespath (1.6.2)
-    json (2.6.2)
-    jwt (2.5.0)
+    json (2.6.3)
+    jwt (2.6.0)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
@@ -268,11 +256,14 @@ GEM
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    loofah (2.19.0)
+    loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
-    mail (2.7.1)
+    mail (2.8.0)
       mini_mime (>= 0.1.1)
+      net-imap
+      net-pop
+      net-smtp
     marcel (1.0.2)
     matrix (0.4.2)
     memory_profiler (1.0.1)
@@ -284,25 +275,26 @@ GEM
       nokogiri (~> 1)
       rake
     mini_histogram (0.3.1)
-    mini_magick (4.11.0)
+    mini_magick (4.12.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.0)
-    minitest (5.16.3)
+    mini_portile2 (2.8.1)
+    minitest (5.17.0)
     msgpack (1.6.0)
     multi_json (1.15.0)
     multi_test (1.1.0)
     multi_xml (0.6.0)
     mysql2 (0.5.4)
-    net-imap (0.3.1)
+    net-imap (0.3.4)
+      date
       net-protocol
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.1.3)
+    net-protocol (0.2.1)
       timeout
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
-    nokogiri (1.13.9)
+    nokogiri (1.13.10)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -346,14 +338,14 @@ GEM
       rqrcode (>= 1.0.0)
     prawn-table (0.2.2)
       prawn (>= 1.3.0, < 3.0.0)
-    psych (4.0.6)
+    psych (5.0.1)
       stringio
-    public_suffix (5.0.0)
-    puma (6.0.0)
+    public_suffix (5.0.1)
+    puma (6.0.2)
       nio4r (~> 2.0)
-    racc (1.6.0)
-    rack (2.2.4)
-    rack-protection (3.0.4)
+    racc (1.6.2)
+    rack (2.2.5)
+    rack-protection (3.0.5)
       rack
     rack-proxy (0.7.4)
       rack
@@ -382,8 +374,8 @@ GEM
       activesupport (>= 4.2)
       choice (~> 0.2.0)
       ruby-graphviz (~> 1.2)
-    rails-html-sanitizer (1.4.3)
-      loofah (~> 2.3)
+    rails-html-sanitizer (1.4.4)
+      loofah (~> 2.19, >= 2.19.1)
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
@@ -402,7 +394,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rb-readline (0.5.5)
-    rdoc (6.4.0)
+    rdoc (6.5.0)
       psych (>= 4.0.0)
     react_on_rails (13.1.0)
       addressable
@@ -410,7 +402,7 @@ GEM
       execjs (~> 2.5)
       rails (>= 5.2)
       rainbow (~> 3.0)
-    reek (6.1.2)
+    reek (6.1.3)
       kwalify (~> 0.7.0)
       parser (~> 3.1.0)
       rainbow (>= 2.0, < 4.0)
@@ -433,29 +425,29 @@ GEM
       rspec-mocks (~> 3.12.0)
     rspec-core (3.12.0)
       rspec-support (~> 3.12.0)
-    rspec-expectations (3.12.0)
+    rspec-expectations (3.12.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
-    rspec-mocks (3.12.0)
+    rspec-mocks (3.12.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-support (3.12.0)
-    rubocop (1.39.0)
+    rubocop (1.42.0)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.2.1)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
-      rubocop-ast (>= 1.23.0, < 2.0)
+      rubocop-ast (>= 1.24.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.24.0)
+    rubocop-ast (1.24.1)
       parser (>= 3.1.1.0)
-    rubocop-performance (1.15.1)
+    rubocop-performance (1.15.2)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-rails (2.17.3)
+    rubocop-rails (2.17.4)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
@@ -471,21 +463,20 @@ GEM
     rubyzip (2.3.2)
     safely_block (0.3.0)
       errbase (>= 0.1.1)
-    sdoc (2.4.0)
+    sdoc (2.5.0)
       rdoc (>= 5.0)
-    selenium-webdriver (4.6.1)
-      childprocess (>= 0.5, < 5.0)
+    selenium-webdriver (4.7.1)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     semantic_range (3.0.0)
-    shakapacker (6.5.4)
+    shakapacker (6.5.5)
       activesupport (>= 5.2)
       rack-proxy (>= 0.6.1)
       railties (>= 5.2)
       semantic_range (>= 2.3.0)
     simple_po_parser (1.1.6)
-    simplecov (0.21.2)
+    simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
@@ -496,7 +487,7 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
-    solargraph (0.47.2)
+    solargraph (0.48.0)
       backport (~> 1.2)
       benchmark
       bundler (>= 1.17.2)
@@ -512,14 +503,15 @@ GEM
       tilt (~> 2.0)
       yard (~> 0.9, >= 0.9.24)
     spring (4.1.0)
-    stringio (3.0.2)
+    stopwords-filter2 (0.1.0)
+    stringio (3.0.4)
     sys-uname (1.2.2)
       ffi (~> 1.1)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
     thor (1.2.1)
     tilt (2.0.11)
-    timeout (0.3.0)
+    timeout (0.3.1)
     traco (5.3.3)
       activerecord (>= 4.2)
     ttfunk (1.7.0)
@@ -530,7 +522,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
-    unicode-display_width (2.3.0)
+    unicode-display_width (2.4.2)
     uniform_notifier (1.16.0)
     version_gem (1.1.1)
     warden (1.2.9)
@@ -578,7 +570,7 @@ DEPENDENCIES
   devise-multi_email
   devise_token_auth!
   email_address
-  faker!
+  faker
   htmlbeautifier
   htmlentities
   i18n_data
@@ -606,24 +598,24 @@ DEPENDENCIES
   reek
   report_builder
   rspec
-  rubocop (~> 1.39.0)
+  rubocop (~> 1.42.0)
   rubocop-performance
   rubocop-rails
   rubocop-thread_safety
   sdoc
   selenium-webdriver
-  shakapacker (= 6.5.4)
+  shakapacker (= 6.5.5)
   simplecov
   solargraph
   spring
-  stopwords-filter!
+  stopwords-filter2
   traco
   tzinfo-data
   web-console
   webdrivers (~> 5.0)
 
 RUBY VERSION
-   ruby 3.1.2p20
+   ruby 3.2.0p0
 
 BUNDLED WITH
    2.3.16

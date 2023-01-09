@@ -1,7 +1,7 @@
 namespace :migratify do
 
   desc 'Applying for the react migration in the summer of 2020'
-  task react_su_2020: :environment do
+  task api_conversion: :environment do
     behavior = Behavior.find_by_name_en( 'Other' )
     behavior.needs_detail = true
     behavior.save
@@ -9,6 +9,11 @@ namespace :migratify do
     User.all.each do |u|
       u.update_instructor
       u.save
+    end
+
+    Course.all.each do |c|
+      c.anon_offset = - Random.rand(1000).days.to_i + 35
+      c.save
     end
 
   end

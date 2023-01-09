@@ -1,9 +1,7 @@
 version: "3.7"
 services:
   app:
-    image: colab_app
-    ports:
-      - '31337:31337'
+    image: colab_tester
     volumes:
       - src:/home/colab/src/app
       - asdf-installs:/home/colab/.asdf/installs
@@ -30,4 +28,6 @@ volumes:
   asdf-installs:
   asdf-shims:
   mariadb-data:
-
+networks:
+  default:
+    name: colab_test

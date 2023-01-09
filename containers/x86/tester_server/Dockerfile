@@ -13,6 +13,9 @@ RUN apt -y install \
   libmysqlclient-dev \
   yarn 
 
+RUN apt -y install \
+  libyaml-dev
+
 RUN apt autoremove && \
     apt clean
 
@@ -59,7 +62,7 @@ USER colab
 
 #Set up the app materials
 RUN mkdir -p /home/colab/src/app
-COPY containers/entrypoint.sh /home/colab/src/
+COPY containers/test_entrypoint.sh /home/colab/src/entrypoint.sh
 WORKDIR /home/colab/src/app
 
 ENV DRIVER docker
