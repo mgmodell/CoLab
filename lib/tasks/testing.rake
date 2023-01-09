@@ -86,7 +86,7 @@ namespace :testing do
               "New user: #{u.informal_name false}" :
               u.errors.full_messages
           course.add_user_by_email u.email
-          u.rosters.first.enrolled_student!
+          u.rosters[0].enrolled_student!
           u.save
 
           group.users << u
