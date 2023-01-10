@@ -118,14 +118,14 @@ namespace :migratify do
 
   desc 'lead time fixes'
   task lead_time: :environment do
-    #update the lead times for bingo games
+    # Uupdate the lead times for bingo games
     BingoGame.all.each do |bg|
       bg.lead_time = bg.lead_time - 1
       bg.save( validate: false )
       puts bg.errors.full_messages unless bg.errors.empty?
     end
     
-    #update the lead times for bingo games
+    # Update the lead times for bingo games
     Experience.all.each do |exp|
       exp.lead_time = 2
       exp.end_date = exp.end_date + exp.lead_time.days
@@ -148,6 +148,7 @@ namespace :migratify do
             user: u,
             bingo_game: cl.bingo_game )
           raise "Too many lists for u:#{u.id} b:#{cl.bingo_game_id}" unless cl_arch.size == 1
+
           cl_arch = cl_arch[ 0 ]
           cl_arch.archived = true
           cl_arch.is_group = false
@@ -159,9 +160,9 @@ namespace :migratify do
 
     CandidateList.where( 'user_id IS NOT NULL' ).where( is_group: true).each do |cl|
       group = GroupRevision
-        .where( 'members LIKE "%? %" AND updated_at < ?', cl.user_id, cl.updated_at)
-        .take
-        .group
+              .where( 'members LIKE "%? %" AND updated_at < ?', cl.user_id, cl.updated_at)
+              .take
+              .group
       g_cl = CandidateList.where(
         is_group: true,
         group: group,
