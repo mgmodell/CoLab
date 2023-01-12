@@ -1,7 +1,7 @@
 Rails.application.config.middleware.use OmniAuth::Builder do
    provider :google_oauth2, 
-      '338872466801-q4d7re3gvjtt6jd5gdic4sj98qo5rea7.apps.googleusercontent.com',
-      'TBQY1tbbSxcg8aMlNfGd-oJB', {}
+      Rails.application.credentials.google.client_id,
+      Rails.application.credentials.google.client_key, { }
    #{
    #   :scope => 'email, profile', 
    #   :image_aspect_ratio => 'square', 
