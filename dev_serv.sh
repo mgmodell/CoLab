@@ -54,12 +54,6 @@ else
   echo "DB started"
 fi
 
-DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP --port=31337 | grep colab_dev | wc -l`
-if [ $(($DB_COUNT)) = 0 ]; then
-  echo "Creating the DB"
-  docker-compose run --rm app "rails db:create COLAB_DB=db COLAB_DB_PORT=3306"
-  echo "Created the DB"
-fi
 
 while getopts "cqtosjxm:l:e:h" opt; do
   case $opt in
@@ -82,10 +76,12 @@ while getopts "cqtosjxm:l:e:h" opt; do
       STARTUP=true
       ;;
     x)
-      OUTPUT_HASH=`docker ps | grep dev_env_app | awk '{print $1;}'`
+      OUTPUT_HASH=`docker ps | grep dev_env | awk '{print $1;}'`
       docker kill $OUTPUT_HASH
       popd
-      rm tmp/pids/server.pid
+      if [ -f tmp/pids/server.pd ] ; then
+      	rm tmp/pids/server.pid
+      fi
       exit
       ;;
     l)
@@ -122,6 +118,13 @@ done
 # Handle Command Help Request
 if [ "$SHOW_HELP" = true ]; then
   print_help
+fi
+
+DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP --port=31337 | grep colab_dev | wc -l`
+if [ $(($DB_COUNT)) = 0 ]; then
+  echo "Creating the DB"
+  docker-compose run --rm app "rails db:create COLAB_DB=db COLAB_DB_PORT=3306"
+  echo "Created the DB"
 fi
 
 # Load a sql file
