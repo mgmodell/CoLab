@@ -20,10 +20,13 @@ support (native on MacOSX and Linux but may require additional
 download/installation on Windows).
 
 ### Setting up ###
-1. (**Recommended**) Set up ssh-keys on [Bitbucket](https://bitbucket.org/account/settings/ssh-keys/)
+1. If you plan to run tests, you must have mysqlshow installed for the tests to run properly. This is contained in and should be available via [homebrew](https://brew.sh/) or apt or whatever package manager you're using:
+    1. mariadb-client
+    1. mysql-client
+1. (**Recommended**) Set up ssh-keys on [GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
 1. Open a terminal and navigate to a directory where you'd like to
   download the project.
-1. Run `git clone git@bitbucket.org:_performance/colab.git`
+1. Run `git clone git@github.com:mgmodell/CoLab.git`
 1. Run `./buildContainers.sh`
 1. Run `./dev_serv.sh -j` to load up anonymized testing data.
 1. Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"` to set
