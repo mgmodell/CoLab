@@ -24,9 +24,6 @@ RUN groupadd -r colab && \
 
 
 WORKDIR /home/colab
-RUN mkdir .ssh
-COPY containers/id_rsa .ssh/
-RUN chown -R colab:colab .ssh
 
 USER colab
 

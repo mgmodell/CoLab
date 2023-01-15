@@ -49,7 +49,7 @@ if lsof -Pi :31337 -sTCP:LISTEN -t >/dev/null; then
   echo "DB Running"
 else
   echo "DB needs to be started"
-  docker-compose up -d db
+  docker compose up -d db
   sleep 2
   echo "DB started"
 fi
@@ -63,12 +63,12 @@ while getopts "cqtosjxm:l:e:h" opt; do
       exit
       ;;
     c)
-      docker-compose run --rm app "rails console"
+      docker compose run --rm app "rails console"
       popd
       exit
       ;;
     t)
-      docker-compose run --rm app /bin/bash
+      docker compose run --rm app /bin/bash
       popd
       exit
       ;;
@@ -123,7 +123,7 @@ fi
 DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP --port=31337 | grep colab_dev | wc -l`
 if [ $(($DB_COUNT)) = 0 ]; then
   echo "Creating the DB"
-  docker-compose run --rm app "rails db:create COLAB_DB=db COLAB_DB_PORT=3306"
+  docker compose run --rm app "rails db:create COLAB_DB=db COLAB_DB_PORT=3306"
   echo "Created the DB"
 fi
 
@@ -144,22 +144,22 @@ fi
 
 # Migrate the DB
 if [ "$MIGRATE" = true ]; then
-  docker-compose run --rm app "rails db:migrate COLAB_DB=db COLAB_DB_PORT=3306"
+  docker compose run --rm app "rails db:migrate COLAB_DB=db COLAB_DB_PORT=3306"
 fi
 
 # Run a migratify task
 if [ "$RUN_TASK_M" = true ]; then
-  docker-compose run --rm app "rails migratify:$RUN_TASK_M_NAME COLAB_DB=db COLAB_DB_PORT=3306"
+  docker compose run --rm app "rails migratify:$RUN_TASK_M_NAME COLAB_DB=db COLAB_DB_PORT=3306"
 fi
 
 # Run an admin task
 if [ "$RUN_TASK_E" = true ]; then
-  docker-compose run --rm app "rails testing:$RUN_TASK_E_NAME"
+  docker compose run --rm app "rails testing:$RUN_TASK_E_NAME"
 fi
 
 # Start the server
 if [ "$STARTUP" = true ]; then
-  docker-compose run -d --rm --service-ports app "foreman start -f Procfile.dev"
+  docker compose run -d --rm --service-ports app "foreman start -f Procfile.dev"
 fi
 
 if [ "$WATCH" = true ]; then

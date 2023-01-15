@@ -60,17 +60,17 @@ done
 
 pushd containers/test_env/
 if [ "$RUN_TERM" = true ]; then
-  docker-compose run --rm --entrypoint='' app /bin/bash
+  docker compose run --rm --entrypoint='' app /bin/bash
 
 elif [ "$SHOW_FAILS" = true ]; then
   echo "Show previous run failures"
-  docker-compose run --rm --entrypoint='' app /bin/cat /home/colab/src/app/rerun.txt
+  docker compose run --rm --entrypoint='' app /bin/cat /home/colab/src/app/rerun.txt
   echo -e "\nEnd failure listing\n"
 
 elif [ "$DROP_SUPPORT" = true ]; then
-  docker-compose down 
+  docker compose down 
 
 else
-  docker-compose run --rm -d app $@
+  docker compose run --rm -d app $@
 fi
 popd

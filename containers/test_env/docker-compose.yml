@@ -28,6 +28,3 @@ volumes:
   asdf-installs:
   asdf-shims:
   mariadb-data:
-networks:
-  default:
-    name: colab_test

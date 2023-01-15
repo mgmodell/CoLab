@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cp ~/.ssh/id_rsa containers/id_rsa
-
 if [[ $OSTYPE == 'darwin'* ]]; then
   echo 'building for arm'
   docker build -f ./containers/arm/db/Dockerfile -t colab_db .
@@ -16,4 +14,3 @@ else
   docker build -f ./containers/x86/browser/Dockerfile -t colab_browser .
 fi
 
-rm containers/id_rsa

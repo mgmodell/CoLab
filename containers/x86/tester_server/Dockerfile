@@ -1,31 +1,30 @@
 FROM ubuntu
 
 RUN apt update && apt upgrade -y
-RUN apt -y install \
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get -y -q install \
   curl \
   imagemagick \
-  libvips \
   make \
   ruby-build \
   vim \
   git \
   bash \
+  dialog \
+  apt-utils \
+  libyaml-dev \
   libmysqlclient-dev \
-  yarn 
+  python3 \
+  yarn \
+  libvips 
 
-RUN apt -y install \
-  libyaml-dev
-
-RUN apt autoremove && \
+RUN apt-get autoremove && \
     apt clean
 
 RUN groupadd -r colab && \
   useradd --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
 
 WORKDIR /home/colab
-RUN mkdir .ssh
-COPY containers/id_rsa .ssh/
-RUN chown -R colab:colab .ssh
 
 USER colab
 
