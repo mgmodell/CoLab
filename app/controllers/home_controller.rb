@@ -208,7 +208,7 @@ class HomeController < ApplicationController
       timezones: HomeController::TIMEZONES,
       timezone_lookup: HomeController::TIMEZONE_HASH,
       oauth_ids: {
-        google: Rails.configuration.omniauth[:google_client_id]
+        google: Rails.application.credentials.google.client_id
       },
       schools: School.all.collect do |school|
         {

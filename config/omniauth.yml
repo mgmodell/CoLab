@@ -1,5 +1,5 @@
 default: &default
-  google_client_id: 338872466801-q4d7re3gvjtt6jd5gdic4sj98qo5rea7.apps.googleusercontent.com
+  # google_client_id: 881119118431-qlnjrlkaqp9kmnle15qvad0hqtdggshs.apps.googleusercontent.com
 
 development:
   <<: *default
