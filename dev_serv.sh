@@ -79,7 +79,7 @@ while getopts "cqtosjxm:l:e:h" opt; do
       OUTPUT_HASH=`docker ps | grep dev_env | awk '{print $1;}'`
       docker kill $OUTPUT_HASH
       popd
-      if [ -f tmp/pids/server.pd ] ; then
+      if [ -f tmp/pids/server.pid ] ; then
       	rm tmp/pids/server.pid
       fi
       exit
