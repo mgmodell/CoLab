@@ -26,7 +26,7 @@ download/installation on Windows).
 1. (**Recommended**) Set up ssh-keys on [GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
 1. Open a terminal and navigate to a directory where you'd like to
   download the project.
-1. Run `https://github.com/mgmodell/CoLab.git` (`git clone git@github.com:mgmodell/CoLab.git` if you've set up ssh-keys)
+1. Run `git clone https://github.com/mgmodell/CoLab.git` (`git clone git@github.com:mgmodell/CoLab.git` if you've set up ssh-keys)
 1. Run `./buildContainers.sh`
 1. Run `./dev_serv.sh -j` to load up anonymized testing data.
 1. Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"` to set
