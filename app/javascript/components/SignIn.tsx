@@ -26,10 +26,7 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import { TabContext, TabPanel, TabList } from "@mui/lab";
 import axios from "axios";
 
-const GoogleLogin = React.lazy(() =>
-  import("./infrastructure/reactGoogleLogin")
-);
-
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
 export default function SignIn(props) {
   const category = "devise";
   const { t }: { t: any } = useTranslation(category);
@@ -168,18 +165,21 @@ export default function SignIn(props) {
     </Grid>
   );
 
+  console.log( 'hello!!!' );
   const get_token_from_oauth = response => {
-    dispatch(oAuthSignIn(response.tokenId));
+    console.log( response );
+    dispatch(oAuthSignIn(response.credential));
   };
 
   const oauthBtn = (
     <GoogleLogin
-      clientId={oauth_client_ids["google"]}
       onSuccess={get_token_from_oauth}
-      onFailure={response => {
-        console.log("Google login fail", response);
+      onError={() => {
+        console.log( 'Login Failed' );
       }}
-      cookiePolicy="single_host_origin"
+      useOneTap
+      context="use"
+      text="continue_with"
     />
   );
 
@@ -208,6 +208,10 @@ export default function SignIn(props) {
     return <Navigate replace to={state.from || "/"} />;
   } else {
     return (
+      <GoogleOAuthProvider
+        clientId={oauth_client_ids["google"]}
+        >
+
       <Paper>
         <TabContext value={curTab}>
           <TabList
@@ -272,6 +276,7 @@ export default function SignIn(props) {
           </TabPanel>
         </TabContext>
       </Paper>
+        </GoogleOAuthProvider>
     );
   }
 }

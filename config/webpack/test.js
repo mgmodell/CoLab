@@ -5,6 +5,15 @@ const webpackConfig = require('./webpackConfig')
 
 const testOnly = (_clientWebpackConfig, _serverWebpackConfig) => {
   // place any code here that is for test only
+  devServer: {
+    host: '0.0.0.0',
+    port: 3010
+    allowedHosts: 'all',
+    watchOptions: {
+      poll: 1000,
+    },
+    hot: true,
+  }
 }
 
 module.exports = webpackConfig(testOnly)
