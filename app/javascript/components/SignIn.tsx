@@ -165,7 +165,6 @@ export default function SignIn(props) {
     </Grid>
   );
 
-  console.log( 'hello!!!' );
   const get_token_from_oauth = response => {
     console.log( response );
     dispatch(oAuthSignIn(response.credential));
