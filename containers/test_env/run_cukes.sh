@@ -48,7 +48,7 @@ SPEC_FEATURE=false
 CHECKOUT_BRANCH=''
 RUN_TESTS=true
 
-while getopts "ecrhsnb:f:d:tl" opt; do
+while getopts "eocrhsnb:f:d:tl" opt; do
   case $opt in
     c)
       DB_RESET=true

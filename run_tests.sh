@@ -34,6 +34,7 @@ fi
 
 SHOW_FAILS=false
 RUN_TERM=false
+SHOW_OUTPUT=false
 DROP_SUPPORT=false
 while getopts "soxb:clndfrteh" opt; do
   case $opt in
@@ -47,9 +48,7 @@ while getopts "soxb:clndfrteh" opt; do
       RUN_TERM=true
       ;;
     o)
-      OUTPUT_HASH=`docker ps | grep colab_tester | awk '{print $1;}'`
-      docker logs -f $OUTPUT_HASH
-      exit 0;
+      SHOW_OUTPUT=true
       ;;
     h|\?) #Invalid option
       print_help
@@ -72,5 +71,9 @@ elif [ "$DROP_SUPPORT" = true ]; then
 
 else
   docker compose run --rm -d app $@
+  if [ "$SHOW_OUTPUT" = true ]; then
+      OUTPUT_HASH=`docker ps | grep colab_tester | awk '{print $1;}'`
+      docker logs -f $OUTPUT_HASH
+  fi
 fi
 popd
