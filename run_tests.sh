@@ -12,8 +12,8 @@ print_help ( ) {
   echo " -c             Initialise the database and terminate"
   echo " -l             Clear out the log files"
   echo " -n             Wipe previous runs"
-  echo " -o		Show output (if running)"
-  echo " -x		Shut down support processes and terminate"
+  echo " -o             Show output (if running)"
+  echo " -x             Shut down support processes and terminate"
   echo "       Run-specific options:"
   echo " -d [driver]    Set the browser driver for this run"
   echo " -f [features]  Specify specific features to run"
@@ -36,6 +36,7 @@ SHOW_FAILS=false
 RUN_TERM=false
 SHOW_OUTPUT=false
 DROP_SUPPORT=false
+RERUN=false
 while getopts "soxb:clndfrteh" opt; do
   case $opt in
     x) # Open up a terminal
@@ -46,6 +47,9 @@ while getopts "soxb:clndfrteh" opt; do
       ;;
     t) # Open up a terminal
       RUN_TERM=true
+      ;;
+    r)
+      RERUN=true
       ;;
     o)
       SHOW_OUTPUT=true
@@ -70,7 +74,9 @@ elif [ "$DROP_SUPPORT" = true ]; then
   docker compose down 
 
 else
-  docker compose run --rm -d app $@
+  if [ "$RERUN" = true ]; then
+    docker compose run --rm -d app $@
+  fi
   if [ "$SHOW_OUTPUT" = true ]; then
       OUTPUT_HASH=`docker ps | grep colab_tester | awk '{print $1;}'`
       docker logs -f $OUTPUT_HASH
