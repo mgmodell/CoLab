@@ -36,7 +36,7 @@ SHOW_FAILS=false
 RUN_TERM=false
 SHOW_OUTPUT=false
 DROP_SUPPORT=false
-RERUN=false
+RUN=false
 while getopts "soxb:clndfrteh" opt; do
   case $opt in
     x) # Open up a terminal
@@ -48,8 +48,8 @@ while getopts "soxb:clndfrteh" opt; do
     t) # Open up a terminal
       RUN_TERM=true
       ;;
-    r)
-      RERUN=true
+    r|b|n|l|f|d)
+      RUN=true
       ;;
     o)
       SHOW_OUTPUT=true
@@ -74,7 +74,7 @@ elif [ "$DROP_SUPPORT" = true ]; then
   docker compose down 
 
 else
-  if [ "$RERUN" = true ]; then
+  if [ "$RUN" = true ]; then
     docker compose run --rm -d app $@
   fi
   if [ "$SHOW_OUTPUT" = true ]; then
