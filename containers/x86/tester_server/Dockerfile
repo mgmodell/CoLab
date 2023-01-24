@@ -1,8 +1,8 @@
 FROM ubuntu
 
-RUN apt update && apt upgrade -y
+RUN apt-get update && apt-get upgrade -y
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get -y -q install \
+RUN apt-get -y --fix-missing -q install \
   curl \
   imagemagick \
   make \
@@ -18,8 +18,9 @@ RUN apt-get -y -q install \
   yarn \
   libvips 
 
+
 RUN apt-get autoremove && \
-    apt clean
+    apt-get clean
 
 RUN groupadd -r colab && \
   useradd --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
