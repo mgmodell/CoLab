@@ -48,7 +48,7 @@ while getopts "soxb:clndfrteh" opt; do
     t) # Open up a terminal
       RUN_TERM=true
       ;;
-    r|b|n|l|f|d)
+    r|c|b|n|l|f|d)
       RUN=true
       ;;
     o)
