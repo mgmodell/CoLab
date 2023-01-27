@@ -36,16 +36,19 @@ SHOW_FAILS=false
 RUN_TERM=false
 SHOW_OUTPUT=false
 DROP_SUPPORT=false
-RUN=false
+RUN=true
 while getopts "soxb:clndfrteh" opt; do
   case $opt in
     x) # Open up a terminal
+      RUN=false
       DROP_SUPPORT=true
       ;;
     s) # Show failures
+      RUN=false
       SHOW_FAILS=true
       ;;
     t) # Open up a terminal
+      RUN=false
       RUN_TERM=true
       ;;
     r|c|b|n|l|f|d)
