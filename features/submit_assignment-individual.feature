@@ -9,6 +9,7 @@ Feature: (Re)Submitting individual assignments
     Given the project has a group with 4 confirmed users
     Given the project has a group with 4 confirmed users
     Given the course has an assignment
+    Given the assignment "is not" group-capable
     Given the assignment's first deadline is "2/29/1980" and final is "7/10/2008"
     Given there exists a rubric published by another user
     Given the existing rubric is attached to this assignment
