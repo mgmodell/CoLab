@@ -10,19 +10,19 @@ Feature: Rubric administration
     Given there is a course with an assessed project
     Given the user is the instructor for the course
     Given the course has 8 confirmed users
-    Given the course has an assignment with an "unpublished" rubric named "Trojan War Diorama"
+    Given the course has an assignment named "Sack Troy" with an "unpublished" rubric named "Trojan War Diorama"
     Given the course started "5/10/1976" and ended "5 months from now"
     Given the project started "5/10/1976" and ends "11/01/2012", opened "Saturday" and closes "Monday"
-    Given the assignment's first deadline is "2/29/1980" and final is "7/10/2008"
+    Given the assignment's opening is "2/29/1980" and close is "7/10/2008"
     Given the course started "5/10/1976" and ended "11/01/2012"
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
     Then the user selects the 'Rubrics' menu item
-    Then the user sees 5 rubrics
 
   @javascript
   Scenario: Instructor creates a rubric
+    Then the user sees 5 rubrics
     Then the user clicks the "New Rubic" button
      And the user sets the "Name" field to "Elderly Tech. Talk"
      And the user sets the "Description" field to "Students prepare and deliver a presentation explaining a technology topic to elderly members of their community."

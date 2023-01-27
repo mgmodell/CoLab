@@ -5,109 +5,165 @@ Feature: Assignment administration
   Background:
     Given a user has signed up
     Given the user "has" had demographics requested
+    Given there are 4 "published" rubrics starting with 'Ruby '
+    Given there are 4 "unpublished" rubrics starting with "Never gonna' give you up "
     Given there is a course with an assessed project
+    Given the user is the instructor for the course
     Given the course has 8 confirmed users
-    Given the course timezone is "Mexico City"
-    Given the user timezone is "Nairobi"
-    Given the course has an assignment
+    Given the course has an assignment named "Sack Troy" with an "unpublished" rubric named "Trojan War Diorama"
     Given the course started "5/10/1976" and ended "5 months from now"
     Given the project started "5/10/1976" and ends "11/01/2012", opened "Saturday" and closes "Monday"
-    Given there exists a rubric published by another user
-    Given the assignment's first deadline is "2/29/1980" and final is "7/10/2008"
+    Given the assignment's opening is "2/29/1980" and close is "7/10/2008"
     Given the course started "5/10/1976" and ended "11/01/2012"
+    Given the user logs in
+    Then the user "does" see an Admin button
+    Then the user clicks the Admin button
+    Then the user selects the 'Courses' menu item
+    Then the user sees 1 course
+    Then the user opens the course
 
   Scenario: Instructor creates a new assignment
+    Then the user sees 1 course
+    Then the user switches to the "Activities" tab
+    Then the user creates a new "New Assignment"
+    Then the user sets the "Name" field to "Term Paper"
+    Then the user sets the "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+    Then the user sets the assignment "opening" to "7/29/1984"
+    Then the user sets the assignment "close" to "2/10/1985"
+    Then the user clicks "Create Assignment"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the "latest" assignment from the db
+     And the assignment "Name" field is "Term Paper"
+     And the assignment "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+     And the assignment "opening" field is "7/29/1984"
+     And the assignment "close" field is "2/10/1985"
+     And the assignment "is not" active
+     And the assignment "is not" group capable
+
   Scenario: Instructor creates a group-capable assignment
+    Then the user sees 1 course
+    Then the user switches to the "Activities" tab
+    Then the user creates a new "New Assignment"
+    Then the user sets the "Name" field to "Term Paper"
+    Then the user sets the "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+    Then the user sets the assignment "opening" to "7/29/1984"
+    Then the user sets the assignment "close" to "2/10/1985"
+    Then the user checks "Make groups available?"
+    Then the user sets the assignment's project to the course's project
+    Then the user clicks "Create Assignment"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the "latest" assignment from the db
+     And the assignment "Name" field is "Term Paper"
+     And the assignment "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+     And the assignment "opening" field is "7/29/1984"
+     And the assignment "close" field is "2/10/1985"
+     And the assignment "is not" active
+     And the assignment "is" group capable
+     And the assignment's project is the course's project
+
+
   Scenario: Instructor activates an assignment
+    Then the user sees 1 course
+    Then the user switches to the "Activities" tab
+    Then the user clicks "Sack Troy"
+    Then the user checks "Active?"
+    Then the user clicks "Update Assignment"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the "latest" assignment from the db
+     And the assignment "is" active
+
   Scenario: Instructor makes an assignment group-capable
+    Then the user sees 1 course
+    Then the user switches to the "Activities" tab
+    Then the user clicks "Sack Troy"
+    Then the user checks "Make groups available?"
+    Then the user sets the assignment's project to the course's project
+    Then the user clicks "Update Assignment"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the "latest" assignment from the db
+     And the assignment "is" group capable
+     And the assignment's project is the course's project
+     And the assignment "is not" active
+
   Scenario: Instructor assigns their own rubric to an assignment
+    Given the user has one rubric named "Pie in the Sky"
+    Then the user sees 1 course
+    Then the user switches to the "Activities" tab
+    Then the user clicks "Sack Troy"
+    Then the user sets the assignment rubric to "Pie in the Sky"
+    Then the user clicks "Update Assignment"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the "Sack Troy" assignment from the db
+     And the assignment's rubric is "Pie in the Sky"
+
+  Scenario: Instructor assigns a new rubric to a new assignment
+    Then the user sees 1 course
+    Then the user switches to the "Activities" tab
+    Then the user creates a new "New Assignment"
+    Then the user sets the "Name" field to "Term Paper"
+    Then the user sets the "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+    Then the user sets the assignment "opening" to "7/29/1984"
+    Then the user sets the assignment "close" to "2/10/1985"
+    Then the user clicks "Add New Rubric"
+     And the user sets the "Rubric Name" field to "Sky in the Pie"
+    Then the user clicks "Create Assignment"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the "latest" rubric
+     And the rubric "Name" is "Sky in the Pie"
+    Then retrieve the "latest" assignment from the db
+     And the assignment "Name" field is "Term Paper"
+     And the assignment's rubric is "Sky in the Pie"
+
+  Scenario: Instructor assigns a new rubric to an existing assignment
+    Then the user sees 1 course
+    Then the user switches to the "Activities" tab
+    Then the user clicks "Sack Troy"
+    Then the user clicks "Add New Rubric"
+     And the user sets the "Rubric Name" field to "Sky in the Pie"
+    Then the user clicks "Update Assignment"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the "latest" rubric
+     And the rubric "Name" is "Sky in the Pie"
+    Then retrieve the "Sack Troy" assignment from the db
+     And the assignment's rubric is "Sky in the Pie"
+
   Scenario: Instructor assigns a published rubric to an assignment
+    Then the user sees 1 course
+    Then the user switches to the "Activities" tab
+    Then the user clicks "Sack Troy"
+    Then the user sets the assignment rubric to "Ruby 2"
+    Then the user clicks "Update Assignment"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the "Sack Troy" assignment from the db
+     And the assignment's rubric is "Ruby 4"
+
   Scenario: Instructor sets the deadlines for an assignment
+    Then the user sees 1 course
+    Then the user switches to the "Activities" tab
+    Then the user clicks "Sack Troy"
+    Then the user sets the assignment "close" to "6/9/2000"
+    Then the user clicks "Update Assignment"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the "Sack Troy" assignment from the db
+     And the assignment "close" field is "6/9/2000"
+
   Scenario: Instructor sets an assignment to be group-capable
-  Scenario: Instructor creates a rubric when creating an assignment
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
     Then the user sees 1 course
-    Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "New Bingo! Game"
-    Then the user sets the "Topic" field to "Privacy"
-    Then the user sets the "Days for instructor prep" field to "2"
-    Then the user sets the "Entries per student" field to "15"
+    Then the user clicks "Sack Troy"
     Then the user checks "Make groups available?"
-    Then the user sets the "Discount for collaboration" field to "30"
-    Then the user sets the project to the course's project
-    Then the user sets the bingo "start" date to "02/29/1980"
-    Then the user sets the bingo "end" date to "07/10/2008"
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Create Bingo game"
-    Then the user will see "success"
-    #Let's check the values stored
-    Then retrieve the latest Bingo! game from the db
-    Then the bingo "topic" is "Privacy"
-    Then the bingo "description" is "this is the coolest"
-    Then the bingo "individual_count" is "15"
-    Then the bingo "group_discount" is "30"
-    Then the bingo "lead_time" is "2"
-    Then the bingo project is the course's project
-    #check the dates
-    Then the bingo "start" date is "02/29/1980"
-    Then the bingo "end" date is "07/10/2008"
-
-  @javascript
-  Scenario: Instructor creates a new Bingo! game but leaves the dates untouched
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Then the user switches to the "Activities" tab
-    Then the user clicks "New Bingo! Game"
-    Then the user sets the "Topic" field to "Privacy"
-    Then the user sets the "Days for instructor prep" field to "2"
-    Then the user sets the "Entries per student" field to "15"
-    Then the user checks "Make groups available?"
-    Then the user sets the "Discount for collaboration" field to "30"
-    Then the user sets the project to the course's project
-    Then the user sets the "Description" field to "this is the coolest"
-    Then the user clicks "Create Bingo game"
-    Then the user will see "success"
-    #Let's check the values stored
-    Then retrieve the latest Bingo! game from the db
-    Then the bingo "topic" is "Privacy"
-    Then the bingo "Description" is "this is the coolest"
-    #check the dates
-    Then the bingo "start" date is "05/10/1976"
-    Then the bingo "end" date is "11/01/2012"
-    #check the selects
-
-  @javascript
-  Scenario: Instructor edits an existing Bingo!
-    Given the user is the instructor for the course
-    Given the user logs in
-    Then the user "does" see an Admin button
-    Then the user clicks the Admin button
-    Then the user sees 1 course
-    Then the user opens the course
-    Then the user clicks "Show" on the existing bingo game
-    Then the user sets the "Topic" field to "Privacy"
-    Then the user sets the "Days for instructor review" field to "2"
-    Then the user sets the "Entries per student" field to "15"
-    Then the user clicks by label "Make groups available?"
-    Then the user sets the "Discount for collaboration" field to "30"
-    Then the user sets the project to the course's project
-    Then the user sets the rich "Description" field to "this is the coolest"
-    Then the user clicks "Update Bingo Game"
-    Then the user waits while seeing "Saving game"
-    Then the user will see "success"
-    #Let's check the values stored
-    Then retrieve the latest Bingo! game from the db
-    Then the bingo "Topic" is "Privacy"
-    Then the bingo "Description" is "<p>this is the coolest</p>"
-    #check the dates
-    Then the bingo "start" date is "2/29/1980"
-    Then the bingo "end" date is "7/10/2008"
-
+    Then the user sets the assignment's project to the course's project
+    Then the user clicks "Update Assignment"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the "Sack Troy" assignment from the db
+     And the assignment's project is the course's project
