@@ -13,7 +13,7 @@ Feature: Rubric administration
     Given the course has an assignment named "Sack Troy" with an "unpublished" rubric named "Trojan War Diorama"
     Given the course started "5/10/1976" and ended "5 months from now"
     Given the project started "5/10/1976" and ends "11/01/2012", opened "Saturday" and closes "Monday"
-    Given the assignment's opening is "2/29/1980" and close is "7/10/2008"
+    Given the assignment opening is "2/29/1980" and close is "7/10/2008"
     Given the course started "5/10/1976" and ended "11/01/2012"
     Given the user logs in
     Then the user "does" see an Admin button
@@ -182,7 +182,7 @@ Feature: Rubric administration
     Then the user searches for "Trojan"
     Then the user edits the rubric
      And the user sees that criteria 3 matches the remembered criteria
-     And the user delete's criteria 2
+     And the user delete criteria 2
     Then the user clicks "Update Rubric"
     Then close all messages
     #Check what was saved

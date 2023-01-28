@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @criterium %>
+
+<div>
+  <%= link_to "Edit this criterium", edit_criterium_path(@criterium) %> |
+  <%= link_to "Back to criteria", criteria_path %>
+
+  <%= button_to "Destroy this criterium", @criterium, method: :delete %>
+</div>

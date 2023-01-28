@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_28_043847) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -33,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
@@ -239,6 +239,22 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
     t.integer "anon_offset", default: 0, null: false
     t.index ["consent_form_id"], name: "fk_rails_469f90a775"
     t.index ["school_id"], name: "index_courses_on_school_id"
+  end
+
+  create_table "criteria", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.bigint "rubric_id", null: false
+    t.string "description"
+    t.integer "weight", default: 1, null: false
+    t.integer "sequence", null: false
+    t.text "l1_description"
+    t.text "l2_description"
+    t.text "l3_description"
+    t.text "l4_description"
+    t.text "l5_description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rubric_id", "sequence"], name: "index_criteria_on_rubric_id_and_sequence", unique: true
+    t.index ["rubric_id"], name: "index_criteria_on_rubric_id"
   end
 
   create_table "delayed_jobs", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
@@ -459,6 +475,19 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
     t.index ["user_id"], name: "index_rosters_on_user_id"
   end
 
+  create_table "rubrics", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.integer "passing", default: 65, null: false
+    t.integer "version", default: 1, null: false
+    t.boolean "published", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "parent_id", null: false
+    t.index ["name", "version", "parent_id"], name: "index_rubrics_on_name_and_version_and_parent_id", unique: true
+    t.index ["parent_id"], name: "index_rubrics_on_parent_id"
+  end
+
   create_table "scenarios", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name_en"
     t.integer "behavior_id"
@@ -612,6 +641,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
   add_foreign_key "consent_logs", "users"
   add_foreign_key "courses", "consent_forms"
   add_foreign_key "courses", "schools"
+  add_foreign_key "criteria", "rubrics"
   add_foreign_key "diagnoses", "behaviors"
   add_foreign_key "diagnoses", "reactions"
   add_foreign_key "diagnoses", "weeks"
@@ -634,6 +664,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
   add_foreign_key "reactions", "users"
   add_foreign_key "rosters", "courses"
   add_foreign_key "rosters", "users"
+  add_foreign_key "rubrics", "rubrics", column: "parent_id"
   add_foreign_key "scenarios", "behaviors"
   add_foreign_key "users", "cip_codes"
   add_foreign_key "users", "genders"

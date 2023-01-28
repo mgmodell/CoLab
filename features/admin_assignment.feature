@@ -13,7 +13,7 @@ Feature: Assignment administration
     Given the course has an assignment named "Sack Troy" with an "unpublished" rubric named "Trojan War Diorama"
     Given the course started "5/10/1976" and ended "5 months from now"
     Given the project started "5/10/1976" and ends "11/01/2012", opened "Saturday" and closes "Monday"
-    Given the assignment's opening is "2/29/1980" and close is "7/10/2008"
+    Given the assignment opening is "2/29/1980" and close is "7/10/2008"
     Given the course started "5/10/1976" and ended "11/01/2012"
     Given the user logs in
     Then the user "does" see an Admin button
@@ -50,7 +50,7 @@ Feature: Assignment administration
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
     Then the user checks "Make groups available?"
-    Then the user sets the assignment's project to the course's project
+    Then the user sets the assignment project to the course's project
     Then the user clicks "Create Assignment"
     Then close all messages
     #Check what was saved
@@ -61,7 +61,7 @@ Feature: Assignment administration
      And the assignment "close" field is "2/10/1985"
      And the assignment "is not" active
      And the assignment "is" group capable
-     And the assignment's project is the course's project
+     And the assignment project is the course's project
 
 
   Scenario: Instructor activates an assignment
@@ -80,13 +80,13 @@ Feature: Assignment administration
     Then the user switches to the "Activities" tab
     Then the user clicks "Sack Troy"
     Then the user checks "Make groups available?"
-    Then the user sets the assignment's project to the course's project
+    Then the user sets the assignment project to the course's project
     Then the user clicks "Update Assignment"
     Then close all messages
     #Check what was saved
     Then retrieve the "latest" assignment from the db
      And the assignment "is" group capable
-     And the assignment's project is the course's project
+     And the assignment project is the course's project
      And the assignment "is not" active
 
   Scenario: Instructor assigns their own rubric to an assignment
@@ -99,7 +99,7 @@ Feature: Assignment administration
     Then close all messages
     #Check what was saved
     Then retrieve the "Sack Troy" assignment from the db
-     And the assignment's rubric is "Pie in the Sky"
+     And the assignment rubric is "Pie in the Sky"
 
   Scenario: Instructor assigns a new rubric to a new assignment
     Then the user sees 1 course
@@ -118,7 +118,7 @@ Feature: Assignment administration
      And the rubric "Name" is "Sky in the Pie"
     Then retrieve the "latest" assignment from the db
      And the assignment "Name" field is "Term Paper"
-     And the assignment's rubric is "Sky in the Pie"
+     And the assignment rubric is "Sky in the Pie"
 
   Scenario: Instructor assigns a new rubric to an existing assignment
     Then the user sees 1 course
@@ -132,7 +132,7 @@ Feature: Assignment administration
     Then retrieve the "latest" rubric
      And the rubric "Name" is "Sky in the Pie"
     Then retrieve the "Sack Troy" assignment from the db
-     And the assignment's rubric is "Sky in the Pie"
+     And the assignment rubric is "Sky in the Pie"
 
   Scenario: Instructor assigns a published rubric to an assignment
     Then the user sees 1 course
@@ -143,7 +143,7 @@ Feature: Assignment administration
     Then close all messages
     #Check what was saved
     Then retrieve the "Sack Troy" assignment from the db
-     And the assignment's rubric is "Ruby 4"
+     And the assignment rubric is "Ruby 4"
 
   Scenario: Instructor sets the deadlines for an assignment
     Then the user sees 1 course
@@ -161,9 +161,9 @@ Feature: Assignment administration
     Then the user switches to the "Activities" tab
     Then the user clicks "Sack Troy"
     Then the user checks "Make groups available?"
-    Then the user sets the assignment's project to the course's project
+    Then the user sets the assignment project to the course's project
     Then the user clicks "Update Assignment"
     Then close all messages
     #Check what was saved
     Then retrieve the "Sack Troy" assignment from the db
-     And the assignment's project is the course's project
+     And the assignment project is the course's project

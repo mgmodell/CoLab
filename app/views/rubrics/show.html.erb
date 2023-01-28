@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @rubric %>
+
+<div>
+  <%= link_to "Edit this rubric", edit_rubric_path(@rubric) %> |
+  <%= link_to "Back to rubrics", rubrics_path %>
+
+  <%= button_to "Destroy this rubric", @rubric, method: :delete %>
+</div>
