@@ -4,6 +4,7 @@ dir="$HOME/src/app/"
 
 if [[ $(find ${dir} -type f  | wc -l) -lt 1 ]]; then
   git clone https://github.com/mgmodell/CoLab.git $dir
+  git config pull.rebase false
 fi
 
 cd $dir
