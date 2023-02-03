@@ -95,7 +95,7 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.701.0)
+    aws-partitions (1.704.0)
     aws-sdk-core (3.170.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -247,7 +247,7 @@ GEM
       activesupport (>= 5.0.0)
     jmespath (1.6.2)
     json (2.6.3)
-    jwt (2.6.0)
+    jwt (2.7.0)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
@@ -294,14 +294,14 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
-    nokogiri (1.14.0)
+    nokogiri (1.14.1)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    nokogiri (1.14.0-aarch64-linux)
+    nokogiri (1.14.1-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.14.0-arm64-darwin)
+    nokogiri (1.14.1-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.14.0-x86_64-linux)
+    nokogiri (1.14.1-x86_64-linux)
       racc (~> 1.4)
     oauth2 (2.0.9)
       faraday (>= 0.17.3, < 3.0)
@@ -310,7 +310,7 @@ GEM
       rack (>= 1.2, < 4)
       snaky_hash (~> 2.0)
       version_gem (~> 1.1)
-    oj (3.13.23)
+    oj (3.14.1)
     omniauth (2.1.1)
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
@@ -402,7 +402,7 @@ GEM
     rb-readline (0.5.5)
     rdoc (6.5.0)
       psych (>= 4.0.0)
-    react_on_rails (13.2.0)
+    react_on_rails (13.3.1)
       addressable
       connection_pool
       execjs (~> 2.5)
@@ -521,7 +521,7 @@ GEM
     traco (5.3.3)
       activerecord (>= 4.2)
     ttfunk (1.7.0)
-    tzinfo (2.0.5)
+    tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2022.7)
       tzinfo (>= 1.0.0)
@@ -603,7 +603,7 @@ DEPENDENCIES
   rails-erd
   rails_12factor
   rb-readline
-  react_on_rails (= 13.2.0)
+  react_on_rails (= 13.3.1)
   reek
   report_builder
   rspec
