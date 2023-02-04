@@ -18,9 +18,9 @@ if grep -q bitbucket .git/config; then
   git push --mirror
 
 else
-  for branch in $(git branch --all | grep '^\s*remotes' | grep -E --invert-match '(:?HEAD|master)$'); do
-    git branch --track "${branch##*/}" "$branch"
-  done
+#  for branch in $(git branch --all | grep '^\s*remotes' | grep -E --invert-match '(:?HEAD|master)$'); do
+#    git branch --track "${branch##*/}" "$branch"
+#  done
 
   git pull --all
 
