@@ -4,6 +4,9 @@ dir="$HOME/src/app/"
 
 if [[ $(find ${dir} -type f  | wc -l) -lt 1 ]]; then
   git clone https://github.com/mgmodell/CoLab.git $dir
+  git config --global pull.rebase false
+  git config --global push.autoSetupRemote true
+  git config --global branch.autoSetupMerge simple
 fi
 
 cd $dir
@@ -17,6 +20,10 @@ if grep -q bitbucket .git/config; then
   git push --mirror
 
 else
+#  for branch in $(git branch --all | grep '^\s*remotes' | grep -E --invert-match '(:?HEAD|master)$'); do
+#    git branch --track "${branch##*/}" "$branch"
+#  done
+
   git pull --all
 
 fi
