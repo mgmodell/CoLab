@@ -36,7 +36,7 @@ SHOW_FAILS=false
 RUN_TERM=false
 SHOW_OUTPUT=false
 DROP_SUPPORT=false
-RUN=true
+RUN=false
 while getopts "soxb:clndfrteh" opt; do
   case $opt in
     x) # Open up a terminal
@@ -78,7 +78,10 @@ elif [ "$DROP_SUPPORT" = true ]; then
 
 else
   if [ "$RUN" = true ]; then
-    docker compose run --rm -d app $@
+    NUM_TESTERS=`docker ps | grep colab_testers | wc -l`
+    if [ $NUM_TESTERS -lt 1 ]; then 
+      docker compose run --rm -d app $@
+    fi
   fi
   if [ "$SHOW_OUTPUT" = true ]; then
       OUTPUT_HASH=`docker ps | grep colab_tester | awk '{print $1;}'`
