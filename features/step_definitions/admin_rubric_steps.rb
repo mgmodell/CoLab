@@ -1,10 +1,25 @@
-Given('there are {int} {string} rubrics starting with {string}') do |int, string, string2|
-    # Given('there are {float} {string} rubrics starting with {string}') do |float, string, string2|
-      pending # Write code here that turns the phrase above into concrete actions
+    Given('there are {int} {string} rubrics starting with {string}') do |count, is_published, prefix|
+        school = School.find(1)
+        count.times do |index|
+            rubric = school.rubrics.new(
+                name: "#{prefix} #{index}",
+                description: "#{Faker::GreekPhilosophers.quote}",
+                passing: 65,
+                published: 'published' == is_published,
+                user: @user
+            )
+            rubic.save
+            log @rubric.errors.full_messages if @rubric.errors.present?
+        end
     end
     
-    Given('the user has one rubric named {string}') do |string|
-      pending # Write code here that turns the phrase above into concrete actions
+    Given('the user has one rubric named {string}') do |name|
+      @rubric = @user.rubrics.new(
+          name: "#{name}",
+          description: "#{Faker::GreekPhilosophers.quote}",
+          passing: 65,
+          school: @user.school
+      )
     end
     
     Then('the assignment rubric is {string}') do |string|

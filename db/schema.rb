@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_28_043847) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_06_032450) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -484,8 +484,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_28_043847) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "parent_id", null: false
+    t.integer "user_id"
+    t.integer "school_id"
     t.index ["name", "version", "parent_id"], name: "index_rubrics_on_name_and_version_and_parent_id", unique: true
     t.index ["parent_id"], name: "index_rubrics_on_parent_id"
+    t.index ["school_id"], name: "index_rubrics_on_school_id"
+    t.index ["user_id"], name: "index_rubrics_on_user_id"
   end
 
   create_table "scenarios", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
@@ -665,6 +669,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_28_043847) do
   add_foreign_key "rosters", "courses"
   add_foreign_key "rosters", "users"
   add_foreign_key "rubrics", "rubrics", column: "parent_id"
+  add_foreign_key "rubrics", "schools"
+  add_foreign_key "rubrics", "users"
   add_foreign_key "scenarios", "behaviors"
   add_foreign_key "users", "cip_codes"
   add_foreign_key "users", "genders"
