@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_06_032450) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_06_040920) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -62,6 +62,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_032450) do
     t.boolean "instructor_updated", default: false, null: false
     t.boolean "active", default: true, null: false
     t.index ["project_id"], name: "index_assessments_on_project_id"
+  end
+
+  create_table "assignments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.date "open"
+    t.date "close"
+    t.bigint "rubric_id", null: false
+    t.boolean "group_enabled"
+    t.integer "course_id", null: false
+    t.integer "project_id"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_assignments_on_course_id"
+    t.index ["project_id"], name: "index_assignments_on_project_id"
+    t.index ["rubric_id"], name: "index_assignments_on_rubric_id"
   end
 
   create_table "behaviors", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
@@ -625,6 +640,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_032450) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "assessments", "projects"
+  add_foreign_key "assignments", "courses"
+  add_foreign_key "assignments", "projects"
+  add_foreign_key "assignments", "rubrics"
   add_foreign_key "bingo_boards", "bingo_games"
   add_foreign_key "bingo_boards", "users"
   add_foreign_key "bingo_cells", "bingo_boards"
