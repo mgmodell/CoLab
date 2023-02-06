@@ -1415,10 +1415,10 @@
   resolved "https://registry.yarnpkg.com/@react-dnd/shallowequal/-/shallowequal-2.0.0.tgz#a3031eb54129f2c66b2753f8404266ec7bf67f0a"
   integrity sha512-Pc/AFTdwZwEKJxFJvlxrSmGe/di+aAOBn60sremrpLo6VI/6cmiUYNNwlI5KNYttg7uypzA3ILPMPgxB2GYZEg==
 
-"@react-oauth/google@^0.6.0":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@react-oauth/google/-/google-0.6.1.tgz#2a4c0f2a2f55988e94e2b6efa4f82c8f3ae154f8"
-  integrity sha512-Nq4OK/NTgnvl2dTgQW5H8O1bhLg4JRQhwkEzpfZNKA1ijByQk6X4XG1FGS49FIHjjKInb263Me/yVQ2F3LJeuw==
+"@react-oauth/google@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@react-oauth/google/-/google-0.7.0.tgz#cc7c5694a16044b7a0a115c0d31c38e396f87c3a"
+  integrity sha512-KLLYlLYYpXf1zmcrsJPAxImvoq2b0Rs0Pi/6GYfdwjmTh66Pf6jkZ4fpO10tuJuUPWvEeqloPEC/i4BySgbYVQ==
 
 "@react-spring/animated@~9.6.1":
   version "9.6.1"
