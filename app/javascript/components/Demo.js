@@ -11,7 +11,7 @@ const CandidatesReviewTable = React.lazy(() =>
   import("./BingoBoards/CandidatesReviewTable")
 );
 const BingoBuilder = React.lazy(() => import("./BingoBoards/BingoBuilder"));
-const Experience = React.lazy(() => import("./Experience"));
+const Experience = React.lazy(() => import("./experiences/Experience"));
 
 export default function Demo(props) {
   return (

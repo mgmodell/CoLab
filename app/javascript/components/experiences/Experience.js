@@ -10,7 +10,7 @@ import {
   setClean,
   addMessage,
   Priorities
-} from "./infrastructure/StatusSlice";
+} from "../infrastructure/StatusSlice";
 
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
@@ -21,7 +21,7 @@ import ExperienceInstructions from './ExperienceInstructions';
 import ExperienceDiagnosis from './ExperienceDiagnosis';
 
 const ExperienceReaction = React.lazy(() => import("./ExperienceReaction"));
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 
 export default function Experience(props) {

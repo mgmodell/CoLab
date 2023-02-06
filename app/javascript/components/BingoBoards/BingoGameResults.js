@@ -21,7 +21,7 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 
 const ScoredGameDataTable = React.lazy( () =>
-  import( "../ScoredGameDataTable" ));
+  import( "./ScoredGameDataTable" ));
 
 function PaperComponent(props) {
   return (

@@ -28,7 +28,7 @@ const CandidatesReviewTable = React.lazy(() =>
   import("./BingoBoards/CandidatesReviewTable")
 );
 const BingoBuilder = React.lazy(() => import("./BingoBoards/BingoBuilder"));
-const Experience = React.lazy(() => import("./Experience"));
+const Experience = React.lazy(() => import("./experiences/Experience"));
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 const Admin = React.lazy(() => import("./Admin"));
 const SignIn = React.lazy(() => import("./SignIn"));

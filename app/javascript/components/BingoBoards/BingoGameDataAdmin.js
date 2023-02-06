@@ -41,7 +41,7 @@ import { useTranslation } from "react-i18next";
 
 import makeStyles from '@mui/styles/makeStyles';
 
-import ConceptChips from "../ConceptChips";
+import ConceptChips from "./ConceptChips";
 const BingoGameDataAdminTable = React.lazy( () =>
   import( "./BingoGameDataAdminTable" ));
 

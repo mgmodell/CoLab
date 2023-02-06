@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 import Skeleton from "@mui/material/Skeleton";
 //For debug purposes
 
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 
 export default function Experience(props) {

@@ -25,10 +25,10 @@ import {
   setClean,
   addMessage,
   Priorities
-} from "./infrastructure/StatusSlice";
+} from "../infrastructure/StatusSlice";
 //import i18n from './i18n';
 //import { useTranslation } from 'react-i18next';
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 
 export default function ExperienceDataAdmin(props) {

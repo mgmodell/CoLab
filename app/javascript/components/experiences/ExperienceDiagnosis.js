@@ -2,7 +2,7 @@ import React, { Suspense, useState } from "react";
 import PropTypes from "prop-types";
 
 import { useDispatch } from "react-redux";
-import { setDirty } from "./infrastructure/StatusSlice";
+import { setDirty } from "../infrastructure/StatusSlice";
 
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -14,7 +14,7 @@ import TextField from "@mui/material/TextField";
 //For debug purposes
 
 import { useTranslation } from "react-i18next";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 
 import Radio from "@mui/material/Radio";
 import Grid from "@mui/material/Grid";

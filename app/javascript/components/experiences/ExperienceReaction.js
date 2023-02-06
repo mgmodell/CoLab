@@ -1,7 +1,7 @@
 import React, { Suspense, useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import { setDirty } from "./infrastructure/StatusSlice";
+import { setDirty } from "../infrastructure/StatusSlice";
 
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -9,7 +9,7 @@ import Skeleton from "@mui/material/Skeleton";
 import TextField from "@mui/material/TextField";
 
 import { useTranslation } from "react-i18next";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 
 import Radio from "@mui/material/Radio";
 import Grid from "@mui/material/Grid";

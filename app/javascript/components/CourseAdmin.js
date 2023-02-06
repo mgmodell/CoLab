@@ -8,7 +8,7 @@ const CourseDataAdmin = React.lazy(() => import("./CourseDataAdmin"));
 const BingoGameDataAdmin = React.lazy(() =>
   import("./BingoBoards/BingoGameDataAdmin")
 );
-const ExperienceDataAdmin = React.lazy(() => import("./ExperienceDataAdmin"));
+const ExperienceDataAdmin = React.lazy(() => import("./experiences/ExperienceDataAdmin"));
 const ProjectDataAdmin = React.lazy(() => import("./ProjectDataAdmin"));
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
