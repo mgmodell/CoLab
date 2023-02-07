@@ -2,7 +2,8 @@
 
 require 'faker'
 class Project < ApplicationRecord
-  include TimezonesSupportConcern
+  include DateSanitySupportConcern,
+          TimezonesSupportConcern
   after_save :build_assessment
 
   belongs_to :course, inverse_of: :projects
@@ -27,9 +28,7 @@ class Project < ApplicationRecord
     less_than_or_equal_to: 6
   }
 
-  # Let's be sure the dates are valid
-  validate :date_sanity
-  validate :dates_within_course
+  # Business rule validation checks
   validate :activation_status
 
   # Set default values

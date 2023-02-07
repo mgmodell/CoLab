@@ -2,7 +2,8 @@
 
 require 'faker'
 class BingoGame < ApplicationRecord
-  include TimezonesSupportConcern
+  include DateSanitySupportConcern,
+          TimezonesSupportConcern
 
   belongs_to :course, inverse_of: :bingo_games
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
@@ -23,12 +24,10 @@ class BingoGame < ApplicationRecord
       less_than_or_equal_to: 100,
       allow_nil: true }
   validates :individual_count, numericality: { only_integer: true }
-  validate :date_sanity
   validate :review_completed
 
   validate :group_components
 
-  validate :dates_within_course
   before_create :anonymize
   # before_validation :init_dates
   before_save :reset_notification

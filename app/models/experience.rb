@@ -2,17 +2,16 @@
 
 require 'faker'
 class Experience < ApplicationRecord
-  include TimezonesSupportConcern
+  include DateSanitySupportConcern,
+          TimezonesSupportConcern
 
   belongs_to :course, inverse_of: :experiences
   has_many :reactions, inverse_of: :experience, dependent: :destroy
 
   # validations
   validates :name, :end_date, :start_date, presence: true
-  validate :date_sanity
   before_create :anonymize
   before_save :reset_notification, :end_date_optimization
-  validate :dates_within_course
 
   scope :active_at, lambda { |date|
                       where(active: true)
