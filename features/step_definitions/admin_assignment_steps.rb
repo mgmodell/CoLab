@@ -1,10 +1,33 @@
+require 'chronic'
 
-    Given('the course has an assignment named {string} with an {string} rubric named {string}') do |string, string2, string3|
-      pending # Write code here that turns the phrase above into concrete actions
+    Given('the course has an assignment named {string} with an {string} rubric named {string}') do |assignment_name, rubric_published, rubric_name|
+        @rubric = @user.rubrics.new(
+            name: rubric_name,
+            description: Faker::GreekPhilosophers.quote,
+            passing: 65,
+            school: @user.school,
+            published: 'published' == rubric_published
+        )
+        @rubric.save
+        log @rubric.errors.full_messages if @rubric.errors.present?
+
+        @assignment = @course.assignments.new(
+            name: assignment_name,
+            description: Faker::Quote.yoda,
+            start_date:  4.months.ago ,
+            end_date:  2.months.from_now ,
+            rubric: @rubric
+        )
+        @assignment.save
+        log @assignment.errors.full_messages if @assignment.errors.present?
     end
     
-    Given('the assignment opening is {string} and close is {string}') do |string, string2|
-      pending # Write code here that turns the phrase above into concrete actions
+    Given('the assignment opening is {string} and close is {string}') do |start_date_string, end_date_string|
+        @assignment.start_date = Chronic.parse(start_date_string)
+        @assignment.end_date = Chronic.parse(end_date_string)
+
+        @assignment.save
+        log @assignment.errors.full_messages if @assignment.errors.present?
     end
     
     Then('the user sets the assignment {string} to {string}') do |string, string2|

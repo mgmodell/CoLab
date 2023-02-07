@@ -182,7 +182,7 @@ Feature: Rubric administration
     Then the user searches for "Trojan"
     Then the user edits the rubric
      And the user sees that criteria 3 matches the remembered criteria
-     And the user delete criteria 2
+     And the user deletes criteria 2
     Then the user clicks "Update Rubric"
     Then close all messages
     #Check what was saved

@@ -1,8 +1,8 @@
--- MariaDB dump 10.19  Distrib 10.9.4-MariaDB, for osx10.18 (arm64)
+-- MariaDB dump 10.19  Distrib 10.10.2-MariaDB, for osx10.18 (arm64)
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	10.9.4-MariaDB
+-- Server version	10.10.2-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -192,6 +192,45 @@ CREATE TABLE `assessments` (
 LOCK TABLES `assessments` WRITE;
 /*!40000 ALTER TABLE `assessments` DISABLE KEYS */;
 /*!40000 ALTER TABLE `assessments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `assignments`
+--
+
+DROP TABLE IF EXISTS `assignments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `assignments` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `rubric_id` bigint(20) NOT NULL,
+  `group_enabled` tinyint(1) NOT NULL DEFAULT 0,
+  `course_id` int(11) NOT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_assignments_on_rubric_id` (`rubric_id`),
+  KEY `index_assignments_on_course_id` (`course_id`),
+  KEY `index_assignments_on_project_id` (`project_id`),
+  CONSTRAINT `fk_rails_2194c084a6` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
+  CONSTRAINT `fk_rails_4d3d2c839c` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
+  CONSTRAINT `fk_rails_7efcd7af22` FOREIGN KEY (`rubric_id`) REFERENCES `rubrics` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `assignments`
+--
+
+LOCK TABLES `assignments` WRITE;
+/*!40000 ALTER TABLE `assignments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `assignments` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -691,6 +730,42 @@ CREATE TABLE `courses` (
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `criteria`
+--
+
+DROP TABLE IF EXISTS `criteria`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `criteria` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `rubric_id` bigint(20) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `weight` int(11) NOT NULL DEFAULT 1,
+  `sequence` int(11) NOT NULL,
+  `l1_description` text DEFAULT NULL,
+  `l2_description` text DEFAULT NULL,
+  `l3_description` text DEFAULT NULL,
+  `l4_description` text DEFAULT NULL,
+  `l5_description` text DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_criteria_on_rubric_id_and_sequence` (`rubric_id`,`sequence`),
+  KEY `index_criteria_on_rubric_id` (`rubric_id`),
+  CONSTRAINT `fk_rails_1b5cbaf9f1` FOREIGN KEY (`rubric_id`) REFERENCES `rubrics` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `criteria`
+--
+
+LOCK TABLES `criteria` WRITE;
+/*!40000 ALTER TABLE `criteria` DISABLE KEYS */;
+/*!40000 ALTER TABLE `criteria` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -4570,6 +4645,45 @@ LOCK TABLES `rosters` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `rubrics`
+--
+
+DROP TABLE IF EXISTS `rubrics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `rubrics` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `passing` int(11) NOT NULL DEFAULT 65,
+  `version` int(11) NOT NULL DEFAULT 1,
+  `published` tinyint(1) NOT NULL DEFAULT 0,
+  `parent_id` bigint(20) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `school_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_rubrics_on_name_and_version_and_parent_id` (`name`,`version`,`parent_id`),
+  KEY `index_rubrics_on_parent_id` (`parent_id`),
+  KEY `index_rubrics_on_user_id` (`user_id`),
+  KEY `index_rubrics_on_school_id` (`school_id`),
+  CONSTRAINT `fk_rails_0b2276316d` FOREIGN KEY (`parent_id`) REFERENCES `rubrics` (`id`),
+  CONSTRAINT `fk_rails_28ec4c65ca` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`),
+  CONSTRAINT `fk_rails_b5b6f45923` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rubrics`
+--
+
+LOCK TABLES `rubrics` WRITE;
+/*!40000 ALTER TABLE `rubrics` DISABLE KEYS */;
+/*!40000 ALTER TABLE `rubrics` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `scenarios`
 --
 
@@ -4789,7 +4903,12 @@ INSERT INTO `schema_migrations` VALUES
 ('20220219194244'),
 ('20220226235110'),
 ('20221201214357'),
-('20221204025950');
+('20221204025950'),
+('20230127221505'),
+('20230127225045'),
+('20230128043847'),
+('20230206032450'),
+('20230206040920');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5252,4 +5371,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-04 11:20:51
+-- Dump completed on 2023-02-06 19:57:32

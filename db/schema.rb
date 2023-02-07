@@ -33,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_040920) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
@@ -65,13 +65,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_040920) do
   end
 
   create_table "assignments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
-    t.date "open"
-    t.date "close"
+    t.string "name", null: false
+    t.text "description"
+    t.date "start_date", null: false
+    t.date "end_date", null: false
     t.bigint "rubric_id", null: false
-    t.boolean "group_enabled"
+    t.boolean "group_enabled", default: false, null: false
     t.integer "course_id", null: false
     t.integer "project_id"
-    t.boolean "active"
+    t.boolean "active", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_assignments_on_course_id"
@@ -496,9 +498,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_040920) do
     t.integer "passing", default: 65, null: false
     t.integer "version", default: 1, null: false
     t.boolean "published", default: false, null: false
+    t.bigint "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "parent_id", null: false
     t.integer "user_id"
     t.integer "school_id"
     t.index ["name", "version", "parent_id"], name: "index_rubrics_on_name_and_version_and_parent_id", unique: true

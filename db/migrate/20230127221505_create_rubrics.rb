@@ -6,6 +6,7 @@ class CreateRubrics < ActiveRecord::Migration[7.0]
       t.integer :passing, null: false, default: 65
       t.integer :version, null: false, default: 1
       t.boolean :published, null: false, default: false
+      t.references :parent, null: true, foreign_key: {to_table: :rubrics}
 
       t.timestamps
 
