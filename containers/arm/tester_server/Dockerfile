@@ -39,6 +39,10 @@ RUN echo -e "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
   echo -e "export DRIVER=docker" >> ~/.bashrc && \
   echo -e "export CUCUMBER_PUBLISH_TOKEN=caa67d94-0eab-4593-90c7-6032772d86ec" >> ~/.bashrc
 
+RUN git config --global pull.rebase false &&\
+  git config --global push.autoSetupRemote true &&\
+  git config --global branch.autoSetupMerge simple
+
 RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0 &&\
     echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.bashrc && \
     echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.profile && \
