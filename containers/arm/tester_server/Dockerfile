@@ -41,7 +41,7 @@ RUN echo -e "export S3_BUCKET_NAME=colab-dev" >> ~/.bashrc &&\
 
 RUN git config --global pull.rebase false &&\
   git config --global push.autoSetupRemote true &&\
-  git config --global branch.autoSetupMerge simple
+  git config --global branch.autoSetupMerge true
 
 RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0 &&\
     echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.bashrc && \
