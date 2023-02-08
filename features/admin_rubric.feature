@@ -147,6 +147,7 @@ Feature: Rubric administration
      And the rubric parent is "Ruby 1" "Version" 1
      And the rubric "is not" published
 
+  @javascript
   Scenario: Instructor adds a row to their unpublished rubric
      And the "Trojan War Diorama" rubric has 5 criteria
     Then the user searches for "Trojan"
@@ -175,6 +176,7 @@ Feature: Rubric administration
      And the rubric criteria 6 weight is 30
 
 
+  @javascript
   Scenario: Instructor removes a row from their unpublished rubric
      And the "Trojan War Diorama" rubric has 5 criteria
     Then retrieve the "Trojan War Diorama" rubric from the db
@@ -189,6 +191,7 @@ Feature: Rubric administration
     Then retrieve the "Trojan War Diorama" rubric from the db
      And criteria 2 matches the remembered criteria
 
+  @javascript
   Scenario: Instructor modifies their unpublished rubric
      And the "Trojan War Diorama" rubric has 5 criteria
     Then retrieve the "Trojan War Diorama" rubric from the db
@@ -210,16 +213,19 @@ Feature: Rubric administration
      And the rubric criteria 4 level 4 is "super duper level 4"
      And the rubric criteria 4 level 5 is "super duper level 5"
 
+  @javascript
   Scenario: Admin deletes an unpublished rubric
    Given the user is an admin
     Then the user searches for "Ruby 1"
     Then the user deletes the rubric
 
+  @javascript
   Scenario: Admin cannot delete a rubric that is in published
    Given the user is an admin
     Then the user searches for "Ruby 1"
      And the user can not 'delete' the rubric
 
+  @javascript
   Scenario: Instructor cannot modify a published rubric
     Then the user searches for "Trojan"
      And the user can not 'delete' the rubric

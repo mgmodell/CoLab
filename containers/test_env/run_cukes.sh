@@ -5,7 +5,7 @@ echo "Setting the current working directory"
 . $HOME/.asdf/asdf.sh
 cd $HOME/src/app
 
-git pull
+git pull --all
 asdf reshim
 
 print_help ( ) {

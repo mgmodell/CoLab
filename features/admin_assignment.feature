@@ -22,6 +22,7 @@ Feature: Assignment administration
     Then the user sees 1 course
     Then the user opens the course
 
+  @javascript
   Scenario: Instructor creates a new assignment
     Then the user sees 1 course
     Then the user switches to the "Activities" tab
@@ -41,6 +42,7 @@ Feature: Assignment administration
      And the assignment "is not" active
      And the assignment "is not" group capable
 
+  @javascript
   Scenario: Instructor creates a group-capable assignment
     Then the user sees 1 course
     Then the user switches to the "Activities" tab
@@ -64,6 +66,7 @@ Feature: Assignment administration
      And the assignment project is the course's project
 
 
+  @javascript
   Scenario: Instructor activates an assignment
     Then the user sees 1 course
     Then the user switches to the "Activities" tab
@@ -75,6 +78,7 @@ Feature: Assignment administration
     Then retrieve the "latest" assignment from the db
      And the assignment "is" active
 
+  @javascript
   Scenario: Instructor makes an assignment group-capable
     Then the user sees 1 course
     Then the user switches to the "Activities" tab
@@ -89,6 +93,7 @@ Feature: Assignment administration
      And the assignment project is the course's project
      And the assignment "is not" active
 
+  @javascript
   Scenario: Instructor assigns their own rubric to an assignment
     Given the user has one rubric named "Pie in the Sky"
     Then the user sees 1 course
@@ -101,6 +106,7 @@ Feature: Assignment administration
     Then retrieve the "Sack Troy" assignment from the db
      And the assignment rubric is "Pie in the Sky"
 
+  @javascript
   Scenario: Instructor assigns a new rubric to a new assignment
     Then the user sees 1 course
     Then the user switches to the "Activities" tab
@@ -120,6 +126,7 @@ Feature: Assignment administration
      And the assignment "Name" field is "Term Paper"
      And the assignment rubric is "Sky in the Pie"
 
+  @javascript
   Scenario: Instructor assigns a new rubric to an existing assignment
     Then the user sees 1 course
     Then the user switches to the "Activities" tab
@@ -134,6 +141,7 @@ Feature: Assignment administration
     Then retrieve the "Sack Troy" assignment from the db
      And the assignment rubric is "Sky in the Pie"
 
+  @javascript
   Scenario: Instructor assigns a published rubric to an assignment
     Then the user sees 1 course
     Then the user switches to the "Activities" tab
@@ -145,6 +153,7 @@ Feature: Assignment administration
     Then retrieve the "Sack Troy" assignment from the db
      And the assignment rubric is "Ruby 4"
 
+  @javascript
   Scenario: Instructor sets the deadlines for an assignment
     Then the user sees 1 course
     Then the user switches to the "Activities" tab
@@ -156,6 +165,7 @@ Feature: Assignment administration
     Then retrieve the "Sack Troy" assignment from the db
      And the assignment "close" field is "6/9/2000"
 
+  @javascript
   Scenario: Instructor sets an assignment to be group-capable
     Then the user sees 1 course
     Then the user switches to the "Activities" tab
