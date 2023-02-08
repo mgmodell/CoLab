@@ -76,9 +76,6 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'bullet'
   gem 'byebug'
-  gem 'cucumber-rails', require: false
-  gem 'capybara'
-  gem 'database_cleaner'
   gem 'derailed'
   # gem 'ruby-debug-ide'
   # gem 'debase'
@@ -97,13 +94,16 @@ group :development, :test do
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
-  gem 'selenium-webdriver'
   gem 'solargraph'
-  gem 'webdrivers', '~> 5.0', require: false
 end
 
 group :test do
   gem 'simplecov', require: false
+  gem 'webdrivers', '~> 5.0', require: false
+  gem 'selenium-webdriver'
+  gem 'cucumber-rails', require: false
+  gem 'capybara'
+  gem 'database_cleaner'
 end
 
 group :development do
