@@ -37,7 +37,7 @@ RUN_TERM=false
 SHOW_OUTPUT=false
 DROP_SUPPORT=false
 RUN=false
-while getopts "soxb:clndfrteh" opt; do
+while getopts "soxb:clndf:rteh" opt; do
   case $opt in
     x) # Open up a terminal
       RUN=false
