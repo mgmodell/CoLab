@@ -358,7 +358,7 @@ class CoursesController < ApplicationController
   def new_from_template
     new_start = Chronic.parse(params[:start_date])
 
-    copied_course = @course.copy_from_template new_start: new_start
+    copied_course = @course.copy_from_template(new_start:)
     respond_to do |format|
       format.json do
         notice = copied_course.errors.empty? ? t('courses.copy_success') : t('courses.copy_fail')

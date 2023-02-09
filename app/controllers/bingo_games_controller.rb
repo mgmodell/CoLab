@@ -25,7 +25,7 @@ class BingoGamesController < ApplicationController
     respond_to do |format|
       format.html { render :show }
       format.json do
-        resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
+        resp = bingo_responder(bingo_game: @bingo_game, current_user:)
         render json: resp
       end
     end
@@ -104,7 +104,7 @@ class BingoGamesController < ApplicationController
        candidate_lists: [{ candidates: %i[concept candidate_feedback] }, group: :users],
        bingo_boards: [:user, { bingo_cells: :candidate }]]
     ).find_by(id: params[:id])
-    check_editor bingo_game: bingo_game
+    check_editor(bingo_game:)
     anon = current_user.anonymize?
     resp = {}
     # Get the users
@@ -240,7 +240,7 @@ class BingoGamesController < ApplicationController
     @bingo_game.end_date = @bingo_game.course.end_date
     respond_to do |format|
       format.json do
-        resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
+        resp = bingo_responder(bingo_game: @bingo_game, current_user:)
         render json: resp
       end
     end
@@ -252,7 +252,7 @@ class BingoGamesController < ApplicationController
       respond_to do |format|
         @title = t 'bingo_games.new.title'
         format.json do
-          resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
+          resp = bingo_responder(bingo_game: @bingo_game, current_user:)
           resp[:messages] = { status: t('bingo_games.create_success') }
           render json: resp
         end
@@ -260,7 +260,7 @@ class BingoGamesController < ApplicationController
     else
       respond_to do |format|
         format.json do
-          resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
+          resp = bingo_responder(bingo_game: @bingo_game, current_user:)
           resp[:messages] = @bingo_game.errors
           render json: resp
         end
@@ -275,7 +275,7 @@ class BingoGamesController < ApplicationController
     respond_to do |format|
       format.json do
         if @bingo_game.errors.empty?
-          resp = bingo_responder bingo_game: @bingo_game, current_user: current_user
+          resp = bingo_responder(bingo_game: @bingo_game, current_user:)
           resp[:notice] = 'Game saved successfully!'
           resp[:messages] = {}
           render json: resp
@@ -563,7 +563,7 @@ class BingoGamesController < ApplicationController
 
   def activate
     bingo_game = BingoGame.find(params[:bingo_game_id])
-    check_editor bingo_game: bingo_game
+    check_editor(bingo_game:)
     if current_user.is_admin? ||
        bingo_game.course.get_roster_for_user(current_user).role.code == 'inst'
       bingo_game.active = true

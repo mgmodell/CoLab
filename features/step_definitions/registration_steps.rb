@@ -87,10 +87,9 @@ When(/^the new user registers$/) do
   fill_in 'first_name', with: Faker::Name.first_name
   fill_in 'first_name', with: Faker::Name.last_name
 
-
   click_button 'Sign me up!'
   wait_for_render
-  email = Email.where email: email
+  email = Email.where(email:)
   expect(email.size).to eq(1)
   @user = email[0].user
   expect(@user).to be
