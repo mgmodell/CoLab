@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
 
 import { useTranslation } from "react-i18next";
-import {useDispatch} from 'react-redux';
-import {startTask, endTask} from '../infrastructure/StatusSlice';
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
@@ -17,11 +17,15 @@ import axios from "axios";
 export default function ConsentLog(props) {
   const { t } = useTranslation("consent_logs");
   const endpointSet = "consent_log";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet])
-  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
-  const {consentFormId} = useParams( );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const { consentFormId } = useParams();
 
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
   const [logId, setLogId] = useState();
   const [formName, setFormName] = useState("");
   const [formText, setFormText] = useState("");
@@ -32,10 +36,11 @@ export default function ConsentLog(props) {
 
   const getLog = () => {
     var url =
-      endpoints['baseUrl'] + (consentFormId || props.consentFormId ) + ".json";
+      endpoints["baseUrl"] + (consentFormId || props.consentFormId) + ".json";
 
-    dispatch( startTask("loading") );
-    axios.get( url, { } )
+    dispatch(startTask("loading"));
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         //Process the data
@@ -47,24 +52,23 @@ export default function ConsentLog(props) {
         setFormPresented(data.consent_log.presented);
         setLogLastUpdated(new Date(data.consent_log.updatedAt));
 
-        dispatch( endTask("loading") );
+        dispatch(endTask("loading"));
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
 
   const updateLog = () => {
-    var url =
-      endpoints['consentLogSaveUrl'] + logId + ".json";
-    dispatch( startTask("saving") );
+    var url = endpoints["consentLogSaveUrl"] + logId + ".json";
+    dispatch(startTask("saving"));
 
-
-    axios.patch( url, {
+    axios
+      .patch(url, {
         consent_log: {
           accepted: formAccepted
         }
-    })
+      })
       .then(response => {
         const data = response.data;
         //Process the data
@@ -75,15 +79,15 @@ export default function ConsentLog(props) {
           history.back();
         }
 
-        dispatch( endTask("saving") );
+        dispatch(endTask("saving"));
       })
-      .catch( error =>{
-        console.log( 'error', error )
+      .catch(error => {
+        console.log("error", error);
       });
   };
 
   useEffect(() => {
-    if (endpointStatus ){
+    if (endpointStatus) {
       getLog();
     }
   }, [endpointStatus]);

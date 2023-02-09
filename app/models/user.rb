@@ -139,7 +139,7 @@ class User < ApplicationRecord
   end
 
   def active_for_authentication?
-    super && self.active?
+    super && active?
   end
 
   def waiting_instructor_tasks

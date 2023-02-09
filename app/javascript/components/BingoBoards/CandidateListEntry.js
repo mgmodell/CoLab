@@ -7,32 +7,38 @@ import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 
-import { Settings } from 'luxon';
+import { Settings } from "luxon";
 
 import { useTranslation } from "react-i18next";
-import {useDispatch} from 'react-redux';
-import {startTask, endTask} from '../infrastructure/StatusSlice';
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 
 export default function CandidateListEntry(props) {
   const endpointSet = "candidate_list";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
-  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
-  const user = useTypedSelector(state=>state.profile.user)
-  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const user = useTypedSelector(state => state.profile.user);
+  const tz_hash = useTypedSelector(
+    state => state.context.lookups.timezone_lookup
+  );
   const { t, i18n } = useTranslation("candidate_lists");
 
-  const { bingoGameId } = useParams( );
+  const { bingoGameId } = useParams();
 
   const [dirty, setDirty] = useState(false);
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
@@ -50,13 +56,15 @@ export default function CandidateListEntry(props) {
   const [requestCollaborationUrl, setRequestCollaborationUrl] = useState("");
 
   const getCandidateList = () => {
-    dispatch( startTask() );
+    dispatch(startTask());
     setDirty(true);
-    const url = props.rootPath === undefined ?
-      `${endpoints.baseUrl}${bingoGameId}.json` :
-      `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
+    const url =
+      props.rootPath === undefined
+        ? `${endpoints.baseUrl}${bingoGameId}.json`
+        : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
 
-    axios.get( url, { } )
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         setCandidateListId(data.id);
@@ -73,11 +81,11 @@ export default function CandidateListEntry(props) {
         setHelpRequested(data.help_requested);
         setRequestCollaborationUrl(data.request_collaboration_url);
 
-        dispatch( endTask() );
+        dispatch(endTask());
         setDirty(false);
       })
-      .catch( error => {
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
   const prepCandidates = (candidates, expectedCount) => {
@@ -109,21 +117,20 @@ export default function CandidateListEntry(props) {
   };
 
   const saveCandidateList = () => {
-    dispatch( startTask("saving") );
+    dispatch(startTask("saving"));
 
-    const url =
-      endpoints.baseUrl + bingoGameId + ".json";
+    const url = endpoints.baseUrl + bingoGameId + ".json";
 
-    axios.put( url, {
+    axios
+      .put(url, {
         candidates: candidates.filter(item => {
           return !(
             null === item.id &&
             "" === item.term &&
             "" === item.definition
           );
+        })
       })
-
-    })
       .then(response => {
         const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
@@ -138,29 +145,28 @@ export default function CandidateListEntry(props) {
           setShowErrors(true);
           setDirty(false);
           setMessages(data.messages);
-          dispatch( endTask("saving") );
+          dispatch(endTask("saving"));
         } else {
           setShowErrors(true);
           setMessages(data.messages);
-          dispatch( endTask("saving") );
+          dispatch(endTask("saving"));
         }
       })
-      .catch(error=>{
-          console.log("error", error);
-          dispatch( endTask("saving") );
-
+      .catch(error => {
+        console.log("error", error);
+        dispatch(endTask("saving"));
       });
   };
 
   useEffect(() => {
-    if (endpointStatus){
+    if (endpointStatus) {
       getCandidateList();
     }
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash ) {
-      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
+    if (null !== user.lastRetrieved && null !== tz_hash) {
+      Settings.defaultZoneName = tz_hash[user.timezone];
     }
   }, [user.lastRetrieved, tz_hash]);
 
@@ -173,9 +179,10 @@ export default function CandidateListEntry(props) {
   ) : null;
 
   const colabResponse = decision => {
-    dispatch( startTask("updating") );
+    dispatch(startTask("updating"));
     const url = `${requestCollaborationUrl}${decision}.json`;
-    axios.get( url, { } )
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         setCandidateListId(data.id);
@@ -186,11 +193,11 @@ export default function CandidateListEntry(props) {
         setHelpRequested(data.help_requested);
         setOthersRequestedHelp(data.others_requested_help);
         setDirty(false);
-        dispatch( endTask("updating") );
+        dispatch(endTask("updating"));
       })
-      .catch( error =>{
-          console.log("error", error );
-          dispatch( endTask("updating") );
+      .catch(error => {
+        console.log("error", error);
+        dispatch(endTask("updating"));
       });
   };
 

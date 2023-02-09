@@ -40,6 +40,7 @@ if [ "$#" -lt 1 ]; then
 fi
 
 DRIVER=docker
+WD_INSTALL_DIR=$HOME/src/app/.webdrivers
 SHOW_FAILS=false
 DB_RESET=false
 CLEAR_LOG=false

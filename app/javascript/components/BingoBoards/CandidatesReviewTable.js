@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {useDispatch} from 'react-redux';
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 import Checkbox from "@mui/material/Checkbox";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -17,11 +17,10 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
 import { useTranslation } from "react-i18next";
-const RemoteAutosuggest = React.lazy( () =>
-  import( "../RemoteAutosuggest" ));
+const RemoteAutosuggest = React.lazy(() => import("../RemoteAutosuggest"));
 import MUIDataTable from "mui-datatables";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import {startTask, endTask} from '../infrastructure/StatusSlice'
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
@@ -29,9 +28,13 @@ import WorkingIndicator from "../infrastructure/WorkingIndicator";
 export default function CandidatesReviewTable(props) {
   const { t } = useTranslation("bingo_games");
   const endpointSet = "candidate_review";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
-  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
-  const {bingoGameId } = useParams( );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const { bingoGameId } = useParams();
 
   const [candidates, setCandidates] = useState([]);
   const [candidateLists, setCandidateLists] = useState([]);
@@ -47,7 +50,7 @@ export default function CandidatesReviewTable(props) {
   const [uniqueConcepts, setUniqueConcepts] = useState(0);
   const [acceptableUniqueConcepts, setAcceptableUniqueConcepts] = useState(0);
 
-  const dispatch = useDispatch( )
+  const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
@@ -173,7 +176,7 @@ export default function CandidatesReviewTable(props) {
   const review_complete_lbl = "Review completed";
 
   useEffect(() => {
-    if ( endpointStatus ) {
+    if (endpointStatus) {
       getData();
     }
   }, [endpointStatus]);
@@ -225,14 +228,16 @@ export default function CandidatesReviewTable(props) {
   };
 
   const getData = () => {
-    dispatch(startTask() );
+    dispatch(startTask());
     setReviewStatus("Loading data");
 
-    const url = props.rootPath === undefined ?
-      `${endpoints.baseUrl}${bingoGameId}.json` :
-      `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
+    const url =
+      props.rootPath === undefined
+        ? `${endpoints.baseUrl}${bingoGameId}.json`
+        : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
 
-    axios.get( url, { } )
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         // Add a non-response for the UI
@@ -264,38 +269,38 @@ export default function CandidatesReviewTable(props) {
 
         setReviewStatus("Data loaded");
         setDirty(false);
-        dispatch( endTask() );
+        dispatch(endTask());
         updateProgress();
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
   // conceptStats() {}
   const saveFeedback = () => {
     setDirty(false);
-    dispatch( startTask("saving") );
+    dispatch(startTask("saving"));
     setReviewStatus("Saving feedback.");
 
-    const url = `${endpoints.reviewSaveUrl}${ bingoGameId }.json`;
+    const url = `${endpoints.reviewSaveUrl}${bingoGameId}.json`;
 
-    axios.patch( url, {
-          candidates: candidates.filter(c => 0 < c.completed),
-          reviewed: reviewComplete
-    })
+    axios
+      .patch(url, {
+        candidates: candidates.filter(c => 0 < c.completed),
+        reviewed: reviewComplete
+      })
       .then(response => {
         const data = response.data;
         setDirty(typeof data.success !== "undefined");
-        dispatch( endTask("saving") );
+        dispatch(endTask("saving"));
         setReviewStatus(data.notice);
       })
-      .catch( error =>{
-          const fail_data = new Object();
-          fail_data.notice = "The operation failed";
-          fail_data.success = false;
-          console.log("error");
-          return fail_data;
-
+      .catch(error => {
+        const fail_data = new Object();
+        fail_data.notice = "The operation failed";
+        fail_data.success = false;
+        console.log("error");
+        return fail_data;
       });
   };
 

@@ -24,13 +24,11 @@ def wait_for_render
 end
 
 def ack_messages
-  begin
-    retries ||= 3
-    all(:xpath, "//button[@id='info-close']", visible: true).each(&:click)
-  rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
-    (retries += 1).should be < 10, 'Too many ack retries'
-    retry unless retries > 5
-  end
+  retries ||= 3
+  all(:xpath, "//button[@id='info-close']", visible: true).each(&:click)
+rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+  (retries += 1).should be < 10, 'Too many ack retries'
+  retry unless retries > 5
 end
 
 Capybara.register_driver :headless_firefox do |app|
@@ -64,21 +62,25 @@ end
 
 Capybara.register_driver(:remote_chrome) do |app|
 
+  options = Selenium::WebDriver::Chrome::Options.new
+
   Capybara::Selenium::Driver.new(
     app,
-    browser: :chrome,
+    browser: :remote,
+    url: 'http://browser:4444/wd/hub',
+    options: options,
   )
 end
 
 Capybara.register_driver(:headless_chrome) do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[headless disable-extensions] }
-  )
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument( "--headless" )
+  options.add_argument( "--disable-extensions" )
 
   Capybara::Selenium::Driver.new(
     app,
-    browser: :chrome
-    # desired_capabilities: capabilities
+    browser: :chrome,
+    options: :options,
   )
 end
 

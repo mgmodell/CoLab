@@ -1,1 +1,1 @@
-export {curveMonotoneX as default } from "@visx/curve";
+export { curveMonotoneX as default } from "@visx/curve";

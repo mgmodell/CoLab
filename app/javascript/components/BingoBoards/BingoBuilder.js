@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {useDispatch} from 'react-redux';
+import { useDispatch } from "react-redux";
 import BingoBoard from "./BingoBoard";
 import ConceptChips from "./ConceptChips";
 import ScoredGameDataTable from "./ScoredGameDataTable";
@@ -13,23 +13,23 @@ import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 
-import { startTask, endTask } from '../infrastructure/StatusSlice';
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
-import {
-  TabContext,
-  TabList,
-  TabPanel
-} from "@mui/lab";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 export default function BingoBuilder(props) {
   const endpointSet = "candidate_results";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[endpointSet]);
-  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
-  const {bingoGameId} = useParams( );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const { bingoGameId } = useParams();
   const { t, i18n } = useTranslation();
 
-  const dispatch = useDispatch()
-  
+  const dispatch = useDispatch();
+
   const [curTab, setCurTab] = useState("builder");
 
   const [saveStatus, setSaveStatus] = useState("");
@@ -48,7 +48,7 @@ export default function BingoBuilder(props) {
   });
 
   useEffect(() => {
-    if (endpointStatus ){
+    if (endpointStatus) {
       getConcepts();
       getMyResults();
       getBoard();
@@ -96,70 +96,77 @@ export default function BingoBuilder(props) {
   };
 
   const getConcepts = () => {
-    dispatch( startTask());
+    dispatch(startTask());
 
-    const url = props.rootPath === undefined ?
-      `${endpoints.conceptsUrl}${bingoGameId}.json` :
-      `/${props.rootPath}${endpoints.conceptsUrl}${bingoGameId}.json`;
+    const url =
+      props.rootPath === undefined
+        ? `${endpoints.conceptsUrl}${bingoGameId}.json`
+        : `/${props.rootPath}${endpoints.conceptsUrl}${bingoGameId}.json`;
 
-    axios.get( url, { } )
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         setConcepts(data);
-        dispatch( endTask() );
+        dispatch(endTask());
       })
-      .catch( error =>{
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
+      .catch(error => {
+        console.log("error");
+        return [{ id: -1, name: "no data" }];
       });
   };
 
   const getMyResults = () => {
-    dispatch( startTask() );
-    const url = props.rootPath === undefined ?
-      `${endpoints.baseUrl}${bingoGameId}.json` :
-      `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
-    axios.get( url, { } )
+    dispatch(startTask());
+    const url =
+      props.rootPath === undefined
+        ? `${endpoints.baseUrl}${bingoGameId}.json`
+        : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         setCandidateList(data.candidate_list);
         setCandidates(data.candidates);
         //}, this.randomizeTiles );
-        dispatch( endTask());
+        dispatch(endTask());
       })
-      .catch( error =>{
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
+      .catch(error => {
+        console.log("error");
+        return [{ id: -1, name: "no data" }];
       });
   };
   const getBoard = () => {
-    dispatch( startTask());
-    const url = props.rootPath === undefined ?
-      `${endpoints.boardUrl}${bingoGameId}.json` :
-      `/${props.rootPath}${endpoints.boardUrl}${bingoGameId}.json`;
-    axios.get( url, { } )
+    dispatch(startTask());
+    const url =
+      props.rootPath === undefined
+        ? `${endpoints.boardUrl}${bingoGameId}.json`
+        : `/${props.rootPath}${endpoints.boardUrl}${bingoGameId}.json`;
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         data.initialised = data.id != null;
         data.iteration = 0;
         setBoard(data);
         //}, this.randomizeTiles );
-        dispatch( endTask());
+        dispatch(endTask());
       })
-      .catch( error =>{
-          console.log("error");
-          return [{ id: -1, name: "no data" }];
+      .catch(error => {
+        console.log("error");
+        return [{ id: -1, name: "no data" }];
       });
   };
 
   const saveBoard = () => {
-    dispatch( startTask("saving"));
+    dispatch(startTask("saving"));
     board.bingo_cells_attributes = board.bingo_cells;
     delete board.bingo_cells;
     const url = `${endpoints.boardUrl}${bingoGameId}.json`;
-    axios.patch( url, {
-      bingo_board: board
-    })
+    axios
+      .patch(url, {
+        bingo_board: board
+      })
       .then(response => {
         const data = response.data;
         data.initialised = true;
@@ -178,10 +185,10 @@ export default function BingoBuilder(props) {
           setSaveStatus("Save failed. Please try again or contact support");
           setBoard(board);
         }
-        dispatch( endTask("saving") );
+        dispatch(endTask("saving"));
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
   const getWorksheet = () => {
@@ -263,85 +270,80 @@ export default function BingoBuilder(props) {
   ) : null;
 
   return (
-      <Paper>
+    <Paper>
+      <Typography>
+        <strong>Topic:</strong> {board.bingo_game.topic}
+      </Typography>
+      <div>
+        <strong>Description:</strong>{" "}
+        <p
+          dangerouslySetInnerHTML={{
+            __html: board.bingo_game.description
+          }}
+        />
+      </div>
+      {null != candidateList && (
         <Typography>
-          <strong>Topic:</strong> {board.bingo_game.topic}
+          <strong>Performance:</strong>
+          <span id="performance">{candidateList.performance}</span>
         </Typography>
-        <div>
-          <strong>Description:</strong>{" "}
-          <p
-            dangerouslySetInnerHTML={{
-              __html: board.bingo_game.description
-            }}
-          />
-        </div>
-        {null != candidateList && (
-          <Typography>
-            <strong>Performance:</strong>
-            <span id="performance">{candidateList.performance}</span>
-          </Typography>
-        )}
-        <hr />
-        <TabContext value={curTab} >
-          <TabList
-            value={curTab}
-            onChange={(event, value) => setCurTab(value)}
-            centered
-          >
-            <Tab value="builder" label="Bingo game builder" />
-            <Tab value="results" label="Your performance" />
-            <Tab
-              value="worksheet"
-              label="Worksheet result"
-              disabled={
-                !board.practicable ||
-                null == board.worksheet ||
-                (null == board.worksheet.performance &&
-                  null == board.worksheet.result_img)
-              }
-            />
-            <Tab value="concepts" label="Concepts found by class" />
-          </TabList>
-          <TabPanel value="worksheet">
-            { null != board.worksheet ?
-              (
-              <Paper square={false}>
-                <Typography>
-                  <strong>Score:</strong>&nbsp;
-                  { board.worksheet.performance || 0 }
-                  <br />
-                </Typography>
-                {
-                  null != board.worksheet.result_img && '' != board.worksheet.result_img ?
-                  (
-                    <img src={board.worksheet.result_img} />
-                  ) : null
-                }
-              </Paper>
-              ) : 'No Worksheet'
+      )}
+      <hr />
+      <TabContext value={curTab}>
+        <TabList
+          value={curTab}
+          onChange={(event, value) => setCurTab(value)}
+          centered
+        >
+          <Tab value="builder" label="Bingo game builder" />
+          <Tab value="results" label="Your performance" />
+          <Tab
+            value="worksheet"
+            label="Worksheet result"
+            disabled={
+              !board.practicable ||
+              null == board.worksheet ||
+              (null == board.worksheet.performance &&
+                null == board.worksheet.result_img)
             }
-
-          </TabPanel>
-          <TabPanel value="builder">
+          />
+          <Tab value="concepts" label="Concepts found by class" />
+        </TabList>
+        <TabPanel value="worksheet">
+          {null != board.worksheet ? (
             <Paper square={false}>
-              <br />
-              <ol>
-                {workSheetInstr}
-                {playableInstr}
-              </ol>
-              {builder}
+              <Typography>
+                <strong>Score:</strong>&nbsp;
+                {board.worksheet.performance || 0}
+                <br />
+              </Typography>
+              {null != board.worksheet.result_img &&
+              "" != board.worksheet.result_img ? (
+                <img src={board.worksheet.result_img} />
+              ) : null}
             </Paper>
-
-          </TabPanel>
-          <TabPanel value="results">
-            <ScoredGameDataTable candidates={candidates} />
-          </TabPanel>
-          <TabPanel value="concepts">
-            <ConceptChips concepts={concepts} />
-          </TabPanel>
-
-        </TabContext>
-      </Paper>
+          ) : (
+            "No Worksheet"
+          )}
+        </TabPanel>
+        <TabPanel value="builder">
+          <Paper square={false}>
+            <br />
+            <ol>
+              {workSheetInstr}
+              {playableInstr}
+            </ol>
+            {builder}
+          </Paper>
+        </TabPanel>
+        <TabPanel value="results">
+          <ScoredGameDataTable candidates={candidates} />
+        </TabPanel>
+        <TabPanel value="concepts">
+          <ConceptChips concepts={concepts} />
+        </TabPanel>
+      </TabContext>
+    </Paper>
   );
 }
 BingoBuilder.propTypes = {

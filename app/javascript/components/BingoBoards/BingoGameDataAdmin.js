@@ -1,8 +1,8 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {useDispatch} from 'react-redux';
+import { useDispatch } from "react-redux";
 import Paper from "@mui/material/Paper";
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -15,38 +15,31 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 
-import Skeleton from '@mui/material/Skeleton';
+import Skeleton from "@mui/material/Skeleton";
 
-import {
-  DatePicker,
-  LocalizationProvider
-} from '@mui/x-date-pickers';
-import {
-  TabContext,
-  TabList,
-  TabPanel
-} from "@mui/lab/";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { TabContext, TabList, TabPanel } from "@mui/lab/";
 
 import { DateTime } from "luxon";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
-const Editor = React.lazy( () =>
-  import('./reactDraftWysiwygEditor' ) );
+const Editor = React.lazy(() => import("./reactDraftWysiwygEditor"));
 
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
 import { useTranslation } from "react-i18next";
 
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 
-import ConceptChips from "./ConceptChips";
-const BingoGameDataAdminTable = React.lazy( () =>
-  import( "./BingoGameDataAdminTable" ));
+import ConceptChips from "../ConceptChips";
+const BingoGameDataAdminTable = React.lazy(() =>
+  import("./BingoGameDataAdminTable")
+);
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import {startTask, endTask} from '../infrastructure/StatusSlice';
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 
 const useStyles = makeStyles({
@@ -69,11 +62,15 @@ export default function BingoGameDataAdmin(props) {
   const classes = useStyles();
 
   const endpointSet = "bingo_game";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[ endpointSet ] );
-  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded );
-  const user = useTypedSelector(state=>state.profile.user);
-  const {courseIdParam, bingoGameIdParam } = useParams( );
-  const dispatch = useDispatch( );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[endpointSet]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const user = useTypedSelector(state => state.profile.user);
+  const { courseIdParam, bingoGameIdParam } = useParams();
+  const dispatch = useDispatch();
 
   const { t, i18n } = useTranslation("bingo_games");
 
@@ -92,7 +89,9 @@ export default function BingoGameDataAdmin(props) {
       ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
     )
   );
-  const [bingoGameId, setBingoGameId] = useState( 'new' === bingoGameIdParam ? null : bingoGameIdParam );
+  const [bingoGameId, setBingoGameId] = useState(
+    "new" === bingoGameIdParam ? null : bingoGameIdParam
+  );
   const [gameSource, setGameSource] = useState("");
   const [gameTimezone, setGameTimezone] = useState("UTC");
   const [gameActive, setGameActive] = useState(false);
@@ -112,7 +111,7 @@ export default function BingoGameDataAdmin(props) {
   const [gameGroupProjectId, setGameGroupProjectId] = useState(-1);
 
   useEffect(() => {
-    if (endpointStatus ){
+    if (endpointStatus) {
       getBingoGameData();
       initResultData();
     }
@@ -137,7 +136,7 @@ export default function BingoGameDataAdmin(props) {
 
   const saveBingoGame = () => {
     const method = null === bingoGameId ? "POST" : "PATCH";
-    dispatch( startTask("saving") );
+    dispatch(startTask("saving"));
 
     const url =
       endpoints.baseUrl +
@@ -167,7 +166,6 @@ export default function BingoGameDataAdmin(props) {
           group_discount: gameGroupDiscount,
           project_id: gameGroupProjectId
         }
-
       }
     })
       .then(response => {
@@ -176,41 +174,43 @@ export default function BingoGameDataAdmin(props) {
         setSaveStatus(data["notice"]);
         setDirty(false);
         setMessages(data["messages"]);
-        dispatch( endTask("saving") );
+        dispatch(endTask("saving"));
 
         getBingoGameData();
       })
-      .catch( error=>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
 
   const initResultData = () => {
     if (bingoGameId > 0) {
-      dispatch( startTask( ));
+      dispatch(startTask());
       const url = endpoints.gameResultsUrl + "/" + bingoGameId + ".json";
-      axios.get( url, { } )
+      axios
+        .get(url, {})
         .then(response => {
           const data = response.data;
           setResultData(data);
-          dispatch( endTask() );
+          dispatch(endTask());
         })
-        .catch( error=>{
-          console.log( 'error', error );
+        .catch(error => {
+          console.log("error", error);
         });
     }
   };
 
   const getBingoGameData = () => {
     setDirty(true);
-    dispatch( startTask( ));
+    dispatch(startTask());
     var url = endpoints.baseUrl + "/";
     if (null === bingoGameId) {
       url = url + "new/" + courseIdParam + ".json";
     } else {
       url = url + bingoGameId + ".json";
     }
-    axios.get( url, { } )
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         const projects = new Array({ id: -1, name: "None Selected" }).concat(
@@ -249,11 +249,11 @@ export default function BingoGameDataAdmin(props) {
         setGameGroupDiscount(bingo_game.group_discount || 0);
         setGameGroupProjectId(bingo_game.project_id);
         setDirty(false);
-        dispatch( endTask() );
+        dispatch(endTask());
       })
-      .catch( error=>{
-          console.log("error", error);
-          return [{ id: -1, name: "no data" }];
+      .catch(error => {
+        console.log("error", error);
+        return [{ id: -1, name: "no data" }];
       });
   };
 
@@ -323,171 +323,173 @@ export default function BingoGameDataAdmin(props) {
   return (
     <Suspense fallback={<Skeleton variant="text" />}>
       <Paper style={{ height: "95%", width: "100%" }}>
-        <TabContext value={curTab} >
+        <TabContext value={curTab}>
           <Box>
-
             <TabList value={curTab} onChange={changeTab} centered>
               <Tab value="details" label={t("game_details_pnl")} />
               <Tab value="results" label={t("response_pnl")} />
             </TabList>
           </Box>
-          <TabPanel value='details'>
-          <React.Fragment>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  id="topic"
-                  label={t("topic")}
-                  className={classes.textField}
-                  value={gameTopic}
-                  fullWidth
-                  onChange={event => setGameTopic(event.target.value)}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Editor
-                  wrapperId="Description"
-                  label={t("description")}
-                  placeholder={t("description")}
-                  onEditorStateChange={setGameDescriptionEditor}
-                  toolbarOnFocus
-                  toolbar={{
-                    options: [
-                      "inline",
-                      "list",
-                      "link",
-                      "blockType",
-                      "fontSize",
-                      "fontFamily"
-                    ],
-                    inline: {
+          <TabPanel value="details">
+            <React.Fragment>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <TextField
+                    id="topic"
+                    label={t("topic")}
+                    className={classes.textField}
+                    value={gameTopic}
+                    fullWidth
+                    onChange={event => setGameTopic(event.target.value)}
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Editor
+                    wrapperId="Description"
+                    label={t("description")}
+                    placeholder={t("description")}
+                    onEditorStateChange={setGameDescriptionEditor}
+                    toolbarOnFocus
+                    toolbar={{
                       options: [
-                        "bold",
-                        "italic",
-                        "underline",
-                        "strikethrough",
-                        "monospace"
+                        "inline",
+                        "list",
+                        "link",
+                        "blockType",
+                        "fontSize",
+                        "fontFamily"
                       ],
-                      bold: { className: "bordered-option-classname" },
-                      italic: { className: "bordered-option-classname" },
-                      underline: { className: "bordered-option-classname" },
-                      strikethrough: { className: "bordered-option-classname" },
-                      code: { className: "bordered-option-classname" }
-                    },
-                    blockType: {
-                      className: "bordered-option-classname"
-                    },
-                    fontSize: {
-                      className: "bordered-option-classname"
-                    },
-                    fontFamily: {
-                      className: "bordered-option-classname"
+                      inline: {
+                        options: [
+                          "bold",
+                          "italic",
+                          "underline",
+                          "strikethrough",
+                          "monospace"
+                        ],
+                        bold: { className: "bordered-option-classname" },
+                        italic: { className: "bordered-option-classname" },
+                        underline: { className: "bordered-option-classname" },
+                        strikethrough: {
+                          className: "bordered-option-classname"
+                        },
+                        code: { className: "bordered-option-classname" }
+                      },
+                      blockType: {
+                        className: "bordered-option-classname"
+                      },
+                      fontSize: {
+                        className: "bordered-option-classname"
+                      },
+                      fontFamily: {
+                        className: "bordered-option-classname"
+                      }
+                    }}
+                    editorState={gameDescriptionEditor}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    id="bingo-lead-time"
+                    label={t("lead_time")}
+                    className={classes.lead_time}
+                    value={gameLeadTime}
+                    type="number"
+                    onChange={event => setGameLeadTime(event.target.value)}
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    id="bingo-individual_count"
+                    label={t("ind_term_count")}
+                    className={classes.textField}
+                    value={gameIndividualCount}
+                    type="number"
+                    onChange={event =>
+                      setGameIndividualCount(event.target.value)
                     }
-                  }}
-                  editorState={gameDescriptionEditor}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="bingo-lead-time"
-                  label={t("lead_time")}
-                  className={classes.lead_time}
-                  value={gameLeadTime}
-                  type="number"
-                  onChange={event => setGameLeadTime(event.target.value)}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="bingo-individual_count"
-                  label={t("ind_term_count")}
-                  className={classes.textField}
-                  value={gameIndividualCount}
-                  type="number"
-                  onChange={event => setGameIndividualCount(event.target.value)}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  margin="normal"
-                  error={null != messages.individual_count}
-                  helperText={messages.individual_count}
-                />
-              </Grid>
-              <LocalizationProvider dateAdapter={AdapterLuxon}>
-                <Grid item xs={4}>
-                  <DatePicker
-                    variant="inline"
-                    autoOk={true}
-                    inputFormat="MM/dd/yyyy"
+                    InputLabelProps={{
+                      shrink: true
+                    }}
                     margin="normal"
-                    label={t("open_date")}
-                    value={gameStartDate}
-                    onChange={setGameStartDate}
-                    renderInput={props => (
-                      <TextField id="bingo_game_start_date" {...props} />
-                    )}
+                    error={null != messages.individual_count}
+                    helperText={messages.individual_count}
                   />
-                  {null != messages.start_date ? (
-                    <FormHelperText error={true}>
-                      {messages.start_date}
-                    </FormHelperText>
-                  ) : null}
                 </Grid>
-                <Grid item xs={4}>
-                  <DatePicker
-                    variant="inline"
-                    autoOk={true}
-                    inputFormat="MM/dd/yyyy"
-                    margin="normal"
-                    label={t("close_date")}
-                    value={gameEndDate}
-                    onChange={setGameEndDate}
-                    renderInput={props => (
-                      <TextField id="bingo_game_end_date" {...props} />
-                    )}
-                  />
-                  {null != messages.end_date ? (
-                    <FormHelperText error={true}>
-                      {messages.end_date}
-                    </FormHelperText>
-                  ) : null}
-                </Grid>
-              </LocalizationProvider>
-              <Grid item xs={4}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={gameActive}
-                      onChange={event => setGameActive(!gameActive)}
+                <LocalizationProvider dateAdapter={AdapterLuxon}>
+                  <Grid item xs={4}>
+                    <DatePicker
+                      variant="inline"
+                      autoOk={true}
+                      inputFormat="MM/dd/yyyy"
+                      margin="normal"
+                      label={t("open_date")}
+                      value={gameStartDate}
+                      onChange={setGameStartDate}
+                      renderInput={props => (
+                        <TextField id="bingo_game_start_date" {...props} />
+                      )}
                     />
-                  }
-                  label={t("active")}
-                />
+                    {null != messages.start_date ? (
+                      <FormHelperText error={true}>
+                        {messages.start_date}
+                      </FormHelperText>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={4}>
+                    <DatePicker
+                      variant="inline"
+                      autoOk={true}
+                      inputFormat="MM/dd/yyyy"
+                      margin="normal"
+                      label={t("close_date")}
+                      value={gameEndDate}
+                      onChange={setGameEndDate}
+                      renderInput={props => (
+                        <TextField id="bingo_game_end_date" {...props} />
+                      )}
+                    />
+                    {null != messages.end_date ? (
+                      <FormHelperText error={true}>
+                        {messages.end_date}
+                      </FormHelperText>
+                    ) : null}
+                  </Grid>
+                </LocalizationProvider>
+                <Grid item xs={4}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={gameActive}
+                        onChange={event => setGameActive(!gameActive)}
+                      />
+                    }
+                    label={t("active")}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Switch
+                    checked={gameGroupOption}
+                    id="group_option"
+                    onChange={event => setGameGroupOption(!gameGroupOption)}
+                    disabled={null == gameProjects || 2 > gameProjects.length}
+                  />
+                  <InputLabel htmlFor="group_option">
+                    {t("group_option")}
+                  </InputLabel>
+                </Grid>
+                {group_options}
               </Grid>
-              <Grid item xs={12}>
-                <Switch
-                  checked={gameGroupOption}
-                  id="group_option"
-                  onChange={event => setGameGroupOption(!gameGroupOption)}
-                  disabled={null == gameProjects || 2 > gameProjects.length}
-                />
-                <InputLabel htmlFor="group_option">
-                  {t("group_option")}
-                </InputLabel>
-              </Grid>
-              {group_options}
-            </Grid>
-            {save_btn} {messages.status}
-            <Typography>{saveStatus}</Typography>
-          </React.Fragment>
-
+              {save_btn} {messages.status}
+              <Typography>{saveStatus}</Typography>
+            </React.Fragment>
           </TabPanel>
-          <TabPanel value="results" >
+          <TabPanel value="results">
             <Grid container style={{ height: "100%" }}>
               <Grid item xs={5}>
                 <ConceptChips concepts={concepts} />
@@ -496,7 +498,6 @@ export default function BingoGameDataAdmin(props) {
                 <BingoGameDataAdminTable results_raw={resultData} />
               </Grid>
             </Grid>
-
           </TabPanel>
         </TabContext>
       </Paper>
@@ -504,5 +505,4 @@ export default function BingoGameDataAdmin(props) {
   );
 }
 
-BingoGameDataAdmin.propTypes = {
-};
+BingoGameDataAdmin.propTypes = {};

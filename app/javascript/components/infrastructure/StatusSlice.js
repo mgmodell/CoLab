@@ -1,81 +1,88 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const Priorities = {
-  ERROR: 'error',
-  INFO: 'info',
-  WARNING: 'warning'
-}
+  ERROR: "error",
+  INFO: "info",
+  WARNING: "warning"
+};
 
 //const initialState : StatusRootState = {
-const initialState  = {
+const initialState = {
   tasks: {},
   messages: [],
-  dirtyStatus: { }
-}
+  dirtyStatus: {}
+};
 
 // Slice
-const statusSlice = createSlice( {
-  name: 'status',
+const statusSlice = createSlice({
+  name: "status",
   initialState,
-  reducers:{
+  reducers: {
     startTask: {
-      reducer: (state, action ) =>{
-        state[ action.payload ] = ( state[ action.payload ] || 0)  + 1
+      reducer: (state, action) => {
+        state[action.payload] = (state[action.payload] || 0) + 1;
       }
     },
     endTask: {
-      reducer: (state, action) =>{
-        state[ action.payload ] = Math.max( 0, state[ action.payload ] || 0)  - 1
+      reducer: (state, action) => {
+        state[action.payload] = Math.max(0, state[action.payload] || 0) - 1;
       }
     },
     setDirty: {
-      reducer: (state, action) =>{
-        state.dirtyStatus[ action.payload ] = true;
+      reducer: (state, action) => {
+        state.dirtyStatus[action.payload] = true;
       }
     },
     setClean: {
-      reducer: (state, action) =>{
-        state.dirtyStatus[ action.payload ] = false;
+      reducer: (state, action) => {
+        state.dirtyStatus[action.payload] = false;
       }
     },
     addMessage: {
-      reducer: (state, action) =>{
-        state.messages.push( action.payload);
+      reducer: (state, action) => {
+        state.messages.push(action.payload);
       },
-      prepare: (text, msgTime, priority) =>{
-        return{
+      prepare: (text, msgTime, priority) => {
+        return {
           payload: {
             text: text,
             priority: priority,
-            msgTime: msgTime.toJSON( ),
+            msgTime: msgTime.toJSON(),
             dismissed: false
           }
-        }
+        };
       }
     },
     acknowledgeMsg: {
       reducer: (state, action) => {
-        state.messages.map( (message, index) =>{
-          if( index === action.payload){
+        state.messages.map((message, index) => {
+          if (index === action.payload) {
             message.dismissed = true;
           }
-        })
+        });
       }
     },
     cleanUpMsgs: {
       reducer: (state, action) => {
-        const curTime = Date.now( );
-        state.messages.map( (message, index) =>{
-          if( new Date( message.msgTime ) < (curTime - 60000)){
+        const curTime = Date.now();
+        state.messages.map((message, index) => {
+          if (new Date(message.msgTime) < curTime - 60000) {
             message.dismissed = true;
           }
-        })
-
+        });
       }
     }
   }
-})
+});
 
-const {actions, reducer} = statusSlice;
-export const { startTask, endTask, setDirty, setClean, addMessage, acknowledgeMsg, cleanUpMsgs } = actions;
+const { actions, reducer } = statusSlice;
+export const {
+  startTask,
+  endTask,
+  setDirty,
+  setClean,
+  addMessage,
+  acknowledgeMsg,
+  cleanUpMsgs
+} = actions;
 export default reducer;

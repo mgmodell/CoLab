@@ -9,8 +9,7 @@ import Typography from "@mui/material/Typography";
 import { SortDirection } from "react-virtualized";
 import WrappedVirtualizedTable from "../WrappedVirtualizedTable";
 
-const BingoGameResults = React.lazy( () =>
-  import( "./BingoGameResults" ));
+const BingoGameResults = React.lazy(() => import("./BingoGameResults"));
 
 class BingoGameDataAdminTable extends React.Component {
   constructor(props) {
