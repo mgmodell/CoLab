@@ -413,7 +413,7 @@ class HomeController < ApplicationController
                 .includes(:gender, :primary_language,
                           :cip_code, home_state: [:home_country],
                                      reactions: [narrative: [:scenario]])
-    diversity_score = Group.calc_diversity_score_for_group users: users
+    diversity_score = Group.calc_diversity_score_for_group(users:)
     found_users = users.collect do |u|
       { email: u.email,
         name: u.informal_name(false),

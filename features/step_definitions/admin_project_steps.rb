@@ -79,8 +79,8 @@ end
 Then('the user adds a group named {string}') do |group_name|
   button = 'Add Group'
   btn = find(:xpath, "//button[contains(.,'#{button}')]",
-               match: :first,
-               visible: :all).click
+             match: :first,
+             visible: :all).click
   elem = find_field('g_-1')
   elem.set(group_name)
 end

@@ -24,13 +24,11 @@ def wait_for_render
 end
 
 def ack_messages
-  begin
-    retries ||= 3
-    all(:xpath, "//button[@id='info-close']", visible: true).each(&:click)
-  rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
-    (retries += 1).should be < 10, 'Too many ack retries'
-    retry unless retries > 5
-  end
+  retries ||= 3
+  all(:xpath, "//button[@id='info-close']", visible: true).each(&:click)
+rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+  (retries += 1).should be < 10, 'Too many ack retries'
+  retry unless retries > 5
 end
 
 Capybara.register_driver :headless_firefox do |app|
@@ -63,10 +61,9 @@ Capybara.register_driver :firefox do |app|
 end
 
 Capybara.register_driver(:remote_chrome) do |app|
-
   Capybara::Selenium::Driver.new(
     app,
-    browser: :chrome,
+    browser: :chrome
     # url: 'http://browser:4444/wd/hub'
     # desired_capabilities: capabilities
   )
