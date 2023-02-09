@@ -1289,10 +1289,9 @@ export default function LeaveItToGeorge(props) {
       </g>
     </svg>
   );
-
 }
-  LeaveItToGeorge.propTypes = {
-    height: PropTypes.number,
-    width: PropTypes.number,
-    framed: PropTypes.bool
-  };
+LeaveItToGeorge.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+  framed: PropTypes.bool
+};

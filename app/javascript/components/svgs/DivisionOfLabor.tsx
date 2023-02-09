@@ -1861,10 +1861,9 @@ export default function DivisionOfLabor(props) {
       </g>
     </svg>
   );
-
 }
-  DivisionOfLabor.propTypes = {
-    height: PropTypes.number,
-    width: PropTypes.number,
-    framed: PropTypes.bool
-  };
+DivisionOfLabor.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+  framed: PropTypes.bool
+};

@@ -1,1 +1,1 @@
-export {Text as default } from "@visx/text";
+export { Text as default } from "@visx/text";

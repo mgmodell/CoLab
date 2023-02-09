@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Fab from "@mui/material/Fab";
 import Paper from "@mui/material/Paper";
@@ -23,22 +23,20 @@ const DiversityScore = React.lazy(() => import("../components/DiversityScore"));
 import { SortDirection } from "react-virtualized";
 import axios from "axios";
 
-export default function ProjectGroups(props){
+export default function ProjectGroups(props) {
+  const [dirty, setDirty] = useState(false);
+  const [working, setWorking] = useState(true);
+  const [message, setMessage] = useState("");
+  const [filterText, setFilterText] = useState("");
+  const [sortBy, setSortBy] = useState("last_name");
+  const [sortDirection, setSortDirection] = useState(SortDirection.DESC);
+  const [groupsRaw, setGroupsRaw] = useState({});
+  const [studentsRaw, setStudentsRaw] = useState({});
+  const [groups, setGroups] = useState([]);
+  const [students, setStudents] = useState([]);
 
-  const [dirty, setDirty] = useState( false );
-  const [working, setWorking] = useState( true );
-  const [message, setMessage] = useState( '' );
-  const [filterText, setFilterText] = useState( '' );
-  const [sortBy, setSortBy] = useState( 'last_name' );
-  const [sortDirection, setSortDirection] = useState( SortDirection.DESC );
-  const [groupsRaw, setGroupsRaw] = useState( {} );
-  const [studentsRaw, setStudentsRaw] = useState( {} );
-  const [groups, setGroups] = useState( [] );
-  const [students, setStudents] = useState( [] );
-
-
-  const addGroup = ()=> {
-    const updatedGroups = Object.assign( {}, groupsRaw );
+  const addGroup = () => {
+    const updatedGroups = Object.assign({}, groupsRaw);
     const group_ids = Object.keys(updatedGroups).map(Number);
     group_ids.push(0);
     const min_id = Math.min(...group_ids) - 1;
@@ -48,14 +46,14 @@ export default function ProjectGroups(props){
       id: min_id,
       diversity: 0
     };
-    setDirty( true );
-    setGroupsRaw( updatedGroups );
-    setGroups( Object.values( updatedGroups ) );
-  }
+    setDirty(true);
+    setGroupsRaw(updatedGroups);
+    setGroups(Object.values(updatedGroups));
+  };
 
   const removeGroup = (event, group_id) => {
-    const groupsUpdated = Object.assign( {}, groupsRaw );
-    const studentsUpdated = Object.assign( {}, studentsRaw );
+    const groupsUpdated = Object.assign({}, groupsRaw);
+    const studentsUpdated = Object.assign({}, studentsRaw);
 
     const students = Object.values(studentsUpdated);
 
@@ -68,11 +66,11 @@ export default function ProjectGroups(props){
       }
     });
     sortStudents(sortBy, sortDirection, students);
-    setGroupsRaw( groupsUpdated );
-    setGroups( Object.values( groupsUpdated ) );
-    setStudentsRaw( studentsUpdated );
-    setStudents( students );
-  }
+    setGroupsRaw(groupsUpdated);
+    setGroups(Object.values(groupsUpdated));
+    setStudentsRaw(studentsUpdated);
+    setStudents(students);
+  };
 
   const sortEvent = (event, key) => {
     const studentsWS = [...students];
@@ -81,14 +79,14 @@ export default function ProjectGroups(props){
     if (key == sortBy && direction == sortDirection) {
       direction = SortDirection.ASC;
     }
-    sortStudents( key, direction, studentsWS );
+    sortStudents(key, direction, studentsWS);
 
-    setStudents( studentsWS );
-    setSortDirection( direction );
-    setSortBy( key );
-  }
+    setStudents(studentsWS);
+    setSortDirection(direction);
+    setSortBy(key);
+  };
 
-  const filter = (event) => {
+  const filter = event => {
     const filter_text = event.target.value;
     const filtered = Object.values(studentsRaw).filter(student =>
       (student.first_name + " " + student.last_name)
@@ -96,9 +94,9 @@ export default function ProjectGroups(props){
         .includes(filter_text.toUpperCase())
     );
     sortStudents(sortBy, sortDirection, filtered);
-    setStudents( filtered );
-    setFilterText( event.target.value );
-  }
+    setStudents(filtered);
+    setFilterText(event.target.value);
+  };
 
   const sortStudents = (key, direction, students) => {
     const mod = direction == SortDirection.ASC ? -1 : 1;
@@ -116,69 +114,67 @@ export default function ProjectGroups(props){
         return mod * resp;
       });
     }
-  }
+  };
 
-  useEffect( ()=>{
-    getGroups( );
-  },[ ] );
-
+  useEffect(() => {
+    getGroups();
+  }, []);
 
   const setGroupName = (event, group_id) => {
-    const groupsWS = Object.assign( {}, groupsRaw );
+    const groupsWS = Object.assign({}, groupsRaw);
 
     groupsWS[group_id]["name"] = event.target.value;
 
-    setDirty( true );
-    setGroups( Object.values( groupsWS))
-    setGroupsRaw( groupsWS );
-  }
+    setDirty(true);
+    setGroups(Object.values(groupsWS));
+    setGroupsRaw(groupsWS);
+  };
 
   const setGroup = (student_id, group_id) => {
-    const studentsWS = Object.assign( {}, studentsRaw );
+    const studentsWS = Object.assign({}, studentsRaw);
     studentsWS[student_id]["group_id"] = group_id;
-    setDirty( true );
-    setStudents( Object.values( studentsWS ) );
-    setStudentsRaw( studentsWS );
-  }
+    setDirty(true);
+    setStudents(Object.values(studentsWS));
+    setStudentsRaw(studentsWS);
+  };
 
   const getGroups = () => {
     const url = props.groupsUrl + props.projectId + ".json";
-    setWorking( true );
+    setWorking(true);
     axios
       .get(url, {})
       .then(response => {
         const data = response.data;
-        setWorking( false );
-        setGroupsRaw( data.groups );
-        setStudentsRaw( data.students );
-        setGroups( Object.values( data.groups ) );
-        setStudents( Object.values( data.students ) );
+        setWorking(false);
+        setGroupsRaw(data.groups);
+        setStudentsRaw(data.students);
+        setGroups(Object.values(data.groups));
+        setStudents(Object.values(data.students));
       })
       .catch(error => {
         console.log("error", error);
       });
-  }
+  };
 
   const rescoreGroup = (event, group_id) => {
-    setWorking( true );
+    setWorking(true);
 
     const g_req = {
       group_id: group_id
     };
 
-    const url =
-      props.diversityRescoreGroup + props.projectId + ".json";
+    const url = props.diversityRescoreGroup + props.projectId + ".json";
     axios
       .post(url, {
         group_id: group_id
       })
       .then(response => {
         const data = response.data;
-        setWorking( false );
-        setGroupsRaw( data.groups );
-        setStudentsRaw( data.students );
-        setGroups( Object.values( data.groups ) );
-        setStudents( Object.values( data.students ) );
+        setWorking(false);
+        setGroupsRaw(data.groups);
+        setStudentsRaw(data.students);
+        setGroups(Object.values(data.groups));
+        setStudents(Object.values(data.students));
       })
       .catch(error => {
         const fail_data = new Object();
@@ -187,21 +183,20 @@ export default function ProjectGroups(props){
         console.log("error", error);
         return fail_data;
       });
-  }
+  };
 
   const recalcDiversity = () => {
-    setWorking( true );
-    const url =
-      props.diversityRescoreGroups + props.projectId + ".json";
+    setWorking(true);
+    const url = props.diversityRescoreGroups + props.projectId + ".json";
     axios
       .post(url, {})
       .then(response => {
         const data = response.data;
-        setWorking( false );
-        setGroupsRaw( data.groups );
-        setStudentsRaw( data.students );
-        setGroups( Object.values( data.groups ) );
-        setStudents( Object.values( data.students ) );
+        setWorking(false);
+        setGroupsRaw(data.groups);
+        setStudentsRaw(data.students);
+        setGroups(Object.values(data.groups));
+        setStudents(Object.values(data.students));
       })
       .catch(error => {
         const fail_data = new Object();
@@ -210,11 +205,11 @@ export default function ProjectGroups(props){
         console.log("error", error);
         return fail_data;
       });
-  }
+  };
 
   const saveGroups = () => {
-    setWorking( true );
-    setMessage( 'Saving...');
+    setWorking(true);
+    setMessage("Saving...");
 
     const url = props.groupsUrl + props.projectId + ".json";
     axios
@@ -224,12 +219,12 @@ export default function ProjectGroups(props){
       })
       .then(response => {
         const data = response.data;
-        setWorking( false );
-        setGroupsRaw( data.groups );
-        setStudentsRaw( data.students );
-        setGroups( Object.values( data.groups ) );
-        setStudents( Object.values( data.students ) );
-        setMessage( data.message == null ? "" : data.message );
+        setWorking(false);
+        setGroupsRaw(data.groups);
+        setStudentsRaw(data.students);
+        setGroups(Object.values(data.groups));
+        setStudents(Object.values(data.students));
+        setMessage(data.message == null ? "" : data.message);
       })
       .catch(error => {
         const fail_data = new Object();
@@ -238,137 +233,133 @@ export default function ProjectGroups(props){
         console.log("error", error);
         return fail_data;
       });
-  }
+  };
 
   const direction = {
     [SortDirection.ASC]: "asc",
     [SortDirection.DESC]: "desc"
   };
 
-    return (
-      <Paper>
-        <Toolbar>
-          <InputBase placeholder="Search Students" onChange={filter} value={filterText} />
-          <SearchIcon />
-          <Typography color="inherit">
-            Showing{" "}
-            {students.length +
-              " of " +
-              Object.values( studentsRaw ).length}
-          </Typography>
-          {dirty ? (
-            <Fab variant="extended" onClick={saveGroups}>
-              Save
-            </Fab>
-          ) : null}
-          <Typography color="inherit">{message}</Typography>
-          <Fab variant="extended" onClick={recalcDiversity}>
-            Recalculate Diversity
+  return (
+    <Paper>
+      <Toolbar>
+        <InputBase
+          placeholder="Search Students"
+          onChange={filter}
+          value={filterText}
+        />
+        <SearchIcon />
+        <Typography color="inherit">
+          Showing {students.length + " of " + Object.values(studentsRaw).length}
+        </Typography>
+        {dirty ? (
+          <Fab variant="extended" onClick={saveGroups}>
+            Save
           </Fab>
-          <Fab variant="extended" onClick={() => addGroup()}>
-            <GroupAddIcon />
-            Add Group
-          </Fab>
-        </Toolbar>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <TableSortLabel
-                  active={"first_name" == sortBy}
-                  direction={direction[sortDirection]}
-                  onClick={() => sortEvent(event, "first_name")}
-                >
-                  Given Name
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={"last_name" == sortBy}
-                  direction={direction[sortDirection]}
-                  onClick={() => sortEvent(event, "last_name")}
-                >
-                  Family Name
-                </TableSortLabel>
-              </TableCell>
-              {groups.map(group => {
-                return (
-                  <TableCell align="center" key={group.id}>
-                    <TextField
-                      onChange={() => setGroupName(event, group.id)}
-                      value={group.name}
-                      id={"g_" + group.id}
-                    />
-                    {group.id < 0 ? (
-                      <Fab
-                        variant="extended"
-                        size="small"
-                        onClick={() => removeGroup(event, group.id)}
-                      >
-                        <DeleteIcon />
-                      </Fab>
-                    ) : null}
-                    <DiversityScore
-                      groupId={group.id}
-                      parentDirty={dirty}
-                      documented={
-                        groupsRaw[group.id].diversity || 0
-                      }
-                      scoreReviewUrl={props.diversityCheckUrl}
-                      rescoreGroup={rescoreGroup}
-                      students={studentsRaw}
-                      sortBy={sortBy}
-                      sortDirection={sortDirection}
-                      sortFunc={sortEvent}
-                    />
-                  </TableCell>
-                );
-              })}
-              <TableCell align="center">
-                <TableSortLabel
-                  active={0 == sortBy}
-                  direction={direction[sortDirection]}
-                  onClick={() => sortEvent(event, 0)}
-                >
-                  No Group
-                </TableSortLabel>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {students.map(student => {
+        ) : null}
+        <Typography color="inherit">{message}</Typography>
+        <Fab variant="extended" onClick={recalcDiversity}>
+          Recalculate Diversity
+        </Fab>
+        <Fab variant="extended" onClick={() => addGroup()}>
+          <GroupAddIcon />
+          Add Group
+        </Fab>
+      </Toolbar>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <TableSortLabel
+                active={"first_name" == sortBy}
+                direction={direction[sortDirection]}
+                onClick={() => sortEvent(event, "first_name")}
+              >
+                Given Name
+              </TableSortLabel>
+            </TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={"last_name" == sortBy}
+                direction={direction[sortDirection]}
+                onClick={() => sortEvent(event, "last_name")}
+              >
+                Family Name
+              </TableSortLabel>
+            </TableCell>
+            {groups.map(group => {
               return (
-                <TableRow key={"stuRow-" + student.id}>
-                  <TableCell>{student.first_name}</TableCell>
-                  <TableCell>{student.last_name}</TableCell>
-                  {groups.map(group => {
-                    return (
-                      <TableCell
-                        align="center"
-                        key={student.id + "-" + group.id}
-                      >
-                        <Radio
-                          onClick={() => setGroup(student.id, group.id)}
-                          id={"user_group_" + student.id + "_" + group.id}
-                          checked={group.id == student.group_id}
-                        />
-                      </TableCell>
-                    );
-                  })}
-                  <TableCell>
-                    <Radio
-                      id={"stu-" + student.id}
-                      onClick={() => setGroup(student.id, null)}
-                      checked={null == student.group_id}
-                    />
-                  </TableCell>
-                </TableRow>
+                <TableCell align="center" key={group.id}>
+                  <TextField
+                    onChange={() => setGroupName(event, group.id)}
+                    value={group.name}
+                    id={"g_" + group.id}
+                  />
+                  {group.id < 0 ? (
+                    <Fab
+                      variant="extended"
+                      size="small"
+                      onClick={() => removeGroup(event, group.id)}
+                    >
+                      <DeleteIcon />
+                    </Fab>
+                  ) : null}
+                  <DiversityScore
+                    groupId={group.id}
+                    parentDirty={dirty}
+                    documented={groupsRaw[group.id].diversity || 0}
+                    scoreReviewUrl={props.diversityCheckUrl}
+                    rescoreGroup={rescoreGroup}
+                    students={studentsRaw}
+                    sortBy={sortBy}
+                    sortDirection={sortDirection}
+                    sortFunc={sortEvent}
+                  />
+                </TableCell>
               );
             })}
-          </TableBody>
-        </Table>
-      </Paper>
-    );
+            <TableCell align="center">
+              <TableSortLabel
+                active={0 == sortBy}
+                direction={direction[sortDirection]}
+                onClick={() => sortEvent(event, 0)}
+              >
+                No Group
+              </TableSortLabel>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {students.map(student => {
+            return (
+              <TableRow key={"stuRow-" + student.id}>
+                <TableCell>{student.first_name}</TableCell>
+                <TableCell>{student.last_name}</TableCell>
+                {groups.map(group => {
+                  return (
+                    <TableCell align="center" key={student.id + "-" + group.id}>
+                      <Radio
+                        onClick={() => setGroup(student.id, group.id)}
+                        id={"user_group_" + student.id + "_" + group.id}
+                        checked={group.id == student.group_id}
+                      />
+                    </TableCell>
+                  );
+                })}
+                <TableCell>
+                  <Radio
+                    id={"stu-" + student.id}
+                    onClick={() => setGroup(student.id, null)}
+                    checked={null == student.group_id}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </Paper>
+  );
 }
 
 ProjectGroups.propTypes = {

@@ -1,1 +1,1 @@
-export {LineSeries as default } from "@visx/xychart";
+export { LineSeries as default } from "@visx/xychart";

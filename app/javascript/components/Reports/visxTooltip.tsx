@@ -1,1 +1,1 @@
-export {Tooltip as default } from "@visx/xychart";
+export { Tooltip as default } from "@visx/xychart";

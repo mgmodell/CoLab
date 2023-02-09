@@ -62,7 +62,7 @@ export default function ProfileDataAdmin(props) {
   );
   const user = useTypedSelector(state => state.profile.user);
   const lastRetrieved = useTypedSelector(state => state.profile.lastRetrieved);
-  const [initRetrieved, setInitRetrieved] = useState( lastRetrieved);
+  const [initRetrieved, setInitRetrieved] = useState(lastRetrieved);
   const tz_hash = useTypedSelector(
     state => state.context.lookups.timezone_lookup
   );
@@ -159,13 +159,13 @@ export default function ProfileDataAdmin(props) {
   const setProfileDOB = date_of_birth => {
     const temp = {};
     Object.assign(temp, user);
-    temp.date_of_birth = date_of_birth.toISO( );
+    temp.date_of_birth = date_of_birth.toISO();
     dispatch(setProfile(temp));
   };
   const setProfileStartedSchool = started_school => {
     const temp = {};
     Object.assign(temp, user);
-    temp.started_school = started_school.toISO( );
+    temp.started_school = started_school.toISO();
     dispatch(setProfile(temp));
   };
   const setProfileImpVisual = impairment_visual => {
@@ -255,20 +255,18 @@ export default function ProfileDataAdmin(props) {
 
   const getProfile = () => {
     dispatch(fetchProfile())
-      .then( setInitRetrieved( lastRetrieved ) )
-      .then( setDirty( false ) )
-      ;
+      .then(setInitRetrieved(lastRetrieved))
+      .then(setDirty(false));
   };
   const saveProfile = () => {
     dispatch(persistProfile());
-    setDirty( false );
+    setDirty(false);
   };
 
   useEffect(() => {
     if (endpointStatus) {
       dispatch(endTask("loading"));
       getProfile();
-
     }
   }, [endpointStatus]);
 
@@ -278,14 +276,12 @@ export default function ProfileDataAdmin(props) {
     }
   }, [user.lastRetrieved, tz_hash]);
 
-
   useEffect(() => {
     //TODO: Fix profiles are marked dirty on initial load.
     if (initRetrieved !== lastRetrieved) {
       setDirty(true);
     }
   }, [user]);
-
 
   useEffect(() => getStates(user.country), [user.country]);
 

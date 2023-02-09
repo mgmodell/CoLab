@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Draggable from "react-draggable";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
@@ -9,19 +9,14 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
-import {
-  TabList,
-  TabContext,
-  TabPanel
-} from '@mui/lab';
+import { TabList, TabContext, TabPanel } from "@mui/lab";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 
-const ScoredGameDataTable = React.lazy( () =>
-  import( "../ScoredGameDataTable" ));
+const ScoredGameDataTable = React.lazy(() => import("../ScoredGameDataTable"));
 
 function PaperComponent(props) {
   return (
@@ -31,11 +26,10 @@ function PaperComponent(props) {
   );
 }
 
-export default function BingoGameResults (props){
+export default function BingoGameResults(props) {
+  const [curTab, setCurTab] = useState("key");
 
-  const [curTab, setCurTab] = useState( 'key' );
-
-  const renderBoard = (board) => {
+  const renderBoard = board => {
     if (board == null || board.length == 0) {
       return <p>No board available</p>;
     } else {
@@ -60,41 +54,37 @@ export default function BingoGameResults (props){
         </React.Fragment>
       );
     }
-  }
+  };
 
-
-    return (
-      <Dialog
-        open={props.open}
-        onClose={props.close}
-        PaperComponent={PaperComponent}
-        aria-labelledby="draggable-dialog-title"
-      >
-        <DialogTitle id="draggable-dialog-title">
-          Results for {props.student}
-        </DialogTitle>
-        <DialogContent>
-          <TabContext value={curTab}>
-            <Box>
-              <TabList value={curTab} onChange={setCurTab} centered>
-                <Tab value="results" label="Scored Results" />
-                <Tab value="key" label="Answer Key" />
-              </TabList>
-
-            </Box>
-            <TabPanel value='key'>
-              {renderBoard(props.board)}
-            </TabPanel>
-            <TabPanel value='results'>
-              <ScoredGameDataTable candidates={props.candidates} />
-            </TabPanel>
-          </TabContext>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={props.close}>Done</Button>
-        </DialogActions>
-      </Dialog>
-    );
+  return (
+    <Dialog
+      open={props.open}
+      onClose={props.close}
+      PaperComponent={PaperComponent}
+      aria-labelledby="draggable-dialog-title"
+    >
+      <DialogTitle id="draggable-dialog-title">
+        Results for {props.student}
+      </DialogTitle>
+      <DialogContent>
+        <TabContext value={curTab}>
+          <Box>
+            <TabList value={curTab} onChange={setCurTab} centered>
+              <Tab value="results" label="Scored Results" />
+              <Tab value="key" label="Answer Key" />
+            </TabList>
+          </Box>
+          <TabPanel value="key">{renderBoard(props.board)}</TabPanel>
+          <TabPanel value="results">
+            <ScoredGameDataTable candidates={props.candidates} />
+          </TabPanel>
+        </TabContext>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.close}>Done</Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 BingoGameResults.propTypes = {
@@ -114,4 +104,3 @@ BingoGameResults.propTypes = {
     })
   )
 };
-

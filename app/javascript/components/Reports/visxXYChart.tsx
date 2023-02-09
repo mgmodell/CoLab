@@ -1,1 +1,1 @@
-export {XYChart as default } from "@visx/xychart";
+export { XYChart as default } from "@visx/xychart";

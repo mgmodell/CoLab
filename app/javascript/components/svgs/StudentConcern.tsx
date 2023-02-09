@@ -913,10 +913,9 @@ export default function StudentConcern(props) {
       </g>
     </svg>
   );
-
 }
-  StudentConcern.propTypes = {
-    height: PropTypes.number,
-    width: PropTypes.number,
-    framed: PropTypes.bool
-  };
+StudentConcern.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+  framed: PropTypes.bool
+};

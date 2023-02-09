@@ -3,10 +3,8 @@ import PropTypes from "prop-types";
 
 import { scaleLinear } from "@visx/scale";
 import { curveMonotoneX } from "@visx/curve";
-const LinePath = React.lazy( ()=>
-  import ('../Reports/visxLinePath'));
-const Text = React.lazy( ()=>
-  import ('../Reports/visxText'));
+const LinePath = React.lazy(() => import("../Reports/visxLinePath"));
+const Text = React.lazy(() => import("../Reports/visxText"));
 
 export default function BingoDataRepresentation(props) {
   const getAvg = valueArray => {

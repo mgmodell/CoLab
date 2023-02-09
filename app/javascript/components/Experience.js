@@ -17,8 +17,8 @@ import Skeleton from "@mui/material/Skeleton";
 
 import { useTranslation } from "react-i18next";
 
-import ExperienceInstructions from './ExperienceInstructions';
-import ExperienceDiagnosis from './ExperienceDiagnosis';
+import ExperienceInstructions from "./ExperienceInstructions";
+import ExperienceDiagnosis from "./ExperienceDiagnosis";
 
 const ExperienceReaction = React.lazy(() => import("./ExperienceReaction"));
 import { useTypedSelector } from "./infrastructure/AppReducers";

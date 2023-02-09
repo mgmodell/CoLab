@@ -1,1 +1,1 @@
-export {LinePath as default } from "@visx/shape";
+export { LinePath as default } from "@visx/shape";

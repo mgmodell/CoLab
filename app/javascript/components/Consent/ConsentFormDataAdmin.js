@@ -9,29 +9,23 @@ import Switch from "@mui/material/Switch";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Collapse from "@mui/material/Collapse";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import Tab from "@mui/material/Tab";
 
-import { Settings } from 'luxon';
+import { Settings } from "luxon";
 
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { useTranslation } from 'react-i18next';
-import {useDispatch} from 'react-redux';
-import {startTask, endTask} from '../infrastructure/StatusSlice';
-import {
-  DatePicker,
-  LocalizationProvider
-} from '@mui/x-date-pickers';
-import {
-  TabContext,
-  TabList,
-  TabPanel
-  } from "@mui/lab/";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { TabContext, TabList, TabPanel } from "@mui/lab/";
 
 import { EditorState, ContentState } from "draft-js";
-const Editor = React.lazy( () =>
-  import( '../BingoBoards/reactDraftWysiwygEditor'));
+const Editor = React.lazy(() =>
+  import("../BingoBoards/reactDraftWysiwygEditor")
+);
 
 import htmlToDraft from "html-to-draftjs";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -39,41 +33,47 @@ import axios from "axios";
 
 export default function ConsentFormDataAdmin(props) {
   const category = "consent_form";
-  const endpoints = useTypedSelector(state=>state.context.endpoints[category]);
-  const endpointStatus = useTypedSelector(state=>state.context.status.endpointsLoaded);
-  const { t } = useTranslation( `${category}s` );
-  const user = useTypedSelector(state=>state.profile.user)
-  const tz_hash = useTypedSelector(state => state.context.lookups.timezone_lookup);
-  const { consentFormIDParam } = useParams( );
+  const endpoints = useTypedSelector(
+    state => state.context.endpoints[category]
+  );
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
+  const { t } = useTranslation(`${category}s`);
+  const user = useTypedSelector(state => state.profile.user);
+  const tz_hash = useTypedSelector(
+    state => state.context.lookups.timezone_lookup
+  );
+  const { consentFormIDParam } = useParams();
 
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
   const [curTab, setCurTab] = useState("en");
 
-  const [consentFormId, setConsentFormId] = useState( consentFormIDParam );
+  const [consentFormId, setConsentFormId] = useState(consentFormIDParam);
   const [consentFormName, setConsentFormName] = useState("");
   const [consentFormActive, setConsentFormActive] = useState(false);
   const [consentFormStartDate, setConsentFormStartDate] = useState(new Date());
   const [consentFormEndDate, setConsentFormEndDate] = useState(new Date());
   const [consentFormFormTextEn, setConsentFormFormTextEn] = useState("");
   const [consentFormFormTextKo, setConsentFormFormTextKo] = useState("");
-  const [consentFormDoc, setConsentFormDoc] = useState( null );
+  const [consentFormDoc, setConsentFormDoc] = useState(null);
 
-  const consentFormDataId = 'consent_form';
+  const consentFormDataId = "consent_form";
 
-  const handleFileSelect = (evt)=>{
+  const handleFileSelect = evt => {
     const file = evt.target.files[0];
 
     if (file) {
-        setConsentFormDoc( file );
+      setConsentFormDoc(file);
     }
-  }
+  };
 
   const getConsentForm = () => {
-    dispatch( startTask() );
+    dispatch(startTask());
     setDirty(true);
     var url = endpoints.baseUrl + "/";
     if (null == consentFormId) {
@@ -81,7 +81,8 @@ export default function ConsentFormDataAdmin(props) {
     } else {
       url = url + consentFormId + ".json";
     }
-    axios.get( url, { } )
+    axios
+      .get(url, {})
       .then(response => {
         const data = response.data;
         const consentForm = data.consent_form;
@@ -107,16 +108,16 @@ export default function ConsentFormDataAdmin(props) {
           )
         );
 
-        dispatch( endTask() );
+        dispatch(endTask());
         setDirty(false);
       })
-      .catch( error =>{
-        console.log( 'error', error );
+      .catch(error => {
+        console.log("error", error);
       });
   };
   const saveConsentForm = () => {
     const method = null == consentFormId ? "POST" : "PATCH";
-    dispatch( startTask("saving") );
+    dispatch(startTask("saving"));
 
     const url =
       endpoints.baseUrl +
@@ -124,18 +125,18 @@ export default function ConsentFormDataAdmin(props) {
       (null == consentFormId ? null : consentFormId) +
       ".json";
 
-    const formData = FormData( );
-    if( consentFormDoc ){
-      formData.append
+    const formData = FormData();
+    if (consentFormDoc) {
+      formData.append;
     }
-    axios( {
+    axios({
       method: method,
       url: url,
-        consent_form: {
-          id: consentFormId,
-          name: consentFormName,
-          start_date: consentFormStartDate
-        }
+      consent_form: {
+        id: consentFormId,
+        name: consentFormName,
+        start_date: consentFormStartDate
+      }
     })
       .then(response => {
         const data = response.data;
@@ -155,29 +156,28 @@ export default function ConsentFormDataAdmin(props) {
           setShowErrors(true);
           setDirty(false);
           setMessages(data.messages);
-          dispatch( endTask("saving") );
+          dispatch(endTask("saving"));
         } else {
           setShowErrors(true);
           setMessages(data.messages);
-          dispatch( endTask("saving") );
+          dispatch(endTask("saving"));
         }
       })
-      .catch( error =>{
-        console.log( 'error', error );
-        dispatch( endTask("saving") );
-
+      .catch(error => {
+        console.log("error", error);
+        dispatch(endTask("saving"));
       });
   };
 
   useEffect(() => {
-    if (endpointStatus ){
+    if (endpointStatus) {
       getConsentForm();
     }
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash ) {
-      Settings.defaultZoneName = tz_hash[ user.timezone ] ;
+    if (null !== user.lastRetrieved && null !== tz_hash) {
+      Settings.defaultZoneName = tz_hash[user.timezone];
     }
   }, [user.lastRetrieved, tz_hash]);
 
@@ -257,116 +257,117 @@ export default function ConsentFormDataAdmin(props) {
           </Grid>
         </LocalizationProvider>
       </Grid>
-      <TabContext value={curTab} >
+      <TabContext value={curTab}>
         <Box>
-          <TabList value={curTab} onChange={(event, name) => setCurTab(name)} centered>
+          <TabList
+            value={curTab}
+            onChange={(event, name) => setCurTab(name)}
+            centered
+          >
             <Tab value="en" label="English" />
             <Tab value="ko" label="Korean" />
           </TabList>
-
         </Box>
-      <TabPanel value='en'>
-        <Editor
-          wrapperId="English Form"
-          label={"en_form"}
-          placeholder={"en_form"}
-          onEditorStateChange={setConsentFormFormTextEn}
-          toolbarOnFocus
-          toolbar={{
-            options: [
-              "inline",
-              "list",
-              "link",
-              "blockType",
-              "fontSize",
-              "fontFamily"
-            ],
-            inline: {
+        <TabPanel value="en">
+          <Editor
+            wrapperId="English Form"
+            label={"en_form"}
+            placeholder={"en_form"}
+            onEditorStateChange={setConsentFormFormTextEn}
+            toolbarOnFocus
+            toolbar={{
               options: [
-                "bold",
-                "italic",
-                "underline",
-                "strikethrough",
-                "monospace"
+                "inline",
+                "list",
+                "link",
+                "blockType",
+                "fontSize",
+                "fontFamily"
               ],
-              bold: { className: "bordered-option-classname" },
-              italic: { className: "bordered-option-classname" },
-              underline: { className: "bordered-option-classname" },
-              strikethrough: { className: "bordered-option-classname" },
-              code: { className: "bordered-option-classname" }
-            },
-            blockType: {
-              className: "bordered-option-classname"
-            },
-            fontSize: {
-              className: "bordered-option-classname"
-            },
-            fontFamily: {
-              className: "bordered-option-classname"
-            }
-          }}
-          editorState={consentFormFormTextEn}
-        />
-
-      </TabPanel>
-      <TabPanel value="ko">
-
-        <Editor
-          wrapperId="Korean Form"
-          label={"ko_form"}
-          placeholder={"ko_form"}
-          onEditorStateChange={setConsentFormFormTextKo}
-          toolbarOnFocus
-          toolbar={{
-            options: [
-              "inline",
-              "list",
-              "link",
-              "blockType",
-              "fontSize",
-              "fontFamily"
-            ],
-            inline: {
+              inline: {
+                options: [
+                  "bold",
+                  "italic",
+                  "underline",
+                  "strikethrough",
+                  "monospace"
+                ],
+                bold: { className: "bordered-option-classname" },
+                italic: { className: "bordered-option-classname" },
+                underline: { className: "bordered-option-classname" },
+                strikethrough: { className: "bordered-option-classname" },
+                code: { className: "bordered-option-classname" }
+              },
+              blockType: {
+                className: "bordered-option-classname"
+              },
+              fontSize: {
+                className: "bordered-option-classname"
+              },
+              fontFamily: {
+                className: "bordered-option-classname"
+              }
+            }}
+            editorState={consentFormFormTextEn}
+          />
+        </TabPanel>
+        <TabPanel value="ko">
+          <Editor
+            wrapperId="Korean Form"
+            label={"ko_form"}
+            placeholder={"ko_form"}
+            onEditorStateChange={setConsentFormFormTextKo}
+            toolbarOnFocus
+            toolbar={{
               options: [
-                "bold",
-                "italic",
-                "underline",
-                "strikethrough",
-                "monospace"
+                "inline",
+                "list",
+                "link",
+                "blockType",
+                "fontSize",
+                "fontFamily"
               ],
-              bold: { className: "bordered-option-classname" },
-              italic: { className: "bordered-option-classname" },
-              underline: { className: "bordered-option-classname" },
-              strikethrough: { className: "bordered-option-classname" },
-              code: { className: "bordered-option-classname" }
-            },
-            blockType: {
-              className: "bordered-option-classname"
-            },
-            fontSize: {
-              className: "bordered-option-classname"
-            },
-            fontFamily: {
-              className: "bordered-option-classname"
-            }
-          }}
-          editorState={consentFormFormTextKo}
-        />
-      </TabPanel>
+              inline: {
+                options: [
+                  "bold",
+                  "italic",
+                  "underline",
+                  "strikethrough",
+                  "monospace"
+                ],
+                bold: { className: "bordered-option-classname" },
+                italic: { className: "bordered-option-classname" },
+                underline: { className: "bordered-option-classname" },
+                strikethrough: { className: "bordered-option-classname" },
+                code: { className: "bordered-option-classname" }
+              },
+              blockType: {
+                className: "bordered-option-classname"
+              },
+              fontSize: {
+                className: "bordered-option-classname"
+              },
+              fontFamily: {
+                className: "bordered-option-classname"
+              }
+            }}
+            editorState={consentFormFormTextKo}
+          />
+        </TabPanel>
       </TabContext>
       &nbsp;
-          <label htmlFor={consentFormDataId}>
-            <input
-              style={{ display: 'none' }}
-              id={consentFormDataId}
-              name={consentFormDataId}
-              onChange={handleFileSelect}
-              type="file" />
-          <Button
-            variant='contained'
-            component='span'
-            >{t('file_select')}</Button>
-          </label>
+      <label htmlFor={consentFormDataId}>
+        <input
+          style={{ display: "none" }}
+          id={consentFormDataId}
+          name={consentFormDataId}
+          onChange={handleFileSelect}
+          type="file"
+        />
+        <Button variant="contained" component="span">
+          {t("file_select")}
+        </Button>
+      </label>
       <br />
       <br />
       {saveButton}
@@ -398,4 +399,3 @@ export default function ConsentFormDataAdmin(props) {
     </Paper>
   );
 }
-
