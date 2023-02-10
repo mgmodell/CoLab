@@ -3,11 +3,43 @@ class RubricsController < ApplicationController
 
   # GET /rubrics or /rubrics.json
   def index
-    @rubrics = Rubric.all
+    if current_user.is_admin?
+      @rubrics = Rubric.Rubric.group( :name, :version ).maximum( :version )
+    else
+      @rubrics = Rubric.Rubric.
+        where( school: current_user.school ).
+        group( :name, :version ).maximum( :version )
+    end
+    respond_to do |format|
+      format.json do
+        resp = @rubrics.collect do |rubric|
+          {
+            id: rubric.id,
+            name: rubric.name,
+            description: rubric.description,
+            passing: rubric.passing,
+            published: rubric.published,
+            version: rubric.version,
+          }
+        end
+        render json: resp
+      end
+    end
   end
 
   # GET /rubrics/1 or /rubrics/1.json
   def show
+    respond_to do |format|
+      format.json do
+        response = {
+          rubric: @rubric.as_json(
+            only: %[id name description passing published school_id version parent_id]
+          ),
+          user: @rubric.user.name
+        }
+        render json: response
+      end
+    end
   end
 
   # GET /rubrics/new

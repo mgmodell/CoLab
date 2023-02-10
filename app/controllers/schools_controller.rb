@@ -6,7 +6,6 @@ class SchoolsController < ApplicationController
   before_action :check_admin
 
   def show
-    @title = t '.title'
     respond_to do |format|
       format.html { render :show }
       format.json do
@@ -28,13 +27,12 @@ class SchoolsController < ApplicationController
 
   # GET /admin/school
   def index
-    @title = t '.title'
-    @schools = School.all
+    schools = School.all
     respond_to do |format|
       format.html do
       end
       format.json do
-        resp = @schools.collect do |school|
+        resp = schools.collect do |school|
           {
             id: school.id,
             name: school.get_name(@anon),
@@ -52,7 +50,6 @@ class SchoolsController < ApplicationController
   end
 
   def create
-    @title = t '.title'
     @school = School.new(school_params)
     if @school.save
       notice = t('schools.create_success')
@@ -88,7 +85,6 @@ class SchoolsController < ApplicationController
   end
 
   def update
-    @title = t '.title'
     if @school.update(school_params)
       notice = t('schools.update_success')
       respond_to do |format|
