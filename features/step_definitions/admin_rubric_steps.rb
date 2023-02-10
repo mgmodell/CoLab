@@ -122,10 +122,6 @@ Then('the user edits the rubric') do
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then('the user clicks {string}') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
 Then('the rubric {string} published') do |string|
   pending # Write code here that turns the phrase above into concrete actions
 end
