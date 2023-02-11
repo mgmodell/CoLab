@@ -15,6 +15,8 @@ import {DataGrid, GridColDef} from '@mui/x-data-grid';
 import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
+import AdminListToolbar from "../infrastructure/AdminListToolbar";
+
 import axios from "axios";
 
 export default function RubricList(props) {
@@ -36,11 +38,11 @@ export default function RubricList(props) {
 
   const dispatch = useDispatch();
   const columns: GridColDef[] = [
-    { field: 'id', hide: true, width: 100 },
-    { field: 'name', headerName: t( 'name' ), width: 100 },
-    { field: 'published', headerName: t( 'published?'), width: 100},
-    { field: 'version', type: 'number',  headerName: t( 'version' ), width: 100},
-    { field: 'user', headerName: t( 'creator')}
+    { field: 'id', hide: true },
+    { field: 'name', headerName: t( 'name' ) },
+    { field: 'published', headerName: t( 'show.published') },
+    { field: 'version', type: 'number',  headerName: t( 'version' ) },
+    { field: 'user', headerName: t( 'show.creator') }
   ];
 
   const [rubrics, setRubrics] = useState([]);
@@ -51,7 +53,6 @@ export default function RubricList(props) {
     dispatch(startTask());
     axios.get(url, {}).then(response => {
       //Process the data
-      console.log( response.data );
       setRubrics(response.data);
       dispatch(endTask("loading"));
     });
@@ -98,8 +99,12 @@ export default function RubricList(props) {
         <div style={{ display: 'flex', height: '100%'}} >
           <div style={ { flexGrow: 1 }} >
           <DataGrid
+            autoHeight
             rows={rubrics}
             columns={columns}
+            components={{
+              Toolbar: AdminListToolbar,
+            }}
           />
 
         </div>
