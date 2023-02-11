@@ -36,10 +36,10 @@ export default function RubricList(props) {
 
   const dispatch = useDispatch();
   const columns: GridColDef[] = [
-    { field: 'id', hide: true },
-    { field: 'name', headerName: t( 'name' ) },
-    { field: 'published', headerName: t( 'published?')},
-    { field: 'version', type: 'number',  headerName: t( 'version' )},
+    { field: 'id', hide: true, width: 100 },
+    { field: 'name', headerName: t( 'name' ), width: 100 },
+    { field: 'published', headerName: t( 'published?'), width: 100},
+    { field: 'version', type: 'number',  headerName: t( 'version' ), width: 100},
     { field: 'user', headerName: t( 'creator')}
   ];
 
@@ -51,6 +51,7 @@ export default function RubricList(props) {
     dispatch(startTask());
     axios.get(url, {}).then(response => {
       //Process the data
+      console.log( response.data );
       setRubrics(response.data);
       dispatch(endTask("loading"));
     });
@@ -94,12 +95,11 @@ export default function RubricList(props) {
           {messages["main"] || null}
         </Alert>
       </Collapse>
-      <div style={{ display: 'flex', height: "100%" }}>
-        <div style={{flexGrow: 1 }} >
+        <div style={{ display: 'flex', height: '100%'}} >
+          <div style={ { flexGrow: 1 }} >
           <DataGrid
             rows={rubrics}
             columns={columns}
-            pageSize={10}
           />
 
         </div>
