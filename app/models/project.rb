@@ -2,8 +2,8 @@
 
 require 'faker'
 class Project < ApplicationRecord
-  include DateSanitySupportConcern,
-          TimezonesSupportConcern
+  include DateSanitySupportConcern
+  include TimezonesSupportConcern
   after_save :build_assessment
 
   belongs_to :course, inverse_of: :projects
@@ -215,30 +215,10 @@ class Project < ApplicationRecord
   private
 
   # Validation check code
-  def date_sanity
-    return if start_date.nil? || end_date.nil?
-
-    errors.add(:start_dow, 'The start date must come before the end date') if start_date > end_date
-    errors
-  end
 
   def init_dates
     self.start_date ||= course.start_date
     self.end_date ||= course.end_date
-  end
-
-  def dates_within_course
-    if self.start_date < course.start_date
-      msg = 'The project cannot begin before the course has begun '
-      msg += "(#{start_date} < #{course.start_date})"
-      errors.add(:start_date, msg)
-    end
-    if self.end_date > course.end_date
-      msg = 'The project cannot continue after the course has ended '
-      msg += "(#{end_date} > #{course.end_date})"
-      errors.add(:end_date, msg)
-    end
-    errors
   end
 
   def activation_status

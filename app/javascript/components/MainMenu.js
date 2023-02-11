@@ -24,6 +24,7 @@ import MultilineChartIcon from "@mui/icons-material/MultilineChart";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
+import TableViewIcon from '@mui/icons-material/TableView';
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
@@ -119,6 +120,16 @@ export default function MainMenu(props) {
                   <DynamicFeedIcon fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>{t("concepts_edit")}</ListItemText>
+              </ListItem>
+              <ListItem
+                button
+                id="rubrics-menu-item"
+                onClick={() => navTo("/admin/rubrics")}
+              >
+                <ListItemIcon>
+                  <TableViewIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{t("rubrics_edit")}</ListItemText>
               </ListItem>
               <ListItem
                 button

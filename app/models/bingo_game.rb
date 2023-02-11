@@ -2,8 +2,8 @@
 
 require 'faker'
 class BingoGame < ApplicationRecord
-  include DateSanitySupportConcern,
-          TimezonesSupportConcern
+  include DateSanitySupportConcern
+  include TimezonesSupportConcern
 
   belongs_to :course, inverse_of: :bingo_games
   has_many :candidate_lists, inverse_of: :bingo_game, dependent: :destroy
@@ -294,30 +294,6 @@ class BingoGame < ApplicationRecord
   end
 
   # validation methods
-  def date_sanity
-    return if start_date.nil? || end_date.nil?
-
-    errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
-    errors
-  end
-
-  def dates_within_course
-    unless start_date.nil? || end_date.nil?
-      if start_date < course.start_date
-        msg = I18n.t('bingo_games.start_date_err',
-                     start_date:,
-                     course_start_date: course.start_date)
-        errors.add(:start_date, msg)
-      end
-      if end_date.change(sec: 0) > course.end_date.change(sec: 0)
-        msg = I18n.t('bingo_games.end_date_err',
-                     end_date:,
-                     course_end_date: course.end_date)
-        errors.add(:end_date, msg)
-      end
-    end
-    errors
-  end
 
   def review_completed
     return unless reviewed && candidates.reviewed.count < candidates.completed.count

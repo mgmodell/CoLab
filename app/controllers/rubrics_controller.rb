@@ -1,15 +1,21 @@
 class RubricsController < ApplicationController
+  include PermissionsCheck
+
   before_action :set_rubric, only: %i[ show edit update destroy ]
+  before_action :check_admin
+
 
   # GET /rubrics or /rubrics.json
   def index
     if current_user.is_admin?
-      @rubrics = Rubric.Rubric.group( :name, :version ).maximum( :version )
+      @rubrics = Rubric.group( :name, :version )
     else
-      @rubrics = Rubric.Rubric.
+      @rubrics = Rubric.
         where( school: current_user.school ).
         group( :name, :version ).maximum( :version )
     end
+
+    anon = current_user.anonymize?
     respond_to do |format|
       format.json do
         resp = @rubrics.collect do |rubric|
@@ -20,6 +26,7 @@ class RubricsController < ApplicationController
             passing: rubric.passing,
             published: rubric.published,
             version: rubric.version,
+            user: rubric.user.informal_name( anon ),
           }
         end
         render json: resp

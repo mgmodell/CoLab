@@ -27,7 +27,7 @@ import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 
-export default function RubricAdmin(props) {
+export default function RubricDataAdmin(props) {
   const category = "school";
   const endpoints = useTypedSelector(state => {
     return state.context.endpoints[category];

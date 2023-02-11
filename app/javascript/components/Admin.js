@@ -6,6 +6,8 @@ import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import CourseAdmin from "./CourseAdmin";
 const SchoolList = React.lazy(() => import("./SchoolList"));
 const SchoolDataAdmin = React.lazy(() => import("./SchoolDataAdmin"));
+const RubricList = React.lazy(() => import("./assignments/RubricList"));
+const RubricDataAdmin = React.lazy(() => import("./assignments/RubricDataAdmin"));
 const ConsentFormList = React.lazy(() => import("./Consent/ConsentFormList"));
 const ConsentFormDataAdmin = React.lazy(() =>
   import("./Consent/ConsentFormDataAdmin")
@@ -38,6 +40,11 @@ export default function Admin(props) {
         {user.is_instructor || user.is_admin ? (
           <React.Fragment>
             <Route path={`courses/*`} element={<CourseAdmin />} />
+            <Route exact path={`rubrics`} element={<RubricList />} />
+            <Route
+              path={`rubrics/:rubricIdParam`}
+              element={<RubricDataAdmin />}
+            />
             <Route exact path={`schools`} element={<SchoolList />} />
             <Route
               path={`schools/:schoolIdParam`}

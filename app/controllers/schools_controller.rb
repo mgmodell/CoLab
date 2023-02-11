@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class SchoolsController < ApplicationController
-  layout 'admin'
+  include PermissionsCheck
+
   before_action :set_school, only: %i[show edit update destroy]
   before_action :check_admin
 
@@ -28,14 +29,13 @@ class SchoolsController < ApplicationController
   # GET /admin/school
   def index
     schools = School.all
+    anon = current_user.anonymize?
     respond_to do |format|
-      format.html do
-      end
       format.json do
         resp = schools.collect do |school|
           {
             id: school.id,
-            name: school.get_name(@anon),
+            name: school.get_name(anon),
             courses: school.courses.size,
             students: school.enrolled_students.size,
             instructors: school.instructors.size,
@@ -135,10 +135,6 @@ class SchoolsController < ApplicationController
               else
                 School.find(params[:id])
               end
-  end
-
-  def check_admin
-    redirect_to root_path unless current_user.is_admin?
   end
 
   def school_params

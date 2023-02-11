@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ConceptsController < ApplicationController
+  include PermissionsCheck
+
   layout 'admin', except: %i[review_candidates update_review_candidates]
   before_action :set_concept, only: %i[show edit update destroy]
   before_action :check_admin,
@@ -142,10 +144,6 @@ class ConceptsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_concept
     @concept = Concept.find(params[:id])
-  end
-
-  def check_admin
-    redirect_to root_path unless current_user.is_admin?
   end
 
   def concept_params

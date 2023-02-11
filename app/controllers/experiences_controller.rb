@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class ExperiencesController < ApplicationController
-  layout 'admin', except: %i[next diagnose react]
+  include PermissionsCheck
+
   before_action :set_experience, only: %i[show get_reactions edit update destroy]
   before_action :check_viewer, only: %i[show index]
   before_action :check_editor, only: %i[edit get_reactions update destroy]
@@ -38,12 +39,13 @@ class ExperiencesController < ApplicationController
     reactions = Reaction.includes([:behavior, { user: :emails }, { narrative: :scenario }])
                         .where(experience_id: @experience.id, user_id: rosters_hash.values.collect(&:user_id))
 
+    anon = current_user.anonymize?
     render json: {
       reactions: reactions.collect do |reaction|
         {
           user: {
             email: reaction.user.email,
-            name: reaction.user.name(@anon)
+            name: reaction.user.name(anon)
           },
           student_status: rosters_hash[reaction.user_id].role,
           status: reaction.status,
@@ -293,15 +295,6 @@ class ExperiencesController < ApplicationController
     end
   end
 
-  def check_viewer
-    redirect_to root_path unless current_user.is_admin? ||
-                                 current_user.is_instructor? ||
-                                 current_user.is_researcher?
-  end
-
-  def check_editor
-    redirect_to root_path unless current_user.is_admin? || current_user.is_instructor?
-  end
 
   def experience_params
     params.require(:experience).permit(:course_id, :name, :active,

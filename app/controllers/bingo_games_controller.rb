@@ -3,6 +3,8 @@
 require 'faker'
 
 class BingoGamesController < ApplicationController
+  include PermissionsCheck
+
   layout 'admin', except: %i[review_candidates update_review_candidates
                              review_candidates_demo game_results ]
   skip_before_action :authenticate_user!,
@@ -104,7 +106,7 @@ class BingoGamesController < ApplicationController
        candidate_lists: [{ candidates: %i[concept candidate_feedback] }, group: :users],
        bingo_boards: [:user, { bingo_cells: :candidate }]]
     ).find_by(id: params[:id])
-    check_editor(bingo_game:)
+    check_bingo_editor(bingo_game:)
     anon = current_user.anonymize?
     resp = {}
     # Get the users
@@ -269,7 +271,7 @@ class BingoGamesController < ApplicationController
   end
 
   def update
-    check_editor bingo_game: @bingo_game
+    check_bingo_editor bingo_game: @bingo_game
     @bingo_game.update(bingo_game_params)
 
     respond_to do |format|
@@ -402,7 +404,7 @@ class BingoGamesController < ApplicationController
 
   def review_candidates
     @title = t '.title'
-    check_editor bingo_game: @bingo_game
+    check_bingo_editor bingo_game: @bingo_game
     respond_to do |format|
       format.json do
         review_helper(
@@ -556,14 +558,14 @@ class BingoGamesController < ApplicationController
 
   def destroy
     @course = @bingo_game.course
-    check_editor bingo_game: @bingo_game
+    check_bingo_editor bingo_game: @bingo_game
     @bingo_game.destroy
     redirect_to @course, notice: (t 'bingo_games.destroy_success')
   end
 
   def activate
     bingo_game = BingoGame.find(params[:bingo_game_id])
-    check_editor(bingo_game:)
+    check_bingo_editor(bingo_game:)
     if current_user.is_admin? ||
        bingo_game.course.get_roster_for_user(current_user).role.code == 'inst'
       bingo_game.active = true
@@ -630,13 +632,7 @@ class BingoGamesController < ApplicationController
     end
   end
 
-  def check_viewer
-    redirect_to root_path unless current_user.is_admin? ||
-                                 current_user.is_instructor? ||
-                                 current_user.is_researcher?
-  end
-
-  def check_editor(bingo_game:)
+  def check_bingo_editor(bingo_game:)
     unless current_user.is_admin? ||
            !bingo_game.course.rosters.instructor.where(user: current_user).nil?
       redirect_to root_path

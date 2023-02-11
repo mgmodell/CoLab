@@ -133,6 +133,10 @@ class HomeController < ApplicationController
         ep_hash[:concept] = {
           baseUrl: concepts_path
         }
+        ep_hash[:rubric] = {
+          baseUrl: rubrics_path,
+          rubricCreateUrl: new_rubric_path,
+        }
         ep_hash[:consent_form] = {
           baseUrl: consent_forms_path,
           consentFormCreateUrl: new_consent_form_path
@@ -347,13 +351,14 @@ class HomeController < ApplicationController
   end
 
   def user_activities
+    anon = current_user.anonymize?
     resp = current_user.activity_history.collect do |activity|
       {
         id: activity.id,
         type: activity.type,
-        course_name: activity.course.get_name(@anon),
-        course_number: activity.course.get_number(@anon),
-        name: activity.get_name(@anon),
+        course_name: activity.course.get_name(anon),
+        course_number: activity.course.get_number(anon),
+        name: activity.get_name(anon),
         close_date: activity.end_date,
         performance: case activity.type
                      when 'Terms List'

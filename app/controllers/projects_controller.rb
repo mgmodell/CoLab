@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class ProjectsController < ApplicationController
-  layout 'admin'
+  include PermissionsCheck
+
   before_action :set_project, only: %i[show new edit update destroy activate
                                        rescore_group rescore_groups]
   before_action :check_editor, except: %i[next diagnose react
@@ -316,19 +317,6 @@ class ProjectsController < ApplicationController
     else
       @project = p_test
     end
-  end
-
-  def check_viewer
-    redirect_to root_path unless current_user.is_admin? ||
-                                 current_user.is_instructor? ||
-                                 current_user.is_researcher?
-  end
-
-  def check_editor
-    return if current_user.is_admin? || current_user.is_instructor?
-
-    redirect_to root_path
-    # TODO: handle JSON response
   end
 
   def project_params

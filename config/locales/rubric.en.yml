@@ -1,0 +1,19 @@
+en:
+  rubrics:
+    index:
+      title: List of Rubrics
+    edit:
+      title: Edit Rubric
+    show:
+      title: Rubric Details
+      edit_string: Edit rubric details
+      published: Is published?
+      creator: Created by
+    new:
+      title: New Rubric
+    create_success: Rubric was created successfully!
+    destroy_success: Rubric was destroyed successfully!
+    update_success: Rubric was updated successfully!
+    back: Back to the list of rubrics
+    name: Name
+    version: Version

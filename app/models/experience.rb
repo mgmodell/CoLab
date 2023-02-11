@@ -2,8 +2,8 @@
 
 require 'faker'
 class Experience < ApplicationRecord
-  include DateSanitySupportConcern,
-          TimezonesSupportConcern
+  include DateSanitySupportConcern
+  include TimezonesSupportConcern
 
   belongs_to :course, inverse_of: :experiences
   has_many :reactions, inverse_of: :experience, dependent: :destroy
@@ -246,31 +246,10 @@ class Experience < ApplicationRecord
     self.instructor_updated = false if end_date_changed? && instructor_updated && DateTime.current <= end_date
   end
 
-  def date_sanity
-    return if start_date.nil? || end_date.nil?
-
-    errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
-    errors
-  end
-
   def end_date_optimization
     return unless student_end_date.nil? || end_date_changed? || lead_time_changed?
 
     self.student_end_date = end_date - (1 + lead_time).days
-  end
-
-  def dates_within_course
-    unless start_date.nil? || end_date.nil?
-      if start_date < course.start_date
-        errors.add(:start_date, "The experience cannot begin before the course has begun (#{course.start_date})")
-      end
-      if end_date.change(sec: 0) > course.end_date.change(sec: 0)
-        msg = 'The experience cannot continue after the course has ended '
-        msg += "(#{end_date} > #{course.end_date})"
-        errors.add(:end_date, msg)
-      end
-    end
-    errors
   end
 
   def anonymize
