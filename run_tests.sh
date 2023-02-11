@@ -81,7 +81,7 @@ else
     DB_COUNT=`mysqlshow -u test -ptest --protocol=TCP --port=31337 | grep colab_test_ | wc -l`
     if [ $(($DB_COUNT)) = 0 ]; then
       echo "Creating the DB"
-        docker compose run --rm app "-c"
+        docker compose run --rm app -c
       echo "Created the DB"
     fi
     NUM_TESTERS=`docker ps | grep colab_testers | wc -l`

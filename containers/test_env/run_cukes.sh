@@ -138,10 +138,12 @@ yarn install --silent
 
 if [ "$DB_RESET" = true ]; then
   # Reset database
+  RUN_TESTS=false
   echo "Setting up database" >&2
   rails db:create RAILS_ENV=$RAILS_ENV COLAB_DB=db
   rails testing:db_init RAILS_ENV=$RAILS_ENV COLAB_DB=db
   echo "Database initialised "
+  exit 0;
 fi
 
 # Show previous failures
