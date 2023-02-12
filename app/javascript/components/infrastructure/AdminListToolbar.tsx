@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { GridToolbarContainer, GridToolbarDensitySelector, GridToolbarFilterButton } from "@mui/x-data-grid";
 import { IconButton } from "@mui/material";
@@ -9,6 +10,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 export default function AdminListToolbar( props ){
 
+    const { t } = useTranslation(`admin`);
     const navigate = useNavigate( );
     return(
         <GridToolbarContainer>
@@ -24,9 +26,10 @@ export default function AdminListToolbar( props ){
                 }}
                 aria-label="New School"
                 size='small'
+
               >
                 <AddIcon />
-                New
+                {t('new')}
               </IconButton>
             </Tooltip>
         </GridToolbarContainer>

@@ -16,4 +16,5 @@ en:
     update_success: Rubric was updated successfully!
     back: Back to the list of rubrics
     name: Name
+    description: Description
     version: Version

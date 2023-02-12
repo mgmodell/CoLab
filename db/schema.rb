@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_06_040920) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_12_031949) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -33,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_040920) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
@@ -76,6 +76,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_040920) do
     t.boolean "active", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "passing", default: 65
     t.index ["course_id"], name: "index_assignments_on_course_id"
     t.index ["project_id"], name: "index_assignments_on_project_id"
     t.index ["rubric_id"], name: "index_assignments_on_rubric_id"
@@ -495,7 +496,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_040920) do
   create_table "rubrics", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
-    t.integer "passing", default: 65, null: false
     t.integer "version", default: 1, null: false
     t.boolean "published", default: false, null: false
     t.bigint "parent_id"

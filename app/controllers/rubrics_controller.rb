@@ -23,7 +23,6 @@ class RubricsController < ApplicationController
             id: rubric.id,
             name: rubric.name,
             description: rubric.description,
-            passing: rubric.passing,
             published: rubric.published,
             version: rubric.version,
             user: rubric.user.informal_name( anon ),
@@ -36,14 +35,15 @@ class RubricsController < ApplicationController
 
   # GET /rubrics/1 or /rubrics/1.json
   def show
+    anon = current_user.anonymize?
     respond_to do |format|
       format.json do
-        response = {
-          rubric: @rubric.as_json(
-            only: %[id name description passing published school_id version parent_id]
-          ),
-          user: @rubric.user.name
-        }
+        response = @rubric.as_json(
+            only: [:id, :name, :description, 
+                    :published, :school_id, :version,
+                    :parent_id]
+          )
+        response[:user] = @rubric.user.informal_name( anon )
         render json: response
       end
     end
@@ -104,6 +104,6 @@ class RubricsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def rubric_params
-      params.require(:rubric).permit(:name, :description, :passing, :version, :published, :parent)
+      params.require(:rubric).permit(:name, :description, :published )
     end
 end

@@ -9,7 +9,6 @@ import {
   setDirty,
   setClean
 } from "../infrastructure/StatusSlice";
-import { refreshSchools } from "../infrastructure/ContextSlice";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -28,7 +27,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 
 export default function RubricDataAdmin(props) {
-  const category = "school";
+  const category = "rubric";
   const endpoints = useTypedSelector(state => {
     return state.context.endpoints[category];
   });
@@ -36,7 +35,6 @@ export default function RubricDataAdmin(props) {
   const endpointStatus = useTypedSelector(state => {
     return state.context.status.endpointsLoaded;
   });
-  //const { t, i18n } = useTranslation('schools' );
   const user = useTypedSelector(state => state.profile.user);
   const tz_hash = useTypedSelector(
     state => state.context.lookups.timezone_lookup
@@ -51,33 +49,40 @@ export default function RubricDataAdmin(props) {
 
   const dispatch = useDispatch();
 
-  let { schoolIdParam } = useParams();
-  const [schoolId, setSchoolId] = useState(schoolIdParam);
-  const [schoolName, setSchoolName] = useState("");
-  const [schoolDescription, setSchoolDescription] = useState("");
-  const [schoolTimezone, setSchoolTimezone] = useState("UTC");
+  let { rubricIdParam } = useParams();
+  const [rubricId, setRubricId] = useState(rubricIdParam);
+  const [rubricName, setRubricName] = useState("");
+  const [rubricDescription, setRubricDescription] = useState("");
+  const [rubricPublished, setRubricPublished] = useState(false);
+  const [rubricVersion, setRubricVersion] = useState(1);
+  const [rubricCreator, setRubricCreator] = useState('');
+  const [rubricSchoolId, setRubricSchoolId] = useState( 0 );
   const [messages, setMessages] = useState({});
 
   const timezones = useTypedSelector(state => {
     return state.context.lookups["timezones"];
   });
 
-  const getSchool = () => {
+  const getRubric = () => {
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
-    if (null == schoolId) {
+    if (null == rubricId) {
       url = url + "new.json";
     } else {
-      url = url + schoolId + ".json";
+      url = url + rubricId + ".json";
     }
+    console.log( `URL: ${url}`);
     axios
       .get(url, {})
       .then(response => {
-        const school = response.data.school;
+        const rubric = response.data;
 
-        setSchoolName(school.name || "");
-        setSchoolDescription(school.description || "");
-        setSchoolTimezone(school.timezone || "UTC");
+        setRubricName(rubric.name || "");
+        setRubricDescription(rubric.description || "");
+        setRubricPublished( rubric.published || false );
+        setRubricVersion( rubric.version || 1 );
+        setRubricCreator( rubric.creator );
+        setRubricSchoolId( rubric.school_id );
         dispatch(setClean(category));
       })
       .catch(error => {
@@ -88,40 +93,40 @@ export default function RubricDataAdmin(props) {
         dispatch(setClean(category));
       });
   };
-  const saveSchool = () => {
-    const method = null == schoolId ? "POST" : "PATCH";
+  const saveRubric = () => {
+    const method = null == rubricId ? "POST" : "PATCH";
     dispatch(startTask("saving"));
 
     const url =
       endpoints["baseUrl"] +
       "/" +
-      (null == schoolId ? props.schoolId : schoolId) +
+      (null == rubricId ? props.rubricId : rubricId) +
       ".json";
 
     axios({
       method: method,
       url: url,
       data: {
-        school: {
-          name: schoolName,
-          description: schoolDescription,
-          timezone: schoolTimezone
+        rubric: {
+          name: rubricName,
+          description: rubricDescription,
         }
       }
     })
       .then(resp => {
         const data = resp["data"];
         if (data.messages != null && Object.keys(data.messages).length < 2) {
-          const school = data.school;
-          setSchoolId(school.id);
-          setSchoolName(school.name);
-          setSchoolDescription(school.description);
-          setSchoolTimezone(school.timezone);
+          const rubric = data.rubric;
+          setRubricId(rubric.id);
+          setRubricName(rubric.name);
+          setRubricDescription(rubric.description);
+          setRubricVersion( rubric.version );
+          setRubricPublished( rubric.published );
+          setRubricCreator( rubric.creator );
 
           dispatch(setClean(category));
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
           //setMessages(data.messages);
-          dispatch(refreshSchools());
           dispatch(endTask("saving"));
         } else {
           dispatch(
@@ -138,67 +143,43 @@ export default function RubricDataAdmin(props) {
 
   useEffect(() => {
     if (endpointStatus) {
-      getSchool();
+      getRubric();
     }
   }, [endpointStatus]);
 
-  useEffect(() => {
-    if (null !== user.lastRetrieved) {
-      Settings.defaultZoneName = user.timezone;
-    }
-  }, [user.lastRetrieved]);
 
   useEffect(() => {
     dispatch(setDirty(category));
-  }, [schoolTimezone, schoolName, schoolDescription]);
+  }, [rubricName, rubricDescription]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveSchool} disabled={!dirty}>
-      {schoolId > 0 ? "Save" : "Create"} School
+    <Button variant="contained" onClick={saveRubric} disabled={!dirty}>
+      {rubricId > 0 ? "Save" : "Create"} Rubric
     </Button>
   ) : null;
 
   const detailsComponent = endpointStatus ? (
     <Paper>
       <TextField
-        label="School Name"
-        id="school-name"
-        value={schoolName}
+        label={t('name')}
+        id="rubric-name"
+        value={rubricName}
         fullWidth={false}
-        onChange={event => setSchoolName(event.target.value)}
+        onChange={event => setRubricName(event.target.value)}
         error={null != messages["name"]}
         helperText={messages["name"]}
       />
       &nbsp;
-      <FormControl>
-        <InputLabel htmlFor="school_timezone" id="school_timezone_lbl">
-          {t("time_zone")}
-        </InputLabel>
-        <Select
-          id="school_timezone"
-          value={schoolTimezone}
-          onChange={event => setSchoolTimezone(String(event.target.value))}
-        >
-          {timezones.map(timezone => {
-            return (
-              <MenuItem key={timezone.name} value={timezone.name}>
-                {timezone.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-        <FormHelperText error={true}>{messages["timezone"]}</FormHelperText>
-      </FormControl>
       <br />
       <TextField
-        id="school-description"
-        placeholder="Enter a description of the school"
+        id="rubric-description"
+        placeholder="Enter a description of the rubric"
         multiline={true}
         minRows={2}
         maxRows={4}
-        label="Description"
-        value={schoolDescription}
-        onChange={event => setSchoolDescription(event.target.value)}
+        label={t('description')}
+        value={rubricDescription}
+        onChange={event => setRubricDescription(event.target.value)}
         InputLabelProps={{
           shrink: true
         }}

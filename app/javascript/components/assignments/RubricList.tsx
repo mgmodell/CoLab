@@ -102,6 +102,17 @@ export default function RubricList(props) {
             autoHeight
             rows={rubrics}
             columns={columns}
+            isCellEditable={(params)=>{
+              return false;
+            }}
+            onCellClick={ ( params, event, details )=>{
+              navigate(String(params.row.id));
+              /*
+              const id = schools[cellMeta.dataIndex].id;
+              navigate(String(id));
+              */
+
+            } }
             components={{
               Toolbar: AdminListToolbar,
             }}

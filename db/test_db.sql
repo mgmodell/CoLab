@@ -214,6 +214,7 @@ CREATE TABLE `assignments` (
   `active` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime(6) NOT NULL,
   `updated_at` datetime(6) NOT NULL,
+  `passing` int(11) DEFAULT 65,
   PRIMARY KEY (`id`),
   KEY `index_assignments_on_rubric_id` (`rubric_id`),
   KEY `index_assignments_on_course_id` (`course_id`),
@@ -4655,7 +4656,6 @@ CREATE TABLE `rubrics` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
-  `passing` int(11) NOT NULL DEFAULT 65,
   `version` int(11) NOT NULL DEFAULT 1,
   `published` tinyint(1) NOT NULL DEFAULT 0,
   `parent_id` bigint(20) DEFAULT NULL,
@@ -4908,7 +4908,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20230127225045'),
 ('20230128043847'),
 ('20230206032450'),
-('20230206040920');
+('20230206040920'),
+('20230212031949');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5371,4 +5372,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-06 19:57:32
+-- Dump completed on 2023-02-11 22:57:39
