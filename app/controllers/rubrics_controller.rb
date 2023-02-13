@@ -104,6 +104,14 @@ class RubricsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def rubric_params
-      params.require(:rubric).permit(:name, :description, :published )
+      params.require(:rubric).permit(:name, :description, :published,
+        criteria_attributes: [:id, :description, :weight, :sequence,
+                    :l1_description,
+                    :l2_description,
+                    :l3_description,
+                    :l4_description,
+                    :l5_description
+                  ]
+       )
     end
 end

@@ -1,7 +1,10 @@
 class Rubric < ApplicationRecord
 
     belongs_to :parent, class_name: 'Rubric', optional: true
-    has_many :versions, class_name: 'Rubric', foreign_key: 'parent_id'
+
+    has_many :criteria, dependent: :destroy
+    accepts_nested_attributes_for :criteria, allow_destroy: true
+
     belongs_to :school
     belongs_to :user
 
