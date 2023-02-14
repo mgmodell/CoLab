@@ -4,7 +4,6 @@ require 'chronic'
         @rubric = @user.rubrics.new(
             name: rubric_name,
             description: Faker::GreekPhilosophers.quote,
-            passing: 65,
             school: @user.school,
             published: 'published' == rubric_published
         )
@@ -14,6 +13,7 @@ require 'chronic'
         @assignment = @course.assignments.new(
             name: assignment_name,
             description: Faker::Quote.yoda,
+            passing: 65,
             start_date:  4.months.ago ,
             end_date:  2.months.from_now ,
             rubric: @rubric
