@@ -6,7 +6,6 @@ Given('there are {int} {string} rubrics starting with {string}') do |count, is_p
     rubric = school.rubrics.new(
       name: "#{prefix} #{index}",
       description: Faker::GreekPhilosophers.quote,
-      passing: 65,
       published: 'published' == is_published,
       user: @user
     )
@@ -19,7 +18,6 @@ Given('the user has one rubric named {string}') do |name|
   @rubric = @user.rubrics.new(
     name: name,
     description: Faker::GreekPhilosophers.quote,
-    passing: 65,
     school: @user.school
   )
   log @rubric.errors.full_messages if @rubric.errors.present?

@@ -26,7 +26,6 @@ Feature: Rubric administration
     Then the user clicks the "New Rubic" button
      And the user sets the "Name" field to "Elderly Tech. Talk"
      And the user sets the "Description" field to "Students prepare and deliver a presentation explaining a technology topic to elderly members of their community."
-     And the user sets the "Passing" field to "65"
      And the user sets criteria 1 "Description" to "History"
      And the user sets criteria 1 level 3 to "Introduces 3 important milestones and 3 important people in the evolution of the technology"
      And the user sets criteria 1 level 2 to "Introduces fewer than 3 important milestones or fewer than 3 important people in the evolution of the technology"
@@ -48,7 +47,6 @@ Feature: Rubric administration
      And the rubric version is 1
      And the rubric "Name" field is "Elderly Tech. Talk"
      And the rubric "Description" field is "Students prepare and deliver a presentation explaining a technology topic to elderly members of their community."
-     And the rubric "Passing" field is "65"
      And the rubric criteria 1 "Description" is "History"
      And the rubric criteria 1 level 3 is "Introduces 3 important milestones and 3 important people in the evolution of the technology"
      And the rubric criteria 1 level 2 is "Introduces fewer than 3 important milestones or fewer than 3 important people in the evolution of the technology"
@@ -167,7 +165,6 @@ Feature: Rubric administration
     Then retrieve the "Trojan War Diorama" rubric from the db
      And the user is the owner of the rubric
      And the rubric version is 1
-     And the rubric "Passing" field is "65"
      And the rubric criteria 6 "Description" is "New Criteria"
      And the rubric criteria 6 level 3 is "level 3"
      And the rubric criteria 6 level 2 is "level 3"
