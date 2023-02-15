@@ -41,7 +41,15 @@ class RubricsController < ApplicationController
         response = @rubric.as_json(
             only: [:id, :name, :description, 
                     :published, :school_id, :version,
-                    :parent_id]
+                    :parent_id, criteria: [ 
+                      :description, :sequence,
+                      :weight,
+                      :l1_description,
+                      :l2_description,
+                      :l3_description,
+                      :l4_description,
+                      :l5_description
+                    ]]
           )
         response[:user] = @rubric.user.informal_name( anon )
         render json: response

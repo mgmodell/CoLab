@@ -18,3 +18,14 @@ en:
     name: Name
     description: Description
     version: Version
+    criteria:
+      new: New Criteria
+      sequence: sequence
+      description: Short criteria description
+      weight: Criteria weight
+      l1_description: Minimum requirements
+      l2_description: Requirements for level 2 credit
+      l3_description: Requirements for level 3 credit
+      l4_description: Requirements for level 4 credit
+      l5_description: Requirements for level 5 credit
+

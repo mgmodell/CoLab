@@ -21,7 +21,7 @@ class Project < ApplicationRecord
   validates :name, :end_dow, :start_dow, presence: true
   validates :end_date, :start_date, presence: true
   before_create :anonymize
-  before_validation :init_dates
+  before_validation :init_dates #From DateSanitySupportConcern
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
@@ -216,10 +216,6 @@ class Project < ApplicationRecord
 
   # Validation check code
 
-  def init_dates
-    self.start_date ||= course.start_date
-    self.end_date ||= course.end_date
-  end
 
   def activation_status
     if active_before_last_save && active &&

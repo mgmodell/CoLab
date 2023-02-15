@@ -16,7 +16,7 @@ export default function AdminListToolbar( props ){
         <GridToolbarContainer>
             <GridToolbarDensitySelector />
             <GridToolbarFilterButton />
-            <Tooltip title="New School">
+            <Tooltip title="New">
               <IconButton
                 id="new_school"
                 onClick={event => {
@@ -24,7 +24,7 @@ export default function AdminListToolbar( props ){
                   //window.location.href =
                   //  endpoints.endpoints[endpointSet].schoolCreateUrl;
                 }}
-                aria-label="New School"
+                aria-label="New"
                 size='small'
 
               >

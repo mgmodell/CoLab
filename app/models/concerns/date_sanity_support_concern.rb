@@ -7,6 +7,11 @@ module DateSanitySupportConcern
     validate :date_sanity
   end
 
+  def init_dates
+    self.start_date ||= course.start_date
+    self.end_date ||= course.end_date
+  end
+
   def date_sanity
     
     return if start_date.nil? || end_date.nil?

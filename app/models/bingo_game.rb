@@ -29,7 +29,6 @@ class BingoGame < ApplicationRecord
   validate :group_components
 
   before_create :anonymize
-  # before_validation :init_dates
   before_save :reset_notification
 
   def status_for_user(user)
@@ -286,11 +285,6 @@ class BingoGame < ApplicationRecord
 
   def reset_notification
     self.instructor_notified = false if end_date_changed? && instructor_notified && term_list_date <= end_date
-  end
-
-  def init_dates
-    self.start_date ||= course.start_date
-    self.end_date ||= course.end_date
   end
 
   # validation methods

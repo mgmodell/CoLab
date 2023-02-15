@@ -18,6 +18,16 @@ import Select from "@mui/material/Select";
 import Paper from "@mui/material/Paper";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
+import AddIcon from '@mui/icons-material/Add';
+
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  GridRowModes,
+  GridToolbarContainer,
+  GridToolbarDensitySelector
+} from '@mui/x-data-grid';
 
 import { Settings } from "luxon";
 
@@ -25,6 +35,8 @@ import { Settings } from "luxon";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
+import { number } from "prop-types";
+import { IconButton, Tooltip } from "@mui/material";
 
 export default function RubricDataAdmin(props) {
   const category = "rubric";
@@ -49,6 +61,18 @@ export default function RubricDataAdmin(props) {
 
   const dispatch = useDispatch();
 
+  const columns: GridColDef[] = [
+    { field: 'id', hide: true },
+    { field: 'sequence', headerName: t( 'criteria.sequence' ), hide: true },
+    { field: 'description', headerName: t( 'criteria.description' ), editable: true },
+    { field: 'weight', headerName: t( 'criteria.weight' ), type: 'number', editable: true },
+    { field: 'l1_description', headerName: t( 'criteria.l1_description' ), editable: true },
+    { field: 'l2_description', headerName: t( 'criteria.l2_description' ), editable: true },
+    { field: 'l3_description', headerName: t( 'criteria.l3_description' ), editable: true },
+    { field: 'l4_description', headerName: t( 'criteria.l4_description' ), editable: true },
+    { field: 'l5_description', headerName: t( 'criteria.l5_description' ), editable: true },
+  ];
+
   let { rubricIdParam } = useParams();
   const [rubricId, setRubricId] = useState(rubricIdParam);
   const [rubricName, setRubricName] = useState("");
@@ -57,6 +81,9 @@ export default function RubricDataAdmin(props) {
   const [rubricVersion, setRubricVersion] = useState(1);
   const [rubricCreator, setRubricCreator] = useState('');
   const [rubricSchoolId, setRubricSchoolId] = useState( 0 );
+
+  const [rubricCriteria, setRubricCriteria] = useState( [] );
+
   const [messages, setMessages] = useState({});
 
   const timezones = useTypedSelector(state => {
@@ -71,7 +98,6 @@ export default function RubricDataAdmin(props) {
     } else {
       url = url + rubricId + ".json";
     }
-    console.log( `URL: ${url}`);
     axios
       .get(url, {})
       .then(response => {
@@ -83,6 +109,9 @@ export default function RubricDataAdmin(props) {
         setRubricVersion( rubric.version || 1 );
         setRubricCreator( rubric.creator );
         setRubricSchoolId( rubric.school_id );
+
+        setRubricCriteria( rubric.criteria || [] );
+
         dispatch(setClean(category));
       })
       .catch(error => {
@@ -110,6 +139,7 @@ export default function RubricDataAdmin(props) {
         rubric: {
           name: rubricName,
           description: rubricDescription,
+          criteria_attributes: rubricCriteria
         }
       }
     })
@@ -123,6 +153,8 @@ export default function RubricDataAdmin(props) {
           setRubricVersion( rubric.version );
           setRubricPublished( rubric.published );
           setRubricCreator( rubric.creator );
+
+          setRubricCriteria( rubric.criteria || []);
 
           dispatch(setClean(category));
           dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
@@ -150,7 +182,7 @@ export default function RubricDataAdmin(props) {
 
   useEffect(() => {
     dispatch(setDirty(category));
-  }, [rubricName, rubricDescription]);
+  }, [rubricName, rubricDescription, rubricCriteria ]);
 
   const saveButton = dirty ? (
     <Button variant="contained" onClick={saveRubric} disabled={!dirty}>
@@ -186,6 +218,54 @@ export default function RubricDataAdmin(props) {
         margin="normal"
       />
       <br />
+        <div style={{ display: 'flex', height: '100%'}} >
+          <div style={ { flexGrow: 1 }} >
+          <DataGrid
+            editMode="row"
+            experimentalFeatures={{ newEditingApi: true }}
+            autoHeight
+            rows={rubricCriteria}
+            columns={columns}
+            onCellClick={ ( params, event, details )=>{
+              /*
+              const id = schools[cellMeta.dataIndex].id;
+              navigate(String(id));
+              */
+
+            } }
+            components={{
+              Toolbar: (() =>
+
+                <GridToolbarContainer>
+                  <GridToolbarDensitySelector />
+                  <Tooltip title={t('criteria.new')}>
+                    <IconButton
+                      id='new_criteria'
+                      onClick={event =>{
+                        const newList = [...rubricCriteria];
+                        newList.push(
+                          {
+                            id: -1 * (rubricCriteria.length + 1) ,
+                            description: 'New Criteria',
+                            sequence: rubricCriteria.length + 1,
+                            weight: 1,
+                            l1_description: "The bare minimum to register a score."
+                          } );
+                        setRubricCriteria( newList);
+                      }}
+                      aria-label={t('criteria.new')}
+                      size='small'
+                      >
+                        <AddIcon />
+                        {t('criteria.new')}
+                      </IconButton>
+                  </Tooltip>
+                </GridToolbarContainer>
+              ),
+            }}
+          />
+        </div>
+      </div>
       {saveButton}
     </Paper>
   ) : null;
