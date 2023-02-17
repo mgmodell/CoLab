@@ -41,15 +41,20 @@ class RubricsController < ApplicationController
         response = @rubric.as_json(
             only: [:id, :name, :description, 
                     :published, :school_id, :version,
-                    :parent_id, criteria: [ 
-                      :description, :sequence,
-                      :weight,
-                      :l1_description,
-                      :l2_description,
-                      :l3_description,
-                      :l4_description,
-                      :l5_description
-                    ]]
+                    :parent_id],
+                    include: {
+                      criteria: { only:
+                        [
+                          :id,
+                          :description, :sequence,
+                          :weight,
+                          :l1_description,
+                          :l2_description,
+                          :l3_description,
+                          :l4_description,
+                          :l5_description
+                        ]}
+                    }
           )
         response[:user] = @rubric.user.informal_name( anon )
         render json: response
@@ -85,11 +90,39 @@ class RubricsController < ApplicationController
   def update
     respond_to do |format|
       if @rubric.update(rubric_params)
-        format.html { redirect_to rubric_url(@rubric), notice: "Rubric was successfully updated." }
-        format.json { render :show, status: :ok, location: @rubric }
+        format.json do
+          render json: {
+            rubric: @rubric.as_json(
+              only: [:id, :name, :description, 
+                    :published, :school_id, :version,
+                    :parent_id],
+                    include: {
+                      criteria: { only:
+                        [
+                          :id,
+                          :description, :sequence,
+                          :weight,
+                          :l1_description,
+                          :l2_description,
+                          :l3_description,
+                          :l4_description,
+                          :l5_description
+                        ]}
+                    }
+                  ),
+              messages: {
+                main: 'Successfully saved rubric',
+              }
+          }
+
+        end
       else
-        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @rubric.errors, status: :unprocessable_entity }
+        format.json do
+          render json: {
+              messages: @rubric.errors.full_messages
+          }
+        end
       end
     end
   end
@@ -107,7 +140,7 @@ class RubricsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_rubric
-      @rubric = Rubric.find(params[:id])
+      @rubric = Rubric.includes(:criteria).find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

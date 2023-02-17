@@ -22,11 +22,15 @@ import AddIcon from '@mui/icons-material/Add';
 
 import {
   DataGrid,
+  GridCellEditStopParams,
   GridCellParams,
   GridColDef,
+  GridPreProcessEditCellProps,
   GridRowModes,
   GridToolbarContainer,
-  GridToolbarDensitySelector
+  GridToolbarDensitySelector,
+  GridValueSetterParams,
+  MuiEvent
 } from '@mui/x-data-grid';
 
 import { Settings } from "luxon";
@@ -61,16 +65,29 @@ export default function RubricDataAdmin(props) {
 
   const dispatch = useDispatch();
 
+  const cellSetter = (params: GridCellEditStopParams, event: MuiEvent)=>{
+    rubricCriteria.find( (criterium)=>{ return criterium.id === params.id} )['description'] =
+      event.target.value;
+    setRubricCriteria( rubricCriteria );
+  };
+
   const columns: GridColDef[] = [
     { field: 'id', hide: true },
     { field: 'sequence', headerName: t( 'criteria.sequence' ), hide: true },
-    { field: 'description', headerName: t( 'criteria.description' ), editable: true },
-    { field: 'weight', headerName: t( 'criteria.weight' ), type: 'number', editable: true },
-    { field: 'l1_description', headerName: t( 'criteria.l1_description' ), editable: true },
-    { field: 'l2_description', headerName: t( 'criteria.l2_description' ), editable: true },
-    { field: 'l3_description', headerName: t( 'criteria.l3_description' ), editable: true },
-    { field: 'l4_description', headerName: t( 'criteria.l4_description' ), editable: true },
-    { field: 'l5_description', headerName: t( 'criteria.l5_description' ), editable: true },
+    { field: 'description', headerName: t( 'criteria.description' ),
+      editable: true },
+    { field: 'weight', headerName: t( 'criteria.weight' ), type: 'number',
+      editable: true },
+    { field: 'l1_description', headerName: t( 'criteria.l1_description' ),
+      editable: true },
+    { field: 'l2_description', headerName: t( 'criteria.l2_description' ),
+      editable: true },
+    { field: 'l3_description', headerName: t( 'criteria.l3_description' ),
+      editable: true },
+    { field: 'l4_description', headerName: t( 'criteria.l4_description' ),
+      editable: true },
+    { field: 'l5_description', headerName: t( 'criteria.l5_description' ),
+      editable: true },
   ];
 
   let { rubricIdParam } = useParams();
@@ -132,6 +149,10 @@ export default function RubricDataAdmin(props) {
       (null == rubricId ? props.rubricId : rubricId) +
       ".json";
 
+    const saveableCriteria = rubricCriteria.map( (value, index, array)=>{
+      value.id = value.id < 1 ? null : value.id;
+      return value;
+    })
     axios({
       method: method,
       url: url,
@@ -139,13 +160,15 @@ export default function RubricDataAdmin(props) {
         rubric: {
           name: rubricName,
           description: rubricDescription,
-          criteria_attributes: rubricCriteria
+          criteria_attributes: saveableCriteria
         }
       }
     })
       .then(resp => {
         const data = resp["data"];
-        if (data.messages != null && Object.keys(data.messages).length < 2) {
+        const messages = data['messages'];
+
+        if (messages != null && Object.keys(messages).length < 2) {
           const rubric = data.rubric;
           setRubricId(rubric.id);
           setRubricName(rubric.name);
@@ -157,14 +180,14 @@ export default function RubricDataAdmin(props) {
           setRubricCriteria( rubric.criteria || []);
 
           dispatch(setClean(category));
-          dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
+          dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
           //setMessages(data.messages);
           dispatch(endTask("saving"));
         } else {
           dispatch(
-            addMessage(data.messages.main, new Date(), Priorities.ERROR)
+            addMessage(messages.main, new Date(), Priorities.ERROR)
           );
-          setMessages(data.messages);
+          setMessages(messages);
           dispatch(endTask("saving"));
         }
       })
@@ -221,18 +244,11 @@ export default function RubricDataAdmin(props) {
         <div style={{ display: 'flex', height: '100%'}} >
           <div style={ { flexGrow: 1 }} >
           <DataGrid
-            editMode="row"
+            onCellEditStop={cellSetter }
             experimentalFeatures={{ newEditingApi: true }}
             autoHeight
             rows={rubricCriteria}
             columns={columns}
-            onCellClick={ ( params, event, details )=>{
-              /*
-              const id = schools[cellMeta.dataIndex].id;
-              navigate(String(id));
-              */
-
-            } }
             components={{
               Toolbar: (() =>
 
