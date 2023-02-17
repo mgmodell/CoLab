@@ -65,28 +65,36 @@ export default function RubricDataAdmin(props) {
 
   const dispatch = useDispatch();
 
-  const cellSetter = (params: GridCellEditStopParams, event: MuiEvent)=>{
-    rubricCriteria.find( (criterium)=>{ return criterium.id === params.id} )['description'] =
-      event.target.value;
+  const editableValueSetter = (params: GridValueSetterParams, field)=>{
+    const row = rubricCriteria.find( (criterium)=>{ return criterium.id === params.row.id} )
+    row[field] = params.value
     setRubricCriteria( rubricCriteria );
-  };
+    return row;
+  }
 
   const columns: GridColDef[] = [
     { field: 'id', hide: true },
     { field: 'sequence', headerName: t( 'criteria.sequence' ), hide: true },
     { field: 'description', headerName: t( 'criteria.description' ),
+      valueSetter: (params, field) => editableValueSetter( params, 'description'),
       editable: true },
     { field: 'weight', headerName: t( 'criteria.weight' ), type: 'number',
+      valueSetter: (params, field) => editableValueSetter( params, 'weight'),
       editable: true },
     { field: 'l1_description', headerName: t( 'criteria.l1_description' ),
+      valueSetter: (params, field) => editableValueSetter( params, 'l1_description'),
       editable: true },
     { field: 'l2_description', headerName: t( 'criteria.l2_description' ),
+      valueSetter: (params, field) => editableValueSetter( params, 'l2_description'),
       editable: true },
     { field: 'l3_description', headerName: t( 'criteria.l3_description' ),
+      valueSetter: (params, field) => editableValueSetter( params, 'l3_description'),
       editable: true },
     { field: 'l4_description', headerName: t( 'criteria.l4_description' ),
+      valueSetter: (params, field) => editableValueSetter( params, 'l4_description'),
       editable: true },
     { field: 'l5_description', headerName: t( 'criteria.l5_description' ),
+      valueSetter: (params, field) => editableValueSetter( params, 'l5_description'),
       editable: true },
   ];
 
@@ -244,7 +252,6 @@ export default function RubricDataAdmin(props) {
         <div style={{ display: 'flex', height: '100%'}} >
           <div style={ { flexGrow: 1 }} >
           <DataGrid
-            onCellEditStop={cellSetter }
             experimentalFeatures={{ newEditingApi: true }}
             autoHeight
             rows={rubricCriteria}
