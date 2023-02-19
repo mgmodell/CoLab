@@ -24,7 +24,7 @@ import { DateTime } from "luxon";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
-const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
+const Editor = React.lazy(() => import( "../reactDraftWysiwygEditor"));
 
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
@@ -32,11 +32,6 @@ import htmlToDraft from "html-to-draftjs";
 import { useTranslation } from "react-i18next";
 
 import makeStyles from "@mui/styles/makeStyles";
-
-import ConceptChips from "./ConceptChips";
-const BingoGameDataAdminTable = React.lazy(() =>
-  import("./BingoGameDataAdminTable")
-);
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
@@ -58,90 +53,78 @@ const useStyles = makeStyles({
   }
 });
 
-export default function BingoGameDataAdmin(props) {
+export default function AssignmentDataAdmin(props) {
   const classes = useStyles();
 
-  const endpointSet = "bingo_game";
+  const category = "assignment";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
-  const { courseIdParam, bingoGameIdParam } = useParams();
+  const { courseIdParam, assignmentIdParam } = useParams();
   const dispatch = useDispatch();
 
-  const { t, i18n } = useTranslation("bingo_games");
+  const { t, i18n } = useTranslation(`${category}s`);
 
   const [dirty, setDirty] = useState(false);
   const [curTab, setCurTab] = useState("details");
   const [messages, setMessages] = useState({});
-  const [gameProjects, setGameProjects] = useState([
+  const [assignmentProjects, setAssignmentProjects] = useState([
     { id: -1, name: "None Selected" }
   ]);
-  const [concepts, setConcepts] = useState([]);
   const [saveStatus, setSaveStatus] = useState("");
-  const [resultData, setResultData] = useState(null);
-  const [gameTopic, setGameTopic] = useState("");
-  const [gameDescriptionEditor, setGameDescriptionEditor] = useState(
+  const [assignmentName, setAssignmentName] = useState("");
+  const [assignmentDescriptionEditor, setAssignmentDescriptionEditor] = useState(
     EditorState.createWithContent(
       ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
     )
   );
-  const [bingoGameId, setBingoGameId] = useState(
-    "new" === bingoGameIdParam ? null : bingoGameIdParam
+  const [assignmentId, setAssignmentId] = useState(
+    "new" === assignmentIdParam ? null : assignmentIdParam
   );
-  const [gameSource, setGameSource] = useState("");
-  const [gameTimezone, setGameTimezone] = useState("UTC");
-  const [gameActive, setGameActive] = useState(false);
-  const [gameEndDate, setGameEndDate] = useState(
+  const [assignmentActive, setAssignmentActive] = useState(false);
+  const [assignmentEndDate, setAssignmentEndDate] = useState(
     DateTime.local()
       .plus({ month: 3 })
       .toJSDate()
   );
-  const [gameStartDate, setGameStartDate] = useState(
+  const [assignmentStartDate, setAssignmentStartDate] = useState(
     DateTime.local().toJSDate()
   );
-  const [gameIndividualCount, setGameIndividualCount] = useState(0);
-  const [gameLeadTime, setGameLeadTime] = useState(0);
   //Group parameters
-  const [gameGroupOption, setGameGroupOption] = useState(false);
-  const [gameGroupDiscount, setGameGroupDiscount] = useState(0);
-  const [gameGroupProjectId, setGameGroupProjectId] = useState(-1);
+  const [assignmentGroupOption, setAssignmentGroupOption] = useState(false);
+  const [assignmentGroupProjectId, setAssignmentGroupProjectId] = useState(-1);
 
   useEffect(() => {
     if (endpointStatus) {
-      getBingoGameData();
-      initResultData();
+      getAssignmentData();
+      // initResultData();
     }
   }, [endpointStatus]);
 
   useEffect(() => {
     setDirty(true);
   }, [
-    gameTopic,
-    gameDescriptionEditor,
-    gameSource,
-    gameTimezone,
-    gameActive,
-    gameStartDate,
-    gameEndDate,
-    gameIndividualCount,
-    gameLeadTime,
-    gameGroupOption,
-    gameGroupDiscount,
-    gameGroupProjectId
+    assignmentName,
+    assignmentDescriptionEditor,
+    assignmentActive,
+    assignmentStartDate,
+    assignmentEndDate,
+    assignmentGroupOption,
+    assignmentGroupProjectId
   ]);
 
-  const saveBingoGame = () => {
-    const method = null === bingoGameId ? "POST" : "PATCH";
+  const saveAssignment = () => {
+    const method = null === assignmentId ? "POST" : "PATCH";
     dispatch(startTask("saving"));
 
     const url =
       endpoints.baseUrl +
       "/" +
-      (null === bingoGameId ? courseIdParam : bingoGameId) +
+      (null === assignmentId ? courseIdParam : assignmentId) +
       ".json";
 
     // Save
@@ -150,21 +133,17 @@ export default function BingoGameDataAdmin(props) {
       url: url,
       method: method,
       data: {
-        bingo_game: {
+        assignment: {
           course_id: courseIdParam,
-          topic: gameTopic,
+          name: assignmentName,
           description: draftToHtml(
-            convertToRaw(gameDescriptionEditor.getCurrentContent())
+            convertToRaw(assignmentDescriptionEditor.getCurrentContent())
           ),
-          source: gameSource,
-          active: gameActive,
-          start_date: gameStartDate,
-          end_date: gameEndDate,
-          individual_count: gameIndividualCount,
-          lead_time: gameLeadTime,
-          group_option: gameGroupOption,
-          group_discount: gameGroupDiscount,
-          project_id: gameGroupProjectId
+          active: assignmentActive,
+          start_date: assignmentStartDate,
+          end_date: assignmentEndDate,
+          group_option: assignmentGroupOption,
+          project_id: assignmentGroupProjectId
         }
       }
     })
@@ -176,7 +155,7 @@ export default function BingoGameDataAdmin(props) {
         setMessages(data["messages"]);
         dispatch(endTask("saving"));
 
-        getBingoGameData();
+        getAssignmentData();
       })
       .catch(error => {
         console.log("error", error);
@@ -200,31 +179,31 @@ export default function BingoGameDataAdmin(props) {
     }
   };
 
-  const getBingoGameData = () => {
+  const getAssignmentData = () => {
     setDirty(true);
     dispatch(startTask());
     var url = endpoints.baseUrl + "/";
-    if (null === bingoGameId) {
+    if (null === assignmentId) {
       url = url + "new/" + courseIdParam + ".json";
     } else {
-      url = url + bingoGameId + ".json";
+      url = url + assignmentId + ".json";
     }
     axios
       .get(url, {})
       .then(response => {
         const data = response.data;
+        console.log( response );
         const projects = new Array({ id: -1, name: "None Selected" }).concat(
           data.projects
         );
 
-        setGameProjects(projects);
-        setConcepts(data.concepts);
+        setAssignmentProjects(projects);
 
         //Set the bingo_game stuff
         const bingo_game = data.bingo_game;
-        setBingoGameId(bingo_game.id);
-        setGameTopic(bingo_game.topic || "");
-        setGameDescriptionEditor(
+        setAssignmentId(bingo_game.id);
+        setAssignmentName(bingo_game.topic || "");
+        setAssignmentDescriptionEditor(
           EditorState.createWithContent(
             ContentState.createFromBlockArray(
               htmlToDraft(bingo_game.description || "").contentBlocks
@@ -232,12 +211,12 @@ export default function BingoGameDataAdmin(props) {
           )
         );
         setGameSource(bingo_game.source || "");
-        setGameActive(bingo_game.active || false);
+        setAssignmentActive(bingo_game.active || false);
         var receivedDate = DateTime.fromISO(bingo_game.start_date).setZone(
           bingo_game.course.timezone
         );
-        setGameStartDate(receivedDate.toISO());
-        setGameEndDate(
+        setAssignmentStartDate(receivedDate.toISO());
+        setAssignmentEndDate(
           DateTime.fromISO(bingo_game.end_date)
             .setZone(bingo_game.course.timezone)
             .toISO()
@@ -245,9 +224,9 @@ export default function BingoGameDataAdmin(props) {
         setGameIndividualCount(bingo_game.individual_count || 0);
         setGameLeadTime(bingo_game.lead_time || 0);
         //Group options
-        setGameGroupOption(bingo_game.group_option || false);
+        setAssignmentGroupOption(bingo_game.group_option || false);
         setGameGroupDiscount(bingo_game.group_discount || 0);
-        setGameGroupProjectId(bingo_game.project_id);
+        setAssignmentGroupProjectId(bingo_game.project_id);
         setDirty(false);
         dispatch(endTask());
       })
@@ -267,33 +246,18 @@ export default function BingoGameDataAdmin(props) {
         variant="contained"
         color="primary"
         className={classes["button"]}
-        onClick={saveBingoGame}
-        id="save_bingo_game"
-        value="save_bingo_game"
+        onClick={saveAssignment}
+        id="save_assignment"
+        value="save_assignment"
       >
-        {null == bingoGameId ? t("create_bingo_btn") : t("update_bingo_btn")}
+        {null == assignmentId ? t("new.create_assignment_btn") : t("edit.update_assignment_btn")}
       </Button>
     </Suspense>
   ) : null;
 
-  const group_options = gameGroupOption ? (
+  const group_options = assignmentGroupOption ? (
     <Suspense fallback={<Skeleton variant="text" />}>
       <React.Fragment>
-        <Grid item xs={6}>
-          <TextField
-            id="bingo-name"
-            label={t("group_discount")}
-            type="number"
-            className={classes.textField}
-            value={gameGroupDiscount}
-            onChange={event =>
-              setGameGroupDiscount(parseInt(event.target.value))
-            }
-            margin="normal"
-            error={null != messages["name"]}
-            helper={messages["name"]}
-          />
-        </Grid>
         <Grid item xs={6}>
           <FormControl className={classes.formControl}>
             <InputLabel shrink htmlFor="bingo_game_project_id">
@@ -301,13 +265,13 @@ export default function BingoGameDataAdmin(props) {
             </InputLabel>
             <Select
               id="bingo_game_project_id"
-              value={gameGroupProjectId}
-              onChange={event => setGameGroupProjectId(event.target.value)}
+              value={assignmentGroupProjectId}
+              onChange={event => setAssignmentGroupProjectId(event.target.value)}
               displayEmpty
               name="bingo_game_project"
               className={classes.selectEmpty}
             >
-              {gameProjects.map(project => {
+              {assignmentProjects.map(project => {
                 return (
                   <MenuItem value={project.id} key={project.id}>
                     {project.name}
@@ -326,8 +290,8 @@ export default function BingoGameDataAdmin(props) {
         <TabContext value={curTab}>
           <Box>
             <TabList value={curTab} onChange={changeTab} centered>
-              <Tab value="details" label={t("game_details_pnl")} />
-              <Tab value="results" label={t("response_pnl")} />
+              <Tab value="details" label={t("edit.assignment_details_pnl")} />
+              <Tab value="results" label={t("edit.assignment_submissions_pnl")} />
             </TabList>
           </Box>
           <TabPanel value="details">
@@ -335,12 +299,12 @@ export default function BingoGameDataAdmin(props) {
               <Grid container spacing={3}>
                 <Grid item xs={12}>
                   <TextField
-                    id="topic"
-                    label={t("topic")}
+                    id="name"
+                    label={t("name")}
                     className={classes.textField}
-                    value={gameTopic}
+                    value={assignmentName}
                     fullWidth
-                    onChange={event => setGameTopic(event.target.value)}
+                    onChange={event => setAssignmentName(event.target.value)}
                     margin="normal"
                   />
                 </Grid>
@@ -349,7 +313,7 @@ export default function BingoGameDataAdmin(props) {
                     wrapperId="Description"
                     label={t("description")}
                     placeholder={t("description")}
-                    onEditorStateChange={setGameDescriptionEditor}
+                    onEditorStateChange={setAssignmentDescriptionEditor}
                     toolbarOnFocus
                     toolbar={{
                       options: [
@@ -386,39 +350,7 @@ export default function BingoGameDataAdmin(props) {
                         className: "bordered-option-classname"
                       }
                     }}
-                    editorState={gameDescriptionEditor}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    id="bingo-lead-time"
-                    label={t("lead_time")}
-                    className={classes.lead_time}
-                    value={gameLeadTime}
-                    type="number"
-                    onChange={event => setGameLeadTime(event.target.value)}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    margin="normal"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    id="bingo-individual_count"
-                    label={t("ind_term_count")}
-                    className={classes.textField}
-                    value={gameIndividualCount}
-                    type="number"
-                    onChange={event =>
-                      setGameIndividualCount(event.target.value)
-                    }
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    margin="normal"
-                    error={null != messages.individual_count}
-                    helperText={messages.individual_count}
+                    editorState={assignmentDescriptionEditor}
                   />
                 </Grid>
                 <LocalizationProvider dateAdapter={AdapterLuxon}>
@@ -429,8 +361,8 @@ export default function BingoGameDataAdmin(props) {
                       inputFormat="MM/dd/yyyy"
                       margin="normal"
                       label={t("open_date")}
-                      value={gameStartDate}
-                      onChange={setGameStartDate}
+                      value={assignmentStartDate}
+                      onChange={setAssignmentStartDate}
                       renderInput={props => (
                         <TextField id="bingo_game_start_date" {...props} />
                       )}
@@ -448,8 +380,8 @@ export default function BingoGameDataAdmin(props) {
                       inputFormat="MM/dd/yyyy"
                       margin="normal"
                       label={t("close_date")}
-                      value={gameEndDate}
-                      onChange={setGameEndDate}
+                      value={assignmentEndDate}
+                      onChange={setAssignmentEndDate}
                       renderInput={props => (
                         <TextField id="bingo_game_end_date" {...props} />
                       )}
@@ -465,8 +397,8 @@ export default function BingoGameDataAdmin(props) {
                   <FormControlLabel
                     control={
                       <Switch
-                        checked={gameActive}
-                        onChange={event => setGameActive(!gameActive)}
+                        checked={assignmentActive}
+                        onChange={event => setAssignmentActive(!assignmentActive)}
                       />
                     }
                     label={t("active")}
@@ -474,13 +406,13 @@ export default function BingoGameDataAdmin(props) {
                 </Grid>
                 <Grid item xs={12}>
                   <Switch
-                    checked={gameGroupOption}
+                    checked={assignmentGroupOption}
                     id="group_option"
-                    onChange={event => setGameGroupOption(!gameGroupOption)}
-                    disabled={null == gameProjects || 2 > gameProjects.length}
+                    onChange={event => setAssignmentGroupOption(!assignmentGroupOption)}
+                    disabled={null == assignmentProjects || 2 > assignmentProjects.length}
                   />
                   <InputLabel htmlFor="group_option">
-                    {t("group_option")}
+                    {t("edit.group_option")}
                   </InputLabel>
                 </Grid>
                 {group_options}
@@ -492,10 +424,7 @@ export default function BingoGameDataAdmin(props) {
           <TabPanel value="results">
             <Grid container style={{ height: "100%" }}>
               <Grid item xs={5}>
-                <ConceptChips concepts={concepts} />
-              </Grid>
-              <Grid item xs={7}>
-                <BingoGameDataAdminTable results_raw={resultData} />
+                Nothing here yet
               </Grid>
             </Grid>
           </TabPanel>
@@ -505,4 +434,4 @@ export default function BingoGameDataAdmin(props) {
   );
 }
 
-BingoGameDataAdmin.propTypes = {};
+AssignmentDataAdmin.propTypes = {};

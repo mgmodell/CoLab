@@ -1,0 +1,25 @@
+en:
+  assignments:
+    index:
+      title: List of Assignments
+    edit:
+      title: Edit Assignment
+      assignment_details_pnl: Assignment Details
+      assignment_submissions_pnl: Submissions
+      update_assignment_btn: Save Assignment
+      group_option: Groups Enabled?
+    show:
+      title: Assignment Details
+      edit_string: Edit assignment details
+      published: Is published?
+      creator: Created by
+    new:
+      title: New Assignment
+      create_assignment_btn: Create new Assignment
+    create_success: Assignment was created successfully!
+    destroy_success: Assignment was destroyed successfully!
+    update_success: Assignment was updated successfully!
+    back: Back to the list of assignments
+    name: Name
+    description: Description
+    version: Version

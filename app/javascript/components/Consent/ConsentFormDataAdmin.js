@@ -24,7 +24,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab/";
 
 import { EditorState, ContentState } from "draft-js";
 const Editor = React.lazy(() =>
-  import("../BingoBoards/reactDraftWysiwygEditor")
+  import("../reactDraftWysiwygEditor")
 );
 
 import htmlToDraft from "html-to-draftjs";

@@ -1,4 +1,4 @@
--- MariaDB dump 10.19  Distrib 10.10.2-MariaDB, for osx10.18 (arm64)
+-- MariaDB dump 10.19  Distrib 10.11.2-MariaDB, for osx10.18 (arm64)
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
@@ -207,7 +207,7 @@ CREATE TABLE `assignments` (
   `description` text DEFAULT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
-  `rubric_id` bigint(20) NOT NULL,
+  `rubric_id` bigint(20) DEFAULT NULL,
   `group_enabled` tinyint(1) NOT NULL DEFAULT 0,
   `course_id` int(11) NOT NULL,
   `project_id` int(11) DEFAULT NULL,
@@ -215,6 +215,8 @@ CREATE TABLE `assignments` (
   `created_at` datetime(6) NOT NULL,
   `updated_at` datetime(6) NOT NULL,
   `passing` int(11) DEFAULT 65,
+  `anon_name` varchar(255) DEFAULT NULL,
+  `anon_description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_assignments_on_rubric_id` (`rubric_id`),
   KEY `index_assignments_on_course_id` (`course_id`),
@@ -4663,6 +4665,9 @@ CREATE TABLE `rubrics` (
   `updated_at` datetime(6) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `school_id` int(11) DEFAULT NULL,
+  `anon_name` varchar(255) DEFAULT NULL,
+  `anon_description` varchar(255) DEFAULT NULL,
+  `anon_version` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_rubrics_on_name_and_version_and_parent_id` (`name`,`version`,`parent_id`),
   KEY `index_rubrics_on_parent_id` (`parent_id`),
@@ -4909,7 +4914,9 @@ INSERT INTO `schema_migrations` VALUES
 ('20230128043847'),
 ('20230206032450'),
 ('20230206040920'),
-('20230212031949');
+('20230212031949'),
+('20230218040723'),
+('20230219025034');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5372,4 +5379,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-11 22:57:39
+-- Dump completed on 2023-02-18 21:56:56

@@ -40,7 +40,8 @@ class CoursesController < ApplicationController
             response[:new_activity_links] = [
               { name: 'Group Experience', link: 'experience' },
               { name: 'Project', link: 'project' },
-              { name: 'Terms List', link: 'bingo_game' }
+              { name: 'Terms List', link: 'bingo_game' },
+              { name: 'Assignment', link: 'assignment'}
             ]
             activities = @course.get_activities.collect do |activity|
               {

@@ -127,6 +127,9 @@ class HomeController < ApplicationController
           worksheetResultsUrl: ws_results_path(id: ''),
           worksheetScoreUrl: ws_score_path(id: '')
         }
+        ep_hash[:assignment] = {
+          baseUrl: assignments_path
+        }
         ep_hash[:experience_admin] = {
           baseUrl: experiences_path
         }
@@ -134,8 +137,7 @@ class HomeController < ApplicationController
           baseUrl: concepts_path
         }
         ep_hash[:rubric] = {
-          baseUrl: rubrics_path,
-          rubricCreateUrl: new_rubric_path,
+          baseUrl: rubrics_path
         }
         ep_hash[:consent_form] = {
           baseUrl: consent_forms_path,

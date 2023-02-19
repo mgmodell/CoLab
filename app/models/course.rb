@@ -37,6 +37,8 @@ class Course < ApplicationRecord
     activities = projects.to_a
     activities.concat bingo_games
     activities.concat experiences
+    activities.concat assignments
+
     activities.sort_by(&:end_date)
   end
 

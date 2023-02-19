@@ -10,6 +10,7 @@ const BingoGameDataAdmin = React.lazy(() =>
 );
 const ExperienceDataAdmin = React.lazy(() => import("./experiences/ExperienceDataAdmin"));
 const ProjectDataAdmin = React.lazy(() => import("./ProjectDataAdmin"));
+const AssignmentDataAdmin = React.lazy(() => import("./assignments/AssignmentDataAdmin"));
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function CourseAdmin(props) {
@@ -37,6 +38,10 @@ export default function CourseAdmin(props) {
       <Route
         path={`:courseIdParam/project/:projectIdParam`}
         element={<ProjectDataAdmin />}
+      />
+      <Route
+        path={`:courseIdParam/assignment/:assignmentIdParam`}
+        element={<AssignmentDataAdmin />}
       />
       <Route path={`:courseIdParam`} element={<CourseDataAdmin />} />
       <Route exact path={`/`} element={<CourseList />} />

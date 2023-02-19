@@ -2,6 +2,7 @@ import React from "react";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import GridOffIcon from "@mui/icons-material/GridOff";
 import TuneIcon from "@mui/icons-material/Tune";
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 export function iconForType(type) {
   var icon;
@@ -11,6 +12,8 @@ export function iconForType(type) {
     icon = <TuneIcon />;
   } else if (["Terms List", "Bingo Games"].includes(type)) {
     icon = <GridOffIcon />;
+  } else if (["Group Assignment", "Assignment"].includes(type)) {
+    icon = <AssignmentIcon />;
   } else {
     console.log(type);
   }

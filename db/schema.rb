@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_12_031949) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_19_025034) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -69,7 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_12_031949) do
     t.text "description"
     t.date "start_date", null: false
     t.date "end_date", null: false
-    t.bigint "rubric_id", null: false
+    t.bigint "rubric_id"
     t.boolean "group_enabled", default: false, null: false
     t.integer "course_id", null: false
     t.integer "project_id"
@@ -77,6 +77,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_12_031949) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "passing", default: 65
+    t.string "anon_name"
+    t.string "anon_description"
     t.index ["course_id"], name: "index_assignments_on_course_id"
     t.index ["project_id"], name: "index_assignments_on_project_id"
     t.index ["rubric_id"], name: "index_assignments_on_rubric_id"
@@ -503,6 +505,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_12_031949) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.integer "school_id"
+    t.string "anon_name"
+    t.string "anon_description"
+    t.integer "anon_version"
     t.index ["name", "version", "parent_id"], name: "index_rubrics_on_name_and_version_and_parent_id", unique: true
     t.index ["parent_id"], name: "index_rubrics_on_parent_id"
     t.index ["school_id"], name: "index_rubrics_on_school_id"
