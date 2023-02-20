@@ -1,5 +1,8 @@
 class AssignmentsController < ApplicationController
   before_action :set_assignment, only: %i[ show edit update destroy ]
+  include PermissionsCheck
+
+  before_action :check_editor
 
   # GET /assignments or /assignments.json
   def index
@@ -8,6 +11,28 @@ class AssignmentsController < ApplicationController
 
   # GET /assignments/1 or /assignments/1.json
   def show
+    anon = current_user.anonymize?
+    respond_to do |format|
+      format.json do
+        response = {
+          assignment: @assignment.as_json(
+              only: [:id, :start_date, :end_date,
+                :rubric_id, :group_enabled, :project_id,
+                :active ]
+            )
+          }
+        response[:assignment][:name] = anon ? @assignment.name : @assignment.anon_name
+        response[:assignment][:description] = anon ? @assignment.description : @assignment.anon_description
+
+        response[:course] = {
+          timezone: @assignment.course.timezone
+        }
+        response[:projects] = @assignment.course.projects.as_json(
+          only: [:id, :name ]
+        )
+        render json: response
+      end
+    end
   end
 
   # GET /assignments/new

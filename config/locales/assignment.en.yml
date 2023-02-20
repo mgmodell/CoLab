@@ -21,5 +21,8 @@ en:
     update_success: Assignment was updated successfully!
     back: Back to the list of assignments
     name: Name
+    open_date: Start Date
+    close_date: Close Date
     description: Description
+    active: Is Active?
     version: Version

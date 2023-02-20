@@ -200,33 +200,33 @@ export default function AssignmentDataAdmin(props) {
         setAssignmentProjects(projects);
 
         //Set the bingo_game stuff
-        const bingo_game = data.bingo_game;
-        setAssignmentId(bingo_game.id);
-        setAssignmentName(bingo_game.topic || "");
+        const assignment = data;
+        setAssignmentId(assignment.id);
+        setAssignmentName(assignment.name || "");
         setAssignmentDescriptionEditor(
           EditorState.createWithContent(
             ContentState.createFromBlockArray(
-              htmlToDraft(bingo_game.description || "").contentBlocks
+              htmlToDraft(assignment.description || "").contentBlocks
             )
           )
         );
-        setGameSource(bingo_game.source || "");
-        setAssignmentActive(bingo_game.active || false);
-        var receivedDate = DateTime.fromISO(bingo_game.start_date).setZone(
-          bingo_game.course.timezone
+        setGameSource(assignment.source || "");
+        setAssignmentActive(assignment.active || false);
+        var receivedDate = DateTime.fromISO(assignment.start_date).setZone(
+          assignment.course.timezone
         );
         setAssignmentStartDate(receivedDate.toISO());
         setAssignmentEndDate(
-          DateTime.fromISO(bingo_game.end_date)
-            .setZone(bingo_game.course.timezone)
+          DateTime.fromISO(assignment.end_date)
+            .setZone(assignment.course.timezone)
             .toISO()
         );
-        setGameIndividualCount(bingo_game.individual_count || 0);
-        setGameLeadTime(bingo_game.lead_time || 0);
+        setGameIndividualCount(assignment.individual_count || 0);
+        setGameLeadTime(assignment.lead_time || 0);
         //Group options
-        setAssignmentGroupOption(bingo_game.group_option || false);
-        setGameGroupDiscount(bingo_game.group_discount || 0);
-        setAssignmentGroupProjectId(bingo_game.project_id);
+        setAssignmentGroupOption(assignment.group_option || false);
+        setGameGroupDiscount(assignment.group_discount || 0);
+        setAssignmentGroupProjectId(assignment.project_id);
         setDirty(false);
         dispatch(endTask());
       })
