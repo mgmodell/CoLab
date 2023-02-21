@@ -50,8 +50,7 @@ class AssignmentsController < ApplicationController
   def update
     respond_to do |format|
       if @assignment.update(assignment_params)
-        format.html { redirect_to assignment_url(@assignment), notice: "Assignment was successfully updated." }
-        format.json { render :show, status: :ok, location: @assignment }
+        render json: standardized_response( @assignment, {main: 'Successfully saved assignment'})
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @assignment.errors, status: :unprocessable_entity }
