@@ -2,7 +2,7 @@ class RubricsController < ApplicationController
   include PermissionsCheck
 
   before_action :set_rubric, only: %i[ show edit update destroy ]
-  before_action :check_admin
+  before_action :check_editor
 
 
   # GET /rubrics or /rubrics.json
@@ -38,26 +38,7 @@ class RubricsController < ApplicationController
     anon = current_user.anonymize?
     respond_to do |format|
       format.json do
-        response = @rubric.as_json(
-            only: [:id, :name, :description, 
-                    :published, :school_id, :version,
-                    :parent_id],
-                    include: {
-                      criteria: { only:
-                        [
-                          :id,
-                          :description, :sequence,
-                          :weight,
-                          :l1_description,
-                          :l2_description,
-                          :l3_description,
-                          :l4_description,
-                          :l5_description
-                        ]}
-                    }
-          )
-        response[:user] = @rubric.user.informal_name( anon )
-        render json: response
+        render json: standardized_response( @rubric )
       end
     end
   end
@@ -65,10 +46,6 @@ class RubricsController < ApplicationController
   # GET /rubrics/new
   def new
     @rubric = Rubric.new
-  end
-
-  # GET /rubrics/1/edit
-  def edit
   end
 
   # POST /rubrics or /rubrics.json
@@ -91,30 +68,7 @@ class RubricsController < ApplicationController
     respond_to do |format|
       if @rubric.update(rubric_params)
         format.json do
-          render json: {
-            rubric: @rubric.as_json(
-              only: [:id, :name, :description, 
-                    :published, :school_id, :version,
-                    :parent_id],
-                    include: {
-                      criteria: { only:
-                        [
-                          :id,
-                          :description, :sequence,
-                          :weight,
-                          :l1_description,
-                          :l2_description,
-                          :l3_description,
-                          :l4_description,
-                          :l5_description
-                        ]}
-                    }
-                  ),
-              messages: {
-                main: 'Successfully saved rubric',
-              }
-          }
-
+          render json: standardized_response( @rubric, { main: 'Successfully saved rubric'} )
         end
       else
         format.json { render json: @rubric.errors, status: :unprocessable_entity }
@@ -138,6 +92,36 @@ class RubricsController < ApplicationController
   end
 
   private
+
+  def standardized_response rubric, messages = { }
+    anon = current_user.anonymize?
+        response = {
+          rubric: rubric.as_json(
+            only: [:id, :name, :description, 
+                    :published, :school_id, :version,
+                    :parent_id],
+                    include: {
+                      criteria: { only:
+                        [
+                          :id,
+                          :description, :sequence,
+                          :weight,
+                          :l1_description,
+                          :l2_description,
+                          :l3_description,
+                          :l4_description,
+                          :l5_description
+                        ]}
+                    }
+          ),
+          messages: messages
+        }
+        response[:rubric][:name] = anon ? rubric.name : rubric.anon_name
+        response[:rubric][:description] = anon ? rubric.description : rubric.anon_description
+        response[:rubric][:user] = rubric.user.informal_name( anon )
+        response
+  end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_rubric
       @rubric = Rubric.includes(:criteria).find(params[:id])

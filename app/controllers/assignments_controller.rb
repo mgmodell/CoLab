@@ -1,8 +1,10 @@
 class AssignmentsController < ApplicationController
-  before_action :set_assignment, only: %i[ show edit update destroy ]
+  before_action :set_assignment, only: %i[show edit update destroy]
   include PermissionsCheck
 
   before_action :check_editor
+
+  before_action :check_admin, only: :index
 
   # GET /assignments or /assignments.json
   def index
@@ -11,26 +13,11 @@ class AssignmentsController < ApplicationController
 
   # GET /assignments/1 or /assignments/1.json
   def show
+    #TODO: Check if course owner
     anon = current_user.anonymize?
     respond_to do |format|
       format.json do
-        response = {
-          assignment: @assignment.as_json(
-              only: [:id, :start_date, :end_date,
-                :rubric_id, :group_enabled, :project_id,
-                :active ]
-            )
-          }
-        response[:assignment][:name] = anon ? @assignment.name : @assignment.anon_name
-        response[:assignment][:description] = anon ? @assignment.description : @assignment.anon_description
-
-        response[:course] = {
-          timezone: @assignment.course.timezone
-        }
-        response[:projects] = @assignment.course.projects.as_json(
-          only: [:id, :name ]
-        )
-        render json: response
+        render json: standardized_response( @assignment )
       end
     end
   end
@@ -83,6 +70,26 @@ class AssignmentsController < ApplicationController
   end
 
   private
+  def standardized_response assignment, messages = {}
+    anon = current_user.anonymize?
+        response = {
+          assignment: assignment.as_json(
+              only: [:id, :start_date, :end_date,
+                :rubric_id, :group_enabled, :project_id,
+                :active ]
+            )
+          }
+        response[:assignment][:name] = anon ? assignment.name : assignment.anon_name
+        response[:assignment][:description] = anon ? assignment.description : assignment.anon_description
+
+        response[:course] = {
+          timezone: assignment.course.timezone
+        }
+        response[:projects] = assignment.course.projects.as_json(
+          only: [:id, :name ]
+        )
+        response
+  end
     # Use callbacks to share common setup or constraints between actions.
     def set_assignment
       @assignment = Assignment.find(params[:id])
