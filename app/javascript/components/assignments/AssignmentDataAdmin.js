@@ -192,7 +192,6 @@ export default function AssignmentDataAdmin(props) {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        console.log( response );
         const projects = new Array({ id: -1, name: "None Selected" }).concat(
           data.projects
         );
@@ -214,7 +213,6 @@ export default function AssignmentDataAdmin(props) {
         var receivedDate = DateTime.fromISO(assignment.start_date).setZone(
           assignment.course.timezone
         );
-        console.log( receivedDate );
         setAssignmentStartDate(receivedDate.toISO());
         setAssignmentEndDate(
           DateTime.fromISO(assignment.end_date)
