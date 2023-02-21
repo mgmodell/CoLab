@@ -81,8 +81,8 @@ class AssignmentsController < ApplicationController
         response[:assignment][:name] = anon ? assignment.name : assignment.anon_name
         response[:assignment][:description] = anon ? assignment.description : assignment.anon_description
 
-        response[:course] = {
-          timezone: assignment.course.timezone
+        response[:assignment][:course] = {
+          timezone: ActiveSupport::TimeZone.new( assignment.course.timezone ).tzinfo.name
         }
         response[:projects] = assignment.course.projects.as_json(
           only: [:id, :name ]

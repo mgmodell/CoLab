@@ -200,7 +200,7 @@ export default function AssignmentDataAdmin(props) {
         setAssignmentProjects(projects);
 
         //Set the bingo_game stuff
-        const assignment = data;
+        const assignment = data.assignment;
         setAssignmentId(assignment.id);
         setAssignmentName(assignment.name || "");
         setAssignmentDescriptionEditor(
@@ -210,22 +210,19 @@ export default function AssignmentDataAdmin(props) {
             )
           )
         );
-        setGameSource(assignment.source || "");
         setAssignmentActive(assignment.active || false);
         var receivedDate = DateTime.fromISO(assignment.start_date).setZone(
           assignment.course.timezone
         );
+        console.log( receivedDate );
         setAssignmentStartDate(receivedDate.toISO());
         setAssignmentEndDate(
           DateTime.fromISO(assignment.end_date)
             .setZone(assignment.course.timezone)
             .toISO()
         );
-        setGameIndividualCount(assignment.individual_count || 0);
-        setGameLeadTime(assignment.lead_time || 0);
         //Group options
         setAssignmentGroupOption(assignment.group_option || false);
-        setGameGroupDiscount(assignment.group_discount || 0);
         setAssignmentGroupProjectId(assignment.project_id);
         setDirty(false);
         dispatch(endTask());
