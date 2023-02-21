@@ -22,7 +22,7 @@ RUN apt -y install \
 RUN apt autoremove && \
     apt clean
 
-RUN groupadd -r colab && \
+RUN groupadd -g $GID -r colab && \
   useradd -u $UID -g $GID --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
 
 
