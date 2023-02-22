@@ -64,6 +64,11 @@ export default function RubricDataAdmin(props) {
   });
 
   const dispatch = useDispatch();
+  const freshCriteria = {
+                            description: 'New Criteria',
+                            weight: 1,
+                            l1_description: "The bare minimum to register a score."
+                          };
 
   const editableValueSetter = (params: GridValueSetterParams, field)=>{
     const row = rubricCriteria.find( (criterium)=>{ return criterium.id === params.row.id} )
@@ -73,29 +78,30 @@ export default function RubricDataAdmin(props) {
   }
 
   const columns: GridColDef[] = [
-    { field: 'id', hide: true },
-    { field: 'sequence', headerName: t( 'criteria.sequence' ), hide: true },
+    { field: 'id', hide: true, sortable: false },
+    { field: 'sequence', headerName: t( 'criteria.sequence' ),
+      hide: true, sortable: true },
     { field: 'description', headerName: t( 'criteria.description' ),
       valueSetter: (params, field) => editableValueSetter( params, 'description'),
-      editable: true },
+      editable: true, sortable: false },
     { field: 'weight', headerName: t( 'criteria.weight' ), type: 'number',
       valueSetter: (params, field) => editableValueSetter( params, 'weight'),
-      editable: true },
+      editable: true, sortable: false },
     { field: 'l1_description', headerName: t( 'criteria.l1_description' ),
       valueSetter: (params, field) => editableValueSetter( params, 'l1_description'),
-      editable: true },
+      editable: true, sortable: false },
     { field: 'l2_description', headerName: t( 'criteria.l2_description' ),
       valueSetter: (params, field) => editableValueSetter( params, 'l2_description'),
-      editable: true },
+      editable: true, sortable: false },
     { field: 'l3_description', headerName: t( 'criteria.l3_description' ),
       valueSetter: (params, field) => editableValueSetter( params, 'l3_description'),
-      editable: true },
+      editable: true, sortable: false },
     { field: 'l4_description', headerName: t( 'criteria.l4_description' ),
       valueSetter: (params, field) => editableValueSetter( params, 'l4_description'),
-      editable: true },
+      editable: true, sortable: false },
     { field: 'l5_description', headerName: t( 'criteria.l5_description' ),
       valueSetter: (params, field) => editableValueSetter( params, 'l5_description'),
-      editable: true },
+      editable: true, sortable: false },
   ];
 
   let { rubricIdParam } = useParams();
@@ -107,7 +113,9 @@ export default function RubricDataAdmin(props) {
   const [rubricCreator, setRubricCreator] = useState('');
   const [rubricSchoolId, setRubricSchoolId] = useState( 0 );
 
-  const [rubricCriteria, setRubricCriteria] = useState( [] );
+  const [rubricCriteria, setRubricCriteria] = useState( [
+    Object.assign( { id: -1, sequence: 1 }, freshCriteria)
+  ] );
 
   const [messages, setMessages] = useState({});
 
@@ -126,7 +134,7 @@ export default function RubricDataAdmin(props) {
     axios
       .get(url, {})
       .then(response => {
-        const rubric = response.data;
+        const rubric = response.data.rubric;
 
         setRubricName(rubric.name || "");
         setRubricDescription(rubric.description || "");
@@ -256,6 +264,10 @@ export default function RubricDataAdmin(props) {
             autoHeight
             rows={rubricCriteria}
             columns={columns}
+            sortModel={[{
+              field: 'sequence',
+              sort: 'asc'
+            }]}
             components={{
               Toolbar: (() =>
 
@@ -266,14 +278,12 @@ export default function RubricDataAdmin(props) {
                       id='new_criteria'
                       onClick={event =>{
                         const newList = [...rubricCriteria];
-                        newList.push(
+                        const newCriteria = Object.assign(
                           {
-                            id: -1 * (rubricCriteria.length + 1) ,
-                            description: 'New Criteria',
+                            id: -1 * (rubricCriteria.length + 1 ),
                             sequence: rubricCriteria.length + 1,
-                            weight: 1,
-                            l1_description: "The bare minimum to register a score."
-                          } );
+                          }, freshCriteria );
+                        newList.push( newCriteria );
                         setRubricCriteria( newList);
                       }}
                       aria-label={t('criteria.new')}

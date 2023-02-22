@@ -35,7 +35,6 @@ class RubricsController < ApplicationController
 
   # GET /rubrics/1 or /rubrics/1.json
   def show
-    anon = current_user.anonymize?
     respond_to do |format|
       format.json do
         render json: standardized_response( @rubric )
@@ -54,8 +53,7 @@ class RubricsController < ApplicationController
 
     respond_to do |format|
       if @rubric.save
-        format.html { redirect_to rubric_url(@rubric), notice: "Rubric was successfully created." }
-        format.json { render :show, status: :created, location: @rubric }
+        render json: standardized_response( @rubric )
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @rubric.errors, status: :unprocessable_entity }
@@ -95,6 +93,9 @@ class RubricsController < ApplicationController
 
   def standardized_response rubric, messages = { }
     anon = current_user.anonymize?
+    puts current_user.inspect
+    puts current_user.anonymize?
+
         response = {
           rubric: rubric.as_json(
             only: [:id, :name, :description, 
@@ -116,8 +117,8 @@ class RubricsController < ApplicationController
           ),
           messages: messages
         }
-        response[:rubric][:name] = anon ? rubric.name : rubric.anon_name
-        response[:rubric][:description] = anon ? rubric.description : rubric.anon_description
+        response[:rubric][:name] = anon ? rubric.anon_name : rubric.name
+        response[:rubric][:description] = anon ? rubric.anon_description : rubric.description 
         response[:rubric][:user] = rubric.user.informal_name( anon )
         response
   end
