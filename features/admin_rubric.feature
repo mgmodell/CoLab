@@ -39,7 +39,7 @@ Feature: Rubric administration
      And the user sets criteria 2 level 3 to "Introduces 3 common features and explains how each one works"
      And the user sees the criteria 2 weight is 10
      And the user sets the criteria 2 weight to 30
-    Then the user clicks "Create Rubric"
+    Then the user clicks the "Create Rubic" button
     Then close all messages
     #Check what was saved
     Then retrieve the "latest" rubric from the db

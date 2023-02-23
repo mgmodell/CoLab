@@ -52,7 +52,7 @@ Feature: Assignment administration
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
     Then the user checks "Make groups available?"
-    Then the user sets the assignment project to the course's project
+    Then the user sets the assignment project to the course project
     Then the user clicks "Create Assignment"
     Then close all messages
     #Check what was saved
@@ -63,7 +63,7 @@ Feature: Assignment administration
      And the assignment "close" field is "2/10/1985"
      And the assignment "is not" active
      And the assignment "is" group capable
-     And the assignment project is the course's project
+     And the assignment project is the course project
 
 
   @javascript
@@ -84,13 +84,13 @@ Feature: Assignment administration
     Then the user switches to the "Activities" tab
     Then the user clicks "Sack Troy"
     Then the user checks "Make groups available?"
-    Then the user sets the assignment project to the course's project
+    Then the user sets the assignment project to the course project
     Then the user clicks "Update Assignment"
     Then close all messages
     #Check what was saved
     Then retrieve the "latest" assignment from the db
      And the assignment "is" group capable
-     And the assignment project is the course's project
+     And the assignment project is the course project
      And the assignment "is not" active
 
   @javascript
@@ -171,7 +171,7 @@ Feature: Assignment administration
     Then the user switches to the "Activities" tab
     Then the user clicks "Sack Troy"
     Then the user checks "Make groups available?"
-    Then the user sets the assignment project to the course's project
+    Then the user sets the assignment project to the course project
     Then the user clicks "Update Assignment"
     Then close all messages
     #Check what was saved
