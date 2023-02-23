@@ -38,7 +38,7 @@ Then('the rubric {string} is {string}') do |field, value|
   when 'description'
     @rubric.description.should eq value
   else
-    true.should be false 'Nothing tested'
+    true.should be false
   end
 
 end
