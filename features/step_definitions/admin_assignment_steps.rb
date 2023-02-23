@@ -29,6 +29,10 @@ require 'chronic'
         @assignment.save
         log @assignment.errors.full_messages if @assignment.errors.present?
     end
+
+    Then('the assignment rubric is {string}') do |rubric_name|
+      @assignment.rubric.name.should eq rubric_name
+    end
     
     Then('the user sets the assignment {string} to {string}') do |string, string2|
       pending # Write code here that turns the phrase above into concrete actions

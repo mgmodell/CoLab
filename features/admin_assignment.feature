@@ -71,7 +71,7 @@ Feature: Assignment administration
     Then the user sees 1 course
     Then the user switches to the "Activities" tab
     Then the user clicks "Sack Troy"
-    Then the user checks "Active?"
+    Then the user checks "Is Active?"
     Then the user clicks "Update Assignment"
     Then close all messages
     #Check what was saved

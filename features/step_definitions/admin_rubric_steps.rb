@@ -23,36 +23,53 @@ Given('the user has one rubric named {string}') do |name|
   log @rubric.errors.full_messages if @rubric.errors.present?
 end
 
-Then('the assignment rubric is {string}') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('retrieve the {string} rubric') do |whichRubric|
+  @rubric = if( 'latest' == whichRubric )
+              Rubric.last
+            else
+              Rubric.find_by_name whichRubric
+            end
 end
 
-Then('retrieve the {string} rubric') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the rubric {string} is {string}') do |field, value|
+  case field.downcase
+  when 'name'
+    @rubric.name.should eq value
+  when 'description'
+    @rubric.description.should eq value
+  else
+    true.should be false 'Nothing tested'
+  end
+
 end
 
-Then('the rubric {string} is {string}') do |string, string2|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user sees {int} rubrics') do |count|
+  rubrics = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')]" )
+  rubrics.size.should eq count
 end
 
-Then('the user sees {int} rubrics') do |int|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user sets criteria {int} {string} to {string}') do |criteria_num, field, value|
+  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='#{field.downcase}']/div")
+  fields.size.should eq 1
+  fields[0].click
+  fill_in fields[0], with: value, fill_options: {clear: [[:control, 'a'], :delete]}
 end
 
-Then('the user sets criteria {int} {string} to {string}') do |int, string, string2|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user sets criteria {int} level {int} to {string}') do |criteria_num, level, value|
+  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='l#{level}_description']/div")
+  fields.size.should eq 1
+  fields[0].click
+  fill_in fields[0], with: value, fill_options: {clear: [[:control, 'a'], :delete]}
 end
 
-Then('the user sets criteria {int} level {int} to {string}') do |int, int2, string|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then('the user sees the criteria {int} weight is {int}') do |int, int2|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user sees the criteria {int} weight is {int}') do |criteria_num, weight|
+  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='weight']/div")
+  fields.size.should eq 1
+  fields[0].textContent.to_int.should eq weight
 end
 
 Then('the user adds a new criteria') do
-  pending # Write code here that turns the phrase above into concrete actions
+  click_button 'New Criteria'
 end
 
 Then('the user will see an empty criteria {int}') do |int|

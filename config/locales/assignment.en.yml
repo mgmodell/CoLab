@@ -7,7 +7,7 @@ en:
       assignment_details_pnl: Assignment Details
       assignment_submissions_pnl: Submissions
       update_assignment_btn: Save Assignment
-      group_option: Groups Enabled?
+      group_option: Make groups available?
     show:
       title: Assignment Details
       edit_string: Edit assignment details

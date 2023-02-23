@@ -9,7 +9,7 @@ import Collapse from "@mui/material/Collapse";
 
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
@@ -75,8 +75,7 @@ export default function MainMenu(props) {
     isLoggedIn && (user.is_instructor || user.is_admin) ? (
       <React.Fragment>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           id="administration-menu"
           onClick={() => setAdminOpen(!adminOpen)}
         >
@@ -86,11 +85,10 @@ export default function MainMenu(props) {
           <ListItemText>
             {t("administration")} {adminOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItemText>
-        </ListItem>
+        </ListItemButton>
         <Collapse in={adminOpen} timeout="auto" unmountOnExit>
           <Divider />
-          <ListItem
-            button
+          <ListItemButton
             id="courses-menu-item"
             onClick={() => navTo("/admin/courses")}
           >
@@ -98,9 +96,8 @@ export default function MainMenu(props) {
               <SchoolIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>{t("courses_edit")}</ListItemText>
-          </ListItem>
-          <ListItem
-            button
+          </ListItemButton>
+          <ListItemButton
             id="admin_rpt-menu"
             onClick={() => navTo("/admin/reporting")}
           >
@@ -108,21 +105,8 @@ export default function MainMenu(props) {
               <MultilineChartIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>{t("reporting")}</ListItemText>
-          </ListItem>
-          {user.is_admin ? (
-            <React.Fragment>
-              <ListItem
-                button
-                id="concepts-menu-item"
-                onClick={() => navTo("/admin/concepts")}
-              >
-                <ListItemIcon>
-                  <DynamicFeedIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>{t("concepts_edit")}</ListItemText>
-              </ListItem>
-              <ListItem
-                button
+          </ListItemButton>
+              <ListItemButton
                 id="rubrics-menu-item"
                 onClick={() => navTo("/admin/rubrics")}
               >
@@ -130,9 +114,19 @@ export default function MainMenu(props) {
                   <TableViewIcon fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>{t("rubrics_edit")}</ListItemText>
-              </ListItem>
-              <ListItem
-                button
+              </ListItemButton>
+          {user.is_admin ? (
+            <React.Fragment>
+              <ListItemButton
+                id="concepts-menu-item"
+                onClick={() => navTo("/admin/concepts")}
+              >
+                <ListItemIcon>
+                  <DynamicFeedIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{t("concepts_edit")}</ListItemText>
+              </ListItemButton>
+              <ListItemButton
                 id="schools-menu-item"
                 onClick={() => navTo("/admin/schools")}
               >
@@ -140,9 +134,8 @@ export default function MainMenu(props) {
                   <AccountBoxIcon fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>{t("schools_edit")}</ListItemText>
-              </ListItem>
-              <ListItem
-                button
+              </ListItemButton>
+              <ListItemButton
                 id="consent_forms-menu-item"
                 onClick={() => navTo("/admin/consent_forms")}
               >
@@ -150,7 +143,7 @@ export default function MainMenu(props) {
                   <FindInPageIcon fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>{t("consent_forms_edit")}</ListItemText>
-              </ListItem>
+              </ListItemButton>
             </React.Fragment>
           ) : null}
 
@@ -161,32 +154,31 @@ export default function MainMenu(props) {
 
   const basicOpts = isLoggedIn ? (
     <React.Fragment>
-      <ListItem id="home-menu-item" button onClick={() => navTo("/")}>
+      <ListItemButton id="home-menu-item" onClick={() => navTo("/")}>
         <ListItemIcon>
           <HomeIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>{t("home.title")}</ListItemText>
-      </ListItem>
-      <ListItem id="profile-menu-item" button onClick={() => navTo("/profile")}>
+      </ListItemButton>
+      <ListItemButton id="profile-menu-item" onClick={() => navTo("/profile")}>
         <ListItemIcon>
           <AccountBoxIcon />
         </ListItemIcon>
         <ListItemText>{t("profile")}</ListItemText>
-      </ListItem>
+      </ListItemButton>
       <DiversityCheck diversityScoreFor={props.diversityScoreFor} />
     </React.Fragment>
   ) : (
-    <ListItem id="home-menu-item" button onClick={() => navTo("/")}>
+    <ListItemButton id="home-menu-item" onClick={() => navTo("/")}>
       <ListItemIcon>
         <HomeIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>{t("home.title")}</ListItemText>
-    </ListItem>
+    </ListItemButton>
   );
   const logoutItem = isLoggedIn ? (
-    <ListItem
+    <ListItemButton
       id="logout-menu-item"
-      button
       onClick={() => {
         dispatch(signOut());
         setMenuOpen(false);
@@ -196,7 +188,7 @@ export default function MainMenu(props) {
         <ExitToAppIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>{t("logout")}</ListItemText>
-    </ListItem>
+    </ListItemButton>
   ) : null;
 
   return (
@@ -221,15 +213,14 @@ export default function MainMenu(props) {
           {basicOpts}
           {adminItems}
           <Divider />
-          <ListItem id="demo-menu-item" button onClick={() => navTo("/demo")}>
+          <ListItemButton id="demo-menu-item" button onClick={() => navTo("/demo")}>
             <ListItemIcon>
               <RateReviewIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>{t("titles.demonstration")}</ListItemText>
-          </ListItem>
-          <ListItem
+          </ListItemButton>
+          <ListItemButton
             id="support-menu-item"
-            button
             onClick={() => {
               window.location = "mailto:" + props.supportAddress;
             }}
@@ -238,10 +229,9 @@ export default function MainMenu(props) {
               <ContactSupportIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>{t("support_menu")}</ListItemText>
-          </ListItem>
-          <ListItem
+          </ListItemButton>
+          <ListItemButton
             id="about-menu-item"
-            button
             onClick={() => {
               window.location.href = props.moreInfoUrl;
             }}
@@ -250,7 +240,7 @@ export default function MainMenu(props) {
               <InfoIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>{t("about")}</ListItemText>
-          </ListItem>
+          </ListItemButton>
           {logoutItem}
         </List>
       </SwipeableDrawer>
