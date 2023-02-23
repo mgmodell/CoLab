@@ -176,4 +176,4 @@ Feature: Assignment administration
     Then close all messages
     #Check what was saved
     Then retrieve the "Sack Troy" assignment from the db
-     And the assignment project is the course's project
+     And the assignment project is the course project

@@ -82,6 +82,6 @@ require 'chronic'
       pending # Write code here that turns the phrase above into concrete actions
     end
     
-    Given('the assignment {string} active') do |string|
-      pending # Write code here that turns the phrase above into concrete actions
+    Given('the assignment {string} active') do |active_assertion|
+      @assignment.active.should eq (active_assertion == 'is' )
     end
