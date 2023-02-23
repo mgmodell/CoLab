@@ -48,7 +48,7 @@ Then(/^the user creates a new "([^"]*)"$/) do |link_or_button|
   find(:xpath, "//li[contains(.,'#{link_or_button}')]").click
 end
 
-Then(/^the user clicks "([^"]*)"$/) do |link_or_button|
+Then('the user clicks {string}') do |link_or_button|
   wait_for_render
   if has_xpath?("//button[contains(.,'#{link_or_button}')]",
                 visible: :all)
