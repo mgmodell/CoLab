@@ -9,7 +9,7 @@ const GlyphSeries = React.lazy(() => import("./visxGlyphSeries"));
 const XYChart = React.lazy(() => import("./visxXYChart"));
 const Tooltip = React.lazy(() => import("./visxTooltip"));
 const LineSeries = React.lazy(() => import("./visxLineSeries"));
-const AnimatedAxis = React.lazy(() => import("./visxAnimatedAxis"));
+import { Axis } from "@visx/xychart";
 const Arc = React.lazy(() => import("./visxArc"));
 const LinePath = React.lazy(() => import("./visxLinePath"));
 
@@ -160,8 +160,8 @@ export default function SubjectChart(props) {
             xScale={{ type: "time", domain: xDateDomain }}
             yScale={{ type: "linear", domain: [0, 6000] }}
           >
-            <AnimatedAxis orientation="bottom" label="Date" />
-            <AnimatedAxis
+            <Axis orientation="bottom" label="Date" />
+            <Axis
               orientation="left"
               label="Contribution Level"
               numTicks={userCount}
