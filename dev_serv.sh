@@ -22,6 +22,11 @@ print_help ( ) {
 
 }
 
+show_output( ) {
+  OUTPUT_HASH=`docker ps | grep dev_env_app | awk '{print $1;}'`
+  docker logs -f $OUTPUT_HASH
+}
+
 echo "Arguments: '$@'"
 
 if [ "$#" -lt 1 ]; then
@@ -144,17 +149,20 @@ fi
 
 # Migrate the DB
 if [ "$MIGRATE" = true ]; then
+  echo 'Migrating'
   docker compose run --rm app "rails db:migrate COLAB_DB=db COLAB_DB_PORT=3306"
 fi
 
 # Run a migratify task
 if [ "$RUN_TASK_M" = true ]; then
+  echo 'Migratify Task'
   docker compose run --rm app "rails migratify:$RUN_TASK_M_NAME COLAB_DB=db COLAB_DB_PORT=3306"
 fi
 
-# Run an admin task
+# Run a testing task
 if [ "$RUN_TASK_E" = true ]; then
-  docker compose run --rm app "rails testing:$RUN_TASK_E_NAME"
+  echo 'Testing Task'
+  docker compose run --rm app "rails testing:$RUN_TASK_E_NAME COLAB_DB=db COLAB_DB_PORT=3306"
 fi
 
 # Start the server
@@ -163,8 +171,7 @@ if [ "$STARTUP" = true ]; then
 fi
 
 if [ "$WATCH" = true ]; then
-  OUTPUT_HASH=`docker ps | grep dev_env_app | awk '{print $1;}'`
-  docker logs -f $OUTPUT_HASH
+  show_output
 fi
 
 popd

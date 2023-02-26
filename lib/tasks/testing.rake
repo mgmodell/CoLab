@@ -147,11 +147,19 @@ namespace :testing do
       puts '   Usage:   rake testing:haccess[<email>]'
     else
 
+      puts 'running'
       if Rails.env.development?
-        user = User.find 1
-        user.email = args[:email]
-        user.password = 'password'
+        user = User.new(
+          email: args[:email],
+          admin: true,
+          password: 'password',
+          password_confirmation: 'password',
+          welcomed: true,
+          school_id: 1
+        )
+        user.confirm
         user.save
+        byebug
       else
         puts 'This only works in development'
       end

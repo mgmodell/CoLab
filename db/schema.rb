@@ -64,6 +64,26 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
     t.index ["project_id"], name: "index_assessments_on_project_id"
   end
 
+  create_table "assignments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.bigint "rubric_id"
+    t.boolean "group_enabled", default: false, null: false
+    t.integer "course_id", null: false
+    t.integer "project_id"
+    t.boolean "active", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "passing", default: 65
+    t.string "anon_name"
+    t.string "anon_description"
+    t.index ["course_id"], name: "index_assignments_on_course_id"
+    t.index ["project_id"], name: "index_assignments_on_project_id"
+    t.index ["rubric_id"], name: "index_assignments_on_rubric_id"
+  end
+
   create_table "behaviors", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name_en"
     t.text "description_en"
@@ -239,6 +259,22 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
     t.integer "anon_offset", default: 0, null: false
     t.index ["consent_form_id"], name: "fk_rails_469f90a775"
     t.index ["school_id"], name: "index_courses_on_school_id"
+  end
+
+  create_table "criteria", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.bigint "rubric_id", null: false
+    t.string "description"
+    t.integer "weight", default: 1, null: false
+    t.integer "sequence", null: false
+    t.text "l1_description"
+    t.text "l2_description"
+    t.text "l3_description"
+    t.text "l4_description"
+    t.text "l5_description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rubric_id", "sequence"], name: "index_criteria_on_rubric_id_and_sequence", unique: true
+    t.index ["rubric_id"], name: "index_criteria_on_rubric_id"
   end
 
   create_table "delayed_jobs", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
@@ -459,6 +495,25 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
     t.index ["user_id"], name: "index_rosters_on_user_id"
   end
 
+  create_table "rubrics", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.integer "version", default: 1, null: false
+    t.boolean "published", default: false, null: false
+    t.bigint "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.integer "school_id"
+    t.string "anon_name"
+    t.string "anon_description"
+    t.integer "anon_version"
+    t.index ["name", "version", "parent_id"], name: "index_rubrics_on_name_and_version_and_parent_id", unique: true
+    t.index ["parent_id"], name: "index_rubrics_on_parent_id"
+    t.index ["school_id"], name: "index_rubrics_on_school_id"
+    t.index ["user_id"], name: "index_rubrics_on_user_id"
+  end
+
   create_table "scenarios", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name_en"
     t.integer "behavior_id"
@@ -592,6 +647,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "assessments", "projects"
+  add_foreign_key "assignments", "courses"
+  add_foreign_key "assignments", "projects"
+  add_foreign_key "assignments", "rubrics"
   add_foreign_key "bingo_boards", "bingo_games"
   add_foreign_key "bingo_boards", "users"
   add_foreign_key "bingo_cells", "bingo_boards"
@@ -612,6 +670,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
   add_foreign_key "consent_logs", "users"
   add_foreign_key "courses", "consent_forms"
   add_foreign_key "courses", "schools"
+  add_foreign_key "criteria", "rubrics"
   add_foreign_key "diagnoses", "behaviors"
   add_foreign_key "diagnoses", "reactions"
   add_foreign_key "diagnoses", "weeks"
@@ -634,6 +693,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_04_025950) do
   add_foreign_key "reactions", "users"
   add_foreign_key "rosters", "courses"
   add_foreign_key "rosters", "users"
+  add_foreign_key "rubrics", "rubrics", column: "parent_id"
+  add_foreign_key "rubrics", "schools"
+  add_foreign_key "rubrics", "users"
   add_foreign_key "scenarios", "behaviors"
   add_foreign_key "users", "cip_codes"
   add_foreign_key "users", "genders"
