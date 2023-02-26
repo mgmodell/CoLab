@@ -1494,12 +1494,12 @@
     "@react-spring/shared" "~9.7.0"
     "@react-spring/types" "~9.7.0"
 
-"@react-spring/types@~9.7.0":
+"@react-spring/types@^9.7.0", "@react-spring/types@~9.7.0":
   version "9.7.0"
   resolved "https://registry.yarnpkg.com/@react-spring/types/-/types-9.7.0.tgz#1b19f9c07bc3ecb2bc7a253ec100f122ace14199"
   integrity sha512-YEmhgtV7b6cNErxgYtlFpd/7N1EKV4IvxWjvLP3WVXi4xBhvBW7a3MCoHXzeTGbdWVK/YLnDh7BgJ542DwLZvg==
 
-"@react-spring/web@~9.7.0":
+"@react-spring/web@^9.7.0", "@react-spring/web@~9.7.0":
   version "9.7.0"
   resolved "https://registry.yarnpkg.com/@react-spring/web/-/web-9.7.0.tgz#8e8b7857f037b6d7584300e6016b42cc0a2db6d1"
   integrity sha512-+mGRMHOpuewAeCuWnoD0FJG7xIkXNlF+OAjkv3RuuvkiUmex1RSRlXTAS/nrvksASx2k9AgMZUWgg7NGK/hFWQ==
@@ -1816,7 +1816,7 @@
     prop-types "^15.5.10"
     react-use-measure "^2.0.4"
 
-"@visx/axis@3.0.1":
+"@visx/axis@3.0.1", "@visx/axis@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@visx/axis/-/axis-3.0.1.tgz#b80883e0d22d77d377ce11fa9b13cc621dc2684b"
   integrity sha512-ozi7DaEe4afsMHTQsG8jKt4ag0t9Z4wQJhHMYbmrYF4iP6BsQUpFUCf2rgnLo5fM0CEEoZXN0vc6ZhvYzp1ZYg==
