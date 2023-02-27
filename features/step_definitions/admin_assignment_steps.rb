@@ -46,16 +46,12 @@ require 'chronic'
       pending # Write code here that turns the phrase above into concrete actions
     end
     
-    Then('the assignment {string} field to {string}') do |string, string2|
-      pending # Write code here that turns the phrase above into concrete actions
-    end
-    
     Then('the assignment {string} active') do |string|
       pending # Write code here that turns the phrase above into concrete actions
     end
     
-    Then('the assignment {string} group capable') do |string|
-      pending # Write code here that turns the phrase above into concrete actions
+    Then('the assignment {string} group capable') do |is_group_enabled|
+      @assignment.group_option.should eq ( 'is' == is_group_enabled)
     end
     
     Then('the user sets the assignment project to the course project') do

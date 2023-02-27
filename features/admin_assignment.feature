@@ -33,10 +33,10 @@ Feature: Assignment administration
     Then the user sets the assignment "close" to "2/10/1985"
     Then the user clicks "Create Assignment"
     Then close all messages
-    #Check what was saved
+    #Csheck what was saved
     Then retrieve the "latest" assignment from the db
      And the assignment "Name" field is "Term Paper"
-     And the assignment "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+     And the assignment "Description" field is "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
      And the assignment "opening" field is "7/29/1984"
      And the assignment "close" field is "2/10/1985"
      And the assignment "is not" active
@@ -58,7 +58,7 @@ Feature: Assignment administration
     #Check what was saved
     Then retrieve the "latest" assignment from the db
      And the assignment "Name" field is "Term Paper"
-     And the assignment "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+     And the assignment "Description" field is "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
      And the assignment "opening" field is "7/29/1984"
      And the assignment "close" field is "2/10/1985"
      And the assignment "is not" active
