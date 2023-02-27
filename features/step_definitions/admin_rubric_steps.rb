@@ -76,45 +76,76 @@ Then('the user will see an empty criteria {int}') do |int|
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then('the user sets criteria {int} {string} to to {string}') do |int, string, string2|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user sets criteria {int} {string} to to {string}') do |criteria_num, field_name, value|
+  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='#{field_name}']/div")
+  fields.size.should eq 1
+  fields[0].click
+  fill_in fields[0], with: value, fill_options: {clear: [[:control, 'a'], :delete]}
 end
 
-Then('the user sets the criteria {int} weight to {int}') do |int, int2|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user sets the criteria {int} weight to {int}') do |criteria_num, weight|
+  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='weight']/div")
+  fields.size.should eq 1
+  fields[0].click
+  fill_in fields[0], with: weight, fill_options: {clear: [[:control, 'a'], :delete]}
 end
 
-Then('retrieve the {string} rubric from the db') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('retrieve the {string} rubric from the db') do |name|
+  @rubric = Rubric.find_by_name name
 end
 
 Then('the user is the owner of the rubric') do
-  pending # Write code here that turns the phrase above into concrete actions
+  @rubric.user.should eq @user
 end
 
-Then('the rubric version is {int}') do |int|
-# Then('the rubric version is {float}') do |float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the rubric version is {int}') do |version|
+  @rubric.version.should eq version
 end
 
-Then('the rubric {string} field is {string}') do |string, string2|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the rubric {string} field is {string}') do |field_name, value|
+  case field_name.downcase
+  when 'description'
+    @rubric.description.should eq value
+  when 'name'
+    @rubric.name.should eq value
+  else
+    true.should be false
+  end
 end
 
-Then('the rubric criteria {int} {string} is {string}') do |int, string, string2|
-# Then('the rubric criteria {float} {string} is {string}') do |float, string, string2|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the rubric criteria {int} {string} is {string}') do |criteria_num, field_name, value|
+  criteria = @rubric.criteria[ criteria_num - 1 ]
+  case field_name.downcase
+  when 'description'
+    criteria.description.should eq value
+  else
+    true.should be false
+  end
 end
 
-Then('the rubric criteria {int} level {int} is {string}') do |int, int2, string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the rubric criteria {int} level {int} is {string}') do |criteria_num, level, value|
+  criteria = @rubric.criteria[ criteria_num - 1 ]
+  case level
+  when 1
+    criteria.l1_description.should eq value
+  when 2
+    criteria.l2_description.should eq value
+  when 3
+    criteria.l3_description.should eq value
+  when 4
+    criteria.l4_description.should eq value
+  when 5
+    criteria.l5_description.should eq value
+  else
+    true.should be false
+  end
+
+
 end
 
-Then('the rubric criteria {int} weight is {int}') do |int, int2|
-# Then('the rubric criteria {int} weight is {float}') do |int, float|
-# Then('the rubric criteria {float} weight is {int}') do |float, int|
-# Then('the rubric criteria {float} weight is {float}') do |float, float2|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the rubric criteria {int} weight is {int}') do |criteria_num, weight|
+  criteria = @rubric.criteria[ criteria_num - 1 ]
+  criteria.weight.should eq weight
 end
 
 Then('the rubric criteria {int} {string} to to {string}') do |int, string, string2|
@@ -137,12 +168,14 @@ Then('the user edits the rubric') do
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then('the rubric {string} published') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the rubric {string} published') do |is_published|
+  @rubric.published.should eq ('is' == is_published )
 end
 
-Given('the {string} rubric is published') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+Given('the {string} rubric is published') do |name|
+  rubric = Rubric.find_by_name name
+  rubric.is_published = true
+  rubric.save
 end
 
 Then('the user copies the {string} rubric') do |string|
