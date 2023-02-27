@@ -13,9 +13,9 @@ cd $dir
 echo "Installing platforms"
 asdf plugin update --all
 asdf install
-echo "Installing gems"
-bundle install --quiet
-echo "Installing yarn packages"
-yarn install --silent
+# echo "Installing gems"
+# bundle install --quiet
+# echo "Installing yarn packages"
+# yarn install --silent
 
 $@
