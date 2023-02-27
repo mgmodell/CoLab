@@ -72,8 +72,10 @@ Then('the user adds a new criteria') do
   click_button 'New Criteria'
 end
 
-Then('the user will see an empty criteria {int}') do |int|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user will see an empty criteria {int}') do |criteria_num|
+  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='description']/div")
+  fields.size.should eq 1
+  fields[0].textContent.should eq 'New Criteria'
 end
 
 Then('the user sets criteria {int} {string} to to {string}') do |criteria_num, field_name, value|
@@ -140,24 +142,11 @@ Then('the rubric criteria {int} level {int} is {string}') do |criteria_num, leve
     true.should be false
   end
 
-
 end
 
 Then('the rubric criteria {int} weight is {int}') do |criteria_num, weight|
   criteria = @rubric.criteria[ criteria_num - 1 ]
   criteria.weight.should eq weight
-end
-
-Then('the rubric criteria {int} {string} to to {string}') do |int, string, string2|
-# Then('the rubric criteria {float} {string} to to {string}') do |float, string, string2|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then('the rubric criteria {int} level {int} to {string}') do |int, int2, string|
-# Then('the rubric criteria {int} level {float} to {string}') do |int, float, string|
-# Then('the rubric criteria {float} level {int} to {string}') do |float, int, string|
-# Then('the rubric criteria {float} level {float} to {string}') do |float, float2, string|
-  pending # Write code here that turns the phrase above into concrete actions
 end
 
 Then('the user searches for {string}') do |string|
@@ -182,23 +171,31 @@ Then('the user copies the {string} rubric') do |string|
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then('the rubric {string} is {int}') do |string, int|
-# Then('the rubric {string} is {float}') do |string, float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the rubric {string} is {int}') do |field_name, value|
+  case field_name.downcase
+  when 'version'
+    @rubric.version.should be value
+  else
+    true.should be false
+  end
 end
 
-Then('the rubric owner {string} the user') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the rubric owner {string} the user') do |is_owner|
+  if( 'is' == is_owner)
+    @rubric.user.should eq @user
+  else
+    @rubric.user.should_not eq @user
+  end
 end
 
-Then('the rubric parent is {string} {string} {int}') do |string, string2, int|
-# Then('the rubric parent is {string} {string} {float}') do |string, string2, float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the rubric parent is {string} version {int}') do |name, version|
+  @rubric.parent.name.should be name
+  @rubric.parent.version.should be version
 end
 
-Then('the {string} rubric has {int} criteria') do |string, int|
-# Then('the {string} rubric has {float} criteria') do |string, float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
+  rubric = Rubric.find_by_name rubric_name
+  rubric.criteria.size.should be criteria_count
 end
 
 Then('the user adds a level to criteria {int}') do |int|

@@ -33,7 +33,7 @@ Feature: Rubric administration
      And the user sees the criteria 1 weight is 10
     Then the user adds a new criteria
     Then the user will see an empty criteria 2
-     And the user sets criteria 2 "Description" to to "Functionality"
+     And the user sets criteria 2 "Description" to "Functionality"
      And the user sets criteria 2 level 2 to "Introduces fewer than 3 common features with understandable explanations of how they work"
      And the user sets criteria 2 level 1 to "Introduces fewer than 3 common features and explains how each one works"
      And the user sets criteria 2 level 3 to "Introduces 3 common features and explains how each one works"
@@ -54,10 +54,10 @@ Feature: Rubric administration
      And the rubric criteria 1 weight is 10
     Then the user adds a new criteria
     Then the user will see an empty criteria 2
-     And the rubric criteria 2 "Description" to to "Functionality"
-     And the rubric criteria 2 level 2 to "Introduces fewer than 3 common features with understandable explanations of how they work"
-     And the rubric criteria 2 level 1 to "Introduces fewer than 3 common features and explains how each one works"
-     And the rubric criteria 2 level 3 to "Introduces 3 common features and explains how each one works"
+     And the rubric criteria 2 "Description" to "Functionality"
+     And the rubric criteria 2 level 2 is "Introduces fewer than 3 common features with understandable explanations of how they work"
+     And the rubric criteria 2 level 1 is "Introduces fewer than 3 common features and explains how each one works"
+     And the rubric criteria 2 level 3 is "Introduces 3 common features and explains how each one works"
      And the rubric criteria 2 weight is 30
 
   @javascript
@@ -128,7 +128,7 @@ Feature: Rubric administration
      And the rubric "Name" is "Trojan War Diorama"
      And the rubric "Version" is 2
      And the rubric owner "is" the user
-     And the rubric parent is "Trojan War Diorama" "Version" 1
+     And the rubric parent is "Trojan War Diorama" version 1
      And the rubric "is not" published
 
 
@@ -142,7 +142,7 @@ Feature: Rubric administration
      And the rubric "Name" is "Ruby 1"
      And the rubric "Version" is 1
      And the rubric owner "is" the user
-     And the rubric parent is "Ruby 1" "Version" 1
+     And the rubric parent is "Ruby 1" version 1
      And the rubric "is not" published
 
   @javascript
@@ -152,7 +152,7 @@ Feature: Rubric administration
     Then the user edits the rubric
     Then the user adds a new criteria
     Then the user will see an empty criteria 6
-     And the user sets criteria 6 "Description" to to "New Criteria"
+     And the user sets criteria 6 "Description" to "New Criteria"
      And the user sets criteria 6 level 1 to "level 1"
      And the user sets criteria 6 level 2 to "level 2"
      And the user sets criteria 6 level 3 to "level 3"
