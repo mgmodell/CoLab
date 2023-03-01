@@ -114,7 +114,10 @@ export default function RubricDataAdmin(props) {
   const [rubricSchoolId, setRubricSchoolId] = useState( 0 );
 
   const [rubricCriteria, setRubricCriteria] = useState( [
-    Object.assign( { id: -1, sequence: 1 }, freshCriteria)
+    Object.assign( {
+      id: -1,
+      sequence: 1
+    }, freshCriteria)
   ] );
 
   const [messages, setMessages] = useState({});

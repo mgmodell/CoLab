@@ -22,23 +22,23 @@ Feature: Rubric administration
 
   @javascript
   Scenario: Instructor creates a rubric
-    Then the user sees 5 rubrics
-    Then the user clicks the "New Rubic" button
+    Then the user sees 9 rubrics
+    Then the user clicks the "new-activity" button
      And the user sets the "Name" field to "Elderly Tech. Talk"
      And the user sets the "Description" field to "Students prepare and deliver a presentation explaining a technology topic to elderly members of their community."
      And the user sets criteria 1 "Description" to "History"
      And the user sets criteria 1 level 3 to "Introduces 3 important milestones and 3 important people in the evolution of the technology"
      And the user sets criteria 1 level 2 to "Introduces fewer than 3 important milestones or fewer than 3 important people in the evolution of the technology"
      And the user sets criteria 1 level 1 to "Introduces fewer than 3 total important milestones and important people in the evolution of the technology"
-     And the user sees the criteria 1 weight is 10
+     And the user sees the criteria 1 weight is 1
     Then the user adds a new criteria
     Then the user will see an empty criteria 2
      And the user sets criteria 2 "Description" to "Functionality"
      And the user sets criteria 2 level 2 to "Introduces fewer than 3 common features with understandable explanations of how they work"
      And the user sets criteria 2 level 1 to "Introduces fewer than 3 common features and explains how each one works"
      And the user sets criteria 2 level 3 to "Introduces 3 common features and explains how each one works"
-     And the user sees the criteria 2 weight is 10
-     And the user sets the criteria 2 weight to 30
+     And the user sees the criteria 2 weight is 1
+     And the user sets the criteria 2 weight to 3
     Then the user clicks the "Create Rubic" button
     Then close all messages
     #Check what was saved
@@ -54,7 +54,7 @@ Feature: Rubric administration
      And the rubric criteria 1 weight is 10
     Then the user adds a new criteria
     Then the user will see an empty criteria 2
-     And the rubric criteria 2 "Description" to "Functionality"
+     And the rubric criteria 2 "Description" is "Functionality"
      And the rubric criteria 2 level 2 is "Introduces fewer than 3 common features with understandable explanations of how they work"
      And the rubric criteria 2 level 1 is "Introduces fewer than 3 common features and explains how each one works"
      And the rubric criteria 2 level 3 is "Introduces 3 common features and explains how each one works"

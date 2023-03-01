@@ -1,8 +1,5 @@
 FROM arm64v8/ubuntu
 
-ARG UID=1000
-ARG GID=1000
-
 RUN apt update && apt upgrade -y
 RUN apt -y install \
   curl \
@@ -22,8 +19,8 @@ RUN apt -y install \
 RUN apt autoremove && \
     apt clean
 
-RUN groupadd -g $GID -r colab && \
-  useradd -u $UID -g $GID --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
+RUN groupadd -r colab && \
+  useradd --no-log-init -rm -d /home/colab -s /bin/bash -g colab colab
 
 
 WORKDIR /home/colab

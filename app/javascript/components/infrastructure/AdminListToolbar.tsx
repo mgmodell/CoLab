@@ -24,7 +24,7 @@ export default function AdminListToolbar( props ){
                   //window.location.href =
                   //  endpoints.endpoints[endpointSet].schoolCreateUrl;
                 }}
-                aria-label="New"
+                aria-label="new-activity"
                 size='small'
 
               >

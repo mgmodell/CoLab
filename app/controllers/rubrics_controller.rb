@@ -12,7 +12,7 @@ class RubricsController < ApplicationController
     else
       @rubrics = Rubric.
         where( school: current_user.school ).
-        group( :name, :version ).maximum( :version )
+        group( :name, :version )
     end
 
     anon = current_user.anonymize?
@@ -93,8 +93,6 @@ class RubricsController < ApplicationController
 
   def standardized_response rubric, messages = { }
     anon = current_user.anonymize?
-    puts current_user.inspect
-    puts current_user.anonymize?
 
         response = {
           rubric: rubric.as_json(
@@ -125,7 +123,24 @@ class RubricsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_rubric
-      @rubric = Rubric.includes(:criteria).find(params[:id])
+      @rubric = if params[:id].blank? || params[:id] == 'new'
+                  Rubric.new(
+                    name: t( 'new.title' ),
+                    school_id: current_user.school_id,
+                    published: false,
+                    user: current_user,
+                    criteria: [
+                      Criterium.new(
+                        id: -1,
+                        description: t( 'new.criteria' ),
+                        sequence: 1,
+                        l1_description: 'new.criteria_l1'
+                      )
+                    ]
+                  )
+                else
+                  Rubric.includes(:criteria).find(params[:id])
+                end
     end
 
     # Only allow a list of trusted parameters through.

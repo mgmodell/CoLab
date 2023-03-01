@@ -114,7 +114,7 @@ export default function RubricList(props) {
 
             } }
             components={{
-              Toolbar: AdminListToolbar,
+              Toolbar: AdminListToolbar
             }}
           />
 

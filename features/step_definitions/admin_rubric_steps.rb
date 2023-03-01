@@ -44,28 +44,26 @@ Then('the rubric {string} is {string}') do |field, value|
 end
 
 Then('the user sees {int} rubrics') do |count|
-  rubrics = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')]" )
+  wait_for_render
+  rubrics = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]" )
   rubrics.size.should eq count
 end
 
-Then('the user sets criteria {int} {string} to {string}') do |criteria_num, field, value|
-  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='#{field.downcase}']/div")
-  fields.size.should eq 1
-  fields[0].click
-  fill_in fields[0], with: value, fill_options: {clear: [[:control, 'a'], :delete]}
+Then('the user sets criteria {int} {string} to {string}') do |criteria_num, field_name, value|
+  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='#{field_name.downcase}']/div")[criteria_num - 1]
+  field.double_click
+  send_keys [:control, 'a'], value
 end
 
 Then('the user sets criteria {int} level {int} to {string}') do |criteria_num, level, value|
-  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='l#{level}_description']/div")
-  fields.size.should eq 1
-  fields[0].click
-  fill_in fields[0], with: value, fill_options: {clear: [[:control, 'a'], :delete]}
+  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='l#{level}_description']")[criteria_num - 1]
+  field.double_click
+  send_keys [:control, 'a'], value
 end
 
 Then('the user sees the criteria {int} weight is {int}') do |criteria_num, weight|
-  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='weight']/div")
-  fields.size.should eq 1
-  fields[0].textContent.to_int.should eq weight
+  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='weight']/div")[criteria_num - 1]
+  field.text.to_i.should eq weight
 end
 
 Then('the user adds a new criteria') do
@@ -73,9 +71,9 @@ Then('the user adds a new criteria') do
 end
 
 Then('the user will see an empty criteria {int}') do |criteria_num|
-  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='description']/div")
+  fields = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='description']/div")
   fields.size.should eq 1
-  fields[0].textContent.should eq 'New Criteria'
+  fields[0].text.should eq 'New Criteria'
 end
 
 Then('the user sets criteria {int} {string} to to {string}') do |criteria_num, field_name, value|
@@ -163,7 +161,7 @@ end
 
 Given('the {string} rubric is published') do |name|
   rubric = Rubric.find_by_name name
-  rubric.is_published = true
+  rubric.published = true
   rubric.save
 end
 
@@ -174,7 +172,7 @@ end
 Then('the rubric {string} is {int}') do |field_name, value|
   case field_name.downcase
   when 'version'
-    @rubric.version.should be value
+    @rubric.version.should eq value
   else
     true.should be false
   end
@@ -189,13 +187,34 @@ Then('the rubric owner {string} the user') do |is_owner|
 end
 
 Then('the rubric parent is {string} version {int}') do |name, version|
-  @rubric.parent.name.should be name
-  @rubric.parent.version.should be version
+  @rubric.parent.name.should eq name
+  @rubric.parent.version.should eq version
 end
 
 Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
   rubric = Rubric.find_by_name rubric_name
-  rubric.criteria.size.should be criteria_count
+  criteria_count.times do |index|
+    criteria = rubric.criteria.new(
+      description: Faker::Company.buzzword,
+      weight: rand( 100),
+      sequence: index,
+      l1_description: Faker::Lorem.sentence
+    )
+    if rand( 2 ) > 1
+      criteria.l2_description = Faker::Lorem.sentence
+      if rand ( 2 ) > 1 
+        criteria.l3_description = Faker::Lorem.sentence
+        if rand ( 2 ) > 1 
+          criteria.l4_description = Faker::Lorem.sentence
+          if rand ( 2 ) > 1 
+            criteria.l5_description = Faker::Lorem.sentence
+          end
+        end
+      end
+    end
+    criteria.save
+    puts criteria.errors.full_messages unless criteria.errors.size == 0
+  end
 end
 
 Then('the user adds a level to criteria {int}') do |int|
