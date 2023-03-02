@@ -72,7 +72,8 @@ export default function RubricDataAdmin(props) {
 
   const editableValueSetter = (params: GridValueSetterParams, field)=>{
     const row = rubricCriteria.find( (criterium)=>{ return criterium.id === params.row.id} )
-    row[field] = params.value
+    row[field] = params.value;
+    row.id = params.row.id;
     setRubricCriteria( rubricCriteria );
     return row;
   }
@@ -189,6 +190,7 @@ export default function RubricDataAdmin(props) {
 
         if (messages != null && Object.keys(messages).length < 2) {
           const rubric = data.rubric;
+          console.log( rubric );
           setRubricId(rubric.id);
           setRubricName(rubric.name);
           setRubricDescription(rubric.description);
@@ -227,7 +229,10 @@ export default function RubricDataAdmin(props) {
   }, [rubricName, rubricDescription, rubricCriteria ]);
 
   const saveButton = dirty ? (
-    <Button variant="contained" onClick={saveRubric} disabled={!dirty}>
+    <Button variant="contained"
+            aria-label="save-rubric"
+            onClick={saveRubric}
+            disabled={!dirty}>
       {rubricId > 0 ? "Save" : "Create"} Rubric
     </Button>
   ) : null;
@@ -287,6 +292,7 @@ export default function RubricDataAdmin(props) {
                             sequence: rubricCriteria.length + 1,
                           }, freshCriteria );
                         newList.push( newCriteria );
+                        console.log( 'criteria', [...newList] );
                         setRubricCriteria( newList);
                       }}
                       aria-label={t('criteria.new')}

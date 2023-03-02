@@ -213,7 +213,7 @@ export default function MainMenu(props) {
           {basicOpts}
           {adminItems}
           <Divider />
-          <ListItemButton id="demo-menu-item" button onClick={() => navTo("/demo")}>
+          <ListItemButton id="demo-menu-item" onClick={() => navTo("/demo")}>
             <ListItemIcon>
               <RateReviewIcon fontSize="small" />
             </ListItemIcon>

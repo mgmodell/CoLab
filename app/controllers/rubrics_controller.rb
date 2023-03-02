@@ -44,11 +44,14 @@ class RubricsController < ApplicationController
 
   # GET /rubrics/new
   def new
-    @rubric = Rubric.new
+    @rubric = current_user.rubrics.new(
+      school: current_user.school
+    )
   end
 
   # POST /rubrics or /rubrics.json
   def create
+    puts 'creating'
     @rubric = Rubric.new(rubric_params)
 
     respond_to do |format|
@@ -64,12 +67,19 @@ class RubricsController < ApplicationController
   # PATCH/PUT /rubrics/1 or /rubrics/1.json
   def update
     respond_to do |format|
-      if @rubric.update(rubric_params)
+      if 'new' == params[:id]
+        @rubric = Rubric.new(rubric_params)
+        @rubric.user = current_user
+        @rubric.school = current_user.school
+        @rubric.save
+      else
+        @rubric.update(rubric_params)
+      end
+      if @rubric.errors.empty?
         format.json do
           render json: standardized_response( @rubric, { main: 'Successfully saved rubric'} )
         end
       else
-        format.json { render json: @rubric.errors, status: :unprocessable_entity }
         format.json do
           render json: {
               messages: @rubric.errors.full_messages
@@ -125,22 +135,24 @@ class RubricsController < ApplicationController
     def set_rubric
       @rubric = if params[:id].blank? || params[:id] == 'new'
                   Rubric.new(
-                    name: t( 'new.title' ),
+                    name: '',
                     school_id: current_user.school_id,
                     published: false,
                     user: current_user,
                     criteria: [
                       Criterium.new(
                         id: -1,
-                        description: t( 'new.criteria' ),
+                        description: t( 'rubrics.new.criteria' ),
                         sequence: 1,
-                        l1_description: 'new.criteria_l1'
+                        l1_description: t('rubrics.new.criteria_l1')
                       )
                     ]
                   )
                 else
                   Rubric.includes(:criteria).find(params[:id])
                 end
+      @rubric.school ||= current_user.school
+      @rubric.user ||= current_user
     end
 
     # Only allow a list of trusted parameters through.

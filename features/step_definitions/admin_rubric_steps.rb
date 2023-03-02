@@ -51,14 +51,25 @@ end
 
 Then('the user sets criteria {int} {string} to {string}') do |criteria_num, field_name, value|
   field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='#{field_name.downcase}']/div")[criteria_num - 1]
+
+  text = field.text
+
   field.double_click
-  send_keys [:control, 'a'], value
+  text.size.times do
+    send_keys :backspace
+  end
+  send_keys value
 end
 
 Then('the user sets criteria {int} level {int} to {string}') do |criteria_num, level, value|
   field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='l#{level}_description']")[criteria_num - 1]
+  text = field.text
+
   field.double_click
-  send_keys [:control, 'a'], value
+  text.size.times do
+    send_keys :backspace
+  end
+  send_keys value
 end
 
 Then('the user sees the criteria {int} weight is {int}') do |criteria_num, weight|
@@ -71,27 +82,38 @@ Then('the user adds a new criteria') do
 end
 
 Then('the user will see an empty criteria {int}') do |criteria_num|
-  fields = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='description']/div")
-  fields.size.should eq 1
-  fields[0].text.should eq 'New Criteria'
+  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='description']/div")[criteria_num - 1]
+  field.text.should eq 'New Criteria'
 end
 
 Then('the user sets criteria {int} {string} to to {string}') do |criteria_num, field_name, value|
   fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='#{field_name}']/div")
   fields.size.should eq 1
-  fields[0].click
-  fill_in fields[0], with: value, fill_options: {clear: [[:control, 'a'], :delete]}
+
+  field.double_click
+  text.size.times do
+    send_keys :backspace
+  end
+  send_keys value
 end
 
 Then('the user sets the criteria {int} weight to {int}') do |criteria_num, weight|
-  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='weight']/div")
-  fields.size.should eq 1
-  fields[0].click
-  fill_in fields[0], with: weight, fill_options: {clear: [[:control, 'a'], :delete]}
+  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='weight']")[criteria_num - 1]
+  text = field.text
+
+  field.double_click
+  text.size.times do
+    send_keys :backspace
+  end
+  send_keys weight
 end
 
 Then('retrieve the {string} rubric from the db') do |name|
-  @rubric = Rubric.find_by_name name
+  @rubric = if 'latest' == name
+              Rubric.last
+            else
+              @rubric = Rubric.find_by_name name
+            end
 end
 
 Then('the user is the owner of the rubric') do
@@ -213,7 +235,7 @@ Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
       end
     end
     criteria.save
-    puts criteria.errors.full_messages unless criteria.errors.size == 0
+    puts criteria.errors.full_messages unless criteria.errors.empty?
   end
 end
 
