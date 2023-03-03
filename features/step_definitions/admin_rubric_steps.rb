@@ -173,8 +173,17 @@ Then('the rubric criteria {int} weight is {int}') do |criteria_num, weight|
   criteria.weight.should eq weight
 end
 
-Then('the user searches for {string}') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user searches for {string}') do |search_string|
+  field = find(:xpath, "//input[@type='search']")
+  oldVal = field.value
+  field.click
+
+  oldVal.size.times do
+    send_keys :backspace
+  end
+  send_keys search_string
+  sleep 0.25
+
 end
 
 Then('the user edits the rubric') do
@@ -248,9 +257,8 @@ Then('the user adds a level to criteria {int}') do |int|
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then('remember the data for criteria {int}') do |int|
-# Then('remember the data for criteria {float}') do |float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('remember the data for criteria {int}') do |criteria_num|
+  @criteria = @rubric.criteria[ criteria_num - 1 ]
 end
 
 Then('the user sees that criteria {int} matches the remembered criteria') do |int|

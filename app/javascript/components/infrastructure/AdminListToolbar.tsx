@@ -3,7 +3,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { GridToolbarContainer, GridToolbarDensitySelector, GridToolbarFilterButton } from "@mui/x-data-grid";
+import { 
+  GridToolbarQuickFilter,
+  GridToolbarContainer,
+  GridToolbarDensitySelector,
+  GridToolbarFilterButton
+} from "@mui/x-data-grid";
 import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Tooltip from "@mui/material/Tooltip";
@@ -29,9 +34,10 @@ export default function AdminListToolbar( props ){
 
               >
                 <AddIcon />
-                {t('new')}
+                {t('new_activity', {activity_type: props.activityType})}
               </IconButton>
             </Tooltip>
+            <GridToolbarQuickFilter debounceMs={50} />
         </GridToolbarContainer>
     )
 }

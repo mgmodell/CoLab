@@ -38,10 +38,10 @@ export default function RubricList(props) {
 
   const dispatch = useDispatch();
   const columns: GridColDef[] = [
-    { field: 'id', hide: true },
+    { field: 'id', hide: true, getApplyQuickFilterFn: undefined },
     { field: 'name', headerName: t( 'name' ) },
     { field: 'published', headerName: t( 'show.published') },
-    { field: 'version', type: 'number',  headerName: t( 'version' ) },
+    { field: 'version', type: 'number',  headerName: t( 'version' ), getApplyQuickFilterFn: undefined },
     { field: 'user', headerName: t( 'show.creator') }
   ];
 
@@ -115,6 +115,11 @@ export default function RubricList(props) {
             } }
             components={{
               Toolbar: AdminListToolbar
+            }}
+            componentsProps={{
+              toolbar: {
+                activityType: 'rubric'
+              }
             }}
           />
 

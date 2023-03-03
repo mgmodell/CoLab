@@ -22,4 +22,4 @@
 en:
   admin:
     accept_decline: Accept/Decline
-    new: New
+    new_activity: New {{activity_type}}
