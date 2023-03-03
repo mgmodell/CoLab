@@ -70,11 +70,23 @@ export default function RubricDataAdmin(props) {
                             l1_description: "The bare minimum to register a score."
                           };
 
-  const editableValueSetter = (params: GridValueSetterParams, field)=>{
+  const addCriteria = () =>{
+    const newList = [...rubricCriteria];
+    const newCriteria = Object.assign(
+      {
+        id: -1 * (rubricCriteria.length + 1 ),
+        sequence: rubricCriteria.length + 1,
+      }, freshCriteria );
+    newList.push( newCriteria );
+    setRubricCriteria( newList);
+  }
+
+  const editableTextValueSetter = (params: GridValueSetterParams, field)=>{
     const row = rubricCriteria.find( (criterium)=>{ return criterium.id === params.row.id} )
     row[field] = params.value;
     row.id = params.row.id;
-    setRubricCriteria( rubricCriteria );
+    
+    // setRubricCriteria( rubricCriteria );
     return row;
   }
 
@@ -83,25 +95,25 @@ export default function RubricDataAdmin(props) {
     { field: 'sequence', headerName: t( 'criteria.sequence' ),
       hide: true, sortable: true },
     { field: 'description', headerName: t( 'criteria.description' ),
-      valueSetter: (params, field) => editableValueSetter( params, 'description'),
+      valueSetter: (params, field) => editableTextValueSetter( params, 'description'),
       editable: true, sortable: false },
     { field: 'weight', headerName: t( 'criteria.weight' ), type: 'number',
-      valueSetter: (params, field) => editableValueSetter( params, 'weight'),
+      valueSetter: (params, field) => editableTextValueSetter( params, 'weight'),
       editable: true, sortable: false },
     { field: 'l1_description', headerName: t( 'criteria.l1_description' ),
-      valueSetter: (params, field) => editableValueSetter( params, 'l1_description'),
+      valueSetter: (params, field) => editableTextValueSetter( params, 'l1_description'),
       editable: true, sortable: false },
     { field: 'l2_description', headerName: t( 'criteria.l2_description' ),
-      valueSetter: (params, field) => editableValueSetter( params, 'l2_description'),
+      valueSetter: (params, field) => editableTextValueSetter( params, 'l2_description'),
       editable: true, sortable: false },
     { field: 'l3_description', headerName: t( 'criteria.l3_description' ),
-      valueSetter: (params, field) => editableValueSetter( params, 'l3_description'),
+      valueSetter: (params, field) => editableTextValueSetter( params, 'l3_description'),
       editable: true, sortable: false },
     { field: 'l4_description', headerName: t( 'criteria.l4_description' ),
-      valueSetter: (params, field) => editableValueSetter( params, 'l4_description'),
+      valueSetter: (params, field) => editableTextValueSetter( params, 'l4_description'),
       editable: true, sortable: false },
     { field: 'l5_description', headerName: t( 'criteria.l5_description' ),
-      valueSetter: (params, field) => editableValueSetter( params, 'l5_description'),
+      valueSetter: (params, field) => editableTextValueSetter( params, 'l5_description'),
       editable: true, sortable: false },
   ];
 
@@ -169,10 +181,12 @@ export default function RubricDataAdmin(props) {
       (null == rubricId ? props.rubricId : rubricId) +
       ".json";
 
-    const saveableCriteria = rubricCriteria.map( (value, index, array)=>{
-      value.id = value.id < 1 ? null : value.id;
-      return value;
+    const saveableCriteria = [...rubricCriteria].map( (value, index, array)=>{
+      const tmpCriteria = Object.assign( { }, value );
+      tmpCriteria.id = value.id < 1 ? null : value.id;
+      return tmpCriteria;
     })
+    console.log( 'saving', saveableCriteria );
     axios({
       method: method,
       url: url,
@@ -190,7 +204,6 @@ export default function RubricDataAdmin(props) {
 
         if (messages != null && Object.keys(messages).length < 2) {
           const rubric = data.rubric;
-          console.log( rubric );
           setRubricId(rubric.id);
           setRubricName(rubric.name);
           setRubricDescription(rubric.description);
@@ -284,17 +297,7 @@ export default function RubricDataAdmin(props) {
                   <Tooltip title={t('criteria.new')}>
                     <IconButton
                       id='new_criteria'
-                      onClick={event =>{
-                        const newList = [...rubricCriteria];
-                        const newCriteria = Object.assign(
-                          {
-                            id: -1 * (rubricCriteria.length + 1 ),
-                            sequence: rubricCriteria.length + 1,
-                          }, freshCriteria );
-                        newList.push( newCriteria );
-                        console.log( 'criteria', [...newList] );
-                        setRubricCriteria( newList);
-                      }}
+                      onClick={(event) => addCriteria(event)}
                       aria-label={t('criteria.new')}
                       size='small'
                       >

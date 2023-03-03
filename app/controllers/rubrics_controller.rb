@@ -1,7 +1,7 @@
 class RubricsController < ApplicationController
   include PermissionsCheck
 
-  before_action :set_rubric, only: %i[ show edit update destroy ]
+  before_action :set_rubric, only: %i[ show update destroy ]
   before_action :check_editor
 
 
@@ -51,7 +51,6 @@ class RubricsController < ApplicationController
 
   # POST /rubrics or /rubrics.json
   def create
-    puts 'creating'
     @rubric = Rubric.new(rubric_params)
 
     respond_to do |format|
@@ -106,21 +105,10 @@ class RubricsController < ApplicationController
 
         response = {
           rubric: rubric.as_json(
-            only: [:id, :name, :description, 
-                    :published, :school_id, :version,
-                    :parent_id],
-                    include: {
-                      criteria: { only:
-                        [
-                          :id,
-                          :description, :sequence,
-                          :weight,
-                          :l1_description,
-                          :l2_description,
-                          :l3_description,
-                          :l4_description,
-                          :l5_description
-                        ]}
+            only: %I[id name description published school_id version parent_id],
+                      include: { criteria: { only: %I[ id description sequence
+                                                weight l1_description l2_description
+                                                l3_description l4_description l5_description ]}
                     }
           ),
           messages: messages
@@ -158,13 +146,10 @@ class RubricsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def rubric_params
       params.require(:rubric).permit(:name, :description, :published,
-        criteria_attributes: [:id, :description, :weight, :sequence,
-                    :l1_description,
-                    :l2_description,
-                    :l3_description,
-                    :l4_description,
-                    :l5_description
-                  ]
+                                      criteria_attributes: %I[id description weight
+                                                              sequence l1_description
+                                                              l2_description l3_description
+                                                              l4_description l5_description ]
        )
     end
 end

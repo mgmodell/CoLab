@@ -59,6 +59,7 @@ Then('the user sets criteria {int} {string} to {string}') do |criteria_num, fiel
     send_keys :backspace
   end
   send_keys value
+  send_keys :enter
 end
 
 Then('the user sets criteria {int} level {int} to {string}') do |criteria_num, level, value|
@@ -70,6 +71,7 @@ Then('the user sets criteria {int} level {int} to {string}') do |criteria_num, l
     send_keys :backspace
   end
   send_keys value
+  send_keys :enter
 end
 
 Then('the user sees the criteria {int} weight is {int}') do |criteria_num, weight|
@@ -95,6 +97,7 @@ Then('the user sets criteria {int} {string} to to {string}') do |criteria_num, f
     send_keys :backspace
   end
   send_keys value
+  send_keys :enter
 end
 
 Then('the user sets the criteria {int} weight to {int}') do |criteria_num, weight|
@@ -106,6 +109,7 @@ Then('the user sets the criteria {int} weight to {int}') do |criteria_num, weigh
     send_keys :backspace
   end
   send_keys weight
+  send_keys :enter
 end
 
 Then('retrieve the {string} rubric from the db') do |name|

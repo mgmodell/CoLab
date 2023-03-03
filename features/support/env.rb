@@ -85,14 +85,13 @@ Capybara.register_driver(:headless_chrome) do |app|
 end
 
 Capybara.register_driver(:chrome) do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[disable-extensions] }
-  )
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument( "--disable-extensions" )
 
   Capybara::Selenium::Driver.new(
     app,
-    browser: :chrome
-    # desired_capabilities: capabilities
+    browser: :chrome,
+    options: options
   )
 end
 
