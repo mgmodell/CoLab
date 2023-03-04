@@ -186,8 +186,11 @@ Then('the user searches for {string}') do |search_string|
 
 end
 
-Then('the user edits the rubric') do
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user edits the {string} rubric') do |name|
+  xpath =  "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div[contains(text(),'#{name}')]"
+  # byebug
+  field = find(:xpath, xpath )
+  field.click
 end
 
 Then('the rubric {string} published') do |is_published|

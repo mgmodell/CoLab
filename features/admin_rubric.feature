@@ -83,7 +83,7 @@ Feature: Rubric administration
   @javascript
   Scenario: Instructor publishes a rubric
     Then the user searches for "Trojan"
-    Then the user edits the rubric
+    Then the user edits the "Trojan" rubric
      And close all messages
      And the user clicks 'Save and publish'
     Then the user will see "success"
@@ -97,7 +97,7 @@ Feature: Rubric administration
   Scenario: Instructor unpublishes their rubric
    Given the "Trojan War Diorama" rubric is published
     Then the user searches for "Trojan"
-    Then the user edits the rubric
+    Then the user edits the "Trojan" rubric
      And the user clicks "Save and Unpublish"
     Then the user will see "success"
     #Check what was saved
@@ -109,7 +109,7 @@ Feature: Rubric administration
   Scenario: Admin unpublishes a rubric
    Given the user is an admin
     Then the user searches for "Ruby 1"
-    Then the user edits the rubric
+    Then the user edits the "Ruby 1" rubric
      And the user clicks "Save and Unpublish"
     Then the user will see "success"
     #Check what was saved
@@ -148,7 +148,7 @@ Feature: Rubric administration
   Scenario: Instructor adds a row to their unpublished rubric
      And the "Trojan War Diorama" rubric has 5 criteria
     Then the user searches for "Trojan"
-    Then the user edits the rubric
+    Then the user edits the "Trojan" rubric
     Then the user adds a new criteria
     Then the user will see an empty criteria 6
      And the user sets criteria 6 "Description" to "New Criteria"
@@ -178,7 +178,7 @@ Feature: Rubric administration
     Then retrieve the "Trojan War Diorama" rubric from the db
     Then remember the data for criteria 3
     Then the user searches for "Trojan"
-    Then the user edits the rubric
+    Then the user edits the "Trojan" rubric
      And the user sees that criteria 3 matches the remembered criteria
      And the user deletes criteria 2
     Then the user clicks "Update Rubric"
@@ -193,7 +193,7 @@ Feature: Rubric administration
     Then retrieve the "Trojan War Diorama" rubric from the db
     Then remember the data for criteria 3
     Then the user searches for "Trojan"
-    Then the user edits the rubric
+    Then the user edits the "Trojan" rubric
     Then the user moves criteria 3 up 1
      And the user sets criteria 5 level 3 to "super-duper"
      And the user adds a level to criteria 4
