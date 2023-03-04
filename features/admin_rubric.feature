@@ -194,12 +194,13 @@ Feature: Rubric administration
     Then remember the data for criteria 3
     Then the user searches for "Trojan"
     Then the user edits the "Trojan" rubric
-    Then the user moves criteria 3 up 1
+    Then the user moves criteria 3 'up'
      And the user sets criteria 5 level 3 to "super-duper"
      And the user adds a level to criteria 4
      And the user sets criteria 4 level 4 to "super duper level 4"
      And the user adds a level to criteria 4
      And the user sets criteria 4 level 5 to "super duper level 5"
+     And the user copies the 'super duper level 4' criteria
     Then the user clicks "Update Rubric"
     Then close all messages
     #Check what was saved
@@ -208,6 +209,7 @@ Feature: Rubric administration
      And the rubric criteria 5 level 3 is "super-duper"
      And the rubric criteria 4 level 4 is "super duper level 4"
      And the rubric criteria 4 level 5 is "super duper level 5"
+     And the rubric criteria 4 level 6 is "super duper level 4 (copy)"
 
   @javascript
   Scenario: Admin deletes an unpublished rubric

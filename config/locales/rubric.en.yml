@@ -20,6 +20,9 @@ en:
     name: Name
     description: Description
     version: Version
+    rubric:
+      copy: Copy rubric
+      delete: Remove this rubric
     criteria:
       new: New Criteria
       sequence: sequence

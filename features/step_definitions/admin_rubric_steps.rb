@@ -203,8 +203,25 @@ Given('the {string} rubric is published') do |name|
   rubric.save
 end
 
-Then('the user copies the {string} rubric') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user copies the {string} rubric') do |rubric_name|
+  pending
+  rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]")
+  rows.each do |row|
+    if row.find_all( :xpath, "//div[@data-field='name']/div[text()='#{rubric_name}']").size > 0
+      puts "found it: #{row}"
+      row.find( :xpath, "//div[@id='copy_criteria']" ).click
+    end
+  end
+end
+
+Then('the user copies the {string} criteria') do |criteria_name|
+  rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]")
+  rows.each do |row|
+    if row.find_all( :xpath, "//div[@data-field='name']/div[text()='#{criteria_name}']").size > 0
+      puts "found it: #{row}"
+      row.find( :xpath, "//div[@id='copy_criteria']" ).click
+    end
+  end
 end
 
 Then('the rubric {string} is {int}') do |field_name, value|
@@ -279,11 +296,9 @@ Then('criteria {int} matches the remembered criteria') do |int|
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then('the user moves criteria {int} up {int}') do |int, int2|
-# Then('the user moves criteria {int} up {float}') do |int, float|
-# Then('the user moves criteria {float} up {int}') do |float, int|
-# Then('the user moves criteria {float} up {float}') do |float, float2|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user moves criteria {int} {string}') do |criteria_num, up_or_down|
+  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@id='#{up_or_down}_criteria']/div")[criteria_num - 1]
+  field.click
 end
 
 Then('the user deletes the rubric') do

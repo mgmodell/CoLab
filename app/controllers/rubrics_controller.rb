@@ -1,16 +1,16 @@
 class RubricsController < ApplicationController
   include PermissionsCheck
 
-  before_action :set_rubric, only: %i[ show update destroy ]
   before_action :check_editor
+  before_action :set_rubric, only: %i[ show update destroy copy ]
 
 
   # GET /rubrics or /rubrics.json
   def index
     if current_user.is_admin?
-      @rubrics = Rubric.group( :name, :version )
+      @rubrics = Rubric.includes( :user ).group( :name, :version )
     else
-      @rubrics = Rubric.
+      @rubrics = Rubric.includes( :user )
         where( school: current_user.school, published: true ).
         or( Rubric.where( user: current_user ) ).
         group( :name, :version )
@@ -41,6 +41,34 @@ class RubricsController < ApplicationController
         render json: standardized_response( @rubric )
       end
     end
+  end
+
+  # GET /rubrics/copy/1.json
+  def copy
+    copied_rubric = Rubric.new(
+      name: "#{@rubric.name} (copy)",
+      description: @rubric.description,
+      published: false,
+      version: 1,
+      school: @rubric.school,
+      user: @rubric.user,
+    )
+    @rubric.criteria.each do |criterium|
+      copied_rubric.criteria.new(
+        description: criterium.description,
+        weight: criterium.weight,
+        sequence: criterium.sequence,
+        l1_description: criterium.l1_description,
+        l2_description: criterium.l2_description,
+        l3_description: criterium.l3_description,
+        l4_description: criterium.l4_description,
+        l5_description: criterium.l5_description,
+      )
+    end
+    copied_rubric.save
+    logger.debug copied_rubric.errors.full_messages unless copied_rubric.errors.empty?
+
+    render json: standardized_response( copied_rubric, copied_rubric.errors )
   end
 
   # GET /rubrics/new
@@ -138,7 +166,7 @@ class RubricsController < ApplicationController
                     ]
                   )
                 else
-                  Rubric.includes(:criteria).find(params[:id])
+                  Rubric.includes(:criteria, :user).find(params[:id])
                 end
       @rubric.school ||= current_user.school
       @rubric.user ||= current_user

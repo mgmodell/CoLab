@@ -33,6 +33,7 @@ import {
   GridColDef,
   GridPreProcessEditCellProps,
   GridRenderCellParams,
+  GridRowModel,
   GridRowModes,
   GridToolbarContainer,
   GridToolbarDensitySelector,
@@ -107,7 +108,6 @@ export default function RubricDataAdmin(props) {
   }
 
   const columns: GridColDef[] = [
-    { field: 'id', hide: true, sortable: false },
     { field: 'sequence', headerName: t( 'criteria.sequence' ),
       hide: true, sortable: true },
     { field: 'description', headerName: t( 'criteria.description' ),
@@ -169,7 +169,19 @@ export default function RubricDataAdmin(props) {
                   <Tooltip title={t('criteria.copy')}>
                     <IconButton
                       id='copy_criteria'
-                      onClick={(event) => { return true }}
+                      onClick={(event) => {
+                        const tmpCriteria = [...rubricCriteria];
+                        console.log( 'start', tmpCriteria.length );
+                        const criterium = Object.assign( {}, tmpCriteria.find( (value)=> {return params.id == value.id} ) );
+                        criterium.id = 0 - (tmpCriteria.length + 1 );
+                        criterium.name += ' (copy)';
+                        tmpCriteria.push( criterium );
+                        console.log( 'end', tmpCriteria.length );
+                        console.log( renumCriteria( tmpCriteria ).length );
+
+                        setRubricCriteria( renumCriteria( tmpCriteria ) );
+
+                      }}
                       aria-label={t('criteria.copy')}
                       size='small'
                       >
@@ -179,8 +191,14 @@ export default function RubricDataAdmin(props) {
                   <Tooltip title={t('criteria.delete')}>
                     <IconButton
                       id='delete_criteria'
-                      onClick={(event) => { return true }}
                       aria-label={t('criteria.delete')}
+                      onClick={(event) => {
+                        const tmpCriteria = [...rubricCriteria];
+                        tmpCriteria = tmpCriteria.filter( (value)=> {return params.id != value.id} );
+
+                        setRubricCriteria( renumCriteria( tmpCriteria ) );
+
+                      }}
                       size='small'
                       >
                         <DeleteIcon />
@@ -262,7 +280,6 @@ export default function RubricDataAdmin(props) {
       tmpCriteria.id = value.id < 1 ? null : value.id;
       return tmpCriteria;
     })
-    console.log( 'saving', saveableCriteria );
     axios({
       method: method,
       url: url,
@@ -361,6 +378,9 @@ export default function RubricDataAdmin(props) {
             getRowHeight={()=> 'auto'}
             experimentalFeatures={{ newEditingApi: true }}
             autoHeight
+            getRowId={(model:GridRowModel) =>{
+              return model.id;
+            }}
             rows={rubricCriteria}
             columns={columns}
             sortModel={[{
