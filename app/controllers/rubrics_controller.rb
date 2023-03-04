@@ -11,7 +11,8 @@ class RubricsController < ApplicationController
       @rubrics = Rubric.group( :name, :version )
     else
       @rubrics = Rubric.
-        where( school: current_user.school ).
+        where( school: current_user.school, published: true ).
+        or( Rubric.where( user: current_user ) ).
         group( :name, :version )
     end
 

@@ -8,8 +8,9 @@ Feature: Rubric administration
     Given there are 4 "published" rubrics starting with 'Ruby '
     Given there are 4 "unpublished" rubrics starting with "Never gonna' give you up "
     Given there is a course with an assessed project
-    Given the user is the instructor for the course
     Given the course has 8 confirmed users
+    Given the user is the most recently created user
+    Given the user is the instructor for the course
     Given the course has an assignment named "Sack Troy" with an "unpublished" rubric named "Trojan War Diorama"
     Given the course started "5/10/1976" and ended "5 months from now"
     Given the project started "5/10/1976" and ends "11/01/2012", opened "Saturday" and closes "Monday"
@@ -22,7 +23,7 @@ Feature: Rubric administration
 
   @javascript
   Scenario: Instructor creates a rubric
-    Then the user sees 9 rubrics
+    Then the user sees 5 rubrics
     Then the user clicks the "new-activity" button
      And the user sets the "Name" field to "Elderly Tech. Talk"
      And the user sets the "Description" field to "Students prepare and deliver a presentation explaining a technology topic to elderly members of their community."

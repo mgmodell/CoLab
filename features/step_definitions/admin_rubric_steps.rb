@@ -182,7 +182,7 @@ Then('the user searches for {string}') do |search_string|
     send_keys :backspace
   end
   send_keys search_string
-  sleep 0.25
+  sleep 0.06
 
 end
 
