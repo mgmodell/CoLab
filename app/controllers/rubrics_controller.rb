@@ -10,7 +10,7 @@ class RubricsController < ApplicationController
     if current_user.is_admin?
       @rubrics = Rubric.includes( :user ).group( :name, :version )
     else
-      @rubrics = Rubric.includes( :user )
+      @rubrics = Rubric.includes( :user ).
         where( school: current_user.school, published: true ).
         or( Rubric.where( user: current_user ) ).
         group( :name, :version )
