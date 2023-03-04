@@ -30,4 +30,8 @@ en:
       l3_description: Requirements for level 3 credit
       l4_description: Requirements for level 4 credit
       l5_description: Requirements for level 5 credit
+      up: Move criteria up
+      down: Move criteria down
+      copy: Copy criteria
+      delete: Remove this criteria
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import {
@@ -18,14 +18,21 @@ import Select from "@mui/material/Select";
 import Paper from "@mui/material/Paper";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
+
 import AddIcon from '@mui/icons-material/Add';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import DeleteIcon from '@mui/icons-material/Delete';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import {
   DataGrid,
+  GridActionsCellItem,
   GridCellEditStopParams,
   GridCellParams,
   GridColDef,
   GridPreProcessEditCellProps,
+  GridRenderCellParams,
   GridRowModes,
   GridToolbarContainer,
   GridToolbarDensitySelector,
@@ -90,6 +97,15 @@ export default function RubricDataAdmin(props) {
     return row;
   }
 
+  const renumCriteria = (criteriaArray) =>{
+    const tmpCriteria = [...criteriaArray]
+    tmpCriteria.sort( (a,b) =>{ return a.sequence - b.sequence })
+    for( let index = 0; index < tmpCriteria.length; index++ ){
+      tmpCriteria[ index ].sequence = index * 2;
+    }
+    return tmpCriteria;
+  }
+
   const columns: GridColDef[] = [
     { field: 'id', hide: true, sortable: false },
     { field: 'sequence', headerName: t( 'criteria.sequence' ),
@@ -115,6 +131,65 @@ export default function RubricDataAdmin(props) {
     { field: 'l5_description', headerName: t( 'criteria.l5_description' ),
       valueSetter: (params, field) => editableTextValueSetter( params, 'l5_description'),
       editable: true, sortable: false },
+    { field: 'actions', headerName: '', type: 'actions', editable: false, sortable: false,
+      renderCell: (params: GridRenderCellParams)=>(
+        <Fragment>
+                  <Tooltip title={t('criteria.up')}>
+                    <IconButton
+                      id='up_criteria'
+                      onClick={(event) => {
+                        const tmpCriteria = [...rubricCriteria];
+                        const criterium = tmpCriteria.find( (value)=> {return params.id == value.id} );
+                        criterium.sequence-=3
+                        setRubricCriteria( renumCriteria( tmpCriteria ) );
+
+                      }}
+                      aria-label={t('criteria.up')}
+                      size='small'
+                      >
+                        <KeyboardArrowUpIcon />
+                      </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t('criteria.down')}>
+                    <IconButton
+                      id='down_criteria'
+                      onClick={(event) => {
+                        const tmpCriteria = [...rubricCriteria];
+                        const criterium = tmpCriteria.find( (value)=> {return params.id == value.id} );
+                        criterium.sequence+=3
+                        setRubricCriteria( renumCriteria( tmpCriteria ) );
+
+                      }}
+                      aria-label={t('criteria.down')}
+                      size='small'
+                      >
+                        <KeyboardArrowDownIcon />
+                      </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t('criteria.copy')}>
+                    <IconButton
+                      id='copy_criteria'
+                      onClick={(event) => { return true }}
+                      aria-label={t('criteria.copy')}
+                      size='small'
+                      >
+                        <FileCopyIcon />
+                      </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t('criteria.delete')}>
+                    <IconButton
+                      id='delete_criteria'
+                      onClick={(event) => { return true }}
+                      aria-label={t('criteria.delete')}
+                      size='small'
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                  </Tooltip>
+
+        </Fragment>
+      )
+    }
   ];
 
   let { rubricIdParam } = useParams();
@@ -159,6 +234,7 @@ export default function RubricDataAdmin(props) {
         setRubricCreator( rubric.creator );
         setRubricSchoolId( rubric.school_id );
 
+        rubric.criteria = renumCriteria( rubric.criteria );
         setRubricCriteria( rubric.criteria || [] );
 
         dispatch(setClean(category));
@@ -211,6 +287,7 @@ export default function RubricDataAdmin(props) {
           setRubricPublished( rubric.published );
           setRubricCreator( rubric.creator );
 
+          rubric.criteria = renumCriteria( rubric.criteria );
           setRubricCriteria( rubric.criteria || []);
 
           dispatch(setClean(category));
@@ -281,6 +358,7 @@ export default function RubricDataAdmin(props) {
         <div style={{ display: 'flex', height: '100%'}} >
           <div style={ { flexGrow: 1 }} >
           <DataGrid
+            getRowHeight={()=> 'auto'}
             experimentalFeatures={{ newEditingApi: true }}
             autoHeight
             rows={rubricCriteria}
