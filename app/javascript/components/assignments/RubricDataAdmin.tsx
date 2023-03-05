@@ -48,7 +48,7 @@ import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { number } from "prop-types";
-import { IconButton, Tooltip } from "@mui/material";
+import { Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mui/material";
 
 export default function RubricDataAdmin(props) {
   const category = "rubric";
@@ -215,6 +215,7 @@ export default function RubricDataAdmin(props) {
   const [rubricName, setRubricName] = useState("");
   const [rubricDescription, setRubricDescription] = useState("");
   const [rubricPublished, setRubricPublished] = useState(false);
+  const [rubricActive, setRubricActive] = useState(false);
   const [rubricVersion, setRubricVersion] = useState(1);
   const [rubricCreator, setRubricCreator] = useState('');
   const [rubricSchoolId, setRubricSchoolId] = useState( 0 );
@@ -248,6 +249,7 @@ export default function RubricDataAdmin(props) {
         setRubricName(rubric.name || "");
         setRubricDescription(rubric.description || "");
         setRubricPublished( rubric.published || false );
+        setRubricActive( rubric.active || false );
         setRubricVersion( rubric.version || 1 );
         setRubricCreator( rubric.creator );
         setRubricSchoolId( rubric.school_id );
@@ -265,6 +267,46 @@ export default function RubricDataAdmin(props) {
         dispatch(setClean(category));
       });
   };
+  const publishOrActivateRubric = ( ) =>{
+    const action = rubricPublished ? 'activate' : 'publish';
+    const url = `${endpoints['baseUrl']}/${action}/${rubricId}.json`;
+    dispatch(startTask(action));
+
+     axios.get( url )
+      .then(resp => {
+        const data = resp["data"];
+        const messages = data['messages'];
+
+        if (messages != null && Object.keys(messages).length < 2) {
+          const rubric = data.rubric;
+          setRubricId(rubric.id);
+          setRubricName(rubric.name);
+          setRubricDescription(rubric.description);
+          setRubricVersion( rubric.version );
+          setRubricPublished( rubric.published );
+          setRubricActive( rubric.active );
+          setRubricCreator( rubric.creator );
+
+          rubric.criteria = renumCriteria( rubric.criteria );
+          setRubricCriteria( rubric.criteria || []);
+
+          dispatch(setClean(category));
+          dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
+          //setMessages(data.messages);
+          dispatch(endTask("saving"));
+        } else {
+          dispatch(
+            addMessage(messages.main, new Date(), Priorities.ERROR)
+          );
+          setMessages(messages);
+          dispatch(endTask(action));
+        }
+      })
+      .catch(error => {
+        console.log("error", error);
+      });
+
+  }
   const saveRubric = () => {
     const method = null == rubricId ? "POST" : "PATCH";
     dispatch(startTask("saving"));
@@ -302,6 +344,7 @@ export default function RubricDataAdmin(props) {
           setRubricDescription(rubric.description);
           setRubricVersion( rubric.version );
           setRubricPublished( rubric.published );
+          setRubricActive( rubric.active );
           setRubricCreator( rubric.creator );
 
           rubric.criteria = renumCriteria( rubric.criteria );
@@ -344,6 +387,19 @@ export default function RubricDataAdmin(props) {
     </Button>
   ) : null;
 
+  const publishOrActivateButton = parseInt( rubricId ) > 0 ? (
+    <Button variant="contained"
+            aria-label="activate-or-publish-rubric"
+            onClick={publishOrActivateRubric}
+            >
+      {
+        rubricPublished ?
+          (rubricActive ? 'Deactivate' : 'Activate' ) :
+          'Publish'
+      } Rubric
+    </Button>
+  ) : null;
+
   const detailsComponent = endpointStatus ? (
     <Paper>
       <TextField
@@ -371,6 +427,9 @@ export default function RubricDataAdmin(props) {
         }}
         margin="normal"
       />
+      <Typography >Version {rubricVersion}</Typography>
+      <Typography >Published {rubricPublished ? 'Yes' : 'No' }</Typography>
+      <Typography >Active {rubricActive ? 'Yes' : 'No' }</Typography>
       <br />
         <div style={{ display: 'flex', height: '100%'}} >
           <div style={ { flexGrow: 1 }} >
@@ -410,6 +469,7 @@ export default function RubricDataAdmin(props) {
         </div>
       </div>
       {saveButton}
+      {publishOrActivateButton}
     </Paper>
   ) : null;
 

@@ -16,6 +16,9 @@ en:
     create_success: Rubric was created successfully!
     destroy_success: Rubric was destroyed successfully!
     update_success: Rubric was updated successfully!
+    publish_success: Rubric was published successfully!
+    activate_success: Rubric was activated
+    deactivate_success: Rubric was deactivated
     back: Back to the list of rubrics
     name: Name
     description: Description

@@ -187,10 +187,12 @@ Then('the user searches for {string}') do |search_string|
 end
 
 Then('the user edits the {string} rubric') do |name|
-  xpath =  "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div[contains(text(),'#{name}')]"
-  # byebug
-  field = find(:xpath, xpath )
-  field.click
+  xpath =  "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div"
+  fields = find_all(:xpath, xpath )
+  fields.each do |field|
+    puts field.text
+    field.click if name == field.text
+  end
 end
 
 Then('the rubric {string} published') do |is_published|
@@ -204,7 +206,6 @@ Given('the {string} rubric is published') do |name|
 end
 
 Then('the user copies the {string} rubric') do |rubric_name|
-  pending
   rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]")
   rows.each do |row|
     if row.find_all( :xpath, "//div[@data-field='name']/div[text()='#{rubric_name}']").size > 0

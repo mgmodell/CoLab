@@ -2,7 +2,7 @@ class RubricsController < ApplicationController
   include PermissionsCheck
 
   before_action :check_editor
-  before_action :set_rubric, only: %i[ show update destroy copy ]
+  before_action :set_rubric, only: %i[ show update destroy copy publish activate ]
 
 
   # GET /rubrics or /rubrics.json
@@ -26,10 +26,53 @@ class RubricsController < ApplicationController
             description: rubric.description,
             published: rubric.published,
             version: rubric.version,
-            user: rubric.user.informal_name( anon ),
+            active: rubric.active,
+            user: rubric.user.informal_name( anon )
           }
         end
         render json: resp
+      end
+    end
+  end
+
+  # GET /rubrics/publish/1.json
+  def publish
+    if current_user.is_admin? || current_user == @rubric.user
+      @rubric.published = true
+      @rubric.save
+    end
+
+    logger.debug @rubric.errors.full_messages unless @rubric.errors.empty?
+
+    respond_to do |format|
+      format.json do
+        if !@rubric.errors.empty?
+          @rubric.published = false
+          render json: standardized_response( @rubric, @rubric.errors )
+        else
+          render json: standardized_response( @rubric, { main: t( 'rubrics.publish_success')} )
+        end
+      end
+    end
+  end
+
+  # GET /rubrics/activate/1.json
+  def activate
+    if current_user.is_admin? || current_user == @rubric.user
+      @rubric.active = !@rubric.active
+      @rubric.save
+    end
+
+    respond_to do |format|
+      format.json do
+        if !@rubric.errors.empty?
+          @rubric.active = !@rubric.active
+          render json: standardized_response( @rubric, @rubric.errors )
+        else
+          render json: standardized_response( @rubric, { main: t(
+            @rubric.active ? 'rubrics.activate_success' : 'rubrics.deactivate_success'
+          )} )
+        end
       end
     end
   end
@@ -50,6 +93,7 @@ class RubricsController < ApplicationController
       description: @rubric.description,
       published: false,
       version: 1,
+      active: false,
       school: @rubric.school,
       user: @rubric.user,
     )
@@ -102,6 +146,31 @@ class RubricsController < ApplicationController
         @rubric.save
       else
         @rubric.update(rubric_params)
+        if !@rubric.errors.empty? && @rubric.errors[:published].present?
+          new_version = current_user.rubrics.new(
+            name: @rubric.name,
+            description: @rubric.description,
+            published: false,
+            version: (@rubric.version + 1),
+            active: false,
+            school: @rubric.school,
+            parent: @rubric
+          )
+          @rubric.criteria.each do |criterium|
+            new_version.criteria.new(
+              description: criterium.description,
+              weight: criterium.weight,
+              sequence: criterium.sequence,
+              l1_description: criterium.l1_description,
+              l2_description: criterium.l2_description,
+              l3_description: criterium.l3_description,
+              l4_description: criterium.l4_description,
+              l5_description: criterium.l5_description,
+            )
+          end
+          @rubric = new_version
+          @rubric.save
+        end
       end
       if @rubric.errors.empty?
         format.json do
@@ -134,7 +203,7 @@ class RubricsController < ApplicationController
 
         response = {
           rubric: rubric.as_json(
-            only: %I[id name description published school_id version parent_id],
+            only: %I[id name description published active school_id version parent_id],
                       include: { criteria: { only: %I[ id description sequence
                                                 weight l1_description l2_description
                                                 l3_description l4_description l5_description ]}
@@ -155,6 +224,7 @@ class RubricsController < ApplicationController
                     name: '',
                     school_id: current_user.school_id,
                     published: false,
+                    active: false,
                     user: current_user,
                     criteria: [
                       Criterium.new(

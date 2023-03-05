@@ -54,6 +54,12 @@ Rails.application.routes.draw do
     get 'rubrics/copy/:id' => 'rubrics#copy',
          as: :copy_rubric,
          constraints: ->(req) { req.format == :json }
+    get 'rubrics/publish/:id' => 'rubrics#publish',
+         as: :publish_rubric,
+         constraints: ->(req) { req.format == :json }
+    get 'rubrics/activate/:id' => 'rubrics#activate',
+         as: :activate_rubric,
+         constraints: ->(req) { req.format == :json }
 
     get 'consent_forms/new/' => 'consent_forms#show', as: :new_consent_form
     post 'consent_forms/:school_id' => 'consent_forms#create'
