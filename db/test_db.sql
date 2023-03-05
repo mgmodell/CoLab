@@ -4668,6 +4668,7 @@ CREATE TABLE `rubrics` (
   `anon_name` varchar(255) DEFAULT NULL,
   `anon_description` varchar(255) DEFAULT NULL,
   `anon_version` int(11) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_rubrics_on_name_and_version_and_parent_id` (`name`,`version`,`parent_id`),
   KEY `index_rubrics_on_parent_id` (`parent_id`),
@@ -4916,7 +4917,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20230206040920'),
 ('20230212031949'),
 ('20230218040723'),
-('20230219025034');
+('20230219025034'),
+('20230305001118');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5379,4 +5381,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-18 21:56:56
+-- Dump completed on 2023-03-04 19:20:39

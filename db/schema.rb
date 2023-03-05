@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_19_025034) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_05_001118) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -33,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_19_025034) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
@@ -508,6 +508,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_19_025034) do
     t.string "anon_name"
     t.string "anon_description"
     t.integer "anon_version"
+    t.boolean "active", default: false, null: false
     t.index ["name", "version", "parent_id"], name: "index_rubrics_on_name_and_version_and_parent_id", unique: true
     t.index ["parent_id"], name: "index_rubrics_on_parent_id"
     t.index ["school_id"], name: "index_rubrics_on_school_id"
