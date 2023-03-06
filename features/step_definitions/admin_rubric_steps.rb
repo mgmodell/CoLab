@@ -201,6 +201,10 @@ Then('the rubric {string} published') do |is_published|
   @rubric.published.should eq ('is' == is_published )
 end
 
+Then('the rubric {string} active') do |is_active|
+  @rubric.active.should eq ('is' == is_active )
+end
+
 Given('the {string} rubric is published') do |name|
   rubric = Rubric.find_by_name name
   rubric.published = true

@@ -51,6 +51,7 @@ end
 
 Then('the user clicks {string}') do |link_or_button|
   wait_for_render
+
   if has_xpath?("//button[contains(.,'#{link_or_button}')]",
                 visible: :all)
     btn = find(:xpath, "//button[contains(.,'#{link_or_button}')]",
@@ -65,6 +66,8 @@ Then('the user clicks {string}') do |link_or_button|
     btn = find(:xpath, "//input[@value='#{link_or_button}']",
                visible: :all)
   end
+  #Make sure we actually clicked something
+  true.should be false if btn.nil?
   begin
     retries ||= 0
     btn.click

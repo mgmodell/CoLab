@@ -392,11 +392,11 @@ export default function RubricDataAdmin(props) {
             aria-label="activate-or-publish-rubric"
             onClick={publishOrActivateRubric}
             >
-      {
-        rubricPublished ?
+      { t(
+        `${rubricPublished ?
           (rubricActive ? 'Deactivate' : 'Activate' ) :
-          'Publish'
-      } Rubric
+          'Publish'} Rubric`
+      ) }
     </Button>
   ) : null;
 

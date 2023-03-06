@@ -94,16 +94,22 @@ Feature: Rubric administration
     
 
   @javascript
-  Scenario: Instructor unpublishes their rubric
+  Scenario: Instructor deactivates and activates their published rubric
    Given the "Trojan War Diorama" rubric is published
     Then the user searches for "Trojan"
     Then the user edits the "Trojan War Diorama" rubric
-     And the user clicks "Save and Unpublish"
+     And the user clicks "Deactivate Rubric"
     Then the user will see "success"
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
      And the rubric "Name" field is "Trojan War Diorama"
-     And the rubric "is not" published
+     And the rubric "is not" active
+     And the user clicks "Activate Rubric"
+    Then the user will see "success"
+    #Check what was saved
+    Then retrieve the "Trojan War Diorama" rubric from the db
+     And the rubric "Name" field is "Trojan War Diorama"
+     And the rubric "is" active
 
   @javascript
   Scenario: Admin unpublishes a rubric

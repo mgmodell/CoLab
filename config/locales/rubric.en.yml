@@ -4,6 +4,8 @@ en:
       title: List of Rubrics
     edit:
       title: Edit Rubric
+      deactivate: Deactivate Rubric
+      activate: Activate Rubric
     show:
       title: Rubric Details
       edit_string: Edit rubric details

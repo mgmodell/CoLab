@@ -12,7 +12,7 @@ class Rubric < ApplicationRecord
 
 
     before_create :set_owner
-    validate :not_published
+    validate :publish_logic
 
     def set_owner
         self.user ||= @current_user
@@ -29,8 +29,10 @@ class Rubric < ApplicationRecord
     self.anon_version = version + (Random.rand * 11).floor
   end
 
-  def not_published
-    if self.published_was
+  def publish_logic
+    if ! self.published_was && self.published
+      self.active = true
+    elsif self.published_was
       unless self.changes.keys == ['active']
         errors.add(:main, 'A published rubric cannot be modified. A new version must be created.')
       end
