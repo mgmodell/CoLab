@@ -189,10 +189,12 @@ end
 Then('the user edits the {string} rubric') do |name|
   xpath =  "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div"
   fields = find_all(:xpath, xpath )
+  found = false
   fields.each do |field|
-    puts field.text
+    found = true
     field.click if name == field.text
   end
+  true.should be false unless found
 end
 
 Then('the rubric {string} published') do |is_published|
