@@ -83,7 +83,7 @@ export default function RubricDataAdmin(props) {
     const newCriteria = Object.assign(
       {
         id: -1 * (rubricCriteria.length + 1 ),
-        sequence: rubricCriteria.length + 1,
+        sequence: 2 * (rubricCriteria.length + 1),
       }, freshCriteria );
     newList.push( newCriteria );
     setRubricCriteria( newList);

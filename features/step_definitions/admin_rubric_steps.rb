@@ -63,8 +63,9 @@ Then('the user sets criteria {int} {string} to {string}') do |criteria_num, fiel
 end
 
 Then('the user sets criteria {int} level {int} to {string}') do |criteria_num, level, value|
+  wait_for_render
   field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='l#{level}_description']")[criteria_num - 1]
-  text = field.text
+  text = field.text 
 
   field.double_click
   text.size.times do
@@ -84,7 +85,9 @@ Then('the user adds a new criteria') do
 end
 
 Then('the user will see an empty criteria {int}') do |criteria_num|
-  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='description']/div")[criteria_num - 1]
+  wait_for_render
+  path = "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='description']/div"
+  field = find_all(:xpath, path)[criteria_num - 1]
   field.text.should eq 'New Criteria'
 end
 
@@ -213,7 +216,6 @@ end
 
 Then('the user copies the {string} rubric') do |rubric_name|
   rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
-  #rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div[contains(text(),'#{rubric_name}')]")
   found = false
   puts "rows: #{rows.inspect} #{rows.size}"
   rows.each do |row|
@@ -223,7 +225,6 @@ Then('the user copies the {string} rubric') do |rubric_name|
       row.find( :xpath, "../..//button[@id='copy_rubric']" ).click
     end
   end
-  # byebug unless found
   true.should be false unless found
 end
 
@@ -314,7 +315,8 @@ Then('criteria {int} matches the remembered criteria') do |int|
 end
 
 Then('the user moves criteria {int} {string}') do |criteria_num, up_or_down|
-  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@id='#{up_or_down}_criteria']/div")[criteria_num - 1]
+  path = "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='actions']/button[@id='#{up_or_down}_criteria']"
+  field = find_all(:xpath, path)[criteria_num - 1]
   field.click
 end
 
