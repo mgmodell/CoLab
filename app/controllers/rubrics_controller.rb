@@ -95,7 +95,7 @@ class RubricsController < ApplicationController
       version: 1,
       active: false,
       school: @rubric.school,
-      user: @rubric.user,
+      user: current_user,
     )
     @rubric.criteria.each do |criterium|
       copied_rubric.criteria.new(

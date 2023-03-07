@@ -56,8 +56,12 @@ export default function RubricList(props) {
                         const url = `${endpoints['baseUrl']}/copy/${rubric.id}.json`;
                         axios.get( url ).
                           then(resp => {
+                            console.log('resp', resp );
                             // check for possible errors
                             getRubrics( );
+                          })
+                          .catch( (error) =>{
+                            console.log( error );
                           })
                       }}
                       aria-label={t('rubric.copy')}

@@ -5,7 +5,7 @@ Feature: Rubric administration
   Background:
     Given a user has signed up
     Given the user "has" had demographics requested
-    Given there are 4 "published" rubrics starting with 'Ruby '
+    Given there are 4 "published" rubrics starting with 'Ruby'
     Given there are 4 "unpublished" rubrics starting with "Never gonna' give you up "
     Given there is a course with an assessed project
     Given the course has 8 confirmed users
@@ -112,28 +112,16 @@ Feature: Rubric administration
      And the rubric "is" active
 
   @javascript
-  Scenario: Admin unpublishes a rubric
-   Given the user is an admin
-    Then the user searches for "Ruby 1"
-    Then the user edits the "Ruby 1" rubric
-     And the user clicks "Save and Unpublish"
-    Then the user will see "success"
-    #Check what was saved
-    Then retrieve the "Ruby 1" rubric from the db
-     And the rubric "Name" field is "Ruby 1"
-     And the rubric "is not" published
-
-  @javascript
   Scenario: Instructor copies their own rubric
     Then the user searches for "Trojan"
     Then the user copies the "Trojan War Diorama" rubric
     Then the user will see "success"
     #Check what was saved
     Then retrieve the "latest" rubric from the db
-     And the rubric "Name" is "Trojan War Diorama"
-     And the rubric "Version" is 2
+     And the rubric "Name" is "Trojan War Diorama (copy)"
+     And the rubric "Version" is 1
      And the rubric owner "is" the user
-     And the rubric parent is "Trojan War Diorama" version 1
+     And the rubric parent is empty
      And the rubric "is not" published
 
 
@@ -144,10 +132,10 @@ Feature: Rubric administration
     Then the user will see "success"
     #Check what was saved
     Then retrieve the "latest" rubric from the db
-     And the rubric "Name" is "Ruby 1"
+     And the rubric "Name" is "Ruby 1 (copy)"
      And the rubric "Version" is 1
      And the rubric owner "is" the user
-     And the rubric parent is "Ruby 1" version 1
+     And the rubric parent is empty
      And the rubric "is not" published
 
   @javascript

@@ -212,13 +212,19 @@ Given('the {string} rubric is published') do |name|
 end
 
 Then('the user copies the {string} rubric') do |rubric_name|
-  rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]")
+  rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
+  #rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div[contains(text(),'#{rubric_name}')]")
+  found = false
+  puts "rows: #{rows.inspect} #{rows.size}"
   rows.each do |row|
-    if row.find_all( :xpath, "//div[@data-field='name']/div[text()='#{rubric_name}']").size > 0
-      puts "found it: #{row}"
-      row.find( :xpath, "//div[@id='copy_criteria']" ).click
+    puts row.text
+    if row.text == rubric_name
+      found = true
+      row.find( :xpath, "../..//button[@id='copy_rubric']" ).click
     end
   end
+  # byebug unless found
+  true.should be false unless found
 end
 
 Then('the user copies the {string} criteria') do |criteria_name|
@@ -251,6 +257,10 @@ end
 Then('the rubric parent is {string} version {int}') do |name, version|
   @rubric.parent.name.should eq name
   @rubric.parent.version.should eq version
+end
+
+Then('the rubric parent is empty') do
+  @rubric.parent.should be nil
 end
 
 Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
