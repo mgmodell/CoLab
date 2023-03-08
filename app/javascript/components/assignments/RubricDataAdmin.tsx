@@ -173,11 +173,9 @@ export default function RubricDataAdmin(props) {
                         const tmpCriteria = [...rubricCriteria];
                         console.log( 'start', tmpCriteria.length );
                         const criterium = Object.assign( {}, tmpCriteria.find( (value)=> {return params.id == value.id} ) );
-                        criterium.id = 0 - (tmpCriteria.length + 1 );
+                        criterium.id = 0 - (( 2 * tmpCriteria.length ) + 1 );
                         criterium.name += ' (copy)';
                         tmpCriteria.push( criterium );
-                        console.log( 'end', tmpCriteria.length );
-                        console.log( renumCriteria( tmpCriteria ).length );
 
                         setRubricCriteria( renumCriteria( tmpCriteria ) );
 
@@ -329,7 +327,7 @@ export default function RubricDataAdmin(props) {
         rubric: {
           name: rubricName,
           description: rubricDescription,
-          criteria_attributes: saveableCriteria
+          criteria_attributes: renumCriteria( saveableCriteria )
         }
       }
     })

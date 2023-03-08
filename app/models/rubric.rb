@@ -2,7 +2,8 @@ class Rubric < ApplicationRecord
 
     belongs_to :parent, class_name: 'Rubric', optional: true
 
-    has_many :criteria, dependent: :destroy
+    has_many :criteria, dependent: :destroy, autosave: true
+    validates_associated :criteria
     accepts_nested_attributes_for :criteria, allow_destroy: true
 
     before_create :anonymize
@@ -13,6 +14,7 @@ class Rubric < ApplicationRecord
 
     before_create :set_owner
     validate :publish_logic
+    validates :criteria, presence: {message: 'a rubric requires at least one criteria'}
 
     def set_owner
         self.user ||= @current_user

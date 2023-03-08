@@ -7,6 +7,11 @@ require 'chronic'
             school: @user.school,
             published: 'published' == rubric_published
         )
+        @rubric.criteria.new(
+          description: Faker::Company.industry,
+          sequence: 1,
+          l1_description: Faker::Company.bs
+        )
         @rubric.save
         log @rubric.errors.full_messages if @rubric.errors.present?
 

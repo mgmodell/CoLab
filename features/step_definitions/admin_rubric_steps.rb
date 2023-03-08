@@ -9,6 +9,11 @@ Given('there are {int} {string} rubrics starting with {string}') do |count, is_p
       published: 'published' == is_published,
       user: @user
     )
+    rubric.criteria.new(
+      description: Faker::Company.industry,
+      sequence: 1,
+      l1_description: Faker::Company.bs
+    )
     rubric.save
     log rubric.errors.full_messages if rubric.errors.present?
   end
@@ -217,9 +222,7 @@ end
 Then('the user copies the {string} rubric') do |rubric_name|
   rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
   found = false
-  puts "rows: #{rows.inspect} #{rows.size}"
   rows.each do |row|
-    puts row.text
     if row.text == rubric_name
       found = true
       row.find( :xpath, "../..//button[@id='copy_rubric']" ).click
@@ -232,7 +235,6 @@ Then('the user copies the {string} criteria') do |criteria_name|
   rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]")
   rows.each do |row|
     if row.find_all( :xpath, "//div[@data-field='name']/div[text()='#{criteria_name}']").size > 0
-      puts "found it: #{row}"
       row.find( :xpath, "//div[@id='copy_criteria']" ).click
     end
   end
@@ -266,11 +268,11 @@ end
 
 Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
   rubric = Rubric.find_by_name rubric_name
-  criteria_count.times do |index|
+  for index in rubric.criteria.size..criteria_count
     criteria = rubric.criteria.new(
       description: Faker::Company.buzzword,
       weight: rand( 100),
-      sequence: index,
+      sequence: index + 1,
       l1_description: Faker::Lorem.sentence
     )
     if rand( 2 ) > 1
@@ -285,14 +287,21 @@ Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
         end
       end
     end
-    criteria.save
-    puts criteria.errors.full_messages unless criteria.errors.empty?
   end
+  rubric.save
+  puts criteria.errors.full_messages unless criteria.errors.empty?
 end
 
-Then('the user adds a level to criteria {int}') do |int|
-# Then('the user adds a level to criteria {float}') do |float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user adds a level to criteria {int}') do |criteria_num|
+  path = "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div[contains(@data-field,'_description')]"
+  levels = find_all(:xpath, path )
+
+  levels.each_with_index do |level, index|
+    level.double_click
+    send_keys "New cool level #{index}"
+    send_keys :enter
+  end
+
 end
 
 Then('remember the data for criteria {int}') do |criteria_num|
@@ -315,6 +324,7 @@ Then('criteria {int} matches the remembered criteria') do |int|
 end
 
 Then('the user moves criteria {int} {string}') do |criteria_num, up_or_down|
+  wait_for_render
   path = "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='actions']/button[@id='#{up_or_down}_criteria']"
   field = find_all(:xpath, path)[criteria_num - 1]
   field.click

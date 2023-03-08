@@ -152,7 +152,7 @@ Feature: Rubric administration
      And the user adds a level to criteria 6
      And the user sets criteria 6 level 4 to "level 4"
      And the user sets the criteria 6 weight to 30
-    Then the user clicks "Update Rubric"
+    Then the user clicks "Save Rubric"
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
@@ -175,7 +175,7 @@ Feature: Rubric administration
     Then the user edits the "Trojan War Diorama" rubric
      And the user sees that criteria 3 matches the remembered criteria
      And the user deletes criteria 2
-    Then the user clicks "Update Rubric"
+    Then the user clicks "Save Rubric"
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
@@ -195,7 +195,7 @@ Feature: Rubric administration
      And the user adds a level to criteria 4
      And the user sets criteria 4 level 5 to "super duper level 5"
      And the user copies the 'super duper level 4' criteria
-    Then the user clicks "Update Rubric"
+    Then the user clicks "Save Rubric"
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
