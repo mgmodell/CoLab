@@ -359,14 +359,21 @@ Then('the user sees that criteria {int} matches the remembered criteria') do |cr
   end
 end
 
-Then('the user deletes criteria {int}') do |int|
-# Then('the user delete's criteria {float}') do |float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user deletes criteria {int}') do |criteria_num|
+  fields = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div[@data-field='actions']/button[@id='delete_criteria']")
+  fields.size.should be 1
+  fields[0].click
 end
 
-Then('criteria {int} matches the remembered criteria') do |int|
-# Then('criteria {float} matches the remembered criteria') do |float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('criteria {int} matches the remembered criteria') do |criteria_num|
+  test_criteria = @rubric.criteria[ criteria_num ]
+  test_criteria.description.should eq @criterium.description
+  test_criteria.weight.should eq @criterium.weight
+  test_criteria.l1_description.should eq @criterium.l1_description
+  test_criteria.l2_description.should eq @criterium.l2_description
+  test_criteria.l3_description.should eq @criterium.l3_description
+  test_criteria.l4_description.should eq @criterium.l4_description
+  test_criteria.l5_description.should eq @criterium.l5_description
 end
 
 Then('the user moves criteria {int} {string}') do |criteria_num, up_or_down|
