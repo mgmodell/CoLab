@@ -390,6 +390,7 @@ Then('the user deletes the {string} rubric') do |rubric_name|
     if row.text == rubric_name
       found = true
       row.find( :xpath, "../..//button[@id='delete_rubric']" ).click
+      break
     end
   end
   true.should be false unless found

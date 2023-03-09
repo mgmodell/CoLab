@@ -6,7 +6,7 @@ Feature: Rubric administration
     Given a user has signed up
     Given the user "has" had demographics requested
     Given there are 4 "published" rubrics starting with 'Ruby'
-    Given there are 4 "unpublished" rubrics starting with "Never gonna' give you up "
+    Given there are 4 "unpublished" rubrics starting with "Never gonna' give you up"
     Given there is a course with an assessed project
     Given the course has 8 confirmed users
     Given the user is the most recently created user
@@ -208,8 +208,8 @@ Feature: Rubric administration
   @javascript
   Scenario: Admin deletes an unpublished rubric
    Given the user is an admin
-    Then the user searches for "Ruby 1"
-    Then the user deletes the "Ruby 1" rubric
+    Then the user searches for "Never gonna' give you up"
+    Then the user deletes the "Never gonna' give you up 3" rubric
 
   @javascript
   Scenario: Admin cannot delete a rubric that is published
