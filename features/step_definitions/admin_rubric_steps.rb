@@ -268,7 +268,9 @@ end
 
 Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
   rubric = Rubric.find_by_name rubric_name
-  for index in rubric.criteria.size..criteria_count
+
+  start_at = rubric.criteria.size + 1
+  start_at.upto(criteria_count) do |index|
     criteria = rubric.criteria.new(
       description: Faker::Company.buzzword,
       weight: rand( 100),
@@ -288,8 +290,11 @@ Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
       end
     end
   end
+  rubric.criteria.sort{|a, b| a.sequence <=> b.sequence} .each_with_index do |criterium,index|
+    criterium.sequence = (index+1) * 2
+  end
   rubric.save
-  puts criteria.errors.full_messages unless criteria.errors.empty?
+  puts rubric.errors.full_messages unless rubric.errors.empty?
 end
 
 Then('the user adds a level to criteria {int}') do |criteria_num|
@@ -297,9 +302,12 @@ Then('the user adds a level to criteria {int}') do |criteria_num|
   levels = find_all(:xpath, path )
 
   levels.each_with_index do |level, index|
-    level.double_click
-    send_keys "New cool level #{index}"
-    send_keys :enter
+    if level.text.blank?
+      level.double_click
+      send_keys "level #{index}"
+      send_keys :enter
+      break
+    end
   end
 
 end

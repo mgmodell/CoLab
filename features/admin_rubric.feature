@@ -160,8 +160,8 @@ Feature: Rubric administration
      And the rubric version is 1
      And the rubric criteria 6 "Description" is "New Criteria"
      And the rubric criteria 6 level 3 is "level 3"
-     And the rubric criteria 6 level 2 is "level 3"
-     And the rubric criteria 6 level 1 is "level 3"
+     And the rubric criteria 6 level 2 is "level 2"
+     And the rubric criteria 6 level 1 is "level 1"
      And the rubric criteria 6 level 4 is "level 4"
      And the rubric criteria 6 weight is 30
 
