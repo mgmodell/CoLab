@@ -27,7 +27,8 @@ class RubricsController < ApplicationController
             published: rubric.published,
             version: rubric.version,
             active: rubric.active,
-            user: rubric.user.informal_name( anon )
+            user: rubric.user.informal_name( anon ),
+            mine: rubric.user == current_user
           }
         end
         render json: resp

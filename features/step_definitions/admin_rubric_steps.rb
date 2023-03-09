@@ -313,12 +313,50 @@ Then('the user adds a level to criteria {int}') do |criteria_num|
 end
 
 Then('remember the data for criteria {int}') do |criteria_num|
-  @criteria = @rubric.criteria[ criteria_num - 1 ]
+  @criterium = @rubric.criteria[ criteria_num - 1 ]
 end
 
-Then('the user sees that criteria {int} matches the remembered criteria') do |int|
-# Then('the user sees that criteria {float} matches the remembered criteria') do |float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user sees that criteria {int} matches the remembered criteria') do |criteria_num|
+  fields = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div")
+  # puts "count: #{fields.size}\n"
+  fields.each do |field|
+    # puts "content: #{field['data-field']}\n#{field.text}"
+    case field['data-field']
+    when 'description'
+      @criterium.description.should eq field.text
+    when 'weight'
+      @criterium.weight.should eq field.text.to_i
+    when 'l1_description'
+      @criterium.l1_description.should eq field.text
+    when 'l2_description'
+      if field.text.blank?
+        @criterium.l2_description.should be nil
+      else
+        @criterium.l2_description.should eq field.text
+      end
+    when 'l3_description'
+      if field.text.blank?
+        @criterium.l3_description.should be nil
+      else
+        @criterium.l3_description.should eq field.text
+      end
+    when 'l4_description'
+      if field.text.blank?
+        @criterium.l4_description.should be nil
+      else
+        @criterium.l4_description.should eq field.text
+      end
+    when 'l5_description'
+      if field.text.blank?
+        @criterium.l5_description.should be nil
+      else
+        @criterium.l5_description.should eq field.text
+      end
+    else
+      #untested field
+      puts "content: #{field['data-field']}: #{field.text}"
+    end
+  end
 end
 
 Then('the user deletes criteria {int}') do |int|
@@ -338,16 +376,54 @@ Then('the user moves criteria {int} {string}') do |criteria_num, up_or_down|
   field.click
 end
 
-Then('the user deletes the rubric') do
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user deletes the {string} rubric') do |rubric_name|
+  rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
+  found = false
+  rows.each do |row|
+    if row.text == rubric_name
+      found = true
+      row.find( :xpath, "../..//button[@id='delete_rubric']" ).click
+    end
+  end
+  true.should be false unless found
 end
 
-Then('the user can not {string} the rubric') do |string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user can not {string} the {string} rubric') do |action,rubric_name|
+  case action
+  when 'delete'
+      rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
+      found = false
+      rows.each do |row|
+        if row.text == rubric_name
+          found = true
+          row.find( :xpath, "../..//button[@id='delete_rubric']" ).disabled?.should be true
+        end
+      end
+      true.should be false unless found
+  when 'edit'
+      pending
+  else
+    true.should be false
+  end
 end
 
 Given('there exists a rubric published by another user') do
-  pending # Write code here that turns the phrase above into concrete actions
+  users = User.where.not( user: @user )
+  another_user = users.sample
+  rubric = school.rubrics.new(
+    name: "#{prefix} #{index}",
+    description: Faker::GreekPhilosophers.quote,
+    published: 'published' == is_published,
+    user: another_user
+  )
+  rubric.criteria.new(
+    description: Faker::Company.industry,
+    sequence: 1,
+    l1_description: Faker::Company.bs
+  )
+  rubric.save
+  log rubric.errors.full_messages if rubric.errors.present?
+
 end
 
 Given('the existing rubric is attached to this assignment') do

@@ -74,7 +74,7 @@ export default function RubricList(props) {
                     <IconButton
                       id='delete_rubric'
                       aria-label={t('rubric.delete')}
-                      disabled={params.published}
+                      disabled={params.row.published}
                       onClick={(event) => {
                         const rubric = Object.assign( {}, rubrics.find( (value)=> {return params.id == value.id} ) );
                         const url = `${endpoints['baseUrl']}/${rubric.id}.json`;

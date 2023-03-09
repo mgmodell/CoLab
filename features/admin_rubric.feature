@@ -209,19 +209,19 @@ Feature: Rubric administration
   Scenario: Admin deletes an unpublished rubric
    Given the user is an admin
     Then the user searches for "Ruby 1"
-    Then the user deletes the rubric
+    Then the user deletes the "Ruby 1" rubric
 
   @javascript
-  Scenario: Admin cannot delete a rubric that is in published
+  Scenario: Admin cannot delete a rubric that is published
    Given the user is an admin
     Then the user searches for "Ruby 1"
-     And the user can not 'delete' the rubric
+    Then the user can not 'delete' the "Ruby 1" rubric
 
   @javascript
   Scenario: Instructor cannot modify a published rubric
     Then the user searches for "Trojan"
-     And the user can not 'delete' the rubric
-     And the user can not 'edit' the rubric
+    Then the user can not 'delete' the "Trojan War Diorama" rubric
+    Then the user can not 'edit' the "Trojan War Diorama" rubric
 
   # For later implementation
   # Scenario: Instructor adds a counter element to a rubric
