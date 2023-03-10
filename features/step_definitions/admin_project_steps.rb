@@ -14,7 +14,6 @@ end
 
 Given(/^the user is an admin$/) do
   @user.admin = true
-  puts 'here'
   @user.save
   log @user.errors.full_messages if @user.errors.present?
 end
