@@ -314,9 +314,7 @@ end
 
 Then('the user sees that criteria {int} matches the remembered criteria') do |criteria_num|
   fields = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div")
-  # puts "count: #{fields.size}\n"
   fields.each do |field|
-    # puts "content: #{field['data-field']}\n#{field.text}"
     case field['data-field']
     when 'description'
       @criterium.description.should eq field.text
@@ -348,6 +346,8 @@ Then('the user sees that criteria {int} matches the remembered criteria') do |cr
       else
         @criterium.l5_description.should eq field.text
       end
+    when 'actions'
+      #no test - these are buttons
     else
       #untested field
       puts "content: #{field['data-field']}: #{field.text}"
