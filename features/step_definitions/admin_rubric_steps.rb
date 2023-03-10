@@ -231,13 +231,9 @@ Then('the user copies the {string} rubric') do |rubric_name|
   true.should be false unless found
 end
 
-Then('the user copies the {string} criteria') do |criteria_name|
-  rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]")
-  rows.each do |row|
-    if row.find_all( :xpath, "//div[@data-field='name']/div[text()='#{criteria_name}']").size > 0
-      row.find( :xpath, "//div[@id='copy_criteria']" ).click
-    end
-  end
+Then('the user copies criteria {int}') do |criteria_num|
+  find_all(:xpath, "//button[@id='copy_criteria']")[criteria_num - 1].click
+
 end
 
 Then('the rubric {string} is {int}') do |field_name, value|
@@ -408,8 +404,6 @@ Then('the user can not {string} the {string} rubric') do |action,rubric_name|
         end
       end
       true.should be false unless found
-  when 'edit'
-      pending
   else
     true.should be false
   end
@@ -432,6 +426,16 @@ Given('there exists a rubric published by another user') do
   rubric.save
   log rubric.errors.full_messages if rubric.errors.present?
 
+end
+
+Then('retrieve the latest child of the rubric') do
+  @rubric.reload
+  @rubric.child_versions.size.should be > 0
+  @rubric = @rubric.child_versions.last
+end
+
+Then('the rubric has a parent') do
+  @rubric.parent.blank?.should_not be true
 end
 
 Given('the existing rubric is attached to this assignment') do

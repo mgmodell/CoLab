@@ -194,7 +194,7 @@ Feature: Rubric administration
      And the user sets criteria 4 level 4 to "super duper level 4"
      And the user adds a level to criteria 4
      And the user sets criteria 4 level 5 to "super duper level 5"
-     And the user copies the 'super duper level 4' criteria
+     And the user copies criteria 4
     Then the user clicks "Save Rubric"
     Then close all messages
     #Check what was saved
@@ -203,7 +203,7 @@ Feature: Rubric administration
      And the rubric criteria 5 level 3 is "super-duper"
      And the rubric criteria 4 level 4 is "super duper level 4"
      And the rubric criteria 4 level 5 is "super duper level 5"
-     And the rubric criteria 4 level 6 is "super duper level 4 (copy)"
+     And the rubric criteria 6 level 4 is "super duper level 4"
 
   @javascript
   Scenario: Admin deletes an unpublished rubric
@@ -218,10 +218,23 @@ Feature: Rubric administration
     Then the user can not 'delete' the "Ruby 1" rubric
 
   @javascript
-  Scenario: Instructor cannot modify a published rubric
-    Then the user searches for "Trojan"
-    Then the user can not 'delete' the "Trojan War Diorama" rubric
-    Then the user can not 'edit' the "Trojan War Diorama" rubric
+  Scenario: Modifying a published rubric results in a new version
+     And retrieve the "Ruby 1" rubric from the db
+    Then the user searches for "Ruby 1"
+    Then the user can not 'delete' the "Ruby 1" rubric
+    Then the user edits the "Ruby 1" rubric
+    Then the user adds a new criteria
+    Then the user adds a new criteria
+     And the user sets criteria 2 level 2 to "super-duper"
+     And the user copies criteria 2
+    Then the user clicks "Save Rubric"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the latest child of the rubric
+     And the rubric "Name" field is "Ruby 1"
+     And the rubric has a parent
+     And the rubric version is 2
+     And the rubric criteria 2 level 2 is "super-duper"
 
   # For later implementation
   # Scenario: Instructor adds a counter element to a rubric

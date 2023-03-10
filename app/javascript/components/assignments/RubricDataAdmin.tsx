@@ -9,7 +9,7 @@ import {
   setDirty,
   setClean
 } from "../infrastructure/StatusSlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
@@ -52,6 +52,8 @@ import { Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mu
 
 export default function RubricDataAdmin(props) {
   const category = "rubric";
+  const navigate = useNavigate( );
+
   const endpoints = useTypedSelector(state => {
     return state.context.endpoints[category];
   });
@@ -171,10 +173,12 @@ export default function RubricDataAdmin(props) {
                       id='copy_criteria'
                       onClick={(event) => {
                         const tmpCriteria = [...rubricCriteria];
-                        console.log( 'start', tmpCriteria.length );
                         const criterium = Object.assign( {}, tmpCriteria.find( (value)=> {return params.id == value.id} ) );
                         criterium.id = 0 - (( 2 * tmpCriteria.length ) + 1 );
                         criterium.name += ' (copy)';
+                        criterium.sequence = tmpCriteria.reduce( (accumulator,current)=>{
+                          return accumulator > current.sequence ? accumulator : current.sequence;
+                        }) + 1;
                         tmpCriteria.push( criterium );
 
                         setRubricCriteria( renumCriteria( tmpCriteria ) );
@@ -337,27 +341,34 @@ export default function RubricDataAdmin(props) {
 
         if (messages != null && Object.keys(messages).length < 2) {
           const rubric = data.rubric;
-          setRubricId(rubric.id);
-          setRubricName(rubric.name);
-          setRubricDescription(rubric.description);
-          setRubricVersion( rubric.version );
-          setRubricPublished( rubric.published );
-          setRubricActive( rubric.active );
-          setRubricCreator( rubric.creator );
+          console.log( data );
+          if( rubric.id != rubricId ){
 
-          rubric.criteria = renumCriteria( rubric.criteria );
-          setRubricCriteria( rubric.criteria || []);
+            console.log( `transferring to ${rubric.id}` );
+            dispatch(endTask("saving"));
+            setMessages({main: 'A new version was created'});
+            navigate( `../rubrics/${String(rubric.id)}`);
+          } else {
+            setRubricId(rubric.id);
+            setRubricName(rubric.name);
+            setRubricDescription(rubric.description);
+            setRubricVersion( rubric.version );
+            setRubricPublished( rubric.published );
+            setRubricActive( rubric.active );
+            setRubricCreator( rubric.creator );
 
-          dispatch(setClean(category));
-          dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
-          //setMessages(data.messages);
-          dispatch(endTask("saving"));
+            rubric.criteria = renumCriteria( rubric.criteria );
+            setRubricCriteria( rubric.criteria || []);
+
+            dispatch(setClean(category));
+            dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
+            dispatch(endTask("saving"));
+          }
         } else {
           dispatch(
             addMessage(messages.main, new Date(), Priorities.ERROR)
           );
           setMessages(messages);
-          dispatch(endTask("saving"));
         }
       })
       .catch(error => {

@@ -11,6 +11,8 @@ class Rubric < ApplicationRecord
     belongs_to :school
     belongs_to :user
 
+    has_many :child_versions, class_name: 'Rubric', foreign_key: 'parent_id'
+
 
     before_create :set_owner
     validate :publish_logic
@@ -36,7 +38,7 @@ class Rubric < ApplicationRecord
       self.active = true
     elsif self.published_was
       unless self.changes.keys == ['active']
-        errors.add(:main, 'A published rubric cannot be modified. A new version must be created.')
+        errors.add(:published, 'A published rubric cannot be modified. A new version must be created.')
       end
     end
     errors
