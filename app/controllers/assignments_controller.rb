@@ -91,7 +91,16 @@ class AssignmentsController < ApplicationController
   end
     # Use callbacks to share common setup or constraints between actions.
     def set_assignment
-      @assignment = Assignment.find(params[:id])
+      if params[:id].blank?
+        course = Course.find params[:course_id]
+        @assignment = course.assignments.new(
+          course_id: params[:course_id],
+          start_date: course.start_date,
+          end_date: course.end_date
+        )
+      else
+        @assignment = Assignment.find(params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

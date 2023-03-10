@@ -46,9 +46,6 @@ Rails.application.routes.draw do
 
     resources :assignments, :rubrics, :consent_forms, :schools, :courses, :experiences, :projects, :bingo_games, except: %i[new create]
 
-    get 'assignments/new/' => 'assignments#show', as: :new_assignment
-    post 'assignments/:course_id' => 'assignments#create'
-
     get 'rubrics/new/' => 'rubrics#show', as: :new_rubric
     post 'rubrics/:school_id' => 'rubrics#create'
     get 'rubrics/copy/:id' => 'rubrics#copy',
@@ -69,6 +66,9 @@ Rails.application.routes.draw do
 
     get 'courses/new/' => 'courses#show', as: :new_course
     post 'courses/:course_id' => 'courses#create'
+
+    get 'assignments/new/:course_id' => 'assignments#show', as: :new_assignment
+    post 'assignments/:course_id' => 'assignments#create'
 
     get 'experiences/new/:course_id' => 'experiences#show', as: :new_experience
     post 'experiences/:course_id' => 'experiences#create'
