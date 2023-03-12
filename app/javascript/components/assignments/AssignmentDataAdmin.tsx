@@ -75,6 +75,9 @@ export default function AssignmentDataAdmin(props) {
   const [assignmentProjects, setAssignmentProjects] = useState([
     { id: -1, name: "None Selected" }
   ]);
+  const [availableRubrics, setAvailableRubrics] = useState([
+    { id: -1, name: "None Selected", version: 0 }
+  ]);
   const [saveStatus, setSaveStatus] = useState("");
   const [assignmentName, setAssignmentName] = useState("");
   const [assignmentDescriptionEditor, setAssignmentDescriptionEditor] = useState(
@@ -96,6 +99,7 @@ export default function AssignmentDataAdmin(props) {
   //Group parameters
   const [assignmentGroupOption, setAssignmentGroupOption] = useState(false);
   const [assignmentGroupProjectId, setAssignmentGroupProjectId] = useState(-1);
+  const [assignmentRubricId, setAssignmentRubricId] = useState(-1);
 
   useEffect(() => {
     if (endpointStatus) {
@@ -194,8 +198,12 @@ export default function AssignmentDataAdmin(props) {
         const projects = new Array({ id: -1, name: "None Selected" }).concat(
           data.projects
         );
-
         setAssignmentProjects(projects);
+        const availableRubrics = new Array({ id: -1, name: "None Selected", version: 0 }).concat(
+          data.rubrics
+        );
+        setAvailableRubrics(availableRubrics);
+
 
         //Set the bingo_game stuff
         const assignment = data.assignment;
@@ -220,7 +228,8 @@ export default function AssignmentDataAdmin(props) {
         );
         //Group options
         setAssignmentGroupOption(assignment.group_option || false);
-        setAssignmentGroupProjectId(assignment.project_id);
+        setAssignmentGroupProjectId(assignment.project_id || -1 );
+        setAssignmentRubricId(assignment.rubric_id || -1 );
         setDirty(false);
         dispatch(endTask());
       })
@@ -346,6 +355,32 @@ export default function AssignmentDataAdmin(props) {
                     }}
                     editorState={assignmentDescriptionEditor}
                   />
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel shrink htmlFor="assignment_rubric_id">
+                      {t("edit.select_rubric")}
+                    </InputLabel>
+                    <Select
+                      id="assignment_rubric_id"
+                      value={assignmentRubricId}
+                      onChange={event => setAssignmentRubricId(event.target.value)}
+                      displayEmpty
+                      name="assignment_rubric"
+                      className={classes.selectEmpty}
+                    >
+                      {availableRubrics.map(rubric => {
+                        return (
+                          <MenuItem
+                             value={rubric.id}
+                             selected={rubric.id == assignmentRubricId}
+                             key={rubric.id}>
+                            {rubric.name} {rubric.id > 0 ? `(${rubric.version})` : null }
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <LocalizationProvider dateAdapter={AdapterLuxon}>
                   <Grid item xs={4}>

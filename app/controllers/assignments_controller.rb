@@ -86,6 +86,9 @@ class AssignmentsController < ApplicationController
         response[:projects] = assignment.course.projects.as_json(
           only: [:id, :name ]
         )
+        rubrics = current_user.is_admin? ? Rubric.all :
+          Rubric.for_instructor( current_user )
+        response[:rubrics] = rubrics.as_json( only: [:id, :name, :version ])
         response
   end
     # Use callbacks to share common setup or constraints between actions.
