@@ -98,10 +98,10 @@ export default function BingoGameDataAdmin(props) {
   const [gameEndDate, setGameEndDate] = useState(
     DateTime.local()
       .plus({ month: 3 })
-      .toJSDate()
+      
   );
   const [gameStartDate, setGameStartDate] = useState(
-    DateTime.local().toJSDate()
+    DateTime.local()
   );
   const [gameIndividualCount, setGameIndividualCount] = useState(0);
   const [gameLeadTime, setGameLeadTime] = useState(0);

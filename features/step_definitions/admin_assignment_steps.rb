@@ -40,11 +40,26 @@ require 'chronic'
     end
     
     Then('the user sets the assignment {string} to {string}') do |field_name, value|
-      pending # Write code here that turns the phrase above into concrete actions
+      case field_name
+      when 'opening'
+        label = find(:xpath, "//label[text()='Start Date']").click
+        new_date = Chronic.parse(value).strftime('%m/%d/%Y')
+        send_keys new_date
+      when 'close'
+        label = find(:xpath, "//label[text()='Close Date']").click
+        new_date = Chronic.parse(value).strftime('%m/%d/%Y')
+        send_keys new_date
+      else
+        false.should be true
+      end
     end
     
-    Then('retrieve the {string} assignment from the db') do |string|
-      pending # Write code here that turns the phrase above into concrete actions
+    Then('retrieve the {string} assignment from the db') do |which_assignment|
+      @assignment = if( 'latest' == which_assignment )
+              Assignment.last
+            else
+              Assignment.find_by_name _assignment
+            end
     end
     
     Then('the assignment {string} field is {string}') do |field_name, value|

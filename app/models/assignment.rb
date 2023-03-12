@@ -2,8 +2,8 @@ class Assignment < ApplicationRecord
     include DateSanitySupportConcern,
             TimezonesSupportConcern
 
-    belongs_to :rubric
-    belongs_to :course
+    belongs_to :rubric, inverse_of: :assignments
+    belongs_to :course, inverse_of: :assignments
     belongs_to :project, optional: true
 
     validates :name, :end_date, :start_date, presence: true

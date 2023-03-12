@@ -89,10 +89,9 @@ export default function AssignmentDataAdmin(props) {
   const [assignmentEndDate, setAssignmentEndDate] = useState(
     DateTime.local()
       .plus({ month: 3 })
-      .toJSDate()
   );
   const [assignmentStartDate, setAssignmentStartDate] = useState(
-    DateTime.local().toJSDate()
+    DateTime.local()
   );
   //Group parameters
   const [assignmentGroupOption, setAssignmentGroupOption] = useState(false);
@@ -351,7 +350,6 @@ export default function AssignmentDataAdmin(props) {
                 <LocalizationProvider dateAdapter={AdapterLuxon}>
                   <Grid item xs={4}>
                     <DatePicker
-                      variant="inline"
                       autoOk={true}
                       format="MM/dd/yyyy"
                       margin="normal"
@@ -359,7 +357,7 @@ export default function AssignmentDataAdmin(props) {
                       value={assignmentStartDate}
                       onChange={setAssignmentStartDate}
                       renderInput={props => (
-                        <TextField id="bingo_game_start_date" {...props} />
+                        <TextField id="assignment_start_date" {...props} />
                       )}
                     />
                     {null != messages.start_date ? (
@@ -370,7 +368,6 @@ export default function AssignmentDataAdmin(props) {
                   </Grid>
                   <Grid item xs={4}>
                     <DatePicker
-                      variant="inline"
                       autoOk={true}
                       format="MM/dd/yyyy"
                       margin="normal"
@@ -378,7 +375,7 @@ export default function AssignmentDataAdmin(props) {
                       value={assignmentEndDate}
                       onChange={setAssignmentEndDate}
                       renderInput={props => (
-                        <TextField id="bingo_game_end_date" {...props} />
+                        <TextField id="assignment_end_date" {...props} />
                       )}
                     />
                     {null != messages.end_date ? (

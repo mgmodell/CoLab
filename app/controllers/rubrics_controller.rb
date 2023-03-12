@@ -8,10 +8,9 @@ class RubricsController < ApplicationController
   # GET /rubrics or /rubrics.json
   def index
     if current_user.is_admin?
-      @rubrics = Rubric.includes( :user ).group( :name, :version )
+      @rubrics = Rubric.all
     else
-      @rubrics = Rubric.includes( :user ).
-        where( school: current_user.school, published: true ).
+      @rubrics = Rubric.for_instructor( current_user ).
         or( Rubric.where( user: current_user ) ).
         group( :name, :version )
     end
@@ -131,7 +130,6 @@ class RubricsController < ApplicationController
       if @rubric.save
         render json: standardized_response( @rubric )
       else
-        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @rubric.errors, status: :unprocessable_entity }
       end
     end

@@ -37,10 +37,9 @@ class AssignmentsController < ApplicationController
 
     respond_to do |format|
       if @assignment.save
-        format.html { redirect_to assignment_url(@assignment), notice: "Assignment was successfully created." }
-        format.json { render :show, status: :created, location: @assignment }
+        render json: standardized_response( @assignment )
       else
-        format.html { render :new, status: :unprocessable_entity }
+        puts @assignment.errors.full_messages
         format.json { render json: @assignment.errors, status: :unprocessable_entity }
       end
     end
@@ -105,6 +104,6 @@ class AssignmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def assignment_params
-      params.require(:assignment).permit(:open, :close, :rubric_id, :group_enabled, :course_id, :project_id, :active)
+      params.require(:assignment).permit(:name, :description, :open, :close, :rubric_id, :group_enabled, :course_id, :project_id, :active)
     end
 end

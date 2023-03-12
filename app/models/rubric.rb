@@ -12,11 +12,20 @@ class Rubric < ApplicationRecord
     belongs_to :user
 
     has_many :child_versions, class_name: 'Rubric', foreign_key: 'parent_id'
+    has_many :rubrics, inverse_of: :rubric
+    has_many :assignments, inverse_of: :rubric
 
 
     before_create :set_owner
     validate :publish_logic
     validates :criteria, presence: {message: 'a rubric requires at least one criteria'}
+
+    default_scope {includes(:user).group( :name, :version )}
+    scope :for_instructor, ->(instructor){
+      includes(:user).
+      where( school: instructor.school, published: true ).
+      group(:name, :version )
+    }
 
     def set_owner
         self.user ||= @current_user

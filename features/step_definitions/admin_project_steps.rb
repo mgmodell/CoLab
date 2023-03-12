@@ -139,7 +139,7 @@ end
 
 Then(/^the user sets the project "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
   new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
-  page.find("#project_#{date_field_prefix}_date").set(new_date)
+  page.find(:xpath, "//input[@id='project_#{date_field_prefix}_date']").set(new_date)
 end
 
 Then(/^the user selects "([^"]*)" as "([^"]*)"$/) do |value, field|

@@ -23,12 +23,15 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor creates a new assignment
+    Then the user opens the course
+    Then the user switches to the "Activities" tab
     Then the user creates a new "New Assignment"
     Then the user sets the "Name" field to "Term Paper"
-    Then the user sets the "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+    Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
     Then the user clicks "Create Assignment"
+    Then we debug
     Then close all messages
     #Csheck what was saved
     Then retrieve the "latest" assignment from the db
@@ -41,9 +44,10 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor creates a group-capable assignment
+    Then the user opens the course
     Then the user creates a new "New Assignment"
     Then the user sets the "Name" field to "Term Paper"
-    Then the user sets the "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+    Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
     Then the user checks "Make groups available?"
@@ -106,7 +110,7 @@ Feature: Assignment administration
   Scenario: Instructor assigns a new rubric to a new assignment
     Then the user creates a new "New Assignment"
     Then the user sets the "Name" field to "Term Paper"
-    Then the user sets the "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+    Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
     Then the user clicks "Add New Rubric"
