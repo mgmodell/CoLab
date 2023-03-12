@@ -59,13 +59,13 @@ export default function ExperienceDataAdmin(props) {
   const [experienceLeadTime, setExperienceLeadTime] = useState(0);
 
   const [experienceStartDate, setExperienceStartDate] = useState(
-    DateTime.local().toISO()
+    DateTime.local()
   );
   //Using this Luxon function for later i18n
   const [experienceEndDate, setExperienceEndDate] = useState(
     DateTime.local()
       .plus({ month: 3 })
-      .toISO()
+      
   );
   const [experienceActive, setExperienceActive] = useState(false);
   const [reactionsUrl, setReactionsUrl] = useState();
@@ -101,11 +101,11 @@ export default function ExperienceDataAdmin(props) {
         var receivedDate = DateTime.fromISO(experience.start_date).setZone(
           course.timezone
         );
-        setExperienceStartDate(receivedDate.toISO());
+        setExperienceStartDate(receivedDate);
         receivedDate = DateTime.fromISO(experience.end_date).setZone(
           course.timezone
         );
-        setExperienceEndDate(receivedDate.toISO());
+        setExperienceEndDate(receivedDate);
 
         dispatch(endTask());
         dispatch(setClean(category));
@@ -151,11 +151,11 @@ export default function ExperienceDataAdmin(props) {
           var receivedDate = DateTime.fromISO(experience.start_date).setZone(
             courseTimezone
           );
-          setExperienceStartDate(receivedDate.toISO());
+          setExperienceStartDate(receivedDate);
           receivedDate = DateTime.fromISO(experience.end_date).setZone(
             courseTimezone
           );
-          setExperienceEndDate(receivedDate.toISO());
+          setExperienceEndDate(receivedDate);
 
           const course = data.course;
           setCourseName(course.name);
@@ -251,7 +251,7 @@ export default function ExperienceDataAdmin(props) {
           disableToolbar
           variant="inline"
           autoOk={true}
-          inputFormat="MM/dd/yyyy"
+          format="MM/dd/yyyy"
           margin="normal"
           label="Experience Start Date"
           value={experienceStartDate}
@@ -272,7 +272,7 @@ export default function ExperienceDataAdmin(props) {
           disableToolbar
           variant="inline"
           autoOk={true}
-          inputFormat="MM/dd/yyyy"
+          format="MM/dd/yyyy"
           margin="normal"
           label="Experience End Date"
           value={experienceEndDate}

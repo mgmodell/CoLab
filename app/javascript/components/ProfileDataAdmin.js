@@ -159,13 +159,13 @@ export default function ProfileDataAdmin(props) {
   const setProfileDOB = date_of_birth => {
     const temp = {};
     Object.assign(temp, user);
-    temp.date_of_birth = date_of_birth.toISO();
+    temp.date_of_birth = date_of_birth;
     dispatch(setProfile(temp));
   };
   const setProfileStartedSchool = started_school => {
     const temp = {};
     Object.assign(temp, user);
-    temp.started_school = started_school.toISO();
+    temp.started_school = started_school;
     dispatch(setProfile(temp));
   };
   const setProfileImpVisual = impairment_visual => {
@@ -539,7 +539,7 @@ export default function ProfileDataAdmin(props) {
                   value={user.started_school}
                   placeholder="Enter Date"
                   onChange={date => setProfileStartedSchool(date)}
-                  inputFormat="MM/dd/yyyy"
+                  format="MM/dd/yyyy"
                   renderInput={props => (
                     <TextField id="profile_primary_start_school" {...props} />
                   )}
@@ -665,7 +665,7 @@ export default function ProfileDataAdmin(props) {
                   value={user.date_of_birth}
                   placeholder="Enter Date"
                   onChange={date => setProfileDOB(date)}
-                  inputFormat="MM/dd/yyyy"
+                  format="MM/dd/yyyy"
                   renderInput={props => (
                     <TextField id="profile_date_of_birth" {...props} />
                   )}

@@ -20,12 +20,9 @@ Feature: Assignment administration
     Then the user clicks the Admin button
     Then the user selects the 'Courses' menu item
     Then the user sees 1 course
-    Then the user opens the course
 
   @javascript
   Scenario: Instructor creates a new assignment
-    Then the user sees 1 course
-    Then the user switches to the "Activities" tab
     Then the user creates a new "New Assignment"
     Then the user sets the "Name" field to "Term Paper"
     Then the user sets the "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
@@ -44,8 +41,6 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor creates a group-capable assignment
-    Then the user sees 1 course
-    Then the user switches to the "Activities" tab
     Then the user creates a new "New Assignment"
     Then the user sets the "Name" field to "Term Paper"
     Then the user sets the "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
@@ -68,7 +63,7 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor activates an assignment
-    Then the user sees 1 course
+    Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user clicks "Sack Troy"
     Then the user checks "Is Active?"
@@ -80,7 +75,7 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor makes an assignment group-capable
-    Then the user sees 1 course
+    Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user clicks "Sack Troy"
     Then the user checks "Make groups available?"
@@ -95,9 +90,10 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor assigns their own rubric to an assignment
-    Given the user has one rubric named "Pie in the Sky"
-    Then the user sees 1 course
+    Then the user opens the course
     Then the user switches to the "Activities" tab
+    # This may need rework
+    Given the user has one rubric named "Pie in the Sky"
     Then the user clicks "Sack Troy"
     Then the user sets the assignment rubric to "Pie in the Sky"
     Then the user clicks "Update Assignment"
@@ -108,8 +104,6 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor assigns a new rubric to a new assignment
-    Then the user sees 1 course
-    Then the user switches to the "Activities" tab
     Then the user creates a new "New Assignment"
     Then the user sets the "Name" field to "Term Paper"
     Then the user sets the "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
@@ -128,7 +122,7 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor assigns a new rubric to an existing assignment
-    Then the user sees 1 course
+    Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user clicks "Sack Troy"
     Then the user clicks "Add New Rubric"
@@ -143,7 +137,7 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor assigns a published rubric to an assignment
-    Then the user sees 1 course
+    Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user clicks "Sack Troy"
     Then the user sets the assignment rubric to "Ruby 2"
@@ -155,7 +149,7 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor sets the deadlines for an assignment
-    Then the user sees 1 course
+    Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user clicks "Sack Troy"
     Then the user sets the assignment "close" to "6/9/2000"
@@ -167,7 +161,7 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor sets an assignment to be group-capable
-    Then the user sees 1 course
+    Then the user opens the course
     Then the user switches to the "Activities" tab
     Then the user clicks "Sack Troy"
     Then the user checks "Make groups available?"

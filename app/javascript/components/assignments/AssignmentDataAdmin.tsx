@@ -213,11 +213,11 @@ export default function AssignmentDataAdmin(props) {
         var receivedDate = DateTime.fromISO(assignment.start_date).setZone(
           assignment.course.timezone
         );
-        setAssignmentStartDate(receivedDate.toISO());
+        setAssignmentStartDate(receivedDate);
         setAssignmentEndDate(
           DateTime.fromISO(assignment.end_date)
             .setZone(assignment.course.timezone)
-            .toISO()
+            
         );
         //Group options
         setAssignmentGroupOption(assignment.group_option || false);
@@ -353,7 +353,7 @@ export default function AssignmentDataAdmin(props) {
                     <DatePicker
                       variant="inline"
                       autoOk={true}
-                      inputFormat="MM/dd/yyyy"
+                      format="MM/dd/yyyy"
                       margin="normal"
                       label={t("open_date")}
                       value={assignmentStartDate}
@@ -372,7 +372,7 @@ export default function AssignmentDataAdmin(props) {
                     <DatePicker
                       variant="inline"
                       autoOk={true}
-                      inputFormat="MM/dd/yyyy"
+                      format="MM/dd/yyyy"
                       margin="normal"
                       label={t("close_date")}
                       value={assignmentEndDate}

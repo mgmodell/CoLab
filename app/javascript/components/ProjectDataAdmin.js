@@ -61,14 +61,14 @@ export default function ProjectDataAdmin(props) {
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [projectStartDate, setProjectStartDate] = useState(
-    DateTime.local().toISO()
+    DateTime.local()
   );
   //Using this Luxon function for later i18n
   const [daysOfWeek, setDaysOfWeek] = useState(Info.weekdays());
   const [projectEndDate, setProjectEndDate] = useState(
     DateTime.local()
       .plus({ month: 3 })
-      .toISO()
+      
   );
   const [projectStartDOW, setProjectStartDOW] = useState(5);
   const [projectEndDOW, setProjectEndDOW] = useState(1);
@@ -105,11 +105,11 @@ export default function ProjectDataAdmin(props) {
       var receivedDate = DateTime.fromISO(project.start_date).setZone(
         course.timezone
       );
-      setProjectStartDate(receivedDate.toISO());
+      setProjectStartDate(receivedDate);
       receivedDate = DateTime.fromISO(project.end_date).setZone(
         course.timezone
       );
-      setProjectEndDate(receivedDate.toISO());
+      setProjectEndDate(receivedDate);
       setProjectFactorPackId(project.factor_pack_id);
       setProjectStyleId(project.style_id);
       setProjectStartDOW(project.start_dow);
@@ -157,11 +157,11 @@ export default function ProjectDataAdmin(props) {
           var receivedDate = DateTime.fromISO(project.start_date).setZone(
             courseTimezone
           );
-          setProjectStartDate(receivedDate.toISO());
+          setProjectStartDate(receivedDate);
           receivedDate = DateTime.fromISO(project.end_date).setZone(
             courseTimezone
           );
-          setProjectEndDate(receivedDate.toISO());
+          setProjectEndDate(receivedDate);
           setProjectFactorPackId(project.factor_pack_id);
           setProjectStyleId(project.style_id);
           setProjectStartDOW(project.start_dow);
@@ -256,7 +256,7 @@ export default function ProjectDataAdmin(props) {
           disableToolbar
           variant="inline"
           autoOk={true}
-          inputFormat="MM/dd/yyyy"
+          format="MM/dd/yyyy"
           margin="normal"
           label="Project Start Date"
           value={projectStartDate}
@@ -277,7 +277,7 @@ export default function ProjectDataAdmin(props) {
           disableToolbar
           variant="inline"
           autoOk={true}
-          inputFormat="MM/dd/yyyy"
+          format="MM/dd/yyyy"
           margin="normal"
           label="Project End Date"
           value={projectEndDate}

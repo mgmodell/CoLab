@@ -236,11 +236,11 @@ export default function BingoGameDataAdmin(props) {
         var receivedDate = DateTime.fromISO(bingo_game.start_date).setZone(
           bingo_game.course.timezone
         );
-        setGameStartDate(receivedDate.toISO());
+        setGameStartDate(receivedDate);
         setGameEndDate(
           DateTime.fromISO(bingo_game.end_date)
             .setZone(bingo_game.course.timezone)
-            .toISO()
+            
         );
         setGameIndividualCount(bingo_game.individual_count || 0);
         setGameLeadTime(bingo_game.lead_time || 0);
@@ -426,7 +426,7 @@ export default function BingoGameDataAdmin(props) {
                     <DatePicker
                       variant="inline"
                       autoOk={true}
-                      inputFormat="MM/dd/yyyy"
+                      format="MM/dd/yyyy"
                       margin="normal"
                       label={t("open_date")}
                       value={gameStartDate}
@@ -445,7 +445,7 @@ export default function BingoGameDataAdmin(props) {
                     <DatePicker
                       variant="inline"
                       autoOk={true}
-                      inputFormat="MM/dd/yyyy"
+                      format="MM/dd/yyyy"
                       margin="normal"
                       label={t("close_date")}
                       value={gameEndDate}

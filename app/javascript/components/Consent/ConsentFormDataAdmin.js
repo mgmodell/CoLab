@@ -214,7 +214,7 @@ export default function ConsentFormDataAdmin(props) {
               disableToolbar
               variant="inline"
               autoOk={true}
-              inputFormat="MM/dd/yyyy"
+              format="MM/dd/yyyy"
               margin="normal"
               label="Study Start Date"
               value={consentFormStartDate}
@@ -231,7 +231,7 @@ export default function ConsentFormDataAdmin(props) {
               disableToolbar
               variant="inline"
               autoOk={true}
-              inputFormat="MM/dd/yyyy"
+              format="MM/dd/yyyy"
               margin="normal"
               label="Study End Date"
               value={consentFormEndDate}

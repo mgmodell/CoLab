@@ -36,7 +36,7 @@ export default function CopyActivityButton(props) {
   const dispatch = useDispatch();
 
   const [copyData, setCopyData] = useState(null);
-  const [newStartDate, setNewStartDate] = useState(DateTime.local().toISO());
+  const [newStartDate, setNewStartDate] = useState(DateTime.local());
   const [value, setValue] = useState(null);
 
   const copyDialog = (
@@ -63,7 +63,7 @@ export default function CopyActivityButton(props) {
               <DatePicker
                 variant="inline"
                 autoOk={true}
-                inputFormat="MM/dd/yyyy"
+                format="MM/dd/yyyy"
                 margin="normal"
                 id="newCourseStartDate"
                 label={t("date_picker_label")}
@@ -78,7 +78,7 @@ export default function CopyActivityButton(props) {
               <Button
                 disabled={status.working}
                 onClick={event => {
-                  setNewStartDate(DateTime.local().toISO());
+                  setNewStartDate(DateTime.local());
                   setCopyData(null);
                 }}
               >
@@ -101,7 +101,7 @@ export default function CopyActivityButton(props) {
                       if (Boolean(props.itemUpdateFunc)) {
                         props.itemUpdateFunc();
                       }
-                      setNewStartDate(DateTime.local().toISO());
+                      setNewStartDate(DateTime.local());
                       setCopyData(null);
                       dispatch(endTask("copying_course"));
                     })

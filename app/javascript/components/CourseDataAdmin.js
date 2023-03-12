@@ -43,6 +43,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
+
 export default function CourseDataAdmin(props) {
   const category = "course";
   const endpoints = useTypedSelector(
@@ -76,13 +77,12 @@ export default function CourseDataAdmin(props) {
   const [courseUsersList, setCourseUsersList] = useState();
   const [courseActivities, setCourseActivities] = useState([]);
   const [courseStartDate, setCourseStartDate] = useState(
-    DateTime.local().toISO()
+    DateTime.local()
   );
   //Using this Luxon function for later i18n
   const [courseEndDate, setCourseEndDate] = useState(
     DateTime.local()
       .plus({ month: 3 })
-      .toISO()
   );
   const [courseSchoolId, setCourseSchoolId] = useState(0);
   const [courseTimezone, setCourseTimezone] = useState("");
@@ -368,7 +368,7 @@ export default function CourseDataAdmin(props) {
       </FormControl>
 
       <Typography>All dates shown in {courseTimezone} timezone.</Typography>
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
+      <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale='en-us'>
         <DatePicker
           variant="inline"
           autoOk={true}
@@ -379,25 +379,40 @@ export default function CourseDataAdmin(props) {
           onChange={setCourseStartDate}
           error={Boolean(messages["start_date"])}
           helperText={messages["start_date"]}
-          renderInput={props => <TextField id="course_start_date" {...props} />}
+          slot={{
+            TextField: TextField
+          } }
+          slotProps={{
+            TextField: {
+              id: 'course_start_date'
+            }
+          }}
+          //renderInput={props => <TextField id="course_start_date" {...props} />}
         />
-      </LocalizationProvider>
       {Boolean(messages["start_date"]) ? (
         <FormHelperText error={true}>{messages["start_date"]}</FormHelperText>
       ) : null}
 
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
         <DatePicker
           variant="inline"
           autoOk={true}
           inputFormat="MM/dd/yyyy"
           margin="normal"
           label="Course End Date"
-          value={courseEndDate}
+          //value={courseEndDate}
           onChange={setCourseEndDate}
           error={Boolean(messages["end_date"])}
           helperText={messages["end_date"]}
-          renderInput={props => <TextField id="course_end_date" {...props} />}
+          slot={{
+            TextField: TextField
+          } }
+          slotProps={{
+            TextField: {
+              id: 'course_end_date'
+            }
+          }}
+
+          //renderInput={props => <TextField id="course_end_date" {...props} />}
         />
       </LocalizationProvider>
       {Boolean(messages["end_date"]) ? (

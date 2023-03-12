@@ -184,7 +184,7 @@ export default function CourseList(props) {
   ];
 
   const [courses, setCourses] = useState([]);
-  const [newStartDate, setNewStartDate] = useState(DateTime.local().toISO());
+  const [newStartDate, setNewStartDate] = useState(DateTime.local());
 
   const getCourses = () => {
     const url = endpoints.baseUrl + ".json";
