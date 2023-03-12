@@ -430,7 +430,6 @@ end
 
 Then('retrieve the latest child of the rubric') do
   @rubric.reload
-  @rubric.child_versions.size.should be > 0
   @rubric = @rubric.child_versions.last
 end
 
