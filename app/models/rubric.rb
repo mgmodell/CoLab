@@ -20,7 +20,7 @@ class Rubric < ApplicationRecord
     validate :publish_logic
     validates :criteria, presence: {message: 'a rubric requires at least one criteria'}
 
-    default_scope {includes(:user).group( :name, :version )}
+    scope :for_admin, ->{includes(:user).group( :name, :version )}
     scope :for_instructor, ->(instructor){
       includes(:user).
       where( school: instructor.school, published: true ).

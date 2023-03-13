@@ -37,9 +37,8 @@ class AssignmentsController < ApplicationController
 
     respond_to do |format|
       if @assignment.save
-        render json: standardized_response( @assignment )
+        format.json {render json: standardized_response( @assignment ) }
       else
-        puts @assignment.errors.full_messages
         format.json { render json: @assignment.errors, status: :unprocessable_entity }
       end
     end
@@ -86,9 +85,11 @@ class AssignmentsController < ApplicationController
         response[:projects] = assignment.course.projects.as_json(
           only: [:id, :name ]
         )
-        rubrics = current_user.is_admin? ? Rubric.all :
+        rubrics = current_user.is_admin? ? Rubric.for_admin :
           Rubric.for_instructor( current_user )
         response[:rubrics] = rubrics.as_json( only: [:id, :name, :version ])
+        response[:messages] = messages
+
         response
   end
     # Use callbacks to share common setup or constraints between actions.
@@ -107,6 +108,6 @@ class AssignmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def assignment_params
-      params.require(:assignment).permit(:name, :description, :open, :close, :rubric_id, :group_enabled, :course_id, :project_id, :active)
+      params.require(:assignment).permit(:name, :description, :start_date, :end_date, :rubric_id, :group_enabled, :course_id, :project_id, :active)
     end
 end

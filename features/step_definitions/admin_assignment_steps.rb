@@ -42,13 +42,13 @@ require 'chronic'
     Then('the user sets the assignment {string} to {string}') do |field_name, value|
       case field_name
       when 'opening'
-        label = find(:xpath, "//label[text()='Start Date']").click
-        new_date = Chronic.parse(value).strftime('%m/%d/%Y')
-        send_keys new_date
+        find(:xpath, "//label[text()='Start Date']").click
+        new_date = Chronic.parse(value).strftime('%m%d%Y')
+        send_keys :left, :left, new_date
       when 'close'
-        label = find(:xpath, "//label[text()='Close Date']").click
-        new_date = Chronic.parse(value).strftime('%m/%d/%Y')
-        send_keys new_date
+        find(:xpath, "//label[text()='Close Date']").click
+        new_date = Chronic.parse(value).strftime('%m%d%Y')
+        send_keys :left, :left, new_date
       else
         false.should be true
       end
@@ -65,36 +65,50 @@ require 'chronic'
     Then('the assignment {string} field is {string}') do |field_name, value|
       case field_name.downcase
       when 'name'
-        @assignment.name.should be value
+        @assignment.name.should eq value
       when 'description'
-        @assignment.description.should be value
+        @assignment.description.should eq "<p>#{value}</p>\n"
       when 'opening'
-        @assignment.start_date.should be Chronic.parse(value)
+        @assignment.start_date.should eq Chronic.parse(value).to_date
       when 'close'
-        @assignment.end_date.should be Chronic.parse(value)
+        @assignment.end_date.should eq Chronic.parse(value).to_date
       else
         true.should be false
       end
     end
     
     Then('the assignment {string} active') do |is_active|
-      @assignment.is_active.should eq ( 'is' == is_active)
+      @assignment.active.should eq ( 'is' == is_active)
     end
     
     Then('the assignment {string} group capable') do |is_group_enabled|
-      @assignment.group_option.should eq ( 'is' == is_group_enabled)
+      @assignment.group_enabled.should eq ( 'is' == is_group_enabled)
     end
     
     Then('the user sets the assignment project to the course project') do
-      pending # Write code here that turns the phrase above into concrete actions
+      project = @assignment.course.projects[0]
+      if has_select? 'Source of groups', visible: :all
+        page.select(project.name, from: 'Source of groups', visible: :all)
+      else
+        find('div', id: /assignment_project_id/).click
+        find('li', text: project.name).click
+
+      end
     end
     
     Then('the assignment project is the course project') do
       @assignment.project.should be @course.project
     end
     
-    Then('the user sets the assignment rubric to {string}') do |string|
-      pending # Write code here that turns the phrase above into concrete actions
+    Then('the user selects the {string} version {int} rubric') do |rubric_name, version|
+      rubric = Rubric.where( name: rubric_name, version: version )[0]
+      if has_select? 'Which rubric will be applied?', visible: :all
+        page.select("#{rubric.name} (#{rubric.version})", from: 'Which rubric will be applied?', visible: :all)
+      else
+        find('div', id: /assignment_rubric_id/).click
+        find('li', text: "#{rubric.name} (#{rubric.version})").click
+
+      end
     end
     
     Given('the course has an assignment') do
@@ -112,6 +126,7 @@ require 'chronic'
       @assessment.group_enabled.should be true
     end
     
-    Given('the assignment {string} active') do |active_assertion|
-      @assignment.active.should eq (active_assertion == 'is' )
+    Then('the assignment rubric is {string} version {int}') do |rubric_name, rubric_version|
+      @assignment.rubric.name.should eq rubric_name
+      @assignment.rubric.version.should eq rubric_version
     end

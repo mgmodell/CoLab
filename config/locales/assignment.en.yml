@@ -8,6 +8,7 @@ en:
       assignment_submissions_pnl: Submissions
       update_assignment_btn: Save Assignment
       group_option: Make groups available?
+      group_source: Source of groups
       select_rubric: Which rubric will be applied?
     show:
       title: Assignment Details

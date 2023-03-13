@@ -5,8 +5,8 @@ Feature: Assignment administration
   Background:
     Given a user has signed up
     Given the user "has" had demographics requested
-    Given there are 4 "published" rubrics starting with 'Ruby '
-    Given there are 4 "unpublished" rubrics starting with "Never gonna' give you up "
+    Given there are 4 "published" rubrics starting with 'Ruby'
+    Given there are 4 "unpublished" rubrics starting with "Never gonna' give you up"
     Given there is a course with an assessed project
     Given the user is the instructor for the course
     Given the course has 8 confirmed users
@@ -30,8 +30,8 @@ Feature: Assignment administration
     Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
+    Then the user selects the 'Ruby 2' version 1 rubric
     Then the user clicks "Create Assignment"
-    Then we debug
     Then close all messages
     #Csheck what was saved
     Then retrieve the "latest" assignment from the db
@@ -39,6 +39,7 @@ Feature: Assignment administration
      And the assignment "Description" field is "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
      And the assignment "opening" field is "7/29/1984"
      And the assignment "close" field is "2/10/1985"
+    Then the assignment rubric is 'Ruby 2' version 1
      And the assignment "is not" active
      And the assignment "is not" group capable
 

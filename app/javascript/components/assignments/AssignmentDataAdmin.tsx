@@ -145,8 +145,9 @@ export default function AssignmentDataAdmin(props) {
           active: assignmentActive,
           start_date: assignmentStartDate,
           end_date: assignmentEndDate,
+          rubric_id: assignmentRubricId > 0 ? assignmentRubricId : null,
           group_option: assignmentGroupOption,
-          project_id: assignmentGroupProjectId
+          project_id: assignmentGroupProjectId > 0 ? assignmentGroupProjectId : null
         }
       }
     })
@@ -264,7 +265,7 @@ export default function AssignmentDataAdmin(props) {
         <Grid item xs={6}>
           <FormControl className={classes.formControl}>
             <InputLabel shrink htmlFor="bingo_game_project_id">
-              {t("group_source")}
+              {t("edit.group_source")}
             </InputLabel>
             <Select
               id="bingo_game_project_id"

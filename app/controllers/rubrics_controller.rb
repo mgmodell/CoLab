@@ -8,7 +8,7 @@ class RubricsController < ApplicationController
   # GET /rubrics or /rubrics.json
   def index
     if current_user.is_admin?
-      @rubrics = Rubric.all
+      @rubrics = Rubric.for_admin
     else
       @rubrics = Rubric.for_instructor( current_user ).
         or( Rubric.where( user: current_user ) ).
