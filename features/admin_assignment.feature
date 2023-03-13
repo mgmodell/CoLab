@@ -46,11 +46,13 @@ Feature: Assignment administration
   @javascript
   Scenario: Instructor creates a group-capable assignment
     Then the user opens the course
+    Then the user switches to the "Activities" tab
     Then the user creates a new "New Assignment"
     Then the user sets the "Name" field to "Term Paper"
     Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
+    Then the user selects the 'Ruby 2' version 1 rubric
     Then the user checks "Make groups available?"
     Then the user sets the assignment project to the course project
     Then the user clicks "Create Assignment"

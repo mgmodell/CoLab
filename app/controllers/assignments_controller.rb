@@ -39,6 +39,7 @@ class AssignmentsController < ApplicationController
       if @assignment.save
         format.json {render json: standardized_response( @assignment ) }
       else
+        puts @assignment.errors.full_messages
         format.json { render json: @assignment.errors, status: :unprocessable_entity }
       end
     end

@@ -97,7 +97,7 @@ require 'chronic'
     end
     
     Then('the assignment project is the course project') do
-      @assignment.project.should be @course.project
+      @assignment.project.should eq @course.projects[0]
     end
     
     Then('the user selects the {string} version {int} rubric') do |rubric_name, version|

@@ -146,7 +146,7 @@ export default function AssignmentDataAdmin(props) {
           start_date: assignmentStartDate,
           end_date: assignmentEndDate,
           rubric_id: assignmentRubricId > 0 ? assignmentRubricId : null,
-          group_option: assignmentGroupOption,
+          group_enabled: assignmentGroupOption,
           project_id: assignmentGroupProjectId > 0 ? assignmentGroupProjectId : null
         }
       }
@@ -228,7 +228,7 @@ export default function AssignmentDataAdmin(props) {
             
         );
         //Group options
-        setAssignmentGroupOption(assignment.group_option || false);
+        setAssignmentGroupOption(assignment.group_enabled || false);
         setAssignmentGroupProjectId(assignment.project_id || -1 );
         setAssignmentRubricId(assignment.rubric_id || -1 );
         setDirty(false);
@@ -264,15 +264,15 @@ export default function AssignmentDataAdmin(props) {
       <React.Fragment>
         <Grid item xs={6}>
           <FormControl className={classes.formControl}>
-            <InputLabel shrink htmlFor="bingo_game_project_id">
+            <InputLabel shrink htmlFor="assignment_project_id">
               {t("edit.group_source")}
             </InputLabel>
             <Select
-              id="bingo_game_project_id"
+              id="assignment_project_id"
               value={assignmentGroupProjectId}
               onChange={event => setAssignmentGroupProjectId(event.target.value)}
               displayEmpty
-              name="bingo_game_project"
+              name="assignment_project"
               className={classes.selectEmpty}
             >
               {assignmentProjects.map(project => {
