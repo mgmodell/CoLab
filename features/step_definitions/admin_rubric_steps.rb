@@ -19,12 +19,19 @@ Given('there are {int} {string} rubrics starting with {string}') do |count, is_p
   end
 end
 
-Given('the user has one rubric named {string}') do |name|
+Given('the user has one {string} rubric named {string}') do |is_published,name|
   @rubric = @user.rubrics.new(
     name: name,
     description: Faker::GreekPhilosophers.quote,
-    school: @user.school
+    school: @user.school,
+    published: 'published' == is_published
   )
+  @rubric.criteria.new(
+    description: Faker::Company.industry,
+    sequence: 1,
+    l1_description: Faker::Company.bs
+  )
+  @rubric.save
   log @rubric.errors.full_messages if @rubric.errors.present?
 end
 

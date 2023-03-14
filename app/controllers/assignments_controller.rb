@@ -14,7 +14,6 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1 or /assignments/1.json
   def show
     #TODO: Check if course owner
-    anon = current_user.anonymize?
     respond_to do |format|
       format.json do
         render json: standardized_response( @assignment )
@@ -77,8 +76,8 @@ class AssignmentsController < ApplicationController
                 :active ]
             )
           }
-        response[:assignment][:name] = anon ? assignment.name : assignment.anon_name
-        response[:assignment][:description] = anon ? assignment.description : assignment.anon_description
+        response[:assignment][:name] = anon ? assignment.anon_name : assignment.name
+        response[:assignment][:description] = anon ? assignment.anon_description : assignment.description
 
         response[:assignment][:course] = {
           timezone: ActiveSupport::TimeZone.new( assignment.course.timezone ).tzinfo.name

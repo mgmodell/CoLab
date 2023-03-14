@@ -58,7 +58,7 @@ require 'chronic'
       @assignment = if( 'latest' == which_assignment )
               Assignment.last
             else
-              Assignment.find_by_name _assignment
+              Assignment.find_by_name which_assignment
             end
     end
     
@@ -120,6 +120,7 @@ require 'chronic'
             end_date:  2.months.from_now ,
             rubric: nil
         )
+        @assignment.save
     end
     
     Given('the assignment {string} group-capable') do |string|

@@ -96,13 +96,13 @@ Feature: Assignment administration
      And the assignment "is not" active
 
   @javascript
-  Scenario: Instructor assigns their own rubric to an assignment
+  Scenario: Instructor assigns their own published rubric to an assignment
     Then the user opens the course
     Then the user switches to the "Activities" tab
     # This may need rework
-    Given the user has one rubric named "Pie in the Sky"
+    Given the user has one 'published' rubric named "Pie in the Sky"
      And the user selects the "Sack Troy" activity
-    Then the user sets the assignment rubric to "Pie in the Sky"
+    Then the user selects the 'Pie in the Sky' version 1 rubric
     Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved
@@ -147,12 +147,12 @@ Feature: Assignment administration
     Then the user opens the course
     Then the user switches to the "Activities" tab
      And the user selects the "Sack Troy" activity
-    Then the user sets the assignment rubric to "Ruby 2"
+    Then the user selects the 'Ruby 2' version 1 rubric
     Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved
     Then retrieve the "Sack Troy" assignment from the db
-     And the assignment rubric is "Ruby 4"
+     And the assignment rubric is "Ruby 2"
 
   @javascript
   Scenario: Instructor sets the deadlines for an assignment
