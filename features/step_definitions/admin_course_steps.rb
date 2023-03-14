@@ -449,3 +449,8 @@ end
 Then('close all messages') do
   ack_messages
 end
+
+Then('the user selects the {string} activity') do |activity_name|
+  activity_cell = find(:xpath, "//td[@data-colindex='1']/div[text()='#{activity_name}']" )
+  activity_cell.click
+end

@@ -72,9 +72,9 @@ Feature: Assignment administration
   Scenario: Instructor activates an assignment
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "Sack Troy"
+     And the user selects the "Sack Troy" activity
     Then the user checks "Is Active?"
-    Then the user clicks "Update Assignment"
+    Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved
     Then retrieve the "latest" assignment from the db
@@ -84,10 +84,10 @@ Feature: Assignment administration
   Scenario: Instructor makes an assignment group-capable
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "Sack Troy"
+     And the user selects the "Sack Troy" activity
     Then the user checks "Make groups available?"
     Then the user sets the assignment project to the course project
-    Then the user clicks "Update Assignment"
+    Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved
     Then retrieve the "latest" assignment from the db
@@ -101,9 +101,9 @@ Feature: Assignment administration
     Then the user switches to the "Activities" tab
     # This may need rework
     Given the user has one rubric named "Pie in the Sky"
-    Then the user clicks "Sack Troy"
+     And the user selects the "Sack Troy" activity
     Then the user sets the assignment rubric to "Pie in the Sky"
-    Then the user clicks "Update Assignment"
+    Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved
     Then retrieve the "Sack Troy" assignment from the db
@@ -131,10 +131,10 @@ Feature: Assignment administration
   Scenario: Instructor assigns a new rubric to an existing assignment
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "Sack Troy"
+     And the user selects the "Sack Troy" activity
     Then the user clicks "Add New Rubric"
      And the user sets the "Rubric Name" field to "Sky in the Pie"
-    Then the user clicks "Update Assignment"
+    Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved
     Then retrieve the "latest" rubric
@@ -146,9 +146,9 @@ Feature: Assignment administration
   Scenario: Instructor assigns a published rubric to an assignment
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "Sack Troy"
+     And the user selects the "Sack Troy" activity
     Then the user sets the assignment rubric to "Ruby 2"
-    Then the user clicks "Update Assignment"
+    Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved
     Then retrieve the "Sack Troy" assignment from the db
@@ -158,9 +158,9 @@ Feature: Assignment administration
   Scenario: Instructor sets the deadlines for an assignment
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "Sack Troy"
+     And the user selects the "Sack Troy" activity
     Then the user sets the assignment "close" to "6/9/2000"
-    Then the user clicks "Update Assignment"
+    Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved
     Then retrieve the "Sack Troy" assignment from the db
@@ -170,10 +170,10 @@ Feature: Assignment administration
   Scenario: Instructor sets an assignment to be group-capable
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "Sack Troy"
+     And the user selects the "Sack Troy" activity
     Then the user checks "Make groups available?"
     Then the user sets the assignment project to the course project
-    Then the user clicks "Update Assignment"
+    Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved
     Then retrieve the "Sack Troy" assignment from the db

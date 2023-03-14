@@ -49,9 +49,9 @@ class AssignmentsController < ApplicationController
   def update
     respond_to do |format|
       if @assignment.update(assignment_params)
-        render json: standardized_response( @assignment, {main: 'Successfully saved assignment'})
+        format.json {render json: standardized_response( @assignment, {main: 'Successfully saved assignment'}) }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        puts @assignment.errors.full_messages
         format.json { render json: @assignment.errors, status: :unprocessable_entity }
       end
     end
