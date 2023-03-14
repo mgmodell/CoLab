@@ -111,6 +111,8 @@ Feature: Assignment administration
 
   @javascript
   Scenario: Instructor assigns a new rubric to a new assignment
+    Then the user opens the course
+    Then the user switches to the "Activities" tab
     Then the user creates a new "New Assignment"
     Then the user sets the "Name" field to "Term Paper"
     Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
