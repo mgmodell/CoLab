@@ -23,9 +23,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TabContext, TabList, TabPanel } from "@mui/lab/";
 
 import { EditorState, ContentState } from "draft-js";
-const Editor = React.lazy(() =>
-  import("../reactDraftWysiwygEditor")
-);
+const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
 
 import htmlToDraft from "html-to-draftjs";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -223,10 +221,10 @@ export default function ConsentFormDataAdmin(props) {
               helperText={messages["start_date"]}
               slot={{
                 TextField: TextField
-              } }
+              }}
               slotProps={{
                 textField: {
-                  id: 'consent_form_start_date'
+                  id: "consent_form_start_date"
                 }
               }}
             />
@@ -245,10 +243,10 @@ export default function ConsentFormDataAdmin(props) {
               helperText={messages["end_date"]}
               slot={{
                 TextField: TextField
-              } }
+              }}
               slotProps={{
                 textField: {
-                  id: 'consent_form_end_date'
+                  id: "consent_form_end_date"
                 }
               }}
             />

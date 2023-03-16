@@ -60,15 +60,11 @@ export default function ProjectDataAdmin(props) {
   );
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
-  const [projectStartDate, setProjectStartDate] = useState(
-    DateTime.local()
-  );
+  const [projectStartDate, setProjectStartDate] = useState(DateTime.local());
   //Using this Luxon function for later i18n
   const [daysOfWeek, setDaysOfWeek] = useState(Info.weekdays());
   const [projectEndDate, setProjectEndDate] = useState(
-    DateTime.local()
-      .plus({ month: 3 })
-      
+    DateTime.local().plus({ month: 3 })
   );
   const [projectStartDOW, setProjectStartDOW] = useState(5);
   const [projectEndDOW, setProjectEndDOW] = useState(1);
@@ -265,10 +261,10 @@ export default function ProjectDataAdmin(props) {
           helperText={messages.start_date}
           slot={{
             TextField: TextField
-          } }
+          }}
           slotProps={{
             textField: {
-              id: 'project_start_date'
+              id: "project_start_date"
             }
           }}
         />
@@ -292,10 +288,10 @@ export default function ProjectDataAdmin(props) {
           renderInput={props => <TextField id="project_end_date" {...props} />}
           slot={{
             TextField: TextField
-          } }
+          }}
           slotProps={{
             textField: {
-              id: 'project_end_date'
+              id: "project_end_date"
             }
           }}
         />

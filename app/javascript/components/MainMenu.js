@@ -24,7 +24,7 @@ import MultilineChartIcon from "@mui/icons-material/MultilineChart";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import SchoolIcon from "@mui/icons-material/School";
-import TableViewIcon from '@mui/icons-material/TableView';
+import TableViewIcon from "@mui/icons-material/TableView";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
@@ -106,15 +106,15 @@ export default function MainMenu(props) {
             </ListItemIcon>
             <ListItemText>{t("reporting")}</ListItemText>
           </ListItemButton>
-              <ListItemButton
-                id="rubrics-menu-item"
-                onClick={() => navTo("/admin/rubrics")}
-              >
-                <ListItemIcon>
-                  <TableViewIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>{t("rubrics_edit")}</ListItemText>
-              </ListItemButton>
+          <ListItemButton
+            id="rubrics-menu-item"
+            onClick={() => navTo("/admin/rubrics")}
+          >
+            <ListItemIcon>
+              <TableViewIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t("rubrics_edit")}</ListItemText>
+          </ListItemButton>
           {user.is_admin ? (
             <React.Fragment>
               <ListItemButton

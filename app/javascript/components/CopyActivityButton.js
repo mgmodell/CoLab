@@ -73,10 +73,10 @@ export default function CopyActivityButton(props) {
                 }}
                 slot={{
                   TextField: TextField
-                } }
+                }}
                 slotProps={{
                   textField: {
-                    id: 'new_start_end_date'
+                    id: "new_start_end_date"
                   }
                 }}
               />

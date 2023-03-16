@@ -7,7 +7,9 @@ import CourseAdmin from "./CourseAdmin";
 const SchoolList = React.lazy(() => import("./SchoolList"));
 const SchoolDataAdmin = React.lazy(() => import("./SchoolDataAdmin"));
 const RubricList = React.lazy(() => import("./assignments/RubricList"));
-const RubricDataAdmin = React.lazy(() => import("./assignments/RubricDataAdmin"));
+const RubricDataAdmin = React.lazy(() =>
+  import("./assignments/RubricDataAdmin")
+);
 const ConsentFormList = React.lazy(() => import("./Consent/ConsentFormList"));
 const ConsentFormDataAdmin = React.lazy(() =>
   import("./Consent/ConsentFormDataAdmin")

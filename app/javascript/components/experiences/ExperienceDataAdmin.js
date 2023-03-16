@@ -63,9 +63,7 @@ export default function ExperienceDataAdmin(props) {
   );
   //Using this Luxon function for later i18n
   const [experienceEndDate, setExperienceEndDate] = useState(
-    DateTime.local()
-      .plus({ month: 3 })
-      
+    DateTime.local().plus({ month: 3 })
   );
   const [experienceActive, setExperienceActive] = useState(false);
   const [reactionsUrl, setReactionsUrl] = useState();
@@ -260,10 +258,10 @@ export default function ExperienceDataAdmin(props) {
           helperText={messages.start_date}
           slot={{
             TextField: TextField
-          } }
+          }}
           slotProps={{
             textField: {
-              id: 'experience_start_date'
+              id: "experience_start_date"
             }
           }}
         />
@@ -286,10 +284,10 @@ export default function ExperienceDataAdmin(props) {
           helperText={messages.end_date}
           slot={{
             TextField: TextField
-          } }
+          }}
           slotProps={{
             textField: {
-              id: 'experience_end_date'
+              id: "experience_end_date"
             }
           }}
         />

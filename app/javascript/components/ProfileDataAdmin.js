@@ -542,10 +542,10 @@ export default function ProfileDataAdmin(props) {
                   format="MM/dd/yyyy"
                   slot={{
                     TextField: TextField
-                  } }
+                  }}
                   slotProps={{
                     textField: {
-                      id: 'profile_primary_start_school'
+                      id: "profile_primary_start_school"
                     }
                   }}
                 />
@@ -671,14 +671,14 @@ export default function ProfileDataAdmin(props) {
                   placeholder="Enter Date"
                   onChange={date => setProfileDOB(date)}
                   format="MM/dd/yyyy"
-                      slot={{
-                        TextField: TextField
-                      } }
-                      slotProps={{
-                        textField: {
-                          id: 'profile_date_of_birth'
-                        }
-                      }}
+                  slot={{
+                    TextField: TextField
+                  }}
+                  slotProps={{
+                    textField: {
+                      id: "profile_date_of_birth"
+                    }
+                  }}
                 />
               </LocalizationProvider>
             </Grid>

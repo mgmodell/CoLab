@@ -2,7 +2,7 @@ import React from "react";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import GridOffIcon from "@mui/icons-material/GridOff";
 import TuneIcon from "@mui/icons-material/Tune";
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 export function iconForType(type) {
   var icon;

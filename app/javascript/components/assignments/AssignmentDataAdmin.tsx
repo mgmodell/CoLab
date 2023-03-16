@@ -24,7 +24,7 @@ import { DateTime } from "luxon";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
-const Editor = React.lazy(() => import( "../reactDraftWysiwygEditor"));
+const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
 
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
@@ -80,7 +80,10 @@ export default function AssignmentDataAdmin(props) {
   ]);
   const [saveStatus, setSaveStatus] = useState("");
   const [assignmentName, setAssignmentName] = useState("");
-  const [assignmentDescriptionEditor, setAssignmentDescriptionEditor] = useState(
+  const [
+    assignmentDescriptionEditor,
+    setAssignmentDescriptionEditor
+  ] = useState(
     EditorState.createWithContent(
       ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
     )
@@ -90,8 +93,7 @@ export default function AssignmentDataAdmin(props) {
   );
   const [assignmentActive, setAssignmentActive] = useState(false);
   const [assignmentEndDate, setAssignmentEndDate] = useState(
-    DateTime.local()
-      .plus({ month: 3 })
+    DateTime.local().plus({ month: 3 })
   );
   const [assignmentStartDate, setAssignmentStartDate] = useState(
     DateTime.local()
@@ -147,7 +149,8 @@ export default function AssignmentDataAdmin(props) {
           end_date: assignmentEndDate,
           rubric_id: assignmentRubricId > 0 ? assignmentRubricId : null,
           group_enabled: assignmentGroupOption,
-          project_id: assignmentGroupProjectId > 0 ? assignmentGroupProjectId : null
+          project_id:
+            assignmentGroupProjectId > 0 ? assignmentGroupProjectId : null
         }
       }
     })
@@ -200,11 +203,12 @@ export default function AssignmentDataAdmin(props) {
           data.projects
         );
         setAssignmentProjects(projects);
-        const availableRubrics = new Array({ id: -1, name: "None Selected", version: 0 }).concat(
-          data.rubrics
-        );
+        const availableRubrics = new Array({
+          id: -1,
+          name: "None Selected",
+          version: 0
+        }).concat(data.rubrics);
         setAvailableRubrics(availableRubrics);
-
 
         //Set the bingo_game stuff
         const assignment = data.assignment;
@@ -223,14 +227,14 @@ export default function AssignmentDataAdmin(props) {
         );
         setAssignmentStartDate(receivedDate);
         setAssignmentEndDate(
-          DateTime.fromISO(assignment.end_date)
-            .setZone(assignment.course.timezone)
-            
+          DateTime.fromISO(assignment.end_date).setZone(
+            assignment.course.timezone
+          )
         );
         //Group options
         setAssignmentGroupOption(assignment.group_enabled || false);
-        setAssignmentGroupProjectId(assignment.project_id || -1 );
-        setAssignmentRubricId(assignment.rubric_id || -1 );
+        setAssignmentGroupProjectId(assignment.project_id || -1);
+        setAssignmentRubricId(assignment.rubric_id || -1);
         setDirty(false);
         dispatch(endTask());
       })
@@ -254,7 +258,9 @@ export default function AssignmentDataAdmin(props) {
         id="save_assignment"
         value="save_assignment"
       >
-        {null == assignmentId ? t("new.create_assignment_btn") : t("edit.update_assignment_btn")}
+        {null == assignmentId
+          ? t("new.create_assignment_btn")
+          : t("edit.update_assignment_btn")}
       </Button>
     </Suspense>
   ) : null;
@@ -270,7 +276,9 @@ export default function AssignmentDataAdmin(props) {
             <Select
               id="assignment_project_id"
               value={assignmentGroupProjectId}
-              onChange={event => setAssignmentGroupProjectId(event.target.value)}
+              onChange={event =>
+                setAssignmentGroupProjectId(event.target.value)
+              }
               displayEmpty
               name="assignment_project"
               className={classes.selectEmpty}
@@ -295,7 +303,10 @@ export default function AssignmentDataAdmin(props) {
           <Box>
             <TabList value={curTab} onChange={changeTab} centered>
               <Tab value="details" label={t("edit.assignment_details_pnl")} />
-              <Tab value="results" label={t("edit.assignment_submissions_pnl")} />
+              <Tab
+                value="results"
+                label={t("edit.assignment_submissions_pnl")}
+              />
             </TabList>
           </Box>
           <TabPanel value="details">
@@ -365,7 +376,9 @@ export default function AssignmentDataAdmin(props) {
                     <Select
                       id="assignment_rubric_id"
                       value={assignmentRubricId}
-                      onChange={event => setAssignmentRubricId(event.target.value)}
+                      onChange={event =>
+                        setAssignmentRubricId(event.target.value)
+                      }
                       displayEmpty
                       name="assignment_rubric"
                       className={classes.selectEmpty}
@@ -373,10 +386,12 @@ export default function AssignmentDataAdmin(props) {
                       {availableRubrics.map(rubric => {
                         return (
                           <MenuItem
-                             value={rubric.id}
-                             selected={rubric.id == assignmentRubricId}
-                             key={rubric.id}>
-                            {rubric.name} {rubric.id > 0 ? `(${rubric.version})` : null }
+                            value={rubric.id}
+                            selected={rubric.id == assignmentRubricId}
+                            key={rubric.id}
+                          >
+                            {rubric.name}{" "}
+                            {rubric.id > 0 ? `(${rubric.version})` : null}
                           </MenuItem>
                         );
                       })}
@@ -394,10 +409,10 @@ export default function AssignmentDataAdmin(props) {
                       onChange={setAssignmentStartDate}
                       slot={{
                         TextField: TextField
-                      } }
+                      }}
                       slotProps={{
                         textField: {
-                          id: 'assignment_start_date'
+                          id: "assignment_start_date"
                         }
                       }}
                     />
@@ -417,10 +432,10 @@ export default function AssignmentDataAdmin(props) {
                       onChange={setAssignmentEndDate}
                       slot={{
                         TextField: TextField
-                      } }
+                      }}
                       slotProps={{
                         textField: {
-                          id: 'assignment_end_date'
+                          id: "assignment_end_date"
                         }
                       }}
                     />
@@ -436,7 +451,9 @@ export default function AssignmentDataAdmin(props) {
                     control={
                       <Switch
                         checked={assignmentActive}
-                        onChange={event => setAssignmentActive(!assignmentActive)}
+                        onChange={event =>
+                          setAssignmentActive(!assignmentActive)
+                        }
                       />
                     }
                     label={t("active")}
@@ -446,8 +463,13 @@ export default function AssignmentDataAdmin(props) {
                   <Switch
                     checked={assignmentGroupOption}
                     id="group_option"
-                    onChange={event => setAssignmentGroupOption(!assignmentGroupOption)}
-                    disabled={null == assignmentProjects || 2 > assignmentProjects.length}
+                    onChange={event =>
+                      setAssignmentGroupOption(!assignmentGroupOption)
+                    }
+                    disabled={
+                      null == assignmentProjects ||
+                      2 > assignmentProjects.length
+                    }
                   />
                   <InputLabel htmlFor="group_option">
                     {t("edit.group_option")}

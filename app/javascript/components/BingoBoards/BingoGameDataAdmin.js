@@ -96,13 +96,9 @@ export default function BingoGameDataAdmin(props) {
   const [gameTimezone, setGameTimezone] = useState("UTC");
   const [gameActive, setGameActive] = useState(false);
   const [gameEndDate, setGameEndDate] = useState(
-    DateTime.local()
-      .plus({ month: 3 })
-      
+    DateTime.local().plus({ month: 3 })
   );
-  const [gameStartDate, setGameStartDate] = useState(
-    DateTime.local()
-  );
+  const [gameStartDate, setGameStartDate] = useState(DateTime.local());
   const [gameIndividualCount, setGameIndividualCount] = useState(0);
   const [gameLeadTime, setGameLeadTime] = useState(0);
   //Group parameters
@@ -158,8 +154,8 @@ export default function BingoGameDataAdmin(props) {
           ),
           source: gameSource,
           active: gameActive,
-          start_date: gameStartDate.toISO( ),
-          end_date: gameEndDate.toISO( ),
+          start_date: gameStartDate.toISO(),
+          end_date: gameEndDate.toISO(),
           individual_count: gameIndividualCount,
           lead_time: gameLeadTime,
           group_option: gameGroupOption,
@@ -238,9 +234,9 @@ export default function BingoGameDataAdmin(props) {
         );
         setGameStartDate(receivedDate);
         setGameEndDate(
-          DateTime.fromISO(bingo_game.end_date)
-            .setZone(bingo_game.course.timezone)
-            
+          DateTime.fromISO(bingo_game.end_date).setZone(
+            bingo_game.course.timezone
+          )
         );
         setGameIndividualCount(bingo_game.individual_count || 0);
         setGameLeadTime(bingo_game.lead_time || 0);
@@ -433,10 +429,10 @@ export default function BingoGameDataAdmin(props) {
                       onChange={setGameStartDate}
                       slot={{
                         TextField: TextField
-                      } }
+                      }}
                       slotProps={{
                         textField: {
-                          id: 'bingo_game_start_date'
+                          id: "bingo_game_start_date"
                         }
                       }}
                     />
@@ -457,10 +453,10 @@ export default function BingoGameDataAdmin(props) {
                       onChange={setGameEndDate}
                       slot={{
                         TextField: TextField
-                      } }
+                      }}
                       slotProps={{
                         textField: {
-                          id: 'bingo_game_end_date'
+                          id: "bingo_game_end_date"
                         }
                       }}
                     />
