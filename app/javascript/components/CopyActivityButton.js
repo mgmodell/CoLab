@@ -71,7 +71,14 @@ export default function CopyActivityButton(props) {
                 onChange={newValue => {
                   setNewStartDate(newValue);
                 }}
-                renderInput={props => <TextField {...props} />}
+                slot={{
+                  TextField: TextField
+                } }
+                slotProps={{
+                  textField: {
+                    id: 'new_start_end_date'
+                  }
+                }}
               />
             </DialogContent>
             <DialogActions>

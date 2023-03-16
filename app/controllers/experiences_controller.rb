@@ -295,7 +295,6 @@ class ExperiencesController < ApplicationController
     end
   end
 
-
   def experience_params
     params.require(:experience).permit(:course_id, :name, :active,
                                        :lead_time, :start_date, :end_date)

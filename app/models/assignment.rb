@@ -1,22 +1,22 @@
 class Assignment < ApplicationRecord
-    include DateSanitySupportConcern,
-            TimezonesSupportConcern
+  include TimezonesSupportConcern
+  include DateSanitySupportConcern
 
-    belongs_to :rubric, inverse_of: :assignments
-    belongs_to :course, inverse_of: :assignments
-    belongs_to :project, optional: true
+  belongs_to :rubric, inverse_of: :assignments
+  belongs_to :course, inverse_of: :assignments
+  belongs_to :project, optional: true
 
-    validates :name, :end_date, :start_date, presence: true
-    before_create :anonymize
+  validates :name, :end_date, :start_date, presence: true
+  before_create :anonymize
 
-    # Validations
-    validates :passing, numericality: { in: 0..100 }
+  # Validations
+  validates :passing, numericality: { in: 0..100 }
 
-  def get_description( anonymous = false)
+  def get_description(anonymous = false)
     anonymous ? anon_description : description
   end
 
-  def get_name( anonymous = false)
+  def get_name(anonymous = false)
     anonymous ? anon_name : name
   end
 
@@ -37,9 +37,9 @@ class Assignment < ApplicationRecord
   def anonymize
     self.anon_name = "#{Faker::Company.profession} #{Faker::Company.industry}"
     self.anon_description = "#{Faker::Lorem.sentence(
-        word_count: 8,
-        supplemental: true,
-        random_words_to_add: 9)}"
+      word_count: 8,
+      supplemental: true,
+      random_words_to_add: 9
+    )}"
   end
-
 end

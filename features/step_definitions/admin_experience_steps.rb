@@ -4,13 +4,19 @@ Then 'retrieve the latest Experience from the db' do
   @experience = Experience.last
 end
 
-Then 'the user sets the experience {string} date to {string}' do |ordinal, date|
+Then 'the user sets the experience {string} date to {string}' do |ordinal, date_value|
   new_date = date.blank? ? '' : Chronic.parse(date).strftime('%m/%d/%Y')
   case ordinal.downcase
   when 'start'
-    page.find('#experience_start_date').set(new_date)
+    field_name = 'Experience start date'
+    find(:xpath, "//label[text()='#{field_name}']").click
+    new_date = Chronic.parse(date_value).strftime('%m%d%Y')
+    send_keys :left, :left, new_date
   when 'end'
-    page.find('#experience_end_date').set(new_date)
+    field_name = 'Experience end date'
+    find(:xpath, "//label[text()='#{field_name}']").click
+    new_date = Chronic.parse(date_value).strftime('%m%d%Y')
+    send_keys :left, :left, new_date
   else
     log "Invalid ordinal: #{ordinal}"
     pending

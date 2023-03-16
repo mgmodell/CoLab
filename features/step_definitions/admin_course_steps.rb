@@ -15,12 +15,16 @@ Given "the user's school is {string}" do |school_name|
 end
 
 Then 'the user sets the start date to {string} and the end date to {string}' do |start_date, end_date|
-  # new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%Y-%m-%dT%T')
-  new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%m-%d-%Y')
-  page.find('#course_start_date').set(new_date)
-  # new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%Y-%m-%dT%T')
-  new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%m-%d-%Y')
-  page.find('#course_end_date').set(new_date)
+
+  field_name = 'Course Start Date'
+  find(:xpath, "//label[text()='#{field_name}']").click
+  new_date = Chronic.parse(start_date).strftime('%m%d%Y')
+  send_keys :left, :left, new_date
+
+  field_name = 'Course End Date'
+  find(:xpath, "//label[text()='#{field_name}']").click
+  new_date = Chronic.parse(end_date).strftime('%m%d%Y')
+  send_keys :left, :left, new_date
 end
 
 Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
@@ -451,7 +455,7 @@ Then('close all messages') do
 end
 
 Then('the user selects the {string} activity') do |activity_name|
-  activity_cell = find(:xpath, "//td[@data-colindex='1']/div[text()='#{activity_name}']" )
+  activity_cell = find(:xpath, "//td[@data-colindex='1']/div[text()='#{activity_name}']")
   activity_cell.click
   wait_for_render
 end

@@ -13,10 +13,10 @@ class AssignmentsController < ApplicationController
 
   # GET /assignments/1 or /assignments/1.json
   def show
-    #TODO: Check if course owner
+    # TODO: Check if course owner
     respond_to do |format|
       format.json do
-        render json: standardized_response( @assignment )
+        render json: standardized_response(@assignment)
       end
     end
   end
@@ -27,8 +27,7 @@ class AssignmentsController < ApplicationController
   end
 
   # GET /assignments/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /assignments or /assignments.json
   def create
@@ -36,7 +35,7 @@ class AssignmentsController < ApplicationController
 
     respond_to do |format|
       if @assignment.save
-        format.json {render json: standardized_response( @assignment ) }
+        format.json { render json: standardized_response(@assignment) }
       else
         puts @assignment.errors.full_messages
         format.json { render json: @assignment.errors, status: :unprocessable_entity }
@@ -48,7 +47,7 @@ class AssignmentsController < ApplicationController
   def update
     respond_to do |format|
       if @assignment.update(assignment_params)
-        format.json {render json: standardized_response( @assignment, {main: 'Successfully saved assignment'}) }
+        format.json { render json: standardized_response(@assignment, { main: 'Successfully saved assignment' }) }
       else
         puts @assignment.errors.full_messages
         format.json { render json: @assignment.errors, status: :unprocessable_entity }
@@ -61,53 +60,59 @@ class AssignmentsController < ApplicationController
     @assignment.destroy
 
     respond_to do |format|
-      format.html { redirect_to assignments_url, notice: "Assignment was successfully destroyed." }
+      format.html { redirect_to assignments_url, notice: 'Assignment was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-  def standardized_response assignment, messages = {}
+
+  def standardized_response(assignment, messages = {})
     anon = current_user.anonymize?
-        response = {
-          assignment: assignment.as_json(
-              only: [:id, :start_date, :end_date,
-                :rubric_id, :group_enabled, :project_id,
-                :active ]
-            )
-          }
-        response[:assignment][:name] = anon ? assignment.anon_name : assignment.name
-        response[:assignment][:description] = anon ? assignment.anon_description : assignment.description
+    response = {
+      assignment: assignment.as_json(
+        only: %i[id start_date end_date
+                 rubric_id group_enabled project_id
+                 active]
+      )
+    }
+    response[:assignment][:name] = anon ? assignment.anon_name : assignment.name
+    response[:assignment][:description] = anon ? assignment.anon_description : assignment.description
 
-        response[:assignment][:course] = {
-          timezone: ActiveSupport::TimeZone.new( assignment.course.timezone ).tzinfo.name
-        }
-        response[:projects] = assignment.course.projects.as_json(
-          only: [:id, :name ]
-        )
-        rubrics = current_user.is_admin? ? Rubric.for_admin :
-          Rubric.for_instructor( current_user )
-        response[:rubrics] = rubrics.as_json( only: [:id, :name, :version ])
-        response[:messages] = messages
+    response[:assignment][:course] = {
+      timezone: ActiveSupport::TimeZone.new(assignment.course.timezone).tzinfo.name
+    }
+    response[:projects] = assignment.course.projects.as_json(
+      only: %i[id name]
+    )
+    rubrics = if current_user.is_admin?
+                Rubric.for_admin
+              else
+                Rubric.for_instructor(current_user)
+              end
+    response[:rubrics] = rubrics.as_json(only: %i[id name version])
+    response[:messages] = messages
 
-        response
+    response
   end
-    # Use callbacks to share common setup or constraints between actions.
-    def set_assignment
-      if params[:id].blank?
-        course = Course.find params[:course_id]
-        @assignment = course.assignments.new(
-          course_id: params[:course_id],
-          start_date: course.start_date,
-          end_date: course.end_date
-        )
-      else
-        @assignment = Assignment.find(params[:id])
-      end
-    end
 
-    # Only allow a list of trusted parameters through.
-    def assignment_params
-      params.require(:assignment).permit(:name, :description, :start_date, :end_date, :rubric_id, :group_enabled, :course_id, :project_id, :active)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_assignment
+    if params[:id].blank?
+      course = Course.find params[:course_id]
+      @assignment = course.assignments.new(
+        course_id: params[:course_id],
+        start_date: course.start_date,
+        end_date: course.end_date
+      )
+    else
+      @assignment = Assignment.find(params[:id])
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def assignment_params
+    params.require(:assignment).permit(:name, :description, :start_date, :end_date, :rubric_id, :group_enabled,
+                                       :course_id, :project_id, :active)
+  end
 end

@@ -258,9 +258,14 @@ export default function ExperienceDataAdmin(props) {
           onChange={setExperienceStartDate}
           error={null != messages.start_date}
           helperText={messages.start_date}
-          renderInput={props => (
-            <TextField id="experience_start_date" {...props} />
-          )}
+          slot={{
+            TextField: TextField
+          } }
+          slotProps={{
+            textField: {
+              id: 'experience_start_date'
+            }
+          }}
         />
       </LocalizationProvider>
       {null != messages.start_date ? (
@@ -279,9 +284,14 @@ export default function ExperienceDataAdmin(props) {
           onChange={setExperienceEndDate}
           error={null != messages.end_date}
           helperText={messages.end_date}
-          renderInput={props => (
-            <TextField id="experience_end_date" {...props} />
-          )}
+          slot={{
+            TextField: TextField
+          } }
+          slotProps={{
+            textField: {
+              id: 'experience_end_date'
+            }
+          }}
         />
       </LocalizationProvider>
       {null != messages.end_date ? (

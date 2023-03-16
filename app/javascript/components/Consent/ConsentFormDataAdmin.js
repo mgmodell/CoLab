@@ -221,9 +221,14 @@ export default function ConsentFormDataAdmin(props) {
               onChange={setConsentFormStartDate}
               error={null != messages["start_date"]}
               helperText={messages["start_date"]}
-              renderInput={props => (
-                <TextField id="consent_form_start_date" {...props} />
-              )}
+              slot={{
+                TextField: TextField
+              } }
+              slotProps={{
+                textField: {
+                  id: 'consent_form_start_date'
+                }
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={5}>
@@ -238,9 +243,14 @@ export default function ConsentFormDataAdmin(props) {
               onChange={setConsentFormEndDate}
               error={null != messages["end_date"]}
               helperText={messages["end_date"]}
-              renderInput={props => (
-                <TextField id="consent_form_end_date" {...props} />
-              )}
+              slot={{
+                TextField: TextField
+              } }
+              slotProps={{
+                textField: {
+                  id: 'consent_form_end_date'
+                }
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={2}>

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class BingoBoardsController < ApplicationController
-  
   before_action :set_bingo_board,
                 except: %i[index update board_for_game board_for_game_demo
                            update_demo demo_worksheet_for_game worksheet_for_game ]

@@ -42,7 +42,7 @@ class User < ApplicationRecord
   has_many :reactions, inverse_of: :user, dependent: :destroy
   has_many :experiences, through: :reactions
   has_many :narratives, through: :experiences
-  
+
   has_many :rubrics, inverse_of: :user
 
   has_many :messages, class_name: 'Ahoy::Message'

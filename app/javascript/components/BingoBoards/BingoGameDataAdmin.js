@@ -158,8 +158,8 @@ export default function BingoGameDataAdmin(props) {
           ),
           source: gameSource,
           active: gameActive,
-          start_date: gameStartDate,
-          end_date: gameEndDate,
+          start_date: gameStartDate.toISO( ),
+          end_date: gameEndDate.toISO( ),
           individual_count: gameIndividualCount,
           lead_time: gameLeadTime,
           group_option: gameGroupOption,
@@ -431,9 +431,14 @@ export default function BingoGameDataAdmin(props) {
                       label={t("open_date")}
                       value={gameStartDate}
                       onChange={setGameStartDate}
-                      renderInput={props => (
-                        <TextField id="bingo_game_start_date" {...props} />
-                      )}
+                      slot={{
+                        TextField: TextField
+                      } }
+                      slotProps={{
+                        textField: {
+                          id: 'bingo_game_start_date'
+                        }
+                      }}
                     />
                     {null != messages.start_date ? (
                       <FormHelperText error={true}>
@@ -450,9 +455,14 @@ export default function BingoGameDataAdmin(props) {
                       label={t("close_date")}
                       value={gameEndDate}
                       onChange={setGameEndDate}
-                      renderInput={props => (
-                        <TextField id="bingo_game_end_date" {...props} />
-                      )}
+                      slot={{
+                        TextField: TextField
+                      } }
+                      slotProps={{
+                        textField: {
+                          id: 'bingo_game_end_date'
+                        }
+                      }}
                     />
                     {null != messages.end_date ? (
                       <FormHelperText error={true}>

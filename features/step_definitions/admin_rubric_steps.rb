@@ -19,9 +19,9 @@ Given('there are {int} {string} rubrics starting with {string}') do |count, is_p
   end
 end
 
-Given('the user has one {string} rubric named {string}') do |is_published,name|
+Given('the user has one {string} rubric named {string}') do |is_published, name|
   @rubric = @user.rubrics.new(
-    name: name,
+    name:,
     description: Faker::GreekPhilosophers.quote,
     school: @user.school,
     published: 'published' == is_published
@@ -36,7 +36,7 @@ Given('the user has one {string} rubric named {string}') do |is_published,name|
 end
 
 Then('retrieve the {string} rubric') do |whichRubric|
-  @rubric = if( 'latest' == whichRubric )
+  @rubric = if 'latest' == whichRubric
               Rubric.last
             else
               Rubric.find_by_name whichRubric
@@ -52,17 +52,17 @@ Then('the rubric {string} is {string}') do |field, value|
   else
     true.should be false
   end
-
 end
 
 Then('the user sees {int} rubrics') do |count|
   wait_for_render
-  rubrics = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]" )
+  rubrics = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]")
   rubrics.size.should eq count
 end
 
 Then('the user sets criteria {int} {string} to {string}') do |criteria_num, field_name, value|
-  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='#{field_name.downcase}']/div")[criteria_num - 1]
+  field = find_all(:xpath,
+                   "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='#{field_name.downcase}']/div")[criteria_num - 1]
 
   text = field.text
 
@@ -76,8 +76,9 @@ end
 
 Then('the user sets criteria {int} level {int} to {string}') do |criteria_num, level, value|
   wait_for_render
-  field = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='l#{level}_description']")[criteria_num - 1]
-  text = field.text 
+  field = find_all(:xpath,
+                   "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='l#{level}_description']")[criteria_num - 1]
+  text = field.text
 
   field.double_click
   text.size.times do
@@ -104,7 +105,8 @@ Then('the user will see an empty criteria {int}') do |criteria_num|
 end
 
 Then('the user sets criteria {int} {string} to to {string}') do |criteria_num, field_name, value|
-  fields = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='#{field_name}']/div")
+  fields = find(:xpath,
+                "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num - 1}]/div[@data-field='#{field_name}']/div")
   fields.size.should eq 1
 
   field.double_click
@@ -155,7 +157,7 @@ Then('the rubric {string} field is {string}') do |field_name, value|
 end
 
 Then('the rubric criteria {int} {string} is {string}') do |criteria_num, field_name, value|
-  criteria = @rubric.criteria[ criteria_num - 1 ]
+  criteria = @rubric.criteria[criteria_num - 1]
   case field_name.downcase
   when 'description'
     criteria.description.should eq value
@@ -165,7 +167,7 @@ Then('the rubric criteria {int} {string} is {string}') do |criteria_num, field_n
 end
 
 Then('the rubric criteria {int} level {int} is {string}') do |criteria_num, level, value|
-  criteria = @rubric.criteria[ criteria_num - 1 ]
+  criteria = @rubric.criteria[criteria_num - 1]
   case level
   when 1
     criteria.l1_description.should eq value
@@ -180,11 +182,10 @@ Then('the rubric criteria {int} level {int} is {string}') do |criteria_num, leve
   else
     true.should be false
   end
-
 end
 
 Then('the rubric criteria {int} weight is {int}') do |criteria_num, weight|
-  criteria = @rubric.criteria[ criteria_num - 1 ]
+  criteria = @rubric.criteria[criteria_num - 1]
   criteria.weight.should eq weight
 end
 
@@ -198,12 +199,11 @@ Then('the user searches for {string}') do |search_string|
   end
   send_keys search_string
   sleep 0.06
-
 end
 
 Then('the user edits the {string} rubric') do |name|
   xpath =  "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div"
-  fields = find_all(:xpath, xpath )
+  fields = find_all(:xpath, xpath)
   found = false
   fields.each do |field|
     found = true
@@ -213,11 +213,11 @@ Then('the user edits the {string} rubric') do |name|
 end
 
 Then('the rubric {string} published') do |is_published|
-  @rubric.published.should eq ('is' == is_published )
+  @rubric.published.should eq('is' == is_published)
 end
 
 Then('the rubric {string} active') do |is_active|
-  @rubric.active.should eq ('is' == is_active )
+  @rubric.active.should eq('is' == is_active)
 end
 
 Given('the {string} rubric is published') do |name|
@@ -232,7 +232,7 @@ Then('the user copies the {string} rubric') do |rubric_name|
   rows.each do |row|
     if row.text == rubric_name
       found = true
-      row.find( :xpath, "../..//button[@id='copy_rubric']" ).click
+      row.find(:xpath, "../..//button[@id='copy_rubric']").click
     end
   end
   true.should be false unless found
@@ -240,7 +240,6 @@ end
 
 Then('the user copies criteria {int}') do |criteria_num|
   find_all(:xpath, "//button[@id='copy_criteria']")[criteria_num - 1].click
-
 end
 
 Then('the rubric {string} is {int}') do |field_name, value|
@@ -253,7 +252,7 @@ Then('the rubric {string} is {int}') do |field_name, value|
 end
 
 Then('the rubric owner {string} the user') do |is_owner|
-  if( 'is' == is_owner)
+  if 'is' == is_owner
     @rubric.user.should eq @user
   else
     @rubric.user.should_not eq @user
@@ -276,25 +275,23 @@ Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
   start_at.upto(criteria_count) do |index|
     criteria = rubric.criteria.new(
       description: Faker::Company.buzzword,
-      weight: rand( 100),
+      weight: rand(100),
       sequence: index + 1,
       l1_description: Faker::Lorem.sentence
     )
-    if rand( 2 ) > 1
-      criteria.l2_description = Faker::Lorem.sentence
-      if rand ( 2 ) > 1 
-        criteria.l3_description = Faker::Lorem.sentence
-        if rand ( 2 ) > 1 
-          criteria.l4_description = Faker::Lorem.sentence
-          if rand ( 2 ) > 1 
-            criteria.l5_description = Faker::Lorem.sentence
-          end
-        end
-      end
+    next unless rand(2) > 1
+
+    criteria.l2_description = Faker::Lorem.sentence
+    next unless rand 2 > 1
+
+    criteria.l3_description = Faker::Lorem.sentence
+    if rand 2 > 1
+      criteria.l4_description = Faker::Lorem.sentence
+      criteria.l5_description = Faker::Lorem.sentence if rand 2 > 1
     end
   end
-  rubric.criteria.sort{|a, b| a.sequence <=> b.sequence} .each_with_index do |criterium,index|
-    criterium.sequence = (index+1) * 2
+  rubric.criteria.sort_by(&:sequence).each_with_index do |criterium, index|
+    criterium.sequence = (index + 1) * 2
   end
   rubric.save
   puts rubric.errors.full_messages unless rubric.errors.empty?
@@ -302,21 +299,20 @@ end
 
 Then('the user adds a level to criteria {int}') do |criteria_num|
   path = "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div[contains(@data-field,'_description')]"
-  levels = find_all(:xpath, path )
+  levels = find_all(:xpath, path)
 
   levels.each_with_index do |level, index|
-    if level.text.blank?
-      level.double_click
-      send_keys "level #{index}"
-      send_keys :enter
-      break
-    end
-  end
+    next if level.text.present?
 
+    level.double_click
+    send_keys "level #{index}"
+    send_keys :enter
+    break
+  end
 end
 
 Then('remember the data for criteria {int}') do |criteria_num|
-  @criterium = @rubric.criteria[ criteria_num - 1 ]
+  @criterium = @rubric.criteria[criteria_num - 1]
 end
 
 Then('the user sees that criteria {int} matches the remembered criteria') do |criteria_num|
@@ -354,22 +350,23 @@ Then('the user sees that criteria {int} matches the remembered criteria') do |cr
         @criterium.l5_description.should eq field.text
       end
     when 'actions'
-      #no test - these are buttons
+      # no test - these are buttons
     else
-      #untested field
+      # untested field
       puts "content: #{field['data-field']}: #{field.text}"
     end
   end
 end
 
 Then('the user deletes criteria {int}') do |criteria_num|
-  fields = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div[@data-field='actions']/button[@id='delete_criteria']")
+  fields = find_all(:xpath,
+                    "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div[@data-field='actions']/button[@id='delete_criteria']")
   fields.size.should be 1
   fields[0].click
 end
 
 Then('criteria {int} matches the remembered criteria') do |criteria_num|
-  test_criteria = @rubric.criteria[ criteria_num ]
+  test_criteria = @rubric.criteria[criteria_num]
   test_criteria.description.should eq @criterium.description
   test_criteria.weight.should eq @criterium.weight
   test_criteria.l1_description.should eq @criterium.l1_description
@@ -390,34 +387,34 @@ Then('the user deletes the {string} rubric') do |rubric_name|
   rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
   found = false
   rows.each do |row|
-    if row.text == rubric_name
-      found = true
-      row.find( :xpath, "../..//button[@id='delete_rubric']" ).click
-      break
-    end
+    next unless row.text == rubric_name
+
+    found = true
+    row.find(:xpath, "../..//button[@id='delete_rubric']").click
+    break
   end
   true.should be false unless found
 end
 
-Then('the user can not {string} the {string} rubric') do |action,rubric_name|
+Then('the user can not {string} the {string} rubric') do |action, rubric_name|
   case action
   when 'delete'
-      rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
-      found = false
-      rows.each do |row|
-        if row.text == rubric_name
-          found = true
-          row.find( :xpath, "../..//button[@id='delete_rubric']" ).disabled?.should be true
-        end
+    rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
+    found = false
+    rows.each do |row|
+      if row.text == rubric_name
+        found = true
+        row.find(:xpath, "../..//button[@id='delete_rubric']").disabled?.should be true
       end
-      true.should be false unless found
+    end
+    true.should be false unless found
   else
     true.should be false
   end
 end
 
 Given('there exists a rubric published by another user') do
-  users = User.where.not( user: @user )
+  users = User.where.not(user: @user)
   another_user = users.sample
   rubric = school.rubrics.new(
     name: "#{prefix} #{index}",
@@ -432,7 +429,6 @@ Given('there exists a rubric published by another user') do
   )
   rubric.save
   log rubric.errors.full_messages if rubric.errors.present?
-
 end
 
 Then('retrieve the latest child of the rubric') do

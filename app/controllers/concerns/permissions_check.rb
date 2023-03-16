@@ -16,5 +16,4 @@ module PermissionsCheck
   def check_editor
     redirect_to root_path unless current_user.is_admin? || current_user.is_instructor?
   end
-
 end

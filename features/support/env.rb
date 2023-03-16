@@ -61,37 +61,36 @@ Capybara.register_driver :firefox do |app|
 end
 
 Capybara.register_driver(:remote_chrome) do |app|
-
   options = Selenium::WebDriver::Chrome::Options.new
 
   Capybara::Selenium::Driver.new(
     app,
     browser: :remote,
     url: 'http://browser:4444/wd/hub',
-    options: options,
+    options:
   )
 end
 
 Capybara.register_driver(:headless_chrome) do |app|
   options = Selenium::WebDriver::Chrome::Options.new
-  options.add_argument( "--headless" )
-  options.add_argument( "--disable-extensions" )
+  options.add_argument('--headless')
+  options.add_argument('--disable-extensions')
 
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    options: :options,
+    options: :options
   )
 end
 
 Capybara.register_driver(:chrome) do |app|
   options = Selenium::WebDriver::Chrome::Options.new
-  options.add_argument( "--disable-extensions" )
+  options.add_argument('--disable-extensions')
 
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    options: options
+    options:
   )
 end
 

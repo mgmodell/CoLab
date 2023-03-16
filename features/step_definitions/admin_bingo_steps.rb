@@ -3,16 +3,10 @@
 require 'faker'
 
 Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
-  new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
-  elem = page.find(:id, "bingo_game_#{date_field_prefix}_date")
-  begin
-    retries ||= 0
-    elem.click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-    log e.inspect
-    retry if (retries += 1) < 4
-  end
-  elem.set(new_date)
+  field_name = 'start' == date_field_prefix ? 'Open date' : 'Game date'
+  find(:xpath, "//label[text()='#{field_name}']").click
+  new_date = Chronic.parse(date_value).strftime('%m%d%Y')
+  send_keys :left, :left, new_date
 end
 
 Then(/^the user clicks "([^"]*)" on the existing bingo game$/) do |_action|

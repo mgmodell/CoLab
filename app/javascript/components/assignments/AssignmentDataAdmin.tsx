@@ -392,9 +392,14 @@ export default function AssignmentDataAdmin(props) {
                       label={t("open_date")}
                       value={assignmentStartDate}
                       onChange={setAssignmentStartDate}
-                      renderInput={props => (
-                        <TextField id="assignment_start_date" {...props} />
-                      )}
+                      slot={{
+                        TextField: TextField
+                      } }
+                      slotProps={{
+                        textField: {
+                          id: 'assignment_start_date'
+                        }
+                      }}
                     />
                     {null != messages.start_date ? (
                       <FormHelperText error={true}>
@@ -410,9 +415,14 @@ export default function AssignmentDataAdmin(props) {
                       label={t("close_date")}
                       value={assignmentEndDate}
                       onChange={setAssignmentEndDate}
-                      renderInput={props => (
-                        <TextField id="assignment_end_date" {...props} />
-                      )}
+                      slot={{
+                        TextField: TextField
+                      } }
+                      slotProps={{
+                        textField: {
+                          id: 'assignment_end_date'
+                        }
+                      }}
                     />
                     {null != messages.end_date ? (
                       <FormHelperText error={true}>

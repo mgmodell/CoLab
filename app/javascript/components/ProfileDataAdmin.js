@@ -540,9 +540,14 @@ export default function ProfileDataAdmin(props) {
                   placeholder="Enter Date"
                   onChange={date => setProfileStartedSchool(date)}
                   format="MM/dd/yyyy"
-                  renderInput={props => (
-                    <TextField id="profile_primary_start_school" {...props} />
-                  )}
+                  slot={{
+                    TextField: TextField
+                  } }
+                  slotProps={{
+                    textField: {
+                      id: 'profile_primary_start_school'
+                    }
+                  }}
                 />
               </LocalizationProvider>
             </Grid>
@@ -666,9 +671,14 @@ export default function ProfileDataAdmin(props) {
                   placeholder="Enter Date"
                   onChange={date => setProfileDOB(date)}
                   format="MM/dd/yyyy"
-                  renderInput={props => (
-                    <TextField id="profile_date_of_birth" {...props} />
-                  )}
+                      slot={{
+                        TextField: TextField
+                      } }
+                      slotProps={{
+                        textField: {
+                          id: 'profile_date_of_birth'
+                        }
+                      }}
                 />
               </LocalizationProvider>
             </Grid>

@@ -383,7 +383,7 @@ export default function CourseDataAdmin(props) {
             TextField: TextField
           } }
           slotProps={{
-            TextField: {
+            textField: {
               id: 'course_start_date'
             }
           }}
@@ -407,7 +407,7 @@ export default function CourseDataAdmin(props) {
             TextField: TextField
           } }
           slotProps={{
-            TextField: {
+            textField: {
               id: 'course_end_date'
             }
           }}
