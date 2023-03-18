@@ -13,6 +13,8 @@ class Experience < ApplicationRecord
   before_create :anonymize
   before_save :reset_notification, :end_date_optimization
 
+  before_validation :init_dates # From DateSanitySupportConcern
+
   scope :active_at, lambda { |date|
                       where(active: true)
                         .where('experiences.start_date <= ? AND experiences.end_date >= ?', date, date)

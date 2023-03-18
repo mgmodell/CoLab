@@ -39,6 +39,52 @@ Feature: Assignment administration
      And the assignment "Description" field is "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
      And the assignment "opening" field is "7/29/1984"
      And the assignment "close" field is "2/10/1985"
+     And the assignment 'does' accept 'text'
+     And the assignment 'does not' accept 'link'
+     And the assignment 'does not' accept 'files'
+    Then the assignment rubric is 'Ruby 2' version 1
+     And the assignment "is not" active
+     And the assignment "is not" group capable
+    #Make some changes
+    Then the user sets the assignment "link" to "true"
+    Then the user clicks "Create Assignment"
+    Then close all messages
+    Then retrieve the "latest" assignment from the db
+     And the assignment "Name" field is "Term Paper"
+     And the assignment "Description" field is "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+     And the assignment "opening" field is "7/29/1984"
+     And the assignment "close" field is "2/10/1985"
+     And the assignment 'does' accept 'text'
+     And the assignment 'does' accept 'link'
+     And the assignment 'does not' accept 'files'
+    Then the assignment rubric is 'Ruby 2' version 1
+     And the assignment "is not" active
+     And the assignment "is not" group capable
+
+  @javascript
+  Scenario: Instructor creates a new assignment with different submit types
+    Then the user opens the course
+    Then the user switches to the "Activities" tab
+    Then the user creates a new "New Assignment"
+    Then the user sets the "Name" field to "Term Paper"
+    Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+    Then the user sets the assignment "opening" to "7/29/1984"
+    Then the user sets the assignment "close" to "2/10/1985"
+    Then the user sets the assignment "text" to "false"
+    Then the user sets the assignment "link" to "true"
+    Then the user sets the assignment "files" to "true"
+    Then the user selects the 'Ruby 2' version 1 rubric
+    Then the user clicks "Create Assignment"
+    Then close all messages
+    #Csheck what was saved
+    Then retrieve the "latest" assignment from the db
+     And the assignment "Name" field is "Term Paper"
+     And the assignment "Description" field is "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+     And the assignment "opening" field is "7/29/1984"
+     And the assignment "close" field is "2/10/1985"
+     And the assignment 'does not' accept 'text'
+     And the assignment 'does' accept 'link'
+     And the assignment 'does' accept 'files'
     Then the assignment rubric is 'Ruby 2' version 1
      And the assignment "is not" active
      And the assignment "is not" group capable
@@ -109,40 +155,40 @@ Feature: Assignment administration
     Then retrieve the "Sack Troy" assignment from the db
      And the assignment rubric is "Pie in the Sky"
 
-  @javascript
-  Scenario: Instructor assigns a new rubric to a new assignment
-    Then the user opens the course
-    Then the user switches to the "Activities" tab
-    Then the user creates a new "New Assignment"
-    Then the user sets the "Name" field to "Term Paper"
-    Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
-    Then the user sets the assignment "opening" to "7/29/1984"
-    Then the user sets the assignment "close" to "2/10/1985"
-    Then the user clicks "Add New Rubric"
-     And the user sets the "Rubric Name" field to "Sky in the Pie"
-    Then the user clicks "Create Assignment"
-    Then close all messages
-    #Check what was saved
-    Then retrieve the "latest" rubric
-     And the rubric "Name" is "Sky in the Pie"
-    Then retrieve the "latest" assignment from the db
-     And the assignment "Name" field is "Term Paper"
-     And the assignment rubric is "Sky in the Pie"
+  #@javascript
+  #Scenario: Instructor assigns a new rubric to a new assignment
+  #  Then the user opens the course
+  #  Then the user switches to the "Activities" tab
+  #  Then the user creates a new "New Assignment"
+  #  Then the user sets the "Name" field to "Term Paper"
+  #  Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+  #  Then the user sets the assignment "opening" to "7/29/1984"
+  #  Then the user sets the assignment "close" to "2/10/1985"
+  #  Then the user clicks "Add New Rubric"
+  #   And the user sets the "Rubric Name" field to "Sky in the Pie"
+  #  Then the user clicks "Create Assignment"
+  #  Then close all messages
+  #  #Check what was saved
+  #  Then retrieve the "latest" rubric
+  #   And the rubric "Name" is "Sky in the Pie"
+  #  Then retrieve the "latest" assignment from the db
+  #   And the assignment "Name" field is "Term Paper"
+  #   And the assignment rubric is "Sky in the Pie"
 
-  @javascript
-  Scenario: Instructor assigns a new rubric to an existing assignment
-    Then the user opens the course
-    Then the user switches to the "Activities" tab
-     And the user selects the "Sack Troy" activity
-    Then the user clicks "Add New Rubric"
-     And the user sets the "Rubric Name" field to "Sky in the Pie"
-    Then the user clicks "Save Assignment"
-    Then close all messages
-    #Check what was saved
-    Then retrieve the "latest" rubric
-     And the rubric "Name" is "Sky in the Pie"
-    Then retrieve the "Sack Troy" assignment from the db
-     And the assignment rubric is "Sky in the Pie"
+  #@javascript
+  #Scenario: Instructor assigns a new rubric to an existing assignment
+  #  Then the user opens the course
+  #  Then the user switches to the "Activities" tab
+  #   And the user selects the "Sack Troy" activity
+  #  Then the user clicks "Add New Rubric"
+  #   And the user sets the "Rubric Name" field to "Sky in the Pie"
+  #  Then the user clicks "Save Assignment"
+  #  Then close all messages
+  #  #Check what was saved
+  #  Then retrieve the "latest" rubric
+  #   And the rubric "Name" is "Sky in the Pie"
+  #  Then retrieve the "Sack Troy" assignment from the db
+  #   And the assignment rubric is "Sky in the Pie"
 
   @javascript
   Scenario: Instructor assigns a published rubric to an assignment

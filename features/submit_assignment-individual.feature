@@ -4,38 +4,234 @@ Feature: (Re)Submitting individual assignments
   Background:
     Given there is a course with an assessed project
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
-    Given the course started "two months ago" and ended "two months from now"
+    Given the course started "three months ago" and ended "two months from now"
     Given the project has a group with 4 confirmed users
     Given the project has a group with 4 confirmed users
     Given the project has a group with 4 confirmed users
+    #active and open - no group
     Given the course has an assignment
+    #default: text only
     Given the assignment "is not" group-capable
-    Given the assignment opening is "2/29/1980" and close is "7/10/2008"
+    Given the assignment opening is "one month ago" and close is "one month from now"
+
     Given there exists a rubric published by another user
     Given the existing rubric is attached to this assignment
-    Given the assignment "is" active
+    Given the assignment "is" initialized active
     Given the user is the "random" user in the group
     Given the user "has" had demographics requested
 
-  Scenario: User should not be able to see an inactive assignment
-    Given the assignment "is" active
+  # Availability
+  Scenario: User should be able to see an open and active assignment
+    Given the assignment "is" initialized active
+    Given the user logs in
+    Then user should see 1 open task
+
+  Scenario: User should not be able to see an open inactive assignment
+    Given the assignment "is not" initialized active
     Given the user logs in
     Then user should see 0 open task
 
-  Scenario: User should not be able to see a closed assignment
-  Scenario: User can see the assginment's attached rubric
-  Scenario: User can open and submit text to an assignment
-  Scenario: User can open and submit a file to an assignment
-  Scenario: User can open and submit a link to an assignment
-  Scenario: User can open and submit files to an assignment
-  Scenario: User can open and submit links to an assignment
-  Scenario: User can open and submit a combo to an assignment
-  Scenario: User can submit a combo to an assignment before the first deadline
-  Scenario: User can submit a combo to an assignment after the first deadline but before the final
-  Scenario: User cannot submit to an assignment after the final deadline
-  Scenario: User can submit and re-submit text" to an assignment
-  Scenario: User can submit and re-submit a file to an assignment
-  Scenario: User can submit and re-submit a link to an assignment
-  Scenario: User can submit and re-submit a combo to an assignment
-  Scenario: User can withdraw a submitted assignment
+  Scenario: User should be able to see a past active assignment
+    Given the course is shifted 1 'years' into the 'past'
+    Given the assignment "is" initialized active
+    Given the user logs in
+    Then user should see 1 open task
 
+  Scenario: User should be able to see an upcoming active assignment
+    Given the course is shifted 2 'months' into the 'future'
+    Given the assignment "is" initialized active
+    Given the user logs in
+    Then user should see 1 open task
+
+  # Rubric viewing
+  Scenario: User can see a current assginment's rubric
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Grading' tab
+      And the shown rubric matches the assignment rubric
+
+  Scenario: User can see a past assginment's rubric
+    Given the course is shifted 1 'years' into the 'past'
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Grading' tab
+      And the shown rubric matches the assignment rubric
+
+  Scenario: User can see an upcoming assginment's rubric
+    Given the course is shifted 2 'months' into the 'future'
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the 'Submssions' tab 'is' enabled
+     Then the user opens the 'Grading' tab
+      And the shown rubric matches the assignment rubric
+
+  Scenario: User can not submit text to an assignment that is closed
+    Given the course is shifted 2 'months' into the 'future'
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the 'Submssions' tab 'is not' enabled
+
+
+  # Submit assignments
+  Scenario: User can open and submit text to an assignment
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Submissions' tab
+     Then the user creates a new submission
+     Then the user enters a 'text' submission
+     Then the user clicks 'Submit Assignment'
+     Then the assignment has 1 'active' submission
+      And the 'latest' db submission data is accurate
+      And the submission has no group
+      And the submission is attached to the user
+
+  Scenario: User can open and submit a file to an assignment
+      And the init assignment 'does not' accept 'text'
+      And the init assignment 'does' accept 'files'
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Submissions' tab
+     Then the user creates a new submission
+     Then the user enters a 'file' submission
+     Then the user clicks 'Submit Assignment'
+     Then the assignment has 1 'active' submission
+      And the 'latest' db submission data is accurate
+      And the submission has no group
+      And the submission is attached to the user
+
+  Scenario: User can open and submit a link to an assignment
+      And the init assignment 'does not' accept 'text'
+      And the init assignment 'does' accept 'links'
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Submissions' tab
+     Then the user creates a new submission
+     Then the user enters a 'link' submission
+     Then the user clicks 'Submit Assignment'
+     Then the assignment has 1 'active' submission
+      And the 'latest' db submission data is accurate
+      And the submission has no group
+      And the submission is attached to the user
+
+  Scenario: User can open and submit files to an assignment
+      And the init assignment 'does not' accept 'text'
+      And the init assignment 'does' accept 'files'
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Submissions' tab
+     Then the user creates a new submission
+     Then the user enters a 'file' submission
+     Then the user enters a 'file' submission
+     Then the user clicks 'Submit Assignment'
+     Then the assignment has 1 'active' submission
+      And the 'latest' db submission data is accurate
+      And the submission has no group
+      And the submission is attached to the user
+
+  Scenario: User can open and submit a combo to an assignment
+      And the init assignment 'does' accept 'links'
+      And the init assignment 'does' accept 'files'
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Submissions' tab
+     Then the user creates a new submission
+     Then the user enters a 'text' submission
+     Then the user enters a 'link' submission
+     Then the user enters a 'file' submission
+     Then the user clicks 'Submit Assignment'
+     Then the assignment has 1 'active' submission
+      And the 'latest' db submission data is accurate
+      And the submission has no group
+      And the submission is attached to the user
+
+  # Deadline enforcement
+  Scenario: User can submit a combo to an assignment before the first deadline
+      And the init assignment 'does' accept 'links'
+      And the init assignment 'does' accept 'files'
+    Given the assignment "is" initialized active
+      And the assignment already has 1 submission from the user
+      And today is 'tomorrow'
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Submissions' tab
+     Then the user creates a new submission
+     Then the user enters a 'text' submission
+     Then the user enters a 'link' submission
+     Then the user enters a 'file' submission
+     Then the user clicks 'Submit Assignment'
+     Then the assignment has 2 'active' submission
+      And the latest 'latest' db submission data is accurate
+      And the submission has no group
+      And the submission is attached to the user
+    
+  Scenario: User can submit a combo to an assignment after the first deadline but before the final
+      And the init assignment 'does' accept 'links'
+      And the init assignment 'does' accept 'files'
+    Given the assignment "is" initialized active
+      And the assignment already has 1 submission from the user
+      And today is between the first assignment deadline and close
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Submissions' tab
+     Then the user creates a new submission
+     Then the user enters a 'combo' submission
+     Then the user clicks 'Submit Assignment'
+     Then the assignment has 2 'active' submission
+      And the latest 'latest' db submission data is accurate
+      And the submission has no group
+      And the submission is attached to the user
+
+  Scenario: User cannot submit to an assignment after the final deadline
+      And the init assignment 'does' accept 'links'
+      And the assignment already has 1 submission from the user
+      And today is after the final deadline
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the 'Submssions' tab 'is not' enabled
+
+  Scenario: User can submit and re-submit to combo assignment
+      And the init assignment 'does' accept 'links'
+      And the init assignment 'does' accept 'files'
+    Given the assignment "is" initialized active
+      And the assignment already has 1 submission from the user
+      And today is 'tomorrow'
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Submissions' tab
+     Then the user creates a new submission
+     Then the user enters a 'combo' submission
+     Then the user clicks 'Submit Assignment'
+     Then the assignment has 2 'active' submission
+      And the latest 'latest' db submission data is accurate
+      And the submission has no group
+      And the submission is attached to the user
+
+  Scenario: User can withdraw a submitted assignment
+      And the assignment already has 4 submission from the user
+      And today is after the final deadline
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Submissions' tab
+     Then the user withdraws submission 3
+     Then the assignment has 1 'withdrawn' submission
+     Then the assignment has 3 'active' submission
+
+  Scenario: User cannot withdraw a graded assignment
+      And the assignment already has 4 submission from the user
+      And assignment 2 'is' graded
+      And today is after the final deadline
+    Given the user logs in
+     Then the user opens the 'assignment' task
+     Then the user opens the 'Submissions' tab
+     Then the user 'can' withdraws submission 1
+     Then the user 'can' withdraws submission 3
+     Then the user 'cannot' withdraws submission 2

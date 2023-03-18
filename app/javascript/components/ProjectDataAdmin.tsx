@@ -30,12 +30,14 @@ import {
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
 import { Skeleton } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const ProjectGroups = React.lazy(() => import("./ProjectGroups"));
 const ChartContainer = React.lazy(() => import("./Reports/ChartContainer"));
 
 export default function ProjectDataAdmin(props) {
   const category = "project";
+  const {t, i18n} = useTranslation( `${category}s` );
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
   );
@@ -124,6 +126,9 @@ export default function ProjectDataAdmin(props) {
       (null == projectId ? courseIdParam : projectId) +
       ".json";
 
+    console.log( projectEndDate );
+    console.log( projectEndDate.toJSDate( ) );
+    console.log( projectEndDate.zoneName );
     axios({
       method: method,
       url: url,
@@ -133,7 +138,7 @@ export default function ProjectDataAdmin(props) {
           course_id: courseIdParam,
           description: projectDescription,
           active: projectActive,
-          start_date: projectStartDate,
+          start_date: projectStartDate.toJSDate(),
           end_date: projectEndDate,
           start_dow: projectStartDOW,
           end_dow: projectEndDOW,
@@ -249,12 +254,11 @@ export default function ProjectDataAdmin(props) {
       <Typography>All dates shown in {courseTimezone} timezone.</Typography>
       <LocalizationProvider dateAdapter={AdapterLuxon}>
         <DatePicker
-          disableToolbar
           variant="inline"
           autoOk={true}
           format="MM/dd/yyyy"
           margin="normal"
-          label="Project Start Date"
+          label={t('start_date_lbl')}
           value={projectStartDate}
           onChange={setProjectStartDate}
           error={null != messages.start_date}
@@ -268,19 +272,16 @@ export default function ProjectDataAdmin(props) {
             }
           }}
         />
-      </LocalizationProvider>
       {null != messages.start_date ? (
         <FormHelperText error={true}>{messages.start_date}</FormHelperText>
       ) : null}
 
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
         <DatePicker
-          disableToolbar
           variant="inline"
           autoOk={true}
           format="MM/dd/yyyy"
           margin="normal"
-          label="Project End Date"
+          label={t('end_date_lbl')}
           value={projectEndDate}
           onChange={setProjectEndDate}
           error={null != messages.end_date}

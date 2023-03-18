@@ -113,7 +113,7 @@ end
 
 Given('the course has an assignment') do
   @assignment = @course.assignments.new(
-    name: assignment_name,
+    name: Faker::Company.industry,
     description: Faker::Quote.yoda,
     passing: 65,
     start_date: 4.months.ago,

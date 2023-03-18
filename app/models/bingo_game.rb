@@ -16,6 +16,8 @@ class BingoGame < ApplicationRecord
 
   has_many :concepts, through: :candidates
 
+  before_validation :init_dates # From DateSanitySupportConcern
+
   # validations
   validates :course, :topic, :end_date, :start_date, presence: true
   validates :group_discount, numericality:

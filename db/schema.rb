@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_05_001118) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_17_191346) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -79,6 +79,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_05_001118) do
     t.integer "passing", default: 65
     t.string "anon_name"
     t.string "anon_description"
+    t.boolean "file_sub", default: false, null: false
+    t.boolean "link_sub", default: false, null: false
+    t.boolean "text_sub", default: true, null: false
     t.index ["course_id"], name: "index_assignments_on_course_id"
     t.index ["project_id"], name: "index_assignments_on_project_id"
     t.index ["rubric_id"], name: "index_assignments_on_rubric_id"
