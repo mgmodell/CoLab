@@ -11,6 +11,8 @@ class Assignment < ApplicationRecord
 
   before_validation :init_dates # From DateSanitySupportConcern
 
+  validate :submission_type
+
   # Validations
   validates :passing, numericality: { in: 0..100 }
 
@@ -35,6 +37,15 @@ class Assignment < ApplicationRecord
   end
 
   private
+
+  def submission_type
+    return unless text_sub || link_sub || file_sub
+
+    errors.add(:text_sub, I18n.t('submission_type_error'))
+    errors.add(:file_sub, I18n.t('submission_type_error'))
+    errors.add(:link_sub, I18n.t('submission_type_error'))
+
+  end
 
   def anonymize
     self.anon_name = "#{Faker::Company.profession} #{Faker::Company.industry}"

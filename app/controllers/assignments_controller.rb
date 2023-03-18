@@ -73,6 +73,7 @@ class AssignmentsController < ApplicationController
       assignment: assignment.as_json(
         only: %i[id start_date end_date
                  rubric_id group_enabled project_id
+                 text_sub file_sub link_sub
                  active]
       )
     }
@@ -113,6 +114,7 @@ class AssignmentsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def assignment_params
     params.require(:assignment).permit(:name, :description, :start_date, :end_date, :rubric_id, :group_enabled,
+                                       :file_sub, :link_sub, :text_sub,
                                        :course_id, :project_id, :active)
   end
 end

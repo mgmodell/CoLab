@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import FormControl from "@mui/material/FormControl";
+import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Tab from "@mui/material/Tab";
@@ -36,6 +37,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
+import { Checkbox, FormLabel } from "@mui/material";
 
 const useStyles = makeStyles({
   container: {
@@ -98,6 +100,9 @@ export default function AssignmentDataAdmin(props) {
   const [assignmentStartDate, setAssignmentStartDate] = useState(
     DateTime.local()
   );
+  const [assignmentFileSub, setAssignmentFileSub] = useState( false );
+  const [assignmentLinkSub, setAssignmentLinkSub] = useState( false );
+  const [assignmentTextSub, setAssignmentTextSub] = useState( false );
   //Group parameters
   const [assignmentGroupOption, setAssignmentGroupOption] = useState(false);
   const [assignmentGroupProjectId, setAssignmentGroupProjectId] = useState(-1);
@@ -121,6 +126,23 @@ export default function AssignmentDataAdmin(props) {
     assignmentGroupOption,
     assignmentGroupProjectId
   ]);
+
+  const updateChecked = ( event: React.ChangeEvent<HTMLInputElement>, fieldName ) =>{
+      switch( fieldName ){
+        case 'text':
+          setAssignmentTextSub( !assignmentTextSub );
+          break;
+        case 'file':
+          setAssignmentFileSub( !assignmentFileSub );
+          break;
+        case 'link':
+          setAssignmentLinkSub( !assignmentLinkSub );
+          break;
+        default:
+          console.log( `No such submission type: ${fieldName}`);
+      }
+
+  }
 
   const saveAssignment = () => {
     const method = null === assignmentId ? "POST" : "PATCH";
@@ -149,6 +171,9 @@ export default function AssignmentDataAdmin(props) {
           end_date: assignmentEndDate,
           rubric_id: assignmentRubricId > 0 ? assignmentRubricId : null,
           group_enabled: assignmentGroupOption,
+          file_sub: assignmentFileSub,
+          text_sub: assignmentTextSub,
+          link_sub: assignmentLinkSub,
           project_id:
             assignmentGroupProjectId > 0 ? assignmentGroupProjectId : null
         }
@@ -231,6 +256,9 @@ export default function AssignmentDataAdmin(props) {
             assignment.course.timezone
           )
         );
+        setAssignmentFileSub( assignment.file_sub );
+        setAssignmentLinkSub( assignment.link_sub );
+        setAssignmentTextSub( assignment.text_sub );
         //Group options
         setAssignmentGroupOption(assignment.group_enabled || false);
         setAssignmentGroupProjectId(assignment.project_id || -1);
@@ -367,6 +395,31 @@ export default function AssignmentDataAdmin(props) {
                     }}
                     editorState={assignmentDescriptionEditor}
                   />
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControl component='fieldset' variant="standard">
+                    <FormLabel component='legend'>{t('edit.sub_type_select')}</FormLabel>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={assignmentTextSub} onChange={(event)=>updateCheckbox(event,'text')} name='sub_text'/>
+                        }
+                        label={t('edit.text_sub')}
+                        />
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={assignmentLinkSub} onChange={(event)=>updateCheckbox(event,'link')} name='sub_link'/>
+                        }
+                        label={t('edit.link_sub')}
+                        />
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={assignmentFileSub} onChange={(event)=>updateCheckbox(event,'file')} name='sub_file'/>
+                        }
+                        label={t('edit.file_sub')}
+                        />
+                    </FormGroup>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={6}>
                   <FormControl className={classes.formControl}>

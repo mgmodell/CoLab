@@ -10,6 +10,10 @@ en:
       group_option: Make groups available?
       group_source: Source of groups
       select_rubric: Which rubric will be applied?
+      sub_type_select: Which types of submissions are allowable?
+      text_sub: Text entered directly into CoLab?
+      link_sub: Links (URLs) to the submissions?
+      file_sub: File uploads?
     show:
       title: Assignment Details
       edit_string: Edit assignment details
@@ -22,9 +26,9 @@ en:
     destroy_success: Assignment was destroyed successfully!
     update_success: Assignment was updated successfully!
     back: Back to the list of assignments
-    name: Name
+    name: Assignment Name
     open_date: Start Date
     close_date: Close Date
-    description: Description
+    description: Assignment Description
     active: Is Active?
     version: Version
