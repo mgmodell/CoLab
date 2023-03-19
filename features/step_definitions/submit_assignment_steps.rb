@@ -58,10 +58,6 @@ Given('the init assignment {string} accept {string}') do |does_or_doesnt, sub_ty
     pending # Write code here that turns the phrase above into concrete actions
   end
   
-  Given('today is {string}') do |string|
-    pending # Write code here that turns the phrase above into concrete actions
-  end
-  
   Then('the latest {string} db submission data is accurate') do |string|
     pending # Write code here that turns the phrase above into concrete actions
   end
