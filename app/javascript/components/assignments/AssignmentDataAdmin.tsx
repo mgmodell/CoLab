@@ -14,6 +14,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import FormHelperText from "@mui/material/FormHelperText";
 import Switch from "@mui/material/Switch";
 
 import Skeleton from "@mui/material/Skeleton";
@@ -127,7 +128,7 @@ export default function AssignmentDataAdmin(props) {
     assignmentGroupProjectId
   ]);
 
-  const updateChecked = ( event: React.ChangeEvent<HTMLInputElement>, fieldName ) =>{
+  const updateSubmissionTypeSelection = ( event: React.ChangeEvent<HTMLInputElement>, fieldName ) =>{
       switch( fieldName ){
         case 'text':
           setAssignmentTextSub( !assignmentTextSub );
@@ -155,7 +156,7 @@ export default function AssignmentDataAdmin(props) {
       ".json";
 
     // Save
-    setSaveStatus(t("save_status"));
+    setSaveStatus(t("edit.status_saving"));
     axios({
       url: url,
       method: method,
@@ -397,24 +398,37 @@ export default function AssignmentDataAdmin(props) {
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControl component='fieldset' variant="standard">
+                  <FormControl
+                    component='fieldset'
+                    variant="standard"
+                    error={messages['submission_types']}
+                    >
                     <FormLabel component='legend'>{t('edit.sub_type_select')}</FormLabel>
                     <FormGroup>
                       <FormControlLabel
                         control={
-                          <Checkbox checked={assignmentTextSub} onChange={(event)=>updateCheckbox(event,'text')} name='sub_text'/>
+                          <Checkbox checked={assignmentTextSub}
+                            onChange={(event)=>updateSubmissionTypeSelection(event,'text')}
+                            id='sub_text'
+                            name='sub_text'/>
                         }
                         label={t('edit.text_sub')}
                         />
                       <FormControlLabel
                         control={
-                          <Checkbox checked={assignmentLinkSub} onChange={(event)=>updateCheckbox(event,'link')} name='sub_link'/>
+                          <Checkbox checked={assignmentLinkSub}
+                            onChange={(event)=>updateSubmissionTypeSelection(event,'link')}
+                            id='sub_link'
+                            name='sub_link'/>
                         }
                         label={t('edit.link_sub')}
                         />
                       <FormControlLabel
                         control={
-                          <Checkbox checked={assignmentFileSub} onChange={(event)=>updateCheckbox(event,'file')} name='sub_file'/>
+                          <Checkbox checked={assignmentFileSub}
+                            onChange={(event)=>updateSubmissionTypeSelection(event,'file')}
+                            id='sub_file'
+                            name='sub_file'/>
                         }
                         label={t('edit.file_sub')}
                         />
@@ -484,7 +498,7 @@ export default function AssignmentDataAdmin(props) {
                       value={assignmentEndDate}
                       onChange={setAssignmentEndDate}
                       slot={{
-                        TextField: TextField
+                        TextField: TextField,
                       }}
                       slotProps={{
                         textField: {

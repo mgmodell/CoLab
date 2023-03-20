@@ -159,7 +159,7 @@ Feature: (Re)Submitting individual assignments
       And the init assignment 'does' accept 'files'
     Given the assignment "is" initialized active
       And the assignment already has 1 submission from the user
-      And today is 'tomorrow'
+      And today is "tomorrow"
     Given the user logs in
      Then the user opens the 'assignment' task
      Then the user opens the 'Submissions' tab
@@ -203,7 +203,7 @@ Feature: (Re)Submitting individual assignments
       And the init assignment 'does' accept 'files'
     Given the assignment "is" initialized active
       And the assignment already has 1 submission from the user
-      And today is 'tomorrow'
+      And today is "tomorrow"
     Given the user logs in
      Then the user opens the 'assignment' task
      Then the user opens the 'Submissions' tab

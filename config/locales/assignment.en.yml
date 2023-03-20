@@ -14,6 +14,7 @@ en:
       text_sub: Text entered directly into CoLab?
       link_sub: Links (URLs) to the submissions?
       file_sub: File uploads?
+      status_saving: Saving assignment
     show:
       title: Assignment Details
       edit_string: Edit assignment details
@@ -32,3 +33,13 @@ en:
     description: Assignment Description
     active: Is Active?
     version: Version
+    error:
+      submission_type: At least one submission type must be selected
+      create_failed: >
+        Unable to create the new assignment. Please resolve the errors
+        below and try again.
+      update_failed: >
+        Unable to save assignment. Please resolve the errors below
+        and try again.
+      no_update_error: Successfully saved the assignment.
+      no_create_error: Successfully created the assignment.

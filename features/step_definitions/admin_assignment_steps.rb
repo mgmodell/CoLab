@@ -49,6 +49,24 @@ Then('the user sets the assignment {string} to {string}') do |field_name, value|
     find(:xpath, "//label[text()='Close Date']").click
     new_date = Chronic.parse(value).strftime('%m%d%Y')
     send_keys :left, :left, new_date
+  when 'link'
+    if 'true' == value  
+      check 'sub_link', visible: :all
+    else
+      uncheck 'sub_link', visible: :all
+    end
+  when 'text'
+    if 'true' == value
+      check 'sub_text', visible: :all
+    else
+      uncheck 'sub_text', visible: :all
+    end
+  when 'files'
+    if 'true' == value
+      check 'sub_file', visible: :all
+    else
+      uncheck 'sub_file', visible: :all
+    end
   else
     false.should be true
   end

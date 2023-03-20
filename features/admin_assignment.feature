@@ -5,7 +5,7 @@ Feature: Assignment administration
   Background:
     Given a user has signed up
     Given the user "has" had demographics requested
-    Given there are 4 "published" rubrics starting with 'Ruby'
+    Given there are 4 "published" rubrics starting with "Ruby"
     Given there are 4 "unpublished" rubrics starting with "Never gonna' give you up"
     Given there is a course with an assessed project
     Given the user is the instructor for the course
@@ -18,7 +18,7 @@ Feature: Assignment administration
     Given the user logs in
     Then the user "does" see an Admin button
     Then the user clicks the Admin button
-    Then the user selects the 'Courses' menu item
+    Then the user selects the "Courses" menu item
     Then the user sees 1 course
 
   @javascript
@@ -30,7 +30,7 @@ Feature: Assignment administration
     Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
-    Then the user selects the 'Ruby 2' version 1 rubric
+    Then the user selects the "Ruby 2" version 1 rubric
     Then the user clicks "Create Assignment"
     Then close all messages
     #Csheck what was saved
@@ -39,10 +39,10 @@ Feature: Assignment administration
      And the assignment "Description" field is "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
      And the assignment "opening" field is "7/29/1984"
      And the assignment "close" field is "2/10/1985"
-     And the assignment 'does' accept 'text'
-     And the assignment 'does not' accept 'link'
-     And the assignment 'does not' accept 'files'
-    Then the assignment rubric is 'Ruby 2' version 1
+     And the assignment "does" accept "text"
+     And the assignment "does not" accept "link"
+     And the assignment "does not" accept "files"
+    Then the assignment rubric is "Ruby 2" version 1
      And the assignment "is not" active
      And the assignment "is not" group capable
     #Make some changes
@@ -54,10 +54,10 @@ Feature: Assignment administration
      And the assignment "Description" field is "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
      And the assignment "opening" field is "7/29/1984"
      And the assignment "close" field is "2/10/1985"
-     And the assignment 'does' accept 'text'
-     And the assignment 'does' accept 'link'
-     And the assignment 'does not' accept 'files'
-    Then the assignment rubric is 'Ruby 2' version 1
+     And the assignment "does" accept "text"
+     And the assignment "does" accept "link"
+     And the assignment "does not" accept "files"
+    Then the assignment rubric is "Ruby 2" version 1
      And the assignment "is not" active
      And the assignment "is not" group capable
 
@@ -73,7 +73,7 @@ Feature: Assignment administration
     Then the user sets the assignment "text" to "false"
     Then the user sets the assignment "link" to "true"
     Then the user sets the assignment "files" to "true"
-    Then the user selects the 'Ruby 2' version 1 rubric
+    Then the user selects the "Ruby 2" version 1 rubric
     Then the user clicks "Create Assignment"
     Then close all messages
     #Csheck what was saved
@@ -82,10 +82,10 @@ Feature: Assignment administration
      And the assignment "Description" field is "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
      And the assignment "opening" field is "7/29/1984"
      And the assignment "close" field is "2/10/1985"
-     And the assignment 'does not' accept 'text'
-     And the assignment 'does' accept 'link'
-     And the assignment 'does' accept 'files'
-    Then the assignment rubric is 'Ruby 2' version 1
+     And the assignment "does not" accept "text"
+     And the assignment "does" accept "link"
+     And the assignment "does" accept "files"
+    Then the assignment rubric is "Ruby 2" version 1
      And the assignment "is not" active
      And the assignment "is not" group capable
 
@@ -98,7 +98,7 @@ Feature: Assignment administration
     Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
-    Then the user selects the 'Ruby 2' version 1 rubric
+    Then the user selects the "Ruby 2" version 1 rubric
     Then the user checks "Make groups available?"
     Then the user sets the assignment project to the course project
     Then the user clicks "Create Assignment"
@@ -146,9 +146,9 @@ Feature: Assignment administration
     Then the user opens the course
     Then the user switches to the "Activities" tab
     # This may need rework
-    Given the user has one 'published' rubric named "Pie in the Sky"
+    Given the user has one "published" rubric named "Pie in the Sky"
      And the user selects the "Sack Troy" activity
-    Then the user selects the 'Pie in the Sky' version 1 rubric
+    Then the user selects the "Pie in the Sky" version 1 rubric
     Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved
@@ -195,7 +195,7 @@ Feature: Assignment administration
     Then the user opens the course
     Then the user switches to the "Activities" tab
      And the user selects the "Sack Troy" activity
-    Then the user selects the 'Ruby 2' version 1 rubric
+    Then the user selects the "Ruby 2" version 1 rubric
     Then the user clicks "Save Assignment"
     Then close all messages
     #Check what was saved

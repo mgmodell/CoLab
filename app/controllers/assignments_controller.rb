@@ -35,10 +35,12 @@ class AssignmentsController < ApplicationController
 
     respond_to do |format|
       if @assignment.save
-        format.json { render json: standardized_response(@assignment) }
+        format.json { render json: standardized_response(@assignment, {main: I18n.t( 'assignments.errors.no_create_error')} ) }
       else
         puts @assignment.errors.full_messages
-        format.json { render json: @assignment.errors, status: :unprocessable_entity }
+        errors = @assignment.errors
+        errors.add( :mail, I18n.t( 'assignments.errors.create_failed') )
+        format.json { render json: standardized_response(@assignment, @assignment.errors) }
       end
     end
   end
@@ -47,10 +49,12 @@ class AssignmentsController < ApplicationController
   def update
     respond_to do |format|
       if @assignment.update(assignment_params)
-        format.json { render json: standardized_response(@assignment, { main: 'Successfully saved assignment' }) }
+        format.json { render json: standardized_response(@assignment, {main: I18n.t( 'assignments.errors.no_update_error')}) }
       else
         puts @assignment.errors.full_messages
-        format.json { render json: @assignment.errors, status: :unprocessable_entity }
+        errors = @assignment.errors
+        errors.add( :mail, I18n.t( 'assignments.errors.update_failed') )
+        format.json { render json: standardized_response(@assignment, @assignment.errors) }
       end
     end
   end

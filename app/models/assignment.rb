@@ -39,11 +39,9 @@ class Assignment < ApplicationRecord
   private
 
   def submission_type
-    return unless text_sub || link_sub || file_sub
+    return if self.text_sub || self.link_sub || self.file_sub
 
-    errors.add(:text_sub, I18n.t('submission_type_error'))
-    errors.add(:file_sub, I18n.t('submission_type_error'))
-    errors.add(:link_sub, I18n.t('submission_type_error'))
+    errors.add(:submission_types, I18n.t('assignments.error.submission_type'))
 
   end
 

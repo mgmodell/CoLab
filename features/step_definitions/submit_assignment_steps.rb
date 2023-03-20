@@ -1,5 +1,29 @@
+Given('the assignment {string} accept {string}') do |does_or_doesnt, sub_type|
+    case sub_type.downcase
+    when 'text'
+        @assignment.text_sub.should eq ('does' == does_or_doesnt )
+    when 'link'
+        @assignment.link_sub.should eq ('does' == does_or_doesnt)
+    when 'files'
+        @assignment.file_sub.should eq  ('does' == does_or_doesnt)
+    else
+      true.should be false
+    end
+  end
+
 Given('the init assignment {string} accept {string}') do |does_or_doesnt, sub_type|
-    pending # Write code here that turns the phrase above into concrete actions
+    case sub_type.downcase
+    when 'text'
+        @assignment.text_sub = 'does' == does_or_doesnt
+    when 'link'
+        @assignment.link_sub = 'does' == does_or_doesnt
+    when 'files'
+        @assignment.file_sub = 'does' == does_or_doesnt
+    else
+      true.should be false
+    end
+    @assignment.save
+    log @assignment.errors.full_messages if @assignment.errors.present?
   end
   
   Given('the assignment {string} initialized active') do |is_or_isnt|
@@ -82,5 +106,9 @@ Given('the init assignment {string} accept {string}') do |does_or_doesnt, sub_ty
   
   Then('the user {string} withdraws submission {int}') do |string, int|
   # Then('the user {string} withdraws submission {float}') do |string, float|
+    pending # Write code here that turns the phrase above into concrete actions
+  end
+
+  Given('today is {string}') do |string|
     pending # Write code here that turns the phrase above into concrete actions
   end
