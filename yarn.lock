@@ -1455,10 +1455,10 @@
   resolved "https://registry.yarnpkg.com/@react-dnd/shallowequal/-/shallowequal-2.0.0.tgz#a3031eb54129f2c66b2753f8404266ec7bf67f0a"
   integrity sha512-Pc/AFTdwZwEKJxFJvlxrSmGe/di+aAOBn60sremrpLo6VI/6cmiUYNNwlI5KNYttg7uypzA3ILPMPgxB2GYZEg==
 
-"@react-oauth/google@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@react-oauth/google/-/google-0.8.0.tgz#e95c9e2ef28f0da6d5de223e48c391a12eb4f821"
-  integrity sha512-xmIhYvvaBSblOzo3Fqv762lqub92SOFR8eRR7QpPyFPZEXZcOymaMuEkRSUKUrbu+9wfB8qtOaGMRJzrN7U2PA==
+"@react-oauth/google@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@react-oauth/google/-/google-0.9.0.tgz#af65ee0c6238a0988056d9e820029f99255f8381"
+  integrity sha512-iq9I6A4uwZezU/BixqLM6UET6an559ufC4Nh0lEIeIaKC3TJRvcPNWCjjHny56yAhgdT6ivUicLIvEoiSMjnmg==
 
 "@react-spring/animated@~9.7.1":
   version "9.7.1"
@@ -1654,9 +1654,9 @@
     "@types/estree" "*"
 
 "@types/eslint@*":
-  version "8.21.2"
-  resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-8.21.2.tgz#2b61b43a8b0e66006856a2a4c8e51f6f773ead27"
-  integrity sha512-EMpxUyystd3uZVByZap1DACsMXvb82ypQnGn89e1Y0a+LYu3JJscUd/gqhRsVFDkaD2MIiWo0MT8EfXr3DGRKw==
+  version "8.21.3"
+  resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-8.21.3.tgz#5794b3911f0f19e34e3a272c49cbdf48d6f543f2"
+  integrity sha512-fa7GkppZVEByMWGbTtE5MbmXWJTVbrjjaS8K6uQj+XtuuUv1fsuPAxhygfqLmsb/Ufb3CV8deFCpiMfAgi00Sw==
   dependencies:
     "@types/estree" "*"
     "@types/json-schema" "*"
@@ -1721,9 +1721,9 @@
   integrity sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==
 
 "@types/node@*":
-  version "18.15.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.3.tgz#f0b991c32cfc6a4e7f3399d6cb4b8cf9a0315014"
-  integrity sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==
+  version "18.15.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.5.tgz#3af577099a99c61479149b716183e70b5239324a"
+  integrity sha512-Ark2WDjjZO7GmvsyFFf81MXuGTA/d6oP38anyxWOL6EREyBKAxKoFHwBhaZxCfLRLpO8JgVXwqOwSwa7jRcjew==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -2420,9 +2420,9 @@ body-parser@1.20.1:
     unpipe "1.0.0"
 
 bonjour-service@^1.0.11:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/bonjour-service/-/bonjour-service-1.1.0.tgz#424170268d68af26ff83a5c640b95def01803a13"
-  integrity sha512-LVRinRB3k1/K0XzZ2p58COnWvkQknIY6sf0zF2rpErvcJXpMBttEPQSxK+HEXSS9VmpZlDoDnQWv8ftJT20B0Q==
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/bonjour-service/-/bonjour-service-1.1.1.tgz#960948fa0e0153f5d26743ab15baf8e33752c135"
+  integrity sha512-Z/5lQRMOG9k7W+FkeGTNjh7htqn/2LMnfOvBZ8pynNZCM9MwkQkI3zeI4oz09uWdcgmgHugVvBqxGg4VQJ5PCg==
   dependencies:
     array-flatten "^2.1.2"
     dns-equal "^1.0.0"
@@ -2488,9 +2488,9 @@ camelcase@^5.0.0:
   integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
 
 caniuse-lite@^1.0.30001449:
-  version "1.0.30001467"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001467.tgz#1afc9c16ed61f50dd87139da87ca43a3e0051c77"
-  integrity sha512-cEdN/5e+RPikvl9AHm4uuLXxeCNq8rFsQ+lPHTfe/OtypP3WwnVVbjn+6uBV7PaFL6xUFzTh+sSCOz1rKhcO+Q==
+  version "1.0.30001469"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001469.tgz#3dd505430c8522fdc9f94b4a19518e330f5c945a"
+  integrity sha512-Rcp7221ScNqQPP3W+lVOYDyjdR6dC+neEQCttoNr5bAyz54AboB4iwpnWgyi8P4YUsPybVzT4LgWiBbI3drL4g==
 
 chalk@^2.0.0, chalk@^2.4.2:
   version "2.4.2"
@@ -2782,9 +2782,9 @@ d3-array@2, d3-array@^2.6.0:
     internmap "^1.0.0"
 
 "d3-array@2 - 3", "d3-array@2.10.0 - 3":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-3.2.2.tgz#f8ac4705c5b06914a7e0025bbf8d5f1513f6a86e"
-  integrity sha512-yEEyEAbDrF8C6Ob2myOBLjwBLck1Z89jMGFee0oPsn95GqjerpaOA4ch+vc2l0FNFFwMD5N7OCSEN5eAlsUbgQ==
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-3.2.3.tgz#39f1f4954e4a09ff69ac597c2d61906b04e84740"
+  integrity sha512-JRHwbQQ84XuAESWhvIPaUV4/1UYTBOLiOPGWqgFDHZS1D5QN9c57FbH3QpEnQMYiOXNzKUQyGTZf+EVO7RT5TQ==
   dependencies:
     internmap "1 - 2"
 
@@ -3004,9 +3004,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.284:
-  version "1.4.333"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.333.tgz#ebb21f860f8a29923717b06ec0cb54e77ed34c04"
-  integrity sha512-YyE8+GKyGtPEP1/kpvqsdhD6rA/TP1DUFDN4uiU/YI52NzDxmwHkEb3qjId8hLBa5siJvG0sfC3O66501jMruQ==
+  version "1.4.334"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.334.tgz#eacdcb1145534202d569610c5915b63a3fec0eb9"
+  integrity sha512-laZ1odk+TRen6q0GeyQx/JEkpD3iSZT7ewopCpKqg9bTjP1l8XRfU3Bg20CFjNPZkp5+NDBl3iqd4o/kPO+Vew==
 
 email-validator@^2.0.4:
   version "2.0.4"
@@ -3537,9 +3537,9 @@ i18next-localstorage-cache@^1.1.1:
   integrity sha512-6kgVSg48bhmYCHppMCMExKBiiGOrb85jQBQMPnAwxVumn/fkXJYEfxV0rdfL0EYcZT+ciOqw+7VIMWkTVuk6Ng==
 
 i18next@^22.0.2:
-  version "22.4.12"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-22.4.12.tgz#fde322c186501ea1adcdfac41b2d2552b26eab42"
-  integrity sha512-2lE+vRXxQ3lGLub1CVbwgO0IfkLHmUSDVOAVdPh22CsxttMXi+35n2qgxh2wZIkKl6t/NMzPfgFPRDiFQOmiCg==
+  version "22.4.13"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-22.4.13.tgz#02e291ab0056eab13b7d356fb454ff991923eaa0"
+  integrity sha512-GX7flMHRRqQA0I1yGLmaZ4Hwt1JfLqagk8QPDPZsqekbKtXsuIngSVWM/s3SLgNkrEXjA+0sMGNuOEkkmyqmWg==
   dependencies:
     "@babel/runtime" "^7.20.6"
 
@@ -5702,9 +5702,9 @@ webpack-dev-middleware@^5.3.1:
     schema-utils "^4.0.0"
 
 webpack-dev-server@^4.11.1:
-  version "4.13.0"
-  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.13.0.tgz#9964abf6bc06637f68ef7ce6eed7b0e5b2cc89ec"
-  integrity sha512-1objTjwG2IaLNz0RjRQd41PjWOxHPc4I+1al4kmZu8J2nWcZcu1N1zlEWIJXTiYIkzhQ1RTrwjX4elnL+2e2GA==
+  version "4.13.1"
+  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.13.1.tgz#6417a9b5d2f528e7644b68d6ed335e392dccffe8"
+  integrity sha512-5tWg00bnWbYgkN+pd5yISQKDejRBYGEw15RaEEslH+zdbNDxxaZvEAO2WulaSaFKb5n3YG8JXsGaDsut1D0xdA==
   dependencies:
     "@types/bonjour" "^3.5.9"
     "@types/connect-history-api-fallback" "^1.3.5"
