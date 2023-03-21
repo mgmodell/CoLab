@@ -4651,6 +4651,38 @@ LOCK TABLES `rosters` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `rubric_row_feedbacks`
+--
+
+DROP TABLE IF EXISTS `rubric_row_feedbacks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `rubric_row_feedbacks` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `submission_feedback_id` bigint(20) NOT NULL,
+  `score` float DEFAULT NULL,
+  `feedback` text DEFAULT NULL,
+  `criterium_id` bigint(20) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_rubric_row_feedbacks_on_submission_feedback_id` (`submission_feedback_id`),
+  KEY `index_rubric_row_feedbacks_on_criterium_id` (`criterium_id`),
+  CONSTRAINT `fk_rails_2becac031c` FOREIGN KEY (`criterium_id`) REFERENCES `criteria` (`id`),
+  CONSTRAINT `fk_rails_92e9fd5270` FOREIGN KEY (`submission_feedback_id`) REFERENCES `submission_feedbacks` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rubric_row_feedbacks`
+--
+
+LOCK TABLES `rubric_row_feedbacks` WRITE;
+/*!40000 ALTER TABLE `rubric_row_feedbacks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `rubric_row_feedbacks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `rubrics`
 --
 
@@ -4922,7 +4954,11 @@ INSERT INTO `schema_migrations` VALUES
 ('20230218040723'),
 ('20230219025034'),
 ('20230305001118'),
-('20230317191346');
+('20230317191346'),
+('20230321202010'),
+('20230321202429'),
+('20230321202810'),
+('20230321215452');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5015,6 +5051,76 @@ INSERT INTO `styles` VALUES
 (1,'Default','new','2019-09-23 11:40:16','2019-09-23 11:40:16',NULL),
 (2,'Sliders (simple)','slider_basic','2019-09-23 11:40:16','2019-09-23 11:40:16',NULL);
 /*!40000 ALTER TABLE `styles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `submission_feedbacks`
+--
+
+DROP TABLE IF EXISTS `submission_feedbacks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `submission_feedbacks` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `submission_id` bigint(20) NOT NULL,
+  `calculated_score` float DEFAULT NULL,
+  `feedback` text DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_submission_feedbacks_on_submission_id` (`submission_id`),
+  CONSTRAINT `fk_rails_a037d179be` FOREIGN KEY (`submission_id`) REFERENCES `submissions` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `submission_feedbacks`
+--
+
+LOCK TABLES `submission_feedbacks` WRITE;
+/*!40000 ALTER TABLE `submission_feedbacks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `submission_feedbacks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `submissions`
+--
+
+DROP TABLE IF EXISTS `submissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `submissions` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `submitted` datetime(6) DEFAULT NULL,
+  `withdrawn` datetime(6) DEFAULT NULL,
+  `recorded_score` float DEFAULT NULL,
+  `sub_text` text DEFAULT NULL,
+  `sub_link` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `group_id` int(11) DEFAULT NULL,
+  `assignment_id` bigint(20) NOT NULL,
+  `rubric_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_submissions_on_user_id` (`user_id`),
+  KEY `index_submissions_on_group_id` (`group_id`),
+  KEY `index_submissions_on_assignment_id` (`assignment_id`),
+  KEY `index_submissions_on_rubric_id` (`rubric_id`),
+  CONSTRAINT `fk_rails_11ec1c51e8` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
+  CONSTRAINT `fk_rails_5ebe306d72` FOREIGN KEY (`rubric_id`) REFERENCES `rubrics` (`id`),
+  CONSTRAINT `fk_rails_61cac0823d` FOREIGN KEY (`assignment_id`) REFERENCES `assignments` (`id`),
+  CONSTRAINT `fk_rails_8d85741475` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `submissions`
+--
+
+LOCK TABLES `submissions` WRITE;
+/*!40000 ALTER TABLE `submissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `submissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -5385,4 +5491,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-18  0:04:26
+-- Dump completed on 2023-03-21 18:20:41

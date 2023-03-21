@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_17_191346) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_21_215452) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -498,6 +498,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_17_191346) do
     t.index ["user_id"], name: "index_rosters_on_user_id"
   end
 
+  create_table "rubric_row_feedbacks", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.bigint "submission_feedback_id", null: false
+    t.float "score"
+    t.text "feedback"
+    t.bigint "criterium_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["criterium_id"], name: "index_rubric_row_feedbacks_on_criterium_id"
+    t.index ["submission_feedback_id"], name: "index_rubric_row_feedbacks_on_submission_feedback_id"
+  end
+
   create_table "rubrics", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -553,6 +564,33 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_17_191346) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "name_ko"
     t.index ["name_en"], name: "index_styles_on_name_en", unique: true
+  end
+
+  create_table "submission_feedbacks", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.bigint "submission_id", null: false
+    t.float "calculated_score"
+    t.text "feedback"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["submission_id"], name: "index_submission_feedbacks_on_submission_id"
+  end
+
+  create_table "submissions", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+    t.datetime "submitted"
+    t.datetime "withdrawn"
+    t.float "recorded_score"
+    t.text "sub_text"
+    t.string "sub_link"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.integer "group_id"
+    t.bigint "assignment_id", null: false
+    t.bigint "rubric_id", null: false
+    t.index ["assignment_id"], name: "index_submissions_on_assignment_id"
+    t.index ["group_id"], name: "index_submissions_on_group_id"
+    t.index ["rubric_id"], name: "index_submissions_on_rubric_id"
+    t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 
   create_table "themes", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
@@ -697,10 +735,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_17_191346) do
   add_foreign_key "reactions", "users"
   add_foreign_key "rosters", "courses"
   add_foreign_key "rosters", "users"
+  add_foreign_key "rubric_row_feedbacks", "criteria"
+  add_foreign_key "rubric_row_feedbacks", "submission_feedbacks"
   add_foreign_key "rubrics", "rubrics", column: "parent_id"
   add_foreign_key "rubrics", "schools"
   add_foreign_key "rubrics", "users"
   add_foreign_key "scenarios", "behaviors"
+  add_foreign_key "submission_feedbacks", "submissions"
+  add_foreign_key "submissions", "assignments"
+  add_foreign_key "submissions", "groups"
+  add_foreign_key "submissions", "rubrics"
+  add_foreign_key "submissions", "users"
   add_foreign_key "users", "cip_codes"
   add_foreign_key "users", "genders"
   add_foreign_key "users", "home_states"

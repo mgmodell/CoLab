@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :rubric_row_feedbacks
+  resources :submission_feedbacks
+  resources :submissions
   scope 'api-backend' do
     post 'courses/copy/:id' => 'courses#new_from_template',
          as: :copy_course,
