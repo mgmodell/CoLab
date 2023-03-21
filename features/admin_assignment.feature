@@ -47,7 +47,7 @@ Feature: Assignment administration
      And the assignment "is not" group capable
     #Make some changes
     Then the user sets the assignment "link" to "true"
-    Then the user clicks "Create Assignment"
+    Then the user clicks "Save Assignment"
     Then close all messages
     Then retrieve the "latest" assignment from the db
      And the assignment "Name" field is "Term Paper"

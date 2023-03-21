@@ -156,6 +156,7 @@ export default function AssignmentDataAdmin(props) {
       ".json";
 
     // Save
+    console.log( method, url, assignmentName, assignmentTextSub, assignmentGroupOption, assignmentRubricId );
     setSaveStatus(t("edit.status_saving"));
     axios({
       url: url,
@@ -182,13 +183,14 @@ export default function AssignmentDataAdmin(props) {
     })
       .then(response => {
         const data = response.data;
+        setAssignmentData( data );
         //TODO: handle save errors
         setSaveStatus(data["notice"]);
         setDirty(false);
         setMessages(data["messages"]);
         dispatch(endTask("saving"));
 
-        getAssignmentData();
+        //getAssignmentData();
       })
       .catch(error => {
         console.log("error", error);
@@ -212,19 +214,7 @@ export default function AssignmentDataAdmin(props) {
     }
   };
 
-  const getAssignmentData = () => {
-    setDirty(true);
-    dispatch(startTask());
-    var url = endpoints.baseUrl + "/";
-    if (null === assignmentId) {
-      url = url + "new/" + courseIdParam + ".json";
-    } else {
-      url = url + assignmentId + ".json";
-    }
-    axios
-      .get(url, {})
-      .then(response => {
-        const data = response.data;
+  const setAssignmentData = (data)=>{
         const projects = new Array({ id: -1, name: "None Selected" }).concat(
           data.projects
         );
@@ -264,6 +254,24 @@ export default function AssignmentDataAdmin(props) {
         setAssignmentGroupOption(assignment.group_enabled || false);
         setAssignmentGroupProjectId(assignment.project_id || -1);
         setAssignmentRubricId(assignment.rubric_id || -1);
+
+  }
+  const getAssignmentData = () => {
+    setDirty(true);
+    dispatch(startTask());
+    var url = endpoints.baseUrl + "/";
+    if (null === assignmentId) {
+      url = url + "new/" + courseIdParam + ".json";
+    } else {
+      url = url + assignmentId + ".json";
+    }
+    axios
+      .get(url, {})
+      .then(response => {
+        const data = response.data;
+        console.log( data );
+        setAssignmentData( data );
+
         setDirty(false);
         dispatch(endTask());
       })
