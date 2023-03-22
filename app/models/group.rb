@@ -19,6 +19,7 @@ class Group < ApplicationRecord
   has_many :cip_codes, through: :users
   has_many :genders, through: :users
   has_many :primary_languages, through: :users
+  has_many :submissions, inverse_of: :group
 
   validates :name, presence: true
   validate :validate_activation_status

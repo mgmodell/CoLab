@@ -4660,7 +4660,7 @@ DROP TABLE IF EXISTS `rubric_row_feedbacks`;
 CREATE TABLE `rubric_row_feedbacks` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `submission_feedback_id` bigint(20) NOT NULL,
-  `score` float DEFAULT NULL,
+  `score` float NOT NULL DEFAULT 0,
   `feedback` text DEFAULT NULL,
   `criterium_id` bigint(20) NOT NULL,
   `created_at` datetime(6) NOT NULL,
@@ -4958,7 +4958,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20230321202010'),
 ('20230321202429'),
 ('20230321202810'),
-('20230321215452');
+('20230321215452'),
+('20230322001413');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5063,7 +5064,7 @@ DROP TABLE IF EXISTS `submission_feedbacks`;
 CREATE TABLE `submission_feedbacks` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `submission_id` bigint(20) NOT NULL,
-  `calculated_score` float DEFAULT NULL,
+  `calculated_score` float NOT NULL DEFAULT 0,
   `feedback` text DEFAULT NULL,
   `created_at` datetime(6) NOT NULL,
   `updated_at` datetime(6) NOT NULL,
@@ -5093,7 +5094,7 @@ CREATE TABLE `submissions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `submitted` datetime(6) DEFAULT NULL,
   `withdrawn` datetime(6) DEFAULT NULL,
-  `recorded_score` float DEFAULT NULL,
+  `recorded_score` float NOT NULL DEFAULT 0,
   `sub_text` text DEFAULT NULL,
   `sub_link` varchar(255) DEFAULT NULL,
   `created_at` datetime(6) NOT NULL,
@@ -5491,4 +5492,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-21 18:20:41
+-- Dump completed on 2023-03-21 20:24:52

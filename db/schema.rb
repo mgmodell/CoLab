@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_21_215452) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_22_001413) do
   create_table "active_storage_attachments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -500,7 +500,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_21_215452) do
 
   create_table "rubric_row_feedbacks", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.bigint "submission_feedback_id", null: false
-    t.float "score"
+    t.float "score", default: 0.0, null: false
     t.text "feedback"
     t.bigint "criterium_id", null: false
     t.datetime "created_at", null: false
@@ -568,7 +568,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_21_215452) do
 
   create_table "submission_feedbacks", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.bigint "submission_id", null: false
-    t.float "calculated_score"
+    t.float "calculated_score", default: 0.0, null: false
     t.text "feedback"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -578,7 +578,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_21_215452) do
   create_table "submissions", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.datetime "submitted"
     t.datetime "withdrawn"
-    t.float "recorded_score"
+    t.float "recorded_score", default: 0.0, null: false
     t.text "sub_text"
     t.string "sub_link"
     t.datetime "created_at", null: false

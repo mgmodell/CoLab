@@ -65,6 +65,9 @@ class SubmissionFeedbacksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def submission_feedback_params
-      params.require(:submission_feedback).permit(:submission_id, :calculated_score, :feedback)
+      params.require(:submission_feedback).permit(:submission_id, :calculated_score, :feedback
+                                                rubric_row_feedbacks_attributes: %I[id 
+                                                submission_feedback_id score feedback criterium_id]
+      )
     end
 end
