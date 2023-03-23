@@ -108,7 +108,3 @@ Given('the init assignment {string} accept {string}') do |does_or_doesnt, sub_ty
   # Then('the user {string} withdraws submission {float}') do |string, float|
     pending # Write code here that turns the phrase above into concrete actions
   end
-
-  Given('today is {string}') do |string|
-    pending # Write code here that turns the phrase above into concrete actions
-  end
