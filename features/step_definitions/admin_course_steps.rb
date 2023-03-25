@@ -16,13 +16,26 @@ end
 
 Then 'the user sets the start date to {string} and the end date to {string}' do |start_date, end_date|
 
-  field_name = 'Course Start Date'
-  find(:xpath, "//label[text()='#{field_name}']").click
+  label = 'Course Start Date'
+  begin
+    find(:xpath, "//label[text()='#{label}']").click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+    field_id = find(:xpath, "//label[text()='#{label}']")['for']
+    field = find( :xpath, "//input[@id='#{field_id}']")
+    field.click
+  end
+
   new_date = Chronic.parse(start_date).strftime('%m%d%Y')
   send_keys :left, :left, new_date
 
-  field_name = 'Course End Date'
-  find(:xpath, "//label[text()='#{field_name}']").click
+  label = 'Course End Date'
+  begin
+    find(:xpath, "//label[text()='#{label}']").click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+    field_id = find(:xpath, "//label[text()='#{label}']")['for']
+    field = find( :xpath, "//input[@id='#{field_id}']")
+    field.click
+  end
   new_date = Chronic.parse(end_date).strftime('%m%d%Y')
   send_keys :left, :left, new_date
 end
