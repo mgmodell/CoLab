@@ -95,8 +95,8 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.731.0)
-    aws-sdk-core (3.170.1)
+    aws-partitions (1.735.0)
+    aws-sdk-core (3.171.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
@@ -104,7 +104,7 @@ GEM
     aws-sdk-kms (1.63.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.119.1)
+    aws-sdk-s3 (1.119.2)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
@@ -138,7 +138,7 @@ GEM
       rubyzip (>= 1.1)
     climate_control (0.2.0)
     concurrent-ruby (1.2.2)
-    connection_pool (2.3.0)
+    connection_pool (2.4.0)
     crass (1.0.6)
     cucumber (8.0.0)
       builder (~> 3.2, >= 3.2.4)
@@ -402,7 +402,7 @@ GEM
     rb-readline (0.5.5)
     rdoc (6.5.0)
       psych (>= 4.0.0)
-    react_on_rails (13.3.2)
+    react_on_rails (13.3.3)
       addressable
       connection_pool
       execjs (~> 2.5)
@@ -448,7 +448,7 @@ GEM
       rubocop-ast (>= 1.26.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.27.0)
+    rubocop-ast (1.28.0)
       parser (>= 3.2.1.0)
     rubocop-performance (1.16.0)
       rubocop (>= 1.7.0, < 2.0)
@@ -457,8 +457,8 @@ GEM
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
-    rubocop-thread_safety (0.4.4)
-      rubocop (>= 0.53.0)
+    rubocop-thread_safety (0.5.0)
+      rubocop (>= 0.90.0)
     ruby-graphviz (1.2.5)
       rexml
     ruby-progressbar (1.13.0)
@@ -471,7 +471,7 @@ GEM
       errbase (>= 0.1.1)
     sdoc (2.6.1)
       rdoc (>= 5.0)
-    selenium-webdriver (4.8.1)
+    selenium-webdriver (4.8.2)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -523,7 +523,7 @@ GEM
     ttfunk (1.7.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    tzinfo-data (1.2022.7)
+    tzinfo-data (1.2023.2)
       tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
@@ -603,7 +603,7 @@ DEPENDENCIES
   rails-erd
   rails_12factor
   rb-readline
-  react_on_rails (= 13.3.2)
+  react_on_rails (= 13.3.3)
   reek
   report_builder
   rspec
