@@ -4,7 +4,13 @@ require 'faker'
 
 Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
   field_name = 'start' == date_field_prefix ? 'Open date' : 'Game date'
-  find(:xpath, "//label[text()='#{field_name}']").click
+  begin
+    find(:xpath, "//label[text()='#{field_name}']").click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+    field_id = find(:xpath, "//label[text()='#{label}']")['for']
+    field = find( :xpath, "//input[@id='#{field_id}']")
+    field.click
+  end
   new_date = Chronic.parse(date_value).strftime('%m%d%Y')
   send_keys :left, :left, new_date
 end

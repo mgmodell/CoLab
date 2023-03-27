@@ -137,10 +137,6 @@ Then(/^the user sets the "([^"]*)" field to "([^"]*)"$/) do |field, value|
   elem.set(value)
 end
 
-def set_to_datepicker 
-
-end
-
 Then(/^the user sets the project "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
   field_name = 'start' == date_field_prefix ? 'Project start date' : 'Project end date'
   find(:xpath, "//label[text()='#{field_name}']").click

@@ -42,11 +42,25 @@ end
 Then('the user sets the assignment {string} to {string}') do |field_name, value|
   case field_name
   when 'opening'
-    find(:xpath, "//label[text()='Start Date']").click
+    label = 'Start Date'
+    begin
+      find(:xpath, "//label[text()='#{label}']").click
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+      field_id = find(:xpath, "//label[text()='#{label}']")['for']
+      field = find( :xpath, "//input[@id='#{field_id}']")
+      field.click
+    end
     new_date = Chronic.parse(value).strftime('%m%d%Y')
     send_keys :left, :left, new_date
   when 'close'
-    find(:xpath, "//label[text()='Close Date']").click
+    label = 'Close Date'
+    begin
+      find(:xpath, "//label[text()='#{label}']").click
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+      field_id = find(:xpath, "//label[text()='#{label}']")['for']
+      field = find( :xpath, "//input[@id='#{field_id}']")
+      field.click
+    end
     new_date = Chronic.parse(value).strftime('%m%d%Y')
     send_keys :left, :left, new_date
   when 'link'
