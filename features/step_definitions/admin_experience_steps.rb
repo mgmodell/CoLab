@@ -7,7 +7,7 @@ end
 Then 'the user sets the experience {string} date to {string}' do |ordinal, date_value|
   case ordinal.downcase
   when 'start'
-    field_name = 'Experience start date'
+    field_name = 'Experience Start Date'
     begin
       find(:xpath, "//label[text()='#{field_name}']").click
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
@@ -18,7 +18,7 @@ Then 'the user sets the experience {string} date to {string}' do |ordinal, date_
     new_date = Chronic.parse(date_value).strftime('%m%d%Y')
     send_keys :left, :left, new_date
   when 'end'
-    field_name = 'Experience end date'
+    field_name = 'Experience End Date'
     begin
       find(:xpath, "//label[text()='#{field_name}']").click
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
