@@ -18,6 +18,7 @@ import RequireAuth from "./infrastructure/RequireAuth";
 import RequireInstructor from "./infrastructure/RequireInstructor";
 
 import HomeShell from "./HomeShell";
+import BingoShell from "./BingoBoards/BingoShell";
 
 const ProfileDataAdmin = React.lazy(() => import("./ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
@@ -102,40 +103,14 @@ export default function PageWrapper(props) {
                   />
                   {/* Perhaps subgroup under Bingo */}
                   <Route
-                    path={`enter_candidates/:bingoGameId`}
+                    path='bingo/*'
                     element={
                       <RequireAuth>
-                        <CandidateListEntry />
+                        <BingoShell />
                       </RequireAuth>
                     }
-                  />
-                  <Route
-                    path={`review_candidates/:bingoGameId`}
-                    element={
-                      <RequireAuth>
-                        <CandidatesReviewTable />
-                      </RequireAuth>
-                    }
-                  />
-                  <Route
-                    path={`candidate_results/:bingoGameId`}
-                    element={
-                      <RequireAuth>
-                        <BingoBuilder />
-                      </RequireAuth>
-                    }
-                  />
-                  <Route
-                    path={`score_bingo_worksheet/:worksheetIdParam`}
-                    element={
-                      <RequireAuth>
-                        <RequireInstructor>
-                          <ScoreBingoWorksheet />
-                        </RequireInstructor>
-                      </RequireAuth>
-                    }
-                  />
-                  {/* Perhaps subgroup under Bingo */}
+                    />
+                  {/* Perhaps subgroup under Experience */}
                   <Route
                     path={`experience/:experienceId`}
                     element={
