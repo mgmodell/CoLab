@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Route, Routes } from "react-router-dom";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 import CandidateListEntry from "./CandidateListEntry";
@@ -8,20 +8,18 @@ import BingoBuilder from "./BingoBuilder";
 import ScoreBingoWorksheet from "./ScoreBingoWorksheet";
 import RequireInstructor from "../infrastructure/RequireInstructor";
 
-export default function BingoShell(props) {
-
-  const [showErrors, setShowErrors] = useState(false);
+export default function BingoShell() {
 
   const [working] = useState(true);
 
   return (
     <React.Fragment>
-      <WorkingIndicator id="admin_save" />
+      <WorkingIndicator identifier="play_bingo" />
       <Routes>
                   <Route
                     path={`enter_candidates/:bingoGameId`}
                     element={
-                        <CandidateListEntry />
+                      <CandidateListEntry />
                     }
                   />
                   <Route
@@ -35,7 +33,7 @@ export default function BingoShell(props) {
                   <Route
                     path={`candidate_results/:bingoGameId`}
                     element={
-                        <BingoBuilder />
+                      <BingoBuilder />
                     }
                   />
                   <Route

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { Settings } from "luxon";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
@@ -25,10 +25,6 @@ export default function Admin(props) {
     state => state.context.lookups.timezone_lookup
   );
 
-  const [showErrors, setShowErrors] = useState(false);
-
-  const [working] = useState(true);
-
   useEffect(() => {
     if (null !== user.lastRetrieved && null !== tz_hash) {
       Settings.defaultZoneName = tz_hash[user.timezone];
@@ -37,7 +33,7 @@ export default function Admin(props) {
 
   return (
     <React.Fragment>
-      <WorkingIndicator id="admin_save" />
+      <WorkingIndicator identifier="admin_save" />
       <Routes>
         {user.is_instructor || user.is_admin ? (
           <React.Fragment>

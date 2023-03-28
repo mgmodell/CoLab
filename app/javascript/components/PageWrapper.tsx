@@ -15,28 +15,17 @@ import AppHeader from "./AppHeader";
 import CookieConsent from "react-cookie-consent";
 import AppStatusBar from "./AppStatusBar";
 import RequireAuth from "./infrastructure/RequireAuth";
-import RequireInstructor from "./infrastructure/RequireInstructor";
 
 import HomeShell from "./HomeShell";
 import BingoShell from "./BingoBoards/BingoShell";
 
 const ProfileDataAdmin = React.lazy(() => import("./ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
-const CandidateListEntry = React.lazy(() =>
-  import("./BingoBoards/CandidateListEntry")
-);
-const CandidatesReviewTable = React.lazy(() =>
-  import("./BingoBoards/CandidatesReviewTable")
-);
-const BingoBuilder = React.lazy(() => import("./BingoBoards/BingoBuilder"));
 const Experience = React.lazy(() => import("./experiences/Experience"));
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 const Admin = React.lazy(() => import("./Admin"));
 const SignIn = React.lazy(() => import("./SignIn"));
 const EnrollInCourse = React.lazy(() => import("./EnrollInCourse"));
-const ScoreBingoWorksheet = React.lazy(() =>
-  import("./BingoBoards/ScoreBingoWorksheet")
-);
 
 const Privacy = React.lazy(() => import("./info/Privacy"));
 const TermsOfService = React.lazy(() => import("./info/TermsOfService"));
