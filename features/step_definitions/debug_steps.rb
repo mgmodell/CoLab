@@ -20,6 +20,9 @@ Then(/^show the entries list$/) do
 end
 
 Then('the environment matches that set') do
+  require 'socket'
+  puts  "Hostname       : #{Socket.gethostname}"
+  puts  "Git branch     : #{`git rev-parse --abbrev-ref HEAD`}"
   puts  "Input RAILS_ENV: #{ENV['RAILS_ENV']}"
   puts  "Rails.env      : #{Rails.env}"
   ENV['RAILS_ENV'].should eq Rails.env
