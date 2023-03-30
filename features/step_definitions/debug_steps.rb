@@ -34,3 +34,7 @@ Then('the AWS keys are available') do
   Rails.application.credentials.aws.region.should_not be_blank
   Rails.application.credentials.aws.s3_bucket_name.should_not be_blank
 end
+
+Then('we artificially fail for info') do
+  true.should eq false
+end
