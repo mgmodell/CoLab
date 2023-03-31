@@ -9,7 +9,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
 #    Given the course has an assignment
 #    Given there exists a rubric published by another user
 #    Given the existing "mixed" rubric is attached to this assignment
-#    Given the assignment "is" group-capable
+#    Given the assignment "is" initialised as group-capable
 #    Given the assignment "is" active
 #    Given a user has submitted to the assignment
 

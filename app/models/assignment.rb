@@ -2,7 +2,7 @@ class Assignment < ApplicationRecord
   include TimezonesSupportConcern
   include DateSanitySupportConcern
 
-  belongs_to :rubric, inverse_of: :assignments
+  belongs_to :rubric, inverse_of: :assignments, optional: true
   belongs_to :course, inverse_of: :assignments
   belongs_to :project, optional: true
 
@@ -30,12 +30,47 @@ class Assignment < ApplicationRecord
     I18n.t(:assignment)
   end
 
-  def type
-    'Assignment'
+  def get_type
+    I18n.t('Assignment')
   end
 
   def get_link
     'assignment'
+  end
+
+  def task_data(current_user:)
+    group = project.group_for_user(current_user) if project.present?
+    link = "/assignments/#{id}"
+
+    log = course.get_consent_log(user: current_user)
+    consent_link = ("/research_information/#{log.consent_form_id}" if log.present?)
+    {
+      id:,
+      type: :assignment,
+      name: get_name(false),
+      group_name: group.present? ? group.get_name(false) : nil,
+      status: status_for_user( current_user ),
+      course_name: course.get_name(false),
+      start_date:,
+      end_date:,
+      next_date: start_date > Date.current ? start_date : end_date,
+      link:,
+      consent_link:,
+      active:
+    }
+  end
+
+  def get_submissions_for_user(current_user)
+    if group_enabled
+      submissions.where( group: project.group_for_user( current_user ) ).order(:submitted)
+    else
+      submissions.where( user: current_user ).order(:submitted)
+    end
+  end
+
+  def status_for_user(user)
+    # TODO: check for graded
+    get_submissions_for_user( user ).size.positive?
   end
 
   private

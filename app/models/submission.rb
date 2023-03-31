@@ -18,8 +18,8 @@ class Submission < ApplicationRecord
   end
 
   def can_submit
-    if self.submitted.nil? && self.withdrawn.nil?
-      && self.submitted_was.nil? && self.withdrawn_was.nil?
+    if self.submitted.nil? && self.withdrawn.nil? &&
+       self.submitted_was.nil? && self.withdrawn_was.nil?
 
       return
 

@@ -113,7 +113,7 @@ Then('the assignment {string} active') do |is_active|
   @assignment.active.should eq('is' == is_active)
 end
 
-Then('the assignment {string} group capable') do |is_group_enabled|
+Then('the assignment {string} initialised as group-capable') do |is_group_enabled|
   @assignment.group_enabled.should eq('is' == is_group_enabled)
 end
 
@@ -155,8 +155,8 @@ Given('the course has an assignment') do
   @assignment.save
 end
 
-Given('the assignment {string} group-capable') do |_string|
-  @assessment.group_enabled.should be true
+Given('the assignment {string} group capable') do |_string|
+  @assignment.group_enabled.should be true
 end
 
 Then('the assignment rubric is {string} version {int}') do |rubric_name, rubric_version|

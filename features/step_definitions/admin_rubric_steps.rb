@@ -414,21 +414,20 @@ Then('the user can not {string} the {string} rubric') do |action, rubric_name|
 end
 
 Given('there exists a rubric published by another user') do
-  users = User.where.not(user: @user)
+  users = User.includes(:school).where.not(id: @user.id)
   another_user = users.sample
-  rubric = school.rubrics.new(
-    name: "#{prefix} #{index}",
-    description: Faker::GreekPhilosophers.quote,
-    published: 'published' == is_published,
+  @rubric = another_user.school.rubrics.new(
+    name: "#{Faker::JapaneseMedia::StudioGhibli.character}",
+    description: Faker::JapaneseMedia::StudioGhibli.quote,
     user: another_user
   )
-  rubric.criteria.new(
+  @rubric.criteria.new(
     description: Faker::Company.industry,
     sequence: 1,
     l1_description: Faker::Company.bs
   )
-  rubric.save
-  log rubric.errors.full_messages if rubric.errors.present?
+  @rubric.save
+  log @rubric.errors.full_messages if @rubric.errors.present?
 end
 
 Then('retrieve the latest child of the rubric') do
@@ -441,5 +440,8 @@ Then('the rubric has a parent') do
 end
 
 Given('the existing rubric is attached to this assignment') do
-  pending # Write code here that turns the phrase above into concrete actions
+  @assignment.rubric = @rubric
+  @assignment.save
+  log @assignment.errors.full_messages if @assignment.errors.present?
+
 end

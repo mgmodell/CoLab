@@ -11,7 +11,9 @@ Feature: (Re)Submitting individual assignments
     #active and open - no group
     Given the course has an assignment
     #default: text only
-    Given the assignment "is not" group-capable
+    Given the assignment "is not" initialised as group-capable
+    Given a user has signed up
+      And the user is the instructor for the course
     Given the assignment opening is "one month ago" and close is "one month from now"
 
     Given there exists a rubric published by another user
@@ -21,22 +23,26 @@ Feature: (Re)Submitting individual assignments
     Given the user "has" had demographics requested
 
   # Availability
+  @javascript
   Scenario: User should be able to see an open and active assignment
     Given the assignment "is" initialized active
     Given the user logs in
     Then user should see 1 open task
 
+  @javascript
   Scenario: User should not be able to see an open inactive assignment
     Given the assignment "is not" initialized active
     Given the user logs in
     Then user should see 0 open task
 
+  @javascript
   Scenario: User should be able to see a past active assignment
     Given the course is shifted 1 'years' into the 'past'
     Given the assignment "is" initialized active
     Given the user logs in
     Then user should see 1 open task
 
+  @javascript
   Scenario: User should be able to see an upcoming active assignment
     Given the course is shifted 2 'months' into the 'future'
     Given the assignment "is" initialized active
@@ -44,6 +50,7 @@ Feature: (Re)Submitting individual assignments
     Then user should see 1 open task
 
   # Rubric viewing
+  @javascript
   Scenario: User can see a current assginment's rubric
     Given the assignment "is" initialized active
     Given the user logs in
@@ -51,6 +58,7 @@ Feature: (Re)Submitting individual assignments
      Then the user opens the 'Grading' tab
       And the shown rubric matches the assignment rubric
 
+  @javascript
   Scenario: User can see a past assginment's rubric
     Given the course is shifted 1 'years' into the 'past'
     Given the assignment "is" initialized active
@@ -59,6 +67,7 @@ Feature: (Re)Submitting individual assignments
      Then the user opens the 'Grading' tab
       And the shown rubric matches the assignment rubric
 
+  @javascript
   Scenario: User can see an upcoming assginment's rubric
     Given the course is shifted 2 'months' into the 'future'
     Given the assignment "is" initialized active
@@ -68,6 +77,7 @@ Feature: (Re)Submitting individual assignments
      Then the user opens the 'Grading' tab
       And the shown rubric matches the assignment rubric
 
+  @javascript
   Scenario: User can not submit text to an assignment that is closed
     Given the course is shifted 2 'months' into the 'future'
     Given the assignment "is" initialized active
@@ -77,6 +87,7 @@ Feature: (Re)Submitting individual assignments
 
 
   # Submit assignments
+  @javascript
   Scenario: User can open and submit text to an assignment
     Given the assignment "is" initialized active
     Given the user logs in
@@ -90,6 +101,7 @@ Feature: (Re)Submitting individual assignments
       And the submission has no group
       And the submission is attached to the user
 
+  @javascript
   Scenario: User can open and submit a file to an assignment
       And the init assignment 'does not' accept 'text'
       And the init assignment 'does' accept 'files'
@@ -105,6 +117,7 @@ Feature: (Re)Submitting individual assignments
       And the submission has no group
       And the submission is attached to the user
 
+  @javascript
   Scenario: User can open and submit a link to an assignment
       And the init assignment 'does not' accept 'text'
       And the init assignment 'does' accept 'links'
@@ -120,6 +133,7 @@ Feature: (Re)Submitting individual assignments
       And the submission has no group
       And the submission is attached to the user
 
+  @javascript
   Scenario: User can open and submit files to an assignment
       And the init assignment 'does not' accept 'text'
       And the init assignment 'does' accept 'files'
@@ -136,6 +150,7 @@ Feature: (Re)Submitting individual assignments
       And the submission has no group
       And the submission is attached to the user
 
+  @javascript
   Scenario: User can open and submit a combo to an assignment
       And the init assignment 'does' accept 'links'
       And the init assignment 'does' accept 'files'
@@ -154,6 +169,7 @@ Feature: (Re)Submitting individual assignments
       And the submission is attached to the user
 
   # Deadline enforcement
+  @javascript
   Scenario: User can submit a combo to an assignment before the first deadline
       And the init assignment 'does' accept 'links'
       And the init assignment 'does' accept 'files'
@@ -173,6 +189,7 @@ Feature: (Re)Submitting individual assignments
       And the submission has no group
       And the submission is attached to the user
     
+  @javascript
   Scenario: User can submit a combo to an assignment after the first deadline but before the final
       And the init assignment 'does' accept 'links'
       And the init assignment 'does' accept 'files'
@@ -190,6 +207,7 @@ Feature: (Re)Submitting individual assignments
       And the submission has no group
       And the submission is attached to the user
 
+  @javascript
   Scenario: User cannot submit to an assignment after the final deadline
       And the init assignment 'does' accept 'links'
       And the assignment already has 1 submission from the user
@@ -198,6 +216,7 @@ Feature: (Re)Submitting individual assignments
      Then the user opens the 'assignment' task
      Then the 'Submssions' tab 'is not' enabled
 
+  @javascript
   Scenario: User can submit and re-submit to combo assignment
       And the init assignment 'does' accept 'links'
       And the init assignment 'does' accept 'files'
@@ -215,6 +234,7 @@ Feature: (Re)Submitting individual assignments
       And the submission has no group
       And the submission is attached to the user
 
+  @javascript
   Scenario: User can withdraw a submitted assignment
       And the assignment already has 4 submission from the user
       And today is after the final deadline
@@ -225,6 +245,7 @@ Feature: (Re)Submitting individual assignments
      Then the assignment has 1 'withdrawn' submission
      Then the assignment has 3 'active' submission
 
+  @javascript
   Scenario: User cannot withdraw a graded assignment
       And the assignment already has 4 submission from the user
       And assignment 2 'is' graded

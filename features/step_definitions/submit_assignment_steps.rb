@@ -15,7 +15,7 @@ Given('the init assignment {string} accept {string}') do |does_or_doesnt, sub_ty
     case sub_type.downcase
     when 'text'
         @assignment.text_sub = 'does' == does_or_doesnt
-    when 'link'
+    when 'links'
         @assignment.link_sub = 'does' == does_or_doesnt
     when 'files'
         @assignment.file_sub = 'does' == does_or_doesnt
