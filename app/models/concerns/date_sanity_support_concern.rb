@@ -4,6 +4,7 @@ module DateSanitySupportConcern
   extend ActiveSupport::Concern
 
   included do
+    before_validation :init_dates
     validate :date_sanity
   end
 

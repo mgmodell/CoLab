@@ -11,7 +11,7 @@ class Assignment < ApplicationRecord
   validates :name, :end_date, :start_date, presence: true
   before_create :anonymize
 
-  before_validation :init_dates # From DateSanitySupportConcern
+  # before_validation :init_dates # From DateSanitySupportConcern
 
   validate :submission_type
 

@@ -10,7 +10,7 @@ Feature: (Re)Submitting individual assignments
     Given the project has a group with 4 confirmed users
     Given the course has an assignment
     Given the assignment "is" initialised as group-capable
-    Given the assignment opening is "2/29/1980" and close is "7/10/2008"
+    Given the assignment opening is "one month ago" and close is "one month from now"
     Given there exists a rubric published by another user
     Given the existing rubric is attached to this assignment
     Given the assignment "is" active

@@ -28,6 +28,7 @@ Given('the course has an assignment named {string} with an {string} rubric named
 end
 
 Given('the assignment opening is {string} and close is {string}') do |start_date_string, end_date_string|
+  puts Chronic.parse( start_date_string )
   @assignment.start_date = Chronic.parse(start_date_string)
   @assignment.end_date = Chronic.parse(end_date_string)
 
@@ -114,7 +115,7 @@ Then('the assignment {string} active') do |is_active|
 end
 
 Then('the assignment {string} initialised as group-capable') do |is_group_enabled|
-  @assignment.group_enabled.should eq('is' == is_group_enabled)
+  @assignment.group_enabled = 'is' == is_group_enabled
 end
 
 Then('the user sets the assignment project to the course project') do
