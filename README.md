@@ -1,4 +1,5 @@
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/mgmodell/CoLab?style=flat-square)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mgmodell/CoLab?style=flat-square)
+![GitHub language count](https://img.shields.io/github/languages/count/mgmodell/CoLab)
 
 # README #
 
