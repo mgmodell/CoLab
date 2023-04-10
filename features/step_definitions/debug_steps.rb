@@ -21,10 +21,10 @@ end
 
 Then('the environment matches that set') do
   require 'socket'
-  puts  "Hostname       : #{Socket.gethostname}"
-  puts  "Git branch     : #{`git rev-parse --abbrev-ref HEAD`}"
-  puts  "Input RAILS_ENV: #{ENV['RAILS_ENV']}"
-  puts  "Rails.env      : #{Rails.env}"
+  log  "Hostname       : #{Socket.gethostname}"
+  log  "Git branch     : #{`git rev-parse --abbrev-ref HEAD`}"
+  log  "Input RAILS_ENV: #{ENV['RAILS_ENV']}"
+  log  "Rails.env      : #{Rails.env}"
   ENV['RAILS_ENV'].should eq Rails.env
 end
 
