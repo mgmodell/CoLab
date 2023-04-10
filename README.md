@@ -1,3 +1,5 @@
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/mgmodell/CoLab?style=flat-square)
+
 # README #
 
 The CoLab system provides instructor support for collaborative learning
