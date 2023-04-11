@@ -51,6 +51,9 @@ LOAD=false
 WATCH=true
 STARTUP=false
 
+# Set up a variable for the container
+export HOSTNAME=$(hostname -s)
+
 if lsof -Pi :31337 -sTCP:LISTEN -t >/dev/null; then
   echo "DB Running"
 else

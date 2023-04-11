@@ -37,6 +37,10 @@ RUN_TERM=false
 SHOW_OUTPUT=false
 DROP_SUPPORT=false
 RUN=false
+
+# Set up a variable for the container
+export HOSTNAME=$(hostname -s)
+
 while getopts "soxb:clndf:rteh" opt; do
   case $opt in
     x) # Open up a terminal

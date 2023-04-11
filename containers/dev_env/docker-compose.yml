@@ -2,6 +2,9 @@ version: "3.7"
 services:
   app:
     image: colab_dev_server
+    hostname: dev-serv-${HOSTNAME}
+    environment:
+      - PARENT=${HOSTNAME}
     ports:
       - "3000:3000"
       - "3035:3035"

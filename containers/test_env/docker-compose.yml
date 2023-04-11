@@ -2,7 +2,9 @@ version: "3.7"
 services:
   app:
     image: colab_tester
-    hostname: "test-server-${HOST}"
+    hostname: test-server-${HOSTNAME}
+    environment:
+      - PARENT=${HOSTNAME}
     volumes:
       - src:/home/colab/src/app
       - asdf-installs:/home/colab/.asdf/installs

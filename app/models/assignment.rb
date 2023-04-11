@@ -30,7 +30,7 @@ class Assignment < ApplicationRecord
     I18n.t(:assignment)
   end
 
-  def get_type
+  def type
     I18n.t('Assignment')
   end
 
