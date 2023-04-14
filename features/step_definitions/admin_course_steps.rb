@@ -25,11 +25,15 @@ Then 'the user sets the start date to {string} and the end date to {string}' do 
     field.click
   end
 
-  new_year = Chronic.parse( start_date ).strftime( '%Y' )
-  new_date = Chronic.parse(start_date).strftime('%m%d')
-  send_keys new_year
-  send_keys :left, :left
-  send_keys new_date
+  if !start_date.blank?
+    new_year = Chronic.parse( start_date ).strftime( '%Y' )
+    new_date = Chronic.parse(start_date).strftime('%m%d')
+    send_keys new_year
+    send_keys :left, :left
+    send_keys new_date
+  else
+    send_keys :left, :left, :delete, :tab, :delete, :tab, :delete
+  end
 
   label = 'Course End Date'
   begin
@@ -39,11 +43,15 @@ Then 'the user sets the start date to {string} and the end date to {string}' do 
     field = find( :xpath, "//input[@id='#{field_id}']")
     field.click
   end
-  new_year = Chronic.parse( end_date ).strftime( '%Y' )
-  new_date = Chronic.parse(end_date).strftime('%m%d')
-  send_keys new_year
-  send_keys :left, :left
-  send_keys new_date
+  if !end_date.blank?
+    new_year = Chronic.parse( end_date ).strftime( '%Y' )
+    new_date = Chronic.parse(end_date).strftime('%m%d')
+    send_keys new_year
+    send_keys :left, :left
+    send_keys new_date
+  else
+    send_keys :left, :left, :delete, :tab, :delete, :tab, :delete
+  end
 end
 
 Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
