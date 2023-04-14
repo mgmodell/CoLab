@@ -144,7 +144,8 @@ Then(/^the user sets the project "([^"]*)" date to "([^"]*)"$/) do |date_field_p
   day_month = Chronic.parse(date_value).strftime('%m%d')
   # byebug unless 'start' == date_field_prefix
   send_keys new_year
-  send_keys :left, :left, day_month
+  send_keys :left, :left
+  send_keys day_month
 end
 
 Then(/^the user selects "([^"]*)" as "([^"]*)"$/) do |value, field|

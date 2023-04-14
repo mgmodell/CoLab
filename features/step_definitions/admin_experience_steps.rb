@@ -15,8 +15,11 @@ Then 'the user sets the experience {string} date to {string}' do |ordinal, date_
       field = find( :xpath, "//input[@id='#{field_id}']")
       field.click
     end
-    new_date = Chronic.parse(date_value).strftime('%m%d%Y')
-    send_keys :left, :left, new_date
+    new_year = Chronic.parse(date_value).strftime('%Y')
+    new_date = Chronic.parse(date_value).strftime('%m%d')
+    send_keys new_year
+    send_keys :left, :left
+    send_keys new_date
   when 'end'
     field_name = 'Experience End Date'
     begin
@@ -26,8 +29,11 @@ Then 'the user sets the experience {string} date to {string}' do |ordinal, date_
       field = find( :xpath, "//input[@id='#{field_id}']")
       field.click
     end
-    new_date = Chronic.parse(date_value).strftime('%m%d%Y')
-    send_keys :left, :left, new_date
+    new_year = Chronic.parse(date_value).strftime('%Y')
+    new_date = Chronic.parse(date_value).strftime('%m%d')
+    send_keys new_year
+    send_keys :left, :left
+    send_keys new_date
   else
     log "Invalid ordinal: #{ordinal}"
     pending

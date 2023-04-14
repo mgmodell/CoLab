@@ -11,8 +11,12 @@ Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_pre
     field = find( :xpath, "//input[@id='#{field_id}']")
     field.click
   end
-  new_date = Chronic.parse(date_value).strftime('%m%d%Y')
-  send_keys :left, :left, new_date
+  new_year = Chronic.parse(date_value).strftime('%Y')
+  # Be sure to enter the year first or leap years will break
+  new_date = Chronic.parse(date_value).strftime('%m%d')
+  send_keys new_year
+  send_keys :left, :left
+  send_keys new_date
 end
 
 Then(/^the user clicks "([^"]*)" on the existing bingo game$/) do |_action|
