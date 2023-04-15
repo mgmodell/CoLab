@@ -31,8 +31,6 @@ Given('the assignment opening is {string} and close is {string}') do |start_date
   @assignment.start_date = Chronic.parse(start_date_string)
   @assignment.end_date = Chronic.parse(end_date_string)
 
-  puts Chronic.parse(start_date_string)
-  puts Chronic.parse(end_date_string)
   @assignment.save
   log @assignment.errors.full_messages if @assignment.errors.present?
 end

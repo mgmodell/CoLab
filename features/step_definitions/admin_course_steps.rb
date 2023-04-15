@@ -226,6 +226,9 @@ Then 'retrieve the {int} course {string}' do |index, activity|
   when 'bingo'
     @orig_bingo = @bingo
     @bingo = @course.reload.bingo_games[index - 1]
+  when 'assignment'
+    @orig_assignment = @assignment
+    @assignment = @course.reload.assignments[index - 1]
   end
 end
 
