@@ -16,7 +16,9 @@ module DateSanitySupportConcern
   def date_sanity
     return if start_date.nil? || end_date.nil?
 
-    errors.add(:start_date, 'The start date must come before the end date') if start_date > end_date
+    if start_date.after? end_date
+      errors.add(:start_date, "The start date of the #{model_name.human} must come before the end date")
+    end
     # Check if the dates are within the course
     unless start_date.nil? || end_date.nil?
       if start_date < course.start_date

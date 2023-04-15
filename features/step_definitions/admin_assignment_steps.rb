@@ -28,10 +28,11 @@ Given('the course has an assignment named {string} with an {string} rubric named
 end
 
 Given('the assignment opening is {string} and close is {string}') do |start_date_string, end_date_string|
-  puts Chronic.parse( start_date_string )
   @assignment.start_date = Chronic.parse(start_date_string)
   @assignment.end_date = Chronic.parse(end_date_string)
 
+  puts Chronic.parse( start_date_string )
+  puts Chronic.parse( end_date_string )
   @assignment.save
   log @assignment.errors.full_messages if @assignment.errors.present?
 end
@@ -169,4 +170,16 @@ end
 Then('the assignment rubric is {string} version {int}') do |rubric_name, rubric_version|
   @assignment.rubric.name.should eq rubric_name
   @assignment.rubric.version.should eq rubric_version
+end
+
+Then('the new assignment metadata is the same as the old') do
+  @assignment.name.should eq @orig_assignment.name
+  @assignment.description.should eq @orig_assignment.description
+  @assignment.rubric.should eq @orig_assignment.rubric
+  @assignment.file_sub.should eq @orig_assignment.file_sub
+  @assignment.link_sub.should eq @orig_assignment.link_sub
+  @assignment.text_sub.should eq @orig_assignment.text_sub
+  @assignment.passing.should eq @orig_assignment.passing
+  @assignment.group_enabled.should eq @orig_assignment.group_enabled
+  @assignment.project.should eq @orig_assignment.project
 end

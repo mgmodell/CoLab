@@ -347,6 +347,8 @@ Feature: Course Administration
     Given the Bingo! project is the course's project
     Given the Bingo! percent discount is 30
     Given the Bingo! is active
+    Given the course has an assignment named "Sack Troy" with an "unpublished" rubric named "Trojan War Diorama"
+    Given the assignment opening is "2/11/1985" and close is "7/12/2003"
      And the course start date is "5/10/1976" and the end date is "11/01/2012"
     Given the user is the instructor for the course
     Given the user is an admin
@@ -387,6 +389,11 @@ Feature: Course Administration
     Then the new bingo metadata is the same as the old
      And the 'bingo' is 'not' active
     Then the 'bingo' dates are '5/30/1976' and '7/30/1976'
+    #check the assignment
+    Then retrieve the 1 course 'assignment'
+    Then the new assignment metadata is the same as the old
+     And the 'assignment' is 'not' active
+    Then the 'assignment' dates are '2/21/1985' and '7/22/2003'
 
   @javascript
   Scenario: Admin duplicates an existing course with a bingo but no project

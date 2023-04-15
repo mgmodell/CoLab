@@ -160,6 +160,25 @@ class Course < ApplicationRecord
         new_obj.save!
       end
 
+      # copy the assignments
+      assignments.each do |assignment|
+        new_obj = new_course.assignments.new(
+          name: assignment.name,
+          description: assignment.description,
+          start_date: assignment.start_date.advance( days: date_difference ),
+          end_date: assignment.end_date.advance( days: date_difference ),
+          rubric: assignment.rubric,
+          file_sub: assignment.file_sub,
+          link_sub: assignment.link_sub,
+          text_sub: assignment.text_sub,
+          passing: assignment.passing,
+          group_enabled: assignment.group_enabled,
+          project: proj_hash[assignment.project]
+        )
+
+        new_obj.save!
+      end
+
       new_course.save!
     end
     new_course

@@ -39,6 +39,7 @@ class AssignmentsController < ApplicationController
       else
         errors = @assignment.errors
         errors.add( :mail, I18n.t( 'assignments.errors.create_failed') )
+        puts @assignment.inspect
         puts @assignment.errors.full_messages
         format.json { render json: standardized_response(@assignment, @assignment.errors) }
       end

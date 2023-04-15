@@ -95,7 +95,7 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.744.0)
+    aws-partitions (1.748.0)
     aws-sdk-core (3.171.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -218,7 +218,7 @@ GEM
     errbase (0.2.2)
     erubi (1.12.0)
     execjs (2.8.1)
-    faker (3.1.1)
+    faker (3.2.0)
       i18n (>= 1.8.11, < 2)
     faraday (2.7.4)
       faraday-net_http (>= 2.0, < 3.1)
@@ -294,14 +294,14 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.14.2)
+    nokogiri (1.14.3)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    nokogiri (1.14.2-aarch64-linux)
+    nokogiri (1.14.3-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.14.2-arm64-darwin)
+    nokogiri (1.14.3-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.14.2-x86_64-linux)
+    nokogiri (1.14.3-x86_64-linux)
       racc (~> 1.4)
     oauth2 (2.0.9)
       faraday (>= 0.17.3, < 3.0)
@@ -351,7 +351,7 @@ GEM
       nio4r (~> 2.0)
     racc (1.6.2)
     rack (2.2.6.4)
-    rack-protection (3.0.5)
+    rack-protection (3.0.6)
       rack
     rack-proxy (0.7.6)
       rack
@@ -439,7 +439,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-support (3.12.0)
-    rubocop (1.49.0)
+    rubocop (1.50.1)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.2.0.0)
@@ -512,7 +512,7 @@ GEM
       yard (~> 0.9, >= 0.9.24)
     spring (4.1.1)
     stopwords-filter2 (0.1.0)
-    stringio (3.0.5)
+    stringio (3.0.6)
     sys-uname (1.2.3)
       ffi (~> 1.1)
     terrapin (0.6.0)
@@ -551,7 +551,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yard (0.9.32)
+    yard (0.9.34)
     zeitwerk (2.6.7)
 
 PLATFORMS
@@ -608,7 +608,7 @@ DEPENDENCIES
   reek
   report_builder
   rspec
-  rubocop (~> 1.49.0)
+  rubocop (~> 1.50.1)
   rubocop-performance
   rubocop-rails
   rubocop-thread_safety

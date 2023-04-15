@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	10.10.2-MariaDB
+-- Server version	10.11.2-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -205,8 +205,8 @@ CREATE TABLE `assignments` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
   `rubric_id` bigint(20) DEFAULT NULL,
   `group_enabled` tinyint(1) NOT NULL DEFAULT 0,
   `course_id` int(11) NOT NULL,
@@ -4959,7 +4959,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20230321202429'),
 ('20230321202810'),
 ('20230321215452'),
-('20230322001413');
+('20230322001413'),
+('20230415194655');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5492,4 +5493,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-21 20:24:52
+-- Dump completed on 2023-04-15 15:51:15

@@ -192,10 +192,13 @@ Then 'set the new course start date to {string}' do |new_date|
   label = find(:xpath, "//label[text()='New course start date?']")
   elem = find(:xpath, "//input[@id='#{label[:for]}']")
 
-  @new_date = Chronic.parse(new_date)
+  new_date = Chronic.parse(new_date)
 
   elem.click
-  elem.set(@new_date.strftime('%m/%d/%Y'))
+  send_keys new_date.strftime( '%Y' )
+  send_keys :left, :left
+  send_keys new_date.strftime( '%m/%d')
+
 end
 
 Then 'the course has {int} instructor user' do |instructor_count|
