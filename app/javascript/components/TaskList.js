@@ -185,7 +185,6 @@ export default function TaskList(props) {
             const link = props.tasks[rowState.dataIndex].link;
             if (null != link) {
               // window.location.href = link;
-              console.log( 'going to', link, props.tasks[rowState.dataIndex]  );
               navigate(link);
             }
           },

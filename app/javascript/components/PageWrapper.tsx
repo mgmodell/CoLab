@@ -92,13 +92,13 @@ export default function PageWrapper(props) {
                   />
                   {/* Perhaps subgroup under Bingo */}
                   <Route
-                    path='bingo/*'
+                    path="bingo/*"
                     element={
                       <RequireAuth>
                         <BingoShell />
                       </RequireAuth>
                     }
-                    />
+                  />
                   {/* Perhaps subgroup under Experience */}
                   <Route
                     path={`experience/:experienceId`}

@@ -101,9 +101,9 @@ export default function AssignmentDataAdmin(props) {
   const [assignmentStartDate, setAssignmentStartDate] = useState(
     DateTime.local()
   );
-  const [assignmentFileSub, setAssignmentFileSub] = useState( false );
-  const [assignmentLinkSub, setAssignmentLinkSub] = useState( false );
-  const [assignmentTextSub, setAssignmentTextSub] = useState( false );
+  const [assignmentFileSub, setAssignmentFileSub] = useState(false);
+  const [assignmentLinkSub, setAssignmentLinkSub] = useState(false);
+  const [assignmentTextSub, setAssignmentTextSub] = useState(false);
   //Group parameters
   const [assignmentGroupOption, setAssignmentGroupOption] = useState(false);
   const [assignmentGroupProjectId, setAssignmentGroupProjectId] = useState(-1);
@@ -128,22 +128,24 @@ export default function AssignmentDataAdmin(props) {
     assignmentGroupProjectId
   ]);
 
-  const updateSubmissionTypeSelection = ( event: React.ChangeEvent<HTMLInputElement>, fieldName ) =>{
-      switch( fieldName ){
-        case 'text':
-          setAssignmentTextSub( !assignmentTextSub );
-          break;
-        case 'file':
-          setAssignmentFileSub( !assignmentFileSub );
-          break;
-        case 'link':
-          setAssignmentLinkSub( !assignmentLinkSub );
-          break;
-        default:
-          console.log( `No such submission type: ${fieldName}`);
-      }
-
-  }
+  const updateSubmissionTypeSelection = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    fieldName
+  ) => {
+    switch (fieldName) {
+      case "text":
+        setAssignmentTextSub(!assignmentTextSub);
+        break;
+      case "file":
+        setAssignmentFileSub(!assignmentFileSub);
+        break;
+      case "link":
+        setAssignmentLinkSub(!assignmentLinkSub);
+        break;
+      default:
+        console.log(`No such submission type: ${fieldName}`);
+    }
+  };
 
   const saveAssignment = () => {
     const method = null === assignmentId ? "POST" : "PATCH";
@@ -156,7 +158,14 @@ export default function AssignmentDataAdmin(props) {
       ".json";
 
     // Save
-    console.log( method, url, assignmentName, assignmentTextSub, assignmentGroupOption, assignmentRubricId );
+    console.log(
+      method,
+      url,
+      assignmentName,
+      assignmentTextSub,
+      assignmentGroupOption,
+      assignmentRubricId
+    );
     setSaveStatus(t("edit.status_saving"));
     axios({
       url: url,
@@ -183,7 +192,7 @@ export default function AssignmentDataAdmin(props) {
     })
       .then(response => {
         const data = response.data;
-        setAssignmentData( data );
+        setAssignmentData(data);
         //TODO: handle save errors
         setSaveStatus(data["notice"]);
         setDirty(false);
@@ -214,48 +223,45 @@ export default function AssignmentDataAdmin(props) {
     }
   };
 
-  const setAssignmentData = (data)=>{
-        const projects = new Array({ id: -1, name: "None Selected" }).concat(
-          data.projects
-        );
-        setAssignmentProjects(projects);
-        const availableRubrics = new Array({
-          id: -1,
-          name: "None Selected",
-          version: 0
-        }).concat(data.rubrics);
-        setAvailableRubrics(availableRubrics);
+  const setAssignmentData = data => {
+    const projects = new Array({ id: -1, name: "None Selected" }).concat(
+      data.projects
+    );
+    setAssignmentProjects(projects);
+    const availableRubrics = new Array({
+      id: -1,
+      name: "None Selected",
+      version: 0
+    }).concat(data.rubrics);
+    setAvailableRubrics(availableRubrics);
 
-        //Set the bingo_game stuff
-        const assignment = data.assignment;
-        setAssignmentId(assignment.id);
-        setAssignmentName(assignment.name || "");
-        setAssignmentDescriptionEditor(
-          EditorState.createWithContent(
-            ContentState.createFromBlockArray(
-              htmlToDraft(assignment.description || "").contentBlocks
-            )
-          )
-        );
-        setAssignmentActive(assignment.active || false);
-        var receivedDate = DateTime.fromISO(assignment.start_date).setZone(
-          assignment.course.timezone
-        );
-        setAssignmentStartDate(receivedDate);
-        setAssignmentEndDate(
-          DateTime.fromISO(assignment.end_date).setZone(
-            assignment.course.timezone
-          )
-        );
-        setAssignmentFileSub( assignment.file_sub );
-        setAssignmentLinkSub( assignment.link_sub );
-        setAssignmentTextSub( assignment.text_sub );
-        //Group options
-        setAssignmentGroupOption(assignment.group_enabled || false);
-        setAssignmentGroupProjectId(assignment.project_id || -1);
-        setAssignmentRubricId(assignment.rubric_id || -1);
-
-  }
+    //Set the bingo_game stuff
+    const assignment = data.assignment;
+    setAssignmentId(assignment.id);
+    setAssignmentName(assignment.name || "");
+    setAssignmentDescriptionEditor(
+      EditorState.createWithContent(
+        ContentState.createFromBlockArray(
+          htmlToDraft(assignment.description || "").contentBlocks
+        )
+      )
+    );
+    setAssignmentActive(assignment.active || false);
+    var receivedDate = DateTime.fromISO(assignment.start_date).setZone(
+      assignment.course.timezone
+    );
+    setAssignmentStartDate(receivedDate);
+    setAssignmentEndDate(
+      DateTime.fromISO(assignment.end_date).setZone(assignment.course.timezone)
+    );
+    setAssignmentFileSub(assignment.file_sub);
+    setAssignmentLinkSub(assignment.link_sub);
+    setAssignmentTextSub(assignment.text_sub);
+    //Group options
+    setAssignmentGroupOption(assignment.group_enabled || false);
+    setAssignmentGroupProjectId(assignment.project_id || -1);
+    setAssignmentRubricId(assignment.rubric_id || -1);
+  };
   const getAssignmentData = () => {
     setDirty(true);
     dispatch(startTask());
@@ -269,8 +275,8 @@ export default function AssignmentDataAdmin(props) {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        console.log( data );
-        setAssignmentData( data );
+        console.log(data);
+        setAssignmentData(data);
 
         setDirty(false);
         dispatch(endTask());
@@ -407,39 +413,53 @@ export default function AssignmentDataAdmin(props) {
                 </Grid>
                 <Grid item xs={6}>
                   <FormControl
-                    component='fieldset'
+                    component="fieldset"
                     variant="standard"
-                    error={messages['submission_types']}
-                    >
-                    <FormLabel component='legend'>{t('edit.sub_type_select')}</FormLabel>
+                    error={messages["submission_types"]}
+                  >
+                    <FormLabel component="legend">
+                      {t("edit.sub_type_select")}
+                    </FormLabel>
                     <FormGroup>
                       <FormControlLabel
                         control={
-                          <Checkbox checked={assignmentTextSub}
-                            onChange={(event)=>updateSubmissionTypeSelection(event,'text')}
-                            id='sub_text'
-                            name='sub_text'/>
+                          <Checkbox
+                            checked={assignmentTextSub}
+                            onChange={event =>
+                              updateSubmissionTypeSelection(event, "text")
+                            }
+                            id="sub_text"
+                            name="sub_text"
+                          />
                         }
-                        label={t('edit.text_sub')}
-                        />
+                        label={t("edit.text_sub")}
+                      />
                       <FormControlLabel
                         control={
-                          <Checkbox checked={assignmentLinkSub}
-                            onChange={(event)=>updateSubmissionTypeSelection(event,'link')}
-                            id='sub_link'
-                            name='sub_link'/>
+                          <Checkbox
+                            checked={assignmentLinkSub}
+                            onChange={event =>
+                              updateSubmissionTypeSelection(event, "link")
+                            }
+                            id="sub_link"
+                            name="sub_link"
+                          />
                         }
-                        label={t('edit.link_sub')}
-                        />
+                        label={t("edit.link_sub")}
+                      />
                       <FormControlLabel
                         control={
-                          <Checkbox checked={assignmentFileSub}
-                            onChange={(event)=>updateSubmissionTypeSelection(event,'file')}
-                            id='sub_file'
-                            name='sub_file'/>
+                          <Checkbox
+                            checked={assignmentFileSub}
+                            onChange={event =>
+                              updateSubmissionTypeSelection(event, "file")
+                            }
+                            id="sub_file"
+                            name="sub_file"
+                          />
                         }
-                        label={t('edit.file_sub')}
-                        />
+                        label={t("edit.file_sub")}
+                      />
                     </FormGroup>
                   </FormControl>
                 </Grid>
@@ -506,7 +526,7 @@ export default function AssignmentDataAdmin(props) {
                       value={assignmentEndDate}
                       onChange={setAssignmentEndDate}
                       slot={{
-                        TextField: TextField,
+                        TextField: TextField
                       }}
                       slotProps={{
                         textField: {

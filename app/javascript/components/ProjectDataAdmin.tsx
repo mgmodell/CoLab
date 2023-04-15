@@ -37,7 +37,7 @@ const ChartContainer = React.lazy(() => import("./Reports/ChartContainer"));
 
 export default function ProjectDataAdmin(props) {
   const category = "project";
-  const {t, i18n} = useTranslation( `${category}s` );
+  const { t, i18n } = useTranslation(`${category}s`);
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
   );
@@ -126,9 +126,6 @@ export default function ProjectDataAdmin(props) {
       (null == projectId ? courseIdParam : projectId) +
       ".json";
 
-    console.log( projectEndDate );
-    console.log( projectEndDate.toJSDate( ) );
-    console.log( projectEndDate.zoneName );
     axios({
       method: method,
       url: url,
@@ -258,7 +255,7 @@ export default function ProjectDataAdmin(props) {
           autoOk={true}
           format="MM/dd/yyyy"
           margin="normal"
-          label={t('start_date_lbl')}
+          label={t("start_date_lbl")}
           value={projectStartDate}
           onChange={setProjectStartDate}
           error={null != messages.start_date}
@@ -272,16 +269,16 @@ export default function ProjectDataAdmin(props) {
             }
           }}
         />
-      {null != messages.start_date ? (
-        <FormHelperText error={true}>{messages.start_date}</FormHelperText>
-      ) : null}
+        {null != messages.start_date ? (
+          <FormHelperText error={true}>{messages.start_date}</FormHelperText>
+        ) : null}
 
         <DatePicker
           variant="inline"
           autoOk={true}
           format="MM/dd/yyyy"
           margin="normal"
-          label={t('end_date_lbl')}
+          label={t("end_date_lbl")}
           value={projectEndDate}
           onChange={setProjectEndDate}
           error={null != messages.end_date}
