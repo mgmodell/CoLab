@@ -31,8 +31,8 @@ Given('the assignment opening is {string} and close is {string}') do |start_date
   @assignment.start_date = Chronic.parse(start_date_string)
   @assignment.end_date = Chronic.parse(end_date_string)
 
-  puts Chronic.parse( start_date_string )
-  puts Chronic.parse( end_date_string )
+  puts Chronic.parse(start_date_string)
+  puts Chronic.parse(end_date_string)
   @assignment.save
   log @assignment.errors.full_messages if @assignment.errors.present?
 end
@@ -47,9 +47,9 @@ Then('the user sets the assignment {string} to {string}') do |field_name, value|
     label = 'Start Date'
     begin
       find(:xpath, "//label[text()='#{label}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       field_id = find(:xpath, "//label[text()='#{label}']")['for']
-      field = find( :xpath, "//input[@id='#{field_id}']")
+      field = find(:xpath, "//input[@id='#{field_id}']")
       field.click
     end
     new_year = Chronic.parse(value).strftime('%Y')
@@ -61,9 +61,9 @@ Then('the user sets the assignment {string} to {string}') do |field_name, value|
     label = 'Close Date'
     begin
       find(:xpath, "//label[text()='#{label}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       field_id = find(:xpath, "//label[text()='#{label}']")['for']
-      field = find( :xpath, "//input[@id='#{field_id}']")
+      field = find(:xpath, "//input[@id='#{field_id}']")
       field.click
     end
     new_year = Chronic.parse(value).strftime('%Y')
@@ -72,7 +72,7 @@ Then('the user sets the assignment {string} to {string}') do |field_name, value|
     send_keys :left, :left
     send_keys new_date
   when 'link'
-    if 'true' == value  
+    if 'true' == value
       check 'sub_link', visible: :all
     else
       uncheck 'sub_link', visible: :all

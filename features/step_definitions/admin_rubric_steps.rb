@@ -443,5 +443,4 @@ Given('the existing rubric is attached to this assignment') do
   @assignment.rubric = @rubric
   @assignment.save
   log @assignment.errors.full_messages if @assignment.errors.present?
-
 end

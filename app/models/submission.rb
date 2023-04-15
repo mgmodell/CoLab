@@ -12,35 +12,34 @@ class Submission < ApplicationRecord
   private
 
   def group_valid
-    if self.assignment.group_option && group.empty?
-      errors.add( :group, I18n.t( 'submissions.group_required'))
-    end
+    return unless assignment.group_option && group.empty?
+
+    errors.add(:group, I18n.t('submissions.group_required'))
   end
 
   def can_submit
-    if self.submitted.nil? && self.withdrawn.nil? &&
-       self.submitted_was.nil? && self.withdrawn_was.nil?
+    if submitted.nil? && withdrawn.nil? &&
+       submitted_was.nil? && withdrawn_was.nil?
 
-      return
+      nil
 
-    elsif self.submitted_was == nil && self.submitted != nil
+    elsif submitted_was.nil? && !submitted.nil?
       self.withdrawn = nil
       self.submitted = current
       found = false
-      found ||= (self.assignment.text_sub && !self.sub_text.blank?)
-      found ||= (self.assignment.link_sub && !self.sub_link.blank?)
-      found ||= (self.assignment.file_sub && self.sub_files.size > 0)
-      errors.add :main, I18n.t( 'submissions.nothing_submitted')
-    elsif self.withdrawn_was == nil && self.withdrawn != nil
-      if self.submitted.nil?
-        errors.add :main, I18n.t( 'submissions.errors.withdraw_requires_submit')
-      elsif self.changes.size > 1
-        errors.add :main, I18n.t( 'submissions.errors.no_changes_on_withdrawal')
+      found ||= (assignment.text_sub && sub_text.present?)
+      found ||= (assignment.link_sub && sub_link.present?)
+      found ||= (assignment.file_sub && sub_files.size > 0)
+      errors.add :main, I18n.t('submissions.nothing_submitted')
+    elsif withdrawn_was.nil? && !withdrawn.nil?
+      if submitted.nil?
+        errors.add :main, I18n.t('submissions.errors.withdraw_requires_submit')
+      elsif changes.size > 1
+        errors.add :main, I18n.t('submissions.errors.no_changes_on_withdrawal')
       end
       self.withdrawn = current
-    elsif !self.submitted_was.nil?
-      errors.add :main, I18n.t( 'submissions.errors.no_changes_once_submitted')
+    elsif !submitted_was.nil?
+      errors.add :main, I18n.t('submissions.errors.no_changes_once_submitted')
     end
-
   end
 end

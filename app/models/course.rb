@@ -165,8 +165,8 @@ class Course < ApplicationRecord
         new_obj = new_course.assignments.new(
           name: assignment.name,
           description: assignment.description,
-          start_date: assignment.start_date.advance( days: date_difference ),
-          end_date: assignment.end_date.advance( days: date_difference ),
+          start_date: assignment.start_date.advance(days: date_difference),
+          end_date: assignment.end_date.advance(days: date_difference),
           rubric: assignment.rubric,
           file_sub: assignment.file_sub,
           link_sub: assignment.link_sub,

@@ -15,18 +15,17 @@ Given "the user's school is {string}" do |school_name|
 end
 
 Then 'the user sets the start date to {string} and the end date to {string}' do |start_date, end_date|
-
   label = 'Course Start Date'
   begin
     find(:xpath, "//label[text()='#{label}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
     field_id = find(:xpath, "//label[text()='#{label}']")['for']
-    field = find( :xpath, "//input[@id='#{field_id}']")
+    field = find(:xpath, "//input[@id='#{field_id}']")
     field.click
   end
 
-  if !start_date.blank?
-    new_year = Chronic.parse( start_date ).strftime( '%Y' )
+  if start_date.present?
+    new_year = Chronic.parse(start_date).strftime('%Y')
     new_date = Chronic.parse(start_date).strftime('%m%d')
     send_keys new_year
     send_keys :left, :left
@@ -38,13 +37,13 @@ Then 'the user sets the start date to {string} and the end date to {string}' do 
   label = 'Course End Date'
   begin
     find(:xpath, "//label[text()='#{label}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
     field_id = find(:xpath, "//label[text()='#{label}']")['for']
-    field = find( :xpath, "//input[@id='#{field_id}']")
+    field = find(:xpath, "//input[@id='#{field_id}']")
     field.click
   end
-  if !end_date.blank?
-    new_year = Chronic.parse( end_date ).strftime( '%Y' )
+  if end_date.present?
+    new_year = Chronic.parse(end_date).strftime('%Y')
     new_date = Chronic.parse(end_date).strftime('%m%d')
     send_keys new_year
     send_keys :left, :left
@@ -195,10 +194,9 @@ Then 'set the new course start date to {string}' do |new_date|
   new_date = Chronic.parse(new_date)
 
   elem.click
-  send_keys new_date.strftime( '%Y' )
+  send_keys new_date.strftime('%Y')
   send_keys :left, :left
-  send_keys new_date.strftime( '%m/%d')
-
+  send_keys new_date.strftime('%m/%d')
 end
 
 Then 'the course has {int} instructor user' do |instructor_count|

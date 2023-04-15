@@ -49,7 +49,7 @@ class Assignment < ApplicationRecord
       type: :assignment,
       name: get_name(false),
       group_name: group.present? ? group.get_name(false) : nil,
-      status: status_for_user( current_user ),
+      status: status_for_user(current_user),
       course_name: course.get_name(false),
       start_date:,
       end_date:,
@@ -62,24 +62,23 @@ class Assignment < ApplicationRecord
 
   def get_submissions_for_user(current_user)
     if group_enabled
-      submissions.where( group: project.group_for_user( current_user ) ).order(:submitted)
+      submissions.where(group: project.group_for_user(current_user)).order(:submitted)
     else
-      submissions.where( user: current_user ).order(:submitted)
+      submissions.where(user: current_user).order(:submitted)
     end
   end
 
   def status_for_user(user)
     # TODO: check for graded
-    get_submissions_for_user( user ).size.positive?
+    get_submissions_for_user(user).size.positive?
   end
 
   private
 
   def submission_type
-    return if self.text_sub || self.link_sub || self.file_sub
+    return if text_sub || link_sub || file_sub
 
     errors.add(:submission_types, I18n.t('assignments.error.submission_type'))
-
   end
 
   def anonymize

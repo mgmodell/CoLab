@@ -307,12 +307,12 @@ class User < ApplicationRecord
     waiting_tasks.concat waiting_games
 
     waiting_assignments = Assignment.joins(course: :rosters)
-                             .includes({ course: :consent_form }, :project)
-                             .where('rosters.user_id': id, 'assignments.active': true)
-                             .where('rosters.role = ? OR rosters.role = ?',
-                                    Roster.roles[:enrolled_student], Roster.roles[:invited_student])
-                             .where('assignments.end_date >= ? AND assignments.start_date <= ?', cur_date, cur_date)
-                             .to_a
+                                    .includes({ course: :consent_form }, :project)
+                                    .where('rosters.user_id': id, 'assignments.active': true)
+                                    .where('rosters.role = ? OR rosters.role = ?',
+                                           Roster.roles[:enrolled_student], Roster.roles[:invited_student])
+                                    .where('assignments.end_date >= ? AND assignments.start_date <= ?', cur_date, cur_date)
+                                    .to_a
     waiting_tasks.concat waiting_assignments
 
     waiting_tasks.sort_by(&:end_date)

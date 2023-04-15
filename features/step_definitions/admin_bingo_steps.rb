@@ -6,9 +6,9 @@ Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_pre
   field_name = 'start' == date_field_prefix ? 'Open date' : 'Game date'
   begin
     find(:xpath, "//label[text()='#{field_name}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
     field_id = find(:xpath, "//label[text()='#{label}']")['for']
-    field = find( :xpath, "//input[@id='#{field_id}']")
+    field = find(:xpath, "//input[@id='#{field_id}']")
     field.click
   end
   new_year = Chronic.parse(date_value).strftime('%Y')

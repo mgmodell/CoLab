@@ -10,9 +10,9 @@ Then 'the user sets the experience {string} date to {string}' do |ordinal, date_
     field_name = 'Experience Start Date'
     begin
       find(:xpath, "//label[text()='#{field_name}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       field_id = find(:xpath, "//label[text()='#{label}']")['for']
-      field = find( :xpath, "//input[@id='#{field_id}']")
+      field = find(:xpath, "//input[@id='#{field_id}']")
       field.click
     end
     new_year = Chronic.parse(date_value).strftime('%Y')
@@ -24,9 +24,9 @@ Then 'the user sets the experience {string} date to {string}' do |ordinal, date_
     field_name = 'Experience End Date'
     begin
       find(:xpath, "//label[text()='#{field_name}']").click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => ecie
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       field_id = find(:xpath, "//label[text()='#{label}']")['for']
-      field = find( :xpath, "//input[@id='#{field_id}']")
+      field = find(:xpath, "//input[@id='#{field_id}']")
       field.click
     end
     new_year = Chronic.parse(date_value).strftime('%Y')
