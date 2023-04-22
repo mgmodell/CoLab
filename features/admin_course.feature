@@ -72,7 +72,6 @@ Feature: Course Administration
      And the course "Name" field is "Off"
      And the course "Number" field is "099"
      And the course "Description" field is "I love to eat peas and carrots all day long"
-     Then we debug
      And the course start date is "tomorrow" and the end date is "next month"
      And the course "timezone" is "Nairobi"
 

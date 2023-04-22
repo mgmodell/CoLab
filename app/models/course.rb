@@ -350,11 +350,8 @@ class Course < ApplicationRecord
 
     # TZ corrections
     if (start_date_changed? || timezone_changed?) && start_date.present?
-      puts start_date
       d = start_date.utc
-      puts d
       new_date = course_tz.local(d.year, d.month, d.day).beginning_of_day
-      puts new_date
       self.start_date = new_date
     end
 

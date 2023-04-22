@@ -188,16 +188,14 @@ export default function CourseDataAdmin(props) {
           setCourseConsentFormId(data.course.consent_form_id || 0);
           setCourseSchoolId(data.course.school_id);
 
-          console.log( data.course.start_date );
           var receivedDate = DateTime.fromISO(data.course.start_date).setZone(
-            courseTimezone
+            tz_hash[ courseTimezone]
           );
-          console.log( receivedDate );
 
           setCourseStartDate(receivedDate);
 
           receivedDate = DateTime.fromISO(data.course.end_date).setZone(
-            courseTimezone
+            tz_hash[ courseTimezone ]
           );
           setCourseEndDate(receivedDate);
 
@@ -214,9 +212,11 @@ export default function CourseDataAdmin(props) {
 
   useEffect(() => {
     if (schools.length > 0) {
+      const newSchoolTzHash = Object.assign( {}, schoolTzHash );
       schools.map(schoolData => {
-        schoolTzHash[schoolData.id] = schoolData.timezone;
+        newSchoolTzHash[schoolData.id] = schoolData.timezone;
       });
+      setSchoolTzHash( newSchoolTzHash );
     }
   }, [schools]);
 
