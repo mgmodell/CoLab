@@ -133,7 +133,6 @@ class Course < ApplicationRecord
 
       # copy the experiences
       experiences.each do |experience|
-        # puts "end date: #{experience.end_date.in_time_zone(course_tz)} => #{experience.end_date.advance(days: date_difference )}"
         new_obj = new_course.experiences.new(
           name: experience.name,
           start_date: experience.start_date.advance(days: date_difference),
@@ -351,8 +350,11 @@ class Course < ApplicationRecord
 
     # TZ corrections
     if (start_date_changed? || timezone_changed?) && start_date.present?
+      puts start_date
       d = start_date.utc
+      puts d
       new_date = course_tz.local(d.year, d.month, d.day).beginning_of_day
+      puts new_date
       self.start_date = new_date
     end
 

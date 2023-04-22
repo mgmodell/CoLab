@@ -188,9 +188,12 @@ export default function CourseDataAdmin(props) {
           setCourseConsentFormId(data.course.consent_form_id || 0);
           setCourseSchoolId(data.course.school_id);
 
+          console.log( data.course.start_date );
           var receivedDate = DateTime.fromISO(data.course.start_date).setZone(
             courseTimezone
           );
+          console.log( receivedDate );
+
           setCourseStartDate(receivedDate);
 
           receivedDate = DateTime.fromISO(data.course.end_date).setZone(
