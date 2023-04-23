@@ -247,20 +247,24 @@ Then 'the {string} dates are {string} and {string}' do |activity, start_date_str
   d = Chronic.parse(start_date_str)
   start_date = course_tz.local(d.year, d.month, d.day).beginning_of_day
   d = Chronic.parse(end_date_str)
-  end_date = course_tz.local(d.year, d.month, d.day).end_of_day.change(sec: 0)
+  end_date = course_tz.local(d.year, d.month, d.day).end_of_day.change(sec: 59)
 
   case activity.downcase
   when 'experience'
-    @experience.start_date.should eq start_date
-    @experience.end_date.should eq end_date.change(sec: 0)
+    @experience.start_date.should eq start_date.utc
+    @experience.end_date.should eq end_date.utc
 
   when 'project'
-    @project.start_date.should eq start_date
-    @project.end_date.should eq end_date.change(sec: 0)
+    @project.start_date.should eq start_date.utc
+    @project.end_date.should eq end_date.utc
 
   when 'bingo'
-    @bingo.start_date.should eq start_date
-    @bingo.end_date.should eq end_date.change(sec: 0)
+    @bingo.start_date.should eq start_date.utc
+    @bingo.end_date.should eq end_date.utc
+
+  when 'assignment'
+    @assignment.start_date.should eq start_date.utc
+    @assignment.end_date.should eq end_date.utc
 
   else
     pending # Write code here that turns the phrase above into concrete
@@ -279,6 +283,9 @@ Then 'the {string} is {string} active' do |activity, active_bool|
 
   when 'bingo'
     @bingo.active.should eq is_active
+
+  when 'assignment'
+    @assignment.active.should eq is_active
 
   else
     pending # Write code here that turns the phrase above into concrete
