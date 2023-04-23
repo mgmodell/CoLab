@@ -369,7 +369,6 @@ export default function CourseDataAdmin(props) {
       <Typography>All dates shown in {courseTimezone} timezone.</Typography>
       <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="en-us">
         <DatePicker
-          variant="inline"
           autoOk={true}
           inputFormat="MM/dd/yyyy"
           margin="normal"
@@ -393,7 +392,6 @@ export default function CourseDataAdmin(props) {
         ) : null}
 
         <DatePicker
-          variant="inline"
           autoOk={true}
           inputFormat="MM/dd/yyyy"
           margin="normal"
