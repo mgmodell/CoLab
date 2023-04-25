@@ -27,114 +27,162 @@ namespace :testing do
       if user.nil?
         puts "User with email <#{email}> not found"
       else
+        ActiveRecord::Base.transaction do
 
-        course = Course.new
-        course.school = School.find 1
-        course.name = "Advanced #{Faker::IndustrySegments.industry}"
-        course.number = "TEST-#{rand(103..550)}"
-        course.timezone = user.timezone
-        course.start_date = 2.months.ago
-        course.end_date = 2.months.from_now
-        course.save
-        puts course.errors.empty? ?
-            "New course: #{course.name}" :
-            course.errors.full_messages
+          course = Course.new
+          course.school = School.find 1
+          course.name = "Advanced #{Faker::IndustrySegments.industry}"
+          course.number = "TEST-#{rand(103..550)}"
+          course.timezone = user.timezone
+          course.start_date = 2.months.ago
+          course.end_date = 2.months.from_now
+          course.save
+          puts course.errors.empty? ?
+              "New course: #{course.name}" :
+              course.errors.full_messages
 
-        course.add_user_by_email user.email
+          course.add_user_by_email user.email
 
-        # Create an experience for the user
-        experience = Experience.new
-        experience.name = "#{Faker::IndustrySegments.industry} Group Simulation"
-        experience.start_date = 1.weeks.ago
-        experience.end_date = 1.weeks.from_now
-        experience.active = true
-        experience.course = course
-        experience.save
-        puts experience.errors.empty? ?
-            "New experience: #{experience.name}" :
-            experience.errors.full_messages
+          # Create an experience for the user
+          experience = Experience.new
+          experience.name = "#{Faker::IndustrySegments.industry} Group Simulation"
+          experience.start_date = 1.weeks.ago
+          experience.end_date = 1.weeks.from_now
+          experience.active = true
+          experience.course = course
+          experience.save
+          puts experience.errors.empty? ?
+              "New experience: #{experience.name}" :
+              experience.errors.full_messages
 
-        # Create Project with the user in a group
-        project = Project.new
-        project.name = "#{Faker::Job.title} project"
-        project.start_date = 1.months.ago
-        project.end_date = 1.months.from_now
-        project.start_dow = Date.yesterday.wday
-        project.end_dow = Date.tomorrow.wday
-        project.course = course
-        project.factor_pack = FactorPack.find 1
-        project.save
-        puts project.errors.empty? ?
-            "New project: #{project.name}" :
-            project.errors.full_messages
+          # Create Project with the user in a group
+          project = Project.new
+          project.name = "#{Faker::Job.title} project"
+          project.start_date = 1.months.ago
+          project.end_date = 1.months.from_now
+          project.start_dow = Date.yesterday.wday
+          project.end_dow = Date.tomorrow.wday
+          project.course = course
+          project.factor_pack = FactorPack.find 1
+          project.save
+          puts project.errors.empty? ?
+              "New project: #{project.name}" :
+              project.errors.full_messages
 
-        # Create a group
-        group = Group.new
-        group.name = Faker::Team.name
-        group.project = project
-        group.users << user
-        3.times do
-          u = User.new
-          u.first_name = Faker::Name.first_name
-          u.last_name = Faker::Name.last_name
-          u.password = 'password'
-          u.password_confirmation = 'password'
-          u.email = Faker::Internet.email
-          u.timezone = 'UTC'
-          u.save
-          puts u.errors.empty? ?
-              "New user: #{u.informal_name false}" :
-              u.errors.full_messages
-          course.add_user_by_email u.email
-          u.rosters[0].enrolled_student!
-          u.save
+          # Create a group
+          group = Group.new
+          group.name = Faker::Team.name
+          group.project = project
+          group.users << user
+          3.times do
+            u = User.new
+            u.first_name = Faker::Name.first_name
+            u.last_name = Faker::Name.last_name
+            u.password = 'password'
+            u.password_confirmation = 'password'
+            u.email = Faker::Internet.email
+            u.timezone = 'UTC'
+            u.save
+            puts u.errors.empty? ?
+                "New user: #{u.informal_name false}" :
+                u.errors.full_messages
+            course.add_user_by_email u.email
+            roster = u.rosters.new(
+              course: course
+            )
+            roster.enrolled_student!
+            # u.rosters[0].enrolled_student!
+            u.save
 
-          group.users << u
+            group.users << u
+          end
+          group.save
+          puts group.errors.empty? ?
+              "New group: #{group.name}" :
+              group.errors.full_messages
+
+          project.active = true
+          project.save
+          puts project.errors.empty? ?
+              'Projct activated' :
+              project.errors.full_messages
+
+          # Create BingoGame
+          bingo = BingoGame.new
+          bingo.topic = Faker::Company.name
+          bingo.description = Faker::Lorem.paragraph
+          bingo.course = course
+          bingo.start_date = 1.month.ago
+          bingo.end_date = 4.days.from_now
+          bingo.lead_time = 2
+          bingo.individual_count = 10
+          bingo.group_option = false
+          bingo.active = true
+          bingo.save
+          puts bingo.errors.empty? ?
+              "New solo bingo: #{bingo.topic}" :
+              bingo.full_messages
+
+          # Create BingoGame with a user group
+          bingo = BingoGame.new
+          bingo.topic = Faker::Company.name
+          bingo.description = Faker::Lorem.paragraph
+          bingo.course = course
+          bingo.start_date = 1.month.ago
+          bingo.end_date = 4.days.from_now
+          bingo.lead_time = 2
+          bingo.individual_count = 10
+          bingo.group_option = true
+          bingo.group_discount = 35
+          bingo.project = project
+          bingo.active = true
+          bingo.save
+          puts bingo.errors.empty? ?
+              "New solo bingo: #{bingo.topic}" :
+              bingo.full_messages
+          #Create a rubric
+          rubric = user.rubrics.new(
+            name: Faker::JapaneseMedia::StudioGhibli.movie,
+            description: Faker::GreekPhilosophers.quote,
+            school: user.school,
+            published: true
+
+          )
+          rubric.criteria.new(
+            description: Faker::Company.industry,
+            sequence: 1,
+            l1_description: Faker::Company.bs,
+            l2_description: Faker::Company.bs,
+            l3_description: Faker::Company.bs,
+            l4_description: Faker::Company.bs,
+            l5_description: Faker::Company.bs
+          )
+          rubric.criteria.new(
+            description: Faker::Company.industry,
+            sequence: 2,
+            l1_description: Faker::Company.bs,
+            l2_description: Faker::Company.bs
+          )
+          rubric.save
+          puts rubric.errors.empty? ?
+              "New rubric: #{rubric.name}" :
+              rubric.full_messages
+
+          #Create an assignment that uses the rubric
+          assignment = course.assignments.new(
+            name: Faker::Books::CultureSeries.culture_ship,
+            description: Faker::Quote.yoda,
+            passing: 65,
+            start_date: 4.months.ago,
+            end_date: 2.months.from_now,
+            active: true,
+            rubric: rubric
+          )
+          assignment.save
+          puts assignment.errors.empty? ?
+              "New assignment: #{assignment.name}" :
+              assignment.full_messages
         end
-        group.save
-        puts group.errors.empty? ?
-            "New group: #{group.name}" :
-            group.errors.full_messages
-
-        project.active = true
-        project.save
-        puts project.errors.empty? ?
-            'Projct activated' :
-            project.errors.full_messages
-
-        # Create BingoGame
-        bingo = BingoGame.new
-        bingo.topic = Faker::Company.name
-        bingo.description = Faker::Lorem.paragraph
-        bingo.course = course
-        bingo.start_date = 1.month.ago
-        bingo.end_date = 4.days.from_now
-        bingo.lead_time = 2
-        bingo.individual_count = 10
-        bingo.group_option = false
-        bingo.active = true
-        bingo.save
-        puts bingo.errors.empty? ?
-            "New solo bingo: #{bingo.topic}" :
-            bingo.full_messages
-
-        # Create BingoGame with a user group
-        bingo = BingoGame.new
-        bingo.topic = Faker::Company.name
-        bingo.description = Faker::Lorem.paragraph
-        bingo.course = course
-        bingo.start_date = 1.month.ago
-        bingo.end_date = 4.days.from_now
-        bingo.lead_time = 2
-        bingo.individual_count = 10
-        bingo.group_option = true
-        bingo.group_discount = 35
-        bingo.project = project
-        bingo.active = true
-        bingo.save
-        puts bingo.errors.empty? ?
-            "New solo bingo: #{bingo.topic}" :
-            bingo.full_messages
       end
     end
   end

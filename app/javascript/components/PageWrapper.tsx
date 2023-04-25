@@ -22,6 +22,7 @@ import BingoShell from "./BingoBoards/BingoShell";
 const ProfileDataAdmin = React.lazy(() => import("./ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
 const Experience = React.lazy(() => import("./experiences/Experience"));
+const AssignmentSubmission = React.lazy( () => import( './assignments/AssignmentSubmission'));
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 const Admin = React.lazy(() => import("./Admin"));
 const SignIn = React.lazy(() => import("./SignIn"));
@@ -105,6 +106,15 @@ export default function PageWrapper(props) {
                     element={
                       <RequireAuth>
                         <Experience />
+                      </RequireAuth>
+                    }
+                  />
+                  {/* Perhaps subgroup under Assignment */}
+                  <Route
+                    path={`assignment/:assignmentId`}
+                    element={
+                      <RequireAuth>
+                        <AssignmentSubmission />
                       </RequireAuth>
                     }
                   />

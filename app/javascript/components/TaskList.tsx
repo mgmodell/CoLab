@@ -5,9 +5,7 @@ import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import { DateTime, Settings } from "luxon";
 
-import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
-import GridOffIcon from "@mui/icons-material/GridOff";
-import TuneIcon from "@mui/icons-material/Tune";
+import { iconForType } from "./ActivityLib";
 
 import MUIDataTable from "mui-datatables";
 import { useTypedSelector } from "./infrastructure/AppReducers";
@@ -29,27 +27,11 @@ export default function TaskList(props) {
       name: "type",
       options: {
         customBodyRender: (value, tableMeta, updateValue) => {
-          var icon;
-          if ("experience" == value) {
-            icon = <LocalLibraryIcon />;
-          } else if ("assessment" == value) {
-            icon = <TuneIcon />;
-          } else if ("bingo_game" == value) {
-            icon = <GridOffIcon />;
-          }
-          return icon;
+          return iconForType( value );
         },
         customFilterListOptions: {
           render: value => {
-            var icon;
-            if ("Experiences" == value) {
-              icon = <LocalLibraryIcon />;
-            } else if ("Assessments" == value) {
-              icon = <TuneIcon />;
-            } else if ("Bingo Games" == value) {
-              icon = <GridOffIcon />;
-            }
-            return icon;
+            return iconForType( value );
           }
         },
         filterOptions: {
@@ -64,6 +46,9 @@ export default function TaskList(props) {
                 break;
               case "Experience":
                 return filters.includes("experience");
+                break;
+              case "Assignment":
+                return filters.includes("assignment");
                 break;
               default:
                 console.log("filter not found: " + location);
@@ -116,7 +101,7 @@ export default function TaskList(props) {
         filter: false,
         display: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          var retVal = "n/a";
+          var retVal = <div></div>;
           if (null !== value) {
             const dt = value.setZone(tz_hash[user.timezone]);
             retVal = (
@@ -135,7 +120,7 @@ export default function TaskList(props) {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          var retVal = "n/a";
+          var retVal = <div></div>;
           if (null !== value) {
             const dt = value.setZone(tz_hash[user.timezone]);
             retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;

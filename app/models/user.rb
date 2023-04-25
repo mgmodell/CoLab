@@ -36,7 +36,7 @@ class User < ApplicationRecord
 
   belongs_to :school, optional: true
   has_many :installments, inverse_of: :user, dependent: :destroy
-  has_many :rosters, inverse_of: :user, dependent: :destroy
+  has_many :rosters, inverse_of: :user, dependent: :destroy, autosave: true
   has_many :courses, through: :rosters
 
   has_many :reactions, inverse_of: :user, dependent: :destroy

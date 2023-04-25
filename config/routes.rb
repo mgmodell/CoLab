@@ -72,6 +72,7 @@ Rails.application.routes.draw do
 
     get 'assignments/new/:course_id' => 'assignments#show', as: :new_assignment
     post 'assignments/:course_id' => 'assignments#create'
+    get 'assignments/:id/status' => 'assignments#status', as: :assignment_status
 
     get 'experiences/new/:course_id' => 'experiences#show', as: :new_experience
     post 'experiences/:course_id' => 'experiences#create'

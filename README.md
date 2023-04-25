@@ -1,3 +1,5 @@
+[![CucumberReports: CoLab](https://messages.cucumber.io/api/report-collections/8e5bd8ab-b12f-460d-85ff-861b1b841ad6/badge)](https://reports.cucumber.io/report-collections/8e5bd8ab-b12f-460d-85ff-861b1b841ad6)
+
 # README #
 
 The CoLab system provides instructor support for collaborative learning

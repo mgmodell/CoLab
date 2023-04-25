@@ -27,11 +27,11 @@ class Assignment < ApplicationRecord
   end
 
   def get_type
-    I18n.t(:assignment)
+    'Assignment'
   end
 
   def type
-    I18n.t('Assignment')
+    'Assignment'
   end
 
   def get_link

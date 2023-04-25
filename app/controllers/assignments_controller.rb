@@ -11,6 +11,27 @@ class AssignmentsController < ApplicationController
     @assignments = Assignment.all
   end
 
+  # GET /assignments/1/status or /assignments/1/status.json
+  def status
+    # TODO: Check if course owner
+    response = standardized_response( @assignment )
+    response[:rubric] = @assignment.rubric.include(:criteria).as_json( 
+      include: { criteria: {
+        only: %i[ description weight sequence 
+        l1_description l2_description l3_description l4_description l5_description ]
+      }},
+      only: %i[ id name description version ]
+    )
+    response[:submissions] = @assignment.submissions.as_json(
+      only: %i[ id submitted withdrawn recorded_score]
+    )
+    respond_to do |format|
+      format.json do
+        render json: standardized_response(@assignment)
+      end
+    end
+  end
+
   # GET /assignments/1 or /assignments/1.json
   def show
     # TODO: Check if course owner

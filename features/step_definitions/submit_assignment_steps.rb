@@ -37,7 +37,8 @@ Given('the course is shifted {int} {string} into the {string}') do |_int, _strin
 end
 
 Then('the user opens the {string} task') do |_string|
-  pending # Write code here that turns the phrase above into concrete actions
+  find(:xpath, "//td[contains(.,'#{@assignment.name}')]").click
+  wait_for_render
 end
 
 Then('the user opens the {string} tab') do |_string|
