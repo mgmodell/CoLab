@@ -12,6 +12,9 @@ import {
   Priorities
 } from "../infrastructure/StatusSlice";
 
+import RubricViewer from "./RubricViewer";
+import { IRubricData } from "./RubricViewer";
+
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { DateTime, Settings } from 'luxon';
@@ -54,13 +57,7 @@ export default function AssignmentSubmission(props) {
 
   const [submissions, setSubmissions] = useState( [] );
 
-  const [rubric, setRubric ] = useState( {
-    name: null,
-    version: 0,
-    criteria: []
-   } )
-
-  //const [rubric, setRubric] = useState( )
+  const [rubric, setRubric ] = useState<IRubricData>( )
 
   useEffect(() => {
     if (endpointsLoaded) {
@@ -90,7 +87,7 @@ export default function AssignmentSubmission(props) {
         setLinkSub( data.assignment.link_sub );
         setFileSub( data.assignment.file_sub );
         
-        setRubric( data.rubric );
+        setRubric( data.rubric as IRubricData );
         setSubmissions( data.submissions );
 
         dispatch(endTask());
@@ -104,67 +101,6 @@ export default function AssignmentSubmission(props) {
     setCurTab( newTab );
   }
 
-  const evaluation = (
-    <React.Fragment>
-            <Grid item xs={10}>
-              <Typography variant="h6">{t('status.rubric_name' )}:</Typography>
-            </Grid>
-            <Grid item xs={20}>
-              <Typography>
-                {rubric.name}
-              </Typography>
-            </Grid>
-            <Grid item xs={10}>
-              <Typography variant="h6">{t('status.rubric_version' )}:</Typography>
-            </Grid>
-            <Grid item xs={20}>
-              <Typography>
-                {rubric.version}
-              </Typography>
-            </Grid>
-            {rubric.criteria.map( (criterium) =>{
-              const levels = [ 
-                criterium.l1_description,
-                criterium.l2_description,
-                criterium.l3_description,
-                criterium.l4_description,
-                criterium.l5_description
-              ];
-              for( let index = levels.length - 1; index > 0; index-- ){
-                if( levels[ index ] !== null && levels[index].length > 0 ){
-                  index = -1;
-                } else {
-                  levels.pop( );
-                }
-              }
-              const span = 60 / ( levels.length + 1 );
-              const renderedLevels = [];
-              let index = 0;
-              levels.forEach( (levelText) => {
-                index++;
-                renderedLevels.push( 
-                    <Grid item key={`${criterium.id}-${index}`} xs={span}>
-                      {parse( levelText) }
-                    </Grid>
-                );
-              })
-              
-              return(
-                <React.Fragment key={criterium.id}>
-                  <Grid item xs={70}><hr></hr></Grid>
-                  <Grid item xs={10}>
-                    { criterium.description}
-                  </Grid>
-                  <Grid item xs={span}>
-                    {t('status.rubric_minimum')}
-                  </Grid>
-                  { renderedLevels }
-                </React.Fragment>
-              )
-            })}
-
-    </React.Fragment>
-  )
   let output = null;
   if (!endpointsLoaded) {
     output = ( <Skeleton variant="rectangular" /> );
@@ -197,7 +133,7 @@ export default function AssignmentSubmission(props) {
                 {t('status.eval_criteria')}:
               </Typography>
             </Grid>
-            {evaluation}
+            <RubricViewer rubric={rubric } />
           </Grid>
         </TabPanel>
         <TabPanel value='responses'>

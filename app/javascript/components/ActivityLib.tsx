@@ -1,8 +1,8 @@
-import React from "react";
-import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
-import GridOffIcon from "@mui/icons-material/GridOff";
-import TuneIcon from "@mui/icons-material/Tune";
-import AssignmentIcon from "@mui/icons-material/Assignment";
+import React, { lazy } from "react";
+const AssignmentIcon = lazy( () => import('@mui/icons-material/Assignment'))
+const TuneIcon = lazy( () => import('@mui/icons-material/Tune'))
+const LocalLibraryIcon = lazy( () => import('@mui/icons-material/LocalLibrary'))
+const GridOffIcon = lazy( () => import('@mui/icons-material/GridOff'))
 
 export function iconForType(type: string) {
   var icon;
