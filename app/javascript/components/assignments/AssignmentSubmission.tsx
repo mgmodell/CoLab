@@ -23,6 +23,9 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Tab from "@mui/material/Tab";
 import { Grid, Typography } from "@mui/material";
 
+import { EditorState, convertToRaw, ContentState } from "draft-js";
+const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
+
 
 export default function AssignmentSubmission(props) {
   const endpointSet = "assignment";
@@ -48,6 +51,8 @@ export default function AssignmentSubmission(props) {
   const [textSub, setTextSub] = useState( false );
   const [linkSub, setLinkSub] = useState( false );
   const [fileSub, setFileSub] = useState( false );
+
+  const [submissions, setSubmissions] = useState( [] );
 
   const [rubric, setRubric ] = useState( {
     name: null,
@@ -86,6 +91,7 @@ export default function AssignmentSubmission(props) {
         setFileSub( data.assignment.file_sub );
         
         setRubric( data.rubric );
+        setSubmissions( data.submissions );
 
         dispatch(endTask());
       })
@@ -168,7 +174,7 @@ export default function AssignmentSubmission(props) {
         <TabList onChange={handleTabChange} >
           <Tab label='Overview' value='overview' />
           <Tab label='Responses' value='responses' />
-          <Tab label='Progress' value='progress' />
+          <Tab label='Progress' value='progress' disabled={submissions.length < 1} />
         </TabList>
         <TabPanel value='overview'>
           <Grid container spacing={1} columns={70}>
