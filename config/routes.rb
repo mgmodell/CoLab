@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :rubric_row_feedbacks
-  resources :submission_feedbacks
-  resources :submissions
   scope 'api-backend' do
     post 'courses/copy/:id' => 'courses#new_from_template',
          as: :copy_course,
@@ -48,6 +45,8 @@ Rails.application.routes.draw do
     resources :concepts, except: %i[destroy create]
 
     resources :assignments, :rubrics, :consent_forms, :schools, :courses, :experiences, :projects, :bingo_games, except: %i[new create]
+
+    resources :rubric_row_feedbacks, :submission_feedbacks, :submissions, only: %i[new create show]
 
     get 'rubrics/new/' => 'rubrics#show', as: :new_rubric
     post 'rubrics/:school_id' => 'rubrics#create'
