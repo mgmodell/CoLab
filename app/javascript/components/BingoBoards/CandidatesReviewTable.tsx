@@ -22,6 +22,7 @@ import MUIDataTable from "mui-datatables";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
+import parse from 'html-react-parser';
 
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
@@ -368,11 +369,9 @@ export default function CandidatesReviewTable(props) {
             {t("description")}:
           </Grid>
           <Grid item xs={12} sm={9}>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: bingoGame.description
-              }}
-            />
+            <p>
+              {parse( bingoGame.description ) }
+            </p>
           </Grid>
         </Grid>
       ) : (

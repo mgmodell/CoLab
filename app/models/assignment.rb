@@ -40,7 +40,7 @@ class Assignment < ApplicationRecord
 
   def task_data(current_user:)
     group = project.group_for_user(current_user) if project.present?
-    link = "/assignments/#{id}"
+    link = "/#{get_link}/#{id}"
 
     log = course.get_consent_log(user: current_user)
     consent_link = ("/research_information/#{log.consent_form_id}" if log.present?)

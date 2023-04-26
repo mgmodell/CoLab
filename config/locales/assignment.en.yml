@@ -23,6 +23,13 @@ en:
     new:
       title: New Assignment
       create_assignment_btn: Create Assignment
+    status:
+      name: Assignment Name
+      brief: Brief
+      eval_criteria: Evaluation Criteria
+      rubric_name: Rubric Title
+      rubric_version: Version
+      rubric_minimum: Minimum requirements not met
     create_success: Assignment was created successfully!
     destroy_success: Assignment was destroyed successfully!
     update_success: Assignment was updated successfully!

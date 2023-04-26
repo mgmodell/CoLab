@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
+import parse from 'html-react-parser';
 
 import IconButton from "@mui/material/IconButton";
 
@@ -38,66 +39,54 @@ export default function HelpMenu(props) {
       {
         target: ".journal_entry",
         content: (
-          <p
-            dangerouslySetInnerHTML={{
-              __html: t("experiences.inst_p1")
-            }}
-          />
+          <p>
+              {parse( t("experiences.inst_p1") ) }
+          </p>
         ),
         placement: "center"
       },
       {
         target: ".behaviors",
         content: (
-          <p
-            dangerouslySetInnerHTML={{
-              __html: t("experiences.inst_p2")
-            }}
-          />
+          <p>
+            {parse( t('experiences.inst_p2'))}
+          </p>
         ),
         placement: "center"
       },
       {
         target: "body",
         content: (
-          <p
-            dangerouslySetInnerHTML={{
-              __html: t("experiences.inst_p3")
-            }}
-          />
+          <p>
+            {parse( t('experiences.inst_p3'))}
+          </p>
         ),
         placement: "center"
       },
       {
         target: "body",
         content: (
-          <p
-            dangerouslySetInnerHTML={{
-              __html: t("experiences.scenario_p1")
-            }}
-          />
+          <p>
+            {parse( t('experiences.scenario_p1'))}
+          </p>
         ),
         placement: "center"
       },
       {
         target: "body",
         content: (
-          <p
-            dangerouslySetInnerHTML={{
-              __html: t("experiences.scenario_p2")
-            }}
-          />
+          <p>
+            {parse( t('experiences.scenario_p2'))}
+          </p>
         ),
         placement: "center"
       },
       {
         target: "body",
         content: (
-          <p
-            dangerouslySetInnerHTML={{
-              __html: t("experiences.scenario_p3")
-            }}
-          />
+          <p>
+            {parse( t('experiences.scenario_p3'))}
+          </p>
         ),
         placement: "center"
       }

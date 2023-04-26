@@ -15,6 +15,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
+import parse from 'html-react-parser';
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 export default function BingoBuilder(props) {
@@ -276,11 +277,9 @@ export default function BingoBuilder(props) {
       </Typography>
       <div>
         <strong>Description:</strong>{" "}
-        <p
-          dangerouslySetInnerHTML={{
-            __html: board.bingo_game.description
-          }}
-        />
+        <p>
+          {parse( board.bingo_game.description )}
+        </p>
       </div>
       {null != candidateList && (
         <Typography>

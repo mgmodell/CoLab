@@ -72,6 +72,9 @@ class HomeController < ApplicationController
       baseUrl: edit_installment_path(assessment_id: ''),
       saveInstallmentUrl: installments_path
     }
+    ep_hash[:assignment] = {
+      statusUrl: assignment_status_path(id: '' )
+    }
     ep_hash[:candidate_list] = {
       baseUrl: get_candidate_list_path(bingo_game_id: '')
     }
@@ -127,9 +130,7 @@ class HomeController < ApplicationController
           worksheetResultsUrl: ws_results_path(id: ''),
           worksheetScoreUrl: ws_score_path(id: '')
         }
-        ep_hash[:assignment] = {
-          baseUrl: assignments_path
-        }
+        ep_hash[:assignment][:baseUrl] = assignments_path
         ep_hash[:experience_admin] = {
           baseUrl: experiences_path
         }
@@ -377,11 +378,15 @@ class HomeController < ApplicationController
                  activity.get_performance(current_user)
                when 'Group Experience'
                  activity.get_user_reaction(current_user).status
+               when 'Assignment'
+                 activity.submitted
                end,
         link: case activity.type
               when 'Terms List'
                 bingo_list_stats_path(activity.candidate_list_for_user(current_user))
               when 'Project'
+                nil
+              when 'Assignment'
                 nil
               when 'Group Experience'
                 nil

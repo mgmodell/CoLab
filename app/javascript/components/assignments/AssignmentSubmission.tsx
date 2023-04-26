@@ -14,11 +14,17 @@ import {
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
+import { DateTime, Settings } from 'luxon';
+import parse from 'html-react-parser';
 
 import { useTranslation } from "react-i18next";
+import Skeleton from "@mui/material/Skeleton";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import Tab from "@mui/material/Tab";
+import { Grid, Typography } from "@mui/material";
 
 
-export default function Experience(props) {
+export default function AssignmentSubmission(props) {
   const endpointSet = "assignment";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[endpointSet]
@@ -30,42 +36,56 @@ export default function Experience(props) {
   const { assignmentId } = useParams();
 
   const dispatch = useDispatch();
-  const [t, i18n] = useTranslation("installments");
+  const [t, i18n] = useTranslation( `${endpointSet}s` );
   const navigate = useNavigate();
 
+  const [curTab, setCurTab] = useState( 'overview' );
 
-  const [reactionId, setReactionId] = useState();
-  const [instructed, setInstructed] = useState(false);
+  const [name, setName] = useState( '' );
+  const [description, setDescription] = useState( '' );
+  const [startDate, setStartDate] = useState( DateTime.local( ) );
+  const [endDate, setEndDate] = useState( DateTime.local( ) );
+  const [textSub, setTextSub] = useState( false );
+  const [linkSub, setLinkSub] = useState( false );
+  const [fileSub, setFileSub] = useState( false );
 
-  const [weekId, setWeekId] = useState();
-  const [weekNum, setWeekNum] = useState(0);
-  const [weekText, setWeekText] = useState("");
+  const [rubric, setRubric ] = useState( {
+    name: null,
+    version: 0,
+    criteria: []
+   } )
+
+  //const [rubric, setRubric] = useState( )
 
   useEffect(() => {
     if (endpointsLoaded) {
-      getNext();
+      loadAssignment();
     }
   }, [endpointsLoaded]);
 
-  const saveButton = (
-    <Button variant="contained" onClick={() => saveDiagnosis()}>
-      <Suspense fallback={<Skeleton variant="text" />}>{t("submit")}</Suspense>
-    </Button>
-  );
 
   //Retrieve the latest data
-  const getNext = () => {
-    const url = `${endpoints.baseUrl}${experienceId}.json`;
+  const loadAssignment = () => {
+    const url = `${endpoints.statusUrl}${assignmentId}.json`;
     dispatch(startTask());
     axios(url, {})
       .then(response => {
         const data = response.data;
-        setWeekId(data.week_id);
-        setWeekNum(data.week_num);
-        setWeekText(data.week_text);
 
-        setReactionId(data.reaction_id);
-        setInstructed(data.instructed);
+        //Set the data received
+        setName( data.assignment.name );
+        setDescription( data.assignment.description );
+
+        let receivedDate = DateTime.fromISO( data.assignment.start_date ).setZone( Settings.timezone );
+        setStartDate( receivedDate );
+        receivedDate = DateTime.fromISO( data.assignment.end_date ).setZone( Settings.timezone );
+        setEndDate( receivedDate );
+        
+        setTextSub( data.assignment.text_sub );
+        setLinkSub( data.assignment.link_sub );
+        setFileSub( data.assignment.file_sub );
+        
+        setRubric( data.rubric );
 
         dispatch(endTask());
       })
@@ -73,83 +93,119 @@ export default function Experience(props) {
         console.log("error", error);
       });
   };
-  //Store what we've got
-  const saveDiagnosis = (behaviorId, otherName, comment, resetFunc) => {
-    dispatch(startTask("saving"));
-    const url = endpoints.diagnosisUrl + ".json";
-    axios
-      .patch(url, {
-        diagnosis: {
-          behavior_id: behaviorId,
-          reaction_id: reactionId,
-          week_id: weekId,
-          other_name: otherName,
-          comment: comment
-        }
-      })
-      .then(response => {
-        const data = response.data;
-        //Process Contributions
-        setWeekId(data.week_id);
-        setWeekNum(data.week_num);
-        setWeekText(data.week_text);
 
-        resetFunc();
-        dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
-        dispatch(endTask("saving"));
-        dispatch(setClean("diagnosis"));
-      })
-      .catch(error => {
-        console.log("error", error);
-      });
-  };
+  const handleTabChange = (event: React.SyntheticEvent, newTab: string ) =>{
+    setCurTab( newTab );
+  }
 
-  //React
-  const saveReaction = (behaviorId, otherName, improvements, resetFunc) => {
-    dispatch(startTask("saving"));
-    const url = endpoints.reactionUrl + ".json";
-    axios
-      .patch(url, {
-        reaction: {
-          id: reactionId,
-          behavior_id: behaviorId,
-          other_name: otherName,
-          improvements: improvements
-        }
-      })
-      .then(response => {
-        const data = response.data;
-        //Process Experience
-        resetFunc();
-        dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
-        dispatch(endTask("saving"));
-        dispatch(setClean("reaction"));
-        navigate("/");
-      })
-      .catch(error => {
-        console.log("error", error);
-      });
-  };
+  const evaluation = (
+    <React.Fragment>
+            <Grid item xs={10}>
+              <Typography variant="h6">{t('status.rubric_name' )}:</Typography>
+            </Grid>
+            <Grid item xs={20}>
+              <Typography>
+                {rubric.name}
+              </Typography>
+            </Grid>
+            <Grid item xs={10}>
+              <Typography variant="h6">{t('status.rubric_version' )}:</Typography>
+            </Grid>
+            <Grid item xs={20}>
+              <Typography>
+                {rubric.version}
+              </Typography>
+            </Grid>
+            {rubric.criteria.map( (criterium) =>{
+              const levels = [ 
+                criterium.l1_description,
+                criterium.l2_description,
+                criterium.l3_description,
+                criterium.l4_description,
+                criterium.l5_description
+              ];
+              for( let index = levels.length - 1; index > 0; index-- ){
+                if( levels[ index ] !== null && levels[index].length > 0 ){
+                  index = -1;
+                } else {
+                  levels.pop( );
+                }
+              }
+              const span = 60 / ( levels.length + 1 );
+              const renderedLevels = [];
+              let index = 0;
+              levels.forEach( (levelText) => {
+                index++;
+                renderedLevels.push( 
+                    <Grid item key={`${criterium.id}-${index}`} xs={span}>
+                      {parse( levelText) }
+                    </Grid>
+                );
+              })
+              
+              return(
+                <React.Fragment key={criterium.id}>
+                  <Grid item xs={70}><hr></hr></Grid>
+                  <Grid item xs={10}>
+                    { criterium.description}
+                  </Grid>
+                  <Grid item xs={span}>
+                    {t('status.rubric_minimum')}
+                  </Grid>
+                  { renderedLevels }
+                </React.Fragment>
+              )
+            })}
 
-  var output = null;
-
+    </React.Fragment>
+  )
+  let output = null;
   if (!endpointsLoaded) {
-    output = <Skeleton variant="rectangular" />;
-  } else if (!instructed) {
-    output = <ExperienceInstructions acknowledgeFunc={getNext} />;
-  } else if (undefined === weekNum) {
-    output = <ExperienceReaction reactionFunc={saveReaction} />;
+    output = ( <Skeleton variant="rectangular" /> );
   } else {
     output = (
-      <ExperienceDiagnosis
-        diagnoseFunc={saveDiagnosis}
-        weekNum={weekNum}
-        weekText={weekText}
-      />
+      <TabContext value={curTab}>
+        <TabList onChange={handleTabChange} >
+          <Tab label='Overview' value='overview' />
+          <Tab label='Responses' value='responses' />
+          <Tab label='Progress' value='progress' />
+        </TabList>
+        <TabPanel value='overview'>
+          <Grid container spacing={1} columns={70}>
+            <Grid item xs={15}>
+              <Typography variant="h6">{t('name' )}:</Typography>
+            </Grid>
+            <Grid item xs={55}>
+              <Typography>
+                {name}
+              </Typography>
+            </Grid>
+            <Grid item xs={15}>
+              <Typography variant="h6">{t('status.brief')}:</Typography>
+            </Grid>
+            <Grid>
+              {parse(description)}
+            </Grid>
+            <Grid item xs={70}>
+              <Typography variant="h6">
+                {t('status.eval_criteria')}:
+              </Typography>
+            </Grid>
+            {evaluation}
+          </Grid>
+        </TabPanel>
+        <TabPanel value='responses'>
+          Working on it
+        </TabPanel>
+        <TabPanel value='progress'>
+          Working on it
+        </TabPanel>
+      </TabContext>
+
     );
   }
 
   return output;
 }
 
-Experience.propTypes = {};
+AssignmentSubmission.propTypes = {};

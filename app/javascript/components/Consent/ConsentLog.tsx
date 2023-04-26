@@ -13,6 +13,7 @@ import Paper from "@mui/material/Paper";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
+import parse from 'html-react-parser';
 
 export default function ConsentLog(props) {
   const { t } = useTranslation("consent_logs");
@@ -103,11 +104,9 @@ export default function ConsentLog(props) {
         </Grid>
         <Grid item xs={12}>
           <p>{t("edit.instructions")}</p>
-          <p
-            dangerouslySetInnerHTML={{
-              __html: formText
-            }}
-          />
+          <p>
+            {parse( formText ) }
+          </p>
         </Grid>
         <Grid item xs={12} sm={6}>
           <Link href={formPdfLink}>{t("edit.consent_dl")}</Link>

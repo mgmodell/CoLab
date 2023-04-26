@@ -8,6 +8,7 @@ import Skeleton from "@mui/material/Skeleton";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
+import parse from 'html-react-parser';
 
 export default function Experience(props) {
   const [t, i18n] = useTranslation("experiences");
@@ -26,25 +27,19 @@ export default function Experience(props) {
         <h3>{t("instructions.title")}</h3>
       </Suspense>
       <Suspense fallback={<Skeleton variant="rectangular" />}>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: t("inst_p1")
-          }}
-        />
+        <p>
+          {parse( t( 'inst_p1'))}
+        </p>
       </Suspense>
       <Suspense fallback={<Skeleton variant="rectangular" />}>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: t("inst_p2")
-          }}
-        />
+        <p>
+          {parse( t( 'inst_p2'))}
+        </p>
       </Suspense>
       <Suspense fallback={<Skeleton variant="rectangular" />}>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: t("inst_p3")
-          }}
-        />
+        <p>
+          {parse( t( 'inst_p3'))}
+        </p>
       </Suspense>
       <Suspense fallback={<Skeleton variant="text" />}>
         <h3>{t("instructions.behaviors_lbl")}</h3>
@@ -55,11 +50,9 @@ export default function Experience(props) {
             return (
               <React.Fragment key={behavior.id}>
                 <dt>{behavior.name}</dt>
-                <dd
-                  dangerouslySetInnerHTML={{
-                    __html: behavior.description
-                  }}
-                />
+                <dd>
+                  {parse( behavior.description)}
+                </dd>
               </React.Fragment>
             );
           })}
@@ -69,25 +62,19 @@ export default function Experience(props) {
         <h3>{t("scenario_lbl")}</h3>
       </Suspense>
       <Suspense fallback={<Skeleton variant="rectangular" />}>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: t("scenario_p1")
-          }}
-        />
+        <p>
+          {parse( t( 'scenario_p1'))}
+        </p>
       </Suspense>
       <Suspense fallback={<Skeleton variant="rectangular" />}>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: t("scenario_p2")
-          }}
-        />
+        <p>
+          {parse( t( 'scenario_p2'))}
+        </p>
       </Suspense>
       <Suspense fallback={<Skeleton variant="rectangular" />}>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: t("scenario_p3")
-          }}
-        />
+        <p>
+          {parse( t( 'scenario_p3'))}
+        </p>
       </Suspense>
       {saveButton}
     </Paper>

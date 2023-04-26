@@ -23,6 +23,7 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 // import LinkedSliders from './LinkedSliders';
 import LinkedSliders from "linked-sliders/dist/LinkedSliders";
 import axios from "axios";
+import parse from 'html-react-parser';
 export default function InstallmentReport(props) {
   const endpointSet = "installment";
   const endpoints = useTypedSelector(
@@ -222,16 +223,18 @@ export default function InstallmentReport(props) {
       </Collapse>
       <Suspense fallback={<Skeleton variant="text" height={15} />}>
         <h1>{t("subtitle")}</h1>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: t("instructions", {
+        <p>
+          {parse(
+            t('instructions', {
               group_name: group.name,
               project_name: project.name,
               member_count: Object.keys(group.users || {}).length,
               factor_count: Object.keys(factors || {}).length
+
             })
-          }}
-        />
+          )}
+
+        </p>
         <p>{t("slider.instructions")}</p>
       </Suspense>
       <Suspense fallback={<Skeleton variant="rectangular" height={300} />}>

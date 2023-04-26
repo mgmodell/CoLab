@@ -21,6 +21,7 @@ import Grid from "@mui/material/Grid";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormLabel from "@mui/material/FormLabel";
+import parse from 'html-react-parser';
 
 export default function ExperienceDiagnosis(props) {
   const [t, i18n] = useTranslation("experiences");
@@ -93,11 +94,9 @@ export default function ExperienceDiagnosis(props) {
         </Grid>
         <Grid item xs={12}>
           <Suspense fallback={<Skeleton variant="rectangular" />}>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: props.weekText
-              }}
-            />
+            <p>
+              {parse( props.weekText ) }
+            </p>
           </Suspense>
         </Grid>
         <Grid item xs={12}>
@@ -120,11 +119,9 @@ export default function ExperienceDiagnosis(props) {
                       label={behavior.name}
                       control={<Radio />}
                     />
-                    <p
-                      dangerouslySetInnerHTML={{
-                        __html: behavior.description
-                      }}
-                    />
+                    <p>
+                      {parse( behavior.description ) }
+                    </p>
                   </React.Fragment>
                 );
               })}

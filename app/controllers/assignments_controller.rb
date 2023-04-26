@@ -1,5 +1,5 @@
 class AssignmentsController < ApplicationController
-  before_action :set_assignment, only: %i[show edit update destroy]
+  before_action :set_assignment, only: %i[show edit update destroy status]
   include PermissionsCheck
 
   before_action :check_editor
@@ -15,9 +15,9 @@ class AssignmentsController < ApplicationController
   def status
     # TODO: Check if course owner
     response = standardized_response( @assignment )
-    response[:rubric] = @assignment.rubric.include(:criteria).as_json( 
+    response[:rubric] = @assignment.rubric.as_json( 
       include: { criteria: {
-        only: %i[ description weight sequence 
+        only: %i[ id description weight sequence 
         l1_description l2_description l3_description l4_description l5_description ]
       }},
       only: %i[ id name description version ]
@@ -27,7 +27,7 @@ class AssignmentsController < ApplicationController
     )
     respond_to do |format|
       format.json do
-        render json: standardized_response(@assignment)
+        render json: response
       end
     end
   end
@@ -121,7 +121,7 @@ class AssignmentsController < ApplicationController
               else
                 Rubric.for_instructor(current_user)
               end
-    response[:rubrics] = rubrics.as_json(only: %i[id name version])
+    response[:rubric] = assignment.rubric.as_json(only: %i[id name version])
     response[:messages] = messages
 
     response
