@@ -7,7 +7,13 @@ class SubmissionsController < ApplicationController
   end
 
   # GET /submissions/1 or /submissions/1.json
-  def show; end
+  def show
+    # TODO: Check if course owner
+    respond_to do |format|
+      format.json do
+        render json: standardized_response(@submission)
+      end
+    end
 
   # GET /submissions/new
   def new
@@ -23,11 +29,15 @@ class SubmissionsController < ApplicationController
 
     respond_to do |format|
       if @submission.save
-        format.html { redirect_to submission_url(@submission), notice: 'Submission was successfully created.' }
-        format.json { render :show, status: :created, location: @submission }
+        format.json do
+          render json: standardized_response( @submission, { main: I18n.t( 'submissions.errors.no_create_error')})
+        end
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @submission.errors, status: :unprocessable_entity }
+        errors = @submission.errors
+        errors.add(:main, I18n.t('submissions.errors.create_failed'))
+        puts @submission.inspect
+        puts @submission.errors.full_messages
+        format.json { render json: standardized_response(@submission, @submission.errors) }
       end
     end
   end
@@ -35,27 +45,37 @@ class SubmissionsController < ApplicationController
   # PATCH/PUT /submissions/1 or /submissions/1.json
   def update
     respond_to do |format|
-      if @submission.update(submission_params)
-        format.html { redirect_to submission_url(@submission), notice: 'Submission was successfully updated.' }
-        format.json { render :show, status: :ok, location: @submission }
+      @submission.assign( submission_params )
+      @submission.user = current_user
+
+      if @submission.save
+      # if @submission.update(submission_params)
+        format.json do
+          render json: standardized_response(@submission, { main: I18n.t('assignments.errors.no_update_error') })
+        end
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @submission.errors, status: :unprocessable_entity }
+        errors = @submission.errors
+        errors.add(:mail, I18n.t('submissions.errors.update_failed'))
+        puts @submission.errors.full_messages
+        format.json { render json: standardized_response(@submission, @submission.errors) }
       end
     end
   end
 
-  # DELETE /submissions/1 or /submissions/1.json
-  def destroy
-    @submission.destroy
-
-    respond_to do |format|
-      format.html { redirect_to submissions_url, notice: 'Submission was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
   private
+  
+  def standardized_response( submission, messages = {} )
+    response = {
+      submission: submission.as_json(
+        user: {only: %i[ first_name last_name email]},
+        group: { only: [ :name, users: { only: %i[ first_name last_name email ]} ]},
+        only: %i[id submitted withdrawn recorded_score sub_text sub_link updated_at ]
+      )
+    }
+    response[:messages] = messages
+    response
+
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_submission

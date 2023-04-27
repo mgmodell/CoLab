@@ -73,7 +73,8 @@ class HomeController < ApplicationController
       saveInstallmentUrl: installments_path
     }
     ep_hash[:assignment] = {
-      statusUrl: assignment_status_path(id: '' )
+      statusUrl: assignment_status_path(id: '' ),
+      submissionUrl: submission_path( id: '' )
     }
     ep_hash[:candidate_list] = {
       baseUrl: get_candidate_list_path(bingo_game_id: '')

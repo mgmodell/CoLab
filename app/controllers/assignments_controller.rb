@@ -61,7 +61,7 @@ class AssignmentsController < ApplicationController
         end
       else
         errors = @assignment.errors
-        errors.add(:mail, I18n.t('assignments.errors.create_failed'))
+        errors.add(:main, I18n.t('assignments.errors.create_failed'))
         puts @assignment.inspect
         puts @assignment.errors.full_messages
         format.json { render json: standardized_response(@assignment, @assignment.errors) }
@@ -82,16 +82,6 @@ class AssignmentsController < ApplicationController
         puts @assignment.errors.full_messages
         format.json { render json: standardized_response(@assignment, @assignment.errors) }
       end
-    end
-  end
-
-  # DELETE /assignments/1 or /assignments/1.json
-  def destroy
-    @assignment.destroy
-
-    respond_to do |format|
-      format.html { redirect_to assignments_url, notice: 'Assignment was successfully destroyed.' }
-      format.json { head :no_content }
     end
   end
 

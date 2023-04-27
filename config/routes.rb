@@ -46,7 +46,7 @@ Rails.application.routes.draw do
 
     resources :assignments, :rubrics, :consent_forms, :schools, :courses, :experiences, :projects, :bingo_games, except: %i[new create]
 
-    resources :rubric_row_feedbacks, :submission_feedbacks, :submissions, only: %i[new create show]
+    resources :rubric_row_feedbacks, :submission_feedbacks, :submissions, only: %i[create update show]
 
     get 'rubrics/new/' => 'rubrics#show', as: :new_rubric
     post 'rubrics/:school_id' => 'rubrics#create'

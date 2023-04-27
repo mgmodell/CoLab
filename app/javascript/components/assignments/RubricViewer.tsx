@@ -1,26 +1,13 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 //Redux store stuff
-import { useDispatch } from "react-redux";
-import {
-  startTask,
-  endTask,
-  setClean,
-  addMessage,
-  Priorities
-} from "../infrastructure/StatusSlice";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import axios from "axios";
 import parse from 'html-react-parser';
 
 import { useTranslation } from "react-i18next";
 import { Grid, Typography } from "@mui/material";
-
-import { EditorState, convertToRaw, ContentState } from "draft-js";
-const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
 
 interface ICriteria{
  id: number;
@@ -45,6 +32,13 @@ type Props = {
   rubric: IRubricData;
 };
 
+const CLEAN_RUBRIC: IRubricData = {
+  name: '',
+  description: '',
+  version: 0,
+  criteria: []
+}
+
 export default function RubricViewer(props: Props) {
   const endpointSet = "assignment";
   const endpointsLoaded = useTypedSelector(
@@ -53,10 +47,7 @@ export default function RubricViewer(props: Props) {
 
   const { assignmentId } = useParams();
 
-  const dispatch = useDispatch();
   const [t, i18n] = useTranslation( `${endpointSet}s` );
-
-  const [curTab, setCurTab] = useState( 'overview' );
 
   const evaluation = props.rubric !== undefined ? (
     <React.Fragment>
@@ -76,7 +67,7 @@ export default function RubricViewer(props: Props) {
                 {props.rubric.version}
               </Typography>
             </Grid>
-            {props.rubric.criteria.map( (criterium) =>{
+            {props.rubric.criteria.sort( (a:ICriteria, b:ICriteria) => a.sequence - b.sequence ).map( (criterium) =>{
               const levels = [ 
                 criterium.l1_description,
                 criterium.l2_description,
@@ -124,4 +115,4 @@ export default function RubricViewer(props: Props) {
   return evaluation;
 }
 
-export { IRubricData };
+export { IRubricData, CLEAN_RUBRIC };

@@ -24,7 +24,7 @@ print_help ( ) {
 }
 
 show_output( ) {
-  OUTPUT_HASH=`docker ps | grep dev_env_app | awk '{print $1;}'`
+  OUTPUT_HASH=`docker ps | grep colab_dev_server | awk '{print $1;}'`
   docker logs -f $OUTPUT_HASH
 }
 
@@ -85,7 +85,7 @@ while getopts "cqdtosjxm:l:e:h" opt; do
       STARTUP=true
       ;;
     x)
-      OUTPUT_HASH=`docker ps | grep dev_env | awk '{print $1;}'`
+      OUTPUT_HASH=`docker ps | grep colab_dev | awk '{print $1;}'`
       docker kill $OUTPUT_HASH
       popd
       if [ -f tmp/pids/server.pid ] ; then

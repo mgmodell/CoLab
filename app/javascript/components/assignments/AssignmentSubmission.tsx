@@ -1,6 +1,7 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import {DateTime, Settings} from 'luxon';
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
@@ -11,143 +12,164 @@ import {
   addMessage,
   Priorities
 } from "../infrastructure/StatusSlice";
-
-import RubricViewer from "./RubricViewer";
-import { IRubricData } from "./RubricViewer";
+import { IAssignment } from "./AssignmentViewer";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { DateTime, Settings } from 'luxon';
 import parse from 'html-react-parser';
 
 import { useTranslation } from "react-i18next";
-import Skeleton from "@mui/material/Skeleton";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import Tab from "@mui/material/Tab";
 import { Grid, Typography } from "@mui/material";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
 
 
-export default function AssignmentSubmission(props) {
-  const endpointSet = "assignment";
+type Props = {
+  assignment: IAssignment;
+};
+
+export default function AssignmentSubmission(props: Props) {
+  const category = "assignment";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-
-  const { assignmentId } = useParams();
+  const endpointStatus = useTypedSelector(
+    state => state.context.status.endpointsLoaded
+  );
 
   const dispatch = useDispatch();
-  const [t, i18n] = useTranslation( `${endpointSet}s` );
-  const navigate = useNavigate();
+  const [t, i18n] = useTranslation( `${category}s` );
 
-  const [curTab, setCurTab] = useState( 'overview' );
+  const [submissionId, setSubmissionId] = useState(  );
+  const [updatedDate, setUpdatedDate] = useState<DateTime|null>(
+    null
+  );
+  const [submittedDate, setSubmittedDate] = useState<DateTime|null>(
+    null
+  );
+  const [withdrawnDate, setWithdrawnDate] = useState<DateTime|null>(
+    null
+  );
+  const [recordedScore, setRecordedScore] = useState( 0 );
+  const [
+    submissionTextEditor,
+    setSubmissionTextEditor
+  ] = useState(
+    EditorState.createWithContent(
+      ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
+    )
+  );
+  
+  console.log( props.assignment );
 
-  const [name, setName] = useState( '' );
-  const [description, setDescription] = useState( '' );
-  const [startDate, setStartDate] = useState( DateTime.local( ) );
-  const [endDate, setEndDate] = useState( DateTime.local( ) );
-  const [textSub, setTextSub] = useState( false );
-  const [linkSub, setLinkSub] = useState( false );
-  const [fileSub, setFileSub] = useState( false );
-
-  const [submissions, setSubmissions] = useState( [] );
-
-  const [rubric, setRubric ] = useState<IRubricData>( )
-
-  useEffect(() => {
-    if (endpointsLoaded) {
-      loadAssignment();
+  /*
+  useEffect( () =>{
+    if( endpointStatus){
     }
-  }, [endpointsLoaded]);
+  },[endpointStatus])
+  */
 
-
-  //Retrieve the latest data
-  const loadAssignment = () => {
-    const url = `${endpoints.statusUrl}${assignmentId}.json`;
-    dispatch(startTask());
-    axios(url, {})
-      .then(response => {
+  const loadSubmission = () =>{
+    const url = `${endpoints.submissionUrl}/${submissionId}.json`;
+    axios.get( url, {} )
+      .then( response =>{
         const data = response.data;
+        console.log( response );
 
-        //Set the data received
-        setName( data.assignment.name );
-        setDescription( data.assignment.description );
+        let receivedDate = DateTime.fromISO( data.submission.updated_at ).setZone( Settings.timezone );
+        setUpdatedDate(receivedDate );
+        receivedDate = DateTime.fromISO( data.submission.submitted ).setZone( Settings.timezone );
+        setSubmittedDate( receivedDate );
+        receivedDate = DateTime.fromISO( data.submission.withdrawn ).setZone( Settings.timezone );
+        setWithdrawnDate( receivedDate );
+        setRecordedScore( data.submission.recorded_score );
+        setSubmissionTextEditor(
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              htmlToDraft( data.submission.sub_text || '' ).contentBlocks
+            )
+          )
+        );
 
-        let receivedDate = DateTime.fromISO( data.assignment.start_date ).setZone( Settings.timezone );
-        setStartDate( receivedDate );
-        receivedDate = DateTime.fromISO( data.assignment.end_date ).setZone( Settings.timezone );
-        setEndDate( receivedDate );
-        
-        setTextSub( data.assignment.text_sub );
-        setLinkSub( data.assignment.link_sub );
-        setFileSub( data.assignment.file_sub );
-        
-        setRubric( data.rubric as IRubricData );
-        setSubmissions( data.submissions );
-
-        dispatch(endTask());
-      })
-      .catch(error => {
-        console.log("error", error);
       });
-  };
 
-  const handleTabChange = (event: React.SyntheticEvent, newTab: string ) =>{
-    setCurTab( newTab );
   }
 
-  let output = null;
-  if (!endpointsLoaded) {
-    output = ( <Skeleton variant="rectangular" /> );
-  } else {
-    output = (
-      <TabContext value={curTab}>
-        <TabList onChange={handleTabChange} >
-          <Tab label='Overview' value='overview' />
-          <Tab label='Responses' value='responses' />
-          <Tab label='Progress' value='progress' disabled={submissions.length < 1} />
-        </TabList>
-        <TabPanel value='overview'>
-          <Grid container spacing={1} columns={70}>
-            <Grid item xs={15}>
-              <Typography variant="h6">{t('name' )}:</Typography>
-            </Grid>
-            <Grid item xs={55}>
-              <Typography>
-                {name}
-              </Typography>
-            </Grid>
-            <Grid item xs={15}>
-              <Typography variant="h6">{t('status.brief')}:</Typography>
-            </Grid>
-            <Grid>
-              {parse(description)}
-            </Grid>
-            <Grid item xs={70}>
-              <Typography variant="h6">
-                {t('status.eval_criteria')}:
-              </Typography>
-            </Grid>
-            <RubricViewer rubric={rubric } />
-          </Grid>
-        </TabPanel>
-        <TabPanel value='responses'>
-          Working on it
-        </TabPanel>
-        <TabPanel value='progress'>
-          Working on it
-        </TabPanel>
-      </TabContext>
 
-    );
-  }
+  const sub_text = props.assignment.textSub ? (
+    <Grid item xs={12}>
+                  <Editor
+                    wrapperId="Description"
+                    label={t("submissions.sub_text_lbl")}
+                    placeholder={t("submissions.sub_text_lbl")}
+                    onEditorStateChange={setSubmissionTextEditor}
+                    toolbarOnFocus
+                    toolbar={{
+                      options: [
+                        "inline",
+                        "list",
+                        "link",
+                        "blockType",
+                        "fontSize",
+                        "fontFamily"
+                      ],
+                      inline: {
+                        options: [
+                          "bold",
+                          "italic",
+                          "underline",
+                          "strikethrough",
+                          "monospace"
+                        ],
+                        bold: { className: "bordered-option-classname" },
+                        italic: { className: "bordered-option-classname" },
+                        underline: { className: "bordered-option-classname" },
+                        strikethrough: {
+                          className: "bordered-option-classname"
+                        },
+                        code: { className: "bordered-option-classname" }
+                      },
+                      blockType: {
+                        className: "bordered-option-classname"
+                      },
+                      fontSize: {
+                        className: "bordered-option-classname"
+                      },
+                      fontFamily: {
+                        className: "bordered-option-classname"
+                      }
+                    }}
+                    editorState={submissionTextEditor}
+                  />
 
-  return output;
+    </Grid>
+  ) : null;
+
+  const sub_link = props.assignment.linkSub ? (
+    <React.Fragment>
+      <Grid item xs={3}>
+        <Typography variant="h6">{t('submissions.link_lbl')}</Typography>
+      </Grid>
+      <Grid item xs={3}>
+
+      </Grid>
+    </React.Fragment>
+  ) : null;
+
+  return (
+    <Grid container >
+      <Grid item xs={12}>
+        {t('submissions.new_header')}
+      </Grid>
+      {sub_text}
+      {sub_link}
+
+    </Grid>
+  );
 }
-
-AssignmentSubmission.propTypes = {};
