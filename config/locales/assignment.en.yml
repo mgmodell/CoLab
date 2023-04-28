@@ -33,11 +33,16 @@ en:
     submissions:
       new_header: New Response
       sub_text_lbl: Text Response
+      sub_text_placeholder: Click to enter your response
       sub_link_lbl: Link to Response
       create: Create a New Response
       save: Save Response as Draft
       submit: Submit a New Response
       past_header: Previous Responses
+      score: Score
+      submitted: Submission Date
+      withdrawn: Withdrawn Date
+      submitter: Submitted by
     create_success: Assignment was created successfully!
     destroy_success: Assignment was destroyed successfully!
     update_success: Assignment was updated successfully!

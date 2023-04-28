@@ -32,6 +32,7 @@ interface ISubmissionCondensed {
   recordedScore: number;
   submitted: DateTime;
   withdrawn: DateTime;
+  user: string;
 }
 
 interface IAssignment {
@@ -113,6 +114,7 @@ export default function AssignmentViewer(props) {
         receivedDate = DateTime.fromISO( data.assignment.end_date ).setZone( Settings.timezone );
         receivedAssignment.endDate = receivedDate;
         receivedAssignment.rubric = data.rubric;
+        receivedAssignment.submissions = data.submissions;
         //Convert snake- to camel-case properties
         receivedAssignment.textSub = receivedAssignment.text_sub;
         delete receivedAssignment.text_sub;
@@ -185,4 +187,4 @@ export default function AssignmentViewer(props) {
   return output;
 };
 
-export {IAssignment, CLEAN_ASSIGNMENT};
+export {IAssignment, ISubmissionCondensed, CLEAN_ASSIGNMENT};

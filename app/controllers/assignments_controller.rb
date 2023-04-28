@@ -22,9 +22,31 @@ class AssignmentsController < ApplicationController
       }},
       only: %i[ id name description version ]
     )
-    response[:submissions] = @assignment.submissions.as_json(
-      only: %i[ id submitted withdrawn recorded_score]
-    )
+    submissions = []
+    if current_user.is_admin? || @assignment.instructors.include?(current_user)
+      submissions = @assignment.submissions.includes( :user )
+    elsif @assignment.group_enabled
+      group = @assignment.project.group_for_user(current_user)
+
+      submissions = @assignment.submisions.includes(:user).where( group: group)
+    else
+      submissions = @assignment.submisions..includes(:user).where( user: current_user)
+    end
+
+    anon = current_user.anonymize?
+    o_submissions = []
+    submissions.each do |submission|
+      o_submissions << {
+        id: submission.id,
+        submitted: submission.submitted,
+        withdrawn: submission.withdrawn,
+        recorded_score: submission.recorded_score,
+        user: current_user.name( anon )
+      }
+    end
+
+    response[:submissions] = o_submissions.as_json
+
     respond_to do |format|
       format.json do
         render json: response
@@ -111,7 +133,7 @@ class AssignmentsController < ApplicationController
               else
                 Rubric.for_instructor(current_user)
               end
-    response[:rubric] = assignment.rubric.as_json(only: %i[id name version])
+    response[:rubric] = rubrics.as_json(only: %i[id name version])
     response[:messages] = messages
 
     response

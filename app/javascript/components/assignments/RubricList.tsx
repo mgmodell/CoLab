@@ -11,7 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 
-import { DataGrid, GridRowModel, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridRowModel, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
@@ -56,7 +56,7 @@ export default function RubricList(props) {
       type: "actions",
       editable: false,
       sortable: false,
-      renderCell: (params: GridRenderCellParams) => (
+      renderCell: (params: GridRenderCellParams ) => (
         <Fragment>
           <Tooltip title={t("rubric.copy")}>
             <IconButton

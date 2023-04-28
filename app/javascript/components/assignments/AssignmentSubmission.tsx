@@ -25,6 +25,7 @@ import { EditorState, convertToRaw, ContentState } from "draft-js";
 const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
+import SubmissionList from "./SubmissionList";
 
 
 type Props = {
@@ -107,7 +108,7 @@ export default function AssignmentSubmission(props: Props) {
                   <Editor
                     wrapperId="Description"
                     label={t("submissions.sub_text_lbl")}
-                    placeholder={t("submissions.sub_text_lbl")}
+                    placeholder={t("submissions.sub_text_placeholder")}
                     onEditorStateChange={setSubmissionTextEditor}
                     toolbarOnFocus
                     toolbar={{
@@ -165,10 +166,20 @@ export default function AssignmentSubmission(props: Props) {
   return (
     <Grid container >
       <Grid item xs={12}>
-        {t('submissions.new_header')}
+        <Typography variant="h6" >
+          {t('submissions.new_header')}
+        </Typography>
       </Grid>
       {sub_text}
       {sub_link}
+      <Grid item xs={12}>
+        <Typography variant="h6" >
+          {t('submissions.past_header')}
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <SubmissionList submissions={props.assignment.submissions } />
+      </Grid>
 
     </Grid>
   );
