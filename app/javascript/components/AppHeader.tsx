@@ -30,20 +30,15 @@ export default function AppHeader(props) {
           <Suspense
             fallback={<Skeleton variant="rectangular" width={32} height={32} />}
           >
-            {endpointsLoaded ? (
               <MainMenu
                 diversityScoreFor={endpoints.diversityScoreFor}
                 reportingUrl={endpoints.reportingUrl}
                 supportAddress={endpoints.supportAddress}
                 moreInfoUrl={endpoints.moreInfoUrl}
               />
-            ) : (
-              <Skeleton variant="rectangular" width={32} height={32} />
-            )}
           </Suspense>
           <Logo height={32} width={32} />
 
-          {endpointsLoaded ? (
             <Suspense fallback={<Skeleton variant="text" />}>
               <Typography>
                 {t("title")}
@@ -51,14 +46,9 @@ export default function AppHeader(props) {
                 <Quote url={endpoints.quotePath} />
               </Typography>
             </Suspense>
-          ) : (
-            <Skeleton variant="text" />
-          )}
-          {endpointsLoaded ? (
+          <Suspense fallback={<Skeleton variant={'circular'} />} >
             <HelpMenu lookupUrl={endpoints.lookupsUrl} />
-          ) : (
-            <Skeleton variant="circular" />
-          )}
+          </Suspense>
         </Toolbar>
       </AppBar>
       <Toolbar />

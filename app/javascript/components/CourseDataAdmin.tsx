@@ -118,7 +118,7 @@ export default function CourseDataAdmin(props) {
         setCourseNumber(course.number || "");
         setCourseDescription(course.description || "");
 
-        var receivedDate = DateTime.fromISO(course.start_date).setZone(
+        let receivedDate = DateTime.fromISO(course.start_date).setZone(
           Settings.timezone
         );
         setCourseStartDate(receivedDate);

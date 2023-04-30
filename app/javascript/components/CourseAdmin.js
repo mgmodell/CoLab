@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Settings } from "luxon";
 
@@ -31,24 +31,29 @@ export default function CourseAdmin(props) {
 
   return (
     <Routes>
-      <Route
-        path={`:courseIdParam/bingo_game/:bingoGameIdParam`}
-        element={<BingoGameDataAdmin />}
-      />
-      <Route
-        path={`:courseIdParam/experience/:experienceIdParam`}
-        element={<ExperienceDataAdmin />}
-      />
-      <Route
-        path={`:courseIdParam/project/:projectIdParam`}
-        element={<ProjectDataAdmin />}
-      />
-      <Route
-        path={`:courseIdParam/assignment/:assignmentIdParam`}
-        element={<AssignmentDataAdmin />}
-      />
-      <Route path={`:courseIdParam`} element={<CourseDataAdmin />} />
-      <Route exact path={`/`} element={<CourseList />} />
+      <Route path="/" element={<Outlet/>} >
+        <Route
+          path={`:courseIdParam/bingo_game/:bingoGameIdParam`}
+          element={<BingoGameDataAdmin />}
+        />
+        <Route
+          path={`:courseIdParam/experience/:experienceIdParam`}
+          element={<ExperienceDataAdmin />}
+        />
+        <Route
+          path={`:courseIdParam/project/:projectIdParam`}
+          element={<ProjectDataAdmin />}
+        />
+        <Route
+          path={`:courseIdParam/assignment/:assignmentIdParam`}
+          element={<AssignmentDataAdmin />}
+        />
+        <Route path={`:courseIdParam`} element={<CourseDataAdmin />} />
+        <Route
+          index
+          element={<CourseList />} />
+
+      </Route>
     </Routes>
   );
 }

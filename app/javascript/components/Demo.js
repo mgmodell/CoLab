@@ -1,8 +1,9 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import HomeShell from "./HomeShell";
+import { Skeleton } from "@mui/material";
 const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
 const CandidateListEntry = React.lazy(() =>
   import("./BingoBoards/CandidateListEntry")
@@ -40,7 +41,9 @@ export default function Demo(props) {
         path={`experience/:experienceId`}
         element={<Experience rootPath={`${props.rootPath}/api-backend`} />}
       />
-      <Route path="/" element={<HomeShell rootPath="demo" />} />
+      <Route index element={
+          <HomeShell rootPath="demo" />
+        } />
     </Routes>
   );
 }

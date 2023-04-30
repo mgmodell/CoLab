@@ -1,5 +1,12 @@
 import React, { Suspense } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { 
+  createBrowserRouter,
+  RouterProvider,
+  BrowserRouter as Router,
+  Routes,
+  Route, 
+  createRoutesFromElements,
+  Outlet} from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import appStatus from "./infrastructure/AppReducers";
@@ -46,43 +53,51 @@ export default function PageWrapper(props) {
     }
   });
 
-  return (
-    <Provider store={store}>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={styles}>
-          <AppInit endpointsUrl={props.getEndpointsUrl}>
-            <CookieConsent>
-              This website uses cookies to enhance the user experience.
-            </CookieConsent>
-            <Router>
-              <Suspense
-                fallback={<Skeleton variant="rectangular" height={50} />}
-              >
-                <AppHeader />
-              </Suspense>
-              <br />
-              <AppStatusBar />
+  const router =createBrowserRouter(
+    createRoutesFromElements(
+      <React.Fragment>
+                  <Route
+                    element={
+                      (<Suspense fallback={<Skeleton variant="rectangular" height={50} />} >
+                        <AppHeader />
+                        <br />
+                        <AppStatusBar />
+                        <Outlet />
+                      </Suspense>)
+                    }
+                  >
+                    <Route element={<Outlet />} >
+                      <Route
+                        index
+                        element={
+                            <Suspense fallback={<Skeleton variant={'rectangular'} /> } >
+                          <RequireAuth>
+                            <HomeShell />
 
-              <Suspense
-                fallback={<Skeleton variant="rectangular" height={600} />}
-              >
-                <Routes>
-                  <Route
-                    path="profile"
-                    element={
-                      <RequireAuth>
-                        <ProfileDataAdmin />
-                      </RequireAuth>
-                    }
-                  />
-                  <Route
-                    path="admin/*"
-                    element={
-                      <RequireAuth>
-                        <Admin />
-                      </RequireAuth>
-                    }
-                  />
+                          </RequireAuth>
+                            </Suspense>
+                        }
+                      />
+                      <Route
+                        path="profile"
+                        element={
+                            <Suspense fallback={<Skeleton variant={'rectangular'} /> } >
+                          <RequireAuth>
+                            <ProfileDataAdmin />
+                          </RequireAuth>
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="admin/*"
+                        element={
+                            <Suspense fallback={<Skeleton variant={'rectangular'} /> } >
+                          <RequireAuth>
+                            <Admin />
+                          </RequireAuth>
+                          </Suspense>
+                        }
+                      />
                   <Route
                     path={`submit_installment/:installmentId`}
                     element={
@@ -134,23 +149,35 @@ export default function PageWrapper(props) {
                       </RequireAuth>
                     }
                   />
+
                   <Route path="user/password/edit" element={<PasswordEdit />} />
                   <Route path={`what_is_colab`} element={<WhatIsIt />} />
                   <Route path={`tos`} element={<TermsOfService />} />
                   <Route path={`privacy`} element={<Privacy />} />
-                  <Route
-                    path="/"
-                    element={
-                      <RequireAuth>
-                        <HomeShell />
-                      </RequireAuth>
-                    }
-                  />
-                  <Route path="demo/*" element={<Demo rootPath="demo" />} />
+                  <Route path="demo/*" element={
+                    <Suspense fallback={<Skeleton variant={'rectangular'} />} >
+                      <Demo rootPath="demo" />
+
+                    </Suspense>
+                  } />
                   <Route path="login" element={<SignIn />} />
-                </Routes>
-              </Suspense>
-            </Router>
+                      </Route>
+
+      </Route>
+      </React.Fragment>
+
+    )
+  );
+
+  return (
+    <Provider store={store}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={styles}>
+          <AppInit endpointsUrl={props.getEndpointsUrl}>
+            <CookieConsent>
+              This website uses cookies to enhance the user experience.
+            </CookieConsent>
+            <RouterProvider router={router} />
           </AppInit>
         </ThemeProvider>
       </StyledEngineProvider>

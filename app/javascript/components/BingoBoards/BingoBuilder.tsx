@@ -278,7 +278,7 @@ export default function BingoBuilder(props) {
       <div>
         <strong>Description:</strong>{" "}
         <p>
-          {parse( board.bingo_game.description )}
+          {parse( board.bingo_game.description || '' )}
         </p>
       </div>
       {null != candidateList && (

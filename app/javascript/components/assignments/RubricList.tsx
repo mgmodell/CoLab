@@ -87,6 +87,8 @@ export default function RubricList(props) {
             </IconButton>
           </Tooltip>
           <Tooltip title={t("rubric.delete")}>
+            <span>
+
             <IconButton
               id="delete_rubric"
               aria-label={t("rubric.delete")}
@@ -108,6 +110,7 @@ export default function RubricList(props) {
             >
               <DeleteIcon />
             </IconButton>
+            </span>
           </Tooltip>
         </Fragment>
       )

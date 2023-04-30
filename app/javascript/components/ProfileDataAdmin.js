@@ -26,7 +26,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TabList, TabContext, TabPanel } from "@mui/lab/";
-import { Settings } from "luxon";
+import { DateTime, Settings } from "luxon";
 
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 const UserCourseList = React.lazy(() => import("./UserCourseList"));
@@ -536,7 +536,7 @@ export default function ProfileDataAdmin(props) {
               <LocalizationProvider dateAdapter={AdapterLuxon}>
                 <DatePicker
                   clearable
-                  value={user.started_school}
+                  value={DateTime.fromISO( user.started_school ).setZone( Settings.timezone)}
                   placeholder="Enter Date"
                   onChange={date => setProfileStartedSchool(date)}
                   format="MM/dd/yyyy"
@@ -667,7 +667,7 @@ export default function ProfileDataAdmin(props) {
               <LocalizationProvider dateAdapter={AdapterLuxon}>
                 <DatePicker
                   clearable
-                  value={user.date_of_birth}
+                  value={DateTime.fromISO( user.date_of_birth ).setZone( Settings.timezone)}
                   placeholder="Enter Date"
                   onChange={date => setProfileDOB(date)}
                   format="MM/dd/yyyy"

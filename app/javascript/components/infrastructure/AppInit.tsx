@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useDispatch } from "react-redux";
 import { getContext, setInitialised } from "./ContextSlice";
 import { cleanUpMsgs } from "./StatusSlice";
@@ -34,11 +34,12 @@ export default function AppInit(props: Props) {
     }, 6000);
   }, []);
 
-  if (!initialised || undefined === props.children) {
-    return <Skeleton variant="rectangular" height={300} />;
-  } else {
-    return props.children;
-  }
+  return(
+    <Suspense fallback={<Skeleton variant={'rectangular'} /> } >
+      {props.children}
+
+    </Suspense>
+  )
 }
 
 AppInit.propTypes = {

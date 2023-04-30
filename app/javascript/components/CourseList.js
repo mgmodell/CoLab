@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,7 @@ import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
+import { Skeleton } from "@mui/material";
 
 export default function CourseList(props) {
   const endpointSet = "course";
@@ -257,7 +258,8 @@ export default function CourseList(props) {
   );
 
   return (
-    <React.Fragment>
+      <Suspense fallback={<Skeleton variant={'rectangular'} />} >
+
       <Collapse in={showErrors}>
         <Alert
           action={
@@ -280,7 +282,7 @@ export default function CourseList(props) {
       {null !== user.lastRetrieved ? (
         <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
       ) : null}
-    </React.Fragment>
+      </Suspense>
   );
 }
 

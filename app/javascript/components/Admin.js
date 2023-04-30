@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 import { Settings } from "luxon";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
@@ -36,7 +36,8 @@ export default function Admin(props) {
       <WorkingIndicator identifier="admin_save" />
       <Routes>
         {user.is_instructor || user.is_admin ? (
-          <React.Fragment>
+          <Route
+            element={<Outlet />} >
             <Route path={`courses/*`} element={<CourseAdmin />} />
             <Route exact path={`rubrics`} element={<RubricList />} />
             <Route
@@ -55,8 +56,9 @@ export default function Admin(props) {
             />
             <Route path={`concepts`} element={<ConceptsTable />} />
             <Route path={"reporting"} element={<ReportingAdmin />} />
-            <Route path={`/`} element={<Navigate to="courses" replace />} />
-          </React.Fragment>
+            <Route index element={<Navigate to='courses' replace />} />
+
+          </Route>
         ) : (
           <Route path={`/*`} element={<Navigate to="/" replace />} />
         )}

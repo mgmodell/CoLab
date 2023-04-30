@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useDispatch } from "react-redux";
 
 import PropTypes from "prop-types";
@@ -35,6 +35,7 @@ import { useTranslation } from "react-i18next";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { signOut } from "./infrastructure/ContextSlice";
+import { Skeleton } from "@mui/material";
 
 export default function MainMenu(props) {
   const navigate = useNavigate();
@@ -61,8 +62,8 @@ export default function MainMenu(props) {
   };
 
   const navTo = url => {
-    navigate(url);
     setMenuOpen(false);
+    navigate(url);
   };
 
   useEffect(() => {
@@ -166,7 +167,10 @@ export default function MainMenu(props) {
         </ListItemIcon>
         <ListItemText>{t("profile")}</ListItemText>
       </ListItemButton>
-      <DiversityCheck diversityScoreFor={props.diversityScoreFor} />
+      <Suspense fallback={<Skeleton variant={'text'} />} >
+        <DiversityCheck diversityScoreFor={props.diversityScoreFor} />
+
+      </Suspense>
     </React.Fragment>
   ) : (
     <ListItemButton id="home-menu-item" onClick={() => navTo("/")}>
