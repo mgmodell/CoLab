@@ -95,7 +95,7 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.755.0)
+    aws-partitions (1.757.0)
     aws-sdk-core (3.171.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -152,7 +152,7 @@ GEM
       mime-types (~> 3.4, >= 3.4.1)
       multi_test (~> 1.1, >= 1.1.0)
       sys-uname (~> 1.2, >= 1.2.2)
-    cucumber-ci-environment (9.1.0)
+    cucumber-ci-environment (9.2.0)
     cucumber-core (11.0.0)
       cucumber-gherkin (~> 23.0, >= 23.0.1)
       cucumber-messages (~> 18.0, >= 18.0.0)
@@ -277,7 +277,7 @@ GEM
     mini_histogram (0.3.1)
     mini_magick (4.12.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.1)
+    mini_portile2 (2.8.2)
     minitest (5.18.0)
     msgpack (1.7.0)
     multi_json (1.15.0)
@@ -552,7 +552,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.34)
-    zeitwerk (2.6.7)
+    zeitwerk (2.6.8)
 
 PLATFORMS
   aarch64-linux
