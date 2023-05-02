@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
@@ -34,6 +34,7 @@ export default function CourseList(props) {
   // Settings.throwOnInvalid = true;
 
   const navigate = useNavigate();
+  const location = useLocation( );
 
   const user = useTypedSelector(state => state.profile.user);
   const tz_hash = useTypedSelector(
@@ -41,10 +42,6 @@ export default function CourseList(props) {
   );
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
-
-  function PaperComponent(props) {
-    return <Paper {...props} />;
-  }
 
   const dispatch = useDispatch();
   const columns = [
@@ -248,8 +245,10 @@ export default function CourseList(props) {
         onCellClick: (colData, cellMeta) => {
           if ("Actions" != columns[cellMeta.colIndex].label) {
             const course_id = courses[cellMeta.dataIndex].id;
-            const location = String(course_id);
-            navigate(location);
+            //This ought not be necessary and I would like to ask about it on SO - 
+            //when time permits
+            const locaLocation = `${location.pathname}/${String(course_id)}`;
+            navigate(locaLocation, {relative: false });
           }
         },
         selectableRows: "none"

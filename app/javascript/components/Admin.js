@@ -32,12 +32,15 @@ export default function Admin(props) {
   }, [user.lastRetrieved, tz_hash]);
 
   return (
-    <React.Fragment>
-      <WorkingIndicator identifier="admin_save" />
       <Routes>
         {user.is_instructor || user.is_admin ? (
           <Route
-            element={<Outlet />} >
+            element={
+              <React.Fragment>
+                <WorkingIndicator identifier="admin_save" />
+                <Outlet />
+              </React.Fragment>
+              } >
             <Route path={`courses/*`} element={<CourseAdmin />} />
             <Route exact path={`rubrics`} element={<RubricList />} />
             <Route
@@ -63,7 +66,6 @@ export default function Admin(props) {
           <Route path={`/*`} element={<Navigate to="/" replace />} />
         )}
       </Routes>
-    </React.Fragment>
   );
 }
 
