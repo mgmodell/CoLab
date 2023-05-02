@@ -31,10 +31,10 @@ export default function AppHeader(props) {
             fallback={<Skeleton variant="rectangular" width={32} height={32} />}
           >
               <MainMenu
-                diversityScoreFor={endpoints.diversityScoreFor}
-                reportingUrl={endpoints.reportingUrl}
-                supportAddress={endpoints.supportAddress}
-                moreInfoUrl={endpoints.moreInfoUrl}
+                diversityScoreFor={endpoints?.diversityScoreFor}
+                reportingUrl={endpoints?.reportingUrl}
+                supportAddress={endpoints?.supportAddress}
+                moreInfoUrl={endpoints?.moreInfoUrl}
               />
           </Suspense>
           <Logo height={32} width={32} />
@@ -43,11 +43,11 @@ export default function AppHeader(props) {
               <Typography>
                 {t("title")}
                 <br />
-                <Quote url={endpoints.quotePath} />
+                <Quote url={endpoints?.quotePath} />
               </Typography>
             </Suspense>
           <Suspense fallback={<Skeleton variant={'circular'} />} >
-            <HelpMenu lookupUrl={endpoints.lookupsUrl} />
+            <HelpMenu lookupUrl={endpoints?.lookupsUrl} />
           </Suspense>
         </Toolbar>
       </AppBar>
