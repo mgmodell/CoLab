@@ -200,7 +200,7 @@ export default function SignIn(props) {
     </Grid>
   );
 
-  if (loggingIn) {
+  if (!endpointsLoaded || loggingIn) {
     return <Skeleton variant="rectangular" height="300" />;
   } else if (isLoggedIn) {
     return <Navigate replace to={state.from || "/"} />;
