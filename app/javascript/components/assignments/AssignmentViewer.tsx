@@ -36,6 +36,7 @@ interface ISubmissionCondensed {
 }
 
 interface IAssignment {
+  id: number|null,
   name: string;
   description: string;
   startDate: DateTime;
@@ -48,6 +49,7 @@ interface IAssignment {
 }
 
 const CLEAN_ASSIGNMENT: IAssignment = {
+  id: null,
   name: '',
   description: '',
   startDate: DateTime.local( ),
@@ -146,7 +148,7 @@ export default function AssignmentViewer(props) {
       <TabContext value={curTab}>
         <TabList onChange={handleTabChange} >
           <Tab label='Overview' value='overview' />
-          <Tab label='Responses' value='responses' />
+          <Tab label='Responses' value='responses' disabled={assignment.id === null} />
           <Tab label='Progress' value='progress' disabled={submissions.length < 1} />
         </TabList>
         <TabPanel value='overview'>
@@ -174,7 +176,10 @@ export default function AssignmentViewer(props) {
           </Grid>
         </TabPanel>
         <TabPanel value='responses'>
-          <AssignmentSubmission assignment={assignment} />
+          <AssignmentSubmission
+            assignment={assignment}
+            reloadCallback={loadAssignment}
+            />
         </TabPanel>
         <TabPanel value='progress'>
           Working on it

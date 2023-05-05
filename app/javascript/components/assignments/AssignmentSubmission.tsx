@@ -19,7 +19,7 @@ import axios from "axios";
 import parse from 'html-react-parser';
 
 import { useTranslation } from "react-i18next";
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Link, TextField, Typography } from "@mui/material";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
@@ -30,6 +30,7 @@ import SubmissionList from "./SubmissionList";
 
 type Props = {
   assignment: IAssignment;
+  reloadCallback: () => void;
 };
 
 export default function AssignmentSubmission(props: Props) {
@@ -46,6 +47,7 @@ export default function AssignmentSubmission(props: Props) {
 
   const dispatch = useDispatch();
   const [t, i18n] = useTranslation( `${category}s` );
+  const [dirty, setDirty] = useState( false );
 
   const [submissionId, setSubmissionId] = useState(  );
   const [updatedDate, setUpdatedDate] = useState<DateTime|null>(
@@ -58,25 +60,22 @@ export default function AssignmentSubmission(props: Props) {
     null
   );
   const [recordedScore, setRecordedScore] = useState( 0 );
-  const [
-    submissionTextEditor,
-    setSubmissionTextEditor
-  ] = useState(
+  const [ submissionTextEditor, setSubmissionTextEditor ] = useState(
     EditorState.createWithContent(
       ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
     )
   );
-  
-  console.log( props.assignment );
+  const [submissionLink, setSubmissionLink] = useState( '' );
 
-  /*
+  //console.log( props.assignment );
+
   useEffect( () =>{
     if( endpointStatus){
     }
   },[endpointStatus])
-  */
 
   const loadSubmission = () =>{
+    console.log( 'loading' );
     const url = `${endpoints.submissionUrl}/${submissionId}.json`;
     axios.get( url, {} )
       .then( response =>{
@@ -98,9 +97,19 @@ export default function AssignmentSubmission(props: Props) {
           )
         );
 
+      }).then( response =>{
+        setDirty( false );
       });
 
   }
+
+  /*
+  useEffect( () =>{
+    if( endpointStatus){
+      setDirty( true );
+    }
+  }, [submissionTextEditor, submissionLink])
+  */
 
 
   const sub_text = props.assignment.textSub ? (
@@ -158,10 +167,69 @@ export default function AssignmentSubmission(props: Props) {
         <Typography variant="h6">{t('submissions.link_lbl')}</Typography>
       </Grid>
       <Grid item xs={3}>
+        <TextField value={subnissionLink} onChange={setSubmissionLink} />
 
       </Grid>
     </React.Fragment>
   ) : null;
+
+  const saveSubmission = (submitIt:boolean) => {
+    dispatch( startTask( 'saving' ) );
+    const url = `${endpoints.submissionUrl}/${
+      // If this is brand new, we have no ID and need a new one
+      // If this has already been submitted, then we must create a new submission
+      submissionId !== null || submittedDate !== null ? null : submissionId
+     }.json`;
+    const method = null == submissionId ? 'POST' : 'PATCH';
+
+    axios({
+      url: url,
+      method: method,
+      data: {
+        submission: {
+          sub_text: draftToHtml(
+            convertToRaw( submissionTextEditor.getCurrentContent( ) )
+          ),
+          sub_link: subnissionLink,
+          assignment_id: props.assignment.id,
+        },
+        submit: submitIt,
+      }
+    }).then( response => {
+      const data = response.data;
+      if( data.messages !== null && Object.keys( data.messages ).length < 2 ){
+        setSubmissionId( data.submission.submissionId );
+        let receivedDate = DateTime.fromISO( data.submission.updated_at ).setZone( Settings.timezone );
+        setUpdatedDate(receivedDate );
+        receivedDate = DateTime.fromISO( data.submission.submitted ).setZone( Settings.timezone );
+        setSubmittedDate( receivedDate );
+        receivedDate = DateTime.fromISO( data.submission.withdrawn ).setZone( Settings.timezone );
+        setWithdrawnDate( receivedDate );
+        setRecordedScore( data.submission.recorded_score );
+        setSubmissionTextEditor(
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              htmlToDraft( data.submission.sub_text || '' ).contentBlocks
+            )
+          )
+        );
+
+      }
+    }).then( props.reloadCallback );
+
+  };
+
+  const draftSubmitBtn =  (
+    <Button disabled={!dirty} onClick={()=>saveSubmission( true )}>
+      { submittedDate !== null ? t('submissions.submit_response') : t('submissions.submit_revision')}
+    </Button>
+  )
+
+  const draftSaveBtn = (
+    <Button disabled={!dirty} onClick={()=>saveSubmission( false )}>
+      { submittedDate !== null ? t('submissions.draft_response') : t('submissions.draft_revision')}
+    </Button>
+  )
 
   return (
     <Grid container >
@@ -172,6 +240,8 @@ export default function AssignmentSubmission(props: Props) {
       </Grid>
       {sub_text}
       {sub_link}
+      {draftSaveBtn}{draftSubmitBtn}
+
       <Grid item xs={12}>
         <Typography variant="h6" >
           {t('submissions.past_header')}

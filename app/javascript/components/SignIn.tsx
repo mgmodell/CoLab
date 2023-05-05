@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
 //Redux store stuff
 import { useDispatch } from "react-redux";
@@ -200,12 +200,15 @@ export default function SignIn(props) {
     </Grid>
   );
 
-  if (!endpointsLoaded || loggingIn) {
+  if ( loggingIn || oauth_client_ids === undefined ) {
     return <Skeleton variant="rectangular" height="300" />;
-  } else if (isLoggedIn) {
+  } else
+  if (isLoggedIn) {
     return <Navigate replace to={state.from || "/"} />;
   } else {
     return (
+      <Suspense fallback={<Skeleton variant={'rectangular'} height='300' />} >
+
       <GoogleOAuthProvider clientId={oauth_client_ids["google"]}>
         <Paper>
           <TabContext value={curTab}>
@@ -272,6 +275,7 @@ export default function SignIn(props) {
           </TabContext>
         </Paper>
       </GoogleOAuthProvider>
+      </Suspense>
     );
   }
 }
