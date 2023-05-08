@@ -27,6 +27,7 @@ class Assessment < ApplicationRecord
     # link = helpers.edit_installment_path(assessment_id: id)
     link = "submit_installment/#{id}"
     group = group_for_user(current_user)
+    instructor_task = false
 
     log = course.get_consent_log(user: current_user)
     consent_link = if log.present?
@@ -37,6 +38,7 @@ class Assessment < ApplicationRecord
     {
       id:,
       type: :assessment,
+      instructor_task:,
       name: project.get_name(false),
       group_name: group.get_name(false),
       status: is_completed_by_user(current_user) ? 100 : 0,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
@@ -10,144 +10,159 @@ import { iconForType } from "./ActivityLib";
 import MUIDataTable from "mui-datatables";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import Logo from "./Logo";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useTranslation } from "react-i18next";
+import { Checkbox, Toolbar } from "@mui/material";
+import TaskListToolbar from "./TaskListToolbar";
+import { renderDateCellExpand, renderTextCellExpand } from "./infrastructure/GridCellExpand";
 
-export default function TaskList(props) {
-  //const endpointSet = "home";
+enum TaskType {
+  experience = 'experience',
+  assignment = 'assignment',
+  assessment = 'assessment',
+  bingo = 'bingo_game'
+  
+}
+interface ITaskItem {
+  id: number,
+  type: TaskType,
+  instructor_task: boolean,
+  name: string,
+  group_name: string,
+  status: string,
+  start_date: DateTime,
+  end_date: DateTime,
+  next_date: DateTime,
+  link: string,
+  consent_link: string,
+  active: boolean
+}
+
+type Props = {
+  tasks: Array< ITaskItem >;
+};
+
+export default function TaskList(props: Props) {
+  const category = "home";
   //const endpoints = useTypedSelector(state=>state['context'].endpoints[endpointSet])
   //const endpointStatus = useTypedSelector(state=>state['context'].endpointsLoaded)
+  const { t } = useTranslation( category );
   const user = useTypedSelector(state => state.profile.user);
+
   const tz_hash = useTypedSelector(
     state => state.context.lookups.timezone_lookup
   );
   const navigate = useNavigate();
 
-  const columns = [
+  const newColumns: GridColDef[] = [
     {
-      label: "Type",
-      name: "type",
-      options: {
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return iconForType( value );
-        },
-        customFilterListOptions: {
-          render: value => {
-            return iconForType( value );
-          }
-        },
-        filterOptions: {
-          names: ["Bingo Games", "Assessments", "Experiences"],
-          logic: (location, filters) => {
-            switch (location) {
-              case "Bingo Games":
-                return filters.includes("bingo_game");
-                break;
-              case "Assessments":
-                return filters.includes("assessment");
-                break;
-              case "Experience":
-                return filters.includes("experience");
-                break;
-              case "Assignment":
-                return filters.includes("assignment");
-                break;
-              default:
-                console.log("filter not found: " + location);
-            }
+      headerName: t( 'list.type' ),
+      field: 'type',
+      width: 50,
+      renderCell: (params) => {
+        return iconForType( params.value )
 
-            return false;
+      }
+    },
+    {
+      headerName: t('list.task_name'),
+      flex: 0.20,
+      field: 'name',
+      renderCell: renderTextCellExpand
+    },
+    {
+      headerName: t( 'list.course_name' ),
+      flex: 0.15,
+      field: 'course_name',
+      renderCell: renderTextCellExpand
+    },
+    {
+      headerName: t( 'list.group_name' ),
+      field: 'group_name',
+      renderCell: renderTextCellExpand
+    },
+    {
+      headerName: t( 'list.status.label' ),
+      field: 'status',
+      renderCell: (params) => {
+        let output = `${params.value}%`;
+        if( params.row.type === 'assessment' ){
+          if( 0 == params.value ){
+            output = t('list.status.incomplete');
+          } else {
+            output = t('list.status.complete');
           }
         }
+        return output;
       }
     },
     {
-      label: "Task",
-      name: "name",
-      options: {
-        filter: false
-      }
-    },
-    {
-      label: "Course Name",
-      name: "course_name"
-    },
-    {
-      label: "Group Name",
-      name: "group_name"
-    },
-    {
-      label: "Status",
-      name: "status",
-      options: {
-        filter: false,
-        display: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          var output = value + "%";
-          if (tableMeta.rowData[0] == "assessment") {
-            if (0 == value) {
-              output = "Not Completed";
-            } else {
-              output = "Completed";
-            }
-          }
-
-          return <span>{output}</span>;
+      headerName: t( 'list.start_date' ),
+      field: 'start_date',
+      renderCell: renderDateCellExpand
+      /*
+      renderCell: (params) => {
+        let retVal = <div></div>;
+        if( null !== params.value ) {
+          const dt = params.value.setZone( tz_hash[user.timezone] );
+          retVal = (
+            <span>
+              {dt.toLocaleString(DateTime.DATETIME_MED)} ({dt.zoneName})
+            </span>
+          );
         }
+        return retVal;
+      }
+      */
+    },
+    {
+      headerName: t( 'list.next_date' ),
+      field: 'next_date',
+      width: 170,
+      renderCell: renderDateCellExpand
+      /*
+      renderCell: (params) => {
+        let retVal = <div></div>;
+        if( null !== params.value ) {
+          const dt = params.value.setZone( tz_hash[user.timezone] );
+          retVal = (
+            <span>
+              {dt.toLocaleString(DateTime.DATETIME_MED)} ({dt.zoneName})
+            </span>
+          );
+        }
+        return retVal;
+      }
+      */
+    },
+    {
+      headerName: t( 'list.consent_form.label' ),
+      field: 'consent_link',
+      renderCell: (params) => {
+        const consent = null == params.value ? (
+          <span>{t('list.consent_form.absent')}</span>
+        ) : (
+          <Link href={value}>{t('list.consent_form.present')}</Link>
+        );
+        return consent;
       }
     },
     {
-      label: "Open Date",
-      name: "start_date",
-      options: {
-        filter: false,
-        display: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          var retVal = <div></div>;
-          if (null !== value) {
-            const dt = value.setZone(tz_hash[user.timezone]);
-            retVal = (
-              <span>
-                {dt.toLocaleString(DateTime.DATETIME_MED)} ({dt.zoneName} )
-              </span>
-            );
-          }
-          return retVal;
-        }
-      }
-    },
-    {
-      label: "Close Date",
-      name: "next_date",
-      options: {
-        filter: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          var retVal = <div></div>;
-          if (null !== value) {
-            const dt = value.setZone(tz_hash[user.timezone]);
-            retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
-          }
-          return retVal;
-        }
-      }
-    },
-    {
-      label: "Consent Form",
-      name: "consent_link",
-      options: {
-        filter: false,
-        display: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const consent =
-            null == value ? (
-              <span>Not for Research</span>
-            ) : (
-              <Link href={value}>Research Consent Form</Link>
-            );
-
-          return consent;
-        }
+      headerName: t( 'list.instructor_task' ),
+      field: 'instructor_task',
+      renderCell: (params) => {
+        return <Checkbox value={params.value} disabled={true} />;
       }
     }
   ];
+
+  const instructorTasks = useMemo( ()=>{
+    let found = false;
+    props.tasks.forEach( (task)=>{
+      found ||= task.instructor_task;
+    })
+    return found;
+  }, [props.tasks])
 
   useEffect(() => {
     if (null !== user.lastRetrieved && null !== tz_hash) {
@@ -157,24 +172,33 @@ export default function TaskList(props) {
 
   const muiDatTab =
     null !== user.lastRetrieved && null !== tz_hash ? (
-      <MUIDataTable
-        title="Tasks"
-        data={props.tasks}
-        columns={columns}
-        options={{
-          responsive: "standard",
-          filterType: "checkbox",
-          print: false,
-          download: false,
-          onRowClick: (rowData, rowState) => {
-            const link = props.tasks[rowState.dataIndex].link;
-            if (null != link) {
-              // window.location.href = link;
-              navigate(link);
+      <DataGrid
+        isCellEditable={() => false}
+        columns={newColumns}
+        rows={props.tasks}
+        onCellClick={(params, event, details ) =>{
+          const link = params.row.link;
+          navigate( link );
+        }}
+        components={{
+          Toolbar: TaskListToolbar
+        } }
+        initialState={{
+          columns: {
+            columnVisibilityModel: {
+              type: true,
+              instructor_task: instructorTasks,
+              consent_link: false,
+              status: false,
+              start_date: false
             }
           },
-          selectableRows: "none"
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5}
+          }
+
         }}
+        pageSizeOptions={[5, 10, -1]}
       />
     ) : (
       <Logo height={100} width={100} spinning />
@@ -186,6 +210,4 @@ export default function TaskList(props) {
   );
 }
 
-TaskList.propTypes = {
-  tasks: PropTypes.array.isRequired
-};
+export { ITaskItem }

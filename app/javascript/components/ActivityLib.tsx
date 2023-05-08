@@ -24,6 +24,7 @@ export function iconForType(type: string) {
       break;
     case 'group assignment':
     case 'assignment':
+    case 'Assignments':
       icon = <AssignmentIcon />;
       break;
     default:

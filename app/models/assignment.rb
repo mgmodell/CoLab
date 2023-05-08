@@ -47,6 +47,7 @@ class Assignment < ApplicationRecord
     {
       id:,
       type: :assignment,
+      instructor_task: false,
       name: get_name(false),
       group_name: group.present? ? group.get_name(false) : nil,
       status: status_for_user(current_user),

@@ -79,9 +79,11 @@ class BingoGame < ApplicationRecord
     # TODO: There's got to be a better way
     group = project.group_for_user(current_user) if project.present?
     # helpers = Rails.application.routes.url_helpers
+    instructor_task = false
     link = if awaiting_review?
              # helpers.review_bingo_candidates_path(self)
              "/bingo/review_candidates/#{id}"
+             instructor_task = true
            else
              candidate_list = candidate_list_for_user(current_user)
              if is_open?
@@ -98,6 +100,7 @@ class BingoGame < ApplicationRecord
     {
       id:,
       type: :bingo_game,
+      instructor_task:,
       name: get_name(false),
       group_name: group.present? ? group.get_name(false) : nil,
       status:,

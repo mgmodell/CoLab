@@ -13,6 +13,7 @@ class Rubric < ApplicationRecord
   has_many :child_versions, class_name: 'Rubric', foreign_key: 'parent_id'
   has_many :rubrics, inverse_of: :rubric
   has_many :assignments, inverse_of: :rubric
+  has_many :submissions, inverse_of: :rubric
 
   before_create :set_owner
   validate :publish_logic

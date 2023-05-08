@@ -181,7 +181,92 @@ namespace :testing do
           assignment.save
           puts assignment.errors.empty? ?
               "New assignment: #{assignment.name}" :
-              assignment.full_messages
+              assignment.errors.full_messages
+          # Create a course with email as instructor
+          course = Course.new
+          course.school = School.find 1
+          course.name = "Advanced #{Faker::IndustrySegments.industry}"
+          course.number = "TEST-#{rand(103..550)}"
+          course.timezone = user.timezone
+          course.start_date = 2.months.ago
+          course.end_date = 2.months.from_now
+          course.save
+          puts course.errors.empty? ?
+              "New course: #{course.name}" :
+              course.errors.full_messages
+
+          # Create Project with the user in a group
+          project = Project.new
+          project.name = "#{Faker::Job.title} project"
+          project.start_date = 1.months.ago
+          project.end_date = 1.months.from_now
+          project.start_dow = Date.yesterday.wday
+          project.end_dow = Date.tomorrow.wday
+          project.course = course
+          project.factor_pack = FactorPack.find 1
+          project.save
+          puts project.errors.empty? ?
+              "New project: #{project.name}" :
+              project.errors.full_messages
+
+          # Create a group
+          group = Group.new
+          group.name = Faker::Team.name
+          group.project = project
+          group.users << user
+          3.times do
+            u = User.new
+            u.first_name = Faker::Name.first_name
+            u.last_name = Faker::Name.last_name
+            u.password = 'password'
+            u.password_confirmation = 'password'
+            u.email = Faker::Internet.email
+            u.timezone = 'UTC'
+            u.save
+            puts u.errors.empty? ?
+                "New user: #{u.informal_name false}" :
+                u.errors.full_messages
+            course.add_user_by_email u.email
+            roster = u.rosters.new(
+              course: course
+            )
+            roster.enrolled_student!
+            # u.rosters[0].enrolled_student!
+            u.save
+
+            group.users << u
+          end
+          group.save
+          puts group.errors.empty? ?
+              "New group: #{group.name}" :
+              group.errors.full_messages
+
+          course.add_instructors_by_email user.email
+          #Create an assignment that uses the rubric
+          assignment = course.assignments.new(
+            name: Faker::Books::CultureSeries.culture_ship,
+            description: Faker::Quote.yoda,
+            passing: 65,
+            start_date: 4.months.ago,
+            end_date: 2.months.from_now,
+            active: true,
+            rubric: rubric
+          )
+          assignment.save
+          puts assignment.errors.empty? ?
+              "New assignment: #{assignment.name}" :
+              assignment.errors.full_messages
+
+          submission = assignment.submissions.new(
+            sub_text: Faker::Quote.yoda,
+            submitted: Date.yesterday,
+            user: group.users.sample
+          )
+          submission.save
+          puts submission.errors.empty? ?
+              "New submission: #{submission.id}" :
+              submission.errors.full_messages
+          
         end
       end
     end

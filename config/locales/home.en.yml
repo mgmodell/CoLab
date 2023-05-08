@@ -226,3 +226,20 @@ en:
       and you cannot enroll in your own course.
     self_enroll: Enroll me!
     self_enroll_cancel: Cancel and Return Home
+    list:
+      type: Type
+      task_name: Task Name
+      course_name: Course Name
+      group_name: Group Name
+      start_date: Open Date
+      next_date: Close Date
+      all_tasks: All
+      consent_form:
+        label: Consent Form
+        absent: Not for Research
+        present: Research Consent Form
+      instructor_task: Instructor Task
+      status:
+        label: Status
+        incomplete: Not Completed
+        complete: Completed

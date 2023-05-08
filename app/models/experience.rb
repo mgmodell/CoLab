@@ -121,6 +121,7 @@ class Experience < ApplicationRecord
     {
       id:,
       type: :experience,
+      instructor_task: false,
       name: get_name(false),
       group_name: 'N/A',
       status: status_for_user(current_user),
