@@ -8,7 +8,9 @@ Then(/^the user clicks the link to the experience$/) do
   begin
     find(:xpath, "//div[text()='#{@experience.name}']").click
   rescue Capybara::ElementNotFound => e
-    byebug
+    puts e.to_s
+    puts e.full_messages
+    # byebug
   end
   # click_link_or_button @experience.name
 end
@@ -32,7 +34,9 @@ end
 Then(/^the user presses "([^"]*)"$/) do |linkOrButtonName|
   click_link_or_button linkOrButtonName
 rescue Capybara::ElementNotFound => e
-  byebug
+  puts linkOrButtonName
+  puts e.to_s
+  puts e.full_messages
 end
 
 Then(/^they open the drawer for additional comments$/) do
