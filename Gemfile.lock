@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/mgmodell/devise_token_auth
-  revision: c1c0aeb679b47578446ca8c4170d3b86a25250c7
+  revision: 7ee20ad217130856b0d279f8eb9ead4bb942400d
   specs:
     devise_token_auth (1.2.1)
       bcrypt (~> 3.0)
@@ -215,7 +215,6 @@ GEM
     e2mmap (0.1.0)
     email_address (0.2.4)
       simpleidn
-    errbase (0.2.2)
     erubi (1.12.0)
     execjs (2.8.1)
     faker (3.2.0)
@@ -468,8 +467,7 @@ GEM
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    safely_block (0.3.0)
-      errbase (>= 0.1.1)
+    safely_block (0.4.0)
     sdoc (2.6.1)
       rdoc (>= 5.0)
     selenium-webdriver (4.9.0)
