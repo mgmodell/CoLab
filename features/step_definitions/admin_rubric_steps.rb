@@ -349,11 +349,13 @@ Then('the user sees that criteria {int} matches the remembered criteria') do |cr
       else
         @criterium.l5_description.should eq field.text
       end
+    when 'content'
+      @criterium.sequence.should eq field.text.to_i
     when 'actions'
       # no test - these are buttons
     else
       # untested field
-      puts "content: #{field['data-field']}: #{field.text}"
+      puts "field not tested: #{field['data-field']}: #{field.text}"
     end
   end
 end
