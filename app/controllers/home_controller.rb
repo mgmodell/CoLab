@@ -4,9 +4,7 @@ class HomeController < ApplicationController
   # protect_from_forgery except: [:get_quote]
   skip_before_action :authenticate_user!, only: %i[index lookups endpoints demo_start get_quote]
 
-  def index
-    current_location = 'home'
-  end
+  def index; end
 
   def task_list
     waiting_tasks = current_user.waiting_student_tasks

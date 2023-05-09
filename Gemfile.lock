@@ -7,6 +7,12 @@ GIT
       devise (> 3.5.2, < 5)
       rails (>= 4.2.0, < 7.1)
 
+PATH
+  remote: /Users/micah/dev/devise-multi_email
+  specs:
+    devise-multi_email (3.0.0)
+      devise
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -208,8 +214,6 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    devise-multi_email (3.0.1)
-      devise
     diff-lcs (1.5.0)
     docile (1.4.0)
     e2mmap (0.1.0)
@@ -470,7 +474,7 @@ GEM
     safely_block (0.4.0)
     sdoc (2.6.1)
       rdoc (>= 5.0)
-    selenium-webdriver (4.9.1)
+    selenium-webdriver (4.9.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -575,7 +579,7 @@ DEPENDENCIES
   delayed_job_active_record
   derailed
   descriptive_statistics (~> 2.5.1)
-  devise-multi_email
+  devise-multi_email!
   devise_token_auth!
   email_address
   faker
@@ -611,7 +615,7 @@ DEPENDENCIES
   rubocop-rails
   rubocop-thread_safety
   sdoc
-  selenium-webdriver
+  selenium-webdriver (= 4.9.0)
   shakapacker (= 6.6.0)
   simplecov
   solargraph

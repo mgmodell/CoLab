@@ -27,23 +27,31 @@ export default function AppHeader(props) {
     <React.Fragment>
       <AppBar id="title_head" position="fixed">
         <Toolbar>
-          <Suspense
-            fallback={<Skeleton variant="rectangular" width={32} height={32} />}
-          >
-              <MainMenu
-                diversityScoreFor={endpoints?.diversityScoreFor}
-                reportingUrl={endpoints?.reportingUrl}
-                supportAddress={endpoints?.supportAddress}
-                moreInfoUrl={endpoints?.moreInfoUrl}
-              />
-          </Suspense>
+                {
+                  endpoints !== undefined ? (
+                    <MainMenu
+                      diversityScoreFor={endpoints.diversityScoreFor}
+                      reportingUrl={endpoints.reportingUrl}
+                      supportAddress={endpoints.supportAddress}
+                      moreInfoUrl={endpoints.moreInfoUrl}
+                    />
+                  ) : (
+                    <Skeleton variant="rectangular" width={32} height={32} />
+                  )
+                }
           <Logo height={32} width={32} />
 
             <Suspense fallback={<Skeleton variant="text" />}>
               <Typography>
                 {t("title")}
                 <br />
-                <Quote url={endpoints?.quotePath} />
+                {
+                  endpoints !== undefined ? (
+                    <Quote url={endpoints.quotePath} />
+                  ) : (
+                    <Skeleton variant={'text'} />
+                  )
+                }
               </Typography>
             </Suspense>
           <Suspense fallback={<Skeleton variant={'circular'} />} >

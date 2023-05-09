@@ -41,7 +41,7 @@ gem 'city-state'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
-gem 'devise-multi_email'
+gem 'devise-multi_email', path: '/Users/micah/dev/devise-multi_email'
 gem 'devise_token_auth', git: 'https://github.com/mgmodell/devise_token_auth'
 gem 'email_address'
 gem 'faker'
@@ -100,7 +100,7 @@ end
 group :test do
   gem 'simplecov', require: false
   gem 'webdrivers', '~> 5.0', require: false
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '4.9.0'
   gem 'cucumber-rails', require: false
   gem 'capybara'
   gem 'database_cleaner'
