@@ -174,7 +174,6 @@ export default function TaskList(props: Props) {
     null !== user.lastRetrieved && null !== tz_hash ? (
       <DataGrid
         isCellEditable={() => false}
-        autoHeight
         columns={newColumns}
         rows={props.tasks}
         onCellClick={(params, event, details ) =>{
@@ -199,7 +198,7 @@ export default function TaskList(props: Props) {
           }
 
         }}
-        pageSizeOptions={[5, 10, { value: -1, label: t('list.all_tasks')}]}
+        pageSizeOptions={[5, 10 ]}
       />
     ) : (
       <Logo height={100} width={100} spinning />
