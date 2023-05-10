@@ -109,7 +109,7 @@ Then('the assignment {string} field is {string}') do |field_name, value|
   when 'opening'
     @assignment.start_date.should eq Chronic.parse(value).to_date
   when 'close'
-    @assignment.end_date.should eq Chronic.parse(value).to_date
+    @assignment.end_date.should eq Chronic.parse(value).end_of_day.change( sec: 59 )
   else
     true.should be false
   end
@@ -161,8 +161,8 @@ Given('the course has an assignment') do
   @assignment.save
 end
 
-Given('the assignment {string} group capable') do |_string|
-  @assignment.group_enabled.should be true
+Given('the assignment {string} group capable') do |is_or_isnt|
+  @assignment.group_enabled.should be 'is' == is_or_isnt
 end
 
 Then('the assignment rubric is {string} version {int}') do |rubric_name, rubric_version|

@@ -13,3 +13,6 @@ AllCops:
     - 'db/**/*'
     - 'config/**/*'
     - 'script/**/*'
+
+Style/YodaCondition:
+  EnforcedStyle: require_for_equality_operators_only
