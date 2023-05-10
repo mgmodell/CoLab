@@ -100,49 +100,21 @@ export default function TaskList(props: Props) {
       headerName: t( 'list.start_date' ),
       field: 'start_date',
       renderCell: renderDateCellExpand
-      /*
-      renderCell: (params) => {
-        let retVal = <div></div>;
-        if( null !== params.value ) {
-          const dt = params.value.setZone( tz_hash[user.timezone] );
-          retVal = (
-            <span>
-              {dt.toLocaleString(DateTime.DATETIME_MED)} ({dt.zoneName})
-            </span>
-          );
-        }
-        return retVal;
-      }
-      */
     },
     {
       headerName: t( 'list.next_date' ),
       field: 'next_date',
       width: 170,
       renderCell: renderDateCellExpand
-      /*
-      renderCell: (params) => {
-        let retVal = <div></div>;
-        if( null !== params.value ) {
-          const dt = params.value.setZone( tz_hash[user.timezone] );
-          retVal = (
-            <span>
-              {dt.toLocaleString(DateTime.DATETIME_MED)} ({dt.zoneName})
-            </span>
-          );
-        }
-        return retVal;
-      }
-      */
     },
     {
       headerName: t( 'list.consent_form.label' ),
       field: 'consent_link',
       renderCell: (params) => {
-        const consent = null == params.value ? (
+        const consent = null === params.value ? (
           <span>{t('list.consent_form.absent')}</span>
         ) : (
-          <Link href={value}>{t('list.consent_form.present')}</Link>
+          <Link href={params.value}>{t('list.consent_form.present')}</Link>
         );
         return consent;
       }
