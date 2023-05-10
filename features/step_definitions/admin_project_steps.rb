@@ -46,6 +46,7 @@ Then(/^the user creates a new "([^"]*)"$/) do |link_or_button|
   wait_for_render
   find(:xpath, '//button[@aria-label="Add Activity"]').click
   find(:xpath, "//li[contains(.,'#{link_or_button}')]").click
+  wait_for_render
 end
 
 Then('the user clicks {string}') do |link_or_button|
@@ -142,7 +143,6 @@ Then(/^the user sets the project "([^"]*)" date to "([^"]*)"$/) do |date_field_p
   find(:xpath, "//label[text()='#{field_name}']").click
   new_year = Chronic.parse(date_value).strftime('%Y')
   day_month = Chronic.parse(date_value).strftime('%m%d')
-  # byebug unless 'start' == date_field_prefix
   send_keys new_year
   send_keys :left, :left
   send_keys day_month

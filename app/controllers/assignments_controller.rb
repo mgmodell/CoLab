@@ -133,7 +133,7 @@ class AssignmentsController < ApplicationController
               else
                 Rubric.for_instructor(current_user)
               end
-    response[:rubric] = rubrics.as_json(only: %i[id name version])
+    response[:rubrics] = rubrics.as_json(only: %i[id name version])
     response[:messages] = messages
 
     response

@@ -206,28 +206,13 @@ export default function AssignmentDataAdmin(props) {
       });
   };
 
-  const initResultData = () => {
-    if (bingoGameId > 0) {
-      dispatch(startTask());
-      const url = endpoints.gameResultsUrl + "/" + bingoGameId + ".json";
-      axios
-        .get(url, {})
-        .then(response => {
-          const data = response.data;
-          setResultData(data);
-          dispatch(endTask());
-        })
-        .catch(error => {
-          console.log("error", error);
-        });
-    }
-  };
 
   const setAssignmentData = data => {
     const projects = new Array({ id: -1, name: "None Selected" }).concat(
       data.projects
     );
     setAssignmentProjects(projects);
+
     const availableRubrics = new Array({
       id: -1,
       name: "None Selected",
@@ -275,7 +260,6 @@ export default function AssignmentDataAdmin(props) {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        console.log(data);
         setAssignmentData(data);
 
         setDirty(false);
