@@ -105,7 +105,10 @@ export default function ConsentLog(props) {
         <Grid item xs={12}>
           <p>{t("edit.instructions")}</p>
           <p>
-            {parse( formText ) }
+            {
+              // Good candidate for dataloading API
+              parse( formText || '' ) 
+            }
           </p>
         </Grid>
         <Grid item xs={12} sm={6}>
