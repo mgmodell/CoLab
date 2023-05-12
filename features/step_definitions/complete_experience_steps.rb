@@ -14,7 +14,6 @@ Then(/^the user clicks the link to the experience$/) do
     # We can click either of the items this finds because they are effectively the same
     find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@experience.name}')]")[0].click
   end
-  # click_link_or_button @experience.name
 end
 
 Then('the {string} button will be disabled') do |button_name|
