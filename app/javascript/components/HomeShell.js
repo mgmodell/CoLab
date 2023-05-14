@@ -87,6 +87,9 @@ export default function HomeShell(props) {
           case "bingo_game":
             value.title = value.name;
             break;
+          case "assignment":
+            value.title = value.name;
+            break;
           case "experience":
             value.title = value.name;
             break;

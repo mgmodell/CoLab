@@ -147,6 +147,10 @@ export default function TaskList(props: Props) {
       <DataGrid
         isCellEditable={() => false}
         columns={newColumns}
+        getRowId={(row ) =>{
+          const uid =`${row.type}-${row.id}`;
+          return uid;
+        }}
         rows={props.tasks}
         onCellClick={(params, event, details ) =>{
           const link = params.row.link;
