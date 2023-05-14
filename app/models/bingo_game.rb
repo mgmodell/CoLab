@@ -82,8 +82,8 @@ class BingoGame < ApplicationRecord
     instructor_task = false
     link = if awaiting_review?
              # helpers.review_bingo_candidates_path(self)
-             "/bingo/review_candidates/#{id}"
              instructor_task = true
+             "/bingo/review_candidates/#{id}"
            else
              candidate_list = candidate_list_for_user(current_user)
              if is_open?
