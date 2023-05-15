@@ -6,7 +6,7 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import { useTypedSelector } from './AppReducers';
-import {DateTime} from 'luxon';
+import {DateTime, Settings} from 'luxon';
 import { padding } from '@mui/system';
 
 interface GridCellExpandProps {
@@ -127,19 +127,14 @@ function renderTextCellExpand(params: GridRenderCellParams<any, string>) {
 }
 
 function renderDateCellExpand(params: GridRenderCellParams<any, string>) {
-  const user = useTypedSelector(state => state.profile.user);
 
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
-
-        let retVal = '';
-        if( null !== params.value ) {
-          const dt = params.value.setZone( tz_hash[user.timezone] );
-          retVal =
-              `${dt.toLocaleString(DateTime.DATETIME_MED)} (${dt.zoneName})`
-          ;
-        }
+  let retVal = '';
+  if( null !== params.value ) {
+    const dt = params.value.setZone( Settings.defaultZone );
+    retVal =
+      `${dt.toLocaleString(DateTime.DATETIME_MED)} (${dt.zoneName})`
+    ;
+  }
   return (
     <GridCellExpand value={retVal} width={params.colDef.computedWidth} />
   );

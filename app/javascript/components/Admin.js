@@ -25,12 +25,6 @@ export default function Admin(props) {
     state => state.context.lookups.timezone_lookup
   );
 
-  useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash) {
-      Settings.defaultZoneName = tz_hash[user.timezone];
-    }
-  }, [user.lastRetrieved, tz_hash]);
-
   return (
       <Routes>
         {user.is_instructor || user.is_admin ? (

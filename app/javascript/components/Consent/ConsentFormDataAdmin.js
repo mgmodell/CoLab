@@ -173,12 +173,6 @@ export default function ConsentFormDataAdmin(props) {
     }
   }, [endpointStatus]);
 
-  useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash) {
-      Settings.defaultZoneName = tz_hash[user.timezone];
-    }
-  }, [user.lastRetrieved, tz_hash]);
-
   useEffect(() => setDirty(true), [
     consentFormName,
     consentFormActive,

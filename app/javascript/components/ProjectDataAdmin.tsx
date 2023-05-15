@@ -94,7 +94,7 @@ export default function ProjectDataAdmin(props) {
       const course = data.course;
       setCourseName(course.name);
       setCourseTimezone(course.timezone);
-      Settings.defaultZoneName = course.timezone;
+      //Settings.defaultZone = course.timezone;
 
       setProjectName(project.name || "");
       setProjectDescription(project.description || "");

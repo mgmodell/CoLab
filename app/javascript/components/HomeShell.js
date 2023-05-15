@@ -50,20 +50,16 @@ export default function HomeShell(props) {
   const [tasks, setTasks] = useState();
 
   useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash) {
-      const userZone = tz_hash[user.timezone];
-      Settings.defaultZoneName = tz_hash[userZone];
-      if (undefined !== tasks) {
+      if (null !== user.lastRetrieved && undefined !== tasks) {
         const newTasks = tasks;
         newTasks.forEach((value, index, array) => {
-          value.next_date = value.next_date.setZone(userZone);
-          value.start_date = value.start_date.setZone(userZone);
+          value.next_date = value.next_date.setZone(Settings.defaultZone);
+          value.start_date = value.start_date.setZone(Settings.defaultZone);
         });
 
         setTasks(newTasks);
       }
-    }
-  }, [user.lastRetrieved, tz_hash, tasks]);
+  }, [user.lastRetrieved, Settings.defaultZone, tasks]);
 
   //Initialising to null
   const [consentLogs, setConsentLogs] = useState();

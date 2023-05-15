@@ -23,12 +23,6 @@ export default function CourseAdmin(props) {
     state => state.context.lookups.timezone_lookup
   );
 
-  useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash) {
-      Settings.defaultZoneName = tz_hash[user.timezone];
-    }
-  }, [user.lastRetrieved, tz_hash]);
-
   return (
     <Routes>
       <Route path="/" element={<Outlet/>} >

@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import { DateTime, Settings } from "luxon";
 
 import { iconForType } from "./ActivityLib";
 
-import MUIDataTable from "mui-datatables";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import Logo from "./Logo";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
-import { Checkbox, Toolbar } from "@mui/material";
+import { Checkbox } from "@mui/material";
 import TaskListToolbar from "./TaskListToolbar";
 import { renderDateCellExpand, renderTextCellExpand } from "./infrastructure/GridCellExpand";
 
@@ -99,6 +97,7 @@ export default function TaskList(props: Props) {
     {
       headerName: t( 'list.start_date' ),
       field: 'start_date',
+      width: 170,
       renderCell: renderDateCellExpand
     },
     {
@@ -130,19 +129,14 @@ export default function TaskList(props: Props) {
 
   const instructorTasks = useMemo( ()=>{
     let found = false;
+    console.log( props.tasks );
     props.tasks.forEach( (task)=>{
       found ||= task.instructor_task;
     })
     return found;
   }, [props.tasks])
 
-  useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash) {
-      Settings.defaultZoneName = tz_hash[user.timezone];
-    }
-  }, [user.lastRetrieved, tz_hash]);
-
-  const muiDatTab =
+  const tableOfTasks =
     null !== user.lastRetrieved && null !== tz_hash ? (
       <DataGrid
         isCellEditable={() => false}
@@ -181,7 +175,7 @@ export default function TaskList(props: Props) {
     );
   return (
     <Paper>
-      <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
+      <div style={{ maxWidth: "100%" }}>{tableOfTasks}</div>
     </Paper>
   );
 }

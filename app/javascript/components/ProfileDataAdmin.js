@@ -271,12 +271,6 @@ export default function ProfileDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash) {
-      Settings.defaultZoneName = tz_hash[user.timezone];
-    }
-  }, [user.lastRetrieved, tz_hash]);
-
-  useEffect(() => {
     //TODO: Fix profiles are marked dirty on initial load.
     if (initRetrieved !== lastRetrieved) {
       setDirty(true);

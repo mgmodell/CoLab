@@ -143,12 +143,6 @@ export default function SchoolDataAdmin(props) {
   }, [endpointStatus]);
 
   useEffect(() => {
-    if (null !== user.lastRetrieved) {
-      Settings.defaultZoneName = user.timezone;
-    }
-  }, [user.lastRetrieved]);
-
-  useEffect(() => {
     dispatch(setDirty(category));
   }, [schoolTimezone, schoolName, schoolDescription]);
 

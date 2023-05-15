@@ -90,7 +90,6 @@ export default function ExperienceDataAdmin(props) {
         setCourseName(course.name);
         setCourseTimezone(course.timezone);
         setReactionsUrl(data.reactionsUrl);
-        Settings.defaultZone = course.timezone;
 
         setExperienceName(experience.name || "");
         setExperienceActive(experience.active || false);
@@ -185,12 +184,6 @@ export default function ExperienceDataAdmin(props) {
       getExperience();
     }
   }, [endpointStatus]);
-
-  useEffect(() => {
-    if (userLoaded) {
-      Settings.defaultZone = user.timezone;
-    }
-  }, [userLoaded]);
 
   useEffect(() => {
     dispatch(setDirty(category));

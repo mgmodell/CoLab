@@ -207,12 +207,6 @@ export default function CourseList(props) {
     }
   }, [endpointStatus]);
 
-  useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash) {
-      Settings.defaultZoneName = tz_hash[user.timezone];
-    }
-  }, [user.lastRetrieved, tz_hash]);
-
   const postNewMessage = msgs => {
     setMessages(msgs);
     setShowErrors(true);
