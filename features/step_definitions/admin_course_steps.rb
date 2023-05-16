@@ -336,16 +336,16 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
   # step 'the user enables the "Actions" table view option'
-  url = if type == 'student'
-          "#{add_students_path}?"
-        else
-          "#{add_instructors_path}?"
-        end
+  #url = if type == 'student'
+  #        "#{add_students_path}?"
+  #      else
+  #        "#{add_instructors_path}?"
+  #      end
   find(:xpath, '//div[@id="pagination-rows"]').click
   find(:xpath, '//li[text()="100"]').click
 
   step 'the user switches to the "Students" tab'
-  # step 'the user enables the "Email" table view option'
+  step 'the user enables the "Email" table view option'
   if addresses == 'user_list'
     @users.each do |_address|
       step 'the user enables the "Email" table view option'

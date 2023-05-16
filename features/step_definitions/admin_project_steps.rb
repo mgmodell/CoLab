@@ -99,7 +99,7 @@ Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
 end
 
 Then 'the user enables the {string} table view option' do |view_option|
-  find(:xpath, "//button[@aria-label='Select columns']").click
+  find(:xpath, "//button[@aria-label='View Columns']").click
 
   begin
     retries ||= 0
