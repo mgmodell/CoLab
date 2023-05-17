@@ -103,7 +103,8 @@ Then 'the user enables the {string} table view option' do |view_option|
 
   begin
     retries ||= 0
-    inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]", visible: :all)
+    # inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]", visible: :all)
+    inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]" ).sibling('span').find(:xpath, 'input', visible: :all )
   rescue StandardError => e
     log e.inspect
     sleep 0.1
