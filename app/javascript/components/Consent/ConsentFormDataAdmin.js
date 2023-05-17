@@ -13,8 +13,6 @@ import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import Tab from "@mui/material/Tab";
 
-import { Settings } from "luxon";
-
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -38,10 +36,6 @@ export default function ConsentFormDataAdmin(props) {
     state => state.context.status.endpointsLoaded
   );
   const { t } = useTranslation(`${category}s`);
-  const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
   const { consentFormIDParam } = useParams();
 
   const dispatch = useDispatch();

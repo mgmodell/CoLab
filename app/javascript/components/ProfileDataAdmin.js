@@ -63,9 +63,6 @@ export default function ProfileDataAdmin(props) {
   const user = useTypedSelector(state => state.profile.user);
   const lastRetrieved = useTypedSelector(state => state.profile.lastRetrieved);
   const [initRetrieved, setInitRetrieved] = useState(lastRetrieved);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
 
   const profileReady = endpointStatus && lookupStatus;
   const existingProfile = profileReady && undefined != user && user.id > 0;

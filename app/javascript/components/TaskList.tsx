@@ -47,9 +47,6 @@ export default function TaskList(props: Props) {
   const { t } = useTranslation( category );
   const user = useTypedSelector(state => state.profile.user);
 
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
   const navigate = useNavigate();
 
   const newColumns: GridColDef[] = [
@@ -136,8 +133,7 @@ export default function TaskList(props: Props) {
     return found;
   }, [props.tasks])
 
-  const tableOfTasks =
-    null !== user.lastRetrieved && null !== tz_hash ? (
+  const tableOfTasks = null !== user.lastRetrieved? (
       <DataGrid
         isCellEditable={() => false}
         columns={newColumns}

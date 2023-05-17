@@ -37,10 +37,6 @@ export default function SchoolDataAdmin(props) {
     return state.context.status.endpointsLoaded;
   });
   //const { t, i18n } = useTranslation('schools' );
-  const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
   const userLoaded = useTypedSelector(state => {
     return null != state.profile.lastRetrieved;
   });

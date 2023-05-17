@@ -28,11 +28,6 @@ type Props = {
 export default function SubmissionList(props:Props) {
   const category = "assignment";
 
-  const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
-
   const { t } = useTranslation(`${category}s`);
 
   const [messages, setMessages] = useState({});

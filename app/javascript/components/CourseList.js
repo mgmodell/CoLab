@@ -37,9 +37,6 @@ export default function CourseList(props) {
   const location = useLocation( );
 
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 

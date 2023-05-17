@@ -31,9 +31,6 @@ export default function CandidateListEntry(props) {
     state => state.context.status.endpointsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
   const { t, i18n } = useTranslation("candidate_lists");
 
   const { bingoGameId } = useParams();

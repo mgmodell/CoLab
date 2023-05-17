@@ -19,9 +19,6 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function CourseAdmin(props) {
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
 
   return (
     <Routes>

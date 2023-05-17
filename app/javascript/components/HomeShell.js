@@ -44,9 +44,6 @@ export default function HomeShell(props) {
 
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
   const [tasks, setTasks] = useState();
 
   useEffect(() => {
