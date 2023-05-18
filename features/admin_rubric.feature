@@ -173,6 +173,7 @@ Feature: Rubric administration
     Then remember the data for criteria 3
     Then the user searches for "Trojan"
     Then the user edits the "Trojan War Diorama" rubric
+    Then 'decrement' sequence of remembered criteria by 1
      And the user sees that criteria 3 matches the remembered criteria
      And the user deletes criteria 2
     Then the user clicks "Save Rubric"

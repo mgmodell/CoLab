@@ -315,6 +315,11 @@ Then('remember the data for criteria {int}') do |criteria_num|
   @criterium = @rubric.criteria[criteria_num - 1]
 end
 
+Then('{string} sequence of remembered criteria by {int}') do |inc_or_dec, raw_delta|
+  delta = 'increment' == inc_or_dec ? raw_delta * 2 : raw_delta * -2
+  @criterium.sequence+= delta
+end
+
 Then('the user sees that criteria {int} matches the remembered criteria') do |criteria_num|
   fields = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')][#{criteria_num}]/div")
   fields.each do |field|
@@ -349,13 +354,15 @@ Then('the user sees that criteria {int} matches the remembered criteria') do |cr
       else
         @criterium.l5_description.should eq field.text
       end
-    when 'content'
+    when 'sequence'
       @criterium.sequence.should eq field.text.to_i
     when 'actions'
       # no test - these are buttons
     else
       # untested field
-      puts "field not tested: #{field['data-field']}: #{field.text}"
+      if !field.text.blank?
+        true.should eq( false ), "field not tested: #{field['data-field']}: #{field.text}"
+      end
     end
   end
 end
