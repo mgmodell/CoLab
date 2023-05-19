@@ -38,7 +38,35 @@ const BingoDataRepresentation = React.lazy(() =>
   import("./BingoBoards/BingoDataRepresentation")
 );
 
-export default function CourseUsersList(props) {
+enum UserListType {
+  student = 'student',
+  instructor = 'instructor'
+};
+
+type StudentData = {
+  assessment_performance: number;
+  bingo_data: Array<number>;
+  bingo_performance: number;
+  drop_link: string;
+  email: string;
+  experience_performance: number;
+  first_name: string;
+  id: number;
+  last_name: string;
+  reinvite_link: string;
+  status: UserListType;
+};
+
+type Props = {
+  courseId: number;
+  retrievalUrl: string;
+  usersList: Array<StudentData>; //Need an interface for the users
+  usersListUpdateFunc: (usersList: Array<StudentData> ) => void;
+  userType: UserListType;
+  addMessagesFunc: ({}) => void
+};
+
+export default function CourseUsersList(props :Props) {
   const category = "courses";
   const { t } = useTranslation(category);
 
@@ -520,12 +548,4 @@ export default function CourseUsersList(props) {
   );
 }
 
-CourseUsersList.propTypes = {
-  courseId: PropTypes.number.isRequired,
-  retrievalUrl: PropTypes.string.isRequired,
-  usersList: PropTypes.array,
-  usersListUpdateFunc: PropTypes.func.isRequired,
-
-  userType: PropTypes.oneOf(["student", "instructor"]),
-  addMessagesFunc: PropTypes.func.isRequired
-};
+export {UserListType, StudentData};

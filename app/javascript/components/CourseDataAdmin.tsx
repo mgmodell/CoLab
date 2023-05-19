@@ -41,6 +41,7 @@ import MUIDataTable from "mui-datatables";
 
 import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { StudentData, UserListType } from "./CourseUsersList";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 
 export default function CourseDataAdmin(props) {
@@ -73,7 +74,7 @@ export default function CourseDataAdmin(props) {
   const [courseName, setCourseName] = useState("");
   const [courseNumber, setCourseNumber] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
-  const [courseUsersList, setCourseUsersList] = useState();
+  const [courseUsersList, setCourseUsersList] = useState(Array<StudentData>);
   const [courseActivities, setCourseActivities] = useState([]);
   const [courseStartDate, setCourseStartDate] = useState(DateTime.local());
   //Using this Luxon function for later i18n
@@ -626,7 +627,7 @@ export default function CourseDataAdmin(props) {
             retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
             usersList={courseUsersList}
             usersListUpdateFunc={setCourseUsersList}
-            userType="instructor"
+            userType={UserListType.instructor}
             addMessagesFunc={postNewMessage}
           />
         </TabPanel>
@@ -636,7 +637,7 @@ export default function CourseDataAdmin(props) {
             retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
             usersList={courseUsersList}
             usersListUpdateFunc={setCourseUsersList}
-            userType="student"
+            userType={UserListType.student}
             addMessagesFunc={postNewMessage}
           />
         </TabPanel>
