@@ -102,8 +102,8 @@ GEM
       safely_block (>= 0.1.1)
     ast (2.4.2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.763.0)
-    aws-sdk-core (3.172.0)
+    aws-partitions (1.766.0)
+    aws-sdk-core (3.173.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
@@ -260,7 +260,7 @@ GEM
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    loofah (2.21.2)
+    loofah (2.21.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.8.1)
@@ -298,14 +298,14 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.14.4)
-      mini_portile2 (~> 2.8.0)
+    nokogiri (1.15.0)
+      mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.14.4-aarch64-linux)
+    nokogiri (1.15.0-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.14.4-arm64-darwin)
+    nokogiri (1.15.0-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.14.4-x86_64-linux)
+    nokogiri (1.15.0-x86_64-linux)
       racc (~> 1.4)
     oauth2 (2.0.9)
       faraday (>= 0.17.3, < 3.0)
@@ -426,7 +426,7 @@ GEM
     reverse_markdown (2.1.1)
       nokogiri
     rexml (3.2.5)
-    rqrcode (2.1.2)
+    rqrcode (2.2.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
     rqrcode_core (1.2.0)
@@ -443,7 +443,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-support (3.12.0)
-    rubocop (1.50.2)
+    rubocop (1.51.0)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.2.0.0)
@@ -611,7 +611,7 @@ DEPENDENCIES
   reek
   report_builder
   rspec
-  rubocop (~> 1.50.1)
+  rubocop (~> 1.51.0)
   rubocop-performance
   rubocop-rails
   rubocop-thread_safety
