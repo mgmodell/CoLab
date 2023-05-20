@@ -49,7 +49,7 @@ export default function TaskList(props: Props) {
 
   const navigate = useNavigate();
 
-  const newColumns: GridColDef[] = [
+  const columns: GridColDef[] = [
     {
       headerName: t( 'list.type' ),
       field: 'type',
@@ -126,7 +126,6 @@ export default function TaskList(props: Props) {
 
   const instructorTasks = useMemo( ()=>{
     let found = false;
-    console.log( props.tasks );
     props.tasks.forEach( (task)=>{
       found ||= task.instructor_task;
     })
@@ -136,7 +135,7 @@ export default function TaskList(props: Props) {
   const tableOfTasks = null !== user.lastRetrieved? (
       <DataGrid
         isCellEditable={() => false}
-        columns={newColumns}
+        columns={columns}
         getRowId={(row ) =>{
           const uid =`${row.type}-${row.id}`;
           return uid;

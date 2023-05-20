@@ -99,12 +99,12 @@ Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
 end
 
 Then 'the user enables the {string} table view option' do |view_option|
-  find(:xpath, "//button[@aria-label='View Columns']").click
+  find(:xpath, "//button[@aria-label='Select columns']").click
 
   begin
     retries ||= 0
     # inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]", visible: :all)
-    inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]" ).sibling('span').find(:xpath, 'input', visible: :all )
+    inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]" ).sibling('span').find(:xpath, './span/input', visible: false )
   rescue StandardError => e
     log e.inspect
     sleep 0.1

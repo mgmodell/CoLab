@@ -335,13 +335,8 @@ end
 Then 'the user drops the {string} users {string}' do |type, addresses|
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
-  # step 'the user enables the "Actions" table view option'
-  #url = if type == 'student'
-  #        "#{add_students_path}?"
-  #      else
-  #        "#{add_instructors_path}?"
-  #      end
-  find(:xpath, '//div[@id="pagination-rows"]').click
+
+  find_all( :xpath, '//div[contains(@class,"Pagination-select")]' )[0].click
   find(:xpath, '//li[text()="100"]').click
 
   step 'the user switches to the "Students" tab'
@@ -357,9 +352,15 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
       wait_for_render
     end
   else
-    elem = find(:xpath,
-                "//tr[td[contains(.,'#{addresses}')]]//button[@aria-label='Drop Student']")
+    # Find the email
+    elem = find(:xpath, "//div[contains(.,'#{addresses}') and @data-field='email']" )
+    # Get the parent
+    elem = elem.ancestor( :xpath, '//div[@role="row"]' )
+    # Get the button
+    elem = elem.find( :xpath, "./div[@data-field='id']/button[@aria-label='Drop Student']")
+
     elem.click
+
     find(:xpath,
          "//button[text()='Drop the Student']").click
     wait_for_render
