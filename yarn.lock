@@ -1337,9 +1337,9 @@
     react-is "^18.2.0"
 
 "@mui/x-data-grid@^6.0.1":
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.4.0.tgz#1ce476c9a213e0e651288ff3384b2bf43f5d238f"
-  integrity sha512-rFpjJh4ZTJW3JnjmTsn5B32PMMJtjxTdRZyjn3Re5K/BA/iJQvN1qHO26qoqbo4Vt3b3dbRLThM/Q0N59PL2Fw==
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.5.0.tgz#7cb8c0049c7d701f23374ec604cfa9ea10b9e34b"
+  integrity sha512-S90o+hwUvm0XC/tCyqSMpL3fGzYSF3P1FfybZPCe3ayVQVV/aR0LQUbfUEHlHUv49qUJ+y9c/QsElrr7BsYrNw==
   dependencies:
     "@babel/runtime" "^7.21.0"
     "@mui/utils" "^5.12.3"
@@ -1348,13 +1348,13 @@
     reselect "^4.1.8"
 
 "@mui/x-date-pickers@^6.0.1":
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.4.0.tgz#97ca181edbc0d56abe08c93b036f97d8e9946572"
-  integrity sha512-EdKj+TVaEvx+nIljsv1BlDOYYwcMWVYB+ZMRoOCStFojY5uuDzhttQAP6DbsAPPrpKt1lzyecIukLfmIfIGcsA==
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.5.0.tgz#b71dbf9d8961fb34d9d829a4c6f9159ebb4e9206"
+  integrity sha512-dRCO1mzHjfOqsa4LdKxiXQnV0cuGiAkliyxSDCdRn6clK2WdF9Oj+1+4Mkx7fcJA61SV1eP4Yg29s0/VDsZKZw==
   dependencies:
     "@babel/runtime" "^7.21.0"
     "@mui/utils" "^5.12.3"
-    "@types/react-transition-group" "^4.4.5"
+    "@types/react-transition-group" "^4.4.6"
     clsx "^1.2.1"
     prop-types "^15.8.1"
     react-transition-group "^4.4.5"
@@ -1709,7 +1709,7 @@
     hoist-non-react-statics "^3.3.0"
     redux "^4.0.0"
 
-"@types/react-transition-group@^4.4.5", "@types/react-transition-group@^4.4.6":
+"@types/react-transition-group@^4.4.6":
   version "4.4.6"
   resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-4.4.6.tgz#18187bcda5281f8e10dfc48f0943e2fdf4f75e2e"
   integrity sha512-VnCdSxfcm08KjsJVQcfBmhEQAPnLB8G08hAxn39azX1qYBQ/5RVQuoHuKIcfKOdncuaUvEpFKFzEvbtIMsfVew==
@@ -2984,9 +2984,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.284:
-  version "1.4.401"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.401.tgz#cbd2c332c4a833e9e8d2ec5b3a6cd85ec6920907"
-  integrity sha512-AswqHsYyEbfSn0x87n31Na/xttUqEAg7NUjpiyxC20MaWKLyadOYHMzyLdF78N1iw+FK8/2KHLpZxRdyRILgtA==
+  version "1.4.402"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.402.tgz#9aa7bbb63081513127870af6d22f829344c5ba57"
+  integrity sha512-gWYvJSkohOiBE6ecVYXkrDgNaUjo47QEKK0kQzmWyhkH+yoYiG44bwuicTGNSIQRG3WDMsWVZJLRnJnLNkbWvA==
 
 email-validator@^2.0.4:
   version "2.0.4"
@@ -4870,9 +4870,9 @@ react@^18.2.0:
     loose-envify "^1.1.0"
 
 react_ujs@^2.6.2:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/react_ujs/-/react_ujs-2.7.0.tgz#988ebfb57f0ad9e7fb1e0109021bba7f6526f756"
-  integrity sha512-uCYdLT6rDQnnrwZorFo+oHddvuJzt/At3Avl+vy2hfp1fZPqkOjSWlvnCVglNS8+qhMaY3tKCg2P5cjqhpHSYw==
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/react_ujs/-/react_ujs-2.7.1.tgz#d87cbcb82593fe59d30fc5dbc51800d1571001a8"
+  integrity sha512-nQ/y/Vn2hZQXjNxFKY4pV5hAQbG3o/8yaRzq3nJAAdk7tMgey/EsMKoDOWlEQxZ+D3J4BtwquW1oCESMiHSHnQ==
 
 read-pkg@^4.0.1:
   version "4.0.1"

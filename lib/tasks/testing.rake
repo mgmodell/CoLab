@@ -436,6 +436,15 @@ namespace :testing do
           course.anon_number = "#{depts.sample}-#{rand(100..700)}" if course.anon_number.blank?
           course.save
         end
+
+        Assignment.find_each do |assignment|
+          assignment.anon_name = "#{Faker::Company.profession} #{Faker::Company.industry}"
+          assignment.anon_description = "#{Faker::Lorem.sentence(
+            word_count: 8,
+            supplemental: true,
+            random_words_to_add: 9
+          )}"
+        end
       end
     end
     ActiveRecord::Base.connection.execute("TRUNCATE ahoy_messages" )
