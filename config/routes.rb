@@ -48,6 +48,10 @@ Rails.application.routes.draw do
 
     resources :rubric_row_feedbacks, :submission_feedbacks, :submissions, only: %i[create update show]
 
+    get 'assignment/critiques/:id' => 'submissions#index_for_assignment',
+         as: 'assignment_critiques',
+         constraints: ->(req) { req.format == :json }
+
     get 'rubrics/new/' => 'rubrics#show', as: :new_rubric
     post 'rubrics/:school_id' => 'rubrics#create'
     get 'rubrics/copy/:id' => 'rubrics#copy',

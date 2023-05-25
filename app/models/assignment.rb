@@ -39,18 +39,27 @@ class Assignment < ApplicationRecord
   end
 
   def task_data(current_user:)
-    group = project.group_for_user(current_user) if project.present?
-    link = "/#{get_link}/#{id}"
+    is_faculty = course.rosters.where( user: current_user ).faculty.size > 0
+
+    group = project.group_for_user(current_user) if project.present? && !is_faculty
+    link = is_faculty ? "assignment/critiques/#{id}" :"/#{get_link}/#{id}"
 
     log = course.get_consent_log(user: current_user)
     consent_link = ("/research_information/#{log.consent_form_id}" if log.present?)
+    status =  if is_faculty
+                submissions.where( withdrawn: nil, recorded_score: nil )
+                .and( Submission.where.not( submitted: nil ) )
+              else
+                status_for_user( current_user )
+              end
+
     {
       id:,
-      type: :assignment,
-      instructor_task: false,
+      type: is_faculty ? :submission : :assignment,
+      instructor_task: is_faculty,
       name: get_name(false),
       group_name: group.present? ? group.get_name(false) : nil,
-      status: status_for_user(current_user),
+      status:,
       course_name: course.get_name(false),
       start_date:,
       end_date:,

@@ -25,6 +25,7 @@ import RequireAuth from "./infrastructure/RequireAuth";
 
 import HomeShell from "./HomeShell";
 import BingoShell from "./BingoBoards/BingoShell";
+import AssignmentShell from "./assignments/AssignmentShell";
 
 const ProfileDataAdmin = React.lazy(() => import("./ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
@@ -126,10 +127,10 @@ export default function PageWrapper(props) {
                   />
                   {/* Perhaps subgroup under Assignment */}
                   <Route
-                    path={`assignment/:assignmentId`}
+                    path={`assignment/*`}
                     element={
                       <RequireAuth>
-                        <AssignmentSubmission />
+                        <AssignmentShell />
                       </RequireAuth>
                     }
                   />

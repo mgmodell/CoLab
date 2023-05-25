@@ -16,32 +16,6 @@ class Submission < ApplicationRecord
     assignment.end_date
   end
 
-  def get_link
-    'submission'
-  end
-
-  def task_data(current_user:)
-    group = assignment.project.group_for_user(current_user) if assignment.project.present?
-    link = "/#{get_link}/#{id}"
-
-    consent_link = nil
-    {
-      id:,
-      type: :submission,
-      instructor_task: true,
-      name: assignment.get_name(false),
-      group_name: group.present? ? group.get_name(false) : nil,
-      status: nil,
-      course_name: course.get_name(false),
-      start_date: assignment.start_date,
-      end_date: assignment.end_date,
-      next_date: assignment.start_date > Date.current ? assignment.start_date : assignment.end_date,
-      link:,
-      consent_link:,
-      active: assignment.active
-    }
-  end
-
   private
 
   def group_valid
@@ -80,7 +54,11 @@ class Submission < ApplicationRecord
       end
       self.withdrawn = current
     elsif !submitted_was.nil?
-      errors.add :main, I18n.t('submissions.error.no_changes_once_submitted')
+      if recorded_score.changed? && changes.size > 1
+        errors.add :main, I18n.t('submissions.error.only_score_change_post_submission')
+      else
+        errors.add :main, I18n.t('submissions.error.no_changes_once_submitted')
+      end
     end
   end
 

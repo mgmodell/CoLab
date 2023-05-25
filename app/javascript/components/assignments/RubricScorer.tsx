@@ -8,36 +8,11 @@ import parse from 'html-react-parser';
 
 import { useTranslation } from "react-i18next";
 import { Grid, Typography } from "@mui/material";
-
-interface ICriteria{
- id: number;
- description: string;
- weight: number;
- sequence: number;
- l1_description: string;
- l2_description: string | null;
- l3_description: string | null;
- l4_description: string | null;
- l5_description: string | null;
-};
-
-interface IRubricData {
- name: string;
- description: string;
- version: number;
- criteria: Array<ICriteria>
-};
+import { IRubricData, ICriteria } from "./RubricViewer";
 
 type Props = {
   rubric: IRubricData;
 };
-
-const CLEAN_RUBRIC: IRubricData = {
-  name: '',
-  description: '',
-  version: 0,
-  criteria: []
-}
 
 export default function RubricViewer(props: Props) {
   const endpointSet = "assignment";
@@ -114,5 +89,3 @@ export default function RubricViewer(props: Props) {
 
   return evaluation;
 }
-
-export { IRubricData, CLEAN_RUBRIC, ICriteria };
