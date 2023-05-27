@@ -6,12 +6,14 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { Allotment } from 'allotment';
 
 import { useTranslation } from "react-i18next";
-import { Grid, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import { ISubmissionCondensed } from "./AssignmentViewer";
 import { DataGrid, GridRowModel, GridColDef } from "@mui/x-data-grid";
+import Grid from "@mui/material/Unstable_Grid2";
 
 type Props = {
 };
@@ -27,10 +29,9 @@ export default function CritiqueShell(props: Props) {
   const dispatch = useDispatch( );
 
   const { assignmentId } = useParams( );
-  console.log( assignmentId );
 
   const [t, i18n] = useTranslation( `${category}s` );
-  const [panels, setPanels] = useState( () => ['submissions', 'submitted', 'feedback', 'history'] )
+  const [panels, setPanels] = useState( () => ['submissions'] )
   const [submissions, setSubmissions] = useState( Array<ISubmissionCondensed> );
 
   const columns: GridColDef[] = [
@@ -59,57 +60,95 @@ export default function CritiqueShell(props: Props) {
     axios.get( url )
       .then(response => {
         const data = response.data;
-        console.log( data );
         setSubmissions( data.submissions );
       })
   }
 
   return (
     <>
-    <ToggleButtonGroup
-      size="small"
-      value={panels}
-      onChange={handlePaneSelection}
-      aria-label="panels">
-      <ToggleButton value='submissions' aria-label={t('submissions')}>
-        {t('submissions')}
-      </ToggleButton>
-      <ToggleButton value='submitted' aria-label={t('submitted')}>
-        {t('submitted')}
-      </ToggleButton>
-      <ToggleButton value='feedback' aria-label={t('feedback')}>
-        {t('feedback')}
-      </ToggleButton>
-      <ToggleButton value='history' aria-label={t('history')}>
-        {t('history')}
-      </ToggleButton>
-    </ToggleButtonGroup>
-    <div>
-          <DataGrid
-            getRowId={(model: GridRowModel) => {
-              return model.id;
-            }}
-            autoHeight
-            rows={submissions}
-            columns={columns}
-            isCellEditable={params => {
-              return false;
-            }}
-            onCellClick={(params, event, details) => {
-                //navigate(String(params.row.id));
-            }}
-            components={{
-              //Toolbar: AdminListToolbar
-            }}
-            componentsProps={{
-              toolbar: {
-                activityType: "submission"
-              }
-            }}
-          />
-      
+    <Grid container columns={12}>
+    <Grid display={'flex'}
+      justifyContent={'center'}
+      alignItems={'center'}
+      xs={12} >
+      <ToggleButtonGroup
+        size="small"
+        value={panels}
+        onChange={handlePaneSelection}
+        aria-label="panels">
+        <ToggleButton value='submissions' aria-label={t('submissions_title')}>
+          {t('submissions_title')}
+        </ToggleButton>
+        <ToggleButton value='submitted' aria-label={t('submitted')}>
+          {t('submitted')}
+        </ToggleButton>
+        <ToggleButton value='feedback' aria-label={t('feedback')}>
+          {t('feedback')}
+        </ToggleButton>
+        <ToggleButton value='history' aria-label={t('history')}>
+          {t('history')}
+        </ToggleButton>
+      </ToggleButtonGroup>
 
-    </div>
+    </Grid>
+      {panels.includes('submissions') ? (
+        <Grid xs={12 / panels.length } >
+          <Typography variant="h6">
+            {t('submissions_title')}
+          </Typography>
+              <DataGrid
+                getRowId={(model: GridRowModel) => {
+                  return model.id;
+                }}
+                autoHeight
+                rows={submissions}
+                columns={columns}
+                isCellEditable={params => {
+                  return false;
+                }}
+                onCellClick={(params, event, details) => {
+                    //navigate(String(params.row.id));
+                }}
+                components={{
+                  //Toolbar: AdminListToolbar
+                }}
+                componentsProps={{
+                  toolbar: {
+                    activityType: "submission"
+                  }
+                }}
+              />
+
+        </Grid>
+      ): null}
+      {panels.includes('submitted') ? (
+        <Grid xs={12 / panels.length } >
+          <Typography variant="h6">
+            {t('submitted')}
+          </Typography>
+          {t('error.not_loaded')}
+        </Grid>
+      ): null}
+      {panels.includes('feedback') ? (
+        <Grid xs={12 / panels.length } >
+          <Typography variant="h6">
+            {t('feedback')}
+          </Typography>
+          {t('error.not_loaded')}
+        </Grid>
+      ): null}
+      {panels.includes('history') ? (
+        <Grid xs={12 / panels.length } >
+          <Typography variant="h6">
+            {t('history')}
+          </Typography>
+          {t('error.not_loaded')}
+        </Grid>
+      ): null}
+
+    </Grid>
+
+    
     </>
 
   );
