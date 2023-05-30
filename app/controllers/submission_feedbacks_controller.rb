@@ -3,17 +3,26 @@ class SubmissionFeedbacksController < ApplicationController
 
   # GET /assignment/critiques/1 or /assignment/critiques/1.json
   def index_for_assignment
-    submissions = Submission.includes(:user, :group).where( assignment_id: params[:id] )
+    assignment = Assignment.includes( submissions: [:user, :group ]).find( params[:id] )
     respond_to do |format|
       format.json do
         render json: {
-          submissions: submissions.as_json(
+          assignment: assignment.as_json(
             include: {
-              user: {only: %i[ id first_name last_name email]},
-              group: { only: [ :id, :name, users: { only: %i[ first_name last_name email ]} ]},
+              submissions: {
+                include: {
+                  user: {only: %i[ id first_name last_name email]},
+                  group: { only: [ :id, :name, users: { only: %i[ first_name last_name email ]} ]},
+                },
+                only: %i[id submitted withdrawn recorded_score sub_text sub_link updated_at ]
+
+              }
+
             },
-            only: %i[id submitted withdrawn recorded_score sub_text sub_link updated_at ]
-          ) }
+            only: %i[ id name file_sub link_sub text_sub group_enabled ]
+
+          )
+        }
       end
     end
   end

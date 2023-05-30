@@ -8,12 +8,13 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 
 import { useTranslation } from "react-i18next";
-import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import { Link, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import { ISubmissionCondensed } from "./AssignmentViewer";
 import { DataGrid, GridRowModel, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import Grid from "@mui/material/Unstable_Grid2";
 import {DateTime} from 'luxon';
+import parse from 'html-react-parser';
 
 interface ISubmissionData{
   id: number;
@@ -58,6 +59,9 @@ export default function CritiqueShell(props: Props) {
   const [panels, setPanels] = useState( () => ['submissions'] )
   const [submissionsIndex, setSubmissionsIndex] = useState( Array<ISubmissionCondensed> );
   const [selectedSubmission, setSelectedSubmission] = useState <number|null> (  );
+  const [assignmentAcceptsText, setAssignmentAcceptsText] = useState( false );
+  const [assignmentAcceptsLink, setAssignmentAcceptsLink] = useState( false );
+  const [assignmentGroupEnabled, setAssignmentGroupEnabled] = useState( false );
 
   const columns: GridColDef[] = [
     { field: "recordedScore", headerName: t("submissions.score") },
@@ -91,7 +95,12 @@ export default function CritiqueShell(props: Props) {
     axios.get( url )
       .then(response => {
         const data = response.data;
-        setSubmissionsIndex( data.submissions );
+        console.log( data.assignment );
+        setAssignmentAcceptsText( data.assignment.text_sub );
+        setAssignmentAcceptsLink( data.assignment.link_sub );
+        setAssignmentGroupEnabled( data.assignment.group_enabled );
+        setSubmissionsIndex( data.assignment.submissions );
+        
       })
   }
 
@@ -103,6 +112,10 @@ export default function CritiqueShell(props: Props) {
         const data = response.data;
         console.log( data.submission );
         setSelectedSubmission( data.submission );
+        if( !panels.includes('submitted') ){
+          const tmpPanels = [...panels, 'submitted'];
+          setPanels( tmpPanels );
+        }
       }).finally( () =>{
         dispatch( endTask() );
       })
@@ -173,7 +186,12 @@ export default function CritiqueShell(props: Props) {
           <Typography variant="h6">
             {t('submitted')}
           </Typography>
-          {t('error.not_loaded')}
+          {assignmentAcceptsLink ? <Link href={selectedSubmission.sub_link}>{selectedSubmission.sub_link}</Link> : null}
+          {assignmentAcceptsText ? (
+          <Typography>
+            {parse( selectedSubmission.sub_text )}
+          </Typography>
+          ) : null }
         </Grid>
       ): null}
       {panels.includes('feedback') ? (
