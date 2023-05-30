@@ -1,20 +1,6 @@
 class SubmissionsController < ApplicationController
   before_action :set_submission, only: %i[show edit update destroy]
 
-  # GET /submissions_for/1 or /submissions_for/1.json
-  def index_for_assignment
-    submissions = Submission.includes(:user, :group).where( assignment_id: params[:id] )
-    respond_to do |format|
-      format.json do
-        render json: {
-          submissions: submissions.as_json(
-            user: {only: %i[ id first_name last_name email]},
-            group: { only: [ :id, :name, users: { only: %i[ first_name last_name email ]} ]},
-            only: %i[id submitted withdrawn recorded_score sub_text sub_link updated_at ]
-          ) }
-      end
-    end
-  end
 
   # GET /submissions/1 or /submissions/1.json
   def show

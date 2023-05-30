@@ -46,10 +46,15 @@ Rails.application.routes.draw do
 
     resources :assignments, :rubrics, :consent_forms, :schools, :courses, :experiences, :projects, :bingo_games, except: %i[new create]
 
-    resources :rubric_row_feedbacks, :submission_feedbacks, :submissions, only: %i[create update show]
+    resources :submissions, only: %i[update show]
+    resources :submission_feedbacks, only: %i[update]
 
-    get 'assignment/critiques/:id' => 'submissions#index_for_assignment',
+    get 'assignment/critiques/:id' => 'submission_feedbacks#index_for_assignment',
          as: 'assignment_critiques',
+         constraints: ->(req) { req.format == :json }
+
+    get 'assignment/critique/:submission_id' => 'submission_feedbacks#show',
+         as: 'critique_assignment',
          constraints: ->(req) { req.format == :json }
 
     get 'rubrics/new/' => 'rubrics#show', as: :new_rubric

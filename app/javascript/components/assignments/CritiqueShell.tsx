@@ -6,14 +6,38 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { Allotment } from 'allotment';
 
 import { useTranslation } from "react-i18next";
 import { ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import { ISubmissionCondensed } from "./AssignmentViewer";
-import { DataGrid, GridRowModel, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridRowModel, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import Grid from "@mui/material/Unstable_Grid2";
+import {DateTime} from 'luxon';
+
+interface ISubmissionData{
+  id: number;
+  recordedScore: number;
+  submitted: DateTime;
+  withdrawn: DateTime;
+  sub_text: string;
+  sub_link: string;
+  rubric: IRubricData;
+  feedback: IFeedback;
+}
+
+interface IFeedback{
+  id: number;
+  feedback: string;
+  rows: Map<number,IRowFeedback>;
+}
+
+interface IRowFeedback{
+  id: number;
+  criterium_id: number;
+  score: number;
+  feedback: string;
+}
 
 type Props = {
 };
@@ -32,13 +56,20 @@ export default function CritiqueShell(props: Props) {
 
   const [t, i18n] = useTranslation( `${category}s` );
   const [panels, setPanels] = useState( () => ['submissions'] )
-  const [submissions, setSubmissions] = useState( Array<ISubmissionCondensed> );
+  const [submissionsIndex, setSubmissionsIndex] = useState( Array<ISubmissionCondensed> );
+  const [selectedSubmission, setSelectedSubmission] = useState <number|null> (  );
 
   const columns: GridColDef[] = [
     { field: "recordedScore", headerName: t("submissions.score") },
     { field: "submitted", headerName: t("submissions.submitted") },
     { field: "withdrawn", headerName: t("submissions.withdrawn") },
-    { field: "user", headerName: t("submissions.submitter") },
+    {
+      field: "user",
+      headerName: t("submissions.submitter"),
+      renderCell: (params: GridRenderCellParams) =>{
+          return `${params.value.last_name}, ${params.value.first_name}`;
+      }
+    },
   ];
 
   const handlePaneSelection = (
@@ -60,7 +91,20 @@ export default function CritiqueShell(props: Props) {
     axios.get( url )
       .then(response => {
         const data = response.data;
-        setSubmissions( data.submissions );
+        setSubmissionsIndex( data.submissions );
+      })
+  }
+
+  const getSubmission = (submissionId:number) => {
+    dispatch( startTask());
+    const url = `${endpoints.showUrl}${submissionId}.json`;
+    axios.get( url )
+      .then(response => {
+        const data = response.data;
+        console.log( data.submission );
+        setSelectedSubmission( data.submission );
+      }).finally( () =>{
+        dispatch( endTask() );
       })
   }
 
@@ -97,11 +141,14 @@ export default function CritiqueShell(props: Props) {
             {t('submissions_title')}
           </Typography>
               <DataGrid
+                onRowClick={(params: GridRowParams) =>{
+                  getSubmission( params.row.id );
+                }}
                 getRowId={(model: GridRowModel) => {
                   return model.id;
                 }}
                 autoHeight
-                rows={submissions}
+                rows={submissionsIndex}
                 columns={columns}
                 isCellEditable={params => {
                   return false;

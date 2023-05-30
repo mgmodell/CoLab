@@ -5,7 +5,7 @@ class Submission < ApplicationRecord
   belongs_to :rubric, inverse_of: :submissions
   has_many_attached :sub_files
 
-  has_many :submission_feedbacks, inverse_of: :submission, dependent: :destroy
+  has_one :submission_feedback, inverse_of: :submission, dependent: :destroy
   has_many :rubric_row_feedbacks, through: :submission_feedbacks
   has_one :course, through: :assignment
 

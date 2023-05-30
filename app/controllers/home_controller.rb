@@ -140,7 +140,8 @@ class HomeController < ApplicationController
           baseUrl: rubrics_path
         }
         ep_hash[:critique] = {
-          baseUrl: assignment_critiques_path(id: '' )
+          baseUrl: assignment_critiques_path(id: '' ),
+          showUrl: critique_assignment_path( submission_id: '' )
         }
         ep_hash[:consent_form] = {
           baseUrl: consent_forms_path,
