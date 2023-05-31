@@ -7,14 +7,15 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import parse from 'html-react-parser';
 
 import { useTranslation } from "react-i18next";
-import { Grid, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
+import Grid from "@mui/system/Unstable_Grid/Grid";
 
 type Props = {
   rubric: IRubricData;
 };
 
-export default function RubricViewer(props: Props) {
+export default function RubricScorer(props: Props) {
   const endpointSet = "assignment";
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -25,19 +26,19 @@ export default function RubricViewer(props: Props) {
   const [t, i18n] = useTranslation( `${endpointSet}s` );
 
   const evaluation = props.rubric !== undefined ? (
-    <React.Fragment>
-            <Grid item xs={10}>
+    <Grid container columns={70}>
+            <Grid xs={10}>
               <Typography variant="h6">{t('status.rubric_name' )}:</Typography>
             </Grid>
-            <Grid item xs={20}>
+            <Grid xs={20}>
               <Typography>
                 {props.rubric.name}
               </Typography>
             </Grid>
-            <Grid item xs={10}>
+            <Grid xs={10}>
               <Typography variant="h6">{t('status.rubric_version' )}:</Typography>
             </Grid>
-            <Grid item xs={20}>
+            <Grid xs={20}>
               <Typography>
                 {props.rubric.version}
               </Typography>
@@ -63,7 +64,7 @@ export default function RubricViewer(props: Props) {
               levels.forEach( (levelText) => {
                 index++;
                 renderedLevels.push( 
-                    <Grid item key={`${criterium.id}-${index}`} xs={span}>
+                    <Grid key={`${criterium.id}-${index}`} xs={span}>
                       {parse( levelText) }
                     </Grid>
                 );
@@ -71,11 +72,11 @@ export default function RubricViewer(props: Props) {
               
               return(
                 <React.Fragment key={criterium.id}>
-                  <Grid item xs={70}><hr></hr></Grid>
-                  <Grid item xs={10}>
+                  <Grid xs={70}><hr></hr></Grid>
+                  <Grid xs={10}>
                     { criterium.description}
                   </Grid>
-                  <Grid item xs={span}>
+                  <Grid xs={span}>
                     {t('status.rubric_minimum')}
                   </Grid>
                   { renderedLevels }
@@ -83,8 +84,8 @@ export default function RubricViewer(props: Props) {
               )
             })}
 
-      <Grid item xs={70}><hr></hr></Grid>
-    </React.Fragment>
+      <Grid xs={70}><hr></hr></Grid>
+    </Grid>
   ) : null;
 
   return evaluation;

@@ -15,6 +15,7 @@ import { DataGrid, GridRowModel, GridColDef, GridRowParams } from "@mui/x-data-g
 import Grid from "@mui/material/Unstable_Grid2";
 import {DateTime} from 'luxon';
 import parse from 'html-react-parser';
+import RubricScorer from "./RubricScorer";
 
 interface ISubmissionData{
   id: number;
@@ -199,7 +200,7 @@ export default function CritiqueShell(props: Props) {
           <Typography variant="h6">
             {t('feedback')}
           </Typography>
-          {t('error.not_loaded')}
+          <RubricScorer rubric={selectedSubmission.rubric} />
         </Grid>
       ): null}
       {panels.includes('history') ? (

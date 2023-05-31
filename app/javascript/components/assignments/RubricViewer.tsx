@@ -7,7 +7,8 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import parse from 'html-react-parser';
 
 import { useTranslation } from "react-i18next";
-import { Grid, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import Grid from "@mui/system/Unstable_Grid/Grid";
 
 interface ICriteria{
  id: number;
@@ -50,19 +51,19 @@ export default function RubricViewer(props: Props) {
   const [t, i18n] = useTranslation( `${endpointSet}s` );
 
   const evaluation = props.rubric !== undefined ? (
-    <React.Fragment>
-            <Grid item xs={10}>
+    <Grid container columns={70} >
+            <Grid xs={10}>
               <Typography variant="h6">{t('status.rubric_name' )}:</Typography>
             </Grid>
-            <Grid item xs={20}>
+            <Grid xs={20}>
               <Typography>
                 {props.rubric.name}
               </Typography>
             </Grid>
-            <Grid item xs={10}>
+            <Grid xs={10}>
               <Typography variant="h6">{t('status.rubric_version' )}:</Typography>
             </Grid>
-            <Grid item xs={20}>
+            <Grid xs={20}>
               <Typography>
                 {props.rubric.version}
               </Typography>
@@ -88,28 +89,31 @@ export default function RubricViewer(props: Props) {
               levels.forEach( (levelText) => {
                 index++;
                 renderedLevels.push( 
-                    <Grid item key={`${criterium.id}-${index}`} xs={span}>
+                    <Grid key={`${criterium.id}-${index}`} xs={span}>
                       {parse( levelText) }
                     </Grid>
                 );
               })
               
               return(
-                <React.Fragment key={criterium.id}>
-                  <Grid item xs={70}><hr></hr></Grid>
-                  <Grid item xs={10}>
+                <Grid container key={criterium.id} columns={70}>
+                  <Grid xs={70}><hr></hr></Grid>
+                  <Grid xs={10}>
                     { criterium.description}
                   </Grid>
-                  <Grid item xs={span}>
+                  <Grid xs={span}>
                     {t('status.rubric_minimum')}
                   </Grid>
+                  <Grid>
+
+                  </Grid>
                   { renderedLevels }
-                </React.Fragment>
+                </Grid>
               )
             })}
 
-      <Grid item xs={70}><hr></hr></Grid>
-    </React.Fragment>
+      <Grid xs={70}><hr></hr></Grid>
+    </Grid>
   ) : null;
 
   return evaluation;
