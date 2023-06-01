@@ -33,6 +33,7 @@ interface ISubmissionCondensed {
   submitted: DateTime;
   withdrawn: DateTime;
   user: string;
+  group: string;
 }
 
 interface IAssignment {

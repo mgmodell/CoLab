@@ -1,10 +1,6 @@
 class SubmissionsController < ApplicationController
   before_action :set_submission, only: %i[show edit update destroy]
 
-  # GET /submissions or /submissions.json
-  def index
-    @submissions = Submission.all
-  end
 
   # GET /submissions/1 or /submissions/1.json
   def show
@@ -14,14 +10,7 @@ class SubmissionsController < ApplicationController
         render json: standardized_response(@submission)
       end
     end
-
-  # GET /submissions/new
-  def new
-    @submission = Submission.new
   end
-
-  # GET /submissions/1/edit
-  def edit; end
 
   # POST /submissions or /submissions.json
   def create

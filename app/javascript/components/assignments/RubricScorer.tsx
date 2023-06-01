@@ -8,39 +8,14 @@ import parse from 'html-react-parser';
 
 import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
+import { IRubricData, ICriteria } from "./RubricViewer";
 import Grid from "@mui/system/Unstable_Grid/Grid";
-
-interface ICriteria{
- id: number;
- description: string;
- weight: number;
- sequence: number;
- l1_description: string;
- l2_description: string | null;
- l3_description: string | null;
- l4_description: string | null;
- l5_description: string | null;
-};
-
-interface IRubricData {
- name: string;
- description: string;
- version: number;
- criteria: Array<ICriteria>
-};
 
 type Props = {
   rubric: IRubricData;
 };
 
-const CLEAN_RUBRIC: IRubricData = {
-  name: '',
-  description: '',
-  version: 0,
-  criteria: []
-}
-
-export default function RubricViewer(props: Props) {
+export default function RubricScorer(props: Props) {
   const endpointSet = "assignment";
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -51,7 +26,7 @@ export default function RubricViewer(props: Props) {
   const [t, i18n] = useTranslation( `${endpointSet}s` );
 
   const evaluation = props.rubric !== undefined ? (
-    <Grid container columns={70} >
+    <Grid container columns={70}>
             <Grid xs={10}>
               <Typography variant="h6">{t('status.rubric_name' )}:</Typography>
             </Grid>
@@ -96,7 +71,7 @@ export default function RubricViewer(props: Props) {
               })
               
               return(
-                <Grid container key={criterium.id} columns={70}>
+                <React.Fragment key={criterium.id}>
                   <Grid xs={70}><hr></hr></Grid>
                   <Grid xs={10}>
                     { criterium.description}
@@ -104,11 +79,8 @@ export default function RubricViewer(props: Props) {
                   <Grid xs={span}>
                     {t('status.rubric_minimum')}
                   </Grid>
-                  <Grid>
-
-                  </Grid>
                   { renderedLevels }
-                </Grid>
+                </React.Fragment>
               )
             })}
 
@@ -118,5 +90,3 @@ export default function RubricViewer(props: Props) {
 
   return evaluation;
 }
-
-export { IRubricData, CLEAN_RUBRIC, ICriteria };

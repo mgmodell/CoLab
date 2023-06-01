@@ -3,6 +3,7 @@ const AssignmentIcon = lazy( () => import('@mui/icons-material/Assignment'))
 const TuneIcon = lazy( () => import('@mui/icons-material/Tune'))
 const LocalLibraryIcon = lazy( () => import('@mui/icons-material/LocalLibrary'))
 const GridOffIcon = lazy( () => import('@mui/icons-material/GridOff'))
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 export function iconForType(type: string) {
   var icon;
@@ -26,6 +27,9 @@ export function iconForType(type: string) {
     case 'assignment':
     case 'Assignments':
       icon = <AssignmentIcon />;
+      break;
+    case 'submission':
+      icon = <AssignmentTurnedInIcon />;
       break;
     default:
       console.log( `No icon match for: ${type}`);

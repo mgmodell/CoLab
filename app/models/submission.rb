@@ -5,11 +5,16 @@ class Submission < ApplicationRecord
   belongs_to :rubric, inverse_of: :submissions
   has_many_attached :sub_files
 
-  has_many :submission_feedbacks, inverse_of: :submission, dependent: :destroy
+  has_one :submission_feedback, inverse_of: :submission, dependent: :destroy
   has_many :rubric_row_feedbacks, through: :submission_feedbacks
+  has_one :course, through: :assignment
 
   before_validation :set_rubric
   validate :group_valid, :can_submit
+
+  def end_date
+    assignment.end_date
+  end
 
   private
 
@@ -49,7 +54,12 @@ class Submission < ApplicationRecord
       end
       self.withdrawn = current
     elsif !submitted_was.nil?
-      errors.add :main, I18n.t('submissions.error.no_changes_once_submitted')
+      if recorded_score.changed? && changes.size > 1
+        errors.add :main, I18n.t('submissions.error.only_score_change_post_submission')
+      else
+        errors.add :main, I18n.t('submissions.error.no_changes_once_submitted')
+      end
     end
   end
+
 end

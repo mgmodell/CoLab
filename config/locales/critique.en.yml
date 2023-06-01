@@ -1,0 +1,13 @@
+en:
+  critiques:
+    error:
+      not_loaded: No submission loaded
+    submissions_title: Submissions
+    submitted: Assignment Submission
+    feedback: Feedback on this Submission
+    history: Previous Submissions and Feedback
+    submissions:
+      score: Score
+      submitted: Submission Date
+      withdrawn: Withdrawn Date
+      submitter: Submitted by

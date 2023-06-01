@@ -5,7 +5,7 @@ export default function GroupDomination(props) {
   const height = props.height || 72;
   const width = props.width || 72;
   const mounted = useRef(false);
-  const framed = props.framed || true;
+  const framed = props.framed === undefined ? true : props.framed;
 
   const viewBox = [0, 0, 7160, 5272].join(" ");
 

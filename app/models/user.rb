@@ -153,6 +153,16 @@ class User < ApplicationRecord
       waiting_tasks << game if game.awaiting_review?
     end
 
+    Assignment.joins( :submissions, course: :rosters)
+             .where('rosters.user_id': id )
+                    .and( Submission.where.not( submitted: nil ) )
+                    .and( Submission.where( withdrawn: nil ) )
+                    .and( Submission.where( recorded_score: nil ) )
+                    .and( Roster.faculty )
+                    .find_each do |submission|
+      waiting_tasks << submission
+     end
+
     waiting_tasks.sort_by(&:end_date)
   end
 

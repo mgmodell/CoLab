@@ -5,7 +5,7 @@ export default function SocialLoafing(props) {
   const height = props.height || 72;
   const width = props.width || 72;
   const mounted = useRef(false);
-  const framed = props.framed || true;
+  const framed = props.framed === undefined ? true : props.framed;
   const oliveColor = props.oliveColor || "#000000";
 
   const viewBox = [0, 0, 6761, 5583].join(" ");
