@@ -6,6 +6,12 @@ import { useParams } from "react-router-dom";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import parse from 'html-react-parser';
 
+import { EditorState, convertToRaw, ContentState } from "draft-js";
+const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
+
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
+
 import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
@@ -13,7 +19,23 @@ import Grid from "@mui/system/Unstable_Grid/Grid";
 
 type Props = {
   rubric: IRubricData;
+  submissionFeedback: ISubmissionFeedback
 };
+
+interface IRubricRowFeedback {
+  id: number | null;
+  submission_feedback_id: number | null;
+  criterium_id: number;
+  score: number;
+  feedback: string;
+}
+interface ISubmissionFeedback {
+  id: number | null;
+  submission_id: number;
+  calculated_score: number | null;
+  feedback: string;
+  rubric_row_feedbacks: Array<IRubricRowFeedback>;
+}
 
 export default function RubricScorer(props: Props) {
   const endpointSet = "assignment";
@@ -90,3 +112,5 @@ export default function RubricScorer(props: Props) {
 
   return evaluation;
 }
+
+export { ISubmissionFeedback, IRubricRowFeedback };
