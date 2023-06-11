@@ -292,7 +292,6 @@ namespace :testing do
         )
         user.confirm
         user.save
-        byebug
       else
         puts 'This only works in development'
       end
