@@ -57,8 +57,8 @@ full guide::
     * `git checkout <enter_new_branch_name>`
 1. Create what you need
     * Create your own user account (if auth is working)
-    * `rake testing:set_admin['true','<email>']` will create new admin accounts with password 'password'
-    * `rake testing:examples['<email>']` will create some courses and activities for the specified user
+    * Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"`
+    * Run `./dev_serv.sh -e "examples[`<yourEmail@something.com>`]"`
 1. Open [the test server](http://localhost:3000)
 1. Play with it to understand the problem
 1. Start writing tests
