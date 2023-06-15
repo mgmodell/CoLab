@@ -11,11 +11,12 @@ import { useTranslation } from "react-i18next";
 import { Link, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import { ISubmissionCondensed } from "./AssignmentViewer";
-import { DataGrid, GridRowModel, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import { DataGrid, GridRenderCellParams, GridRowModel, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import Grid from "@mui/material/Unstable_Grid2";
 import {DateTime} from 'luxon';
 import parse from 'html-react-parser';
-import RubricScorer from "./RubricScorer";
+import RubricScorer, { IRubricRowFeedback } from "./RubricScorer";
+import { ISubmissionFeedback } from "./RubricScorer";
 
 interface ISubmissionData{
   id: number;
@@ -25,20 +26,7 @@ interface ISubmissionData{
   sub_text: string;
   sub_link: string;
   rubric: IRubricData;
-  feedback: IFeedback;
-}
-
-interface IFeedback{
-  id: number;
-  feedback: string;
-  rows: Map<number,IRowFeedback>;
-}
-
-interface IRowFeedback{
-  id: number;
-  criterium_id: number;
-  score: number;
-  feedback: string;
+  submissionFeedback: ISubmissionFeedback;
 }
 
 type Props = {
@@ -59,10 +47,11 @@ export default function CritiqueShell(props: Props) {
   const [t, i18n] = useTranslation( `${category}s` );
   const [panels, setPanels] = useState( () => ['submissions'] )
   const [submissionsIndex, setSubmissionsIndex] = useState( Array<ISubmissionCondensed> );
-  const [selectedSubmission, setSelectedSubmission] = useState <number|null> (  );
+  const [selectedSubmission, setSelectedSubmission] = useState <ISubmissionData|null> (  );
   const [assignmentAcceptsText, setAssignmentAcceptsText] = useState( false );
   const [assignmentAcceptsLink, setAssignmentAcceptsLink] = useState( false );
   const [assignmentGroupEnabled, setAssignmentGroupEnabled] = useState( false );
+  const [selectedSubmissionFeedback, setSelectedSubmissionFeedback] = useState<ISubmissionFeedback|null>( )
 
   const columns: GridColDef[] = [
     { field: "recordedScore", headerName: t("submissions.score") },
@@ -105,14 +94,47 @@ export default function CritiqueShell(props: Props) {
       })
   }
 
+  const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissionFeedback =>{
+    const submissionFeedback:ISubmissionFeedback = {
+      id: null,
+      submission_id: submission_id,
+      calculated_score: 0,
+      feedback: '',
+      rubric_row_feedbacks: []
+    }
+    rubric.criteria.forEach( (value:ICriteria) =>{
+      const newRowFeedback: IRubricRowFeedback = {
+        id: null,
+        submission_feedback_id: null,
+        criterium_id: value.id,
+        score: 0,
+        feedback: ''
+      }
+      submissionFeedback.rubric_row_feedbacks.push( newRowFeedback );
+    })
+    return submissionFeedback;
+
+  };
+
   const getSubmission = (submissionId:number) => {
     dispatch( startTask());
     const url = `${endpoints.showUrl}${submissionId}.json`;
     axios.get( url )
       .then(response => {
-        const data = response.data;
+        const data = response.data as {
+          submission: ISubmissionData,
+          submission_feedback: ISubmissionFeedback,
+          rubric: IRubricData
+        };
         console.log( data.submission );
         setSelectedSubmission( data.submission );
+        if( data.submission_feedback === undefined ){
+          console.log( 'no feedback' );
+          setSelectedSubmissionFeedback( genCleanFeedback( data.submission.id, data.rubric ) )
+        }else{
+          setSelectedSubmissionFeedback( data.submission_feedback );
+        }
+
         if( !panels.includes('submitted') ){
           const tmpPanels = [...panels, 'submitted'];
           setPanels( tmpPanels );
@@ -200,7 +222,8 @@ export default function CritiqueShell(props: Props) {
           <Typography variant="h6">
             {t('feedback')}
           </Typography>
-          <RubricScorer rubric={selectedSubmission.rubric} />
+          <RubricScorer rubric={selectedSubmission.rubric}
+                        submissionFeedback={selectedSubmissionFeedback} />
         </Grid>
       ): null}
       {panels.includes('history') ? (
