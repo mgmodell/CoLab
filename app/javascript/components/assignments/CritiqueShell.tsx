@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, useReducer } from "react";
 import { useParams } from "react-router-dom";
 
 //Redux store stuff
@@ -18,6 +18,79 @@ import parse from 'html-react-parser';
 import RubricScorer, { IRubricRowFeedback } from "./RubricScorer";
 import { ISubmissionFeedback } from "./RubricScorer";
 
+enum SubmissionActions{
+  init_no_data = 'INIT NO DATA',
+  set_feedback_full = 'INIT FEEDBACK FULL',
+  set_feedback_header = 'INIT FEEDBACK HEADER',
+  set_criteria = 'INIT CRITERIA',
+  set_recorded_score = 'INIT RECORDED SCORE'
+  
+}
+
+const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissionFeedback =>{
+  const submissionFeedback:ISubmissionFeedback = {
+    id: null,
+    submission_id: submission_id,
+    calculated_score: 0,
+    feedback: '',
+    rubric_row_feedbacks: []
+  }
+  console.log( rubric );
+  rubric.criteria.forEach( (value:ICriteria) =>{
+    const newRowFeedback: IRubricRowFeedback = {
+      id: null,
+      submission_feedback_id: null,
+      criterium_id: value.id,
+      score: 0,
+      feedback: ''
+    }
+    submissionFeedback.rubric_row_feedbacks.push( newRowFeedback );
+  })
+  return submissionFeedback;
+
+};
+
+const genCleanSubmission = ( submission_id:number, rubric:IRubricData ):ISubmissionData =>{
+      return {
+        id: 0,
+        recordedScore: null,
+        submitted: null,
+        withdrawn: null,
+        sub_text: null,
+        sub_link: null,
+        rubric: rubric,
+        submissionFeedback: genCleanFeedback( submission_id, rubric )
+
+      };
+
+}
+
+
+const SubmissionReducer = ( state, action ) =>{
+  const tmpSubmission : ISubmissionData = Object.assign({}, state );
+
+  switch( action.type ){
+    case SubmissionActions.init_no_data:
+      return  genCleanSubmission( action.submission_id, action.rubric );
+
+    case SubmissionActions.set_feedback_full:
+      return {...action.submission as ISubmissionData};
+    case SubmissionActions.set_feedback_header:
+      return Object.assign({}, state, action.submission );
+    case SubmissionActions.set_criteria:
+
+      const local_rubric_row_feedback = tmpSubmission.submissionFeedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.rubric_row_feedback.criterium_id );
+      Object.assign( local_rubric_row_feedback, action.rubric_row_feedback );
+      return tmpSubmission
+    case SubmissionActions.set_recorded_score:
+      tmpSubmission.recordedScore = action.recorded_score;
+      return tmpSubmission;
+    default:
+      const msg = 'no action taken in submissionReducer';
+      console.log( msg );
+      throw new Error( msg );
+  }
+}
 interface ISubmissionData{
   id: number;
   recordedScore: number;
@@ -47,11 +120,11 @@ export default function CritiqueShell(props: Props) {
   const [t, i18n] = useTranslation( `${category}s` );
   const [panels, setPanels] = useState( () => ['submissions'] )
   const [submissionsIndex, setSubmissionsIndex] = useState( Array<ISubmissionCondensed> );
-  const [selectedSubmission, setSelectedSubmission] = useState <ISubmissionData|null> (  );
   const [assignmentAcceptsText, setAssignmentAcceptsText] = useState( false );
   const [assignmentAcceptsLink, setAssignmentAcceptsLink] = useState( false );
   const [assignmentGroupEnabled, setAssignmentGroupEnabled] = useState( false );
-  const [selectedSubmissionFeedback, setSelectedSubmissionFeedback] = useState<ISubmissionFeedback|null>( )
+
+  const [selectedSubmission, updateSelectedSubmission] = useReducer(SubmissionReducer, {} );
 
   const columns: GridColDef[] = [
     { field: "recordedScore", headerName: t("submissions.score") },
@@ -65,6 +138,33 @@ export default function CritiqueShell(props: Props) {
       }
     },
   ];
+
+  //Retrieve the submission
+  const loadSubmission = (submissionId:number) => {
+    dispatch( startTask());
+    const url = `${endpoints.showUrl}${submissionId}.json`;
+    axios.get( url )
+      .then(response => {
+        const data = response.data as {
+          submission: ISubmissionData,
+          submission_feedback: ISubmissionFeedback,
+          rubric: IRubricData
+        };
+        console.log( data.submission );
+        if( data.submission_feedback === undefined ){
+          data.submission_feedback = genCleanFeedback( data.submission.id, data.submission.rubric );
+        }
+
+        updateSelectedSubmission({type: SubmissionActions.set_feedback_full, submission: data.submission} );
+
+        if( !panels.includes('submitted') ){
+          const tmpPanels = [...panels, 'submitted'];
+          setPanels( tmpPanels );
+        }
+      }).finally( () =>{
+        dispatch( endTask() );
+      })
+  }
 
   const handlePaneSelection = (
     event: React.MouseEvent<HTMLElement>,
@@ -91,56 +191,6 @@ export default function CritiqueShell(props: Props) {
         setAssignmentGroupEnabled( data.assignment.group_enabled );
         setSubmissionsIndex( data.assignment.submissions );
         
-      })
-  }
-
-  const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissionFeedback =>{
-    const submissionFeedback:ISubmissionFeedback = {
-      id: null,
-      submission_id: submission_id,
-      calculated_score: 0,
-      feedback: '',
-      rubric_row_feedbacks: []
-    }
-    rubric.criteria.forEach( (value:ICriteria) =>{
-      const newRowFeedback: IRubricRowFeedback = {
-        id: null,
-        submission_feedback_id: null,
-        criterium_id: value.id,
-        score: 0,
-        feedback: ''
-      }
-      submissionFeedback.rubric_row_feedbacks.push( newRowFeedback );
-    })
-    return submissionFeedback;
-
-  };
-
-  const getSubmission = (submissionId:number) => {
-    dispatch( startTask());
-    const url = `${endpoints.showUrl}${submissionId}.json`;
-    axios.get( url )
-      .then(response => {
-        const data = response.data as {
-          submission: ISubmissionData,
-          submission_feedback: ISubmissionFeedback,
-          rubric: IRubricData
-        };
-        console.log( data.submission );
-        setSelectedSubmission( data.submission );
-        if( data.submission_feedback === undefined ){
-          console.log( 'no feedback' );
-          setSelectedSubmissionFeedback( genCleanFeedback( data.submission.id, data.rubric ) )
-        }else{
-          setSelectedSubmissionFeedback( data.submission_feedback );
-        }
-
-        if( !panels.includes('submitted') ){
-          const tmpPanels = [...panels, 'submitted'];
-          setPanels( tmpPanels );
-        }
-      }).finally( () =>{
-        dispatch( endTask() );
       })
   }
 
@@ -178,7 +228,7 @@ export default function CritiqueShell(props: Props) {
           </Typography>
               <DataGrid
                 onRowClick={(params: GridRowParams) =>{
-                  getSubmission( params.row.id );
+                  loadSubmission( params.row.id );
                 }}
                 getRowId={(model: GridRowModel) => {
                   return model.id;
@@ -192,10 +242,10 @@ export default function CritiqueShell(props: Props) {
                 onCellClick={(params, event, details) => {
                     //navigate(String(params.row.id));
                 }}
-                components={{
+                slots={{
                   //Toolbar: AdminListToolbar
                 }}
-                componentsProps={{
+                slotProps={{
                   toolbar: {
                     activityType: "submission"
                   }
@@ -222,8 +272,7 @@ export default function CritiqueShell(props: Props) {
           <Typography variant="h6">
             {t('feedback')}
           </Typography>
-          <RubricScorer rubric={selectedSubmission.rubric}
-                        submissionFeedback={selectedSubmissionFeedback} />
+          <RubricScorer submission={selectedSubmission} />
         </Grid>
       ): null}
       {panels.includes('history') ? (
@@ -242,3 +291,4 @@ export default function CritiqueShell(props: Props) {
 
   );
 }
+export { ISubmissionData };

@@ -1,5 +1,7 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
+import axios from "axios";
 
 //Redux store stuff
 
@@ -16,10 +18,11 @@ import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import Grid from "@mui/system/Unstable_Grid/Grid";
+import { useDispatch } from "react-redux";
+import { ISubmissionData } from "./CritiqueShell";
 
 type Props = {
-  rubric: IRubricData;
-  submissionFeedback: ISubmissionFeedback
+  submission: ISubmissionData;
 };
 
 interface IRubricRowFeedback {
@@ -38,23 +41,29 @@ interface ISubmissionFeedback {
 }
 
 export default function RubricScorer(props: Props) {
-  const endpointSet = "assignment";
+  const category = "critique";
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
+  );
+  const dispatch = useDispatch( );
+  const endpoints = useTypedSelector( 
+    state => state.context.endpoints[category]
   );
 
   const { assignmentId } = useParams();
 
-  const [t, i18n] = useTranslation( `${endpointSet}s` );
+  const [t, i18n] = useTranslation( `${category}s` );
 
-  const evaluation = props.rubric !== undefined ? (
+
+
+  const evaluation = props.submission?.rubric !== undefined ? (
     <Grid container columns={70}>
             <Grid xs={10}>
               <Typography variant="h6">{t('status.rubric_name' )}:</Typography>
             </Grid>
             <Grid xs={20}>
               <Typography>
-                {props.rubric.name}
+                {props.submission.rubric.name}
               </Typography>
             </Grid>
             <Grid xs={10}>
@@ -62,10 +71,10 @@ export default function RubricScorer(props: Props) {
             </Grid>
             <Grid xs={20}>
               <Typography>
-                {props.rubric.version}
+                {props.submission.rubric.version}
               </Typography>
             </Grid>
-            {props.rubric.criteria.sort( (a:ICriteria, b:ICriteria) => a.sequence - b.sequence ).map( (criterium) =>{
+            {props.submission.rubric.criteria.sort( (a:ICriteria, b:ICriteria) => a.sequence - b.sequence ).map( (criterium) =>{
               const levels = [ 
                 criterium.l1_description,
                 criterium.l2_description,
