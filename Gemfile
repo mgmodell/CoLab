@@ -19,7 +19,7 @@ gem 'mysql2'
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
 # https://github.com/rails/webpacker
-gem 'shakapacker', '6.6.0'
+gem 'shakapacker', '7.0.0'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -89,7 +89,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.52.1', require: false
+  gem 'rubocop', '~> 1.53.1', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
