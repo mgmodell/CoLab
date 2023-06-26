@@ -82,12 +82,16 @@ export default function AssignmentViewer(props) {
 
   const [submissions, setSubmissions] = useState( [] );
 
+  enum AssignmentActions{
+    setAssignment = 'SET ASSIGNMENT',
+    setValue = 'SET VALUE'
+  }
   
   const assignmentReducer = (state, action) =>{
     switch(action.type){
-      case 'setAssignment':
+      case AssignmentActions.setAssignment:
         return {...action.assignment as IAssignment};
-      case 'set':
+      case AssignmentActions.setValue:
         return {...state, [action.field]: action.value};
       default:
         throw new Error();
@@ -127,7 +131,7 @@ export default function AssignmentViewer(props) {
         delete receivedAssignment.link_sub;
 
         modifyAssignment({
-          type:'setAssignment',
+          type: AssignmentActions.setAssignment,
           assignment: receivedAssignment });
         
         dispatch(endTask());
