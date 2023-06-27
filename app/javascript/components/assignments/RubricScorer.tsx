@@ -1,7 +1,5 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
-import axios from "axios";
 
 //Redux store stuff
 
@@ -18,7 +16,6 @@ import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import Grid from "@mui/system/Unstable_Grid/Grid";
-import { useDispatch } from "react-redux";
 import { ISubmissionData } from "./CritiqueShell";
 
 type Props = {
@@ -45,7 +42,6 @@ export default function RubricScorer(props: Props) {
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const dispatch = useDispatch( );
   const endpoints = useTypedSelector( 
     state => state.context.endpoints[category]
   );
@@ -57,11 +53,11 @@ export default function RubricScorer(props: Props) {
 
 
   const evaluation = props.submission?.rubric !== undefined ? (
-    <Grid container columns={70}>
+    <Grid container columns={80}>
             <Grid xs={10}>
               <Typography variant="h6">{t('status.rubric_name' )}:</Typography>
             </Grid>
-            <Grid xs={20}>
+            <Grid xs={25}>
               <Typography>
                 {props.submission.rubric.name}
               </Typography>
@@ -69,7 +65,7 @@ export default function RubricScorer(props: Props) {
             <Grid xs={10}>
               <Typography variant="h6">{t('status.rubric_version' )}:</Typography>
             </Grid>
-            <Grid xs={20}>
+            <Grid xs={25}>
               <Typography>
                 {props.submission.rubric.version}
               </Typography>
@@ -103,7 +99,7 @@ export default function RubricScorer(props: Props) {
               
               return(
                 <React.Fragment key={criterium.id}>
-                  <Grid xs={70}><hr></hr></Grid>
+                  <Grid xs={80}><hr></hr></Grid>
                   <Grid xs={10}>
                     { criterium.description}
                   </Grid>
@@ -111,11 +107,14 @@ export default function RubricScorer(props: Props) {
                     {t('status.rubric_minimum')}
                   </Grid>
                   { renderedLevels }
+                  <Grid xs={10}>
+                    Editor
+                  </Grid>
                 </React.Fragment>
               )
             })}
 
-      <Grid xs={70}><hr></hr></Grid>
+      <Grid xs={80}><hr></hr></Grid>
     </Grid>
   ) : null;
 

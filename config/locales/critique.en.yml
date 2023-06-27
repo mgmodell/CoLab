@@ -6,6 +6,10 @@ en:
     submitted: Assignment Submission
     feedback: Feedback on this Submission
     history: Previous Submissions and Feedback
+    status:
+      rubric_name: Name
+      rubric_version: Version
+      rubric_minimum: Minimum requirements not met.
     submissions:
       score: Score
       submitted: Submission Date
