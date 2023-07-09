@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 ruby '3.2.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.5'
+gem 'rails', '~> 7.0.6'
 
 gem 'puma', '~> 6.0'
 # Use mysql as the database for Active Record
@@ -19,7 +19,7 @@ gem 'mysql2'
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
 # https://github.com/rails/webpacker
-gem 'shakapacker', '7.0.0'
+gem 'shakapacker', '7.0.2'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -89,7 +89,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.53.1', require: false
+  gem 'rubocop', '~> 1.54.1', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
