@@ -4,12 +4,13 @@ en:
       not_loaded: No submission loaded
     submissions_title: Submissions
     submitted: Assignment Submission
-    feedback: Feedback on this Submission
+    feedback: Overall Feedback
     history: Previous Submissions and Feedback
-    status:
-      rubric_name: Name
-      rubric_version: Version
-      rubric_minimum: Minimum requirements not met.
+    rubric:
+      name: Name
+      version: Version
+      minimum: Minimum requirements not met.
+      criteria_feedback: Criteria Feedback
     submissions:
       score: Score
       submitted: Submission Date

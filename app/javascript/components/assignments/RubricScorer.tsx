@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, Dispatch } from "react";
 import { useParams } from "react-router-dom";
 
 //Redux store stuff
@@ -16,10 +16,12 @@ import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import Grid from "@mui/system/Unstable_Grid/Grid";
-import { ISubmissionData } from "./CritiqueShell";
+import { ISubmissionData, SubmissionActions } from "./CritiqueShell";
 
 type Props = {
   submission: ISubmissionData;
+  submissionReducer: Dispatch<{}>;
+
 };
 
 interface IRubricRowFeedback {
@@ -54,21 +56,75 @@ export default function RubricScorer(props: Props) {
 
   const evaluation = props.submission?.rubric !== undefined ? (
     <Grid container columns={80}>
-            <Grid xs={10}>
-              <Typography variant="h6">{t('status.rubric_name' )}:</Typography>
+            <Grid xs={15}>
+              <Typography variant="h6">{t('rubric.name' )}:</Typography>
             </Grid>
             <Grid xs={25}>
               <Typography>
                 {props.submission.rubric.name}
               </Typography>
             </Grid>
-            <Grid xs={10}>
-              <Typography variant="h6">{t('status.rubric_version' )}:</Typography>
+            <Grid xs={15}>
+              <Typography variant="h6">{t('rubric.version' )}:</Typography>
             </Grid>
             <Grid xs={25}>
               <Typography>
                 {props.submission.rubric.version}
               </Typography>
+            </Grid>
+            <Grid xs={15}>
+              <Typography variant="h6">{t('feedback' )}:</Typography>
+            </Grid>
+            <Grid xs={65}>
+                  <Editor
+                    wrapperId={t('feedback')}
+                    label={t("feedback")}
+                    placeholder={t("feedback")}
+                    onEditorStateChange={(editorState, title)=>{
+                      console.log( editorState, title );
+                      props.submissionReducer({
+                        type: SubmissionActions.set_feedback_overall,
+                        submission: editorState,
+                      })
+                    }}
+                    toolbarOnFocus
+                    toolbar={{
+                      options: [
+                        "inline",
+                        "list",
+                        "link",
+                        "blockType",
+                        "fontSize",
+                        "fontFamily"
+                      ],
+                      inline: {
+                        options: [
+                          "bold",
+                          "italic",
+                          "underline",
+                          "strikethrough",
+                          "monospace"
+                        ],
+                        bold: { className: "bordered-option-classname" },
+                        italic: { className: "bordered-option-classname" },
+                        underline: { className: "bordered-option-classname" },
+                        strikethrough: {
+                          className: "bordered-option-classname"
+                        },
+                        code: { className: "bordered-option-classname" }
+                      },
+                      blockType: {
+                        className: "bordered-option-classname"
+                      },
+                      fontSize: {
+                        className: "bordered-option-classname"
+                      },
+                      fontFamily: {
+                        className: "bordered-option-classname"
+                      }
+                    }}
+                    editorState={props.submission.submissionFeedback.feedback}
+                  />
             </Grid>
             {props.submission.rubric.criteria.sort( (a:ICriteria, b:ICriteria) => a.sequence - b.sequence ).map( (criterium) =>{
               const levels = [ 
@@ -104,11 +160,53 @@ export default function RubricScorer(props: Props) {
                     { criterium.description}
                   </Grid>
                   <Grid xs={span}>
-                    {t('status.rubric_minimum')}
+                    {t('rubric.minimum')}
                   </Grid>
                   { renderedLevels }
                   <Grid xs={10}>
-                    Editor
+                  <Editor
+                    wrapperId="Description"
+                    label={t("rubric.criteria_feedback")}
+                    placeholder={t("rubric.criteria_feedback")}
+                    //onEditorStateChange={setAssignmentDescriptionEditor}
+                    toolbarOnFocus
+                    toolbar={{
+                      options: [
+                        "inline",
+                        "list",
+                        "link",
+                        "blockType",
+                        "fontSize",
+                        "fontFamily"
+                      ],
+                      inline: {
+                        options: [
+                          "bold",
+                          "italic",
+                          "underline",
+                          "strikethrough",
+                          "monospace"
+                        ],
+                        bold: { className: "bordered-option-classname" },
+                        italic: { className: "bordered-option-classname" },
+                        underline: { className: "bordered-option-classname" },
+                        strikethrough: {
+                          className: "bordered-option-classname"
+                        },
+                        code: { className: "bordered-option-classname" }
+                      },
+                      blockType: {
+                        className: "bordered-option-classname"
+                      },
+                      fontSize: {
+                        className: "bordered-option-classname"
+                      },
+                      fontFamily: {
+                        className: "bordered-option-classname"
+                      }
+                    }}
+                    editorState={props.submission.submissionFeedback.rubric_row_feedbacks.find(feedback=> feedback.criterium_id == criterium.id ).feedback}
+                  />
                   </Grid>
                 </React.Fragment>
               )

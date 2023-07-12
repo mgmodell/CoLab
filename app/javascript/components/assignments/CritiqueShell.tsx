@@ -17,13 +17,20 @@ import {DateTime} from 'luxon';
 import parse from 'html-react-parser';
 import RubricScorer, { IRubricRowFeedback } from "./RubricScorer";
 import { ISubmissionFeedback } from "./RubricScorer";
+import {EditorState, convertToRaw, ContentState } from 'draft-js';
+const Editor = React.lazy( () => import('../reactDraftWysiwygEditor'));
+import htmlToDraft from 'html-to-draftjs';
+import draftToHtml from 'draftjs-to-html';
 
 enum SubmissionActions{
   init_no_data = 'INIT NO DATA',
-  set_feedback_full = 'INIT FEEDBACK FULL',
-  set_feedback_header = 'INIT FEEDBACK HEADER',
-  set_criteria = 'INIT CRITERIA',
-  set_recorded_score = 'INIT RECORDED SCORE'
+  set_feedback_full = 'SET FEEDBACK FULL',
+  set_feedback_overall = 'SET FEEDBACK OVERALL',
+  set_recorded_score = 'SET RECORDED SCORE',
+  set_criteria = 'SET CRITERIA',
+  set_criteria_feedback = 'SET CRITERIA FEEDBACK',
+  set_criteria_score = 'SET CRITERIA SCORE',
+
   
 }
 
@@ -32,7 +39,9 @@ const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissio
     id: null,
     submission_id: submission_id,
     calculated_score: 0,
-    feedback: '',
+    feedback: EditorState.createWithContent(
+      ContentState.createFromBlockArray( htmlToDraft('').contentBlocks )
+    ),
     rubric_row_feedbacks: []
   }
   console.log( rubric );
@@ -42,10 +51,13 @@ const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissio
       submission_feedback_id: null,
       criterium_id: value.id,
       score: 0,
-      feedback: ''
+      feedback: EditorState.createWithContent(
+        ContentState.createFromBlockArray( htmlToDraft( '' ).contentBlocks )
+      )
     }
     submissionFeedback.rubric_row_feedbacks.push( newRowFeedback );
   })
+  console.log( submissionFeedback );
   return submissionFeedback;
 
 };
@@ -69,18 +81,27 @@ const genCleanSubmission = ( submission_id:number, rubric:IRubricData ):ISubmiss
 const SubmissionReducer = ( state, action ) =>{
   const tmpSubmission : ISubmissionData = Object.assign({}, state );
 
+  var local_rubric_row_feedback = null;
   switch( action.type ){
     case SubmissionActions.init_no_data:
       return  genCleanSubmission( action.submission_id, action.rubric );
 
     case SubmissionActions.set_feedback_full:
       return {...action.submission as ISubmissionData};
-    case SubmissionActions.set_feedback_header:
+    case SubmissionActions.set_feedback_overall:
+      console.log( action.submission );
       return Object.assign({}, state, action.submission );
     case SubmissionActions.set_criteria:
-
-      const local_rubric_row_feedback = tmpSubmission.submissionFeedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.rubric_row_feedback.criterium_id );
+      local_rubric_row_feedback = tmpSubmission.submissionFeedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.rubric_row_feedback.criterium_id );
       Object.assign( local_rubric_row_feedback, action.rubric_row_feedback );
+      return tmpSubmission
+    case SubmissionActions.set_criteria_feedback:
+      local_rubric_row_feedback = tmpSubmission.submissionFeedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.criterium_id );
+      local_rubric_row_feedback.feedback = action.feedback;
+      return tmpSubmission
+    case SubmissionActions.set_criteria_score:
+      local_rubric_row_feedback = tmpSubmission.submissionFeedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.criterium_id );
+      local_rubric_row_feedback.score = action.score;
       return tmpSubmission
     case SubmissionActions.set_recorded_score:
       tmpSubmission.recordedScore = action.recorded_score;
@@ -153,8 +174,27 @@ export default function CritiqueShell(props: Props) {
         console.log( data.submission );
         if( data.submission_feedback === undefined ){
           data.submission_feedback = genCleanFeedback( data.submission.id, data.submission.rubric );
+        } else {
+          //Convert the feedbacks to EditorStates
+          data.submission_feedback.feedback =
+            EditorState.createWithContent(
+              ContentState.createFromBlockArray(
+                htmlToDraft( data.submission_feedback.rubric_row_feedbacks ).contentBlocks
+              )
+            );
+          data.submission_feedback.rubric_row_feedbacks.forEach( (row_feedback) =>{
+            row_feedback.feedback = 
+              EditorState.createWithContent(
+                ContentState.createFromBlockArray(
+                  htmlToDraft( row_feedback.feedback ).contentBlocks
+                )
+              );
+          })
         }
+        data.submission.submissionFeedback = data.submission_feedback;
 
+        console.log( data.submission );
+        console.log( data.submission_feedback );
         updateSelectedSubmission({type: SubmissionActions.set_feedback_full, submission: data.submission} );
 
         if( !panels.includes('submitted') ){
@@ -272,7 +312,7 @@ export default function CritiqueShell(props: Props) {
           <Typography variant="h6">
             {t('feedback')}
           </Typography>
-          <RubricScorer submission={selectedSubmission} />
+          <RubricScorer submission={selectedSubmission} submissionReducer={updateSelectedSubmission} />
         </Grid>
       ): null}
       {panels.includes('history') ? (
@@ -291,4 +331,4 @@ export default function CritiqueShell(props: Props) {
 
   );
 }
-export { ISubmissionData };
+export { ISubmissionData, SubmissionActions };
