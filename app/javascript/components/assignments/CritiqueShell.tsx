@@ -44,7 +44,6 @@ const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissio
     ),
     rubric_row_feedbacks: []
   }
-  console.log( rubric );
   rubric.criteria.forEach( (value:ICriteria) =>{
     const newRowFeedback: IRubricRowFeedback = {
       id: null,
@@ -71,7 +70,7 @@ const genCleanSubmission = ( submission_id:number, rubric:IRubricData ):ISubmiss
         sub_text: null,
         sub_link: null,
         rubric: rubric,
-        submissionFeedback: genCleanFeedback( submission_id, rubric )
+        submission_feedback: genCleanFeedback( submission_id, rubric )
 
       };
 
@@ -89,18 +88,18 @@ const SubmissionReducer = ( state, action ) =>{
     case SubmissionActions.set_feedback_full:
       return {...action.submission as ISubmissionData};
     case SubmissionActions.set_feedback_overall:
-      console.log( action.submission );
-      return Object.assign({}, state, action.submission );
+      tmpSubmission.submission_feedback.feedback = action.submission_feedback;
+      return Object.assign({}, tmpSubmission );
     case SubmissionActions.set_criteria:
-      local_rubric_row_feedback = tmpSubmission.submissionFeedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.rubric_row_feedback.criterium_id );
+      local_rubric_row_feedback = tmpSubmission.submission_feedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.rubric_row_feedback.criterium_id );
       Object.assign( local_rubric_row_feedback, action.rubric_row_feedback );
       return tmpSubmission
     case SubmissionActions.set_criteria_feedback:
-      local_rubric_row_feedback = tmpSubmission.submissionFeedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.criterium_id );
-      local_rubric_row_feedback.feedback = action.feedback;
+      local_rubric_row_feedback = tmpSubmission.submission_feedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.criterium_id );
+      local_rubric_row_feedback.feedback = action.criterium_feedback;
       return tmpSubmission
     case SubmissionActions.set_criteria_score:
-      local_rubric_row_feedback = tmpSubmission.submissionFeedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.criterium_id );
+      local_rubric_row_feedback = tmpSubmission.submission_feedback.rubric_row_feedbacks.find( candidate => candidate.criterium_id === action.criterium_id );
       local_rubric_row_feedback.score = action.score;
       return tmpSubmission
     case SubmissionActions.set_recorded_score:
@@ -120,7 +119,7 @@ interface ISubmissionData{
   sub_text: string;
   sub_link: string;
   rubric: IRubricData;
-  submissionFeedback: ISubmissionFeedback;
+  submission_feedback: ISubmissionFeedback;
 }
 
 type Props = {
@@ -168,21 +167,20 @@ export default function CritiqueShell(props: Props) {
       .then(response => {
         const data = response.data as {
           submission: ISubmissionData,
-          submission_feedback: ISubmissionFeedback,
           rubric: IRubricData
         };
-        console.log( data.submission );
-        if( data.submission_feedback === undefined ){
-          data.submission_feedback = genCleanFeedback( data.submission.id, data.submission.rubric );
+        if( data.submission.submission_feedback === undefined ){
+          data.submission.submission_feedback = genCleanFeedback( data.submission.id, data.submission.rubric );
         } else {
           //Convert the feedbacks to EditorStates
-          data.submission_feedback.feedback =
+
+          data.submission.submission_feedback.feedback =
             EditorState.createWithContent(
               ContentState.createFromBlockArray(
-                htmlToDraft( data.submission_feedback.rubric_row_feedbacks ).contentBlocks
+                htmlToDraft( data.submission.submission_feedback.rubric_row_feedbacks ).contentBlocks
               )
             );
-          data.submission_feedback.rubric_row_feedbacks.forEach( (row_feedback) =>{
+          data.submission.submission_feedback.rubric_row_feedbacks.forEach( (row_feedback) =>{
             row_feedback.feedback = 
               EditorState.createWithContent(
                 ContentState.createFromBlockArray(
@@ -191,10 +189,8 @@ export default function CritiqueShell(props: Props) {
               );
           })
         }
-        data.submission.submissionFeedback = data.submission_feedback;
+        //data.submission.submissionFeedback = data.submission.submission_feedback;
 
-        console.log( data.submission );
-        console.log( data.submission_feedback );
         updateSelectedSubmission({type: SubmissionActions.set_feedback_full, submission: data.submission} );
 
         if( !panels.includes('submitted') ){
@@ -225,7 +221,6 @@ export default function CritiqueShell(props: Props) {
     axios.get( url )
       .then(response => {
         const data = response.data;
-        console.log( data.assignment );
         setAssignmentAcceptsText( data.assignment.text_sub );
         setAssignmentAcceptsLink( data.assignment.link_sub );
         setAssignmentGroupEnabled( data.assignment.group_enabled );

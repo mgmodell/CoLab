@@ -48,7 +48,11 @@ export default function RubricScorer(props: Props) {
     state => state.context.endpoints[category]
   );
 
-  const { assignmentId } = useParams();
+  const [ ed, setEd ] = useState(
+    EditorState.createWithContent(
+      ContentState.createFromBlockArray(htmlToDraft('').contentBlocks)
+    )
+  );
 
   const [t, i18n] = useTranslation( `${category}s` );
 
@@ -80,11 +84,11 @@ export default function RubricScorer(props: Props) {
                     wrapperId={t('feedback')}
                     label={t("feedback")}
                     placeholder={t("feedback")}
+                    editorState={props.submission.submission_feedback.feedback}
                     onEditorStateChange={(editorState, title)=>{
-                      console.log( editorState, title );
                       props.submissionReducer({
                         type: SubmissionActions.set_feedback_overall,
-                        submission: editorState,
+                        submission_feedback: editorState,
                       })
                     }}
                     toolbarOnFocus
@@ -123,7 +127,6 @@ export default function RubricScorer(props: Props) {
                         className: "bordered-option-classname"
                       }
                     }}
-                    editorState={props.submission.submissionFeedback.feedback}
                   />
             </Grid>
             {props.submission.rubric.criteria.sort( (a:ICriteria, b:ICriteria) => a.sequence - b.sequence ).map( (criterium) =>{
@@ -168,7 +171,6 @@ export default function RubricScorer(props: Props) {
                     wrapperId="Description"
                     label={t("rubric.criteria_feedback")}
                     placeholder={t("rubric.criteria_feedback")}
-                    //onEditorStateChange={setAssignmentDescriptionEditor}
                     toolbarOnFocus
                     toolbar={{
                       options: [
@@ -205,7 +207,14 @@ export default function RubricScorer(props: Props) {
                         className: "bordered-option-classname"
                       }
                     }}
-                    editorState={props.submission.submissionFeedback.rubric_row_feedbacks.find(feedback=> feedback.criterium_id == criterium.id ).feedback}
+                    editorState={props.submission.submission_feedback.rubric_row_feedbacks.find(feedback=> feedback.criterium_id == criterium.id ).feedback}
+                    onEditorStateChange={(editorState, title)=>{
+                      props.submissionReducer({
+                        type: SubmissionActions.set_criteria_feedback,
+                        criterium_feedback: editorState,
+                        criterium_id: criterium.id,
+                      })
+                    }}
                   />
                   </Grid>
                 </React.Fragment>
