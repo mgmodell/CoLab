@@ -13,7 +13,7 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
 import { useTranslation } from "react-i18next";
-import { Typography } from "@mui/material";
+import { Slider, TextField, Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import Grid from "@mui/system/Unstable_Grid/Grid";
 import { ISubmissionData, SubmissionActions } from "./CritiqueShell";
@@ -149,8 +149,20 @@ export default function RubricScorer(props: Props) {
               let index = 0;
               levels.forEach( (levelText) => {
                 index++;
+                const score = 100 / levels.length * index;
                 renderedLevels.push( 
-                    <Grid key={`${criterium.id}-${index}`} xs={span}>
+                    <Grid
+                      key={`${criterium.id}-${index}`}
+                      xs={span}
+                      onClick={()=>{
+
+                        props.submissionReducer({
+                          type: SubmissionActions.set_criteria_score,
+                          score: score,
+                          criterium_id: criterium.id,
+                        })
+                      }}
+                      >
                       {parse( levelText) }
                     </Grid>
                 );
@@ -160,9 +172,56 @@ export default function RubricScorer(props: Props) {
                 <React.Fragment key={criterium.id}>
                   <Grid xs={80}><hr></hr></Grid>
                   <Grid xs={10}>
-                    { criterium.description}
+                    &nbsp;
                   </Grid>
-                  <Grid xs={span}>
+                  <Grid xs={60}>
+                    <Slider
+                      defaultValue={0}
+                      max={100}
+                      min={0}
+                      value={props.submission.submission_feedback.rubric_row_feedbacks.find(feedback=> feedback.criterium_id == criterium.id ).score}
+                      onChange={( event )=>{
+                        props.submissionReducer({
+                          type: SubmissionActions.set_criteria_score,
+                          score: event.target.value,
+                          criterium_id: criterium.id,
+                        })
+                      }
+                      }
+                    />
+
+                  </Grid>
+                  <Grid xs={10}>
+                    <TextField
+                      value={props.submission.submission_feedback.rubric_row_feedbacks.find(feedback=> feedback.criterium_id == criterium.id ).score}
+                      type={'number'}
+                      size={'small'}
+                      variant={'standard'}
+                      onClick={(event)=>{
+                        props.submissionReducer({
+                          type: SubmissionActions.set_criteria_score,
+                          score: event.target.value,
+                          criterium_id: criterium.id,
+                        })
+                      }}
+                    />
+                  </Grid>
+                  <Grid xs={10}>
+                    <b>
+                      { criterium.description}
+                    </b>
+                  </Grid>
+                  <Grid xs={span}
+                      onClick={()=>{
+
+                        props.submissionReducer({
+                          type: SubmissionActions.set_criteria_score,
+                          score: 0,
+                          criterium_id: criterium.id,
+                        })
+                      }
+                    }
+                        >
                     {t('rubric.minimum')}
                   </Grid>
                   { renderedLevels }
