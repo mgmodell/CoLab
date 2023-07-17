@@ -177,24 +177,15 @@ export default function RubricScorer(props: Props) {
                         "inline",
                         "list",
                         "link",
-                        "blockType",
-                        "fontSize",
-                        "fontFamily"
                       ],
                       inline: {
                         options: [
                           "bold",
                           "italic",
-                          "underline",
-                          "strikethrough",
-                          "monospace"
                         ],
                         bold: { className: "bordered-option-classname" },
                         italic: { className: "bordered-option-classname" },
                         underline: { className: "bordered-option-classname" },
-                        strikethrough: {
-                          className: "bordered-option-classname"
-                        },
                         code: { className: "bordered-option-classname" }
                       },
                       blockType: {
