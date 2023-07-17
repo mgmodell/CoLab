@@ -171,10 +171,10 @@ export default function RubricScorer(props: Props) {
               return(
                 <React.Fragment key={criterium.id}>
                   <Grid xs={80}><hr></hr></Grid>
-                  <Grid xs={10}>
+                  <Grid xs={10 + span}>
                     &nbsp;
                   </Grid>
-                  <Grid xs={60}>
+                  <Grid xs={60 - span}>
                     <Slider
                       defaultValue={0}
                       max={100}
