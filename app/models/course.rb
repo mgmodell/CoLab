@@ -3,16 +3,16 @@
 require 'faker'
 class Course < ApplicationRecord
   belongs_to :school, inverse_of: :courses, counter_cache: true
-  has_many :projects, inverse_of: :course, dependent: :destroy
-  has_many :rosters, inverse_of: :course, dependent: :destroy
-  has_many :bingo_games, inverse_of: :course, dependent: :destroy
+  has_many :projects, inverse_of: :course, dependent: :destroy, autosave: true
+  has_many :rosters, inverse_of: :course, dependent: :destroy, autosave: true
+  has_many :bingo_games, inverse_of: :course, dependent: :destroy, autosave: true
   has_many :candidate_lists, through: :bingo_games
   has_many :concepts, through: :candidate_lists
   has_many :users, through: :rosters
   belongs_to :consent_form, counter_cache: true, inverse_of: :courses, optional: true
-  has_many :assignments, inverse_of: :course
+  has_many :assignments, inverse_of: :course, autosave: true
 
-  has_many :experiences, inverse_of: :course, dependent: :destroy
+  has_many :experiences, inverse_of: :course, dependent: :destroy, autosave: true
 
   validates :timezone, :start_date, :end_date, presence: true
   validates :name, presence: true

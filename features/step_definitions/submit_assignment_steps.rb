@@ -31,9 +31,49 @@ Given('the assignment {string} initialized active') do |is_or_isnt|
   @assignment.save
 end
 
-Given('the course is shifted {int} {string} into the {string}') do |_int, _string, _string2|
-  # Given('the course is shifted {float} {string} into the {string}') do |float, string, string2|
-  pending # Write code here that turns the phrase above into concrete actions
+Given('the course is shifted {int} {string} into the {string}') do |qty, units, direction|
+  shift = 0
+  case units.downcase
+  when 'years'
+    shift = qty.years
+  when 'months'
+    shift = qty.months
+  when 'days'
+    shift = qty.days
+  else
+    true.should be false
+  end
+
+  shift = shift * -1 unless direction.downcase == 'future'
+
+  ActiveRecord::Base.transaction do
+    @course.start_date += shift
+    @course.end_date += shift
+
+    # Experiences
+    @course.experiences.find_each do |experience|
+      experience.start_date += shift
+      experience.end_date += shift
+    end
+    # Projects
+    @course.projects.find_each do |project|
+      project.start_date += shift
+      project.end_date += shift
+    end
+    # assignments
+    @course.assignments.find_each do |assignment|
+      assignment.start_date += shift
+      assignment.end_date += shift
+    end
+    # bingo_games
+    @course.bingo_games.find_each do |bingo_game|
+      bingo_game.start_date += shift
+      bingo_game.end_date += shift
+    end
+    @course.save # validate: false
+
+  end
+
 end
 
 Then('the user opens the {string} task') do |_string|
