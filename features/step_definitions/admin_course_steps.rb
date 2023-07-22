@@ -27,6 +27,7 @@ Then 'the user sets the start date to {string} and the end date to {string}' do 
   if start_date.present?
     new_year = Chronic.parse(start_date).strftime('%Y')
     new_date = Chronic.parse(start_date).strftime('%m%d')
+    send_keys :right, :right
     send_keys new_year
     send_keys :left, :left
     send_keys new_date

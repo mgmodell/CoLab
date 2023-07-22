@@ -52,6 +52,7 @@ Then('the user sets the assignment {string} to {string}') do |field_name, value|
     end
     new_year = Chronic.parse(value).strftime('%Y')
     new_date = Chronic.parse(value).strftime('%m%d%Y')
+    send_keys :right, :right
     send_keys new_year
     send_keys :left, :left
     send_keys new_date
@@ -66,6 +67,7 @@ Then('the user sets the assignment {string} to {string}') do |field_name, value|
     end
     new_year = Chronic.parse(value).strftime('%Y')
     new_date = Chronic.parse(value).strftime('%m%d%Y')
+    send_keys :right, :right
     send_keys new_year
     send_keys :left, :left
     send_keys new_date

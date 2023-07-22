@@ -14,6 +14,7 @@ Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_pre
   new_year = Chronic.parse(date_value).strftime('%Y')
   # Be sure to enter the year first or leap years will break
   new_date = Chronic.parse(date_value).strftime('%m%d')
+  send_keys :right, :right
   send_keys new_year
   send_keys :left, :left
   send_keys new_date

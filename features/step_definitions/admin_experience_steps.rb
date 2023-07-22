@@ -17,6 +17,7 @@ Then 'the user sets the experience {string} date to {string}' do |ordinal, date_
     end
     new_year = Chronic.parse(date_value).strftime('%Y')
     new_date = Chronic.parse(date_value).strftime('%m%d')
+    send_keys :right, :right
     send_keys new_year
     send_keys :left, :left
     send_keys new_date
@@ -31,6 +32,7 @@ Then 'the user sets the experience {string} date to {string}' do |ordinal, date_
     end
     new_year = Chronic.parse(date_value).strftime('%Y')
     new_date = Chronic.parse(date_value).strftime('%m%d')
+    send_keys :right, :right
     send_keys new_year
     send_keys :left, :left
     send_keys new_date
