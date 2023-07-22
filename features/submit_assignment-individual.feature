@@ -2,9 +2,11 @@ Feature: (Re)Submitting individual assignments
   Students must be able to (re)submit individual assignments
 
   Background:
+    Given a user has signed up
     Given there is a course with an assessed project
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
     Given the course started "three months ago" and ended "two months from now"
+    Given the user is the instructor for the course
     Given the project has a group with 4 confirmed users
     Given the project has a group with 4 confirmed users
     Given the project has a group with 4 confirmed users

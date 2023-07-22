@@ -77,8 +77,17 @@ Given('the course is shifted {int} {string} into the {string}') do |qty, units, 
 end
 
 Then('the user opens the {string} task') do |_string|
-  find(:xpath, "//td[contains(.,'#{@assignment.name}')]").click
   wait_for_render
+  step 'the user switches to the "Task View" tab'
+  find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").hover
+  begin
+    # Try to click regularly
+    find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    # If that gives an error, it's because of the readability popup
+    # We can click either of the items this finds because they are effectively the same
+    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@assignment.name}')]")[0].click
+  end
 end
 
 Then('the user opens the {string} tab') do |_string|
