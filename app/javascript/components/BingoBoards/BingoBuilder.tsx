@@ -90,10 +90,11 @@ export default function BingoBuilder(props) {
         cells[i].concept = concept;
       }
     }
-    board.bingo_cells = cells;
-    board.iteration = iteration;
-    board.initialised = true;
-    setBoard(board);
+    const tmpBoard = Object.assign( {}, board );
+    tmpBoard.bingo_cells = cells;
+    tmpBoard.iteration = iteration;
+    tmpBoard.initialised = true;
+    setBoard(tmpBoard);
   };
 
   const getConcepts = () => {
@@ -199,25 +200,28 @@ export default function BingoBuilder(props) {
     open(`${endpoints.boardUrl}${bingoGameId}.pdf`);
   };
 
-  //This nested ternary operator is ugly, but it works. At some point
-  // I need to figure out the right way to do it.
-  const saveBtn =
-    null !== board.bingo_game.end_date &&
-    new Date(board.bingo_game.end_date) < new Date() ? (
+  const saveBtn = []
+  if( null === board.bingo_game.end_date ){
+    //no op
+  } else if( new Date( board.bingo_game.end_date ) < new Date( ) ){
+    saveBtn.push(
       <em>
         This game has already been played, so you cannot save a new board.
       </em>
-    ) : board.initialised &&
-      board.iteration > 0 &&
-      null !== board.bingo_game.end_date &&
-      new Date(board.bingo_game.endDate) > new Date() ? (
+    )
+  } else if( board.initialised && board.iteration > 0 && new Date( board.bingo_game.end_date ) > new Date( ) ){
+    saveBtn.push(
       <React.Fragment>
         <Link onClick={() => saveBoard()}>Save</Link> the board you
         generated&hellip;
       </React.Fragment>
-    ) : (
+
+    )
+  } else {
+    saveBtn.push(
       <em>If you generate a new board, you will be able to save it here.</em>
-    );
+    )
+  }
 
   const printBtn =
     (board.id != null && board.iteration == 0) ||
@@ -264,12 +268,6 @@ export default function BingoBuilder(props) {
     </li>
   );
 
-  const builder = board.playable ? (
-    <div id="bingoBoard" className="mt4">
-      <BingoBoard board={board} />
-    </div>
-  ) : null;
-
   return (
     <Paper>
       <Typography>
@@ -284,7 +282,7 @@ export default function BingoBuilder(props) {
       {null != candidateList && (
         <Typography>
           <strong>Performance:</strong>
-          <span id="performance">{candidateList.performance}</span>
+          <span id="performance">{candidateList.cached_performance}</span>
         </Typography>
       )}
       <hr />
@@ -332,7 +330,12 @@ export default function BingoBuilder(props) {
               {workSheetInstr}
               {playableInstr}
             </ol>
-            {builder}
+            { board.playable ? (
+                <div id="bingoBoard" className="mt4">
+                  <BingoBoard board={board} />
+                </div>
+              ) : null
+            }
           </Paper>
         </TabPanel>
         <TabPanel value="results">
