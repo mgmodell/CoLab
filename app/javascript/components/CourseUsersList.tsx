@@ -91,10 +91,12 @@ export default function CourseUsersList(props :Props) {
         setProcRegReqPath(data.add_function.proc_self_reg + ".json");
         props.usersListUpdateFunc(data.users);
 
-        dispatch(endTask());
       })
       .catch(error => {
         console.log("error", error);
+      })
+      .finally(()=>{
+        dispatch(endTask());
       });
   };
 

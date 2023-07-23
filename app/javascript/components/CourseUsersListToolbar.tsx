@@ -96,11 +96,11 @@ export default function CourseUsersListToolbar(props:Props) {
                             addresses: newUserAddresses
                           })
                           .then(response => {
-                            props.refreshUsersFunc();
                             const data = response.data;
                             props.addMessagesFunc(data.messages);
                           })
                           .finally(( )=>{
+                            props.refreshUsersFunc();
                             dispatch(endTask("adding_email"));
                           });
                         closeDialog();

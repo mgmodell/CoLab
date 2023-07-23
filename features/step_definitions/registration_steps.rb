@@ -95,7 +95,7 @@ When(/^the new user registers$/) do
   expect(@user).to be
 end
 
-Given(/^(\d+) users$/) do |user_count|
+Given '{int} users' do |user_count|
   @users = []
   user_count.to_i.times do
     u = User.new(
