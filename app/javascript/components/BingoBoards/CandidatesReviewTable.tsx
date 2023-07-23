@@ -17,7 +17,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
 import { useTranslation } from "react-i18next";
-const RemoteAutosuggest = React.lazy(() => import("../RemoteAutosuggest"));
+const RemoteAutosuggest = React.lazy(() => import("./RemoteAutosuggest"));
 import MUIDataTable from "mui-datatables";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
@@ -165,6 +165,7 @@ export default function CandidatesReviewTable(props) {
                 controlId={"concept_4_" + candidate.id}
                 dataUrl={endpoints.conceptUrl}
                 setFunction={conceptSet}
+                rootPath={props.rootPath}
               />
             );
           }

@@ -100,7 +100,9 @@ class RemoteAutoSuggest extends React.Component {
     });
   };
   getData = function(value) {
-    const url = this.props.dataUrl + ".json?search_string=" + value;
+    const url = this.props.rootPath === undefined
+        ? `${this.props.dataUrl}.json?search_string=${value}`
+        : `/${this.props.rootPath}${this.props.dataUrl}.json?search_string=${value}`;
 
     axios
       .get(url, {})
@@ -163,6 +165,7 @@ RemoteAutoSuggest.propTypes = {
   enteredValue: PropTypes.string,
   controlId: PropTypes.string,
   dataUrl: PropTypes.string,
+  rootPath: PropTypes.string,
   setFunction: PropTypes.func.isRequired
 };
 export default withStyles(styles)(RemoteAutoSuggest);
