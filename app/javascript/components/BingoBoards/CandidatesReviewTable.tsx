@@ -284,7 +284,10 @@ export default function CandidatesReviewTable(props) {
     dispatch(startTask("saving"));
     setReviewStatus("Saving feedback.");
 
-    const url = `${endpoints.reviewSaveUrl}${bingoGameId}.json`;
+    const url = 
+      props.rootPath === undefined
+        ? `${endpoints.reviewSaveUrl}${bingoGameId}.json`
+        : `/${props.rootPath}${endpoints.reviewSaveUrl}${bingoGameId}.json`;
 
     axios
       .patch(url, {
