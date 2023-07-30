@@ -148,13 +148,16 @@ class User < ApplicationRecord
 
     BingoGame.joins(course: :rosters)
              .includes(:course)
-             .where('rosters.user_id': id, 'rosters.role': Roster.roles[:instructor])
+             .where('rosters.user_id': id )
+             .and( Roster.faculty )
              .find_each do |game|
       waiting_tasks << game if game.awaiting_review?
     end
 
+    cur_date = DateTime.current
     Assignment.joins( :submissions, course: :rosters)
              .where('rosters.user_id': id )
+             .where('assignments.end_date >= ?', cur_date )
                     .and( Submission.where.not( submitted: nil ) )
                     .and( Submission.where( withdrawn: nil ) )
                     .and( Submission.where( recorded_score: nil ) )
@@ -172,8 +175,7 @@ class User < ApplicationRecord
     BingoGame.joins(course: :rosters)
              .includes(:course, :project)
              .where(reviewed: true, 'rosters.user_id': id)
-             .where('rosters.role = ? OR rosters.role = ?',
-                    Roster.roles[:enrolled_student], Roster.roles[:invited_student])
+             .and( Roster.enrolled )
              .all.find_each do |bingo_game|
       activities << bingo_game
     end
@@ -182,6 +184,15 @@ class User < ApplicationRecord
 
     # Add in projects
     activities.concat projects.includes(:course).all
+
+    # Add in assignments
+    Assignment.joins(course: :rosters)
+             .includes(:course, :submissions)
+             .where( 'rosters.user_id': id)
+             .and( Roster.enrolled )
+             .all.find_each do |assignment|
+      activities << assignment
+    end
 
     activities.sort_by(&:end_date)
   end
@@ -253,7 +264,6 @@ class User < ApplicationRecord
   end
 
   def get_experience_performance(course_id: 0)
-    my_reactions = []
     my_reactions = if course_id.positive?
                      reactions.includes(:narrative).joins(:experience)
                               .where(experiences: { course_id: })
@@ -269,7 +279,6 @@ class User < ApplicationRecord
   end
 
   def get_assessment_performance(course_id: 0)
-    my_projects = []
     my_projects = if course_id.positive?
                     projects.includes(:assessments).where(course_id:)
                   else
@@ -288,10 +297,8 @@ class User < ApplicationRecord
     waiting_tasks = assessments.includes(course: :consent_form).active_at(cur_date).to_a
 
     # Check available tasks for students
-    available_rosters = rosters.enrolled
 
     # Add the experiences
-
     waiting_experiences = Experience.active_at(cur_date)
                                     .includes(course: :consent_form)
                                     .joins(course: :rosters)
@@ -323,6 +330,7 @@ class User < ApplicationRecord
                                            Roster.roles[:enrolled_student], Roster.roles[:invited_student])
                                     .where('assignments.end_date >= ? AND assignments.start_date <= ?', cur_date, cur_date)
                                     .to_a
+
     waiting_tasks.concat waiting_assignments
 
     waiting_tasks.sort_by(&:end_date)

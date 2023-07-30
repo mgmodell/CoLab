@@ -30,6 +30,12 @@ Then(/^user sees the assessed project in the history$/) do
   page.should have_content(@project.get_name(false))
 end
 
+Then(/^user sees the assignment in the history$/) do
+  find(:xpath, "//button[contains(.,'History')]").click
+  wait_for_render
+  page.should have_content(@assignment.get_name(false))
+end
+
 When(/^the user logs in$/) do
   visit '/'
   fill_in 'email', with: @user.email

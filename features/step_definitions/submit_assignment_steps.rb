@@ -54,23 +54,29 @@ Given('the course is shifted {int} {string} into the {string}') do |qty, units, 
     @course.experiences.find_each do |experience|
       experience.start_date += shift
       experience.end_date += shift
+      experience.save
     end
     # Projects
     @course.projects.find_each do |project|
       project.start_date += shift
       project.end_date += shift
+      project.save
     end
     # assignments
     @course.assignments.find_each do |assignment|
       assignment.start_date += shift
       assignment.end_date += shift
+      assignment.save
     end
     # bingo_games
     @course.bingo_games.find_each do |bingo_game|
       bingo_game.start_date += shift
       bingo_game.end_date += shift
+      bingo_game.save
     end
     @course.save # validate: false
+    byebug if @course.errors.present?
+    true.should be false if @course.errors.present?
 
   end
 
@@ -90,7 +96,7 @@ Then('the user opens the {string} task') do |_string|
   end
 end
 
-Then('the user opens the {string} tab') do |_string|
+Then('the user opens the {string} submissions tab') do |_string|
   pending # Write code here that turns the phrase above into concrete actions
 end
 

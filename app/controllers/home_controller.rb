@@ -382,7 +382,7 @@ class HomeController < ApplicationController
                when 'Group Experience'
                  activity.get_user_reaction(current_user).status
                when 'Assignment'
-                 activity.submitted
+                 activity.get_submissions_for_user(current_user).size
                end,
         link: case activity.type
               when 'Terms List'
