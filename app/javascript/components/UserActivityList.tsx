@@ -67,11 +67,13 @@ export default function UserActivityList(props: Props) {
     {
       headerName: t('activities.name' ),
       field: "name",
+      width: 250,
       renderCell: renderTextCellExpand
     },
     {
       headerName: t('activities.type'),
       field: "type",
+      width: 75,
       renderCell: (params) => {
         return iconForType( params.value)
       }
@@ -79,6 +81,7 @@ export default function UserActivityList(props: Props) {
     {
       headerName: t('activities.course_name'),
       field: "course_name",
+      width: 250,
       renderCell: renderTextCellExpand
     },
     {
