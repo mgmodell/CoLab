@@ -390,7 +390,7 @@ class HomeController < ApplicationController
               when 'Project'
                 nil
               when 'Assignment'
-                nil
+                "/#{activity.get_link}/#{activity.id}"
               when 'Group Experience'
                 nil
               end

@@ -4,6 +4,7 @@ const TuneIcon = lazy( () => import('@mui/icons-material/Tune'))
 const LocalLibraryIcon = lazy( () => import('@mui/icons-material/LocalLibrary'))
 const GridOffIcon = lazy( () => import('@mui/icons-material/GridOff'))
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import { Tooltip } from "@mui/material";
 
 export function iconForType(type: string) {
   var icon;
@@ -34,5 +35,9 @@ export function iconForType(type: string) {
     default:
       console.log( `No icon match for: ${type}`);
   }
-  return icon;
+  return (
+    <Tooltip title={type}>
+      {icon}
+    </Tooltip>
+  );
 }

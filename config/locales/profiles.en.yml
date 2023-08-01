@@ -1,0 +1,43 @@
+en:
+  profiles:
+    activities:
+      name: Activity
+      type: Type
+      course_name: Course
+      course_number: Course number
+    first_name: First name
+    last_name: Last name
+    edit_profile: Edit your profile
+    email_settings: Email settings
+    none_option: None selected
+    password_change: >
+      Want to change your password? Click here and we'll email
+      instructions.
+    display_settings:
+      prompt: Display settings
+      ui_theme: What UI theme would you like to use?
+      language: What language would you like to use for CoLab?
+      anonymize: Anonymize names?
+    demographics: 
+      prompt: >
+        Tell us about yourself, {{first_name}} (optional)
+      date_prompt: Enter date
+      time_zone: Time zone
+      school: What school do you currently attend?
+      major: What are you studying?
+      start_school: When did you begin your studies?
+      born: When were you born?
+      gender: What is your gender?
+      home_language: What language do you speak at home?
+      home_town: What country and state do you call home?
+      impairments:
+        prompt: >
+          Do you have any impairments which alter your
+          perspective?
+        visual: Visual
+        auditory: Auditory
+        cognitive: Cognitive
+        motor: Motor
+        other: Other
+      
+

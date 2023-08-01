@@ -56,7 +56,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '13.3.5'
+gem 'react_on_rails', '13.4.0'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
@@ -88,7 +88,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.55.0', require: false
+  gem 'rubocop', '~> 1.55.1', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'

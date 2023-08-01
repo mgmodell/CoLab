@@ -145,8 +145,8 @@ export default function TaskList(props: Props) {
           const link = params.row.link;
           navigate( link );
         }}
-        components={{
-          Toolbar: TaskListToolbar
+        slots={{
+          toolbar: TaskListToolbar
         } }
         initialState={{
           columns: {
