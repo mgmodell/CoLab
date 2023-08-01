@@ -10,6 +10,22 @@ en:
     edit_profile: Edit your profile
     email_settings: Email settings
     none_option: None selected
+    course_status:
+      name: Name
+      number: Number
+      bingo: Bingo! progress
+      assessment: Assessment progress
+      experience: Experience progress
+    consent:
+      name: Study title
+      status: Study status
+      accept_status: Accepted?
+      active: Active
+      expired: Inactive (expired)
+      inactive: Inactive
+      accepted: Accepted
+      declined: Declined
+      action: Action
     password_change: >
       Want to change your password? Click here and we'll email
       instructions.
@@ -40,4 +56,3 @@ en:
         motor: Motor
         other: Other
       
-

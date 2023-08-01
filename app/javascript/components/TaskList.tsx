@@ -11,7 +11,7 @@ import Logo from "./Logo";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@mui/material";
-import TaskListToolbar from "./TaskListToolbar";
+import StandardListToolbar from "./StandardListToolbar";
 import { renderDateCellExpand, renderTextCellExpand } from "./infrastructure/GridCellExpand";
 
 enum TaskType {
@@ -146,7 +146,7 @@ export default function TaskList(props: Props) {
           navigate( link );
         }}
         slots={{
-          toolbar: TaskListToolbar
+          toolbar: StandardListToolbar
         } }
         initialState={{
           columns: {

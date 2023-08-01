@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { renderTextCellExpand } from "./infrastructure/GridCellExpand";
 import { useNavigate } from "react-router-dom";
 import {DateTime} from 'luxon';
+import StandardListToolbar from "./StandardListToolbar";
 
 interface IActivity {
   id: number,
@@ -47,7 +48,6 @@ export default function UserActivityList(props: Props) {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        console.log( data );
         //MetaData and Infrastructure
         props.activitiesListUpdateFunc(data);
         dispatch(endTask());
@@ -105,6 +105,15 @@ export default function UserActivityList(props: Props) {
             navigate( params.row.link );
           }
         }}
+        slots={{
+          toolbar: StandardListToolbar
+        }}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 }
+          }
+        }}
+        pageSizeOptions={[5, 10]}
         />
     ) : (
       "The activities are loading"

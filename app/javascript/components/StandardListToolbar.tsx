@@ -13,7 +13,7 @@ import {
 } from '@mui/x-data-grid';
 
 
-export default function TaskListToolbar( props ){
+export default function StandardListToolbar( props ){
 
     return(
         <GridToolbarContainer>
