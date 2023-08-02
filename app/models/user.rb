@@ -328,7 +328,7 @@ class User < ApplicationRecord
                                     .where('rosters.user_id': id, 'assignments.active': true)
                                     .where('rosters.role = ? OR rosters.role = ?',
                                            Roster.roles[:enrolled_student], Roster.roles[:invited_student])
-                                    .where('assignments.end_date >= ? AND assignments.start_date <= ?', cur_date, cur_date)
+                                    .where('assignments.end_date >= ? AND courses.start_date <= ?', cur_date, cur_date)
                                     .to_a
 
     waiting_tasks.concat waiting_assignments

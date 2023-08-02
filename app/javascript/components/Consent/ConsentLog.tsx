@@ -15,7 +15,12 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from 'html-react-parser';
 
-export default function ConsentLog(props) {
+type Props = {
+  consentFormId: number;
+  parentUpdateFunc: () => void;
+}
+
+export default function ConsentLog(props : Props) {
   const { t } = useTranslation("consent_logs");
   const endpointSet = "consent_log";
   const endpoints = useTypedSelector(
@@ -136,7 +141,3 @@ export default function ConsentLog(props) {
   );
 }
 
-ConsentLog.propTypes = {
-  consentFormId: PropTypes.number,
-  parentUpdateFunc: PropTypes.func
-};

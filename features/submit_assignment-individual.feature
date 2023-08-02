@@ -54,11 +54,18 @@ Feature: (Re)Submitting individual assignments
     Then user sees the assignment in the history
 
   @javascript
-  Scenario: User should be able to see an upcoming active assignment
+  Scenario: User should be able to see an upcoming active assignment that isn't yet open
     Given the course is shifted 2 'months' into the 'future'
     Given the assignment "is" initialized active
     Given the user logs in
     Then user should see 1 open task
+
+  @javascript
+  Scenario: User should not be able to see an upcoming active assignment if the course isn't yet open
+    Given the course is shifted 4 'months' into the 'future'
+    Given the assignment "is" initialized active
+    Given the user logs in
+    Then user should see 0 open task
 
   # Rubric viewing
   @javascript

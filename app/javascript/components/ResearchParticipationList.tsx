@@ -50,7 +50,7 @@ export default function UserCourseList(props : Props) {
   };
 
   useEffect(() => {
-    if (null == props.usersList || props.usersList.length < 1) {
+    if (null == props.consentFormList || props.consentFormList.length < 1) {
       getCourses();
     }
   }, []);
