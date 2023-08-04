@@ -52,6 +52,9 @@ Feature: (Re)Submitting individual assignments
     Then user should see 0 open task
     Then user opens their profile
     Then user sees the assignment in the history
+    Then the user opens the assignment history item
+     Then the user opens the 'Grading' submissions tab
+      And the shown rubric matches the assignment rubric
 
   @javascript
   Scenario: User should be able to see an upcoming active assignment that isn't yet open
@@ -72,16 +75,7 @@ Feature: (Re)Submitting individual assignments
   Scenario: User can see a current assginment's rubric
     Given the assignment "is" initialized active
     Given the user logs in
-     Then the user opens the 'assignment' task
-     Then the user opens the 'Grading' submissions tab
-      And the shown rubric matches the assignment rubric
-
-  @javascript
-  Scenario: User can see a past assginment's rubric
-    Given the course is shifted 1 'years' into the 'past'
-    Given the assignment "is" initialized active
-    Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the user opens the 'Grading' submissions tab
       And the shown rubric matches the assignment rubric
 
@@ -90,7 +84,7 @@ Feature: (Re)Submitting individual assignments
     Given the course is shifted 2 'months' into the 'future'
     Given the assignment "is" initialized active
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the 'Submssions' tab 'is' enabled
      Then the user opens the 'Grading' submissions tab
       And the shown rubric matches the assignment rubric
@@ -100,7 +94,7 @@ Feature: (Re)Submitting individual assignments
     Given the course is shifted 2 'months' into the 'future'
     Given the assignment "is" initialized active
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the 'Submssions' tab 'is not' enabled
 
 
@@ -109,7 +103,7 @@ Feature: (Re)Submitting individual assignments
   Scenario: User can open and submit text to an assignment
     Given the assignment "is" initialized active
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'text' submission
@@ -125,7 +119,7 @@ Feature: (Re)Submitting individual assignments
       And the init assignment 'does' accept 'files'
     Given the assignment "is" initialized active
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'file' submission
@@ -141,7 +135,7 @@ Feature: (Re)Submitting individual assignments
       And the init assignment 'does' accept 'links'
     Given the assignment "is" initialized active
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'link' submission
@@ -157,7 +151,7 @@ Feature: (Re)Submitting individual assignments
       And the init assignment 'does' accept 'files'
     Given the assignment "is" initialized active
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'file' submission
@@ -174,7 +168,7 @@ Feature: (Re)Submitting individual assignments
       And the init assignment 'does' accept 'files'
     Given the assignment "is" initialized active
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'text' submission
@@ -195,7 +189,7 @@ Feature: (Re)Submitting individual assignments
       And the assignment already has 1 submission from the user
       And today is "tomorrow"
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'text' submission
@@ -215,7 +209,7 @@ Feature: (Re)Submitting individual assignments
       And the assignment already has 1 submission from the user
       And today is between the first assignment deadline and close
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'combo' submission
@@ -231,7 +225,7 @@ Feature: (Re)Submitting individual assignments
       And the assignment already has 1 submission from the user
       And today is after the final deadline
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the 'Submssions' tab 'is not' enabled
 
   @javascript
@@ -242,7 +236,7 @@ Feature: (Re)Submitting individual assignments
       And the assignment already has 1 submission from the user
       And today is "tomorrow"
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'combo' submission
@@ -257,7 +251,7 @@ Feature: (Re)Submitting individual assignments
       And the assignment already has 4 submission from the user
       And today is after the final deadline
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
      Then the user withdraws submission 3
      Then the assignment has 1 'withdrawn' submission
@@ -269,7 +263,7 @@ Feature: (Re)Submitting individual assignments
       And assignment 2 'is' graded
       And today is after the final deadline
     Given the user logs in
-     Then the user opens the 'assignment' task
+     Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
      Then the user 'can' withdraws submission 1
      Then the user 'can' withdraws submission 3

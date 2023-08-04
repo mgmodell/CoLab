@@ -75,14 +75,13 @@ Given('the course is shifted {int} {string} into the {string}') do |qty, units, 
       bingo_game.save
     end
     @course.save # validate: false
-    byebug if @course.errors.present?
     true.should be false if @course.errors.present?
 
   end
 
 end
 
-Then('the user opens the {string} task') do |_string|
+Then('the user opens the assignment task') do 
   wait_for_render
   step 'the user switches to the "Task View" tab'
   find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").hover
@@ -94,10 +93,34 @@ Then('the user opens the {string} task') do |_string|
     # We can click either of the items this finds because they are effectively the same
     find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@assignment.name}')]")[0].click
   end
+
 end
 
-Then('the user opens the {string} submissions tab') do |_string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user opens the assignment history item') do 
+  wait_for_render
+  find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").hover
+  begin
+    # Try to click regularly
+    find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    # If that gives an error, it's because of the readability popup
+    # We can click either of the items this finds because they are effectively the same
+    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@assignment.name}')]")[0].click
+  end
+end
+
+Then('the user opens the {string} submissions tab') do |tab_name|
+  wait_for_render
+  case tab_name
+  when 'Submissions'
+    click_link_or_button 'Responses'
+    # find(:xpath, "//div[@role='tablist']/button[text()='Responses']").click
+  when 'Grading'
+    click_link_or_button 'Progress'
+    # find(:xpath, "//div[@role='tablist']/button[text()='Progress']").click
+  else
+    true.should be false
+  end
 end
 
 Then('the shown rubric matches the assignment rubric') do
@@ -133,9 +156,19 @@ Then('the submission is attached to the user') do
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Given('the assignment already has {int} submission from the user') do |_int|
-  # Given('the assignment already has {float} submission from the user') do |float|
-  pending # Write code here that turns the phrase above into concrete actions
+Given('the assignment already has {int} submission from the user') do |count|
+  count.times do |index|
+    submission = @assignment.submissions.new(
+      submitted: (count - index ).hours.ago,
+      sub_text: Faker::Books::Lovecraft.sentence(word_count: rand(50..150)),
+      user: @user,
+      rubric: @assignment.rubric
+    )
+    submission.save
+
+    log submission.errors.full_messages if submission.errors.present?
+    true.should be false if submission.errors.present?
+  end
 end
 
 Then('the latest {string} db submission data is accurate') do |_string|

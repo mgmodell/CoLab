@@ -6,7 +6,7 @@ class Assignment < ApplicationRecord
   belongs_to :course, inverse_of: :assignments
   belongs_to :project, optional: true
 
-  has_many :submissions, inverse_of: :assignment
+  has_many :submissions, inverse_of: :assignment, autosave: true
 
   validates :name, :end_date, :start_date, presence: true
   before_create :anonymize

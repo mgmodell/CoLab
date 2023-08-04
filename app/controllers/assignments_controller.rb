@@ -2,7 +2,7 @@ class AssignmentsController < ApplicationController
   before_action :set_assignment, only: %i[show edit update destroy status]
   include PermissionsCheck
 
-  before_action :check_editor
+  before_action :check_editor, except: :status
 
   before_action :check_admin, only: :index
 
@@ -23,14 +23,14 @@ class AssignmentsController < ApplicationController
       only: %i[ id name description version ]
     )
     submissions = []
-    if current_user.is_admin? || @assignment.instructors.include?(current_user)
+    if current_user.is_admin? || @assignment.course.rosters.instructor.include?(current_user)
       submissions = @assignment.submissions.includes( :user )
     elsif @assignment.group_enabled
       group = @assignment.project.group_for_user(current_user)
 
-      submissions = @assignment.submisions.includes(:user).where( group: group)
+      submissions = @assignment.submissions.includes(:user).where( group: group)
     else
-      submissions = @assignment.submisions..includes(:user).where( user: current_user)
+      submissions = @assignment.submissions.includes(:user).where( user: current_user)
     end
 
     anon = current_user.anonymize?
