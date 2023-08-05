@@ -53,8 +53,7 @@ Feature: (Re)Submitting individual assignments
     Then user opens their profile
     Then user sees the assignment in the history
     Then the user opens the assignment history item
-     Then the user opens the 'Grading' submissions tab
-      And the shown rubric matches the assignment rubric
+     And the shown rubric matches the assignment rubric
 
   @javascript
   Scenario: User should be able to see an upcoming active assignment that isn't yet open

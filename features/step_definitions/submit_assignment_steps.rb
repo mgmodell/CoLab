@@ -107,6 +107,7 @@ Then('the user opens the assignment history item') do
     # We can click either of the items this finds because they are effectively the same
     find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@assignment.name}')]")[0].click
   end
+  wait_for_render
 end
 
 Then('the user opens the {string} submissions tab') do |tab_name|
@@ -124,7 +125,22 @@ Then('the user opens the {string} submissions tab') do |tab_name|
 end
 
 Then('the shown rubric matches the assignment rubric') do
-  pending # Write code here that turns the phrase above into concrete actions
+  page.should have_content @assignment.name
+  page.should have_content @assignment.description
+
+  rubric = @assignment.rubric
+  page.should have_content rubric.name
+  page.should have_content rubric.version
+
+  rubric.criteria.each do |criterium|
+    page.should have_content criterium.description
+    page.should have_content criterium.l1_description
+    page.should have_content criterium.l2_description unless criterium.l2_description.nil?
+    page.should have_content criterium.l3_description unless criterium.l3_description.nil?
+    page.should have_content criterium.l4_description unless criterium.l4_description.nil?
+    page.should have_content criterium.l5_description unless criterium.l5_description.nil?
+
+  end
 end
 
 Then('the {string} tab {string} enabled') do |_string, _string2|
