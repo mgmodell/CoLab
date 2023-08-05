@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, Fragment } from "react";
 import { useDispatch } from "react-redux";
 
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
+import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
@@ -18,7 +18,7 @@ import Link from "@mui/material/Link";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 
-import { startTask, endTask } from "./infrastructure/StatusSlice";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { DataGrid, GridRowModel, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
@@ -26,7 +26,7 @@ import CourseUsersListToolbar from "./CourseUsersListToolbar";
 
 const DropUserButton = React.lazy(() => import("./DropUserButton"));
 const BingoDataRepresentation = React.lazy(() =>
-  import("./BingoBoards/BingoDataRepresentation")
+  import("../BingoBoards/BingoDataRepresentation")
 );
 
 enum UserListType {

@@ -6,16 +6,16 @@ import { Settings } from "luxon";
 const CourseList = React.lazy(() => import("./CourseList"));
 const CourseDataAdmin = React.lazy(() => import("./CourseDataAdmin"));
 const BingoGameDataAdmin = React.lazy(() =>
-  import("./BingoBoards/BingoGameDataAdmin")
+  import("../BingoBoards/BingoGameDataAdmin")
 );
 const ExperienceDataAdmin = React.lazy(() =>
-  import("./experiences/ExperienceDataAdmin")
+  import("../experiences/ExperienceDataAdmin")
 );
 const ProjectDataAdmin = React.lazy(() => import("./ProjectDataAdmin"));
 const AssignmentDataAdmin = React.lazy(() =>
-  import("./assignments/AssignmentDataAdmin")
+  import("../assignments/AssignmentDataAdmin")
 );
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 
 export default function CourseAdmin(props) {
   const user = useTypedSelector(state => state.profile.user);

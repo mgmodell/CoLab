@@ -16,14 +16,13 @@ Then(/^the user clicks the link to the experience$/) do
   end
 end
 
-Then('the {string} button will be disabled') do |button_name|
+Then 'the {string} button will be disabled' do |button_name|
   wait_for_render
   elem = find(:xpath, "//button[contains(.,'#{button_name}')]")
-  byebug if elem[:disabled] == 'false'
   elem[:disabled].should eq 'true'
 end
 
-Then(/^the user will see "([^"]*)"$/) do |checkText|
+Then 'the user will see {string}' do |checkText|
   wait_for_render
   page.should have_content(:all, checkText)
 end

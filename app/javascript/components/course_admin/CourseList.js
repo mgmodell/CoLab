@@ -17,9 +17,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import CopyActivityButton from "./CopyActivityButton";
 import MUIDataTable from "mui-datatables";
 import Collapse from "@mui/material/Collapse";
-import { useTypedSelector } from "./infrastructure/AppReducers";
-import { startTask, endTask } from "./infrastructure/StatusSlice";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
+import { useTypedSelector } from "../infrastructure/AppReducers";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
+import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { Skeleton } from "@mui/material";
 
 export default function CourseList(props) {

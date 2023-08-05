@@ -18,7 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
-const DiversityScore = React.lazy(() => import("../components/DiversityScore"));
+const DiversityScore = React.lazy(() => import("../DiversityScore"));
 
 import { SortDirection } from "react-virtualized";
 import axios from "axios";

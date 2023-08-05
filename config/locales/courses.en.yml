@@ -23,6 +23,7 @@ en:
       add_instructor_lbl: 'Add instructor by email:'
       add_student_lbl: 'Add student by email:'
       add: Add!
+      add_btn: Add {{user_type}}s!
       enrolled_count:
         one: There is one student enrolled.
         other: There are %{count} students enrolled.

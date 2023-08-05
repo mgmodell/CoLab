@@ -10,7 +10,7 @@ import {
   setClean,
   addMessage,
   Priorities
-} from "./infrastructure/StatusSlice";
+} from "../infrastructure/StatusSlice";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -28,7 +28,7 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 
-import { iconForType } from "./ActivityLib";
+import { iconForType } from "../ActivityLib";
 
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TabPanel, TabList, TabContext } from "@mui/lab/";
@@ -42,7 +42,7 @@ import MUIDataTable from "mui-datatables";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { StudentData, UserListType } from "./CourseUsersList";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 
 export default function CourseDataAdmin(props) {
   const category = "course";

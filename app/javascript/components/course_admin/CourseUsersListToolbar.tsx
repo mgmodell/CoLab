@@ -25,7 +25,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Tooltip from "@mui/material/Tooltip";
 import { useDispatch } from "react-redux";
 
-import { startTask, endTask } from "./infrastructure/StatusSlice";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { StudentData, UserListType } from "./CourseUsersList";
 import axios from "axios";
 
@@ -39,7 +39,8 @@ type Props = {
   addUsersPath: string;
 }
 export default function CourseUsersListToolbar(props:Props) {
-  const { t } = useTranslation(`admin`);
+  const category = 'course';
+  const { t } = useTranslation(`${category}s`);
   const navigate = useNavigate();
   const dispatch = useDispatch( );
 
@@ -89,6 +90,7 @@ export default function CourseUsersListToolbar(props:Props) {
                     <Button
                       onClick={() => {
                         dispatch(startTask("adding_email"));
+                        console.log( newUserAddresses );
 
                         axios
                           .put(props.addUsersPath, {
@@ -107,7 +109,7 @@ export default function CourseUsersListToolbar(props:Props) {
                       }}
                       color="primary"
                     >
-                      Add {props.userType}s!
+                      {t('show.add_btn', {user_type: props.userType})}
                     </Button>
                   </DialogActions>
                 </Dialog>

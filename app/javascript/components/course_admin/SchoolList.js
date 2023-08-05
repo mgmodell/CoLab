@@ -9,11 +9,11 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusSlice";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 
 import MUIDataTable from "mui-datatables";
 import Collapse from "@mui/material/Collapse";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 
 export default function SchoolList(props) {

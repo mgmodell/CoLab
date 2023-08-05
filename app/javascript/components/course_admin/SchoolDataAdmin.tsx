@@ -8,8 +8,8 @@ import {
   Priorities,
   setDirty,
   setClean
-} from "./infrastructure/StatusSlice";
-import { refreshSchools } from "./infrastructure/ContextSlice";
+} from "../infrastructure/StatusSlice";
+import { refreshSchools } from "../infrastructure/ContextSlice";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -24,7 +24,7 @@ import { Settings } from "luxon";
 
 //import i18n from './i18n';
 import { useTranslation } from "react-i18next";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 
 export default function SchoolDataAdmin(props) {

@@ -3,9 +3,9 @@ import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 import { Settings } from "luxon";
 import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
-import CourseAdmin from "./CourseAdmin";
-const SchoolList = React.lazy(() => import("./SchoolList"));
-const SchoolDataAdmin = React.lazy(() => import("./SchoolDataAdmin"));
+import CourseAdmin from "./course_admin/CourseAdmin";
+const SchoolList = React.lazy(() => import("./course_admin/SchoolList"));
+const SchoolDataAdmin = React.lazy(() => import("./course_admin/SchoolDataAdmin"));
 const RubricList = React.lazy(() => import("./assignments/RubricList"));
 const RubricDataAdmin = React.lazy(() =>
   import("./assignments/RubricDataAdmin")
@@ -16,6 +16,7 @@ const ConsentFormDataAdmin = React.lazy(() =>
 );
 const ConceptsTable = React.lazy(() => import("./ConceptsTable"));
 const ReportingAdmin = React.lazy(() => import("./Reports/ReportingAdmin"));
+
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
 

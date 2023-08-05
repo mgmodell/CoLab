@@ -18,10 +18,10 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 
-import { startTask, endTask } from "./infrastructure/StatusSlice";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
+import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 export default function CopyActivityButton(props) {
   const category = "course";

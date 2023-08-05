@@ -325,8 +325,13 @@ Then 'the user adds the {string} users {string}' do |type, addresses|
   btn.click
 
   inpt = find(:xpath, "//input[@id='addresses']")
+
   addresses = @users.map(&:email).join(', ') if addresses == 'user_list'
-  inpt.set addresses
+  inpt.click
+  send_keys addresses
+  # It seems that inpt.set doesn't work properly here for some reason
+  # characters get eaten if I use the following:
+  # inpt.set addresses
 
   btn = find(:xpath, "//button[contains(.,'Add #{lbl}!')]")
   btn.click
