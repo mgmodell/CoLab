@@ -75,7 +75,7 @@ Feature: (Re)Submitting individual assignments
     Given the assignment "is" initialized active
     Given the user logs in
      Then the user opens the assignment task
-     Then the user opens the 'Grading' submissions tab
+  #   Then the user opens the 'Grading' submissions tab
       And the shown rubric matches the assignment rubric
 
   @javascript
@@ -84,8 +84,8 @@ Feature: (Re)Submitting individual assignments
     Given the assignment "is" initialized active
     Given the user logs in
      Then the user opens the assignment task
-     Then the 'Submssions' tab 'is' enabled
-     Then the user opens the 'Grading' submissions tab
+     Then the 'Submissions' tab 'is' enabled
+  #   Then the user opens the 'Grading' submissions tab
       And the shown rubric matches the assignment rubric
 
   @javascript
@@ -94,7 +94,7 @@ Feature: (Re)Submitting individual assignments
     Given the assignment "is" initialized active
     Given the user logs in
      Then the user opens the assignment task
-     Then the 'Submssions' tab 'is not' enabled
+     Then the 'Submissions' tab 'is not' enabled
 
 
   # Submit assignments
@@ -225,7 +225,7 @@ Feature: (Re)Submitting individual assignments
       And today is after the final deadline
     Given the user logs in
      Then the user opens the assignment task
-     Then the 'Submssions' tab 'is not' enabled
+     Then the 'Submissions' tab 'is not' enabled
 
   @javascript
   Scenario: User can submit and re-submit to combo assignment

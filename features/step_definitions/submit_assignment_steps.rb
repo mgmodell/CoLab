@@ -143,8 +143,16 @@ Then('the shown rubric matches the assignment rubric') do
   end
 end
 
-Then('the {string} tab {string} enabled') do |_string, _string2|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the {string} tab {string} enabled') do |tab_name, enabled|
+  case tab_name.downcase
+  when 'submissions'
+    tab = find(:xpath, "//button[text()='Responses']")
+  when 'grading'
+    tab = find(:xpath, "//button[text()='Progress']")
+  else
+    true.should be false
+  end
+  (tab['disabled'] == 'true').should be 'is' == enabled
 end
 
 Then('the user creates a new submission') do
