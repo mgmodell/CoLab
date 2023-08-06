@@ -13,7 +13,11 @@ import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Tooltip from "@mui/material/Tooltip";
 
-export default function AdminListToolbar(props) {
+type Props = {
+    itemType: string;
+}
+
+export default function AdminListToolbar(props: Props) {
   const { t } = useTranslation(`admin`);
   const navigate = useNavigate();
   return (
@@ -28,11 +32,11 @@ export default function AdminListToolbar(props) {
             //window.location.href =
             //  endpoints.endpoints[endpointSet].schoolCreateUrl;
           }}
-          aria-label="new-activity"
+          aria-label={`New ${props.itemType}`}
           size="small"
         >
           <AddIcon />
-          {t("new_activity", { activity_type: props.activityType })}
+          {t("new_activity", { activity_type: props.itemType })}
         </IconButton>
       </Tooltip>
       <GridToolbarQuickFilter debounceMs={50} />

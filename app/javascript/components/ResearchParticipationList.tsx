@@ -13,7 +13,7 @@ import {DateTime} from 'luxon';
 import StandardListToolbar from "./StandardListToolbar";
 
 interface IConsentForm {
-  id: number
+  id: number,
   name: string,
   link: string,
   accepted: boolean,

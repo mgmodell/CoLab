@@ -21,6 +21,7 @@ import {EditorState, convertToRaw, ContentState } from 'draft-js';
 const Editor = React.lazy( () => import('../reactDraftWysiwygEditor'));
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
+import AdminListToolbar from "../infrastructure/AdminListToolbar";
 
 enum SubmissionActions{
   init_no_data = 'INIT NO DATA',
@@ -278,7 +279,7 @@ export default function CritiqueShell(props: Props) {
                     //navigate(String(params.row.id));
                 }}
                 slots={{
-                  //Toolbar: AdminListToolbar
+                  toolbar: AdminListToolbar
                 }}
                 slotProps={{
                   toolbar: {

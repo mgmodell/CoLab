@@ -59,10 +59,10 @@ export default function SubmissionList(props:Props) {
             onCellClick={(params, event, details) => {
                 //navigate(String(params.row.id));
             }}
-            components={{
-              //Toolbar: AdminListToolbar
+            slots={{
+              toolbar: AdminListToolbar
             }}
-            componentsProps={{
+            slotProps={{
               toolbar: {
                 activityType: "submission"
               }

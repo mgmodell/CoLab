@@ -176,10 +176,10 @@ export default function RubricList(props) {
                 navigate(String(params.row.id));
               }
             }}
-            components={{
-              Toolbar: AdminListToolbar
+            slots={{
+              toolbar: AdminListToolbar
             }}
-            componentsProps={{
+            slotProps={{
               toolbar: {
                 activityType: "rubric"
               }

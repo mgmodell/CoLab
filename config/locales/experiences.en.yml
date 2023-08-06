@@ -23,6 +23,17 @@ en:
     not_started: Not Started
     not_completed: Not Completed
     improvements: Improvements
+    reactions:
+      student_lbl: Student
+      email_lbl: Email
+      completion_lbl: Completion
+      narrative_lbl: Narrative
+      scenario_lbl: Scenario
+      response_lbl: Response
+      improvements_lbl: Improvements
+      suggestions_lbl: Suggestions
+      none_yet: No reactions yet.
+      
     tz_warn: This experience occurs in the %{time_zone} time zone and all dates reflect this.
     react_title: Experience Reaction
     editing: Editing Experience
