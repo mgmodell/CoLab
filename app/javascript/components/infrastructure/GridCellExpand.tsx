@@ -130,11 +130,18 @@ function renderDateCellExpand(params: GridRenderCellParams<any, string>) {
 
   let retVal = '';
   if( null !== params.value ) {
-    const dt = params.value.setZone( Settings.defaultZone );
+    let dt = null;
+    if( typeof( params.value ) === 'string' ) {
+      dt = new DateTime( params.value );
+    } else {
+      dt = params.value;
+    }
+    dt = dt.setZone( Settings.defaultZone );
     retVal =
       `${dt.toLocaleString(DateTime.DATETIME_MED)} (${dt.zoneName})`
     ;
-  }
+
+    }
   return (
     <GridCellExpand value={retVal} width={params.colDef.computedWidth} />
   );

@@ -456,7 +456,6 @@ class CoursesController < ApplicationController
   end
 
   def add_students
-    puts params[:addresses]
 
     count = @course.add_students_by_email params[:addresses]
     msg = t('courses.students_invited', count:)

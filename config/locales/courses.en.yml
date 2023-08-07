@@ -13,6 +13,17 @@ en:
       copy_new_start: When will this new course start?
       original_date: Existing course date
       copy_new_start_lbl: New course start date?
+      number_col: Number
+      name_col: Name
+      school_col: School
+      open_col: Open Date
+      close_col: Close Date
+      faculty_col: Faculty
+      students_col: Students
+      projects_col: Projects
+      experiences_col: Experiences
+      bingo_games_col: Bingo! Games
+      actions_col: Actions
     edit:
       title: Edit Course Details
       self_reg_dwnld: Download self-registration code
