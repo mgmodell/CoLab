@@ -20,6 +20,9 @@ import parse from 'html-react-parser';
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import CandidateReviewListToolbar from "./CandidateReviewListToolbar";
+import useResizeObserver from 'resize-observer-hook';
+import { width } from "@mui/system";
+import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
 export default function CandidatesReviewTable(props) {
   const category = "candidate_review";
@@ -33,6 +36,7 @@ export default function CandidatesReviewTable(props) {
     state => state.context.status.endpointsLoaded
   );
   const { bingoGameId } = useParams();
+  const [ref, chartWidth, height] = useResizeObserver( );
 
   const [candidates, setCandidates] = useState([]);
   const [candidateLists, setCandidateLists] = useState([]);
@@ -51,6 +55,8 @@ export default function CandidatesReviewTable(props) {
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
 
+  const VAR_COL_LEFT = (chartWidth - 240) / 100 ;
+
   useEffect(() => {
     setDirty(true);
     updateProgress();
@@ -66,10 +72,12 @@ export default function CandidatesReviewTable(props) {
     {
       headerName: "#",
       field: "number",
+      width: 10,
     },
     {
       headerName: t('review.completed_col'),
       field: "completed",
+      width: 75,
       renderCell: (params) => {
           return 100 == params.value ? "*" : null;
 
@@ -78,6 +86,7 @@ export default function CandidatesReviewTable(props) {
     {
       headerName: t('review.submitter_col'),
       field: "user_id",
+      width: VAR_COL_LEFT * 30,
       renderCell: (params) => {
           const candidate = getById(candidates, params.row.id);
           const user = getById(users, candidate.user_id);
@@ -103,15 +112,20 @@ export default function CandidatesReviewTable(props) {
     },
     {
       headerName: t('review.term_col'),
-      field: "term"
+      field: "term",
+      width: VAR_COL_LEFT * 15,
+      renderCell: renderTextCellExpand
     },
     {
       headerName: t('review.definition_col'),
-      field: "definition"
+      field: "definition",
+      width: VAR_COL_LEFT * 30,
+      renderCell: renderTextCellExpand
     },
     {
       headerName: t('review.feedback_col'),
       field: 'candidate_feedback_id',
+      width: VAR_COL_LEFT * 20,
       renderCell: (params) => {
           const candidate = getById(candidates, params.row.id);
           return (
@@ -137,6 +151,7 @@ export default function CandidatesReviewTable(props) {
     {
       headerName: t('review.concept_col'),
       field: "concept_id",
+      width: VAR_COL_LEFT * 30,
       renderCell: (params) => {
           let output = <div>{t('review.none_msg' )}</div>
           const candidate = getById(candidates, params.row.id);
@@ -346,9 +361,16 @@ export default function CandidatesReviewTable(props) {
       ) : (
         <Skeleton variant="rectangular" height={20} />
       )}
+      <div ref={ref}>
+
       <DataGrid
         columns={columns}
         rows={candidates}
+        
+        style={{
+          width: chartWidth
+        }
+        }
         slots={{
           toolbar: CandidateReviewListToolbar
         }}
@@ -368,7 +390,14 @@ export default function CandidatesReviewTable(props) {
           }
 
         }}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 }
+          }
+        }}
+        pageSizeOptions={[5, 10]}
         />
+      </div>
     </Paper>
   );
 }
