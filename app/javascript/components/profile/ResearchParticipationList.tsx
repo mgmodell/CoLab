@@ -3,14 +3,14 @@ import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusSlice";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 
 import axios from "axios";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
-import { renderTextCellExpand } from "./infrastructure/GridCellExpand";
+import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 import {DateTime} from 'luxon';
-import StandardListToolbar from "./StandardListToolbar";
+import StandardListToolbar from "../StandardListToolbar";
 
 interface IConsentForm {
   id: number,

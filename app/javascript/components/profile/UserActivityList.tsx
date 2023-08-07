@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
-import { iconForType } from "./ActivityLib";
+import { iconForType } from "../ActivityLib";
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusSlice";
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
+import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 import axios from "axios";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
-import { renderTextCellExpand } from "./infrastructure/GridCellExpand";
+import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 import { useNavigate } from "react-router-dom";
 import {DateTime} from 'luxon';
-import StandardListToolbar from "./StandardListToolbar";
+import StandardListToolbar from "../StandardListToolbar";
 
 interface IActivity {
   id: number,

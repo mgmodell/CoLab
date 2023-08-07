@@ -10,14 +10,14 @@ import Link from "@mui/material/Link";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
+import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusSlice";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
-import UserListToolbar from "./UserListToolbar";
+import UserListToolbar from "../course_admin/UserListToolbar";
 
 interface IEmail {
   id: number;

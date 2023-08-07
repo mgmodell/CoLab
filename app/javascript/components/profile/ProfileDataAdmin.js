@@ -37,15 +37,15 @@ const UserActivityList = React.lazy(() => import("./UserActivityList"));
 //import i18n from './i18n';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "./infrastructure/StatusSlice";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { Box, Grid, Link } from "@mui/material";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import {
   fetchProfile,
   setProfile,
   persistProfile,
   setLocalLanguage
-} from "./infrastructure/ProfileSlice";
+} from "../infrastructure/ProfileSlice";
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 

@@ -25,12 +25,16 @@ import axios from "axios";
 import parse from 'html-react-parser';
 
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import CandidateReviewListToolbar from "./CandidateReviewListToolbar";
 
 export default function CandidatesReviewTable(props) {
+  const category = "candidate_review";
+
+  // Inconsistent naming follows. This should be cleaned up.
   const { t } = useTranslation("bingo_games");
-  const endpointSet = "candidate_review";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -65,30 +69,24 @@ export default function CandidatesReviewTable(props) {
     })[0];
   };
 
-  const columns = [
+  const columns: GridColDef[] = [
     {
-      label: "#",
-      name: "number",
-      options: {
-        filter: false
+      headerName: "#",
+      field: "number",
+    },
+    {
+      headerName: t('review.completed_col'),
+      field: "completed",
+      renderCell: (params) => {
+          return 100 == params.value ? "*" : null;
+
       }
     },
     {
-      label: "Complete",
-      name: "completed",
-      options: {
-        customBodyRender: value => {
-          return 100 == value ? "*" : null;
-        }
-      }
-    },
-    {
-      label: "Submitted by",
-      name: "id",
-      options: {
-        display: false,
-        customBodyRender: value => {
-          const candidate = getById(candidates, value);
+      headerName: t('review.submitter_col'),
+      field: "user_id",
+      renderCell: (params) => {
+          const candidate = getById(candidates, params.row.id);
           const user = getById(users, candidate.user_id);
           let cl = getById(candidateLists, candidate.candidate_list_id);
           const output = [
@@ -107,30 +105,29 @@ export default function CandidatesReviewTable(props) {
             );
           }
           return output;
-        }
+
       }
     },
     {
-      label: "Term",
-      name: "term"
+      headerName: t('review.term_col'),
+      field: "term"
     },
     {
-      label: "Definition",
-      name: "definition"
+      headerName: t('review.definition_col'),
+      field: "definition"
     },
     {
-      label: "Feedback",
-      name: "id",
-      options: {
-        customBodyRender: value => {
-          const candidate = getById(candidates, value);
+      headerName: t('review.feedback_col'),
+      field: 'candidate_feedback_id',
+      renderCell: (params) => {
+          const candidate = getById(candidates, params.row.id);
           return (
             <Select
               value={candidate.candidate_feedback_id || 0}
               onChange={event => {
-                feedbackSet(value, event.target.value);
+                feedbackSet(params.row.id, event.target.value);
               }}
-              id={`feedback_4_${value}`}
+              id={`feedback_4_${params.row.id}`}
             >
               {feedbackOptions.map(opt => {
                 return (
@@ -141,16 +138,15 @@ export default function CandidatesReviewTable(props) {
               })}
             </Select>
           );
-        }
+
       }
     },
     {
-      label: "Concept",
-      name: "id",
-      options: {
-        customBodyRender: value => {
-          let output = "N/A";
-          const candidate = getById(candidates, value);
+      headerName: t('review.concept_col'),
+      field: "concept_id",
+      renderCell: (params) => {
+          let output = <div>{t('review.none_msg' )}</div>
+          const candidate = getById(candidates, params.row.id);
           const feedback = getById(
             feedbackOptions,
             candidate.candidate_feedback_id || 0
@@ -159,8 +155,8 @@ export default function CandidatesReviewTable(props) {
           if (feedback.id !== 0 && "term_problem" !== feedback.critique) {
             output = (
               <RemoteAutosuggest
-                inputLabel={"Concept"}
-                itemId={value}
+                inputLabel={t('concept')}
+                itemId={params.row.id}
                 enteredValue={candidate.concept.name}
                 controlId={"concept_4_" + candidate.id}
                 dataUrl={endpoints.conceptUrl}
@@ -171,11 +167,9 @@ export default function CandidatesReviewTable(props) {
           }
           return output;
         }
-      }
     }
   ];
 
-  const review_complete_lbl = "Review completed";
 
   useEffect(() => {
     if (endpointStatus) {
@@ -247,7 +241,7 @@ export default function CandidatesReviewTable(props) {
           credit: 0,
           critique: "empty",
           id: 0,
-          name: "Not set"
+          name: t('review.not_set_opt')
         });
         setFeedbackOptions(data.feedback_opts);
 
@@ -269,7 +263,7 @@ export default function CandidatesReviewTable(props) {
 
         setCandidates(data.candidates);
 
-        setReviewStatus("Data loaded");
+        setReviewStatus(t('review.data_loaded_msg'));
         setDirty(false);
         dispatch(endTask());
         updateProgress();
@@ -282,7 +276,7 @@ export default function CandidatesReviewTable(props) {
   const saveFeedback = () => {
     setDirty(false);
     dispatch(startTask("saving"));
-    setReviewStatus("Saving feedback.");
+    setReviewStatus(t('review.saving_msg'));
 
     const url = 
       props.rootPath === undefined
@@ -302,7 +296,7 @@ export default function CandidatesReviewTable(props) {
       })
       .catch(error => {
         const fail_data = new Object();
-        fail_data.notice = "The operation failed";
+        fail_data.notice = t('review.save_fail_msg');
         fail_data.success = false;
         console.log("error");
         return fail_data;
@@ -328,28 +322,6 @@ export default function CandidatesReviewTable(props) {
     setCandidates(candidates_temp);
   };
 
-  const notify =
-    progress < 100 ? null : (
-      <FormControlLabel
-        control={
-          <Checkbox
-            id="review_complete"
-            onClick={() => setReviewComplete(!reviewComplete)}
-            checked={reviewComplete}
-          />
-        }
-        label={review_complete_lbl}
-      />
-    );
-  const saveButton = (
-    <Button
-      disabled={!dirty}
-      variant="contained"
-      onClick={() => saveFeedback()}
-    >
-      Save
-    </Button>
-  );
 
   return (
     <Paper>
@@ -381,52 +353,29 @@ export default function CandidatesReviewTable(props) {
       ) : (
         <Skeleton variant="rectangular" height={20} />
       )}
-      <MUIDataTable
-        data={candidates}
+      <DataGrid
         columns={columns}
-        options={{
-          responsive: "standard",
-          filter: false,
-          print: false,
-          download: false,
-          selectableRows: "none",
-          rowsPerPageOptions: [10, 15, 100, candidates.length],
-          customToolbar: () => {
-            return (
-              <Grid
-                container
-                spacing={8}
-                direction="row"
-                justifyContent="flex-end"
-                alignItems="stretch"
-              >
-                <Grid item>
-                  <CircularProgress
-                    size={10}
-                    variant={progress > 0 ? "determinate" : "indeterminate"}
-                    value={progress}
-                  />
-                  &nbsp;
-                  {progress}%
-                  <Tooltip title="Unique concepts identified [acceptably explained]">
-                    <Typography>
-                      {uniqueConcepts} [{acceptableUniqueConcepts}]
-                    </Typography>
-                  </Tooltip>
-                  {reviewStatus}
-                  {notify}
-                </Grid>
-                <Grid item>
-                  <Button variant="contained" onClick={() => getData()}>
-                    Reload
-                  </Button>
-                  {saveButton}
-                </Grid>
-              </Grid>
-            );
-          }
+        rows={candidates}
+        slots={{
+          toolbar: CandidateReviewListToolbar
         }}
-      />
+        slotProps={{
+          toolbar: {
+            progress: progress,
+            uniqueConcepts: uniqueConcepts,
+            acceptableUniqueConcepts: acceptableUniqueConcepts,
+            reloadFunc: getData,
+
+            reviewStatus: reviewStatus,
+            reviewComplete: reviewComplete,
+            saveFeedbackFunc: saveFeedback,
+            setReviewCompleteFunc: setReviewComplete,
+
+            dirty: dirty
+          }
+
+        }}
+        />
     </Paper>
   );
 }

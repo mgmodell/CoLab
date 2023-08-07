@@ -25,7 +25,7 @@ const DecisionInvitationsTable = React.lazy(() =>
   import("./DecisionInvitationsTable")
 );
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
-const ProfileDataAdmin = React.lazy(() => import("./ProfileDataAdmin"));
+const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const TaskList = React.lazy(() => import("./TaskList"));
 
 export default function HomeShell(props) {

@@ -3,14 +3,14 @@ import Paper from "@mui/material/Paper";
 
 import { useDispatch } from "react-redux";
 
-import { startTask, endTask } from "./infrastructure/StatusSlice";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 
-import WorkingIndicator from "./infrastructure/WorkingIndicator";
-import BingoDataRepresentation from "./BingoBoards/BingoDataRepresentation";
+import WorkingIndicator from "../infrastructure/WorkingIndicator";
+import BingoDataRepresentation from "../BingoBoards/BingoDataRepresentation";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
-import StandardListToolbar from "./StandardListToolbar";
+import StandardListToolbar from "../StandardListToolbar";
 
 interface ICourse {
   id: number,

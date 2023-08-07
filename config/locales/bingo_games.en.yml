@@ -31,6 +31,20 @@ en:
     active: Active
     group_option: Make groups available?
     activate_success: Bingo! Game activated!
+    review:
+      completed_col: Complete
+      submitter_col: Submitted by
+      term_col: Term
+      definition_col: Definition
+      feedback_col: Feedback
+      concept_col: Concept
+      none_msg: N/A
+      review_complete_msg: Review completed
+      not_set_opt: Not set
+      data_loaded_msg: Data loaded
+      saving_msg: Saving feedback
+      save_fail_msg: The save operation failed
+      reload_btn: Reload
     #Term data
     topic: Topic
     description: Description
