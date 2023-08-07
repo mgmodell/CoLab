@@ -3,22 +3,23 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 
-import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 
-import MUIDataTable from "mui-datatables";
 import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { useTranslation } from "react-i18next";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import AdminListToolbar from "../infrastructure/AdminListToolbar";
 
 export default function ConsentFormList(props) {
-  const endpointSet = "consent_form";
+  const category = "consent_form";
+  const { t } = useTranslation( `${category}s`);
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -31,23 +32,18 @@ export default function ConsentFormList(props) {
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
-  const columns = [
+  const columns: GridColDef[] = [
     {
-      label: "Name",
-      name: "name",
-      options: {
-        filter: false
-      }
+      headerName: t('index.name_col' ),
+      field: "name",
     },
     {
-      label: "Active",
-      name: "active",
-      options: {
-        filter: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const output = value ? <CheckIcon /> : null;
-          return output;
-        }
+      headerName: t('index.active_col'),
+      field: "active",
+      renderCell: (params) => {
+        const output = params.value ? <CheckIcon /> : null;
+        return output;
+
       }
     }
   ];
@@ -83,39 +79,21 @@ export default function ConsentFormList(props) {
     setShowErrors(true);
   };
 
-  const muiDatTab = (
-    <MUIDataTable
-      title="Schools"
-      data={consent_forms}
+  const dataTable = (
+    <DataGrid
+      isCellEditable={()=>false}
       columns={columns}
-      options={{
-        responsive: "standard",
-        filter: false,
-        print: false,
-        download: false,
-        customToolbar: () => (
-          <Tooltip title="New Consent Form">
-            <IconButton
-              id="new_consent_form"
-              onClick={event => {
-                navigate("new");
-              }}
-              aria-label="New Consent Form"
-              size="large"
-            >
-              <AddIcon />
-            </IconButton>
-          </Tooltip>
-        ),
-        onCellClick: (colData, cellMeta) => {
-          if ("Actions" != columns[cellMeta.colIndex].label) {
-            const consent_form_id = consent_forms[cellMeta.dataIndex].id;
-            navigate(String(consent_form_id));
-          }
-        },
-        selectableRows: "none"
+      rows={consent_forms}
+      slots={{
+        toolbar: AdminListToolbar
       }}
-    />
+      slotProps={{
+        toolbar:{
+          itemType: category
+
+        }
+      }}
+      />
   );
 
   return (
@@ -138,9 +116,7 @@ export default function ConsentFormList(props) {
           {messages["main"] || null}
         </Alert>
       </Collapse>
-      <div style={{ maxWidth: "100%" }}>{muiDatTab}</div>
+      <div style={{ maxWidth: "100%" }}>{dataTable}</div>
     </React.Fragment>
   );
 }
-
-ConsentFormList.propTypes = {};

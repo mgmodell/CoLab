@@ -1,14 +1,12 @@
 /* eslint-disable no-console */
 import React from "react";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
 import Fab from "@mui/material/Fab";
 import Tooltip from "@mui/material/Tooltip";
 
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 
-import MUIDataTable from "mui-datatables";
 import { useTranslation } from "react-i18next";
 
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
@@ -16,22 +14,32 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import axios from "axios";
 
 import { DateTime } from "luxon";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
-export default function DecisionInvitationsTable(props) {
+interface IInvitation {
+  id: number,
+  name: string,
+  startDate: DateTime,
+  endDate: DateTime,
+  acceptPath: string,
+  declinePath: string,
+}
+type Props = {
+  invitations: Array<IInvitation>;
+  parentUpdateFunc: () => void;
+}
+
+export default function DecisionInvitationsTable(props : Props) {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const user = useTypedSelector(state => state.profile.user);
 
-  const columns = [
+  const columns: GridColDef[] = [
     {
-      label: t("task_name"),
-      name: "id",
-      options: {
-        filter: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const invitation = props.invitations.filter(item => {
-            return value === item.id;
-          })[0];
+      headerName: t("task_name"),
+      field: "id",
+      renderCell: (params) => {
+          const invitation = params.row;
           return (
             <React.Fragment>
               <Tooltip title={t("accept")}>
@@ -82,44 +90,35 @@ export default function DecisionInvitationsTable(props) {
               </Tooltip>
             </React.Fragment>
           );
-        }
+
       }
     },
     {
-      label: t("course_name"),
-      name: "name",
-      options: {
-        filter: false
-      }
+      headerName: t("course_name"),
+      field: "name",
     },
     {
-      label: t("open_date"),
-      name: "startDate",
-      options: {
-        filter: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          var retVal = "n/a";
-          if (null !== value) {
-            const dt = DateTime.fromISO(value);
+      headerName: t("open_date"),
+      field: "startDate",
+      renderCell: (params) => {
+          var retVal = <React.Fragment>{t('not_available')}</React.Fragment>
+          if (null !== params.value) {
+            const dt = DateTime.fromISO(params.value);
             retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
           }
           return retVal;
-        }
       }
     },
     {
-      label: t("close_date"),
-      name: "endDate",
-      options: {
-        filter: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          var retVal = "n/a";
-          if (null !== value) {
-            const dt = DateTime.fromISO(value);
+      headerName: t("close_date"),
+      field: "endDate",
+      renderCell: (params) => {
+          var retVal = <React.Fragment>{t('not_available')}</React.Fragment>
+          if (null !== params.value) {
+            const dt = DateTime.fromISO(params.value);
             retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
           }
           return retVal;
-        }
       }
     }
   ];
@@ -139,22 +138,16 @@ export default function DecisionInvitationsTable(props) {
           })
         })}
       </p>
-      <MUIDataTable
-        title={t("home.greeting", { name: user.first_name })}
-        data={props.invitations}
+      <DataGrid
         columns={columns}
-        options={{
-          responsive: "standard",
-          filter: false,
-          print: false,
-          download: false,
-          selectableRows: "none"
+        rows={props.invitations}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 }
+          }
         }}
-      />
+        pageSizeOptions={[5, 10]}
+        />
     </React.Fragment>
   );
 }
-DecisionInvitationsTable.propTypes = {
-  invitations: PropTypes.array.isRequired,
-  parentUpdateFunc: PropTypes.func.isRequired
-};

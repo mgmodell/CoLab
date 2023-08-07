@@ -9,6 +9,8 @@ en:
       title: Consent Form
     index:
       title: Listing Consent Forms
+      name_col: Name
+      active_col: Active
     show:
       name: Name of the Study
       lead_admin: Lead Administrator of the Study

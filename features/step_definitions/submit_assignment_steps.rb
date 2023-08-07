@@ -204,7 +204,7 @@ Given('today is between the first assignment deadline and close') do
 end
 
 Given('today is after the final deadline') do
-  pending # Write code here that turns the phrase above into concrete actions
+  travel_to @assignment.end_date
 end
 
 Then('the user withdraws submission {int}') do |_int|

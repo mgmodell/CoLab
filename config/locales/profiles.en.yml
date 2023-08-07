@@ -8,7 +8,20 @@ en:
     first_name: First name
     last_name: Last name
     edit_profile: Edit your profile
+    cancel: Cancel
     email_settings: Email settings
+    emails:
+      email_lbl: Email address
+      registered_col: Registered Emails
+      primary_col: Primary
+      set_primary: Set as primary?
+      confirmed_col: Confirmed
+      remove_btn: Remove?
+      add_btn: Add Email!
+      add_dlg_title: Add email
+      add_dlg: Add a new email address
+      none_yet: No emails loaded.
+      remove_tltp: Remove this address
     none_option: None selected
     course_status:
       name: Name
