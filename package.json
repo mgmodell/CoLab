@@ -59,7 +59,6 @@
     "luxon": "^3.0.1",
     "mini-css-extract-plugin": "^2.6.1",
     "mockdate": "^3.0.5",
-    "mui-datatables": "^4.2.2",
     "promise-polyfill": "^8.2.3",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
