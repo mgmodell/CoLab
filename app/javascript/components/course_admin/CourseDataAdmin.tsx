@@ -22,7 +22,6 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import Skeleton from "@mui/material/Skeleton";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
@@ -37,15 +36,18 @@ import { DateTime, Settings } from "luxon";
 const CourseUsersList = React.lazy(() => import("./CourseUsersList"));
 
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import MUIDataTable from "mui-datatables";
 
-import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { StudentData, UserListType } from "./CourseUsersList";
 import { useTypedSelector } from "../infrastructure/AppReducers";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useTranslation } from "react-i18next";
+import CourseAdminListToolbar from "../infrastructure/CourseAdminListToolbar";
 
 export default function CourseDataAdmin(props) {
   const category = "course";
+  const {t} = useTranslation( `${category}s`);
+
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
   );
@@ -421,10 +423,10 @@ export default function CourseDataAdmin(props) {
       <br />
     </Paper>
   );
-  const activityColumns = [
+  const activityColumns: GridColDef[] = [
     {
-      label: "Type",
-      name: "type",
+      headerName: t('activities.type_col'),
+      field: "type",
       options: {
         customBodyRender: (value, tableMeta, updateValue) => {
           return iconForType(value);
@@ -457,56 +459,43 @@ export default function CourseDataAdmin(props) {
       }
     },
     {
-      label: "Name",
-      name: "name",
-      options: {
-        filter: false
-      }
+      headerName: t('activities.name_col'),
+      field: "name",
     },
     {
-      label: "Status",
-      name: "end_date",
-      options: {
-        customBodyRender: (value, tableMeta, updateValue) => {
-          if (value > DateTime.local()) {
+      headerName: t('activities.status_col'),
+      field: "end_date",
+      renderCell: (params) => {
+          if (params.value > DateTime.local()) {
             return "Active";
           } else {
             return "Expired";
           }
-        }
       }
     },
     {
-      label: "Open Date",
-      name: "start_date",
-      options: {
-        filter: false,
-        display: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value);
+      headerName: t('activities.open_col'),
+      field: "start_date",
+      renderCell: (params) => {
+        const dt = DateTime.fromISO(params.value);
+        return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+
+      }
+    },
+    {
+      headerName: t('activities.close_col'),
+      field: "end_date",
+      renderCell: (params) => {
+          const dt = DateTime.fromISO(params.value);
           return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
-        }
+
       }
     },
     {
-      label: "Close Date",
-      name: "end_date",
-      options: {
-        filter: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const dt = DateTime.fromISO(value);
-          return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
-        }
-      }
-    },
-    {
-      label: " ",
-      name: "link",
-      options: {
-        filter: false,
-        sort: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const lbl = "Delete";
+      headerName: " ",
+      field: "link",
+      renderCell: (params) => {
+          const lbl = t('activities.delete_lbl');
           return (
             <Tooltip title={lbl}>
               <IconButton
@@ -515,6 +504,7 @@ export default function CourseDataAdmin(props) {
                   dispatch(startTask("deleting"));
 
                   axios
+                    // Is this right? Shouldn't it be params.value?
                     .delete(user.drop_link, {})
                     .then(response => {
                       const data = response.data;
@@ -535,74 +525,34 @@ export default function CourseDataAdmin(props) {
           );
         }
       }
-    }
   ];
 
-  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
-  const addButton = (
-    <React.Fragment>
-      <IconButton
-        onClick={event => {
-          setMenuAnchorEl(event.currentTarget);
-        }}
-        aria-label="Add Activity"
-        size="large"
-      >
-        <AddIcon />
-      </IconButton>
-      <Menu
-        id="addMenu"
-        anchorEl={menuAnchorEl}
-        keepMounted
-        open={Boolean(menuAnchorEl)}
-        onClose={() => {
-          setMenuAnchorEl(null);
-        }}
-      >
-        {newActivityLinks.map(linkData => {
-          return (
-            <MenuItem
-              key={linkData.name}
-              onClick={event => {
-                setMenuAnchorEl(null);
-                navigate(`${linkData.link}/new`);
-                // window.location.href = linkData.link;
-              }}
-            >
-              {iconForType(linkData.name)}
-              {" New " + linkData.name}&hellip;
-            </MenuItem>
-          );
-        })}
-      </Menu>
-    </React.Fragment>
-  );
 
   const activityList =
     courseId != null && courseId > 0 ? (
-      <MUIDataTable
-        title="Activities"
+      <DataGrid
         columns={activityColumns}
-        data={courseActivities}
-        options={{
-          responsive: "standard",
-          filterType: "checkbox",
-          print: false,
-          download: false,
-          customToolbar: () => {
-            return addButton;
-          },
-          onCellClick: (colData, cellMeta) => {
+        rows={courseActivities}
+        onCellClick={(params)=>{
             if ("link" != activityColumns[cellMeta.colIndex].name) {
               const link = courseActivities[cellMeta.dataIndex].link;
               const activityId = courseActivities[cellMeta.dataIndex].id;
               navigate(`${link}/${activityId}`);
             }
           }
+        }
+        slots={{
+          toolbar: CourseAdminListToolbar
         }}
-      />
+        slotProps={{
+          toolbar: {
+            newActivityLinks: newActivityLinks
+          }
+        }}
+        />
+
     ) : (
-      "You must save the Course to have activities."
+      <div>{t('activities.save_first_msg')}</div>
     );
 
   return (

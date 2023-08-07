@@ -54,7 +54,14 @@ en:
     no_roster: That user is not listed as a student in that course.
     editing: Editing Course
     participants: Participants
-    activities: Course Activities
+    activities: 
+      type_col: Type
+      name_col: Name
+      status_col: Status
+      open_col: Open date
+      close_col: Close date
+      delete_lbl: Delete
+      save_first_msg: You must save the course to have activities.
     re_invite: Re-Invite
     drop: Drop
     courses: Courses
