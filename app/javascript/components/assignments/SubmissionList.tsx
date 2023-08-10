@@ -22,7 +22,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { ISubmissionCondensed } from "./AssignmentViewer";
 
 type Props = {
-  submissions: Array<ISubmissionCondensed>
+  submissions: Array<ISubmissionCondensed>;
 }
 
 export default function SubmissionList(props:Props) {

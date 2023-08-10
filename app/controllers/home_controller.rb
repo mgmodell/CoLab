@@ -52,20 +52,6 @@ class HomeController < ApplicationController
         oauthValidate: validation_path
       }
     }
-    ep_hash[:profile] = {
-      baseUrl: full_profile_path,
-      coursePerformanceUrl: user_courses_path,
-      activitiesUrl: user_activities_path,
-      consentFormsUrl: user_consents_path,
-
-      addEmailUrl: add_registered_email_path,
-      removeEmailUrl: remove_registered_email_path(email_id: ''),
-      setPrimaryEmailUrl: set_primary_registered_email_path(email_id: ''),
-      passwordResetUrl: initiate_password_reset_path,
-      passwordUpdateUrl: password_change_path,
-      # infrastructure
-      statesForUrl: states_for_path(country_code: '')
-    }
     ep_hash[:installment] = {
       baseUrl: edit_installment_path(assessment_id: ''),
       saveInstallmentUrl: installments_path
@@ -93,6 +79,20 @@ class HomeController < ApplicationController
       ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path
       ep_hash[:home][ :selfRegUrl] = self_reg_init_path(id: '')
 
+      ep_hash[:profile] = {
+        baseUrl: full_profile_path,
+        coursePerformanceUrl: user_courses_path,
+        activitiesUrl: user_activities_path,
+        consentFormsUrl: user_consents_path,
+
+        addEmailUrl: add_registered_email_path,
+        removeEmailUrl: remove_registered_email_path(email_id: ''),
+        setPrimaryEmailUrl: set_primary_registered_email_path(email_id: ''),
+        passwordResetUrl: initiate_password_reset_path,
+        passwordUpdateUrl: password_change_path,
+        # infrastructure
+        statesForUrl: states_for_path(country_code: '')
+      }
       ep_hash[:experience] = {
         baseUrl: next_experience_path(experience_id: ''),
         diagnosisUrl: diagnose_path,

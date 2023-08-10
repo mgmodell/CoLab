@@ -19,6 +19,10 @@ export default function AssignmentShell() {
           element={<AssignmentViewer />}
         />
         <Route
+          path={`:assignmentId/:submissionId`}
+          element={<div>nothing yet</div>}
+        />
+        <Route
           path={`critiques/:assignmentId`}
           element={
             <RequireInstructor>
