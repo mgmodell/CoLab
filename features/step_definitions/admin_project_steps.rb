@@ -38,7 +38,7 @@ Then('retrieve the instructor user') do
 end
 
 Then(/^the user opens the course$/) do
-  elem = find(:xpath, "//td[contains(.,'#{@course.get_name(@anon)}')]")
+  elem = find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{@course.get_name(@anon)}')]")
   elem.click
 end
 
