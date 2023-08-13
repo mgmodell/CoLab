@@ -22,7 +22,7 @@ end
 
 Then(/^the user clicks "([^"]*)" on the existing bingo game$/) do |_action|
   click_link_or_button 'Activities'
-  find(:xpath, "//tr[td[contains(.,'#{@bingo.get_name(@anon)}')]]").click
+  find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{@bingo.get_name(@anon)}')]").click
 end
 
 Then(/^retrieve the latest Bingo! game from the db$/) do
