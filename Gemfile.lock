@@ -142,8 +142,8 @@ GEM
     choice (0.2.0)
     chronic (0.10.2)
     chunky_png (1.4.0)
-    city-state (0.1.0)
-      rubyzip (>= 1.1)
+    city-state (1.1.0)
+      rubyzip (>= 2.3)
     climate_control (0.2.0)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
@@ -456,7 +456,7 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.29.0)
       parser (>= 3.2.1.0)
-    rubocop-performance (1.18.0)
+    rubocop-performance (1.19.0)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
     rubocop-rails (2.20.2)
@@ -481,7 +481,7 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     semantic_range (3.0.0)
-    shakapacker (7.0.2)
+    shakapacker (7.0.3)
       activesupport (>= 5.2)
       rack-proxy (>= 0.6.1)
       railties (>= 5.2)
@@ -615,7 +615,7 @@ DEPENDENCIES
   rubocop-rails
   rubocop-thread_safety
   sdoc
-  shakapacker (= 7.0.2)
+  shakapacker (= 7.0.3)
   simplecov
   solargraph
   spring

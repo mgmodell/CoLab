@@ -74,7 +74,7 @@
     "react-router-dom": "6",
     "react-spring": "^9.4.4",
     "react-virtualized": "^9.22.3",
-    "react_ujs": "^2.6.2",
+    "react_ujs": "^3.0.0",
     "resize-observer-hook": "^1.0.5",
     "shakapacker": "^7.0.1",
     "style-loader": "^3.3.1",
