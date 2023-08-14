@@ -63,6 +63,7 @@ export default function CourseList(props) {
     {
       headerName: t( 'index.school_col'),
       field: "school_name",
+      renderCell: renderTextCellExpand
     },
     {
       headerName: t( 'index.open_col'),
@@ -174,7 +175,6 @@ export default function CourseList(props) {
       }
     }}
     onCellClick={(params)=>{
-      console.log( params );
       if ('id' != params.colDef.field) {
         const course_id = params.row.id
         //This ought not be necessary and I would like to ask about it on SO - 

@@ -15,6 +15,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
+import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
 export default function SchoolList(props) {
   const category = "school";
@@ -35,10 +36,12 @@ export default function SchoolList(props) {
     {
       headerName: t('index.name_lbl'),
       field: "name",
+      renderCell: renderTextCellExpand
     },
     {
       headerName: t('index.courses_lbl'),
       field: "courses",
+      renderCell: renderTextCellExpand
     },
     {
       headerName: t('index.students_lbl'),

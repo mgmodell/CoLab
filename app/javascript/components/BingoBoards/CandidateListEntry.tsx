@@ -91,13 +91,10 @@ export default function CandidateListEntry(props) {
     const candidate_count = candidates.length;
     tmpCandidates.sort((a, b) => {
       if (0 == b.term.length) {
-        //console.log( `empty b: "${a.term}" and "${b.term}"`)
         return -1;
       } else if (0 == a.term.length) {
-        //console.log( `empty a: "${a.term}" and "${b.term}"`)
         return 1;
       } else {
-        //console.log( `not empty: "${a.term}" and "${b.term}"`)
         return a.term.localeCompare(b.term);
       }
     });

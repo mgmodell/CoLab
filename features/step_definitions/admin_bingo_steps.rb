@@ -20,9 +20,10 @@ Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_pre
   send_keys new_date
 end
 
-Then(/^the user clicks "([^"]*)" on the existing bingo game$/) do |_action|
+Then ('the user clicks on the existing bingo game') do 
   click_link_or_button 'Activities'
   find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{@bingo.get_name(@anon)}')]").click
+  wait_for_render
 end
 
 Then(/^retrieve the latest Bingo! game from the db$/) do

@@ -11,6 +11,7 @@ import axios from "axios";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
 import StandardListToolbar from "../StandardListToolbar";
+import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
 export interface IReaction {
   id: number,
@@ -102,10 +103,12 @@ export default function ReactionsList(props: Props) {
     {
       headerName: t('reactions.narrative_lbl'),
       field: "narrative",
+      renderCell: renderTextCellExpand
     },
     {
       headerName: t('reactions.scenario_lbl'),
       field: "scenario",
+      renderCell: renderTextCellExpand
     },
     {
       headerName: t('reactions.response_lbl'),

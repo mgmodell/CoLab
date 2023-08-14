@@ -89,7 +89,7 @@ Feature: Bingo Administration
     Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Show" on the existing bingo game
+    Then the user clicks on the existing bingo game
     Then the user sets the "Topic" field to "Privacy"
     Then the user sets the "Days for instructor review" field to "2"
     Then the user sets the "Entries per student" field to "15"

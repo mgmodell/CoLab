@@ -86,7 +86,7 @@ Feature: Project Administration
     Then the user selects the 'Courses' menu item
     Then the user sees 1 course
     Then the user opens the course
-    Then the user clicks "Show" on the existing project
+    Then the user clicks on the existing project
     Then the user sets the "Name" field to "Cool-yo!"
     Then the user sets the project "start" date to "05/10/1976"
     Then the user sets the project "end" date to "02/29/1980"
@@ -287,7 +287,7 @@ Feature: Project Administration
     Then the user sees 1 course
     Then the user opens the course
 
-    Then the user clicks "Show" on the existing project
+    Then the user clicks on the existing project
     Then the user switches to the "Groups" tab
     Then the user adds a group named 'my group'
     # Then the user sets the "g_-1" field to "my group"

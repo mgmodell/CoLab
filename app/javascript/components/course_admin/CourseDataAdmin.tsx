@@ -43,6 +43,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
 import CourseAdminListToolbar from "../infrastructure/CourseAdminListToolbar";
+import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
 export default function CourseDataAdmin(props) {
   const category = "course";
@@ -427,46 +428,21 @@ export default function CourseDataAdmin(props) {
     {
       headerName: t('activities.type_col'),
       field: "type",
-      options: {
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return iconForType(value);
-        },
-        customFilterListOptions: {
-          render: value => {
-            return iconForType(value);
-          }
-        },
-        filterOptions: {
-          names: ["Bingo Games", "Assessments", "Experiences"],
-          logic: (location, filters) => {
-            switch (location) {
-              case "Terms List":
-                return filters.includes("Bingo Games");
-                break;
-              case "Project":
-                return filters.includes("Assessments");
-                break;
-              case "Group Experience":
-                return filters.includes("Experiences");
-                break;
-              default:
-                console.log("filter not found: " + location);
-            }
-
-            return false;
-          }
-        }
+      renderCell: (params) => {
+          return iconForType(params.row.type);
       }
     },
     {
       headerName: t('activities.name_col'),
       field: "name",
+      renderCell: renderTextCellExpand
     },
     {
       headerName: t('activities.status_col'),
-      field: "end_date",
+      field: "status",
+      
       renderCell: (params) => {
-          if (params.value > DateTime.local()) {
+          if (params.row.end_date > DateTime.local()) {
             return "Active";
           } else {
             return "Expired";
@@ -533,10 +509,13 @@ export default function CourseDataAdmin(props) {
       <DataGrid
         columns={activityColumns}
         rows={courseActivities}
+        getRowId={(row) => {
+          return `${row.type}-${row.id}`;
+        }}
         onCellClick={(params)=>{
-            if ("link" != activityColumns[cellMeta.colIndex].name) {
-              const link = courseActivities[cellMeta.dataIndex].link;
-              const activityId = courseActivities[cellMeta.dataIndex].id;
+            if ("link" !== params.colDef.headerName ) {
+              const link = params.row.link; //courseActivities[cellMeta.dataIndex].link;
+              const activityId = params.row.id; // courseActivities[cellMeta.dataIndex].id;
               navigate(`${link}/${activityId}`);
             }
           }

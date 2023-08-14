@@ -15,6 +15,7 @@ import axios from "axios";
 
 import { DateTime } from "luxon";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { renderTextCellExpand } from "./infrastructure/GridCellExpand";
 
 interface IInvitation {
   id: number,
@@ -96,6 +97,7 @@ export default function DecisionInvitationsTable(props : Props) {
     {
       headerName: t("course_name"),
       field: "name",
+      renderCell: renderTextCellExpand
     },
     {
       headerName: t("open_date"),

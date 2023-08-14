@@ -90,7 +90,6 @@ export default function CourseUsersListToolbar(props:Props) {
                     <Button
                       onClick={() => {
                         dispatch(startTask("adding_email"));
-                        console.log( newUserAddresses );
 
                         axios
                           .put(props.addUsersPath, {

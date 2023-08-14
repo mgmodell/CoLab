@@ -23,6 +23,7 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { DataGrid, GridRowModel, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import CourseUsersListToolbar from "./CourseUsersListToolbar";
+import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
 const DropUserButton = React.lazy(() => import("./DropUserButton"));
 const BingoDataRepresentation = React.lazy(() =>
@@ -115,10 +116,12 @@ export default function CourseUsersList(props :Props) {
     {
       headerName: t("first_name"),
       field: "first_name",
+      renderCell: renderTextCellExpand
     },
     {
       headerName: t("last_name"),
       field: "last_name",
+      renderCell: renderTextCellExpand
     },
     {
       headerName: t("email"),

@@ -11,6 +11,7 @@ import BingoDataRepresentation from "../BingoBoards/BingoDataRepresentation";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
 import StandardListToolbar from "../StandardListToolbar";
+import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
 interface ICourse {
   id: number,
@@ -60,6 +61,7 @@ export default function UserCourseList(props : Props) {
     {
       headerName: t('course_status.name'),
       field: "name",
+      renderCell: renderTextCellExpand,
       width: 250,
     },
     {
