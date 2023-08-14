@@ -22,6 +22,7 @@ else
 #  done
 
   git pull --all
+  git checkout .
 
 fi
 
