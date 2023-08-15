@@ -26,7 +26,7 @@ end
 
 Then 'the user opens the school' do
   @school = School.last
-  row = find(:xpath, "//td[contains(.,'#{@school.name}')]")
+  row = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[contains(.,'#{@school.name}')]")
   row.click
 end
 

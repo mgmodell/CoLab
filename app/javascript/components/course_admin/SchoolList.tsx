@@ -100,7 +100,7 @@ export default function SchoolList(props) {
       }}
       slotProps={{
         toolbar: {
-          activityType: category
+          itemType: category
         }
       }}
       onCellClick={(params: GridCellParams ) => {

@@ -180,7 +180,7 @@ export default function CourseList(props) {
         //This ought not be necessary and I would like to ask about it on SO - 
         //when time permits
         const locaLocation = `${location.pathname}/${String(course_id)}`;
-        navigate(locaLocation, {relative: false });
+        navigate(locaLocation, {relative: 'path' });
       }
 
     }}
