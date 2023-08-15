@@ -30,7 +30,6 @@ import AssignmentShell from "./assignments/AssignmentShell";
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
 const Experience = React.lazy(() => import("./experiences/Experience"));
-const AssignmentSubmission = React.lazy( () => import( './assignments/AssignmentViewer'));
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 const Admin = React.lazy(() => import("./Admin"));
 const SignIn = React.lazy(() => import("./SignIn"));

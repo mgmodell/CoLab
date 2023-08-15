@@ -1,10 +1,10 @@
 class SubmissionsController < ApplicationController
-  before_action :set_submission, only: %i[show edit update destroy]
+  before_action :set_submission, only: %i[show save_submission]
 
 
   # GET /submissions/1 or /submissions/1.json
   def show
-    # TODO: Check if course owner
+    # TODO: Check if owner or course owner
     respond_to do |format|
       format.json do
         render json: standardized_response(@submission)
@@ -12,30 +12,11 @@ class SubmissionsController < ApplicationController
     end
   end
 
-  # POST /submissions or /submissions.json
-  def create
-    @submission = Submission.new(submission_params)
+  # PATCH/PUT /submissions/1/new.json or /submissions/1/1.json
+  def save_submission
 
-    respond_to do |format|
-      if @submission.save
-        format.json do
-          render json: standardized_response( @submission, { main: I18n.t( 'submissions.errors.no_create_error')})
-        end
-      else
-        errors = @submission.errors
-        errors.add(:main, I18n.t('submissions.errors.create_failed'))
-        puts @submission.inspect
-        puts @submission.errors.full_messages
-        format.json { render json: standardized_response(@submission, @submission.errors) }
-      end
-    end
-  end
-
-  # PATCH/PUT /submissions/1 or /submissions/1.json
-  def update
     respond_to do |format|
       @submission.assign( submission_params )
-      @submission.user = current_user
 
       if @submission.save
       # if @submission.update(submission_params)
@@ -58,6 +39,12 @@ class SubmissionsController < ApplicationController
       submission: submission.as_json(
         user: {only: %i[ first_name last_name email]},
         group: { only: [ :name, users: { only: %i[ first_name last_name email ]} ]},
+        assignment: { only: [ :name, :description, :start_date, :end_date, :group_enabled,
+                              project: { only: %i[ name ] },
+                              rubric: { only: [ :name, :description, :version,
+                                  criteria: { only: %i[ description weight sequence
+                                                        l1_description l2_description
+                                                        l3_description l4_description l5_description]}]}]},
         only: %i[id submitted withdrawn recorded_score sub_text sub_link updated_at ]
       )
     }
@@ -68,12 +55,24 @@ class SubmissionsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_submission
-    @submission = Submission.find(params[:id])
+    submission_id = params[:id].to_i
+
+    @submission = if 0 < submission_id
+                    Submission.where(
+                        user_id: @current_user,
+                        id: submission_id,
+                    ).take
+                  else
+                    Submission.new(
+                      user: @current_user
+                    )
+                  end
+
   end
 
   # Only allow a list of trusted parameters through.
   def submission_params
-    params.require(:submission).permit(:assignment_id, :submitted, :withdrawn, :score, :user_id, :group_id,
+    params.require(:submission).permit(:submitted, :withdrawn, :score, :user_id, :group_id,
                                        :sub_file, :sub_text, :sub_link)
   end
 end

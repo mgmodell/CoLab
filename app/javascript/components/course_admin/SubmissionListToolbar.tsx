@@ -14,29 +14,30 @@ import AddIcon from "@mui/icons-material/Add";
 import Tooltip from "@mui/material/Tooltip";
 
 type Props = {
-    itemType: string;
+  selectSubmissionFunc: (selectedSub:string) => void;
+    
 }
 
-export default function AdminListToolbar(props: Props) {
-  const { t } = useTranslation(`admin`);
+export default function SubmissionListToolbar(props: Props) {
+  const category = 'assignment'
+  const { t } = useTranslation(`${category}s`);
   const navigate = useNavigate();
   return (
     <GridToolbarContainer>
       <GridToolbarDensitySelector />
       <GridToolbarFilterButton />
-      <Tooltip title="New">
+      <Tooltip title={t('submissions.new_btn')}>
         <IconButton
-          id={`new_${props.itemType}`}
+          id="new_sub"
           onClick={event => {
-            navigate("new");
-            //window.location.href =
-            //  endpoints.endpoints[endpointSet].schoolCreateUrl;
+            props.selectSubmissionFunc( 'new' );
+            // Pop up the AssignmentSubmission component in a dialog
           }}
-          aria-label={`New ${props.itemType}`}
+          aria-label={t(`submissions.new_btn`)}
           size="small"
         >
           <AddIcon />
-          {t("new_activity", { activity_type: props.itemType })}
+          {t("submissions.new_btn")}
         </IconButton>
       </Tooltip>
       <GridToolbarQuickFilter debounceMs={50} />

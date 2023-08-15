@@ -14,15 +14,16 @@ import { DataGrid, GridRowModel, GridColDef, GridRenderCellParams } from "@mui/x
 import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
-import AdminListToolbar from "../infrastructure/AdminListToolbar";
 
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { ISubmissionCondensed } from "./AssignmentViewer";
+import SubmissionListToolbar from "../course_admin/SubmissionListToolbar";
 
 type Props = {
   submissions: Array<ISubmissionCondensed>;
+  selectSubmissionFunc: (selectedSub:string) => void;
 }
 
 export default function SubmissionList(props:Props) {
@@ -57,14 +58,15 @@ export default function SubmissionList(props:Props) {
               return false;
             }}
             onCellClick={(params, event, details) => {
+              props.selectSubmissionFunc( params.row.id );
                 //navigate(String(params.row.id));
             }}
             slots={{
-              toolbar: AdminListToolbar
+              toolbar: SubmissionListToolbar
             }}
             slotProps={{
               toolbar: {
-                activityType: "submission"
+                selectSubmissionFunc: props.selectSubmissionFunc
               }
             }}
           />

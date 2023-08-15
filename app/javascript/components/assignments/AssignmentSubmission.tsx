@@ -49,7 +49,7 @@ export default function AssignmentSubmission(props: Props) {
   const [t, i18n] = useTranslation( `${category}s` );
   const [dirty, setDirty] = useState( false );
 
-  const [submissionId, setSubmissionId] = useState(  );
+  const [submissionId, setSubmissionId] = useState <string> (  );
   const [updatedDate, setUpdatedDate] = useState<DateTime|null>(
     null
   );
@@ -68,15 +68,16 @@ export default function AssignmentSubmission(props: Props) {
   const [submissionLink, setSubmissionLink] = useState( '' );
 
   //console.log( props.assignment );
-
-  useEffect( () =>{
-    if( endpointStatus){
+  useEffect( () => {
+    if( endpointStatus ){
+      loadSubmission( );
     }
-  },[endpointStatus])
+  }, [endpointStatus, submissionId])
+
 
   const loadSubmission = () =>{
     console.log( 'loading' );
-    const url = `${endpoints.submissionUrl}/${submissionId}.json`;
+    const url = `${endpoints.submissionUrl}${submissionId}.json`;
     axios.get( url, {} )
       .then( response =>{
         const data = response.data;
@@ -103,13 +104,11 @@ export default function AssignmentSubmission(props: Props) {
 
   }
 
-  /*
   useEffect( () =>{
     if( endpointStatus){
       setDirty( true );
     }
   }, [submissionTextEditor, submissionLink])
-  */
 
 
   const sub_text = props.assignment.textSub ? (
@@ -215,7 +214,11 @@ export default function AssignmentSubmission(props: Props) {
         );
 
       }
-    }).then( props.reloadCallback );
+    }).then( props.reloadCallback ).finally(()=>{
+      dispatch( endTask( 'saving' ));
+    }
+
+    );
 
   };
 
@@ -248,7 +251,10 @@ export default function AssignmentSubmission(props: Props) {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <SubmissionList submissions={props.assignment.submissions } />
+        <SubmissionList
+            submissions={props.assignment.submissions }
+            selectSubmissionFunc={setSubmissionId}
+        />
       </Grid>
 
     </Grid>
