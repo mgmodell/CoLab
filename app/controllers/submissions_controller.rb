@@ -1,5 +1,5 @@
 class SubmissionsController < ApplicationController
-  before_action :set_submission, only: %i[show save_submission]
+  before_action :set_submission, only: %i[show update ]
 
 
   # GET /submissions/1 or /submissions/1.json
@@ -12,11 +12,12 @@ class SubmissionsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /submissions/1/new.json or /submissions/1/1.json
-  def save_submission
 
+  # PATCH/PUT /submissions/1 or /submissions/1.json
+  def update
     respond_to do |format|
       @submission.assign( submission_params )
+      @submission.user = current_user
 
       if @submission.save
       # if @submission.update(submission_params)
