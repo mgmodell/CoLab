@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 
 import {
     GridSeparatorIcon,
@@ -11,13 +13,31 @@ import {
     GridToolbarFilterButton,
     GridToolbarQuickFilter
 } from '@mui/x-data-grid';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField
+} from "@mui/material";
+import {startTask, endTask} from '../infrastructure/StatusSlice';
 
 
 export default function UserListToolbar( props ){
 
     const category = 'profile';
     const {t} = useTranslation( `${category}s`);
+    const dispatch = useDispatch( );
+
+    const [addDialogOpen, setAddDialogOpen] = useState( false );
+    const [newEmail, setNewEmail] = useState( '' );
+
+    const closeDialog = () => {
+      setNewEmail( '' );
+      setAddDialogOpen( false );
+    }
 
     return(
         <GridToolbarContainer>
