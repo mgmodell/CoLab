@@ -6,5 +6,5 @@ ENV MYSQL_ROOT_PASSWORD test
 
 EXPOSE 3306
 
-CMD ["mysqld"]
+CMD ["mariadbd"]
 
