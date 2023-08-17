@@ -54,7 +54,15 @@ Then 'the experience start date is {string} and the end date is {string}' do |st
   @experience.end_date.change(sec: 0).should eq test_date.change(sec: 0)
 end
 
-Then 'the user clicks {string} on the existing experience' do |_action|
-  find(:xpath, "//td[contains(.,'#{@experience.name}')]").click
-  # find(:xpath, "//tr[td[contains(.,'#{@experience.name}')]]/td/a", text: action).click
+Then 'the user edits the existing experience' do 
+  find(:xpath, "//div[text()='#{@experience.name}']").hover
+  begin
+    find(:xpath, "//div[text()='#{@experience.name}']").click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+    # If that gives an error, it's because of the readability popup
+    # We can click either of the items this finds because they are effectively the same
+    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@experience.name}')]")[0].click
+  end
+  wait_for_render
+  
 end

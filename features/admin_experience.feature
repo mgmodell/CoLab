@@ -81,7 +81,7 @@ Feature: Experience Administration
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "Edit" on the existing experience
+    Then the user edits the existing experience
     Then the user sets the "Name" field to "Bob Marley"
     Then the user sets the experience "start" date to "2/29/1980"
     Then the user sets the experience "end" date to "7/10/2008"
@@ -102,7 +102,7 @@ Feature: Experience Administration
     Then the user sees 1 course
     Then the user opens the course
     Then the user switches to the "Activities" tab
-    Then the user clicks "Edit" on the existing experience
+    Then the user edits the existing experience
     Then the user sets the "Name" field to "Bob Marley"
     Then the user sets the experience "start" date to "2/29/1980"
     Then the user sets the experience "end" date to "7/10/2008"
