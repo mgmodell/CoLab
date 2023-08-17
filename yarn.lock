@@ -1361,7 +1361,7 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.4.tgz#b6fade19323b754c5c6de679a38f068fd50b9328"
   integrity sha512-LBcwa8rN84bKF+f5sDyku42w1NTxaPgPyYKODsh01U1fVstTClbUoSA96oyRBnSNyEiAVjKm6Gwx9vjR+xyqHA==
 
-"@mui/utils@^5.14.3", "@mui/utils@^5.14.5":
+"@mui/utils@^5.14.5":
   version "5.14.5"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.14.5.tgz#98fb6060610b793a8478e70ffe5e4ed5bd922dba"
   integrity sha512-6Hzw63VR9C5xYv+CbjndoRLU6Gntal8rJ5W+GUzkyHrGWIyYPWZPa6AevnyGioySNETATe1H9oXS8f/7qgIHJA==
@@ -1373,23 +1373,23 @@
     react-is "^18.2.0"
 
 "@mui/x-data-grid@^6.0.1":
-  version "6.11.1"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.11.1.tgz#60b172a50acd9ecec0a264d0604a34422ce3f80c"
-  integrity sha512-qFyuf6R/JOG46Y62scwH0C7s+xVqfRFU/gv4rUWS9m+EYsabAXTx/g+Mq2t+ZGdaaGZlrpKDavr2PwitbpTMaw==
+  version "6.11.2"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.11.2.tgz#c9ad731108439eab1cd914228d3ac368d51cd6e3"
+  integrity sha512-84IgDwjgQ2eqTJvoj0BxN2KIgQdwTf7pnR0dYxbpcIkB+LMsOxSv502UJkvWWkjm16D4vKcj4QMSLsWhc21BHg==
   dependencies:
     "@babel/runtime" "^7.22.6"
-    "@mui/utils" "^5.14.3"
+    "@mui/utils" "^5.14.5"
     clsx "^2.0.0"
     prop-types "^15.8.1"
     reselect "^4.1.8"
 
 "@mui/x-date-pickers@^6.0.1":
-  version "6.11.1"
-  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.11.1.tgz#6382608a95f9655d5f08fc2ee7366982002443d2"
-  integrity sha512-0NnBen60iZNBmJK7m2UU9jPZXW9RRyBL3meAupWyq+j6bLpSWG+8O2TnP1E3KFC7q66bPG6qOGOKKGfzFyR3cg==
+  version "6.11.2"
+  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.11.2.tgz#913038015c4c0f2f4a2bf8f79afa94707cd5df2e"
+  integrity sha512-AOmXtnnAhjlku03oqRMOG1oJkxazBTz06A6a0iRz+1sUyBWbqz5kKH9eYUYQC4Tv3j2EciRpwyns5xwX3wpc1A==
   dependencies:
     "@babel/runtime" "^7.22.6"
-    "@mui/utils" "^5.14.3"
+    "@mui/utils" "^5.14.5"
     "@types/react-transition-group" "^4.4.6"
     clsx "^2.0.0"
     prop-types "^15.8.1"
@@ -2545,9 +2545,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001517:
-  version "1.0.30001520"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001520.tgz#62e2b7a1c7b35269594cf296a80bdf8cb9565006"
-  integrity sha512-tahF5O9EiiTzwTUqAeFjIZbn4Dnqxzz7ktrgGlMYNLH43Ul26IgTMH/zvL3DG0lZxBYnlT04axvInszUsZULdA==
+  version "1.0.30001521"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001521.tgz#e9930cf499f7c1e80334b6c1fbca52e00d889e56"
+  integrity sha512-fnx1grfpEOvDGH+V17eccmNjucGUnCbP6KL+l5KqBIerp26WK/+RQ7CIDE37KGJjaPyqWXXlFUyKiWmvdNNKmQ==
 
 chalk@^2.4.2:
   version "2.4.2"
@@ -3210,9 +3210,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.477:
-  version "1.4.492"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.492.tgz#83fed8beb64ec60578069e15dddd17b13a77ca56"
-  integrity sha512-36K9b/6skMVwAIEsC7GiQ8I8N3soCALVSHqWHzNDtGemAcI9Xu8hP02cywWM0A794rTHm0b0zHPeLJHtgFVamQ==
+  version "1.4.495"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.495.tgz#d72d2eddc05d07c538275a00f2619b113848bff6"
+  integrity sha512-mwknuemBZnoOCths4GtpU/SDuVMp3uQHKa2UNJT9/aVD6WVRjGpXOxRGX7lm6ILIenTdGXPSTCTDaWos5tEU8Q==
 
 email-validator@^2.0.4:
   version "2.0.4"
@@ -5233,9 +5233,9 @@ react_ujs@^2.7.1:
   integrity sha512-nQ/y/Vn2hZQXjNxFKY4pV5hAQbG3o/8yaRzq3nJAAdk7tMgey/EsMKoDOWlEQxZ+D3J4BtwquW1oCESMiHSHnQ==
 
 react_ujs@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react_ujs/-/react_ujs-3.1.0.tgz#c4bf42dc0fb9319b618453d3973a489df8055ee2"
-  integrity sha512-tsYW6BDkXXJrRBUDcgUxWr6rp0ztbMH+EjyTz6LNT4F8L69PXBAYxdvpE8t+/j9ynGKblFWrwEV8ONNnRKZB/g==
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react_ujs/-/react_ujs-3.1.1.tgz#7c4a990280014d5f42a04bd6380ec7d85db7a7bb"
+  integrity sha512-BCNm1DFaXl9XU50UDWYAWW3HpKwkWqWaSVxW/Mg6NGhQUvs7XdxFPd08ZSSF8+OjHXqQ1lJPKtIefcQDqbnA3Q==
   dependencies:
     "@babel/preset-react" "^7.22.5"
     css-loader "^6.8.1"
