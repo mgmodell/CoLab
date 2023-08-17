@@ -69,6 +69,7 @@ export default function SubmissionList(props:Props) {
                 selectSubmissionFunc: props.selectSubmissionFunc
               }
             }}
+            pageSizeOptions={[5, 10, 100 ]}
           />
         </div>
       </div>

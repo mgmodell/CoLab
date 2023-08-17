@@ -163,7 +163,7 @@ export default function TaskList(props: Props) {
           }
 
         }}
-        pageSizeOptions={[5, 10 ]}
+        pageSizeOptions={[5, 10, 100 ]}
       />
     ) : (
       <Logo height={100} width={100} spinning />

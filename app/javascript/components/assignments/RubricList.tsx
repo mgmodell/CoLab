@@ -184,6 +184,7 @@ export default function RubricList(props) {
                 activityType: "rubric"
               }
             }}
+            pageSizeOptions={[5, 10, 100 ]}
           />
         </div>
       </div>

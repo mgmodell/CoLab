@@ -95,6 +95,7 @@ export default function ConsentFormList(props) {
 
         }
       }}
+      pageSizeOptions={[5, 10, 100 ]}
       />
   );
 

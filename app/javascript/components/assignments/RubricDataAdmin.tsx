@@ -523,8 +523,8 @@ export default function RubricDataAdmin(props) {
                 sort: "asc"
               }
             ]}
-            components={{
-              Toolbar: () => (
+            slots={{
+              toolbar: () => (
                 <GridToolbarContainer>
                   <GridToolbarDensitySelector />
                   <Tooltip title={t("criteria.new")}>

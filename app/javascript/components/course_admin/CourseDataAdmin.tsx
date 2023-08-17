@@ -528,6 +528,7 @@ export default function CourseDataAdmin(props) {
             newActivityLinks: newActivityLinks
           }
         }}
+        pageSizeOptions={[5, 10, 100 ]}
         />
 
     ) : (

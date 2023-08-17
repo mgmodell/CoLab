@@ -106,6 +106,7 @@ export default function SchoolList(props) {
       onCellClick={(params: GridCellParams ) => {
         navigate( String( params.row.id ));
       }}
+        pageSizeOptions={[5, 10, 100 ]}
       />
   );
 

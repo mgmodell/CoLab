@@ -113,7 +113,7 @@ export default function UserActivityList(props: Props) {
             paginationModel: { page: 0, pageSize: 5 }
           }
         }}
-        pageSizeOptions={[5, 10]}
+        pageSizeOptions={[5, 10, 100]}
         />
     ) : (
       "The activities are loading"
