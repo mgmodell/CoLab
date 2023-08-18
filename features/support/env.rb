@@ -33,7 +33,7 @@ end
 
 # Not sure I should really need this, but...
 # Latest pulled from https://chromedriver.storage.googleapis.com/index.html
-Webdrivers::Chromedriver.required_version = '114.0.5735.90'
+# Webdrivers::Chromedriver.required_version = '114.0.5735.90'
 
 Capybara.register_driver :headless_firefox do |app|
   profile = Selenium::WebDriver::Firefox::Profile.new
