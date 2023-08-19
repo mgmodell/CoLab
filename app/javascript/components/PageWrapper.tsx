@@ -11,6 +11,12 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import appStatus from "./infrastructure/AppReducers";
 
+
+import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
+import "primereact/resources/themes/md-light-indigo/theme.css"; // theme
+import 'primereact/resources/primereact.min.css'; // core css
+import 'primeicons/primeicons.css'; //Prime icons
+
 import Skeleton from "@mui/material/Skeleton";
 import {
   ThemeProvider,
@@ -171,6 +177,8 @@ export default function PageWrapper(props) {
 
   return (
     <Provider store={store}>
+      <PrimeReactProvider>
+
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={styles}>
           <AppInit endpointsUrl={props.getEndpointsUrl}>
@@ -181,6 +189,7 @@ export default function PageWrapper(props) {
           </AppInit>
         </ThemeProvider>
       </StyledEngineProvider>
+      </PrimeReactProvider>
     </Provider>
   );
 }

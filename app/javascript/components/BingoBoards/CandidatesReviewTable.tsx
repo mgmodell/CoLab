@@ -23,6 +23,11 @@ import CandidateReviewListToolbar from "./CandidateReviewListToolbar";
 import useResizeObserver from 'resize-observer-hook';
 import { width } from "@mui/system";
 import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
+import { DataTable } from "primereact/datatable";
+
+import { Column } from "primereact/column";
+import { Button } from "primereact/button";
+import { standardTemplate } from "../StandardPaginatorTemplate";
 
 export default function CandidatesReviewTable(props) {
   const category = "candidate_review";
@@ -37,6 +42,9 @@ export default function CandidatesReviewTable(props) {
   );
   const { bingoGameId } = useParams();
   const [ref, chartWidth, height] = useResizeObserver( );
+
+  const paginatorLeft = <Button type="button" icon="pi pi-refresh" text />;
+  const paginatorRight = <Button type="button" icon="pi pi-download" text />;
 
   const [candidates, setCandidates] = useState([]);
   const [candidateLists, setCandidateLists] = useState([]);
@@ -55,7 +63,6 @@ export default function CandidatesReviewTable(props) {
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
 
-  const VAR_COL_LEFT = (chartWidth - 240) / 100 ;
 
   useEffect(() => {
     setDirty(true);
@@ -67,117 +74,6 @@ export default function CandidatesReviewTable(props) {
       return id === item.id;
     })[0];
   };
-
-  const columns: GridColDef[] = [
-    {
-      headerName: "#",
-      field: "number",
-      width: 10,
-    },
-    {
-      headerName: t('review.completed_col'),
-      field: "completed",
-      width: 75,
-      renderCell: (params) => {
-          return 100 == params.value ? "*" : null;
-
-      }
-    },
-    {
-      headerName: t('review.submitter_col'),
-      field: "user_id",
-      width: VAR_COL_LEFT * 30,
-      renderCell: (params) => {
-          const candidate = getById(candidates, params.row.id);
-          const user = getById(users, candidate.user_id);
-          let cl = getById(candidateLists, candidate.candidate_list_id);
-          const output = [
-            <div>
-              <Link href={"mailto:" + user.email}>
-                {user.last_name},&nbsp;{user.first_name}
-              </Link>
-            </div>
-          ];
-          if (cl.is_group) {
-            output.push(
-              <em>
-                {"\n"}
-                (on behalf of {getById(groups, cl.group_id).name})
-              </em>
-            );
-          }
-          return output;
-
-      }
-    },
-    {
-      headerName: t('review.term_col'),
-      field: "term",
-      width: VAR_COL_LEFT * 15,
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t('review.definition_col'),
-      field: "definition",
-      width: VAR_COL_LEFT * 30,
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t('review.feedback_col'),
-      field: 'candidate_feedback_id',
-      width: VAR_COL_LEFT * 20,
-      renderCell: (params) => {
-          const candidate = getById(candidates, params.row.id);
-          return (
-            <Select
-              value={candidate.candidate_feedback_id || 0}
-              onChange={event => {
-                feedbackSet(params.row.id, event.target.value);
-              }}
-              id={`feedback_4_${params.row.id}`}
-            >
-              {feedbackOptions.map(opt => {
-                return (
-                  <MenuItem key={`fb_${opt.id}`} value={opt.id}>
-                    {opt.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          );
-
-      }
-    },
-    {
-      headerName: t('review.concept_col'),
-      field: "concept_id",
-      width: VAR_COL_LEFT * 30,
-      renderCell: (params) => {
-          let output = <div>{t('review.none_msg' )}</div>
-          const candidate = getById(candidates, params.row.id);
-          const feedback = getById(
-            feedbackOptions,
-            candidate.candidate_feedback_id || 0
-          );
-
-          if (feedback.id !== 0 && "term_problem" !== feedback.critique) {
-            output = (
-              <RemoteAutosuggest
-                inputLabel={t('concept')}
-                itemId={params.row.id}
-                enteredValue={candidate.concept.name}
-                controlId={"concept_4_" + candidate.id}
-                dataUrl={endpoints.conceptUrl}
-                setFunction={conceptSet}
-                rootPath={props.rootPath}
-              />
-            );
-          }
-          return output;
-        }
-    }
-  ];
-
 
   useEffect(() => {
     if (endpointStatus) {
@@ -330,7 +226,6 @@ export default function CandidatesReviewTable(props) {
     setCandidates(candidates_temp);
   };
 
-
   return (
     <Paper>
       <WorkingIndicator identifier="waiting" />
@@ -362,41 +257,92 @@ export default function CandidatesReviewTable(props) {
         <Skeleton variant="rectangular" height={20} />
       )}
       <div ref={ref}>
+        <DataTable value={candidates} resizableColumns tableStyle={{minWidth: '50rem'}}
+          paginator rows={5} rowsPerPageOptions={[5, 10, 20, candidates.length]} paginatorDropdownAppendTo={'self'}
+          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+          currentPageReportTemplate="{first} to {last} of {totalRecords}" paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}
+          dataKey="id"
+        >
+          <Column field="number"  header='#' />
+          <Column field='completed' header={t('review.completed_col')}
+              body={(param)=>{ return 100 == param ? '*' : null}} />
+          <Column field="user_id" header={t('review.submitter_col')}
+              hidden
+              body={(candidate) =>{
+                const user = getById(users, candidate.user_id);
+                let cl = getById(candidateLists, candidate.candidate_list_id);
+                const output = [
+                  <div>
+                    <Link href={"mailto:" + user.email}>
+                      {user.last_name},&nbsp;{user.first_name}
+                    </Link>
+                  </div>
+                ];
+                if (cl.is_group) {
+                  output.push(
+                    <em>
+                      {"\n"}
+                      (on behalf of {getById(groups, cl.group_id).name})
+                    </em>
+                  );
+                }
+                return output;
 
-      <DataGrid
-        columns={columns}
-        rows={candidates}
-        
-        style={{
-          width: chartWidth
-        }
-        }
-        slots={{
-          toolbar: CandidateReviewListToolbar
-        }}
-        slotProps={{
-          toolbar: {
-            progress: progress,
-            uniqueConcepts: uniqueConcepts,
-            acceptableUniqueConcepts: acceptableUniqueConcepts,
-            reloadFunc: getData,
+              }} />
+          <Column field="term" header={t('review.term_col')} />
+          <Column field="definition" header={t('review.definition_col')} />
+          <Column field="candidate_feedback_id" header={t('review.feedback_col')}
+            key='id'
+              body={(candidate)=>{
+                return (
+                  <Select
+                    value={candidate.candidate_feedback_id || 0}
+                    onChange={event => {
+                      feedbackSet(candidate.id, event.target.value);
+                    }}
+                    id={`feedback_4_${candidate.id}`}
+                  >
+                    {feedbackOptions.map(opt => {
+                      return (
+                        <MenuItem key={`fb_${opt.id}`} value={opt.id}>
+                          {opt.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                );
 
-            reviewStatus: reviewStatus,
-            reviewComplete: reviewComplete,
-            saveFeedbackFunc: saveFeedback,
-            setReviewCompleteFunc: setReviewComplete,
+              }}
+              />
+          <Column field='concept_id' header={t('review.concept_col')}
+              body={(candidate)=>{
+                let output = <div>{t('review.none_msg' )}</div>
+                //const candidate = getById(candidates, params.row.id);
+                const feedback = getById(
+                  feedbackOptions,
+                  candidate.candidate_feedback_id || 0
+                );
+                
+                if (feedback.id !== 0 && "term_problem" !== feedback.critique) {
+                  output = (
+                    <RemoteAutosuggest
+                      inputLabel={t('concept')}
+                      itemId={candidate.id}
+                      enteredValue={candidate.concept.name}
+                      controlId={"concept_4_" + candidate.id}
+                      dataUrl={endpoints.conceptUrl}
+                      setFunction={conceptSet}
+                      rootPath={props.rootPath}
+                    />
+                  );
+                }
+                return output;
 
-            dirty: dirty
-          }
+              }}
+          
+              />
+        </DataTable>
 
-        }}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 }
-          }
-        }}
-        pageSizeOptions={[5, 10, 100]}
-        />
       </div>
     </Paper>
   );

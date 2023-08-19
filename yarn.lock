@@ -1772,7 +1772,7 @@
     hoist-non-react-statics "^3.3.0"
     redux "^4.0.0"
 
-"@types/react-transition-group@^4.4.6":
+"@types/react-transition-group@^4.4.1", "@types/react-transition-group@^4.4.6":
   version "4.4.6"
   resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-4.4.6.tgz#18187bcda5281f8e10dfc48f0943e2fdf4f75e2e"
   integrity sha512-VnCdSxfcm08KjsJVQcfBmhEQAPnLB8G08hAxn39azX1qYBQ/5RVQuoHuKIcfKOdncuaUvEpFKFzEvbtIMsfVew==
@@ -4941,6 +4941,19 @@ preact@~10.12.1:
   resolved "https://registry.yarnpkg.com/preact/-/preact-10.12.1.tgz#8f9cb5442f560e532729b7d23d42fd1161354a21"
   integrity sha512-l8386ixSsBdbreOAkqtrwqHwdvR35ID8c3rKPa8lCWuO86dBi32QWHV4vfsZK1utLLFMvw+Z5Ad4XLkZzchscg==
 
+primeicons@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-6.0.1.tgz#431fa7c79825934eefd62087d8e1faa6a9e376ad"
+  integrity sha512-KDeO94CbWI4pKsPnYpA1FPjo79EsY9I+M8ywoPBSf9XMXoe/0crjbUK7jcQEDHuc0ZMRIZsxH3TYLv4TUtHmAA==
+
+primereact@^9.6.2:
+  version "9.6.2"
+  resolved "https://registry.yarnpkg.com/primereact/-/primereact-9.6.2.tgz#266053294bcbbc24340948a8b82f969ebbb02bdb"
+  integrity sha512-wc7bvhR+9TiWkHADp02R10lnLbtmXiJ0Pdix8jgVh9HdHMaT2tbA6zPuhaRvA1PVT49hvrDXRCL9QB6YtaCi3w==
+  dependencies:
+    "@types/react-transition-group" "^4.4.1"
+    react-transition-group "^4.4.1"
+
 process-nextick-args@~2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
@@ -5191,7 +5204,7 @@ react-themeable@^1.1.0:
   dependencies:
     object-assign "^3.0.0"
 
-react-transition-group@^4.4.5:
+react-transition-group@^4.4.1, react-transition-group@^4.4.5:
   version "4.4.5"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.5.tgz#e53d4e3f3344da8521489fbef8f2581d42becdd1"
   integrity sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==
