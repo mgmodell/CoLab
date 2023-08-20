@@ -45,6 +45,9 @@ en:
       saving_msg: Saving feedback
       save_fail_msg: The save operation failed
       reload_btn: Reload
+      progress_key: >
+        Unique concepts [acceptable concepts]
+        {{unique}} [{{acceptable}}]
     #Term data
     topic: Topic
     description: Description

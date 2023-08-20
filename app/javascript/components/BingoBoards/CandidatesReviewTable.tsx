@@ -226,6 +226,18 @@ export default function CandidatesReviewTable(props) {
     setCandidates(candidates_temp);
   };
 
+  const toolbarHdr = <CandidateReviewListToolbar 
+    progress={progress}
+    uniqueConcepts={uniqueConcepts}
+    acceptableUniqueConcepts={acceptableUniqueConcepts}
+    dirty={dirty}
+    reviewStatus={reviewStatus}
+    reviewComplete={reviewComplete}
+    setReviewCompleteFunc={setReviewComplete}
+    saveFeedbackFunc={saveFeedback}
+    reloadFunc={getData}
+  />
+
   return (
     <Paper>
       <WorkingIndicator identifier="waiting" />
@@ -258,6 +270,7 @@ export default function CandidatesReviewTable(props) {
       )}
       <div ref={ref}>
         <DataTable value={candidates} resizableColumns tableStyle={{minWidth: '50rem'}}
+          header={toolbarHdr}
           paginator rows={5} rowsPerPageOptions={[5, 10, 20, candidates.length]} paginatorDropdownAppendTo={'self'}
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           currentPageReportTemplate="{first} to {last} of {totalRecords}" paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}
