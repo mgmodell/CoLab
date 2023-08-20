@@ -114,8 +114,8 @@ Given(/^the user assigns "([^"]*)" feedback to all candidates$/) do |feedback_ty
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
-  page.find(:xpath, "//div[@id='pagination-rows']").click
-  page.find(:xpath, "//li[text()='#{max_rows}']").click
+  find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
+  find( :xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']" ).click
 
   concept_count = Concept.count
   concepts = if concept_count < 2
