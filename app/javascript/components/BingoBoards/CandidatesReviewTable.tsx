@@ -1,12 +1,8 @@
 /* eslint-disable no-console */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import Skeleton from "@mui/material/Skeleton";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
@@ -18,17 +14,25 @@ import axios from "axios";
 import parse from 'html-react-parser';
 
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import CandidateReviewListToolbar from "./CandidateReviewListToolbar";
 import useResizeObserver from 'resize-observer-hook';
-import { width } from "@mui/system";
-import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 import { DataTable } from "primereact/datatable";
 
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { standardTemplate } from "../StandardPaginatorTemplate";
+import { ScrollPanel } from "primereact/scrollpanel";
+import { Skeleton } from "primereact/skeleton";
+import { Dropdown } from "primereact/dropdown";
 
+interface ColumnMeta {
+  field: string;
+  header: string;
+  sortable: boolean;
+  filterable?: boolean;
+  hidden?: boolean;
+  body?: (param) => ReactNode;
+  key?: string;
+}
 export default function CandidatesReviewTable(props) {
   const category = "candidate_review";
 
@@ -60,6 +64,7 @@ export default function CandidatesReviewTable(props) {
   const [uniqueConcepts, setUniqueConcepts] = useState(0);
   const [acceptableUniqueConcepts, setAcceptableUniqueConcepts] = useState(0);
 
+
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
 
@@ -80,6 +85,7 @@ export default function CandidatesReviewTable(props) {
       getData();
     }
   }, [endpointStatus]);
+
 
   const setCompleted = (item, options) => {
     //This use feedbackOpts from state
@@ -226,6 +232,43 @@ export default function CandidatesReviewTable(props) {
     setCandidates(candidates_temp);
   };
 
+  const optColumns : Array<ColumnMeta> = [
+    { field: 'number', header: '#', sortable: true, key: 'number' },
+    { field: 'completed', header: t('review.completed_col'), sortable: true, filterable: true,
+      body: (param) => { return 100 === param ? '*' : null },
+      key: 'completed'
+    },
+    { field: 'user_id', header: t('review.submitter_col'), sortable: true, filterable: true,
+
+      body: (candidate) => { 
+                const user = getById(users, candidate.user_id);
+                const cl = getById(candidateLists, candidate.candidate_list_id);
+                if( undefined === user ){
+                  return null;
+                } else {
+
+                const output = [
+                  <div>
+                    <a href={"mailto:" + user.email}>
+                      {user.last_name},&nbsp;{user.first_name}
+                    </a>
+                  </div>
+                ];
+                if (cl.is_group) {
+                  output.push(
+                    <em>
+                      {"\n"}
+                      (on behalf of {getById(groups, cl.group_id).name})
+                    </em>
+                  );
+                }
+                return output;
+                }
+              }
+    },
+  ]
+  const [visibleColumns, setVisibleColumns] = useState( optColumns.slice(0,2) );
+
   const toolbarHdr = <CandidateReviewListToolbar 
     progress={progress}
     uniqueConcepts={uniqueConcepts}
@@ -236,10 +279,15 @@ export default function CandidatesReviewTable(props) {
     setReviewCompleteFunc={setReviewComplete}
     saveFeedbackFunc={saveFeedback}
     reloadFunc={getData}
+    optColumns={optColumns}
+    visibleColumns={visibleColumns}
+    setVisibleColumnsFunc={setVisibleColumns}
   />
 
   return (
-    <Paper>
+    <ScrollPanel >
+
+
       <WorkingIndicator identifier="waiting" />
 
       {bingoGame != null ? (
@@ -266,63 +314,32 @@ export default function CandidatesReviewTable(props) {
           </Grid>
         </Grid>
       ) : (
-        <Skeleton variant="rectangular" height={20} />
+        <Skeleton height={20} />
       )}
-      <div ref={ref}>
         <DataTable value={candidates} resizableColumns tableStyle={{minWidth: '50rem'}}
-          header={toolbarHdr}
+          header={toolbarHdr} reorderableColumns
           paginator rows={5} rowsPerPageOptions={[5, 10, 20, candidates.length]} paginatorDropdownAppendTo={'self'}
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           currentPageReportTemplate="{first} to {last} of {totalRecords}" paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}
           dataKey="id"
         >
-          <Column field="number"  header='#' />
-          <Column field='completed' header={t('review.completed_col')}
-              body={(param)=>{ return 100 == param ? '*' : null}} />
-          <Column field="user_id" header={t('review.submitter_col')}
-              hidden
-              body={(candidate) =>{
-                const user = getById(users, candidate.user_id);
-                let cl = getById(candidateLists, candidate.candidate_list_id);
-                const output = [
-                  <div>
-                    <Link href={"mailto:" + user.email}>
-                      {user.last_name},&nbsp;{user.first_name}
-                    </Link>
-                  </div>
-                ];
-                if (cl.is_group) {
-                  output.push(
-                    <em>
-                      {"\n"}
-                      (on behalf of {getById(groups, cl.group_id).name})
-                    </em>
-                  );
-                }
-                return output;
-
-              }} />
+          {visibleColumns.map( (col) => (
+            <Column {...col} />
+          ))}
           <Column field="term" header={t('review.term_col')} />
           <Column field="definition" header={t('review.definition_col')} />
           <Column field="candidate_feedback_id" header={t('review.feedback_col')}
             key='id'
               body={(candidate)=>{
                 return (
-                  <Select
-                    value={candidate.candidate_feedback_id || 0}
-                    onChange={event => {
+                  <Dropdown value={candidate.candidate_feedback_id || 0}
+                    onChange={(event)=>{
                       feedbackSet(candidate.id, event.target.value);
                     }}
-                    id={`feedback_4_${candidate.id}`}
-                  >
-                    {feedbackOptions.map(opt => {
-                      return (
-                        <MenuItem key={`fb_${opt.id}`} value={opt.id}>
-                          {opt.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
+                    options={feedbackOptions}
+                    optionLabel="name"
+                    optionValue="id"
+                  />
                 );
 
               }}
@@ -356,10 +373,7 @@ export default function CandidatesReviewTable(props) {
               />
         </DataTable>
 
-      </div>
-    </Paper>
+    </ScrollPanel>
   );
 }
-CandidatesReviewTable.propTypes = {
-  rootPath: PropTypes.string
-};
+export {ColumnMeta};

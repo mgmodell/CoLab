@@ -45,6 +45,7 @@ en:
       saving_msg: Saving feedback
       save_fail_msg: The save operation failed
       reload_btn: Reload
+      toggle_columns_plc: Hide columns
       progress_key: >
         Unique concepts [acceptable concepts]
         {{unique}} [{{acceptable}}]
