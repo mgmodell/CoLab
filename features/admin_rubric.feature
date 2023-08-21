@@ -24,7 +24,7 @@ Feature: Rubric administration
   @javascript
   Scenario: Instructor creates a rubric
     Then the user sees 5 rubrics
-    Then the user clicks the "new-activity" button
+    Then the user clicks the "New rubric" button
      And the user sets the "Name" field to "Elderly Tech. Talk"
      And the user sets the "Description" field to "Students prepare and deliver a presentation explaining a technology topic to elderly members of their community."
      And the user sets criteria 1 "Description" to "History"
