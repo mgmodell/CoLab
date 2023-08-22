@@ -332,14 +332,17 @@ export default function CandidatesReviewTable(props) {
             key='id'
               body={(candidate)=>{
                 return (
-                  <Dropdown value={candidate.candidate_feedback_id || 0}
-                    onChange={(event)=>{
-                      feedbackSet(candidate.id, event.target.value);
-                    }}
-                    options={feedbackOptions}
-                    optionLabel="name"
-                    optionValue="id"
-                  />
+                  <React.Fragment>
+                    <input type={'hidden'} id={`feedback_4_${candidate.id}`}/>
+                    <Dropdown value={candidate.candidate_feedback_id || 0}
+                      onChange={(event)=>{
+                        feedbackSet(candidate.id, event.target.value);
+                      }}
+                      options={feedbackOptions}
+                      optionLabel="name"
+                      optionValue="id"
+                    />
+                  </React.Fragment>
                 );
 
               }}

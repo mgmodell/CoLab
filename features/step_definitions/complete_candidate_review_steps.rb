@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Given(/^the users "([^"]*)" prep "([^"]*)"$/) do |completion_level, group_or_solo|
+Given('the users {string} prep {string}') do |completion_level, group_or_solo|
   # Store the previous user (do no harm)
   temp_user = @user
 
@@ -45,18 +45,37 @@ Given(/^the users "([^"]*)" prep "([^"]*)"$/) do |completion_level, group_or_sol
     fields_to_complete = 0
   else
     log "we didn't test anything here: #{completion_level}"
+    true.should be false
   end
 
   user_group.each do |user|
-    @user = user
-    step 'the user "has" had demographics requested'
-    step 'the user logs in'
-    step 'the user clicks the link to the candidate list'
-    step "the user populates #{fields_to_complete} of the \"term\" entries"
-    step "the user populates #{fields_to_complete} of the \"definition\" entries"
-    step 'the user clicks "Save"' if fields_to_complete.positive?
-    step 'the user will see "success"'
-    step 'the user logs out'
+    #@user = user
+    @bingo.transaction do
+      cl = @bingo.candidate_list_for_user user
+      @entries_lists = {} if @entries_lists.nil?
+      @entries_lists[user] = [] if @entries_lists[user].nil?
+      @entries_list = @entries_lists[user]
+
+      fields_to_complete.times do |index|
+        @entries_list[index] = {} if @entries_list[index].nil?
+        @entries_list[index]['term'] = "#{Faker::Company.industry}_#{index}"
+        @entries_list[index]['definition'] = Faker::Company.bs
+
+        candidate = Candidate.new(
+          candidate_list: cl,
+          term: @entries_list[index]['term'],
+          definition: @entries_list[index]['definition'],
+          user: user
+        )
+        candidate.save
+        if candidate.errors.size > 0
+          log candidate.errors.full_messages
+          true.should be false
+        end
+
+      end
+    end
+
   end
 
   # Reset back to previous user (whomever that was)
@@ -70,7 +89,7 @@ Then(/^the user sees (\d+) candidate items for review$/) do |candidate_count|
   find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
   find( :xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']" ).click
 
-  page.all(:xpath, "//div[contains(@id, 'feedback_4_')]")
+  page.all(:xpath, "//input[contains(@id, 'feedback_4_')]", visible: :all )
       .count.should eq candidate_count.to_i
   # Latest UI only shows 'Concept' when relevant/available
   # page.all(:xpath, "//input[contains(@id, 'concept_4_')]")
@@ -110,7 +129,7 @@ Given(/^the user lowercases "([^"]*)" concepts$/) do |which_concepts|
   end
 end
 
-Given(/^the user assigns "([^"]*)" feedback to all candidates$/) do |feedback_type|
+Given('the user assigns {string} feedback to all candidates') do |feedback_type|
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
@@ -145,7 +164,8 @@ Given(/^the user assigns "([^"]*)" feedback to all candidates$/) do |feedback_ty
     begin
       retries ||= 0
       elem = page.find(:xpath,
-                       "//div[@id='feedback_4_#{candidate.id}']")
+                       # "//div[@id='feedback_4_#{candidate.id}']")
+                       "//input[@id='feedback_4_#{candidate.id}']/following-sibling::div")
       elem.scroll_to(elem)
       elem.click
     rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
@@ -158,13 +178,19 @@ Given(/^the user assigns "([^"]*)" feedback to all candidates$/) do |feedback_ty
       elem = page.find(:xpath,
                        "//li[text()=\"#{feedback.name}\"]")
       elem.scroll_to(elem)
-      elem.send_keys :enter
+      elem.click
+      elem.click
+      # elem.send_keys :enter
 
       if concept.present?
         elem = page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
         elem.scroll_to(elem)
+        elem.click
         elem.set(concept)
       end
+    rescue Selenium::WebDriver::Error::StaleElementReferenceError
+      #Nothing needed
+
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       elem = page.find(:xpath,
                        "//li[text()=\"#{feedback.name}\"]")
