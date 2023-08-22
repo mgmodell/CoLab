@@ -181,7 +181,7 @@ export default function RubricList(props) {
             }}
             slotProps={{
               toolbar: {
-                activityType: "rubric"
+                itemType: "rubric"
               }
             }}
             pageSizeOptions={[5, 10, 100 ]}
