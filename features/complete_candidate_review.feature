@@ -6,7 +6,7 @@ Feature: Review Candidate words for Bingo!
     Given the course started "two months ago" and ended "two months from now"
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
     Given the course has a Bingo! game
-    Given the Bingo! game individual count is 10
+    Given the Bingo! game individual count is 5
     Given the Bingo! started "last month" and ends "3 days from now"
     Given the Bingo! is group-enabled with the project and a 10 percent group discount
     Given the Bingo! "has" been activated
@@ -14,22 +14,22 @@ Feature: Review Candidate words for Bingo!
     #set up the users and have them complete the bingo! prep assignment
     Given the project has a group with 4 confirmed users
     Given the users "finish" prep "as a group"
-    # 36 terms
+    # 18 terms
     Given the project has a group with 4 confirmed users
     Given the users "finish" prep "as individuals"
-    # 40 terms
+    # 20 terms
     Given the project has a group with 4 confirmed users
     Given the users "incomplete" prep "as individuals"
-    # 20
+    # 10
     Given the project has a group with 4 confirmed users
     Given the users "incomplete" prep "as a group"
-    # 18
+    # 9
     Given the project has a group with 4 confirmed users
     Given the users "don't" prep "as a group"
     # 0
     Given the course has 4 confirmed users
     Given the users "incomplete" prep "as individuals"
-    # 20
+    # 10
 
     Given the course has 1 confirmed users
     Given the user is the most recently created user
@@ -49,15 +49,15 @@ Feature: Review Candidate words for Bingo!
      Then user should see 0 open task
 
   @javascript
-  Scenario: Instructor sees 134 candidates
+  Scenario: Instructor sees 67 candidates
     Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
     Given the user clicks the link to the candidate review
-     Then the user sees 134 candidate items for review
+     Then the user sees 67 candidate items for review
 
   @javascript
-  Scenario: Instructor logs in and assigns feedback to 134 candidates
+  Scenario: Instructor logs in and assigns feedback to 67 candidates
     Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
@@ -71,7 +71,7 @@ Feature: Review Candidate words for Bingo!
      Then the user will see "100%"
 
   @javascript
-  Scenario: Instructor logs in and accepts all 134 candidates
+  Scenario: Instructor logs in and accepts all 67 candidates
     Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
@@ -89,7 +89,7 @@ Feature: Review Candidate words for Bingo!
      Then user should see 0 open task
 
   @javascript
-  Scenario: Instructor logs in and assigns term feedback to 134 candidates
+  Scenario: Instructor logs in and assigns term feedback to 67 candidates
     Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
@@ -106,7 +106,7 @@ Feature: Review Candidate words for Bingo!
      Then user should see 0 open task
 
   @javascript
-  Scenario: Instructor logs in and assigns definition feedback to 134 candidates
+  Scenario: Instructor logs in and assigns definition feedback to 67 candidates
     Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task
@@ -124,7 +124,7 @@ Feature: Review Candidate words for Bingo!
      Then user should see 0 open task
 
   @javascript
-  Scenario: Instructor logs in and assigns mixed feedback to 134 candidates
+  Scenario: Instructor logs in and assigns mixed feedback to 67 candidates
     Given today is "tomorrow"
     Given the user logs in
      Then user should see 1 open task

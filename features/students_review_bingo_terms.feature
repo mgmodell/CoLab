@@ -63,7 +63,7 @@ Feature: Students review Candidate words for Bingo!
      Then user sees the Bingo! in the history
 
   @javascript
-  Scenario: Instructor logs in and accepts all 134 candidates
+  Scenario: Instructor logs in and accepts all 67 candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Accept" feedback to all candidates
     Given the user checks "Review completed"
@@ -78,7 +78,7 @@ Feature: Students review Candidate words for Bingo!
      Then the concept list should match the list
      
   @javascript
-  Scenario: Instructor logs in and assigns term feedback to 134 candidates
+  Scenario: Instructor logs in and assigns term feedback to 67 candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Term" feedback to all candidates
     Given the user checks "Review completed"
@@ -132,7 +132,7 @@ Feature: Students review Candidate words for Bingo!
      Then the concept list should match the list
 
   @javascript
-  Scenario: Instructor logs in and assigns definition feedback to 134 candidates
+  Scenario: Instructor logs in and assigns definition feedback to 67 candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Definition" feedback to all candidates
     Given the user checks "Review completed"
@@ -147,7 +147,7 @@ Feature: Students review Candidate words for Bingo!
      Then the concept list should match the list
 
   @javascript
-  Scenario: Instructor logs in and assigns mixed feedback to 134 candidates
+  Scenario: Instructor logs in and assigns mixed feedback to 67 candidates
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
     Given the user assigns "" feedback to all candidates

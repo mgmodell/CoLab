@@ -84,8 +84,8 @@ Then(/^the user sees (\d+) candidate items for review$/) do |candidate_count|
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
-  page.find(:xpath, "//div[@id='pagination-rows']").click
-  page.find(:xpath, "//li[text()='#{max_rows}']").click
+  page.find(:xpath, "//div[contains(@class,'MuiTablePagination-select')]/div").click
+  page.find(:xpath, "//li[text()='100']").click
 
   page.all(:xpath, "//div[contains(@id, 'feedback_4_')]")
       .count.should eq candidate_count.to_i
@@ -131,8 +131,8 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
-  page.find(:xpath, "//div[@id='pagination-rows']").click
-  page.find(:xpath, "//li[text()='#{max_rows}']").click
+  page.find(:xpath, "//div[contains(@class,'MuiTablePagination-select')]/div").click
+  page.find(:xpath, "//li[text()='100']").click
 
   concept_count = Concept.count
   concepts = if concept_count < 2
@@ -234,8 +234,8 @@ When(/^the user clicks the link to the candidate review$/) do
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
-  page.find(:xpath, "//div[@id='pagination-rows']").click
-  page.find(:xpath, "//li[text()='#{max_rows}']").click
+  page.find(:xpath, "//div[contains(@class,'MuiTablePagination-select')]/div").click
+  page.find(:xpath, "//li[text()='100']").click
 end
 
 Then(/^there will be (\d+) concepts$/) do |concept_count|
