@@ -6,9 +6,9 @@ Feature: Students review Candidate words for Bingo!
     Given the project started "last month" and ends "next month", opened "3 days ago" and closes "yesterday"
     Given the course started "two months ago" and ended "two months from now"
     Given the course has a Bingo! game
-    Given the Bingo! game individual count is 10
+    Given the Bingo! game individual count is 5
     Given the Bingo! started "last month" and ends "3 days from now"
-    Given the Bingo! is group-enabled with the project and a 10 percent group discount
+    Given the Bingo! is group-enabled with the project and a 20 percent group discount
     Given the Bingo! "has" been activated
 
     #set up the users and have them complete the bingo! prep assignment
@@ -63,7 +63,7 @@ Feature: Students review Candidate words for Bingo!
      Then user sees the Bingo! in the history
 
   @javascript
-  Scenario: Instructor logs in and accepts all 67 candidates
+  Scenario: Instructor logs in and accepts all candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Accept" feedback to all candidates
     Given the user checks "Review completed"
@@ -78,7 +78,7 @@ Feature: Students review Candidate words for Bingo!
      Then the concept list should match the list
      
   @javascript
-  Scenario: Instructor logs in and assigns term feedback to 67 candidates
+  Scenario: Instructor logs in and assigns term feedback to candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Term" feedback to all candidates
     Given the user checks "Review completed"
@@ -132,7 +132,7 @@ Feature: Students review Candidate words for Bingo!
      Then the concept list should match the list
 
   @javascript
-  Scenario: Instructor logs in and assigns definition feedback to 67 candidates
+  Scenario: Instructor logs in and assigns definition feedback to candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Definition" feedback to all candidates
     Given the user checks "Review completed"
@@ -147,7 +147,7 @@ Feature: Students review Candidate words for Bingo!
      Then the concept list should match the list
 
   @javascript
-  Scenario: Instructor logs in and assigns mixed feedback to 67 candidates
+  Scenario: Instructor logs in and assigns mixed feedback to candidates
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
     Given the user assigns "" feedback to all candidates

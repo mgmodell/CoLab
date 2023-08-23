@@ -199,7 +199,11 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
       error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries.positive?
       error_msg += e.message
       error_msg += "\t\t#{candidate.inspect}" unless retries.positive?
-      elem.send_keys :enter
+      begin
+        elem.send_keys :enter
+      rescue Selenium::WebDriver::Error::ElementNotInteractableError
+        byebug
+      end
     end
   end
 end
