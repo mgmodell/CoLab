@@ -7,7 +7,8 @@ import {
   GridToolbarQuickFilter,
   GridToolbarContainer,
   GridToolbarDensitySelector,
-  GridToolbarFilterButton
+  GridToolbarFilterButton,
+  GridToolbarColumnsButton
 } from "@mui/x-data-grid";
 import { Button, Checkbox, CircularProgress, FormControlLabel, IconButton, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
@@ -40,7 +41,7 @@ export default function CandidateReviewListToolbar(props: Props) {
             checked={props.reviewComplete}
           />
         }
-        label={t('review.review_completed_msg')}
+        label={t('review.review_complete_msg')}
       />
     );
   const saveButton = (
@@ -54,6 +55,7 @@ export default function CandidateReviewListToolbar(props: Props) {
   );
   return (
     <GridToolbarContainer>
+      <GridToolbarColumnsButton />
       <GridToolbarDensitySelector />
       <GridToolbarFilterButton />
       <Grid
