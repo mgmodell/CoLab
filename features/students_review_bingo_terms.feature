@@ -15,22 +15,22 @@ Feature: Students review Candidate words for Bingo!
     Given the project has a group with 4 confirmed users
      Then remember 2 group members
     Given the users "finish" prep "as a group"
-    # 36 terms
+    # 6 terms
     Given the project has a group with 4 confirmed users
     Given the users "finish" prep "as individuals"
-    # 40 terms
+    # 24 terms
     Given the project has a group with 4 confirmed users
     Given the users "incomplete" prep "as individuals"
-    # 20
+    # 24
     Given the project has a group with 4 confirmed users
     Given the users "incomplete" prep "as a group"
-    # 18
+    # 6
     Given the project has a group with 4 confirmed users
     Given the users "don't" prep "as a group"
     # 0
     Given the course has 4 confirmed users
     Given the users "incomplete" prep "as individuals"
-    # 20
+    # 24
 
     #Instructor time!
     Given the course has 1 confirmed users

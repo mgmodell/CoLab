@@ -14,22 +14,22 @@ Feature: Review Candidate words for Bingo!
     #set up the users and have them complete the bingo! prep assignment
     Given the project has a group with 4 confirmed users
     Given the users "finish" prep "as a group"
-    # 16 terms
+    # 12 terms
     Given the project has a group with 4 confirmed users
     Given the users "finish" prep "as individuals"
-    # 20 terms
+    # 24 terms
     Given the project has a group with 4 confirmed users
     Given the users "incomplete" prep "as individuals"
-    # 10
+    # 12
     Given the project has a group with 4 confirmed users
     Given the users "incomplete" prep "as a group"
-    # 8
+    # 6
     Given the project has a group with 4 confirmed users
     Given the users "don't" prep "as a group"
     # 0
     Given the course has 4 confirmed users
     Given the users "incomplete" prep "as individuals"
-    # 10
+    # 12
 
     Given the course has 1 confirmed users
     Given the user is the most recently created user
