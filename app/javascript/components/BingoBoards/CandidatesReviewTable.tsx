@@ -130,6 +130,8 @@ export default function CandidatesReviewTable(props) {
 
     setUniqueConcepts(unique_concepts);
     setAcceptableUniqueConcepts(acceptable_unique_concepts);
+    console.log('progress', Math.round((completed / candidates.length) * 100));
+    console.log( completed, candidates.length );
     setProgress(Math.round((completed / candidates.length) * 100));
   };
 
@@ -193,6 +195,7 @@ export default function CandidatesReviewTable(props) {
         ? `${endpoints.reviewSaveUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.reviewSaveUrl}${bingoGameId}.json`;
 
+    console.log( 'reviewed', reviewComplete );
     axios
       .patch(url, {
         candidates: candidates.filter(c => 0 < c.completed),
@@ -201,7 +204,6 @@ export default function CandidatesReviewTable(props) {
       .then(response => {
         const data = response.data;
         setDirty(typeof data.success !== "undefined");
-        dispatch(endTask("saving"));
         setReviewStatus(data.notice);
       })
       .catch(error => {
@@ -210,7 +212,11 @@ export default function CandidatesReviewTable(props) {
         fail_data.success = false;
         console.log("error");
         return fail_data;
-      });
+      })
+      .finally(() =>{
+        dispatch(endTask("saving"));
+      })
+      ;
   };
 
   const conceptSet = (id, value) => {

@@ -45,7 +45,7 @@ Feature: Students review Candidate words for Bingo!
   @javascript
   Scenario: Instructor completes the review and the user checks their account
     Given the user assigns "Accept" feedback to all candidates
-    Given the user checks "Review completed"
+    Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user logs out
@@ -66,7 +66,7 @@ Feature: Students review Candidate words for Bingo!
   Scenario: Instructor logs in and accepts all candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Accept" feedback to all candidates
-    Given the user checks "Review completed"
+    Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user logs out
@@ -81,7 +81,7 @@ Feature: Students review Candidate words for Bingo!
   Scenario: Instructor logs in and assigns term feedback to candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Term" feedback to all candidates
-    Given the user checks "Review completed"
+    Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user logs out
@@ -96,7 +96,7 @@ Feature: Students review Candidate words for Bingo!
   Scenario: Instructor reviews, user is dropped and re-added
     Given the user sees review items for all the expected candidates
     Given the user assigns "" feedback to all candidates
-    Given the user checks "Review completed"
+    Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user logs out
@@ -135,7 +135,7 @@ Feature: Students review Candidate words for Bingo!
   Scenario: Instructor logs in and assigns definition feedback to candidates
     Given the user sees review items for all the expected candidates
     Given the user assigns "Definition" feedback to all candidates
-    Given the user checks "Review completed"
+    Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user logs out
@@ -151,7 +151,7 @@ Feature: Students review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
     Given the user assigns "" feedback to all candidates
-    Given the user checks "Review completed"
+    Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user logs out
@@ -172,7 +172,7 @@ Feature: Students review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
     Given the user assigns "" feedback to all candidates
-    Given the user checks "Review completed"
+    Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user logs out
@@ -210,7 +210,7 @@ Feature: Students review Candidate words for Bingo!
     Given the user sees review items for all the expected candidates
     # Assign any sort of feedback
     Given the user assigns "" feedback to all candidates
-    Given the user checks "Review completed"
+    Given the user checks the review completed checkbox
      Then the user clicks "Save"
      Then the user waits while seeing "Saving feedback."
      Then the user logs out
