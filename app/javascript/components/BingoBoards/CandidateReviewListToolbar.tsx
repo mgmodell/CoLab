@@ -50,7 +50,10 @@ export default function CandidateReviewListToolbar(props: Props) {
   const notify = props.progress < 100 ? null : (
       <React.Fragment>
         <Checkbox id='review_complete'
-            onClick={() => props.setReviewCompleteFunc(!props.reviewComplete)}
+            onClick={() => {
+              console.log( 'before', props.reviewComplete );
+              props.setReviewCompleteFunc(!props.reviewComplete)}
+            }
             checked={props.reviewComplete}
             />
         <label htmlFor="review_complete">{t('review.review_complete_msg')}</label>

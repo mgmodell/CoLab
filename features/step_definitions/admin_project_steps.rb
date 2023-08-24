@@ -204,7 +204,7 @@ Then(/^the project "([^"]*)" is "([^"]*)"$/) do |field, value|
   end
 end
 
-Then(/^the user clicks on the existing project$/) do
+Then('the user clicks on the existing project') do
   click_link_or_button 'Activities'
   elem = find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{@project.get_name(@anon)}')]")
   elem.click

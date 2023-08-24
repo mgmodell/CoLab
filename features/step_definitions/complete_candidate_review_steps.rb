@@ -49,7 +49,6 @@ Given('the users {string} prep {string}') do |completion_level, group_or_solo|
   end
 
   user_group.each do |user|
-    #@user = user
     @bingo.transaction do
       cl = @bingo.candidate_list_for_user user
       @entries_lists = {} if @entries_lists.nil?
@@ -75,7 +74,6 @@ Given('the users {string} prep {string}') do |completion_level, group_or_solo|
 
       end
     end
-
   end
 
   # Reset back to previous user (whomever that was)
@@ -101,7 +99,8 @@ Given(/^the user sees review items for all the expected candidates$/) do
     # Latest UI only shows 'Concept' when relevant/available
     # page.all(:xpath, "//input[@id='concept_4_#{candidate.id}']").count.should eq 1
     page.all(:xpath,
-             "//div[@id='feedback_4_#{candidate.id}']",
+             # "//div[@id='feedback_4_#{candidate.id}']",
+             "//input[@id='feedback_4_#{candidate.id}']",
              visible: false).count.should eq 1
   end
 end
@@ -165,7 +164,7 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
       retries ||= 0
       elem = page.find(:xpath,
                        # "//div[@id='feedback_4_#{candidate.id}']")
-                       "//input[@id='feedback_4_#{candidate.id}']/following-sibling::div")
+                       "//input[@id='feedback_4_#{candidate.id}']/following-sibling::div", visible: :all)
       elem.scroll_to(elem)
       elem.click
     rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
@@ -208,7 +207,11 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
       error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries.positive?
       error_msg += e.message
       error_msg += "\t\t#{candidate.inspect}" unless retries.positive?
-      elem.send_keys :enter
+      begin
+        elem.send_keys :enter
+      rescue Selenium::WebDriver::Error::ElementNotInteractableError
+        byebug
+      end
     end
   end
 end
@@ -216,6 +219,14 @@ end
 Given(/^the saved reviews match the list$/) do
   @feedback_list.each do |key, value|
     Candidate.find(key).concept.name.should eq value[:concept] if value[:concept].present?
+  end
+end
+
+Given('the user checks the review completed checkbox') do
+  inpt = find(:xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all)
+
+  if ('true' != inpt[:checked])
+    find(:xpath, "//div[@id='review_complete']").click
   end
 end
 
@@ -244,7 +255,7 @@ When(/^the user clicks the link to the candidate review$/) do
   # Enable max rows
   max_rows = @bingo.candidates.size
   find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
-  find( :xpath, '//div[@data-pc-name="paginator"]//li[text()="134"]' ).click
+  find( :xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']" ).click
 end
 
 Then(/^there will be (\d+) concepts$/) do |concept_count|
