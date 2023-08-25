@@ -111,8 +111,8 @@ Feature: (Re)Submitting individual assignments
       And the 'latest' db submission data is accurate
       And the submission has no group
       And the submission is attached to the user
-     Then the user clicks 'Save Draft for Further Editing'
-     Then the assignment has 1 'ready' submission
+     Then the user clicks 'Submit for Grading'
+     Then the assignment has 1 'submitted' submission
 
   @javascript
   Scenario: User can open and submit a file to an assignment

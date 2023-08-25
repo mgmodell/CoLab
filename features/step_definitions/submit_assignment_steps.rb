@@ -193,7 +193,11 @@ Then('the user enters a {string} submission') do |submission_type|
 end
 
 Then('the assignment has {int} {string} submission') do |qty, state|
-  Submission.where( submitted: nil ).size.should be 1
+  if 'draft' == state
+    Submission.where( submitted: nil ).size.should eq qty
+  else
+    Submission.where.not( submitted: nil ).size.should eq qty
+  end
 end
 
 Then('the {string} db submission data is accurate') do |placement|
@@ -219,7 +223,7 @@ Then('the submission has no group') do
 end
 
 Then('the submission is attached to the user') do
-  pending # Write code here that turns the phrase above into concrete actions
+  @check_submission.user_id.should be @user.id
 end
 
 Given('the assignment already has {int} submission from the user') do |count|

@@ -18,6 +18,7 @@ class SubmissionsController < ApplicationController
     sub_params = submission_params
     assignment = Assignment.find sub_params[:assignment_id]
     @submission.rubric_id = assignment.rubric_id
+
     # Set this as submitted if requested
     @submission.submitted = DateTime.now if params[:submit]
     if @submission.update( sub_params )
