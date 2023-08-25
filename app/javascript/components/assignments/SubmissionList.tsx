@@ -1,25 +1,15 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Alert from "@mui/material/Alert";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import { Settings } from "luxon";
 
-import CloseIcon from "@mui/icons-material/Close";
 
 import { useDispatch } from "react-redux";
-import { startTask, endTask } from "../infrastructure/StatusSlice";
 
-import { DataGrid, GridRowModel, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import Collapse from "@mui/material/Collapse";
-import { useTypedSelector } from "../infrastructure/AppReducers";
+import { DataGrid, GridRowModel, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
 
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 import { ISubmissionCondensed } from "./AssignmentViewer";
-import SubmissionListToolbar from "../course_admin/SubmissionListToolbar";
+import SubmissionListToolbar from "./SubmissionListToolbar";
 
 type Props = {
   submissions: Array<ISubmissionCondensed>;

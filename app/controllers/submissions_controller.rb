@@ -12,22 +12,25 @@ class SubmissionsController < ApplicationController
     end
   end
 
-
   # PATCH/PUT /submissions/1 or /submissions/1.json
   def update
-    respond_to do |format|
-      @submission.assign( submission_params )
-      @submission.user = current_user
+    puts "update: #{@submission.inspect}"
+    puts "submit? #{params[:submit]}"
 
-      if @submission.save
+    @submission.user = current_user
+    if @submission.update( submission_params )
+      respond_to do |format|
+
       # if @submission.update(submission_params)
         format.json do
           render json: standardized_response(@submission, { main: I18n.t('assignments.errors.no_update_error') })
         end
-      else
-        errors = @submission.errors
-        errors.add(:mail, I18n.t('submissions.errors.update_failed'))
-        puts @submission.errors.full_messages
+      end
+    else
+      errors = @submission.errors
+      errors.add(:mail, I18n.t('submissions.errors.update_failed'))
+      logger.debug @submission.errors.full_messages
+      respond_to do |format|
         format.json { render json: standardized_response(@submission, @submission.errors) }
       end
     end
@@ -58,6 +61,7 @@ class SubmissionsController < ApplicationController
   def set_submission
     submission_id = params[:id].to_i
 
+
     @submission = if 0 < submission_id
                     Submission.where(
                         user_id: @current_user,
@@ -68,12 +72,10 @@ class SubmissionsController < ApplicationController
                       user: @current_user
                     )
                   end
-
   end
 
   # Only allow a list of trusted parameters through.
   def submission_params
-    params.require(:submission).permit(:submitted, :withdrawn, :score, :user_id, :group_id,
-                                       :sub_file, :sub_text, :sub_link)
+    params.require(:submission).permit( :sub_file, :sub_text, :sub_link, :assignment_id )
   end
 end

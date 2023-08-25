@@ -1,3 +1,5 @@
+require 'faker'
+
 Given('the assignment {string} accept {string}') do |does_or_doesnt, sub_type|
   case sub_type.downcase
   when 'text'
@@ -93,6 +95,7 @@ Then('the user opens the assignment task') do
     # We can click either of the items this finds because they are effectively the same
     find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@assignment.name}')]")[0].click
   end
+  wait_for_render
 
 end
 
@@ -152,15 +155,23 @@ Then('the {string} tab {string} enabled') do |tab_name, enabled|
   else
     true.should be false
   end
-  (tab['disabled'] == 'true').should be 'is' == enabled
+  (tab['disabled'] == 'true').should be 'is' != enabled
 end
 
 Then('the user creates a new submission') do
-  pending # Write code here that turns the phrase above into concrete actions
+  find( :xpath, "//button[text()='New response']")
 end
 
-Then('the user enters a {string} submission') do |_string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user enters a {string} submission') do |submission_type|
+  case submission_type.downcase
+  when 'text'
+    find(:xpath, "//div[@class='rdw-editor-main']").click
+    rand(6).times do
+      send_keys Faker::Lorem.paragraph, :enter
+    end
+  else  
+    pending # Write code here that turns the phrase above into concrete actions
+  end
 end
 
 Then('the assignment has {int} {string} submission') do |_int, _string|

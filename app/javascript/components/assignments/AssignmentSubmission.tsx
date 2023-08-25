@@ -1,25 +1,18 @@
-import React, { Suspense, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import {DateTime, Settings} from 'luxon';
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
 import {
   startTask,
-  endTask,
-  setClean,
-  addMessage,
-  Priorities
-} from "../infrastructure/StatusSlice";
+  endTask} from "../infrastructure/StatusSlice";
 import { IAssignment } from "./AssignmentViewer";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import parse from 'html-react-parser';
 
 import { useTranslation } from "react-i18next";
-import { Button, Grid, Link, TextField, Typography } from "@mui/material";
+import { Button, Grid, TextField, Typography } from "@mui/material";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
@@ -67,7 +60,6 @@ export default function AssignmentSubmission(props: Props) {
   );
   const [submissionLink, setSubmissionLink] = useState( '' );
 
-  //console.log( props.assignment );
   useEffect( () => {
     if( endpointStatus ){
       loadSubmission( );
@@ -76,12 +68,10 @@ export default function AssignmentSubmission(props: Props) {
 
 
   const loadSubmission = () =>{
-    console.log( 'loading' );
     const url = `${endpoints.submissionUrl}${submissionId}.json`;
     axios.get( url, {} )
       .then( response =>{
         const data = response.data;
-        console.log( response );
 
         let receivedDate = DateTime.fromISO( data.submission.updated_at ).setZone( Settings.timezone );
         setUpdatedDate(receivedDate );
@@ -166,7 +156,9 @@ export default function AssignmentSubmission(props: Props) {
         <Typography variant="h6">{t('submissions.link_lbl')}</Typography>
       </Grid>
       <Grid item xs={3}>
-        <TextField value={subnissionLink} onChange={setSubmissionLink} />
+        <TextField value={submissionLink} onChange={(event)=>{
+          setSubmissionLink( event.target.value );
+        }} />
 
       </Grid>
     </React.Fragment>
@@ -174,12 +166,12 @@ export default function AssignmentSubmission(props: Props) {
 
   const saveSubmission = (submitIt:boolean) => {
     dispatch( startTask( 'saving' ) );
-    const url = `${endpoints.submissionUrl}/${
+    const url = `${endpoints.submissionUrl}${
       // If this is brand new, we have no ID and need a new one
       // If this has already been submitted, then we must create a new submission
-      submissionId !== null || submittedDate !== null ? null : submissionId
+      submissionId !== null || submittedDate !== null ? 'new' : submissionId
      }.json`;
-    const method = null == submissionId ? 'POST' : 'PATCH';
+    const method = null == submissionId ? 'PUT' : 'PATCH';
 
     axios({
       url: url,
@@ -189,7 +181,7 @@ export default function AssignmentSubmission(props: Props) {
           sub_text: draftToHtml(
             convertToRaw( submissionTextEditor.getCurrentContent( ) )
           ),
-          sub_link: subnissionLink,
+          sub_link: submissionLink,
           assignment_id: props.assignment.id,
         },
         submit: submitIt,

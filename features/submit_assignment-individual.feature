@@ -106,11 +106,13 @@ Feature: (Re)Submitting individual assignments
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'text' submission
-     Then the user clicks 'Submit Assignment'
-     Then the assignment has 1 'active' submission
+     Then the user clicks 'Save draft for further editing'
+     Then the assignment has 1 'draft' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
       And the submission is attached to the user
+     Then the user clicks 'Save draft for further editing'
+     Then the assignment has 1 'ready' submission
 
   @javascript
   Scenario: User can open and submit a file to an assignment

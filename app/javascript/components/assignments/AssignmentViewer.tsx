@@ -110,11 +110,9 @@ export default function AssignmentViewer(props) {
   const loadAssignment = () => {
     const url = `${endpoints.statusUrl}${assignmentId}.json`;
     dispatch(startTask());
-    console.log( 'url', url );
     axios(url, {})
       .then(response => {
         const data = response.data;
-        console.log( 'ra', data );
 
         //Process, clean and set the data received
         const receivedAssignment:IAssignment = {...data.assignment};
