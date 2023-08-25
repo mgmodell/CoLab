@@ -14,11 +14,13 @@ class SubmissionsController < ApplicationController
 
   # PATCH/PUT /submissions/1 or /submissions/1.json
   def update
-    puts "update: #{@submission.inspect}"
-    puts "submit? #{params[:submit]}"
-
     @submission.user = current_user
-    if @submission.update( submission_params )
+    sub_params = submission_params
+    assignment = Assignment.find sub_params[:assignment_id]
+    @submission.rubric_id = assignment.rubric_id
+    # Set this as submitted if requested
+    @submission.submitted = DateTime.now if params[:submit]
+    if @submission.update( sub_params )
       respond_to do |format|
 
       # if @submission.update(submission_params)
@@ -60,7 +62,6 @@ class SubmissionsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_submission
     submission_id = params[:id].to_i
-
 
     @submission = if 0 < submission_id
                     Submission.where(

@@ -160,31 +160,62 @@ end
 
 Then('the user creates a new submission') do
   find( :xpath, "//button[text()='New response']")
+  @submission = Submission.new(
+    sub_text: '',
+    sub_link: '',
+    assignment_id: @assignment.id,
+    rubric_id: @assignment.rubric_id,
+    user_id: @user.id
+
+  )
 end
 
 Then('the user enters a {string} submission') do |submission_type|
   case submission_type.downcase
   when 'text'
     find(:xpath, "//div[@class='rdw-editor-main']").click
-    rand(6).times do
-      send_keys Faker::Lorem.paragraph, :enter
+
+    sub_text_web = ''
+    sub_text_db = ''
+
+    (rand(6) + 2 ).times do
+      para = Faker::Lorem.paragraph
+      sub_text_db = sub_text_db + "<p>#{para}</p>"
+      send_keys para, :enter
+      sub_text_web = sub_text_web + "#{para}\n"
     end
+    # send_keys sub_text_web, :backspace
+    send_keys :backspace
+    @submission.sub_text = sub_text_db
   else  
     pending # Write code here that turns the phrase above into concrete actions
   end
 end
 
-Then('the assignment has {int} {string} submission') do |_int, _string|
-  # Then('the assignment has {float} {string} submission') do |float, string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the assignment has {int} {string} submission') do |qty, state|
+  Submission.where( submitted: nil ).size.should be 1
 end
 
-Then('the {string} db submission data is accurate') do |_string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the {string} db submission data is accurate') do |placement|
+  case placement
+  when 'latest'
+    submission = Submission.last
+  else
+    puts "Placement '#{placement}' not implemented"
+    pending # Write code here that turns the phrase above into concrete actions
+  end
+  @check_submission = submission
+  @submission.assignment_id.should eq @check_submission.assignment_id
+
+  @submission.sub_text.should eq @check_submission.sub_text.gsub(/\n/,'')
+  @submission.sub_link.should eq @check_submission.sub_link
+  @submission.rubric_id.should eq @check_submission.rubric_id
+  @submission.user_id.should eq @check_submission.user_id
+
 end
 
 Then('the submission has no group') do
-  pending # Write code here that turns the phrase above into concrete actions
+  @check_submission.group_id.should be nil
 end
 
 Then('the submission is attached to the user') do

@@ -173,6 +173,7 @@ export default function AssignmentSubmission(props: Props) {
      }.json`;
     const method = null == submissionId ? 'PUT' : 'PATCH';
 
+    console.log( 'a_id', props.assignment )
     axios({
       url: url,
       method: method,
