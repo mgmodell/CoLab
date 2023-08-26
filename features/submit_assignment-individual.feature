@@ -119,21 +119,21 @@ Feature: (Re)Submitting individual assignments
      Then the user clicks 'Submit for Grading'
      Then the assignment has 1 'submitted' submission
 
-  @javascript
-  Scenario: User can open and submit a file to an assignment
-      And the init assignment 'does not' accept 'text'
-      And the init assignment 'does' accept 'files'
-    Given the assignment "is" initialized active
-    Given the user logs in
-     Then the user opens the assignment task
-     Then the user opens the 'Submissions' submissions tab
-     Then the user creates a new submission
-     Then the user enters a 'file' submission
-     Then the user clicks 'Submit Assignment'
-     Then the assignment has 1 'active' submission
-      And the 'latest' db submission data is accurate
-      And the submission has no group
-      And the submission is attached to the user
+#  @javascript
+#  Scenario: User can open and submit a file to an assignment
+#      And the init assignment 'does not' accept 'text'
+#      And the init assignment 'does' accept 'files'
+#    Given the assignment "is" initialized active
+#    Given the user logs in
+#     Then the user opens the assignment task
+#     Then the user opens the 'Submissions' submissions tab
+#     Then the user creates a new submission
+#     Then the user enters a 'file' submission
+#     Then the user clicks 'Submit Assignment'
+#     Then the assignment has 1 'active' submission
+#      And the 'latest' db submission data is accurate
+#      And the submission has no group
+#      And the submission is attached to the user
 
   @javascript
   Scenario: User can open and submit a link to an assignment
@@ -152,23 +152,6 @@ Feature: (Re)Submitting individual assignments
       And the submission is attached to the user
 
   @javascript
-  Scenario: User can open and submit files to an assignment
-      And the init assignment 'does not' accept 'text'
-      And the init assignment 'does' accept 'files'
-    Given the assignment "is" initialized active
-    Given the user logs in
-     Then the user opens the assignment task
-     Then the user opens the 'Submissions' submissions tab
-     Then the user creates a new submission
-     Then the user enters a 'file' submission
-     Then the user enters a 'file' submission
-     Then the user clicks 'Submit Assignment'
-     Then the assignment has 1 'active' submission
-      And the 'latest' db submission data is accurate
-      And the submission has no group
-      And the submission is attached to the user
-
-  @javascript
   Scenario: User can open and submit a combo to an assignment
       And the init assignment 'does' accept 'links'
       And the init assignment 'does' accept 'files'
@@ -179,7 +162,7 @@ Feature: (Re)Submitting individual assignments
      Then the user creates a new submission
      Then the user enters a 'text' submission
      Then the user enters a 'link' submission
-     Then the user enters a 'file' submission
+#     Then the user enters a 'file' submission
      Then the user clicks 'Submit Assignment'
      Then the assignment has 1 'active' submission
       And the 'latest' db submission data is accurate

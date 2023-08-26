@@ -150,6 +150,10 @@ export default function AssignmentViewer(props) {
 
   let output = null;
   const curDate = new Date();
+  console.log( assignment, curDate,
+    assignment.startDate > curDate ? 'true' : 'false',
+    assignment.endDate < curDate ? 'true' : 'false'
+    );
   if (!endpointsLoaded) {
     output = ( <Skeleton variant="rectangular" /> );
   } else {
@@ -158,7 +162,7 @@ export default function AssignmentViewer(props) {
         <TabList onChange={handleTabChange} >
           <Tab label='Overview' value='overview' />
           <Tab label='Responses' value='responses' disabled={
-            assignment.id === null || assignment.startDate < curDate || assignment.endDate > curDate
+            assignment.startDate > curDate || assignment.endDate < curDate
             } />
           <Tab label='Progress' value='progress' disabled={submissions.length < 1 || assignment.startDate < curDate} />
         </TabList>
