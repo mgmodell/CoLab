@@ -57,6 +57,10 @@ Rails.application.routes.draw do
          as: 'critique_assignment',
          constraints: ->(req) { req.format == :json }
 
+    get 'submissions/withdraw/:id' => 'submissions#withdraw',
+         as: 'submission_withdraw',
+         constraints: ->(req) { req.format == :json }
+
     get 'rubrics/new/' => 'rubrics#show', as: :new_rubric
     post 'rubrics/:school_id' => 'rubrics#create'
     get 'rubrics/copy/:id' => 'rubrics#copy',

@@ -118,6 +118,7 @@ Feature: (Re)Submitting individual assignments
       And the submission is attached to the user
      Then the user clicks 'Submit for Grading'
      Then the assignment has 1 'submitted' submission
+     Then the assignment has 0 'active' submission
 
 #  @javascript
 #  Scenario: User can open and submit a file to an assignment
@@ -237,7 +238,7 @@ Feature: (Re)Submitting individual assignments
   @javascript
   Scenario: User can withdraw a submitted assignment
       And the assignment already has 4 submission from the user
-      And today is after the final deadline
+#      And today is after the final deadline
     Given the user logs in
      Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
@@ -249,10 +250,18 @@ Feature: (Re)Submitting individual assignments
   Scenario: User cannot withdraw a graded assignment
       And the assignment already has 4 submission from the user
       And assignment 2 'is' graded
-      And today is after the final deadline
     Given the user logs in
      Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
-     Then the user 'can' withdraws submission 1
-     Then the user 'can' withdraws submission 3
+     Then the user 'can' withdraw submission 1
+     Then the user 'can' withdraw submission 3
      Then the user 'cannot' withdraws submission 2
+
+  @javascript
+  Scenario: User cannot withdraw a graded assignment
+      And the assignment already has 4 submission from the user
+      And assignment 2 'is' graded
+      And today is after the final deadline
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the 'Submissions' tab 'is not' enabled

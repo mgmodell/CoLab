@@ -59,6 +59,7 @@ export default function AssignmentSubmission(props: Props) {
     )
   );
   const [submissionLink, setSubmissionLink] = useState( '' );
+  const notSubmitted = submittedDate === null;
 
   useEffect( () => {
     if( endpointStatus ){
@@ -75,10 +76,19 @@ export default function AssignmentSubmission(props: Props) {
 
         let receivedDate = DateTime.fromISO( data.submission.updated_at ).setZone( Settings.timezone );
         setUpdatedDate(receivedDate );
-        receivedDate = DateTime.fromISO( data.submission.submitted ).setZone( Settings.timezone );
-        setSubmittedDate( receivedDate );
-        receivedDate = DateTime.fromISO( data.submission.withdrawn ).setZone( Settings.timezone );
-        setWithdrawnDate( receivedDate );
+        if( null !== data.submission.submitted  ){
+          receivedDate = DateTime.fromISO( data.submission.submitted ).setZone( Settings.timezone );
+          setSubmittedDate( receivedDate );
+        } else {
+          setSubmittedDate( null );
+        }
+        
+        if( null !== data.submission.withdrawn ){
+          receivedDate = DateTime.fromISO( data.submission.withdrawn ).setZone( Settings.timezone );
+          setWithdrawnDate( receivedDate );
+        } else {
+          setWithdrawnDate( null );
+        }
         setRecordedScore( data.submission.recorded_score );
         setSubmissionTextEditor(
           EditorState.createWithContent(
@@ -109,6 +119,7 @@ export default function AssignmentSubmission(props: Props) {
                     placeholder={t("submissions.sub_text_placeholder")}
                     onEditorStateChange={setSubmissionTextEditor}
                     toolbarOnFocus
+                    readOnly={!notSubmitted}
                     toolbar={{
                       options: [
                         "inline",
@@ -150,7 +161,7 @@ export default function AssignmentSubmission(props: Props) {
     </Grid>
   ) : null;
 
-  const sub_link = props.assignment.linkSub ? (
+  const subLink = props.assignment.linkSub ? (
     <React.Fragment>
       <Grid item xs={3}>
         <Typography variant="h6">{t('submissions.sub_link_lbl')}</Typography>
@@ -158,6 +169,7 @@ export default function AssignmentSubmission(props: Props) {
       <Grid item xs={3}>
         <TextField value={submissionLink}
           id="sub_link"
+          disabled={!notSubmitted}
           placeholder={t('submissions.sub_link_placehldr')}
           onChange={(event)=>{
             setSubmissionLink( event.target.value );
@@ -176,7 +188,6 @@ export default function AssignmentSubmission(props: Props) {
      }.json`;
     const method = null == submissionId ? 'PUT' : 'PATCH';
 
-    console.log( 'a_id', props.assignment )
     axios({
       url: url,
       method: method,
@@ -218,17 +229,38 @@ export default function AssignmentSubmission(props: Props) {
 
   };
 
+  const withdrawSubmission = () => {
+    dispatch( startTask( 'saving' ) );
+
+    const url = `${endpoints.submissionWithdrawalUrl}${ submissionId }.json`;
+
+    axios.get(url).then( response => {
+      const messages = response.data.messages;
+
+
+    }).then( props.reloadCallback ).finally(()=>{
+      dispatch( endTask( 'saving' ));
+    });
+
+  }
+
   const draftSubmitBtn =  (
-    <Button disabled={!dirty} onClick={()=>saveSubmission( true )}>
-      { submittedDate !== null ? t('submissions.submit_response') : t('submissions.submit_revision')}
+    <Button disabled={!dirty || !notSubmitted} onClick={()=>saveSubmission( true )}>
+      { t('submissions.submit_revision_btn')}
     </Button>
   )
 
   const draftSaveBtn = (
-    <Button disabled={!dirty} onClick={()=>saveSubmission( false )}>
-      { submittedDate !== null ? t('submissions.draft_response') : t('submissions.draft_revision')}
+    <Button disabled={!dirty || !notSubmitted} onClick={()=>saveSubmission( false )}>
+      { t('submissions.draft_revision_btn')}
     </Button>
   )
+
+  const withdrawBtn = ! notSubmitted ? (
+    <Button disabled={ notSubmitted} onClick={()=>withdrawSubmission( )}>
+      { t('submissions.withdraw_btn')}
+    </Button>
+  ) : null
 
   return (
     <Grid container >
@@ -238,8 +270,8 @@ export default function AssignmentSubmission(props: Props) {
         </Typography>
       </Grid>
       {sub_text}
-      {sub_link}
-      {draftSaveBtn}{draftSubmitBtn}
+      {subLink}
+      {draftSaveBtn}{draftSubmitBtn}{withdrawBtn}
 
       <Grid item xs={12}>
         <Typography variant="h6" >

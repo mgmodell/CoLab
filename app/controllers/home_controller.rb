@@ -56,10 +56,6 @@ class HomeController < ApplicationController
       baseUrl: edit_installment_path(assessment_id: ''),
       saveInstallmentUrl: installments_path
     }
-    ep_hash[:assignment] = {
-      statusUrl: assignment_status_path(id: '' ),
-      submissionUrl: submission_path( id: '' )
-    }
     ep_hash[:candidate_list] = {
       baseUrl: get_candidate_list_path(bingo_game_id: '')
     }
@@ -101,6 +97,11 @@ class HomeController < ApplicationController
       ep_hash[:consent_log] = {
         baseUrl: edit_consent_log_path(consent_form_id: ''),
         consentLogSaveUrl: consent_log_path(id: '')
+      }
+      ep_hash[:assignment] = {
+        statusUrl: assignment_status_path(id: '' ),
+        submissionUrl: submission_path( id: '' ),
+        submissionWithdrawalUrl: submission_withdraw_path( id: '' )
       }
 
       if current_user.is_admin? || current_user.is_instructor?

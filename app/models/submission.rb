@@ -52,7 +52,6 @@ class Submission < ApplicationRecord
       elsif changes.size > 1
         errors.add :main, I18n.t('submissions.error.no_changes_on_withdrawal')
       end
-      self.withdrawn = current
     elsif !submitted_was.nil?
       if recorded_score.changed? && changes.size > 1
         errors.add :main, I18n.t('submissions.error.only_score_change_post_submission')

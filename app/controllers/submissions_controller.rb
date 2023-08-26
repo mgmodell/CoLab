@@ -1,5 +1,5 @@
 class SubmissionsController < ApplicationController
-  before_action :set_submission, only: %i[show update ]
+  before_action :set_submission, only: %i[show update withdraw]
 
 
   # GET /submissions/1 or /submissions/1.json
@@ -38,6 +38,25 @@ class SubmissionsController < ApplicationController
       end
     end
   end
+
+  # PATCH/PUT /submissions/withdraw/1 or /submissions/withdraw/1.json
+  def withdraw
+    @submission.withdrawn = DateTime.now
+    if @submission.save
+      respond_to do |format|
+        format.json do
+          render json: standardized_response(@submission, { main: I18n.t('assignments.errors.no_update_error') })
+        end
+      end
+
+    else
+      respond_to do |format|
+        format.json { render json: standardized_response(@submission, @submission.errors) }
+      end
+
+    end
+  end
+
 
   private
   

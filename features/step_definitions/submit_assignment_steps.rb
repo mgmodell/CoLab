@@ -201,10 +201,16 @@ Then('the user enters a {string} submission') do |submission_type|
 end
 
 Then('the assignment has {int} {string} submission') do |qty, state|
-  if 'draft' == state
-    Submission.where( submitted: nil ).size.should eq qty
+  case state
+  when 'draft'
+    Submission.where( submitted: nil ).where(withdrawn: nil).size.should eq qty
+  when 'submitted', 'active'
+    Submission.where.not( submitted: nil ).where(withdrawn: nil).size.should eq qty
+  when 'withdrawn'
+    Submission.where.not( submitted: nil).where.not( withdrawn: nil ).size.should eq qty
   else
-    Submission.where.not( submitted: nil ).size.should eq qty
+    puts "No '#{state}' assignment state accounted for"
+    pending
   end
 end
 
@@ -236,9 +242,16 @@ end
 
 Given('the assignment already has {int} submission from the user') do |count|
   count.times do |index|
+
+    sub_text_db = ''
+    (rand(6) + 2 ).times do
+      para = Faker::Lorem.paragraph
+      sub_text_db = sub_text_db + "<p>#{para}</p>"
+    end
+
     submission = @assignment.submissions.new(
       submitted: (count - index ).hours.ago,
-      sub_text: Faker::Books::Lovecraft.sentence(word_count: rand(50..150)),
+      sub_text: sub_text_db,
       user: @user,
       rubric: @assignment.rubric
     )
@@ -261,9 +274,14 @@ Given('today is after the final deadline') do
   travel_to @assignment.end_date + 1
 end
 
-Then('the user withdraws submission {int}') do |_int|
-  # Then('the user withdraws submission {float}') do |float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user withdraws submission {int}') do |assignment_ord|
+  target_sub = find( :xpath, "//div[@role='row' and @data-rowindex='#{assignment_ord-1}']" +
+                              "/div[@data-field='submitted']/div" )
+  target_sub.click
+  wait_for_render
+  click_link_or_button 'Withdraw Revision'
+  wait_for_render
+
 end
 
 Given('assignment {int} {string} graded') do |_int, _string|

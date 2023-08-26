@@ -44,10 +44,11 @@ en:
       submitted: Submission Date
       withdrawn: Withdrawn Date
       submitter: Submitted by
-      submit_response: Submit for Grading
-      submit_revision: Submit Revision for Grading
-      draft_response: Save Draft for Further Editing
-      draft_revision: Save Revision for Further Editing
+      submit_response_btn: Submit for Grading
+      submit_revision_btn: Submit Revision for Grading
+      draft_response_btn: Save Draft for Further Editing
+      draft_revision_btn: Save Revision for Further Editing
+      withdraw_btn: Withdraw Revision
       new_btn: New response
     create_success: Assignment was created successfully!
     destroy_success: Assignment was destroyed successfully!
