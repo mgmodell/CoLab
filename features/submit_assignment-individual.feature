@@ -84,8 +84,7 @@ Feature: (Re)Submitting individual assignments
     Given the assignment "is" initialized active
     Given the user logs in
      Then the user opens the assignment task
-     Then the 'Submissions' tab 'is' enabled
-  #   Then the user opens the 'Grading' submissions tab
+     Then the 'Submissions' tab 'is not' enabled
       And the shown rubric matches the assignment rubric
 
   @javascript
