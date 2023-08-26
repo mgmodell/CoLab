@@ -153,12 +153,15 @@ export default function AssignmentSubmission(props: Props) {
   const sub_link = props.assignment.linkSub ? (
     <React.Fragment>
       <Grid item xs={3}>
-        <Typography variant="h6">{t('submissions.link_lbl')}</Typography>
+        <Typography variant="h6">{t('submissions.sub_link_lbl')}</Typography>
       </Grid>
       <Grid item xs={3}>
-        <TextField value={submissionLink} onChange={(event)=>{
-          setSubmissionLink( event.target.value );
-        }} />
+        <TextField value={submissionLink}
+          id="sub_link"
+          placeholder={t('submissions.sub_link_placehldr')}
+          onChange={(event)=>{
+            setSubmissionLink( event.target.value );
+          }} />
 
       </Grid>
     </React.Fragment>

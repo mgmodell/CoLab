@@ -145,7 +145,7 @@ Feature: (Re)Submitting individual assignments
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'link' submission
-     Then the user clicks 'Submit Assignment'
+     Then the user clicks 'Submit for Grading'
      Then the assignment has 1 'active' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
@@ -163,7 +163,7 @@ Feature: (Re)Submitting individual assignments
      Then the user enters a 'text' submission
      Then the user enters a 'link' submission
 #     Then the user enters a 'file' submission
-     Then the user clicks 'Submit Assignment'
+     Then the user clicks 'Save Draft for Further Editing'
      Then the assignment has 1 'active' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
@@ -214,8 +214,7 @@ Feature: (Re)Submitting individual assignments
       And the assignment already has 1 submission from the user
       And today is after the final deadline
     Given the user logs in
-     Then the user opens the assignment task
-     Then the 'Submissions' tab 'is not' enabled
+     Then the user does not see the assignment task
 
   @javascript
   Scenario: User can submit and re-submit to combo assignment

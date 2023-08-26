@@ -192,6 +192,9 @@ Then('the user enters a {string} submission') do |submission_type|
     # send_keys sub_text_web, :backspace
     send_keys :backspace
     @submission.sub_text = sub_text_db
+  when 'link'
+    find(:xpath, "//input[@id='sub_link']").click
+    send_keys Faker::Internet.url
   else  
     pending # Write code here that turns the phrase above into concrete actions
   end
@@ -255,7 +258,7 @@ Given('today is between the first assignment deadline and close') do
 end
 
 Given('today is after the final deadline') do
-  travel_to @assignment.end_date
+  travel_to @assignment.end_date + 1
 end
 
 Then('the user withdraws submission {int}') do |_int|

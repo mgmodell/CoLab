@@ -35,6 +35,7 @@ en:
       sub_text_lbl: Text Response
       sub_text_placeholder: Click to enter your response
       sub_link_lbl: Link to Response
+      sub_link_placehldr: Enter the link to the response
       create: Create a New Response
       save: Save Response as Draft
       submit: Submit a New Response
