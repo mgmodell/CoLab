@@ -96,7 +96,12 @@ Then('the user opens the assignment task') do
     find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@assignment.name}')]")[0].click
   end
   wait_for_render
+end
 
+Then('the user does not see the assignment task') do
+  wait_for_render
+  step 'the user switches to the "Task View" tab'
+  find_all(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").size.should be 0
 end
 
 Then('the user opens the assignment history item') do 

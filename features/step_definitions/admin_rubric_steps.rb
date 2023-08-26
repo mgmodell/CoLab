@@ -424,7 +424,7 @@ end
 
 Given('there exists a rubric published by another user') do
   users = User.includes(:school).where.not(id: @user.id)
-  another_user = users.sample
+  another_user = users.where.not( school_id: nil).sample
   @rubric = another_user.school.rubrics.new(
     name: "#{Faker::JapaneseMedia::StudioGhibli.character}",
     description: Faker::JapaneseMedia::StudioGhibli.quote,

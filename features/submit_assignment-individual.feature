@@ -96,6 +96,12 @@ Feature: (Re)Submitting individual assignments
      Then the user opens the assignment task
      Then the 'Submissions' tab 'is not' enabled
 
+  @javascript
+  Scenario: User does not see an assignment that is inactive
+    Given the course is shifted 2 'months' into the 'future'
+    Given the assignment "is not" initialized active
+    Given the user logs in
+     Then the user does not see the assignment task
 
   # Submit assignments
   @javascript
