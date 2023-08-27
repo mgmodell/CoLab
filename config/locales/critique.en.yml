@@ -3,16 +3,16 @@ en:
     error:
       not_loaded: No submission loaded
     submissions_title: Submissions
-    submitted: Assignment Submission
-    feedback: Overall Feedback
-    history: Previous Submissions and Feedback
+    submitted: Assignment submission
+    feedback: Overall feedback
+    history: Previous submissions and feedback
     rubric:
       name: Name
       version: Version
       minimum: Minimum requirements not met.
-      criteria_feedback: Criteria Feedback
+      criteria_feedback: Criteria feedback
     submissions:
       score: Score
-      submitted: Submission Date
-      withdrawn: Withdrawn Date
+      submitted: Submission date
+      withdrawn: Withdrawn date
       submitter: Submitted by

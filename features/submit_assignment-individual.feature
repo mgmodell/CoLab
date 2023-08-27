@@ -291,7 +291,7 @@ Feature: (Re)Submitting individual assignments
   @javascript
   Scenario: User cannot withdraw a graded assignment
       And the assignment already has 4 submission from the user
-      And assignment 2 'is' graded
+      And submission 2 'is' graded
     Given the user logs in
      Then the user opens the assignment task
      Then the user opens the 'Submissions' submissions tab
@@ -302,7 +302,7 @@ Feature: (Re)Submitting individual assignments
   @javascript
   Scenario: User cannot withdraw a graded assignment
       And the assignment already has 4 submission from the user
-      And assignment 2 'is' graded
+      And submission 2 'is' graded
       And today is after the final deadline
     Given the user logs in
      Then the user opens the assignment task

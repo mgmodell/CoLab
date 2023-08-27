@@ -314,7 +314,7 @@ Then('the user withdraws submission {int}') do |assignment_ord|
 
 end
 
-Given('assignment {int} {string} graded') do |_int, _string|
+Given('submission {int} {string} graded') do |_int, _string|
   # Given('assignment {float} {string} graded') do |float, string|
   pending # Write code here that turns the phrase above into concrete actions
 end
