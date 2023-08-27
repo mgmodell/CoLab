@@ -25,9 +25,9 @@ Given(/^there is a course with an assessed project$/) do
 
   # Check that the anonymous stuff got built
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be.positive?
+  @course.get_name(true).length.should be > 0
   @project.get_name(true).should_not be_nil
-  @project.get_name(true).length.should be.positive?
+  @project.get_name(true).length.should be > 0
 end
 
 Given(/^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes "(.*?)"$/) do |start_date, end_date, start_dow, end_dow|
@@ -70,7 +70,7 @@ Given(/^the project has a group with (\d+) confirmed users$/) do |user_count|
   end
   @group.save
   @group.get_name(true).should_not be_nil
-  @group.get_name(true).length.should be.positive?
+  @group.get_name(true).length.should be  > 0
   log @group.errors.full_messages if @group.errors.present?
 end
 

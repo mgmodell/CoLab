@@ -123,7 +123,7 @@ Given(/^a course$/) do
   )
   @course.save
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be.positive?
+  @course.get_name(true).length.should be  > 0
 end
 
 Then(/^the users are added to the course by email address$/) do

@@ -23,7 +23,7 @@ module TaskHelperHelper
       group = task.group_for_user(user)
       o_string = link_to group.get_name(anonymize),
                          edit_installment_path(assessment_id: task.id)
-      o_string + raw "<br><small>(#{t :project}:
+      o_string += raw "<br><small>(#{t :project}:
         #{task.project.get_name(anonymize)})</small>"
     elsif task.instance_of?(Experience)
       reaction = task.get_user_reaction(user)

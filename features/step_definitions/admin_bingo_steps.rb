@@ -49,7 +49,7 @@ Given(/^the course has a Bingo! game$/) do
   @bingo.save
   if @bingo.persisted?
     @bingo.get_topic(true).should_not be_nil
-    @bingo.get_topic(true).length.should be.positive?
+    @bingo.get_topic(true).length.should be  > 0
   end
   log @bingo.errors.full_messages if @bingo.errors.present?
 end
@@ -107,7 +107,7 @@ end
 
 Then('the {string} label is disabled') do |label|
   control = page.all(:xpath, "//label[contains(., '#{label}')][not(@disabled)]")
-  control.size.should be.positive?
+  control.size.should be  > 0
 end
 
 Then('the bingo project is empty') do
