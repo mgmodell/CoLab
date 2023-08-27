@@ -25,9 +25,9 @@ Given(/^there is a course with an assessed project$/) do
 
   # Check that the anonymous stuff got built
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
+  @course.get_name(true).length.should be.positive?
   @project.get_name(true).should_not be_nil
-  @project.get_name(true).length.should be > 0
+  @project.get_name(true).length.should be.positive?
 end
 
 Given(/^the project started "(.*?)" and ends "(.*?)", opened "(.*?)" and closes "(.*?)"$/) do |start_date, end_date, start_dow, end_dow|
@@ -70,7 +70,7 @@ Given(/^the project has a group with (\d+) confirmed users$/) do |user_count|
   end
   @group.save
   @group.get_name(true).should_not be_nil
-  @group.get_name(true).length.should be > 0
+  @group.get_name(true).length.should be.positive?
   log @group.errors.full_messages if @group.errors.present?
 end
 
@@ -107,7 +107,7 @@ Then(/^the user will see the main index page$/) do
 end
 
 Given(/^the user "(.*?)" had demographics requested$/) do |with_demographics|
-  demographics_requested = with_demographics == 'has'
+  demographics_requested = 'has' == with_demographics
   @user.welcomed = demographics_requested
   @user.save!
   log @user.errors.full_messages if @user.errors.present?

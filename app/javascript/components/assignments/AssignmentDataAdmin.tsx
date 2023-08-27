@@ -206,7 +206,6 @@ export default function AssignmentDataAdmin(props) {
       });
   };
 
-
   const setAssignmentData = data => {
     const projects = new Array({ id: -1, name: "None Selected" }).concat(
       data.projects

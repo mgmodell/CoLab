@@ -14,26 +14,26 @@ import StandardListToolbar from "../StandardListToolbar";
 import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
 interface ICourse {
-  id: number,
-  name: string,
-  number: string,
-  experience_performance: number,
-  bingo_performance: number,
-  assessment_performance: number,
-  bingo_data: Array<number>,
+  id: number;
+  name: string;
+  number: string;
+  experience_performance: number;
+  bingo_performance: number;
+  assessment_performance: number;
+  bingo_data: Array<number>;
 }
 
 type Props = {
   retrievalUrl: string;
   coursesList: Array<ICourse>;
-  coursesListUpdateFunc: (coursesList: Array<ICourse> ) => void;
-}
+  coursesListUpdateFunc: (coursesList: Array<ICourse>) => void;
+};
 
-export default function UserCourseList(props : Props) {
+export default function UserCourseList(props: Props) {
   const dispatch = useDispatch();
 
   const category = "profile";
-  const { t } = useTranslation( `${category}s` );
+  const { t } = useTranslation(`${category}s`);
 
   const getCourses = () => {
     dispatch(startTask());
@@ -57,44 +57,43 @@ export default function UserCourseList(props : Props) {
     }
   }, []);
 
-  var courseColumns : GridColDef[] = [
+  var courseColumns: GridColDef[] = [
     {
-      headerName: t('course_status.name'),
+      headerName: t("course_status.name"),
       field: "name",
       renderCell: renderTextCellExpand,
-      width: 250,
+      width: 250
     },
     {
-      headerName: t('course_status.number'),
-      field: "number",
+      headerName: t("course_status.number"),
+      field: "number"
     },
     {
       headerName: t("course_status.bingo"),
       field: "id",
-      renderCell: (params) => {
+      renderCell: params => {
         const data = params.row.bingo_data;
-        return(
+        return (
           <BingoDataRepresentation
             height={30}
             width={70}
             value={Number(params.row.bingo_performance)}
             scores={data}
           />
-        )
-
+        );
       }
     },
     {
-      headerName: t('course_status.assessment'),
+      headerName: t("course_status.assessment"),
       field: "assessment_performance",
-      renderCell: (params) =>{
+      renderCell: params => {
         return `${params.value}%`;
       }
     },
     {
-      headerName: t('course_status.experience'),
+      headerName: t("course_status.experience"),
       field: "experience_performance",
-      renderCell: (params) =>{
+      renderCell: params => {
         return `${params.value}%`;
       }
     }
@@ -103,11 +102,11 @@ export default function UserCourseList(props : Props) {
   const courseList =
     null != props.coursesList ? (
       <DataGrid
-        isCellEditable={() => false }
+        isCellEditable={() => false}
         columns={courseColumns}
-        getRowId={(row) =>{
+        getRowId={row => {
           return `${row.number}-${row.id}`;
-         }}
+        }}
         rows={props.coursesList}
         slots={{
           toolbar: StandardListToolbar
@@ -118,8 +117,7 @@ export default function UserCourseList(props : Props) {
           }
         }}
         pageSizeOptions={[5, 10, 100]}
-        />
-
+      />
     ) : (
       "The course data is loading"
     );
@@ -131,4 +129,3 @@ export default function UserCourseList(props : Props) {
     </Paper>
   );
 }
-

@@ -249,14 +249,14 @@ export default function ProjectDataAdmin(props) {
       />
 
       <Typography>All dates shown in {courseTimezone} timezone.</Typography>
-      <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={'en-us'}>
+      <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={"en-us"}>
         <DatePicker
           format="MM/dd/yyyy"
           label={t("start_date_lbl")}
           value={projectStartDate}
           onChange={setProjectStartDate}
-          error={Boolean(messages['start_date'])}
-          helperText={messages['start_date']}
+          error={Boolean(messages["start_date"])}
+          helperText={messages["start_date"]}
           slot={{
             TextField: TextField
           }}
@@ -275,8 +275,8 @@ export default function ProjectDataAdmin(props) {
           label={t("end_date_lbl")}
           value={projectEndDate}
           onChange={setProjectEndDate}
-          error={Boolean(messages['end_date'])}
-          helperText={messages['end_date']}
+          error={Boolean(messages["end_date"])}
+          helperText={messages["end_date"]}
           renderInput={props => <TextField id="project_end_date" {...props} />}
           slot={{
             TextField: TextField

@@ -13,7 +13,6 @@ class Experience < ApplicationRecord
   before_create :anonymize
   before_save :reset_notification, :end_date_optimization
 
-
   scope :active_at, lambda { |date|
                       where(active: true)
                         .where('experiences.start_date <= ? AND experiences.end_date >= ?', date, date)
@@ -56,14 +55,14 @@ class Experience < ApplicationRecord
     destroy_url = nil
     sim_url = helpers.next_experience_path(experience_id: id)
 
-    if user_role == 'instructor'
+    if 'instructor' == user_role
       edit_url = helpers.edit_experience_path(self)
       destroy_url = helpers.experience_path(self)
       sim_url = nil
     end
 
-    if (active && user_role == 'enrolled_student') ||
-       (user_role == 'instructor')
+    if (active && 'enrolled_student' == user_role) ||
+       ('instructor' == user_role)
       events << {
         type: 'experience',
         id: "exp_in_#{id}",
@@ -171,10 +170,10 @@ class Experience < ApplicationRecord
         exp = include_ids - narrative_counts.keys
         world = exp - Reaction.group(:narrative_id).count.keys
 
-        i = Narrative.includes(scenario: :behavior).joins(:reactions).where('scenario_id NOT IN (?)',
-                                                                            scenario_counts.keys)
-                     .where(reactions: { narrative_id: exp })
-                     .group(:narrative_id).count
+        Narrative.includes(scenario: :behavior).joins(:reactions).where('scenario_id NOT IN (?)',
+                                                                        scenario_counts.keys)
+                 .where(reactions: { narrative_id: exp })
+                 .group(:narrative_id).count
         narrative = if include_ids.empty?
                       Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where('id NOT IN (?)', narrative_counts.keys).sample
@@ -206,11 +205,11 @@ class Experience < ApplicationRecord
   end
 
   def get_narrative_counts
-    reactions.group(:narrative).count.to_a.sort! { |x, y| x[1] <=> y[1] }
+    reactions.group(:narrative).count.to_a.sort_by! { |a| a[1] }
   end
 
   def get_scenario_counts
-    reactions.joins(narrative: :scenario).group(:scenario_id).count.to_a.sort! { |x, y| x[1] <=> y[1] }
+    reactions.joins(narrative: :scenario).group(:scenario_id).count.to_a.sort_by! { |a| a[1] }
   end
 
   def self.inform_instructors

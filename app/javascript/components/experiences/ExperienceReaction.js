@@ -16,7 +16,7 @@ import Grid from "@mui/material/Grid";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormLabel from "@mui/material/FormLabel";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 export default function ExperienceReaction(props) {
   const [t, i18n] = useTranslation("experiences");
   const [behaviorId, setBehaviorId] = useState(0);
@@ -81,11 +81,7 @@ export default function ExperienceReaction(props) {
         </Grid>
         <Grid item xs={12}>
           <Suspense fallback={<Skeleton variant="rectangular" />}>
-            <p>
-              { parse(
-                t( 'reaction.instructions')
-              )}
-            </p>
+            <p>{parse(t("reaction.instructions"))}</p>
           </Suspense>
         </Grid>
         <Grid item xs={12}>
@@ -107,9 +103,7 @@ export default function ExperienceReaction(props) {
                       label={behavior.name}
                       control={<Radio />}
                     />
-                    <p>
-                      {parse( behavior.description)}
-                    </p>
+                    <p>{parse(behavior.description)}</p>
                   </React.Fragment>
                 );
               })}

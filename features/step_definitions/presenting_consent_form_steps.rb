@@ -5,7 +5,7 @@ require 'faker'
 
 Given(/^reset time clock to now$/) do
   travel_back
-  if Capybara.current_driver != :rack_test
+  if :rack_test != Capybara.current_driver
     @dest_date = nil
     click_button 'resetTimeBtn' if has_button?('resetTimeBtn')
   end
@@ -17,7 +17,7 @@ Given(/^there is a global consent form$/) do
     user: User.find(1)
   )
   @consent_form.pdf.attach(io: File.open(
-    Rails.root.join('db', 'ConsentForms_consolidated.pdf')
+    Rails.root.join('db/ConsentForms_consolidated.pdf')
   ),
                            filename: 'cf.pdf',
                            content_type: 'application/pdf')
@@ -31,7 +31,7 @@ Given(/^the course has a consent form$/) do
     name: Faker::Nation.nationality
   )
   @consent_form.pdf.attach(io: File.open(
-    Rails.root.join('db', 'ConsentForms_consolidated.pdf')
+    Rails.root.join('db/ConsentForms_consolidated.pdf')
   ),
                            filename: 'cf.pdf',
                            content_type: 'application/pdf')
@@ -74,10 +74,10 @@ Given(/^the user is the "(.*?)" user in the group$/) do |ordinal|
 end
 
 Given(/^the consent form "(.*?)" been presented to the user$/) do |has_or_has_not|
-  presented = has_or_has_not == 'has'
-  consent_log = ConsentLog.create(presented:,
-                                  user_id: @user.id,
-                                  consent_form_id: @consent_form.id)
+  presented = 'has' == has_or_has_not
+  ConsentLog.create(presented:,
+                    user_id: @user.id,
+                    consent_form_id: @consent_form.id)
 end
 
 Then(/^user should not see a consent form listed for the open project$/) do
@@ -86,7 +86,7 @@ end
 
 When(/^the user visits the index$/) do
   visit '/'
-  if !@dest_date.nil? && Capybara.current_driver != :rack_test && current_url.start_with?('http')
+  if !@dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?('http')
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end
@@ -100,7 +100,7 @@ Given(/^the consent form started "([^"]*)" and ends "([^"]*)"$/) do |start_date,
 end
 
 Given(/^the consent form "([^"]*)" active$/) do |is_active|
-  @consent_form.active = is_active == 'is'
+  @consent_form.active = 'is' == is_active
   @consent_form.save
   log @consent_form.errors.full_messages unless @consent_form.errors.empty?
 end

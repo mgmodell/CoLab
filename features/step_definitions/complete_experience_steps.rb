@@ -9,7 +9,7 @@ Then(/^the user clicks the link to the experience$/) do
   begin
     # Try to click regularly
     find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@experience.name}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
     # If that gives an error, it's because of the readability popup
     # We can click either of the items this finds because they are effectively the same
     find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@experience.name}')]")[0].click
@@ -35,7 +35,7 @@ Then(/^the user presses "([^"]*)"$/) do |linkOrButtonName|
   click_link_or_button linkOrButtonName
 rescue Capybara::ElementNotFound => e
   puts linkOrButtonName
-  puts e.to_s
+  puts e
   puts e.full_messages
 end
 
@@ -100,7 +100,7 @@ Then(/^the user completes a week$/) do
   step step_text
   step_text = 'they enter "FUBAR" in extant field "What behavior did you see?"'
   # Only enter behavior name if 'Other' is selected
-  step step_text if behavior.name_en == 'Other'
+  step step_text if 'Other' == behavior.name_en
   step_text = 'the user presses "Save and continue"'
   step step_text
   wait_for_render
@@ -197,7 +197,7 @@ Given(/^the user enrolls in a new course$/) do
   )
   @course.save
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
+  @course.get_name(true).length.should be.positive?
   @course.rosters.new(
     user: @user,
     role: Roster.roles[:enrolled_student]

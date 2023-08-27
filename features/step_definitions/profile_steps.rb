@@ -51,7 +51,7 @@ When(/^the user logs in$/) do
   click_link_or_button 'I understand' if has_content? 'I understand'
 
   # Set custom time if warranted
-  if Capybara.current_driver != :rack_test && !@dest_date.nil?
+  if :rack_test != Capybara.current_driver && !@dest_date.nil?
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end

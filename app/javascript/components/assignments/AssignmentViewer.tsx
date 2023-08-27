@@ -17,8 +17,8 @@ import { IRubricData } from "./RubricViewer";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { DateTime, Settings } from 'luxon';
-import parse from 'html-react-parser';
+import { DateTime, Settings } from "luxon";
+import parse from "html-react-parser";
 
 import { useTranslation } from "react-i18next";
 import Skeleton from "@mui/material/Skeleton";
@@ -37,7 +37,7 @@ interface ISubmissionCondensed {
 }
 
 interface IAssignment {
-  id: number|null,
+  id: number | null;
   name: string;
   description: string;
   startDate: DateTime;
@@ -51,17 +51,16 @@ interface IAssignment {
 
 const CLEAN_ASSIGNMENT: IAssignment = {
   id: null,
-  name: '',
-  description: '',
-  startDate: DateTime.local( ),
-  endDate: DateTime.local( ),
+  name: "",
+  description: "",
+  startDate: DateTime.local(),
+  endDate: DateTime.local(),
   textSub: false,
   linkSub: false,
   fileSub: false,
   submissions: [],
   rubric: CLEAN_RUBRIC
-}
-
+};
 
 export default function AssignmentViewer(props) {
   const endpointSet = "assignment";
@@ -75,36 +74,38 @@ export default function AssignmentViewer(props) {
   const { assignmentId } = useParams();
 
   const dispatch = useDispatch();
-  const [t, i18n] = useTranslation( `${endpointSet}s` );
+  const [t, i18n] = useTranslation(`${endpointSet}s`);
   const navigate = useNavigate();
 
-  const [curTab, setCurTab] = useState( 'overview' );
+  const [curTab, setCurTab] = useState("overview");
 
-  const [submissions, setSubmissions] = useState( [] );
+  const [submissions, setSubmissions] = useState([]);
 
-  enum AssignmentActions{
-    setAssignment = 'SET ASSIGNMENT',
-    setValue = 'SET VALUE'
+  enum AssignmentActions {
+    setAssignment = "SET ASSIGNMENT",
+    setValue = "SET VALUE"
   }
-  
-  const assignmentReducer = (state, action) =>{
-    switch(action.type){
+
+  const assignmentReducer = (state, action) => {
+    switch (action.type) {
       case AssignmentActions.setAssignment:
-        return {...action.assignment as IAssignment};
+        return { ...(action.assignment as IAssignment) };
       case AssignmentActions.setValue:
-        return {...state, [action.field]: action.value};
+        return { ...state, [action.field]: action.value };
       default:
         throw new Error();
     }
   };
-  const [assignment, modifyAssignment] = React.useReducer( assignmentReducer, CLEAN_ASSIGNMENT );
+  const [assignment, modifyAssignment] = React.useReducer(
+    assignmentReducer,
+    CLEAN_ASSIGNMENT
+  );
 
   useEffect(() => {
     if (endpointsLoaded) {
       loadAssignment();
     }
   }, [endpointsLoaded]);
-
 
   //Retrieve the latest data
   const loadAssignment = () => {
@@ -115,10 +116,14 @@ export default function AssignmentViewer(props) {
         const data = response.data;
 
         //Process, clean and set the data received
-        const receivedAssignment:IAssignment = {...data.assignment};
-        let receivedDate = DateTime.fromISO( data.assignment.start_date ).setZone( Settings.timezone );
+        const receivedAssignment: IAssignment = { ...data.assignment };
+        let receivedDate = DateTime.fromISO(data.assignment.start_date).setZone(
+          Settings.timezone
+        );
         receivedAssignment.startDate = receivedDate;
-        receivedDate = DateTime.fromISO( data.assignment.end_date ).setZone( Settings.timezone );
+        receivedDate = DateTime.fromISO(data.assignment.end_date).setZone(
+          Settings.timezone
+        );
         receivedAssignment.endDate = receivedDate;
         receivedAssignment.rubric = data.rubric;
         receivedAssignment.submissions = data.submissions;
@@ -132,75 +137,73 @@ export default function AssignmentViewer(props) {
 
         modifyAssignment({
           type: AssignmentActions.setAssignment,
-          assignment: receivedAssignment });
-        
+          assignment: receivedAssignment
+        });
       })
       .catch(error => {
         console.log("error", error);
       })
-      .finally(()=>{
+      .finally(() => {
         dispatch(endTask());
-      })
-      ;
+      });
   };
 
-  const handleTabChange = (event: React.SyntheticEvent, newTab: string ) =>{
-    setCurTab( newTab );
-  }
+  const handleTabChange = (event: React.SyntheticEvent, newTab: string) => {
+    setCurTab(newTab);
+  };
 
   let output = null;
   const curDate = new Date();
   if (!endpointsLoaded) {
-    output = ( <Skeleton variant="rectangular" /> );
+    output = <Skeleton variant="rectangular" />;
   } else {
     output = (
       <TabContext value={curTab}>
-        <TabList onChange={handleTabChange} >
-          <Tab label='Overview' value='overview' />
-          <Tab label='Responses' value='responses' disabled={
-            assignment.startDate > curDate || assignment.endDate < curDate
-            } />
-          <Tab label='Progress' value='progress' disabled={submissions.length < 1 || assignment.startDate < curDate} />
+        <TabList onChange={handleTabChange}>
+          <Tab label="Overview" value="overview" />
+          <Tab
+            label="Responses"
+            value="responses"
+            disabled={
+              assignment.startDate > curDate || assignment.endDate < curDate
+            }
+          />
+          <Tab
+            label="Progress"
+            value="progress"
+            disabled={submissions.length < 1 || assignment.startDate < curDate}
+          />
         </TabList>
-        <TabPanel value='overview'>
+        <TabPanel value="overview">
           <Grid container spacing={1} columns={70}>
             <Grid item xs={15}>
-              <Typography variant="h6">{t('name' )}:</Typography>
+              <Typography variant="h6">{t("name")}:</Typography>
             </Grid>
             <Grid item xs={55}>
-              <Typography>
-                {assignment.name}
-              </Typography>
+              <Typography>{assignment.name}</Typography>
             </Grid>
             <Grid item xs={15}>
-              <Typography variant="h6">{t('status.brief')}:</Typography>
+              <Typography variant="h6">{t("status.brief")}:</Typography>
             </Grid>
-            <Grid>
-              {parse(assignment.description)}
-            </Grid>
+            <Grid>{parse(assignment.description)}</Grid>
             <Grid item xs={70}>
-              <Typography variant="h6">
-                {t('status.eval_criteria')}:
-              </Typography>
+              <Typography variant="h6">{t("status.eval_criteria")}:</Typography>
             </Grid>
-            <RubricViewer rubric={assignment.rubric } />
+            <RubricViewer rubric={assignment.rubric} />
           </Grid>
         </TabPanel>
-        <TabPanel value='responses'>
+        <TabPanel value="responses">
           <AssignmentSubmission
             assignment={assignment}
             reloadCallback={loadAssignment}
-            />
+          />
         </TabPanel>
-        <TabPanel value='progress'>
-          Working on it
-        </TabPanel>
+        <TabPanel value="progress">Working on it</TabPanel>
       </TabContext>
-
     );
   }
 
   return output;
-};
+}
 
-export {IAssignment, ISubmissionCondensed, CLEAN_ASSIGNMENT};
+export { IAssignment, ISubmissionCondensed, CLEAN_ASSIGNMENT };

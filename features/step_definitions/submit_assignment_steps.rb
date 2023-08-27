@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'faker'
 
 Given('the assignment {string} accept {string}') do |does_or_doesnt, sub_type|
@@ -46,7 +48,7 @@ Given('the course is shifted {int} {string} into the {string}') do |qty, units, 
     true.should be false
   end
 
-  shift = shift * -1 unless direction.downcase == 'future'
+  shift *= -1 unless direction.casecmp('future').zero?
 
   ActiveRecord::Base.transaction do
     @course.start_date += shift
@@ -78,19 +80,17 @@ Given('the course is shifted {int} {string} into the {string}') do |qty, units, 
     end
     @course.save # validate: false
     true.should be false if @course.errors.present?
-
   end
-
 end
 
-Then('the user opens the assignment task') do 
+Then('the user opens the assignment task') do
   wait_for_render
   step 'the user switches to the "Task View" tab'
   find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").hover
   begin
     # Try to click regularly
     find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
     # If that gives an error, it's because of the readability popup
     # We can click either of the items this finds because they are effectively the same
     find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@assignment.name}')]")[0].click
@@ -104,13 +104,13 @@ Then('the user does not see the assignment task') do
   find_all(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").size.should be 0
 end
 
-Then('the user opens the assignment history item') do 
+Then('the user opens the assignment history item') do
   wait_for_render
   find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").hover
   begin
     # Try to click regularly
     find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@assignment.name}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
     # If that gives an error, it's because of the readability popup
     # We can click either of the items this finds because they are effectively the same
     find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@assignment.name}')]")[0].click
@@ -147,7 +147,6 @@ Then('the shown rubric matches the assignment rubric') do
     page.should have_content criterium.l3_description unless criterium.l3_description.nil?
     page.should have_content criterium.l4_description unless criterium.l4_description.nil?
     page.should have_content criterium.l5_description unless criterium.l5_description.nil?
-
   end
 end
 
@@ -160,18 +159,17 @@ Then('the {string} tab {string} enabled') do |tab_name, enabled|
   else
     true.should be false
   end
-  (tab['disabled'] == 'true').should be 'is' != enabled
+  ('true' == tab['disabled']).should be 'is' != enabled
 end
 
 Then('the user creates a new submission') do
-  find( :xpath, "//button[text()='New response']")
+  find(:xpath, "//button[text()='New response']")
   @submission = Submission.new(
     sub_text: '',
     sub_link: '',
     assignment_id: @assignment.id,
     rubric_id: @assignment.rubric_id,
     user_id: @user.id
-
   )
 end
 
@@ -183,11 +181,11 @@ Then('the user enters a {string} submission') do |submission_type|
     sub_text_web = ''
     sub_text_db = ''
 
-    (rand(6) + 2 ).times do
+    rand(2..7).times do
       para = Faker::Lorem.paragraph
-      sub_text_db = sub_text_db + "<p>#{para}</p>"
+      sub_text_db += "<p>#{para}</p>"
       send_keys para, :enter
-      sub_text_web = sub_text_web + "#{para}\n"
+      sub_text_web += "#{para}\n"
     end
     # send_keys sub_text_web, :backspace
     send_keys :backspace
@@ -201,18 +199,18 @@ Then('the user enters a {string} submission') do |submission_type|
   when 'combo'
     entered = 0
     # Text
-    if rand( 2 ) == 1
-      entered = entered + 1
+    if 1 == rand(2)
+      entered += 1
       find(:xpath, "//div[@class='rdw-editor-main']").click
 
       sub_text_web = ''
       sub_text_db = ''
 
-      (rand(6) + 2 ).times do
+      rand(2..7).times do
         para = Faker::Lorem.paragraph
-        sub_text_db = sub_text_db + "<p>#{para}</p>"
+        sub_text_db += "<p>#{para}</p>"
         send_keys para, :enter
-        sub_text_web = sub_text_web + "#{para}\n"
+        sub_text_web += "#{para}\n"
       end
       # send_keys sub_text_web, :backspace
       send_keys :backspace
@@ -221,13 +219,12 @@ Then('the user enters a {string} submission') do |submission_type|
       @submission.sub_text = '<p></p>'
     end
     # Links
-    if entered > 0 || rand( 2 ) == 1
-      entered = entered + 1
+    if entered.positive? || 1 == rand(2)
       find(:xpath, "//input[@id='sub_link']").click
       @submission.sub_link = Faker::Internet.url
       send_keys @submission.sub_link
     end
-  else  
+  else
     pending # Write code here that turns the phrase above into concrete actions
   end
 end
@@ -235,11 +232,11 @@ end
 Then('the assignment has {int} {string} submission') do |qty, state|
   case state
   when 'draft'
-    Submission.where( submitted: nil ).where(withdrawn: nil).size.should eq qty
+    Submission.where(submitted: nil).where(withdrawn: nil).size.should eq qty
   when 'submitted', 'active'
-    Submission.where.not( submitted: nil ).where(withdrawn: nil).size.should eq qty
+    Submission.where.not(submitted: nil).where(withdrawn: nil).size.should eq qty
   when 'withdrawn'
-    Submission.where.not( submitted: nil).where.not( withdrawn: nil ).size.should eq qty
+    Submission.where.not(submitted: nil).where.not(withdrawn: nil).size.should eq qty
   else
     puts "No '#{state}' assignment state accounted for"
     pending
@@ -257,11 +254,10 @@ Then('the {string} db submission data is accurate') do |placement|
   @check_submission = submission
   @submission.assignment_id.should eq @check_submission.assignment_id
 
-  @submission.sub_text.should eq @check_submission.sub_text.gsub(/\n/,'')
+  @submission.sub_text.should eq @check_submission.sub_text.delete("\n")
   @submission.sub_link.should eq @check_submission.sub_link
   @submission.rubric_id.should eq @check_submission.rubric_id
   @submission.user_id.should eq @check_submission.user_id
-
 end
 
 Then('the submission has no group') do
@@ -274,15 +270,14 @@ end
 
 Given('the assignment already has {int} submission from the user') do |count|
   count.times do |index|
-
     sub_text_db = ''
-    (rand(6) + 2 ).times do
+    rand(2..7).times do
       para = Faker::Lorem.paragraph
-      sub_text_db = sub_text_db + "<p>#{para}</p>"
+      sub_text_db += "<p>#{para}</p>"
     end
 
     submission = @assignment.submissions.new(
-      submitted: (count - index ).hours.ago,
+      submitted: (count - index).hours.ago,
       sub_text: sub_text_db,
       user: @user,
       rubric: @assignment.rubric
@@ -296,7 +291,7 @@ end
 
 Given('today is between the first assignment deadline and close') do
   days_between = (@assignment.end_date - @assignment.start_date) - 1
-  delta = rand( 1..days_between)
+  delta = rand(1..days_between)
   travel_to @assignment.start_date + delta
 end
 
@@ -305,13 +300,12 @@ Given('today is after the final deadline') do
 end
 
 Then('the user withdraws submission {int}') do |assignment_ord|
-  target_sub = find( :xpath, "//div[@role='row' and @data-rowindex='#{assignment_ord-1}']" +
-                              "/div[@data-field='submitted']/div" )
+  target_sub = find(:xpath, "//div[@role='row' and @data-rowindex='#{assignment_ord - 1}']" \
+                              "/div[@data-field='submitted']/div")
   target_sub.click
   wait_for_render
   click_link_or_button 'Withdraw revision'
   wait_for_render
-
 end
 
 Given('submission {int} {string} graded') do |_int, _string|
@@ -320,11 +314,11 @@ Given('submission {int} {string} graded') do |_int, _string|
 end
 
 Then('the user {string} withdraw submission {int}') do |can, assignment_ord|
-  target_sub = find( :xpath, "//div[@role='row' and @data-rowindex='#{assignment_ord-1}']" +
-                              "/div[@data-field='submitted']/div" )
+  target_sub = find(:xpath, "//div[@role='row' and @data-rowindex='#{assignment_ord - 1}']" \
+                              "/div[@data-field='submitted']/div")
   target_sub.click
   wait_for_render
-  button_count = find_all( :xpath, "//button[text()='Withdraw revision' and not(@disabled)]").size
+  button_count = find_all(:xpath, "//button[text()='Withdraw revision' and not(@disabled)]").size
   case can.downcase
   when 'can'
     button_count.should eq 1
@@ -334,21 +328,20 @@ Then('the user {string} withdraw submission {int}') do |can, assignment_ord|
     puts "'#{can}' is not a valid option"
     true.should be false
   end
-
 end
 
 Then('the {string} button is {string}') do |btn_name, state|
   case state
   when 'enabled'
-    button_count = find_all( :xpath, "//button[text()='#{btn_name}' and not(@disabled)]").size
+    button_count = find_all(:xpath, "//button[text()='#{btn_name}' and not(@disabled)]").size
     button_count.should eq 1
 
   when 'disabled'
-    button_count = find_all( :xpath, "//button[text()='#{btn_name}' and @disabled]").size
+    button_count = find_all(:xpath, "//button[text()='#{btn_name}' and @disabled]").size
     button_count.should eq 1
 
   when 'hidden'
-    button_count = find_all( :xpath, "//button[text()='#{btn_name}']").size
+    button_count = find_all(:xpath, "//button[text()='#{btn_name}']").size
     button_count.should eq 0
   else
     puts "State '#{state}' not yet handled"

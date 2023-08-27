@@ -34,12 +34,11 @@ export default function AppInit(props: Props) {
     }, 6000);
   }, []);
 
-  return(
-    <Suspense fallback={<Skeleton variant={'rectangular'} /> } >
+  return (
+    <Suspense fallback={<Skeleton variant={"rectangular"} />}>
       {props.children}
-
     </Suspense>
-  )
+  );
 }
 
 AppInit.propTypes = {

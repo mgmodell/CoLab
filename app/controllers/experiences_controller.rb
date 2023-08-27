@@ -275,7 +275,7 @@ class ExperiencesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_experience
-    if params[:id].blank? || params[:id] == 'new'
+    if params[:id].blank? || 'new' == params[:id]
       course = Course.find(params[:course_id])
       e_test = course.experiences.new
       e_test.start_date = course.start_date

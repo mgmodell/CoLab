@@ -99,9 +99,9 @@ class HomeController < ApplicationController
         consentLogSaveUrl: consent_log_path(id: '')
       }
       ep_hash[:assignment] = {
-        statusUrl: assignment_status_path(id: '' ),
-        submissionUrl: submission_path( id: '' ),
-        submissionWithdrawalUrl: submission_withdraw_path( id: '' )
+        statusUrl: assignment_status_path(id: ''),
+        submissionUrl: submission_path(id: ''),
+        submissionWithdrawalUrl: submission_withdraw_path(id: '')
       }
 
       if current_user.is_admin? || current_user.is_instructor?
@@ -141,8 +141,8 @@ class HomeController < ApplicationController
           baseUrl: rubrics_path
         }
         ep_hash[:critique] = {
-          baseUrl: assignment_critiques_path(id: '' ),
-          showUrl: critique_assignment_path( submission_id: '' )
+          baseUrl: assignment_critiques_path(id: ''),
+          showUrl: critique_assignment_path(submission_id: '')
         }
         ep_hash[:consent_form] = {
           baseUrl: consent_forms_path,
@@ -172,7 +172,7 @@ class HomeController < ApplicationController
   end
 
   def get_lookups
-    lookups = {
+    {
       behaviors: Behavior.all.collect do |behavior|
         {
           id: behavior.id,
@@ -503,7 +503,7 @@ class HomeController < ApplicationController
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
     e.start_time = 3.weeks.ago
-    e.close_date = Date.today.end_of_day
+    e.close_date = Time.zone.today.end_of_day
     e.next_date = e.close_date
     e.link = "/review_candidates/#{e.id}"
     e.instructor_task = true

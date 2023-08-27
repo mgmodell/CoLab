@@ -11,11 +11,11 @@ const RemoteAutosuggest = React.lazy(() => import("./RemoteAutosuggest"));
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import CandidateReviewListToolbar from "./CandidateReviewListToolbar";
-import useResizeObserver from 'resize-observer-hook';
+import useResizeObserver from "resize-observer-hook";
 import { DataTable } from "primereact/datatable";
 
 import { Column } from "primereact/column";
@@ -45,7 +45,7 @@ export default function CandidatesReviewTable(props) {
     state => state.context.status.endpointsLoaded
   );
   const { bingoGameId } = useParams();
-  const [ref, chartWidth, height] = useResizeObserver( );
+  const [ref, chartWidth, height] = useResizeObserver();
 
   const paginatorLeft = <Button type="button" icon="pi pi-refresh" text />;
   const paginatorRight = <Button type="button" icon="pi pi-download" text />;
@@ -64,10 +64,8 @@ export default function CandidatesReviewTable(props) {
   const [uniqueConcepts, setUniqueConcepts] = useState(0);
   const [acceptableUniqueConcepts, setAcceptableUniqueConcepts] = useState(0);
 
-
   const dispatch = useDispatch();
   const [dirty, setDirty] = useState(false);
-
 
   useEffect(() => {
     setDirty(true);
@@ -85,7 +83,6 @@ export default function CandidatesReviewTable(props) {
       getData();
     }
   }, [endpointStatus]);
-
 
   const setCompleted = (item, options) => {
     //This use feedbackOpts from state
@@ -130,8 +127,8 @@ export default function CandidatesReviewTable(props) {
 
     setUniqueConcepts(unique_concepts);
     setAcceptableUniqueConcepts(acceptable_unique_concepts);
-    console.log('progress', Math.round((completed / candidates.length) * 100));
-    console.log( completed, candidates.length );
+    console.log("progress", Math.round((completed / candidates.length) * 100));
+    console.log(completed, candidates.length);
     setProgress(Math.round((completed / candidates.length) * 100));
   };
 
@@ -153,7 +150,7 @@ export default function CandidatesReviewTable(props) {
           credit: 0,
           critique: "empty",
           id: 0,
-          name: t('review.not_set_opt')
+          name: t("review.not_set_opt")
         });
         setFeedbackOptions(data.feedback_opts);
 
@@ -175,7 +172,7 @@ export default function CandidatesReviewTable(props) {
 
         setCandidates(data.candidates);
 
-        setReviewStatus(t('review.data_loaded_msg'));
+        setReviewStatus(t("review.data_loaded_msg"));
         setDirty(false);
         dispatch(endTask());
         updateProgress();
@@ -188,14 +185,14 @@ export default function CandidatesReviewTable(props) {
   const saveFeedback = () => {
     setDirty(false);
     dispatch(startTask("saving"));
-    setReviewStatus(t('review.saving_msg'));
+    setReviewStatus(t("review.saving_msg"));
 
-    const url = 
+    const url =
       props.rootPath === undefined
         ? `${endpoints.reviewSaveUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.reviewSaveUrl}${bingoGameId}.json`;
 
-    console.log( 'reviewed', reviewComplete );
+    console.log("reviewed", reviewComplete);
     axios
       .patch(url, {
         candidates: candidates.filter(c => 0 < c.completed),
@@ -208,15 +205,14 @@ export default function CandidatesReviewTable(props) {
       })
       .catch(error => {
         const fail_data = new Object();
-        fail_data.notice = t('review.save_fail_msg');
+        fail_data.notice = t("review.save_fail_msg");
         fail_data.success = false;
         console.log("error");
         return fail_data;
       })
-      .finally(() =>{
+      .finally(() => {
         dispatch(endTask("saving"));
-      })
-      ;
+      });
   };
 
   const conceptSet = (id, value) => {
@@ -238,62 +234,71 @@ export default function CandidatesReviewTable(props) {
     setCandidates(candidates_temp);
   };
 
-  const optColumns : Array<ColumnMeta> = [
-    { field: 'number', header: '#', sortable: true, key: 'number' },
-    { field: 'completed', header: t('review.completed_col'), sortable: true, filterable: true,
-      body: (param) => { return 100 === param ? '*' : null },
-      key: 'completed'
+  const optColumns: Array<ColumnMeta> = [
+    { field: "number", header: "#", sortable: true, key: "number" },
+    {
+      field: "completed",
+      header: t("review.completed_col"),
+      sortable: true,
+      filterable: true,
+      body: param => {
+        return 100 === param ? "*" : null;
+      },
+      key: "completed"
     },
-    { field: 'user_id', header: t('review.submitter_col'), sortable: true, filterable: true,
+    {
+      field: "user_id",
+      header: t("review.submitter_col"),
+      sortable: true,
+      filterable: true,
 
-      body: (candidate) => { 
-                const user = getById(users, candidate.user_id);
-                const cl = getById(candidateLists, candidate.candidate_list_id);
-                if( undefined === user ){
-                  return null;
-                } else {
+      body: candidate => {
+        const user = getById(users, candidate.user_id);
+        const cl = getById(candidateLists, candidate.candidate_list_id);
+        if (undefined === user) {
+          return null;
+        } else {
+          const output = [
+            <div>
+              <a href={"mailto:" + user.email}>
+                {user.last_name},&nbsp;{user.first_name}
+              </a>
+            </div>
+          ];
+          if (cl.is_group) {
+            output.push(
+              <em>
+                {"\n"}
+                (on behalf of {getById(groups, cl.group_id).name})
+              </em>
+            );
+          }
+          return output;
+        }
+      }
+    }
+  ];
+  const [visibleColumns, setVisibleColumns] = useState(optColumns.slice(0, 2));
 
-                const output = [
-                  <div>
-                    <a href={"mailto:" + user.email}>
-                      {user.last_name},&nbsp;{user.first_name}
-                    </a>
-                  </div>
-                ];
-                if (cl.is_group) {
-                  output.push(
-                    <em>
-                      {"\n"}
-                      (on behalf of {getById(groups, cl.group_id).name})
-                    </em>
-                  );
-                }
-                return output;
-                }
-              }
-    },
-  ]
-  const [visibleColumns, setVisibleColumns] = useState( optColumns.slice(0,2) );
-
-  const toolbarHdr = <CandidateReviewListToolbar 
-    progress={progress}
-    uniqueConcepts={uniqueConcepts}
-    acceptableUniqueConcepts={acceptableUniqueConcepts}
-    dirty={dirty}
-    reviewStatus={reviewStatus}
-    reviewComplete={reviewComplete}
-    setReviewCompleteFunc={setReviewComplete}
-    saveFeedbackFunc={saveFeedback}
-    reloadFunc={getData}
-    optColumns={optColumns}
-    visibleColumns={visibleColumns}
-    setVisibleColumnsFunc={setVisibleColumns}
-  />
+  const toolbarHdr = (
+    <CandidateReviewListToolbar
+      progress={progress}
+      uniqueConcepts={uniqueConcepts}
+      acceptableUniqueConcepts={acceptableUniqueConcepts}
+      dirty={dirty}
+      reviewStatus={reviewStatus}
+      reviewComplete={reviewComplete}
+      setReviewCompleteFunc={setReviewComplete}
+      saveFeedbackFunc={saveFeedback}
+      reloadFunc={getData}
+      optColumns={optColumns}
+      visibleColumns={visibleColumns}
+      setVisibleColumnsFunc={setVisibleColumns}
+    />
+  );
 
   return (
-    <ScrollPanel >
-
-
+    <ScrollPanel>
       <WorkingIndicator identifier="waiting" />
 
       {bingoGame != null ? (
@@ -314,75 +319,83 @@ export default function CandidatesReviewTable(props) {
             {t("description")}:
           </Grid>
           <Grid item xs={12} sm={9}>
-            <p>
-              {parse( bingoGame.description ) }
-            </p>
+            <p>{parse(bingoGame.description)}</p>
           </Grid>
         </Grid>
       ) : (
         <Skeleton height={20} />
       )}
-        <DataTable value={candidates} resizableColumns tableStyle={{minWidth: '50rem'}}
-          header={toolbarHdr} reorderableColumns
-          paginator rows={5} rowsPerPageOptions={[5, 10, 20, candidates.length]} paginatorDropdownAppendTo={'self'}
-          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-          currentPageReportTemplate="{first} to {last} of {totalRecords}" paginatorLeft={paginatorLeft} paginatorRight={paginatorRight}
-          dataKey="id"
-        >
-          {visibleColumns.map( (col) => (
-            <Column {...col} />
-          ))}
-          <Column field="term" header={t('review.term_col')} />
-          <Column field="definition" header={t('review.definition_col')} />
-          <Column field="candidate_feedback_id" header={t('review.feedback_col')}
-            key='id'
-              body={(candidate)=>{
-                return (
-                  <React.Fragment>
-                    <input type={'hidden'} id={`feedback_4_${candidate.id}`}/>
-                    <Dropdown value={candidate.candidate_feedback_id || 0}
-                      onChange={(event)=>{
-                        feedbackSet(candidate.id, event.target.value);
-                      }}
-                      options={feedbackOptions}
-                      optionLabel="name"
-                      optionValue="id"
-                    />
-                  </React.Fragment>
-                );
+      <DataTable
+        value={candidates}
+        resizableColumns
+        tableStyle={{ minWidth: "50rem" }}
+        header={toolbarHdr}
+        reorderableColumns
+        paginator
+        rows={5}
+        rowsPerPageOptions={[5, 10, 20, candidates.length]}
+        paginatorDropdownAppendTo={"self"}
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="{first} to {last} of {totalRecords}"
+        paginatorLeft={paginatorLeft}
+        paginatorRight={paginatorRight}
+        dataKey="id"
+      >
+        {visibleColumns.map(col => (
+          <Column {...col} />
+        ))}
+        <Column field="term" header={t("review.term_col")} />
+        <Column field="definition" header={t("review.definition_col")} />
+        <Column
+          field="candidate_feedback_id"
+          header={t("review.feedback_col")}
+          key="id"
+          body={candidate => {
+            return (
+              <React.Fragment>
+                <input type={"hidden"} id={`feedback_4_${candidate.id}`} />
+                <Dropdown
+                  value={candidate.candidate_feedback_id || 0}
+                  onChange={event => {
+                    feedbackSet(candidate.id, event.target.value);
+                  }}
+                  options={feedbackOptions}
+                  optionLabel="name"
+                  optionValue="id"
+                />
+              </React.Fragment>
+            );
+          }}
+        />
+        <Column
+          field="concept_id"
+          header={t("review.concept_col")}
+          body={candidate => {
+            let output = <div>{t("review.none_msg")}</div>;
+            //const candidate = getById(candidates, params.row.id);
+            const feedback = getById(
+              feedbackOptions,
+              candidate.candidate_feedback_id || 0
+            );
 
-              }}
-              />
-          <Column field='concept_id' header={t('review.concept_col')}
-              body={(candidate)=>{
-                let output = <div>{t('review.none_msg' )}</div>
-                //const candidate = getById(candidates, params.row.id);
-                const feedback = getById(
-                  feedbackOptions,
-                  candidate.candidate_feedback_id || 0
-                );
-                
-                if (feedback.id !== 0 && "term_problem" !== feedback.critique) {
-                  output = (
-                    <RemoteAutosuggest
-                      inputLabel={t('concept')}
-                      itemId={candidate.id}
-                      enteredValue={candidate.concept.name}
-                      controlId={"concept_4_" + candidate.id}
-                      dataUrl={endpoints.conceptUrl}
-                      setFunction={conceptSet}
-                      rootPath={props.rootPath}
-                    />
-                  );
-                }
-                return output;
-
-              }}
-          
-              />
-        </DataTable>
-
+            if (feedback.id !== 0 && "term_problem" !== feedback.critique) {
+              output = (
+                <RemoteAutosuggest
+                  inputLabel={t("concept")}
+                  itemId={candidate.id}
+                  enteredValue={candidate.concept.name}
+                  controlId={"concept_4_" + candidate.id}
+                  dataUrl={endpoints.conceptUrl}
+                  setFunction={conceptSet}
+                  rootPath={props.rootPath}
+                />
+              );
+            }
+            return output;
+          }}
+        />
+      </DataTable>
     </ScrollPanel>
   );
 }
-export {ColumnMeta};
+export { ColumnMeta };

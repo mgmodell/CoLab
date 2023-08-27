@@ -128,7 +128,7 @@ class SchoolsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_school
-    @school = if params[:id].blank? || params[:id] == 'new'
+    @school = if params[:id].blank? || 'new' == params[:id]
                 School.new(
                   timezone: current_user.timezone
                 )

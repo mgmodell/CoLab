@@ -41,9 +41,7 @@ export default function Demo(props) {
         path={`experience/:experienceId`}
         element={<Experience rootPath={`${props.rootPath}/api-backend`} />}
       />
-      <Route index element={
-          <HomeShell rootPath="demo" />
-        } />
+      <Route index element={<HomeShell rootPath="demo" />} />
     </Routes>
   );
 }

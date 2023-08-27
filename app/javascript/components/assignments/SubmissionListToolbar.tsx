@@ -14,23 +14,22 @@ import AddIcon from "@mui/icons-material/Add";
 import Tooltip from "@mui/material/Tooltip";
 
 type Props = {
-  selectSubmissionFunc: (selectedSub:string) => void;
-    
-}
+  selectSubmissionFunc: (selectedSub: string) => void;
+};
 
 export default function SubmissionListToolbar(props: Props) {
-  const category = 'assignment'
+  const category = "assignment";
   const { t } = useTranslation(`${category}s`);
   const navigate = useNavigate();
   return (
     <GridToolbarContainer>
       <GridToolbarDensitySelector />
       <GridToolbarFilterButton />
-      <Tooltip title={t('submissions.new_btn')}>
+      <Tooltip title={t("submissions.new_btn")}>
         <IconButton
           id="new_sub"
           onClick={event => {
-            props.selectSubmissionFunc( 'new' );
+            props.selectSubmissionFunc("new");
             // Pop up the AssignmentSubmission component in a dialog
           }}
           aria-label={t(`submissions.new_btn`)}

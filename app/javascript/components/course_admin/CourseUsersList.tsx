@@ -21,7 +21,12 @@ import IconButton from "@mui/material/IconButton";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import { DataGrid, GridRowModel, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridRowModel,
+  GridColDef,
+  GridRenderCellParams
+} from "@mui/x-data-grid";
 import CourseUsersListToolbar from "./CourseUsersListToolbar";
 import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
@@ -31,16 +36,16 @@ const BingoDataRepresentation = React.lazy(() =>
 );
 
 enum UserListType {
-  student = 'student',
-  instructor = 'instructor',
-  invited_student = 'invited_student',
-  assistant = 'assistant',
-  enrolled_student = 'enrolled_student',
-  requesting_student = 'requesting_student',
-  rejected_student = 'rejected_student',
-  dropped_student = 'dropped_student',
-  declined_student = 'declined_student'
-};
+  student = "student",
+  instructor = "instructor",
+  invited_student = "invited_student",
+  assistant = "assistant",
+  enrolled_student = "enrolled_student",
+  requesting_student = "requesting_student",
+  rejected_student = "rejected_student",
+  dropped_student = "dropped_student",
+  declined_student = "declined_student"
+}
 
 type StudentData = {
   assessment_performance: number;
@@ -60,12 +65,12 @@ type Props = {
   courseId: number;
   retrievalUrl: string;
   usersList: Array<StudentData>; //Need an interface for the users
-  usersListUpdateFunc: (usersList: Array<StudentData> ) => void;
+  usersListUpdateFunc: (usersList: Array<StudentData>) => void;
   userType: UserListType;
-  addMessagesFunc: ({}) => void
+  addMessagesFunc: ({}) => void;
 };
 
-export default function CourseUsersList(props :Props) {
+export default function CourseUsersList(props: Props) {
   const category = "courses";
   const { t } = useTranslation(category);
 
@@ -91,12 +96,11 @@ export default function CourseUsersList(props :Props) {
         }
         setProcRegReqPath(data.add_function.proc_self_reg + ".json");
         props.usersListUpdateFunc(data.users);
-
       })
       .catch(error => {
         console.log("error", error);
       })
-      .finally(()=>{
+      .finally(() => {
         dispatch(endTask());
       });
   };
@@ -126,185 +130,182 @@ export default function CourseUsersList(props :Props) {
     {
       headerName: t("email"),
       field: "email",
-      renderCell: (params: GridRenderCellParams) =>{
-          return <Link href={"mailto:" + params.value}>{params.value}</Link>;
+      renderCell: (params: GridRenderCellParams) => {
+        return <Link href={"mailto:" + params.value}>{params.value}</Link>;
       }
-
     },
     {
       headerName: t("bingo_progress"),
       field: "bingo_data",
-      renderCell: (params: GridRenderCellParams) =>{
+      renderCell: (params: GridRenderCellParams) => {
         const data = params.row.bingo_data;
 
-          return (
-              <BingoDataRepresentation
-                height={30}
-                width={70}
-                value={Number(params.value)}
-                scores={data}
-              />
-          );
-
+        return (
+          <BingoDataRepresentation
+            height={30}
+            width={70}
+            value={Number(params.value)}
+            scores={data}
+          />
+        );
       }
     },
     {
       headerName: t("assessment_progress"),
       field: "assessment_performance",
-      renderCell: (params: GridRenderCellParams) =>{
+      renderCell: (params: GridRenderCellParams) => {
         return `${params.value}%`;
       }
     },
     {
       headerName: t("experience_progress"),
       field: "experience_performance",
-      renderCell: (params: GridRenderCellParams) =>{
+      renderCell: (params: GridRenderCellParams) => {
         return `${params.value}%`;
       }
     },
     {
       headerName: t("status"),
       field: "status",
-      renderCell: (params: GridRenderCellParams) =>{
-        return iconForStatus( params.value );
+      renderCell: (params: GridRenderCellParams) => {
+        return iconForStatus(params.value);
       }
     },
     {
-      headerName: t('actions'),
+      headerName: t("actions"),
       field: "id",
       renderCell: (params: GridRenderCellParams) => {
-        const user = props.usersList.filter( user => {
+        const user = props.usersList.filter(user => {
           return params.id === user.id;
         })[0];
         const btns = [];
-          switch (user.status) {
-            case UserListType.invited_student:
-              btns.push(
-                <Tooltip key="re-send-invite" title={t('re-send_invitation')}>
-                  <IconButton
-                    aria-label={t('re-send_invitation')}
-                    onClick={event => {
-                      dispatch(startTask("inviting"));
-                      axios
-                        .get(user.reinvite_link, {})
-                        .then(response => {
-                          const data = response.data;
-                          refreshFunc(data.messages);
-                          dispatch(endTask("inviting"));
-                        })
-                        .catch(error => {
-                          console.log("error", error);
-                        });
-                    }}
-                    size="large"
-                  >
-                    <EmailIcon />
-                  </IconButton>
-                </Tooltip>
-              );
-            case UserListType.instructor:
-            case UserListType.assistant:
-            case UserListType.enrolled_student:
-              btns.push(
-                <DropUserButton
-                  key="drop-student-button"
-                  dropUrl={user.drop_link}
-                  refreshFunc={refreshFunc}
-                />
-              );
-              break;
-            case UserListType.requesting_student:
-              const acceptLbl = t("accept_student");
-              const lbl2 = t("decline_student");
-              btns.push(
-                <Tooltip key="accept" title={acceptLbl}>
-                  <IconButton
-                    aria-label={acceptLbl}
-                    onClick={event => {
-                      dispatch(startTask("accepting_student"));
-                      axios
-                        .patch(procRegReqPath, {
-                          roster_id: user.id,
-                          decision: true
-                        })
-                        .then(response => {
-                          const data = response.data;
-                          refreshFunc(data.messages);
-                          dispatch(endTask("accepting_student"));
-                        })
-                        .catch(error => {
-                          console.log("error", error);
-                        });
-                    }}
-                    size="large"
-                  >
-                    <CheckIcon />
-                  </IconButton>
-                </Tooltip>
-              );
-              btns.push(
-                <Tooltip key="decline" title={lbl2}>
-                  <IconButton
-                    aria-label={lbl2}
-                    onClick={event => {
-                      dispatch(startTask("decline_student"));
-                      axios
-                        .patch(procRegReqPath, {
-                          roster_id: user.id,
-                          decision: false
-                        })
-                        .then(response => {
-                          const data = response.data;
-                          refreshFunc(data.messages);
-                          dispatch(endTask("decline_student"));
-                        })
-                        .catch(error => {
-                          console.log("error", error);
-                        });
-                    }}
-                    size="large"
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </Tooltip>
-              );
-              break;
-            case UserListType.rejected_student:
-            case UserListType.dropped_student:
-            case UserListType.declined_student:
-              const lbl = "Re-Add Student";
-              btns.push(
-                <Tooltip key="re-add" title={lbl}>
-                  <IconButton
-                    aria-label={lbl}
-                    onClick={event => {
-                      dispatch(startTask("re-adding"));
-                      axios
-                        .put(addUsersPath, {
-                          addresses: user.email
-                        })
-                        .then(response => {
-                          const data = response.data;
-                          refreshFunc(data.messages);
-                          dispatch(endTask("re-adding"));
-                        })
-                        .catch(error => {
-                          console.log("error", error);
-                        });
-                    }}
-                    size="large"
-                  >
-                    <PersonAddIcon />
-                  </IconButton>
-                </Tooltip>
-              );
-              break;
-            default:
-              console.log("Status not found: " + user.status);
-          }
+        switch (user.status) {
+          case UserListType.invited_student:
+            btns.push(
+              <Tooltip key="re-send-invite" title={t("re-send_invitation")}>
+                <IconButton
+                  aria-label={t("re-send_invitation")}
+                  onClick={event => {
+                    dispatch(startTask("inviting"));
+                    axios
+                      .get(user.reinvite_link, {})
+                      .then(response => {
+                        const data = response.data;
+                        refreshFunc(data.messages);
+                        dispatch(endTask("inviting"));
+                      })
+                      .catch(error => {
+                        console.log("error", error);
+                      });
+                  }}
+                  size="large"
+                >
+                  <EmailIcon />
+                </IconButton>
+              </Tooltip>
+            );
+          case UserListType.instructor:
+          case UserListType.assistant:
+          case UserListType.enrolled_student:
+            btns.push(
+              <DropUserButton
+                key="drop-student-button"
+                dropUrl={user.drop_link}
+                refreshFunc={refreshFunc}
+              />
+            );
+            break;
+          case UserListType.requesting_student:
+            const acceptLbl = t("accept_student");
+            const lbl2 = t("decline_student");
+            btns.push(
+              <Tooltip key="accept" title={acceptLbl}>
+                <IconButton
+                  aria-label={acceptLbl}
+                  onClick={event => {
+                    dispatch(startTask("accepting_student"));
+                    axios
+                      .patch(procRegReqPath, {
+                        roster_id: user.id,
+                        decision: true
+                      })
+                      .then(response => {
+                        const data = response.data;
+                        refreshFunc(data.messages);
+                        dispatch(endTask("accepting_student"));
+                      })
+                      .catch(error => {
+                        console.log("error", error);
+                      });
+                  }}
+                  size="large"
+                >
+                  <CheckIcon />
+                </IconButton>
+              </Tooltip>
+            );
+            btns.push(
+              <Tooltip key="decline" title={lbl2}>
+                <IconButton
+                  aria-label={lbl2}
+                  onClick={event => {
+                    dispatch(startTask("decline_student"));
+                    axios
+                      .patch(procRegReqPath, {
+                        roster_id: user.id,
+                        decision: false
+                      })
+                      .then(response => {
+                        const data = response.data;
+                        refreshFunc(data.messages);
+                        dispatch(endTask("decline_student"));
+                      })
+                      .catch(error => {
+                        console.log("error", error);
+                      });
+                  }}
+                  size="large"
+                >
+                  <ClearIcon />
+                </IconButton>
+              </Tooltip>
+            );
+            break;
+          case UserListType.rejected_student:
+          case UserListType.dropped_student:
+          case UserListType.declined_student:
+            const lbl = "Re-Add Student";
+            btns.push(
+              <Tooltip key="re-add" title={lbl}>
+                <IconButton
+                  aria-label={lbl}
+                  onClick={event => {
+                    dispatch(startTask("re-adding"));
+                    axios
+                      .put(addUsersPath, {
+                        addresses: user.email
+                      })
+                      .then(response => {
+                        const data = response.data;
+                        refreshFunc(data.messages);
+                        dispatch(endTask("re-adding"));
+                      })
+                      .catch(error => {
+                        console.log("error", error);
+                      });
+                  }}
+                  size="large"
+                >
+                  <PersonAddIcon />
+                </IconButton>
+              </Tooltip>
+            );
+            break;
+          default:
+            console.log("Status not found: " + user.status);
+        }
 
-          return btns;
-
+        return btns;
       }
     }
   ];
@@ -358,57 +359,55 @@ export default function CourseUsersList(props :Props) {
     return icon;
   };
 
-  const newUserList = useMemo( ()=>{
-    return(
-
-    <DataGrid
-      columns={userColumns}
-      getRowId={(model: GridRowModel) =>{
-        return model.id;
-      }}
-      rows={props.usersList.filter( user => {
-        const checkType = UserListType.instructor !== user.status &&
-                          UserListType.assistant !== user.status;
-        return UserListType.instructor === props.userType ? !checkType : checkType;
-      }) }
-      initialState={{
-        columns: {
-          columnVisibilityModel: {
-            first_name: true,
-            last_name: true,
-            bingo_data: props.userType === UserListType.student,
-            assessment_performance: props.userType === UserListType.student,
-            experience_performance: props.userType === UserListType.student,
-            email: false,
-            status: true,
+  const newUserList = useMemo(() => {
+    return (
+      <DataGrid
+        columns={userColumns}
+        getRowId={(model: GridRowModel) => {
+          return model.id;
+        }}
+        rows={props.usersList.filter(user => {
+          const checkType =
+            UserListType.instructor !== user.status &&
+            UserListType.assistant !== user.status;
+          return UserListType.instructor === props.userType
+            ? !checkType
+            : checkType;
+        })}
+        initialState={{
+          columns: {
+            columnVisibilityModel: {
+              first_name: true,
+              last_name: true,
+              bingo_data: props.userType === UserListType.student,
+              assessment_performance: props.userType === UserListType.student,
+              experience_performance: props.userType === UserListType.student,
+              email: false,
+              status: true
+            }
+          },
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 }
           }
-        },
-        pagination: {
-          paginationModel: { page: 0, pageSize: 5}
-        }
-
-      }}
-      slots={{
-        toolbar: CourseUsersListToolbar,
-          
-      } }
-      pageSizeOptions={[5, 10, 25, 100]}
-      slotProps={{
-        toolbar: {
-          courseId: props.courseId,
-          userType: props.userType,
-          usersListUpdateFunc: props.usersListUpdateFunc,
-          retrievalUrl: props.retrievalUrl,
-          addMessagesFunc: props.addMessagesFunc,
-          refreshUsersFunc: getUsers,
-          addUsersPath: addUsersPath,
-        }
-      } }
-    />
-    )
-
-  }, [props.usersList])
-
+        }}
+        slots={{
+          toolbar: CourseUsersListToolbar
+        }}
+        pageSizeOptions={[5, 10, 25, 100]}
+        slotProps={{
+          toolbar: {
+            courseId: props.courseId,
+            userType: props.userType,
+            usersListUpdateFunc: props.usersListUpdateFunc,
+            retrievalUrl: props.retrievalUrl,
+            addMessagesFunc: props.addMessagesFunc,
+            refreshUsersFunc: getUsers,
+            addUsersPath: addUsersPath
+          }
+        }}
+      />
+    );
+  }, [props.usersList]);
 
   return (
     <Fragment>
@@ -418,4 +417,4 @@ export default function CourseUsersList(props :Props) {
   );
 }
 
-export {UserListType, StudentData};
+export { UserListType, StudentData };

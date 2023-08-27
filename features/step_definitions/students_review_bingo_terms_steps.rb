@@ -12,7 +12,7 @@ Then(/^the user clicks the link to the concept list$/) do
   begin
     # Try to click regularly
     find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@bingo.get_name(@anon)}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
     # If that gives an error, it's because of the readability popup
     # We can click either of the items this finds because they are effectively the same
     find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@bingo.get_name(@anon)}')]")[0].click

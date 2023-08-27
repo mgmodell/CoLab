@@ -14,8 +14,8 @@ import AddIcon from "@mui/icons-material/Add";
 import Tooltip from "@mui/material/Tooltip";
 
 type Props = {
-    itemType: string;
-}
+  itemType: string;
+};
 
 export default function AdminListToolbar(props: Props) {
   const { t } = useTranslation(`admin`);

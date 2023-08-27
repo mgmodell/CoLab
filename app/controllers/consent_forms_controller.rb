@@ -125,7 +125,7 @@ class ConsentFormsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_consent_form
-    @consent_form = if params[:id].blank? || params[:id] == 'new'
+    @consent_form = if params[:id].blank? || 'new' == params[:id]
                       ConsentForm.new
                     else
                       ConsentForm.find(params[:id])

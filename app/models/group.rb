@@ -70,16 +70,16 @@ class Group < ApplicationRecord
       users.uniq.each do |user|
         if user.home_state.present?
           state_hash[user.home_state] += 1 unless
-            user.home_state.no_response == true
+            true == user.home_state.no_response
           country_hash[user.home_state.home_country] += 1 unless
-            user.home_state.home_country.no_response == true
+            true == user.home_state.home_country.no_response
         end
         cip_hash[user.cip_code] += 1 unless
             user.cip_code.nil? || user.cip_code.gov_code.zero?
         primary_lang_hash[user.primary_language] += 1 unless
-            user.primary_language.nil? || user.primary_language.code == '__'
+            user.primary_language.nil? || '__' == user.primary_language.code
         gender_hash[user.gender] += 1 unless
-            user.gender.nil? || user.gender.code == '__'
+            user.gender.nil? || '__' == user.gender.code
         user.reactions.each do |reaction|
           scenario_hash[reaction.narrative.member] += 1
         end

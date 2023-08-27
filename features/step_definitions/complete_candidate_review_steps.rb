@@ -6,7 +6,7 @@ Given('the users {string} prep {string}') do |completion_level, group_or_solo|
 
   user_group = @users
   # If we're working with a group, as a group, then...
-  if group_or_solo == 'as a group'
+  if 'as a group' == group_or_solo
     collab_requested = false
     @users.each do |user|
       @user = user
@@ -64,14 +64,13 @@ Given('the users {string} prep {string}') do |completion_level, group_or_solo|
           candidate_list: cl,
           term: @entries_list[index]['term'],
           definition: @entries_list[index]['definition'],
-          user: user
+          user:
         )
         candidate.save
-        if candidate.errors.size > 0
+        if candidate.errors.size.positive?
           log candidate.errors.full_messages
           true.should be false
         end
-
       end
     end
   end
@@ -84,10 +83,10 @@ Then(/^the user sees (\d+) candidate items for review$/) do |candidate_count|
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
-  find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
-  find( :xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']" ).click
+  find(:xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]').click
+  find(:xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']").click
 
-  page.all(:xpath, "//input[contains(@id, 'feedback_4_')]", visible: :all )
+  page.all(:xpath, "//input[contains(@id, 'feedback_4_')]", visible: :all)
       .count.should eq candidate_count.to_i
   # Latest UI only shows 'Concept' when relevant/available
   # page.all(:xpath, "//input[contains(@id, 'concept_4_')]")
@@ -132,8 +131,8 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
-  find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
-  find( :xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']" ).click
+  find(:xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]').click
+  find(:xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']").click
 
   concept_count = Concept.count
   concepts = if concept_count < 2
@@ -153,7 +152,7 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
     feedback = feedbacks.sample
     @feedback_list[candidate.id] = { feedback: }
     concept = nil
-    if feedback.critique == 'term_problem'
+    if 'term_problem' == feedback.critique
       @feedback_list[candidate.id][:concept] = ''
     else
       concept = concepts.rotate!(1).first
@@ -167,7 +166,7 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
                        "//input[@id='feedback_4_#{candidate.id}']/following-sibling::div", visible: :all)
       elem.scroll_to(elem)
       elem.click
-    rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+    rescue Selenium::WebDriver::Error::ElementNotInteractableError
       elem.send_keys :escape
       (retries += 1).should be < 20, 'Too many retries'
       retry unless retries > 5
@@ -188,8 +187,7 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
         elem.set(concept)
       end
     rescue Selenium::WebDriver::Error::StaleElementReferenceError
-      #Nothing needed
-
+      # Nothing needed
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       elem = page.find(:xpath,
                        "//li[text()=\"#{feedback.name}\"]")
@@ -225,9 +223,7 @@ end
 Given('the user checks the review completed checkbox') do
   inpt = find(:xpath, "//div[@id='review_complete']//input[@type='checkbox']", visible: :all)
 
-  if ('true' != inpt[:checked])
-    find(:xpath, "//div[@id='review_complete']").click
-  end
+  find(:xpath, "//div[@id='review_complete']").click if 'true' != inpt[:checked]
 end
 
 Given(/^the user checks "([^"]*)"$/) do |checkbox_name|
@@ -245,7 +241,7 @@ When(/^the user clicks the link to the candidate review$/) do
   begin
     # Try to click regularly
     find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@bingo.get_name(@anon)}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
     # If that gives an error, it's because of the readability popup
     # We can click either of the items this finds because they are effectively the same
     find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@bingo.get_name(@anon)}')]")[0].click
@@ -254,8 +250,8 @@ When(/^the user clicks the link to the candidate review$/) do
   wait_for_render
   # Enable max rows
   max_rows = @bingo.candidates.size
-  find( :xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]' ).click
-  find( :xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']" ).click
+  find(:xpath, '//div[@data-pc-name="paginator"]/div[contains(@class,"dropdown")]').click
+  find(:xpath, "//div[@data-pc-name='paginator']//li[text()='#{max_rows}']").click
 end
 
 Then(/^there will be (\d+) concepts$/) do |concept_count|

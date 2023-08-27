@@ -10,7 +10,7 @@ import TextField from "@mui/material/TextField";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
 import {
   GridToolbarQuickFilter,
@@ -32,17 +32,17 @@ import axios from "axios";
 type Props = {
   courseId: number;
   retrievalUrl: string;
-  usersListUpdateFunc: (usersList: Array<StudentData> ) => void;
+  usersListUpdateFunc: (usersList: Array<StudentData>) => void;
   userType: UserListType;
   addMessagesFunc: ({}) => void;
   refreshUsersFunc: () => void;
   addUsersPath: string;
-}
-export default function CourseUsersListToolbar(props:Props) {
-  const category = 'course';
+};
+export default function CourseUsersListToolbar(props: Props) {
+  const category = "course";
   const { t } = useTranslation(`${category}s`);
   const navigate = useNavigate();
-  const dispatch = useDispatch( );
+  const dispatch = useDispatch();
 
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newUserAddresses, setNewUserAddresses] = useState("");
@@ -52,85 +52,78 @@ export default function CourseUsersListToolbar(props:Props) {
     setAddDialogOpen(false);
   };
 
-
   const lbl = "Add " + props.userType + "s";
 
   return (
     <Fragment>
-                <Dialog
-                  fullWidth={true}
-                  open={addDialogOpen}
-                  onClose={() => closeDialog()}
-                  aria-labelledby="form-dialog-title"
-                >
-                  <DialogTitle id="form-dialog-title">
-                    Add {props.userType}s
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>
-                      Add {props.userType}s by email:
-                    </DialogContentText>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="addresses"
-                      label="Email Address"
-                      type="email"
-                      value={newUserAddresses}
-                      onChange={event =>
-                        setNewUserAddresses(event.target.value)
-                      }
-                      fullWidth
-                    />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={() => closeDialog()} color="primary">
-                      {t("Cancel")}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        dispatch(startTask("adding_email"));
+      <Dialog
+        fullWidth={true}
+        open={addDialogOpen}
+        onClose={() => closeDialog()}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Add {props.userType}s</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Add {props.userType}s by email:</DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="addresses"
+            label="Email Address"
+            type="email"
+            value={newUserAddresses}
+            onChange={event => setNewUserAddresses(event.target.value)}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => closeDialog()} color="primary">
+            {t("Cancel")}
+          </Button>
+          <Button
+            onClick={() => {
+              dispatch(startTask("adding_email"));
 
-                        axios
-                          .put(props.addUsersPath, {
-                            id: props.courseId,
-                            addresses: newUserAddresses
-                          })
-                          .then(response => {
-                            const data = response.data;
-                            props.addMessagesFunc(data.messages);
-                          })
-                          .finally(( )=>{
-                            props.refreshUsersFunc();
-                            dispatch(endTask("adding_email"));
-                          });
-                        closeDialog();
-                      }}
-                      color="primary"
-                    >
-                      {t('show.add_btn', {user_type: props.userType})}
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+              axios
+                .put(props.addUsersPath, {
+                  id: props.courseId,
+                  addresses: newUserAddresses
+                })
+                .then(response => {
+                  const data = response.data;
+                  props.addMessagesFunc(data.messages);
+                })
+                .finally(() => {
+                  props.refreshUsersFunc();
+                  dispatch(endTask("adding_email"));
+                });
+              closeDialog();
+            }}
+            color="primary"
+          >
+            {t("show.add_btn", { user_type: props.userType })}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-    <GridToolbarContainer>
-      <GridToolbarDensitySelector />
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton />
-       <Tooltip title={lbl}>
-         <IconButton
-           aria-label={lbl}
-           onClick={event => {
-             setAddDialogOpen(true);
-           }}
-           size="large"
-         >
-           <GroupAddIcon />
-         </IconButton>
-       </Tooltip>
-      <GridSeparatorIcon />
-      <GridToolbarQuickFilter debounceMs={50} />
-    </GridToolbarContainer>
+      <GridToolbarContainer>
+        <GridToolbarDensitySelector />
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <Tooltip title={lbl}>
+          <IconButton
+            aria-label={lbl}
+            onClick={event => {
+              setAddDialogOpen(true);
+            }}
+            size="large"
+          >
+            <GroupAddIcon />
+          </IconButton>
+        </Tooltip>
+        <GridSeparatorIcon />
+        <GridToolbarQuickFilter debounceMs={50} />
+      </GridToolbarContainer>
     </Fragment>
   );
 }

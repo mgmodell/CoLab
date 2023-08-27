@@ -134,7 +134,7 @@ class Installment < ApplicationRecord
 
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }
       difference = Installment::TOTAL_VAL - total
-      if difference != 0
+      if 0 != difference
         delta = difference <=> 0
         index = 0
         difference.abs.to_i.times do

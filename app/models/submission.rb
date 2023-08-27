@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Submission < ApplicationRecord
   belongs_to :assignment, inverse_of: :submissions
   belongs_to :user, inverse_of: :submissions
@@ -12,9 +14,7 @@ class Submission < ApplicationRecord
   before_validation :set_rubric
   validate :group_valid, :can_submit
 
-  def end_date
-    assignment.end_date
-  end
+  delegate :end_date, to: :assignment
 
   private
 
@@ -25,10 +25,9 @@ class Submission < ApplicationRecord
   end
 
   def set_rubric
-    if self.rubric.nil? || self.submitted_was.nil?
-      self.rubric = self.assignment.rubric
-    end
+    return unless rubric.nil? || submitted_was.nil?
 
+    self.rubric = assignment.rubric
   end
 
   def can_submit
@@ -43,7 +42,7 @@ class Submission < ApplicationRecord
       found = false
       found ||= (assignment.text_sub && sub_text.present?)
       found ||= (assignment.link_sub && sub_link.present?)
-      found ||= (assignment.file_sub && sub_files.size > 0)
+      found ||= (assignment.file_sub && sub_files.size.positive?)
       errors.add :main, I18n.t('submissions.error.nothing_submitted') unless found
 
     elsif withdrawn_was.nil? && !withdrawn.nil?
@@ -60,5 +59,4 @@ class Submission < ApplicationRecord
       end
     end
   end
-
 end

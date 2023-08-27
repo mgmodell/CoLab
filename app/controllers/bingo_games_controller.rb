@@ -34,14 +34,12 @@ class BingoGamesController < ApplicationController
   end
 
   def demo_my_results
-    candidate_list = nil
-    candidates = nil
     candidate_list = get_demo_candidate_list
     candidates = candidate_list.candidates
 
     candidates = candidates.to_a.collect do |c|
       { id: c.id,
-        concept: c.concept.nil? ? nil : c.concept.name,
+        concept: c.concept&.name,
         definition: c.definition,
         term: c.term,
         feedback: c.candidate_feedback.name,
@@ -80,7 +78,7 @@ class BingoGamesController < ApplicationController
 
     candidates = candidates.to_a.collect do |c|
       { id: c.id,
-        concept: c.concept.nil? ? nil : c.concept.name,
+        concept: c.concept&.name,
         definition: c.definition,
         term: c.term,
         feedback: c.candidate_feedback.name,
@@ -151,17 +149,17 @@ class BingoGamesController < ApplicationController
         if resp[user_id].present?
           resp[user_id][:concepts_expected] = cl.candidates.size
           resp[user_id][:concepts_entered] = cl.candidates
-                                               .reject { |c| (c.definition.empty? || c.term.empty?) }.count
+                                               .count { |c| !(c.definition.empty? || c.term.empty?) }
           resp[user_id][:concepts_credited] = cl.candidates
-                                                .reject do |c|
-            c.candidate_feedback.present? &&
-              CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name
-          end.count
+                                                .count do |c|
+            !(c.candidate_feedback.present? &&
+              CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name)
+          end
           resp[user_id][:term_problems] = cl.candidates
-                                            .reject do |c|
-            c.candidate_feedback.present? &&
-              CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name
-          end.count
+                                            .count do |c|
+            !(c.candidate_feedback.present? &&
+              CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name)
+          end
           resp[user_id][:performance] = cl.performance
           candidates = []
           cl.candidates.reviewed.each do |c|
@@ -179,17 +177,17 @@ class BingoGamesController < ApplicationController
       elsif cl.is_group && cl.group.present?
         concepts_expected = cl.candidates.size
         concepts_entered = cl.candidates
-                             .reject { |c| c.definition.empty? || c.term.empty? }.count
+                             .count { |c| !(c.definition.empty? || c.term.empty?) }
         concepts_credited = cl.candidates
-                              .reject do |c|
-          c.candidate_feedback.present? &&
-            CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name
-        end.count
+                              .count do |c|
+          !(c.candidate_feedback.present? &&
+            CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name)
+        end
         term_problems = cl.candidates
-                          .reject do |c|
-          c.candidate_feedback.present? &&
-            CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name
-        end.count
+                          .count do |c|
+          !(c.candidate_feedback.present? &&
+            CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name)
+        end
         performance = cl.performance
         candidates = []
         cl.candidates.completed.each do |c|
@@ -496,7 +494,6 @@ class BingoGamesController < ApplicationController
       end
 
       # Process the data
-      existing_concepts = {}
 
       @bingo_game.candidates.completed
                  .includes(:candidate_feedback,
@@ -513,7 +510,7 @@ class BingoGamesController < ApplicationController
 
         # feedback_name = candidate.candidate_feedback.name_en
 
-        if candidate.candidate_feedback.critique != 'term_problem'
+        if 'term_problem' != candidate.candidate_feedback.critique
           entered_candidate[:concept][:name].present?
           concept_name = entered_candidate[:concept][:name]
           concept_name = Concept.standardize_name name: concept_name
@@ -567,7 +564,7 @@ class BingoGamesController < ApplicationController
     bingo_game = BingoGame.find(params[:bingo_game_id])
     check_bingo_editor(bingo_game:)
     if current_user.is_admin? ||
-       bingo_game.course.get_roster_for_user(current_user).role.code == 'inst'
+       'inst' == bingo_game.course.get_roster_for_user(current_user).role.code
       bingo_game.active = true
       bingo_game.save
     end

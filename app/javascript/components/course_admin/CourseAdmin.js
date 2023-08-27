@@ -22,7 +22,7 @@ export default function CourseAdmin(props) {
 
   return (
     <Routes>
-      <Route path="/" element={<Outlet/>} >
+      <Route path="/" element={<Outlet />}>
         <Route
           path={`:courseIdParam/bingo_game/:bingoGameIdParam`}
           element={<BingoGameDataAdmin />}
@@ -40,10 +40,7 @@ export default function CourseAdmin(props) {
           element={<AssignmentDataAdmin />}
         />
         <Route path={`:courseIdParam`} element={<CourseDataAdmin />} />
-        <Route
-          index
-          element={<CourseList />} />
-
+        <Route index element={<CourseList />} />
       </Route>
     </Routes>
   );

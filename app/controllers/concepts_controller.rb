@@ -62,7 +62,7 @@ class ConceptsController < ApplicationController
                       ''
                     end
 
-    if bingo_game_id != 0 || search_string.length > 2
+    if 0 != bingo_game_id || search_string.length > 2
       index = 0
       demo_concepts = get_demo_game_concepts
       demo_concepts.each do |concept|

@@ -178,9 +178,9 @@ class ProjectsController < ApplicationController
 
     begin
       ActiveRecord::Base.transaction do
-        group_hash.values.each(&:save!)
+        group_hash.each_value(&:save!)
       end
-    rescue StandardError => e
+    rescue StandardError
       # Post back a JSON error
       get_groups_helper project:, message: t('projects.group_save_failure')
     else
@@ -241,7 +241,7 @@ class ProjectsController < ApplicationController
   def add_group
     @title = t('.title')
     @project = Project.find(params[:project_id])
-    group = Group.create(name: params[:group_name], project: @project)
+    Group.create(name: params[:group_name], project: @project)
 
     redirect_to @project, notice: t('projects.group_create_success')
   end
@@ -288,7 +288,7 @@ class ProjectsController < ApplicationController
   def activate
     @title = t('projects.show.title')
     if current_user.is_admin? ||
-       @project.course.get_user_role(current_user) == 'instructor'
+       'instructor' == @project.course.get_user_role(current_user)
       @project.active = true
       @project.save
       logger.debug @project.errors.full_messages unless @project.errors.empty?
@@ -300,7 +300,7 @@ class ProjectsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_project
-    if params[:id].blank? || params[:id] == 'new'
+    if params[:id].blank? || 'new' == params[:id]
       course = Course.find(params[:course_id])
       p_test = course.projects.new
       p_test.start_date = course.start_date

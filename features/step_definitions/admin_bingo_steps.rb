@@ -6,7 +6,7 @@ Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_pre
   field_name = 'start' == date_field_prefix ? 'Open date' : 'Game date'
   begin
     find(:xpath, "//label[text()='#{field_name}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
     field_id = find(:xpath, "//label[text()='#{label}']")['for']
     field = find(:xpath, "//input[@id='#{field_id}']")
     field.click
@@ -20,7 +20,7 @@ Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_pre
   send_keys new_date
 end
 
-Then ('the user clicks on the existing bingo game') do 
+Then('the user clicks on the existing bingo game') do
   click_link_or_button 'Activities'
   find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{@bingo.get_name(@anon)}')]").click
   wait_for_render
@@ -49,7 +49,7 @@ Given(/^the course has a Bingo! game$/) do
   @bingo.save
   if @bingo.persisted?
     @bingo.get_topic(true).should_not be_nil
-    @bingo.get_topic(true).length.should be > 0
+    @bingo.get_topic(true).length.should be.positive?
   end
   log @bingo.errors.full_messages if @bingo.errors.present?
 end
@@ -107,7 +107,7 @@ end
 
 Then('the {string} label is disabled') do |label|
   control = page.all(:xpath, "//label[contains(., '#{label}')][not(@disabled)]")
-  control.size.should be > 0
+  control.size.should be.positive?
 end
 
 Then('the bingo project is empty') do

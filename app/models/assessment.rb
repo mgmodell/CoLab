@@ -19,7 +19,7 @@ class Assessment < ApplicationRecord
                     }
 
   def is_completed_by_user(user)
-    user.installments.where(assessment: self).count != 0
+    0 != user.installments.where(assessment: self).count
   end
 
   def task_data(current_user:)
@@ -160,7 +160,7 @@ class Assessment < ApplicationRecord
       assessment.save
       logger.debug assessment.errors.full_messages unless assessment.errors.empty?
 
-    elsif existing_assessments.count == 1
+    elsif 1 == existing_assessments.count
       existing_assessment = existing_assessments[0]
       if project.is_available?
         existing_assessment.start_date = assessment.start_date

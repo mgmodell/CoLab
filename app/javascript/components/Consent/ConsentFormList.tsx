@@ -18,7 +18,7 @@ import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
 export default function ConsentFormList(props) {
   const category = "consent_form";
-  const { t } = useTranslation( `${category}s`);
+  const { t } = useTranslation(`${category}s`);
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
   );
@@ -35,17 +35,16 @@ export default function ConsentFormList(props) {
 
   const columns: GridColDef[] = [
     {
-      headerName: t('index.name_col' ),
+      headerName: t("index.name_col"),
       field: "name",
       renderCell: renderTextCellExpand
     },
     {
-      headerName: t('index.active_col'),
+      headerName: t("index.active_col"),
       field: "active",
-      renderCell: (params) => {
+      renderCell: params => {
         const output = params.value ? <CheckIcon /> : null;
         return output;
-
       }
     }
   ];
@@ -83,20 +82,19 @@ export default function ConsentFormList(props) {
 
   const dataTable = (
     <DataGrid
-      isCellEditable={()=>false}
+      isCellEditable={() => false}
       columns={columns}
       rows={consent_forms}
       slots={{
         toolbar: AdminListToolbar
       }}
       slotProps={{
-        toolbar:{
+        toolbar: {
           itemType: category
-
         }
       }}
-      pageSizeOptions={[5, 10, 100 ]}
-      />
+      pageSizeOptions={[5, 10, 100]}
+    />
   );
 
   return (

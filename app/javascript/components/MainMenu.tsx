@@ -167,9 +167,8 @@ export default function MainMenu(props) {
         </ListItemIcon>
         <ListItemText>{t("profile")}</ListItemText>
       </ListItemButton>
-      <Suspense fallback={<Skeleton variant={'text'} />} >
-        <DiversityCheck diversityScoreFor={props.diversityScoreFor || ''} />
-
+      <Suspense fallback={<Skeleton variant={"text"} />}>
+        <DiversityCheck diversityScoreFor={props.diversityScoreFor || ""} />
       </Suspense>
     </React.Fragment>
   ) : (

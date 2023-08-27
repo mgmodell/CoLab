@@ -57,7 +57,7 @@ class CandidateList < ApplicationRecord
 
   def expected_count
     if is_group
-      required_term_count = bingo_game.required_terms_for_contributors(contributor_count)
+      bingo_game.required_terms_for_contributors(contributor_count)
     else
       bingo_game.individual_count
     end
@@ -89,7 +89,6 @@ class CandidateList < ApplicationRecord
     else
       false
     end
-
   end
 
   private

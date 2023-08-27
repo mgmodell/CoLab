@@ -24,7 +24,7 @@ Given(/^the project measures (\d+) factors$/) do |num_factors|
 end
 
 Given(/^the project started last month and lasts (\d+) weeks, opened yesterday and closes tomorrow$/) do |num_weeks|
-  @project.start_date = (Date.today - 1.month)
+  @project.start_date = (Time.zone.today - 1.month)
   @project.end_date = (@assessment.start_date + num_weeks.to_i.weeks)
   @project.start_dow = Date.yesterday.wday
   @project.end_dow = Date.tomorrow.wday
@@ -49,10 +49,11 @@ When(/^user clicks the link to the project$/) do
   begin
     # Try to click regularly
     find(:xpath, "//div[@data-field='group_name']/div/div[contains(.,'#{@project.group_for_user(@user).name}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
     # If that gives an error, it's because of the readability popup
     # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@project.group_for_user(@user).name}')]")[0].click
+    find_all(:xpath,
+             "//div[contains(@class,'MuiBox') and contains(.,'#{@project.group_for_user(@user).name}')]")[0].click
   end
 
   wait_for_render
@@ -67,7 +68,7 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
     page.all(:xpath, '//input[starts-with(@id,"installment_values_attributes_")]').each do |element|
       element.set 0 if element[:id].end_with? 'value'
     end
-  elsif distribution == 'evenly'
+  elsif 'evenly' == distribution
     cell_value = column_points.to_i / task.group_for_user(@user).users.count
     page.all(:xpath, '//input[starts-with(@name,"slider_")]').each do |element|
       element.set cell_value if element[:id].end_with? 'value'
@@ -86,7 +87,7 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
       actions = []
       rand(3..10).times do
         actions << {
-          increment: rand(2000) * (rand(2) == 1 ? -1 : 1),
+          increment: rand(2000) * (1 == rand(2) ? -1 : 1),
           target: factor_vals.keys.sample
         }
       end
@@ -102,7 +103,7 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
 
         sum = all(:xpath, "//input[@factor='#{factor.id}']").reduce(0) do |total, slider|
           factor_vals[slider[:contributor]] = slider.value
-          total += slider.value.to_i
+          total + slider.value.to_i
         end
         sum.should eq Installment::TOTAL_VAL
       end
@@ -120,8 +121,6 @@ Then(/^the installment form should request factor x user values$/) do
   factors = tasks[0].factors
 
   expected_count = group.users.count * factors.count
-
-  actual_count = 0
   page.all(:xpath,
            '//input[starts-with(@name,"slider_")]', visible: :all).size.should eq expected_count
 end
@@ -131,7 +130,8 @@ Then(/^the assessment should show up as completed$/) do
   group_name = @project.group_for_user(@user).name
   step 'the user switches to the "Task View" tab'
 
-  page.should have_xpath("//div[@data-field='group_name']/div/div[contains(., '#{group_name}')]/.."), 'No link to assessment'
+  page.should have_xpath("//div[@data-field='group_name']/div/div[contains(., '#{group_name}')]/.."),
+              'No link to assessment'
   page.should have_xpath("//div/div/div[contains(., 'Completed')]"), "No 'completed' message"
 end
 
@@ -161,14 +161,14 @@ end
 
 Then(/^the installment values will match the submit ratio$/) do
   installment = Installment.last
-  if @value_ratio == 'evenly'
+  if 'evenly' == @value_ratio
     baseline = installment.values[0].value
-    installment.values.each do |value|
+    installment.each_value do |value|
       value.value.should eq baseline
     end
   else
     recorded_vals = {}
-    installment.values.each do |value|
+    installment.each_value do |value|
       factor_vals = recorded_vals[value.factor.id]
       factor_vals = [] if factor_vals.nil?
       factor_vals << [value.user_id, value.value]
@@ -198,7 +198,7 @@ Then(/^the user enters a comment "([^"]*)" personally identifiable information$/
   @comment = 'A nice, bland, comment'
   @anon_comment = @comment
 
-  if anonymized == 'with'
+  if 'with' == anonymized
     group =  @project.group_for_user(@user)
     user_one = group.users.last
     user_two = group.users.first

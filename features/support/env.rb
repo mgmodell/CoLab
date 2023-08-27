@@ -26,7 +26,7 @@ end
 def ack_messages
   retries ||= 3
   all(:xpath, "//button[@id='info-close']", visible: true).each(&:click)
-rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+rescue Selenium::WebDriver::Error::ElementNotInteractableError
   (retries += 1).should be < 10, 'Too many ack retries'
   retry unless retries > 5
 end

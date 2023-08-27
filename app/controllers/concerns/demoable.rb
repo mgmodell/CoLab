@@ -61,7 +61,7 @@ module Demoable
       term = concept
 
       feedback = rand(3) < 2 ? feedbacks[0] : feedbacks.sample
-      definition = concepts.delete(concepts.sample)[1] if feedback.id != 1
+      definition = concepts.delete(concepts.sample)[1] if 1 != feedback.id
 
       cl.candidates << Candidate.new(
         id: - index,
@@ -81,7 +81,7 @@ module Demoable
     BingoGame.new(id: -11,
                   topic: (t 'candidate_lists.demo_review_topic'),
                   description: (t 'candidate_lists.demo_review_description'),
-                  end_date: Date.today.end_of_day,
+                  end_date: Time.zone.today.end_of_day,
                   size: 5,
                   course: Course.new(
                     name: (t 'demo_course_name'),

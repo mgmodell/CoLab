@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RubricsController < ApplicationController
   include PermissionsCheck
 
@@ -217,7 +219,7 @@ class RubricsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_rubric
-    @rubric = if params[:id].blank? || params[:id] == 'new'
+    @rubric = if params[:id].blank? || 'new' == params[:id]
                 Rubric.new(
                   name: '',
                   school_id: current_user.school_id,

@@ -57,28 +57,28 @@ class User < ApplicationRecord
   # Give us a standard form of the name
   def name(anonymous)
     if anonymous
-      name = "#{anon_last_name}, #{anon_first_name}"
+      "#{anon_last_name}, #{anon_first_name}"
     elsif last_name.nil? && first_name.nil?
-      name = email
+      email
     else
       name = "#{!last_name.nil? ? last_name : '[No Last Name Given]'}, "
-      name += (!first_name.nil? ? first_name : '[No First Name Given]')
+      name + (!first_name.nil? ? first_name : '[No First Name Given]')
     end
   end
 
   def informal_name(anonymous)
     if anonymous
-      name = "#{anon_first_name} #{anon_last_name}"
+      "#{anon_first_name} #{anon_last_name}"
     elsif last_name.nil? && first_name.nil?
-      name = email
+      email
     else
       name = "#{!first_name.nil? ? first_name : '[No First Name Given]'} "
-      name += (!last_name.nil? ? last_name : '[No Last Name Given]')
+      name + (!last_name.nil? ? last_name : '[No Last Name Given]')
     end
   end
 
   def language_code
-    language.nil? ? nil : language.code
+    language&.code
   end
 
   def anonymize?
@@ -104,7 +104,7 @@ class User < ApplicationRecord
       end
     end
 
-    now = Date.today
+    now = Time.zone.today
     # Find those consent forms to which the user has not yet responded
     # We only want to do this for currently active consent forms
     consent_forms = ConsentForm.global_active_at(now).to_a
@@ -148,23 +148,23 @@ class User < ApplicationRecord
 
     BingoGame.joins(course: :rosters)
              .includes(:course)
-             .where('rosters.user_id': id )
-             .and( Roster.faculty )
+             .where('rosters.user_id': id)
+             .and(Roster.faculty)
              .find_each do |game|
       waiting_tasks << game if game.awaiting_review?
     end
 
     cur_date = DateTime.current
-    Assignment.joins( :submissions, course: :rosters)
-             .where('rosters.user_id': id )
-             .where('assignments.end_date >= ?', cur_date )
-                    .and( Submission.where.not( submitted: nil ) )
-                    .and( Submission.where( withdrawn: nil ) )
-                    .and( Submission.where( recorded_score: nil ) )
-                    .and( Roster.faculty )
-                    .find_each do |submission|
+    Assignment.joins(:submissions, course: :rosters)
+              .where('rosters.user_id': id)
+              .where('assignments.end_date >= ?', cur_date)
+              .and(Submission.where.not(submitted: nil))
+              .and(Submission.where(withdrawn: nil))
+              .and(Submission.where(recorded_score: nil))
+              .and(Roster.faculty)
+              .find_each do |submission|
       waiting_tasks << submission
-     end
+    end
 
     waiting_tasks.sort_by(&:end_date)
   end
@@ -175,7 +175,7 @@ class User < ApplicationRecord
     BingoGame.joins(course: :rosters)
              .includes(:course, :project)
              .where(reviewed: true, 'rosters.user_id': id)
-             .and( Roster.enrolled )
+             .and(Roster.enrolled)
              .all.find_each do |bingo_game|
       activities << bingo_game
     end
@@ -187,10 +187,10 @@ class User < ApplicationRecord
 
     # Add in assignments
     Assignment.joins(course: :rosters)
-             .includes(:course, :submissions)
-             .where( 'rosters.user_id': id)
-             .and( Roster.enrolled )
-             .all.find_each do |assignment|
+              .includes(:course, :submissions)
+              .where('rosters.user_id': id)
+              .and(Roster.enrolled)
+              .all.find_each do |assignment|
       activities << assignment
     end
 

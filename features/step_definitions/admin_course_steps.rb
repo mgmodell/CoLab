@@ -18,7 +18,7 @@ Then 'the user sets the start date to {string} and the end date to {string}' do 
   label = 'Course Start Date'
   begin
     find(:xpath, "//label[text()='#{label}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
     field_id = find(:xpath, "//label[text()='#{label}']")['for']
     field = find(:xpath, "//input[@id='#{field_id}']")
     field.click
@@ -38,7 +38,7 @@ Then 'the user sets the start date to {string} and the end date to {string}' do 
   label = 'Course End Date'
   begin
     find(:xpath, "//label[text()='#{label}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
     field_id = find(:xpath, "//label[text()='#{label}']")['for']
     field = find(:xpath, "//input[@id='#{field_id}']")
     field.click
@@ -59,7 +59,7 @@ Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
   lbl = find(:xpath, "//label[text()='#{field_lbl}']")
   elem = find(:xpath, "//*[@id='#{lbl[:for]}']")
 
-  if is_or_isnt == 'is'
+  if 'is' == is_or_isnt
     elem.text.should eq timezone
   else
     elem.text.should_not eq timezone
@@ -273,7 +273,7 @@ Then 'the {string} dates are {string} and {string}' do |activity, start_date_str
 end
 
 Then 'the {string} is {string} active' do |activity, active_bool|
-  is_active = active_bool == 'is'
+  is_active = 'is' == active_bool
 
   case activity.downcase
   when 'experience'
@@ -326,7 +326,7 @@ Then 'the user adds the {string} users {string}' do |type, addresses|
 
   inpt = find(:xpath, "//input[@id='addresses']")
 
-  addresses = @users.map(&:email).join(', ') if addresses == 'user_list'
+  addresses = @users.map(&:email).join(', ') if 'user_list' == addresses
   inpt.click
   send_keys addresses
   # It seems that inpt.set doesn't work properly here for some reason
@@ -338,20 +338,20 @@ Then 'the user adds the {string} users {string}' do |type, addresses|
   wait_for_render
 end
 
-Then 'the user drops the {string} users {string}' do |type, addresses|
+Then 'the user drops the {string} users {string}' do |_type, addresses|
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
 
-  find_all( :xpath, '//div[contains(@class,"Pagination-select")]' )[0].click
+  find_all(:xpath, '//div[contains(@class,"Pagination-select")]')[0].click
   find(:xpath, '//li[text()="100"]').click
 
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
-  if addresses == 'user_list'
+  if 'user_list' == addresses
     @users.each do |_address|
       step 'the user enables the "Email" table view option'
       elem = find(:xpath,
-        "//div[div[a[@href='mailto:#{_address.email}']]]//button[@aria-label='Drop Student']" )
+                  "//div[div[a[@href='mailto:#{_address.email}']]]//button[@aria-label='Drop Student']")
       elem.click
       find(:xpath,
            "//button[text()='Drop the Student']").click
@@ -359,11 +359,11 @@ Then 'the user drops the {string} users {string}' do |type, addresses|
     end
   else
     # Find the email
-    elem = find(:xpath, "//div[contains(.,'#{addresses}') and @data-field='email']" )
+    elem = find(:xpath, "//div[contains(.,'#{addresses}') and @data-field='email']")
     # Get the parent
-    elem = elem.ancestor( :xpath, '//div[@role="row"]' )
+    elem = elem.ancestor(:xpath, '//div[@role="row"]')
     # Get the button
-    elem = elem.find( :xpath, "./div[@data-field='id']/button[@aria-label='Drop Student']")
+    elem = elem.find(:xpath, "./div[@data-field='id']/button[@aria-label='Drop Student']")
 
     elem.click
 
@@ -406,7 +406,7 @@ end
 Then 'the user opens the self-registration link for the course' do
   self_reg_url = "course/#{@course.id}/enroll"
   visit(self_reg_url)
-  if !@dest_date.nil? && Capybara.current_driver != :rack_test && current_url.start_with?('http')
+  if !@dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?('http')
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end
@@ -475,7 +475,7 @@ Then('the user sees {int} enrollment request') do |count|
 end
 
 Then('the user {string} {int} enrollment request') do |decision, count|
-  action = decision == 'approves' ? 'Accept' : 'Reject'
+  action = 'approves' == decision ? 'Accept' : 'Reject'
   # Using aria-labl instead of title because of some strange JavaScript
   # error.
   buttons = all(:xpath, "//button[@aria-label='#{action}']")

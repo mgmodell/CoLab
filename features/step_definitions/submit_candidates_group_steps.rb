@@ -83,7 +83,7 @@ When(/^the user populates (\d+) additional "([^"]*)" entries$/) do |count, field
     if @entries_list[existing_count + index].blank?
       @entries_list[existing_count + index] = { 'term' => '', 'definition' => '' }
     end
-    @entries_list[existing_count + index][field] = if field == 'term'
+    @entries_list[existing_count + index][field] = if 'term' == field
                                                      Faker::Company.industry
                                                    else
                                                      Faker::Company.bs
@@ -115,7 +115,7 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
     existing_def = page.find(:xpath, "//textarea[@id='definition_#{rand_ind}']").value
 
     # Gen the new term
-    new_val = if field == 'term'
+    new_val = if 'term' == field
                 Faker::Company.industry
               else
                 Faker::Company.bs
@@ -126,12 +126,12 @@ When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
     else
       found = false
       entries_array.each do |entry|
-        if field == 'term' && entry['definition'] == existing_def
+        if 'term' == field && entry['definition'] == existing_def
           entry['term'] = new_val
           page.fill_in("#{field}_#{rand_ind}",
                        with: new_val)
           found = true
-        elsif field == 'definition' && entry['term'] == existing_term
+        elsif 'definition' == field && entry['term'] == existing_term
           entry['definition'] = new_val
           page.fill_in("#{field}_#{rand_ind}",
                        with: new_val)
@@ -153,8 +153,6 @@ Then(/^the candidate lists have been merged$/) do
     @entries_lists[user].each do |list_item|
       combined_list << list_item if list_item['term'].present? || list_item['definition'].present?
     end
-  end
-  @bingo.project.group_for_user(@user).users.each do |user|
     @entries_lists[user] = combined_list
   end
 end

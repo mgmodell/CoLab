@@ -85,7 +85,7 @@ class BingoGame < ApplicationRecord
              instructor_task = true
              "/bingo/review_candidates/#{id}"
            else
-             candidate_list = candidate_list_for_user(current_user)
+             candidate_list_for_user(current_user)
              if is_open?
                # helpers.edit_candidate_list_path(candidate_list)
                "/bingo/enter_candidates/#{id}"
@@ -138,14 +138,14 @@ class BingoGame < ApplicationRecord
     cl = nil
     edit_url = nil
     destroy_url = nil
-    if user_role == 'instructor'
+    if 'instructor' == user_role
       edit_url = helpers.edit_bingo_game_path(self)
       destroy_url = helpers.bingo_game_path(self)
       cl = candidate_list_for_user(user)
     end
 
-    if (active && user_role == 'enrolled_student') ||
-       (user_role == 'instructor')
+    if (active && 'enrolled_student' == user_role) ||
+       ('instructor' == user_role)
       events << {
         type: 'bingo_game',
         id: "bg_#{id}",
@@ -166,13 +166,13 @@ class BingoGame < ApplicationRecord
                    else
                      (cl.is_group? ? 'group' : 'solo')
                    end,
-            url: (helpers.edit_candidate_list_path(cl) if (is_open? && user_role) == 'enrolled_student')
+            url: (helpers.edit_candidate_list_path(cl) if 'enrolled_student' == (is_open? && user_role))
           },
           {
             type: 'terms_list_review',
             start: term_list_date + 1.day,
             end: end_date,
-            actor: if user_role == 'enrolled_student' && reviewed
+            actor: if 'enrolled_student' == user_role && reviewed
                      'solo'
                    else
                      'instructor'
@@ -180,7 +180,7 @@ class BingoGame < ApplicationRecord
             url: if is_open?
                    nil
                  else
-                   (if user_role == 'instructor'
+                   (if 'instructor' == user_role
                       helpers.review_bingo_candidates_path(self)
                     else
                       (reviewed ? helpers.candidate_list_path(cl) : nil)
@@ -216,7 +216,7 @@ class BingoGame < ApplicationRecord
 
   def required_terms_for_contributors(contributor_count)
     remaining_percent = (100.0 - group_discount) / 100
-    discounted = (contributor_count * individual_count * remaining_percent).floor
+    (contributor_count * individual_count * remaining_percent).floor
   end
 
   def get_current_lists_hash
@@ -277,7 +277,7 @@ class BingoGame < ApplicationRecord
       individual_count.times do
         cl.candidates << Candidate.new(term: '', definition: '', user:)
       end
-      cl.save unless id == -1 # This unless supports the demonstration only
+      cl.save unless -1 == id # This unless supports the demonstration only
       logger.debug cl.errors.full_messages unless cl.errors.empty?
     elsif  cl.archived
       # TODO: I think I can fix this

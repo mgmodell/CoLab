@@ -15,7 +15,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 export default function BingoBuilder(props) {
@@ -90,7 +90,7 @@ export default function BingoBuilder(props) {
         cells[i].concept = concept;
       }
     }
-    const tmpBoard = Object.assign( {}, board );
+    const tmpBoard = Object.assign({}, board);
     tmpBoard.bingo_cells = cells;
     tmpBoard.iteration = iteration;
     tmpBoard.initialised = true;
@@ -200,27 +200,30 @@ export default function BingoBuilder(props) {
     open(`${endpoints.boardUrl}${bingoGameId}.pdf`);
   };
 
-  const saveBtn = []
-  if( null === board.bingo_game.end_date ){
+  const saveBtn = [];
+  if (null === board.bingo_game.end_date) {
     //no op
-  } else if( new Date( board.bingo_game.end_date ) < new Date( ) ){
+  } else if (new Date(board.bingo_game.end_date) < new Date()) {
     saveBtn.push(
       <em>
         This game has already been played, so you cannot save a new board.
       </em>
-    )
-  } else if( board.initialised && board.iteration > 0 && new Date( board.bingo_game.end_date ) > new Date( ) ){
+    );
+  } else if (
+    board.initialised &&
+    board.iteration > 0 &&
+    new Date(board.bingo_game.end_date) > new Date()
+  ) {
     saveBtn.push(
       <React.Fragment>
         <Link onClick={() => saveBoard()}>Save</Link> the board you
         generated&hellip;
       </React.Fragment>
-
-    )
+    );
   } else {
     saveBtn.push(
       <em>If you generate a new board, you will be able to save it here.</em>
-    )
+    );
   }
 
   const printBtn =
@@ -275,9 +278,7 @@ export default function BingoBuilder(props) {
       </Typography>
       <div>
         <strong>Description:</strong>{" "}
-        <p>
-          {parse( board.bingo_game.description || '' )}
-        </p>
+        <p>{parse(board.bingo_game.description || "")}</p>
       </div>
       {null != candidateList && (
         <Typography>
@@ -330,12 +331,11 @@ export default function BingoBuilder(props) {
               {workSheetInstr}
               {playableInstr}
             </ol>
-            { board.playable ? (
-                <div id="bingoBoard" className="mt4">
-                  <BingoBoard board={board} />
-                </div>
-              ) : null
-            }
+            {board.playable ? (
+              <div id="bingoBoard" className="mt4">
+                <BingoBoard board={board} />
+              </div>
+            ) : null}
           </Paper>
         </TabPanel>
         <TabPanel value="results">

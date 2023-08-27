@@ -14,30 +14,28 @@ import StandardListToolbar from "../StandardListToolbar";
 import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
 export interface IReaction {
-  id: number,
+  id: number;
   user: {
-    email: string,
-    name: string
-  }
-  status: string,
-  student_status: string,
-  narrative: string,
-  scenario: string,
-  behavior: string,
-  other_name: string,
-  improvements: string
-
+    email: string;
+    name: string;
+  };
+  status: string;
+  student_status: string;
+  narrative: string;
+  scenario: string;
+  behavior: string;
+  other_name: string;
+  improvements: string;
 }
 type Props = {
   retrievalUrl: string;
   reactionsList: Array<IReaction>;
   reactionsListUpdateFunc: (reactionList: Array<IReaction>) => void;
-
-}
+};
 
 export default function ReactionsList(props: Props) {
-  const category = 'experience';
-  const {t } = useTranslation( `${category}s`);
+  const category = "experience";
+  const { t } = useTranslation(`${category}s`);
 
   const [anchorEl, setAnchorEl] = useState();
   const [popMsg, setPopMsg] = useState();
@@ -78,81 +76,66 @@ export default function ReactionsList(props: Props) {
 
   const reactionColumns: GridColDef[] = [
     {
-      headerName: t('reactions.student_lbl' ),
+      headerName: t("reactions.student_lbl"),
       field: "user",
-      renderCell: (params) => {
-          const user = params.value;
-          return <Link href={`mailto:${user.email}`}>{user.name}</Link>;
+      renderCell: params => {
+        const user = params.value;
+        return <Link href={`mailto:${user.email}`}>{user.name}</Link>;
       }
     },
     {
-      headerName: t('reactions.email_lbl'),
+      headerName: t("reactions.email_lbl"),
       field: "email",
-      renderCell: (params) => {
-          const user = params.value;
-          return <Link href={`mailto:${user.email}`}>{user.email}</Link>;
+      renderCell: params => {
+        const user = params.value;
+        return <Link href={`mailto:${user.email}`}>{user.email}</Link>;
       }
     },
     {
-      headerName: t('reactions.completion_lbl'),
+      headerName: t("reactions.completion_lbl"),
       field: "status",
-      renderCell: (params) => {
-          return params.value + "%";
+      renderCell: params => {
+        return params.value + "%";
       }
     },
     {
-      headerName: t('reactions.narrative_lbl'),
+      headerName: t("reactions.narrative_lbl"),
       field: "narrative",
       renderCell: renderTextCellExpand
     },
     {
-      headerName: t('reactions.scenario_lbl'),
+      headerName: t("reactions.scenario_lbl"),
       field: "scenario",
       renderCell: renderTextCellExpand
     },
     {
-      headerName: t('reactions.response_lbl'),
+      headerName: t("reactions.response_lbl"),
       field: "behavior",
-      renderCell: ( params ) => {
-          if ("Other" == params.value) {
-            return (
-              <Link
-                onClick={event =>
-                  openPop(
-                    event,
-                    params.row.other_name
-                  )
-                }
-              >
-                {params.value}
-              </Link>
-            );
-          } else {
-            return params.value;
-          }
+      renderCell: params => {
+        if ("Other" == params.value) {
+          return (
+            <Link onClick={event => openPop(event, params.row.other_name)}>
+              {params.value}
+            </Link>
+          );
+        } else {
+          return params.value;
         }
+      }
     },
     {
-      headerName: t('reactions.improvements_lbl'),
+      headerName: t("reactions.improvements_lbl"),
       field: "improvements",
-      renderCell: ( params ) => {
-          if ("" != params.value) {
-            return (
-              <Link
-                onClick={event =>
-                  openPop(
-                    event,
-                    params.row.improvements
-                  )
-                }
-              >
-                {t('reactions.suggestions_lbl')}
-              </Link>
-            );
-          } else {
-            return "N/A";
-          }
-
+      renderCell: params => {
+        if ("" != params.value) {
+          return (
+            <Link onClick={event => openPop(event, params.row.improvements)}>
+              {t("reactions.suggestions_lbl")}
+            </Link>
+          );
+        } else {
+          return "N/A";
+        }
       }
     }
   ];
@@ -162,7 +145,7 @@ export default function ReactionsList(props: Props) {
       {null != props.reactionsList ? (
         <React.Fragment>
           <DataGrid
-            isCellEditable={()=>false}
+            isCellEditable={() => false}
             columns={reactionColumns}
             rows={props.reactionsList}
             slots={{
@@ -174,8 +157,7 @@ export default function ReactionsList(props: Props) {
               }
             }}
             pageSizeOptions={[5, 10, 100]}
-
-        />
+          />
           <Popover
             open={Boolean(anchorEl)}
             onClose={closePop}
@@ -184,9 +166,9 @@ export default function ReactionsList(props: Props) {
             <Container maxWidth="sm">{popMsg}</Container>
           </Popover>
         </React.Fragment>
-      ) : 
-        <div>{t('reactions.none_yet')}</div>
-      }
+      ) : (
+        <div>{t("reactions.none_yet")}</div>
+      )}
     </Paper>
   );
 }

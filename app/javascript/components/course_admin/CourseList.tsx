@@ -19,7 +19,10 @@ import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { Skeleton } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
-import { renderDateCellExpand, renderTextCellExpand } from "../infrastructure/GridCellExpand";
+import {
+  renderDateCellExpand,
+  renderTextCellExpand
+} from "../infrastructure/GridCellExpand";
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
 
 export default function CourseList(props) {
@@ -34,8 +37,8 @@ export default function CourseList(props) {
   // Settings.throwOnInvalid = true;
 
   const navigate = useNavigate();
-  const location = useLocation( );
-  const {t} = useTranslation( `${category}s`);
+  const location = useLocation();
+  const { t } = useTranslation(`${category}s`);
 
   const user = useTypedSelector(state => state.profile.user);
   const [messages, setMessages] = useState({});
@@ -44,61 +47,61 @@ export default function CourseList(props) {
   const dispatch = useDispatch();
   const columns: GridColDef[] = [
     {
-      headerName: t( 'index.number_col'),
+      headerName: t("index.number_col"),
       field: "number",
-      renderCell: (params) => {
-          return (
-            <span>
-              <BookIcon />
-              &nbsp;{params.value}
-            </span>
-          );
+      renderCell: params => {
+        return (
+          <span>
+            <BookIcon />
+            &nbsp;{params.value}
+          </span>
+        );
       }
     },
     {
-      headerName: t( 'index.name_col'),
+      headerName: t("index.name_col"),
       field: "name",
       renderCell: renderTextCellExpand
     },
     {
-      headerName: t( 'index.school_col'),
+      headerName: t("index.school_col"),
       field: "school_name",
       renderCell: renderTextCellExpand
     },
     {
-      headerName: t( 'index.open_col'),
+      headerName: t("index.open_col"),
       field: "start_date",
       renderCell: renderDateCellExpand
     },
     {
-      headerName: t( 'index.close_col'),
+      headerName: t("index.close_col"),
       field: "end_date",
       renderCell: renderDateCellExpand
     },
     {
-      headerName: t( 'index.faculty_col'),
-      field: "faculty_count",
+      headerName: t("index.faculty_col"),
+      field: "faculty_count"
     },
     {
-      headerName: t( 'index.students_col'),
-      field: "student_count",
+      headerName: t("index.students_col"),
+      field: "student_count"
     },
     {
-      headerName: t( 'index.projects_col'),
-      field: "project_count",
+      headerName: t("index.projects_col"),
+      field: "project_count"
     },
     {
-      headerName: t( 'index.experiences_col'),
-      field: "experience_count",
+      headerName: t("index.experiences_col"),
+      field: "experience_count"
     },
     {
-      headerName: t( 'index.bingo_games_col'),
-      field: "bingo_game_count",
+      headerName: t("index.bingo_games_col"),
+      field: "bingo_game_count"
     },
     {
-      headerName: t( 'index.actions_col'),
+      headerName: t("index.actions_col"),
       field: "id",
-      renderCell: (params) => {
+      renderCell: params => {
         const course = params.row;
         const scoresUrl = endpoints.scoresUrl + params.value + ".csv";
         const copyUrl = endpoints.courseCopyUrl + params.value + ".json";
@@ -126,7 +129,6 @@ export default function CourseList(props) {
             />
           </React.Fragment>
         );
-
       }
     }
   ];
@@ -164,40 +166,36 @@ export default function CourseList(props) {
 
   const dataTable = (
     <DataGrid
-    columns={columns}
-    rows={courses}
-    slots={{
-      toolbar: AdminListToolbar
-    }}
-    slotProps={{
-      toolbar: {
-        itemType: category
-      }
-    }}
-    onCellClick={(params)=>{
-      if ('id' != params.colDef.field) {
-        const course_id = params.row.id
-        //This ought not be necessary and I would like to ask about it on SO - 
-        //when time permits
-        const locaLocation = `${location.pathname}/${String(course_id)}`;
-        navigate(locaLocation, {relative: 'path' });
-      }
-
-    }}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 }
-          }
-        }}
-        pageSizeOptions={[5, 10, 100 ]}
-
+      columns={columns}
+      rows={courses}
+      slots={{
+        toolbar: AdminListToolbar
+      }}
+      slotProps={{
+        toolbar: {
+          itemType: category
+        }
+      }}
+      onCellClick={params => {
+        if ("id" != params.colDef.field) {
+          const course_id = params.row.id;
+          //This ought not be necessary and I would like to ask about it on SO -
+          //when time permits
+          const locaLocation = `${location.pathname}/${String(course_id)}`;
+          navigate(locaLocation, { relative: "path" });
+        }
+      }}
+      initialState={{
+        pagination: {
+          paginationModel: { page: 0, pageSize: 5 }
+        }
+      }}
+      pageSizeOptions={[5, 10, 100]}
     />
-
   );
 
   return (
-      <Suspense fallback={<Skeleton variant={'rectangular'} />} >
-
+    <Suspense fallback={<Skeleton variant={"rectangular"} />}>
       <Collapse in={showErrors}>
         <Alert
           action={
@@ -220,7 +218,7 @@ export default function CourseList(props) {
       {null !== user.lastRetrieved ? (
         <div style={{ maxWidth: "100%" }}>{dataTable}</div>
       ) : null}
-      </Suspense>
+    </Suspense>
   );
 }
 

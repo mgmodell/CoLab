@@ -11,7 +11,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 
-import { DataGrid, GridRowModel, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridRowModel,
+  GridColDef,
+  GridRenderCellParams
+} from "@mui/x-data-grid";
 import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
@@ -53,7 +58,7 @@ export default function RubricList(props) {
       type: "actions",
       editable: false,
       sortable: false,
-      renderCell: (params: GridRenderCellParams ) => (
+      renderCell: (params: GridRenderCellParams) => (
         <Fragment>
           <Tooltip title={t("rubric.copy")}>
             <IconButton
@@ -85,28 +90,27 @@ export default function RubricList(props) {
           </Tooltip>
           <Tooltip title={t("rubric.delete")}>
             <span>
-
-            <IconButton
-              id="delete_rubric"
-              aria-label={t("rubric.delete")}
-              disabled={params.row.published}
-              onClick={event => {
-                const rubric = Object.assign(
-                  {},
-                  rubrics.find(value => {
-                    return params.id == value.id;
-                  })
-                );
-                const url = `${endpoints["baseUrl"]}/${rubric.id}.json`;
-                axios.delete(url).then(resp => {
-                  // check for possible errors
-                  getRubrics();
-                });
-              }}
-              size="small"
-            >
-              <DeleteIcon />
-            </IconButton>
+              <IconButton
+                id="delete_rubric"
+                aria-label={t("rubric.delete")}
+                disabled={params.row.published}
+                onClick={event => {
+                  const rubric = Object.assign(
+                    {},
+                    rubrics.find(value => {
+                      return params.id == value.id;
+                    })
+                  );
+                  const url = `${endpoints["baseUrl"]}/${rubric.id}.json`;
+                  axios.delete(url).then(resp => {
+                    // check for possible errors
+                    getRubrics();
+                  });
+                }}
+                size="small"
+              >
+                <DeleteIcon />
+              </IconButton>
             </span>
           </Tooltip>
         </Fragment>
@@ -184,7 +188,7 @@ export default function RubricList(props) {
                 itemType: "rubric"
               }
             }}
-            pageSizeOptions={[5, 10, 100 ]}
+            pageSizeOptions={[5, 10, 100]}
           />
         </div>
       </div>

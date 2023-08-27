@@ -4,7 +4,7 @@ require 'chronic'
 # frozen_string_literal: true
 Then(/^the user "([^"]*)" see an Admin button$/) do |admin|
   find(:xpath, '//*[@id="main-menu-button"]').click
-  if admin == 'does'
+  if 'does' == admin
     page.should have_content('Administration')
   else
     page.should_not have_content('Administration')
@@ -87,9 +87,9 @@ end
 
 Then('the user adds a group named {string}') do |group_name|
   button = 'Add Group'
-  btn = find(:xpath, "//button[contains(.,'#{button}')]",
-             match: :first,
-             visible: :all).click
+  find(:xpath, "//button[contains(.,'#{button}')]",
+       match: :first,
+       visible: :all).click
   elem = find_field('g_-1')
   elem.set(group_name)
 end
@@ -97,7 +97,7 @@ end
 Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
   begin
     click_link tab
-  rescue Capybara::ElementNotFound => e
+  rescue Capybara::ElementNotFound
     find(:xpath, "//button[text()='#{tab}']").click
   end
   wait_for_render
@@ -109,7 +109,8 @@ Then 'the user enables the {string} table view option' do |view_option|
   begin
     retries ||= 0
     # inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]", visible: :all)
-    inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]" ).sibling('span').find(:xpath, './span/input', visible: false )
+    inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]").sibling('span').find(:xpath, './span/input',
+                                                                                           visible: false)
   rescue StandardError => e
     log e.inspect
     sleep 0.1
@@ -161,7 +162,7 @@ Then(/^the user selects "([^"]*)" as "([^"]*)"$/) do |value, field|
   begin
     retries ||= 0
     selectCtrl = find_all(:xpath, "//select[@id='#{id}']")
-  rescue NoMethodError => e
+  rescue NoMethodError
     retry if (retries += 1) < 4
   end
 

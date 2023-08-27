@@ -30,7 +30,7 @@ class ConsentForm < ApplicationRecord
   end
 
   def is_active?
-    now = Date.today
+    now = Time.zone.today
     active && start_date <= now && (end_date.nil? || end_date >= now)
   end
 end

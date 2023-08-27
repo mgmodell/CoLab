@@ -69,7 +69,7 @@ class CoursesController < ApplicationController
   end
 
   def get_users
-    rosters = @course.rosters
+    @course.rosters
     users = []
     @course.rosters.each do |roster|
       users << {
@@ -456,7 +456,6 @@ class CoursesController < ApplicationController
   end
 
   def add_students
-
     count = @course.add_students_by_email params[:addresses]
     msg = t('courses.students_invited', count:)
     respond_to do |format|
@@ -602,7 +601,7 @@ class CoursesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_course
     if current_user.is_admin?
-      @course = if params[:id].blank? || params[:id] == 'new'
+      @course = if params[:id].blank? || 'new' == params[:id]
                   Course.new(
                     school_id: current_user.school_id,
                     timezone: current_user.timezone

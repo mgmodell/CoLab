@@ -23,7 +23,6 @@ class Course < ApplicationRecord
   before_create :anonymize
 
   def pretty_name(anonymous = false)
-    prettyName = ''
     if anonymous
       "#{anon_name} (#{anon_number})"
     elsif number.present?
@@ -82,7 +81,7 @@ class Course < ApplicationRecord
 
   def get_user_role(user)
     roster = rosters.find_by(user:)
-    roster.nil? ? nil : roster.role
+    roster&.role
   end
 
   def copy_from_template(new_start:)
@@ -292,14 +291,14 @@ class Course < ApplicationRecord
   def activity_date_check
     experiences.reload.each do |experience|
       if experience.start_date < start_date
-        msg = errors[:start_date].presence || ''
+        errors[:start_date].presence || ''
         msg = "Experience '#{experience.name}' currently starts before this course does"
         msg += " (#{experience.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
       next unless experience.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].presence || ''
+      errors[:end_date].presence || ''
       msg = "Experience '#{experience.name}' currently ends after this course does"
       msg += " (#{experience.end_date} > #{end_date})."
       errors.add(:end_date, msg)
@@ -313,21 +312,21 @@ class Course < ApplicationRecord
       end
       next unless project.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].presence || ''
+      errors[:end_date].presence || ''
       msg = "Project '#{project.name}' currently ends after this course does"
       msg += " (#{project.end_date} > #{end_date})."
       errors.add(:end_date, msg)
     end
     bingo_games.reload.each do |bingo_game|
       if bingo_game.start_date < start_date
-        msg = errors[:start_date].presence || ''
+        errors[:start_date].presence || ''
         msg = "Bingo! '#{bingo_game.topic}' currently starts before this course does "
         msg += " (#{bingo_game.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
       next unless bingo_game.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].presence || ''
+      errors[:end_date].presence || ''
       msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
       msg += " (#{bingo_game.end_date} > #{end_date})."
       errors.add(:end_date, msg)

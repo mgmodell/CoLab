@@ -79,7 +79,7 @@ class CandidateListsController < ApplicationController
       @candidate_list.group_requested = true
       @candidate_list.save
       logger.debug @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
-      @candidate_list = merge_to_group_list(@candidate_list) if @candidate_list.others_requested_help == 1
+      @candidate_list = merge_to_group_list(@candidate_list) if 1 == @candidate_list.others_requested_help
     else
       @candidate_list.transaction do
         @candidate_list.bingo_game.project.group_for_user(current_user).users.each do |user|
@@ -129,7 +129,7 @@ class CandidateListsController < ApplicationController
           id = candidate_data[:id]
 
           if id.blank?
-            candidate = @candidate_list.candidates.build(
+            @candidate_list.candidates.build(
               term:,
               definition:,
               user: current_user
@@ -199,7 +199,7 @@ class CandidateListsController < ApplicationController
                                         contributor_count: 1,
                                         is_group: false)
     @candidate_list.user = current_user
-    demo_project = Project.new(id: -1,
+    Project.new(id: -1,
                                name: (t :demo_project),
                                course_id: -1)
 
@@ -213,7 +213,7 @@ class CandidateListsController < ApplicationController
   end
 
   def demo_entry
-    name = (t :demo_project),
+    (t :demo_project),
 
            candidates = []
 
@@ -307,7 +307,7 @@ class CandidateListsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_candidate_list
-    if params[:bingo_game_id] == '-1' # Support for demo
+    if '-1' == params[:bingo_game_id] # Support for demo
       flash[:notice] = t('candidate_lists.demo_colab_success')
       redirect_to root_url
     else

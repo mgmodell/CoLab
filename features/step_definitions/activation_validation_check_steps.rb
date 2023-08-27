@@ -41,7 +41,7 @@ Then(/^there should be an error if I try to modify an project field$/) do
   @project.start_date = @project.start_date + 1
   @project.save
   log @project.errors.full_messages if @project.errors.present?
-  @project.errors.count.should be > 0
+  @project.errors.count.should be.positive?
 end
 
 Then(/^there should be an error if I try to modify a group that is part of an active project$/) do
@@ -50,7 +50,7 @@ Then(/^there should be an error if I try to modify a group that is part of an ac
   group.users.delete(user)
   group.save
   log group.errors.full_messages if group.errors.present?
-  group.errors.count.should be > 0
+  group.errors.count.should be.positive?
 end
 
 Given(/^the factor pack is set to "([^"]*)"$/) do |pack_name|

@@ -47,15 +47,15 @@ export default function HomeShell(props) {
   const [tasks, setTasks] = useState();
 
   useEffect(() => {
-      if (null !== user.lastRetrieved && undefined !== tasks) {
-        const newTasks = tasks;
-        newTasks.forEach((value, index, array) => {
-          value.next_date = value.next_date.setZone(Settings.defaultZone);
-          value.start_date = value.start_date.setZone(Settings.defaultZone);
-        });
+    if (null !== user.lastRetrieved && undefined !== tasks) {
+      const newTasks = tasks;
+      newTasks.forEach((value, index, array) => {
+        value.next_date = value.next_date.setZone(Settings.defaultZone);
+        value.start_date = value.start_date.setZone(Settings.defaultZone);
+      });
 
-        setTasks(newTasks);
-      }
+      setTasks(newTasks);
+    }
   }, [user.lastRetrieved, Settings.defaultZone, tasks]);
 
   //Initialising to null

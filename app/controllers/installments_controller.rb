@@ -179,7 +179,7 @@ class InstallmentsController < ApplicationController
           if !found
             redirect_to root_url error: (t 'installments.err_not_member')
           elsif @installment.save
-            project = @installment.assessment.project
+            @installment.assessment.project
             flash[:notice] = t 'installments.success'
             redirect_to root_url
           else
@@ -200,31 +200,30 @@ class InstallmentsController < ApplicationController
       end
       format.json do
         if id.negative?
-          valueArray =
-            render json: {
-              messages: {
-                status: t('installments.demo_success')
-              },
-              installment: {
-                id:,
-                assessment_id: params[:assessment_id],
-                group_id: params[:group_id],
-                values: params[:contributions].values
-                                              .reduce([]) do |tmpArr, itemSet|
-                          tmpArr.concat(
-                            itemSet.collect do |item|
-                              {
-                                id: item[:id],
-                                user_id: item[:userId],
-                                factor_id: item[:factorId],
-                                name: item[:name],
-                                value: item[:value]
-                              }
-                            end
-                          )
-                        end
-              }
+          render json: {
+            messages: {
+              status: t('installments.demo_success')
+            },
+            installment: {
+              id:,
+              assessment_id: params[:assessment_id],
+              group_id: params[:group_id],
+              values: params[:contributions].values
+                                            .reduce([]) do |tmpArr, itemSet|
+                        tmpArr.concat(
+                          itemSet.collect do |item|
+                            {
+                              id: item[:id],
+                              user_id: item[:userId],
+                              factor_id: item[:factorId],
+                              name: item[:name],
+                              value: item[:value]
+                            }
+                          end
+                        )
+                      end
             }
+          }
         else
           ActiveRecord::Base.transaction do
             installment = Installment.includes(:values).find(id)

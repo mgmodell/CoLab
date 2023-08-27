@@ -18,19 +18,19 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { renderTextCellExpand } from "./infrastructure/GridCellExpand";
 
 interface IInvitation {
-  id: number,
-  name: string,
-  startDate: DateTime,
-  endDate: DateTime,
-  acceptPath: string,
-  declinePath: string,
+  id: number;
+  name: string;
+  startDate: DateTime;
+  endDate: DateTime;
+  acceptPath: string;
+  declinePath: string;
 }
 type Props = {
   invitations: Array<IInvitation>;
   parentUpdateFunc: () => void;
-}
+};
 
-export default function DecisionInvitationsTable(props : Props) {
+export default function DecisionInvitationsTable(props: Props) {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const user = useTypedSelector(state => state.profile.user);
@@ -39,59 +39,58 @@ export default function DecisionInvitationsTable(props : Props) {
     {
       headerName: t("task_name"),
       field: "id",
-      renderCell: (params) => {
-          const invitation = params.row;
-          return (
-            <React.Fragment>
-              <Tooltip title={t("accept")}>
-                <Fab
-                  aria-label={t("accept")}
-                  id="Accept"
-                  onClick={event => {
-                    const url = invitation.acceptPath + ".json";
-                    dispatch(startTask("accepting"));
-                    axios
-                      .get(url, {})
-                      .then(response => {
-                        const data = response.data;
-                        //Process the data
-                        props.parentUpdateFunc();
-                        dispatch(endTask("accepting"));
-                      })
-                      .catch(error => {
-                        console.log("error", error);
-                      });
-                  }}
-                >
-                  <ThumbUpIcon />
-                </Fab>
-              </Tooltip>
-              <Tooltip title={t("decline")}>
-                <Fab
-                  aria-label={t("decline")}
-                  id="Decline"
-                  onClick={event => {
-                    const url = invitation.declinePath + ".json";
-                    dispatch(startTask("declining"));
-                    axios
-                      .get(url, {})
-                      .then(response => {
-                        const data = response.data;
-                        //Process the data
-                        props.parentUpdateFunc();
-                        dispatch(endTask("declining"));
-                      })
-                      .catch(error => {
-                        console.log("error", error);
-                      });
-                  }}
-                >
-                  <ThumbDownIcon />
-                </Fab>
-              </Tooltip>
-            </React.Fragment>
-          );
-
+      renderCell: params => {
+        const invitation = params.row;
+        return (
+          <React.Fragment>
+            <Tooltip title={t("accept")}>
+              <Fab
+                aria-label={t("accept")}
+                id="Accept"
+                onClick={event => {
+                  const url = invitation.acceptPath + ".json";
+                  dispatch(startTask("accepting"));
+                  axios
+                    .get(url, {})
+                    .then(response => {
+                      const data = response.data;
+                      //Process the data
+                      props.parentUpdateFunc();
+                      dispatch(endTask("accepting"));
+                    })
+                    .catch(error => {
+                      console.log("error", error);
+                    });
+                }}
+              >
+                <ThumbUpIcon />
+              </Fab>
+            </Tooltip>
+            <Tooltip title={t("decline")}>
+              <Fab
+                aria-label={t("decline")}
+                id="Decline"
+                onClick={event => {
+                  const url = invitation.declinePath + ".json";
+                  dispatch(startTask("declining"));
+                  axios
+                    .get(url, {})
+                    .then(response => {
+                      const data = response.data;
+                      //Process the data
+                      props.parentUpdateFunc();
+                      dispatch(endTask("declining"));
+                    })
+                    .catch(error => {
+                      console.log("error", error);
+                    });
+                }}
+              >
+                <ThumbDownIcon />
+              </Fab>
+            </Tooltip>
+          </React.Fragment>
+        );
       }
     },
     {
@@ -102,25 +101,25 @@ export default function DecisionInvitationsTable(props : Props) {
     {
       headerName: t("open_date"),
       field: "startDate",
-      renderCell: (params) => {
-          var retVal = <React.Fragment>{t('not_available')}</React.Fragment>
-          if (null !== params.value) {
-            const dt = DateTime.fromISO(params.value);
-            retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
-          }
-          return retVal;
+      renderCell: params => {
+        var retVal = <React.Fragment>{t("not_available")}</React.Fragment>;
+        if (null !== params.value) {
+          const dt = DateTime.fromISO(params.value);
+          retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+        }
+        return retVal;
       }
     },
     {
       headerName: t("close_date"),
       field: "endDate",
-      renderCell: (params) => {
-          var retVal = <React.Fragment>{t('not_available')}</React.Fragment>
-          if (null !== params.value) {
-            const dt = DateTime.fromISO(params.value);
-            retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
-          }
-          return retVal;
+      renderCell: params => {
+        var retVal = <React.Fragment>{t("not_available")}</React.Fragment>;
+        if (null !== params.value) {
+          const dt = DateTime.fromISO(params.value);
+          retVal = <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+        }
+        return retVal;
       }
     }
   ];
@@ -149,7 +148,7 @@ export default function DecisionInvitationsTable(props : Props) {
           }
         }}
         pageSizeOptions={[5, 10]}
-        />
+      />
     </React.Fragment>
   );
 }

@@ -35,7 +35,7 @@ const ResearchParticipationList = React.lazy(() =>
 );
 const UserActivityList = React.lazy(() => import("./UserActivityList"));
 //import i18n from './i18n';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { Box, Grid, Link } from "@mui/material";
@@ -57,7 +57,7 @@ export default function ProfileDataAdmin(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const { t } = useTranslation( `${category}s` );
+  const { t } = useTranslation(`${category}s`);
   const lookupStatus = useTypedSelector(
     state => state.context.status.lookupsLoaded
   );
@@ -286,14 +286,12 @@ export default function ProfileDataAdmin(props) {
   const detailsComponent = lookupStatus ? (
     <Paper>
       <Accordion expanded>
-        <AccordionSummary id="profile">
-          {t('edit_profile')}
-        </AccordionSummary>
+        <AccordionSummary id="profile">{t("edit_profile")}</AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3}>
             <Grid item sm={6} xs={12}>
               <TextField
-                label={t('first_name')}
+                label={t("first_name")}
                 id="first-name"
                 value={user.first_name}
                 fullWidth
@@ -304,7 +302,7 @@ export default function ProfileDataAdmin(props) {
             </Grid>
             <Grid item sm={6} xs={12}>
               <TextField
-                label={t('last')}
+                label={t("last")}
                 id="last-name"
                 value={user.last_name}
                 fullWidth
@@ -321,7 +319,7 @@ export default function ProfileDataAdmin(props) {
         onChange={() => handlePanelClick("email")}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />} id="email">
-          {t('email_settings')}
+          {t("email_settings")}
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3}>
@@ -339,7 +337,7 @@ export default function ProfileDataAdmin(props) {
             </Grid>
             <Grid item xs={12}>
               <Link href={endpoints["passwordResetUrl"]}>
-                {t('password_change')}
+                {t("password_change")}
               </Link>
             </Grid>
           </Grid>
@@ -350,14 +348,14 @@ export default function ProfileDataAdmin(props) {
         onChange={() => handlePanelClick("display")}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />} id="display">
-          {t('display_settings.prompt')}
+          {t("display_settings.prompt")}
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
               <FormControl fullWidth>
                 <InputLabel htmlFor="profile_theme" id="profile_theme_lbl">
-                  {t('display_settings.ui_theme')}
+                  {t("display_settings.ui_theme")}
                 </InputLabel>
                 <Select
                   id="profile_theme"
@@ -366,9 +364,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileTheme(Number(event.target.value))
                   }
                 >
-                  <MenuItem value={0}>
-                    {t('none_option')}
-                  </MenuItem>
+                  <MenuItem value={0}>{t("none_option")}</MenuItem>
                   {themes.map(theme => {
                     return (
                       <MenuItem key={theme.code} value={theme.id}>
@@ -388,7 +384,7 @@ export default function ProfileDataAdmin(props) {
                   htmlFor="profile_language"
                   id="profile_language_lbl"
                 >
-                  {t('display_settings.language')}
+                  {t("display_settings.language")}
                 </InputLabel>
                 <Select
                   id="profile_language"
@@ -397,9 +393,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileLanguage(Number(event.target.value))
                   }
                 >
-                  <MenuItem value={0}>
-                    {t('none_option')}
-                  </MenuItem>
+                  <MenuItem value={0}>{t("none_option")}</MenuItem>
                   {languages.map(language => {
                     return (
                       <MenuItem key={language.name} value={language.id}>
@@ -422,7 +416,7 @@ export default function ProfileDataAdmin(props) {
                     name="researcher"
                   />
                 }
-                label={t('display_settings.anonymize')}
+                label={t("display_settings.anonymize")}
               />
             </Grid>
             <Grid item xs={9}>
@@ -431,7 +425,7 @@ export default function ProfileDataAdmin(props) {
                   htmlFor="profile_timezone"
                   id="profile_timezone_lbl"
                 >
-                  {t('demographics.time_zone')}
+                  {t("demographics.time_zone")}
                 </InputLabel>
                 <Select
                   id="profile_timezone"
@@ -440,9 +434,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileTimezone(String(event.target.value))
                   }
                 >
-                  <MenuItem value={0}>
-                    {t('none_option')}
-                  </MenuItem>
+                  <MenuItem value={0}>{t("none_option")}</MenuItem>
                   {timezones.map(timezone => {
                     return (
                       <MenuItem key={timezone.name} value={timezone.name}>
@@ -464,14 +456,14 @@ export default function ProfileDataAdmin(props) {
         onChange={() => handlePanelClick("demographics")}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />} id="demographics">
-          {t('demographics.prompt', { first_name: user.first_name})}
+          {t("demographics.prompt", { first_name: user.first_name })}
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel htmlFor="profile_school" id="profile_school_lbl">
-                  {t('demographics.school')}
+                  {t("demographics.school")}
                 </InputLabel>
                 <Select
                   id="profile_school"
@@ -480,9 +472,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileSchool(Number(event.target.value))
                   }
                 >
-                  <MenuItem value={0}>
-                    {t('none_option')}
-                  </MenuItem>
+                  <MenuItem value={0}>{t("none_option")}</MenuItem>
                   {schools.map(school => {
                     return (
                       <MenuItem key={school.name} value={school.id}>
@@ -502,7 +492,7 @@ export default function ProfileDataAdmin(props) {
                   htmlFor="profile_cip_code"
                   id="profile_cip_code_lbl"
                 >
-                  {t('demographics.major')}
+                  {t("demographics.major")}
                 </InputLabel>
                 <Select
                   id="profile_cip_code"
@@ -512,7 +502,7 @@ export default function ProfileDataAdmin(props) {
                   }
                 >
                   <MenuItem key={0} value={0}>
-                    {t('none_option')}
+                    {t("none_option")}
                   </MenuItem>
                   {cipCodes.map(cipCode => {
                     return (
@@ -532,13 +522,15 @@ export default function ProfileDataAdmin(props) {
                 htmlFor="profile_primary_start_school"
                 id="profile_primary_start_school_lbl"
               >
-                {t('demographics.start_school')}
+                {t("demographics.start_school")}
               </InputLabel>
               <LocalizationProvider dateAdapter={AdapterLuxon}>
                 <DatePicker
                   clearable
-                  value={DateTime.fromISO( user.started_school ).setZone( Settings.timezone)}
-                  placeholder={t('demographics.date_prompt')}
+                  value={DateTime.fromISO(user.started_school).setZone(
+                    Settings.timezone
+                  )}
+                  placeholder={t("demographics.date_prompt")}
                   onChange={date => setProfileStartedSchool(date)}
                   format="MM/dd/yyyy"
                   slot={{
@@ -555,7 +547,7 @@ export default function ProfileDataAdmin(props) {
             <Grid item xs={12} md={6}>
               <FormControl fullWidth>
                 <InputLabel htmlFor="profile_country" id="profile_country_lbl">
-                  {t('demographics.home_town')}
+                  {t("demographics.home_town")}
                 </InputLabel>
                 <Select
                   id="profile_country"
@@ -565,9 +557,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileHomeCountry(country);
                   }}
                 >
-                  <MenuItem value={0}>
-                    {t('none_option')}
-                  </MenuItem>
+                  <MenuItem value={0}>{t("none_option")}</MenuItem>
                   {countries.map(country => {
                     return (
                       <MenuItem key={country.id} value={country.code}>
@@ -611,7 +601,7 @@ export default function ProfileDataAdmin(props) {
                   htmlFor="profile_language"
                   id="profile_language_lbl"
                 >
-                  {t('demographics.home_language')}
+                  {t("demographics.home_language")}
                 </InputLabel>
                 <Select
                   id="profile_language"
@@ -620,9 +610,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileHomeLanguage(Number(event.target.value))
                   }
                 >
-                  <MenuItem value={0}>
-                    {t('none_option')}
-                  </MenuItem>
+                  <MenuItem value={0}>{t("none_option")}</MenuItem>
                   {languages.map(language => {
                     return (
                       <MenuItem key={language.code} value={language.id}>
@@ -639,7 +627,7 @@ export default function ProfileDataAdmin(props) {
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel htmlFor="profile_gender" id="profile_gender_lbl">
-                  {t('demographics.gender')}
+                  {t("demographics.gender")}
                 </InputLabel>
                 <Select
                   id="profile_gender"
@@ -648,9 +636,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileGender(Number(event.target.value))
                   }
                 >
-                  <MenuItem value={0}>
-                    {t('none_option')}
-                  </MenuItem>
+                  <MenuItem value={0}>{t("none_option")}</MenuItem>
                   {genders.map(gender => {
                     return (
                       <MenuItem key={gender.code} value={gender.id}>
@@ -669,13 +655,15 @@ export default function ProfileDataAdmin(props) {
                 htmlFor="profile_date_of_birth"
                 id="profile_date_of_birth_lbl"
               >
-                {t('demographics.born')}
+                {t("demographics.born")}
               </InputLabel>
               <LocalizationProvider dateAdapter={AdapterLuxon}>
                 <DatePicker
                   clearable
-                  value={DateTime.fromISO( user.date_of_birth ).setZone( Settings.timezone)}
-                  placeholder={t('demographics.date_prompt')}
+                  value={DateTime.fromISO(user.date_of_birth).setZone(
+                    Settings.timezone
+                  )}
+                  placeholder={t("demographics.date_prompt")}
                   onChange={date => setProfileDOB(date)}
                   format="MM/dd/yyyy"
                   slot={{
@@ -691,7 +679,7 @@ export default function ProfileDataAdmin(props) {
             </Grid>
             <Grid item xs={12} md={12}>
               <InputLabel htmlFor="impairments">
-                {t('demographics.impairments.prompt')}
+                {t("demographics.impairments.prompt")}
               </InputLabel>
               <ToggleButtonGroup id="impairments">
                 <ToggleButton
@@ -701,7 +689,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileImpVisual(!profileImpVisual);
                   }}
                 >
-                  {t('demographics.impairments.visual')}
+                  {t("demographics.impairments.visual")}
                 </ToggleButton>
                 <ToggleButton
                   value="auditory"
@@ -710,7 +698,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileImpAuditory(!profileImpAuditory);
                   }}
                 >
-                  {t('demographics.impairments.auditory')}
+                  {t("demographics.impairments.auditory")}
                 </ToggleButton>
                 <ToggleButton
                   value="cognitive"
@@ -719,7 +707,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileImpCognitive(!profileImpCognitive);
                   }}
                 >
-                  {t('demographics.impairments.cognitive')}
+                  {t("demographics.impairments.cognitive")}
                 </ToggleButton>
                 <ToggleButton
                   value="motor"
@@ -728,7 +716,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileImpMotor(!profileImpMotor);
                   }}
                 >
-                  {t('demographics.impairments.motor')}
+                  {t("demographics.impairments.motor")}
                 </ToggleButton>
                 <ToggleButton
                   value="other"
@@ -737,7 +725,7 @@ export default function ProfileDataAdmin(props) {
                     setProfileImpOther(!profileImpOther);
                   }}
                 >
-                  {t('demographics.impairments.other')}
+                  {t("demographics.impairments.other")}
                 </ToggleButton>
               </ToggleButtonGroup>
             </Grid>

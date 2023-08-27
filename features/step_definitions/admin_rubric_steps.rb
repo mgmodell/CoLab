@@ -39,7 +39,7 @@ Then('retrieve the {string} rubric') do |whichRubric|
   @rubric = if 'latest' == whichRubric
               Rubric.last
             else
-              Rubric.find_by_name whichRubric
+              Rubric.find_by name: whichRubric
             end
 end
 
@@ -133,7 +133,7 @@ Then('retrieve the {string} rubric from the db') do |name|
   @rubric = if 'latest' == name
               Rubric.last
             else
-              @rubric = Rubric.find_by_name name
+              @rubric = Rubric.find_by name:
             end
 end
 
@@ -221,7 +221,7 @@ Then('the rubric {string} active') do |is_active|
 end
 
 Given('the {string} rubric is published') do |name|
-  rubric = Rubric.find_by_name name
+  rubric = Rubric.find_by(name:)
   rubric.published = true
   rubric.save
 end
@@ -269,7 +269,7 @@ Then('the rubric parent is empty') do
 end
 
 Then('the {string} rubric has {int} criteria') do |rubric_name, criteria_count|
-  rubric = Rubric.find_by_name rubric_name
+  rubric = Rubric.find_by name: rubric_name
 
   start_at = rubric.criteria.size + 1
   start_at.upto(criteria_count) do |index|
@@ -317,7 +317,7 @@ end
 
 Then('{string} sequence of remembered criteria by {int}') do |inc_or_dec, raw_delta|
   delta = 'increment' == inc_or_dec ? raw_delta * 2 : raw_delta * -2
-  @criterium.sequence+= delta
+  @criterium.sequence += delta
 end
 
 Then('the user sees that criteria {int} matches the remembered criteria') do |criteria_num|
@@ -360,9 +360,7 @@ Then('the user sees that criteria {int} matches the remembered criteria') do |cr
       # no test - these are buttons
     else
       # untested field
-      if !field.text.blank?
-        true.should eq( false ), "field not tested: #{field['data-field']}: #{field.text}"
-      end
+      true.should eq(false), "field not tested: #{field['data-field']}: #{field.text}" if field.text.present?
     end
   end
 end
@@ -424,9 +422,9 @@ end
 
 Given('there exists a rubric published by another user') do
   users = User.includes(:school).where.not(id: @user.id)
-  another_user = users.where.not( school_id: nil).sample
+  another_user = users.where.not(school_id: nil).sample
   @rubric = another_user.school.rubrics.new(
-    name: "#{Faker::JapaneseMedia::StudioGhibli.character}",
+    name: Faker::JapaneseMedia::StudioGhibli.character.to_s,
     description: Faker::JapaneseMedia::StudioGhibli.quote,
     user: another_user
   )

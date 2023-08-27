@@ -1,22 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 import { useDispatch } from "react-redux";
 
 import { DataGrid, GridRowModel, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
-
 
 import { ISubmissionCondensed } from "./AssignmentViewer";
 import SubmissionListToolbar from "./SubmissionListToolbar";
 
 type Props = {
   submissions: Array<ISubmissionCondensed>;
-  selectSubmissionFunc: (selectedSub:string) => void;
-}
+  selectSubmissionFunc: (selectedSub: string) => void;
+};
 
-export default function SubmissionList(props:Props) {
+export default function SubmissionList(props: Props) {
   const category = "assignment";
 
   const { t } = useTranslation(`${category}s`);
@@ -30,7 +28,7 @@ export default function SubmissionList(props:Props) {
     { field: "recordedScore", headerName: t("submissions.score") },
     { field: "submitted", headerName: t("submissions.submitted") },
     { field: "withdrawn", headerName: t("submissions.withdrawn") },
-    { field: "user", headerName: t("submissions.submitter") },
+    { field: "user", headerName: t("submissions.submitter") }
   ];
 
   return (
@@ -48,8 +46,8 @@ export default function SubmissionList(props:Props) {
               return false;
             }}
             onCellClick={(params, event, details) => {
-              props.selectSubmissionFunc( params.row.id );
-                //navigate(String(params.row.id));
+              props.selectSubmissionFunc(params.row.id);
+              //navigate(String(params.row.id));
             }}
             slots={{
               toolbar: SubmissionListToolbar
@@ -59,7 +57,7 @@ export default function SubmissionList(props:Props) {
                 selectSubmissionFunc: props.selectSubmissionFunc
               }
             }}
-            pageSizeOptions={[5, 10, 100 ]}
+            pageSizeOptions={[5, 10, 100]}
           />
         </div>
       </div>

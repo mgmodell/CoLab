@@ -13,14 +13,14 @@ import Paper from "@mui/material/Paper";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 
 type Props = {
   consentFormId: number;
   parentUpdateFunc: () => void;
-}
+};
 
-export default function ConsentLog(props : Props) {
+export default function ConsentLog(props: Props) {
   const { t } = useTranslation("consent_logs");
   const endpointSet = "consent_log";
   const endpoints = useTypedSelector(
@@ -110,10 +110,8 @@ export default function ConsentLog(props : Props) {
         <Grid item xs={12}>
           <p>{t("edit.instructions")}</p>
           <p>
-            {
-              // Good candidate for dataloading API
-              parse( formText || '' ) 
-            }
+            {// Good candidate for dataloading API
+            parse(formText || "")}
           </p>
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -140,4 +138,3 @@ export default function ConsentLog(props : Props) {
     </Paper>
   );
 }
-

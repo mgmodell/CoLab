@@ -20,7 +20,7 @@ import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 
 export default function CandidateListEntry(props) {
   const endpointSet = "candidate_list";
@@ -235,18 +235,16 @@ export default function CandidateListEntry(props) {
     <Paper>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={3}>
-          <Typography>{t('topic')}</Typography>
+          <Typography>{t("topic")}</Typography>
         </Grid>
         <Grid item xs={12} sm={9}>
           <Typography>{topic}</Typography>
         </Grid>
         <Grid item xs={12} sm={3}>
-          <Typography>{t('description')}</Typography>
+          <Typography>{t("description")}</Typography>
         </Grid>
         <Grid item xs={12} sm={9}>
-            <Typography>
-              {parse( description ) }
-            </Typography>
+          <Typography>{parse(description)}</Typography>
         </Grid>
         <Grid item xs={12} sm={3}>
           <Typography>For</Typography>

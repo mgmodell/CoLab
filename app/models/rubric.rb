@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rubric < ApplicationRecord
   belongs_to :parent, class_name: 'Rubric', optional: true
 
@@ -34,12 +36,12 @@ class Rubric < ApplicationRecord
   private
 
   def anonymize
-    self.anon_name = "#{Faker::Company.bs}"
-    self.anon_description = "#{Faker::Lorem.sentence(
+    self.anon_name = Faker::Company.bs.to_s
+    self.anon_description = Faker::Lorem.sentence(
       word_count: 8,
       supplemental: true,
       random_words_to_add: 9
-    )}"
+    ).to_s
     self.anon_version = version + (Random.rand * 11).floor
   end
 
@@ -47,7 +49,7 @@ class Rubric < ApplicationRecord
     if !published_was && published
       self.active = true
     elsif published_was
-      unless changes.keys == ['active']
+      unless ['active'] == changes.keys
         errors.add(:published, 'A published rubric cannot be modified. A new version must be created.')
       end
     end

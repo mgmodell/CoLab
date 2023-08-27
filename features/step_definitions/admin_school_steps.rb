@@ -32,7 +32,7 @@ end
 
 Then 'the user selects {string} as the {string}' do |value, field|
   lbl = find(:xpath, "//label[text()='#{field}']")[:for]
-  elem = find(:xpath, "//*[@id='#{lbl}']").click
+  find(:xpath, "//*[@id='#{lbl}']").click
   find(:xpath, "//li[text()='#{value}']").click
 end
 

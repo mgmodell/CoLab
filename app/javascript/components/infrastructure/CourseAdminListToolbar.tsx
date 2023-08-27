@@ -16,18 +16,18 @@ import Tooltip from "@mui/material/Tooltip";
 import { iconForType } from "../ActivityLib";
 
 interface IActivityLink {
-  name: string,
-  link: string
+  name: string;
+  link: string;
 }
 type Props = {
-    newActivityLinks: Array<IActivityLink>;
-}
+  newActivityLinks: Array<IActivityLink>;
+};
 
 export default function CourseAdminListToolbar(props: Props) {
   const { t } = useTranslation(`admin`);
   const navigate = useNavigate();
 
-  const [menuAnchorEl, setMenuAnchorEl] = useState( null );
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
   const addButton = (
     <React.Fragment>
       <IconButton

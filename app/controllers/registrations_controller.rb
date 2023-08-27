@@ -94,7 +94,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
     }
     user_email = params[:email]
     if EmailAddress.valid? user_email
-      user = User.find_by_email user_email
+      user = User.find_by email: user_email
       if user.nil?
         passwd = SecureRandom.alphanumeric(10)
         user = User.create(
@@ -120,9 +120,6 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
   end
 
   def confirm
-    resp = {
-      message: 'confirmations.no_token'
-    }
     token = params[:confirmation_token]
 
     # Because I'm using devise_multi-email, this will return

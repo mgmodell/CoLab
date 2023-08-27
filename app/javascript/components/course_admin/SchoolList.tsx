@@ -25,7 +25,7 @@ export default function SchoolList(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
-  const { t } = useTranslation( `${category}s`);
+  const { t } = useTranslation(`${category}s`);
 
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
@@ -34,34 +34,34 @@ export default function SchoolList(props) {
   const dispatch = useDispatch();
   const columns: GridColDef[] = [
     {
-      headerName: t('index.name_lbl'),
+      headerName: t("index.name_lbl"),
       field: "name",
       renderCell: renderTextCellExpand
     },
     {
-      headerName: t('index.courses_lbl'),
+      headerName: t("index.courses_lbl"),
       field: "courses",
       renderCell: renderTextCellExpand
     },
     {
-      headerName: t('index.students_lbl'),
-      field: "students",
+      headerName: t("index.students_lbl"),
+      field: "students"
     },
     {
-      headerName: t('index.instructors_lbl'),
-      field: "instructors",
+      headerName: t("index.instructors_lbl"),
+      field: "instructors"
     },
     {
-      headerName: t('index.project_lbl'),
-      field: "projects",
+      headerName: t("index.project_lbl"),
+      field: "projects"
     },
     {
-      headerName: t('index.experience_lbl'),
-      field: "experiences",
+      headerName: t("index.experience_lbl"),
+      field: "experiences"
     },
     {
-      headerName: t('index.terms_list_lbl'),
-      field: "terms_lists",
+      headerName: t("index.terms_list_lbl"),
+      field: "terms_lists"
     }
   ];
 
@@ -92,7 +92,7 @@ export default function SchoolList(props) {
 
   const schoolTable = (
     <DataGrid
-      isCellEditable={()=>false}
+      isCellEditable={() => false}
       columns={columns}
       rows={schools}
       slots={{
@@ -103,11 +103,11 @@ export default function SchoolList(props) {
           itemType: category
         }
       }}
-      onCellClick={(params: GridCellParams ) => {
-        navigate( String( params.row.id ));
+      onCellClick={(params: GridCellParams) => {
+        navigate(String(params.row.id));
       }}
-        pageSizeOptions={[5, 10, 100 ]}
-      />
+      pageSizeOptions={[5, 10, 100]}
+    />
   );
 
   return (
