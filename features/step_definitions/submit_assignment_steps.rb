@@ -309,7 +309,7 @@ Then('the user withdraws submission {int}') do |assignment_ord|
                               "/div[@data-field='submitted']/div" )
   target_sub.click
   wait_for_render
-  click_link_or_button 'Withdraw Revision'
+  click_link_or_button 'Withdraw revision'
   wait_for_render
 
 end
@@ -324,7 +324,7 @@ Then('the user {string} withdraw submission {int}') do |can, assignment_ord|
                               "/div[@data-field='submitted']/div" )
   target_sub.click
   wait_for_render
-  button_count = find_all( :xpath, "//button[text()='Withdraw Revision' and not(@disabled)]").size
+  button_count = find_all( :xpath, "//button[text()='Withdraw revision' and not(@disabled)]").size
   case can.downcase
   when 'can'
     button_count.should eq 1
@@ -335,4 +335,23 @@ Then('the user {string} withdraw submission {int}') do |can, assignment_ord|
     true.should be false
   end
 
+end
+
+Then('the {string} button is {string}') do |btn_name, state|
+  case state
+  when 'enabled'
+    button_count = find_all( :xpath, "//button[text()='#{btn_name}' and not(@disabled)]").size
+    button_count.should eq 1
+
+  when 'disabled'
+    button_count = find_all( :xpath, "//button[text()='#{btn_name}' and @disabled]").size
+    button_count.should eq 1
+
+  when 'hidden'
+    button_count = find_all( :xpath, "//button[text()='#{btn_name}']").size
+    button_count.should eq 0
+  else
+    puts "State '#{state}' not yet handled"
+    pending # Write code here that turns the phrase above into concrete actions
+  end
 end

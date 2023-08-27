@@ -75,7 +75,7 @@ Feature: (Re)Submitting individual assignments
     Given the assignment "is" initialized active
     Given the user logs in
      Then the user opens the assignment task
-  #   Then the user opens the 'Grading' submissions tab
+  #   Then the user opens the 'grading' submissions tab
       And the shown rubric matches the assignment rubric
 
   @javascript
@@ -111,14 +111,48 @@ Feature: (Re)Submitting individual assignments
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'text' submission
-     Then the user clicks 'Save Revision for Further Editing'
+     Then the user clicks 'Save revision for further editing'
      Then the assignment has 1 'draft' submission
+     Then the assignment has 0 'submitted' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
       And the submission is attached to the user
-     Then the user clicks 'Submit Revision for Grading'
+     Then the user clicks 'Submit revision for grading'
      Then the assignment has 1 'submitted' submission
      Then the assignment has 0 'draft' submission
+
+  @javascript
+  Scenario: User can open and submit text to an assignment
+    Given the assignment "is" initialized active
+    Given the user logs in
+     Then the user opens the assignment task
+     Then the user opens the 'Submissions' submissions tab
+     Then the user creates a new submission
+     Then the user enters a 'text' submission
+     Then the 'Save revision for further editing' button is 'enabled'
+     Then the 'Submit revision for grading' button is 'enabled'
+     Then the 'Make a copy of this revision' button is 'hidden'
+     Then the 'Withdraw revision ' button is 'hidden'
+     Then the user clicks 'Save revision for further editing'
+     Then the assignment has 1 'draft' submission
+     Then the assignment has 0 'submitted' submission
+      And the 'latest' db submission data is accurate
+      And the submission has no group
+      And the submission is attached to the user
+     Then the 'Save revision for further editing' button is 'enabled'
+     Then the 'Submit revision for grading' button is 'enabled'
+     Then the 'Make a copy of this revision' button is 'hidden'
+     Then the 'Withdraw revision ' button is 'hidden'
+     Then the user clicks 'Submit revision for grading'
+     Then the assignment has 1 'submitted' submission
+     Then the assignment has 0 'draft' submission
+     Then the 'Save revision for further editing' button is 'disabled'
+     Then the 'Submit revision for grading' button is 'disabled'
+     Then the 'Make a copy of this revision' button is 'enabled'
+     Then the 'Withdraw revision' button is 'enabled'
+     Then the user clicks 'Make a copy of this revision'
+     Then the assignment has 1 'submitted' submission
+     Then the assignment has 1 'draft' submission
 
 #  @javascript
 #  Scenario: User can open and submit a file to an assignment
@@ -130,7 +164,7 @@ Feature: (Re)Submitting individual assignments
 #     Then the user opens the 'Submissions' submissions tab
 #     Then the user creates a new submission
 #     Then the user enters a 'file' submission
-#     Then the user clicks 'Submit Revision for Grading'
+#     Then the user clicks 'Submit revision for grading'
 #     Then the assignment has 1 'active' submission
 #      And the 'latest' db submission data is accurate
 #      And the submission has no group
@@ -147,7 +181,7 @@ Feature: (Re)Submitting individual assignments
      Then the user creates a new submission
      Then the user enters a 'empty text' submission
      Then the user enters a 'link' submission
-     Then the user clicks 'Submit Revision for Grading'
+     Then the user clicks 'Submit revision for grading'
      Then the assignment has 1 'active' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
@@ -165,7 +199,7 @@ Feature: (Re)Submitting individual assignments
      Then the user enters a 'text' submission
      Then the user enters a 'link' submission
 #     Then the user enters a 'file' submission
-     Then the user clicks 'Save Revision for Further Editing'
+     Then the user clicks 'Save revision for further editing'
      Then the assignment has 1 'draft' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
@@ -186,7 +220,7 @@ Feature: (Re)Submitting individual assignments
      Then the user enters a 'text' submission
      Then the user enters a 'link' submission
 #     Then the user enters a 'file' submission
-     Then the user clicks 'Submit Revision for Grading'
+     Then the user clicks 'Submit revision for grading'
      Then the assignment has 2 'active' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
@@ -204,7 +238,7 @@ Feature: (Re)Submitting individual assignments
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'combo' submission
-     Then the user clicks 'Submit Revision for Grading'
+     Then the user clicks 'Submit revision for grading'
      Then the assignment has 2 'active' submission
       And the 'latest' db submission data is accurate
       And the submission has no group
@@ -230,7 +264,7 @@ Feature: (Re)Submitting individual assignments
      Then the user opens the 'Submissions' submissions tab
      Then the user creates a new submission
      Then the user enters a 'combo' submission
-     Then the user clicks 'Submit Revision for Grading'
+     Then the user clicks 'Submit revision for grading'
      Then the assignment has 2 'active' submission
       And the 'latest' db submission data is accurate
       And the submission has no group

@@ -184,7 +184,7 @@ export default function AssignmentSubmission(props: Props) {
     const url = `${endpoints.submissionUrl}${
       // If this is brand new, we have no ID and need a new one
       // If this has already been submitted, then we must create a new submission
-      submissionId !== null || submittedDate !== null ? 'new' : submissionId
+      submissionId === null || submittedDate !== null ? 'new' : submissionId
      }.json`;
     const method = null == submissionId ? 'PUT' : 'PATCH';
 
@@ -203,8 +203,9 @@ export default function AssignmentSubmission(props: Props) {
       }
     }).then( response => {
       const data = response.data;
+      console.log( 'received', data );
       if( data.messages !== null && Object.keys( data.messages ).length < 2 ){
-        setSubmissionId( data.submission.submissionId );
+        setSubmissionId( data.submission.id );
         let receivedDate = DateTime.fromISO( data.submission.updated_at ).setZone( Settings.timezone );
         setUpdatedDate(receivedDate );
         if( data.submission.submitted !== null ){
@@ -252,30 +253,38 @@ export default function AssignmentSubmission(props: Props) {
     <Button disabled={!dirty || !notSubmitted} onClick={()=>saveSubmission( true )}>
       { t('submissions.submit_revision_btn')}
     </Button>
-  )
+  );
 
   const draftSaveBtn = (
     <Button disabled={!dirty || !notSubmitted} onClick={()=>saveSubmission( false )}>
       { t('submissions.draft_revision_btn')}
     </Button>
-  )
+  );
+
+  const revCopyBtn = ! notSubmitted ? (
+    <Button disabled={!dirty || notSubmitted} onClick={()=>saveSubmission( false )}>
+      { t('submissions.copy_submission_btn')}
+    </Button>
+  ) : null;
 
   const withdrawBtn = ! notSubmitted ? (
     <Button disabled={ notSubmitted} onClick={()=>withdrawSubmission( )}>
       { t('submissions.withdraw_btn')}
     </Button>
-  ) : null
+  ) : null;
 
   return (
     <Grid container >
       <Grid item xs={12}>
         <Typography variant="h6" >
-          {t('submissions.new_header')}
+          {undefined === submissionId || 0 === submissionId ?
+             t('submissions.new_header') :
+             t('submissions.edit_header')}
         </Typography>
       </Grid>
       {sub_text}
       {subLink}
-      {draftSaveBtn}{draftSubmitBtn}{withdrawBtn}
+      {draftSaveBtn}{draftSubmitBtn}{revCopyBtn}{withdrawBtn}
 
       <Grid item xs={12}>
         <Typography variant="h6" >

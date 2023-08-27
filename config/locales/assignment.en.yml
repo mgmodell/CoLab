@@ -32,6 +32,7 @@ en:
       rubric_minimum: Minimum requirements not met
     submissions:
       new_header: New Response
+      edit_header: Edit Response
       sub_text_lbl: Text Response
       sub_text_placeholder: Click to enter your response
       sub_link_lbl: Link to Response
@@ -44,11 +45,10 @@ en:
       submitted: Submission Date
       withdrawn: Withdrawn Date
       submitter: Submitted by
-      submit_response_btn: Submit for Grading
-      submit_revision_btn: Submit Revision for Grading
-      draft_response_btn: Save Draft for Further Editing
-      draft_revision_btn: Save Revision for Further Editing
-      withdraw_btn: Withdraw Revision
+      submit_revision_btn: Submit revision for grading
+      draft_revision_btn: Save revision for further editing
+      copy_submission_btn: Make a copy of this revision
+      withdraw_btn: Withdraw revision
       new_btn: New response
     create_success: Assignment was created successfully!
     destroy_success: Assignment was destroyed successfully!
