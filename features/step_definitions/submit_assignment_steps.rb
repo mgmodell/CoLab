@@ -192,9 +192,41 @@ Then('the user enters a {string} submission') do |submission_type|
     # send_keys sub_text_web, :backspace
     send_keys :backspace
     @submission.sub_text = sub_text_db
+  when 'empty text'
+    @submission.sub_text = '<p></p>'
   when 'link'
     find(:xpath, "//input[@id='sub_link']").click
-    send_keys Faker::Internet.url
+    @submission.sub_link = Faker::Internet.url
+    send_keys @submission.sub_link
+  when 'combo'
+    entered = 0
+    # Text
+    if rand( 2 ) == 1
+      entered = entered + 1
+      find(:xpath, "//div[@class='rdw-editor-main']").click
+
+      sub_text_web = ''
+      sub_text_db = ''
+
+      (rand(6) + 2 ).times do
+        para = Faker::Lorem.paragraph
+        sub_text_db = sub_text_db + "<p>#{para}</p>"
+        send_keys para, :enter
+        sub_text_web = sub_text_web + "#{para}\n"
+      end
+      # send_keys sub_text_web, :backspace
+      send_keys :backspace
+      @submission.sub_text = sub_text_db
+    else
+      @submission.sub_text = '<p></p>'
+    end
+    # Links
+    if entered > 0 || rand( 2 ) == 1
+      entered = entered + 1
+      find(:xpath, "//input[@id='sub_link']").click
+      @submission.sub_link = Faker::Internet.url
+      send_keys @submission.sub_link
+    end
   else  
     pending # Write code here that turns the phrase above into concrete actions
   end
@@ -262,12 +294,10 @@ Given('the assignment already has {int} submission from the user') do |count|
   end
 end
 
-Then('the latest {string} db submission data is accurate') do |_string|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
 Given('today is between the first assignment deadline and close') do
-  pending # Write code here that turns the phrase above into concrete actions
+  days_between = (@assignment.end_date - @assignment.start_date) - 1
+  delta = rand( 1..days_between)
+  travel_to @assignment.start_date + delta
 end
 
 Given('today is after the final deadline') do
@@ -289,7 +319,20 @@ Given('assignment {int} {string} graded') do |_int, _string|
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then('the user {string} withdraws submission {int}') do |_string, _int|
-  # Then('the user {string} withdraws submission {float}') do |string, float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user {string} withdraw submission {int}') do |can, assignment_ord|
+  target_sub = find( :xpath, "//div[@role='row' and @data-rowindex='#{assignment_ord-1}']" +
+                              "/div[@data-field='submitted']/div" )
+  target_sub.click
+  wait_for_render
+  button_count = find_all( :xpath, "//button[text()='Withdraw Revision' and not(@disabled)]").size
+  case can.downcase
+  when 'can'
+    button_count.should eq 1
+  when 'cannot'
+    button_count.should eq 0
+  else
+    puts "'#{can}' is not a valid option"
+    true.should be false
+  end
+
 end

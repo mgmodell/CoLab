@@ -150,10 +150,6 @@ export default function AssignmentViewer(props) {
 
   let output = null;
   const curDate = new Date();
-  console.log( assignment, curDate,
-    assignment.startDate > curDate ? 'true' : 'false',
-    assignment.endDate < curDate ? 'true' : 'false'
-    );
   if (!endpointsLoaded) {
     output = ( <Skeleton variant="rectangular" /> );
   } else {

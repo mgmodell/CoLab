@@ -76,7 +76,11 @@ Then('the user clicks {string}') do |link_or_button|
     puts e.inspect
   rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
     puts e.inspect
-    retry if (retries += 1) < 4
+    if (retries += 1) < 4
+      retry
+    else
+      true.should be false
+    end
   end
   wait_for_render
 end

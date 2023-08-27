@@ -207,10 +207,14 @@ export default function AssignmentSubmission(props: Props) {
         setSubmissionId( data.submission.submissionId );
         let receivedDate = DateTime.fromISO( data.submission.updated_at ).setZone( Settings.timezone );
         setUpdatedDate(receivedDate );
-        receivedDate = DateTime.fromISO( data.submission.submitted ).setZone( Settings.timezone );
-        setSubmittedDate( receivedDate );
-        receivedDate = DateTime.fromISO( data.submission.withdrawn ).setZone( Settings.timezone );
-        setWithdrawnDate( receivedDate );
+        if( data.submission.submitted !== null ){
+          receivedDate = DateTime.fromISO( data.submission.submitted ).setZone( Settings.timezone );
+          setSubmittedDate( receivedDate );
+        }
+        if( data.submission.withdrawn !== null ){
+          receivedDate = DateTime.fromISO( data.submission.withdrawn ).setZone( Settings.timezone );
+          setWithdrawnDate( receivedDate );
+        }
         setRecordedScore( data.submission.recorded_score );
         setSubmissionTextEditor(
           EditorState.createWithContent(
