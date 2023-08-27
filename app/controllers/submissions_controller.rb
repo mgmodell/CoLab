@@ -26,12 +26,12 @@ class SubmissionsController < ApplicationController
 
       # if @submission.update(submission_params)
         format.json do
-          render json: standardized_response(@submission, { main: I18n.t('assignments.errors.no_update_error') })
+          render json: standardized_response(@submission, { main: I18n.t('assignments.error.no_update_error') })
         end
       end
     else
       errors = @submission.errors
-      errors.add(:mail, I18n.t('submissions.errors.update_failed'))
+      errors.add(:mail, I18n.t('submissions.error.update_failed'))
       logger.debug @submission.errors.full_messages
       respond_to do |format|
         format.json { render json: standardized_response(@submission, @submission.errors) }
@@ -45,7 +45,7 @@ class SubmissionsController < ApplicationController
     if @submission.save
       respond_to do |format|
         format.json do
-          render json: standardized_response(@submission, { main: I18n.t('assignments.errors.no_update_error') })
+          render json: standardized_response(@submission, { main: I18n.t('assignments.error.no_update_error') })
         end
       end
 

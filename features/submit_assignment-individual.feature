@@ -153,6 +153,13 @@ Feature: (Re)Submitting individual assignments
      Then the user clicks 'Make a copy of this revision'
      Then the assignment has 1 'submitted' submission
      Then the assignment has 1 'draft' submission
+     Then the user withdraws submission 1
+     Then the 'Save revision for further editing' button is 'disabled'
+     Then the 'Submit revision for grading' button is 'disabled'
+     Then the 'Make a copy of this revision' button is 'enabled'
+     Then the 'Withdraw revision' button is 'disabled'
+     Then the assignment has 1 'withdrawn' submission
+     Then the assignment has 1 'draft' submission
 
 #  @javascript
 #  Scenario: User can open and submit a file to an assignment

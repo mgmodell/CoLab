@@ -203,7 +203,6 @@ export default function AssignmentSubmission(props: Props) {
       }
     }).then( response => {
       const data = response.data;
-      console.log( 'received', data );
       if( data.messages !== null && Object.keys( data.messages ).length < 2 ){
         setSubmissionId( data.submission.id );
         let receivedDate = DateTime.fromISO( data.submission.updated_at ).setZone( Settings.timezone );
@@ -235,29 +234,50 @@ export default function AssignmentSubmission(props: Props) {
   };
 
   const withdrawSubmission = () => {
-    dispatch( startTask( 'saving' ) );
+    dispatch( startTask( 'withdrawing' ) );
 
     const url = `${endpoints.submissionWithdrawalUrl}${ submissionId }.json`;
-
     axios.get(url).then( response => {
-      const messages = response.data.messages;
+      const data = response.data;
+      console.log( 'data', data );
+      if( data.messages !== null && Object.keys( data.messages ).length < 2 ){
+        setSubmissionId( data.submission.id );
+        let receivedDate = DateTime.fromISO( data.submission.updated_at ).setZone( Settings.timezone );
+        setUpdatedDate(receivedDate );
+        if( data.submission.submitted !== null ){
+          receivedDate = DateTime.fromISO( data.submission.submitted ).setZone( Settings.timezone );
+          setSubmittedDate( receivedDate );
+        }
+        if( data.submission.withdrawn !== null ){
+          receivedDate = DateTime.fromISO( data.submission.withdrawn ).setZone( Settings.timezone );
+          setWithdrawnDate( receivedDate );
+        }
+        setRecordedScore( data.submission.recorded_score );
+        setSubmissionTextEditor(
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              htmlToDraft( data.submission.sub_text || '' ).contentBlocks
+            )
+          )
+        );
 
+      }
 
     }).then( props.reloadCallback ).finally(()=>{
-      dispatch( endTask( 'saving' ));
+      dispatch( endTask( 'withdrawing' ));
     });
 
   }
 
-  const draftSubmitBtn =  (
-    <Button disabled={!dirty || !notSubmitted} onClick={()=>saveSubmission( true )}>
-      { t('submissions.submit_revision_btn')}
-    </Button>
-  );
-
   const draftSaveBtn = (
     <Button disabled={!dirty || !notSubmitted} onClick={()=>saveSubmission( false )}>
       { t('submissions.draft_revision_btn')}
+    </Button>
+  );
+
+  const draftSubmitBtn =  (
+    <Button disabled={!dirty || !notSubmitted} onClick={()=>saveSubmission( true )}>
+      { t('submissions.submit_revision_btn')}
     </Button>
   );
 
@@ -268,7 +288,7 @@ export default function AssignmentSubmission(props: Props) {
   ) : null;
 
   const withdrawBtn = ! notSubmitted ? (
-    <Button disabled={ notSubmitted} onClick={()=>withdrawSubmission( )}>
+    <Button disabled={ notSubmitted || (null !== withdrawnDate)} onClick={()=>withdrawSubmission( )}>
       { t('submissions.withdraw_btn')}
     </Button>
   ) : null;
