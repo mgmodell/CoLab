@@ -2,9 +2,29 @@
 
 require 'faker'
 
-Given('{int} user has submitted to the assignment') do |_int|
-  # Given('{float} user has submitted to the assignment') do |float|
-  pending # Write code here that turns the phrase above into concrete actions
+Given('{int} user has submitted to the assignment') do |count|
+  count.times do
+    user = @assignment.course.enrolled_students.sample
+    submitted = DateTime.now
+    submission = Submission.new(
+      sub_link: Faker::Internet.url,
+      rubric: @assignment.rubric,
+      assignment: @assignment,
+      user:,
+      submitted:,
+      recorded_score: nil
+    )
+    submission.save
+  end
+end
+
+Given('the submission has been withdrawn') do
+  submission = Submission.last
+  submission.withdrawn = DateTime.now
+  unless submission.save
+    puts submission.errors.full_messages
+    true.should be false
+  end
 end
 
 Then('the user selects submission {int}') do |_int|
@@ -43,4 +63,15 @@ end
 Then('the user sets score to {int}') do |_int|
   # Then('the user sets score to {float}') do |float|
   pending # Write code here that turns the phrase above into concrete actions
+end
+
+Given('the user is an {string} user in the course') do |user_type|
+  case user_type
+  when 'instructor'
+    @user = @assignment.course.instructors.sample
+  else
+    puts "User type of '#{user_type}' not handled"
+    pending
+  end
+  @user.should_not be_nil
 end
