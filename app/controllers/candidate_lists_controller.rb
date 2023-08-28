@@ -213,9 +213,7 @@ class CandidateListsController < ApplicationController
   end
 
   def demo_entry
-    (t :demo_project),
-
-           candidates = []
+    candidates = []
 
     6.times do |index|
       candidates << {
