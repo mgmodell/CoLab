@@ -1,8 +1,8 @@
--- MariaDB dump 10.19  Distrib 10.11.2-MariaDB, for osx10.18 (arm64)
+-- MariaDB dump 10.19-11.0.2-MariaDB, for osx10.18 (arm64)
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	10.11.2-MariaDB
+-- Server version	11.0.2-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -4960,7 +4960,9 @@ INSERT INTO `schema_migrations` VALUES
 ('20230321202810'),
 ('20230321215452'),
 ('20230322001413'),
-('20230415194655');
+('20230415194655'),
+('20230521034701'),
+('20230828001816');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5095,7 +5097,7 @@ CREATE TABLE `submissions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `submitted` datetime(6) DEFAULT NULL,
   `withdrawn` datetime(6) DEFAULT NULL,
-  `recorded_score` float NOT NULL DEFAULT 0,
+  `recorded_score` float DEFAULT NULL,
   `sub_text` text DEFAULT NULL,
   `sub_link` varchar(255) DEFAULT NULL,
   `created_at` datetime(6) NOT NULL,
@@ -5493,4 +5495,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-15 15:51:15
+-- Dump completed on 2023-08-27 20:28:01

@@ -161,6 +161,7 @@ class User < ApplicationRecord
               .and(Submission.where.not(submitted: nil))
               .and(Submission.where(withdrawn: nil))
               .and(Submission.where(recorded_score: nil))
+              # .and(Submission.where('recorded_score < 0'))
               .and(Roster.faculty)
               .find_each do |submission|
       waiting_tasks << submission
