@@ -295,11 +295,25 @@ export default function CritiqueShell(props: Props) {
           <Typography variant="h6">
             {t('submitted')}
           </Typography>
-          {assignmentAcceptsLink ? <Link href={selectedSubmission.sub_link}>{selectedSubmission.sub_link}</Link> : null}
+          {assignmentAcceptsLink ? (
+            <React.Fragment>
+              <Typography variant="h6">
+                {t('submitted_link')}:
+              </Typography>
+              <Typography id='sub_link'>
+                <Link href={selectedSubmission.sub_link}>{selectedSubmission.sub_link}</Link>
+              </Typography>
+            </React.Fragment>
+          ): null}
           {assignmentAcceptsText ? (
-          <Typography>
-            {parse( selectedSubmission.sub_text )}
-          </Typography>
+            <React.Fragment>
+              <Typography variant='h6'>
+                {t('submitted_text')}:
+              </Typography>
+              <Typography id='sub_text' variant="body1">
+                {parse( selectedSubmission.sub_text || `<i>${t('no_text')}</i>` )}
+              </Typography>
+            </React.Fragment>
           ) : null }
         </Grid>
       ): null}

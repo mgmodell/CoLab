@@ -4,6 +4,7 @@ en:
       not_loaded: No submission loaded
     submissions_title: Submissions
     submitted: Assignment submission
+    no_text: No text entered
     feedback: Overall feedback
     history: Previous submissions and feedback
     rubric:

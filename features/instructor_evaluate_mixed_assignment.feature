@@ -39,7 +39,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user opens the assignment task
     Then the user selects submission 1
     Then the user hides all but the 'Assignment submission' tab
-     And the contents match the assignment contents
+     And the contents match the submission contents
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
     Then the user responds to all criteria with 'proficient' and 'no' feedback
