@@ -83,6 +83,7 @@ export default function RubricScorer(props: Props) {
                   <Editor
                     wrapperId={t('feedback')}
                     label={t("feedback")}
+                    id='overall_feedback'
                     placeholder={t("feedback")}
                     editorState={props.submission.submission_feedback.feedback}
                     onEditorStateChange={(editorState, title)=>{
@@ -153,6 +154,7 @@ export default function RubricScorer(props: Props) {
                 renderedLevels.push( 
                     <Grid
                       key={`${criterium.id}-${index}`}
+                      id={`level-${criterium.id}-${index}`}
                       xs={span}
                       onClick={()=>{
 
@@ -174,7 +176,9 @@ export default function RubricScorer(props: Props) {
                   <Grid xs={10 + span}>
                     &nbsp;
                   </Grid>
-                  <Grid xs={60 - span}>
+                  <Grid
+                    id={`slider-${criterium.id}`}
+                    xs={60 - span}>
                     <Slider
                       defaultValue={0}
                       max={100}
@@ -193,6 +197,7 @@ export default function RubricScorer(props: Props) {
                   </Grid>
                   <Grid xs={10}>
                     <TextField
+                      id={`score-${criterium.id}`}
                       value={props.submission.submission_feedback.rubric_row_feedbacks.find(feedback=> feedback.criterium_id == criterium.id ).score}
                       type={'number'}
                       size={'small'}
@@ -206,12 +211,15 @@ export default function RubricScorer(props: Props) {
                       }}
                     />
                   </Grid>
-                  <Grid xs={10}>
+                  <Grid
+                      id={`description-${criterium.id}`}
+                      xs={10}>
                     <b>
                       { criterium.description}
                     </b>
                   </Grid>
                   <Grid xs={span}
+                      id={`minimum-${criterium.id}`}
                       onClick={()=>{
 
                         props.submissionReducer({
@@ -225,9 +233,11 @@ export default function RubricScorer(props: Props) {
                     {t('rubric.minimum')}
                   </Grid>
                   { renderedLevels }
-                  <Grid xs={10}>
+                  <Grid 
+                      id={`feedback-${criterium.id}`}
+                      xs={10}>
                   <Editor
-                    wrapperId="Description"
+                    wrapperId="criteria_feedback"
                     label={t("rubric.criteria_feedback")}
                     placeholder={t("rubric.criteria_feedback")}
                     toolbarOnFocus

@@ -428,11 +428,19 @@ Given('there exists a rubric published by another user') do
     description: Faker::JapaneseMedia::StudioGhibli.quote,
     user: another_user
   )
-  @rubric.criteria.new(
-    description: Faker::Company.industry,
-    sequence: 1,
-    l1_description: Faker::Company.bs
-  )
+  (rand(4)+1).times do |index|
+    levels = rand(5)
+    criteria = @rubric.criteria.new(
+      description: Faker::Company.industry,
+      sequence: index,
+      l1_description: Faker::Company.bs,
+      l2_description: levels >= 0 ? Faker::Company.bs : nil,
+      l3_description: levels >= 1 ? Faker::Company.bs : nil,
+      l4_description: levels >= 2 ? Faker::Company.bs : nil,
+      l5_description: levels >= 3 ? Faker::Company.bs : nil,
+    )
+    log criteria.errors.full_messages unless criteria.save
+  end
   @rubric.save
   log @rubric.errors.full_messages if @rubric.errors.present?
 end

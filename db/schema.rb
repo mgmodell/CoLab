@@ -33,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_001816) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
+  create_table "active_storage_variant_records", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
@@ -67,8 +67,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_001816) do
   create_table "assignments", charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
-    t.datetime "start_date", precision: nil, null: false
-    t.datetime "end_date", precision: nil, null: false
+    t.datetime "start_date", null: false
+    t.datetime "end_date", null: false
     t.bigint "rubric_id"
     t.boolean "group_enabled", default: false, null: false
     t.integer "course_id", null: false
