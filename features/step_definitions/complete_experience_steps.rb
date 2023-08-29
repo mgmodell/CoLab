@@ -147,7 +147,7 @@ end
 Then(/^no user will have reacted to the same narrative more than once$/) do
   User.all.each do |user|
     reaction_counts = user.reactions.group('narrative_id').count
-    reaction_counts.each_value do |val|
+    reaction_counts.values.each do |val|
       val.should <= 1
     end
   end

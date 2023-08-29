@@ -101,6 +101,7 @@ Then(/^the user should enter values summing to (\d+), "(.*?)" across each column
         new_val = (increment + contrib.value.to_i).clamp(0, Installment::TOTAL_VAL)
         contrib.set new_val
 
+        wait_for_render
         sum = all(:xpath, "//input[@factor='#{factor.id}']").reduce(0) do |total, slider|
           factor_vals[slider[:contributor]] = slider.value
           total + slider.value.to_i
@@ -163,19 +164,19 @@ Then(/^the installment values will match the submit ratio$/) do
   installment = Installment.last
   if 'evenly' == @value_ratio
     baseline = installment.values[0].value
-    installment.each_value do |value|
+    installment.values.each do |value|
       value.value.should eq baseline
     end
   else
     recorded_vals = {}
-    installment.each_value do |value|
+    installment.values.each do |value|
       factor_vals = recorded_vals[value.factor.id]
       factor_vals = [] if factor_vals.nil?
       factor_vals << [value.user_id, value.value]
       recorded_vals[value.factor.id] = factor_vals
     end
 
-    recorded_vals.each_key do |factor_id|
+    recorded_vals.keys.each do |factor_id|
       set_vals = @installment_values[factor_id]
       set_tot = set_vals.values.reduce(0) { |sum, x| sum + x.to_i }
       set_vals_a = []

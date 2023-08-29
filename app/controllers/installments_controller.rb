@@ -100,7 +100,7 @@ class InstallmentsController < ApplicationController
           installment.save!
 
           if installment.errors.empty?
-            params[:contributions].each_value do |contribution|
+            params[:contributions].values.each do |contribution|
               contribution.each do |value|
                 installment.values.create!(
                   user_id: value[:userId],

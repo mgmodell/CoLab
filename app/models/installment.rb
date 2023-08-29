@@ -123,7 +123,7 @@ class Installment < ApplicationRecord
     values_by_factor.each do |_factor, au_hash|
       total = au_hash.values.inject(0) { |sum, v| sum + v.value }
 
-      au_hash.each_value do |v|
+      au_hash.values.each do |v|
         prelim = (Installment::TOTAL_VAL * v.value) / total
         v.value = if prelim.nan?
                     (Installment::TOTAL_VAL / v.installment.values.count).round

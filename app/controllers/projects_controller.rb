@@ -159,7 +159,7 @@ class ProjectsController < ApplicationController
                      .find_by(id: params[:id])
 
     group_hash = {}
-    params[:groups].each_value do |g|
+    params[:groups].values.each do |g|
       group = nil
       if (g[:id]).positive?
         group = project.groups.find_by id: g[:id]
@@ -170,7 +170,7 @@ class ProjectsController < ApplicationController
       group.users = []
       group_hash[g[:id]] = group
     end
-    params[:students].each_value do |s|
+    params[:students].values.each do |s|
       student = project.rosters.find_by(user_id: s[:id]).user
       group = group_hash[s[:group_id]]
       group.users << student unless group.nil?
@@ -178,7 +178,7 @@ class ProjectsController < ApplicationController
 
     begin
       ActiveRecord::Base.transaction do
-        group_hash.each_value(&:save!)
+        group_hash.values.each(&:save!)
       end
     rescue StandardError
       # Post back a JSON error

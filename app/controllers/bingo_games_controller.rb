@@ -213,7 +213,7 @@ class BingoGamesController < ApplicationController
       end
     end
     resp_array = []
-    resp.each_key do |key|
+    resp.keys.each do |key|
       resp[key][:id] = key
       resp_array << resp[key]
     end

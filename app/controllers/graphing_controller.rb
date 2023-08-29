@@ -214,9 +214,9 @@ class GraphingController < ApplicationController
     end
 
     factors = {}
-    dataset[:streams].each_value do |stream|
-      stream[:sub_streams].each_value do |substream|
-        substream[:factor_streams].each_value do |factor_stream|
+    dataset[:streams].values.each do |stream|
+      stream[:sub_streams].values.each do |substream|
+        substream[:factor_streams].values.each do |factor_stream|
           factors[factor_stream[:factor_id]] = {
             name: factor_stream[:factor_name],
             id: factor_stream[:factor_id]
