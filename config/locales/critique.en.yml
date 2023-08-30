@@ -6,6 +6,10 @@ en:
     submitted: Assignment submission
     no_text: No text entered
     feedback: Overall feedback
+    calculated_score_lbl: Calculated score
+    override_option_lbl: Override the score?
+    override_score_lbl: Set score
+    clear_override_btn: Clear overridden score
     history: Previous submissions and feedback
     rubric:
       name: Name

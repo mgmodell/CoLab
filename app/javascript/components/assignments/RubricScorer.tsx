@@ -13,10 +13,11 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
 import { useTranslation } from "react-i18next";
-import { Slider, TextField, Typography } from "@mui/material";
+import { Checkbox, FormControlLabel, Slider, TextField, Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import Grid from "@mui/system/Unstable_Grid/Grid";
 import { ISubmissionData, SubmissionActions } from "./CritiqueShell";
+import { number } from "prop-types";
 
 type Props = {
   submission: ISubmissionData;
@@ -48,6 +49,12 @@ export default function RubricScorer(props: Props) {
     state => state.context.endpoints[category]
   );
 
+  const [overrideScore, setOverrideScore] = useState( false );
+  const [overriddenScore, setOverriddenScore] = useState <number | null>( null );
+  const handleOverRideScoreChange = (event: React.ChangeEvent<HTMLInputElement>) =>{
+    setOverrideScore( !overrideScore );
+  }
+
   const [ ed, setEd ] = useState(
     EditorState.createWithContent(
       ContentState.createFromBlockArray(htmlToDraft('').contentBlocks)
@@ -56,6 +63,20 @@ export default function RubricScorer(props: Props) {
 
   const [t, i18n] = useTranslation( `${category}s` );
 
+  const calcScore = () =>{
+    const weightScore = props.submission.submission_feedback.rubric_row_feedbacks.reduce(
+      (acc, rubricRowFeedack) =>{
+        const weight = props.submission.rubric.criteria.find( (criterium) => criterium.id === rubricRowFeedack.criterium_id).weight;
+        const score = weight * rubricRowFeedack.score;
+
+        acc[0] += weight;
+        acc[1] += score;
+
+        return acc;
+      }, [0,0]
+    )
+    return weightScore[1] / weightScore[0];
+  }
 
 
   const evaluation = props.submission?.rubric !== undefined ? (
@@ -79,7 +100,7 @@ export default function RubricScorer(props: Props) {
             <Grid xs={15}>
               <Typography variant="h6">{t('feedback' )}:</Typography>
             </Grid>
-            <Grid xs={65}>
+            <Grid xs={55}>
                   <Editor
                     wrapperId={t('feedback')}
                     label={t("feedback")}
@@ -129,6 +150,29 @@ export default function RubricScorer(props: Props) {
                       }
                     }}
                   />
+            </Grid>
+            <Grid xs={55}>
+              <Typography variant="h6">
+              {t('calculated_score_lbl')}:
+                </Typography>
+              <Typography >
+              {calcScore()}
+                </Typography>
+              <FormControlLabel
+                control={<Checkbox />}
+                onChange={handleOverRideScoreChange}
+                value={overrideScore}
+                label={t('override_option_lbl')} />
+
+              {overrideScore ? (
+                <TextField id='override-score' label={t('override_score_lbl')}
+                  type='number'
+                  value={overriddenScore} onChange={
+                    (event) => {
+                      setOverriddenScore(event.target.value);
+                    }
+                  } />
+              ): null }
             </Grid>
             {props.submission.rubric.criteria.sort( (a:ICriteria, b:ICriteria) => a.sequence - b.sequence ).map( (criterium) =>{
               const levels = [ 
@@ -199,10 +243,10 @@ export default function RubricScorer(props: Props) {
                     <TextField
                       id={`score-${criterium.id}`}
                       value={props.submission.submission_feedback.rubric_row_feedbacks.find(feedback=> feedback.criterium_id == criterium.id ).score}
-                      type={'number'}
+                      type='number'
                       size={'small'}
                       variant={'standard'}
-                      onClick={(event)=>{
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>)=>{
                         props.submissionReducer({
                           type: SubmissionActions.set_criteria_score,
                           score: event.target.value,

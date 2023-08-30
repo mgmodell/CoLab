@@ -99,12 +99,10 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
 
     case competence
     when 'proficient'
-      found = false
       level_elements = find_all(:xpath, "//div[contains(@id,'level-#{criterium.id}')]")
       proficient_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{level_elements.size - 1}')]")
       proficient_elem.click
     when 'competent'
-      found = false
       level_elements = find_all(:xpath, "//div[contains(@id,'level-#{criterium.id}')]")
       competent_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{level_elements.size - 2}')]")
       competent_elem.click
@@ -112,6 +110,8 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       elem = find(:xpath, "//div[@id='minimum-#{criterium.id}']")
       elem.click
     when 'numbers'
+      elem = find(:xpath, "//input[@id='score-#{criterium.id}']")
+
     else
       log "No such competence level: #{competence}"
       pending
