@@ -12,7 +12,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTranslation } from "react-i18next";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
 import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 
@@ -37,6 +37,7 @@ export default function ConsentFormList(props) {
     {
       headerName: t("index.name_col"),
       field: "name",
+      width: 400,
       renderCell: renderTextCellExpand
     },
     {
@@ -85,6 +86,9 @@ export default function ConsentFormList(props) {
       isCellEditable={() => false}
       columns={columns}
       rows={consent_forms}
+      onCellClick={(params: GridCellParams) => {
+        navigate(String(params.row.id));
+      }}
       slots={{
         toolbar: AdminListToolbar
       }}

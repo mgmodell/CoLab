@@ -13,6 +13,7 @@ import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import Tab from "@mui/material/Tab";
 
+import {DateTime, Settings} from 'luxon';
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -48,8 +49,12 @@ export default function ConsentFormDataAdmin(props) {
   const [consentFormId, setConsentFormId] = useState(consentFormIDParam);
   const [consentFormName, setConsentFormName] = useState("");
   const [consentFormActive, setConsentFormActive] = useState(false);
-  const [consentFormStartDate, setConsentFormStartDate] = useState(new Date());
-  const [consentFormEndDate, setConsentFormEndDate] = useState(new Date());
+  const [consentFormStartDate, setConsentFormStartDate] = useState(
+    DateTime.local()
+    );
+  const [consentFormEndDate, setConsentFormEndDate] = useState(
+    DateTime.local().plus({year: 1})
+  );
   const [consentFormFormTextEn, setConsentFormFormTextEn] = useState("");
   const [consentFormFormTextKo, setConsentFormFormTextKo] = useState("");
   const [consentFormDoc, setConsentFormDoc] = useState(null);
@@ -81,9 +86,13 @@ export default function ConsentFormDataAdmin(props) {
 
         setConsentFormName(consentForm.name || "");
         setConsentFormActive(consentForm.active || false);
-        var receivedDate = new Date(consentForm.start_date);
+        var receivedDate = DateTime.fromISO(consentForm.start_date).setZone(
+          Settings.timezone
+        );
         setConsentFormStartDate(receivedDate);
-        receivedDate = new Date(consentForm.end_date);
+        var receivedDate = DateTime.fromISO(consentForm.end_date).setZone(
+          Settings.timezone
+        );
         setConsentFormEndDate(receivedDate);
         setConsentFormFormTextEn(
           EditorState.createWithContent(
@@ -117,33 +126,53 @@ export default function ConsentFormDataAdmin(props) {
       (null == consentFormId ? null : consentFormId) +
       ".json";
 
-    const formData = FormData();
+    const formData = new FormData();
     if (consentFormDoc) {
       formData.append;
     }
     axios({
       method: method,
       url: url,
-      consent_form: {
-        id: consentFormId,
-        name: consentFormName,
-        start_date: consentFormStartDate
+      data:{
+        consent_form: {
+          name: consentFormName,
+          start_date: consentFormStartDate,
+          end_date: consentFormEndDate,
+          form_text_en: consentFormFormTextEn,
+          form_text_ko: consentFormFormTextKo,
+          active: consentFormActive
+          
+        }
       }
     })
       .then(response => {
         const data = response.data;
         if (data.messages != null && Object.keys(data.messages).length < 2) {
-          const consentForm = data.school;
+          const consentForm = data.consent_form;
+          console.log( response );
           setConsentFormId(consentForm.id);
           setConsentFormName(consentForm.name);
 
           setConsentFormActive(consentForm.active || false);
-          var receivedDate = new Date(consentForm.start_date);
+          var receivedDate = DateTime.fromISO(consentForm.start_date).setZone(
+            Settings.timezone
+          );
           setConsentFormStartDate(receivedDate);
-          receivedDate = new Date(consentForm.end_date);
+          var receivedDate = DateTime.fromISO(consentForm.end_date).setZone(
+            Settings.timezone
+          );
           setConsentFormEndDate(receivedDate);
-          setConsentFormFormTextEn(consentForm.form_text_en || "");
-          setConsentFormFormTextKo(consentForm.form_text_ko || "");
+          setConsentFormFormTextEn
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              htmlToDraft(consentForm.form_text_en || "").contentBlocks
+            )
+          );
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              htmlToDraft(consentForm.form_text_ko || "").contentBlocks
+            )
+          );
 
           setShowErrors(true);
           setDirty(false);
@@ -176,7 +205,7 @@ export default function ConsentFormDataAdmin(props) {
 
   const saveButton = dirty ? (
     <Button variant="contained" onClick={saveConsentForm}>
-      {null == consentFormId ? "Create" : "Save"} School
+      {null == consentFormId ? t('edit.create_btn') : t('edit.save_btn')}
     </Button>
   ) : null;
 
@@ -361,7 +390,7 @@ export default function ConsentFormDataAdmin(props) {
           type="file"
         />
         <Button variant="contained" component="span">
-          {t("file_select")}
+          {t("edit.file_select_btn")}
         </Button>
       </label>
       <br />
