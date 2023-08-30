@@ -111,7 +111,8 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       elem.click
     when 'numbers'
       elem = find(:xpath, "//input[@id='score-#{criterium.id}']")
-
+      elem.click
+      elem.set rand(100)
     else
       log "No such competence level: #{competence}"
       pending

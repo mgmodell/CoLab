@@ -200,6 +200,16 @@ export default function RubricScorer(props: Props) {
                       key={`${criterium.id}-${index}`}
                       id={`level-${criterium.id}-${index}`}
                       xs={span}
+                      color={()=>{
+                        const rubricRowFeedback = props.submission.submission_feedback.rubric_row_feedbacks.find(
+                          (rubricRowFeedback)=>{
+                            return criterium.id === rubricRowFeedback.criterium_id;
+                          }
+                        )
+                        if( rubricRowFeedback.score >= score ){
+                          return 'green';
+                        }
+                      }}
                       onClick={()=>{
 
                         props.submissionReducer({
