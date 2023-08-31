@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class SubmissionFeedbacksController < ApplicationController
+  include PermissionsCheck
+
   before_action :set_submission_feedback, only: %i[show edit update destroy]
+  before_action :check_admin
 
   # GET /assignment/critiques/1 or /assignment/critiques/1.json
   def index_for_assignment

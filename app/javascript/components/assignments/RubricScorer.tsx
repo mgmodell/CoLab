@@ -18,6 +18,7 @@ import { IRubricData, ICriteria } from "./RubricViewer";
 import Grid from "@mui/system/Unstable_Grid/Grid";
 import { ISubmissionData, SubmissionActions } from "./CritiqueShell";
 import { number } from "prop-types";
+import axios from "axios";
 
 type Props = {
   submission: ISubmissionData;
@@ -76,6 +77,28 @@ export default function RubricScorer(props: Props) {
       }, [0,0]
     )
     return weightScore[1] / weightScore[0];
+  }
+
+  const saveSubmissionFeedback = ()=>{
+    const url = `${endpoints.updateUrl}${
+      null === props.submission.submission_feedback.id ? 'new' : 
+      props.submission.submission_feedback.id}}.json`;
+    const method = null === props.submission.submission_feedback.id ? 'PUT' : 'PATCH';
+    axios({
+      url: url,
+      method: method,
+      data: {
+        submission_feedback: props.submission.submission_feedback,
+        override_score: overrideScore ? overriddenScore : null
+      }
+    })
+      .then(response =>{
+        const data = response.data;
+        console.log( data );
+
+      })
+
+
   }
 
 

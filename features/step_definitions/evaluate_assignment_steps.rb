@@ -97,29 +97,37 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       pending
     end
 
+    score = 0
     case competence
     when 'proficient'
       level_elements = find_all(:xpath, "//div[contains(@id,'level-#{criterium.id}')]")
       proficient_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{level_elements.size - 1}')]")
       proficient_elem.click
+      score = 100
     when 'competent'
       level_elements = find_all(:xpath, "//div[contains(@id,'level-#{criterium.id}')]")
       competent_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{level_elements.size - 2}')]")
       competent_elem.click
+      score = (level_elements.size - 2 ) * 100 / level_elements.size
     when 'novice'
       elem = find(:xpath, "//div[@id='minimum-#{criterium.id}']")
       elem.click
+      score = 100
     when 'numbers'
       elem = find(:xpath, "//input[@id='score-#{criterium.id}']")
       elem.click
-      elem.set rand(100)
+      score = rand(100)
+      elem.set score
     else
       log "No such competence level: #{competence}"
       pending
     end
+    rubric_row_feedback = @submission.build_rubric_row_feedback(
+      criterium:,
+      feedback:,
+      score:
+    )
   end
-
-  pending
 end
 
 Then('the user saves the critique') do

@@ -181,7 +181,7 @@ export default function AssignmentSubmission(props: Props) {
       // If this has already been submitted, then we must create a new submission
       submissionId === null || submittedDate !== null ? "new" : submissionId
     }.json`;
-    const method = null == submissionId ? "PUT" : "PATCH";
+    const method = null === submissionId ? "PUT" : "PATCH";
 
     axios({
       url: url,
