@@ -109,7 +109,6 @@ Then(/^the candidate list entries should match the list$/) do
       elem_term = candidate['term'].blank? ? candidate['term'] : candidate['term'].strip.split.map(&:capitalize) * ' '
       term == elem_term && definition == candidate['definition']
     end
-    # byebug unless entry.present?
     entry.present?.should eq true
   end
 end
