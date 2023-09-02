@@ -16,6 +16,8 @@ en:
       version: Version
       minimum: Minimum requirements not met.
       criteria_feedback: Criteria feedback
+    save_btn: Save feedback
+    save_success_msg: Your feedback was successfully saved
     submissions:
       score: Score
       submitted: Submission date

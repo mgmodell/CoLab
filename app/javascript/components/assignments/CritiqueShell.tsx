@@ -57,7 +57,6 @@ const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissio
     }
     submissionFeedback.rubric_row_feedbacks.push( newRowFeedback );
   })
-  console.log( submissionFeedback );
   return submissionFeedback;
 
 };

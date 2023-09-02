@@ -92,6 +92,8 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       else
         feedback = Faker::Lorem.paragraph 
       end
+    when 'no'
+      # Nothing should be entered
     else
       log "No such completeness level: #{completeness}"
       pending
@@ -122,16 +124,20 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       log "No such competence level: #{competence}"
       pending
     end
-    rubric_row_feedback = @submission.build_rubric_row_feedback(
+    rubric_row_feedback = RubricRowFeedback.new(
       criterium:,
       feedback:,
       score:
     )
+    @submission_feedback.rubric_row_feedbacks << rubric_row_feedback
   end
 end
 
 Then('the user saves the critique') do
-  pending # Write code here that turns the phrase above into concrete actions
+  ack_messages
+  click_button 'save_feedback'
+  wait_for_render
+  byebug
 end
 
 Then('the db critique matches the data entered') do

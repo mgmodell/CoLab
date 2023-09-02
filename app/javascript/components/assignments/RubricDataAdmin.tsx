@@ -240,7 +240,7 @@ export default function RubricDataAdmin(props) {
                     return accumulator > current.sequence
                       ? accumulator
                       : current.sequence;
-                  }) + 1;
+                  },0) + 1;
                 tmpCriteria.push(criterium);
 
                 setRubricCriteria(renumCriteria(tmpCriteria));
@@ -403,7 +403,6 @@ export default function RubricDataAdmin(props) {
 
         if (messages != null && Object.keys(messages).length < 2) {
           const rubric = data.rubric;
-          console.log(data);
           if (rubric.id != rubricId) {
             console.log(`transferring to ${rubric.id}`);
             dispatch(endTask("saving"));

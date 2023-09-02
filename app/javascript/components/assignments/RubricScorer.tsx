@@ -5,6 +5,11 @@ import { useParams } from "react-router-dom";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import parse from 'html-react-parser';
+import { useDispatch } from "react-redux";
+import {
+  startTask,endTask,
+  addMessage, Priorities
+} from "../infrastructure/StatusSlice";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
@@ -13,7 +18,7 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
 import { useTranslation } from "react-i18next";
-import { Checkbox, FormControlLabel, Slider, TextField, Typography } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Slider, TextField, Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import Grid from "@mui/system/Unstable_Grid/Grid";
 import { ISubmissionData, SubmissionActions } from "./CritiqueShell";
@@ -49,6 +54,7 @@ export default function RubricScorer(props: Props) {
   const endpoints = useTypedSelector( 
     state => state.context.endpoints[category]
   );
+  const dispatch = useDispatch( );
 
   const [overrideScore, setOverrideScore] = useState( false );
   const [overriddenScore, setOverriddenScore] = useState <number | null>( null );
@@ -80,10 +86,14 @@ export default function RubricScorer(props: Props) {
   }
 
   const saveSubmissionFeedback = ()=>{
+    dispatch(startTask());
     const url = `${endpoints.updateUrl}${
       null === props.submission.submission_feedback.id ? 'new' : 
-      props.submission.submission_feedback.id}}.json`;
+      props.submission.submission_feedback.id}.json`;
     const method = null === props.submission.submission_feedback.id ? 'PUT' : 'PATCH';
+
+    const toSend : ISubmissionFeedback = Object.assign( {}, props.submission.submission_feedback);
+    
     axios({
       url: url,
       method: method,
@@ -94,12 +104,40 @@ export default function RubricScorer(props: Props) {
     })
       .then(response =>{
         const data = response.data;
-        console.log( data );
+        const messages = data["messages"];
 
+        if (messages != null && Object.keys(messages).length < 2) {
+          console.log( data );
+          props.submissionReducer({
+            type: SubmissionActions.set_feedback_full,
+            submission_feedback: data.submission_feedback,
+          })
+          console.log( 'success', messages.main );
+          dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
+        } else {
+          console.log( 'fail', messages.main );
+          dispatch(addMessage(messages.main, new Date(), Priorities.ERROR));
+        }
+
+      })
+      .finally(()=>{
+        dispatch(endTask());
       })
 
 
   }
+
+  const saveBtn = (
+    <Button
+      id='save_feedback'
+      onClick={() => {
+        saveSubmissionFeedback();
+      }
+    }
+    >
+      {t("save_btn")}
+    </Button>
+  );
 
 
   const evaluation = props.submission?.rubric !== undefined ? (
@@ -191,7 +229,7 @@ export default function RubricScorer(props: Props) {
                 <TextField id='override-score' label={t('override_score_lbl')}
                   type='number'
                   value={overriddenScore} onChange={
-                    (event) => {
+                    (event: React.ChangeEvent<HTMLInputElement>) => {
                       setOverriddenScore(event.target.value);
                     }
                   } />
@@ -359,6 +397,9 @@ export default function RubricScorer(props: Props) {
             })}
 
       <Grid xs={80}><hr></hr></Grid>
+      <Grid xs={80}>
+        {saveBtn}
+      </Grid>
     </Grid>
   ) : null;
 

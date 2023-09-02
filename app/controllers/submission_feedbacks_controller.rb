@@ -3,8 +3,9 @@
 class SubmissionFeedbacksController < ApplicationController
   include PermissionsCheck
 
-  before_action :set_submission_feedback, only: %i[show edit update destroy]
-  before_action :check_admin
+  before_action :set_submission, only: %i[show edit]
+  before_action :set_submission_feedback, only: %i[update destroy]
+  before_action :check_editor
 
   # GET /assignment/critiques/1 or /assignment/critiques/1.json
   def index_for_assignment
@@ -48,30 +49,44 @@ class SubmissionFeedbacksController < ApplicationController
 
     respond_to do |format|
       if @submission_feedback.save
-        format.html do
-          redirect_to submission_feedback_url(@submission_feedback),
-                      notice: 'Submission feedback was successfully created.'
-        end
         format.json { render :show, status: :created, location: @submission_feedback }
       else
-        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @submission_feedback.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /submission_feedbacks/1 or /submission_feedbacks/1.json
+  # PATCH/PUT /assignment/critique/1 or /assignment/critique/1.json
   def update
-    respond_to do |format|
-      if @submission_feedback.update(submission_feedback_params)
-        format.html do
-          redirect_to submission_feedback_url(@submission_feedback),
-                      notice: 'Submission feedback was successfully updated.'
+    @submission_feedback.transaction do
+      submission = @submission_feedback.submission
+      submission.recorded_score = params[:override_score]
+
+      respond_to do |format|
+        if @submission_feedback.save && submission.save
+          format.json  do
+            response = @submission_feedback.as_json(
+              include: {
+                rubric_row_feedbacks: {
+                  only: %i[ id feedback score submission_feedback_id criterium_id]
+                }
+              },
+              only: %i[ id submission_id calculated_score feedback]
+            )
+            response[ :messages] = I18n.t 'critiques.save_success_msg'
+            render json: response
+          end
+        else
+          errors = @submission_feedback.errors.merge!( submission.errors )
+          response = {
+            messages: errors
+          }
+          format.json do
+            render json: response, status: :unprocessable_entity
+          end
+          
+          #format.json { render json: {messages: errors}, status: :unprocessable_entity }
         end
-        format.json { render :show, status: :ok, location: @submission_feedback }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @submission_feedback.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -81,7 +96,6 @@ class SubmissionFeedbacksController < ApplicationController
     @submission_feedback.destroy
 
     respond_to do |format|
-      format.html { redirect_to submission_feedbacks_url, notice: 'Submission feedback was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -89,7 +103,6 @@ class SubmissionFeedbacksController < ApplicationController
   private
 
   def standardized_response(submission, messages = {})
-    Rails.logger.debug submission.rubric.inspect
     response = {
       submission: submission.as_json(
         include: {
@@ -117,17 +130,31 @@ class SubmissionFeedbacksController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_submission_feedback
+    if params[:submission_feedback_id].to_i > 0
+      @submission_feedback = SubmissionFeedback
+                    .includes( rubric_row_feedbacks:)
+                    .find(params[:submission_feedback_id])
+    else
+      @submission_feedback = SubmissionFeedback.new(
+        submission_feedback_params
+      )
+
+    end
+
+    @submission_feedback
+  end
+
+  def set_submission
     @submission = Submission
                   .includes(rubric: :criteria, submission_feedback: :rubric_row_feedbacks)
                   .find(params[:submission_id])
 
-    # return value
     @submission
   end
 
   # Only allow a list of trusted parameters through.
   def submission_feedback_params
-    params.require(:submission_feedback).permit(:submission_id, :feedback,
+    params.require(:submission_feedback).permit(:submission_id, :feedback, :calculated_score,
                                                 rubric_row_feedbacks_attributes: %I[id
                                                                                     submission_feedback_id score feedback criterium_id])
   end
