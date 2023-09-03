@@ -25,7 +25,8 @@ import AdminListToolbar from "../infrastructure/AdminListToolbar";
 
 enum SubmissionActions{
   init_no_data = 'INIT NO DATA',
-  set_feedback_full = 'SET FEEDBACK FULL',
+  set_submission_full = 'SET SUBMISSION FULL',
+  set_submission_feedback_full = 'SET FEEDBACK FULL',
   set_feedback_overall = 'SET FEEDBACK OVERALL',
   set_recorded_score = 'SET RECORDED SCORE',
   set_criteria = 'SET CRITERIA',
@@ -85,8 +86,11 @@ const SubmissionReducer = ( state, action ) =>{
     case SubmissionActions.init_no_data:
       return  genCleanSubmission( action.submission_id, action.rubric );
 
-    case SubmissionActions.set_feedback_full:
+    case SubmissionActions.set_submission_full:
       return {...action.submission as ISubmissionData};
+    case SubmissionActions.set_submission_feedback_full:
+      tmpSubmission.submission_feedback = action.submission_feedback
+      return Object.assign({}, tmpSubmission );
     case SubmissionActions.set_feedback_overall:
       tmpSubmission.submission_feedback.feedback = action.submission_feedback;
       return Object.assign({}, tmpSubmission );
@@ -191,7 +195,7 @@ export default function CritiqueShell(props: Props) {
         }
         //data.submission.submissionFeedback = data.submission.submission_feedback;
 
-        updateSelectedSubmission({type: SubmissionActions.set_feedback_full, submission: data.submission} );
+        updateSelectedSubmission({type: SubmissionActions.set_submission_full, submission: data.submission} );
 
         if( !panels.includes('submitted') ){
           const tmpPanels = [...panels, 'submitted'];

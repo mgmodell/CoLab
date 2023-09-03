@@ -36,13 +36,13 @@ interface IRubricRowFeedback {
   submission_feedback_id: number | null;
   criterium_id: number;
   score: number;
-  feedback: string;
+  feedback: string | EditorState;
 }
 interface ISubmissionFeedback {
   id: number | null;
   submission_id: number;
   calculated_score: number | null;
-  feedback: string;
+  feedback: string | EditorState;
   rubric_row_feedbacks: Array<IRubricRowFeedback>;
 }
 
@@ -82,7 +82,7 @@ export default function RubricScorer(props: Props) {
         return acc;
       }, [0,0]
     )
-    return weightScore[1] / weightScore[0];
+    return Math.round( weightScore[1] / weightScore[0]);
   }
 
   const saveSubmissionFeedback = ()=>{
@@ -93,12 +93,22 @@ export default function RubricScorer(props: Props) {
     const method = null === props.submission.submission_feedback.id ? 'PUT' : 'PATCH';
 
     const toSend : ISubmissionFeedback = Object.assign( {}, props.submission.submission_feedback);
+    toSend.feedback = draftToHtml(
+      convertToRaw(toSend.feedback.getCurrentContent())
+    );
+    toSend.rubric_row_feedbacks.forEach( (rubricRowFeedback) =>{
+      rubricRowFeedback.feedback = draftToHtml(
+        convertToRaw( rubricRowFeedback.feedback.getCurrentContent( ) )
+      );
+    })
+    toSend['rubric_row_feedbacks_attributes'] = toSend.rubric_row_feedbacks;
+    delete toSend.rubric_row_feedbacks;
     
     axios({
       url: url,
       method: method,
       data: {
-        submission_feedback: props.submission.submission_feedback,
+        submission_feedback: toSend,
         override_score: overrideScore ? overriddenScore : null
       }
     })
@@ -107,15 +117,27 @@ export default function RubricScorer(props: Props) {
         const messages = data["messages"];
 
         if (messages != null && Object.keys(messages).length < 2) {
-          console.log( data );
-          props.submissionReducer({
-            type: SubmissionActions.set_feedback_full,
-            submission_feedback: data.submission_feedback,
+          const r_sub_fdbk : ISubmissionFeedback = data.submission_feedback;
+          //Prep the Editors
+          r_sub_fdbk.feedback = EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              htmlToDraft( r_sub_fdbk.feedback).contentBlocks
+            )
+          )
+          r_sub_fdbk.rubric_row_feedbacks.forEach( (rubricRowFeedback) =>{
+            rubricRowFeedback.feedback = EditorState.createWithContent(
+              ContentState.createFromBlockArray(
+                htmlToDraft( rubricRowFeedback.feedback)
+              )
+            )
           })
-          console.log( 'success', messages.main );
+          
+          props.submissionReducer({
+            type: SubmissionActions.set_submission_feedback_full,
+            submission_feedback: r_sub_fdbk,
+          })
           dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
         } else {
-          console.log( 'fail', messages.main );
           dispatch(addMessage(messages.main, new Date(), Priorities.ERROR));
         }
 
@@ -255,7 +277,7 @@ export default function RubricScorer(props: Props) {
               let index = 0;
               levels.forEach( (levelText) => {
                 index++;
-                const score = 100 / levels.length * index;
+                const score = Math.round( 100 / levels.length * index );
                 renderedLevels.push( 
                     <Grid
                       key={`${criterium.id}-${index}`}

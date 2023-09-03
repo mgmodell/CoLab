@@ -12,12 +12,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import Paper from "@mui/material/Paper";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
 
 import AddIcon from "@mui/icons-material/Add";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
@@ -27,30 +22,19 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import {
   DataGrid,
-  GridActionsCellItem,
-  GridCellEditStopParams,
-  GridCellParams,
   GridColDef,
-  GridPreProcessEditCellProps,
   GridRenderCellParams,
   GridRowModel,
-  GridRowModes,
   GridToolbarContainer,
   GridToolbarDensitySelector,
-  GridValueSetterParams,
-  MuiEvent
-} from "@mui/x-data-grid";
+  GridValueSetterParams} from "@mui/x-data-grid";
 
-import { Settings } from "luxon";
 
 //import i18n from './i18n';
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { number } from "prop-types";
 import {
-  Checkbox,
-  FormControlLabel,
   IconButton,
   Tooltip,
   Typography

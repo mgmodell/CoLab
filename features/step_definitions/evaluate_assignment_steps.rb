@@ -98,12 +98,16 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       log "No such completeness level: #{completeness}"
       pending
     end
+    feedback_elem = find( :xpath, "//div[@id='description-#{criterium.id}' and contains(.,'#{criterium.description}')]" )
+    feedback_elem.click
+    send_keys feedback
+    feedback = "<p>#{feedback}</p>"
 
     score = 0
     case competence
     when 'proficient'
       level_elements = find_all(:xpath, "//div[contains(@id,'level-#{criterium.id}')]")
-      proficient_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{level_elements.size - 1}')]")
+      proficient_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{level_elements.size}')]")
       proficient_elem.click
       score = 100
     when 'competent'
@@ -124,6 +128,9 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       log "No such competence level: #{competence}"
       pending
     end
+
+    score = score.round
+
     rubric_row_feedback = RubricRowFeedback.new(
       criterium:,
       feedback:,
@@ -137,11 +144,25 @@ Then('the user saves the critique') do
   ack_messages
   click_button 'save_feedback'
   wait_for_render
-  byebug
 end
 
 Then('the db critique matches the data entered') do
-  pending # Write code here that turns the phrase above into concrete actions
+  SubmissionFeedback.where( submission_id: @submission.id ).size.should be 1
+  submission_feedback = SubmissionFeedback.where( submission_id: @submission.id ).take
+  #Check the submissionFeedback contents
+  @submission_feedback.feedback.should eq submission_feedback.feedback.gsub( "\n", '' )
+  @submission_feedback.calculated_score.should eq submission_feedback.calculated_score
+
+  @submission_feedback.rubric_row_feedbacks.each do |rrfbk|
+    db_rrfbks = RubricRowFeedback.where(
+      submission_feedback_id: submission_feedback.id,
+      criterium_id: rrfbk.criterium_id
+    )
+    db_rrfbks.size.should eq 1
+    rrfbk.score.should eq db_rrfbks[0].score
+    rrfbk.feedback.should eq db_rrfbks[0].feedback.gsub( "\n", '' )
+
+  end
 end
 
 Then('the user selects the {string} submission') do |_string|

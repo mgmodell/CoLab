@@ -17,7 +17,8 @@ en:
       minimum: Minimum requirements not met.
       criteria_feedback: Criteria feedback
     save_btn: Save feedback
-    save_success_msg: Your feedback was successfully saved
+    save_success_msg: Successfully saved your feedback
+    save_fail_msg: Your feedback failed to save
     submissions:
       score: Score
       submitted: Submission date

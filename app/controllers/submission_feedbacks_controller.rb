@@ -65,19 +65,25 @@ class SubmissionFeedbacksController < ApplicationController
       respond_to do |format|
         if @submission_feedback.save && submission.save
           format.json  do
-            response = @submission_feedback.as_json(
-              include: {
-                rubric_row_feedbacks: {
-                  only: %i[ id feedback score submission_feedback_id criterium_id]
-                }
-              },
-              only: %i[ id submission_id calculated_score feedback]
-            )
-            response[ :messages] = I18n.t 'critiques.save_success_msg'
+            response = {
+              submission_feedback: @submission_feedback.as_json(
+                  include: {
+                    rubric_row_feedbacks: {
+                      only: %i[ id feedback score submission_feedback_id criterium_id]
+                    }
+                  },
+                  only: %i[ id submission_id calculated_score feedback]
+                ),
+              messages: {
+                main: t('critiques.save_success_msg'),
+
+              }
+            }
             render json: response
           end
         else
           errors = @submission_feedback.errors.merge!( submission.errors )
+          errors[:main ] = t('critiques.save_fail_msg')
           response = {
             messages: errors
           }
