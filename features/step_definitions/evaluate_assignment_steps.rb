@@ -100,6 +100,7 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       pending
     end
     feedback_elem = find( :xpath, "//div[@id='feedback-#{criterium.id}']/div[@data-pc-section='content']" )
+
     feedback_elem.click
     send_keys feedback
     feedback = "<p>#{feedback}</p>" if feedback.length.positive?
@@ -141,6 +142,9 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
         feedback:,
         score:
       )
+    else
+      rubric_row_feedback.feedback = feedback
+      rubric_row_feedback.score = score
     end
     @submission_feedback.rubric_row_feedbacks << rubric_row_feedback
   end
