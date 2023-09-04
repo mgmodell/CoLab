@@ -316,9 +316,10 @@ Given('submission {int} {string} graded') do |index, graded_state|
   if 'is' == graded_state
     submission = @assignment.submissions[index - 1]
     submission.transaction do
-      submission_feedback = submission.build_submission_feedback(
+      submission_feedback = SubmissionFeedback.new(
         feedback: "<p>#{Faker::Lorem.paragraph}</p>",
         calculated_score: 100,
+        submission:
       )
       @assignment.rubric.criteria.each do |criterium|
         rubric_row_feedback = RubricRowFeedback.new(
@@ -326,15 +327,11 @@ Given('submission {int} {string} graded') do |index, graded_state|
           criterium:,
           feedback: "<p>#{Faker::Lorem.paragraph}</p>",
         )
-        submission.rubric_row_feedbacks << rubric_row_feedback
+        submission_feedback.rubric_row_feedbacks << rubric_row_feedback
       end
       log submission_feedback.errors.full_messages unless submission_feedback.save
-
     end
-
   end
-  
-  pending # Write code here that turns the phrase above into concrete actions
 end
 
 Then('the user {string} withdraw submission {int}') do |can, assignment_ord|
