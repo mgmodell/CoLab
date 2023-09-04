@@ -66,10 +66,12 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user selects submission 1
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
-    Then the user responds to all criteria with 'novice' and 'some' feedback
+    Then the user responds to all criteria with 'novice' and 'no' feedback
     Then the user saves the critique
-    Then the user sees 'Errors'
+    Then the user sees 'failed to save'
+    Then the user sees 'Feedback is required'
     Then the user responds to all criteria with 'novice' and 'all' feedback
+    Then the user saves the critique
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
 

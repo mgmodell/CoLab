@@ -77,6 +77,7 @@ Then('the user enters overall feedback') do
 end
 
 Then('the user responds to all criteria with {string} and {string} feedback') do |competence, completeness|
+  wait_for_render
 
   has_empty = false
   @assignment.rubric.criteria.each do |criterium|
@@ -92,13 +93,13 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       else
         feedback = Faker::Lorem.paragraph 
       end
-    when 'no'
+    when 'no', 'none'
       # Nothing should be entered
     else
       log "No such completeness level: #{completeness}"
       pending
     end
-    feedback_elem = find( :xpath, "//div[@id='description-#{criterium.id}' and contains(.,'#{criterium.description}')]" )
+    feedback_elem = find( :xpath, "//div[@id='feedback-#{criterium.id}']//div[contains(@class,'rdw-editor-main')]")
     feedback_elem.click
     send_keys feedback
     feedback = "<p>#{feedback}</p>"
@@ -112,14 +113,15 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       score = 100
     when 'competent'
       level_elements = find_all(:xpath, "//div[contains(@id,'level-#{criterium.id}')]")
-      competent_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{level_elements.size - 2}')]")
+      competent_level = level_elements.size > 1 ? level_elements.size - 1 : 1
+      competent_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{competent_level}')]")
       competent_elem.click
-      score = (level_elements.size - 2 ) * 100 / level_elements.size
+      score = (competent_level) * 100 / level_elements.size
     when 'novice'
       elem = find(:xpath, "//div[@id='minimum-#{criterium.id}']")
       elem.click
-      score = 100
-    when 'numbers'
+      score = 0
+    when 'numbers', 'mixed'
       elem = find(:xpath, "//input[@id='score-#{criterium.id}']")
       elem.click
       score = rand(100)
@@ -131,11 +133,15 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
 
     score = score.round
 
-    rubric_row_feedback = RubricRowFeedback.new(
-      criterium:,
-      feedback:,
-      score:
-    )
+    rubric_row_feedback = @submission_feedback.rubric_row_feedbacks.find {|rrf| rrf.criterium_id == criterium.id }
+
+    if rubric_row_feedback.nil? 
+      rubric_row_feedback = RubricRowFeedback.new(
+        criterium:,
+        feedback:,
+        score:
+      )
+    end
     @submission_feedback.rubric_row_feedbacks << rubric_row_feedback
   end
 end
@@ -165,13 +171,43 @@ Then('the db critique matches the data entered') do
   end
 end
 
-Then('the user selects the {string} submission') do |_string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user selects the {string} submission') do |temporal_relation|
+  find(:xpath, '//div[contains(@class,"MuiDataGrid-columnHeaderTitleContainer") and contains(.,"Submission date")]' \
+                '//button[@title="Sort"]', visible: :all).hover
+
+  case temporal_relation
+  when 'latest'
+    sort_dir = 'Downward'
+  else
+    log "Selecting the '#{temporal_relation}' item is not yet handled"
+    pending
+  end
+  svg_search = "//div[contains(@class,'MuiDataGrid-columnHeaderTitleContainer') and contains(.,'Submission date')]" \
+                "//button[@title='Sort']/*[contains(@data-testid,'#{sort_dir}')]"
+
+  unless has_xpath? svg_search
+    find(:xpath, "//div[contains(@class,'MuiDataGrid-columnHeaderTitleContainer') and contains(.,'Submission date')]" +
+                  "//button[@title='Sort']", visible: :all).click
+    unless has_xpath? svg_search
+      find(:xpath, "//div[contains(@class,'MuiDataGrid-columnHeaderTitleContainer') and contains(.,'Submission date')]" +
+                    "//button[@title='Sort']", visible: :all).click
+    end
+    true.should eq false unless has_xpath? svg_search
+  end
+  find(:xpath, '//div[@data-rowindex=0]').click
+
+  row = find(:xpath, '//div[@data-rowindex=0]')
+  row.click
+  submission_id = row['data-id'].to_i
+  @submission = Submission.find submission_id
+
+  wait_for_render
 end
 
-Then('the user sets score to {int}') do |_int|
-  # Then('the user sets score to {float}') do |float|
-  pending # Write code here that turns the phrase above into concrete actions
+Then('the user sets score to {int}') do |score|
+  click_link_or_button 'Override the score?'
+  find( :xpath, '//input[@id="override-score"]').click
+  send_keys score
 end
 
 Given('the user is an {string} user in the course') do |user_type|

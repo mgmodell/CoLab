@@ -57,7 +57,7 @@ export default function RubricScorer(props: Props) {
   const dispatch = useDispatch( );
 
   const [overrideScore, setOverrideScore] = useState( false );
-  const [overriddenScore, setOverriddenScore] = useState <number | null>( null );
+  const [overriddenScore, setOverriddenScore] = useState <number >( 0 );
   const handleOverRideScoreChange = (event: React.ChangeEvent<HTMLInputElement>) =>{
     setOverrideScore( !overrideScore );
   }
@@ -115,6 +115,7 @@ export default function RubricScorer(props: Props) {
       .then(response =>{
         const data = response.data;
         const messages = data["messages"];
+        console.log( messages );
 
         if (messages != null && Object.keys(messages).length < 2) {
           const r_sub_fdbk : ISubmissionFeedback = data.submission_feedback;
@@ -138,7 +139,10 @@ export default function RubricScorer(props: Props) {
           })
           dispatch(addMessage(messages.main, new Date(), Priorities.INFO));
         } else {
-          dispatch(addMessage(messages.main, new Date(), Priorities.ERROR));
+          Object.values( messages ).forEach( (message)=>{
+            dispatch(addMessage(message, new Date(), Priorities.ERROR));
+
+          })
         }
 
       })

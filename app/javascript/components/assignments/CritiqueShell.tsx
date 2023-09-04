@@ -22,6 +22,7 @@ const Editor = React.lazy( () => import('../reactDraftWysiwygEditor'));
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
+import { renderDateCellExpand } from "../infrastructure/GridCellExpand";
 
 enum SubmissionActions{
   init_no_data = 'INIT NO DATA',
@@ -151,12 +152,20 @@ export default function CritiqueShell(props: Props) {
   const [selectedSubmission, updateSelectedSubmission] = useReducer(SubmissionReducer, {} );
 
   const columns: GridColDef[] = [
-    { field: "recordedScore", headerName: t("submissions.score") },
-    { field: "submitted", headerName: t("submissions.submitted") },
-    { field: "withdrawn", headerName: t("submissions.withdrawn") },
+    { field: "recordedScore", 
+      headerName: t("submissions.score") },
+    { field: "submitted", 
+      width: 250,
+      renderCell: renderDateCellExpand,
+      headerName: t("submissions.submitted") },
+    { field: "withdrawn", 
+      width: 250,
+      renderCell: renderDateCellExpand,
+      headerName: t("submissions.withdrawn") },
     {
       field: "user",
       headerName: t("submissions.submitter"),
+      width: 400,
       renderCell: (params: GridRenderCellParams) =>{
           return `${params.value.last_name}, ${params.value.first_name}`;
       }
@@ -228,6 +237,10 @@ export default function CritiqueShell(props: Props) {
         setAssignmentAcceptsText( data.assignment.text_sub );
         setAssignmentAcceptsLink( data.assignment.link_sub );
         setAssignmentGroupEnabled( data.assignment.group_enabled );
+        data.assignment.submissions.forEach( (submission: ISubmissionCondensed) =>{
+          submission.submitted = submission.submitted !== null ? DateTime.fromISO( submission.submitted) : null;
+          submission.withdrawn = submission.withdrawn !== null ? DateTime.fromISO( submission.withdrawn) : null;
+        })
         setSubmissionsIndex( data.assignment.submissions );
         
       })

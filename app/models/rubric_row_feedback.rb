@@ -5,11 +5,12 @@ class RubricRowFeedback < ApplicationRecord
   has_one :submission, through: :submission_feedback
   belongs_to :criterium
 
+  validate :sufficent_feedback
+
   private
 
   def sufficent_feedback
-    if score < 100 && ( feedback.length < 8 )
-      errors.add( :feedback, I18n.t( 'feedback_required'))
-    end
+    return unless score < 100 && feedback.length < 9
+    errors.add( :feedback, I18n.t( '.rubric_row_feedbacks.feedback_required'))
   end
 end

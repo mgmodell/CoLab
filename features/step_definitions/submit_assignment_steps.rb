@@ -272,12 +272,16 @@ Given('the assignment already has {int} submission from the user') do |count|
   count.times do |index|
     sub_text_db = ''
     rand(2..7).times do
+
       para = Faker::Lorem.paragraph
       sub_text_db += "<p>#{para}</p>"
     end
 
+    travel 10.minutes
+    submitted = DateTime.now
+
     submission = @assignment.submissions.new(
-      submitted: (count - index).hours.ago,
+      submitted:,
       sub_text: sub_text_db,
       user: @user,
       rubric: @assignment.rubric
@@ -308,8 +312,28 @@ Then('the user withdraws submission {int}') do |assignment_ord|
   wait_for_render
 end
 
-Given('submission {int} {string} graded') do |_int, _string|
-  # Given('assignment {float} {string} graded') do |float, string|
+Given('submission {int} {string} graded') do |index, graded_state|
+  if 'is' == graded_state
+    submission = @assignment.submissions[index - 1]
+    submission.transaction do
+      submission_feedback = submission.build_submission_feedback(
+        feedback: "<p>#{Faker::Lorem.paragraph}</p>",
+        calculated_score: 100,
+      )
+      @assignment.rubric.criteria.each do |criterium|
+        rubric_row_feedback = RubricRowFeedback.new(
+          score: 100,
+          criterium:,
+          feedback: "<p>#{Faker::Lorem.paragraph}</p>",
+        )
+        submission.rubric_row_feedbacks << rubric_row_feedback
+      end
+      log submission_feedback.errors.full_messages unless submission_feedback.save
+
+    end
+
+  end
+  
   pending # Write code here that turns the phrase above into concrete actions
 end
 

@@ -82,16 +82,16 @@ class SubmissionFeedbacksController < ApplicationController
             render json: response
           end
         else
-          errors = @submission_feedback.errors.merge!( submission.errors )
-          errors[:main ] = t('critiques.save_fail_msg')
+          errors = @submission_feedback.errors.to_hash.merge( submission.errors.to_hash )
+          errors[:main] = t('critiques.save_fail_msg')
+
           response = {
             messages: errors
           }
           format.json do
-            render json: response, status: :unprocessable_entity
+            render json: response
           end
           
-          #format.json { render json: {messages: errors}, status: :unprocessable_entity }
         end
       end
     end
