@@ -47,15 +47,15 @@ class Submission < ApplicationRecord
 
     elsif withdrawn_was.nil? && !withdrawn.nil?
       if submitted.nil?
-        errors.add :main, I18n.t('submissions.error.withdraw_requires_submit')
+        errors.add :withdrawn, I18n.t('submissions.error.withdraw_requires_submit')
       elsif changes.size > 1
-        errors.add :main, I18n.t('submissions.error.no_changes_on_withdrawal')
+        errors.add :withdrawn, I18n.t('submissions.error.no_changes_on_withdrawal')
       end
     elsif !submitted_was.nil?
       if recorded_score_changed? && changes.size > 1
-        errors.add :main, I18n.t('submissions.error.only_score_change_post_submission')
-      elsif changes.size > 0
-        errors.add :main, I18n.t('submissions.error.no_changes_once_submitted')
+        errors.add :recorded_score, I18n.t('submissions.error.only_score_change_post_submission')
+      elsif (changes.size.positive? && !recorded_score_changed? ) || ( recorded_score_changed? && 1 < changes.size )
+        errors.add :recorded_score, I18n.t('submissions.error.no_changes_once_submitted')
       end
     end
   end

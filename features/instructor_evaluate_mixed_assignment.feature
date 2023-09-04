@@ -160,6 +160,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
   Scenario: Instructor grades assignment novice and overrides score
     Given the user logs in
     Then the user opens the assignment task
+    Then the user selects submission 1
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
     Then the user responds to all criteria with 'novice' and 'all' feedback

@@ -205,7 +205,8 @@ Then('the user selects the {string} submission') do |temporal_relation|
 end
 
 Then('the user sets score to {int}') do |score|
-  click_link_or_button 'Override the score?'
+  label_txt = 'Override the score?'
+  find( :xpath, "//label[contains(.,'#{label_txt}')]").click
   find( :xpath, '//input[@id="override-score"]').click
   send_keys score
 end

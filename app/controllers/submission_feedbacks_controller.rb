@@ -82,8 +82,9 @@ class SubmissionFeedbacksController < ApplicationController
             render json: response
           end
         else
+
           errors = @submission_feedback.errors.to_hash.merge( submission.errors.to_hash )
-          errors[:main] = t('critiques.save_fail_msg')
+          errors[:main] = t('critiques.save_fail_msg') unless errors[:main].present?
 
           response = {
             messages: errors
