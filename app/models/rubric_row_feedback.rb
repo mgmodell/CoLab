@@ -10,7 +10,7 @@ class RubricRowFeedback < ApplicationRecord
   private
 
   def sufficent_feedback
-    return unless score < 100 && feedback.length < 9
+    return unless score < 100 && feedback.length < 1
     errors.add( :feedback, I18n.t( '.rubric_row_feedbacks.feedback_required'))
   end
 end

@@ -55,7 +55,7 @@ Then('the contents match the submission contents') do
 end
 
 Then('the user enters overall feedback') do
-  editor = find(:xpath, "//div[@class='rdw-editor-main' and contains(.,'Overall feedback')]")
+  editor = find(:xpath, "//div[@id='overall-feedback']/div[@data-pc-section='content']" )
   editor.click
 
   fb_text_web = ''
@@ -63,7 +63,7 @@ Then('the user enters overall feedback') do
 
   rand(2..7).times do
     para = Faker::Lorem.paragraph
-    fb_text_db += "<p>#{para}</p>"
+    fb_text_db += "<p>#{para}</p>" if para.length.positive?
     send_keys para, :enter
     fb_text_web += "#{para}\n"
   end
@@ -81,7 +81,7 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
 
   has_empty = false
   @assignment.rubric.criteria.each do |criterium|
-    has_xpath? "//div[@id='description-#{criterium.id}' and contains(.,'#{criterium.description}')]"
+    has_xpath? "//div[@id='description-#{criterium.id}']/div[@data-pc-section='content']"
     #TODO fix to make sure at least one is empty
     feedback = ''
     case completeness
@@ -99,10 +99,10 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       log "No such completeness level: #{completeness}"
       pending
     end
-    feedback_elem = find( :xpath, "//div[@id='feedback-#{criterium.id}']//div[contains(@class,'rdw-editor-main')]")
+    feedback_elem = find( :xpath, "//div[@id='feedback-#{criterium.id}']/div[@data-pc-section='content']" )
     feedback_elem.click
     send_keys feedback
-    feedback = "<p>#{feedback}</p>"
+    feedback = "<p>#{feedback}</p>" if feedback.length.positive?
 
     score = 0
     case competence

@@ -11,11 +11,7 @@ import {
   addMessage, Priorities
 } from "../infrastructure/StatusSlice";
 
-import { EditorState, convertToRaw, ContentState } from "draft-js";
-const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
-
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
+import { Editor } from "primereact/editor";
 
 import { useTranslation } from "react-i18next";
 import { Button, Checkbox, FormControlLabel, Slider, TextField, Typography } from "@mui/material";
@@ -36,13 +32,13 @@ interface IRubricRowFeedback {
   submission_feedback_id: number | null;
   criterium_id: number;
   score: number;
-  feedback: string | EditorState;
+  feedback: string;
 }
 interface ISubmissionFeedback {
   id: number | null;
   submission_id: number;
   calculated_score: number | null;
-  feedback: string | EditorState;
+  feedback: string;
   rubric_row_feedbacks: Array<IRubricRowFeedback>;
 }
 
@@ -62,11 +58,7 @@ export default function RubricScorer(props: Props) {
     setOverrideScore( !overrideScore );
   }
 
-  const [ ed, setEd ] = useState(
-    EditorState.createWithContent(
-      ContentState.createFromBlockArray(htmlToDraft('').contentBlocks)
-    )
-  );
+  const [ ed, setEd ] = useState( '' );
 
   const [t, i18n] = useTranslation( `${category}s` );
 
@@ -93,14 +85,6 @@ export default function RubricScorer(props: Props) {
     const method = null === props.submission.submission_feedback.id ? 'PUT' : 'PATCH';
 
     const toSend : ISubmissionFeedback = Object.assign( {}, props.submission.submission_feedback);
-    toSend.feedback = draftToHtml(
-      convertToRaw(toSend.feedback.getCurrentContent())
-    );
-    toSend.rubric_row_feedbacks.forEach( (rubricRowFeedback) =>{
-      rubricRowFeedback.feedback = draftToHtml(
-        convertToRaw( rubricRowFeedback.feedback.getCurrentContent( ) )
-      );
-    })
     toSend['rubric_row_feedbacks_attributes'] = toSend.rubric_row_feedbacks;
     delete toSend.rubric_row_feedbacks;
     
@@ -119,19 +103,6 @@ export default function RubricScorer(props: Props) {
 
         if (messages != null && Object.keys(messages).length < 2) {
           const r_sub_fdbk : ISubmissionFeedback = data.submission_feedback;
-          //Prep the Editors
-          r_sub_fdbk.feedback = EditorState.createWithContent(
-            ContentState.createFromBlockArray(
-              htmlToDraft( r_sub_fdbk.feedback).contentBlocks
-            )
-          )
-          r_sub_fdbk.rubric_row_feedbacks.forEach( (rubricRowFeedback) =>{
-            rubricRowFeedback.feedback = EditorState.createWithContent(
-              ContentState.createFromBlockArray(
-                htmlToDraft( rubricRowFeedback.feedback)
-              )
-            )
-          })
           
           props.submissionReducer({
             type: SubmissionActions.set_submission_feedback_full,
@@ -188,55 +159,19 @@ export default function RubricScorer(props: Props) {
               <Typography variant="h6">{t('feedback' )}:</Typography>
             </Grid>
             <Grid xs={55}>
-                  <Editor
-                    wrapperId={t('feedback')}
-                    label={t("feedback")}
-                    id='overall_feedback'
-                    placeholder={t("feedback")}
-                    editorState={props.submission.submission_feedback.feedback}
-                    onEditorStateChange={(editorState, title)=>{
+              <Editor
+                id='overall-feedback'
+                placeholder={t('feedback')}
+                aria-label={t('feedback')}
+                value={props.submission.submission_feedback.feedback}
+                onTextChange={(e)=>{
                       props.submissionReducer({
                         type: SubmissionActions.set_feedback_overall,
-                        submission_feedback: editorState,
+                        submission_feedback: e.htmlValue,
                       })
-                    }}
-                    toolbarOnFocus
-                    toolbar={{
-                      options: [
-                        "inline",
-                        "list",
-                        "link",
-                        "blockType",
-                        "fontSize",
-                        "fontFamily"
-                      ],
-                      inline: {
-                        options: [
-                          "bold",
-                          "italic",
-                          "underline",
-                          "strikethrough",
-                          "monospace"
-                        ],
-                        bold: { className: "bordered-option-classname" },
-                        italic: { className: "bordered-option-classname" },
-                        underline: { className: "bordered-option-classname" },
-                        strikethrough: {
-                          className: "bordered-option-classname"
-                        },
-                        code: { className: "bordered-option-classname" }
-                      },
-                      blockType: {
-                        className: "bordered-option-classname"
-                      },
-                      fontSize: {
-                        className: "bordered-option-classname"
-                      },
-                      fontFamily: {
-                        className: "bordered-option-classname"
-                      }
-                    }}
-                  />
+
+                }}
+              />
             </Grid>
             <Grid xs={55}>
               <Typography variant="h6">
@@ -375,48 +310,21 @@ export default function RubricScorer(props: Props) {
                   </Grid>
                   { renderedLevels }
                   <Grid 
-                      id={`feedback-${criterium.id}`}
                       xs={10}>
-                  <Editor
-                    wrapperId="criteria_feedback"
-                    label={t("rubric.criteria_feedback")}
-                    placeholder={t("rubric.criteria_feedback")}
-                    toolbarOnFocus
-                    toolbar={{
-                      options: [
-                        "inline",
-                        "list",
-                        "link",
-                      ],
-                      inline: {
-                        options: [
-                          "bold",
-                          "italic",
-                        ],
-                        bold: { className: "bordered-option-classname" },
-                        italic: { className: "bordered-option-classname" },
-                        underline: { className: "bordered-option-classname" },
-                        code: { className: "bordered-option-classname" }
-                      },
-                      blockType: {
-                        className: "bordered-option-classname"
-                      },
-                      fontSize: {
-                        className: "bordered-option-classname"
-                      },
-                      fontFamily: {
-                        className: "bordered-option-classname"
-                      }
-                    }}
-                    editorState={props.submission.submission_feedback.rubric_row_feedbacks.find(feedback=> feedback.criterium_id == criterium.id ).feedback}
-                    onEditorStateChange={(editorState, title)=>{
+                <Editor
+                  id={`feedback-${criterium.id}`}
+                  placeholder={t("rubric.criteria_feedback")}
+                  aria-label={t("rubric.criteria_feedback")}
+                  value={props.submission.submission_feedback.rubric_row_feedbacks.find(feedback=> feedback.criterium_id == criterium.id ).feedback}
+                  onTextChange={(e)=>{
                       props.submissionReducer({
                         type: SubmissionActions.set_criteria_feedback,
-                        criterium_feedback: editorState,
+                        criterium_feedback: e.htmlValue,
                         criterium_id: criterium.id,
                       })
-                    }}
-                  />
+                      
+                  }}
+                />
                   </Grid>
                 </React.Fragment>
               )

@@ -17,10 +17,10 @@ import {DateTime} from 'luxon';
 import parse from 'html-react-parser';
 import RubricScorer, { IRubricRowFeedback } from "./RubricScorer";
 import { ISubmissionFeedback } from "./RubricScorer";
-import {EditorState, convertToRaw, ContentState } from 'draft-js';
-const Editor = React.lazy( () => import('../reactDraftWysiwygEditor'));
-import htmlToDraft from 'html-to-draftjs';
-import draftToHtml from 'draftjs-to-html';
+//import {EditorState, convertToRaw, ContentState } from 'draft-js';
+//const Editor = React.lazy( () => import('../reactDraftWysiwygEditor'));
+//import htmlToDraft from 'html-to-draftjs';
+//import draftToHtml from 'draftjs-to-html';
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
 import { renderDateCellExpand } from "../infrastructure/GridCellExpand";
 
@@ -42,9 +42,7 @@ const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissio
     id: null,
     submission_id: submission_id,
     calculated_score: 0,
-    feedback: EditorState.createWithContent(
-      ContentState.createFromBlockArray( htmlToDraft('').contentBlocks )
-    ),
+    feedback: '',
     rubric_row_feedbacks: []
   }
   rubric.criteria.forEach( (value:ICriteria) =>{
@@ -53,9 +51,7 @@ const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissio
       submission_feedback_id: null,
       criterium_id: value.id,
       score: 0,
-      feedback: EditorState.createWithContent(
-        ContentState.createFromBlockArray( htmlToDraft( '' ).contentBlocks )
-      )
+      feedback: '',
     }
     submissionFeedback.rubric_row_feedbacks.push( newRowFeedback );
   })
@@ -187,6 +183,7 @@ export default function CritiqueShell(props: Props) {
         } else {
           //Convert the feedbacks to EditorStates
 
+          /*
           data.submission.submission_feedback.feedback =
             EditorState.createWithContent(
               ContentState.createFromBlockArray(
@@ -201,6 +198,7 @@ export default function CritiqueShell(props: Props) {
                 )
               );
           })
+          */
         }
         //data.submission.submissionFeedback = data.submission.submission_feedback;
 

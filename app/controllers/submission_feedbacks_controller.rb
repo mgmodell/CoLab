@@ -139,7 +139,7 @@ class SubmissionFeedbacksController < ApplicationController
   def set_submission_feedback
     if params[:submission_feedback_id].to_i > 0
       @submission_feedback = SubmissionFeedback
-                    .includes( rubric_row_feedbacks:)
+                    .includes( :rubric_row_feedbacks)
                     .find(params[:submission_feedback_id])
     else
       @submission_feedback = SubmissionFeedback.new(
