@@ -1,5 +1,6 @@
 en:
   rubric_row_feedbacks:
-    feedback_required: >
-      Feedback is required for anything less than a perfect
-      score.
+    error:
+      feedback_required: >
+        Feedback is required for anything less than a perfect
+        score.

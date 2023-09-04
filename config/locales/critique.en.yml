@@ -2,6 +2,9 @@ en:
   critiques:
     error:
       not_loaded: No submission loaded
+      feedback_required: >
+        Feedback is required for anything less than a perfect
+        score.
     submissions_title: Submissions
     submitted: Assignment submission
     no_text: No text entered
