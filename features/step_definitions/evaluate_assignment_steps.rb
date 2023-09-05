@@ -109,7 +109,13 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
     feedback_elem = find( :xpath, "//div[@id='feedback-#{criterium.id}']/div[@data-pc-section='content']" )
 
     feedback_elem.click
-    send_keys [:control, 'a'], feedback
+    send_keys [:command, 'a'], :backspace
+    send_keys [:control, 'a'], :backspace
+    send_keys :end
+    feedback_elem.text.size.times do
+      send_keys :backspace
+    end
+    send_keys feedback
     feedback = "<p>#{feedback}</p>" if feedback.length.positive?
 
     score = 0
@@ -168,7 +174,6 @@ Then('the db critique matches the data entered') do
   submission_feedback = SubmissionFeedback.where( submission_id: @submission.id ).take
   #Check the submissionFeedback contents
   @submission_feedback.feedback.should eq submission_feedback.feedback
-  @submission_feedback.calculated_score.should eq submission_feedback.calculated_score
 
   @submission_feedback.rubric_row_feedbacks.each do |rrfbk|
     db_rrfbks = RubricRowFeedback.where(

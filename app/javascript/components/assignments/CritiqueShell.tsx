@@ -41,7 +41,6 @@ const genCleanFeedback = ( submission_id:number, rubric:IRubricData ):ISubmissio
   const submissionFeedback:ISubmissionFeedback = {
     id: null,
     submission_id: submission_id,
-    calculated_score: 0,
     feedback: '',
     rubric_row_feedbacks: []
   }

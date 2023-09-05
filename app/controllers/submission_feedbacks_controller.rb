@@ -60,7 +60,7 @@ class SubmissionFeedbacksController < ApplicationController
   def update
     @submission_feedback.transaction do
       submission = @submission_feedback.submission
-      @submission_feedback.assign_attributes(submission_feedback_params) if @submission_feedback.id.positive?
+      @submission_feedback.assign_attributes(submission_feedback_params) if @submission_feedback.id.present?
       submission.recorded_score = params[:override_score]
 
       respond_to do |format|
@@ -73,7 +73,7 @@ class SubmissionFeedbacksController < ApplicationController
                       only: %i[ id feedback score submission_feedback_id criterium_id]
                     }
                   },
-                  only: %i[ id submission_id calculated_score feedback]
+                  only: %i[ id submission_id feedback]
                 ),
               messages: {
                 main: t('critiques.save_success_msg'),
@@ -122,7 +122,7 @@ class SubmissionFeedbacksController < ApplicationController
           },
           user: { only: %i[first_name last_name email] },
           group: { only: [:name, { users: { only: %i[first_name last_name email] } }] },
-          submission_feedback: { only: %I[id calculated_score feedback],
+          submission_feedback: { only: %I[id feedback],
                                  include: {
                                    rubric_row_feedbacks: { only: %I[id submission_feedback_id score feedback
                                                                     criterium_id] }
@@ -162,7 +162,7 @@ class SubmissionFeedbacksController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def submission_feedback_params
-    params.require(:submission_feedback).permit(:submission_id, :feedback, :calculated_score,
+    params.require(:submission_feedback).permit(:submission_id, :feedback, 
                                                 rubric_row_feedbacks_attributes: %I[id
                                                                                     submission_feedback_id score feedback criterium_id])
   end

@@ -30,6 +30,17 @@ class Submission < ApplicationRecord
     self.rubric = assignment.rubric
   end
 
+  def get_calculated_score
+    total = 0
+    sum_weights = 0
+    rubric_row_feedbacks.each do |rubric_row_feedback|
+      sum_weights += rubric_row_feedback.criteria.weight
+      total += rubric_row_feedback.criteria.weight * score
+    end
+
+    total / sum_weights
+  end
+
   def can_submit
     if submitted.nil? && withdrawn.nil? &&
        submitted_was.nil? && withdrawn_was.nil?

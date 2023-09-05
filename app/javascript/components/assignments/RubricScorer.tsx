@@ -37,7 +37,6 @@ interface IRubricRowFeedback {
 interface ISubmissionFeedback {
   id: number | null;
   submission_id: number;
-  calculated_score: number | null;
   feedback: string;
   rubric_row_feedbacks: Array<IRubricRowFeedback>;
 }

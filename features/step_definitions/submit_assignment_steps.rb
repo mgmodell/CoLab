@@ -318,7 +318,6 @@ Given('submission {int} {string} graded') do |index, graded_state|
     submission.transaction do
       submission_feedback = SubmissionFeedback.new(
         feedback: "<p>#{Faker::Lorem.paragraph}</p>",
-        calculated_score: 100,
         submission:
       )
       @assignment.rubric.criteria.each do |criterium|
