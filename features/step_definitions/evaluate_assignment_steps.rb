@@ -58,21 +58,24 @@ Then('the user enters overall feedback') do
   editor = find(:xpath, "//div[@id='overall-feedback']/div[@data-pc-section='content']" )
   editor.click
 
-  fb_text_web = ''
   fb_text_db = ''
 
   rand(2..7).times do
     para = Faker::Lorem.paragraph
     fb_text_db += "<p>#{para}</p>" if para.length.positive?
+
+    send_keys [:control, 'a']
     send_keys para, :enter
-    fb_text_web += "#{para}\n"
   end
   # send_keys sub_text_web, :backspace
   send_keys :backspace
-  @submission_feedback = SubmissionFeedback.new(
-    feedback: fb_text_db
-
-  )
+  if @submission_feedback.present?
+    @submission_feedback.feedback = fb_text_db
+  else
+    @submission_feedback = SubmissionFeedback.new(
+      feedback: fb_text_db
+    )
+  end
 
 end
 
@@ -102,7 +105,7 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
     feedback_elem = find( :xpath, "//div[@id='feedback-#{criterium.id}']/div[@data-pc-section='content']" )
 
     feedback_elem.click
-    send_keys feedback
+    send_keys [:control, 'a'], feedback
     feedback = "<p>#{feedback}</p>" if feedback.length.positive?
 
     score = 0

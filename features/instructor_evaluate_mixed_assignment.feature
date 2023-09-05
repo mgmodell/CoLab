@@ -127,6 +127,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
     # Grade number one
+    Then the user hides all but the 'Submissions' tab
     Then the user selects submission 1
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
@@ -135,6 +136,7 @@ Feature: Instructor can evaluate a submitted leveled assignment
     Then the user sees 'Successfully saved'
      And the db critique matches the data entered
     # Grade number three
+    Then the user hides all but the 'Submissions' tab
     Then the user selects submission 3
     Then the user hides all but the 'Overall feedback' tab
     Then the user enters overall feedback
