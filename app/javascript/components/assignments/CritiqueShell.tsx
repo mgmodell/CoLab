@@ -17,10 +17,6 @@ import {DateTime} from 'luxon';
 import parse from 'html-react-parser';
 import RubricScorer, { IRubricRowFeedback } from "./RubricScorer";
 import { ISubmissionFeedback } from "./RubricScorer";
-//import {EditorState, convertToRaw, ContentState } from 'draft-js';
-//const Editor = React.lazy( () => import('../reactDraftWysiwygEditor'));
-//import htmlToDraft from 'html-to-draftjs';
-//import draftToHtml from 'draftjs-to-html';
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
 import { renderDateCellExpand } from "../infrastructure/GridCellExpand";
 

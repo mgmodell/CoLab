@@ -52,12 +52,17 @@ export default function RubricScorer(props: Props) {
   const dispatch = useDispatch( );
 
   const [overrideScore, setOverrideScore] = useState( false );
-  const [overriddenScore, setOverriddenScore] = useState <number >( 0 );
+  const [overriddenScore, setOverriddenScore] = useState <number | null >( null );
   const handleOverRideScoreChange = (event: React.ChangeEvent<HTMLInputElement>) =>{
-    setOverrideScore( !overrideScore );
-  }
+    const newOverrideSetting = !overrideScore;
+    if( newOverrideSetting ){
+      setOverriddenScore( calcScore( ) );
+    } else {
+      setOverriddenScore( null );
+    }
 
-  const [ ed, setEd ] = useState( '' );
+    setOverrideScore( newOverrideSetting );
+  }
 
   const [t, i18n] = useTranslation( `${category}s` );
 
