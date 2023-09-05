@@ -60,6 +60,7 @@ class SubmissionFeedbacksController < ApplicationController
   def update
     @submission_feedback.transaction do
       submission = @submission_feedback.submission
+      @submission_feedback.assign_attributes(submission_feedback_params) if @submission_feedback.id.positive?
       submission.recorded_score = params[:override_score]
 
       respond_to do |format|

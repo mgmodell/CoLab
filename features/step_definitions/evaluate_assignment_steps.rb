@@ -58,15 +58,19 @@ Then('the user enters overall feedback') do
   editor = find(:xpath, "//div[@id='overall-feedback']/div[@data-pc-section='content']" )
   editor.click
 
+  send_keys :end
+  editor.text.length.times do
+    send_keys :backspace
+  end
+
   fb_text_db = ''
 
   rand(2..7).times do
     para = Faker::Lorem.paragraph
     fb_text_db += "<p>#{para}</p>" if para.length.positive?
-
-    send_keys [:control, 'a']
     send_keys para, :enter
   end
+
   # send_keys sub_text_web, :backspace
   send_keys :backspace
   if @submission_feedback.present?
@@ -163,7 +167,7 @@ Then('the db critique matches the data entered') do
   SubmissionFeedback.where( submission_id: @submission.id ).size.should be 1
   submission_feedback = SubmissionFeedback.where( submission_id: @submission.id ).take
   #Check the submissionFeedback contents
-  @submission_feedback.feedback.should eq submission_feedback.feedback.gsub( "\n", '' )
+  @submission_feedback.feedback.should eq submission_feedback.feedback
   @submission_feedback.calculated_score.should eq submission_feedback.calculated_score
 
   @submission_feedback.rubric_row_feedbacks.each do |rrfbk|
@@ -173,7 +177,7 @@ Then('the db critique matches the data entered') do
     )
     db_rrfbks.size.should eq 1
     rrfbk.score.should eq db_rrfbks[0].score
-    rrfbk.feedback.should eq db_rrfbks[0].feedback.gsub( "\n", '' )
+    rrfbk.feedback.should eq db_rrfbks[0].feedback
 
   end
 end
