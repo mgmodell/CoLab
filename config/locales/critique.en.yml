@@ -24,6 +24,8 @@ en:
     save_fail_msg: Your feedback failed to save
     submissions:
       score: Score
+      calculated_score: Calculated score
       submitted: Submission date
       withdrawn: Withdrawn date
       submitter: Submitted by
+      score_na: --

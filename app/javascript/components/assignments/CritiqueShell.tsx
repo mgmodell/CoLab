@@ -147,8 +147,18 @@ export default function CritiqueShell(props: Props) {
   const [selectedSubmission, updateSelectedSubmission] = useReducer(SubmissionReducer, {} );
 
   const columns: GridColDef[] = [
-    { field: "recordedScore", 
-      headerName: t("submissions.score") },
+    { field: "recorded_score", 
+      headerName: t("submissions.score"),
+      renderCell: (params: GridRenderCellParams) =>{
+        if( params.value === null ){
+          return t('submissions.score_na');
+        }else{
+          return params.value;
+        }
+      }
+     },
+    { field: "calculated_score", 
+      headerName: t("submissions.calculated_score") },
     { field: "submitted", 
       width: 250,
       renderCell: renderDateCellExpand,
@@ -179,27 +189,7 @@ export default function CritiqueShell(props: Props) {
         };
         if( data.submission.submission_feedback === undefined ){
           data.submission.submission_feedback = genCleanFeedback( data.submission.id, data.submission.rubric );
-        } else {
-          //Convert the feedbacks to EditorStates
-
-          /*
-          data.submission.submission_feedback.feedback =
-            EditorState.createWithContent(
-              ContentState.createFromBlockArray(
-                htmlToDraft( data.submission.submission_feedback.rubric_row_feedbacks ).contentBlocks
-              )
-            );
-          data.submission.submission_feedback.rubric_row_feedbacks.forEach( (row_feedback) =>{
-            row_feedback.feedback = 
-              EditorState.createWithContent(
-                ContentState.createFromBlockArray(
-                  htmlToDraft( row_feedback.feedback ).contentBlocks
-                )
-              );
-          })
-          */
         }
-        //data.submission.submissionFeedback = data.submission.submission_feedback;
 
         updateSelectedSubmission({type: SubmissionActions.set_submission_full, submission: data.submission} );
 
@@ -231,6 +221,7 @@ export default function CritiqueShell(props: Props) {
     axios.get( url )
       .then(response => {
         const data = response.data;
+        console.log( response.data );
         setAssignmentAcceptsText( data.assignment.text_sub );
         setAssignmentAcceptsLink( data.assignment.link_sub );
         setAssignmentGroupEnabled( data.assignment.group_enabled );

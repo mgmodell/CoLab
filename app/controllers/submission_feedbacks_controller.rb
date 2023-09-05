@@ -20,7 +20,8 @@ class SubmissionFeedbacksController < ApplicationController
                   user: { only: %i[id first_name last_name email] },
                   group: { only: [:id, :name, { users: { only: %i[first_name last_name email] } }] }
                 },
-                only: %i[id submitted withdrawn recorded_score sub_text sub_link updated_at]
+                only: %i[id submitted withdrawn recorded_score sub_text sub_link updated_at],
+                methods: :calculated_score
 
               }
 
@@ -129,7 +130,8 @@ class SubmissionFeedbacksController < ApplicationController
                                  } }
 
         },
-        only: %i[id submitted withdrawn recorded_score sub_text sub_link updated_at]
+        only: %i[id submitted withdrawn recorded_score sub_text sub_link updated_at],
+        methods: :calculated_score
       )
     }
     response[:messages] = messages

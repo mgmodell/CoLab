@@ -8,7 +8,7 @@ class Submission < ApplicationRecord
   has_many_attached :sub_files
 
   has_one :submission_feedback, inverse_of: :submission, dependent: :destroy
-  has_many :rubric_row_feedbacks, through: :submission_feedbacks
+  has_many :rubric_row_feedbacks, through: :submission_feedback
   has_one :course, through: :assignment
 
   before_validation :set_rubric
@@ -30,15 +30,15 @@ class Submission < ApplicationRecord
     self.rubric = assignment.rubric
   end
 
-  def get_calculated_score
+  def calculated_score
     total = 0
     sum_weights = 0
     rubric_row_feedbacks.each do |rubric_row_feedback|
-      sum_weights += rubric_row_feedback.criteria.weight
-      total += rubric_row_feedback.criteria.weight * score
+      sum_weights += rubric_row_feedback.criterium.weight
+      total += rubric_row_feedback.criterium.weight * rubric_row_feedback.score
     end
 
-    total / sum_weights
+    total <= 0 ? nil : total / sum_weights
   end
 
   def can_submit
