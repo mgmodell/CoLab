@@ -130,7 +130,7 @@ Then('the user responds to all criteria with {string} and {string} feedback') do
       competent_level = level_elements.size > 1 ? level_elements.size - 1 : 1
       competent_elem = find(:xpath, "//div[contains(@id,'level-#{criterium.id}-#{competent_level}')]")
       competent_elem.click
-      score = ( (competent_level) * 100 / level_elements.size).round
+      score = ( (competent_level) * 100.0 / level_elements.size).round
     when 'novice'
       elem = find(:xpath, "//div[@id='minimum-#{criterium.id}']")
       elem.click
