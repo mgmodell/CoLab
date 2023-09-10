@@ -16,6 +16,8 @@ print_help ( ) {
   echo " -m [task]      Run a migratify task (assumes -m)"
   echo " -e [task]      Run a tEsting task (then terminate;"
   echo "                assumes -m)"
+  echo " -a [task]      Run a admin task (then terminate;"
+  echo "                assumes -m)"
   echo ""
   echo " -h             Show this help and terminate"
   
@@ -47,6 +49,7 @@ SHOW_HELP=false
 MIGRATE=false
 RUN_TASK_M=false
 RUN_TASK_E=false
+RUN_TASK_A=false
 LOAD=false
 WATCH=true
 STARTUP=false
@@ -64,7 +67,7 @@ else
 fi
 
 
-while getopts "cqdtosjxm:l:e:h" opt; do
+while getopts "a:cqdtosjxm:l:e:h" opt; do
   case $opt in
     q)
       mysql colab_dev -u test -ptest --protocol=TCP --port=31337
@@ -105,6 +108,11 @@ while getopts "cqdtosjxm:l:e:h" opt; do
       ;;
     o)
       WATCH=true
+      ;;
+    a)
+      RUN_TASK_A=true
+      RUN_TASK_A_NAME=$OPTARG
+      MIGRATE=true
       ;;
     e)
       RUN_TASK_E=true
@@ -170,6 +178,12 @@ fi
 if [ "$RUN_TASK_E" = true ]; then
   echo 'Testing Task'
   docker compose run --rm app "rails testing:$RUN_TASK_E_NAME COLAB_DB=db COLAB_DB_PORT=3306"
+fi
+
+# Run an admin task
+if [ "$RUN_TASK_A" = true ]; then
+  echo 'Admin Task'
+  docker compose run --rm app "rails admin:$RUN_TASK_A_NAME COLAB_DB=db COLAB_DB_PORT=3306"
 fi
 
 # Start the server
