@@ -10,7 +10,6 @@
 // Support component names relative to this directory:
 import ReactOnRails from "react-on-rails";
 
-import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "../css/application.css";
 import "promise-polyfill/src/polyfill";
 import "whatwg-fetch";

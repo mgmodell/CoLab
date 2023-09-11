@@ -23,12 +23,6 @@ import { TabContext, TabList, TabPanel } from "@mui/lab/";
 import { DateTime } from "luxon";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
-import { EditorState, convertToRaw, ContentState } from "draft-js";
-const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
-
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
-
 import { useTranslation } from "react-i18next";
 
 import makeStyles from "@mui/styles/makeStyles";
@@ -41,6 +35,7 @@ const BingoGameDataAdminTable = React.lazy(() =>
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
+import { Editor } from "primereact/editor";
 
 const useStyles = makeStyles({
   container: {
@@ -84,11 +79,7 @@ export default function BingoGameDataAdmin(props) {
   const [saveStatus, setSaveStatus] = useState("");
   const [resultData, setResultData] = useState(null);
   const [gameTopic, setGameTopic] = useState("");
-  const [gameDescriptionEditor, setGameDescriptionEditor] = useState(
-    EditorState.createWithContent(
-      ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
-    )
-  );
+  const [gameDescriptionEditor, setGameDescriptionEditor] = useState( '' );
   const [bingoGameId, setBingoGameId] = useState(
     "new" === bingoGameIdParam ? null : bingoGameIdParam
   );
@@ -149,9 +140,7 @@ export default function BingoGameDataAdmin(props) {
         bingo_game: {
           course_id: courseIdParam,
           topic: gameTopic,
-          description: draftToHtml(
-            convertToRaw(gameDescriptionEditor.getCurrentContent())
-          ),
+          description: gameDescriptionEditor,
           source: gameSource,
           active: gameActive,
           start_date: gameStartDate.toISO(),
@@ -220,13 +209,7 @@ export default function BingoGameDataAdmin(props) {
         const bingo_game = data.bingo_game;
         setBingoGameId(bingo_game.id);
         setGameTopic(bingo_game.topic || "");
-        setGameDescriptionEditor(
-          EditorState.createWithContent(
-            ContentState.createFromBlockArray(
-              htmlToDraft(bingo_game.description || "").contentBlocks
-            )
-          )
-        );
+        setGameDescriptionEditor( bingo_game.description || '' );
         setGameSource(bingo_game.source || "");
         setGameActive(bingo_game.active || false);
         var receivedDate = DateTime.fromISO(bingo_game.start_date).setZone(
@@ -342,48 +325,15 @@ export default function BingoGameDataAdmin(props) {
                 </Grid>
                 <Grid item xs={12}>
                   <Editor
-                    wrapperId="Description"
-                    label={t("description")}
+                    id="description"
+                    aria-label={t("description")}
                     placeholder={t("description")}
-                    onEditorStateChange={setGameDescriptionEditor}
-                    toolbarOnFocus
-                    toolbar={{
-                      options: [
-                        "inline",
-                        "list",
-                        "link",
-                        "blockType",
-                        "fontSize",
-                        "fontFamily"
-                      ],
-                      inline: {
-                        options: [
-                          "bold",
-                          "italic",
-                          "underline",
-                          "strikethrough",
-                          "monospace"
-                        ],
-                        bold: { className: "bordered-option-classname" },
-                        italic: { className: "bordered-option-classname" },
-                        underline: { className: "bordered-option-classname" },
-                        strikethrough: {
-                          className: "bordered-option-classname"
-                        },
-                        code: { className: "bordered-option-classname" }
-                      },
-                      blockType: {
-                        className: "bordered-option-classname"
-                      },
-                      fontSize: {
-                        className: "bordered-option-classname"
-                      },
-                      fontFamily: {
-                        className: "bordered-option-classname"
-                      }
+                    value={gameDescriptionEditor}
+                    onTextChange={(event) =>{
+                      setGameDescriptionEditor( event.htmlValue );
                     }}
-                    editorState={gameDescriptionEditor}
-                  />
+                    />
+
                 </Grid>
                 <Grid item xs={6}>
                   <TextField

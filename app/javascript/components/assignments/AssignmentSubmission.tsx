@@ -12,10 +12,7 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 
-import { EditorState, convertToRaw, ContentState } from "draft-js";
-const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
+import { Editor } from "primereact/editor";
 import SubmissionList from "./SubmissionList";
 
 type Props = {
@@ -44,11 +41,7 @@ export default function AssignmentSubmission(props: Props) {
   const [submittedDate, setSubmittedDate] = useState<DateTime | null>(null);
   const [withdrawnDate, setWithdrawnDate] = useState<DateTime | null>(null);
   const [recordedScore, setRecordedScore] = useState(0);
-  const [submissionTextEditor, setSubmissionTextEditor] = useState(
-    EditorState.createWithContent(
-      ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
-    )
-  );
+  const [submissionTextEditor, setSubmissionTextEditor] = useState( '' );
   const [submissionLink, setSubmissionLink] = useState("");
   const notSubmitted = submittedDate === null;
 
@@ -88,11 +81,7 @@ export default function AssignmentSubmission(props: Props) {
         }
         setRecordedScore(data.submission.recorded_score);
         setSubmissionTextEditor(
-          EditorState.createWithContent(
-            ContentState.createFromBlockArray(
-              htmlToDraft(data.submission.sub_text || "").contentBlocks
-            )
-          )
+          data.submission.sub_text || ''
         );
       })
       .then(response => {
@@ -109,49 +98,15 @@ export default function AssignmentSubmission(props: Props) {
   const sub_text = props.assignment.textSub ? (
     <Grid item xs={12}>
       <Editor
-        wrapperId="Description"
-        label={t("submissions.sub_text_lbl")}
+        id='description'
         placeholder={t("submissions.sub_text_placeholder")}
-        onEditorStateChange={setSubmissionTextEditor}
-        toolbarOnFocus
+        aria-label={t("submissions.sub_text_placeholder")}
         readOnly={!notSubmitted}
-        toolbar={{
-          options: [
-            "inline",
-            "list",
-            "link",
-            "blockType",
-            "fontSize",
-            "fontFamily"
-          ],
-          inline: {
-            options: [
-              "bold",
-              "italic",
-              "underline",
-              "strikethrough",
-              "monospace"
-            ],
-            bold: { className: "bordered-option-classname" },
-            italic: { className: "bordered-option-classname" },
-            underline: { className: "bordered-option-classname" },
-            strikethrough: {
-              className: "bordered-option-classname"
-            },
-            code: { className: "bordered-option-classname" }
-          },
-          blockType: {
-            className: "bordered-option-classname"
-          },
-          fontSize: {
-            className: "bordered-option-classname"
-          },
-          fontFamily: {
-            className: "bordered-option-classname"
-          }
+        value={submissionTextEditor}
+        onTextChange={(e)=>{
+          setSubmissionTextEditor( e.htmlValue );
         }}
-        editorState={submissionTextEditor}
-      />
+        />
     </Grid>
   ) : null;
 
@@ -188,9 +143,7 @@ export default function AssignmentSubmission(props: Props) {
       method: method,
       data: {
         submission: {
-          sub_text: draftToHtml(
-            convertToRaw(submissionTextEditor.getCurrentContent())
-          ),
+          sub_text:  submissionTextEditor,
           sub_link: submissionLink,
           assignment_id: props.assignment.id
         },
@@ -218,13 +171,7 @@ export default function AssignmentSubmission(props: Props) {
             setWithdrawnDate(receivedDate);
           }
           setRecordedScore(data.submission.recorded_score);
-          setSubmissionTextEditor(
-            EditorState.createWithContent(
-              ContentState.createFromBlockArray(
-                htmlToDraft(data.submission.sub_text || "").contentBlocks
-              )
-            )
-          );
+          setSubmissionTextEditor( data.submission.sub_text );
         }
       })
       .then(props.reloadCallback)
@@ -261,13 +208,7 @@ export default function AssignmentSubmission(props: Props) {
             setWithdrawnDate(receivedDate);
           }
           setRecordedScore(data.submission.recorded_score);
-          setSubmissionTextEditor(
-            EditorState.createWithContent(
-              ContentState.createFromBlockArray(
-                htmlToDraft(data.submission.sub_text || "").contentBlocks
-              )
-            )
-          );
+          setSubmissionTextEditor( data.submission.sub_text || '' );
         }
       })
       .then(props.reloadCallback)

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -11,7 +10,6 @@ import Grid from "@mui/material/Grid";
 import Collapse from "@mui/material/Collapse";
 import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
-import Tab from "@mui/material/Tab";
 
 import {DateTime, Settings} from 'luxon';
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
@@ -19,14 +17,17 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { TabContext, TabList, TabPanel } from "@mui/lab/";
 
-import { EditorState, ContentState } from "draft-js";
-const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
 
-import htmlToDraft from "html-to-draftjs";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
+import { Editor } from "primereact/editor";
+import { TabView, TabPanel } from "primereact/tabview";
+
+enum ConsentFormTabs {
+  English = 1,
+  Korean = 2
+}
 
 export default function ConsentFormDataAdmin(props) {
   const category = "consent_form";
@@ -44,7 +45,7 @@ export default function ConsentFormDataAdmin(props) {
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
-  const [curTab, setCurTab] = useState("en");
+  const [curTab, setCurTab] = useState(ConsentFormTabs.English);
 
   const [consentFormId, setConsentFormId] = useState(consentFormIDParam);
   const [consentFormName, setConsentFormName] = useState("");
@@ -94,20 +95,8 @@ export default function ConsentFormDataAdmin(props) {
           Settings.timezone
         );
         setConsentFormEndDate(receivedDate);
-        setConsentFormFormTextEn(
-          EditorState.createWithContent(
-            ContentState.createFromBlockArray(
-              htmlToDraft(consentForm.form_text_en || "").contentBlocks
-            )
-          )
-        );
-        setConsentFormFormTextKo(
-          EditorState.createWithContent(
-            ContentState.createFromBlockArray(
-              htmlToDraft(consentForm.form_text_ko || "").contentBlocks
-            )
-          )
-        );
+        setConsentFormFormTextEn( consentForm.form_text_en || '' );
+        setConsentFormFormTextKo( consentForm.form_text_ko || '' );
 
         dispatch(endTask());
         setDirty(false);
@@ -162,17 +151,8 @@ export default function ConsentFormDataAdmin(props) {
             Settings.timezone
           );
           setConsentFormEndDate(receivedDate);
-          setConsentFormFormTextEn
-          EditorState.createWithContent(
-            ContentState.createFromBlockArray(
-              htmlToDraft(consentForm.form_text_en || "").contentBlocks
-            )
-          );
-          EditorState.createWithContent(
-            ContentState.createFromBlockArray(
-              htmlToDraft(consentForm.form_text_ko || "").contentBlocks
-            )
-          );
+          setConsentFormFormTextEn( consentForm.form_text_en || '' );
+          setConsentFormFormTextKo( consentForm.form_text_ko || '' );
 
           setShowErrors(true);
           setDirty(false);
@@ -282,104 +262,32 @@ export default function ConsentFormDataAdmin(props) {
           </Grid>
         </LocalizationProvider>
       </Grid>
-      <TabContext value={curTab}>
-        <Box>
-          <TabList
-            value={curTab}
-            onChange={(event, name) => setCurTab(name)}
-            centered
-          >
-            <Tab value="en" label="English" />
-            <Tab value="ko" label="Korean" />
-          </TabList>
-        </Box>
-        <TabPanel value="en">
-          <Editor
-            wrapperId="English Form"
-            label={"en_form"}
-            placeholder={"en_form"}
-            onEditorStateChange={setConsentFormFormTextEn}
-            toolbarOnFocus
-            toolbar={{
-              options: [
-                "inline",
-                "list",
-                "link",
-                "blockType",
-                "fontSize",
-                "fontFamily"
-              ],
-              inline: {
-                options: [
-                  "bold",
-                  "italic",
-                  "underline",
-                  "strikethrough",
-                  "monospace"
-                ],
-                bold: { className: "bordered-option-classname" },
-                italic: { className: "bordered-option-classname" },
-                underline: { className: "bordered-option-classname" },
-                strikethrough: { className: "bordered-option-classname" },
-                code: { className: "bordered-option-classname" }
-              },
-              blockType: {
-                className: "bordered-option-classname"
-              },
-              fontSize: {
-                className: "bordered-option-classname"
-              },
-              fontFamily: {
-                className: "bordered-option-classname"
-              }
-            }}
-            editorState={consentFormFormTextEn}
-          />
-        </TabPanel>
-        <TabPanel value="ko">
-          <Editor
-            wrapperId="Korean Form"
-            label={"ko_form"}
-            placeholder={"ko_form"}
-            onEditorStateChange={setConsentFormFormTextKo}
-            toolbarOnFocus
-            toolbar={{
-              options: [
-                "inline",
-                "list",
-                "link",
-                "blockType",
-                "fontSize",
-                "fontFamily"
-              ],
-              inline: {
-                options: [
-                  "bold",
-                  "italic",
-                  "underline",
-                  "strikethrough",
-                  "monospace"
-                ],
-                bold: { className: "bordered-option-classname" },
-                italic: { className: "bordered-option-classname" },
-                underline: { className: "bordered-option-classname" },
-                strikethrough: { className: "bordered-option-classname" },
-                code: { className: "bordered-option-classname" }
-              },
-              blockType: {
-                className: "bordered-option-classname"
-              },
-              fontSize: {
-                className: "bordered-option-classname"
-              },
-              fontFamily: {
-                className: "bordered-option-classname"
-              }
-            }}
-            editorState={consentFormFormTextKo}
-          />
-        </TabPanel>
-      </TabContext>
+          <TabView>
+            <TabPanel header='English'>
+              <Editor
+                id='english_form'
+                placeholder={"en_form"}
+                aria-label={"en_form"}
+                onTextChange={(event) =>{
+                  setConsentFormFormTextEn( event.htmlValue)
+                }}
+                value={consentFormFormTextEn}
+                />
+
+            </TabPanel>
+            <TabPanel header='Korean'>
+              <Editor
+                id='korean_form'
+                placeholder={"ko_form"}
+                aria-label={"ko_form"}
+                onTextChange={(event)=>{
+                  setConsentFormFormTextKo( event.htmlValue)
+                }}
+                value={consentFormFormTextKo}
+                />
+            </TabPanel>
+
+          </TabView>
       &nbsp;
       <label htmlFor={consentFormDataId}>
         <input

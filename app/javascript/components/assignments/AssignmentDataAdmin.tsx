@@ -25,12 +25,6 @@ import { TabContext, TabList, TabPanel } from "@mui/lab/";
 import { DateTime } from "luxon";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
-import { EditorState, convertToRaw, ContentState } from "draft-js";
-const Editor = React.lazy(() => import("../reactDraftWysiwygEditor"));
-
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
-
 import { useTranslation } from "react-i18next";
 
 import makeStyles from "@mui/styles/makeStyles";
@@ -39,6 +33,7 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { Checkbox, FormLabel } from "@mui/material";
+import { Editor } from "primereact/editor";
 
 const useStyles = makeStyles({
   container: {
@@ -85,12 +80,7 @@ export default function AssignmentDataAdmin(props) {
   const [assignmentName, setAssignmentName] = useState("");
   const [
     assignmentDescriptionEditor,
-    setAssignmentDescriptionEditor
-  ] = useState(
-    EditorState.createWithContent(
-      ContentState.createFromBlockArray(htmlToDraft("").contentBlocks)
-    )
-  );
+    setAssignmentDescriptionEditor ] = useState( '' );
   const [assignmentId, setAssignmentId] = useState(
     "new" === assignmentIdParam ? null : assignmentIdParam
   );
@@ -174,9 +164,7 @@ export default function AssignmentDataAdmin(props) {
         assignment: {
           course_id: courseIdParam,
           name: assignmentName,
-          description: draftToHtml(
-            convertToRaw(assignmentDescriptionEditor.getCurrentContent())
-          ),
+          description: assignmentDescriptionEditor,
           active: assignmentActive,
           start_date: assignmentStartDate,
           end_date: assignmentEndDate,
@@ -223,13 +211,7 @@ export default function AssignmentDataAdmin(props) {
     const assignment = data.assignment;
     setAssignmentId(assignment.id);
     setAssignmentName(assignment.name || "");
-    setAssignmentDescriptionEditor(
-      EditorState.createWithContent(
-        ContentState.createFromBlockArray(
-          htmlToDraft(assignment.description || "").contentBlocks
-        )
-      )
-    );
+    setAssignmentDescriptionEditor( assignment.description || '' );
     setAssignmentActive(assignment.active || false);
     var receivedDate = DateTime.fromISO(assignment.start_date).setZone(
       assignment.course.timezone
@@ -351,47 +333,13 @@ export default function AssignmentDataAdmin(props) {
                 </Grid>
                 <Grid item xs={12}>
                   <Editor
-                    wrapperId="Description"
-                    label={t("description")}
+                    id="description"
+                    aria-label={t("description")}
                     placeholder={t("description")}
-                    onEditorStateChange={setAssignmentDescriptionEditor}
-                    toolbarOnFocus
-                    toolbar={{
-                      options: [
-                        "inline",
-                        "list",
-                        "link",
-                        "blockType",
-                        "fontSize",
-                        "fontFamily"
-                      ],
-                      inline: {
-                        options: [
-                          "bold",
-                          "italic",
-                          "underline",
-                          "strikethrough",
-                          "monospace"
-                        ],
-                        bold: { className: "bordered-option-classname" },
-                        italic: { className: "bordered-option-classname" },
-                        underline: { className: "bordered-option-classname" },
-                        strikethrough: {
-                          className: "bordered-option-classname"
-                        },
-                        code: { className: "bordered-option-classname" }
-                      },
-                      blockType: {
-                        className: "bordered-option-classname"
-                      },
-                      fontSize: {
-                        className: "bordered-option-classname"
-                      },
-                      fontFamily: {
-                        className: "bordered-option-classname"
-                      }
+                    value={assignmentDescriptionEditor}
+                    onTextChange={(event)=>{
+                      setAssignmentDescriptionEditor( event.htmlValue );
                     }}
-                    editorState={assignmentDescriptionEditor}
                   />
                 </Grid>
                 <Grid item xs={6}>
