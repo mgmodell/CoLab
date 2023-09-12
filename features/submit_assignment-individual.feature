@@ -179,8 +179,8 @@ Feature: (Re)Submitting individual assignments
 
   @javascript
   Scenario: User can open and submit a link to an assignment
-      And the init assignment 'does not' accept 'text'
       And the init assignment 'does' accept 'links'
+      And the init assignment 'does not' accept 'text'
     Given the assignment "is" initialized active
     Given the user logs in
      Then the user opens the assignment task

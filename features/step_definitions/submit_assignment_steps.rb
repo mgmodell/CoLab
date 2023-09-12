@@ -201,7 +201,6 @@ Then('the user enters a {string} submission') do |submission_type|
     # Text
     if 1 == rand(2)
       entered += 1
-      find(:xpath, "//div[@class='rdw-editor-main']").click
       find( :xpath, "//div[@id='description']/div[@data-pc-section='content']" ).click
 
       sub_text_web = ''
