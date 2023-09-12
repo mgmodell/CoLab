@@ -70,7 +70,8 @@ class SubmissionsController < ApplicationController
                                                 { criteria: { only: %i[ description weight sequence
                                                                         l1_description l2_description
                                                                         l3_description l4_description l5_description] } }] } }] },
-        only: %i[id submitted withdrawn recorded_score sub_text sub_link updated_at]
+        only: %i[id submitted withdrawn recorded_score sub_text sub_link updated_at],
+        methods: :calculated_score
       )
     }
     response[:messages] = messages

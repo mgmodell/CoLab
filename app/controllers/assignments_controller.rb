@@ -42,7 +42,7 @@ class AssignmentsController < ApplicationController
         id: submission.id,
         submitted: submission.submitted,
         withdrawn: submission.withdrawn,
-        recorded_score: submission.recorded_score,
+        recorded_score: submission.recorded_score || submission.calculated_score,
         user: current_user.name(anon)
       }
     end

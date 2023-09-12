@@ -25,7 +25,7 @@ export default function SubmissionList(props: Props) {
 
   const dispatch = useDispatch();
   const columns: GridColDef[] = [
-    { field: "recordedScore", headerName: t("submissions.score") },
+    { field: "recorded_score", headerName: t("submissions.score") },
     { field: "submitted", headerName: t("submissions.submitted") },
     { field: "withdrawn", headerName: t("submissions.withdrawn") },
     { field: "user", headerName: t("submissions.submitter") }

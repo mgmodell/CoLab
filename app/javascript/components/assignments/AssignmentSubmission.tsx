@@ -79,7 +79,7 @@ export default function AssignmentSubmission(props: Props) {
         } else {
           setWithdrawnDate(null);
         }
-        setRecordedScore(data.submission.recorded_score);
+        setRecordedScore(data.submission.recorded_score || data.submission.calculated_score );
         setSubmissionTextEditor(
           data.submission.sub_text || ''
         );
@@ -246,7 +246,7 @@ export default function AssignmentSubmission(props: Props) {
 
   const withdrawBtn = !notSubmitted ? (
     <Button
-      disabled={notSubmitted || null !== withdrawnDate}
+      disabled={notSubmitted || null !== withdrawnDate || null !== recordedScore  }
       onClick={() => withdrawSubmission()}
     >
       {t("submissions.withdraw_btn")}
