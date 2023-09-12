@@ -139,6 +139,8 @@ Feature: (Re)Submitting individual assignments
       And the 'latest' db submission data is accurate
       And the submission has no group
       And the submission is attached to the user
+      #User makes a change and re-saves
+     Then the user enters a 'text' submission
      Then the 'Save revision for further editing' button is 'enabled'
      Then the 'Submit revision for grading' button is 'enabled'
      Then the 'Make a copy of this revision' button is 'hidden'
@@ -151,13 +153,18 @@ Feature: (Re)Submitting individual assignments
      Then the 'Make a copy of this revision' button is 'enabled'
      Then the 'Withdraw revision' button is 'enabled'
      Then the user clicks 'Make a copy of this revision'
+      And the 'latest' db submission data is accurate
      Then the assignment has 1 'submitted' submission
      Then the assignment has 1 'draft' submission
+      #User withdraws the submission
      Then the user withdraws submission 1
      Then the 'Save revision for further editing' button is 'disabled'
      Then the 'Submit revision for grading' button is 'disabled'
-     Then the 'Make a copy of this revision' button is 'enabled'
+     Then the 'Make a copy of this revision' button is 'disabled'
      Then the 'Withdraw revision' button is 'disabled'
+      And the 'latest' db submission data is accurate
+     Then the user enters a 'text' submission
+     Then the 'Make a copy of this revision' button is 'enabled'
      Then the assignment has 1 'withdrawn' submission
      Then the assignment has 1 'draft' submission
 

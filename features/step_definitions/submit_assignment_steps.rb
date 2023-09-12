@@ -187,8 +187,11 @@ Then('the user enters a {string} submission') do |submission_type|
       send_keys para, :enter
       sub_text_web += "#{para}\n"
     end
-    # send_keys sub_text_web, :backspace
-    send_keys :backspace
+    send_keys [:command, 'a'], :backspace
+    send_keys [:control, 'a'], :backspace
+
+    send_keys sub_text_web, :backspace
+
     @submission.sub_text = sub_text_db
   when 'empty text'
     @submission.sub_text = '<p></p>'
