@@ -194,7 +194,7 @@ Then('the user enters a {string} submission') do |submission_type|
 
     @submission.sub_text = sub_text_db
   when 'empty text'
-    @submission.sub_text = '<p></p>'
+    @submission.sub_text = ''
   when 'link'
     find(:xpath, "//input[@id='sub_link']").click
     @submission.sub_link = Faker::Internet.url
