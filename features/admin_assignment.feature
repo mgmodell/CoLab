@@ -27,7 +27,7 @@ Feature: Assignment administration
     Then the user switches to the "Activities" tab
     Then the user creates a new "New Assignment"
     Then the user sets the "Name" field to "Term Paper"
-    Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+    Then the user sets the rich "description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
     Then the user selects the "Ruby 2" version 1 rubric
@@ -67,7 +67,7 @@ Feature: Assignment administration
     Then the user switches to the "Activities" tab
     Then the user creates a new "New Assignment"
     Then the user sets the "Name" field to "Term Paper"
-    Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+    Then the user sets the rich "description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
     Then the user sets the assignment "text" to "false"
@@ -95,7 +95,7 @@ Feature: Assignment administration
     Then the user switches to the "Activities" tab
     Then the user creates a new "New Assignment"
     Then the user sets the "Name" field to "Term Paper"
-    Then the user sets the rich "Description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
+    Then the user sets the rich "description" field to "Compare and contrast Muppet Babies with Animaniacs. The result should be a 20 page paer."
     Then the user sets the assignment "opening" to "7/29/1984"
     Then the user sets the assignment "close" to "2/10/1985"
     Then the user selects the "Ruby 2" version 1 rubric

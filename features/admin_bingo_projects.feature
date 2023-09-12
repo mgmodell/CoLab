@@ -34,7 +34,7 @@ Feature: Bingo Administration
     Then the user sets the project to the course's project
     Then the user sets the bingo "start" date to "02/29/1980"
     Then the user sets the bingo "end" date to "07/10/2008"
-    Then the user sets the rich "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then the user clicks "Create Bingo Game"
     Then the user will see "success"
     Then close all messages
@@ -67,7 +67,7 @@ Feature: Bingo Administration
     Then the user checks "Make groups available?"
     Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
-    Then the user sets the rich "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then the user clicks "Create Bingo Game"
     Then the user will see "success"
     Then close all messages
@@ -96,7 +96,7 @@ Feature: Bingo Administration
     Then the user clicks by label "Make groups available?"
     Then the user sets the "Discount for collaboration" field to "30"
     Then the user sets the project to the course's project
-    Then the user sets the rich "Description" field to "this is the coolest"
+    Then the user sets the rich "description" field to "this is the coolest"
     Then the user clicks "Update Bingo Game"
     Then the user waits while seeing "Saving game"
     Then the user will see "success"

@@ -109,7 +109,7 @@ Then('the assignment {string} field is {string}') do |field_name, value|
   when 'name'
     @assignment.name.should eq value
   when 'description'
-    @assignment.description.should eq "<p>#{value}</p>\n"
+    @assignment.description.should eq "<p>#{value}</p>"
   when 'opening'
     @assignment.start_date.should eq Chronic.parse(value).to_date
   when 'close'

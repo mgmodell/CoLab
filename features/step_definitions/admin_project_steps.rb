@@ -105,20 +105,11 @@ end
 
 Then 'the user enables the {string} table view option' do |view_option|
   find(:xpath, "//button[@aria-label='Select columns']").click
-
-  begin
-    retries ||= 0
-    # inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]", visible: :all)
-    inpt = find(:xpath, "//label/span[contains(.,'#{view_option}')]").sibling('span').find(:xpath, './span/input',
-                                                                                           visible: false)
-  rescue StandardError => e
-    log e.inspect
-    sleep 0.1
-    retry if (retries += 1) < 2
-  end
+  inpt = find(:xpath, "//label[contains(.,'#{view_option}')]//input[@type='checkbox']", visible: :all)
   inpt.click unless inpt.checked?
 
   find(:xpath, '//body').click
+
 end
 
 Then(/^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/) do |field, value|
@@ -126,14 +117,14 @@ Then(/^the user sets the hidden tab field "([^"]*)" to "([^"]*)"$/) do |field, v
 end
 
 Then(/^the user sets the rich "([^"]*)" field to "([^"]*)"$/) do |field, value|
-  field = find(:xpath,
-               "//div[@id='rdw-wrapper-#{field}']//div[@contenteditable='true']")
+  field = find( :xpath, "//div[@id='#{field}']/div[@data-pc-section='content']" )
   text = field.text
-  field.send_keys :end
+  field.click
+  send_keys :end
   text.length.times do
-    field.send_keys :backspace
+    send_keys :backspace
   end
-  field.send_keys value
+  send_keys value
 end
 
 Then(/^the user sets the "([^"]*)" field to "([^"]*)"$/) do |field, value|
