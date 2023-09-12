@@ -228,7 +228,7 @@ export default function AssignmentSubmission(props: Props) {
 
   const draftSubmitBtn = (
     <Button
-      disabled={!dirty || !notSubmitted}
+      disabled={ !notSubmitted}
       onClick={() => saveSubmission(true)}
     >
       {t("submissions.submit_revision_btn")}
