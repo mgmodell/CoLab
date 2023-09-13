@@ -307,10 +307,12 @@ Feature: (Re)Submitting individual assignments
      Then the user 'cannot' withdraw submission 2
 
   @javascript
-  Scenario: User cannot withdraw a graded assignment
+  Scenario: User cannot withdraw a closed assignment
       And the assignment already has 4 submission from the user
-      And submission 2 'is' graded
       And today is after the final deadline
     Given the user logs in
-     Then the user opens the assignment task
+     Then user should see 0 open task
+     Then user opens their profile
+     Then user sees the assignment in the history
+     Then the user opens the assignment history item
      Then the 'Submissions' tab 'is not' enabled

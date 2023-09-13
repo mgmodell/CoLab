@@ -153,7 +153,7 @@ export default function AssignmentViewer(props) {
   };
 
   let output = null;
-  const curDate = new Date();
+  const curDate = DateTime.local();
   if (!endpointsLoaded) {
     output = <Skeleton variant="rectangular" />;
   } else {
@@ -162,14 +162,14 @@ export default function AssignmentViewer(props) {
         <TabList onChange={handleTabChange}>
           <Tab label="Overview" value="overview" />
           <Tab
-            label="Responses"
+            label={t('submissions.response_tab_lbl')}
             value="responses"
             disabled={
               assignment.startDate > curDate || assignment.endDate < curDate
             }
           />
           <Tab
-            label="Progress"
+            label={t('progress.progress_tab_lbl')}
             value="progress"
             disabled={submissions.length < 1 || assignment.startDate < curDate}
           />
@@ -198,7 +198,7 @@ export default function AssignmentViewer(props) {
             reloadCallback={loadAssignment}
           />
         </TabPanel>
-        <TabPanel value="progress">Working on it</TabPanel>
+        <TabPanel value="progress">{t('progress.in_progress_msg')}</TabPanel>
       </TabContext>
     );
   }

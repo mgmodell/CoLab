@@ -50,6 +50,10 @@ en:
       copy_submission_btn: Make a copy of this revision
       withdraw_btn: Withdraw revision
       new_btn: New response
+      response_tab_lbl: Responses
+    progress:
+      progress_tab_lbl: Progress
+      in_progress: Work in progress
     create_success: Assignment was created successfully!
     destroy_success: Assignment was destroyed successfully!
     update_success: Assignment was updated successfully!

@@ -123,10 +123,8 @@ Then('the user opens the {string} submissions tab') do |tab_name|
   case tab_name
   when 'Submissions'
     click_link_or_button 'Responses'
-    # find(:xpath, "//div[@role='tablist']/button[text()='Responses']").click
   when 'Grading'
     click_link_or_button 'Progress'
-    # find(:xpath, "//div[@role='tablist']/button[text()='Progress']").click
   else
     true.should be false
   end
@@ -299,11 +297,12 @@ end
 Given('today is between the first assignment deadline and close') do
   days_between = (@assignment.end_date - @assignment.start_date) - 1
   delta = rand(1..days_between)
-  travel_to @assignment.start_date + delta
+  comprehensive_time_travel_to @assignment.start_date + delta
 end
 
 Given('today is after the final deadline') do
-  travel_to @assignment.end_date + 1
+  comprehensive_time_travel_to @assignment.end_date + 1
+  puts "Assignment: #{@assignment.end_date}\nCourse: #{@assignment.course.end_date}"
 end
 
 Then('the user withdraws submission {int}') do |assignment_ord|
