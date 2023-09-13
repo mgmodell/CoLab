@@ -217,7 +217,7 @@ Then('the user enters a {string} submission') do |submission_type|
       send_keys :backspace
       @submission.sub_text = sub_text_db
     else
-      @submission.sub_text = '<p></p>'
+      @submission.sub_text = ''
     end
     # Links
     if entered.positive? || 1 == rand(2)

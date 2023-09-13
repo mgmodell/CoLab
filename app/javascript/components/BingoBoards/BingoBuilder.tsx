@@ -19,15 +19,15 @@ import parse from "html-react-parser";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 export default function BingoBuilder(props) {
-  const endpointSet = "candidate_results";
+  const category = "candidate_results";
   const endpoints = useTypedSelector(
-    state => state.context.endpoints[endpointSet]
+    state => state.context.endpoints[category]
   );
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
   const { bingoGameId } = useParams();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation( category );
 
   const dispatch = useDispatch();
 
@@ -44,7 +44,7 @@ export default function BingoBuilder(props) {
     iteration: 0,
     bingo_game: {
       size: 5,
-      topic: "no game"
+      topic: t('no_game_msg')
     }
   });
 
@@ -114,7 +114,7 @@ export default function BingoBuilder(props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: "no data" }];
+        return [{ id: -1, name: t('no_data_list_item' ) }];
       });
   };
 
@@ -124,10 +124,12 @@ export default function BingoBuilder(props) {
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
+    console.log( url );
     axios
       .get(url, {})
       .then(response => {
         const data = response.data;
+        console.log( data.candidate_list );
         setCandidateList(data.candidate_list);
         setCandidates(data.candidates);
         //}, this.randomizeTiles );
@@ -135,7 +137,7 @@ export default function BingoBuilder(props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: "no data" }];
+        return [{ id: -1, name: t('no_data_list_item' ) }];
       });
   };
   const getBoard = () => {
@@ -156,7 +158,7 @@ export default function BingoBuilder(props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: "no data" }];
+        return [{ id: -1, name: t('no_data_list_item' ) }];
       });
   };
 
@@ -205,9 +207,7 @@ export default function BingoBuilder(props) {
     //no op
   } else if (new Date(board.bingo_game.end_date) < new Date()) {
     saveBtn.push(
-      <em>
-        This game has already been played, so you cannot save a new board.
-      </em>
+      <em key='played_btn'>{t('already_played_msg')}</em>
     );
   } else if (
     board.initialised &&
@@ -216,13 +216,12 @@ export default function BingoBuilder(props) {
   ) {
     saveBtn.push(
       <React.Fragment>
-        <Link onClick={() => saveBoard()}>Save</Link> the board you
-        generated&hellip;
+        <Link onClick={() => saveBoard()}>{t('save_lnk')}</Link> {t('gen_board_msg')}&hellip;
       </React.Fragment>
     );
   } else {
     saveBtn.push(
-      <em>If you generate a new board, you will be able to save it here.</em>
+      <em key='save_btn'>{t('gen_and_save_msg')}</em>
     );
   }
 
@@ -232,9 +231,9 @@ export default function BingoBuilder(props) {
       new Date(board.bingo_game.end_date) < new Date()) ? (
       <React.Fragment>
         <Link onClick={() => getPrintableBoard()}>
-          Download your Bingo Board
+          {t('download_board_lnk')}
         </Link>{" "}
-        and play along in class!
+        {t('play_msg')}
       </React.Fragment>
     ) : (
       "Save your board before this step"
@@ -247,10 +246,7 @@ export default function BingoBuilder(props) {
       it in before class begins.
     </li>
   ) : (
-    <li>
-      Not enough usable entries for a practice sheet. Encourage your classmates
-      to complete their assignments.
-    </li>
+    <li>{t('not_enough_entries_msg')}</li>
   );
 
   const playableInstr = board.playable ? (
@@ -265,24 +261,21 @@ export default function BingoBuilder(props) {
       <li>{printBtn}</li>
     </React.Fragment>
   ) : (
-    <li>
-      Not enough usable entries to generate a playble Bingo board &mdash;
-      encourage your classmates to complete their assignments.
-    </li>
+    <li>{t('not_enough_entries_msg')}</li>
   );
 
   return (
     <Paper>
       <Typography>
-        <strong>Topic:</strong> {board.bingo_game.topic}
+        <strong>{t('topic_lbl')}:</strong> {board.bingo_game.topic}
       </Typography>
       <div>
-        <strong>Description:</strong>{" "}
+        <strong>{t('description_lbl')}:</strong>{" "}
         <p>{parse(board.bingo_game.description || "")}</p>
       </div>
       {null != candidateList && (
         <Typography>
-          <strong>Performance:</strong>
+          <strong>{t('performance_lbl')}:</strong>
           <span id="performance">{candidateList.cached_performance}</span>
         </Typography>
       )}

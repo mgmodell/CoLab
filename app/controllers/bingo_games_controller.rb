@@ -89,7 +89,7 @@ class BingoGamesController < ApplicationController
       candidate_list: {
         id: candidate_list.id,
         is_group: candidate_list.is_group,
-        performance: candidate_list.performance,
+        cached_performance: candidate_list.performance,
         bingo_game_id: candidate_list.bingo_game_id,
         group_id: candidate_list.group_id,
         user_id: candidate_list.user_id
