@@ -130,6 +130,8 @@ end
 Then(/^the user sets the "([^"]*)" field to "([^"]*)"$/) do |field, value|
   find_field(field).click
   elem = find_field(field)
+  send_keys [:command, 'a'], :backspace
+  send_keys [:control, 'a'], :backspace
   elem.value.size.times do
     elem.send_keys :backspace
   end
