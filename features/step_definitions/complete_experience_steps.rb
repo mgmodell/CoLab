@@ -158,7 +158,7 @@ Then(/^the user successfully completes an experience$/) do
   step 'the user clicks the link to the experience'
   step 'the user sees the experience instructions page'
   step 'the user presses "Next"'
-  14.times do |_count|
+  14.times do |index|
     step 'the user completes a week'
   end
   step 'the user will see "Overall Group Behavior"'
@@ -176,14 +176,10 @@ Then(/^all users complete the course successfully$/) do
   @course.enrolled_students.each do |user|
     @user = user
     step 'the user logs in'
-    # puts "post-login: #{_count}"
     step 'the user should see a successful login message'
-    # puts "logged in: #{_count}"
     step 'the user successfully completes an experience'
-    # puts "iteration: #{_count}"
     # _count += 1
     step 'the user logs out'
-    # puts "post-logout: #{_count}"
   end
 end
 
