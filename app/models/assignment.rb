@@ -101,4 +101,9 @@ class Assignment < ApplicationRecord
       random_words_to_add: 9
     ).to_s
   end
+
+  def self.inform_instructors
+    # TODO build a reminder mechanism
+
+  end
 end

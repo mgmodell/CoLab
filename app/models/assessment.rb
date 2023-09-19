@@ -179,4 +179,7 @@ class Assessment < ApplicationRecord
       logger.debug msg
     end
   end
+
+  delegate :name, to: :project
+  delegate :description, to: :project
 end

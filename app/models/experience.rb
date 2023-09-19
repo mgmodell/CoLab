@@ -215,23 +215,28 @@ class Experience < ApplicationRecord
   def self.inform_instructors
     count = 0
     cur_date = DateTime.current
-    Experience.where('instructor_updated = false AND student_end_date < ?', cur_date).find_each do |experience|
-      completion_hash = {}
-      experience.course.enrolled_students.each do |student|
-        reaction = experience.get_user_reaction student
-        completion_hash[student.email] = { name: student.name(false), status: reaction.status }
-      end
+    Experience.transaction do
+      Experience.where('instructor_updated = false AND student_end_date < ?', cur_date).find_each do |experience|
+        completion_hash = {}
+        experience.course.enrolled_students.each do |student|
+          reaction = experience.get_user_reaction student
+          completion_hash[student.email] = {
+            name: student.name(false),
+            status: reaction.status
+          }
+        end
 
-      experience.course.instructors.each do |instructor|
-        AdministrativeMailer.summary_report("#{experience.name} (experience)",
-                                            experience.course.pretty_name,
-                                            instructor,
-                                            completion_hash).deliver_later
-        count += 1
+        experience.course.instructors.each do |instructor|
+          AdministrativeMailer.summary_report("#{experience.name} (experience)",
+                                              experience.course.pretty_name,
+                                              instructor,
+                                              completion_hash).deliver_later
+          count += 1
+        end
+        experience.instructor_updated = true
+        experience.save
+        logger.debug experience.errors.full_messages unless experience.errors.empty?
       end
-      experience.instructor_updated = true
-      experience.save
-      logger.debug experience.errors.full_messages unless experience.errors.empty?
     end
     logger.debug "\n\t**#{count} Experience Reports sent to Instructors**"
   end
