@@ -25,8 +25,12 @@ class Reaction < ApplicationRecord
         if user.reactions.count < Scenario.all.count
           # If they haven't yet been assigned all possible scenarios
           assigned_scenarios = user.reactions.joins(:narrative).group(:scenario_id).count
-          possible_narratives = Narrative
-                                .where('scenario_id NOT IN (?)', assigned_scenarios.keys)
+          possible_narratives = if assigned_scenarios.empty?
+                                  Narrative.all
+                                else
+                                  Narrative
+                                    .where('scenario_id NOT IN (?)', assigned_scenarios.keys)
+                                end
 
         else
           # If they've been assigned all scenarios, but not all narratives
