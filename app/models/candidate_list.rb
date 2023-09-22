@@ -12,7 +12,7 @@ class CandidateList < ApplicationRecord
 
   belongs_to :current_candidate_list, class_name: 'CandidateList', optional: true
   has_many :archived_candidate_lists, class_name: 'CandidateList',
-              foreign_key: :current_candidate_list_id.
+              foreign_key: :current_candidate_list_id
 
   accepts_nested_attributes_for :candidates
 
