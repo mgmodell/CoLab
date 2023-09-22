@@ -312,7 +312,7 @@ Then('the user adds a level to criteria {int}') do |criteria_num|
 end
 
 Then('remember the data for criteria {int}') do |criteria_num|
-  @criterium = @rubric.criteria[criteria_num - 1]
+  @criterium = @rubric.criteria.order( :sequence )[criteria_num - 1]
 end
 
 Then('{string} sequence of remembered criteria by {int}') do |inc_or_dec, raw_delta|

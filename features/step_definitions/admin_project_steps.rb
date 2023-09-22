@@ -128,14 +128,19 @@ Then(/^the user sets the rich "([^"]*)" field to "([^"]*)"$/) do |field, value|
 end
 
 Then(/^the user sets the "([^"]*)" field to "([^"]*)"$/) do |field, value|
-  find_field(field).click
+  # find_field(field).click
   elem = find_field(field)
+  elem.click
   send_keys [:command, 'a'], :backspace
   send_keys [:control, 'a'], :backspace
   elem.value.size.times do
+    elem.send_keys :right
+  end
+  elem.value.size.times do
     elem.send_keys :backspace
   end
-  elem.set(value)
+  elem.send_keys value
+  # elem.set(value)
 end
 
 Then(/^the user sets the project "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|

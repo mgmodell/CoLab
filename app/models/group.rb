@@ -9,7 +9,7 @@ class Group < ApplicationRecord
   has_and_belongs_to_many :users, inverse_of: :groups,
                                   after_add: :set_dirty, after_remove: :set_dirty
   has_many :group_revisions, inverse_of: :group, dependent: :destroy
-  has_many :candidate_lists, inverse_of: :group
+  has_many :candidate_lists, inverse_of: :group, dependent: :nullify
 
   has_many :installments, inverse_of: :group, dependent: :destroy
 
@@ -19,7 +19,7 @@ class Group < ApplicationRecord
   has_many :cip_codes, through: :users
   has_many :genders, through: :users
   has_many :primary_languages, through: :users
-  has_many :submissions, inverse_of: :group
+  has_many :submissions, inverse_of: :group, dependent: :nullify
 
   validates :name, presence: true
   validate :validate_activation_status

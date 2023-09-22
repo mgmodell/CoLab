@@ -10,7 +10,7 @@ class Course < ApplicationRecord
   has_many :concepts, through: :candidate_lists
   has_many :users, through: :rosters
   belongs_to :consent_form, counter_cache: true, inverse_of: :courses, optional: true
-  has_many :assignments, inverse_of: :course, autosave: true
+  has_many :assignments, inverse_of: :course, autosave: true, dependent: :destroy
 
   has_many :experiences, inverse_of: :course, dependent: :destroy, autosave: true
 

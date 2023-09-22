@@ -10,8 +10,8 @@ class ConsentForm < ApplicationRecord
   #                                  content_type: ['application/pdf']
   # validates_attachment_file_name :pdf, matches: [/\.pdf$/i]
 
-  has_many :consent_logs, inverse_of: :consent_form
-  has_many :courses, inverse_of: :consent_form
+  has_many :consent_logs, inverse_of: :consent_form, dependent: :destroy
+  has_many :courses, inverse_of: :consent_form, dependent: :nullify
 
   scope :active_at, lambda { |date|
                       where(active: true)

@@ -197,6 +197,7 @@ Feature: Rubric administration
      And the user sets criteria 4 level 5 to "super duper level 5"
      And the user copies criteria 4
     Then the user clicks "Save Rubric"
+    Then the user will see "success"
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db

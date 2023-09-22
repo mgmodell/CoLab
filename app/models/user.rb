@@ -21,8 +21,8 @@ class User < ApplicationRecord
   has_many :concepts, inverse_of: :user, dependent: :destroy
   has_many :projects, through: :groups
   has_many :bingo_games, through: :courses
-  has_many :bingo_boards, inverse_of: :user
-  has_many :candidates, inverse_of: :user
+  has_many :bingo_boards, inverse_of: :user, dependent: :destroy
+  has_many :candidates, inverse_of: :user, dependent: :nullify
   has_many :concepts, through: :candidates
   belongs_to :gender, inverse_of: :users, optional: true
   belongs_to :theme, inverse_of: :users, optional: true
@@ -43,14 +43,14 @@ class User < ApplicationRecord
   has_many :experiences, through: :reactions
   has_many :narratives, through: :experiences
 
-  has_many :rubrics, inverse_of: :user
+  has_many :rubrics, inverse_of: :user, dependent: :nullify
 
-  has_many :messages, class_name: 'Ahoy::Message'
+  has_many :messages, class_name: 'Ahoy::Message', dependent: :nullify
 
   validates :timezone, :theme, presence: true
 
   has_many :assessments, through: :projects
-  has_many :submissions, inverse_of: :user
+  has_many :submissions, inverse_of: :user, dependent: :destroy
 
   before_save :anonymize
 
