@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: colab_test_
 -- ------------------------------------------------------
--- Server version	11.0.2-MariaDB
+-- Server version	11.1.2-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -931,7 +931,7 @@ CREATE TABLE `factor_packs` (
   `description_ko` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_factor_packs_on_name_en` (`name_en`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -943,7 +943,8 @@ LOCK TABLES `factor_packs` WRITE;
 INSERT INTO `factor_packs` VALUES
 (1,'Simple','Borrowed from Goldfinch','2019-09-23 11:40:09','2019-09-23 11:40:09','단순한','Goldfinch에서 빌린'),
 (2,'Original','My earliest formulation','2019-09-23 11:40:09','2019-09-23 11:40:09','실물','나의 가장 초기의 배합'),
-(3,'Distilled I','Distillation of factors from 23 sources','2019-09-23 11:40:09','2019-09-23 11:40:09','증류 한','23 개 출처의 요인 증류');
+(3,'Distilled I','Distillation of factors from 23 sources','2019-09-23 11:40:09','2019-09-23 11:40:09','증류 한','23 개 출처의 요인 증류'),
+(4,'AECT 2023','Distillation of factors from 100+ sources. Presented at Association for Educational Communications Technologists Annual Meeting, 2023.\n','2023-09-23 16:34:41','2023-09-23 16:34:41',NULL,NULL);
 /*!40000 ALTER TABLE `factor_packs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -967,7 +968,7 @@ CREATE TABLE `factors` (
   UNIQUE KEY `index_factors_on_name_en` (`name_en`),
   KEY `index_factors_on_factor_pack_id` (`factor_pack_id`),
   CONSTRAINT `fk_rails_532f0f9a0e` FOREIGN KEY (`factor_pack_id`) REFERENCES `factor_packs` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -997,7 +998,13 @@ INSERT INTO `factors` VALUES
 (18,'Asking questions relevant to understanding the group\'s goals or how to achieve  them. This includes questions aimed at understanding teammates\' ideas and  suggestions.\n','Relevant questions','2019-09-23 11:40:16','2019-09-23 11:40:16','관련 질문',NULL,3),
 (19,'Representing or demonstrating the group\'s progress, goals and/or positions  effectively and accurately to non-members (orally, visually or otherwise).\n','External communications','2019-09-23 11:40:16','2019-09-23 11:40:16','외부 커뮤니케이션',NULL,3),
 (20,'Managing the development of, adherence to and revision of the group\'s specific timeline.\n','Timeline management','2019-09-23 11:40:16','2019-09-23 11:40:16','타임 라인 관리',NULL,3),
-(21,'Suggesting allocation of resources (team members, materials, etc.) to individual task completions.\n','Allocating resources','2019-09-23 11:40:16','2019-09-23 11:40:16','자원 할당',NULL,3);
+(21,'Suggesting allocation of resources (team members, materials, etc.) to individual task completions.\n','Allocating resources','2019-09-23 11:40:16','2019-09-23 11:40:16','자원 할당',NULL,3),
+(22,'Performing tasks that bring the team materially closer to meeting its objective(s).\n','Progress towards task completion','2023-09-23 16:34:41','2023-09-23 16:34:41',NULL,NULL,4),
+(23,'Engages in activities that leads to the sharing and/or generation of ideas that relate to meeting the team\'s objective(s).\n','Facilitates free flow of ideas','2023-09-23 16:34:41','2023-09-23 16:34:41',NULL,NULL,4),
+(24,'Provides help or support to team members, makes it possible for others to provide help or initiates requests for assistance or additional support for themselves.\n','Involved in skill augmentation behavior','2023-09-23 16:34:41','2023-09-23 16:34:41',NULL,NULL,4),
+(25,'Considers the tasks required to progress towards meeting objectives and works to develop, communicate and track progress towards achieving milestones - adapting approach as warranted.\n','Develops and implements strategy','2023-09-23 16:34:41','2023-09-23 16:34:41',NULL,NULL,4),
+(26,'Actively generates and/or seeks out creative solutions to the problem(s) facing the team. Entertains all possibilities.\n','Considers alternate approaches and/or perspectives','2023-09-23 16:34:41','2023-09-23 16:34:41',NULL,NULL,4),
+(27,'interrogates the objectives and the problem space to develop and share a thorough understanding of the challenge(s) facing the team.\n','Contributes towards understanding goals/requirements','2023-09-23 16:34:41','2023-09-23 16:34:41',NULL,NULL,4);
 /*!40000 ALTER TABLE `factors` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5495,4 +5502,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-05  9:39:42
+-- Dump completed on 2023-09-23 12:35:56

@@ -17,7 +17,7 @@ module Demoable
     @project.style = Style.find(2)
     @project.name = t :demo_project
     @project.description = t :demo_project_description
-    @project.factor_pack = FactorPack.find(1).factors
+    @project.factor_pack = FactorPack.find(4).factors # Hard code AECT2023 Factor Pack
     @project
   end
 

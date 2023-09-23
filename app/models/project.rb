@@ -34,8 +34,8 @@ class Project < ApplicationRecord
   after_initialize do
     if new_record?
       self.active = false
-      # Simple/Goldfinch factor pack is the default
-      self.factor_pack_id = 1
+      # AECT 2023 factor pack is the default
+      self.factor_pack_id = 4
       # Sliders style
       self.style_id = 2
       self.start_dow = 5
