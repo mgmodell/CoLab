@@ -419,20 +419,11 @@ class BingoGamesController < ApplicationController
 
   def review_helper(bingo_game:, users:, groups:,
                     candidate_lists:, candidates:)
-    feedback_opts = CandidateFeedback.all.collect do |cf|
-      {
-        id: cf.id,
-        name: cf.name,
-        credit: cf.credit,
-        critique: cf.critique
-      }
-    end
     render json: {
       bingo_game: bingo_game.as_json(only:
         %i[id topic description status close_date]),
       users: users.as_json(only:
         %i[id first_name last_name], methods: :email),
-      feedback_opts: feedback_opts.as_json,
       groups: groups.as_json(only:
         %i[id name]),
       candidate_lists: candidate_lists.as_json(only:

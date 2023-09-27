@@ -52,7 +52,19 @@ export default function CandidatesReviewTable(props) {
 
   const [candidates, setCandidates] = useState([]);
   const [candidateLists, setCandidateLists] = useState([]);
-  const [feedbackOptions, setFeedbackOptions] = useState([]);
+  const [feedbackOptions] = useState(
+        // Add a non-response for the UI
+    [{
+
+          credit: 0,
+          critique: "empty",
+          id: 0,
+          name: t("review.not_set_opt")
+    }, ...useTypedSelector(
+        state => state.context.lookups["candidate_feedbacks"]
+      )
+    ]
+  );
   const [bingoGame, setBingoGame] = useState();
   const [users, setUsers] = useState([]);
   const [groups, setGroups] = useState([]);
@@ -127,8 +139,6 @@ export default function CandidatesReviewTable(props) {
 
     setUniqueConcepts(unique_concepts);
     setAcceptableUniqueConcepts(acceptable_unique_concepts);
-    console.log("progress", Math.round((completed / candidates.length) * 100));
-    console.log(completed, candidates.length);
     setProgress(Math.round((completed / candidates.length) * 100));
   };
 
@@ -145,14 +155,6 @@ export default function CandidatesReviewTable(props) {
       .get(url, {})
       .then(response => {
         const data = response.data;
-        // Add a non-response for the UI
-        data.feedback_opts.unshift({
-          credit: 0,
-          critique: "empty",
-          id: 0,
-          name: t("review.not_set_opt")
-        });
-        setFeedbackOptions(data.feedback_opts);
 
         setBingoGame(data.bingo_game);
 

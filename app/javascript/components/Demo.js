@@ -25,15 +25,15 @@ export default function Demo(props) {
       />
       {/* Perhaps subgroup under Bingo */}
       <Route
-        path={`enter_candidates/:bingoGameId`}
+        path={`bingo/enter_candidates/:bingoGameId`}
         element={<CandidateListEntry rootPath={props.rootPath} />}
       />
       <Route
-        path={`review_candidates/:bingoGameId`}
+        path={`bingo/review_candidates/:bingoGameId`}
         element={<CandidatesReviewTable rootPath={props.rootPath} />}
       />
       <Route
-        path={`candidate_results/:bingoGameId`}
+        path={`bingo/candidate_results/:bingoGameId`}
         element={<BingoBuilder rootPath={props.rootPath} />}
       />
       {/* Perhaps subgroup under Bingo */}
