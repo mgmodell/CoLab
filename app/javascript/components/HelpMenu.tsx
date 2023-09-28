@@ -32,8 +32,8 @@ export default function HelpMenu(props) {
     state => state.context.lookups["candidate_feedbacks"]
   );
   const candidateFeedbackInfo = ()=> {
-   if( null === feedbackOpts ){
-    return (<p>Not loaded</p>)
+   if( undefined === feedbackOpts || null === feedbackOpts ){
+    return (<p>Not loaded</p>);
    } else{
     return (
 

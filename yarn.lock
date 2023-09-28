@@ -1762,19 +1762,19 @@
   integrity sha512-Vrjz5N5Ia4SEzWWgIVwnHNEnb1UE1XMkvY5DGXrAeOGE9imk0hgTHh5GyDjLDJi9OTCn9oo9dXH1uToK1VRfrg==
 
 "@types/mime@*":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-3.0.1.tgz#5f8f2bca0a5863cb69bc0b0acd88c96cb1d4ae10"
-  integrity sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-3.0.2.tgz#c1ae807f13d308ee7511a5b81c74f327028e66e8"
+  integrity sha512-Wj+fqpTLtTbG7c0tH47dkahefpLKEbB+xAZuLq7b4/IDHPl/n6VoXcyUQ2bypFlbSwvCr0y+bD4euTTqTJsPxQ==
 
 "@types/mime@^1":
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.2.tgz#93e25bf9ee75fe0fd80b594bc4feb0e862111b5a"
-  integrity sha512-YATxVxgRqNH6nHEIsvg6k2Boc1JHI9ZbH5iWFFv/MTkchz3b1ieGDa5T0a9RznNdI0KhVbdbWSN+KWWrQZRxTw==
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.3.tgz#bbe64987e0eb05de150c305005055c7ad784a9ce"
+  integrity sha512-Ys+/St+2VF4+xuY6+kDIXGxbNRO0mesVg0bbxEfB97Od1Vjpjx9KD1qxs64Gcb3CWPirk9Xe+PT4YiiHQ9T+eg==
 
 "@types/node@*":
-  version "20.7.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.7.0.tgz#c03de4572f114a940bc2ca909a33ddb2b925e470"
-  integrity sha512-zI22/pJW2wUZOVyguFaUL1HABdmSVxpXrzIqkjsHmyUjNhPoWM1CKfvVuXfetHhIok4RY573cqS0mZ1SJEnoTg==
+  version "20.7.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.7.1.tgz#06d732ead0bd5ad978ef0ea9cbdeb24dc8717514"
+  integrity sha512-LT+OIXpp2kj4E2S/p91BMe+VgGX2+lfO+XTpfXhh+bCk2LkQtHZSub8ewFBMGP5ClysPjTDFa4sMI8Q3n4T0wg==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -1792,21 +1792,21 @@
   integrity sha512-u95svzDlTysU5xecFNTgfFG5RUWu1A9P0VzgpcIiGZA9iraHOdSzcxMxQ55DyeRaGCSxQi7LxXDI4rzq/MYfdg==
 
 "@types/range-parser@*":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
-  integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.5.tgz#38bd1733ae299620771bd414837ade2e57757498"
+  integrity sha512-xrO9OoVPqFuYyR/loIHjnbvvyRZREYKLjxV4+dY6v3FQR3stQ9ZxIGkaclF7YhI9hfjpuTbu14hZEy94qKLtOA==
 
 "@types/react-dom@*", "@types/react-dom@^18.0.0":
-  version "18.2.7"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.7.tgz#67222a08c0a6ae0a0da33c3532348277c70abb63"
-  integrity sha512-GRaAEriuT4zp9N4p1i8BDBYmEyfo+xQ3yHjJU4eiK5NDa1RmUZG+unZABUTK4/Ox/M+GaHwb6Ow8rUITrtjszA==
+  version "18.2.8"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.8.tgz#338f1b0a646c9f10e0a97208c1d26b9f473dffd6"
+  integrity sha512-bAIvO5lN/U8sPGvs1Xm61rlRHHaq5rp5N3kp9C+NJ/Q41P8iqjkXSu0+/qu8POsjH9pNWb0OYabFez7taP7omw==
   dependencies:
     "@types/react" "*"
 
 "@types/react-redux@^7.1.23":
-  version "7.1.26"
-  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.26.tgz#84149f5614e40274bb70fcbe8f7cae6267d548b1"
-  integrity sha512-UKPo7Cm7rswYU6PH6CmTNCRv5NYF3HrgKuHEYTK8g/3czYLrUux50gQ2pkxc9c7ZpQZi+PNhgmI8oNIRoiVIxg==
+  version "7.1.27"
+  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.27.tgz#1afb31f7354bf787e162c10ff3fa19bafa9e6b57"
+  integrity sha512-xj7d9z32p1K/eBmO+OEy+qfaWXtcPlN8f1Xk3Ne0p/ZRQ867RI5bQ/bpBtxbqU1AHNhKJSgGvld/P2myU2uYkg==
   dependencies:
     "@types/hoist-non-react-statics" "^3.3.0"
     "@types/react" "*"
@@ -1814,9 +1814,9 @@
     redux "^4.0.0"
 
 "@types/react-transition-group@^4.4.1", "@types/react-transition-group@^4.4.6":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-4.4.6.tgz#18187bcda5281f8e10dfc48f0943e2fdf4f75e2e"
-  integrity sha512-VnCdSxfcm08KjsJVQcfBmhEQAPnLB8G08hAxn39azX1qYBQ/5RVQuoHuKIcfKOdncuaUvEpFKFzEvbtIMsfVew==
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-4.4.7.tgz#bf69f269d74aa78b99097673ca6dd6824a68ef1c"
+  integrity sha512-ICCyBl5mvyqYp8Qeq9B5G/fyBSRC0zx3XM3sCC6KkcMsNeAHqXBKkmat4GqdJET5jtYUpZXrxI5flve5qhi2Eg==
   dependencies:
     "@types/react" "*"
 
@@ -2581,9 +2581,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001539:
-  version "1.0.30001539"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001539.tgz#325a387ab1ed236df2c12dc6cd43a4fff9903a44"
-  integrity sha512-hfS5tE8bnNiNvEOEkm8HElUHroYwlqMMENEzELymy77+tJ6m+gA2krtHl5hxJaj71OlpC2cHZbdSMX1/YEqEkA==
+  version "1.0.30001541"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001541.tgz#b1aef0fadd87fb72db4dcb55d220eae17b81cdb1"
+  integrity sha512-bLOsqxDgTqUBkzxbNlSBt8annkDpQB9NdzdTbO2ooJ+eC/IQcvDspDc058g84ejCelF7vHUx57KIOjEecOHXaw==
 
 chalk@^2.4.2:
   version "2.4.2"
@@ -3255,9 +3255,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.530:
-  version "1.4.531"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.531.tgz#22966d894c4680726c17cf2908ee82ff5d26ac25"
-  integrity sha512-H6gi5E41Rn3/mhKlPaT1aIMg/71hTAqn0gYEllSuw9igNWtvQwu185jiCZoZD29n7Zukgh7GVZ3zGf0XvkhqjQ==
+  version "1.4.534"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.534.tgz#2056c1fc41a7157cdd5c634f96e758d727b69201"
+  integrity sha512-ikY7wAMtMt3jTnHsHG0YLl4MKJiKz2tgidenGSNgwUX2StBLNZ8VCxflD9tZK/ceTs4j8gDC9+6LQQ6iGkK04g==
 
 email-validator@^2.0.4:
   version "2.0.4"
@@ -5164,9 +5164,9 @@ react-dom@^18.2.0:
     scheduler "^0.23.0"
 
 react-draggable@^4.4.4:
-  version "4.4.5"
-  resolved "https://registry.yarnpkg.com/react-draggable/-/react-draggable-4.4.5.tgz#9e37fe7ce1a4cf843030f521a0a4cc41886d7e7c"
-  integrity sha512-OMHzJdyJbYTZo4uQE393fHcqqPYsEtkjfMgvCHr6rejT+Ezn4OZbNyGH50vv+SunC1RMvwOTSWkEODQLzw1M9g==
+  version "4.4.6"
+  resolved "https://registry.yarnpkg.com/react-draggable/-/react-draggable-4.4.6.tgz#63343ee945770881ca1256a5b6fa5c9f5983fe1e"
+  integrity sha512-LtY5Xw1zTPqHkVmtM3X8MUOxNDOUhv/khTgBgrUvwaS064bwVvxT+q5El0uUFNx5IEPKXuRejr7UqLwBIg5pdw==
   dependencies:
     clsx "^1.1.1"
     prop-types "^15.8.1"
