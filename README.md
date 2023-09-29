@@ -78,7 +78,7 @@ full guide::
 * Ask on [Slack](https://mountsaintmarycollege.slack.com/archives/G01269L9DAT)
 
 ## Contributors
-
+My wife, Misun, and my two children have been instrumental in making this possible by putting up with me throughout.
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
