@@ -18,7 +18,7 @@ gem 'mysql2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-gem 'shakapacker', '7.0.3'
+gem 'shakapacker', '7.1.0'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
