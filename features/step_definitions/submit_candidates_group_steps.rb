@@ -60,7 +60,7 @@ Then(/^the user "([^"]*)" the collaboration request$/) do |accept_or_decline|
   btn.click
 end
 
-Then(/^the user "([^"]*)" see collaboration request button$/) do |button_present|
+Then('the user {string} see collaboration request button') do |button_present|
   case button_present.downcase
   when 'should'
     page.should have_content 'Invite your group to help?'
@@ -71,29 +71,47 @@ Then(/^the user "([^"]*)" see collaboration request button$/) do |button_present
   end
 end
 
-When(/^the user populates (\d+) additional "([^"]*)" entries$/) do |count, field|
+When('the user populates {int} additional {string} entries') do |count, field|
   # required_term_count = @bingo.required_terms_for_group(@bingo.project.group_for_user(@user))
 
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
+  balance_field = 'definition' == field ? 'term' : 'definition'
 
   existing_count = @entries_list.count
-  count.to_i.times do |index|
-    if @entries_list[existing_count + index].blank?
+  index = 0
+  counter = 0
+  while counter < count do
+    field_elem = find( :xpath, "//*[@id='#{field}_#{existing_count + index}']")
+    if @entries_list[existing_count + index].nil?
       @entries_list[existing_count + index] = { 'term' => '', 'definition' => '' }
     end
-    @entries_list[existing_count + index][field] = if 'term' == field
-                                                     Faker::Company.industry
-                                                   else
-                                                     Faker::Company.bs
-                                                   end
-    page.fill_in("#{field}_#{existing_count + index}",
-                 with: @entries_list[existing_count + index][field])
+    if field_elem.value.blank?
+      @entries_list[existing_count + index][field] = if 'term' == field
+                                                       Faker::Company.industry
+                                                     else
+                                                       Faker::Company.bs
+                                                     end
+      balance_field_elem = find( :xpath, "//*[@id='#{balance_field}_#{existing_count + index}']")
+      @entries_list[existing_count + index][balance_field] = balance_field_elem.value
+      # field_elem = find( :xpath, "//*[@id='#{field}_#{existing_count + index}']")
+      field_elem.click
+      field_elem.send_keys [:command,'a'], :backspace
+      field_elem.send_keys [:control,'a'], :backspace
+      field_elem.send_keys  @entries_list[existing_count + index][field]
+      counter += 1
+    else
+      @entries_list[existing_count + index][field] = field_elem.value
+    end
+    balance_field_elem = find( :xpath, "//*[@id='#{balance_field}_#{existing_count + index}']")
+    @entries_list[existing_count + index][balance_field] = balance_field_elem.value
+    index += 1
+
   end
 end
 
-When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
+When('the user changes the first {int} {string} entries') do |count, field|
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
