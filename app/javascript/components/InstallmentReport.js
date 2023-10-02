@@ -1,6 +1,6 @@
 import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -33,6 +33,7 @@ export default function InstallmentReport(props) {
     state => state.context.status.endpointsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
+  const navigate = useNavigate();
 
   const { installmentId } = useParams();
 
@@ -190,6 +191,7 @@ export default function InstallmentReport(props) {
             {}
           );
           setContributions(receivedContributions);
+          navigate(`..`);
         }
         setMessages(data.messages);
         setShowAlerts(true);

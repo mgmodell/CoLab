@@ -87,7 +87,7 @@ export default function HelpMenu(props) {
     bingo: [
       {
         target: 'body',
-        content: candidateFeedbackInfo(),
+        content: "There is no help available for this topic",
         placement: 'center'
       }
     ],
