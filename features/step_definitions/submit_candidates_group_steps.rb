@@ -77,6 +77,11 @@ When('the user populates {int} additional {string} entries') do |count, field|
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
+
+  # Support a current list of all entries
+  @entries_lists['all'] = [] if @entries_lists['all'].nil?
+  entries_list_a = @entries_lists['all']
+
   balance_field = 'definition' == field ? 'term' : 'definition'
 
   existing_count = @entries_list.count
@@ -106,27 +111,34 @@ When('the user populates {int} additional {string} entries') do |count, field|
     end
     balance_field_elem = find( :xpath, "//*[@id='#{balance_field}_#{existing_count + index}']")
     @entries_list[existing_count + index][balance_field] = balance_field_elem.value
+    entries_list_a[existing_count + index] = @entries_list[existing_count + index]
     index += 1
 
   end
 end
 
-When('the user changes the first {int} {string} entries') do |count, field|
+When('the user changes a random {int} {string} entries') do |count, field|
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
 
+  # Support a current list of all entries
+  @entries_lists['all'] = [] if @entries_lists['all'].nil?
+  entries_list_a = @entries_lists['all']
+
+  balance_field = 'term' == field ? 'definition' : 'term'
+
   entries_array = []
-  @entries_lists.keys.each do |user_id|
-    @entries_lists[user_id].each do |entry|
-      entries_array.push entry
-    end
-  end
+  # @entries_lists.keys.each do |user_id|
+  #   @entries_lists[user_id].each do |entry|
+  #     entries_array.push entry
+  #   end
+  # end
   field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]").count
 
   count.to_i.times do |_index|
     # Index to the field to change
-    rand_ind = Random.rand(field_count)
+    rand_ind = Random.rand(field_count) - 1
 
     # Pull the existing values
     existing_term = page.find(:xpath, "//input[@id='term_#{rand_ind}']").value
@@ -140,21 +152,28 @@ When('the user changes the first {int} {string} entries') do |count, field|
               end
 
     if existing_term.blank? && existing_def.blank?
-      @entries_list.push({ field => new_val })
+      @entries_list.push({
+        field => new_val,
+        balance_field => ''
+      })
     else
       found = false
       entries_array.each do |entry|
         if 'term' == field && entry['definition'] == existing_def
           entry['term'] = new_val
-          page.fill_in("#{field}_#{rand_ind}",
-                       with: new_val)
+          entry['definition'] = existing_def
           found = true
         elsif 'definition' == field && entry['term'] == existing_term
           entry['definition'] = new_val
-          page.fill_in("#{field}_#{rand_ind}",
-                       with: new_val)
+          entry['term'] = existing_term
           found = true
         end
+        to_fill_elem = find( :xpath, "//*[@id='#{field}_#{rand_ind}']")
+        to_fill_elem.click
+        send_keys [:command, 'a'], :backspace
+        send_keys [:control, 'a'], :backspace
+        send_keys new_val
+        entries_list_a[rand_ind][field] = new_val
 
         break if found
       end

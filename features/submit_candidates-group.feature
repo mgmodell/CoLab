@@ -297,8 +297,8 @@ Feature: Submitting Candidate words for Bingo!
      Then the user "should not" see collaboration was requested
      Then the user "should not" see collaboration request button
      Then the user will see 36 term field sets
-     When the user changes the first 4 "term" entries
-     When the user changes the first 4 "definition" entries
+     When the user changes a random 4 "term" entries
+     When the user changes a random 4 "definition" entries
      Then the user clicks "Save"
      Then the user will see "success"
      Then close all messages

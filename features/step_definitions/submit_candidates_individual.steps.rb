@@ -71,10 +71,15 @@ Then(/^the candidate properties should be empty$/) do
   end
 end
 
-When(/^the user populates (\d+) of the "([^"]*)" entries$/) do |count, field|
+When('the user populates {int} of the {string} entries') do |count, field|
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
+
+  # Support a current list of all entries
+  @entries_lists['all'] = [] if @entries_lists['all'].nil?
+  entries_list_a = @entries_lists['all']
+
   count.to_i.times do |index|
     @entries_list[index] = {} if @entries_list[index].nil?
     @entries_list[index][field] = if 'term' == field
@@ -82,19 +87,23 @@ When(/^the user populates (\d+) of the "([^"]*)" entries$/) do |count, field|
                                   else
                                     Faker::Company.bs
                                   end
+
+    entries_list_a[index] = {} if entries_list_a[index].nil?
+    entries_list_a[index][field] = @entries_list[index][field]
+
     page.fill_in("#{field}_#{index}",
                  with: @entries_list[index][field])
   end
 end
 
-Then(/^the candidate list properties will match the list$/) do
+Then('the candidate list properties will match the list') do
   cl = @bingo.candidate_list_for_user @user
   @entries_list.each do |cand|
     cl.candidates.where(term: cand['term'], definition: cand['definition']).count.should eq 1
   end
 end
 
-Then(/^the candidate list entries should match the list$/) do
+Then('the candidate list entries should match the list') do
   field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]").count
 
   field_count.times do |index|
@@ -105,15 +114,16 @@ Then(/^the candidate list entries should match the list$/) do
 
     next unless term.present? || definition.present?
 
-    entry = @entries_lists[@user].find do |candidate|
+    entry = @entries_lists['all'].find do |candidate|
       elem_term = candidate['term'].blank? ? candidate['term'] : candidate['term'].strip.split.map(&:capitalize) * ' '
       term == elem_term && definition == candidate['definition']
     end
+    byebug unless true == entry.present?
     entry.present?.should eq true
   end
 end
 
-Given(/^the Bingo! "([^"]*)" been activated$/) do |has_or_has_not|
+Given('the Bingo! {string} been activated') do |has_or_has_not|
   @bingo.active = 'has' == has_or_has_not
   @bingo.save
   log @bingo.errors.full_messages if @bingo.errors.present?
