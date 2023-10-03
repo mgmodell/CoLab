@@ -114,11 +114,13 @@ Then('the candidate list entries should match the list') do
 
     next unless term.present? || definition.present?
 
-    entry = @entries_lists['all'].find do |candidate|
+    list_of_interest = @entries_lists['all'].present? ?
+      @entries_lists['all'] : @entries_lists[@user]
+
+    entry = list_of_interest.find do |candidate|
       elem_term = candidate['term'].blank? ? candidate['term'] : candidate['term'].strip.split.map(&:capitalize) * ' '
       term == elem_term && definition == candidate['definition']
     end
-    byebug unless true == entry.present?
     entry.present?.should eq true
   end
 end
