@@ -35,11 +35,11 @@ class Project < ApplicationRecord
     if new_record?
       self.active = false
       # AECT 2023 factor pack is the default
-      self.factor_pack_id = 4
+      self.factor_pack_id ||= 4
       # Sliders style
-      self.style_id = 2
-      self.start_dow = 5
-      self.end_dow = 1
+      self.style_id ||= 2
+      self.start_dow ||= 5
+      self.end_dow ||= 1
 
     end
   end

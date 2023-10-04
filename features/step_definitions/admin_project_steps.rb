@@ -154,7 +154,7 @@ Then(/^the user sets the project "([^"]*)" date to "([^"]*)"$/) do |date_field_p
   send_keys day_month
 end
 
-Then(/^the user selects "([^"]*)" as "([^"]*)"$/) do |value, field|
+Then('the user selects {string} as {string}') do |value, field|
   id = find(:xpath,
             "//label[contains(text(),'#{field}')]")[:for]
   begin
@@ -167,7 +167,7 @@ Then(/^the user selects "([^"]*)" as "([^"]*)"$/) do |value, field|
   if selectCtrl.empty?
     find(:xpath, "//div[@id='#{id}']", visible: :all).click
     find(:xpath, "//li[contains(text(),'#{value}')]").click
-    sleep(0.3)
+    # sleep(0.3)
   else
     selectCtrl[0].select(value)
   end
