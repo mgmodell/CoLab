@@ -8,7 +8,6 @@ gem 'rails', '~> 7.0.8'
 
 gem 'puma', '~> 6.0'
 # Use mysql as the database for Active Record
-#gem 'mysql2', '>= 0.3.18', '< 0.5'
 gem 'mysql2'
 
 # Use Uglifier as compressor for JavaScript assets
