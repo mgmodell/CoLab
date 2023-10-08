@@ -173,7 +173,7 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
     end
 
     begin
-      xpth_search = "//li[text()='#{feedback.name}']"
+      xpth_search = "//li[text()=\"#{feedback.name}\"]"
       page.find(:xpath, xpth_search ).click
       begin
         if has_xpath?( xpth_search )
