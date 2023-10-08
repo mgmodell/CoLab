@@ -159,56 +159,64 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
       @feedback_list[candidate.id][:concept] = concept.split.map(&:capitalize).*' '
     end
 
+    # Set the feedback
     begin
       retries ||= 0
-      elem = page.find(:xpath,
-                       # "//div[@id='feedback_4_#{candidate.id}']")
-                       "//input[@id='feedback_4_#{candidate.id}']/following-sibling::div", visible: :all)
-      elem.scroll_to(elem)
-      elem.click
+      xp_search = "//input[@id='feedback_4_#{candidate.id}']/following-sibling::div"
+
+      find( :xpath, xp_search, visible: :all ).click
     rescue Selenium::WebDriver::Error::ElementNotInteractableError
-      elem.send_keys :escape
+      find( :xpath, xp_search, visible: :all ).send_keys :escape
+
       (retries += 1).should be < 20, 'Too many retries'
       retry unless retries > 5
     end
 
     begin
-      elem = page.find(:xpath,
-                       "//li[text()=\"#{feedback.name}\"]")
-      elem.scroll_to(elem)
-      elem.click
-      elem.click
-      # elem.send_keys :enter
+      xpth_search = "//li[text()='#{feedback.name}']"
+      page.find(:xpath, xpth_search ).click
+      begin
+        if has_xpath?( xpth_search )
+          page.find(:xpath, xpth_search ).click
+          send_keys :enter
+        end
+      rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
+        send_keys :escape
+        (retries += 1).should be < 20, 'Too many retries'
+        retry unless retries > 5
+      rescue Capybara::ElementNotFound => e
+        send_keys :escape
+        (retries += 1).should be < 20, 'Too many retries'
+        retry unless retries > 5
+      end
 
       if concept.present?
-        elem = page.find(:xpath, "//input[@id='concept_4_#{candidate.id}']")
-        elem.scroll_to(elem)
-        elem.click
-        elem.set(concept)
+        find(:xpath, "//input[@id='concept_4_#{candidate.id}']").click
+        send_keys [:control, 'a'], :backspace
+        send_keys [:command, 'a'], :backspace
+        send_keys concept
       end
-    rescue Selenium::WebDriver::Error::StaleElementReferenceError
+    rescue Selenium::WebDriver::Error::NoSuchElementError => e
+      puts e.message
+        (retries += 1).should be < 20, 'Too many retries'
+        retry unless retries > 5
+
+    rescue Selenium::WebDriver::Error::StaleElementReferenceError => e
       # Nothing needed
+      puts e.message
     rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
       elem = page.find(:xpath,
                        "//li[text()=\"#{feedback.name}\"]")
       elem.scroll_to(elem)
       elem.click
 
-      error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries.positive?
-      error_msg += e.message
-      error_msg += "\t\t#{candidate.inspect}" unless retries.positive?
-      # elem.send_keys :escape
-
       (retries += 1).should be < 20, 'Too many retries'
       retry unless retries > 5
     rescue Capybara::ElementNotFound => e
-      error_msg += "FAIL\tFeedback: #{feedback.name} for #{candidate.id}" unless retries.positive?
-      error_msg += e.message
-      error_msg += "\t\t#{candidate.inspect}" unless retries.positive?
       begin
         elem.send_keys :enter
       rescue Selenium::WebDriver::Error::ElementNotInteractableError
-        byebug
+        puts e.full_message
       end
     end
   end
