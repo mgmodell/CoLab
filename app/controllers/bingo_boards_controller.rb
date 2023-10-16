@@ -283,9 +283,9 @@ class BingoBoardsController < ApplicationController
 
       respond_to do |format|
         format.pdf do
-          # TODO: fix the ws_results_url here
-          pdf = WorksheetPdf.new(wksheet,
-                                 url: ws_results_url(wksheet))
+          url = "#{root_url}bingo/score_bingo_worksheet/#{wksheet.id}"
+          # TODO: there's got to be a better way to do this.
+          pdf = WorksheetPdf.new(wksheet, url:)
           send_data pdf.render, filename: 'bingo_practice.pdf', type: 'application/pdf'
         end
       end
