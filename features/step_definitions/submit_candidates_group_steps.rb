@@ -191,6 +191,7 @@ Then(/^the candidate lists have been merged$/) do
       combined_list << list_item if list_item['term'].present? || list_item['definition'].present?
     end
     @entries_lists[user] = combined_list
+    @entries_lists['all'] = combined_list.clone
   end
 end
 
