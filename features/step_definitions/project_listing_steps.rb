@@ -17,7 +17,7 @@ Given(/^there is a course with an assessed project$/) do
     name: "#{Faker::Company.industry} Project",
     start_dow: 1,
     end_dow: 2,
-    style: Style.find(1)
+    style: Style.find(2)
   )
 
   @project.save

@@ -102,7 +102,7 @@ Given(/^the course has an assessed project$/) do
     end_dow: 2,
     start_date: yesterday,
     end_date: tomorrow,
-    style: Style.find(1)
+    style: Style.find(2)
   )
   @project.save!
   if @project.persisted?
