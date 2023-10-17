@@ -136,7 +136,7 @@ class Experience < ApplicationRecord
 
   def get_least_reviewed_narrative(include_ids = [])
     narrative_counts = if include_ids.empty?
-                         reactions.group(:narrative_id).count
+                         reactions.where.not(narrative_id: nil).group(:narrative_id).count
                        else
                          reactions
                            .where(narrative_id: include_ids)
@@ -158,7 +158,6 @@ class Experience < ApplicationRecord
           sorted =  narrative_counts.sort_by { |a| a[1] }
           narrative = Narrative.includes(scenario: :behavior).find(sorted[0][0])
         end
-        # narrative = Narrative.where( id: include_ids).take
       end
     elsif narrative_counts.count < Narrative.includes(scenario:
     :behavior).all.count
@@ -170,10 +169,6 @@ class Experience < ApplicationRecord
         exp = include_ids - narrative_counts.keys
         world = exp - Reaction.group(:narrative_id).count.keys
 
-        Narrative.includes(scenario: :behavior).joins(:reactions).where('scenario_id NOT IN (?)',
-                                                                        scenario_counts.keys)
-                 .where(reactions: { narrative_id: exp })
-                 .group(:narrative_id).count
         narrative = if include_ids.empty?
                       Narrative.includes(scenario: :behavior).where('scenario_id NOT IN (?)', scenario_counts.keys)
                                .where('id NOT IN (?)', narrative_counts.keys).sample
