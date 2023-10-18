@@ -4,7 +4,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
   echo 'building for arm'
   docker build -f ./containers/arm/db/Dockerfile -t colab_db .
   docker build -f ./containers/arm/tester_server/Dockerfile -t colab_tester .
-  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -f ./containers/arm/dev_server/Dockerfile -t colab_dev_server .
+  docker build -f ./containers/arm/dev_server/Dockerfile -t colab_dev_server .
   docker build -f ./containers/arm/browser/Dockerfile -t colab_browser .
 else
   echo 'building for x86'

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class ExperiencesController < ApplicationController
-  layout 'admin', except: %i[next diagnose react]
+  include PermissionsCheck
+
   before_action :set_experience, only: %i[show get_reactions edit update destroy]
   before_action :check_viewer, only: %i[show index]
   before_action :check_editor, only: %i[edit get_reactions update destroy]
 
   def show
-    @title = t('.title')
     respond_to do |format|
       format.html { render :show }
       format.json do
@@ -38,12 +38,13 @@ class ExperiencesController < ApplicationController
     reactions = Reaction.includes([:behavior, { user: :emails }, { narrative: :scenario }])
                         .where(experience_id: @experience.id, user_id: rosters_hash.values.collect(&:user_id))
 
+    anon = current_user.anonymize?
     render json: {
       reactions: reactions.collect do |reaction|
         {
           user: {
             email: reaction.user.email,
-            name: reaction.user.name(@anon)
+            name: reaction.user.name(anon)
           },
           student_status: rosters_hash[reaction.user_id].role,
           status: reaction.status,
@@ -57,12 +58,7 @@ class ExperiencesController < ApplicationController
     }
   end
 
-  def edit
-    @title = t('.title')
-  end
-
   def index
-    @title = t('.title')
     @experiences = []
     if current_user.is_admin?
       @experiences = Experience.all
@@ -75,7 +71,6 @@ class ExperiencesController < ApplicationController
   end
 
   def create
-    @title = t('experiences.new.title')
     @experience = Experience.new(experience_params)
     @experience.course = Course.find(@experience.course_id)
     if @experience.save
@@ -115,7 +110,6 @@ class ExperiencesController < ApplicationController
   end
 
   def update
-    @title = t('experiences.edit.title')
     if @experience.update(experience_params)
       respond_to do |format|
         format.html do
@@ -201,14 +195,15 @@ class ExperiencesController < ApplicationController
   end
 
   def diagnose
+
     received_diagnosis = Diagnosis.new(diagnosis_params)
     received_diagnosis.reaction = Reaction.find(received_diagnosis.reaction_id)
     received_diagnosis.save
-    logger.debug received_diagnosis.errors.full_messages unless received_diagnosis.errors.empty?
 
     week = received_diagnosis.reaction.next_week
     response = {}
     if received_diagnosis.errors.any?
+      logger.debug received_diagnosis.errors.full_messages
       @diagnosis = received_diagnosis
       response[:messages] = @diagnosis.errors.to_hash
       response[:messages][:main] = 'Unable to save your diagnosis. Please try again.'
@@ -231,8 +226,12 @@ class ExperiencesController < ApplicationController
       # render :next
     end
 
+
     respond_to do |format|
-      format.json { render json: response.as_json }
+      format.json do
+        # byebug if 8 == week.week_num
+        render json: response
+      end
     end
   end
 
@@ -273,7 +272,7 @@ class ExperiencesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_experience
-    if params[:id].blank? || params[:id] == 'new'
+    if params[:id].blank? || 'new' == params[:id]
       course = Course.find(params[:course_id])
       e_test = course.experiences.new
       e_test.start_date = course.start_date
@@ -291,16 +290,6 @@ class ExperiencesController < ApplicationController
     else
       @experience = e_test
     end
-  end
-
-  def check_viewer
-    redirect_to root_path unless current_user.is_admin? ||
-                                 current_user.is_instructor? ||
-                                 current_user.is_researcher?
-  end
-
-  def check_editor
-    redirect_to root_path unless current_user.is_admin? || current_user.is_instructor?
   end
 
   def experience_params

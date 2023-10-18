@@ -8,8 +8,7 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Support component names relative to this directory:
-import ReactOnRails from 'react-on-rails';
-
+import ReactOnRails from "react-on-rails";
 
 /*
 import "promise-polyfill/src/polyfill";
@@ -19,8 +18,8 @@ var ReactRailsUJS = require("react_ujs");
 ReactRailsUJS.useContext(componentRequireContext);
 */
 
-import TimeSetter from '../components/TimeSetter';
+import TimeSetter from "../components/TimeSetter";
 
 ReactOnRails.register({
-  TimeSetter,
+  TimeSetter
 });

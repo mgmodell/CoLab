@@ -3,15 +3,16 @@
 require 'faker'
 class Course < ApplicationRecord
   belongs_to :school, inverse_of: :courses, counter_cache: true
-  has_many :projects, inverse_of: :course, dependent: :destroy
-  has_many :rosters, inverse_of: :course, dependent: :destroy
-  has_many :bingo_games, inverse_of: :course, dependent: :destroy
+  has_many :projects, inverse_of: :course, dependent: :destroy, autosave: true
+  has_many :rosters, inverse_of: :course, dependent: :destroy, autosave: true
+  has_many :bingo_games, inverse_of: :course, dependent: :destroy, autosave: true
   has_many :candidate_lists, through: :bingo_games
   has_many :concepts, through: :candidate_lists
   has_many :users, through: :rosters
   belongs_to :consent_form, counter_cache: true, inverse_of: :courses, optional: true
+  has_many :assignments, inverse_of: :course, autosave: true, dependent: :destroy
 
-  has_many :experiences, inverse_of: :course, dependent: :destroy
+  has_many :experiences, inverse_of: :course, dependent: :destroy, autosave: true
 
   validates :timezone, :start_date, :end_date, presence: true
   validates :name, presence: true
@@ -22,7 +23,6 @@ class Course < ApplicationRecord
   before_create :anonymize
 
   def pretty_name(anonymous = false)
-    prettyName = ''
     if anonymous
       "#{anon_name} (#{anon_number})"
     elsif number.present?
@@ -36,6 +36,8 @@ class Course < ApplicationRecord
     activities = projects.to_a
     activities.concat bingo_games
     activities.concat experiences
+    activities.concat assignments
+
     activities.sort_by(&:end_date)
   end
 
@@ -79,7 +81,7 @@ class Course < ApplicationRecord
 
   def get_user_role(user)
     roster = rosters.find_by(user:)
-    roster.nil? ? nil : roster.role
+    roster&.role
   end
 
   def copy_from_template(new_start:)
@@ -130,7 +132,6 @@ class Course < ApplicationRecord
 
       # copy the experiences
       experiences.each do |experience|
-        # puts "end date: #{experience.end_date.in_time_zone(course_tz)} => #{experience.end_date.advance(days: date_difference )}"
         new_obj = new_course.experiences.new(
           name: experience.name,
           start_date: experience.start_date.advance(days: date_difference),
@@ -154,6 +155,25 @@ class Course < ApplicationRecord
           start_date: bingo_game.start_date.advance(days: date_difference),
           end_date: bingo_game.end_date.advance(days: date_difference)
         )
+        new_obj.save!
+      end
+
+      # copy the assignments
+      assignments.each do |assignment|
+        new_obj = new_course.assignments.new(
+          name: assignment.name,
+          description: assignment.description,
+          start_date: assignment.start_date.advance(days: date_difference),
+          end_date: assignment.end_date.advance(days: date_difference),
+          rubric: assignment.rubric,
+          file_sub: assignment.file_sub,
+          link_sub: assignment.link_sub,
+          text_sub: assignment.text_sub,
+          passing: assignment.passing,
+          group_enabled: assignment.group_enabled,
+          project: proj_hash[assignment.project]
+        )
+
         new_obj.save!
       end
 
@@ -271,14 +291,14 @@ class Course < ApplicationRecord
   def activity_date_check
     experiences.reload.each do |experience|
       if experience.start_date < start_date
-        msg = errors[:start_date].presence || ''
+        errors[:start_date].presence || ''
         msg = "Experience '#{experience.name}' currently starts before this course does"
         msg += " (#{experience.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
       next unless experience.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].presence || ''
+      errors[:end_date].presence || ''
       msg = "Experience '#{experience.name}' currently ends after this course does"
       msg += " (#{experience.end_date} > #{end_date})."
       errors.add(:end_date, msg)
@@ -292,21 +312,21 @@ class Course < ApplicationRecord
       end
       next unless project.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].presence || ''
+      errors[:end_date].presence || ''
       msg = "Project '#{project.name}' currently ends after this course does"
       msg += " (#{project.end_date} > #{end_date})."
       errors.add(:end_date, msg)
     end
     bingo_games.reload.each do |bingo_game|
       if bingo_game.start_date < start_date
-        msg = errors[:start_date].presence || ''
+        errors[:start_date].presence || ''
         msg = "Bingo! '#{bingo_game.topic}' currently starts before this course does "
         msg += " (#{bingo_game.start_date} < #{start_date})."
         errors.add(:start_date, msg)
       end
       next unless bingo_game.end_date.change(sec: 0) > end_date
 
-      msg = errors[:end_date].presence || ''
+      errors[:end_date].presence || ''
       msg = "Bingo! '#{bingo_game.topic}' currently ends after this course does "
       msg += " (#{bingo_game.end_date} > #{end_date})."
       errors.add(:end_date, msg)

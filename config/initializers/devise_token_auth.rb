@@ -20,7 +20,7 @@ DeviseTokenAuth.setup do |config|
   # After this limit is reached, the oldest tokens will be removed.
   # TODO: Fix
   # System seems to see batched requests as new devices. Not sure why, but this solves.
-  config.max_number_of_devices = 20
+  config.max_number_of_devices = 150
 
   # Sometimes it's necessary to make several requests to the API at the same
   # time. In this case, each request in the batch will need to share the same

@@ -16,6 +16,7 @@
 **/id_rsa
 rerun.txt
 *.swp
+**/~$*.pptx
 *.DS_Store
 *~
 .byebug_history

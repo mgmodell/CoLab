@@ -60,7 +60,7 @@ Then(/^the user "([^"]*)" the collaboration request$/) do |accept_or_decline|
   btn.click
 end
 
-Then(/^the user "([^"]*)" see collaboration request button$/) do |button_present|
+Then('the user {string} see collaboration request button') do |button_present|
   case button_present.downcase
   when 'should'
     page.should have_content 'Invite your group to help?'
@@ -71,72 +71,109 @@ Then(/^the user "([^"]*)" see collaboration request button$/) do |button_present
   end
 end
 
-When(/^the user populates (\d+) additional "([^"]*)" entries$/) do |count, field|
+When('the user populates {int} additional {string} entries') do |count, field|
   # required_term_count = @bingo.required_terms_for_group(@bingo.project.group_for_user(@user))
 
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
 
+  # Support a current list of all entries
+  @entries_lists['all'] = [] if @entries_lists['all'].nil?
+  entries_list_a = @entries_lists['all']
+
+  balance_field = 'definition' == field ? 'term' : 'definition'
+
   existing_count = @entries_list.count
-  count.to_i.times do |index|
-    if @entries_list[existing_count + index].blank?
+  index = 0
+  counter = 0
+  while counter < count do
+    field_elem = find( :xpath, "//*[@id='#{field}_#{existing_count + index}']")
+    if @entries_list[existing_count + index].nil?
       @entries_list[existing_count + index] = { 'term' => '', 'definition' => '' }
     end
-    @entries_list[existing_count + index][field] = if field == 'term'
-                                                     Faker::Company.industry
-                                                   else
-                                                     Faker::Company.bs
-                                                   end
-    page.fill_in("#{field}_#{existing_count + index}",
-                 with: @entries_list[existing_count + index][field])
+    if field_elem.value.blank?
+      @entries_list[existing_count + index][field] = if 'term' == field
+                                                       Faker::Company.industry
+                                                     else
+                                                       Faker::Company.bs
+                                                     end
+      balance_field_elem = find( :xpath, "//*[@id='#{balance_field}_#{existing_count + index}']")
+      @entries_list[existing_count + index][balance_field] = balance_field_elem.value
+      # field_elem = find( :xpath, "//*[@id='#{field}_#{existing_count + index}']")
+      field_elem.click
+      field_elem.send_keys [:command,'a'], :backspace
+      field_elem.send_keys [:control,'a'], :backspace
+      field_elem.send_keys  @entries_list[existing_count + index][field]
+      counter += 1
+    else
+      @entries_list[existing_count + index][field] = field_elem.value
+    end
+    balance_field_elem = find( :xpath, "//*[@id='#{balance_field}_#{existing_count + index}']")
+    @entries_list[existing_count + index][balance_field] = balance_field_elem.value
+    entries_list_a[existing_count + index] = @entries_list[existing_count + index]
+    index += 1
+
   end
 end
 
-When(/^the user changes the first (\d+) "([^"]*)" entries$/) do |count, field|
+When('the user changes a random {int} {string} entries') do |count, field|
   @entries_lists = {} if @entries_lists.nil?
   @entries_lists[@user] = [] if @entries_lists[@user].nil?
   @entries_list = @entries_lists[@user]
 
+  # Support a current list of all entries
+  @entries_lists['all'] = [] if @entries_lists['all'].nil?
+  entries_list_a = @entries_lists['all']
+
+  balance_field = 'term' == field ? 'definition' : 'term'
+
   entries_array = []
-  @entries_lists.each_key do |user_id|
-    @entries_lists[user_id].each do |entry|
-      entries_array.push entry
-    end
-  end
+  # @entries_lists.keys.each do |user_id|
+  #   @entries_lists[user_id].each do |entry|
+  #     entries_array.push entry
+  #   end
+  # end
   field_count = page.all(:xpath, "//textarea[contains(@id, 'definition_')]").count
 
   count.to_i.times do |_index|
     # Index to the field to change
-    rand_ind = Random.rand(field_count)
+    rand_ind = Random.rand(field_count) - 1
 
     # Pull the existing values
     existing_term = page.find(:xpath, "//input[@id='term_#{rand_ind}']").value
     existing_def = page.find(:xpath, "//textarea[@id='definition_#{rand_ind}']").value
 
     # Gen the new term
-    new_val = if field == 'term'
+    new_val = if 'term' == field
                 Faker::Company.industry
               else
                 Faker::Company.bs
               end
 
     if existing_term.blank? && existing_def.blank?
-      @entries_list.push({ field => new_val })
+      @entries_list.push({
+        field => new_val,
+        balance_field => ''
+      })
     else
       found = false
       entries_array.each do |entry|
-        if field == 'term' && entry['definition'] == existing_def
+        if 'term' == field && entry['definition'] == existing_def
           entry['term'] = new_val
-          page.fill_in("#{field}_#{rand_ind}",
-                       with: new_val)
+          entry['definition'] = existing_def
           found = true
-        elsif field == 'definition' && entry['term'] == existing_term
+        elsif 'definition' == field && entry['term'] == existing_term
           entry['definition'] = new_val
-          page.fill_in("#{field}_#{rand_ind}",
-                       with: new_val)
+          entry['term'] = existing_term
           found = true
         end
+        to_fill_elem = find( :xpath, "//*[@id='#{field}_#{rand_ind}']")
+        to_fill_elem.click
+        send_keys [:command, 'a'], :backspace
+        send_keys [:control, 'a'], :backspace
+        send_keys new_val
+        entries_list_a[rand_ind][field] = new_val
 
         break if found
       end
@@ -153,9 +190,8 @@ Then(/^the candidate lists have been merged$/) do
     @entries_lists[user].each do |list_item|
       combined_list << list_item if list_item['term'].present? || list_item['definition'].present?
     end
-  end
-  @bingo.project.group_for_user(@user).users.each do |user|
     @entries_lists[user] = combined_list
+    @entries_lists['all'] = combined_list.clone
   end
 end
 

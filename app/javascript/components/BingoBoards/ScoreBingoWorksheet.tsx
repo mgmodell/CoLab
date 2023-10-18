@@ -13,6 +13,7 @@ import TextField from "@mui/material/TextField";
 
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
+import parse from "html-react-parser";
 
 export default function ScoreBingoWorksheet(props) {
   const category = "bingo_game";
@@ -123,11 +124,7 @@ export default function ScoreBingoWorksheet(props) {
           <h2>{t("description")}:</h2>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <p
-            dangerouslySetInnerHTML={{
-              __html: description
-            }}
-          />
+          <p>{parse(description)}</p>
         </Grid>
         <Grid item xs={12} sm={12}>
           <table>

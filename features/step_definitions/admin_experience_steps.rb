@@ -4,13 +4,38 @@ Then 'retrieve the latest Experience from the db' do
   @experience = Experience.last
 end
 
-Then 'the user sets the experience {string} date to {string}' do |ordinal, date|
-  new_date = date.blank? ? '' : Chronic.parse(date).strftime('%m/%d/%Y')
+Then 'the user sets the experience {string} date to {string}' do |ordinal, date_value|
   case ordinal.downcase
   when 'start'
-    page.find('#experience_start_date').set(new_date)
+    field_name = 'Experience Start Date'
+    begin
+      find(:xpath, "//label[text()='#{field_name}']").click
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+      field_id = find(:xpath, "//label[text()='#{label}']")['for']
+      field = find(:xpath, "//input[@id='#{field_id}']")
+      field.click
+    end
+    new_year = Chronic.parse(date_value).strftime('%Y')
+    new_date = Chronic.parse(date_value).strftime('%m%d')
+    send_keys :right, :right
+    send_keys new_year
+    send_keys :left, :left
+    send_keys new_date
   when 'end'
-    page.find('#experience_end_date').set(new_date)
+    field_name = 'Experience End Date'
+    begin
+      find(:xpath, "//label[text()='#{field_name}']").click
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+      field_id = find(:xpath, "//label[text()='#{label}']")['for']
+      field = find(:xpath, "//input[@id='#{field_id}']")
+      field.click
+    end
+    new_year = Chronic.parse(date_value).strftime('%Y')
+    new_date = Chronic.parse(date_value).strftime('%m%d')
+    send_keys :right, :right
+    send_keys new_year
+    send_keys :left, :left
+    send_keys new_date
   else
     log "Invalid ordinal: #{ordinal}"
     pending
@@ -29,7 +54,14 @@ Then 'the experience start date is {string} and the end date is {string}' do |st
   @experience.end_date.change(sec: 0).should eq test_date.change(sec: 0)
 end
 
-Then 'the user clicks {string} on the existing experience' do |_action|
-  find(:xpath, "//td[contains(.,'#{@experience.name}')]").click
-  # find(:xpath, "//tr[td[contains(.,'#{@experience.name}')]]/td/a", text: action).click
+Then 'the user edits the existing experience' do
+  find(:xpath, "//div[text()='#{@experience.name}']").hover
+  begin
+    find(:xpath, "//div[text()='#{@experience.name}']").click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+    # If that gives an error, it's because of the readability popup
+    # We can click either of the items this finds because they are effectively the same
+    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@experience.name}')]")[0].click
+  end
+  wait_for_render
 end

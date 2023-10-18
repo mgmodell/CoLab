@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CoursesController < ApplicationController
+  include PermissionsCheck
+
   layout 'admin', except: %i[self_reg self_reg_confirm]
   before_action :set_course, only: %i[show edit update destroy
                                       add_students add_instructors calendar
@@ -33,20 +35,22 @@ class CoursesController < ApplicationController
           )
         }
         if current_user.is_instructor? || current_user.is_admin?
+          anon = current_user.anonymize?
           if @course.id&.positive?
             response[:new_activity_links] = [
               { name: 'Group Experience', link: 'experience' },
               { name: 'Project', link: 'project' },
-              { name: 'Terms List', link: 'bingo_game' }
+              { name: 'Terms List', link: 'bingo_game' },
+              { name: 'Assignment', link: 'assignment' }
             ]
             activities = @course.get_activities.collect do |activity|
               {
                 id: activity.id,
-                name: activity.get_name(@anon),
+                name: activity.get_name(anon),
                 active: activity.active,
                 type: activity.type,
-                start_date: @anon ? activity.start_date + @course.anon_offset : activity.start_date,
-                end_date: @anon ? activity.end_date + @course.anon_offset : activity.end_date,
+                start_date: anon ? activity.start_date + @course.anon_offset : activity.start_date,
+                end_date: anon ? activity.end_date + @course.anon_offset : activity.end_date,
                 link: activity.get_link
               }
             end
@@ -65,7 +69,7 @@ class CoursesController < ApplicationController
   end
 
   def get_users
-    rosters = @course.rosters
+    @course.rosters
     users = []
     @course.rosters.each do |roster|
       users << {
@@ -73,13 +77,14 @@ class CoursesController < ApplicationController
       }
     end
 
+    anon = current_user.anonymize?
     users = @course.rosters.collect do |roster|
       user = roster.user
       {
         id: roster.id,
-        first_name: @anon ? user.anon_first_name : user.first_name,
-        last_name: @anon ? user.anon_last_name : user.last_name,
-        email: @anon ? "#{user.last_name_anon}@mailinator.com" : user.email,
+        first_name: anon ? user.anon_first_name : user.first_name,
+        last_name: anon ? user.anon_last_name : user.last_name,
+        email: anon ? "#{user.last_name_anon}@mailinator.com" : user.email,
         bingo_data: user.get_bingo_data(course_id: @course.id),
         bingo_performance: user.get_bingo_performance(course_id: @course.id),
         assessment_performance: user.get_assessment_performance(course_id: @course.id),
@@ -596,7 +601,7 @@ class CoursesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_course
     if current_user.is_admin?
-      @course = if params[:id].blank? || params[:id] == 'new'
+      @course = if params[:id].blank? || 'new' == params[:id]
                   Course.new(
                     school_id: current_user.school_id,
                     timezone: current_user.timezone
@@ -613,20 +618,6 @@ class CoursesController < ApplicationController
 
   def set_reg_course
     @course = Course.find(params[:id])
-  end
-
-  def check_viewer
-    redirect_to root_path unless current_user.is_admin? ||
-                                 current_user.is_instructor? ||
-                                 current_user.is_researcher?
-  end
-
-  def check_admin
-    redirect_to root_path unless current_user.is_admin?
-  end
-
-  def check_editor
-    redirect_to root_path unless current_user.is_admin? || current_user.is_instructor?
   end
 
   def course_params

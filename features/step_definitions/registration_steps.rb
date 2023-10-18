@@ -11,7 +11,7 @@ Then(/^the user will see a consent request$/) do
 end
 
 When(/^the user "(.*?)" provide consent$/) do |does_or_does_not|
-  consent = does_or_does_not == 'does'
+  consent = 'does' == does_or_does_not
   chkbox = find(:xpath, "//label[contains(.,'I agree')]")
   chkbox.click if chkbox.checked? != consent
   click_button 'Record my response to this Consent Form'
@@ -43,7 +43,7 @@ Given(/^a user has signed up$/) do
 end
 
 When(/^the user "(.*?)" fill in demographics data$/) do |does_or_does_not|
-  give_demographics = does_or_does_not == 'does'
+  give_demographics = 'does' == does_or_does_not
   if give_demographics
     find(:xpath, "//div[@id='demographics']").click
 
@@ -95,7 +95,7 @@ When(/^the new user registers$/) do
   expect(@user).to be
 end
 
-Given(/^(\d+) users$/) do |user_count|
+Given '{int} users' do |user_count|
   @users = []
   user_count.to_i.times do
     u = User.new(
@@ -123,7 +123,7 @@ Given(/^a course$/) do
   )
   @course.save
   @course.get_name(true).should_not be_nil
-  @course.get_name(true).length.should be > 0
+  @course.get_name(true).length.should be  > 0
 end
 
 Then(/^the users are added to the course by email address$/) do
@@ -172,7 +172,7 @@ Given(/^the users are confirmed$/) do
 end
 
 Then(/^the user "([^"]*)" enrollment in the course$/) do |accept|
-  if accept == 'accepts'
+  if 'accepts' == accept
     click_link_or_button 'Accept'
   else
     click_link_or_button 'Decline'
@@ -188,7 +188,7 @@ Then(/^the user sees (\d+) invitation$/) do |invitation_count|
   end
 
   page.should have_content 'confirm that you are actually enrolled in'
-  if invitation_count.to_i == 1
+  if 1 == invitation_count.to_i
     page.should have_content 'the course listed below'
   else
     page.should have_content "#{invitation_count} courses listed below"

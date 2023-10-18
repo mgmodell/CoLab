@@ -1,6 +1,6 @@
 import React, { Suspense, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -23,6 +23,7 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 // import LinkedSliders from './LinkedSliders';
 import LinkedSliders from "linked-sliders/dist/LinkedSliders";
 import axios from "axios";
+import parse from "html-react-parser";
 export default function InstallmentReport(props) {
   const endpointSet = "installment";
   const endpoints = useTypedSelector(
@@ -32,6 +33,7 @@ export default function InstallmentReport(props) {
     state => state.context.status.endpointsLoaded
   );
   const user = useTypedSelector(state => state.profile.user);
+  const navigate = useNavigate();
 
   const { installmentId } = useParams();
 
@@ -189,6 +191,7 @@ export default function InstallmentReport(props) {
             {}
           );
           setContributions(receivedContributions);
+          navigate(`..`);
         }
         setMessages(data.messages);
         setShowAlerts(true);
@@ -222,16 +225,16 @@ export default function InstallmentReport(props) {
       </Collapse>
       <Suspense fallback={<Skeleton variant="text" height={15} />}>
         <h1>{t("subtitle")}</h1>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: t("instructions", {
+        <p>
+          {parse(
+            t("instructions", {
               group_name: group.name,
               project_name: project.name,
               member_count: Object.keys(group.users || {}).length,
               factor_count: Object.keys(factors || {}).length
             })
-          }}
-        />
+          )}
+        </p>
         <p>{t("slider.instructions")}</p>
       </Suspense>
       <Suspense fallback={<Skeleton variant="rectangular" height={300} />}>

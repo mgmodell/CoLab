@@ -27,38 +27,36 @@ export default function AppHeader(props) {
     <React.Fragment>
       <AppBar id="title_head" position="fixed">
         <Toolbar>
-          <Suspense
-            fallback={<Skeleton variant="rectangular" width={32} height={32} />}
-          >
-            {endpointsLoaded ? (
-              <MainMenu
-                diversityScoreFor={endpoints.diversityScoreFor}
-                reportingUrl={endpoints.reportingUrl}
-                supportAddress={endpoints.supportAddress}
-                moreInfoUrl={endpoints.moreInfoUrl}
-              />
-            ) : (
-              <Skeleton variant="rectangular" width={32} height={32} />
-            )}
-          </Suspense>
+                {
+                  endpoints !== undefined ? (
+                    <MainMenu
+                      diversityScoreFor={endpoints.diversityScoreFor}
+                      reportingUrl={endpoints.reportingUrl}
+                      supportAddress={endpoints.supportAddress}
+                      moreInfoUrl={endpoints.moreInfoUrl}
+                    />
+                  ) : (
+                    <Skeleton variant="rectangular" width={32} height={32} />
+                  )
+                }
           <Logo height={32} width={32} />
 
-          {endpointsLoaded ? (
             <Suspense fallback={<Skeleton variant="text" />}>
               <Typography>
                 {t("title")}
                 <br />
-                <Quote url={endpoints.quotePath} />
+                {
+                  endpoints !== undefined ? (
+                    <Quote url={endpoints.quotePath} />
+                  ) : (
+                    <Skeleton variant={'text'} />
+                  )
+                }
               </Typography>
             </Suspense>
-          ) : (
-            <Skeleton variant="text" />
-          )}
-          {endpointsLoaded ? (
-            <HelpMenu lookupUrl={endpoints.lookupsUrl} />
-          ) : (
-            <Skeleton variant="circular" />
-          )}
+          <Suspense fallback={<Skeleton variant={'circular'} />} >
+            <HelpMenu lookupUrl={endpoints?.lookupsUrl} />
+          </Suspense>
         </Toolbar>
       </AppBar>
       <Toolbar />

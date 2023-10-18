@@ -5,15 +5,16 @@ Feature: Rubric administration
   Background:
     Given a user has signed up
     Given the user "has" had demographics requested
-    Given there are 4 "published" rubrics starting with 'Ruby '
-    Given there are 4 "unpublished" rubrics starting with "Never gonna' give you up "
+    Given there are 4 "published" rubrics starting with 'Ruby'
+    Given there are 4 "unpublished" rubrics starting with "Never gonna' give you up"
     Given there is a course with an assessed project
-    Given the user is the instructor for the course
     Given the course has 8 confirmed users
+    Given the user is the most recently created user
+    Given the user is the instructor for the course
     Given the course has an assignment named "Sack Troy" with an "unpublished" rubric named "Trojan War Diorama"
     Given the course started "5/10/1976" and ended "5 months from now"
     Given the project started "5/10/1976" and ends "11/01/2012", opened "Saturday" and closes "Monday"
-    Given the assignment's opening is "2/29/1980" and close is "7/10/2008"
+    Given the assignment opening is "2/29/1980" and close is "7/10/2008"
     Given the course started "5/10/1976" and ended "11/01/2012"
     Given the user logs in
     Then the user "does" see an Admin button
@@ -23,24 +24,23 @@ Feature: Rubric administration
   @javascript
   Scenario: Instructor creates a rubric
     Then the user sees 5 rubrics
-    Then the user clicks the "New Rubic" button
+    Then the user clicks the "New rubric" button
      And the user sets the "Name" field to "Elderly Tech. Talk"
      And the user sets the "Description" field to "Students prepare and deliver a presentation explaining a technology topic to elderly members of their community."
-     And the user sets the "Passing" field to "65"
      And the user sets criteria 1 "Description" to "History"
      And the user sets criteria 1 level 3 to "Introduces 3 important milestones and 3 important people in the evolution of the technology"
      And the user sets criteria 1 level 2 to "Introduces fewer than 3 important milestones or fewer than 3 important people in the evolution of the technology"
      And the user sets criteria 1 level 1 to "Introduces fewer than 3 total important milestones and important people in the evolution of the technology"
-     And the user sees the criteria 1 weight is 10
+     And the user sees the criteria 1 weight is 1
     Then the user adds a new criteria
     Then the user will see an empty criteria 2
-     And the user sets criteria 2 "Description" to to "Functionality"
+     And the user sets criteria 2 "Description" to "Functionality"
      And the user sets criteria 2 level 2 to "Introduces fewer than 3 common features with understandable explanations of how they work"
+     And the user sees the criteria 2 weight is 1
+     And the user sets the criteria 2 weight to 3
      And the user sets criteria 2 level 1 to "Introduces fewer than 3 common features and explains how each one works"
      And the user sets criteria 2 level 3 to "Introduces 3 common features and explains how each one works"
-     And the user sees the criteria 2 weight is 10
-     And the user sets the criteria 2 weight to 30
-    Then the user clicks "Create Rubric"
+    Then the user clicks the "save-rubric" button
     Then close all messages
     #Check what was saved
     Then retrieve the "latest" rubric from the db
@@ -48,19 +48,16 @@ Feature: Rubric administration
      And the rubric version is 1
      And the rubric "Name" field is "Elderly Tech. Talk"
      And the rubric "Description" field is "Students prepare and deliver a presentation explaining a technology topic to elderly members of their community."
-     And the rubric "Passing" field is "65"
      And the rubric criteria 1 "Description" is "History"
      And the rubric criteria 1 level 3 is "Introduces 3 important milestones and 3 important people in the evolution of the technology"
      And the rubric criteria 1 level 2 is "Introduces fewer than 3 important milestones or fewer than 3 important people in the evolution of the technology"
      And the rubric criteria 1 level 1 is "Introduces fewer than 3 total important milestones and important people in the evolution of the technology"
-     And the rubric criteria 1 weight is 10
-    Then the user adds a new criteria
-    Then the user will see an empty criteria 2
-     And the rubric criteria 2 "Description" to to "Functionality"
-     And the rubric criteria 2 level 2 to "Introduces fewer than 3 common features with understandable explanations of how they work"
-     And the rubric criteria 2 level 1 to "Introduces fewer than 3 common features and explains how each one works"
-     And the rubric criteria 2 level 3 to "Introduces 3 common features and explains how each one works"
-     And the rubric criteria 2 weight is 30
+     And the rubric criteria 1 weight is 1
+     And the rubric criteria 2 "Description" is "Functionality"
+     And the rubric criteria 2 level 2 is "Introduces fewer than 3 common features with understandable explanations of how they work"
+     And the rubric criteria 2 level 1 is "Introduces fewer than 3 common features and explains how each one works"
+     And the rubric criteria 2 level 3 is "Introduces 3 common features and explains how each one works"
+     And the rubric criteria 2 weight is 3
 
   @javascript
   Scenario: Instructor searches for a published rubric
@@ -86,9 +83,9 @@ Feature: Rubric administration
   @javascript
   Scenario: Instructor publishes a rubric
     Then the user searches for "Trojan"
-    Then the user edits the rubric
+    Then the user edits the "Trojan War Diorama" rubric
      And close all messages
-     And the user clicks 'Save and publish'
+     And the user clicks 'Publish Rubric'
     Then the user will see "success"
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
@@ -97,28 +94,22 @@ Feature: Rubric administration
     
 
   @javascript
-  Scenario: Instructor unpublishes their rubric
+  Scenario: Instructor deactivates and activates their published rubric
    Given the "Trojan War Diorama" rubric is published
     Then the user searches for "Trojan"
-    Then the user edits the rubric
-     And the user clicks "Save and Unpublish"
+    Then the user edits the "Trojan War Diorama" rubric
+     And the user clicks "Deactivate Rubric"
     Then the user will see "success"
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
      And the rubric "Name" field is "Trojan War Diorama"
-     And the rubric "is not" published
-
-  @javascript
-  Scenario: Admin unpublishes a rubric
-   Given the user is an admin
-    Then the user searches for "Ruby 1"
-    Then the user edits the rubric
-     And the user clicks "Save and Unpublish"
+     And the rubric "is not" active
+     And the user clicks "Activate Rubric"
     Then the user will see "success"
     #Check what was saved
-    Then retrieve the "Ruby 1" rubric from the db
-     And the rubric "Name" field is "Ruby 1"
-     And the rubric "is not" published
+    Then retrieve the "Trojan War Diorama" rubric from the db
+     And the rubric "Name" field is "Trojan War Diorama"
+     And the rubric "is" active
 
   @javascript
   Scenario: Instructor copies their own rubric
@@ -127,10 +118,10 @@ Feature: Rubric administration
     Then the user will see "success"
     #Check what was saved
     Then retrieve the "latest" rubric from the db
-     And the rubric "Name" is "Trojan War Diorama"
-     And the rubric "Version" is 2
+     And the rubric "Name" is "Trojan War Diorama (copy)"
+     And the rubric "Version" is 1
      And the rubric owner "is" the user
-     And the rubric parent is "Trojan War Diorama" "Version" 1
+     And the rubric parent is empty
      And the rubric "is not" published
 
 
@@ -141,37 +132,36 @@ Feature: Rubric administration
     Then the user will see "success"
     #Check what was saved
     Then retrieve the "latest" rubric from the db
-     And the rubric "Name" is "Ruby 1"
+     And the rubric "Name" is "Ruby 1 (copy)"
      And the rubric "Version" is 1
      And the rubric owner "is" the user
-     And the rubric parent is "Ruby 1" "Version" 1
+     And the rubric parent is empty
      And the rubric "is not" published
 
   @javascript
   Scenario: Instructor adds a row to their unpublished rubric
      And the "Trojan War Diorama" rubric has 5 criteria
     Then the user searches for "Trojan"
-    Then the user edits the rubric
+    Then the user edits the "Trojan War Diorama" rubric
     Then the user adds a new criteria
     Then the user will see an empty criteria 6
-     And the user sets criteria 6 "Description" to to "New Criteria"
+     And the user sets criteria 6 "Description" to "New Criteria"
      And the user sets criteria 6 level 1 to "level 1"
      And the user sets criteria 6 level 2 to "level 2"
      And the user sets criteria 6 level 3 to "level 3"
      And the user adds a level to criteria 6
      And the user sets criteria 6 level 4 to "level 4"
      And the user sets the criteria 6 weight to 30
-    Then the user clicks "Update Rubric"
+    Then the user clicks "Save Rubric"
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
      And the user is the owner of the rubric
      And the rubric version is 1
-     And the rubric "Passing" field is "65"
      And the rubric criteria 6 "Description" is "New Criteria"
      And the rubric criteria 6 level 3 is "level 3"
-     And the rubric criteria 6 level 2 is "level 3"
-     And the rubric criteria 6 level 1 is "level 3"
+     And the rubric criteria 6 level 2 is "level 2"
+     And the rubric criteria 6 level 1 is "level 1"
      And the rubric criteria 6 level 4 is "level 4"
      And the rubric criteria 6 weight is 30
 
@@ -182,10 +172,11 @@ Feature: Rubric administration
     Then retrieve the "Trojan War Diorama" rubric from the db
     Then remember the data for criteria 3
     Then the user searches for "Trojan"
-    Then the user edits the rubric
+    Then the user edits the "Trojan War Diorama" rubric
+    Then 'decrement' sequence of remembered criteria by 1
      And the user sees that criteria 3 matches the remembered criteria
-     And the user delete's criteria 2
-    Then the user clicks "Update Rubric"
+     And the user deletes criteria 2
+    Then the user clicks "Save Rubric"
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
@@ -197,14 +188,16 @@ Feature: Rubric administration
     Then retrieve the "Trojan War Diorama" rubric from the db
     Then remember the data for criteria 3
     Then the user searches for "Trojan"
-    Then the user edits the rubric
-    Then the user moves criteria 3 up 1
+    Then the user edits the "Trojan War Diorama" rubric
+    Then the user moves criteria 3 'up'
      And the user sets criteria 5 level 3 to "super-duper"
      And the user adds a level to criteria 4
      And the user sets criteria 4 level 4 to "super duper level 4"
      And the user adds a level to criteria 4
      And the user sets criteria 4 level 5 to "super duper level 5"
-    Then the user clicks "Update Rubric"
+     And the user copies criteria 4
+    Then the user clicks "Save Rubric"
+    Then the user will see "success"
     Then close all messages
     #Check what was saved
     Then retrieve the "Trojan War Diorama" rubric from the db
@@ -212,24 +205,38 @@ Feature: Rubric administration
      And the rubric criteria 5 level 3 is "super-duper"
      And the rubric criteria 4 level 4 is "super duper level 4"
      And the rubric criteria 4 level 5 is "super duper level 5"
+     And the rubric criteria 6 level 4 is "super duper level 4"
 
   @javascript
   Scenario: Admin deletes an unpublished rubric
    Given the user is an admin
-    Then the user searches for "Ruby 1"
-    Then the user deletes the rubric
+    Then the user searches for "Never gonna' give you up"
+    Then the user deletes the "Never gonna' give you up 3" rubric
 
   @javascript
-  Scenario: Admin cannot delete a rubric that is in published
+  Scenario: Admin cannot delete a rubric that is published
    Given the user is an admin
     Then the user searches for "Ruby 1"
-     And the user can not 'delete' the rubric
+    Then the user can not 'delete' the "Ruby 1" rubric
 
   @javascript
-  Scenario: Instructor cannot modify a published rubric
-    Then the user searches for "Trojan"
-     And the user can not 'delete' the rubric
-     And the user can not 'edit' the rubric
+  Scenario: Modifying a published rubric results in a new version
+     And retrieve the "Ruby 1" rubric from the db
+    Then the user searches for "Ruby 1"
+    Then the user can not 'delete' the "Ruby 1" rubric
+    Then the user edits the "Ruby 1" rubric
+    Then the user adds a new criteria
+    Then the user adds a new criteria
+     And the user sets criteria 2 level 2 to "super-duper"
+     And the user copies criteria 2
+    Then the user clicks "Save Rubric"
+    Then close all messages
+    #Check what was saved
+    Then retrieve the latest child of the rubric
+     And the rubric "Name" field is "Ruby 1"
+     And the rubric has a parent
+     And the rubric version is 2
+     And the rubric criteria 2 level 2 is "super-duper"
 
   # For later implementation
   # Scenario: Instructor adds a counter element to a rubric

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
 //Redux store stuff
 import { useDispatch } from "react-redux";
@@ -200,78 +200,84 @@ export default function SignIn(props) {
     </Grid>
   );
 
-  if (loggingIn) {
+  if (loggingIn || oauth_client_ids === undefined) {
     return <Skeleton variant="rectangular" height="300" />;
   } else if (isLoggedIn) {
     return <Navigate replace to={state.from || "/"} />;
   } else {
     return (
-      <GoogleOAuthProvider clientId={oauth_client_ids["google"]}>
-        <Paper>
-          <TabContext value={curTab}>
-            <TabList
-              onChange={(evt, newVal) => {
-                setCurTab(newVal);
-              }}
-            >
-              <Tab label={t("sessions.login")} value="login" />
-              <Tab label={t("registrations.signup_tab")} value="register" />
-              <Tab label={t("passwords.reset_tab")} value="password" />
-            </TabList>
-            <TabPanel value="login">
-              <Grid container>
-                {emailField}
-                <Grid item xs={12} sm={9}>
-                  <TextField
-                    label="Password"
-                    id="password"
-                    value={password}
-                    variant="standard"
-                    onChange={event => setPassword(event.target.value)}
-                    onKeyDown={submitOnEnter}
-                    type={showPassword ? "text" : "password"}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={() => {
-                              setShowPassword(!showPassword);
-                            }}
-                            onMouseDown={event => {
-                              event.preventDefault;
-                            }}
-                            size="large"
-                          >
-                            {showPassword ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
+      <Suspense fallback={<Skeleton variant={"rectangular"} height="300" />}>
+        <GoogleOAuthProvider clientId={oauth_client_ids["google"]}>
+          <Paper>
+            <TabContext value={curTab}>
+              <TabList
+                onChange={(evt, newVal) => {
+                  setCurTab(newVal);
+                }}
+              >
+                <Tab label={t("sessions.login")} value="login" />
+                <Tab label={t("registrations.signup_tab")} value="register" />
+                <Tab label={t("passwords.reset_tab")} value="password" />
+              </TabList>
+              <TabPanel value="login">
+                <Grid container>
+                  {emailField}
+                  <Grid item xs={12} sm={9}>
+                    <TextField
+                      label="Password"
+                      id="password"
+                      value={password}
+                      variant="standard"
+                      onChange={event => setPassword(event.target.value)}
+                      onKeyDown={submitOnEnter}
+                      type={showPassword ? "text" : "password"}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={() => {
+                                setShowPassword(!showPassword);
+                              }}
+                              onMouseDown={event => {
+                                event.preventDefault;
+                              }}
+                              size="large"
+                            >
+                              {showPassword ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-              {enterLoginBtn}
-              {clearBtn}
-              {oauthBtn}
-            </TabPanel>
-            <TabPanel value="register">
-              <Grid container>
-                {emailField}
-                {registerBlock}
+                {enterLoginBtn}
                 {clearBtn}
-              </Grid>
-            </TabPanel>
-            <TabPanel value="password">
-              <Grid container>
-                {emailField}
-                {passwordResetBtn}
-                {clearBtn}
-              </Grid>
-            </TabPanel>
-          </TabContext>
-        </Paper>
-      </GoogleOAuthProvider>
+                {oauthBtn}
+              </TabPanel>
+              <TabPanel value="register">
+                <Grid container>
+                  {emailField}
+                  {registerBlock}
+                  {clearBtn}
+                </Grid>
+              </TabPanel>
+              <TabPanel value="password">
+                <Grid container>
+                  {emailField}
+                  {passwordResetBtn}
+                  {clearBtn}
+                </Grid>
+              </TabPanel>
+            </TabContext>
+          </Paper>
+        </GoogleOAuthProvider>
+      </Suspense>
     );
   }
 }

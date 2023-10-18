@@ -3,21 +3,27 @@
 require 'faker'
 
 Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_prefix, date_value|
-  new_date = Chronic.parse(date_value).strftime('%m/%d/%Y')
-  elem = page.find(:id, "bingo_game_#{date_field_prefix}_date")
+  field_name = 'start' == date_field_prefix ? 'Open date' : 'Game date'
   begin
-    retries ||= 0
-    elem.click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError => e
-    log e.inspect
-    retry if (retries += 1) < 4
+    find(:xpath, "//label[text()='#{field_name}']").click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+    field_id = find(:xpath, "//label[text()='#{label}']")['for']
+    field = find(:xpath, "//input[@id='#{field_id}']")
+    field.click
   end
-  elem.set(new_date)
+  new_year = Chronic.parse(date_value).strftime('%Y')
+  # Be sure to enter the year first or leap years will break
+  new_date = Chronic.parse(date_value).strftime('%m%d')
+  send_keys :right, :right
+  send_keys new_year
+  send_keys :left, :left
+  send_keys new_date
 end
 
-Then(/^the user clicks "([^"]*)" on the existing bingo game$/) do |_action|
+Then('the user clicks on the existing bingo game') do
   click_link_or_button 'Activities'
-  find(:xpath, "//tr[td[contains(.,'#{@bingo.get_name(@anon)}')]]").click
+  find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{@bingo.get_name(@anon)}')]").click
+  wait_for_render
 end
 
 Then(/^retrieve the latest Bingo! game from the db$/) do
@@ -43,7 +49,7 @@ Given(/^the course has a Bingo! game$/) do
   @bingo.save
   if @bingo.persisted?
     @bingo.get_topic(true).should_not be_nil
-    @bingo.get_topic(true).length.should be > 0
+    @bingo.get_topic(true).length.should be  > 0
   end
   log @bingo.errors.full_messages if @bingo.errors.present?
 end
@@ -101,7 +107,7 @@ end
 
 Then('the {string} label is disabled') do |label|
   control = page.all(:xpath, "//label[contains(., '#{label}')][not(@disabled)]")
-  control.size.should be > 0
+  control.size.should be  > 0
 end
 
 Then('the bingo project is empty') do

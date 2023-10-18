@@ -6,15 +6,18 @@ print_help ( ) {
   echo " -s             Start the server (cannot be combined)"
   echo " -x             Stop the server (cannot be combined)"
   echo ""
-  echo " -l [sql dump]  Load DB from dump (assumes -m)"
-  echo " -j             Load latest dev db dump (assumes -m)"
+  echo " -l [sql dump]  Load DB from dump"
+  echo " -j             Load latest dev db dump"
   echo " -d             Migrate the DB"
   echo " -c             Run the rails console (then terminate)"
   echo " -o             Monitor the running server"
   echo " -t             Open up a terminal on the dev server"
   echo " -q             Open mysql terminal"
   echo " -m [task]      Run a migratify task (assumes -m)"
-  echo " -e [task]      Run a tEsting task (then terminate)"
+  echo " -e [task]      Run a tEsting task (then terminate;"
+  echo "                assumes -m)"
+  echo " -a [task]      Run a admin task (then terminate;"
+  echo "                assumes -m)"
   echo ""
   echo " -h             Show this help and terminate"
   
@@ -23,7 +26,7 @@ print_help ( ) {
 }
 
 show_output( ) {
-  OUTPUT_HASH=`docker ps | grep dev_env_app | awk '{print $1;}'`
+  OUTPUT_HASH=`docker ps | grep colab_dev_server | awk '{print $1;}'`
   docker logs -f $OUTPUT_HASH
 }
 
@@ -46,9 +49,13 @@ SHOW_HELP=false
 MIGRATE=false
 RUN_TASK_M=false
 RUN_TASK_E=false
+RUN_TASK_A=false
 LOAD=false
-WATCH=false
+WATCH=true
 STARTUP=false
+
+# Set up a variable for the container
+export HOSTNAME=$(hostname -s)
 
 if lsof -Pi :31337 -sTCP:LISTEN -t >/dev/null; then
   echo "DB Running"
@@ -60,7 +67,7 @@ else
 fi
 
 
-while getopts "cqtosjxm:l:e:h" opt; do
+while getopts "a:cqdtosjxm:l:e:h" opt; do
   case $opt in
     q)
       mysql colab_dev -u test -ptest --protocol=TCP --port=31337
@@ -81,7 +88,7 @@ while getopts "cqtosjxm:l:e:h" opt; do
       STARTUP=true
       ;;
     x)
-      OUTPUT_HASH=`docker ps | grep dev_env | awk '{print $1;}'`
+      OUTPUT_HASH=`docker ps | grep colab_dev | awk '{print $1;}'`
       docker kill $OUTPUT_HASH
       popd
       if [ -f tmp/pids/server.pid ] ; then
@@ -90,17 +97,22 @@ while getopts "cqtosjxm:l:e:h" opt; do
       exit
       ;;
     l)
-      MIGRATE=true
       LOAD=true
       LOAD_FILE="../../$OPTARG"
+      WATCH=false
       ;;
     j)
-      MIGRATE=true
       LOAD=true
       LOAD_FILE="../../db/dev_db.sql"
+      WATCH=false
       ;;
     o)
       WATCH=true
+      ;;
+    a)
+      RUN_TASK_A=true
+      RUN_TASK_A_NAME=$OPTARG
+      MIGRATE=true
       ;;
     e)
       RUN_TASK_E=true
@@ -108,6 +120,7 @@ while getopts "cqtosjxm:l:e:h" opt; do
       MIGRATE=true
       ;;
     m)
+      MIGRATE=true
       RUN_TASK_M=true
       RUN_TASK_M_NAME=$OPTARG
       ;;
@@ -136,7 +149,9 @@ fi
 if [ "$LOAD" = true ]; then
   if test -f "$LOAD_FILE"; then
     echo "Loading"
+    docker compose run --rm app "rails db:drop db:create COLAB_DB=db COLAB_DB_PORT=3306"
     mysql colab_dev -u test -ptest --protocol=TCP --port=31337 < $LOAD_FILE
+    docker compose run --rm app "rails bin/rails db:environment:set RAILS_ENV=development"
     echo "Loaded"
   else
     echo "File does not exist: $LOAD_FILE"
@@ -149,7 +164,7 @@ fi
 
 # Migrate the DB
 if [ "$MIGRATE" = true ]; then
-  echo 'Migrating'
+  echo "Migrating the DB..."
   docker compose run --rm app "rails db:migrate COLAB_DB=db COLAB_DB_PORT=3306"
 fi
 
@@ -163,6 +178,12 @@ fi
 if [ "$RUN_TASK_E" = true ]; then
   echo 'Testing Task'
   docker compose run --rm app "rails testing:$RUN_TASK_E_NAME COLAB_DB=db COLAB_DB_PORT=3306"
+fi
+
+# Run an admin task
+if [ "$RUN_TASK_A" = true ]; then
+  echo 'Admin Task'
+  docker compose run --rm app "rails admin:$RUN_TASK_A_NAME COLAB_DB=db COLAB_DB_PORT=3306"
 fi
 
 # Start the server

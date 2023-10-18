@@ -1,7 +1,6 @@
-![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mgmodell/CoLab?style=flat-square)
 ![GitHub language count](https://img.shields.io/github/languages/count/mgmodell/CoLab)
 [![All Contributors](https://img.shields.io/github/all-contributors/projectOwner/projectName?color=ee8449&style=flat-square)](#contributors)
-
+[![CucumberReports: CoLab](https://messages.cucumber.io/api/report-collections/8e5bd8ab-b12f-460d-85ff-861b1b841ad6/badge)](https://reports.cucumber.io/report-collections/8e5bd8ab-b12f-460d-85ff-861b1b841ad6)
 
 # README #
 
@@ -60,8 +59,8 @@ full guide::
     * `git checkout <enter_new_branch_name>`
 1. Create what you need
     * Create your own user account (if auth is working)
-    * `rake testing:set_admin['true','<email>']` will create new admin accounts with password 'password'
-    * `rake testing:examples['<email>']` will create some courses and activities for the specified user
+    * Run `./dev_serv.sh -e "haccess[`<yourEmail@something.com>`]"`
+    * Run `./dev_serv.sh -e "examples[`<yourEmail@something.com>`]"`
 1. Open [the test server](http://localhost:3000)
 1. Play with it to understand the problem
 1. Start writing tests
@@ -79,11 +78,3 @@ full guide::
 
 ## Contributors
 My wife, Misun, and my two children have been instrumental in making this possible by putting up with me throughout.
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->

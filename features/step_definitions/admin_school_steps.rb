@@ -26,13 +26,13 @@ end
 
 Then 'the user opens the school' do
   @school = School.last
-  row = find(:xpath, "//td[contains(.,'#{@school.name}')]")
+  row = find(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[contains(.,'#{@school.name}')]")
   row.click
 end
 
 Then 'the user selects {string} as the {string}' do |value, field|
   lbl = find(:xpath, "//label[text()='#{field}']")[:for]
-  elem = find(:xpath, "//*[@id='#{lbl}']").click
+  find(:xpath, "//*[@id='#{lbl}']").click
   find(:xpath, "//li[text()='#{value}']").click
 end
 

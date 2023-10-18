@@ -2,6 +2,7 @@
 
 require 'faker'
 class Project < ApplicationRecord
+  include DateSanitySupportConcern
   include TimezonesSupportConcern
   after_save :build_assessment
 
@@ -12,7 +13,7 @@ class Project < ApplicationRecord
   has_many :groups, inverse_of: :project, dependent: :destroy
   has_many :bingo_games, inverse_of: :project, dependent: :destroy
   has_many :assessments, inverse_of: :project, dependent: :destroy
-  has_many :installments, through: :assessments
+  has_many :installments, through: :assessments, dependent: :destroy
 
   has_many :users, through: :groups
   has_many :factors, through: :factor_pack
@@ -20,34 +21,31 @@ class Project < ApplicationRecord
   validates :name, :end_dow, :start_dow, presence: true
   validates :end_date, :start_date, presence: true
   before_create :anonymize
-  before_validation :init_dates
 
   validates :start_dow, :end_dow, numericality: {
     greater_than_or_equal_to: 0,
     less_than_or_equal_to: 6
   }
 
-  # Let's be sure the dates are valid
-  validate :date_sanity
-  validate :dates_within_course
+  # Business rule validation checks
   validate :activation_status
 
   # Set default values
   after_initialize do
     if new_record?
       self.active = false
-      # Simple/Goldfinch factor pack is the default
-      self.factor_pack_id = 1
+      # AECT 2023 factor pack is the default
+      self.factor_pack_id ||= 4
       # Sliders style
-      self.style_id = 2
-      self.start_dow = 5
-      self.end_dow = 1
+      self.style_id ||= 2
+      self.start_dow ||= 5
+      self.end_dow ||= 1
 
     end
   end
 
   def group_for_user(user)
-    if id == -1 # This hack supports demonstration of group term lists
+    if -1 == id # This hack supports demonstration of group term lists
       Group.new(name: 'SuperStars', users: [user])
     else
       groups.joins(:users).find_by(users: { id: user.id })
@@ -97,7 +95,6 @@ class Project < ApplicationRecord
   def get_activity_on_date(date:, anon:)
     day = date.wday
     o_string = get_name(anon)
-    add_string = ''
     add_string = if has_inside_date_range?
                    if day < start_dow || day > end_dow
                      ' (work)'
@@ -182,13 +179,13 @@ class Project < ApplicationRecord
 
     edit_url = nil
     destroy_url = nil
-    if user_role == 'instructor'
+    if 'instructor' == user_role
       edit_url = helpers.edit_project_path(self)
       destroy_url = helpers.project_path(self)
     end
 
-    if (active && user_role == 'enrolled_student') ||
-       (user_role == 'instructor')
+    if (active && 'enrolled_student' == user_role) ||
+       ('instructor' == user_role)
 
       days = get_days_applicable
 
@@ -216,31 +213,6 @@ class Project < ApplicationRecord
   private
 
   # Validation check code
-  def date_sanity
-    return if start_date.nil? || end_date.nil?
-
-    errors.add(:start_dow, 'The start date must come before the end date') if start_date > end_date
-    errors
-  end
-
-  def init_dates
-    self.start_date ||= course.start_date
-    self.end_date ||= course.end_date
-  end
-
-  def dates_within_course
-    if self.start_date < course.start_date
-      msg = 'The project cannot begin before the course has begun '
-      msg += "(#{start_date} < #{course.start_date})"
-      errors.add(:start_date, msg)
-    end
-    if self.end_date > course.end_date
-      msg = 'The project cannot continue after the course has ended '
-      msg += "(#{end_date} > #{course.end_date})"
-      errors.add(:end_date, msg)
-    end
-    errors
-  end
 
   def activation_status
     if active_before_last_save && active &&

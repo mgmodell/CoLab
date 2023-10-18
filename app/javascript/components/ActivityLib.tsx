@@ -1,18 +1,39 @@
-import React from "react";
-import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
-import GridOffIcon from "@mui/icons-material/GridOff";
-import TuneIcon from "@mui/icons-material/Tune";
+import React, { lazy } from "react";
+const AssignmentIcon = lazy(() => import("@mui/icons-material/Assignment"));
+const TuneIcon = lazy(() => import("@mui/icons-material/Tune"));
+const LocalLibraryIcon = lazy(() => import("@mui/icons-material/LocalLibrary"));
+const GridOffIcon = lazy(() => import("@mui/icons-material/GridOff"));
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import { Tooltip } from "@mui/material";
 
-export function iconForType(type) {
+export function iconForType(type: string) {
   var icon;
-  if (["Group Experience", "Experiences"].includes(type)) {
-    icon = <LocalLibraryIcon />;
-  } else if (["Project", "Assessments"].includes(type)) {
-    icon = <TuneIcon />;
-  } else if (["Terms List", "Bingo Games"].includes(type)) {
-    icon = <GridOffIcon />;
-  } else {
-    console.log(type);
+  switch (type.toLowerCase()) {
+    case "group experience":
+    case "experience":
+    case "experiences":
+      icon = <LocalLibraryIcon />;
+      break;
+    case "project":
+    case "assessment":
+    case "assessments":
+      icon = <TuneIcon />;
+      break;
+    case "terms list":
+    case "bingo_game":
+    case "bingo games":
+      icon = <GridOffIcon />;
+      break;
+    case "group assignment":
+    case "assignment":
+    case "Assignments":
+      icon = <AssignmentIcon />;
+      break;
+    case "submission":
+      icon = <AssignmentTurnedInIcon />;
+      break;
+    default:
+      console.log(`No icon match for: ${type}`);
   }
-  return icon;
+  return <Tooltip title={type}>{icon}</Tooltip>;
 }

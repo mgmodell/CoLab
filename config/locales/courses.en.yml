@@ -13,6 +13,17 @@ en:
       copy_new_start: When will this new course start?
       original_date: Existing course date
       copy_new_start_lbl: New course start date?
+      number_col: Number
+      name_col: Name
+      school_col: School
+      open_col: Open Date
+      close_col: Close Date
+      faculty_col: Faculty
+      students_col: Students
+      projects_col: Projects
+      experiences_col: Experiences
+      bingo_games_col: Bingo! Games
+      actions_col: Actions
     edit:
       title: Edit Course Details
       self_reg_dwnld: Download self-registration code
@@ -23,6 +34,7 @@ en:
       add_instructor_lbl: 'Add instructor by email:'
       add_student_lbl: 'Add student by email:'
       add: Add!
+      add_btn: Add {{user_type}}s!
       enrolled_count:
         one: There is one student enrolled.
         other: There are %{count} students enrolled.
@@ -53,7 +65,14 @@ en:
     no_roster: That user is not listed as a student in that course.
     editing: Editing Course
     participants: Participants
-    activities: Course Activities
+    activities: 
+      type_col: Type
+      name_col: Name
+      status_col: Status
+      open_col: Open date
+      close_col: Close date
+      delete_lbl: Delete
+      save_first_msg: You must save the course to have activities.
     re_invite: Re-Invite
     drop: Drop
     courses: Courses

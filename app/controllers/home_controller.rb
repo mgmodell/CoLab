@@ -4,9 +4,7 @@ class HomeController < ApplicationController
   # protect_from_forgery except: [:get_quote]
   skip_before_action :authenticate_user!, only: %i[index lookups endpoints demo_start get_quote]
 
-  def index
-    current_location = 'home'
-  end
+  def index; end
 
   def task_list
     waiting_tasks = current_user.waiting_student_tasks
@@ -54,20 +52,6 @@ class HomeController < ApplicationController
         oauthValidate: validation_path
       }
     }
-    ep_hash[:profile] = {
-      baseUrl: full_profile_path,
-      coursePerformanceUrl: user_courses_path,
-      activitiesUrl: user_activities_path,
-      consentFormsUrl: user_consents_path,
-
-      addEmailUrl: add_registered_email_path,
-      removeEmailUrl: remove_registered_email_path(email_id: ''),
-      setPrimaryEmailUrl: set_primary_registered_email_path(email_id: ''),
-      passwordResetUrl: initiate_password_reset_path,
-      passwordUpdateUrl: password_change_path,
-      # infrastructure
-      statesForUrl: states_for_path(country_code: '')
-    }
     ep_hash[:installment] = {
       baseUrl: edit_installment_path(assessment_id: ''),
       saveInstallmentUrl: installments_path
@@ -91,6 +75,20 @@ class HomeController < ApplicationController
       ep_hash[:home][ :courseRegUpdatesUrl] = proc_course_reg_requests_path
       ep_hash[:home][ :selfRegUrl] = self_reg_init_path(id: '')
 
+      ep_hash[:profile] = {
+        baseUrl: full_profile_path,
+        coursePerformanceUrl: user_courses_path,
+        activitiesUrl: user_activities_path,
+        consentFormsUrl: user_consents_path,
+
+        addEmailUrl: add_registered_email_path,
+        removeEmailUrl: remove_registered_email_path(email_id: ''),
+        setPrimaryEmailUrl: set_primary_registered_email_path(email_id: ''),
+        passwordResetUrl: initiate_password_reset_path,
+        passwordUpdateUrl: password_change_path,
+        # infrastructure
+        statesForUrl: states_for_path(country_code: '')
+      }
       ep_hash[:experience] = {
         baseUrl: next_experience_path(experience_id: ''),
         diagnosisUrl: diagnose_path,
@@ -99,6 +97,11 @@ class HomeController < ApplicationController
       ep_hash[:consent_log] = {
         baseUrl: edit_consent_log_path(consent_form_id: ''),
         consentLogSaveUrl: consent_log_path(id: '')
+      }
+      ep_hash[:assignment] = {
+        statusUrl: assignment_status_path(id: ''),
+        submissionUrl: submission_path(id: ''),
+        submissionWithdrawalUrl: submission_withdraw_path(id: '')
       }
 
       if current_user.is_admin? || current_user.is_instructor?
@@ -127,11 +130,20 @@ class HomeController < ApplicationController
           worksheetResultsUrl: ws_results_path(id: ''),
           worksheetScoreUrl: ws_score_path(id: '')
         }
+        ep_hash[:assignment][:baseUrl] = assignments_path
         ep_hash[:experience_admin] = {
           baseUrl: experiences_path
         }
         ep_hash[:concept] = {
           baseUrl: concepts_path
+        }
+        ep_hash[:rubric] = {
+          baseUrl: rubrics_path
+        }
+        ep_hash[:critique] = {
+          baseUrl: assignment_critiques_path(id: ''),
+          showUrl: critique_assignment_path(submission_id: ''),
+          updateUrl: critique_update_path(submission_feedback_id: '')
         }
         ep_hash[:consent_form] = {
           baseUrl: consent_forms_path,
@@ -161,13 +173,22 @@ class HomeController < ApplicationController
   end
 
   def get_lookups
-    lookups = {
+    {
       behaviors: Behavior.all.collect do |behavior|
         {
           id: behavior.id,
           name: behavior.name,
           description: behavior.description,
           needs_detail: behavior.needs_detail
+        }
+      end,
+      candidate_feedbacks: CandidateFeedback.all.collect do |candidate_feedback|
+        {
+          id: candidate_feedback.id,
+          name: candidate_feedback.name,
+          definition: candidate_feedback.definition,
+          credit: candidate_feedback.credit,
+          critique: candidate_feedback.critique
         }
       end,
       countries: HomeCountry.all.collect do |country|
@@ -347,13 +368,14 @@ class HomeController < ApplicationController
   end
 
   def user_activities
+    anon = current_user.anonymize?
     resp = current_user.activity_history.collect do |activity|
       {
         id: activity.id,
         type: activity.type,
-        course_name: activity.course.get_name(@anon),
-        course_number: activity.course.get_number(@anon),
-        name: activity.get_name(@anon),
+        course_name: activity.course.get_name(anon),
+        course_number: activity.course.get_number(anon),
+        name: activity.get_name(anon),
         close_date: activity.end_date,
         performance: case activity.type
                      when 'Terms List'
@@ -370,12 +392,16 @@ class HomeController < ApplicationController
                  activity.get_performance(current_user)
                when 'Group Experience'
                  activity.get_user_reaction(current_user).status
+               when 'Assignment'
+                 activity.get_submissions_for_user(current_user).size
                end,
         link: case activity.type
               when 'Terms List'
                 bingo_list_stats_path(activity.candidate_list_for_user(current_user))
               when 'Project'
                 nil
+              when 'Assignment'
+                "/#{activity.get_link}/#{activity.id}"
               when 'Group Experience'
                 nil
               end
@@ -472,7 +498,7 @@ class HomeController < ApplicationController
     e.start_time = 1.week.ago
     e.close_date = 4.days.from_now.end_of_day
     e.next_date = e.close_date
-    e.link = "/enter_candidates/#{e.id}"
+    e.link = "/bingo/enter_candidates/#{e.id}"
     e.instructor_task = false
     @events << e
 
@@ -487,9 +513,9 @@ class HomeController < ApplicationController
     e.group_name = t(:demo_group)
     e.course_name = t(:demo_course_name)
     e.start_time = 3.weeks.ago
-    e.close_date = Date.today.end_of_day
+    e.close_date = Time.zone.today.end_of_day
     e.next_date = e.close_date
-    e.link = "/review_candidates/#{e.id}"
+    e.link = "/bingo/review_candidates/#{e.id}"
     e.instructor_task = true
     # TODO: Enable the candidate review demo
     @events << e
@@ -507,7 +533,7 @@ class HomeController < ApplicationController
     e.start_time = 2.weeks.ago
     e.close_date = 1.day.from_now.end_of_day
     e.next_date = e.close_date
-    e.link = "/candidate_results/#{e.id}"
+    e.link = "/bingo/candidate_results/#{e.id}"
     e.instructor_task = false
     @events << e
 

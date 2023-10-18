@@ -13,7 +13,7 @@ class Diagnosis < ApplicationRecord
 
   def validate_other_name
     if !behavior_id.nil? &&
-       Behavior.find(behavior_id).name == 'Other' &&
+       'Other' == Behavior.find(behavior_id).name &&
        other_name.blank?
 
       errors.add(:other_name, I18n.t('diagnosis.other_name_rqrd'))

@@ -1,5 +1,52 @@
 namespace :migratify do
 
+  desc 'Updating the DB to accommodate updated factors'
+  task factor_update: :environment do
+    # FactorPack seed data
+    class FactorPack_
+      attr_accessor :name_en, :name_ko
+      attr_accessor :description_en, :description_ko
+    end
+    class Factor_
+      attr_accessor :fp
+      attr_accessor :name_en, :name_ko
+      attr_accessor :description_en, :description_ko
+    end
+    ActiveRecord::Base.transaction do
+      read_data = YAML.load_file(
+        'db/factor_pack.yml',
+        permitted_classes: [FactorPack_]
+        )
+      read_data.each do |factor_pack|
+        g = FactorPack.where(name_en: factor_pack.name_en).take
+        g = FactorPack.new if g.nil?
+        g.name_en = factor_pack.name_en unless g.name_en == factor_pack.name_en
+        g.name_ko = factor_pack.name_ko unless g.name_ko == factor_pack.name_ko
+        g.description_en = factor_pack.description_en unless g.description_en == factor_pack.description_en
+        g.description_ko = factor_pack.description_ko unless g.description_ko == factor_pack.description_ko
+        g.save
+      end
+
+
+      # Factor seed data
+      read_data = YAML.load_file(
+        'db/factor.yml',
+        permitted_classes: [Factor_]
+      )
+      read_data.each do |factor|
+        g = Factor.where(name_en: factor.name_en).take
+        g = Factor.new if g.nil?
+        fp = FactorPack.where(name_en: factor.fp).take
+        g.name_en = factor.name_en unless g.name_en == factor.name_en
+        g.name_ko = factor.name_ko unless g.name_ko == factor.name_ko
+        g.description_en = factor.description_en unless g.description_en == factor.description_en
+        g.description_ko = factor.description_ko unless g.description_ko == factor.description_ko
+        g.factor_pack = fp
+        g.save
+      end
+    end
+  end
+
   desc 'Applying for the react migration in the summer of 2020'
   task api_conversion: :environment do
     behavior = Behavior.find_by_name_en( 'Other' )
@@ -24,7 +71,9 @@ namespace :migratify do
     class Quote_
       attr_accessor :text_en, :attribution
     end
-    read_data = YAML.safe_load(File.open('db/quotes.yml'), [Quote_])
+    read_data = YAML.load_file(
+      'db/quotes.yml', 
+      permitted_classes: [Quote_])
     read_data.each do |quote|
       quote.text_en = quote.text_en.strip
       q = Quote.where(text_en: quote.text_en).take

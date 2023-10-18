@@ -17,7 +17,7 @@ Given(/^there is a course with an assessed project$/) do
     name: "#{Faker::Company.industry} Project",
     start_dow: 1,
     end_dow: 2,
-    style: Style.find(1)
+    style: Style.find(2)
   )
 
   @project.save
@@ -70,7 +70,7 @@ Given(/^the project has a group with (\d+) confirmed users$/) do |user_count|
   end
   @group.save
   @group.get_name(true).should_not be_nil
-  @group.get_name(true).length.should be > 0
+  @group.get_name(true).length.should be  > 0
   log @group.errors.full_messages if @group.errors.present?
 end
 
@@ -107,7 +107,7 @@ Then(/^the user will see the main index page$/) do
 end
 
 Given(/^the user "(.*?)" had demographics requested$/) do |with_demographics|
-  demographics_requested = with_demographics == 'has'
+  demographics_requested = 'has' == with_demographics
   @user.welcomed = demographics_requested
   @user.save!
   log @user.errors.full_messages if @user.errors.present?

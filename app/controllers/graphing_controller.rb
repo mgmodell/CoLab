@@ -24,10 +24,9 @@ class GraphingController < ApplicationController
   end
 
   def projects
-    for_research = params[:for_research]
+    params[:for_research]
     anon_req = params[:anonymous]
     anonymize = current_user.anonymize? || current_user.is_researcher? || anon_req
-    projects = []
     project_list = if current_user.admin || current_user.is_researcher?
                      Project.all.to_a
                    else
@@ -38,7 +37,7 @@ class GraphingController < ApplicationController
                    end
     project_list.collect! { |project| { id: project.id, name: project.get_name(anonymize) } }
 
-    project_list.sort! { |a, b| a[:name] <=> b[:name] }
+    project_list.sort_by! { |a| a[:name] }
     respond_to do |format|
       format.json { render json: project_list }
     end
@@ -67,7 +66,7 @@ class GraphingController < ApplicationController
 
     end
 
-    subjects.sort! { |a, b| a[:name] <=> b[:name] }
+    subjects.sort_by! { |a| a[:name] }
     # Return the retrieved data
     respond_to do |format|
       format.json { render json: subjects }
@@ -78,7 +77,7 @@ class GraphingController < ApplicationController
     unit_of_analysis = params[:unit_of_analysis].to_i
     project = Project.find(params[:project])
     subject = params[:subject]
-    for_research = params[:for_research]
+    params[:for_research]
     anon_req = params[:anonymous]
     anonymize = current_user.anonymize? || anon_req
 
@@ -215,9 +214,9 @@ class GraphingController < ApplicationController
     end
 
     factors = {}
-    dataset[:streams].each_value do |stream|
-      stream[:sub_streams].each_value do |substream|
-        substream[:factor_streams].each_value do |factor_stream|
+    dataset[:streams].values.each do |stream|
+      stream[:sub_streams].values.each do |substream|
+        substream[:factor_streams].values.each do |factor_stream|
           factors[factor_stream[:factor_id]] = {
             name: factor_stream[:factor_name],
             id: factor_stream[:factor_id]

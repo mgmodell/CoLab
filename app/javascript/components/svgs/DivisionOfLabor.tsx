@@ -5,7 +5,7 @@ export default function DivisionOfLabor(props) {
   const height = props.height || 72;
   const width = props.width || 72;
   const mounted = useRef(false);
-  const framed = props.framed || true;
+  const framed = props.framed === undefined ? true : props.framed;
 
   const viewBox = [0, 0, 6811, 5543].join(" ");
 

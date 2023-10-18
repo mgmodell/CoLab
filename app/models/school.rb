@@ -7,6 +7,7 @@ class School < ApplicationRecord
   has_many :projects, through: :courses
   has_many :experiences, through: :courses
   has_many :rosters, through: :courses
+  has_many :rubrics, inverse_of: :school, dependent: :nullify
 
   before_create :anonymize
   validates :name, :timezone, presence: true

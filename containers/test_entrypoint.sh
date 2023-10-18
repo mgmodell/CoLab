@@ -4,9 +4,6 @@ dir="$HOME/src/app/"
 
 if [[ $(find ${dir} -type f  | wc -l) -lt 1 ]]; then
   git clone https://github.com/mgmodell/CoLab.git $dir
-  git config --global pull.rebase false
-  git config --global push.autoSetupRemote true
-  git config --global branch.autoSetupMerge true
 fi
 
 cd $dir
@@ -24,6 +21,7 @@ else
 #    git branch --track "${branch##*/}" "$branch"
 #  done
 
+  git checkout .
   git pull --all
 
 fi

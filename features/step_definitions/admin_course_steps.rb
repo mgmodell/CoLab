@@ -15,12 +15,43 @@ Given "the user's school is {string}" do |school_name|
 end
 
 Then 'the user sets the start date to {string} and the end date to {string}' do |start_date, end_date|
-  # new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%Y-%m-%dT%T')
-  new_date = start_date.blank? ? '' : Chronic.parse(start_date).strftime('%m-%d-%Y')
-  page.find('#course_start_date').set(new_date)
-  # new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%Y-%m-%dT%T')
-  new_date = end_date.blank? ? '' : Chronic.parse(end_date).strftime('%m-%d-%Y')
-  page.find('#course_end_date').set(new_date)
+  label = 'Course Start Date'
+  begin
+    find(:xpath, "//label[text()='#{label}']").click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+    field_id = find(:xpath, "//label[text()='#{label}']")['for']
+    field = find(:xpath, "//input[@id='#{field_id}']")
+    field.click
+  end
+
+  if start_date.present?
+    new_year = Chronic.parse(start_date).strftime('%Y')
+    new_date = Chronic.parse(start_date).strftime('%m%d')
+    send_keys :right, :right
+    send_keys new_year
+    send_keys :left, :left
+    send_keys new_date
+  else
+    send_keys :left, :left, :delete, :tab, :delete, :tab, :delete
+  end
+
+  label = 'Course End Date'
+  begin
+    find(:xpath, "//label[text()='#{label}']").click
+  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+    field_id = find(:xpath, "//label[text()='#{label}']")['for']
+    field = find(:xpath, "//input[@id='#{field_id}']")
+    field.click
+  end
+  if end_date.present?
+    new_year = Chronic.parse(end_date).strftime('%Y')
+    new_date = Chronic.parse(end_date).strftime('%m%d')
+    send_keys :right, :right, new_year
+    send_keys :left, :left
+    send_keys new_date
+  else
+    send_keys :left, :left, :delete, :tab, :delete, :tab, :delete
+  end
 end
 
 Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
@@ -28,7 +59,7 @@ Then 'the timezone {string} {string}' do |is_or_isnt, timezone|
   lbl = find(:xpath, "//label[text()='#{field_lbl}']")
   elem = find(:xpath, "//*[@id='#{lbl[:for]}']")
 
-  if is_or_isnt == 'is'
+  if 'is' == is_or_isnt
     elem.text.should eq timezone
   else
     elem.text.should_not eq timezone
@@ -161,10 +192,12 @@ Then 'set the new course start date to {string}' do |new_date|
   label = find(:xpath, "//label[text()='New course start date?']")
   elem = find(:xpath, "//input[@id='#{label[:for]}']")
 
-  @new_date = Chronic.parse(new_date)
+  new_date = Chronic.parse(new_date)
 
   elem.click
-  elem.set(@new_date.strftime('%m/%d/%Y'))
+  send_keys new_date.strftime('%Y')
+  send_keys :left, :left
+  send_keys new_date.strftime('%m/%d')
 end
 
 Then 'the course has {int} instructor user' do |instructor_count|
@@ -194,6 +227,9 @@ Then 'retrieve the {int} course {string}' do |index, activity|
   when 'bingo'
     @orig_bingo = @bingo
     @bingo = @course.reload.bingo_games[index - 1]
+  when 'assignment'
+    @orig_assignment = @assignment
+    @assignment = @course.reload.assignments[index - 1]
   end
 end
 
@@ -212,20 +248,24 @@ Then 'the {string} dates are {string} and {string}' do |activity, start_date_str
   d = Chronic.parse(start_date_str)
   start_date = course_tz.local(d.year, d.month, d.day).beginning_of_day
   d = Chronic.parse(end_date_str)
-  end_date = course_tz.local(d.year, d.month, d.day).end_of_day.change(sec: 0)
+  end_date = course_tz.local(d.year, d.month, d.day).end_of_day.change(sec: 59)
 
   case activity.downcase
   when 'experience'
-    @experience.start_date.should eq start_date
-    @experience.end_date.should eq end_date.change(sec: 0)
+    @experience.start_date.should eq start_date.utc
+    @experience.end_date.should eq end_date.utc
 
   when 'project'
-    @project.start_date.should eq start_date
-    @project.end_date.should eq end_date.change(sec: 0)
+    @project.start_date.should eq start_date.utc
+    @project.end_date.should eq end_date.utc
 
   when 'bingo'
-    @bingo.start_date.should eq start_date
-    @bingo.end_date.should eq end_date.change(sec: 0)
+    @bingo.start_date.should eq start_date.utc
+    @bingo.end_date.should eq end_date.utc
+
+  when 'assignment'
+    @assignment.start_date.should eq start_date.utc
+    @assignment.end_date.should eq end_date.utc
 
   else
     pending # Write code here that turns the phrase above into concrete
@@ -233,7 +273,7 @@ Then 'the {string} dates are {string} and {string}' do |activity, start_date_str
 end
 
 Then 'the {string} is {string} active' do |activity, active_bool|
-  is_active = active_bool == 'is'
+  is_active = 'is' == active_bool
 
   case activity.downcase
   when 'experience'
@@ -244,6 +284,9 @@ Then 'the {string} is {string} active' do |activity, active_bool|
 
   when 'bingo'
     @bingo.active.should eq is_active
+
+  when 'assignment'
+    @assignment.active.should eq is_active
 
   else
     pending # Write code here that turns the phrase above into concrete
@@ -282,42 +325,48 @@ Then 'the user adds the {string} users {string}' do |type, addresses|
   btn.click
 
   inpt = find(:xpath, "//input[@id='addresses']")
-  addresses = @users.map(&:email).join(', ') if addresses == 'user_list'
-  inpt.set addresses
+
+  addresses = @users.map(&:email).join(', ') if 'user_list' == addresses
+  inpt.click
+  send_keys addresses
+  # It seems that inpt.set doesn't work properly here for some reason
+  # characters get eaten if I use the following:
+  # inpt.set addresses
 
   btn = find(:xpath, "//button[contains(.,'Add #{lbl}!')]")
   btn.click
   wait_for_render
 end
 
-Then 'the user drops the {string} users {string}' do |type, addresses|
+Then 'the user drops the {string} users {string}' do |_type, addresses|
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
-  # step 'the user enables the "Actions" table view option'
-  url = if type == 'student'
-          "#{add_students_path}?"
-        else
-          "#{add_instructors_path}?"
-        end
-  find(:xpath, '//div[@id="pagination-rows"]').click
+
+  find_all(:xpath, '//div[contains(@class,"Pagination-select")]')[0].click
   find(:xpath, '//li[text()="100"]').click
 
   step 'the user switches to the "Students" tab'
-  # step 'the user enables the "Email" table view option'
-  if addresses == 'user_list'
+  step 'the user enables the "Email" table view option'
+  if 'user_list' == addresses
     @users.each do |_address|
       step 'the user enables the "Email" table view option'
       elem = find(:xpath,
-                  "//tr[td[contains(.,'#{_address.email}')]]//button[@aria-label='Drop Student']")
+                  "//div[div[a[@href='mailto:#{_address.email}']]]//button[@aria-label='Drop Student']")
       elem.click
       find(:xpath,
            "//button[text()='Drop the Student']").click
       wait_for_render
     end
   else
-    elem = find(:xpath,
-                "//tr[td[contains(.,'#{addresses}')]]//button[@aria-label='Drop Student']")
+    # Find the email
+    elem = find(:xpath, "//div[contains(.,'#{addresses}') and @data-field='email']")
+    # Get the parent
+    elem = elem.ancestor(:xpath, '//div[@role="row"]')
+    # Get the button
+    elem = elem.find(:xpath, "./div[@data-field='id']/button[@aria-label='Drop Student']")
+
     elem.click
+
     find(:xpath,
          "//button[text()='Drop the Student']").click
     wait_for_render
@@ -357,7 +406,7 @@ end
 Then 'the user opens the self-registration link for the course' do
   self_reg_url = "course/#{@course.id}/enroll"
   visit(self_reg_url)
-  if !@dest_date.nil? && Capybara.current_driver != :rack_test && current_url.start_with?('http')
+  if !@dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?('http')
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
   end
@@ -426,7 +475,7 @@ Then('the user sees {int} enrollment request') do |count|
 end
 
 Then('the user {string} {int} enrollment request') do |decision, count|
-  action = decision == 'approves' ? 'Accept' : 'Reject'
+  action = 'approves' == decision ? 'Accept' : 'Reject'
   # Using aria-labl instead of title because of some strange JavaScript
   # error.
   buttons = all(:xpath, "//button[@aria-label='#{action}']")
@@ -448,4 +497,9 @@ end
 
 Then('close all messages') do
   ack_messages
+end
+
+Then('the user selects the {string} activity') do |activity_name|
+  find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{activity_name}')]").click
+  wait_for_render
 end

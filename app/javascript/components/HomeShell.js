@@ -25,7 +25,7 @@ const DecisionInvitationsTable = React.lazy(() =>
   import("./DecisionInvitationsTable")
 );
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
-const ProfileDataAdmin = React.lazy(() => import("./ProfileDataAdmin"));
+const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const TaskList = React.lazy(() => import("./TaskList"));
 
 export default function HomeShell(props) {
@@ -44,26 +44,19 @@ export default function HomeShell(props) {
 
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
-  const tz_hash = useTypedSelector(
-    state => state.context.lookups.timezone_lookup
-  );
   const [tasks, setTasks] = useState();
 
   useEffect(() => {
-    if (null !== user.lastRetrieved && null !== tz_hash) {
-      const userZone = tz_hash[user.timezone];
-      Settings.defaultZoneName = tz_hash[userZone];
-      if (undefined !== tasks) {
-        const newTasks = tasks;
-        newTasks.forEach((value, index, array) => {
-          value.next_date = value.next_date.setZone(userZone);
-          value.start_date = value.start_date.setZone(userZone);
-        });
+    if (null !== user.lastRetrieved && undefined !== tasks) {
+      const newTasks = tasks;
+      newTasks.forEach((value, index, array) => {
+        value.next_date = value.next_date.setZone(Settings.defaultZone);
+        value.start_date = value.start_date.setZone(Settings.defaultZone);
+      });
 
-        setTasks(newTasks);
-      }
+      setTasks(newTasks);
     }
-  }, [user.lastRetrieved, tz_hash, tasks]);
+  }, [user.lastRetrieved, Settings.defaultZone, tasks]);
 
   //Initialising to null
   const [consentLogs, setConsentLogs] = useState();
@@ -85,6 +78,9 @@ export default function HomeShell(props) {
             value.title = value.group_name + " for (" + value.name + ")";
             break;
           case "bingo_game":
+            value.title = value.name;
+            break;
+          case "assignment":
             value.title = value.name;
             break;
           case "experience":

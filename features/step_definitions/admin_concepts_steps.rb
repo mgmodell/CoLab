@@ -8,7 +8,7 @@ Given('{int} multi-word concepts have been added to the system') do |word_count|
     c_name = Faker::Company.industry
     check_uniq[c_name.downcase] = true
   end
-  check_uniq.each_key do |c_name|
+  check_uniq.keys.each do |c_name|
     Concept.create name: c_name
   end
 end

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class SchoolsController < ApplicationController
-  layout 'admin'
+  include PermissionsCheck
+
   before_action :set_school, only: %i[show edit update destroy]
   before_action :check_admin
 
   def show
-    @title = t '.title'
     respond_to do |format|
       format.html { render :show }
       format.json do
@@ -28,16 +28,14 @@ class SchoolsController < ApplicationController
 
   # GET /admin/school
   def index
-    @title = t '.title'
-    @schools = School.all
+    schools = School.all
+    anon = current_user.anonymize?
     respond_to do |format|
-      format.html do
-      end
       format.json do
-        resp = @schools.collect do |school|
+        resp = schools.collect do |school|
           {
             id: school.id,
-            name: school.get_name(@anon),
+            name: school.get_name(anon),
             courses: school.courses.size,
             students: school.enrolled_students.size,
             instructors: school.instructors.size,
@@ -52,7 +50,6 @@ class SchoolsController < ApplicationController
   end
 
   def create
-    @title = t '.title'
     @school = School.new(school_params)
     if @school.save
       notice = t('schools.create_success')
@@ -88,7 +85,6 @@ class SchoolsController < ApplicationController
   end
 
   def update
-    @title = t '.title'
     if @school.update(school_params)
       notice = t('schools.update_success')
       respond_to do |format|
@@ -132,17 +128,13 @@ class SchoolsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_school
-    @school = if params[:id].blank? || params[:id] == 'new'
+    @school = if params[:id].blank? || 'new' == params[:id]
                 School.new(
                   timezone: current_user.timezone
                 )
               else
                 School.find(params[:id])
               end
-  end
-
-  def check_admin
-    redirect_to root_path unless current_user.is_admin?
   end
 
   def school_params

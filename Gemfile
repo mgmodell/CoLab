@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '3.2.0'
+ruby '3.2.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.4.2'
+gem 'rails', '~> 7.0.8'
 
 gem 'puma', '~> 6.0'
 # Use mysql as the database for Active Record
-#gem 'mysql2', '>= 0.3.18', '< 0.5'
 gem 'mysql2'
 
 # Use Uglifier as compressor for JavaScript assets
@@ -18,8 +17,7 @@ gem 'mysql2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 # Transpile app-like JavaScript. Read more:
-# https://github.com/rails/webpacker
-gem 'shakapacker', '6.5.6'
+gem 'shakapacker', '7.1.0'
 
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
@@ -41,8 +39,9 @@ gem 'city-state'
 gem 'd3-rails'
 gem 'delayed_job_active_record'
 gem 'descriptive_statistics', '~> 2.5.1', require: 'descriptive_statistics/safe'
-gem 'devise-multi_email'
+gem 'devise-multi_email', git: 'https://github.com/mgmodell/devise-multi_email'
 gem 'devise_token_auth', git: 'https://github.com/mgmodell/devise_token_auth'
+# gem 'devise_token_auth', path: '/Users/micah/dev/devise_token_auth_multi_email'
 gem 'email_address'
 gem 'faker'
 gem 'image_processing', '~> 1.0'
@@ -57,7 +56,7 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'prawn-qrcode'
 gem 'rails_12factor', group: :production
-gem 'react_on_rails', '13.3.2'
+gem 'react_on_rails', '13.4.0'
 
 gem 'stopwords-filter2', require: 'stopwords'
 gem 'traco'
@@ -89,7 +88,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'report_builder'
   gem 'rspec'
-  gem 'rubocop', '~> 1.46.0', require: false
+  gem 'rubocop', '~> 1.57.1', require: false
   gem 'reek'
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
@@ -99,8 +98,8 @@ end
 
 group :test do
   gem 'simplecov', require: false
-  gem 'webdrivers', '~> 5.0', require: false
-  gem 'selenium-webdriver'
+  gem 'webdrivers', '~> 5.3.1', require: false
+  # gem 'selenium-webdriver'
   gem 'cucumber-rails', require: false
   gem 'capybara'
   gem 'database_cleaner'

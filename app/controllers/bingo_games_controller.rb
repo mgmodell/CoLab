@@ -3,6 +3,8 @@
 require 'faker'
 
 class BingoGamesController < ApplicationController
+  include PermissionsCheck
+
   layout 'admin', except: %i[review_candidates update_review_candidates
                              review_candidates_demo game_results ]
   skip_before_action :authenticate_user!,
@@ -32,14 +34,12 @@ class BingoGamesController < ApplicationController
   end
 
   def demo_my_results
-    candidate_list = nil
-    candidates = nil
     candidate_list = get_demo_candidate_list
     candidates = candidate_list.candidates
 
     candidates = candidates.to_a.collect do |c|
       { id: c.id,
-        concept: c.concept.nil? ? nil : c.concept.name,
+        concept: c.concept&.name,
         definition: c.definition,
         term: c.term,
         feedback: c.candidate_feedback.name,
@@ -78,7 +78,7 @@ class BingoGamesController < ApplicationController
 
     candidates = candidates.to_a.collect do |c|
       { id: c.id,
-        concept: c.concept.nil? ? nil : c.concept.name,
+        concept: c.concept&.name,
         definition: c.definition,
         term: c.term,
         feedback: c.candidate_feedback.name,
@@ -89,7 +89,7 @@ class BingoGamesController < ApplicationController
       candidate_list: {
         id: candidate_list.id,
         is_group: candidate_list.is_group,
-        performance: candidate_list.performance,
+        cached_performance: candidate_list.performance,
         bingo_game_id: candidate_list.bingo_game_id,
         group_id: candidate_list.group_id,
         user_id: candidate_list.user_id
@@ -104,7 +104,7 @@ class BingoGamesController < ApplicationController
        candidate_lists: [{ candidates: %i[concept candidate_feedback] }, group: :users],
        bingo_boards: [:user, { bingo_cells: :candidate }]]
     ).find_by(id: params[:id])
-    check_editor(bingo_game:)
+    check_bingo_editor(bingo_game:)
     anon = current_user.anonymize?
     resp = {}
     # Get the users
@@ -149,17 +149,17 @@ class BingoGamesController < ApplicationController
         if resp[user_id].present?
           resp[user_id][:concepts_expected] = cl.candidates.size
           resp[user_id][:concepts_entered] = cl.candidates
-                                               .reject { |c| (c.definition.empty? || c.term.empty?) }.count
+                                               .count { |c| !(c.definition.empty? || c.term.empty?) }
           resp[user_id][:concepts_credited] = cl.candidates
-                                                .reject do |c|
-            c.candidate_feedback.present? &&
-              CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name
-          end.count
+                                                .count do |c|
+            !(c.candidate_feedback.present? &&
+              CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name)
+          end
           resp[user_id][:term_problems] = cl.candidates
-                                            .reject do |c|
-            c.candidate_feedback.present? &&
-              CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name
-          end.count
+                                            .count do |c|
+            !(c.candidate_feedback.present? &&
+              CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name)
+          end
           resp[user_id][:performance] = cl.performance
           candidates = []
           cl.candidates.reviewed.each do |c|
@@ -177,17 +177,17 @@ class BingoGamesController < ApplicationController
       elsif cl.is_group && cl.group.present?
         concepts_expected = cl.candidates.size
         concepts_entered = cl.candidates
-                             .reject { |c| c.definition.empty? || c.term.empty? }.count
+                             .count { |c| !(c.definition.empty? || c.term.empty?) }
         concepts_credited = cl.candidates
-                              .reject do |c|
-          c.candidate_feedback.present? &&
-            CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name
-        end.count
+                              .count do |c|
+          !(c.candidate_feedback.present? &&
+            CandidateFeedback.critiques[:term_problem] == c.candidate_feedback.name)
+        end
         term_problems = cl.candidates
-                          .reject do |c|
-          c.candidate_feedback.present? &&
-            CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name
-        end.count
+                          .count do |c|
+          !(c.candidate_feedback.present? &&
+            CandidateFeedback.critiques[:term_problem] != c.candidate_feedback.name)
+        end
         performance = cl.performance
         candidates = []
         cl.candidates.completed.each do |c|
@@ -213,7 +213,7 @@ class BingoGamesController < ApplicationController
       end
     end
     resp_array = []
-    resp.each_key do |key|
+    resp.keys.each do |key|
       resp[key][:id] = key
       resp_array << resp[key]
     end
@@ -269,7 +269,7 @@ class BingoGamesController < ApplicationController
   end
 
   def update
-    check_editor bingo_game: @bingo_game
+    check_bingo_editor bingo_game: @bingo_game
     @bingo_game.update(bingo_game_params)
 
     respond_to do |format|
@@ -402,7 +402,7 @@ class BingoGamesController < ApplicationController
 
   def review_candidates
     @title = t '.title'
-    check_editor bingo_game: @bingo_game
+    check_bingo_editor bingo_game: @bingo_game
     respond_to do |format|
       format.json do
         review_helper(
@@ -419,20 +419,11 @@ class BingoGamesController < ApplicationController
 
   def review_helper(bingo_game:, users:, groups:,
                     candidate_lists:, candidates:)
-    feedback_opts = CandidateFeedback.all.collect do |cf|
-      {
-        id: cf.id,
-        name: cf.name,
-        credit: cf.credit,
-        critique: cf.critique
-      }
-    end
     render json: {
       bingo_game: bingo_game.as_json(only:
         %i[id topic description status close_date]),
       users: users.as_json(only:
         %i[id first_name last_name], methods: :email),
-      feedback_opts: feedback_opts.as_json,
       groups: groups.as_json(only:
         %i[id name]),
       candidate_lists: candidate_lists.as_json(only:
@@ -494,7 +485,6 @@ class BingoGamesController < ApplicationController
       end
 
       # Process the data
-      existing_concepts = {}
 
       @bingo_game.candidates.completed
                  .includes(:candidate_feedback,
@@ -511,7 +501,7 @@ class BingoGamesController < ApplicationController
 
         # feedback_name = candidate.candidate_feedback.name_en
 
-        if candidate.candidate_feedback.critique != 'term_problem'
+        if 'term_problem' != candidate.candidate_feedback.critique
           entered_candidate[:concept][:name].present?
           concept_name = entered_candidate[:concept][:name]
           concept_name = Concept.standardize_name name: concept_name
@@ -556,16 +546,16 @@ class BingoGamesController < ApplicationController
 
   def destroy
     @course = @bingo_game.course
-    check_editor bingo_game: @bingo_game
+    check_bingo_editor bingo_game: @bingo_game
     @bingo_game.destroy
     redirect_to @course, notice: (t 'bingo_games.destroy_success')
   end
 
   def activate
     bingo_game = BingoGame.find(params[:bingo_game_id])
-    check_editor(bingo_game:)
+    check_bingo_editor(bingo_game:)
     if current_user.is_admin? ||
-       bingo_game.course.get_roster_for_user(current_user).role.code == 'inst'
+       'inst' == bingo_game.course.get_roster_for_user(current_user).role.code
       bingo_game.active = true
       bingo_game.save
     end
@@ -630,13 +620,7 @@ class BingoGamesController < ApplicationController
     end
   end
 
-  def check_viewer
-    redirect_to root_path unless current_user.is_admin? ||
-                                 current_user.is_instructor? ||
-                                 current_user.is_researcher?
-  end
-
-  def check_editor(bingo_game:)
+  def check_bingo_editor(bingo_game:)
     unless current_user.is_admin? ||
            !bingo_game.course.rosters.instructor.where(user: current_user).nil?
       redirect_to root_path

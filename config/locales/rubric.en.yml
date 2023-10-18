@@ -1,0 +1,45 @@
+en:
+  rubrics:
+    index:
+      title: List of Rubrics
+    edit:
+      title: Edit Rubric
+      deactivate: Deactivate Rubric
+      activate: Activate Rubric
+    show:
+      title: Rubric Details
+      edit_string: Edit rubric details
+      published: Is published?
+      creator: Created by
+    new:
+      title: New Rubric
+      criteria: New Criteria
+      criteria_l1: Bare minimum
+    create_success: Rubric was created successfully!
+    destroy_success: Rubric was destroyed successfully!
+    update_success: Rubric was updated successfully!
+    publish_success: Rubric was published successfully!
+    activate_success: Rubric was activated
+    deactivate_success: Rubric was deactivated
+    back: Back to the list of rubrics
+    name: Name
+    description: Description
+    version: Version
+    rubric:
+      copy: Copy rubric
+      delete: Remove this rubric
+    criteria:
+      new: New Criteria
+      sequence: sequence
+      description: Short criteria description
+      weight: Criteria weight
+      l1_description: Minimum requirements
+      l2_description: Requirements for level 2 credit
+      l3_description: Requirements for level 3 credit
+      l4_description: Requirements for level 4 credit
+      l5_description: Requirements for level 5 credit
+      up: Move criteria up
+      down: Move criteria down
+      copy: Copy criteria
+      delete: Remove this criteria
+
