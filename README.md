@@ -1,5 +1,5 @@
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mgmodell/CoLab?style=flat-square)
 ![GitHub language count](https://img.shields.io/github/languages/count/mgmodell/CoLab)
-[![All Contributors](https://img.shields.io/github/all-contributors/projectOwner/projectName?color=ee8449&style=flat-square)](#contributors)
 [![CucumberReports: CoLab](https://messages.cucumber.io/api/report-collections/8e5bd8ab-b12f-460d-85ff-861b1b841ad6/badge)](https://reports.cucumber.io/report-collections/8e5bd8ab-b12f-460d-85ff-861b1b841ad6)
 
 # README #
