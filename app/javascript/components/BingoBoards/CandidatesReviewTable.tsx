@@ -169,7 +169,7 @@ export default function CandidatesReviewTable(props) {
               name: ""
             };
           }
-          setCompleted(item, data.feedback_opts);
+          setCompleted(item, feedbackOptions);
         });
 
         setCandidates(data.candidates);
