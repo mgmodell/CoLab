@@ -138,7 +138,7 @@ When('the user changes a random {int} {string} entries') do |count, field|
 
   count.to_i.times do |_index|
     # Index to the field to change
-    rand_ind = Random.rand(field_count) - 1
+    rand_ind = Random.rand(field_count) # - 1
 
     # Pull the existing values
     existing_term = page.find(:xpath, "//input[@id='term_#{rand_ind}']").value
