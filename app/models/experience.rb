@@ -22,7 +22,7 @@ class Experience < ApplicationRecord
     reaction = reactions.includes(narrative: { scenario: :behavior }).find_by(user:)
 
     reaction = Reaction.create(user:, experience: self, instructed: false) if reaction.nil?
-    reaction.assign_narrative
+    reaction.assign_narrative if reaction.narrative.nil?
     reaction
   end
 
