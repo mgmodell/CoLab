@@ -1,5 +1,30 @@
 namespace :migratify do
 
+  desc 'Updating the rails counter caches'
+  task update_counters: :environment do
+    ActiveRecord::Base.transaction do
+
+      Reaction.find_each do |reaction|
+        Reaction.reset_counters( reaction.id, :diagnoses )
+      end
+
+      CandidateList.find_each do |candidate_list|
+        CandidateList.reset_counters( candidate_list.id, :candidates )
+      end
+      Concept.find_each do |concept|
+        Concept.reset_counters( concept.id, :candidates )
+      end
+      
+      School.find_each do |school|
+        School.reset_counters( school.id, :courses )
+      end
+      ConsentForm.find_each do |consent_form|
+        ConsentForm.reset_counters( consent_form.id, :courses )
+      end
+      
+    end
+  end
+
   desc 'Updating the DB to accommodate updated factors'
   task factor_update: :environment do
     # FactorPack seed data

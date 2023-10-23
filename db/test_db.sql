@@ -4604,6 +4604,7 @@ CREATE TABLE `reactions` (
   `experience_id` int(11) DEFAULT NULL,
   `instructed` tinyint(1) DEFAULT NULL,
   `other_name` varchar(255) DEFAULT NULL,
+  `diagnoses_count` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_reactions_on_behavior_id` (`behavior_id`),
   KEY `index_reactions_on_experience_id` (`experience_id`),
@@ -4970,7 +4971,8 @@ INSERT INTO `schema_migrations` VALUES
 ('20230415194655'),
 ('20230521034701'),
 ('20230828001816'),
-('20230905132419');
+('20230905132419'),
+('20231023010656');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5502,4 +5504,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-23 12:35:56
+-- Dump completed on 2023-10-22 21:42:13
