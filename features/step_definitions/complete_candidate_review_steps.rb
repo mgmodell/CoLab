@@ -145,6 +145,8 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
     concepts << "concept #{counter}"
   end
 
+  puts concepts.inspect
+
   feedbacks = CandidateFeedback.unscoped.where('name_en like ?', "#{feedback_type}%")
   error_msg = ''
   @feedback_list = {}
@@ -215,15 +217,21 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
     rescue Capybara::ElementNotFound => e
       begin
         elem.send_keys :enter
-      rescue Selenium::WebDriver::Error::ElementNotInteractableError
-        puts e.full_message
+      rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
+        log 'Element not interactable error'
+        log e
       end
     end
   end
+  byebug
 end
 
 Given(/^the saved reviews match the list$/) do
   @feedback_list.each do |key, value|
+    puts "set: #{Candidate.find( key ).concept.name}|#{value[:concept]}"
+  end
+  @feedback_list.each do |key, value|
+    puts "#{Candidate.find( key ).concept.name}|#{value[:concept]}"
     Candidate.find(key).concept.name.should eq value[:concept] if value[:concept].present?
   end
 end

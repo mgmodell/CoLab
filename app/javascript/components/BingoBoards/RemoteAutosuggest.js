@@ -82,7 +82,7 @@ const styles = theme => ({
 class RemoteAutoSuggest extends React.Component {
   state = {
     single: "",
-    popper: "",
+    //popper: "",
     suggestions: []
   };
   handleSuggestionsFetchRequested = ({ value }) => {
@@ -135,6 +135,8 @@ class RemoteAutoSuggest extends React.Component {
       renderSuggestion
     };
     return (
+      <Paper>
+
       <div className={classes.root}>
         <Autosuggest
           {...autosuggestProps}
@@ -158,6 +160,7 @@ class RemoteAutoSuggest extends React.Component {
           )}
         />
       </div>
+      </Paper>
     );
   }
 }
