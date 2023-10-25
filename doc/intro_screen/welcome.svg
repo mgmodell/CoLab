@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="1024"
-   height="768"
-   viewBox="0 0 270.93333 203.2"
+   width="100%"
+   height="100%"
+   viewBox="0 0 220 175"
    version="1.1"
    id="svg1"
    inkscape:version="1.3 (0e150ed, 2023-07-21)"
@@ -13,93 +13,85 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:document-units="mm"
-     inkscape:zoom="0.5546875"
-     inkscape:cx="569.69014"
-     inkscape:cy="470.53521"
-     inkscape:window-width="1440"
-     inkscape:window-height="771"
-     inkscape:window-x="1523"
-     inkscape:window-y="179"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="layer1" />
-  <defs
-     id="defs1">
-    <rect
-       x="290.25352"
-       y="621.97183"
-       width="526.42254"
-       height="79.323944"
-       id="rect4" />
-    <rect
-       x="349.74648"
-       y="530.02817"
-       width="603.94366"
-       height="156.84507"
-       id="rect3" />
-    <rect
-       x="183.88732"
-       y="295.66197"
-       width="825.69015"
-       height="236.16901"
-       id="rect2" />
-    <rect
-       x="108.16901"
-       y="72.112676"
-       width="286.64789"
-       height="106.3662"
-       id="rect1" />
-  </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="title_text">
     <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-2.3849765,30.050704)"
-       id="text1"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1);fill:#000000;fill-opacity:1;stroke:none"><tspan
-         x="108.16992"
-         y="108.60649"
-         id="tspan2">Improving</tspan></text>
+         x="-29%"
+         y="27%"
+       id="improving"
+       style="font-style:normal;
+              font-weight:normal;
+              font-size:28px;
+              line-height:1.25;
+              font-family:sans-serif;
+              white-space:pre;
+              shape-inside:url(#rect1);
+              fill:white;
+              stroke:black">
+         Improving
+    </text>
     <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-17.171831,-8.5859155)"
-       id="text2"
-       style="font-style:normal;font-weight:normal;font-size:160px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect2);fill:#000000;fill-opacity:1;stroke:none"><tspan
-         x="183.88672"
-         y="441.63496"
-         id="tspan3">C    LLAB</tspan></text>
+         x="-45%"
+         y="51%"
+       id="collab"
+       style="font-style:normal;
+              font-weight:normal;
+              font-size:45px;
+              line-height:1.25;
+              font-family:sans-serif;
+              white-space:pre;
+              shape-inside:url(#rect1);
+              fill:black;
+              fill-opacity:1;
+              stroke-opacity:1;
+              stroke-width
+              stroke:white">
+         C    LAB
+    </text>
     <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-6.6779343,-21.941784)"
-       id="text3"
-       style="font-style:normal;font-weight:normal;font-size:120px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect3);fill:#000000;fill-opacity:1;stroke:none"><tspan
-         x="349.74609"
-         y="639.50698"
-         id="tspan5">ORATION</tspan></text>
+         x="26%"
+         y="62.25%"
+       id="oration"
+       style="font-style:normal;
+              font-weight:normal;
+              font-size:23px;
+              line-height:1.25;
+              font-family:sans-serif;
+              white-space:pre;
+              shape-inside:url(#rect1);
+              fill:white;
+              fill-opacity:1;
+              stroke-opacity:1;
+              stroke:black">
+         RATION
+    </text>
     <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,59.624413,-4.7699531)"
-       id="text4"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect4);fill:#000000;fill-opacity:1;stroke:none"><tspan
-         x="290.25391"
-         y="658.46587"
-         id="tspan6">one team at a time</tspan></text>
+         x="8.5%"
+         y="70%"
+       id="one_team"
+       style="font-style:normal;
+              font-weight:normal;
+              font-size:17;
+              line-height:1.25;
+              font-family:sans-serif;
+              white-space:pre;
+              shape-inside:url(#rect1);
+              fill:white;
+              stroke:black">
+         ne team at a time
+    </text>
+    </g>
     <g
        id="circles"
        stroke="#000000"
        stroke-width="30"
-       transform="matrix(-0.10526316,0,0,-0.10526316,138.00664,146.93916)">
+       transform="
+        translate(47,131)
+        rotate( 255 )
+        scale(.1)"
+       >
       <line
          x1="450"
          y1="455"
@@ -171,5 +163,4 @@
            fill="#ff00ff" />
       </g>
     </g>
-  </g>
 </svg>
