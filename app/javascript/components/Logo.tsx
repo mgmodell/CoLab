@@ -1,7 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import PropTypes from "prop-types";
 
-export default function Logo(props) {
+type Props = {
+  height: number;
+  width: number;
+  spinning: boolean;
+}
+
+export default function Logo(props: Props) {
   const height = props.height || 72;
   const width = props.width || 72;
   const mounted = useRef(false);

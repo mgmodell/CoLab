@@ -32,6 +32,7 @@ import RequireAuth from "./infrastructure/RequireAuth";
 import HomeShell from "./HomeShell";
 import BingoShell from "./BingoBoards/BingoShell";
 import AssignmentShell from "./assignments/AssignmentShell";
+import Welcome from "./Welcome";
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
@@ -155,6 +156,7 @@ export default function PageWrapper(props) {
               }
             />
 
+            <Route path='welcome' element={<Welcome />} />
             <Route path="user/password/edit" element={<PasswordEdit />} />
             <Route path={`what_is_colab`} element={<WhatIsIt />} />
             <Route path={`tos`} element={<TermsOfService />} />
