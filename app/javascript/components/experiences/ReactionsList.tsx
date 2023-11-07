@@ -85,9 +85,9 @@ export default function ReactionsList(props: Props) {
     },
     {
       headerName: t("reactions.email_lbl"),
-      field: "email",
+      field: "id",
       renderCell: params => {
-        const user = params.value;
+        const user = params.row.user;
         return <Link href={`mailto:${user.email}`}>{user.email}</Link>;
       }
     },
