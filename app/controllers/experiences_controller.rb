@@ -42,6 +42,7 @@ class ExperiencesController < ApplicationController
     render json: {
       reactions: reactions.collect do |reaction|
         {
+          id: reaction.id,
           user: {
             email: reaction.user.email,
             name: reaction.user.name(anon)
