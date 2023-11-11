@@ -203,7 +203,7 @@ export default function SignIn(props) {
   if (loggingIn || oauth_client_ids === undefined) {
     return <Skeleton variant="rectangular" height="300" />;
   } else if (isLoggedIn) {
-    return <Navigate replace to={state.from || "/"} />;
+    return <Navigate replace to={state?.from || "/"} />;
   } else {
     return (
       <Suspense fallback={<Skeleton variant={"rectangular"} height="300" />}>

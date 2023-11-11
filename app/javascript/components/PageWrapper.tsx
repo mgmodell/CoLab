@@ -156,7 +156,7 @@ export default function PageWrapper(props) {
               }
             />
 
-            <Route path='welcome' element={<Welcome />} />
+            <Route path='welcome/*' element={<Welcome />} />
             <Route path="user/password/edit" element={<PasswordEdit />} />
             <Route path={`what_is_colab`} element={<WhatIsIt />} />
             <Route path={`tos`} element={<TermsOfService />} />

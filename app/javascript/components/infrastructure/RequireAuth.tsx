@@ -13,6 +13,6 @@ export default function RequireAuth({ children }) {
   } else if (isLoggingIn) {
     return <Skeleton variant="rectangular" height={300} />;
   } else {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+    return <Navigate to="/welcome/login" replace state={{ from: location.pathname }} />;
   }
 }

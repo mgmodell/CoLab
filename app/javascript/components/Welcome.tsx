@@ -1,69 +1,126 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useSpring, animated } from "react-spring";
+import { useSpring, animated, config } from "react-spring";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import SignIn from "./SignIn";
+import EmbeddedHTMLInSVG from "./infrastructure/EmbeddedHTMLInSVG";
+import ResizableSVG from "./infrastructure/ResizableSVG";
 
 type Props = {
 }
 
 export default function Welcome(props: Props) {
-  const height = '100%'
-  const width = '100%'
+  const location = useLocation( );
+  const params = useParams( );
+  const navigate = useNavigate( );
+
   //const mounted = useRef(false);
+  console.log( location, params );
 
-  const viewBox = [0, 0, 220, 175].join(" ");
+  const login = params['*'] === 'login' ?
+  (
+    <animated.g>
+      <EmbeddedHTMLInSVG width={'50%'} height={'100%'}>
+           <SignIn />
+      </EmbeddedHTMLInSVG>
+    </animated.g>
 
-  const [springs, api] = useSpring(() => ({
-   from: {opacity: 1},
+  ) : null;
+
+
+  //const viewBox = [0, 0, 1024, 768].join(" ");
+
+  const [styles, api] = useSpring(() => ({
+   x: 0,
+   y: 0,
+   scale: 1,
+   rotate: 0,
+   config: {
+      precision: 0.0001,
+      ...config.molasses
+   }
   }));
 
+  const logo_look = {
+   welcome: {
+      x: 41,
+      y: 132,
+      scale: 0.125,
+      rotate: 255,
+
+   },
+   login: {
+      x: 41,
+      y: 132,
+      scale: 0.125,
+      rotate: 255,
+
+   }
+  }
+
+  const toWelcome = () =>{
+   api.start({
+      to:{
+         x: 41,
+         y: 132,
+         scale: 0.125,
+         rotate: 255,
+      }
+   })
+  }
+
+  const toLogin = () =>{
+   navigate('login');
+   api.start({
+      to:{
+         x: 140,
+         y: 140,
+         scale: 0.08,
+         rotate: 615,
+      }
+   })
+  }
+
+  useEffect( () =>{
+   toWelcome( );
+  },[])
+
+
   return (
-    <svg
-      //height={height}
-      //width={width}
-      viewBox={viewBox}
-      version="1.1"
+   <ResizableSVG
       id='welcome'
-      preserveAspectRatio="xMidYMid meet"
-      xmlns="http://www.w3.org/2000/svg"
-      onClick={()=>{
-         api.start({
-            from: {
-               opacity: 1,
-            },
-            to: {
-               opacity: 0
-            }
-         })
-      }}
-    >
+      height={300}
+      width={400}
+   >
   <animated.g
      id="title_text"
      style={{
-      ...springs
+         strokeWidth: .125,
+          fill: 'white',
+          stroke: 'black',
+          scale: 3
      }}>
     <text
          x="29"
-         y="27"
+         y="21"
        id="improving"
        style={ {
           fontWeight: "normal",
-          fontSize: '18',
-          lineHeight: 1.25,
-          fontFamily: 'sans-serif',
+          fontSize: '22',
+          lineHeight: 1,
           whiteSpace: 'pre',
-          fill: 'white',
-          stroke: 'black',
+          fontFamily: 'sans-serif',
 
         }}>
-         Impr    ving
+         Impr        ving
     </text>
     <text
-         x="26"
-         y="74"
-       id="collab"
+         x="20"
+         y="79"
+       id="colab"
        style={ {
           fontWeight: "normal",
-          fontSize: '45',
-          lineHeight: 1.35,
+          fontSize: '50',
+          lineHeight: 1.45,
           fontFamily: 'sans-serif',
           whiteSpace: 'pre',
           fill: 'black',
@@ -72,45 +129,50 @@ export default function Welcome(props: Props) {
          C    LAB
     </text>
     <text
-         x="119"
-         y="93"
+         x="133"
+         y="101"
        id="oration"
-       style={ {
-          fontWeight: "normal",
-          fontSize: '',
-          lineHeight: 1.25,
-          fontFamily: 'sans-serif',
-          whiteSpace: 'pre',
-          fill: 'white',
-          stroke: 'black',
-        }}>
-         RATION
-    </text>
-    <text
-         x="65"
-         y="107"
-       id="one_team"
        style={ {
           fontWeight: "normal",
           fontSize: '18',
           lineHeight: 1.25,
           fontFamily: 'sans-serif',
-          whiteSpace: 'pre',
-          fill: 'white',
-          stroke: 'black',
+          fill: 'black',
+          stroke: 'white',
+        }}>
+         RATION
+    </text>
+    <text
+         x="65"
+         y="117"
+       id="one_team"
+       style={ {
+          fontWeight: "normal",
+          fontSize: '12',
+          lineHeight: 1.25,
+          fontFamily: 'sans-serif',
 
         }}>
          ne team at a time
     </text>
     </animated.g>
-    <g
+    {
+
+
+    }
+    {login}
+
+    <animated.g
        id="circles"
        stroke="#000000"
        strokeWidth="30"
        transform="
-        translate(45,115)
+        translate(41,132)
         rotate( 255 )
-        scale(.1)"
+        scale(.125)"
+       style={{
+         ...styles
+       }}
        >
       <line
          x1="450"
@@ -174,16 +236,43 @@ export default function Welcome(props: Props) {
            cx="610"
            cy="790"
            r="81"
-           fill="#ff6600" />
+           fill="#ff6600"
+           onClick={()=>{
+            toLogin( );
+           }}
+           />
         <circle
            id="purple"
            cx="120"
            cy="710"
            r="80"
-           fill="#ff00ff" />
+           fill="#ff00ff"
+           onClick={()=>{
+            toWelcome( );
+           }}
+           />
       </g>
-    </g>
-    </svg>
+    </animated.g>
+    <animated.g
+         id='tooltips'
+    >
+      <text
+         x="59"
+         y="62"
+       id="one_team"
+       style={ {
+          fontWeight: "normal",
+          fontSize: '9',
+          fontFamily: 'sans-serif',
+          fill: 'white',
+          strokeWidth: .25,
+          stroke: 'black',
+       }}
+      >
+         Welcome
+      </text>
+    </animated.g>
+   </ResizableSVG>
   );
 
 }
