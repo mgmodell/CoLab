@@ -192,7 +192,6 @@ class RubricsController < ApplicationController
     @rubric.destroy
 
     respond_to do |format|
-      format.html { redirect_to rubrics_url, notice: 'Rubric was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

@@ -9,7 +9,6 @@ class ExperiencesController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html { render :show }
       format.json do
         course_hash = {
           id: @experience.course_id,
@@ -76,10 +75,6 @@ class ExperiencesController < ApplicationController
     @experience.course = Course.find(@experience.course_id)
     if @experience.save
       respond_to do |format|
-        format.html do
-          redirect_to @experience,
-                      notice: t('experiences.create_success')
-        end
         format.json do
           response = {
             experience: @experience.as_json(
@@ -98,9 +93,6 @@ class ExperiencesController < ApplicationController
     else
       logger.debug @experience.errors.full_messages unless @experience.errors.empty?
       respond_to do |format|
-        format.html do
-          render :new
-        end
         format.json do
           messages = @experience.errors.to_hash
           messages[:status] = 'Error creating the Experience'
@@ -113,9 +105,6 @@ class ExperiencesController < ApplicationController
   def update
     if @experience.update(experience_params)
       respond_to do |format|
-        format.html do
-          redirect_to @experience, notice: t('experiences.update_success')
-        end
         format.json do
           response = {
             experience: @experience.as_json(
@@ -134,9 +123,6 @@ class ExperiencesController < ApplicationController
     else
       logger.debug @experience.errors.full_messages @experience.errors.empty?
       respond_to do |format|
-        format.html do
-          render :edit
-        end
         format.json do
           messages = @experience.errors.to_hash
           messages[:status] = 'Error saving the Experience'

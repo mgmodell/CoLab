@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/mgmodell/devise_token_auth
-  revision: 6b875beb369b028a8539e30f478e84f1e4148902
+  revision: 31e43f6269829f3e9a113830af5f1b5934ffa56b
   specs:
     devise_token_auth (1.2.2)
       bcrypt (~> 3.0)
@@ -533,7 +533,7 @@ GEM
       tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.8.2)
+    unf_ext (0.0.9)
     unicode-display_width (2.5.0)
     uniform_notifier (1.16.0)
     version_gem (1.1.3)

@@ -25,7 +25,6 @@ class BingoGamesController < ApplicationController
   def show
     @title = t '.title'
     respond_to do |format|
-      format.html { render :show }
       format.json do
         resp = bingo_responder(bingo_game: @bingo_game, current_user:)
         render json: resp
@@ -396,7 +395,6 @@ class BingoGamesController < ApplicationController
           candidates:
         )
       end
-      format.html { render :review_candidates }
     end
   end
 
@@ -413,7 +411,6 @@ class BingoGamesController < ApplicationController
           candidates: @bingo_game.candidates.completed
         )
       end
-      format.html { render :review_candidates }
     end
   end
 

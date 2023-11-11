@@ -5,7 +5,11 @@ en:
     submit: Submit Weekly Check-In
     success: Your response was successfully saved
     err_unknown: Your response could not be recorded
-    demo_success: Your response would have been successfully saved. The demonstration is finished.
+    err_normalize_sums: >
+        Unable to reconcile check-in values. Please contact an administrator.
+    demo_success: >
+        Your response would have been successfully saved. The demonstration
+        is finished.
     err_not_member: >
       You are not a member of this group and therefore are not permitted
       to submit this check-in.

@@ -144,7 +144,7 @@ class Installment < ApplicationRecord
         total = au_hash.values.inject(0) { |sum, v| sum + v.value }
       end
       if Installment::TOTAL_VAL != total
-        errors[:base] << 'Unable to reconcile reported values. Please contact an administrator.'
+        errors[:base] << I18n.t( 'err_normalize_sums' )
       end
     end
   end

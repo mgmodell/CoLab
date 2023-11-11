@@ -31,12 +31,12 @@ Given(/^the project started last month and lasts (\d+) weeks, opened yesterday a
 end
 
 When(/^the user submits the installment$/) do
-  click_link_or_button('Submit Weekly Installment')
+  click_link_or_button('Submit Weekly Check-In')
   wait_for_render
 end
 
 Then(/^there should be no error$/) do
-  page.should_not have_content('Unable to reconcile installment values.')
+  page.should_not have_content('Unable to reconcile check-in values.')
   page.should_not have_content('assessment has expired')
 end
 
@@ -271,6 +271,6 @@ end
 
 Then(/^user will be presented with the installment form$/) do
   wait_for_render
-  page.should have_content 'Your weekly installment'
+  page.should have_content 'Your weekly check-in'
   page.should have_content @project.name
 end

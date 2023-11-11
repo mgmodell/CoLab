@@ -22,7 +22,6 @@ class CoursesController < ApplicationController
   def show
     @title = t('.title')
     respond_to do |format|
-      format.html { render :show }
       format.json do
         response = {
           course: @course.as_json(
@@ -321,8 +320,6 @@ class CoursesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html do
-      end
       format.json do
         resp = @courses.collect do |r|
           { id: r.id,
@@ -380,9 +377,6 @@ class CoursesController < ApplicationController
     if @course.save
       notice = t('courses.create_success')
       respond_to do |format|
-        format.html do
-          redirect_to courses_url, notice:
-        end
         format.json do
           response = {
             course: @course.as_json(
@@ -398,9 +392,6 @@ class CoursesController < ApplicationController
     else
       logger.debug @course.errors.full_messages unless @course.errors.empty?
       respond_to do |format|
-        format.html do
-          render :new
-        end
         format.json do
           messages = @course.errors.as_json
           messages[:main] = 'Please review the problems below'
@@ -417,10 +408,6 @@ class CoursesController < ApplicationController
     if @course.update(course_params)
       notice = t('courses.create_success')
       respond_to do |format|
-        format.html do
-          @course.school = School.find(@course.school_id)
-          redirect_to course_path(@course), notice:
-        end
         format.json do
           response = {
             course: @course.as_json(
@@ -436,9 +423,6 @@ class CoursesController < ApplicationController
     else
       logger.debug @course.errors.full_messages unless @course.errors.empty?
       respond_to do |format|
-        format.html do
-          render :edit
-        end
         format.json do
           messages = @course.errors.to_hash.store(:main, 'Please review the problems below')
           response = {
@@ -459,9 +443,6 @@ class CoursesController < ApplicationController
     count = @course.add_students_by_email params[:addresses]
     msg = t('courses.students_invited', count:)
     respond_to do |format|
-      format.html do
-        redirect_to @course, notice: msg
-      end
       format.json do
         render json: { messages: { main: msg } }
       end
@@ -472,9 +453,6 @@ class CoursesController < ApplicationController
     count = @course.add_instructors_by_email params[:addresses]
     msg = t('courses.instructor_invited', count:)
     respond_to do |format|
-      format.html do
-        redirect_to @course, notice: msg
-      end
       format.json do
         render json: { messages: { main: msg } }
       end
@@ -491,10 +469,6 @@ class CoursesController < ApplicationController
       r.save
     end
     respond_to do |format|
-      format.html do
-        flash.keep
-        redirect_to :root
-      end
       format.json do
         render json: {
           messages: { main: notice }
@@ -513,10 +487,6 @@ class CoursesController < ApplicationController
       r.save
     end
     respond_to do |format|
-      format.html do
-        flash.keep
-        redirect_to :root
-      end
       format.json do
         render json: {
           messages: { main: notice }
@@ -549,9 +519,6 @@ class CoursesController < ApplicationController
     user = User.find(params[:user_id])
     AdministrativeMailer.re_invite(user).deliver_later
     respond_to do |format|
-      format.html do
-        redirect_to :admin
-      end
       format.json do
         render json: {
           messages: {
@@ -585,13 +552,6 @@ class CoursesController < ApplicationController
             main: message || 'Successfully dropped'
           }
         }
-      end
-      format.html do
-        unless message.nil?
-          flash[:notice] = message
-          flash.keep
-        end
-        redirect_to destination
       end
     end
   end

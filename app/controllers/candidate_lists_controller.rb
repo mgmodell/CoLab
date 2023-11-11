@@ -95,9 +95,6 @@ class CandidateListsController < ApplicationController
       @term_counts[candidate.filtered_consistent] = @term_counts[candidate.filtered_consistent].to_i + 1
     end
     respond_to do |format|
-      format.html do
-        render :edit
-      end
       format.json do
         render json: {
           id: @candidate_list.id,
@@ -145,10 +142,6 @@ class CandidateListsController < ApplicationController
         if @candidate_list.save
           @candidate_list.reload
           notice = t 'candidate_lists.update_success'
-          format.html do
-            redirect_to edit_candidate_list_path(@candidate_list),
-                        notice:
-          end
           format.json do
             render json: {
               id: @candidate_list.id,
@@ -164,7 +157,6 @@ class CandidateListsController < ApplicationController
           end
         else
           logger.debug @candidate_list.errors.full_messages unless @candidate_list.errors.empty?
-          format.html { render :edit }
           format.json do
             messages = @candidate_list.errors.to_h
             messages[:main] = 'Please review the errors noted'

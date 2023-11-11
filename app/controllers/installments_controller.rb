@@ -46,8 +46,6 @@ class InstallmentsController < ApplicationController
 
   def submit_helper(factors:, group:, installment:)
     respond_to do |format|
-      format.html { render installment.assessment.project.style.filename }
-
       format.json do
         render json: {
           factors: Hash[ factors.collect do |factor|

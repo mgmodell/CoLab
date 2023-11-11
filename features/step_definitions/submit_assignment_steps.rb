@@ -302,7 +302,6 @@ end
 
 Given('today is after the final deadline') do
   comprehensive_time_travel_to @assignment.end_date + 1
-  puts "Assignment: #{@assignment.end_date}\nCourse: #{@assignment.course.end_date}"
 end
 
 Then('the user withdraws submission {int}') do |assignment_ord|

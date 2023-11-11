@@ -145,8 +145,6 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
     concepts << "concept #{counter}"
   end
 
-  puts concepts.inspect
-
   feedbacks = CandidateFeedback.unscoped.where('name_en like ?', "#{feedback_type}%")
   error_msg = ''
   @feedback_list = {}
@@ -227,10 +225,7 @@ end
 
 Given(/^the saved reviews match the list$/) do
   @feedback_list.each do |key, value|
-    puts "set: #{Candidate.find( key ).concept.name}|#{value[:concept]}"
-  end
-  @feedback_list.each do |key, value|
-    puts "#{Candidate.find( key ).concept.name}|#{value[:concept]}"
+  #   puts "#{Candidate.find( key ).concept.name}|#{value[:concept]}"
     Candidate.find(key).concept.name.should eq value[:concept] if value[:concept].present?
   end
 end

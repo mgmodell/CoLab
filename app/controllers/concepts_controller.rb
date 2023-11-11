@@ -17,9 +17,6 @@ class ConceptsController < ApplicationController
   def show
     @title = t '.title'
     respond_to do |format|
-      format.html do
-        render :index
-      end
       format.json do
         render json: @concept.to_json(only: %i[name candidates_count courses_count bingo_count])
       end
@@ -34,9 +31,6 @@ class ConceptsController < ApplicationController
   def index
     @title = t '.title'
     respond_to do |format|
-      format.html do
-        render :index
-      end
       format.json do
         @concepts = Concept.all.order(:name)
         render json: @concepts.collect { |c|
@@ -111,10 +105,6 @@ class ConceptsController < ApplicationController
   def update
     if @concept.update(concept_params)
       respond_to do |format|
-        format.html do
-          @title = t '.title'
-          redirect_to concept_path(@concept), notice: t('concepts.update_success')
-        end
         format.json do
           render json: @concept.to_json(only: %i[name candidates_count courses_count bingo_count])
         end
@@ -122,10 +112,6 @@ class ConceptsController < ApplicationController
     else
       logger.debug @concept.errors.full_messages unless @concept.errors.empty?
       respond_to do |format|
-        format.html do
-          @title = t '.title'
-          render :edit
-        end
         format.json do
           # TODO: add proper error handling here
           render json: @concept.to_json(only: %i[name candidates_count courses_count bingo_count])

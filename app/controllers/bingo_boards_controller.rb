@@ -213,9 +213,6 @@ class BingoBoardsController < ApplicationController
             practice_answers: @practice_answers.as_json
           }
         end
-        format.html do
-          # worksheet_results
-        end
       end
     else
       redirect_to root_path
