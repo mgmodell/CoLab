@@ -24,7 +24,12 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import LinkedSliders from "linked-sliders/dist/LinkedSliders";
 import axios from "axios";
 import parse from "html-react-parser";
-export default function InstallmentReport(props) {
+
+interface Props {
+  rootPath: string;
+};
+
+export default function InstallmentReport(props : Props) {
   const endpointSet = "installment";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[endpointSet]
@@ -228,9 +233,9 @@ export default function InstallmentReport(props) {
         <p>
           {parse(
             t("instructions", {
-              group_name: group.name,
-              project_name: project.name,
-              member_count: Object.keys(group.users || {}).length,
+              group_name: group['name'],
+              project_name: project['name'],
+              member_count: Object.keys(group['users'] || {}).length,
               factor_count: Object.keys(factors || {}).length
             })
           )}
@@ -307,6 +312,3 @@ export default function InstallmentReport(props) {
   );
 }
 
-InstallmentReport.propTypes = {
-  rootPath: PropTypes.string
-};
