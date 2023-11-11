@@ -223,7 +223,6 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
       end
     end
   end
-  byebug
 end
 
 Given(/^the saved reviews match the list$/) do

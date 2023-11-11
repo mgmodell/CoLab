@@ -148,59 +148,10 @@ class InstallmentsController < ApplicationController
   def update
     id = params[:id].to_i
 
-    respond_to do |format|
-      format.html do
-        @title = t 'installments.title'
-        if id.negative?
-          flash[:notice] = t 'installments.demo_success'
-          redirect_to root_url
-        elsif id.positive?
-          @installment = Installment.find(id)
-          if @installment.update(i_params)
-            notice = t('installments.success')
-            redirect_to root_url, notice:
-          else
-            logger.debug @installment.errors.full_messages unless @installment.errors.empty?
-            @group = Group.find(@installment.group)
-            @project = @installment.assessment.project
-            @factors = @installment.assessment.project.factors
-            @project_name = @installment.assessment.project.name
-            @members = @group.users
-            render @project.style.filename
-          end
-        else
-          @installment = Installment.new(i_params)
-          @installment.id = nil
-          found = false
-          @installment.group.users.each do |user|
-            found = true if current_user == user
-          end
+    result = {}
 
-          if !found
-            redirect_to root_url error: (t 'installments.err_not_member')
-          elsif @installment.save
-            @installment.assessment.project
-            flash[:notice] = t 'installments.success'
-            redirect_to root_url
-          else
-            @factors = @installment.assessment.project.factors
-            @project_name = @installment.assessment.project.name
-            @group = @installment.group
-
-            @members = @installment.values_by_user.keys
-            if @installment.errors[:base].any?
-              flash[:error] = @installment.errors[:base][0]
-              redirect_to root_url
-            else
-              flash[:error] = t 'installments.err_unknown'
-              render @installment.assessment.project.style.filename
-            end
-          end
-        end
-      end
-      format.json do
         if id.negative?
-          render json: {
+          result = {
             messages: {
               status: t('installments.demo_success')
             },
@@ -248,7 +199,7 @@ class InstallmentsController < ApplicationController
           end
           Rails.logger.debug value.errors.full_messages unless value.errors.empty?
           if value.errors.empty?
-            render json: {
+            result = {
               messages: {
                 status: t('installments.success')
               },
@@ -273,12 +224,15 @@ class InstallmentsController < ApplicationController
               }
             }
           else
-            render json: {
+            result = {
               messages: value.errors.full_messages,
               error: true
             }
 
           end
+    respond_to do |format|
+      format.json do
+        render json: result
         end
       end
     end
