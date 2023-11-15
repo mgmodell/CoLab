@@ -3,10 +3,10 @@ import {
   createBrowserRouter,
   RouterProvider,
   BrowserRouter as Router,
-  Routes,
   Route,
   createRoutesFromElements,
-  Outlet
+  Outlet,
+  Navigate
 } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -76,6 +76,13 @@ export default function PageWrapper(props) {
           <Route element={<Outlet />}>
             <Route
               index
+              path="/*"
+              element={
+                <Welcome />
+              }
+            />
+            <Route
+              path={'home'}
               element={
                 <Suspense fallback={<Skeleton variant={"rectangular"} />}>
                   <RequireAuth>
@@ -156,7 +163,6 @@ export default function PageWrapper(props) {
               }
             />
 
-            <Route path='welcome/*' element={<Welcome />} />
             <Route path="user/password/edit" element={<PasswordEdit />} />
             <Route path={`what_is_colab`} element={<WhatIsIt />} />
             <Route path={`tos`} element={<TermsOfService />} />
@@ -169,7 +175,6 @@ export default function PageWrapper(props) {
                 </Suspense>
               }
             />
-            <Route path="login" element={<SignIn />} />
           </Route>
         </Route>
       </React.Fragment>

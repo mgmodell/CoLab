@@ -149,7 +149,7 @@ const CONFIG = {
           dispatch(setLoggedOut());
           dispatch(setLookups(resp["data"]["lookups"]));
           dispatch(setEndPoints(resp["data"]["endpoints"]));
-          dispatch(clearProfile);
+          dispatch(clearProfile());
           CONFIG.deleteData(CONFIG.SAVED_CREDS_KEY);
         }
       });

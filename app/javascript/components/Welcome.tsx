@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SignIn from "./SignIn";
 import EmbeddedHTMLInSVG from "./infrastructure/EmbeddedHTMLInSVG";
 import ResizableSVG from "./infrastructure/ResizableSVG";
+import { useTypedSelector } from "./infrastructure/AppReducers";
 
 type Props = {
 }
@@ -12,14 +13,18 @@ export default function Welcome(props: Props) {
   const location = useLocation( );
   const params = useParams( );
   const navigate = useNavigate( );
+  const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn );
 
+  const [welcomed, setWelcomed] = useState( false );
+
+  const height = 300;
+  const width = 500;
   //const mounted = useRef(false);
-  console.log( location, params );
 
   const login = params['*'] === 'login' ?
   (
     <animated.g>
-      <EmbeddedHTMLInSVG width={'50%'} height={'100%'}>
+      <EmbeddedHTMLInSVG width={`${width / 2}`} height={`${height}`}>
            <SignIn />
       </EmbeddedHTMLInSVG>
     </animated.g>
@@ -29,97 +34,155 @@ export default function Welcome(props: Props) {
 
   //const viewBox = [0, 0, 1024, 768].join(" ");
 
-  const [styles, api] = useSpring(() => ({
+  const [logoStyles, logoApi] = useSpring(() => ({
    x: 0,
    y: 0,
    scale: 1,
    rotate: 0,
    config: {
       precision: 0.0001,
-      ...config.molasses
+      ...config.gentle
    }
   }));
 
-  const logo_look = {
+  const [titleStyles, titleApi] = useSpring(() =>({
+
+   opacity: 0,
+   config: {
+      ...config.gentle
+   }
+  }))
+
+
+  const logoLook = {
    welcome: {
-      x: 41,
-      y: 132,
-      scale: 0.125,
+      x: 79,
+      y: 320,
+      scale: 0.32,
       rotate: 255,
 
    },
    login: {
-      x: 41,
-      y: 132,
-      scale: 0.125,
-      rotate: 255,
+      x: 200,
+      y: 180,
+      scale: 0.26,
+      rotate: 670,
+
+   }
+  }
+  const titleLook = {
+   welcome: {
+      opacity: 100
+
+   },
+   other: {
+      opacity: 0
 
    }
   }
 
-  const toWelcome = () =>{
-   api.start({
-      to:{
-         x: 41,
-         y: 132,
-         scale: 0.125,
-         rotate: 255,
+  const animateToScene = ( sceneName:string) =>{
+
+      logoApi.start({
+         to: logoLook[sceneName]
+      })
+      titleApi.start({
+         to: titleLook['welcome' === sceneName ? 'welcome' : 'other' ]
+      })
+
+  }
+  const goToScene = (sceneName: string) =>{
+
+
+   if( `/${sceneName}` !== location.pathname){
+
+      setWelcomed( true );
+      animateToScene( sceneName.length > 0 ? sceneName : 'welcome' );
+      navigate( sceneName );
+
+   } else if( '' === sceneName ){
+      // If there's no change in the path, we only care
+      // if the request is for '/' (i.e. 'welcome')
+      if( welcomed && '/' === location.pathname){
+         animateToScene( 'login' );
+         setWelcomed( true );
+         navigate( '/login',
+         {
+            relative: 'route'
+         } );
+      }else if( !welcomed || '/login' === location.pathname ){
+         animateToScene( 'welcome' );
+         setWelcomed( true );
+         navigate( '/', {
+            relative: 'route',
+         });
+
       }
-   })
+
+   } else if( sceneName.length > 0 ){
+      if( !isLoggedIn || 'login' !== sceneName ){
+        navigate( sceneName, {
+           replace: true
+        })
+      } else {
+         navigate( '/home', {
+            replace: true
+         })
+      }
+   }
+
   }
 
-  const toLogin = () =>{
-   navigate('login');
-   api.start({
-      to:{
-         x: 140,
-         y: 140,
-         scale: 0.08,
-         rotate: 615,
-      }
-   })
-  }
+
 
   useEffect( () =>{
-   toWelcome( );
+   const sceneName = '' === params[ '*' ] ? 'welcome' : params['*'];
+   animateToScene( sceneName );
+   setWelcomed( true );
+   navigate( sceneName, {
+      replace: true,
+   } );
   },[])
 
 
   return (
    <ResizableSVG
       id='welcome'
-      height={300}
-      width={400}
+      height={height}
+      width={width}
    >
   <animated.g
      id="title_text"
      style={{
+         x: 0,
+
          strokeWidth: .125,
           fill: 'white',
           stroke: 'black',
-          scale: 3
+          scale: 1,
+          ...titleStyles
      }}>
     <text
-         x="29"
-         y="21"
+         x="64"
+         y="31"
        id="improving"
        style={ {
           fontWeight: "normal",
-          fontSize: '22',
+          fontSize: '42',
           lineHeight: 1,
           whiteSpace: 'pre',
           fontFamily: 'sans-serif',
 
         }}>
-         Impr        ving
+         Impr     ving
     </text>
     <text
-         x="20"
-         y="79"
+         x="23"
+         y="181"
        id="colab"
        style={ {
           fontWeight: "normal",
-          fontSize: '50',
+          fontSize: '128',
           lineHeight: 1.45,
           fontFamily: 'sans-serif',
           whiteSpace: 'pre',
@@ -129,12 +192,12 @@ export default function Welcome(props: Props) {
          C    LAB
     </text>
     <text
-         x="133"
-         y="101"
+         x="315"
+         y="240"
        id="oration"
        style={ {
           fontWeight: "normal",
-          fontSize: '18',
+          fontSize: '50',
           lineHeight: 1.25,
           fontFamily: 'sans-serif',
           fill: 'black',
@@ -143,12 +206,12 @@ export default function Welcome(props: Props) {
          RATION
     </text>
     <text
-         x="65"
-         y="117"
+         x="142"
+         y="285"
        id="one_team"
        style={ {
           fontWeight: "normal",
-          fontSize: '12',
+          fontSize: '42',
           lineHeight: 1.25,
           fontFamily: 'sans-serif',
 
@@ -161,17 +224,12 @@ export default function Welcome(props: Props) {
 
     }
     {login}
-
     <animated.g
        id="circles"
        stroke="#000000"
        strokeWidth="30"
-       transform="
-        translate(41,132)
-        rotate( 255 )
-        scale(.125)"
        style={{
-         ...styles
+         ...logoStyles
        }}
        >
       <line
@@ -209,7 +267,11 @@ export default function Welcome(props: Props) {
          cx="450"
          cy="455"
          r="160"
-         fill="#00ffff" />
+         fill="#00ffff"
+         onClick={() =>
+            goToScene( '' ) // To Welcome
+         }
+         />
       <g
          id="teammates"
          strokeWidth="20">
@@ -230,7 +292,11 @@ export default function Welcome(props: Props) {
            cx="790"
            cy="530"
            r="85"
-           fill="#ffff00" />
+           fill="#ffff00" 
+           onClick={()=>{
+            goToScene( 'why' );
+           }}
+           />
         <circle
            id="orange"
            cx="610"
@@ -238,7 +304,7 @@ export default function Welcome(props: Props) {
            r="81"
            fill="#ff6600"
            onClick={()=>{
-            toLogin( );
+            goToScene( 'student' );
            }}
            />
         <circle
@@ -247,29 +313,85 @@ export default function Welcome(props: Props) {
            cy="710"
            r="80"
            fill="#ff00ff"
-           onClick={()=>{
-            toWelcome( );
-           }}
+           onClick={()=>
+            goToScene( 'instructor' )
+           }
            />
       </g>
     </animated.g>
     <animated.g
          id='tooltips'
+         style={{
+          fontWeight: 'bold',
+          fontSize: '11',
+          fontFamily: 'sans-serif',
+          fill: 'azure',
+          strokeWidth: .5,
+          stroke: 'midnightblue',
+         }}
     >
       <text
-         x="59"
-         y="62"
-       id="one_team"
+         x="145"
+         y="156"
+       id="welcome_txt"
+       onClick={()=> goToScene( '/' )} // To Welcome
        style={ {
-          fontWeight: "normal",
-          fontSize: '9',
-          fontFamily: 'sans-serif',
-          fill: 'white',
-          strokeWidth: .25,
-          stroke: 'black',
+          fontSize: '20',
+          fill: 'midnightblue',
+          //strokeWidth: .2,
+          stroke: 'azure',
        }}
       >
          Welcome
+      </text>
+      <text
+         x="130"
+         y="45"
+       id="why_txt"
+       style={ {
+         stroke: "azure",
+         fill: 'midnightblue'
+       }}
+      >
+         Why CoLab?
+      </text>
+      <text
+         x="255"
+         y="65"
+       id="student_txt"
+       style={ {
+       }}
+      >
+         Student?
+      </text>
+      <text
+         x="245"
+         y="225"
+       id="instructor_txt"
+       style={ {
+       }}
+      >
+         Instructor?
+      </text>
+      <text
+         x="80"
+         y="270"
+       id="about_txt"
+       style={ {
+         stroke: "azure",
+         fill: 'black'
+       }}
+      >
+         About
+      </text>
+      <text
+         x="45"
+         y="130"
+       id="research_txt"
+       style={ {
+       }}
+      >
+         Research
       </text>
     </animated.g>
    </ResizableSVG>

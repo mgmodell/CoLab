@@ -15,9 +15,9 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
 
-type Props = {
-  consentFormId: number;
-  parentUpdateFunc: () => void;
+interface Props {
+  consentFormId?: number;
+  parentUpdateFunc?: () => void;
 };
 
 export default function ConsentLog(props: Props) {

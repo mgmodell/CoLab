@@ -28,7 +28,11 @@ const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const TaskList = React.lazy(() => import("./TaskList"));
 
-export default function HomeShell(props) {
+interface Props {
+  rootPath?: string
+}
+
+export default function HomeShell(props : Props) {
   const category = "home";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -218,6 +222,3 @@ export default function HomeShell(props) {
   );
 }
 
-HomeShell.propTypes = {
-  rootPath: PropTypes.string
-};

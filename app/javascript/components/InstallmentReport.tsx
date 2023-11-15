@@ -26,7 +26,7 @@ import axios from "axios";
 import parse from "html-react-parser";
 
 interface Props {
-  rootPath: string;
+  rootPath?: string;
 };
 
 export default function InstallmentReport(props : Props) {

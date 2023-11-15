@@ -54,6 +54,8 @@ export default function SignIn(props) {
     state => state.context.lookups["oauth_ids"]
   );
 
+  const from = undefined != state ? state.from : "/home";
+
   //Code to trap an 'enter' press and submit
   //It gets placed on the password field
   const submitOnEnter = evt => {
@@ -62,8 +64,6 @@ export default function SignIn(props) {
       evt.preventDefault();
     }
   };
-
-  const from = undefined != state ? state.from : "/";
 
   const enterLoginBtn = (
     <Button
@@ -203,7 +203,7 @@ export default function SignIn(props) {
   if (loggingIn || oauth_client_ids === undefined) {
     return <Skeleton variant="rectangular" height="300" />;
   } else if (isLoggedIn) {
-    return <Navigate replace to={state?.from || "/"} />;
+    return <Navigate replace to={state?.from || "/home"} />;
   } else {
     return (
       <Suspense fallback={<Skeleton variant={"rectangular"} height="300" />}>
