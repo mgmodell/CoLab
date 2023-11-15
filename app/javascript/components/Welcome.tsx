@@ -5,6 +5,7 @@ import SignIn from "./SignIn";
 import EmbeddedHTMLInSVG from "./infrastructure/EmbeddedHTMLInSVG";
 import ResizableSVG from "./infrastructure/ResizableSVG";
 import { useTypedSelector } from "./infrastructure/AppReducers";
+import Tooltip from '@mui/material/Tooltip'
 
 type Props = {
 }
@@ -32,7 +33,6 @@ export default function Welcome(props: Props) {
   ) : null;
 
 
-  //const viewBox = [0, 0, 1024, 768].join(" ");
 
   const [logoStyles, logoApi] = useSpring(() => ({
    x: 0,
@@ -45,15 +45,50 @@ export default function Welcome(props: Props) {
    }
   }));
 
-  const [titleStyles, titleApi] = useSpring(() =>({
+  const [tooltipRStyles, tooltipRApi] = useSpring(() => ({
+   transform: 'translate(0, 0)'
+  }))
 
+  const [tooltipStyles, tooltipApi] = useSpring(() => ({
+   x: 0,
+   y: 0,
+   scale: 1,
+   config: {
+      precision: 0.0001,
+      ...config.gentle
+   }
+  }));
+
+  const [titleStyles, titleApi] = useSpring(() =>({
    opacity: 0,
    config: {
       ...config.gentle
    }
   }))
 
+  const tooltipLook = {
+   welcome: {
+      opacity: 100,
+      /*
+      x: 0,
+      y: 0,
+      rotate: 0,
+      scale: 1,
+      */
 
+   },
+   login: {
+      opacity: 0,
+      /*
+      x: 370,
+      y: 0,
+      rotate: 55,
+      scale: 0.8125,
+      */
+
+   }
+  }
+    
   const logoLook = {
    welcome: {
       x: 79,
@@ -83,11 +118,14 @@ export default function Welcome(props: Props) {
 
   const animateToScene = ( sceneName:string) =>{
 
-      logoApi.start({
-         to: logoLook[sceneName]
+      tooltipApi.start({
+         to: tooltipLook[sceneName]
       })
       titleApi.start({
          to: titleLook['welcome' === sceneName ? 'welcome' : 'other' ]
+      })
+      logoApi.start({
+         to: logoLook[sceneName]
       })
 
   }
@@ -328,7 +366,8 @@ export default function Welcome(props: Props) {
           fill: 'azure',
           strokeWidth: .5,
           stroke: 'midnightblue',
-         }}
+          ...tooltipStyles
+       }}
     >
       <text
          x="145"
@@ -340,6 +379,7 @@ export default function Welcome(props: Props) {
           fill: 'midnightblue',
           //strokeWidth: .2,
           stroke: 'azure',
+          ...tooltipRStyles
        }}
       >
          Welcome
@@ -350,25 +390,35 @@ export default function Welcome(props: Props) {
        id="why_txt"
        style={ {
          stroke: "azure",
-         fill: 'midnightblue'
+         fill: 'midnightblue',
+          ...tooltipRStyles
        }}
       >
          Why CoLab?
       </text>
+
+      <animated.g
+         style={{
+            ...tooltipRStyles
+         }}
+         >
       <text
          x="255"
          y="65"
        id="student_txt"
        style={ {
+            ...tooltipRStyles
        }}
       >
          Student?
       </text>
+      </animated.g>
       <text
          x="245"
          y="225"
        id="instructor_txt"
        style={ {
+          ...tooltipRStyles
        }}
       >
          Instructor?
@@ -379,7 +429,8 @@ export default function Welcome(props: Props) {
        id="about_txt"
        style={ {
          stroke: "azure",
-         fill: 'black'
+         fill: 'black',
+          ...tooltipRStyles
        }}
       >
          About
@@ -389,6 +440,7 @@ export default function Welcome(props: Props) {
          y="130"
        id="research_txt"
        style={ {
+         ...tooltipRStyles,
        }}
       >
          Research
