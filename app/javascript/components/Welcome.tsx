@@ -69,22 +69,52 @@ export default function Welcome(props: Props) {
   const tooltipLook = {
    welcome: {
       opacity: 100,
-      /*
       x: 0,
       y: 0,
-      rotate: 0,
       scale: 1,
+      /*
+      rotate: 0,
       */
 
    },
    login: {
       opacity: 0,
-      /*
       x: 370,
       y: 0,
-      rotate: 55,
       scale: 0.8125,
+      /*
+      rotate: 55,
       */
+   },
+   student: {
+      opacity: 0,
+      x: 370,
+      y: 0,
+      scale: 0.8125,
+   },
+   instructor: {
+      opacity: 0,
+      x: 370,
+      y: 0,
+      scale: 0.8125,
+   },
+   about: {
+      opacity: 0,
+      x: 370,
+      y: 0,
+      scale: 0.8125,
+   },
+   research: {
+      opacity: 0,
+      x: 370,
+      y: 0,
+      scale: 0.8125,
+   },
+   why: {
+      opacity: 0,
+      x: 370,
+      y: 0,
+      scale: 0.8125,
 
    }
   }
@@ -95,15 +125,44 @@ export default function Welcome(props: Props) {
       y: 320,
       scale: 0.32,
       rotate: 255,
-
    },
    login: {
       x: 200,
       y: 180,
       scale: 0.26,
       rotate: 670,
+   },
+   about: {
+      x: 430,
+      y: 35,
+      scale: 0.07,
+      rotate: 135,
+   },
+   research: {
+      x: 90,
+      y: 80,
+      scale: 0.11,
+      rotate: 430,
+   },
+   student: {
+      x: 28,
+      y: 25,
+      scale: 0.10,
+      rotate: 325,
+   },
+   instructor: {
+      x: 85,
+      y: 245,
+      scale: 0.08,
+      rotate: 510,
+   },
+   why: {
+      x: 405,
+      y: 80,
+      scale: 0.10,
+      rotate: 1,
+   },
 
-   }
   }
   const titleLook = {
    welcome: {
@@ -130,6 +189,7 @@ export default function Welcome(props: Props) {
 
   }
   const goToScene = (sceneName: string) =>{
+   console.log( 'go to', sceneName );
 
 
    if( `/${sceneName}` !== location.pathname){
@@ -318,13 +378,21 @@ export default function Welcome(props: Props) {
            cx="124"
            cy="135"
            r="82"
-           fill="#00ff00" />
+           fill="#00ff00"
+           onClick={()=>{
+            goToScene( 'about' );
+           }}
+            />
         <circle
            id="red"
            cx="568"
            cy="134"
            r="80"
-           fill="#ff2a2a" />
+           fill="#ff2a2a"
+           onClick={()=>{
+            goToScene( 'research' );
+           }}
+            />
         <circle
            id="yellow"
            cx="790"
@@ -379,7 +447,7 @@ export default function Welcome(props: Props) {
           fill: 'midnightblue',
           //strokeWidth: .2,
           stroke: 'azure',
-          ...tooltipRStyles
+          ...tooltipRStyles,
        }}
       >
          Welcome
@@ -404,8 +472,11 @@ export default function Welcome(props: Props) {
          >
       <text
          x="255"
-         y="65"
+         y="75"
        id="student_txt"
+           onClick={()=>{
+            goToScene( 'student' );
+           }}
        style={ {
             ...tooltipRStyles
        }}
@@ -417,6 +488,9 @@ export default function Welcome(props: Props) {
          x="245"
          y="225"
        id="instructor_txt"
+           onClick={()=>{
+            goToScene( 'instructor' );
+           }}
        style={ {
           ...tooltipRStyles
        }}
@@ -427,6 +501,9 @@ export default function Welcome(props: Props) {
          x="80"
          y="270"
        id="about_txt"
+           onClick={()=>{
+            goToScene( 'about' );
+           }}
        style={ {
          stroke: "azure",
          fill: 'black',
@@ -439,6 +516,9 @@ export default function Welcome(props: Props) {
          x="45"
          y="130"
        id="research_txt"
+           onClick={()=>{
+            goToScene( 'research' );
+           }}
        style={ {
          ...tooltipRStyles,
        }}
