@@ -32,7 +32,7 @@ import RequireAuth from "./infrastructure/RequireAuth";
 import HomeShell from "./HomeShell";
 import BingoShell from "./BingoBoards/BingoShell";
 import AssignmentShell from "./assignments/AssignmentShell";
-import Welcome from "./Welcome";
+import Welcome from "./info/Welcome";
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() => import("./InstallmentReport"));

@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSpring, animated, config } from "react-spring";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import SignIn from "./SignIn";
-import EmbeddedHTMLInSVG from "./infrastructure/EmbeddedHTMLInSVG";
-import ResizableSVG from "./infrastructure/ResizableSVG";
-import { useTypedSelector } from "./infrastructure/AppReducers";
+import SignIn from "../SignIn";
+import EmbeddedHTMLInSVG from "../infrastructure/EmbeddedHTMLInSVG";
+import ResizableSVG from "../infrastructure/ResizableSVG";
+import { useTypedSelector } from "../infrastructure/AppReducers";
 import Tooltip from '@mui/material/Tooltip'
+import WhyCoLab from "./WhyCoLab";
 
 type Props = {
 }
@@ -17,9 +18,10 @@ export default function Welcome(props: Props) {
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn );
 
   const [welcomed, setWelcomed] = useState( false );
+  const [title, setTitle] = useState( '' );
 
   const height = 300;
-  const width = 500;
+  const width = 530;
   //const mounted = useRef(false);
 
   const login = params['*'] === 'login' ?
@@ -145,8 +147,8 @@ export default function Welcome(props: Props) {
       rotate: 430,
    },
    student: {
-      x: 28,
-      y: 25,
+      x: 13,
+      y: 35,
       scale: 0.10,
       rotate: 325,
    },
@@ -176,6 +178,30 @@ export default function Welcome(props: Props) {
   }
 
   const animateToScene = ( sceneName:string) =>{
+      switch( sceneName ){
+         case 'welcome':
+         case 'login':
+            setTitle( '' );
+            break;
+         case 'student':
+            setTitle( 'CoLab features for students' );
+            break;
+         case 'instructor':
+            setTitle( 'CoLab features for instructors' );
+            break;
+         case 'why':
+            setTitle( 'What problem does CoLab solve?' );
+            break;
+         case 'research':
+            setTitle( 'The research behind CoLab' );
+            break;
+         case 'about':
+            setTitle( 'Who\'s behind CoLab?' );
+            break;
+         default:
+            setTitle( `${sceneName} was not found`)
+
+      }
 
       tooltipApi.start({
          to: tooltipLook[sceneName]
@@ -189,8 +215,6 @@ export default function Welcome(props: Props) {
 
   }
   const goToScene = (sceneName: string) =>{
-   console.log( 'go to', sceneName );
-
 
    if( `/${sceneName}` !== location.pathname){
 
@@ -249,6 +273,22 @@ export default function Welcome(props: Props) {
       height={height}
       width={width}
    >
+  <text
+       x="90"
+       y="20"
+     id="title"
+     style={ {
+        fontWeight: "normal",
+        fontSize: '18',
+        lineHeight: 1,
+        fontFamily: 'sans-serif',
+        strokeWidth: .2,
+        fill: 'azure',
+        stroke: 'midnightblue',
+
+      }}>
+       {title}
+  </text>
   <animated.g
      id="title_text"
      style={{
@@ -526,6 +566,16 @@ export default function Welcome(props: Props) {
          Research
       </text>
     </animated.g>
+    <g
+     style={{
+       transform: 'translate( 10 150 )',
+     }}
+     >
+    {'why' === params['*'] ?
+      <WhyCoLab height={250} width={444} />
+    : null
+    }
+    </g>
    </ResizableSVG>
   );
 
