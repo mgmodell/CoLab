@@ -244,7 +244,7 @@ export default function CandidatesReviewTable(props) {
       sortable: true,
       filterable: true,
       body: param => {
-        return 100 === param ? "*" : null;
+        return 100 === param.completed ? "*" : null;
       },
       key: "completed"
     },

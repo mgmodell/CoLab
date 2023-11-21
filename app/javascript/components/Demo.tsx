@@ -17,7 +17,6 @@ type Props = {
   rootPath: string
 }
 export default function Demo(props : Props) {
-  console.log( 'demoing', location.pathname );
   return (
     <Routes>
       <Route

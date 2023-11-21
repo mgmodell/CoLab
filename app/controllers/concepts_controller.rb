@@ -103,9 +103,6 @@ class ConceptsController < ApplicationController
   end
 
   def update
-        else
-      logger.debug @concept.errors.full_messages if @concept.errors.empty?
-    end
     respond_to do |format|
             format.json do
               render json: @concept.to_json(only: %i[name candidates_count courses_count bingo_count])

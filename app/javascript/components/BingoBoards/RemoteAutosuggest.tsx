@@ -19,7 +19,6 @@ export default function RemoteAutosuggest( props: Props ){
   const [items, setItems] = useState( [] );
 
   const getData = (value) => {
-    console.log( 'val', value );
     if( value.length > 2 ){
       const url =
         props.rootPath === undefined
