@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 
 type Props = {
-  height: number;
-  width: number;
-  spinning: boolean;
+  height?: number;
+  width?: number;
+  spinning?: boolean;
 }
 
 export default function Logo(props: Props) {

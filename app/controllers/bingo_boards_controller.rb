@@ -71,9 +71,9 @@ class BingoBoardsController < ApplicationController
     bingo_game = BingoGame.find(params[:bingo_game_id])
     bingo_board = bingo_game.bingo_boards.playable
                             .includes(:bingo_game, bingo_cells: :concept)
-                            .where(user_id: current_user.id).take
+                            .find_by(user_id: current_user.id)
     worksheet = bingo_game.bingo_boards.worksheet
-                          .where(user_id: current_user.id).take
+                          .find_by(user_id: current_user.id)
     board_for_game_helper bingo_board:,
                           worksheet:,
                           bingo_game:,
@@ -228,7 +228,7 @@ class BingoBoardsController < ApplicationController
       bingo_game = BingoGame.find(params[:bingo_game_id])
       wksheet = bingo_game.bingo_boards.worksheet
                           .includes(:bingo_game, bingo_cells: %i[concept candidate])
-                          .where(user_id: current_user.id).take
+                          .find_by(user_id: current_user.id)
 
       if wksheet.blank?
         candidates = bingo_game.candidates.acceptable.to_a
@@ -333,10 +333,10 @@ class BingoBoardsController < ApplicationController
 
   def update
     bingo_game_id = params[:bingo_game_id]
-    @board = BingoBoard.playable.where(
+    @board = BingoBoard.playable.find_by(
       user_id: current_user.id,
       bingo_game_id:
-    ).take
+    )
     if @board.nil?
       @board = BingoBoard.new(
         user_id: current_user.id,
@@ -352,7 +352,7 @@ class BingoBoardsController < ApplicationController
 
     cells = []
     params[:bingo_board][:bingo_cells_attributes].each do |bc_hash|
-      bc = BingoCell.where(id: bc_hash[:id]).take
+      bc = BingoCell.find_by(id: bc_hash[:id])
       if bc.nil?
         bc = @board.bingo_cells.build(
           row: bc_hash[:row],

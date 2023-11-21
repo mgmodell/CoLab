@@ -76,21 +76,22 @@ export default function PageWrapper(props) {
           <Route element={<Outlet />}>
             <Route
               index
-              path="/*"
+              element={
+                <Navigate to={'welcome'} replace={true} />
+              }
+              />
+            <Route
+              path={'welcome/*'}
               element={
                 <Welcome />
               }
-            />
+              />
             <Route
-              path={'home'}
+              path={'login'}
               element={
-                <Suspense fallback={<Skeleton variant={"rectangular"} />}>
-                  <RequireAuth>
-                    <HomeShell />
-                  </RequireAuth>
-                </Suspense>
+                <Navigate to={'/welcome/login'} replace={true} />
               }
-            />
+              />
             <Route
               path="profile"
               element={
@@ -112,46 +113,54 @@ export default function PageWrapper(props) {
               }
             />
             <Route
+              path={'home'}
+              element={
+                <Suspense fallback={<Skeleton variant={"rectangular"} />}>
+                  <RequireAuth>
+                    <Outlet />
+                  </RequireAuth>
+                </Suspense>
+              }
+            >
+              <Route
+                index
+                element={
+                  <HomeShell />
+                }
+                />
+
+
+            <Route
               path={`submit_installment/:installmentId`}
               element={
-                <RequireAuth>
                   <InstallmentReport />
-                </RequireAuth>
               }
             />
             {/* Perhaps subgroup under Bingo */}
             <Route
               path="bingo/*"
               element={
-                <RequireAuth>
                   <BingoShell />
-                </RequireAuth>
               }
             />
             {/* Perhaps subgroup under Experience */}
             <Route
               path={`experience/:experienceId`}
               element={
-                <RequireAuth>
                   <Experience />
-                </RequireAuth>
               }
             />
             {/* Perhaps subgroup under Assignment */}
             <Route
               path={`assignment/*`}
               element={
-                <RequireAuth>
                   <AssignmentShell />
-                </RequireAuth>
               }
             />
             <Route
               path={`research_information/:consentFormId`}
               element={
-                <RequireAuth>
                   <ConsentLog />
-                </RequireAuth>
               }
             />
             <Route
@@ -162,6 +171,7 @@ export default function PageWrapper(props) {
                 </RequireAuth>
               }
             />
+            </Route>
 
             <Route path="user/password/edit" element={<PasswordEdit />} />
             <Route path={`what_is_colab`} element={<WhatIsIt />} />

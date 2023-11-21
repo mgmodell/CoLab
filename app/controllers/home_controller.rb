@@ -414,7 +414,7 @@ class HomeController < ApplicationController
 
   def states_for_country
     country_code = params[:country_code]
-    country = HomeCountry.where(code: country_code).take
+    country = HomeCountry.find_by(code: country_code)
 
     @states = country.nil? ? [] : country.home_states
 

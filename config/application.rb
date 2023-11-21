@@ -30,5 +30,6 @@ module Colab
     # -- all .rb files in that directory are automatically loaded.
     config.active_job.queue_adapter = :delayed_job
     config.omniauth = config_for(:omniauth)
+    config.active_support.cache_format_version = 7.0
   end
 end

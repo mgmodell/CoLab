@@ -37,7 +37,7 @@ Then(/^user sees the assignment in the history$/) do
 end
 
 When(/^the user logs in$/) do
-  visit '/'
+  visit '/home'
   fill_in 'email', with: @user.email
   fill_in 'password', with: 'password'
 

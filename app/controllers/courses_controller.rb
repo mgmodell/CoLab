@@ -133,7 +133,7 @@ class CoursesController < ApplicationController
   end
 
   def self_reg_confirm
-    roster = Roster.where(user: current_user, course: @course).take
+    roster = Roster.find_by(user: current_user, course: @course)
     if roster.nil?
       roster = @course.rosters.create(role: Roster.roles[:requesting_student], user: current_user)
     elsif !((roster.enrolled_student? || roster.invited_student? ||
@@ -161,7 +161,7 @@ class CoursesController < ApplicationController
       response[:message] = 'self_enroll_course_closed_body'
 
     else
-      roster = Roster.includes(:course).where(user: current_user, course: @course).take
+      roster = Roster.includes(:course).find_by(user: current_user, course: @course)
 
       if roster.nil? || roster.dropped_student? ||
          roster.invited_student? || roster.declined_student?
@@ -460,7 +460,7 @@ class CoursesController < ApplicationController
   end
 
   def accept_roster
-    r = Roster.students.where(id: params[:roster_id], user: current_user).take
+    r = Roster.students.find_by(id: params[:roster_id], user: current_user)
     notice = 'Successfully accepted the course'
     if r.nil?
       notice = t('courses.accept_fail')
@@ -478,7 +478,7 @@ class CoursesController < ApplicationController
   end
 
   def decline_roster
-    r = Roster.students.where(id: params[:roster_id], user: current_user).take
+    r = Roster.students.find_by(id: params[:roster_id], user: current_user)
     notice = 'Successfully declined the course'
     if r.nil?
       notice = t('courses.decline_fail')
@@ -532,7 +532,6 @@ class CoursesController < ApplicationController
   def drop_student
     r = Roster.find(params[:roster_id])
     message = nil
-    destination = :root
     if r.nil?
       message = t('courses.no_roster')
     else
@@ -542,7 +541,7 @@ class CoursesController < ApplicationController
       else
         r.role = Roster.roles[:dropped_student]
         r.save
-        destination = course_path(r.course) if instructor_action
+        course_path(r.course) if instructor_action
       end
     end
     respond_to do |format|

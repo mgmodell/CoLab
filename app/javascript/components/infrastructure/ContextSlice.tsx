@@ -141,15 +141,18 @@ const CONFIG = {
       .then(resp => {
         if (resp["data"]["logged_in"]) {
           dispatch(
-            setLoggedIn(resp["data"]["lookups"], resp["data"]["endpoints"])
+            setLoggedIn({
+              lookups: resp["data"]["lookups"],
+              endpoints: resp["data"]["endpoints"]
+            })
           );
           dispatch(setRetrievedProfile(resp["data"]["profile"]["user"]));
           //dispatch( fetchProfile( ) );
         } else {
-          dispatch(setLoggedOut());
+          dispatch(setLoggedOut( {} ));
           dispatch(setLookups(resp["data"]["lookups"]));
           dispatch(setEndPoints(resp["data"]["endpoints"]));
-          dispatch(clearProfile());
+          dispatch(clearProfile( {} ));
           CONFIG.deleteData(CONFIG.SAVED_CREDS_KEY);
         }
       });
@@ -210,23 +213,32 @@ const contextSlice = createSlice({
   initialState: initialState,
   reducers: {
     setInitialised: {
-      reducer: (state, action) => {
+      reducer (state, action) {
         state.status.initialised = true;
+      },
+      prepare() {
+        return {};
       }
     },
     setEndPointUrl: {
-      reducer: (state, action) => {
+      reducer(state, action) {
         state.config.endpoint_url = action.payload;
+      },
+      prepare( url: string ) {
+        return {
+          payload:  url,
+        };
       }
     },
     setLoggingIn: {
       reducer: (state, action) => {
         state.status.loggingIn = true;
         state.status.loggedIn = false;
-      }
+      },
+      prepare: () => { return {} }
     },
     setLoggedIn: {
-      reducer: (state, action) => {
+      reducer (state, action) {
         state.status.loggingIn = false;
         state.status.loggedIn = true;
         state.lookups = action.payload.lookups;
@@ -234,40 +246,52 @@ const contextSlice = createSlice({
         state.status.endpointsLoaded = true;
         state.status.lookupsLoaded = true;
       },
-      prepare: (lookups: object, endpoints: object) => {
+      prepare ( payload: {lookups: object, endpoints: object } ) {
         return {
           payload: {
-            lookups: lookups,
-            endpoints: endpoints
+            lookups: payload.lookups,
+            endpoints: payload.endpoints
           }
         };
       }
     },
     setLoginFailed: {
-      reducer: (state, action) => {
+      reducer (state, action) {
         state.status.loggingIn = false;
-      }
+      },
+      prepare () { return {} }
     },
     setLoggedOut: {
-      reducer: (state, action) => {
+      reducer(state, action) {
         state.status.loggingIn = false;
         state.status.loggedIn = false;
         state.lookups = {};
         state.endpoints = {};
         state.status.endpointsLoaded = true;
         state.status.initialised = false;
-      }
+      },
+      prepare ( ) { return {} }
     },
     setEndPoints: {
-      reducer: (state, action) => {
+      reducer (state, action) {
         state.endpoints = action.payload;
         state.status.endpointsLoaded = true;
+      },
+      prepare ( endpoints )  {
+        return {
+          payload: endpoints
+        }
       }
     },
     setLookups: {
       reducer: (state, action) => {
         state.lookups = action.payload;
         state.status.lookupsLoaded = true;
+      },
+      prepare: ( lookups ) => {
+        return {
+          payload: lookups
+        }
       }
     }
   }
@@ -345,7 +369,7 @@ export const emailSignUp = createAsyncThunk(
     const dispatch = thunkAPI.dispatch;
     const getState = thunkAPI.getState;
 
-    dispatch(setLoggingIn);
+    dispatch(setLoggingIn({} ));
 
     if (!params.email) {
       dispatch(setLoginFailed());
@@ -373,7 +397,7 @@ export const oAuthSignIn = createAsyncThunk(
   async (token: string, thunkAPI) => {
     const dispatch = thunkAPI.dispatch;
     const getState = thunkAPI.getState;
-    dispatch(setLoggingIn);
+    dispatch(setLoggingIn({} ));
 
     const url = getState().context.endpoints["home"].oauthValidate + ".json";
 

@@ -103,20 +103,13 @@ class ConceptsController < ApplicationController
   end
 
   def update
-    if @concept.update(concept_params)
-      respond_to do |format|
-        format.json do
-          render json: @concept.to_json(only: %i[name candidates_count courses_count bingo_count])
-        end
-      end
-    else
-      logger.debug @concept.errors.full_messages unless @concept.errors.empty?
-      respond_to do |format|
-        format.json do
-          # TODO: add proper error handling here
-          render json: @concept.to_json(only: %i[name candidates_count courses_count bingo_count])
-        end
-      end
+        else
+      logger.debug @concept.errors.full_messages if @concept.errors.empty?
+    end
+    respond_to do |format|
+            format.json do
+              render json: @concept.to_json(only: %i[name candidates_count courses_count bingo_count])
+            end
     end
   end
 

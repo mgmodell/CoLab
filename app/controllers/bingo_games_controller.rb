@@ -212,7 +212,7 @@ class BingoGamesController < ApplicationController
       end
     end
     resp_array = []
-    resp.keys.each do |key|
+    resp.each_key do |key|
       resp[key][:id] = key
       resp_array << resp[key]
     end
@@ -467,12 +467,12 @@ class BingoGamesController < ApplicationController
       end
 
       concept_map = {}
-      Concept.where(name: entered_concepts).each do |c|
+      Concept.where(name: entered_concepts).find_each do |c|
         concept_map[c.name] = c
       end
 
       feedback_map = {}
-      CandidateFeedback.all.each do |cf|
+      CandidateFeedback.all.find_each do |cf|
         feedback_map[cf.id] = cf
       end
 

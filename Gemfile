@@ -93,6 +93,7 @@ group :development, :test do
   gem 'rubocop-thread_safety'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
+  gem 'rubocop-capybara'
   gem 'solargraph'
 end
 

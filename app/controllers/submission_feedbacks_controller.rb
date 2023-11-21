@@ -69,15 +69,15 @@ class SubmissionFeedbacksController < ApplicationController
           format.json  do
             response = {
               submission_feedback: @submission_feedback.as_json(
-                  include: {
-                    rubric_row_feedbacks: {
-                      only: %i[ id feedback score submission_feedback_id criterium_id]
-                    }
-                  },
-                  only: %i[ id submission_id feedback]
-                ),
+                include: {
+                  rubric_row_feedbacks: {
+                    only: %i[id feedback score submission_feedback_id criterium_id]
+                  }
+                },
+                only: %i[id submission_id feedback]
+              ),
               messages: {
-                main: t('critiques.save_success_msg'),
+                main: t('critiques.save_success_msg')
 
               }
             }
@@ -85,8 +85,8 @@ class SubmissionFeedbacksController < ApplicationController
           end
         else
 
-          errors = @submission_feedback.errors.to_hash.merge( submission.errors.to_hash )
-          errors[:main] = t('critiques.save_fail_msg') unless errors[:main].present?
+          errors = @submission_feedback.errors.to_hash.merge(submission.errors.to_hash)
+          errors[:main] = t('critiques.save_fail_msg') if errors[:main].blank?
 
           response = {
             messages: errors
@@ -94,7 +94,7 @@ class SubmissionFeedbacksController < ApplicationController
           format.json do
             render json: response
           end
-          
+
         end
       end
     end
@@ -140,16 +140,16 @@ class SubmissionFeedbacksController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_submission_feedback
-    if params[:submission_feedback_id].to_i > 0
-      @submission_feedback = SubmissionFeedback
-                    .includes( :rubric_row_feedbacks)
-                    .find(params[:submission_feedback_id])
-    else
-      @submission_feedback = SubmissionFeedback.new(
-        submission_feedback_params
-      )
+    @submission_feedback = if params[:submission_feedback_id].to_i.positive?
+                             SubmissionFeedback
+                               .includes(:rubric_row_feedbacks)
+                               .find(params[:submission_feedback_id])
+                           else
+                             SubmissionFeedback.new(
+                               submission_feedback_params
+                             )
 
-    end
+                           end
 
     @submission_feedback
   end
@@ -164,7 +164,7 @@ class SubmissionFeedbacksController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def submission_feedback_params
-    params.require(:submission_feedback).permit(:submission_id, :feedback, 
+    params.require(:submission_feedback).permit(:submission_id, :feedback,
                                                 rubric_row_feedbacks_attributes: %I[id
                                                                                     submission_feedback_id score feedback criterium_id])
   end

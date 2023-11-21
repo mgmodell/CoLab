@@ -172,6 +172,9 @@ Rails.application.routes.draw do
     # Consent log paths
     get 'consent_logs/edit/:consent_form_id' => 'consent_logs#edit', as: :edit_consent_log
     patch 'consent_logs/:id' => 'consent_logs#update', as: :consent_log
+    get 'installments/edit/:assessment_id' => 'installments#submit_installment', as: :edit_installment
+
+    resources :installments, only: %i[update create]
   end
 
   scope 'infra' do
@@ -235,6 +238,7 @@ Rails.application.routes.draw do
       get 'task_list' => 'home#demo_start', as: :demo_task_list
   
       get 'installments/edit/:id' => 'installments#demo_complete', as: :assessment_demo_complete
+      patch 'installments/:id' => 'installments#demo_update'
       get 'candidate_lists/:id' => 'candidate_lists#demo_entry', as: :terms_demo_entry
       get 'candidate_lists/play' => 'candidate_lists#demo_play', as: :bingo_demo_play
       get 'bingo/bingo_board/:bingo_game_id' => 'bingo_boards#board_for_game_demo',
@@ -258,9 +262,6 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'installments/edit/:assessment_id' => 'installments#submit_installment', as: :edit_installment
-
-  resources :installments, only: %i[update create]
 
   get 'graphing/index' => 'graphing#index', as: :graphing
   # Pull the available projects

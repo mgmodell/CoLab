@@ -1,6 +1,5 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
-import PropTypes from "prop-types";
+import { Routes, Route, Outlet } from "react-router-dom";
 
 import HomeShell from "./HomeShell";
 import { Skeleton } from "@mui/material";
@@ -14,13 +13,21 @@ const CandidatesReviewTable = React.lazy(() =>
 const BingoBuilder = React.lazy(() => import("./BingoBoards/BingoBuilder"));
 const Experience = React.lazy(() => import("./experiences/Experience"));
 
-export default function Demo(props) {
+type Props = {
+  rootPath: string
+}
+export default function Demo(props : Props) {
+  console.log( 'demoing', location.pathname );
   return (
     <Routes>
       <Route
+        element={<Outlet />}
+        >
+
+      <Route
         path={`submit_installment/:installmentId`}
         element={
-          <InstallmentReport rootPath={`${props.rootPath}/api-backend`} />
+          <InstallmentReport rootPath={props.rootPath} />
         }
       />
       {/* Perhaps subgroup under Bingo */}
@@ -42,10 +49,7 @@ export default function Demo(props) {
         element={<Experience rootPath={`${props.rootPath}/api-backend`} />}
       />
       <Route index element={<HomeShell rootPath="demo" />} />
+        </Route>
     </Routes>
   );
 }
-
-Demo.propTypes = {
-  rootPath: PropTypes.string.isRequired
-};

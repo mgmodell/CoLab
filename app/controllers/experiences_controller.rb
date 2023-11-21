@@ -143,7 +143,7 @@ class ExperiencesController < ApplicationController
     experience_id = params[:experience_id]
 
     experience = Experience.joins(course: { rosters: :user })
-                           .where(id: experience_id, users: { id: current_user }).take
+                           .find_by(id: experience_id, users: { id: current_user })
 
     response = {
       messages: {}
@@ -182,7 +182,6 @@ class ExperiencesController < ApplicationController
   end
 
   def diagnose
-
     received_diagnosis = Diagnosis.new(diagnosis_params)
     received_diagnosis.reaction = Reaction.find(received_diagnosis.reaction_id)
     received_diagnosis.save
@@ -212,7 +211,6 @@ class ExperiencesController < ApplicationController
                                 })
       # render :next
     end
-
 
     respond_to do |format|
       format.json do

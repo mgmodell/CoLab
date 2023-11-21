@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
 import { Box } from "@mui/material";
@@ -116,7 +116,8 @@ export default function HomeShell(props : Props) {
   };
 
   useEffect(() => {
-    if (props.rootPath !== undefined || (endpointsLoaded && isLoggedIn)) {
+
+    if ( endpointsLoaded && ( props.rootPath !== undefined || isLoggedIn)) {
       getTasks();
     }
   }, [endpointsLoaded, isLoggedIn]);
@@ -176,7 +177,9 @@ export default function HomeShell(props : Props) {
                 displayEventTime={false}
                 events={tasks}
                 eventClick={info => {
-                  navigate(info.event.url);
+                  navigate(
+                    info.event.url
+                    );
                 }}
                 plugins={[dayGridPlugin, luxonPlugin]}
               />
@@ -189,6 +192,10 @@ export default function HomeShell(props : Props) {
       );
     }
   }
+
+  const demoMatch = useMatch( '/demo' );
+  const homeMatch = useMatch( '/home' );
+
 
   return (
     <Paper>

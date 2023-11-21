@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSpring, animated, config } from "react-spring";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, Routes, Route, Outlet } from "react-router-dom";
 import SignIn from "../SignIn";
 import EmbeddedHTMLInSVG from "../infrastructure/EmbeddedHTMLInSVG";
 import ResizableSVG from "../infrastructure/ResizableSVG";
@@ -178,7 +178,9 @@ export default function Welcome(props: Props) {
   }
 
   const animateToScene = ( sceneName:string) =>{
-      switch( sceneName ){
+      const animateSceneName = '' === sceneName ? 'welcome' : sceneName;
+
+      switch( animateSceneName ){
          case 'welcome':
          case 'login':
             setTitle( '' );
@@ -204,38 +206,46 @@ export default function Welcome(props: Props) {
       }
 
       tooltipApi.start({
-         to: tooltipLook[sceneName]
+         to: tooltipLook[animateSceneName]
       })
       titleApi.start({
-         to: titleLook['welcome' === sceneName ? 'welcome' : 'other' ]
+         to: titleLook['welcome' === animateSceneName ? 'welcome' : 'other' ]
       })
       logoApi.start({
-         to: logoLook[sceneName]
+         to: logoLook[animateSceneName]
       })
 
   }
   const goToScene = (sceneName: string) =>{
 
-   if( `/${sceneName}` !== location.pathname){
+   if( 'welcome' !== sceneName && `/${sceneName}` !== location.pathname){
 
       setWelcomed( true );
       animateToScene( sceneName.length > 0 ? sceneName : 'welcome' );
       navigate( sceneName );
 
-   } else if( '' === sceneName ){
+   } else if( 'welcome' === sceneName ){
       // If there's no change in the path, we only care
       // if the request is for '/' (i.e. 'welcome')
-      if( welcomed && '/' === location.pathname){
+      if( welcomed && '/welcome' === location.pathname){
          animateToScene( 'login' );
          setWelcomed( true );
-         navigate( '/login',
+         navigate( 'login',
          {
-            relative: 'route'
+            relative: 'path'
          } );
-      }else if( !welcomed || '/login' === location.pathname ){
+      }else if( '' !== params['*']){
          animateToScene( 'welcome' );
          setWelcomed( true );
-         navigate( '/', {
+         navigate( '/welcome',
+         {
+            relative: 'route'
+         });
+
+      }else if( !welcomed || '/welcome/login' === location.pathname ){
+         animateToScene( 'welcome' );
+         setWelcomed( true );
+         navigate( '/welcome', {
             relative: 'route',
          });
 
@@ -258,16 +268,19 @@ export default function Welcome(props: Props) {
 
 
   useEffect( () =>{
-   const sceneName = '' === params[ '*' ] ? 'welcome' : params['*'];
+   const sceneName = params['*'];
+
    animateToScene( sceneName );
    setWelcomed( true );
    navigate( sceneName, {
+      relative: 'path',
       replace: true,
    } );
   },[])
 
 
   return (
+
    <ResizableSVG
       id='welcome'
       height={height}
@@ -407,7 +420,7 @@ export default function Welcome(props: Props) {
          r="160"
          fill="#00ffff"
          onClick={() =>
-            goToScene( '' ) // To Welcome
+            goToScene( 'welcome' ) // To Welcome
          }
          />
       <g
@@ -481,7 +494,7 @@ export default function Welcome(props: Props) {
          x="145"
          y="156"
        id="welcome_txt"
-       onClick={()=> goToScene( '/' )} // To Welcome
+       onClick={()=> goToScene( 'welcome' )} // To Welcome
        style={ {
           fontSize: '20',
           fill: 'midnightblue',

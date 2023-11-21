@@ -192,8 +192,8 @@ class CandidateListsController < ApplicationController
                                         is_group: false)
     @candidate_list.user = current_user
     Project.new(id: -1,
-                               name: (t :demo_project),
-                               course_id: -1)
+                name: (t :demo_project),
+                course_id: -1)
 
     @candidate_list.bingo_game = BingoGame.new(id: -42,
                                                topic: (t 'candidate_lists.demo_bingo_topic'),
@@ -262,7 +262,7 @@ class CandidateListsController < ApplicationController
       merger_group.users.each do |group_member|
         member_cl = candidate_list.bingo_game.candidate_list_for_user(group_member)
         member_cl.archived = true
-        member_cl.candidates.includes(:user).each do |candidate|
+        member_cl.candidates.includes(:user).find_each do |candidate|
           merged_list << candidate if candidate.term.present? || candidate.definition.present?
         end
         member_cl.save!

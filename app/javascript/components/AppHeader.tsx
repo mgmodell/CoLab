@@ -1,5 +1,4 @@
 import React, { useState, useEffect, Suspense } from "react";
-import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -63,5 +62,3 @@ export default function AppHeader(props) {
     </React.Fragment>
   );
 }
-
-AppHeader.propTypes = {};

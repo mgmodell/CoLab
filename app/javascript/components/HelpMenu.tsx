@@ -10,7 +10,11 @@ import { useTypedSelector } from "./infrastructure/AppReducers";
 import { Button } from "primereact/button";
 import { Sidebar } from "primereact/sidebar";
 
-export default function HelpMenu(props) {
+type Props = {
+  lookupUrl: string
+}
+
+export default function HelpMenu(props : Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [t, i18n] = useTranslation();
 
@@ -201,4 +205,3 @@ export default function HelpMenu(props) {
   );
 }
 
-HelpMenu.propTypes = {};

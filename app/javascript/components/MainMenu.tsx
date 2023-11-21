@@ -66,12 +66,6 @@ export default function MainMenu(props) {
     navigate(url);
   };
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navTo("/");
-    }
-  }, [isLoggedIn]);
-
   const adminItems =
     isLoggedIn && (user.is_instructor || user.is_admin) ? (
       <React.Fragment>
@@ -155,7 +149,7 @@ export default function MainMenu(props) {
 
   const basicOpts = isLoggedIn ? (
     <React.Fragment>
-      <ListItemButton id="home-menu-item" onClick={() => navTo("/")}>
+      <ListItemButton id="home-menu-item" onClick={() => navTo("/home")}>
         <ListItemIcon>
           <HomeIcon fontSize="small" />
         </ListItemIcon>

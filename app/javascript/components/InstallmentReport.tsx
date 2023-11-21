@@ -161,7 +161,7 @@ export default function InstallmentReport(props : Props) {
   //Store what we've got
   const saveContributions = () => {
     dispatch(startTask("saving"));
-    const url =
+    const url = ( props.rootPath === undefined ? '' : `/${props.rootPath}` ) +
       endpoints.saveInstallmentUrl +
       (Boolean(installment.id) ? `/${installment.id}` : ``) +
       ".json";
