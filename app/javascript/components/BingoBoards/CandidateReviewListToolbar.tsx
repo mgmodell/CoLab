@@ -7,7 +7,7 @@ import { Checkbox } from "primereact/checkbox";
 import { ProgressBar } from "primereact/progressbar";
 import { Tooltip } from "primereact/tooltip";
 import { Toolbar } from "primereact/toolbar";
-import { ColumnMeta } from "./CandidatesReviewTable";
+import { ColumnMeta } from '../infrastructure/Types';
 import { MultiSelect } from "primereact/multiselect";
 
 type Props = {

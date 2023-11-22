@@ -22,15 +22,8 @@ import { ScrollPanel } from "primereact/scrollpanel";
 import { Skeleton } from "primereact/skeleton";
 import { Dropdown } from "primereact/dropdown";
 
-interface ColumnMeta {
-  field: string;
-  header: string;
-  sortable: boolean;
-  filterable?: boolean;
-  hidden?: boolean;
-  body?: (param) => ReactNode;
-  key?: string;
-}
+import { ColumnMeta } from "../infrastructure/Types";
+
 export default function CandidatesReviewTable(props) {
   const category = "candidate_review";
 
@@ -409,4 +402,3 @@ export default function CandidatesReviewTable(props) {
     </ScrollPanel>
   );
 }
-export { ColumnMeta };

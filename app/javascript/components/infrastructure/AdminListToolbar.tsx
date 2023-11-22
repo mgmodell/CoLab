@@ -12,6 +12,8 @@ import {
 import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Tooltip from "@mui/material/Tooltip";
+import { Button } from "primereact/button";
+import { PrimeIcons } from "primereact/api";
 
 type Props = {
   itemType: string;
@@ -21,25 +23,19 @@ export default function AdminListToolbar(props: Props) {
   const { t } = useTranslation(`admin`);
   const navigate = useNavigate();
   return (
-    <GridToolbarContainer>
-      <GridToolbarDensitySelector />
-      <GridToolbarFilterButton />
-      <Tooltip title="New">
-        <IconButton
-          id={`new_${props.itemType}`}
-          onClick={event => {
-            navigate("new");
-            //window.location.href =
-            //  endpoints.endpoints[endpointSet].schoolCreateUrl;
-          }}
-          aria-label={`New ${props.itemType}`}
-          size="small"
-        >
-          <AddIcon />
-          {t("new_activity", { activity_type: props.itemType })}
-        </IconButton>
-      </Tooltip>
-      <GridToolbarQuickFilter debounceMs={50} />
-    </GridToolbarContainer>
+    <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+            <span className="text-xl text-900 font-bold">Products</span>
+            <Button
+              tooltip={t('new_activity', {activity_type: props.itemType})}
+              id={`new_${props.itemType}`}
+              onClick={event => {
+                navigate("new");
+              }}
+              aria-label={`New ${props.itemType}`}
+              icon={ PrimeIcons.PLUS} rounded raised >
+                {t("new_activity", { activity_type: props.itemType })}
+
+              </Button>
+        </div>
   );
 }

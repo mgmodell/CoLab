@@ -1,29 +1,28 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import TextField from "@mui/material/TextField";
+
 import { DateTime } from "luxon";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { Calendar } from "primereact/calendar";
 
-import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
+import { Dialog } from "primereact/dialog";
 
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogActions from "@mui/material/DialogActions";
-import Button from "@mui/material/Button";
+import {Button} from 'primereact/button';
 
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
-export default function CopyActivityButton(props) {
+type Props = {
+  itemId: number,
+  itemUpdateFunc: () => void,
+  startDate: Date,
+  copyUrl: string,
+  addMessagesFunc: (msgs:{}) => void,
+}
+
+export default function CopyActivityButton(props: Props) {
   const category = "course";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -37,51 +36,23 @@ export default function CopyActivityButton(props) {
 
   const [copyData, setCopyData] = useState(null);
   const [newStartDate, setNewStartDate] = useState(DateTime.local());
-  const [value, setValue] = useState(null);
 
   const copyDialog = (
     <Dialog
-      open={null != copyData}
-      onClose={(event, reason) => {
+      visible={null !== copyData}
+      header={<h3>{t('dialog_title')}</h3>}
+      draggable={false}
+      onClick={(event)=>{
+        event.preventDefault( );
+      }}
+      modal
+      onHide={() => {
+        console.log( 'hidden?')
         setNewStartDate(null);
         setCopyData(null);
       }}
-    >
-      {null != copyData ? (
-        <React.Fragment>
-          <LocalizationProvider dateAdapter={AdapterLuxon}>
-            <DialogTitle>{t("dialog_title")}</DialogTitle>
-            <DialogContent>
-              <WorkingIndicator identifier="copying_course" />
-              <DialogContentText>
-                This course started on{" "}
-                {props.startDate.toLocaleString(DateTime.DATE_SHORT)}. When
-                would you like for the new copy to begin? Everything will be
-                shifted accordingly.
-                <br />
-              </DialogContentText>
-              <DatePicker
-                variant="inline"
-                autoOk={true}
-                format="MM/dd/yyyy"
-                margin="normal"
-                id="newCourseStartDate"
-                label={t("date_picker_label")}
-                value={newStartDate}
-                onChange={newValue => {
-                  setNewStartDate(newValue);
-                }}
-                slot={{
-                  TextField: TextField
-                }}
-                slotProps={{
-                  textField: {
-                    id: "new_start_end_date"
-                  }
-                }}
-              />
-            </DialogContent>
-            <DialogActions>
+      footer={
+        <>
               <Button
                 disabled={status.working}
                 onClick={event => {
@@ -121,41 +92,53 @@ export default function CopyActivityButton(props) {
               >
                 {t("copy_btn_txt")}
               </Button>
-            </DialogActions>
-          </LocalizationProvider>
-        </React.Fragment>
-      ) : (
-        <DialogContent />
-      )}
+        </>
+      }
+    >
+      This course started on{" "}
+      {props.startDate.toLocaleString(DateTime.DATE_SHORT)}. When
+      would you like for the new copy to begin? Everything will be
+      shifted accordingly.
+      <br />
+              <span className="p-float-label">
+
+              <Calendar
+                value={newStartDate.toJSDate( )}
+                id="newCourseStartDate"
+                icon
+                onChange={newValue =>{
+                  setNewStartDate( DateTime.fromJSDate( newValue) )
+                }}
+                />
+                <label htmlFor="newCourseStartDate">
+                  {t("date_picker_label")}
+                </label>
+              </span>
     </Dialog>
+
   );
 
   return (
     <React.Fragment>
-      <Tooltip title={t("btn_tooltip_title")} aria-label="Copy">
-        <IconButton
+        <Button
+          tooltip={t('btn_tooltip_title')}
+          tooltipOptions={{
+            position: 'left',
+          }}
+          icon='pi pi-copy'
           id={"copy-" + props.itemId}
           onClick={event => {
             setCopyData({
               id: props.itemId,
               startDate: props.startDate,
-              copyUrl: props.copyUrl + props.itemId + ".json"
+              copyUrl: props.copyUrl,
             });
           }}
           aria-label={t("copy_btn_aria")}
           size={t("size_btn")}
-        >
-          <CollectionsBookmarkIcon />
-        </IconButton>
-      </Tooltip>
+        />
       {copyDialog}
     </React.Fragment>
   );
 }
 
-CopyActivityButton.propTypes = {
-  itemId: PropTypes.number.isRequired,
-  itemUpdateFunc: PropTypes.func,
-  startDate: PropTypes.instanceOf(Date).isRequired,
-  addMessagesFunc: PropTypes.func.isRequired
-};

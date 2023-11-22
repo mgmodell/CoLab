@@ -2,28 +2,29 @@ import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import Alert from "@mui/material/Alert";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
+
 import { DateTime } from "luxon";
 
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import BookIcon from "@mui/icons-material/Book";
-import CloseIcon from "@mui/icons-material/Close";
+import { Skeleton } from 'primereact/skeleton';
+import { Button } from "primereact/button";
+
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+
+import { DataTable } from "primereact/datatable";
+import { ColumnMeta } from "../infrastructure/Types";
 
 import CopyActivityButton from "./CopyActivityButton";
-import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
-import { Skeleton } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
 import {
   renderDateCellExpand,
   renderTextCellExpand
 } from "../infrastructure/GridCellExpand";
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
+import { Column } from "primereact/column";
+import { PrimeIcons } from "primereact/api";
 
 export default function CourseList(props) {
   const category = "course";
@@ -34,7 +35,6 @@ export default function CourseList(props) {
     state => state.context.status.endpointsLoaded
   );
 
-  // Settings.throwOnInvalid = true;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -45,14 +45,40 @@ export default function CourseList(props) {
   const [showErrors, setShowErrors] = useState(false);
 
   const dispatch = useDispatch();
+  const optColumns: Array<ColumnMeta> = [
+    {
+      header: t("index.number_col"),
+      field: "number",
+      sortable: true,
+      filterable: false,
+      key: 'number',
+      body: param => {
+        return(
+          <span className={'pi pi-users'} >
+            &nbsp;{param.number}
+          </span>
+        )
+
+      }
+    },
+    {
+      header: t('index.name_col'),
+      field: 'name',
+      sortable: true,
+      filterable: false,
+      body: param => {
+        return renderTextCellExpand( param.name );
+      }
+    }
+  ];
   const columns: GridColDef[] = [
+    /*
     {
       headerName: t("index.number_col"),
       field: "number",
       renderCell: params => {
         return (
-          <span>
-            <BookIcon />
+          <span className={'pi pi-users'} >
             &nbsp;{params.value}
           </span>
         );
@@ -63,6 +89,7 @@ export default function CourseList(props) {
       field: "name",
       renderCell: renderTextCellExpand
     },
+    */
     {
       headerName: t("index.school_col"),
       field: "school_name",
@@ -107,8 +134,9 @@ export default function CourseList(props) {
         const copyUrl = endpoints.courseCopyUrl + params.value + ".json";
         return (
           <React.Fragment>
-            <Tooltip title="Download Scores to CSV">
-              <IconButton
+              <Button
+                icon='pi pi-download'
+                tooltip={'Download Scores to CSV'}
                 id={"csv-" + params.value}
                 onClick={event => {
                   window.location.href = scoresUrl;
@@ -116,12 +144,9 @@ export default function CourseList(props) {
                 }}
                 aria-label="Download scores as CSV"
                 size="large"
-              >
-                <CloudDownloadIcon />
-              </IconButton>
-            </Tooltip>
+              />
             <CopyActivityButton
-              copyUrl={endpoints.courseCopyUrl}
+              copyUrl={copyUrl}
               itemId={params.value}
               itemUpdateFunc={getCourses}
               startDate={new Date(course["start_date"])}
@@ -165,55 +190,169 @@ export default function CourseList(props) {
   };
 
   const dataTable = (
-    <DataGrid
-      columns={columns}
-      rows={courses}
-      slots={{
-        toolbar: AdminListToolbar
+    <>
+    <DataTable
+      value={courses}
+      resizableColumns
+      tableStyle={{
+        minWidth: '50rem'
       }}
-      slotProps={{
-        toolbar: {
-          itemType: category
-        }
-      }}
-      onCellClick={params => {
-        if ("id" != params.colDef.field) {
-          const course_id = params.row.id;
-          //This ought not be necessary and I would like to ask about it on SO -
-          //when time permits
-          const locaLocation = `${location.pathname}/${String(course_id)}`;
+      reorderableColumns
+      paginator
+      rows={5}
+      rowsPerPageOptions={
+        [5, 10, 20, courses.length]
+      }
+      header={<AdminListToolbar itemType={category}/>}
+      sortField="start_date"
+      sortOrder={-1}
+      paginatorDropdownAppendTo={'self'}
+      paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+      currentPageReportTemplate="{first} to {last} of {totalRecords}"
+      //paginatorLeft={paginatorLeft}
+      //paginatorRight={paginatorRight}
+      dataKey="id"
+      onRowClick={(event) =>{
+        console.log( 'doing something', event );
+          const courseId = event.data.id;
+          const locaLocation = `${location.pathname}/${String(courseId)}`;
           navigate(locaLocation, { relative: "path" });
-        }
       }}
-      initialState={{
-        pagination: {
-          paginationModel: { page: 0, pageSize: 5 }
-        }
-      }}
-      pageSizeOptions={[5, 10, 100]}
-    />
+      >
+        <Column
+          header={t('index.number_col')}
+          field="number"
+          sortable
+          filter
+          key={'number'}
+          body={param=>{
+            return(
+              <span className={'pi pi-users'} >
+                &nbsp;{param.number}
+              </span>
+            )
+          }}
+          />
+        <Column
+          header={t('index.name_col')}
+          field="name"
+          sortable
+          filter
+          key={'name'}
+          />
+        <Column
+          header={t('index.school_col')}
+          field="school_name"
+          sortable
+          filter
+          key={'school_name'}
+          />
+        <Column
+          header={t('index.open_col')}
+          sortable
+          filter
+          field="start_date"
+          body={(param)=>{
+            return(
+              <>
+              {DateTime.fromISO( param.start_date).toLocaleString()}
+              </>
+            )
+          }}
+          />
+        <Column
+          header={t('index.close_col')}
+          sortable
+          filter
+          field="end_date"
+          body={(param)=>{
+            return(
+              <>
+              {DateTime.fromISO( param.end_date).toLocaleString()}
+              </>
+            )
+          }}
+          />
+        <Column
+          header={t('index.faculty_col')}
+          field="faculty_count"
+          sortable
+          filter
+          key={'faculty_count'}
+          />
+        <Column
+          header={t('index.students_col')}
+          field="student_count"
+          sortable
+          filter
+          key={'student_count'}
+          />
+        <Column
+          header={t('index.projects_col')}
+          field="project_count"
+          sortable
+          filter
+          key={'project_count'}
+          />
+        <Column
+          header={t('index.experiences_col')}
+          field="experience_count"
+          sortable
+          filter
+          key={'experience_count'}
+          />
+        <Column
+          header={t('index.bingo_games_col')}
+          field="bingo_game_count"
+          sortable
+          filter
+          key={'bingo_game_count'}
+          />
+        <Column
+          header={t('index.actions_col')}
+          field="id"
+          body={(course) =>{
+            //const course = params.row;
+            const scoresUrl = endpoints.scoresUrl + course.id + ".csv";
+            const copyUrl = endpoints.courseCopyUrl + course.id + ".json";
+            return(
+              <>
+              <Button
+                icon='pi pi-download'
+                tooltip={'Download Scores to CSV'}
+                tooltipOptions={{
+                  position: 'left',
+                }}
+                id={"csv-" + course.id}
+                onClick={event => {
+                  window.location.href = scoresUrl;
+                  event.preventDefault();
+                }}
+                aria-label="Download scores as CSV"
+                size="large"
+              />
+            <CopyActivityButton
+              copyUrl={copyUrl}
+              itemId={course.id}
+              itemUpdateFunc={getCourses}
+              startDate={new Date(course["start_date"])}
+              addMessagesFunc={postNewMessage}
+            />
+              </>
+
+            )
+
+          }
+          }
+          />
+
+      </DataTable>
+
+    </>
   );
 
   return (
-    <Suspense fallback={<Skeleton variant={"rectangular"} />}>
-      <Collapse in={showErrors}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setShowErrors(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          {messages["main"] || null}
-        </Alert>
-      </Collapse>
+    <Suspense fallback={<Skeleton className={'mb-2'} />}>
       <WorkingIndicator identifier="courses_loading" />
       {null !== user.lastRetrieved ? (
         <div style={{ maxWidth: "100%" }}>{dataTable}</div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-// import { Skeleton } from "@mui/material";
 import { useTypedSelector } from "./AppReducers";
+import { Skeleton } from "primereact/skeleton";
 
 export default function RequireAuth({ children }) {
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
@@ -10,9 +10,14 @@ export default function RequireAuth({ children }) {
 
   if (isLoggedIn) {
     return children;
-//  } else if (isLoggingIn) {
-//    return <Skeleton variant="rectangular" height={300} />;
+  } else if (isLoggingIn) {
+    return <Skeleton className={'mb-2'} height={'30rem'} />;
   } else {
-    return <Navigate to="/welcome/login" replace state={{ from: location.pathname }} />;
+    return <Navigate
+      to="/welcome/login"
+      replace
+      state={{
+        from: location.pathname
+      }} />;
   }
 }

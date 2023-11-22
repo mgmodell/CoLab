@@ -230,7 +230,7 @@ export default function Welcome(props: Props) {
       if( welcomed && '/welcome' === location.pathname){
          animateToScene( 'login' );
          setWelcomed( true );
-         navigate( 'login',
+         navigate( '/welcome/login',
          {
             relative: 'path'
          } );
