@@ -85,7 +85,7 @@ Then(/^user should not see a consent form listed for the open project$/) do
 end
 
 When(/^the user visits the index$/) do
-  visit '/'
+  visit '/home'
   if !@dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?('http')
     fill_in 'newTimeVal', with: @dest_date.to_s
     click_button 'setTimeBtn'
