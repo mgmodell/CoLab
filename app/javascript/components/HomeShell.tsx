@@ -69,7 +69,7 @@ export default function HomeShell(props : Props) {
   const getTasks = () => {
     const url =
       props.rootPath !== undefined
-        ? `${props.rootPath}${endpoints.taskListUrl}.json`
+        ? `/${props.rootPath}${endpoints.taskListUrl}.json`
         : `${endpoints.taskListUrl}.json`;
 
     dispatch(startTask());
@@ -92,9 +92,9 @@ export default function HomeShell(props : Props) {
             break;
         }
         if (props.rootPath === undefined) {
-          value.url = value.link;
+          value.url = `/home${value.link}`;
         } else {
-          const url = `/${props.rootPath}${value.link}`;
+          const url = `/${props.rootPath}/home${value.link}`;
           value.url = url;
           value.link = url;
         }

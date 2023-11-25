@@ -8,7 +8,11 @@ import BingoBuilder from "./BingoBuilder";
 import ScoreBingoWorksheet from "./ScoreBingoWorksheet";
 import RequireInstructor from "../infrastructure/RequireInstructor";
 
-export default function BingoShell() {
+
+type Props = {
+
+}
+export default function BingoShell( props: Props) {
   const [working] = useState(true);
 
   return (
@@ -43,5 +47,3 @@ export default function BingoShell() {
     </React.Fragment>
   );
 }
-
-BingoShell.propTypes = {};

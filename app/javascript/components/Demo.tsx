@@ -1,54 +1,56 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 
 import HomeShell from "./HomeShell";
-import { Skeleton } from "@mui/material";
+import { Skeleton } from "primereact/skeleton";
+
 const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
-const CandidateListEntry = React.lazy(() =>
-  import("./BingoBoards/CandidateListEntry")
-);
-const CandidatesReviewTable = React.lazy(() =>
-  import("./BingoBoards/CandidatesReviewTable")
-);
-const BingoBuilder = React.lazy(() => import("./BingoBoards/BingoBuilder"));
+
+import BingoShell from "./BingoBoards/BingoShell";
 const Experience = React.lazy(() => import("./experiences/Experience"));
 
 type Props = {
   rootPath: string
 }
-export default function Demo(props : Props) {
+export default function Demo(props: Props) {
   return (
     <Routes>
       <Route
-        element={<Outlet />}
-        >
-
-      <Route
-        path={`submit_installment/:installmentId`}
+        path={'home'}
         element={
-          <InstallmentReport rootPath={props.rootPath} />
+          <Suspense fallback={<Skeleton height={'10rem'} className={'mb-2'} />}>
+            <Outlet />
+          </Suspense>
         }
-      />
-      {/* Perhaps subgroup under Bingo */}
+      >
+
+        <Route
+          path={`submit_installment/:installmentId`}
+          element={
+            <InstallmentReport rootPath={props.rootPath} />
+          }
+        />
+        {/* Perhaps subgroup under Bingo */}
+        <Route
+          path="bingo/*"
+          element={
+            <BingoShell />
+          }
+        />
+
+        {/* Perhaps subgroup under Bingo */}
+        <Route
+          path={`experience/:experienceId`}
+          element={<Experience rootPath={`${props.rootPath}/api-backend`} />}
+        />
+        <Route index element={<HomeShell rootPath={'demo'} />} />
+      </Route>
       <Route
-        path={`bingo/enter_candidates/:bingoGameId`}
-        element={<CandidateListEntry rootPath={props.rootPath} />}
-      />
-      <Route
-        path={`bingo/review_candidates/:bingoGameId`}
-        element={<CandidatesReviewTable rootPath={props.rootPath} />}
-      />
-      <Route
-        path={`bingo/candidate_results/:bingoGameId`}
-        element={<BingoBuilder rootPath={props.rootPath} />}
-      />
-      {/* Perhaps subgroup under Bingo */}
-      <Route
-        path={`experience/:experienceId`}
-        element={<Experience rootPath={`${props.rootPath}/api-backend`} />}
-      />
-      <Route index element={<HomeShell rootPath="demo" />} />
-        </Route>
+        index
+        element={
+          <Navigate to={'home'} />
+        }
+        />
     </Routes>
   );
 }
