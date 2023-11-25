@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
-import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
@@ -13,8 +12,6 @@ import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 
-import { Settings } from "luxon";
-
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
@@ -22,7 +19,11 @@ import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
 import parse from "html-react-parser";
 
-export default function CandidateListEntry(props) {
+type Props = {
+  rootPath?: string,
+}
+
+export default function CandidateListEntry(props : Props) {
   const endpointSet = "candidate_list";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[endpointSet]
@@ -60,6 +61,7 @@ export default function CandidateListEntry(props) {
       props.rootPath === undefined
         ? `${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
+    
 
     axios
       .get(url, {})
@@ -311,6 +313,3 @@ export default function CandidateListEntry(props) {
   );
 }
 
-CandidateListEntry.propTypes = {
-  rootPath: PropTypes.string
-};

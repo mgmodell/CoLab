@@ -498,7 +498,7 @@ class HomeController < ApplicationController
     e.start_time = 1.week.ago
     e.close_date = 4.days.from_now.end_of_day
     e.next_date = e.close_date
-    e.link = "/home/bingo/enter_candidates/#{e.id}"
+    e.link = "/bingo/enter_candidates/#{e.id}"
     e.instructor_task = false
     @events << e
 
@@ -515,7 +515,7 @@ class HomeController < ApplicationController
     e.start_time = 3.weeks.ago
     e.close_date = Time.zone.today.end_of_day
     e.next_date = e.close_date
-    e.link = "/home/bingo/review_candidates/#{e.id}"
+    e.link = "/bingo/review_candidates/#{e.id}"
     e.instructor_task = true
     # TODO: Enable the candidate review demo
     @events << e
@@ -533,7 +533,7 @@ class HomeController < ApplicationController
     e.start_time = 2.weeks.ago
     e.close_date = 1.day.from_now.end_of_day
     e.next_date = e.close_date
-    e.link = "/home/bingo/candidate_results/#{e.id}"
+    e.link = "/bingo/candidate_results/#{e.id}"
     e.instructor_task = false
     @events << e
 

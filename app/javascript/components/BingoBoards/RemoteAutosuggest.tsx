@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import deburr from "lodash/deburr";
 
 import axios from "axios";
 import { AutoComplete } from "primereact/autocomplete";
 
 type Props = {
   inputLabel: string | null;
-  classes: object;
   itemId: number;
   enteredValue: string | null;
   controlId: string | null;

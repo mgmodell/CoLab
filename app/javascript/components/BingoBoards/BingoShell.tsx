@@ -10,6 +10,7 @@ import RequireInstructor from "../infrastructure/RequireInstructor";
 
 
 type Props = {
+  rootPath?: string
 
 }
 export default function BingoShell( props: Props) {
@@ -21,24 +22,25 @@ export default function BingoShell( props: Props) {
       <Routes>
         <Route
           path={`enter_candidates/:bingoGameId`}
-          element={<CandidateListEntry />}
+          element={<CandidateListEntry rootPath={props.rootPath}/>}
         />
         <Route
           path={`review_candidates/:bingoGameId`}
           element={
             <RequireInstructor>
-              <CandidatesReviewTable />
+              <CandidatesReviewTable rootPath={props.rootPath} />
             </RequireInstructor>
           }
         />
         <Route
           path={`candidate_results/:bingoGameId`}
-          element={<BingoBuilder />}
+          element={<BingoBuilder rootPath={props.rootPath} />}
         />
         <Route
           path={`score_bingo_worksheet/:worksheetIdParam`}
           element={
             <RequireInstructor>
+              {/* No rootPath because there exists no demo for it */}
               <ScoreBingoWorksheet />
             </RequireInstructor>
           }

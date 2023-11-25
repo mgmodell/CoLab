@@ -34,7 +34,7 @@ export default function Demo(props: Props) {
         <Route
           path="bingo/*"
           element={
-            <BingoShell />
+            <BingoShell rootPath={'demo'} />
           }
         />
 

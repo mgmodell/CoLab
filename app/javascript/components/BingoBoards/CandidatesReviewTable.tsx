@@ -23,8 +23,12 @@ import { Skeleton } from "primereact/skeleton";
 import { Dropdown } from "primereact/dropdown";
 
 import { ColumnMeta } from "../infrastructure/Types";
+import { Panel } from "primereact/panel";
 
-export default function CandidatesReviewTable(props) {
+type Props = {
+  rootPath?: string,
+}
+export default function CandidatesReviewTable(props : Props) {
   const category = "candidate_review";
 
   // Inconsistent naming follows. This should be cleaned up.
@@ -142,8 +146,9 @@ export default function CandidatesReviewTable(props) {
 
     const url =
       props.rootPath === undefined
-        ? `${endpoints.baseUrl}${bingoGameId}.json`
+        ? `/home${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
+
 
     axios
       .get(url, {})
@@ -185,7 +190,7 @@ export default function CandidatesReviewTable(props) {
 
     const url =
       props.rootPath === undefined
-        ? `${endpoints.reviewSaveUrl}${bingoGameId}.json`
+        ? `/home${endpoints.reviewSaveUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.reviewSaveUrl}${bingoGameId}.json`;
 
     axios
@@ -298,6 +303,8 @@ export default function CandidatesReviewTable(props) {
       <WorkingIndicator identifier="waiting" />
 
       {bingoGame != null ? (
+        <Panel>
+
         <Container>
           <Row>
             <Col sm={3}>
@@ -325,6 +332,7 @@ export default function CandidatesReviewTable(props) {
           </Row>
 
         </Container>
+        </Panel>
 
       ) : (
         <Skeleton height={20} />
