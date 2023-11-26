@@ -128,7 +128,7 @@ export default function Experience(props) {
         dispatch(addMessage(data.messages.main, new Date(), Priorities.INFO));
         dispatch(endTask("saving"));
         dispatch(setClean("reaction"));
-        navigate("/");
+        navigate("/home");
       })
       .catch(error => {
         console.log("error", error);
