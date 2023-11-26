@@ -404,7 +404,7 @@ Then('the user sees self-registration image') do
 end
 
 Then 'the user opens the self-registration link for the course' do
-  self_reg_url = "course/#{@course.id}/enroll"
+  self_reg_url = "home/course/#{@course.id}/enroll"
   visit(self_reg_url)
   if !@dest_date.nil? && :rack_test != Capybara.current_driver && current_url.start_with?('http')
     fill_in 'newTimeVal', with: @dest_date.to_s

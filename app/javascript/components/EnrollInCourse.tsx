@@ -34,7 +34,7 @@ export default function EnrollInCourse(props) {
 
   const enrollConfirm = (confirm: boolean) => {
     if (confirm) {
-      const url = `${endpoints.selfRegUrl}/${courseId}.json`;
+      const url = `${endpoints.selfRegUrl}${courseId}.json`;
       axios
         .post(url, {})
         .then(response => {
