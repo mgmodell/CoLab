@@ -146,7 +146,7 @@ export default function CandidatesReviewTable(props : Props) {
 
     const url =
       props.rootPath === undefined
-        ? `/home${endpoints.baseUrl}${bingoGameId}.json`
+        ? `${endpoints.baseUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
 
 
@@ -190,7 +190,7 @@ export default function CandidatesReviewTable(props : Props) {
 
     const url =
       props.rootPath === undefined
-        ? `/home${endpoints.reviewSaveUrl}${bingoGameId}.json`
+        ? `${endpoints.reviewSaveUrl}${bingoGameId}.json`
         : `/${props.rootPath}${endpoints.reviewSaveUrl}${bingoGameId}.json`;
 
     axios

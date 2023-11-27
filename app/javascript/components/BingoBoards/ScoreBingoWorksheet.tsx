@@ -37,7 +37,6 @@ export default function ScoreBingoWorksheet(props) {
 
   const imgFileDataId = "result_photo";
 
-  const navigate = useNavigate();
 
   const [courseName, setCourseName] = useState("loading");
 

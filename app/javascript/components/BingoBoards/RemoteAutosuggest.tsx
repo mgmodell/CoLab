@@ -44,6 +44,7 @@ export default function RemoteAutosuggest( props: Props ){
 
   return(
     <AutoComplete
+      id={props.controlId}
       value={props.enteredValue}
       onChange={(e)=>{
         props.setFunction( props.itemId, e.value );

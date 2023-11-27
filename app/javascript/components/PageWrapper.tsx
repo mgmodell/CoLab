@@ -6,7 +6,8 @@ import {
   Route,
   createRoutesFromElements,
   Outlet,
-  Navigate
+  Navigate,
+  useLocation
 } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -46,19 +47,22 @@ const Privacy = React.lazy(() => import("./info/Privacy"));
 const TermsOfService = React.lazy(() => import("./info/TermsOfService"));
 const WhatIsIt = React.lazy(() => import("./info/WhatIsIt"));
 const AppInit = React.lazy(() => import("./infrastructure/AppInit"));
-const PasswordEdit = React.lazy(() => import("./PasswordEdit"));
+const PasswordEdit = React.lazy( () => import( './PasswordEdit'))
 const Demo = React.lazy(() => import("./Demo"));
 
-export default function PageWrapper(props) {
+type Props = {
+  getEndpointsUrl: string
+}
+
+export default function PageWrapper(props : Props) {
   const store = configureStore({
     reducer: appStatus
   });
 
   const styles = createTheme({
-    typography: {
-      useNextVariants: true
-    }
   });
+
+  console.log( 'wrapping again' );
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -79,19 +83,22 @@ export default function PageWrapper(props) {
               element={
                 <Navigate to={'welcome'} replace={true} />
               }
-              />
+            />
             <Route
               path={'welcome/*'}
               element={
                 <Welcome />
               }
-              />
+            />
             <Route
               path={'login'}
               element={
-                <Navigate to={'/welcome/login'} replace={true} />
+                <Navigate
+                  to={'/welcome/login'}
+                  replace={true}
+                />
               }
-              />
+            />
             <Route
               path="profile"
               element={
@@ -113,7 +120,7 @@ export default function PageWrapper(props) {
               }
             />
             <Route
-              path={'home'}
+              path={'home/*'}
               element={
                 <Suspense fallback={<Skeleton variant={"rectangular"} />}>
                   <RequireAuth>
@@ -127,50 +134,48 @@ export default function PageWrapper(props) {
                 element={
                   <HomeShell />
                 }
-                />
-
-
-            <Route
-              path={`submit_installment/:installmentId`}
-              element={
+              />
+              <Route
+                path={`submit_installment/:installmentId`}
+                element={
                   <InstallmentReport />
-              }
-            />
-            {/* Perhaps subgroup under Bingo */}
-            <Route
-              path="bingo/*"
-              element={
+                }
+              />
+              {/* Perhaps subgroup under Bingo */}
+              <Route
+                path="bingo/*"
+                element={
                   <BingoShell />
-              }
-            />
-            {/* Perhaps subgroup under Experience */}
-            <Route
-              path={`experience/:experienceId`}
-              element={
+                }
+              />
+              {/* Perhaps subgroup under Experience */}
+              <Route
+                path={`experience/:experienceId`}
+                element={
                   <Experience />
-              }
-            />
-            {/* Perhaps subgroup under Assignment */}
-            <Route
-              path={`assignment/*`}
-              element={
+                }
+              />
+              {/* Perhaps subgroup under Assignment */}
+              <Route
+                path={`assignment/*`}
+                element={
                   <AssignmentShell />
-              }
-            />
-            <Route
-              path={`research_information/:consentFormId`}
-              element={
+                }
+              />
+              <Route
+                path={`research_information/:consentFormId`}
+                element={
                   <ConsentLog />
-              }
-            />
-            <Route
-              path={`course/:courseId/enroll`}
-              element={
-                <RequireAuth>
-                  <EnrollInCourse />
-                </RequireAuth>
-              }
-            />
+                }
+              />
+              <Route
+                path={`course/:courseId/enroll`}
+                element={
+                  <RequireAuth>
+                    <EnrollInCourse />
+                  </RequireAuth>
+                }
+              />
             </Route>
 
             <Route path="user/password/edit" element={<PasswordEdit />} />
@@ -209,6 +214,3 @@ export default function PageWrapper(props) {
   );
 }
 
-PageWrapper.propTypes = {
-  getEndpointsUrl: PropTypes.string.isRequired
-};

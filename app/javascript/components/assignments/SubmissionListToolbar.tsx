@@ -20,7 +20,7 @@ type Props = {
 export default function SubmissionListToolbar(props: Props) {
   const category = "assignment";
   const { t } = useTranslation(`${category}s`);
-  const navigate = useNavigate();
+
   return (
     <GridToolbarContainer>
       <GridToolbarDensitySelector />

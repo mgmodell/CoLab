@@ -146,7 +146,6 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
   end
 
   feedbacks = CandidateFeedback.unscoped.where('name_en like ?', "#{feedback_type}%")
-  error_msg = ''
   @feedback_list = {}
   @bingo.candidates.completed.each do |candidate|
     feedback = feedbacks.sample
@@ -167,7 +166,10 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
       find( :xpath, xp_search, visible: :all ).click
     rescue Selenium::WebDriver::Error::ElementNotInteractableError
       find( :xpath, xp_search, visible: :all ).send_keys :escape
-
+      (retries += 1).should be < 20, 'Too many retries'
+      retry unless retries > 5
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+      find(:xpath, '//body').click
       (retries += 1).should be < 20, 'Too many retries'
       retry unless retries > 5
     end
@@ -191,7 +193,7 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
       end
 
       if concept.present?
-        find(:xpath, "//input[@id='concept_4_#{candidate.id}']").click
+        find(:xpath, "//span[@id='concept_4_#{candidate.id}']").click
         send_keys [:control, 'a'], :backspace
         send_keys [:command, 'a'], :backspace
         send_keys concept
@@ -214,7 +216,7 @@ Given('the user assigns {string} feedback to all candidates') do |feedback_type|
       retry unless retries > 5
     rescue Capybara::ElementNotFound => e
       begin
-        elem.send_keys :enter
+        send_keys :enter
       rescue Selenium::WebDriver::Error::ElementNotInteractableError => e
         log 'Element not interactable error'
         log e

@@ -1,6 +1,5 @@
 import React, { Suspense, useState, useEffect, useReducer } from "react";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 //Redux store stuff
 import { useDispatch } from "react-redux";
@@ -75,7 +74,6 @@ export default function AssignmentViewer(props) {
 
   const dispatch = useDispatch();
   const [t, i18n] = useTranslation(`${endpointSet}s`);
-  const navigate = useNavigate();
 
   const [curTab, setCurTab] = useState("overview");
 

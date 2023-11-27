@@ -1,6 +1,5 @@
 import React, { Fragment, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import Dialog from "@mui/material/Dialog";
@@ -41,7 +40,6 @@ type Props = {
 export default function CourseUsersListToolbar(props: Props) {
   const category = "course";
   const { t } = useTranslation(`${category}s`);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [addDialogOpen, setAddDialogOpen] = useState(false);
