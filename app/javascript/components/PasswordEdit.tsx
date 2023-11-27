@@ -11,10 +11,11 @@ import { Priorities, addMessage } from "./infrastructure/StatusSlice";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import React, { useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import axios from "axios";
+import { emailSignIn } from "./infrastructure/ContextSlice";
 
 export default function PasswordEdit(props) {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ export default function PasswordEdit(props) {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const {state } = useLocation( );
 
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -33,12 +35,15 @@ export default function PasswordEdit(props) {
     state => state.context.endpoints["profile"]
   );
 
+  const from = undefined != state ? state.from : "/home";
+
   //Code to trap an 'enter' press and submit
   //It gets placed on the password field
   const submitOnEnter = evt => {
     if (endpointsLoaded && evt.key === "Enter") {
-      dispatch(emailSignIn({ email: string, password: string })).then(
+      dispatch(emailSignIn({ email: string, password: string })).then( ()=>{
         navigate(from)
+      }
       );
       evt.preventDefault();
     }

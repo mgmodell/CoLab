@@ -63,6 +63,7 @@ export default function MainMenu(props) {
 
   const navTo = url => {
     setMenuOpen(false);
+    console.log( 'navigating in menu:', url );
     navigate(url);
   };
 
@@ -166,7 +167,7 @@ export default function MainMenu(props) {
       </Suspense>
     </React.Fragment>
   ) : (
-    <ListItemButton id="home-menu-item" onClick={() => navTo("/")}>
+    <ListItemButton id="home-menu-item" onClick={() => navTo("/home")}>
       <ListItemIcon>
         <HomeIcon fontSize="small" />
       </ListItemIcon>

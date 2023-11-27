@@ -32,7 +32,7 @@ export default function SignIn(props) {
   const { t }: { t: any } = useTranslation(category);
 
   const dispatch = useDispatch();
-  const { state } = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -54,7 +54,7 @@ export default function SignIn(props) {
     state => state.context.lookups["oauth_ids"]
   );
 
-  const from = undefined != state ? state.from : "/home";
+  const from = undefined != location.state ? location.state.from : "/home";
 
   //Code to trap an 'enter' press and submit
   //It gets placed on the password field
@@ -203,7 +203,7 @@ export default function SignIn(props) {
   if (loggingIn || oauth_client_ids === undefined) {
     return <Skeleton variant="rectangular" height="300" />;
   } else if (isLoggedIn) {
-    return <Navigate replace to={state?.from || "/home"} />;
+    return <Navigate replace to={location.state?.from || "/home"} />;
   } else {
     return (
       <Suspense fallback={<Skeleton variant={"rectangular"} height="300" />}>

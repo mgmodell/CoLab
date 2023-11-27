@@ -40,7 +40,6 @@ const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
 const Experience = React.lazy(() => import("./experiences/Experience"));
 const ConsentLog = React.lazy(() => import("./Consent/ConsentLog"));
 const Admin = React.lazy(() => import("./Admin"));
-const SignIn = React.lazy(() => import("./SignIn"));
 const EnrollInCourse = React.lazy(() => import("./EnrollInCourse"));
 
 const Privacy = React.lazy(() => import("./info/Privacy"));
@@ -61,8 +60,6 @@ export default function PageWrapper(props : Props) {
 
   const styles = createTheme({
   });
-
-  console.log( 'wrapping again' );
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -171,9 +168,7 @@ export default function PageWrapper(props : Props) {
               <Route
                 path={`course/:courseId/enroll`}
                 element={
-                  <RequireAuth>
-                    <EnrollInCourse />
-                  </RequireAuth>
+                  <EnrollInCourse />
                 }
               />
             </Route>

@@ -8,7 +8,7 @@ import { DateTime } from "luxon";
 import { Skeleton } from 'primereact/skeleton';
 import { Button } from "primereact/button";
 
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 
 import { DataTable } from "primereact/datatable";
 import { ColumnMeta } from "../infrastructure/Types";
@@ -213,7 +213,6 @@ export default function CourseList(props) {
       //paginatorRight={paginatorRight}
       dataKey="id"
       onRowClick={(event) =>{
-        console.log( 'doing something', event );
           const courseId = event.data.id;
           const locaLocation = `${location.pathname}/${String(courseId)}`;
           navigate(locaLocation, { relative: "path" });

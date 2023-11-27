@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useSpring, animated, config } from "react-spring";
-import { useLocation, useNavigate, useParams, Routes, Route, Outlet } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SignIn from "../SignIn";
 import EmbeddedHTMLInSVG from "../infrastructure/EmbeddedHTMLInSVG";
 import ResizableSVG from "../infrastructure/ResizableSVG";
 import { useTypedSelector } from "../infrastructure/AppReducers";
-import Tooltip from '@mui/material/Tooltip'
 import WhyCoLab from "./WhyCoLab";
 
 type Props = {
@@ -232,7 +231,10 @@ export default function Welcome(props: Props) {
          setWelcomed( true );
          navigate( '/welcome/login',
          {
-            relative: 'path'
+            relative: 'path',
+            state: {
+               from: location.state?.from,
+            }
          } );
       }else if( '' !== params['*']){
          animateToScene( 'welcome' );
@@ -247,6 +249,9 @@ export default function Welcome(props: Props) {
          setWelcomed( true );
          navigate( '/welcome', {
             relative: 'route',
+            state: {
+               from: location.state?.from
+            }
          });
 
       }
@@ -275,6 +280,9 @@ export default function Welcome(props: Props) {
    navigate( sceneName, {
       relative: 'path',
       replace: true,
+      state: {
+         from: location.state?.from,
+      }
    } );
   },[])
 
