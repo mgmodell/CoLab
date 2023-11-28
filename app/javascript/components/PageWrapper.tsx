@@ -133,6 +133,15 @@ export default function PageWrapper(props : Props) {
                 }
               />
               <Route
+                path={`login`}
+                element={
+                  <Navigate
+                    to={'/home'}
+                    relative={'path'}
+                    />
+                }
+              />
+              <Route
                 path={`submit_installment/:installmentId`}
                 element={
                   <InstallmentReport />

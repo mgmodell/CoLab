@@ -216,7 +216,7 @@ const contextSlice = createSlice({
       reducer (state, action) {
         state.status.initialised = true;
       },
-      prepare() {
+      prepare: () => {
         return {};
       }
     },
@@ -334,7 +334,7 @@ export const emailSignIn = createAsyncThunk(
     const dispatch = thunkAPI.dispatch;
     const getState = thunkAPI.getState;
 
-    dispatch(setLoggingIn);
+    dispatch(setLoggingIn({}));
 
     if (!params.email || !params.password) {
       dispatch(setLoginFailed());

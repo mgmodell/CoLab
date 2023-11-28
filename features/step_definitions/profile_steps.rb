@@ -38,8 +38,10 @@ end
 
 When(/^the user logs in$/) do
   visit '/login'
+
   fill_in 'email', with: @user.email
   fill_in 'password', with: 'password'
+
 
   ack_messages
   click_link_or_button 'Log in!'
