@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Paper from "@mui/material/Paper";
 import { iconForType } from "../ActivityLib";
 import { useDispatch } from "react-redux";
@@ -102,7 +101,7 @@ export default function UserActivityList(props: Props) {
         rows={props.activitiesList}
         onCellClick={(params, event, details) => {
           if (params.row.link !== null) {
-            navigate(params.row.link);
+            navigate(`/home${params.row.link}`);
           }
         }}
         slots={{
