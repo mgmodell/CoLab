@@ -386,15 +386,8 @@ end
 Then('the user can not {string} the {string} rubric') do |action, rubric_name|
   case action
   when 'delete'
-    rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
-    found = false
-    rows.each do |row|
-      if row.text == rubric_name
-        found = true
-        row.find(:xpath, "../..//button[@id='delete_rubric']").disabled?.should be true
-      end
-    end
-    true.should be false unless found
+    button = find(:xpath, "//tr/td[text()=\"#{rubric_name}\"]/following-sibling::td/button[@id='delete_rubric']" )
+    button.disabled?.should be true
   else
     true.should be false
   end
