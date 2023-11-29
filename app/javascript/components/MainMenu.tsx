@@ -63,7 +63,6 @@ export default function MainMenu(props) {
 
   const navTo = url => {
     setMenuOpen(false);
-    console.log( 'navigating in menu:', url );
     navigate(url);
   };
 

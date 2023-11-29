@@ -56,7 +56,7 @@ end
 
 Then('the user sees {int} rubrics') do |count|
   wait_for_render
-  rubrics = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]")
+  rubrics = find_all(:xpath, "//tbody/tr")
   rubrics.size.should eq count
 end
 
@@ -190,7 +190,7 @@ Then('the rubric criteria {int} weight is {int}') do |criteria_num, weight|
 end
 
 Then('the user searches for {string}') do |search_string|
-  field = find(:xpath, "//input[@type='search']")
+  field = find(:xpath, "//input[@id='rubric-search']")
   oldVal = field.value
   field.click
 
@@ -202,14 +202,9 @@ Then('the user searches for {string}') do |search_string|
 end
 
 Then('the user edits the {string} rubric') do |name|
-  xpath =  "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div"
-  fields = find_all(:xpath, xpath)
-  found = false
-  fields.each do |field|
-    found = true
-    field.click if name == field.text
-  end
-  true.should be false unless found
+  xpath =  "//tbody/tr/td[text()='#{name}']"
+  field = find(:xpath, xpath)
+  field.click
 end
 
 Then('the rubric {string} published') do |is_published|
@@ -227,15 +222,8 @@ Given('the {string} rubric is published') do |name|
 end
 
 Then('the user copies the {string} rubric') do |rubric_name|
-  rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
-  found = false
-  rows.each do |row|
-    if row.text == rubric_name
-      found = true
-      row.find(:xpath, "../..//button[@id='copy_rubric']").click
-    end
-  end
-  true.should be false unless found
+  row = find(:xpath, "//tr/td[text()=\"#{rubric_name}\"]/following-sibling::td/button[@id='copy_rubric']")
+  row.click
 end
 
 Then('the user copies criteria {int}') do |criteria_num|
@@ -391,16 +379,8 @@ Then('the user moves criteria {int} {string}') do |criteria_num, up_or_down|
 end
 
 Then('the user deletes the {string} rubric') do |rubric_name|
-  rows = find_all(:xpath, "//div[contains(@class,'MuiDataGrid-row')]/div[@data-field='name']/div")
-  found = false
-  rows.each do |row|
-    next unless row.text == rubric_name
-
-    found = true
-    row.find(:xpath, "../..//button[@id='delete_rubric']").click
-    break
-  end
-  true.should be false unless found
+  row = find(:xpath, "//tr/td[text()=\"#{rubric_name}\"]/following-sibling::td/button[@id='delete_rubric']" )
+  row.click
 end
 
 Then('the user can not {string} the {string} rubric') do |action, rubric_name|

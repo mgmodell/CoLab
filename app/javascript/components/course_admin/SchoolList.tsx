@@ -13,9 +13,9 @@ import { startTask, endTask } from "../infrastructure/StatusSlice";
 import Collapse from "@mui/material/Collapse";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import axios from "axios";
-import { DataGrid, GridCellParams, GridColDef } from "@mui/x-data-grid";
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
-import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 export default function SchoolList(props) {
   const category = "school";
@@ -32,40 +32,9 @@ export default function SchoolList(props) {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const columns: GridColDef[] = [
-    {
-      headerName: t("index.name_lbl"),
-      field: "name",
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t("index.courses_lbl"),
-      field: "courses",
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t("index.students_lbl"),
-      field: "students"
-    },
-    {
-      headerName: t("index.instructors_lbl"),
-      field: "instructors"
-    },
-    {
-      headerName: t("index.project_lbl"),
-      field: "projects"
-    },
-    {
-      headerName: t("index.experience_lbl"),
-      field: "experiences"
-    },
-    {
-      headerName: t("index.terms_list_lbl"),
-      field: "terms_lists"
-    }
-  ];
 
   const [schools, setSchools] = useState([]);
+  const [filterText, setFilterText] = useState( '' );
 
   const getSchools = () => {
     const url = endpoints.baseUrl + ".json";
@@ -91,23 +60,88 @@ export default function SchoolList(props) {
   };
 
   const schoolTable = (
-    <DataGrid
-      isCellEditable={() => false}
-      columns={columns}
-      rows={schools}
-      slots={{
-        toolbar: AdminListToolbar
-      }}
-      slotProps={{
-        toolbar: {
-          itemType: category
-        }
-      }}
-      onCellClick={(params: GridCellParams) => {
-        navigate(String(params.row.id));
-      }}
-      pageSizeOptions={[5, 10, 100]}
-    />
+    <DataTable
+      value={schools.filter( (school) =>{
+        return filterText.length === 0 || school.name.includes( filterText );
+      })}
+            resizableColumns
+            reorderableColumns
+            paginator
+            rows={5}
+            tableStyle={{
+              minWidth: '50rem'
+            }}
+            rowsPerPageOptions={
+              [5, 10, 20, rubrics.length]
+            }
+            header={<AdminListToolbar
+              itemType={category}
+              filterValue={filterText}
+              setFilterFunc={setFilterText}
+              />}
+            sortField="name"
+            sortOrder={1}
+            paginatorDropdownAppendTo={'self'}
+            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+            currentPageReportTemplate="{first} to {last} of {totalRecords}"
+            dataKey="id"
+            onRowClick={(event) => {
+              navigate(String(event.data.id));
+            }}
+          >
+
+        <Column
+          header={t('index.name_lbl')}
+          field="name"
+          sortable
+          filter
+          key={'name'}
+          />
+        <Column
+          header={t('index.courses_lbl')}
+          field="courses"
+          sortable
+          filter
+          key={'courses'}
+          />
+        <Column
+          header={t('index.students_lbl')}
+          field="students"
+          sortable
+          filter
+          key={'students'}
+          />
+        <Column
+          header={t('index.instructors_lbl')}
+          field="instructors"
+          sortable
+          filter
+          key={'instructors'}
+          />
+        <Column
+          header={t('index.project_lbl')}
+          field="project"
+          sortable
+          filter
+          key={'project'}
+          />
+        <Column
+          header={t('index.experience_lbl')}
+          field="experience"
+          sortable
+          filter
+          key={'experience'}
+          />
+        <Column
+          header={t('index.terms_list_lbl')}
+          field="terms_lists"
+          sortable
+          filter
+          key={'terms_list'}
+          />
+
+    </DataTable>
+
   );
 
   return (

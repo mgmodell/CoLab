@@ -8,8 +8,6 @@ import { DateTime } from "luxon";
 import { Skeleton } from 'primereact/skeleton';
 import { Button } from "primereact/button";
 
-import { GridColDef } from "@mui/x-data-grid";
-
 import { DataTable } from "primereact/datatable";
 import { ColumnMeta } from "../infrastructure/Types";
 
@@ -71,95 +69,11 @@ export default function CourseList(props) {
       }
     }
   ];
-  const columns: GridColDef[] = [
-    /*
-    {
-      headerName: t("index.number_col"),
-      field: "number",
-      renderCell: params => {
-        return (
-          <span className={'pi pi-users'} >
-            &nbsp;{params.value}
-          </span>
-        );
-      }
-    },
-    {
-      headerName: t("index.name_col"),
-      field: "name",
-      renderCell: renderTextCellExpand
-    },
-    */
-    {
-      headerName: t("index.school_col"),
-      field: "school_name",
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t("index.open_col"),
-      field: "start_date",
-      renderCell: renderDateCellExpand
-    },
-    {
-      headerName: t("index.close_col"),
-      field: "end_date",
-      renderCell: renderDateCellExpand
-    },
-    {
-      headerName: t("index.faculty_col"),
-      field: "faculty_count"
-    },
-    {
-      headerName: t("index.students_col"),
-      field: "student_count"
-    },
-    {
-      headerName: t("index.projects_col"),
-      field: "project_count"
-    },
-    {
-      headerName: t("index.experiences_col"),
-      field: "experience_count"
-    },
-    {
-      headerName: t("index.bingo_games_col"),
-      field: "bingo_game_count"
-    },
-    {
-      headerName: t("index.actions_col"),
-      field: "id",
-      renderCell: params => {
-        const course = params.row;
-        const scoresUrl = endpoints.scoresUrl + params.value + ".csv";
-        const copyUrl = endpoints.courseCopyUrl + params.value + ".json";
-        return (
-          <React.Fragment>
-              <Button
-                icon='pi pi-download'
-                tooltip={'Download Scores to CSV'}
-                id={"csv-" + params.value}
-                onClick={event => {
-                  window.location.href = scoresUrl;
-                  event.preventDefault();
-                }}
-                aria-label="Download scores as CSV"
-                size="large"
-              />
-            <CopyActivityButton
-              copyUrl={copyUrl}
-              itemId={params.value}
-              itemUpdateFunc={getCourses}
-              startDate={new Date(course["start_date"])}
-              addMessagesFunc={postNewMessage}
-            />
-          </React.Fragment>
-        );
-      }
-    }
-  ];
 
   const [courses, setCourses] = useState([]);
   const [newStartDate, setNewStartDate] = useState(DateTime.local());
+  const [filterText, setFilterText] = useState('');
+
 
   const getCourses = () => {
     const url = endpoints.baseUrl + ".json";
@@ -192,7 +106,9 @@ export default function CourseList(props) {
   const dataTable = (
     <>
     <DataTable
-      value={courses}
+      value={courses.filter( (course) =>{
+        return filterText.length === 0 || course.name.includes( filterText );
+      })}
       resizableColumns
       tableStyle={{
         minWidth: '50rem'
@@ -203,7 +119,11 @@ export default function CourseList(props) {
       rowsPerPageOptions={
         [5, 10, 20, courses.length]
       }
-      header={<AdminListToolbar itemType={category}/>}
+      header={<AdminListToolbar
+        itemType={category}
+        filterValue={filterText}
+        setFilterFunc={setFilterText}
+        />}
       sortField="start_date"
       sortOrder={-1}
       paginatorDropdownAppendTo={'self'}
