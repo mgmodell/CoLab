@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useMatch, useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid";
@@ -96,8 +95,8 @@ export default function HomeShell(props : Props) {
         } else {
           const url = `/${props.rootPath}/home${value.link}`;
           value.url = url;
-          value.link = url;
         }
+        value.link = value.url;
         // Set the dates properly - close may need work
         value.start = value.next_date;
         if (null !== value.next_date) {
@@ -192,10 +191,6 @@ export default function HomeShell(props : Props) {
       );
     }
   }
-
-  const demoMatch = useMatch( '/demo' );
-  const homeMatch = useMatch( '/home' );
-
 
   return (
     <Paper>
