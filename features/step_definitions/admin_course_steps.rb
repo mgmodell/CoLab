@@ -190,11 +190,13 @@ end
 
 Then 'set the new course start date to {string}' do |new_date|
   label = find(:xpath, "//label[text()='New course start date?']")
-  elem = find(:xpath, "//*[@id='#{label[:for]}']")
+  elem = find(:xpath, "//*[@id='#{label[:for]}']/input")
 
   new_date = Chronic.parse(new_date)
 
   elem.click
+  elem.send_keys :escape
+  elem.send_keys :backspace
   send_keys new_date.strftime('%Y')
   send_keys :left, :left
   send_keys new_date.strftime('%m/%d')

@@ -4,10 +4,11 @@ import { useDispatch } from "react-redux";
 
 import { DateTime } from "luxon";
 import { Calendar } from "primereact/calendar";
+import { Nullable } from "primereact/ts-helpers";
 
 import { Dialog } from "primereact/dialog";
 
-import {Button} from 'primereact/button';
+import { Button } from 'primereact/button';
 
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import { useTypedSelector } from "../infrastructure/AppReducers";
@@ -19,7 +20,7 @@ type Props = {
   itemUpdateFunc: () => void,
   startDate: Date,
   copyUrl: string,
-  addMessagesFunc: (msgs:{}) => void,
+  addMessagesFunc: (msgs: {}) => void,
 }
 
 export default function CopyActivityButton(props: Props) {
@@ -35,63 +36,63 @@ export default function CopyActivityButton(props: Props) {
   const dispatch = useDispatch();
 
   const [copyData, setCopyData] = useState(null);
-  const [newStartDate, setNewStartDate] = useState(DateTime.local());
+  const [newStartDate, setNewStartDate] = useState<Nullable<Date>>(new Date());
 
   const copyDialog = (
     <Dialog
       visible={null !== copyData}
       header={<h3>{t('dialog_title')}</h3>}
       draggable={false}
-      onClick={(event)=>{
-        event.preventDefault( );
+      onClick={(event) => {
+        event.preventDefault();
       }}
-      modal
+      closeOnEscape={false}
+      modal={true}
       onHide={() => {
-        console.log( 'hidden?')
-        setNewStartDate(null);
+        setNewStartDate(DateTime.local());
         setCopyData(null);
       }}
       footer={
         <>
-              <Button
-                disabled={status.working}
-                onClick={event => {
+          <Button
+            disabled={status.working}
+            onClick={event => {
+              setNewStartDate(DateTime.local());
+              setCopyData(null);
+            }}
+          >
+            {t("copy_cancel_btn")}
+          </Button>
+          <Button
+            disabled={status.working}
+            onClick={event => {
+              dispatch(startTask("copying_course"));
+              const url = `${endpoints.courseCopyUrl}${props.itemId}.json`;
+              const sendDate = newStartDate.toSQLDate();
+
+              axios
+                .post(url, {
+                  start_date: sendDate
+                })
+                .then(response => {
+                  const data = response.data;
+                  props.addMessagesFunc(data.messages);
+                  if (Boolean(props.itemUpdateFunc)) {
+                    props.itemUpdateFunc();
+                  }
                   setNewStartDate(DateTime.local());
                   setCopyData(null);
-                }}
-              >
-                {t("copy_cancel_btn")}
-              </Button>
-              <Button
-                disabled={status.working}
-                onClick={event => {
-                  dispatch(startTask("copying_course"));
-                  const url = `${endpoints.courseCopyUrl}${props.itemId}.json`;
-                  const sendDate = newStartDate.toSQLDate();
+                  dispatch(endTask("copying_course"));
+                })
+                .catch(error => {
+                  console.log("error:", error);
 
-                  axios
-                    .post(url, {
-                      start_date: sendDate
-                    })
-                    .then(response => {
-                      const data = response.data;
-                      props.addMessagesFunc(data.messages);
-                      if (Boolean(props.itemUpdateFunc)) {
-                        props.itemUpdateFunc();
-                      }
-                      setNewStartDate(DateTime.local());
-                      setCopyData(null);
-                      dispatch(endTask("copying_course"));
-                    })
-                    .catch(error => {
-                      console.log("error:", error);
-
-                      dispatch(endTask("copying"));
-                    });
-                }}
-              >
-                {t("copy_btn_txt")}
-              </Button>
+                  dispatch(endTask("copying"));
+                });
+            }}
+          >
+            {t("copy_btn_txt")}
+          </Button>
         </>
       }
     >
@@ -100,43 +101,51 @@ export default function CopyActivityButton(props: Props) {
       would you like for the new copy to begin? Everything will be
       shifted accordingly.
       <br />
-              <span className="p-float-label">
+      <span className="card flex justify-content-center">
 
-              <Calendar
-                value={newStartDate.toJSDate( )}
-                id="newCourseStartDate"
-                icon
-                onChange={newValue =>{
-                  setNewStartDate( DateTime.fromJSDate( newValue) )
-                }}
-                />
-                <label htmlFor="newCourseStartDate">
-                  {t("date_picker_label")}
-                </label>
-              </span>
+        <Calendar
+          value={newStartDate}
+          id="newCourseStartDate"
+          showIcon
+          onFocus={(event) =>{
+            console.log( 'focus', event );
+          }}
+          onInput={(event) =>{
+            console.log( 'input', event );
+          }}
+          onChange={newValue => {
+            console.log(newValue);
+            setNewStartDate(newValue.value)
+
+          }}
+        />
+        <label htmlFor="newCourseStartDate">
+          {t("date_picker_label")}
+        </label>
+      </span>
     </Dialog>
 
   );
 
   return (
     <React.Fragment>
-        <Button
-          tooltip={t('btn_tooltip_title')}
-          tooltipOptions={{
-            position: 'left',
-          }}
-          icon='pi pi-copy'
-          id={"copy-" + props.itemId}
-          onClick={event => {
-            setCopyData({
-              id: props.itemId,
-              startDate: props.startDate,
-              copyUrl: props.copyUrl,
-            });
-          }}
-          aria-label={t("copy_btn_aria")}
-          size={t("size_btn")}
-        />
+      <Button
+        tooltip={t('btn_tooltip_title')}
+        tooltipOptions={{
+          position: 'left',
+        }}
+        icon='pi pi-copy'
+        id={"copy-" + props.itemId}
+        onClick={event => {
+          setCopyData({
+            id: props.itemId,
+            startDate: props.startDate,
+            copyUrl: props.copyUrl,
+          });
+        }}
+        aria-label={t("copy_btn_aria")}
+        size={t("size_btn")}
+      />
       {copyDialog}
     </React.Fragment>
   );

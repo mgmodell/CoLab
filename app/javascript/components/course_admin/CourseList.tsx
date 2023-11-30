@@ -34,13 +34,13 @@ export default function CourseList(props) {
     state => state.context.status.endpointsLoaded
   );
 
-enum OPT_COLS {
-  STUDENTS = 'students',
-  INSTR = 'instructors',
-  EXPS = 'experiences',
-  PROJS = 'projects',
-  BINGOS = 'bingo!'
-}
+  enum OPT_COLS {
+    STUDENTS = 'students',
+    INSTR = 'instructors',
+    EXPS = 'experiences',
+    PROJS = 'projects',
+    BINGOS = 'bingo!'
+  }
 
 
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ enum OPT_COLS {
     OPT_COLS.EXPS,
     OPT_COLS.BINGOS
   ];
-  const [visibleColumns, setVisibleColumns] = useState([ ]);
+  const [visibleColumns, setVisibleColumns] = useState([]);
 
   const getCourses = () => {
     const url = endpoints.baseUrl + ".json";
@@ -95,45 +95,46 @@ enum OPT_COLS {
 
   const dataTable = (
     <>
-    <DataTable
-      value={courses.filter( (course) =>{
-        return filterText.length === 0 || course.name.includes( filterText );
-      })}
-      resizableColumns
-      tableStyle={{
-        minWidth: '50rem'
-      }}
-      reorderableColumns
-      paginator
-      rows={5}
-      rowsPerPageOptions={
-        [5, 10, 20, courses.length]
-      }
-      header={<AdminListToolbar
-        itemType={category}
-        filtering={{
-          filterValue: filterText,
-          setFilterFunc: setFilterText
-        } }
-        columnToggle={{
-          optColumns: optColumns,
-          visibleColumns: visibleColumns,
-          setVisibleColumnsFunc: setVisibleColumns,
+      <DataTable
+        value={courses.filter((course) => {
+          return filterText.length === 0 || course.name.includes(filterText);
+        })}
+        resizableColumns
+        tableStyle={{
+          minWidth: '50rem'
         }}
+        reorderableColumns
+        paginator
+        rows={5}
+        rowsPerPageOptions={
+          [5, 10, 20, courses.length]
+        }
+        header={<AdminListToolbar
+          itemType={category}
+          filtering={{
+            filterValue: filterText,
+            setFilterFunc: setFilterText
+          }}
+          columnToggle={{
+            optColumns: optColumns,
+            visibleColumns: visibleColumns,
+            setVisibleColumnsFunc: setVisibleColumns,
+          }}
         />}
-      sortField="start_date"
-      sortOrder={-1}
-      paginatorDropdownAppendTo={'self'}
-      paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-      currentPageReportTemplate="{first} to {last} of {totalRecords}"
-      //paginatorLeft={paginatorLeft}
-      //paginatorRight={paginatorRight}
-      dataKey="id"
-      onRowClick={(event) =>{
+        sortField="start_date"
+        sortOrder={-1}
+        paginatorDropdownAppendTo={'self'}
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="{first} to {last} of {totalRecords}"
+        //paginatorLeft={paginatorLeft}
+        //paginatorRight={paginatorRight}
+        dataKey="id"
+        onRowClick={(event) => {
+          console.log( event );
           const courseId = event.data.id;
           const locaLocation = `${location.pathname}/${String(courseId)}`;
           navigate(locaLocation, { relative: "path" });
-      }}
+        }}
       >
         <Column
           header={t('index.number_col')}
@@ -141,142 +142,142 @@ enum OPT_COLS {
           sortable
           filter
           key={'number'}
-          body={param=>{
-            return(
+          body={param => {
+            return (
               <span className={'pi pi-users'} >
                 &nbsp;{param.number}
               </span>
             )
           }}
-          />
+        />
         <Column
           header={t('index.name_col')}
           field="name"
           sortable
           filter
           key={'name'}
-          />
+        />
         <Column
           header={t('index.school_col')}
           field="school_name"
           sortable
           filter
           key={'school_name'}
-          />
+        />
         <Column
           header={t('index.open_col')}
           sortable
           filter
           field="start_date"
-          body={(param)=>{
-            return(
+          body={(param) => {
+            return (
               <>
-              {DateTime.fromISO( param.start_date).toLocaleString()}
+                {DateTime.fromISO(param.start_date).toLocaleString()}
               </>
             )
           }}
-          />
+        />
         <Column
           header={t('index.close_col')}
           sortable
           filter
           field="end_date"
-          body={(param)=>{
-            return(
+          body={(param) => {
+            return (
               <>
-              {DateTime.fromISO( param.end_date).toLocaleString()}
+                {DateTime.fromISO(param.end_date).toLocaleString()}
               </>
             )
           }}
-          />
-        { visibleColumns.includes( OPT_COLS.INSTR ) ?
-        (
-        <Column
-          header={t('index.faculty_col')}
-          field="faculty_count"
-          sortable
-          filter
-          key={'faculty_count'}
-          />
+        />
+        {visibleColumns.includes(OPT_COLS.INSTR) ?
+          (
+            <Column
+              header={t('index.faculty_col')}
+              field="faculty_count"
+              sortable
+              filter
+              key={'faculty_count'}
+            />
 
-        ) : null}
-        { visibleColumns.includes( OPT_COLS.STUDENTS ) ?
-        (
-        <Column
-          header={t('index.students_col')}
-          field="student_count"
-          sortable
-          filter
-          key={'student_count'}
-          />
-        ) : null}
-        { visibleColumns.includes( OPT_COLS.PROJS ) ?
-        (
-        <Column
-          header={t('index.projects_col')}
-          field="project_count"
-          sortable
-          filter
-          key={'project_count'}
-          />
-        ) : null}
-        { visibleColumns.includes( OPT_COLS.EXPS ) ?
-        (
-        <Column
-          header={t('index.experiences_col')}
-          field="experience_count"
-          sortable
-          filter
-          key={'experience_count'}
-          />
-        ) : null}
-        { visibleColumns.includes( OPT_COLS.BINGOS ) ?
-        (
-        <Column
-          header={t('index.bingo_games_col')}
-          field="bingo_game_count"
-          sortable
-          filter
-          key={'bingo_game_count'}
-          />
-        ) : null}
+          ) : null}
+        {visibleColumns.includes(OPT_COLS.STUDENTS) ?
+          (
+            <Column
+              header={t('index.students_col')}
+              field="student_count"
+              sortable
+              filter
+              key={'student_count'}
+            />
+          ) : null}
+        {visibleColumns.includes(OPT_COLS.PROJS) ?
+          (
+            <Column
+              header={t('index.projects_col')}
+              field="project_count"
+              sortable
+              filter
+              key={'project_count'}
+            />
+          ) : null}
+        {visibleColumns.includes(OPT_COLS.EXPS) ?
+          (
+            <Column
+              header={t('index.experiences_col')}
+              field="experience_count"
+              sortable
+              filter
+              key={'experience_count'}
+            />
+          ) : null}
+        {visibleColumns.includes(OPT_COLS.BINGOS) ?
+          (
+            <Column
+              header={t('index.bingo_games_col')}
+              field="bingo_game_count"
+              sortable
+              filter
+              key={'bingo_game_count'}
+            />
+          ) : null}
         <Column
           header={t('index.actions_col')}
           field="id"
-          body={(course) =>{
+          body={(course) => {
             //const course = params.row;
             const scoresUrl = endpoints.scoresUrl + course.id + ".csv";
             const copyUrl = endpoints.courseCopyUrl + course.id + ".json";
-            return(
+            return (
               <>
-              <Button
-                icon='pi pi-download'
-                tooltip={'Download Scores to CSV'}
-                tooltipOptions={{
-                  position: 'left',
-                }}
-                id={"csv-" + course.id}
-                onClick={event => {
-                  window.location.href = scoresUrl;
-                  event.preventDefault();
-                }}
-                aria-label="Download scores as CSV"
-                size="large"
-              />
-            <CopyActivityButton
-              copyUrl={copyUrl}
-              itemId={course.id}
-              itemUpdateFunc={getCourses}
-              startDate={new Date(course["start_date"])}
-              addMessagesFunc={postNewMessage}
-            />
+                <Button
+                  icon='pi pi-download'
+                  tooltip={'Download Scores to CSV'}
+                  tooltipOptions={{
+                    position: 'left',
+                  }}
+                  id={"csv-" + course.id}
+                  onClick={event => {
+                    window.location.href = scoresUrl;
+                    event.preventDefault();
+                  }}
+                  aria-label="Download scores as CSV"
+                  size="large"
+                />
+                <CopyActivityButton
+                  copyUrl={copyUrl}
+                  itemId={course.id}
+                  itemUpdateFunc={getCourses}
+                  startDate={new Date(course["start_date"])}
+                  addMessagesFunc={postNewMessage}
+                />
               </>
 
             )
 
           }
           }
-          />
+        />
 
       </DataTable>
 
