@@ -30,11 +30,8 @@ export default function CandidateReviewListToolbar(props: Props) {
   const { t } = useTranslation(category);
 
   const onColumnToggle = event => {
-    const selectedColumns = event.value;
     props.setVisibleColumnsFunc(event.value);
 
-    //const selectedOptColumns = props.optColumns.filter((col) => selectedColumns.some((sCol) => sCol.field === col.field));
-    //props.setVisibleColumnsFunc( selectedOptColumns );
   };
 
   const columnToggle = (

@@ -41,80 +41,17 @@ export default function RubricList(props) {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const columns: GridColDef[] = [
-    { field: "name", headerName: t("name") },
-    { field: "published", headerName: t("show.published") },
-    {
-      field: "version",
-      type: "number",
-      headerName: t("version"),
-      getApplyQuickFilterFn: undefined
-    },
-    { field: "user", headerName: t("show.creator") },
-    {
-      field: "actions",
-      headerName: "",
-      type: "actions",
-      editable: false,
-      sortable: false,
-      renderCell: (params: GridRenderCellParams) => (
-        <Fragment>
-          <Tooltip title={t("rubric.copy")}>
-            <IconButton
-              id="copy_rubric"
-              onClick={event => {
-                const rubric = Object.assign(
-                  {},
-                  rubrics.find(value => {
-                    return params.id == value.id;
-                  })
-                );
-                const url = `${endpoints["baseUrl"]}/copy/${rubric.id}.json`;
-                axios
-                  .get(url)
-                  .then(resp => {
-                    // check for possible errors
-                    getRubrics();
-                  })
-                  .catch(error => {
-                    console.log(error);
-                  });
-              }}
-              aria-label={t("rubric.copy")}
-              size="small"
-            >
-              <FileCopyIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={t("rubric.delete")}>
-            <span>
-              <IconButton
-                id="delete_rubric"
-                aria-label={t("rubric.delete")}
-                disabled={params.row.published}
-                onClick={event => {
-                  const rubric = Object.assign(
-                    {},
-                    rubrics.find(value => {
-                      return params.id == value.id;
-                    })
-                  );
-                  const url = `${endpoints["baseUrl"]}/${rubric.id}.json`;
-                  axios.delete(url).then(resp => {
-                    // check for possible errors
-                    getRubrics();
-                  });
-                }}
-                size="small"
-              >
-                <DeleteIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
-        </Fragment>
-      )
-    }
+enum OPT_COLS {
+  PUBLISHED = 'published',
+  VERSION = 'version',
+  CREATOR = 'creator',
+}
+  const optColumns = [
+    OPT_COLS.PUBLISHED,
+    OPT_COLS.VERSION,
+    OPT_COLS.CREATOR,
   ];
+  const [visibleColumns, setVisibleColumns] = useState([ ]);
 
   const [rubrics, setRubrics] = useState([]);
 
@@ -162,16 +99,21 @@ export default function RubricList(props) {
             }
             header={<AdminListToolbar
               itemType={category}
-              filterValue={filterText}
-              setFilterFunc={setFilterText}
+              filtering={{
+                filterValue: filterText,
+                setFilterFunc: setFilterText,
+              }}
+              columnToggle={{
+                optColumns: optColumns,
+                visibleColumns: visibleColumns,
+                setVisibleColumnsFunc: setVisibleColumns,
+
+              }}
               />}
-            //sortField="start_date"
             sortOrder={-1}
             paginatorDropdownAppendTo={'self'}
             paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             currentPageReportTemplate="{first} to {last} of {totalRecords}"
-            //paginatorLeft={paginatorLeft}
-            //paginatorRight={paginatorRight}
             dataKey="id"
             onRowClick={(event) => {
               navigate(String(event.data.id));
@@ -185,6 +127,7 @@ export default function RubricList(props) {
               filter
               key={'name'}
             />
+            {visibleColumns.includes( OPT_COLS.PUBLISHED) ? (
             <Column
               header={t('show.published')}
               field='published'
@@ -192,6 +135,8 @@ export default function RubricList(props) {
               filter
               key={'published'}
             />
+            ): null}
+            {visibleColumns.includes( OPT_COLS.VERSION) ? (
             <Column
               header={t('version')}
               field='version'
@@ -199,6 +144,8 @@ export default function RubricList(props) {
               filter
               key={'version'}
             />
+            ): null}
+            {visibleColumns.includes( OPT_COLS.CREATOR) ? (
             <Column
               header={t('show.creator')}
               field='user'
@@ -206,6 +153,7 @@ export default function RubricList(props) {
               filter
               key={'user'}
             />
+            ): null}
             <Column
               header={t('index.actions_col')}
               field="id"

@@ -24,6 +24,7 @@ import AdminListToolbar from "../infrastructure/AdminListToolbar";
 import { Column } from "primereact/column";
 import { PrimeIcons } from "primereact/api";
 
+
 export default function CourseList(props) {
   const category = "course";
   const endpoints = useTypedSelector(
@@ -32,6 +33,14 @@ export default function CourseList(props) {
   const endpointStatus = useTypedSelector(
     state => state.context.status.endpointsLoaded
   );
+
+enum OPT_COLS {
+  STUDENTS = 'students',
+  INSTR = 'instructors',
+  EXPS = 'experiences',
+  PROJS = 'projects',
+  BINGOS = 'bingo!'
+}
 
 
   const navigate = useNavigate();
@@ -43,37 +52,18 @@ export default function CourseList(props) {
   const [showErrors, setShowErrors] = useState(false);
 
   const dispatch = useDispatch();
-  const optColumns: Array<ColumnMeta> = [
-    {
-      header: t("index.number_col"),
-      field: "number",
-      sortable: true,
-      filterable: false,
-      key: 'number',
-      body: param => {
-        return(
-          <span className={'pi pi-users'} >
-            &nbsp;{param.number}
-          </span>
-        )
-
-      }
-    },
-    {
-      header: t('index.name_col'),
-      field: 'name',
-      sortable: true,
-      filterable: false,
-      body: param => {
-        return renderTextCellExpand( param.name );
-      }
-    }
-  ];
 
   const [courses, setCourses] = useState([]);
   const [newStartDate, setNewStartDate] = useState(DateTime.local());
   const [filterText, setFilterText] = useState('');
-
+  const optColumns = [
+    OPT_COLS.STUDENTS,
+    OPT_COLS.INSTR,
+    OPT_COLS.PROJS,
+    OPT_COLS.EXPS,
+    OPT_COLS.BINGOS
+  ];
+  const [visibleColumns, setVisibleColumns] = useState([ ]);
 
   const getCourses = () => {
     const url = endpoints.baseUrl + ".json";
@@ -121,8 +111,15 @@ export default function CourseList(props) {
       }
       header={<AdminListToolbar
         itemType={category}
-        filterValue={filterText}
-        setFilterFunc={setFilterText}
+        filtering={{
+          filterValue: filterText,
+          setFilterFunc: setFilterText
+        } }
+        columnToggle={{
+          optColumns: optColumns,
+          visibleColumns: visibleColumns,
+          setVisibleColumnsFunc: setVisibleColumns,
+        }}
         />}
       sortField="start_date"
       sortOrder={-1}
@@ -192,6 +189,8 @@ export default function CourseList(props) {
             )
           }}
           />
+        { visibleColumns.includes( OPT_COLS.INSTR ) ?
+        (
         <Column
           header={t('index.faculty_col')}
           field="faculty_count"
@@ -199,6 +198,10 @@ export default function CourseList(props) {
           filter
           key={'faculty_count'}
           />
+
+        ) : null}
+        { visibleColumns.includes( OPT_COLS.STUDENTS ) ?
+        (
         <Column
           header={t('index.students_col')}
           field="student_count"
@@ -206,6 +209,9 @@ export default function CourseList(props) {
           filter
           key={'student_count'}
           />
+        ) : null}
+        { visibleColumns.includes( OPT_COLS.PROJS ) ?
+        (
         <Column
           header={t('index.projects_col')}
           field="project_count"
@@ -213,6 +219,9 @@ export default function CourseList(props) {
           filter
           key={'project_count'}
           />
+        ) : null}
+        { visibleColumns.includes( OPT_COLS.EXPS ) ?
+        (
         <Column
           header={t('index.experiences_col')}
           field="experience_count"
@@ -220,6 +229,9 @@ export default function CourseList(props) {
           filter
           key={'experience_count'}
           />
+        ) : null}
+        { visibleColumns.includes( OPT_COLS.BINGOS ) ?
+        (
         <Column
           header={t('index.bingo_games_col')}
           field="bingo_game_count"
@@ -227,6 +239,7 @@ export default function CourseList(props) {
           filter
           key={'bingo_game_count'}
           />
+        ) : null}
         <Column
           header={t('index.actions_col')}
           field="id"

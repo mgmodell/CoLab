@@ -6,19 +6,52 @@ import { useTranslation } from "react-i18next";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
+import { MultiSelect } from "primereact/multiselect";
+
+import { ColumnMeta } from "./Types";
+import { Toolbar } from "primereact/toolbar";
 
 type Props = {
   itemType: string;
-  filterValue: string;
-  setFilterFunc: (string) => void
+  filtering?: {
+    filterValue: string;
+    setFilterFunc: (string) => void;
+  };
+  columnToggle?: {
+    optColumns: Array<string>;
+    visibleColumns: Array<string>;
+    setVisibleColumnsFunc: (Array) => void;
+
+  }
 };
 
 export default function AdminListToolbar(props: Props) {
   const { t } = useTranslation(`admin`);
   const navigate = useNavigate();
-  return (
-    <div className="flex flex-wrap align-items-center justify-content-between gap-2">
-            <span className="text-xl text-900 font-bold">{props.itemType}s</span>
+  const onColumnToggle = event => {
+    const selectedColumns = event.value;
+    props.columnToggle.setVisibleColumnsFunc(event.value);
+
+  };
+
+  const columnToggle = undefined !== props.columnToggle ? (
+    <MultiSelect
+      value={props.columnToggle.visibleColumns}
+      options={props.columnToggle.optColumns}
+      //dataKey="name"
+      //optionLabel="name"
+      placeholder={t("toggle_columns_plc")}
+      onChange={onColumnToggle}
+      className="w-full sm:w-20rem"
+    />
+  ) : null;
+
+  const title = (
+            <h3>{props.itemType.charAt(0).toUpperCase() + props.itemType.slice( 1 )}s</h3>
+  );
+
+  const createButton = (
+
             <Button
               tooltip={t('new_activity', {activity_type: props.itemType})}
               id={`new_${props.itemType}`}
@@ -30,18 +63,35 @@ export default function AdminListToolbar(props: Props) {
                 {t("new_activity", { activity_type: props.itemType })}
 
               </Button>
+  );
+
+  const search = undefined !== props.filtering ? (
               <div className="flex justify-content-end">
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText
                       id={`${props.itemType}-search`}
-                      value={props.filterValue}
+                      value={props.filtering.filterValue}
                       onChange={(event) =>{
-                        props.setFilterFunc( event.target.value );
+                        props.filtering.setFilterFunc( event.target.value );
                       }}
                       placeholder="Search" />
                 </span>
             </div>
-        </div>
+
+  ) : null;
+
+
+  return (
+    <Toolbar
+      start={title}
+      center={createButton}
+      end={(
+        <>
+          {columnToggle}
+          {search}
+        </>
+      )}
+    />
   );
 }

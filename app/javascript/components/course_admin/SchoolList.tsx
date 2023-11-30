@@ -35,6 +35,23 @@ export default function SchoolList(props) {
 
   const [schools, setSchools] = useState([]);
   const [filterText, setFilterText] = useState( '' );
+enum OPT_COLS {
+  STUDENTS = 'students',
+  COURSES = 'courses',
+  INSTRS = 'instructors',
+  PROJS = 'projects',
+  EXPS = 'experiences',
+  BINGO = 'bingo!'
+}
+  const optColumns = [
+    OPT_COLS.STUDENTS,
+    OPT_COLS.COURSES,
+    OPT_COLS.INSTRS,
+    OPT_COLS.PROJS,
+    OPT_COLS.EXPS,
+    OPT_COLS.BINGO
+  ];
+  const [visibleColumns, setVisibleColumns] = useState([ ]);
 
   const getSchools = () => {
     const url = endpoints.baseUrl + ".json";
@@ -72,12 +89,19 @@ export default function SchoolList(props) {
               minWidth: '50rem'
             }}
             rowsPerPageOptions={
-              [5, 10, 20, rubrics.length]
+              [5, 10, 20, schools.length]
             }
             header={<AdminListToolbar
               itemType={category}
-              filterValue={filterText}
-              setFilterFunc={setFilterText}
+              filtering={{
+                filterValue: filterText,
+                setFilterFunc: setFilterText,
+              }}
+              columnToggle={{
+                setVisibleColumnsFunc: setVisibleColumns,
+                optColumns: optColumns,
+                visibleColumns: visibleColumns
+              }}
               />}
             sortField="name"
             sortOrder={1}
@@ -97,6 +121,7 @@ export default function SchoolList(props) {
           filter
           key={'name'}
           />
+        {visibleColumns.includes( OPT_COLS.COURSES) ? (
         <Column
           header={t('index.courses_lbl')}
           field="courses"
@@ -104,6 +129,8 @@ export default function SchoolList(props) {
           filter
           key={'courses'}
           />
+          ) : null}
+        {visibleColumns.includes( OPT_COLS.STUDENTS) ? (
         <Column
           header={t('index.students_lbl')}
           field="students"
@@ -111,6 +138,8 @@ export default function SchoolList(props) {
           filter
           key={'students'}
           />
+          ) : null}
+        {visibleColumns.includes( OPT_COLS.INSTRS) ? (
         <Column
           header={t('index.instructors_lbl')}
           field="instructors"
@@ -118,6 +147,8 @@ export default function SchoolList(props) {
           filter
           key={'instructors'}
           />
+          ) : null}
+        {visibleColumns.includes( OPT_COLS.PROJS) ? (
         <Column
           header={t('index.project_lbl')}
           field="project"
@@ -125,6 +156,8 @@ export default function SchoolList(props) {
           filter
           key={'project'}
           />
+          ) : null}
+        {visibleColumns.includes( OPT_COLS.EXPS) ? (
         <Column
           header={t('index.experience_lbl')}
           field="experience"
@@ -132,6 +165,8 @@ export default function SchoolList(props) {
           filter
           key={'experience'}
           />
+          ) : null}
+        {visibleColumns.includes( OPT_COLS.BINGO) ? (
         <Column
           header={t('index.terms_list_lbl')}
           field="terms_lists"
@@ -139,6 +174,7 @@ export default function SchoolList(props) {
           filter
           key={'terms_list'}
           />
+          ) : null}
 
     </DataTable>
 
