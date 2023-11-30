@@ -27,7 +27,7 @@ export default function BingoBuilder(props) {
     state => state.context.status.endpointsLoaded
   );
   const { bingoGameId } = useParams();
-  const { t, i18n } = useTranslation( category );
+  const { t, i18n } = useTranslation(category);
 
   const dispatch = useDispatch();
 
@@ -97,13 +97,12 @@ export default function BingoBuilder(props) {
     setBoard(tmpBoard);
   };
 
+  const prefix = props.rootPath === undefined ? '' : `/${props.rootPath}`;
+
   const getConcepts = () => {
     dispatch(startTask());
 
-    const url =
-      props.rootPath === undefined
-        ? `${endpoints.conceptsUrl}${bingoGameId}.json`
-        : `/${props.rootPath}${endpoints.conceptsUrl}${bingoGameId}.json`;
+    const url = `${prefix}${endpoints.conceptsUrl}${bingoGameId}.json`;
 
     axios
       .get(url, {})
@@ -114,22 +113,18 @@ export default function BingoBuilder(props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: t('no_data_list_item' ) }];
+        return [{ id: -1, name: t('no_data_list_item') }];
       });
   };
 
   const getMyResults = () => {
     dispatch(startTask());
     const url =
-      props.rootPath === undefined
-        ? `${endpoints.baseUrl}${bingoGameId}.json`
-        : `/${props.rootPath}${endpoints.baseUrl}${bingoGameId}.json`;
-    console.log( url );
+      `${prefix}${endpoints.baseUrl}${bingoGameId}.json`
     axios
       .get(url, {})
       .then(response => {
         const data = response.data;
-        console.log( data.candidate_list );
         setCandidateList(data.candidate_list);
         setCandidates(data.candidates);
         //}, this.randomizeTiles );
@@ -137,15 +132,13 @@ export default function BingoBuilder(props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: t('no_data_list_item' ) }];
+        return [{ id: -1, name: t('no_data_list_item') }];
       });
   };
   const getBoard = () => {
     dispatch(startTask());
-    const url =
-      props.rootPath === undefined
-        ? `${endpoints.boardUrl}${bingoGameId}.json`
-        : `/${props.rootPath}${endpoints.boardUrl}${bingoGameId}.json`;
+    const url = `${prefix}${endpoints.boardUrl}${bingoGameId}.json`;
+
     axios
       .get(url, {})
       .then(response => {
@@ -158,7 +151,7 @@ export default function BingoBuilder(props) {
       })
       .catch(error => {
         console.log("error");
-        return [{ id: -1, name: t('no_data_list_item' ) }];
+        return [{ id: -1, name: t('no_data_list_item') }];
       });
   };
 
@@ -166,7 +159,8 @@ export default function BingoBuilder(props) {
     dispatch(startTask("saving"));
     board.bingo_cells_attributes = board.bingo_cells;
     delete board.bingo_cells;
-    const url = `${endpoints.boardUrl}${bingoGameId}.json`;
+    const url = `${prefix}${endpoints.boardUrl}${bingoGameId}.json`;
+
     axios
       .patch(url, {
         bingo_board: board
@@ -196,39 +190,42 @@ export default function BingoBuilder(props) {
       });
   };
   const getWorksheet = () => {
-    open(`${endpoints.worksheetUrl}${bingoGameId}.pdf`);
+    open(`${prefix}${endpoints.worksheetUrl}${bingoGameId}.pdf`);
   };
   const getPrintableBoard = () => {
-    open(`${endpoints.boardUrl}${bingoGameId}.pdf`);
+    open(`${prefix}${endpoints.boardUrl}${bingoGameId}.pdf`);
   };
 
-  const saveBtn = [];
-  if (null === board.bingo_game.end_date) {
-    //no op
-  } else if (new Date(board.bingo_game.end_date) < new Date()) {
-    saveBtn.push(
-      <em key='played_btn'>{t('already_played_msg')}</em>
-    );
-  } else if (
-    board.initialised &&
-    board.iteration > 0 &&
-    new Date(board.bingo_game.end_date) > new Date()
-  ) {
-    saveBtn.push(
-      <React.Fragment>
-        <Link onClick={() => saveBoard()}>{t('save_lnk')}</Link> {t('gen_board_msg')}&hellip;
-      </React.Fragment>
-    );
-  } else {
-    saveBtn.push(
-      <em key='save_btn'>{t('gen_and_save_msg')}</em>
-    );
+  const saveBtn = () => {
+
+    if (null === board.bingo_game.end_date) {
+      //no op
+      return (<></>);
+    } else if (new Date(board.bingo_game.end_date) < new Date()) {
+      return (
+        <em key='played_btn'>{t('already_played_msg')}</em>
+      )
+    } else if (
+      board.initialised &&
+      board.iteration > 0 &&
+      new Date(board.bingo_game.end_date) > new Date()
+    ) {
+      return (
+        <React.Fragment>
+          <Link onClick={() => saveBoard()}>{t('save_lnk')}</Link> {t('gen_board_msg')}&hellip;
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <em key='save_btn'>{t('gen_and_save_msg')}</em>
+      );
+    }
   }
 
   const printBtn =
     (board.id != null && board.iteration == 0) ||
-    (null !== board.bingo_game.end_date &&
-      new Date(board.bingo_game.end_date) < new Date()) ? (
+      (null !== board.bingo_game.end_date &&
+        new Date(board.bingo_game.end_date) < new Date()) ? (
       <React.Fragment>
         <Link onClick={() => getPrintableBoard()}>
           {t('download_board_lnk')}
@@ -240,25 +237,25 @@ export default function BingoBuilder(props) {
     );
 
   const workSheetInstr = board.practicable ? (
-    <li>
+    <li key={'practice'}>
       Print and complete this&nbsp;
       <Link onClick={() => getWorksheet()}>Practice Bingo Board</Link> then turn
       it in before class begins.
     </li>
   ) : (
-    <li>{t('not_enough_entries_msg')}</li>
+    <li key={'practice'}>{t('not_enough_entries_msg')}</li>
   );
 
   const playableInstr = board.playable ? (
     <React.Fragment>
-      <li>
+      <li key={'generate'}>
         <Link onClick={() => randomizeTiles()}>
           (Re)Generate your playable board
         </Link>{" "}
         until you get one you like and then&hellip;
       </li>
-      <li>{saveBtn}</li>
-      <li>{printBtn}</li>
+      <li key={'save_board'}>{saveBtn()}</li>
+      <li key={'print_board'}>{printBtn}</li>
     </React.Fragment>
   ) : (
     <li>{t('not_enough_entries_msg')}</li>
@@ -309,7 +306,7 @@ export default function BingoBuilder(props) {
                 <br />
               </Typography>
               {null != board.worksheet.result_img &&
-              "" != board.worksheet.result_img ? (
+                "" != board.worksheet.result_img ? (
                 <img src={board.worksheet.result_img} />
               ) : null}
             </Paper>

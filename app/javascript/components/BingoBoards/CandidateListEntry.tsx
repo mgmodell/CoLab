@@ -116,7 +116,10 @@ export default function CandidateListEntry(props : Props) {
   const saveCandidateList = () => {
     dispatch(startTask("saving"));
 
-    const url = endpoints.baseUrl + bingoGameId + ".json";
+    const url = 
+      props.rootPath === undefined
+        ? `${ endpoints.baseUrl}${bingoGameId}.json`
+        : `/${props.rootPath}${ endpoints.baseUrl}${bingoGameId}.json`;
 
     axios
       .put(url, {
@@ -171,7 +174,11 @@ export default function CandidateListEntry(props : Props) {
 
   const colabResponse = decision => {
     dispatch(startTask("updating"));
-    const url = `${requestCollaborationUrl}${decision}.json`;
+    const url = 
+      props.rootPath === undefined 
+        ?  `${requestCollaborationUrl}${decision}.json`
+        :  `/${props.rootPath}${requestCollaborationUrl}${decision}.json` ;
+
     axios
       .get(url, {})
       .then(response => {

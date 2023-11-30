@@ -137,8 +137,8 @@ export default function HelpMenu(props : Props) {
   };
   const [steps, setSteps] = useState(stepHash.default);
 
-          const pathComponents = location.pathname.split("/");
-          const pathLoc = 'demo' === pathComponents[1] ? pathComponents[2] : pathComponents[1];
+  const pathComponents = location.pathname.split("/");
+  const pathLoc = 'demo' === pathComponents[1] ? pathComponents[2] : pathComponents[1];
   return (
     <React.Fragment>
       <Sidebar visible={showInfo} position="right" onHide={()=> setShowInfo(false )} >
@@ -187,7 +187,7 @@ export default function HelpMenu(props : Props) {
         icon='pi pi-question'
 
       />
-      {'bingo'===pathLoc ?
+      { pathComponents.includes( 'bingo' ) ?
         <Button
           icon='pi pi-info'
           size="small"

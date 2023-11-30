@@ -27,9 +27,15 @@ export default function BingoShell( props: Props) {
         <Route
           path={`review_candidates/:bingoGameId`}
           element={
-            <RequireInstructor>
-              <CandidatesReviewTable rootPath={props.rootPath} />
-            </RequireInstructor>
+            <>
+              { undefined === props.rootPath ? (
+                <RequireInstructor>
+                  <CandidatesReviewTable rootPath={props.rootPath} />
+                </RequireInstructor>
+              ) : (
+                <CandidatesReviewTable rootPath={props.rootPath} />
+              )}
+            </>
           }
         />
         <Route
