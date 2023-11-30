@@ -143,7 +143,9 @@ export default function TaskList(props: Props) {
         rows={props.tasks}
         onCellClick={(params, event, details ) =>{
           const link = params.row.link;
-          navigate( link );
+          navigate( link, {
+            relative: 'path'
+          } );
         }}
         slots={{
           toolbar: StandardListToolbar

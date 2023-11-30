@@ -93,8 +93,7 @@ export default function HomeShell(props : Props) {
         if (props.rootPath === undefined) {
           value.url = `/home${value.link}`;
         } else {
-          const url = `/${props.rootPath}/home${value.link}`;
-          value.url = url;
+          value.url = `/${props.rootPath}/home${value.link}`;
         }
         value.link = value.url;
         // Set the dates properly - close may need work
