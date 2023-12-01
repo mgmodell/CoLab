@@ -283,7 +283,7 @@ export default function CritiqueShell(props: Props) {
                 }}
                 slotProps={{
                   toolbar: {
-                    activityType: "submission"
+                    itemType: "submission"
                   }
                 }}
               />
