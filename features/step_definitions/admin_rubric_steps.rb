@@ -57,7 +57,11 @@ end
 Then('the user sees {int} rubrics') do |count|
   wait_for_render
   rubrics = find_all(:xpath, "//tbody/tr")
-  rubrics.size.should eq count
+  if 0 == count && 1 == rubrics.size
+    has_content?('No results found').should be true
+  else
+    rubrics.size.should eq count
+  end
 end
 
 Then('the user sets criteria {int} {string} to {string}') do |criteria_num, field_name, value|
