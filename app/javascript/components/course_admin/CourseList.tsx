@@ -130,7 +130,6 @@ export default function CourseList(props) {
         //paginatorRight={paginatorRight}
         dataKey="id"
         onRowClick={(event) => {
-          console.log( event );
           const courseId = event.data.id;
           const locaLocation = `${location.pathname}/${String(courseId)}`;
           navigate(locaLocation, { relative: "path" });

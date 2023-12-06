@@ -442,7 +442,10 @@ export default function CourseDataAdmin(props) {
       field: "status",
       
       renderCell: (params) => {
-          if (params.row.end_date > DateTime.local()) {
+          if (!params.row.active){
+            return 'Not Activated'
+          }
+          else if (params.row.end_date > DateTime.local()) {
             return "Active";
           } else {
             return "Expired";
