@@ -86,11 +86,13 @@ class Course < ApplicationRecord
 
   def copy_from_template(new_start:)
     # Timezone checking here
-    course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC')
-    new_start = new_start.getlocal(course_tz.utc_offset).beginning_of_day
+    # course_tz = ActiveSupport::TimeZone.new(timezone || 'UTC')
+    # new_start = new_start.getlocal(course_tz.utc_offset).beginning_of_day
+    # new_start = new_start.beginning_of_day.getlocal(course_tz)
     # new_start = course_tz.utc_to_local(new_start).beginning_of_day
     # date_difference = new_start - course_tz.local(d.year, d.month, d.day).beginning_of_day
-    date_difference = (new_start - start_date + course_tz.utc_offset) / 86_400
+    # date_difference = (new_start - start_date + course_tz.utc_offset) / 86_400
+    date_difference = (new_start - start_date.beginning_of_day) / 86_400
     new_course = nil
 
     Course.transaction do

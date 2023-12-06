@@ -68,8 +68,8 @@ export default function CopyActivityButton(props: Props) {
             onClick={event => {
               dispatch(startTask("copying_course"));
               const url = `${endpoints.courseCopyUrl}${props.itemId}.json`;
-              const sendDate = DateTime.fromJSDate( newStartDate ).toUTC( );
-              console.log( newStartDate, sendDate );
+              const sendDate =  DateTime.fromISO( newStartDate.toISOString().substring(0,10),
+                {zone: 'UTC' } );
 
               axios
                 .post(url, {

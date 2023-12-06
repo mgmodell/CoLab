@@ -427,7 +427,7 @@ Then 'the user submits credentials' do
 end
 
 Given('the user has {string} the course') do |action|
-  roster = Roster.where(course: @course, user: @user).take
+  roster = Roster.find_by( course: @course, user: @user )
   roster = @course.rosters.create(user: @user) if roster.nil?
   case action
   when 'declined'
