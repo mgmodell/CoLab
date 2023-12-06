@@ -119,7 +119,7 @@ export default function TaskList(props: Props) {
       headerName: t( 'list.instructor_task' ),
       field: 'instructor_task',
       renderCell: (params) => {
-        return <Checkbox value={params.value} disabled={true} />;
+        return <Checkbox checked={params.value} disabled={true} />;
       }
     }
   ];
