@@ -482,7 +482,7 @@ class HomeController < ApplicationController
     e.start_time = 1.day.ago
     e.close_date = 3.days.from_now.end_of_day
     e.next_date = 1.day.ago
-    e.link = "submit_installment/#{e.id}"
+    e.link = "project/checkin/#{e.id}"
     e.instructor_task = false
 
     @events = [e]
