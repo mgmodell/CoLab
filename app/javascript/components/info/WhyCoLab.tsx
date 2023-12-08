@@ -18,25 +18,18 @@ export default function WhyCoLab( props ){
             >
                 <NormallyFunctioningGroup
                     svgPos={{
-                        x: 85,
+                        x: 200,
                         y: 20,
-                        scale: .05
+                        scale: .01,
+                        height: 200,
+                        width: 200,
                     }}
                     />
-            <animated.text
-                x={10}
-                y={100}
-                style={{
-                    fontWeight: "normal",
-                    fontSize: '9',
-                    lineHeight: 1.25,
-                    fontFamily: 'sans-serif',
-
-                }
-                }
-                >
+            <foreignObject x="10" y="100" width="150" height="200">
+<p xmlns="http://www.w3.org/1999/xhtml" style={{color: 'azure'}}>
                     We dream of teamwork that looks like this
-                </animated.text>
+    </p>
+</foreignObject>
             
         </svg>
     )
