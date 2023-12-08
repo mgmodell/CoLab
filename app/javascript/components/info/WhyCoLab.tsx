@@ -16,6 +16,13 @@ export default function WhyCoLab( props ){
             viewBox={viewBox}
             xmlns="http://www.w3.org/2000/svg"
             >
+                <NormallyFunctioningGroup
+                    svgPos={{
+                        x: 85,
+                        y: 20,
+                        scale: .05
+                    }}
+                    />
             <animated.text
                 x={10}
                 y={100}
@@ -30,13 +37,6 @@ export default function WhyCoLab( props ){
                 >
                     We dream of teamwork that looks like this
                 </animated.text>
-            <g 
-                style={{
-                    transform: 'translate( 200 350 )'
-                }}
-              >
-                <NormallyFunctioningGroup framed height={200} width={200} />
-            </g>
             
         </svg>
     )

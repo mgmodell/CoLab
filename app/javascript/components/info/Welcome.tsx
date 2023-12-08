@@ -99,7 +99,7 @@ export default function Welcome(props: Props) {
       y: 0,
       scale: 0.8125,
    },
-   about: {
+   why: {
       opacity: 0,
       x: 370,
       y: 0,
@@ -111,7 +111,7 @@ export default function Welcome(props: Props) {
       y: 0,
       scale: 0.8125,
    },
-   why: {
+   about: {
       opacity: 0,
       x: 370,
       y: 0,
@@ -133,7 +133,7 @@ export default function Welcome(props: Props) {
       scale: 0.26,
       rotate: 670,
    },
-   about: {
+   why: {
       x: 430,
       y: 35,
       scale: 0.07,
@@ -157,7 +157,7 @@ export default function Welcome(props: Props) {
       scale: 0.08,
       rotate: 510,
    },
-   why: {
+   about: {
       x: 405,
       y: 80,
       scale: 0.10,
@@ -294,6 +294,10 @@ export default function Welcome(props: Props) {
       height={height}
       width={width}
    >
+    {'why' === params['*'] ?
+      <WhyCoLab height={250} width={444} />
+    : null
+    }
   <text
        x="90"
        y="20"
@@ -592,10 +596,6 @@ export default function Welcome(props: Props) {
        transform: 'translate( 10 150 )',
      }}
      >
-    {'why' === params['*'] ?
-      <WhyCoLab height={250} width={444} />
-    : null
-    }
     </g>
    </ResizableSVG>
   );
