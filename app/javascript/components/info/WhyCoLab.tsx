@@ -4,6 +4,7 @@ import NormallyFunctioningGroup from "../svgs/NormallyFunctioningGroup";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fontStyle } from "@mui/system";
 import StudentConcern from "../svgs/StudentConcern";
+import SocialLoafing from "../svgs/SocialLoafing";
 
 type Props = {
     height: number;
@@ -44,29 +45,82 @@ export default function WhyCoLab(props) {
 
         },
         {
-        x: 260,
-        y: 48,
-        height: 52,
-        width: 52,
+        x: 265,
+        y: 38,
+        height: 57,
+        width: 57,
         opacity: 1,
 
+        },
+        {
+        x: 265,
+        y: 38,
+        height: 57,
+        width: 57,
+        opacity: 0,
+
+        },
+    ]
+
+    const SL_SVG = [
+        {
+        x: 265,
+        y: 38,
+        height: 57,
+        width: 57,
+        opacity: 0,
+        },
+        {
+        x: 265,
+        y: 38,
+        height: 57,
+        width: 57,
+        opacity: 0,
+        },
+        {
+        x: 265,
+        y: 38,
+        height: 57,
+        width: 57,
+        opacity: 1,
+        },
+        {
+        x: 10,
+        y: 19,
+        height: 150,
+        width: 150,
+        opacity: 1,
         },
     ]
 
     const TS_SVG = [
         {
-        x: 185,
-        y: 20,
-        height: 200,
-        width: 200,
+        x: 190,
+        y: 10,
+        height: 210,
+        width: 210,
         opacity: 0,
         },
         {
-        x: 185,
-        y: 20,
-        height: 200,
-        width: 200,
+        x: 190,
+        y: 10,
+        height: 210,
+        width: 210,
         opacity: 1,
+        },
+        {
+        x: 190,
+        y: 10,
+        height: 210,
+        width: 210,
+        opacity: 1,
+        },
+        {
+        x: 190,
+        y: 10,
+        height: 210,
+        width: 210,
+        opacity: 0,
         },
     ]
 
@@ -75,6 +129,9 @@ export default function WhyCoLab(props) {
     ))
     const [teacherStudentSpring, teacherStudentApi] = useSpring(() => (
         TS_SVG[ 0 ]
+    ))
+    const [socialLoafingSpring, socialLoafingApi] = useSpring(() => (
+        SL_SVG[ 0 ]
     ))
 
     const [ arrowNavSpring ] = useSpring(
@@ -131,6 +188,9 @@ export default function WhyCoLab(props) {
         })
         teacherStudentApi.start({
             to: TS_SVG[ curScene ]
+        })
+        socialLoafingApi.start({
+            to: SL_SVG[ curScene ]
         })
 
 
@@ -209,8 +269,20 @@ export default function WhyCoLab(props) {
                 width={normallyFunctioningSpring.width}
                  >
 
-                <NormallyFunctioningGroup
-                />
+                <NormallyFunctioningGroup />
+            </animated.svg>
+            <animated.svg
+                viewBox={[0, 0, 6761, 5583].join(" ")}
+                preserveAspectRatio="xMidYMid meet"
+                xmlns="http://www.w3.org/2000/svg"
+                opacity={socialLoafingSpring.opacity}
+                x={socialLoafingSpring.x}
+                y={socialLoafingSpring.y}
+                height={socialLoafingSpring.height}
+                width={socialLoafingSpring.width}
+                 >
+
+                <SocialLoafing />
             </animated.svg>
 
             <animated.foreignObject
