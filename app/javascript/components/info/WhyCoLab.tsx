@@ -5,6 +5,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { fontStyle } from "@mui/system";
 import StudentConcern from "../svgs/StudentConcern";
 import SocialLoafing from "../svgs/SocialLoafing";
+import LeaveItToGeorge from "../svgs/LeaveItToGeorge";
+import GroupDomination from "../svgs/GroupDomination";
+import DivisionOfLabor from "../svgs/DivisionOfLabor";
 
 type Props = {
     height: number;
@@ -19,7 +22,7 @@ export default function WhyCoLab(props) {
     const [curScene, setCurScene ] = useState( 0 );
 
     const NavSpecs = {
-        navDots: 7,
+        navDots: 6,
         dotSpacing: 20,
         dotRad: 4,
         centerY: 215,
@@ -34,6 +37,64 @@ export default function WhyCoLab(props) {
         opacity: 1,
 
     }))
+
+    const titles = [
+        (<p style={{ color: 'azure' }}>
+            We dream of teamwork that looks like this
+        </p>),
+        (<p style={{ color: 'azure' }}>
+                    But we often learn that&hellip;
+        </p>),
+        (<p style={{ color: 'azure' }}>
+                    It feels like an inequitable experience
+        </p>),
+        (<p style={{ color: 'azure' }}>
+                    And negative experiences take many shapes
+        </p>),
+        (<p style={{ color: 'azure' }}>
+                    Or possibly the results just feel cookie-cutter and boring?
+        </p>),
+
+    ]
+
+    const TXT = [
+        {
+        x: 10,
+        y: 100,
+        width: 175,
+        height: 200,
+        opacity: 1,
+        },
+        {
+        x: 10,
+        y: 125,
+        width: 175,
+        height: 125,
+        opacity: 1,
+        },
+        {
+        x: 10,
+        y: 125,
+        width: 175,
+        height: 125,
+        opacity: 1,
+        },
+        {
+        x: 5,
+        y: 155,
+        width: 350,
+        height: 50,
+        opacity: 1,
+        },
+        {
+        x: 5,
+        y: 155,
+        width: 350,
+        height: 50,
+        opacity: 1,
+        },
+
+    ]
 
     const NF_SVG = [
         {
@@ -87,9 +148,155 @@ export default function WhyCoLab(props) {
         {
         x: 10,
         y: 19,
+        height: 125,
+        width: 125,
+        opacity: 1,
+        },
+        {
+        x: 10,
+        y: 19,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 10,
+        y: 19,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+    ]
+    const LITG_SVG = [
+        {
+        x: 255,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 255,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 255,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 255,
+        y: 25,
+        height: 120,
+        width: 120,
+        opacity: 1,
+        },
+        {
+        x: 255,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 255,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+    ]
+    const GD_SVG = [
+        {
+        x: 155,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 255,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 255,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 125,
+        y: 35,
         height: 150,
         width: 150,
         opacity: 1,
+        },
+        {
+        x: 125,
+        y: 35,
+        height: 180,
+        width: 180,
+        opacity: 0,
+        },
+        {
+        x: 125,
+        y: 35,
+        height: 180,
+        width: 180,
+        opacity: 0,
+        },
+    ]
+    const DL_SVG = [
+        {
+        x: 155,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 255,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 255,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 125,
+        y: 35,
+        height: 150,
+        width: 150,
+        opacity: 0,
+        },
+        {
+        x: 120,
+        y: 25,
+        height: 175,
+        width: 175,
+        opacity: 1,
+        },
+        {
+        x: 255,
+        y: 25,
+        height: 150,
+        width: 150,
+        opacity: 0,
         },
     ]
 
@@ -122,6 +329,20 @@ export default function WhyCoLab(props) {
         width: 210,
         opacity: 0,
         },
+        {
+        x: 190,
+        y: 10,
+        height: 210,
+        width: 210,
+        opacity: 0,
+        },
+        {
+        x: 190,
+        y: 10,
+        height: 210,
+        width: 210,
+        opacity: 0,
+        },
     ]
 
     const [normallyFunctioningSpring, normallyFunctioningApi] = useSpring(() => (
@@ -132,6 +353,15 @@ export default function WhyCoLab(props) {
     ))
     const [socialLoafingSpring, socialLoafingApi] = useSpring(() => (
         SL_SVG[ 0 ]
+    ))
+    const [leaveItToGeorgeSpring, leaveItToGeorgeApi] = useSpring(() => (
+        LITG_SVG[ 0 ]
+    ))
+    const [groupDominationSpring, groupDominationApi] = useSpring(() => (
+        GD_SVG[ 0 ]
+    ))
+    const [divisionOfLaborSpring, divisionOfLaborApi] = useSpring(() => (
+        DL_SVG[ 0 ]
     ))
 
     const [ arrowNavSpring ] = useSpring(
@@ -183,6 +413,9 @@ export default function WhyCoLab(props) {
     }
 
     useEffect( () =>{
+        titleApi.start({
+            to: TXT[ curScene ]
+        })
         normallyFunctioningApi.start({
             to: NF_SVG[ curScene ]
         })
@@ -191,6 +424,15 @@ export default function WhyCoLab(props) {
         })
         socialLoafingApi.start({
             to: SL_SVG[ curScene ]
+        })
+        leaveItToGeorgeApi.start({
+            to: LITG_SVG[ curScene ]
+        })
+        groupDominationApi.start({
+            to: GD_SVG[ curScene ]
+        })
+        divisionOfLaborApi.start({
+            to: DL_SVG[ curScene ]
         })
 
 
@@ -282,18 +524,53 @@ export default function WhyCoLab(props) {
                 width={socialLoafingSpring.width}
                  >
 
-                <SocialLoafing />
+                <SocialLoafing oliveColor={'olive'} />
+            </animated.svg>
+            <animated.svg
+                viewBox={[0, 0, 6753, 5590].join(" ")}
+                preserveAspectRatio="xMidYMid meet"
+                xmlns="http://www.w3.org/2000/svg"
+                opacity={leaveItToGeorgeSpring.opacity}
+                x={leaveItToGeorgeSpring.x}
+                y={leaveItToGeorgeSpring.y}
+                height={leaveItToGeorgeSpring.height}
+                width={leaveItToGeorgeSpring.width}
+                 >
+
+                <LeaveItToGeorge />
+            </animated.svg>
+            <animated.svg
+                viewBox={[0, 0, 6753, 5590].join(" ")}
+                preserveAspectRatio="xMidYMid meet"
+                xmlns="http://www.w3.org/2000/svg"
+                opacity={groupDominationSpring.opacity}
+                x={groupDominationSpring.x}
+                y={groupDominationSpring.y}
+                height={groupDominationSpring.height}
+                width={groupDominationSpring.width}
+                 >
+
+                <GroupDomination bgColor={'aliceblue'} />
+            </animated.svg>
+            <animated.svg
+                viewBox={[0, 0, 6753, 5590].join(" ")}
+                preserveAspectRatio="xMidYMid meet"
+                xmlns="http://www.w3.org/2000/svg"
+                opacity={divisionOfLaborSpring.opacity}
+                x={divisionOfLaborSpring.x}
+                y={divisionOfLaborSpring.y}
+                height={divisionOfLaborSpring.height}
+                width={divisionOfLaborSpring.width}
+                 >
+
+                <DivisionOfLabor bgColor={'aliceblue'} />
             </animated.svg>
 
             <animated.foreignObject
                 style={{
                     ...titleSpring
                 }} >
-                <p
-                    style={{ color: 'azure' }}
-                    >
-                    We dream of teamwork that looks like this
-                </p>
+                        {titles[ curScene]}
             </animated.foreignObject>
             {
                 curNav
