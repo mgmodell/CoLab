@@ -13,6 +13,7 @@ import { Toolbar } from "primereact/toolbar";
 
 type Props = {
   itemType: string;
+  newItemFunc?: (string) => void;
   filtering?: {
     filterValue: string;
     setFilterFunc: (string) => void;
@@ -56,7 +57,11 @@ export default function AdminListToolbar(props: Props) {
               tooltip={t('new_activity', {activity_type: props.itemType})}
               id={`new_${props.itemType}`}
               onClick={event => {
-                navigate("new");
+                if( undefined === props.newItemFunc ){
+                  navigate("new");
+                } else {
+                  props.newItemFunc( 'new' );
+                }
               }}
               aria-label={`New ${props.itemType}`}
               icon={ PrimeIcons.PLUS} rounded raised >

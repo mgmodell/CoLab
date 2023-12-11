@@ -9,17 +9,12 @@ import { Skeleton } from 'primereact/skeleton';
 import { Button } from "primereact/button";
 
 import { DataTable } from "primereact/datatable";
-import { ColumnMeta } from "../infrastructure/Types";
 
 import CopyActivityButton from "./CopyActivityButton";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTranslation } from "react-i18next";
-import {
-  renderDateCellExpand,
-  renderTextCellExpand
-} from "../infrastructure/GridCellExpand";
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
 import { Column } from "primereact/column";
 import { PrimeIcons } from "primereact/api";
@@ -42,7 +37,6 @@ export default function CourseList(props) {
     BINGOS = 'bingo!'
   }
 
-
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation(`${category}s`);
@@ -54,7 +48,6 @@ export default function CourseList(props) {
   const dispatch = useDispatch();
 
   const [courses, setCourses] = useState([]);
-  const [newStartDate, setNewStartDate] = useState(DateTime.local());
   const [filterText, setFilterText] = useState('');
   const optColumns = [
     OPT_COLS.STUDENTS,
@@ -126,8 +119,6 @@ export default function CourseList(props) {
         paginatorDropdownAppendTo={'self'}
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="{first} to {last} of {totalRecords}"
-        //paginatorLeft={paginatorLeft}
-        //paginatorRight={paginatorRight}
         dataKey="id"
         onRowClick={(event) => {
           const courseId = event.data.id;
