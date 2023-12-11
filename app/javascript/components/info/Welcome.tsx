@@ -277,7 +277,7 @@ export default function Welcome(props: Props) {
 
    animateToScene( sceneName );
    setWelcomed( true );
-   navigate( sceneName, {
+   navigate( `${sceneName}${location.hash}`, {
       relative: 'path',
       replace: true,
       state: {

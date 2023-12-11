@@ -1,17 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 
-NormallyFunctioningGroup.propTypes = {
-  height: PropTypes.number,
-  width: PropTypes.number,
-  framed: PropTypes.bool
-};
-
 type Props = {
-  svgProps?: {
-    height: number,
-    width: number,
-  },
   svgPos?: {
     x: number,
     y: number,
@@ -1555,10 +1545,10 @@ export default function NormallyFunctioningGroup(props : Props) {
 
   )
 
-  if( !props.svgProps && !props.svgPos ){
+  if( !props.svgPos ){
     return content;
 
-  } else if( ! props.svgProps) {
+  } else {
     const viewBox = [0, 0, 6761, 5583].join(" ");
     const height = props.svgPos.height || 72;
     const width = props.svgPos.width || 72;
@@ -1570,26 +1560,10 @@ export default function NormallyFunctioningGroup(props : Props) {
         width={width}
         viewBox={viewBox}
         preserveAspectRatio="xMidYMid meet"
-      >
-        {content}
-      </svg>
-    );
-  } else {
-    const height = props.svgProps.height || 72;
-    const width = props.svgProps.width || 72;
-    const viewBox = [0, 0, 6761, 5583].join(" ");
-
-    return (
-      <svg
-        height={height}
-        width={width}
-        viewBox={viewBox}
-        preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg"
       >
         {content}
       </svg>
     );
-
   }
 }
