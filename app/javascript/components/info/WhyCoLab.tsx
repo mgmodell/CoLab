@@ -8,6 +8,7 @@ import SocialLoafing from "../svgs/SocialLoafing";
 import LeaveItToGeorge from "../svgs/LeaveItToGeorge";
 import GroupDomination from "../svgs/GroupDomination";
 import DivisionOfLabor from "../svgs/DivisionOfLabor";
+import { Container, Row, Col } from "react-grid-system";
 
 type Props = {
     height: number;
@@ -18,8 +19,8 @@ export default function WhyCoLab(props) {
     const viewBox = [0, 0, 400, 225].join(' ');
 
     const location = useLocation();
-    const navigate = useNavigate( );
-    const [curScene, setCurScene ] = useState( 0 );
+    const navigate = useNavigate();
+    const [curScene, setCurScene] = useState(0);
 
     const NavSpecs = {
         navDots: 6,
@@ -43,329 +44,401 @@ export default function WhyCoLab(props) {
             We dream of teamwork that looks like this
         </p>),
         (<p style={{ color: 'azure' }}>
-                    But we often learn that&hellip;
+            But we often learn that&hellip;
         </p>),
         (<p style={{ color: 'azure' }}>
-                    It feels like an inequitable experience
+            It feels like an inequitable experience
         </p>),
         (<p style={{ color: 'azure' }}>
-                    And negative experiences take many shapes
+            And negative experiences take many shapes
         </p>),
         (<p style={{ color: 'azure' }}>
-                    Or possibly the results just feel cookie-cutter and boring?
+            Or possibly the results just feel cookie-cutter and boring?
         </p>),
+        (
+            <Container
+                style={{
+                    color: 'azure',
+                    fontSize: '16px'
+                }}
+            >
+                <Row>
+                    <Col sm={8}>
+                        <p>CoLab.online can help!</p>
+                        <ul style={{
+                            fontSize: '10px'
+                        }}>
+                            <li>Weekly self- and peer-assessment check-ins</li>
+                            <li>Growth focused (not judgment)</li>
+                            <li>Visualizations</li>
+                            <li>Diversity-focused group composition</li>
+                            <li>Gamified collaborative reading</li>
+                            <li>Simulated team experiences</li>
+                            <li>Iterative assignments</li>
+                        </ul>
+                    </Col>
+                    <Col sm={3}>
+                        <p>Are you a(n)&hellip;</p>
+                        <ul style={{
+                            fontSize: '10px',
+                        }}>
+                            <li
+                                onClick={() => {
+                                    navigate('welcome/student')
+                                }}
+                            >Student? =&gt;</li>
+                            <li
+                            >Instructor? =&gt;</li>
+                        </ul>
+
+                    </Col>
+                </Row>
+            </Container>
+        )
+
 
     ]
 
     const TXT = [
         {
-        x: 10,
-        y: 100,
-        width: 175,
-        height: 200,
-        opacity: 1,
+            x: 10,
+            y: 100,
+            width: 175,
+            height: 200,
+            opacity: 1,
         },
         {
-        x: 10,
-        y: 125,
-        width: 175,
-        height: 125,
-        opacity: 1,
+            x: 10,
+            y: 125,
+            width: 175,
+            height: 125,
+            opacity: 1,
         },
         {
-        x: 10,
-        y: 125,
-        width: 175,
-        height: 125,
-        opacity: 1,
+            x: 10,
+            y: 125,
+            width: 175,
+            height: 125,
+            opacity: 1,
         },
         {
-        x: 5,
-        y: 155,
-        width: 350,
-        height: 50,
-        opacity: 1,
+            x: 5,
+            y: 155,
+            width: 350,
+            height: 50,
+            opacity: 1,
         },
         {
-        x: 5,
-        y: 155,
-        width: 350,
-        height: 50,
-        opacity: 1,
+            x: 5,
+            y: 155,
+            width: 350,
+            height: 50,
+            opacity: 1,
+        },
+        {
+            x: 5,
+            y: 10,
+            width: 350,
+            height: 210,
+            opacity: 1,
         },
 
     ]
 
     const NF_SVG = [
         {
-        x: 185,
-        y: 20,
-        height: 200,
-        width: 200,
-        opacity: 1,
+            x: 185,
+            y: 20,
+            height: 200,
+            width: 200,
+            opacity: 1,
 
         },
         {
-        x: 265,
-        y: 38,
-        height: 57,
-        width: 57,
-        opacity: 1,
+            x: 265,
+            y: 38,
+            height: 57,
+            width: 57,
+            opacity: 1,
 
         },
         {
-        x: 265,
-        y: 38,
-        height: 57,
-        width: 57,
-        opacity: 0,
+            x: 265,
+            y: 38,
+            height: 57,
+            width: 57,
+            opacity: 0,
+
+        },
+        {
+            x: 265,
+            y: 38,
+            height: 57,
+            width: 57,
+            opacity: 0,
+
+        },
+        {
+            x: 265,
+            y: 38,
+            height: 57,
+            width: 57,
+            opacity: 0,
+
+        },
+        {
+            x: 265,
+            y: 38,
+            height: 57,
+            width: 57,
+            opacity: 0,
 
         },
     ]
 
     const SL_SVG = [
         {
-        x: 265,
-        y: 38,
-        height: 57,
-        width: 57,
-        opacity: 0,
+            x: 265,
+            y: 38,
+            height: 57,
+            width: 57,
+            opacity: 0,
         },
         {
-        x: 265,
-        y: 38,
-        height: 57,
-        width: 57,
-        opacity: 0,
+            x: 265,
+            y: 38,
+            height: 57,
+            width: 57,
+            opacity: 0,
         },
         {
-        x: 265,
-        y: 38,
-        height: 57,
-        width: 57,
-        opacity: 1,
+            x: 265,
+            y: 38,
+            height: 57,
+            width: 57,
+            opacity: 1,
         },
         {
-        x: 10,
-        y: 19,
-        height: 125,
-        width: 125,
-        opacity: 1,
+            x: 10,
+            y: 19,
+            height: 125,
+            width: 125,
+            opacity: 1,
         },
         {
-        x: 10,
-        y: 19,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 10,
+            y: 19,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 10,
-        y: 19,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 10,
+            y: 19,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
     ]
     const LITG_SVG = [
         {
-        x: 255,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 255,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 255,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 255,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 255,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 255,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 255,
-        y: 25,
-        height: 120,
-        width: 120,
-        opacity: 1,
+            x: 255,
+            y: 25,
+            height: 120,
+            width: 120,
+            opacity: 1,
         },
         {
-        x: 255,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 255,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 255,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 255,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
     ]
     const GD_SVG = [
         {
-        x: 155,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 155,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 255,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 255,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 255,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 255,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 125,
-        y: 35,
-        height: 150,
-        width: 150,
-        opacity: 1,
+            x: 125,
+            y: 35,
+            height: 150,
+            width: 150,
+            opacity: 1,
         },
         {
-        x: 125,
-        y: 35,
-        height: 180,
-        width: 180,
-        opacity: 0,
+            x: 125,
+            y: 35,
+            height: 180,
+            width: 180,
+            opacity: 0,
         },
         {
-        x: 125,
-        y: 35,
-        height: 180,
-        width: 180,
-        opacity: 0,
+            x: 125,
+            y: 35,
+            height: 180,
+            width: 180,
+            opacity: 0,
         },
     ]
     const DL_SVG = [
         {
-        x: 155,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 155,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 255,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 255,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 255,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 255,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 125,
-        y: 35,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 125,
+            y: 35,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
         {
-        x: 120,
-        y: 25,
-        height: 175,
-        width: 175,
-        opacity: 1,
+            x: 120,
+            y: 25,
+            height: 175,
+            width: 175,
+            opacity: 1,
         },
         {
-        x: 255,
-        y: 25,
-        height: 150,
-        width: 150,
-        opacity: 0,
+            x: 255,
+            y: 25,
+            height: 150,
+            width: 150,
+            opacity: 0,
         },
     ]
 
     const TS_SVG = [
         {
-        x: 190,
-        y: 10,
-        height: 210,
-        width: 210,
-        opacity: 0,
+            x: 190,
+            y: 10,
+            height: 210,
+            width: 210,
+            opacity: 0,
         },
         {
-        x: 190,
-        y: 10,
-        height: 210,
-        width: 210,
-        opacity: 1,
+            x: 190,
+            y: 10,
+            height: 210,
+            width: 210,
+            opacity: 1,
         },
         {
-        x: 190,
-        y: 10,
-        height: 210,
-        width: 210,
-        opacity: 1,
+            x: 190,
+            y: 10,
+            height: 210,
+            width: 210,
+            opacity: 1,
         },
         {
-        x: 190,
-        y: 10,
-        height: 210,
-        width: 210,
-        opacity: 0,
+            x: 190,
+            y: 10,
+            height: 210,
+            width: 210,
+            opacity: 0,
         },
         {
-        x: 190,
-        y: 10,
-        height: 210,
-        width: 210,
-        opacity: 0,
+            x: 190,
+            y: 10,
+            height: 210,
+            width: 210,
+            opacity: 0,
         },
         {
-        x: 190,
-        y: 10,
-        height: 210,
-        width: 210,
-        opacity: 0,
+            x: 190,
+            y: 10,
+            height: 210,
+            width: 210,
+            opacity: 0,
         },
     ]
 
     const [normallyFunctioningSpring, normallyFunctioningApi] = useSpring(() => (
-        NF_SVG[ 0 ]
+        NF_SVG[0]
     ))
     const [teacherStudentSpring, teacherStudentApi] = useSpring(() => (
-        TS_SVG[ 0 ]
+        TS_SVG[0]
     ))
     const [socialLoafingSpring, socialLoafingApi] = useSpring(() => (
-        SL_SVG[ 0 ]
+        SL_SVG[0]
     ))
     const [leaveItToGeorgeSpring, leaveItToGeorgeApi] = useSpring(() => (
-        LITG_SVG[ 0 ]
+        LITG_SVG[0]
     ))
     const [groupDominationSpring, groupDominationApi] = useSpring(() => (
-        GD_SVG[ 0 ]
+        GD_SVG[0]
     ))
     const [divisionOfLaborSpring, divisionOfLaborApi] = useSpring(() => (
-        DL_SVG[ 0 ]
+        DL_SVG[0]
     ))
 
-    const [ arrowNavSpring ] = useSpring(
-        () =>({
+    const [arrowNavSpring] = useSpring(
+        () => ({
             from: {
                 opacity: .5
             },
@@ -392,12 +465,12 @@ export default function WhyCoLab(props) {
                 cy={NavSpecs.centerY}
                 r={NavSpecs.dotRad}
                 stroke={'midnightblue'}
-                fill={ index <= curScene ? '#ffff00' : 'midnightblue'}
+                fill={index <= curScene ? '#ffff00' : 'midnightblue'}
                 strokeWidth={1.5}
                 opacity={1}
-                onClick={(event) =>{
-                    setScene( index );
-                    navigate( `why#${index}`);
+                onClick={(event) => {
+                    setScene(index);
+                    navigate(`why#${index}`);
                 }}
             />
         )
@@ -405,44 +478,44 @@ export default function WhyCoLab(props) {
     }
     const rightArrowLoc = 200 + ((NavSpecs.navDots + 1) / 2) * NavSpecs.dotSpacing;
 
-    const setScene = ( sceneNum : number ) => {
-        setCurScene( sceneNum );
-        navigate( `/welcome/why#${sceneNum}`);
+    const setScene = (sceneNum: number) => {
+        setCurScene(sceneNum);
+        navigate(`/welcome/why#${sceneNum}`);
 
 
     }
 
-    useEffect( () =>{
+    useEffect(() => {
         titleApi.start({
-            to: TXT[ curScene ]
+            to: TXT[curScene]
         })
         normallyFunctioningApi.start({
-            to: NF_SVG[ curScene ]
+            to: NF_SVG[curScene]
         })
         teacherStudentApi.start({
-            to: TS_SVG[ curScene ]
+            to: TS_SVG[curScene]
         })
         socialLoafingApi.start({
-            to: SL_SVG[ curScene ]
+            to: SL_SVG[curScene]
         })
         leaveItToGeorgeApi.start({
-            to: LITG_SVG[ curScene ]
+            to: LITG_SVG[curScene]
         })
         groupDominationApi.start({
-            to: GD_SVG[ curScene ]
+            to: GD_SVG[curScene]
         })
         divisionOfLaborApi.start({
-            to: DL_SVG[ curScene ]
+            to: DL_SVG[curScene]
         })
 
 
     }, [curScene])
 
-    useEffect( () =>{
-        if( location.hash.length < 1 ){
-            setScene( 0 );
+    useEffect(() => {
+        if (location.hash.length < 1) {
+            setScene(0);
         } else {
-            setScene( parseInt( location.hash.substring( 1 )));
+            setScene(parseInt(location.hash.substring(1)));
         }
 
     }, [])
@@ -451,32 +524,32 @@ export default function WhyCoLab(props) {
         <g
             id='right-arrow'
             key='right-arrow'
-            onClick={( event ) =>{
-                setScene( curScene + 1 );
+            onClick={(event) => {
+                setScene(curScene + 1);
             }}
-            opacity={ curScene < NavSpecs.navDots ? 1 : 0}
-            >
+            opacity={curScene < NavSpecs.navDots ? 1 : 0}
+        >
 
-        <circle
-            cx={rightArrowLoc - ( NavSpecs.dotRad / 2 )}
-            cy={NavSpecs.centerY}
-            r={NavSpecs.dotRad * 1.75}
-            fill={'midnightblue'}
-            stroke={'midnightblue'}
+            <circle
+                cx={rightArrowLoc - (NavSpecs.dotRad / 2)}
+                cy={NavSpecs.centerY}
+                r={NavSpecs.dotRad * 1.75}
+                fill={'midnightblue'}
+                stroke={'midnightblue'}
             />
-        <animated.polyline
-            points={`${rightArrowLoc - NavSpecs.dotRad},${NavSpecs.centerY - NavSpecs.dotRad} ${rightArrowLoc},${NavSpecs.centerY} ${rightArrowLoc - NavSpecs.dotRad},${NavSpecs.centerY + NavSpecs.dotRad}`}
-            x1={rightArrowLoc}
-            y1={NavSpecs.centerY}
+            <animated.polyline
+                points={`${rightArrowLoc - NavSpecs.dotRad},${NavSpecs.centerY - NavSpecs.dotRad} ${rightArrowLoc},${NavSpecs.centerY} ${rightArrowLoc - NavSpecs.dotRad},${NavSpecs.centerY + NavSpecs.dotRad}`}
+                x1={rightArrowLoc}
+                y1={NavSpecs.centerY}
 
-            style={{
-                stroke: 'azure',
-                strokeWidth: 2,
-                strokeLinecap: 'round',
-                strokeLinejoin: 'round',
-                fill: 'none',
-                ...arrowNavSpring,
-            }} />
+                style={{
+                    stroke: 'azure',
+                    strokeWidth: 2,
+                    strokeLinecap: 'round',
+                    strokeLinejoin: 'round',
+                    fill: 'none',
+                    ...arrowNavSpring,
+                }} />
         </g>
     )
 
@@ -496,7 +569,7 @@ export default function WhyCoLab(props) {
                 y={teacherStudentSpring.y}
                 height={teacherStudentSpring.height}
                 width={teacherStudentSpring.width}
-                 >
+            >
                 <StudentConcern framed
                 />
             </animated.svg>
@@ -509,7 +582,7 @@ export default function WhyCoLab(props) {
                 y={normallyFunctioningSpring.y}
                 height={normallyFunctioningSpring.height}
                 width={normallyFunctioningSpring.width}
-                 >
+            >
 
                 <NormallyFunctioningGroup />
             </animated.svg>
@@ -522,7 +595,7 @@ export default function WhyCoLab(props) {
                 y={socialLoafingSpring.y}
                 height={socialLoafingSpring.height}
                 width={socialLoafingSpring.width}
-                 >
+            >
 
                 <SocialLoafing oliveColor={'olive'} />
             </animated.svg>
@@ -535,7 +608,7 @@ export default function WhyCoLab(props) {
                 y={leaveItToGeorgeSpring.y}
                 height={leaveItToGeorgeSpring.height}
                 width={leaveItToGeorgeSpring.width}
-                 >
+            >
 
                 <LeaveItToGeorge />
             </animated.svg>
@@ -548,7 +621,7 @@ export default function WhyCoLab(props) {
                 y={groupDominationSpring.y}
                 height={groupDominationSpring.height}
                 width={groupDominationSpring.width}
-                 >
+            >
 
                 <GroupDomination bgColor={'aliceblue'} />
             </animated.svg>
@@ -561,7 +634,7 @@ export default function WhyCoLab(props) {
                 y={divisionOfLaborSpring.y}
                 height={divisionOfLaborSpring.height}
                 width={divisionOfLaborSpring.width}
-                 >
+            >
 
                 <DivisionOfLabor bgColor={'aliceblue'} />
             </animated.svg>
@@ -570,7 +643,7 @@ export default function WhyCoLab(props) {
                 style={{
                     ...titleSpring
                 }} >
-                        {titles[ curScene]}
+                {titles[curScene]}
             </animated.foreignObject>
             {
                 curNav
