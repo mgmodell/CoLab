@@ -45,7 +45,7 @@ class HomeController < ApplicationController
         supportAddress: 'Support@CoLab.online',
         logoPath: ActionController::Base.helpers.asset_path('CoLab_small.png'),
         quotePath: get_quote_path,
-        moreInfoUrl: 'http://PeerAssess.info',
+        moreInfoUrl: 'welcome',
         diversityScoreFor: check_diversity_score_path,
         lookupsUrl: lookups_path,
         taskListUrl: task_list_path,
@@ -450,8 +450,8 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          'found_users': found_users,
-          'diversity_score': diversity_score
+          found_users:,
+          diversity_score:
         }
       end
     end
@@ -482,7 +482,7 @@ class HomeController < ApplicationController
     e.start_time = 1.day.ago
     e.close_date = 3.days.from_now.end_of_day
     e.next_date = 1.day.ago
-    e.link = "submit_installment/#{e.id}"
+    e.link = "project/checkin/#{e.id}"
     e.instructor_task = false
 
     @events = [e]

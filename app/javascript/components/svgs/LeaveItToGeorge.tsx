@@ -1,23 +1,36 @@
 import React, { useEffect, useState, useRef } from "react";
-import PropTypes from "prop-types";
 
-export default function LeaveItToGeorge(props) {
-  const height = props.height || 72;
-  const width = props.width || 72;
+type Props = {
+  svgPos?: {
+    x: number,
+    y: number,
+    height?: number,
+    width?: number,
+    scale: number,
+  }
+  framed?: boolean,
+}
+
+export default function LeaveItToGeorge(props:Props) {
   const mounted = useRef(false);
-  const framed = props.framed === undefined ? true : props.framed;
+  const framed = props.framed === undefined ? false : props.framed;
 
-  const viewBox = [0, 0, 6753, 5590].join(" ");
-
-  return (
-    <svg
-      height={height}
-      width={width}
-      viewBox={viewBox}
-      preserveAspectRatio="xMidYMid meet"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+  const content = (
       <g id="layer1">
+        <path id='bg'
+          d='m 6302.3225,4351.7469
+          c 0,0 -105.1372,408.8672 -502.3224,817.7344 -397.1852,408.8671 -899.5077,665.8693 -467.2767,-186.9107 432.2309,-852.7801 1074.7364,-1285.011 922.8715,-1635.4686 -151.865,-350.4575 -782.6885,525.6864 -1051.3727,864.4619
+          C 4935.5381,4550.3396 3811.4429,6119.2181 3977.6208,5111.0717 4152.8496,4048.0171 5659.817,3218.601 5951.865,2786.3699 6243.913,2354.139 6571.0067,1396.2216 5729.9086,2085.4549 4716.0953,2916.2187 4596.7625,3370.4659 4141.1678,4059.699 3714.5964,4705.025 3206.6143,5683.4857 2914.5663,5333.0281 2622.5183,4982.5706 2902.8844,4620.4312 3148.2047,4340.0651 3393.525,4059.6991 4257.9869,3125.1456 4678.5359,2517.6858 5099.085,1910.2261 6442.5056,788.76175 6173.8214,379.89457 5905.1373,-28.972642 5075.7211,952.30845 4748.6274,1431.2674
+          c -327.0936,478.9587 -2346.1546,3439.5059 -2710.205,3738.2139 -455.5949,373.8214 -805.2565,21.195 -292.048,-549.0502
+          C 2162.3186,4158.26 4117.8038,1828.4526 4643.4902,987.35425 5169.1765,146.25615 4853.7647,-239.24703 3884.1655,975.67245 2914.5663,2190.5922 2482.3353,3078.4179 2050.1043,3580.7404 1715.369,3969.7571 -5.7070653,6044.8003 461.36335,4877.4333 926.56585,3714.7348 1272.2063,3720.1794 1781.4203,3055.0541 2430.1365,2207.7136 2783.2667,1630.7025 3089.795,1185.9471 3410.2936,720.92135 3803.0562,-30.170342 3194.9324,333.16687 2624.7269,673.84885 1240.1878,3091.6816 823.50265,3405.5117 82.094631,3963.9099 576.14765,2876.7677 950.87015,2487.548 1775.2561,1631.2686 2079.6209,1307.7635 2145.576,786.72805
+          c 44.9671,-355.23308 28.4267,-845.760986 -656.0408,211.8178 -288.2026,445.30535 -576.74385,1078.04735 -944.33985,986.07295 -188.7769,-47.233 -81.027,-579.4404 128.9963,-879.2087 243.629,-347.73405 421.57075,-500.14963 336.22175,-620.37823'
+          fill={'none'}
+          stroke={undefined === props.bgColor ? 'azure' : props.bgColor}
+          strokeWidth={550}
+          strokeOpacity={1}
+          strokeLinecap={'round'}
+          strokeLinejoin={'miter'}
+          />
         <g
           id="frame"
           fill="none"
@@ -1287,11 +1300,28 @@ export default function LeaveItToGeorge(props) {
           </g>
         </g>
       </g>
-    </svg>
   );
+
+  const viewBox = [0, 0, 6753, 5590].join(" ");
+  if( !props.svgPos ){
+    return content;
+
+  } else {
+    const viewBox = [0, 0, 6761, 5583].join(" ");
+    const height = props.svgPos.height || 72;
+    const width = props.svgPos.width || 72;
+    return (
+      <svg
+        x={props.svgPos.x}
+        y={props.svgPos.y}
+        height={height}
+        width={width}
+        viewBox={viewBox}
+        preserveAspectRatio="xMidYMid meet"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {content}
+      </svg>
+    );
+  }
 }
-LeaveItToGeorge.propTypes = {
-  height: PropTypes.number,
-  width: PropTypes.number,
-  framed: PropTypes.bool
-};

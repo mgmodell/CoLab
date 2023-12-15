@@ -25,7 +25,7 @@ export default function Demo(props: Props) {
       >
 
         <Route
-          path={`submit_installment/:installmentId`}
+          path={`project/checkin/:installmentId`}
           element={
             <InstallmentReport rootPath={props.rootPath} />
           }

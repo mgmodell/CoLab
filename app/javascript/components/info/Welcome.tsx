@@ -134,8 +134,8 @@ export default function Welcome(props: Props) {
       rotate: 670,
    },
    why: {
-      x: 430,
-      y: 35,
+      x: 480,
+      y: 45,
       scale: 0.07,
       rotate: 135,
    },
@@ -277,7 +277,7 @@ export default function Welcome(props: Props) {
 
    animateToScene( sceneName );
    setWelcomed( true );
-   navigate( sceneName, {
+   navigate( `${sceneName}${location.hash}`, {
       relative: 'path',
       replace: true,
       state: {

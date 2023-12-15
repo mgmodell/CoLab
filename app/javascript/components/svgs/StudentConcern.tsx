@@ -1,22 +1,30 @@
 import React, { useEffect, useState, useRef } from "react";
-import PropTypes from "prop-types";
 
+type Props = {
+  svgPos?: {
+    x: number,
+    y: number,
+    height?: number,
+    width?: number,
+    scale: number,
+  }
+  framed?: boolean,
+}
 export default function StudentConcern(props) {
-  const height = props.height || 72;
-  const width = props.width || 72;
   const mounted = useRef(false);
   const framed = props.framed === undefined ? true : props.framed;
 
-  const viewBox = [0, 0, 6780, 5568].join(" ");
 
-  return (
-    <svg
-      height={height}
-      width={width}
-      viewBox={viewBox}
-      preserveAspectRatio="xMidYMid meet"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+  const content = (
+    <g>
+      <rect
+        id='bg'
+        opacity={framed ? 100 : 0}
+        height={5568}
+        width={6780}
+        fill={'azure'}
+        />
+
       <g
         id="layer1"
         fill="none"
@@ -911,11 +919,28 @@ export default function StudentConcern(props) {
           id="path3594"
         />
       </g>
-    </svg>
+
+    </g>
   );
+  if( !props.svgPos ){
+    return content;
+
+  } else {
+    const viewBox = [0, 0, 6780, 5568].join(" ");
+    const height = props.svgPos.height || 72;
+    const width = props.svgPos.width || 72;
+    return (
+      <svg
+        x={props.svgPos.x}
+        y={props.svgPos.y}
+        height={height}
+        width={width}
+        viewBox={viewBox}
+        preserveAspectRatio="xMidYMid meet"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {content}
+      </svg>
+    );
+  }
 }
-StudentConcern.propTypes = {
-  height: PropTypes.number,
-  width: PropTypes.number,
-  framed: PropTypes.bool
-};
