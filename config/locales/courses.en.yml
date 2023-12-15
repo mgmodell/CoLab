@@ -6,6 +6,20 @@ en:
     copy_btn_txt: Make a Copy
     size_btn: large
     date_picker_label: New course start date?
+    toggle_columns_plc: Show hidden columns
+    new_user: Add a {{user_type}}
+    add_lbl: Add {{user_type}}
+    bingo_performance: Bingo! Performance
+    activities_list_ttl: Activities
+    details_tab: Details
+    instructors_tab: Instructors
+    students_tab: Students
+    activities_tab: Activities
+    new_activity: New Activity
+    checkin_record: Check-in Record
+    email: Email
+    experience_completion: Experience Completion
+    actions: Actions
     copy_cancel_btn: Cancel
     index:
       title: List of Courses

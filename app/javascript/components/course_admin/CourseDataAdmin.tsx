@@ -11,11 +11,9 @@ import {
   addMessage,
   Priorities
 } from "../infrastructure/StatusSlice";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
+
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
-import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
@@ -23,31 +21,29 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Skeleton from "@mui/material/Skeleton";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-
-import { iconForType } from "../ActivityLib";
-
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { TabPanel, TabList, TabContext } from "@mui/lab/";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+
+import { StudentData, UserListType } from "./CourseUsersList";
+import { useTypedSelector } from "../infrastructure/AppReducers";
+import { iconForType } from "../ActivityLib";
 
 import { DateTime, Settings } from "luxon";
 const CourseUsersList = React.lazy(() => import("./CourseUsersList"));
-
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { StudentData, UserListType } from "./CourseUsersList";
-import { useTypedSelector } from "../infrastructure/AppReducers";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
-import CourseAdminListToolbar from "../infrastructure/CourseAdminListToolbar";
-import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
+import CourseAdminListToolbar from "./CourseAdminListToolbar";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Button } from "primereact/button";
+import { TabView } from "primereact/tabview";
+import { TabPanel } from "primereact/tabview";
 
 export default function CourseDataAdmin(props) {
   const category = "course";
-  const {t} = useTranslation( `${category}s`);
+  const { t } = useTranslation(`${category}s`);
+  const [filterText, setFilterText] = useState('');
+  const [optActivityColumns, setOptActivityColumns] = useState([]);
 
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -62,7 +58,7 @@ export default function CourseDataAdmin(props) {
 
   const navigate = useNavigate();
 
-  const [curTab, setCurTab] = useState("details");
+  const [curTab, setCurTab] = useState(0);
   const dirty = useTypedSelector(state => {
     return state.status.dirtyStatus[category];
   });
@@ -193,13 +189,13 @@ export default function CourseDataAdmin(props) {
           setCourseSchoolId(data.course.school_id);
 
           var receivedDate = DateTime.fromISO(data.course.start_date).setZone(
-            tz_hash[ courseTimezone]
+            tz_hash[courseTimezone]
           );
 
           setCourseStartDate(receivedDate);
 
           receivedDate = DateTime.fromISO(data.course.end_date).setZone(
-            tz_hash[ courseTimezone ]
+            tz_hash[courseTimezone]
           );
           setCourseEndDate(receivedDate);
 
@@ -216,11 +212,11 @@ export default function CourseDataAdmin(props) {
 
   useEffect(() => {
     if (schools.length > 0) {
-      const newSchoolTzHash = Object.assign( {}, schoolTzHash );
+      const newSchoolTzHash = Object.assign({}, schoolTzHash);
       schools.map(schoolData => {
         newSchoolTzHash[schoolData.id] = schoolData.timezone;
       });
-      setSchoolTzHash( newSchoolTzHash );
+      setSchoolTzHash(newSchoolTzHash);
     }
   }, [schools]);
 
@@ -251,7 +247,7 @@ export default function CourseDataAdmin(props) {
   const saveButton = dirty ? (
     <React.Fragment>
       <hr />
-      <Button variant="contained" onClick={saveCourse}>
+      <Button onClick={saveCourse}>
         {Boolean(courseId) ? "Save" : "Create"} Course
       </Button>
     </React.Fragment>
@@ -383,7 +379,7 @@ export default function CourseDataAdmin(props) {
               id: "course_start_date"
             }
           }}
-          //renderInput={props => <TextField id="course_start_date" {...props} />}
+        //renderInput={props => <TextField id="course_start_date" {...props} />}
         />
         {Boolean(messages["start_date"]) ? (
           <FormHelperText error={true}>{messages["start_date"]}</FormHelperText>
@@ -407,7 +403,7 @@ export default function CourseDataAdmin(props) {
             }
           }}
 
-          //renderInput={props => <TextField id="course_end_date" {...props} />}
+        //renderInput={props => <TextField id="course_end_date" {...props} />}
         />
       </LocalizationProvider>
       {Boolean(messages["end_date"]) ? (
@@ -424,115 +420,147 @@ export default function CourseDataAdmin(props) {
       <br />
     </Paper>
   );
-  const activityColumns: GridColDef[] = [
-    {
-      headerName: t('activities.type_col'),
-      field: "type",
-      renderCell: (params) => {
-          return iconForType(params.row.type);
-      }
-    },
-    {
-      headerName: t('activities.name_col'),
-      field: "name",
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t('activities.status_col'),
-      field: "status",
-      
-      renderCell: (params) => {
-          if (!params.row.active){
-            return 'Not Activated'
-          }
-          else if (params.row.end_date > DateTime.local()) {
-            return "Active";
-          } else {
-            return "Expired";
-          }
-      }
-    },
-    {
-      headerName: t('activities.open_col'),
-      field: "start_date",
-      renderCell: (params) => {
-        const dt = DateTime.fromISO(params.value);
-        return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
 
-      }
-    },
-    {
-      headerName: t('activities.close_col'),
-      field: "end_date",
-      renderCell: (params) => {
-          const dt = DateTime.fromISO(params.value);
-          return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+  enum ACTIVITY_COLS {
+    STATUS = "status",
+    OPEN = "open",
+    CLOSE = "close",
+  }
 
-      }
-    },
-    {
-      headerName: " ",
-      field: "link",
-      renderCell: (params) => {
-          const lbl = t('activities.delete_lbl');
-          return (
-            <Tooltip title={lbl}>
-              <IconButton
-                aria-label={lbl}
-                onClick={event => {
-                  dispatch(startTask("deleting"));
-
-                  axios
-                    // Is this right? Shouldn't it be params.value?
-                    .delete(user.drop_link, {})
-                    .then(response => {
-                      const data = response.data;
-                      getCourse();
-                      setMessages(data.messages);
-                      dispatch(endTask("deleting"));
-                    })
-                    .catch(error => {
-                      console.log("error:", error);
-                      dispatch(endTask("deleting"));
-                    });
-                }}
-                size="large"
-              >
-                <DeleteForeverIcon />
-              </IconButton>
-            </Tooltip>
-          );
-        }
-      }
-  ];
+  const optColumns = [
+    ACTIVITY_COLS.STATUS,
+    ACTIVITY_COLS.OPEN,
+    ACTIVITY_COLS.CLOSE,
+  ]
 
 
   const activityList =
     courseId != null && courseId > 0 ? (
-      <DataGrid
-        columns={activityColumns}
-        rows={courseActivities}
-        getRowId={(row) => {
-          return `${row.type}-${row.id}`;
-        }}
-        onCellClick={(params)=>{
-            if ("link" !== params.colDef.headerName ) {
-              const link = params.row.link; //courseActivities[cellMeta.dataIndex].link;
-              const activityId = params.row.id; // courseActivities[cellMeta.dataIndex].id;
-              navigate(`${link}/${activityId}`);
+      <>
+        <DataTable
+          value={courseActivities.filter((activity) => {
+
+            //Add filtering here
+            return filterText.length === 0 || activity.name.includes(filterText);
+
+          })}
+          resizableColumns
+          reorderableColumns
+          paginator
+          rows={5}
+          tableStyle={{
+            minWidth: '50rem'
+          }}
+          rowsPerPageOptions={
+            [5, 10, 20, courseActivities.length]
+          }
+          header={
+            <CourseAdminListToolbar
+              newActivityLinks={newActivityLinks}
+              filtering={{
+                filterValue: filterText,
+                setFilterFunc: setFilterText,
+              }}
+              columnToggle={{
+                optColumns: optColumns,
+                visibleColumns: optActivityColumns,
+                setVisibleColumnsFunc: setOptActivityColumns,
+
+              }}
+            />}
+          sortOrder={-1}
+          paginatorDropdownAppendTo={'self'}
+          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+          onRowClick={(event) => {
+            console.log(event);
+            const link = event.data.link; //courseActivities[cellMeta.dataIndex].link;
+            const activityId = event.data.id; // courseActivities[cellMeta.dataIndex].id;
+            navigate(`${link}/${activityId}`);
+          }}
+          currentPageReportTemplate="{first} to {last} of {totalRecords}"
+          dataKey="id"
+        >
+          <Column
+            header={t('activities.type_col')}
+            field="type"
+            body={(rowData) => {
+              return iconForType(rowData.type);
+            }}
+          />
+          <Column
+            header={t('activities.name_col')}
+            field="name"
+          />
+          {optActivityColumns.includes(ACTIVITY_COLS.STATUS) ? (
+          <Column
+            header={t('activities.status_col')}
+            field="status"
+            body={(rowData) => {
+              if (!rowData.active) {
+                return 'Not Activated'
+              }
+              else if (rowData.end_date > DateTime.local()) {
+                return "Active";
+              } else {
+                return "Expired";
+              }
+            }}
+          /> ): null
             }
-          }
-        }
-        slots={{
-          toolbar: CourseAdminListToolbar
-        }}
-        slotProps={{
-          toolbar: {
-            newActivityLinks: newActivityLinks
-          }
-        }}
-        pageSizeOptions={[5, 10, 100 ]}
-        />
+            {optActivityColumns.includes(ACTIVITY_COLS.OPEN) ? (
+          <Column
+            header={t('activities.open_col')}
+            field="start_date"
+            body={(rowData) => {
+              const dt = DateTime.fromISO(rowData.start_date);
+              return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+            }}
+          />
+              ):null }
+              {optActivityColumns.includes(ACTIVITY_COLS.CLOSE) ? (
+          <Column
+            header={t('activities.close_col')}
+            field="end_date"
+            body={(rowData) => {
+              const dt = DateTime.fromISO(rowData.end_date);
+              return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+
+            }}
+          />
+                ): null}
+          <Column
+            header=''
+            field="link"
+            body={(rowData) => {
+              const lbl = t('activities.delete_lbl');
+              return (
+                <Button
+                  icon="pi pi-trash"
+                  aria-label="Delete"
+                  tooltip={lbl}
+                  onClick={event => {
+                    dispatch(startTask("deleting"));
+                    axios
+                      // Is this right? Shouldn't it be params.value?
+                      .delete(user.drop_link, {})
+                      .then(response => {
+                        const data = response.data;
+                        getCourse();
+                        setMessages(data.messages);
+                        dispatch(endTask("deleting"));
+                      })
+                      .catch(error => {
+                        console.log("error:", error);
+                        dispatch(endTask("deleting"));
+                      });
+                  }}
+                />
+              );
+            }}
+          />
+
+        </DataTable>
+      </>
 
     ) : (
       <div>{t('activities.save_first_msg')}</div>
@@ -540,21 +568,13 @@ export default function CourseDataAdmin(props) {
 
   return (
     <Paper>
-      <TabContext value={curTab}>
-        <Box>
-          <TabList
-            centered
-            value={curTab}
-            onChange={(event, value) => setCurTab(value)}
-          >
-            <Tab label="Details" value="details" />
-            <Tab value="instructors" label="Instructors" />
-            <Tab value="students" label="Students" />
-            <Tab value="activities" label="Activities" />
-          </TabList>
-        </Box>
-        <TabPanel value="details">{detailsComponent}</TabPanel>
-        <TabPanel value="instructors">
+      <TabView
+        activeIndex={curTab}
+        onTabChange={(event) => setCurTab(event.index)}
+      >
+
+        <TabPanel header={t("details_tab")}>{detailsComponent}</TabPanel>
+        <TabPanel header={t("instructors_tab")}>
           <CourseUsersList
             courseId={courseId}
             retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
@@ -564,7 +584,7 @@ export default function CourseDataAdmin(props) {
             addMessagesFunc={postNewMessage}
           />
         </TabPanel>
-        <TabPanel value="students">
+        <TabPanel header={t("students_tab")}>
           <CourseUsersList
             courseId={courseId}
             retrievalUrl={endpoints.courseUsersUrl + courseId + ".json"}
@@ -574,8 +594,8 @@ export default function CourseDataAdmin(props) {
             addMessagesFunc={postNewMessage}
           />
         </TabPanel>
-        <TabPanel value="activities">{activityList}</TabPanel>
-      </TabContext>
+        <TabPanel header={t("activities_tab")}>{activityList}</TabPanel>
+      </TabView>
       {saveButton}
       {messages["status"]}
     </Paper>

@@ -3,62 +3,116 @@ import { useNavigate } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 
-import { DataGrid, GridRowModel, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
 
 import { ISubmissionCondensed } from "./AssignmentViewer";
-import SubmissionListToolbar from "./SubmissionListToolbar";
+import { DataTable } from "primereact/datatable";
+import AdminListToolbar from "../infrastructure/AdminListToolbar";
+import { Column } from "primereact/column";
 
 type Props = {
   submissions: Array<ISubmissionCondensed>;
   selectSubmissionFunc: (selectedSub: string) => void;
 };
 
+  enum OPT_COLS {
+    RECORDED_SCORE = 'recorded_score',
+    SUBMITTED = 'submitted',
+    WITHDRAWN = 'withdrawn',
+    USER = 'user',
+  }
+
 export default function SubmissionList(props: Props) {
   const category = "assignment";
 
   const { t } = useTranslation(`${category}s`);
 
-  const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const columns: GridColDef[] = [
-    { field: "recorded_score", headerName: t("submissions.score") },
-    { field: "submitted", headerName: t("submissions.submitted") },
-    { field: "withdrawn", headerName: t("submissions.withdrawn") },
-    { field: "user", headerName: t("submissions.submitter") }
+  const [filterText, setFilterText] = useState('');
+  const optColumns = [
+    OPT_COLS.RECORDED_SCORE,
+    OPT_COLS.SUBMITTED,
+    OPT_COLS.USER,
+    OPT_COLS.WITHDRAWN,
   ];
+  const [visibleColumns, setVisibleColumns] = useState([]);
 
   return (
     <React.Fragment>
       <div style={{ display: "flex", height: "100%" }}>
         <div style={{ flexGrow: 1 }}>
-          <DataGrid
-            getRowId={(model: GridRowModel) => {
-              return model.id;
-            }}
-            autoHeight
-            rows={props.submissions}
-            columns={columns}
-            isCellEditable={params => {
-              return false;
-            }}
-            onCellClick={(params, event, details) => {
-              props.selectSubmissionFunc(params.row.id);
-              //navigate(String(params.row.id));
-            }}
-            slots={{
-              toolbar: SubmissionListToolbar
-            }}
-            slotProps={{
-              toolbar: {
-                selectSubmissionFunc: props.selectSubmissionFunc
-              }
-            }}
-            pageSizeOptions={[5, 10, 100]}
-          />
+      <DataTable
+        value={props.submissions.filter((submission) => {
+          return filterText.length === 0 || submission.user.includes(filterText);
+        })}
+        resizableColumns
+        tableStyle={{
+          minWidth: '50rem'
+        }}
+        reorderableColumns
+        paginator
+        rows={5}
+        rowsPerPageOptions={
+          [5, 10, 20, props.submissions.length]
+        }
+        header={<AdminListToolbar
+          itemType={category}
+          newItemFunc={props.selectSubmissionFunc}
+          filtering={{
+            filterValue: filterText,
+            setFilterFunc: setFilterText
+          }}
+          columnToggle={{
+            optColumns: optColumns,
+            visibleColumns: visibleColumns,
+            setVisibleColumnsFunc: setVisibleColumns,
+          }}
+        />}
+        sortField="start_date"
+        sortOrder={-1}
+        paginatorDropdownAppendTo={'self'}
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="{first} to {last} of {totalRecords}"
+        //paginatorLeft={paginatorLeft}
+        //paginatorRight={paginatorRight}
+        dataKey="id"
+        onRowClick={(event) => {
+          props.selectSubmissionFunc(event.data.id);
+        }}
+        >
+          <Column
+            header={t("submissions.score")}
+            field={OPT_COLS.RECORDED_SCORE}
+            sortable
+            filter
+            key={OPT_COLS.RECORDED_SCORE}
+            />
+          <Column
+            header={t("submissions.submitted")}
+            field={OPT_COLS.SUBMITTED}
+            sortable
+            filter
+            key={OPT_COLS.SUBMITTED}
+            />
+          <Column
+            header={t("submissions.withdrawn")}
+            field={OPT_COLS.WITHDRAWN}
+            sortable
+            filter
+            key={OPT_COLS.WITHDRAWN}
+            />
+          <Column
+            header={t("submissions.user")}
+            field={OPT_COLS.USER}
+            sortable
+            filter
+            key={OPT_COLS.USER}
+            />
+
+        </DataTable>
         </div>
       </div>
     </React.Fragment>

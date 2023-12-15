@@ -142,7 +142,7 @@ export default function PageWrapper(props : Props) {
                 }
               />
               <Route
-                path={`submit_installment/:installmentId`}
+                path={`project/checkin/:installmentId`}
                 element={
                   <InstallmentReport />
                 }

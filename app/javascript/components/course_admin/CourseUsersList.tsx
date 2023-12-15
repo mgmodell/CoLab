@@ -3,37 +3,38 @@ import { useDispatch } from "react-redux";
 
 import WorkingIndicator from "../infrastructure/WorkingIndicator";
 
+// Icons - maybe replace later
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import ClearIcon from "@mui/icons-material/Clear";
-
 import EmailIcon from "@mui/icons-material/Email";
 import CheckIcon from "@mui/icons-material/Check";
-
-import Link from "@mui/material/Link";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
 
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import {
-  DataGrid,
-  GridRowModel,
-  GridColDef,
-  GridRenderCellParams
-} from "@mui/x-data-grid";
-import CourseUsersListToolbar from "./CourseUsersListToolbar";
-import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
+import { DataTable } from "primereact/datatable";
+import UserListAdminToolbar from "./UserListAdminToolbar";
+import { Column } from "primereact/column";
+import { Button } from "primereact/button";
+import { Tooltip } from "primereact/tooltip";
 
 const DropUserButton = React.lazy(() => import("./DropUserButton"));
 const BingoDataRepresentation = React.lazy(() =>
   import("../BingoBoards/BingoDataRepresentation")
 );
+export enum OPT_COLS {
+    FIRST_NAME = 'first_name',
+    LAST_NAME = 'last_name',
+    EMAIL = 'email',
+    BINGO_PERF = 'bingo_performance',
+    CHECKIN_RECORD = 'checkin_record',
+    EXPERIENCE_COMPLETION = 'experience_completion',
+    STATUS = 'status',
+    ACTIONS = 'actions',
+  }
 
 enum UserListType {
   student = "student",
@@ -67,12 +68,12 @@ type Props = {
   usersList: Array<StudentData>; //Need an interface for the users
   usersListUpdateFunc: (usersList: Array<StudentData>) => void;
   userType: UserListType;
-  addMessagesFunc: ({}) => void;
+  addMessagesFunc: ({ }) => void;
 };
 
 export default function CourseUsersList(props: Props) {
-  const category = "courses";
-  const { t } = useTranslation(category);
+  const category = "course";
+  const { t } = useTranslation(`${category}s`);
 
   const [addUsersPath, setAddUsersPath] = useState("");
   const [procRegReqPath, setProcRegReqPath] = useState("");
@@ -80,6 +81,27 @@ export default function CourseUsersList(props: Props) {
   const [newUserAddresses, setNewUserAddresses] = useState("");
 
   const dispatch = useDispatch();
+  const [filterText, setFilterText] = useState('');
+
+  const optColumns = [
+    {
+      name: t( OPT_COLS.EMAIL),
+      code: OPT_COLS.EMAIL,
+    },
+    {
+      name: t( OPT_COLS.CHECKIN_RECORD),
+      code: OPT_COLS.CHECKIN_RECORD,
+    },
+    {
+      name: t( OPT_COLS.BINGO_PERF),
+      code: OPT_COLS.BINGO_PERF,
+    },
+    {
+      name: t( OPT_COLS.EXPERIENCE_COMPLETION),
+      code: OPT_COLS.EXPERIENCE_COMPLETION,
+    },
+  ];
+  const [visibleColumns, setVisibleColumns] = useState([ ]);
 
   const getUsers = () => {
     dispatch(startTask());
@@ -116,199 +138,6 @@ export default function CourseUsersList(props: Props) {
     }
   }, []);
 
-  const userColumns: GridColDef[] = [
-    {
-      headerName: t("first_name"),
-      field: "first_name",
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t("last_name"),
-      field: "last_name",
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t("email"),
-      field: "email",
-      renderCell: (params: GridRenderCellParams) => {
-        return <Link href={"mailto:" + params.value}>{params.value}</Link>;
-      }
-    },
-    {
-      headerName: t("bingo_progress"),
-      field: "bingo_data",
-      renderCell: (params: GridRenderCellParams) => {
-        const data = params.row.bingo_data;
-
-        return (
-          <BingoDataRepresentation
-            height={30}
-            width={70}
-            value={Number(params.value)}
-            scores={data}
-          />
-        );
-      }
-    },
-    {
-      headerName: t("assessment_progress"),
-      field: "assessment_performance",
-      renderCell: (params: GridRenderCellParams) => {
-        return `${params.value}%`;
-      }
-    },
-    {
-      headerName: t("experience_progress"),
-      field: "experience_performance",
-      renderCell: (params: GridRenderCellParams) => {
-        return `${params.value}%`;
-      }
-    },
-    {
-      headerName: t("status"),
-      field: "status",
-      renderCell: (params: GridRenderCellParams) => {
-        return iconForStatus(params.value);
-      }
-    },
-    {
-      headerName: t("actions"),
-      field: "id",
-      renderCell: (params: GridRenderCellParams) => {
-        const user = props.usersList.filter(user => {
-          return params.id === user.id;
-        })[0];
-        const btns = [];
-        switch (user.status) {
-          case UserListType.invited_student:
-            btns.push(
-              <Tooltip key="re-send-invite" title={t("re-send_invitation")}>
-                <IconButton
-                  aria-label={t("re-send_invitation")}
-                  onClick={event => {
-                    dispatch(startTask("inviting"));
-                    axios
-                      .get(user.reinvite_link, {})
-                      .then(response => {
-                        const data = response.data;
-                        refreshFunc(data.messages);
-                        dispatch(endTask("inviting"));
-                      })
-                      .catch(error => {
-                        console.log("error", error);
-                      });
-                  }}
-                  size="large"
-                >
-                  <EmailIcon />
-                </IconButton>
-              </Tooltip>
-            );
-          case UserListType.instructor:
-          case UserListType.assistant:
-          case UserListType.enrolled_student:
-            btns.push(
-              <DropUserButton
-                key="drop-student-button"
-                dropUrl={user.drop_link}
-                refreshFunc={refreshFunc}
-              />
-            );
-            break;
-          case UserListType.requesting_student:
-            const acceptLbl = t("accept_student");
-            const lbl2 = t("decline_student");
-            btns.push(
-              <Tooltip key="accept" title={acceptLbl}>
-                <IconButton
-                  aria-label={acceptLbl}
-                  onClick={event => {
-                    dispatch(startTask("accepting_student"));
-                    axios
-                      .patch(procRegReqPath, {
-                        roster_id: user.id,
-                        decision: true
-                      })
-                      .then(response => {
-                        const data = response.data;
-                        refreshFunc(data.messages);
-                        dispatch(endTask("accepting_student"));
-                      })
-                      .catch(error => {
-                        console.log("error", error);
-                      });
-                  }}
-                  size="large"
-                >
-                  <CheckIcon />
-                </IconButton>
-              </Tooltip>
-            );
-            btns.push(
-              <Tooltip key="decline" title={lbl2}>
-                <IconButton
-                  aria-label={lbl2}
-                  onClick={event => {
-                    dispatch(startTask("decline_student"));
-                    axios
-                      .patch(procRegReqPath, {
-                        roster_id: user.id,
-                        decision: false
-                      })
-                      .then(response => {
-                        const data = response.data;
-                        refreshFunc(data.messages);
-                        dispatch(endTask("decline_student"));
-                      })
-                      .catch(error => {
-                        console.log("error", error);
-                      });
-                  }}
-                  size="large"
-                >
-                  <ClearIcon />
-                </IconButton>
-              </Tooltip>
-            );
-            break;
-          case UserListType.rejected_student:
-          case UserListType.dropped_student:
-          case UserListType.declined_student:
-            const lbl = "Re-Add Student";
-            btns.push(
-              <Tooltip key="re-add" title={lbl}>
-                <IconButton
-                  aria-label={lbl}
-                  onClick={event => {
-                    dispatch(startTask("re-adding"));
-                    axios
-                      .put(addUsersPath, {
-                        addresses: user.email
-                      })
-                      .then(response => {
-                        const data = response.data;
-                        refreshFunc(data.messages);
-                        dispatch(endTask("re-adding"));
-                      })
-                      .catch(error => {
-                        console.log("error", error);
-                      });
-                  }}
-                  size="large"
-                >
-                  <PersonAddIcon />
-                </IconButton>
-              </Tooltip>
-            );
-            break;
-          default:
-            console.log("Status not found: " + user.status);
-        }
-
-        return btns;
-      }
-    }
-  ];
 
   const closeDialog = () => {
     setNewUserAddresses("");
@@ -321,18 +150,21 @@ export default function CourseUsersList(props: Props) {
       case "enrolled":
       case "enrolled_student":
         icon = (
-          <Tooltip title="Enrolled">
-            <CheckCircleOutlineIcon />
-          </Tooltip>
+
+          <>
+            <i className="pi pi-check-circle enrolled" />
+          </>
         );
         break;
       case "undetermined":
       case "invited_student":
       case "requesting_student":
         icon = (
-          <Tooltip title="Awaiting Response">
-            <HelpOutlineIcon />
-          </Tooltip>
+          <>
+            <HelpOutlineIcon
+              className="awaiting"
+            />
+          </>
         );
         break;
       case "dropped":
@@ -340,17 +172,15 @@ export default function CourseUsersList(props: Props) {
       case "dropped_student":
       case "declined_student":
         icon = (
-          <Tooltip title="Not Enrolled">
-            <NotInterestedIcon />
-          </Tooltip>
+          <>
+            <NotInterestedIcon className="not-enrolled" />
+          </>
         );
         break;
       case "instructor":
       case "assistant":
         icon = (
-          <Tooltip title="Instructor or Assistant">
-            <SupervisedUserCircleIcon />
-          </Tooltip>
+          <SupervisedUserCircleIcon className="instructor" />
         );
         break;
       default:
@@ -361,56 +191,287 @@ export default function CourseUsersList(props: Props) {
 
   const newUserList = useMemo(() => {
     return (
-      <DataGrid
-        columns={userColumns}
-        getRowId={(model: GridRowModel) => {
-          return model.id;
-        }}
-        rows={props.usersList.filter(user => {
-          const checkType =
-            UserListType.instructor !== user.status &&
-            UserListType.assistant !== user.status;
-          return UserListType.instructor === props.userType
-            ? !checkType
-            : checkType;
-        })}
-        initialState={{
-          columns: {
-            columnVisibilityModel: {
-              first_name: true,
-              last_name: true,
-              bingo_data: props.userType === UserListType.student,
-              assessment_performance: props.userType === UserListType.student,
-              experience_performance: props.userType === UserListType.student,
-              email: false,
-              status: true
+      <>
+        <DataTable
+          value={props.usersList.filter((user) => {
+            const checkType =
+              UserListType.instructor !== user.status &&
+              UserListType.assistant !== user.status;
+            return UserListType.instructor === props.userType
+              ? !checkType
+              : checkType;
+
+            //Add filtering here
+            // return filterText.length === 0 ||  rubric.name.includes( filterText );
+
+          })}
+          resizableColumns
+          reorderableColumns
+          paginator
+          rows={5}
+          tableStyle={{
+            minWidth: '50rem'
+          }}
+          rowsPerPageOptions={
+            [5, 10, 20, props.usersList.filter((user) => {
+              const checkType =
+                UserListType.instructor !== user.status &&
+                UserListType.assistant !== user.status;
+              return UserListType.instructor === props.userType
+                ? !checkType
+                : checkType;
+            }).length]
+          }
+          header={<UserListAdminToolbar
+            courseId={props.courseId}
+            userType={props.userType}
+            usersListUpdateFunc={props.usersListUpdateFunc}
+            retrievalUrl={props.retrievalUrl}
+            addMessagesFunc={props.addMessagesFunc}
+            refreshUsersFunc={getUsers}
+            addUsersPath={addUsersPath}
+
+            filtering={{
+              filterValue: filterText,
+              setFilterFunc: setFilterText,
+            }}
+            columnToggle={{
+              optColumns: optColumns,
+              visibleColumns: visibleColumns,
+              setVisibleColumnsFunc: setVisibleColumns,
+
+            }}
+          />}
+          sortOrder={-1}
+          paginatorDropdownAppendTo={'self'}
+          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+          currentPageReportTemplate="{first} to {last} of {totalRecords}"
+          dataKey="id"
+        >
+          <Column
+            header={t('first_name')}
+            field='first_name'
+            sortable
+            data-id='first_name'
+            filter
+            key={'first_name'}
+          />
+          <Column
+            header={t('last_name')}
+            field='last_name'
+            sortable
+            data-id='last_name'
+            filter
+            key={'last_name'}
+          />
+          {undefined === visibleColumns.find( (col) =>{
+              col.clode === OPT_COLS.EMAIL;
+          }) ? (
+            <Column
+              header={t('email')}
+              field='email'
+              sortable
+              data-id='email'
+              filter
+              key={'email'}
+            />)
+            : null}
+          {undefined === visibleColumns.find( (col) => {
+            col.code === OPT_COLS.BINGO_PERF;
+           }) ? (
+            <Column
+              header={t('bingo_progress')}
+              field='bingo_performance'
+              sortable
+              data-id='bingo_performance'
+              filter
+              key={'bingo_performance'}
+              body={(params) => {
+                return (
+                  <BingoDataRepresentation
+                    height={30}
+                    width={70}
+                    value={Number(params.bingo_data)}
+                    scores={params.bingo_data}
+                  />);
+              }}
+            />
+          ) : null}
+          {visibleColumns.includes(OPT_COLS.CHECKIN_RECORD) ? (
+            <Column
+              header={t('checkin_record')}
+              field="assessment_performance"
+              body={(params) => {
+                return `${params.assessment_performance}%`;
+              }}
+            />
+          ) : null}
+          {visibleColumns.includes(OPT_COLS.EXPERIENCE_COMPLETION) ? (
+            <Column
+              header={t('experience_completion')}
+              field="experience_performance"
+              body={(params) => {
+                return `${params.experience_performance}%`;
+              }}
+            />
+          ) : null}
+          <Column
+            header={t('status')}
+            field="status"
+            body={(params) => {
+              return iconForStatus(params.status);
+            }}
+          />
+          <Column
+            header={t('actions')}
+            field="id"
+            body={(params) => {
+              const user = props.usersList.filter(user => {
+                return params.id === user.id;
+              })[0];
+              const btns = [];
+              switch (user.status) {
+                case UserListType.invited_student:
+                  btns.push(
+                    <Button
+                      tooltip={t("re-send_invitation")}
+                      aria-label={t("re-send_invitation")}
+                      icon={<EmailIcon />}
+                      onClick={event => {
+                        dispatch(startTask("inviting"));
+                        axios
+                          .get(user.reinvite_link, {})
+                          .then(response => {
+                            const data = response.data;
+                            refreshFunc(data.messages);
+                            dispatch(endTask("inviting"));
+                          })
+                          .catch(error => {
+                            console.log("error", error);
+                          });
+                      }}
+                    />
+
+                  );
+                case UserListType.instructor:
+                case UserListType.assistant:
+                case UserListType.enrolled_student:
+                  btns.push(
+                    <DropUserButton
+                      key="drop-student-button"
+                      dropUrl={user.drop_link}
+                      refreshFunc={refreshFunc}
+                    />
+                  );
+                  break;
+                case UserListType.requesting_student:
+                  const acceptLbl = t("accept_student");
+                  const lbl2 = t("decline_student");
+                  btns.push(
+                    <Button
+                      tooltip={acceptLbl}
+                      icon={<CheckIcon />}
+                      aria-label={acceptLbl}
+                      onClick={event => {
+                        dispatch(startTask("accepting_student"));
+                        axios
+                          .patch(procRegReqPath, {
+                            roster_id: user.id,
+                            decision: true
+                          })
+                          .then(response => {
+                            const data = response.data;
+                            refreshFunc(data.messages);
+                            dispatch(endTask("accepting_student"));
+                          })
+                          .catch(error => {
+                            console.log("error", error);
+                          });
+                      }}
+                    />
+                  );
+                  btns.push(
+                    <Button
+                      tooltip={lbl2}
+                      aria-label={lbl2}
+                      icon={<ClearIcon />}
+                      onClick={event => {
+                        dispatch(startTask("decline_student"));
+                        axios
+                          .patch(procRegReqPath, {
+                            roster_id: user.id,
+                            decision: false
+                          })
+                          .then(response => {
+                            const data = response.data;
+                            refreshFunc(data.messages);
+                            dispatch(endTask("decline_student"));
+                          })
+                          .catch(error => {
+                            console.log("error", error);
+                          });
+                      }}
+                    />
+                  );
+                  break;
+                case UserListType.rejected_student:
+                case UserListType.dropped_student:
+                case UserListType.declined_student:
+                  const lbl = "Re-Add Student";
+                  btns.push(
+                    <Button
+                      tooltip={lbl}
+                      icon={<PersonAddIcon />}
+                      aria-label={lbl}
+                      onClick={event => {
+                        dispatch(startTask("re-adding"));
+                        axios
+                          .put(addUsersPath, {
+                            addresses: user.email
+                          })
+                          .then(response => {
+                            const data = response.data;
+                            refreshFunc(data.messages);
+                            dispatch(endTask("re-adding"));
+                          })
+                          .catch(error => {
+                            console.log("error", error);
+                          });
+                      }}
+                    />
+                  );
+                  break;
+                default:
+                  console.log("Status not found: " + user.status);
+              }
+
+              return btns;
+
             }
-          },
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 }
-          }
-        }}
-        slots={{
-          toolbar: CourseUsersListToolbar
-        }}
-        pageSizeOptions={[5, 10, 25, 100]}
-        slotProps={{
-          toolbar: {
-            courseId: props.courseId,
-            userType: props.userType,
-            usersListUpdateFunc: props.usersListUpdateFunc,
-            retrievalUrl: props.retrievalUrl,
-            addMessagesFunc: props.addMessagesFunc,
-            refreshUsersFunc: getUsers,
-            addUsersPath: addUsersPath
-          }
-        }}
-      />
+            } />
+
+
+        </DataTable>
+      </>
     );
   }, [props.usersList]);
 
   return (
     <Fragment>
+      <Tooltip
+        target={'.enrolled'}
+        content="Enrolled" />
+      <Tooltip
+        target={'.awaiting'}
+        content="Awaiting Response" />
+      <Tooltip
+        content="Not Enrolled"
+        target={'.not-enrolled'}
+      />
+      <Tooltip
+        target={'.instructor'}
+        content="Instructor or Assistant"
+      />
       <WorkingIndicator identifier="loading_users" />
       {newUserList}
     </Fragment>

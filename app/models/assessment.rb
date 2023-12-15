@@ -25,7 +25,7 @@ class Assessment < ApplicationRecord
   def task_data(current_user:)
     helpers = Rails.application.routes.url_helpers
     # link = helpers.edit_installment_path(assessment_id: id)
-    link = "submit_installment/#{id}"
+    link = "project/checkin/#{id}"
     group = group_for_user(current_user)
     instructor_task = false
 

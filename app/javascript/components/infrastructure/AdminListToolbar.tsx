@@ -13,6 +13,7 @@ import { Toolbar } from "primereact/toolbar";
 
 type Props = {
   itemType: string;
+  newItemFunc?: (string) => void;
   filtering?: {
     filterValue: string;
     setFilterFunc: (string) => void;
@@ -29,7 +30,6 @@ export default function AdminListToolbar(props: Props) {
   const { t } = useTranslation(`admin`);
   const navigate = useNavigate();
   const onColumnToggle = event => {
-    const selectedColumns = event.value;
     props.columnToggle.setVisibleColumnsFunc(event.value);
 
   };
@@ -38,8 +38,6 @@ export default function AdminListToolbar(props: Props) {
     <MultiSelect
       value={props.columnToggle.visibleColumns}
       options={props.columnToggle.optColumns}
-      //dataKey="name"
-      //optionLabel="name"
       placeholder={t("toggle_columns_plc")}
       onChange={onColumnToggle}
       className="w-full sm:w-20rem"
@@ -56,7 +54,11 @@ export default function AdminListToolbar(props: Props) {
               tooltip={t('new_activity', {activity_type: props.itemType})}
               id={`new_${props.itemType}`}
               onClick={event => {
-                navigate("new");
+                if( undefined === props.newItemFunc ){
+                  navigate("new");
+                } else {
+                  props.newItemFunc( 'new' );
+                }
               }}
               aria-label={`New ${props.itemType}`}
               icon={ PrimeIcons.PLUS} rounded raised >
