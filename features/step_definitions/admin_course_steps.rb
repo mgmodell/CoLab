@@ -319,10 +319,10 @@ end
 
 Then 'the user adds the {string} users {string}' do |type, addresses|
   lbl = "#{type}s"
-  tab = find(:xpath, "//button[text()='#{lbl.capitalize}']")
+  tab = find(:xpath, "//ul[@role='tablist']/li/a/span[text()='#{lbl.capitalize}']")
   tab.click
 
-  btn = find(:xpath, "//button[@aria-label='Add #{lbl}']")
+  btn = find(:xpath, "//button[text()='Add a #{type}']")
   btn.click
 
   inpt = find(:xpath, "//input[@id='addresses']")
@@ -375,11 +375,13 @@ Then 'the user drops the {string} users {string}' do |_type, addresses|
 end
 
 Then 'there are {int} students in the course' do |count|
-  @course.rosters.students.count.should eq count
+  wait_for_render
+  @course.rosters.students.size.should eq count
 end
 
 Then 'there are {int} enrolled students in the course' do |count|
-  @course.rosters.enrolled.count.should eq count
+  wait_for_render
+  @course.rosters.enrolled.size.should eq count
 end
 
 Then 'there are {int} instructors in the course' do |count|

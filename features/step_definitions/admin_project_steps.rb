@@ -44,8 +44,9 @@ end
 
 Then(/^the user creates a new "([^"]*)"$/) do |link_or_button|
   wait_for_render
-  find(:xpath, '//button[@aria-label="Add Activity"]').click
-  find(:xpath, "//li[contains(.,'#{link_or_button}')]").click
+  find(:xpath, "//button[@id='new_activity']" ).click
+  find( :xpath, "//ul[@role='menu']/li/a/span[contains(.,'#{link_or_button}')]" ).click
+
   wait_for_render
 end
 
@@ -98,7 +99,7 @@ Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
   begin
     click_link tab
   rescue Capybara::ElementNotFound
-    find(:xpath, "//button[text()='#{tab}']").click
+    find( :xpath, "//ul[@role='tablist']/li/a/span[text()='#{tab}']" ).click
   end
   wait_for_render
 end
