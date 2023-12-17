@@ -230,7 +230,8 @@ export default function MainMenu(props) {
           <ListItemButton
             id="about-menu-item"
             onClick={() => {
-              window.location.href = props.moreInfoUrl;
+              navTo( props.moreInfoUrl);
+              //window.location.href = props.moreInfoUrl;
             }}
           >
             <ListItemIcon>
