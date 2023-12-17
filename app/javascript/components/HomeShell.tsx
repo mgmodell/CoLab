@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import Tab from "@mui/material/Tab";
-import { TabList, TabContext, TabPanel } from "@mui/lab";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import luxonPlugin from "@fullcalendar/luxon";
@@ -16,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
+import { TabView, TabPanel } from "primereact/tabview";
 
 const DecisionEnrollmentsTable = React.lazy(() =>
   import("./DecisionEnrollmentsTable")
@@ -43,7 +42,7 @@ export default function HomeShell(props : Props) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
-  const [curTab, setCurTab] = useState("list");
+  const [curTab, setCurTab] = useState(0);
 
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const user = useTypedSelector(state => state.profile.user);
@@ -121,9 +120,6 @@ export default function HomeShell(props : Props) {
     }
   }, [endpointsLoaded, isLoggedIn]);
 
-  const handleTabChange = (event, newValue) => {
-    setCurTab(newValue);
-  };
 
   var pageContent = <Skeleton variant="rectangular" />;
   if (undefined !== consentLogs) {
@@ -147,15 +143,12 @@ export default function HomeShell(props : Props) {
               count: tasks.length
             })}
           </p>
-          <TabContext value={curTab}>
-            <Box>
-              <TabList onChange={(event, newValue) => setCurTab(newValue)}>
-                <Tab label="Task View" value="list" />
-                <Tab label="Calendar View" value="calendar" />
-              </TabList>
-            </Box>
+          <TabView activeIndex={curTab} onTabChange={e=>{setCurTab(e.index)}}>
+            <TabPanel header="Task View">
+              <TaskList tasks={tasks} />
+            </TabPanel>
 
-            <TabPanel value="calendar">
+            <TabPanel header='Calendar View' >
               <FullCalendar
                 headerToolbar={{
                   center: "thisWeek,dayGridMonth"
@@ -182,11 +175,9 @@ export default function HomeShell(props : Props) {
                 }}
                 plugins={[dayGridPlugin, luxonPlugin]}
               />
+
             </TabPanel>
-            <TabPanel value="list">
-              <TaskList tasks={tasks} />
-            </TabPanel>
-          </TabContext>
+          </TabView>
         </React.Fragment>
       );
     }

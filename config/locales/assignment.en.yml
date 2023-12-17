@@ -42,6 +42,7 @@ en:
       submit: Submit a New Response
       past_header: Previous Responses
       score: Score
+      id: Submission ID
       submitted: Submission Date
       withdrawn: Withdrawn Date
       submitter: Submitted by

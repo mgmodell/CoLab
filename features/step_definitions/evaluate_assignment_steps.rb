@@ -28,9 +28,11 @@ Given('the submission has been withdrawn') do
 end
 
 Then('the user selects submission {int}') do |index|
-  row = find(:xpath, "//div[@data-rowindex='#{index - 1}']")
+  row = find_all( :xpath, "//table/tbody/tr" )[index - 1]
   row.click
-  submission_id = row['data-id'].to_i
+  row.find_all(:xpath, "td" )[0]
+
+  submission_id = row.text.to_i
   @submission = Submission.find submission_id
   @submission.should be_present
   wait_for_render
