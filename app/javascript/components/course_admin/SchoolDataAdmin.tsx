@@ -124,12 +124,13 @@ export default function SchoolDataAdmin(props) {
             addMessage(data.messages.main, new Date(), Priorities.ERROR)
           );
           setMessages(data.messages);
-          dispatch(endTask("saving"));
         }
       })
       .catch(error => {
         console.log("error", error);
-      });
+      }).finally(() => {
+        dispatch(endTask("saving"));
+      })
   };
 
   useEffect(() => {

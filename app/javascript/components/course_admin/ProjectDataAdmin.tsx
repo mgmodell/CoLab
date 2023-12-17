@@ -112,9 +112,10 @@ export default function ProjectDataAdmin(props) {
       setProjectStyleId(project.style_id);
       setProjectStartDOW(project.start_dow);
       setProjectEndDOW(project.end_dow);
-      dispatch(endTask());
       dispatch(setClean(category));
-    });
+    }).finally(() => {
+      dispatch(endTask());
+    })
   };
   const saveProject = () => {
     const method = null == projectId ? "POST" : "PATCH";
@@ -178,12 +179,13 @@ export default function ProjectDataAdmin(props) {
           dispatch(
             addMessage(data.messages.status, new Date(), Priorities.ERROR)
           );
-          dispatch(endTask("saving"));
         }
       })
       .catch(error => {
         console.log("error", error);
-      });
+      }).finally(() => {
+        dispatch(endTask("saving"));
+      })
   };
   useEffect(() => {
     daysOfWeek.unshift(daysOfWeek.pop());

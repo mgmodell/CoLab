@@ -18,6 +18,7 @@ def wait_for_render
   times = 3000
 
   while !all(:xpath, "//*[@id='waiting']").empty? && times.positive?
+    # puts( find_all(:xpath, "//*[@id='waiting'])" ) ).size
     sleep(0.01)
     times -= 1
   end

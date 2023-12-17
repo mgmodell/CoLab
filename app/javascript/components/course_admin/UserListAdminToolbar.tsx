@@ -19,7 +19,7 @@ type Props = {
   userType: string;
   retrievalUrl: string;
   usersListUpdateFunc: (usersList: Array<StudentData>) => void;
-  addMessagesFunc: ({}) => void;
+  addMessagesFunc: ({ }) => void;
   refreshUsersFunc: () => void;
   addUsersPath: string;
 
@@ -28,38 +28,31 @@ type Props = {
     setFilterFunc: (string) => void;
   };
   columnToggle?: {
-    optColumns: Array<{name: string, code: OPT_COLS}>;
+    optColumns: Array<string>;
     visibleColumns: Array<string>;
-    setVisibleColumnsFunc: (Array) => void;
+    setVisibleColumnsFunc: (selectedColumns: Array<string>) => void;
 
   }
 };
 
 export default function UserListAdminToolbar(props: Props) {
   const category = 'course';
-  const { t } = useTranslation( `${category}s` );
-  const dispatch = useDispatch( );
+  const { t } = useTranslation(`${category}s`);
+  const dispatch = useDispatch();
 
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newUserAddresses, setNewUserAddresses] = useState("");
 
   const closeDialog = () => {
-    setNewUserAddresses('' );
-    setAddDialogOpen( false );
+    setNewUserAddresses('');
+    setAddDialogOpen(false);
   }
 
-  const lbl = t('add_lbl', {'user_type': props.userType});
-
+  const lbl = t('add_lbl', { 'user_type': props.userType });
 
   const onColumnToggle = event => {
-    console.log(event);
-    console.log( props.columnToggle );
-    const newArray = props.columnToggle.optColumns.filter( (item) => {
-      return event.value.includes( item.code );
-    });
-    console.log( newArray );
+    props.columnToggle.setVisibleColumnsFunc(event.value);
 
-    props.columnToggle.setVisibleColumnsFunc(newArray);
   };
 
   const columnToggle = undefined !== props.columnToggle ? (
@@ -67,90 +60,88 @@ export default function UserListAdminToolbar(props: Props) {
       value={props.columnToggle.visibleColumns}
       options={props.columnToggle.optColumns}
       placeholder={t("toggle_columns_plc")}
-      onChange={
-        onColumnToggle
-      } 
+      onChange={onColumnToggle}
       className="w-full sm:w-20rem"
-      optionLabel="name"
-      optionValue="code"
+      display="chip"
     />
   ) : null;
 
+
   const title = (
-            <h3>{props.userType.charAt(0).toUpperCase() + props.userType.slice( 1 )}s</h3>
+    <h3>{props.userType.charAt(0).toUpperCase() + props.userType.slice(1)}s</h3>
   );
 
   const createButton = (
 
-            <Button
-              tooltip={t('new_user', {'user_type': props.userType})}
-              id={`new_${props.userType}`}
-              onClick={event => {
-                setAddDialogOpen(true);
-              }}
-              aria-label={`New ${props.userType}`}
-              icon={ PrimeIcons.PLUS} rounded raised >
-                {t("new_user", { 'user_type': props.userType })}
+    <Button
+      tooltip={t('new_user', { 'user_type': props.userType })}
+      id={`new_${props.userType}`}
+      onClick={event => {
+        setAddDialogOpen(true);
+      }}
+      aria-label={`New ${props.userType}`}
+      icon={PrimeIcons.PLUS} rounded raised >
+      {t("new_user", { 'user_type': props.userType })}
 
-              </Button>
+    </Button>
   );
 
   const search = undefined !== props.filtering ? (
-              <div className="flex justify-content-end">
-                <span className="p-input-icon-left">
-                    <i className="pi pi-search" />
-                    <InputText
-                      id={`${props.userType}-search`}
-                      value={props.filtering.filterValue}
-                      onChange={(event) =>{
-                        props.filtering.setFilterFunc( event.target.value );
-                      }}
-                      placeholder="Search" />
-                </span>
-            </div>
+    <div className="flex justify-content-end">
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText
+          id={`${props.userType}-search`}
+          value={props.filtering.filterValue}
+          onChange={(event) => {
+            props.filtering.setFilterFunc(event.target.value);
+          }}
+          placeholder="Search" />
+      </span>
+    </div>
 
   ) : null;
 
 
   return (
     <>
-    <Dialog
-      header={lbl}
-      visible={addDialogOpen}
-      onHide={closeDialog}
-      aria-labelledby="adduser-dialog"
-      footer={()=>{
-        return(
-          <>
-          <Button
-            onClick={() => {
-              dispatch(startTask("adding_email"));
+      <Dialog
+        header={lbl}
+        visible={addDialogOpen}
+        onHide={closeDialog}
+        aria-labelledby="adduser-dialog"
+        footer={() => {
+          return (
+            <>
+              <Button
+                onClick={() => {
+                  dispatch(startTask("adding_email"));
 
-              axios
-                .put(props.addUsersPath, {
-                  id: props.courseId,
-                  addresses: newUserAddresses
-                })
-                .then(response => {
-                  const data = response.data;
-                  props.addMessagesFunc(data.messages);
-                })
-                .finally(() => {
-                  props.refreshUsersFunc();
-                  dispatch(endTask("adding_email"));
-                });
-              closeDialog();
-            }}
-            color="primary">
-              {t('show.add_btn', {'user_type': props.userType})}
-            </Button>
-          <Button onClick={() => closeDialog()} >
-            {t("Cancel")}
-          </Button>
+                  axios
+                    .put(props.addUsersPath, {
+                      id: props.courseId,
+                      addresses: newUserAddresses
+                    })
+                    .then(response => {
+                      const data = response.data;
+                      props.addMessagesFunc(data.messages);
+                    })
+                    .finally(() => {
+                      props.refreshUsersFunc();
+                      dispatch(endTask("adding_email"));
+                    });
+                  closeDialog();
+                }}
+                color="primary">
+                {t('show.add_btn', { 'user_type': props.userType })}
+              </Button>
+              <Button onClick={() => closeDialog()} >
+                {t("Cancel")}
+              </Button>
 
-          </>
-        )
-      }}
+            </>
+          )
+        }}
       >
         <p>
           Add {props.userType}s by email:
@@ -162,20 +153,20 @@ export default function UserListAdminToolbar(props: Props) {
           type="email"
           value={newUserAddresses}
           onChange={event => setNewUserAddresses(event.target.value)}
-          />
-      
-    </Dialog>
+        />
 
-    <Toolbar
-      start={title}
-      center={createButton}
-      end={(
-        <>
-          {columnToggle}
-          {search}
-        </>
-      )}
-    />
+      </Dialog>
+
+      <Toolbar
+        start={title}
+        center={createButton}
+        end={(
+          <>
+            {columnToggle}
+            {search}
+          </>
+        )}
+      />
     </>
   );
 }

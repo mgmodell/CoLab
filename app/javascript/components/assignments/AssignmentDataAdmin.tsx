@@ -148,14 +148,6 @@ export default function AssignmentDataAdmin(props) {
       ".json";
 
     // Save
-    console.log(
-      method,
-      url,
-      assignmentName,
-      assignmentTextSub,
-      assignmentGroupOption,
-      assignmentRubricId
-    );
     setSaveStatus(t("edit.status_saving"));
     axios({
       url: url,

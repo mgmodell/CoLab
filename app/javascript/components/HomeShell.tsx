@@ -109,8 +109,9 @@ export default function HomeShell(props : Props) {
       setConsentLogs(data.consent_logs);
       setWaitingRosters(data.waiting_rosters);
 
+    }).finally(() => {
       dispatch(endTask());
-    });
+    })
   };
 
   useEffect(() => {

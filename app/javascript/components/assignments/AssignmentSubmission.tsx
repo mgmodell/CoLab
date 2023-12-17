@@ -188,7 +188,6 @@ export default function AssignmentSubmission(props: Props) {
       .get(url)
       .then(response => {
         const data = response.data;
-        console.log("data", data);
         if (data.messages !== null && Object.keys(data.messages).length < 2) {
           setSubmissionId(data.submission.id);
           let receivedDate = DateTime.fromISO(

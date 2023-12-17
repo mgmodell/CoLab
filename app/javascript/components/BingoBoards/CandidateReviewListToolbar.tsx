@@ -43,6 +43,7 @@ export default function CandidateReviewListToolbar(props: Props) {
       placeholder={t("review.toggle_columns_plc")}
       onChange={onColumnToggle}
       className="w-full sm:w-20rem"
+      display="chip"
     />
   );
 

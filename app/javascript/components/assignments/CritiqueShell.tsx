@@ -217,7 +217,6 @@ export default function CritiqueShell(props: Props) {
     axios.get( url )
       .then(response => {
         const data = response.data;
-        console.log( response.data );
         setAssignmentAcceptsText( data.assignment.text_sub );
         setAssignmentAcceptsLink( data.assignment.link_sub );
         setAssignmentGroupEnabled( data.assignment.group_enabled );

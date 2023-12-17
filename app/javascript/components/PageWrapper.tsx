@@ -34,6 +34,7 @@ import HomeShell from "./HomeShell";
 import BingoShell from "./BingoBoards/BingoShell";
 import AssignmentShell from "./assignments/AssignmentShell";
 import Welcome from "./info/Welcome";
+import WorkingIndicator from "./infrastructure/WorkingIndicator";
 
 const ProfileDataAdmin = React.lazy(() => import("./profile/ProfileDataAdmin"));
 const InstallmentReport = React.lazy(() => import("./InstallmentReport"));
@@ -68,6 +69,7 @@ export default function PageWrapper(props : Props) {
           element={
             <Suspense fallback={<Skeleton variant="rectangular" height={50} />}>
               <AppHeader />
+              <WorkingIndicator />
               <br />
               <AppStatusBar />
               <Outlet />

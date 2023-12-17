@@ -13,12 +13,25 @@ import DialogContentText from "@mui/material/DialogContentText";
 import { DialogActions, Button, Collapse } from "@mui/material";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "../infrastructure/StatusSlice";
 
-export default function DropUserButton(props) {
+DropUserButton.propTypes = {
+  dropUrl: PropTypes.string.isRequired,
+  refreshFunc: PropTypes.func.isRequired
+};
+
+type Props = {
+  dropUrl: string;
+  refreshFunc: (messages: Array<string>) => void;
+};  
+
+export default function DropUserButton(props : Props) {
   const [showDialog, setShowDialog] = useState(false);
 
   const category = "course";
   const { t } = useTranslation(`${category}s`);
+  const dispatch = useDispatch();
 
   function PaperComponent(props) {
     return <Paper {...props} />;
@@ -45,6 +58,7 @@ export default function DropUserButton(props) {
         </Button>
         <Button
           onClick={event => {
+            dispatch(startTask('dropping'));
             axios
               .get(`${props.dropUrl}.json`, {})
               .then(response => {
@@ -54,6 +68,8 @@ export default function DropUserButton(props) {
               })
               .catch(error => {
                 console.log("error", error);
+              }).finally(() => {
+                dispatch(endTask('dropping'));
               });
           }}
           color="primary"
@@ -83,7 +99,3 @@ export default function DropUserButton(props) {
   );
 }
 
-DropUserButton.propTypes = {
-  dropUrl: PropTypes.string.isRequired,
-  refreshFunc: PropTypes.func.isRequired
-};

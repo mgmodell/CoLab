@@ -56,10 +56,11 @@ export default function DecisionInvitationsTable(props: Props) {
                       const data = response.data;
                       //Process the data
                       props.parentUpdateFunc();
-                      dispatch(endTask("accepting"));
                     })
                     .catch(error => {
                       console.log("error", error);
+                    }).finally(() => {
+                      dispatch(endTask("accepting"));
                     });
                 }}
               >
@@ -79,12 +80,13 @@ export default function DecisionInvitationsTable(props: Props) {
                       const data = response.data;
                       //Process the data
                       props.parentUpdateFunc();
-                      dispatch(endTask("declining"));
                     })
                     .catch(error => {
                       console.log("error", error);
-                    });
-                }}
+                    }).finally(() => {
+                      dispatch(endTask("declining"));
+
+                })}}
               >
                 <ThumbDownIcon />
               </Fab>

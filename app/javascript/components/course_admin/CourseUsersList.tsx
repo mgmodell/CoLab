@@ -26,15 +26,15 @@ const BingoDataRepresentation = React.lazy(() =>
   import("../BingoBoards/BingoDataRepresentation")
 );
 export enum OPT_COLS {
-    FIRST_NAME = 'first_name',
-    LAST_NAME = 'last_name',
-    EMAIL = 'email',
-    BINGO_PERF = 'bingo_performance',
-    CHECKIN_RECORD = 'checkin_record',
-    EXPERIENCE_COMPLETION = 'experience_completion',
-    STATUS = 'status',
-    ACTIONS = 'actions',
-  }
+  FIRST_NAME = 'first_name',
+  LAST_NAME = 'last_name',
+  EMAIL = 'email',
+  BINGO_PERF = 'bingo_performance',
+  CHECKIN_RECORD = 'checkin_record',
+  EXPERIENCE_COMPLETION = 'experience_completion',
+  STATUS = 'status',
+  ACTIONS = 'actions',
+}
 
 enum UserListType {
   student = "student",
@@ -77,31 +77,18 @@ export default function CourseUsersList(props: Props) {
 
   const [addUsersPath, setAddUsersPath] = useState("");
   const [procRegReqPath, setProcRegReqPath] = useState("");
-  const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const [newUserAddresses, setNewUserAddresses] = useState("");
 
   const dispatch = useDispatch();
+
   const [filterText, setFilterText] = useState('');
+  const [columnsToShow, setColumnsToShow] = useState([]);
 
   const optColumns = [
-    {
-      name: t( OPT_COLS.EMAIL),
-      code: OPT_COLS.EMAIL,
-    },
-    {
-      name: t( OPT_COLS.CHECKIN_RECORD),
-      code: OPT_COLS.CHECKIN_RECORD,
-    },
-    {
-      name: t( OPT_COLS.BINGO_PERF),
-      code: OPT_COLS.BINGO_PERF,
-    },
-    {
-      name: t( OPT_COLS.EXPERIENCE_COMPLETION),
-      code: OPT_COLS.EXPERIENCE_COMPLETION,
-    },
+    t(OPT_COLS.EMAIL),
+    t(OPT_COLS.CHECKIN_RECORD),
+    t(OPT_COLS.BINGO_PERF),
+    t(OPT_COLS.EXPERIENCE_COMPLETION),
   ];
-  const [visibleColumns, setVisibleColumns] = useState([ ]);
 
   const getUsers = () => {
     dispatch(startTask());
@@ -138,11 +125,6 @@ export default function CourseUsersList(props: Props) {
     }
   }, []);
 
-
-  const closeDialog = () => {
-    setNewUserAddresses("");
-    setAddDialogOpen(false);
-  };
 
   const iconForStatus = status => {
     var icon;
@@ -230,16 +212,14 @@ export default function CourseUsersList(props: Props) {
             addMessagesFunc={props.addMessagesFunc}
             refreshUsersFunc={getUsers}
             addUsersPath={addUsersPath}
-
             filtering={{
               filterValue: filterText,
               setFilterFunc: setFilterText,
             }}
             columnToggle={{
+              setVisibleColumnsFunc: setColumnsToShow,
               optColumns: optColumns,
-              visibleColumns: visibleColumns,
-              setVisibleColumnsFunc: setVisibleColumns,
-
+              visibleColumns: columnsToShow
             }}
           />}
           sortOrder={-1}
@@ -264,9 +244,8 @@ export default function CourseUsersList(props: Props) {
             filter
             key={'last_name'}
           />
-          {undefined === visibleColumns.find( (col) =>{
-              col.clode === OPT_COLS.EMAIL;
-          }) ? (
+          {columnsToShow.includes(t(OPT_COLS.EMAIL))
+          ? (
             <Column
               header={t('email')}
               field='email'
@@ -276,9 +255,8 @@ export default function CourseUsersList(props: Props) {
               key={'email'}
             />)
             : null}
-          {undefined === visibleColumns.find( (col) => {
-            col.code === OPT_COLS.BINGO_PERF;
-           }) ? (
+          {columnsToShow.includes(t(OPT_COLS.BINGO_PERF) ) ?
+          (
             <Column
               header={t('bingo_progress')}
               field='bingo_performance'
@@ -297,7 +275,7 @@ export default function CourseUsersList(props: Props) {
               }}
             />
           ) : null}
-          {visibleColumns.includes(OPT_COLS.CHECKIN_RECORD) ? (
+          {columnsToShow.includes(t(OPT_COLS.CHECKIN_RECORD)) ? (
             <Column
               header={t('checkin_record')}
               field="assessment_performance"
@@ -306,7 +284,8 @@ export default function CourseUsersList(props: Props) {
               }}
             />
           ) : null}
-          {visibleColumns.includes(OPT_COLS.EXPERIENCE_COMPLETION) ? (
+          {columnsToShow.includes(t(OPT_COLS.EXPERIENCE_COMPLETION))
+          ? (
             <Column
               header={t('experience_completion')}
               field="experience_performance"
@@ -315,13 +294,17 @@ export default function CourseUsersList(props: Props) {
               }}
             />
           ) : null}
-          <Column
-            header={t('status')}
-            field="status"
-            body={(params) => {
-              return iconForStatus(params.status);
-            }}
-          />
+          {columnsToShow.includes(t(OPT_COLS.STATUS)) ?
+           (
+            <Column
+              header={t('status')}
+              field="status"
+              body={(params) => {
+                return iconForStatus(params.status);
+              }}
+            />
+
+          ) : null}
           <Column
             header={t('actions')}
             field="id"
@@ -344,11 +327,12 @@ export default function CourseUsersList(props: Props) {
                           .then(response => {
                             const data = response.data;
                             refreshFunc(data.messages);
-                            dispatch(endTask("inviting"));
                           })
                           .catch(error => {
                             console.log("error", error);
-                          });
+                          }).finally(() => {
+                            dispatch(endTask("inviting"));
+                          })
                       }}
                     />
 
@@ -382,11 +366,12 @@ export default function CourseUsersList(props: Props) {
                           .then(response => {
                             const data = response.data;
                             refreshFunc(data.messages);
-                            dispatch(endTask("accepting_student"));
                           })
                           .catch(error => {
                             console.log("error", error);
-                          });
+                          }).finally(() => {
+                            dispatch(endTask("accepting_student"));
+                          })
                       }}
                     />
                   );
@@ -405,11 +390,12 @@ export default function CourseUsersList(props: Props) {
                           .then(response => {
                             const data = response.data;
                             refreshFunc(data.messages);
-                            dispatch(endTask("decline_student"));
                           })
                           .catch(error => {
                             console.log("error", error);
-                          });
+                          }).finally(() => {
+                            dispatch(endTask("decline_student"));
+                          })
                       }}
                     />
                   );
@@ -432,11 +418,12 @@ export default function CourseUsersList(props: Props) {
                           .then(response => {
                             const data = response.data;
                             refreshFunc(data.messages);
-                            dispatch(endTask("re-adding"));
                           })
                           .catch(error => {
                             console.log("error", error);
-                          });
+                          }).finally(() => {
+                            dispatch(endTask("re-adding"));
+                          })
                       }}
                     />
                   );
@@ -454,7 +441,7 @@ export default function CourseUsersList(props: Props) {
         </DataTable>
       </>
     );
-  }, [props.usersList]);
+  }, [props.usersList, columnsToShow, filterText]);
 
   return (
     <Fragment>

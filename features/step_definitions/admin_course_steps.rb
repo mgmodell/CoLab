@@ -343,8 +343,9 @@ Then 'the user drops the {string} users {string}' do |_type, addresses|
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
 
-  find_all(:xpath, '//div[contains(@class,"Pagination-select")]')[0].click
-  find(:xpath, '//li[text()="100"]').click
+  wait_for_render
+  find(:xpath, "//div[@data-pc-name='paginator']/div/div[@role='button']").click
+  find_all(:xpath, "//ul[@role='listbox']/li" ).last.click
 
   step 'the user switches to the "Students" tab'
   step 'the user enables the "Email" table view option'
@@ -360,11 +361,7 @@ Then 'the user drops the {string} users {string}' do |_type, addresses|
     end
   else
     # Find the email
-    elem = find(:xpath, "//div[contains(.,'#{addresses}') and @data-field='email']")
-    # Get the parent
-    elem = elem.ancestor(:xpath, '//div[@role="row"]')
-    # Get the button
-    elem = elem.find(:xpath, "./div[@data-field='id']/button[@aria-label='Drop Student']")
+    elem = find(:xpath, "//tr/td[text()='#{addresses}']/../td/button[@aria-label='Drop Student']")
 
     elem.click
 
@@ -376,6 +373,9 @@ end
 
 Then 'there are {int} students in the course' do |count|
   wait_for_render
+  
+  # byebug if count != @course.rosters.students.size
+
   @course.rosters.students.size.should eq count
 end
 

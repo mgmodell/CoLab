@@ -103,7 +103,6 @@ export default function RubricScorer(props: Props) {
       .then(response =>{
         const data = response.data;
         const messages = data["messages"];
-        console.log( messages );
 
         if (messages != null && Object.keys(messages).length < 2) {
           const r_sub_fdbk : ISubmissionFeedback = data.submission_feedback;

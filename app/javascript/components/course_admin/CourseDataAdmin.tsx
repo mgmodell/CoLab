@@ -143,13 +143,13 @@ export default function CourseDataAdmin(props) {
         setCourseConsentFormId(course.consent_form_id || 0);
         setCourseSchoolId(course.school_id || 0);
 
-        dispatch(endTask("loading"));
         dispatch(setClean(category));
       })
       .catch(error => {
         console.log("error:", error);
+      }).finally(() => {
         dispatch(endTask("loading"));
-      });
+      })
   };
 
   const saveCourse = () => {
@@ -199,7 +199,6 @@ export default function CourseDataAdmin(props) {
           );
           setCourseEndDate(receivedDate);
 
-          dispatch(endTask("saving"));
           dispatch(setClean(category));
         }
         postNewMessage(data.messages);
@@ -207,7 +206,9 @@ export default function CourseDataAdmin(props) {
       .catch(error => {
         console.log("error:", error);
         dispatch(endTask("saving"));
-      });
+      }).finally(() => {
+        dispatch(endTask("saving"));
+      })
   };
 
   useEffect(() => {
@@ -472,7 +473,6 @@ export default function CourseDataAdmin(props) {
           paginatorDropdownAppendTo={'self'}
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           onRowClick={(event) => {
-            console.log(event);
             const link = event.data.link; //courseActivities[cellMeta.dataIndex].link;
             const activityId = event.data.id; // courseActivities[cellMeta.dataIndex].id;
             navigate(`${link}/${activityId}`);
@@ -551,8 +551,9 @@ export default function CourseDataAdmin(props) {
                       })
                       .catch(error => {
                         console.log("error:", error);
+                      }).finally(() => {
                         dispatch(endTask("deleting"));
-                      });
+                      })
                   }}
                 />
               );

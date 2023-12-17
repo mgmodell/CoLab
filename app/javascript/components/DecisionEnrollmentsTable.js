@@ -15,6 +15,9 @@ import WorkingIndicator from "./infrastructure/WorkingIndicator";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { startTask, endTask } from "./infrastructure/StatusSlice";
+
 import { useTranslation } from "react-i18next";
 
 const styles = theme => ({
@@ -44,6 +47,7 @@ const styles = theme => ({
 export default function DecisionEnrollmentsTable(props) {
   const category = "admin";
   const { t } = useTranslation(category);
+  const dispatch = useDispatch();
 
   const [requests_raw, setRequestsRaw] = useState([]);
   const [requests, setRequests] = useState([]);
@@ -136,6 +140,7 @@ export default function DecisionEnrollmentsTable(props) {
 
   const getRequests = () => {
     const url = `${props.init_url}.json`;
+    dispatch(startTask());
     axios
       .get(url, {})
       .then(response => {
@@ -147,6 +152,8 @@ export default function DecisionEnrollmentsTable(props) {
       .catch(error => {
         console.log("error", error);
         return [{ id: -1, name: "no data" }];
+      }).finally(() => {
+        dispatch(endTask());
       });
   };
   const filter = event => {
@@ -179,6 +186,7 @@ export default function DecisionEnrollmentsTable(props) {
   const decision = (id, accept) => {
     setWorking(true);
     const url = props.update_url + ".json";
+    dispatch(startTask());
     axios
       .patch(url, {
         roster_id: id,
@@ -196,6 +204,8 @@ export default function DecisionEnrollmentsTable(props) {
         fail_data.success = false;
         console.log("error", error);
         return fail_data;
+      }).finally(() => {
+        dispatch(endTask());
       });
   };
 

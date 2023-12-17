@@ -67,11 +67,12 @@ export default function CourseList(props) {
       .then(response => {
         //Process the data
         setCourses(response.data);
-        dispatch(endTask("loading"));
       })
       .catch(error => {
         console.log("error", error);
-      });
+      }).finally(() => {
+        dispatch(endTask("loading"));
+      })
   };
 
   useEffect(() => {

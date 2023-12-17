@@ -105,11 +105,14 @@ Then(/^the user switches to the "([^"]*)" tab$/) do |tab|
 end
 
 Then 'the user enables the {string} table view option' do |view_option|
-  find(:xpath, "//button[@aria-label='Select columns']").click
-  inpt = find(:xpath, "//label[contains(.,'#{view_option}')]//input[@type='checkbox']", visible: :all)
-  inpt.click unless inpt.checked?
+  find(:xpath, "//div[@data-pc-name='multiselect']/div[@data-pc-section='labelcontainer']" ).click
+
+  inpt = find( :xpath, "//ul[@role='listbox']/li[contains(.,'#{view_option}')]" ) 
+  # TODO: fix this check for isChecked
+  inpt.click unless inpt['aria-selected'] == 'true'
 
   find(:xpath, '//body').click
+  inpt.send_keys :escape
 
 end
 

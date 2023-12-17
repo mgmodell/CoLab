@@ -45,5 +45,3 @@ export default function CourseAdmin(props) {
     </Routes>
   );
 }
-
-CourseAdmin.propTypes = {};

@@ -81,12 +81,13 @@ export default function UserListToolbar(props) {
                     //getUsers();
                     props.emailListUpdateFunc(data.emails);
                     props.addMessagesFunc(data.messages);
-                    dispatch(endTask("updating"));
                   })
                   .catch(error => {
                     console.log("error", error);
-                  });
-                closeDialog();
+                  }).finally(() => {
+                    dispatch(endTask("updating"));
+                    closeDialog();
+                  })
               }}
               color="primary"
             >

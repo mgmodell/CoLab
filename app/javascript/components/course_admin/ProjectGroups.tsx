@@ -14,6 +14,9 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TextField from "@mui/material/TextField";
 
+import { startTask, endTask } from "../infrastructure/StatusSlice";
+import { useDispatch } from "react-redux";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
@@ -23,7 +26,15 @@ const DiversityScore = React.lazy(() => import("../DiversityScore"));
 import { SortDirection } from "react-virtualized";
 import axios from "axios";
 
-export default function ProjectGroups(props) {
+type Props = {
+  projectId: number;
+  groupsUrl: string;
+  diversityCheckUrl: string;
+  diversityRescoreGroup: string;
+  diversityRescoreGroups: string;
+};
+
+export default function ProjectGroups(props : Props) {
   const [dirty, setDirty] = useState(false);
   const [working, setWorking] = useState(true);
   const [message, setMessage] = useState("");
@@ -34,6 +45,8 @@ export default function ProjectGroups(props) {
   const [studentsRaw, setStudentsRaw] = useState({});
   const [groups, setGroups] = useState([]);
   const [students, setStudents] = useState([]);
+
+  const dispatch = useDispatch();
 
   const addGroup = () => {
     const updatedGroups = Object.assign({}, groupsRaw);
@@ -141,6 +154,7 @@ export default function ProjectGroups(props) {
   const getGroups = () => {
     const url = props.groupsUrl + props.projectId + ".json";
     setWorking(true);
+    dispatch(startTask());
     axios
       .get(url, {})
       .then(response => {
@@ -153,6 +167,8 @@ export default function ProjectGroups(props) {
       })
       .catch(error => {
         console.log("error", error);
+      }).finally(() => {
+        dispatch(endTask());
       });
   };
 
@@ -164,6 +180,7 @@ export default function ProjectGroups(props) {
     };
 
     const url = props.diversityRescoreGroup + props.projectId + ".json";
+    dispatch(startTask());
     axios
       .post(url, {
         group_id: group_id
@@ -182,12 +199,15 @@ export default function ProjectGroups(props) {
         fail_data.success = false;
         console.log("error", error);
         return fail_data;
+      }).finally(() => {  
+        dispatch(endTask());
       });
   };
 
   const recalcDiversity = () => {
     setWorking(true);
     const url = props.diversityRescoreGroups + props.projectId + ".json";
+    dispatch(startTask());
     axios
       .post(url, {})
       .then(response => {
@@ -204,6 +224,8 @@ export default function ProjectGroups(props) {
         fail_data.success = false;
         console.log("error", error);
         return fail_data;
+      }).finally(() => {
+        dispatch(endTask());
       });
   };
 
@@ -212,6 +234,7 @@ export default function ProjectGroups(props) {
     setMessage("Saving...");
 
     const url = props.groupsUrl + props.projectId + ".json";
+    dispatch(startTask());
     axios
       .patch(url, {
         groups: groupsRaw,
@@ -232,6 +255,8 @@ export default function ProjectGroups(props) {
         fail_data.success = false;
         console.log("error", error);
         return fail_data;
+      }).finally(() => {
+        dispatch(endTask());
       });
   };
 
@@ -362,10 +387,3 @@ export default function ProjectGroups(props) {
   );
 }
 
-ProjectGroups.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  groupsUrl: PropTypes.string.isRequired,
-  diversityCheckUrl: PropTypes.string.isRequired,
-  diversityRescoreGroup: PropTypes.string.isRequired,
-  diversityRescoreGroups: PropTypes.string.isRequired
-};
