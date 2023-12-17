@@ -503,6 +503,6 @@ Then('close all messages') do
 end
 
 Then('the user selects the {string} activity') do |activity_name|
-  find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{activity_name}')]").click
+  find(:xpath, "//tbody/tr/td[text()='#{activity_name}']" ).click
   wait_for_render
 end
