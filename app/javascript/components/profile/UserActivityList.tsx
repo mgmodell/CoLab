@@ -101,7 +101,7 @@ export default function UserActivityList(props: Props) {
         rows={props.activitiesList}
         onCellClick={(params, event, details) => {
           if (params.row.link !== null) {
-            navigate(`/home${params.row.link}`);
+            navigate(`/home/${params.row.link}`);
           }
         }}
         slots={{

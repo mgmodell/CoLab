@@ -28,9 +28,7 @@ export default function SubmissionList(props: Props) {
   const { t } = useTranslation(`${category}s`);
 
   const [showErrors, setShowErrors] = useState(false);
-  const navigate = useNavigate();
 
-  const dispatch = useDispatch();
   const [filterText, setFilterText] = useState('');
   const optColumns = [
     OPT_COLS.RECORDED_SCORE,
