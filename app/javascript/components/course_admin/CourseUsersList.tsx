@@ -25,7 +25,7 @@ const DropUserButton = React.lazy(() => import("./DropUserButton"));
 const BingoDataRepresentation = React.lazy(() =>
   import("../BingoBoards/BingoDataRepresentation")
 );
-export enum OPT_COLS {
+enum OPT_COLS {
   FIRST_NAME = 'first_name',
   LAST_NAME = 'last_name',
   EMAIL = 'email',
@@ -253,6 +253,11 @@ export default function CourseUsersList(props: Props) {
               data-id='email'
               filter
               key={'email'}
+              body={(params) => {
+                return(
+                  <a href="mailto:{params.email}">{params.email}</a>
+                )
+              }}
             />)
             : null}
           {columnsToShow.includes(t(OPT_COLS.BINGO_PERF) ) ?

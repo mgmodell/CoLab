@@ -352,8 +352,8 @@ Then 'the user drops the {string} users {string}' do |_type, addresses|
   if 'user_list' == addresses
     @users.each do |_address|
       step 'the user enables the "Email" table view option'
-      elem = find(:xpath,
-                  "//div[div[a[@href='mailto:#{_address.email}']]]//button[@aria-label='Drop Student']")
+      xpression = "//tr/td/a[text()='#{_address.email}']/../../td/button[@aria-label='Drop Student']"
+      elem = find(:xpath, xpression )
       elem.click
       find(:xpath,
            "//button[text()='Drop the Student']").click
@@ -361,7 +361,7 @@ Then 'the user drops the {string} users {string}' do |_type, addresses|
     end
   else
     # Find the email
-    elem = find(:xpath, "//tr/td[text()='#{addresses}']/../td/button[@aria-label='Drop Student']")
+    elem = find(:xpath, "//tr/td/a[text()='#{addresses}']/../../td/button[@aria-label='Drop Student']")
 
     elem.click
 

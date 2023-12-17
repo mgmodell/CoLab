@@ -9,7 +9,7 @@ import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import { MultiSelect } from "primereact/multiselect";
 import { Dialog } from "primereact/dialog";
-import { OPT_COLS, StudentData, UserListType } from "./CourseUsersList";
+import { StudentData } from "./CourseUsersList";
 
 import { Toolbar } from "primereact/toolbar";
 import { useDispatch } from "react-redux";
