@@ -20,7 +20,6 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import Skeleton from "@mui/material/Skeleton";
 import Link from "@mui/material/Link";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
@@ -38,6 +37,7 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { TabView } from "primereact/tabview";
 import { TabPanel } from "primereact/tabview";
+import { Skeleton } from "primereact/skeleton";
 
 export default function CourseDataAdmin(props) {
   const category = "course";
@@ -311,7 +311,7 @@ export default function CourseDataAdmin(props) {
             })}
           </Select>
         ) : (
-          <Skeleton variant="rectangular" height={20} />
+          <Skeleton className={"mb-2"} height={'2rem'} />
         )}
         <FormHelperText>Error schtuff</FormHelperText>
       </FormControl>
@@ -335,7 +335,7 @@ export default function CourseDataAdmin(props) {
             })}
           </Select>
         ) : (
-          <Skeleton variant="rectangular" height={20} />
+          <Skeleton className={"mb-2"} height={'2rem'} />
         )}
         <FormHelperText>More Error Schtuff</FormHelperText>
       </FormControl>

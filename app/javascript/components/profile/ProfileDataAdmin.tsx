@@ -49,7 +49,11 @@ import {
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 
-export default function ProfileDataAdmin(props) {
+type Props = {
+  // profileId: number;
+};
+
+export default function ProfileDataAdmin(props : Props) {
   const category = "profile";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -817,6 +821,3 @@ export default function ProfileDataAdmin(props) {
   );
 }
 
-ProfileDataAdmin.propTypes = {
-  profileId: PropTypes.number
-};

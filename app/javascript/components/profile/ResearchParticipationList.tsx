@@ -27,7 +27,7 @@ type Props = {
   consentFormListUpdateFunc: (consentFormsList: Array<IConsentForm>) => void;
 };
 
-export default function UserCourseList(props: Props) {
+export default function ResearchParticipationList(props: Props) {
   const dispatch = useDispatch();
 
   const category = "profile";

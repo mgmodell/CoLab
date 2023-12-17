@@ -11,14 +11,14 @@ import { useTranslation } from "react-i18next";
 import { Link, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { IRubricData, ICriteria } from "./RubricViewer";
 import { ISubmissionCondensed } from "./AssignmentViewer";
-import { DataGrid, GridRenderCellParams, GridRowModel, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import Grid from "@mui/material/Unstable_Grid2";
 import {DateTime} from 'luxon';
 import parse from 'html-react-parser';
 import RubricScorer, { IRubricRowFeedback } from "./RubricScorer";
 import { ISubmissionFeedback } from "./RubricScorer";
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
-import { renderDateCellExpand } from "../infrastructure/GridCellExpand";
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 
 enum SubmissionActions{
   init_no_data = 'INIT NO DATA',
@@ -68,7 +68,6 @@ const genCleanSubmission = ( submission_id:number, rubric:IRubricData ):ISubmiss
       };
 
 }
-
 
 const SubmissionReducer = ( state, action ) =>{
   const tmpSubmission : ISubmissionData = Object.assign({}, state );
@@ -121,6 +120,13 @@ interface ISubmissionData{
 type Props = {
 };
 
+  enum OPT_COLS {
+    RECORDED_SCORE = 'submissions.score',
+    CALCULATED_SCORE = 'submissions.calculated_score',
+    SUBMITTED = 'submissions.submitted',
+    WITHDRAWN = 'submissions.withdrawn',
+
+  }
 export default function CritiqueShell(props: Props) {
   const category = "critique";
   const endpointsLoaded = useTypedSelector(
@@ -132,6 +138,8 @@ export default function CritiqueShell(props: Props) {
   const dispatch = useDispatch( );
 
   const { assignmentId } = useParams( );
+  const [filterText, setFilterText] = useState("");
+  const [visibleColumns, setVisibleColumns] = useState([]);
 
   const [t, i18n] = useTranslation( `${category}s` );
   const [panels, setPanels] = useState( () => ['submissions'] )
@@ -140,38 +148,34 @@ export default function CritiqueShell(props: Props) {
   const [assignmentAcceptsLink, setAssignmentAcceptsLink] = useState( false );
   const [assignmentGroupEnabled, setAssignmentGroupEnabled] = useState( false );
 
-  const [selectedSubmission, updateSelectedSubmission] = useReducer(SubmissionReducer, {} );
-
-  const columns: GridColDef[] = [
-    { field: "recorded_score", 
-      headerName: t("submissions.score"),
-      renderCell: (params: GridRenderCellParams) =>{
-        if( params.value === null ){
-          return t('submissions.score_na');
-        }else{
-          return params.value;
-        }
-      }
-     },
-    { field: "calculated_score", 
-      headerName: t("submissions.calculated_score") },
-    { field: "submitted", 
-      width: 250,
-      renderCell: renderDateCellExpand,
-      headerName: t("submissions.submitted") },
-    { field: "withdrawn", 
-      width: 250,
-      renderCell: renderDateCellExpand,
-      headerName: t("submissions.withdrawn") },
-    {
-      field: "user",
-      headerName: t("submissions.submitter"),
-      width: 400,
-      renderCell: (params: GridRenderCellParams) =>{
-          return `${params.value.last_name}, ${params.value.first_name}`;
-      }
+  const initialState: ISubmissionData = {
+    id: 0,
+    recordedScore: 0,
+    submitted: new Date(),
+    withdrawn: new Date(),
+    sub_text: "",
+    sub_link: "",
+    rubric: {
+      name: "",
+      description: "",
+      version: 0,
+      criteria: []
     },
-  ];
+    submission_feedback: {
+      id: 0,
+      submission_id: 0,
+      feedback: "",
+      rubric_row_feedbacks: []
+    }
+  };
+
+  const [selectedSubmission, updateSelectedSubmission] = useReducer(SubmissionReducer, initialState);
+
+  const optColumns = [
+    t( OPT_COLS.RECORDED_SCORE ),
+    t( OPT_COLS.CALCULATED_SCORE ),
+    t( OPT_COLS.WITHDRAWN)
+  ]
 
   //Retrieve the submission
   const loadSubmission = (submissionId:number) => {
@@ -261,31 +265,48 @@ export default function CritiqueShell(props: Props) {
           <Typography variant="h6">
             {t('submissions_title')}
           </Typography>
-              <DataGrid
-                onRowClick={(params: GridRowParams) =>{
-                  loadSubmission( params.row.id );
-                }}
-                getRowId={(model: GridRowModel) => {
-                  return model.id;
-                }}
-                autoHeight
-                rows={submissionsIndex}
-                columns={columns}
-                isCellEditable={params => {
-                  return false;
-                }}
-                onCellClick={(params, event, details) => {
-                    //navigate(String(params.row.id));
-                }}
-                slots={{
-                  toolbar: AdminListToolbar
-                }}
-                slotProps={{
-                  toolbar: {
-                    itemType: "submission"
-                  }
-                }}
-              />
+      <DataTable
+        value={submissionsIndex}
+        resizableColumns
+        tableStyle={{
+          minWidth: '50rem'
+        }}
+        reorderableColumns
+        paginator
+        rows={5}
+        rowsPerPageOptions={
+          [5, 10, 20, submissionsIndex.length]
+        }
+        header={<AdminListToolbar
+          itemType={category}
+          columnToggle={{
+            optColumns: optColumns,
+            visibleColumns: visibleColumns,
+            setVisibleColumnsFunc: setVisibleColumns,
+          }}
+        />}
+        sortField="start_date"
+        sortOrder={-1}
+        paginatorDropdownAppendTo={'self'}
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="{first} to {last} of {totalRecords}"
+        dataKey="id"
+        onRowClick={(event) => {
+          loadSubmission( event.data.id );
+        }}
+      >
+        <Column field="recorded_score" header={t("submissions.score")} />
+        <Column field="calculated_score" header={t("submissions.calculated_score")} />
+        <Column field="submitted" header={t("submissions.submitted")} />
+        <Column field="withdrawn" header={t("submissions.withdrawn")} />
+        <Column
+          field="user"
+          header={t("submissions.submitter")}
+          body={param => {
+            return `${param.last_name}, ${param.first_name}`;
+          }}
+        />
+        </DataTable>
 
         </Grid>
       ): null}

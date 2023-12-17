@@ -17,7 +17,6 @@ import WorkingIndicator from "../infrastructure/WorkingIndicator";
 import { useTranslation } from "react-i18next";
 import AdminListToolbar from "../infrastructure/AdminListToolbar";
 import { Column } from "primereact/column";
-import { PrimeIcons } from "primereact/api";
 
 
 export default function CourseList(props) {
