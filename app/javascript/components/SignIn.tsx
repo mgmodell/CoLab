@@ -23,8 +23,8 @@ import {
   emailSignUp
 } from "./infrastructure/ContextSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
-import { TabContext, TabPanel, TabList } from "@mui/lab";
 import axios from "axios";
+import { TabView, TabPanel } from "primereact/tabview";
 
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 export default function SignIn(props) {
@@ -42,7 +42,7 @@ export default function SignIn(props) {
   const [showPassword, setShowPassword] = useState(false);
   const isLoggedIn = useTypedSelector(state => state.context.status.loggedIn);
   const loggingIn = useTypedSelector(state => state.context.status.loggingIn);
-  const [curTab, setCurTab] = useState("login");
+  const [curTab, setCurTab] = useState(0);
 
   const endpointsLoaded = useTypedSelector(
     state => state.context.status.endpointsLoaded
@@ -210,17 +210,10 @@ export default function SignIn(props) {
       <Suspense fallback={<Skeleton variant={"rectangular"} height="300" />}>
         <GoogleOAuthProvider clientId={oauth_client_ids["google"]}>
           <Paper>
-            <TabContext value={curTab}>
-              <TabList
-                onChange={(evt, newVal) => {
-                  setCurTab(newVal);
-                }}
-              >
-                <Tab label={t("sessions.login")} value="login" />
-                <Tab label={t("registrations.signup_tab")} value="register" />
-                <Tab label={t("passwords.reset_tab")} value="password" />
-              </TabList>
-              <TabPanel value="login">
+            <TabView  activeIndex={curTab} onTabChange={(e) => {console.log(e.index)}}>
+
+              <TabPanel 
+                header={t("sessions.login")}  >
                 <Grid container>
                   {emailField}
                   <Grid item xs={12} sm={9}>
@@ -261,21 +254,23 @@ export default function SignIn(props) {
                 {clearBtn}
                 {oauthBtn}
               </TabPanel>
-              <TabPanel value="register">
+              <TabPanel 
+                header={t("registrations.signup_tab")} >
                 <Grid container>
                   {emailField}
                   {registerBlock}
                   {clearBtn}
                 </Grid>
               </TabPanel>
-              <TabPanel value="password">
+              <TabPanel 
+                header={t("passwords.reset_tab")} >
                 <Grid container>
                   {emailField}
                   {passwordResetBtn}
                   {clearBtn}
                 </Grid>
               </TabPanel>
-            </TabContext>
+            </TabView>
           </Paper>
         </GoogleOAuthProvider>
       </Suspense>

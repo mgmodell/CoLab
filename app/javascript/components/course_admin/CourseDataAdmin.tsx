@@ -13,14 +13,6 @@ import {
 } from "../infrastructure/StatusSlice";
 
 import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Link from "@mui/material/Link";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
@@ -38,6 +30,11 @@ import { Button } from "primereact/button";
 import { TabView } from "primereact/tabview";
 import { TabPanel } from "primereact/tabview";
 import { Skeleton } from "primereact/skeleton";
+import { Dropdown } from "primereact/dropdown";
+import { Panel } from "primereact/panel";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Message } from "primereact/message";
 
 export default function CourseDataAdmin(props) {
   const category = "course";
@@ -255,113 +252,100 @@ export default function CourseDataAdmin(props) {
   ) : null;
 
   const detailsComponent = (
-    <Paper>
-      <TextField
-        label="Course Number"
+    <Panel>
+        <label htmlFor="course-number" id="course-number_lbl">
+          Course Number
+        </label>
+      <InputText
+        placeholder="Course Number"
         id="course-number"
         value={courseNumber}
-        fullWidth={false}
         onChange={event => setCourseNumber(event.target.value)}
-        error={Boolean(messages["number"])}
-        helperText={messages["number"]}
-      />
-      <TextField
-        label="Course Name"
-        id="course-name"
-        value={courseName}
-        fullWidth={false}
-        onChange={event => setCourseName(event.target.value)}
-        error={Boolean(messages["name"])}
-        helperText={messages["name"]}
-      />
-      <br />
-      <TextField
-        label="Course Description"
+        />
+        {Boolean(messages['course_number']) ? (
+          <Message severity="error" text={messages['course_number']} />
+        ) : null}
+        <br />
+        <label htmlFor="course-name" id="course-name_lbl">
+          Course Name
+          </label>
+          <InputText
+          placeholder="Course Name"
+          id="course-name"
+          value={courseName}
+          onChange={event => setCourseName(event.target.value)}
+        />
+        {Boolean(messages['course_name']) ? (
+          <Message severity="error" text={messages['course_name']} />
+        ) : null}
+        <br />
+        <label htmlFor="course-description" id="course-description_lbl">
+          Course Description
+        </label>
+        <InputTextarea
+        placeholder="Course Description"
         id="course-description"
         value={courseDescription}
-        fullWidth={true}
-        multiline={true}
         onChange={event => setCourseDescription(event.target.value)}
-        error={Boolean(messages["description"])}
-        helperText={messages["description"]}
-      />
-      <br />
-      <br />
-      <FormControl>
-        <InputLabel htmlFor="course_school" id="course_school_lbl">
+        rows={5}
+        cols={30}
+        autoResize={true}
+        />
+        {Boolean(messages['course_description']) ? (
+          <Message severity="error" text={messages['course_description']} />
+        ) : null}
+        <br />
+        <label htmlFor="course_school" id="course_school_lbl">
           School
-        </InputLabel>
+        </label>
         {schools.length > 0 ? (
-          <Select
+          <Dropdown
             id="course_school"
             value={courseSchoolId}
+            options={schools}
             onChange={event => {
               const changeTo = Number(event.target.value);
               setCourseSchoolId(changeTo);
               setCourseTimezone(schoolTzHash[changeTo]);
             }}
-          >
-            <MenuItem value={0}>None Selected</MenuItem>
-            {schools.map(school => {
-              return (
-                <MenuItem key={"school_" + school.id} value={school.id}>
-                  {school.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
+            optionLabel="name"
+            placeholder="Select a School"
+            showClear={true}
+            />
         ) : (
           <Skeleton className={"mb-2"} height={'2rem'} />
         )}
-        <FormHelperText>Error schtuff</FormHelperText>
-      </FormControl>
 
-      <FormControl>
-        <InputLabel htmlFor="course_timezone" id="course_timezone_lbl">
+        <label htmlFor="course_timezone" id="course_timezone_lbl">
           Time Zone
-        </InputLabel>
+        </label>
         {timezones.length > 0 ? (
-          <Select
-            id="course_timezone"
+          <Dropdown id="course_timezone"
             value={courseTimezone}
+            options={timezones}
             onChange={event => setCourseTimezone(String(event.target.value))}
-          >
-            {timezones.map(timezone => {
-              return (
-                <MenuItem key={timezone.name} value={timezone.name}>
-                  {timezone.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
+            optionLabel="name"
+            placeholder="Select a Time Zone"
+            showClear={true}
+            />
         ) : (
           <Skeleton className={"mb-2"} height={'2rem'} />
         )}
-        <FormHelperText>More Error Schtuff</FormHelperText>
-      </FormControl>
 
-      <FormControl>
-        <InputLabel htmlFor="course_consent_form" id="course_consent_form_lbl">
+        <label htmlFor="course_consent_form" id="course_consent_form_lbl">
           Consent Form
-        </InputLabel>
-        <Select
+        </label>
+        <Dropdown
           id="course_consent_form"
           value={courseConsentFormId}
+          options={consentForms}
           onChange={event => setCourseConsentFormId(Number(event.target.value))}
-        >
-          <MenuItem value={0}>None Selected</MenuItem>
-          {consentForms.map(consent_form => {
-            return (
-              <MenuItem key={consent_form.id} value={consent_form.id}>
-                {consent_form.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-        <FormHelperText>More Error Schtuff</FormHelperText>
-      </FormControl>
+          optionLabel="name"
+          placeholder="Select a Consent Form"
+          showClear={true}
+          />
 
-      <Typography>All dates shown in {courseTimezone} timezone.</Typography>
+      <p>All dates shown in {courseTimezone} timezone.</p>
       <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="en-us">
         <DatePicker
           autoOk={true}
@@ -383,7 +367,7 @@ export default function CourseDataAdmin(props) {
         //renderInput={props => <TextField id="course_start_date" {...props} />}
         />
         {Boolean(messages["start_date"]) ? (
-          <FormHelperText error={true}>{messages["start_date"]}</FormHelperText>
+          <Message severity="error" text={messages["start_date"]} />
         ) : null}
 
         <DatePicker
@@ -408,18 +392,18 @@ export default function CourseDataAdmin(props) {
         />
       </LocalizationProvider>
       {Boolean(messages["end_date"]) ? (
-        <FormHelperText error={true}>{messages["end_date"]}</FormHelperText>
+        <Message severity="error" text={messages["end_date"]} />
       ) : null}
       <br />
       {courseId != null && courseId > 0 ? (
-        <Link href={courseRegImage}>
+        <a href={courseRegImage} download>
           <img src={courseRegImage} alt="Registration QR Code" />
           Download self-registration code
-        </Link>
+        </a>
       ) : null}
 
       <br />
-    </Paper>
+    </Panel>
   );
 
   enum ACTIVITY_COLS {
@@ -568,7 +552,7 @@ export default function CourseDataAdmin(props) {
     );
 
   return (
-    <Paper>
+    <Panel>
       <TabView
         activeIndex={curTab}
         onTabChange={(event) => setCurTab(event.index)}
@@ -599,6 +583,6 @@ export default function CourseDataAdmin(props) {
       </TabView>
       {saveButton}
       {messages["status"]}
-    </Paper>
+    </Panel>
   );
 }
