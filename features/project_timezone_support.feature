@@ -24,6 +24,7 @@ Feature: Timezone Support
     Then the user switches to the "Task View" tab
     Then the user enables the "Open Date" table view option
     Then the user should see "Mar 7, 1980, 12:00 AM"
+    Then the user enables the "Close Date" table view option
     Then the user should see "Mar 9, 1980, 11:59 PM"
     
   @javascript

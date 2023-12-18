@@ -194,13 +194,13 @@ export default function TaskList(props: Props) {
             filter
             key={OPT_COLS.START_DATE}
             body={(params) => {
-              return <span>{params.start_date.toLocaleString( DateTime.DATETIME_SHORT )}</span>;
+              return <span>{params.start_date.toLocaleString( DateTime.DATETIME_MED )}</span>;
             }}
 
             />
           ) : null
           }
-          { visibleColumns.includes(t(`list.${OPT_COLS.CONSENT_LINK}`)) ?
+          { visibleColumns.includes(t(`list.${OPT_COLS.NEXT_DATE}`)) ?
           (
           <Column 
             header={t(`list.${OPT_COLS.NEXT_DATE}`)}
@@ -209,7 +209,7 @@ export default function TaskList(props: Props) {
             filter
             key={OPT_COLS.NEXT_DATE}
             body={(params) => {
-              return <span>{params.next_date.toLocaleString( DateTime.DATETIME_SHORT )}</span>;
+              return <span>{params.next_date.toLocaleString( DateTime.DATETIME_MED )}</span>;
             }}
             />
           ) : null
