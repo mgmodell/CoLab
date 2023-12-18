@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Paper from "@mui/material/Paper";
-import { Box } from "@mui/material";
-import Grid from "@mui/material/Grid";
+
+
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import luxonPlugin from "@fullcalendar/luxon";
 import { DateTime, Settings } from "luxon";
-import Skeleton from "@mui/material/Skeleton";
+
+import { Skeleton } from "primereact/skeleton";
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "./infrastructure/StatusSlice";
 import { useTypedSelector } from "./infrastructure/AppReducers";
 import { useTranslation } from "react-i18next";
 import { TabView, TabPanel } from "primereact/tabview";
+import { Panel } from "primereact/panel";
+import { Container, Row, Col } from "react-grid-system";
 
 const DecisionEnrollmentsTable = React.lazy(() =>
   import("./DecisionEnrollmentsTable")
@@ -30,7 +32,7 @@ interface Props {
   rootPath?: string
 }
 
-export default function HomeShell(props : Props) {
+export default function HomeShell(props: Props) {
   const category = "home";
   const endpoints = useTypedSelector(
     state => state.context.endpoints[category]
@@ -115,13 +117,13 @@ export default function HomeShell(props : Props) {
 
   useEffect(() => {
 
-    if ( endpointsLoaded && ( props.rootPath !== undefined || isLoggedIn)) {
+    if (endpointsLoaded && (props.rootPath !== undefined || isLoggedIn)) {
       getTasks();
     }
   }, [endpointsLoaded, isLoggedIn]);
 
 
-  var pageContent = <Skeleton variant="rectangular" />;
+  var pageContent = <Skeleton className="mb-2" />;
   if (undefined !== consentLogs) {
     if (consentLogs.length > 0) {
       pageContent = (
@@ -143,7 +145,7 @@ export default function HomeShell(props : Props) {
               count: tasks.length
             })}
           </p>
-          <TabView activeIndex={curTab} onTabChange={e=>{setCurTab(e.index)}}>
+          <TabView activeIndex={curTab} onTabChange={e => { setCurTab(e.index) }}>
             <TabPanel header="Task View">
               <TaskList tasks={tasks} />
             </TabPanel>
@@ -171,7 +173,7 @@ export default function HomeShell(props : Props) {
                 eventClick={info => {
                   navigate(
                     info.event.url
-                    );
+                  );
                 }}
                 plugins={[dayGridPlugin, luxonPlugin]}
               />
@@ -184,34 +186,42 @@ export default function HomeShell(props : Props) {
   }
 
   return (
-    <Paper>
-      <Grid container spacing={3}>
+    <Panel>
+      <Container fluid>
         {endpointsLoaded ? (
           <React.Fragment>
-            <Grid item xs={12}>
-              {undefined !== waitingRosters && waitingRosters.length > 0 ? (
-                <DecisionInvitationsTable
-                  invitations={waitingRosters}
-                  parentUpdateFunc={getTasks}
-                />
-              ) : null}
-            </Grid>
-            <Grid item xs={12}>
-              {undefined !== endpoints["courseRegRequestsUrl"] &&
-              undefined !== endpoints["courseRegUpdatesUrl"] ? (
-                <DecisionEnrollmentsTable
-                  init_url={endpoints["courseRegRequestsUrl"]}
-                  update_url={endpoints["courseRegUpdatesUrl"]}
-                />
-              ) : null}
-            </Grid>
+            <Row >
+              <Col xs={12}>
+                {undefined !== waitingRosters && waitingRosters.length > 0 ? (
+                  <DecisionInvitationsTable
+                    invitations={waitingRosters}
+                    parentUpdateFunc={getTasks}
+                  />
+                ) : null}
+              </Col>
+            </Row>
+
+            <Row >
+              <Col xs={12}>
+                {undefined !== endpoints["courseRegRequestsUrl"] &&
+                  undefined !== endpoints["courseRegUpdatesUrl"] ? (
+                  <DecisionEnrollmentsTable
+                    init_url={endpoints["courseRegRequestsUrl"]}
+                    update_url={endpoints["courseRegUpdatesUrl"]}
+                  />
+                ) : null}
+              </Col>
+            </Row>
           </React.Fragment>
         ) : null}
-        <Grid item xs={12}>
-          {pageContent}
-        </Grid>
-      </Grid>
-    </Paper>
+        <Row>
+          <Col xs={12}>
+            {pageContent}
+          </Col>
+
+        </Row>
+      </Container>
+    </Panel>
   );
 }
 
