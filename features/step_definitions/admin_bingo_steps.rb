@@ -21,8 +21,8 @@ Then(/^the user sets the bingo "([^"]*)" date to "([^"]*)"$/) do |date_field_pre
 end
 
 Then('the user clicks on the existing bingo game') do
-  click_link_or_button 'Activities'
-  find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{@bingo.get_name(@anon)}')]").click
+  find(:xpath, "//a[contains(.,'Activities')]").click
+  find(:xpath, "//tbody/tr/td[text()='#{@bingo.get_name(@anon)}']").click
   wait_for_render
 end
 

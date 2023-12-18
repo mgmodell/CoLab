@@ -55,13 +55,6 @@ Then 'the experience start date is {string} and the end date is {string}' do |st
 end
 
 Then 'the user edits the existing experience' do
-  find(:xpath, "//div[text()='#{@experience.name}']").hover
-  begin
-    find(:xpath, "//div[text()='#{@experience.name}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    # If that gives an error, it's because of the readability popup
-    # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@experience.name}')]")[0].click
-  end
+  find( :xpath, "//tbody/tr/td[text()='#{@experience.name}']" ).click
   wait_for_render
 end

@@ -213,9 +213,8 @@ Then(/^the project "([^"]*)" is "([^"]*)"$/) do |field, value|
 end
 
 Then('the user clicks on the existing project') do
-  click_link_or_button 'Activities'
-  elem = find(:xpath, "//div[contains(@class,'MuiDataGrid-cell')]/div[contains(.,'#{@project.get_name(@anon)}')]")
-  elem.click
+  find(:xpath, "//a[contains(.,'Activities')]").click
+  find(:xpath, "//tbody/tr/td[text()='#{@project.get_name(@anon)}']").click
 end
 
 Then(/^the project Factor pack is "([^"]*)"$/) do |selected_factor_pack|

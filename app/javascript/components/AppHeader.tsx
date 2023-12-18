@@ -22,6 +22,20 @@ export default function AppHeader(props) {
     state => state.context.status.endpointsLoaded
   );
 
+  const working = useTypedSelector(state => {
+    let accum = 0;
+    if (undefined === props.identifier) {
+      accum = state.status.tasks[props.identifier];
+    } else {
+      accum = Number(
+        Object.values(state.status.tasks).reduce((accum, nextVal) => {
+          return Number(accum) + Number(nextVal);
+        }, accum)
+      );
+    }
+    return accum > 0;
+  });
+
   return (
     <React.Fragment>
       <AppBar id="title_head" position="fixed">
@@ -38,7 +52,11 @@ export default function AppHeader(props) {
                     <Skeleton variant="rectangular" width={32} height={32} />
                   )
                 }
-          <Logo height={32} width={32} />
+          <Logo
+            height={32}
+            width={32}
+            spinning={working}
+            />
 
             <Suspense fallback={<Skeleton variant="text" />}>
               <Typography>
