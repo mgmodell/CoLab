@@ -326,8 +326,7 @@ Given('submission {int} {string} graded') do |index, graded_state|
 end
 
 Then('the user {string} withdraw submission {int}') do |can, assignment_ord|
-  target_sub = find(:xpath, "//div[@role='row' and @data-rowindex='#{assignment_ord - 1}']" \
-                              "/div[@data-field='submitted']/div")
+  target_sub = find_all(:xpath, "//tbody/tr" )[ assignment_ord - 1 ]
   target_sub.click
   wait_for_render
   button_count = find_all(:xpath, "//button[text()='Withdraw revision' and not(@disabled)]").size
