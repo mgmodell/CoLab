@@ -297,8 +297,7 @@ Given('today is after the final deadline') do
 end
 
 Then('the user withdraws submission {int}') do |assignment_ord|
-  target_sub = find(:xpath, "//div[@role='row' and @data-rowindex='#{assignment_ord - 1}']" \
-                              "/div[@data-field='submitted']/div")
+  target_sub = find_all( :xpath, "//tbody/tr" )[assignment_ord -1]
   target_sub.click
   wait_for_render
   click_link_or_button 'Withdraw revision'
