@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import TaskListToolbar from "./TaskListToolbar";
 import { Column } from "primereact/column";
 import { Checkbox } from "primereact/checkbox";
+import { br } from "@fullcalendar/core/internal-common";
 
 enum TaskType {
   experience = 'experience',
@@ -172,14 +173,20 @@ export default function TaskList(props: Props) {
             filter
             key={'status'}
             body={(params) => {
-              let output = `${params.status}%`;
-              if( params.type === 'assessment' ){
-                if( 0 == params.value ){
-                  output = t('list.status.incomplete');
-                } else {
-                  output = t('list.status.complete');
+              let output = 'No status'
+              switch( params.type ){
+                case 'assessment':
+                  if( 0 == params.value ){
+                    output = t('list.status.incomplete');
+                  } else {
+                    output = t('list.status.complete');
+                  }
+                  break;
+                case 'assignment':
+                  output = `${params.status} submitted`;
+                default:
+                  output = `${params.status}%`;
                 }
-              }
               return output;
             }}
             />

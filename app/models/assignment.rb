@@ -82,7 +82,7 @@ class Assignment < ApplicationRecord
 
   def status_for_user(user)
     # TODO: check for graded
-    get_submissions_for_user(user).size.positive?
+    get_submissions_for_user(user).size
   end
 
   private

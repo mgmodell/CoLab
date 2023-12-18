@@ -57,7 +57,7 @@ export default function SubmissionList(props: Props) {
           [5, 10, 20, props.submissions.length]
         }
         header={<AdminListToolbar
-          itemType={category}
+          itemType={'response'}
           newItemFunc={props.selectSubmissionFunc}
           filtering={{
             filterValue: filterText,
