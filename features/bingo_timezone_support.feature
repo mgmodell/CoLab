@@ -25,6 +25,7 @@ Feature: Timezone Support for Bingo!
 
     Then the user should see "Feb 15, 1980, 12:00 AM"
     #Rounding goes on here
+    Then the user enables the "Close Date" table view option
     Then the user should see "Apr 12, 1980, 11:59 PM"
     
   @javascript
