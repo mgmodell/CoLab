@@ -15,43 +15,21 @@ Given "the user's school is {string}" do |school_name|
 end
 
 Then 'the user sets the start date to {string} and the end date to {string}' do |start_date, end_date|
-  label = 'Course Start Date'
-  begin
-    find(:xpath, "//label[text()='#{label}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    field_id = find(:xpath, "//label[text()='#{label}']")['for']
-    field = find(:xpath, "//input[@id='#{field_id}']")
-    field.click
-  end
 
-  if start_date.present?
-    new_year = Chronic.parse(start_date).strftime('%Y')
-    new_date = Chronic.parse(start_date).strftime('%m%d')
-    send_keys :right, :right
-    send_keys new_year
-    send_keys :left, :left
-    send_keys new_date
-  else
-    send_keys :left, :left, :delete, :tab, :delete, :tab, :delete
-  end
+    # This doesn't work because the date picker doesn't seem to have a form id
+    # find( :xpath, "//label[text()='Course Dates']" ).click
+    existing_dates = find( :xpath, "//span[@id='course_dates']/input" ).text
 
-  label = 'Course End Date'
-  begin
-    find(:xpath, "//label[text()='#{label}']").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    field_id = find(:xpath, "//label[text()='#{label}']")['for']
-    field = find(:xpath, "//input[@id='#{field_id}']")
-    field.click
-  end
-  if end_date.present?
-    new_year = Chronic.parse(end_date).strftime('%Y')
-    new_date = Chronic.parse(end_date).strftime('%m%d')
-    send_keys :right, :right, new_year
-    send_keys :left, :left
-    send_keys new_date
-  else
-    send_keys :left, :left, :delete, :tab, :delete, :tab, :delete
-  end
+    find( :xpath, "//span[@id='course_dates']/input" ).click
+    send_keys :escape
+
+    send_keys [:command, 'a'], :backspace
+    send_keys [:control, 'a'], :backspace
+
+    send_keys Chronic.parse( start_date ).strftime( "%m/%d/%Y" )
+    send_keys ' - '
+    send_keys Chronic.parse( end_date ).strftime( "%m/%d/%Y" )
+
 end
 
 Then 'the timezone {string} {string}' do |is_or_isnt, timezone|

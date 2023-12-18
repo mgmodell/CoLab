@@ -12,15 +12,11 @@ import {
   Priorities
 } from "../infrastructure/StatusSlice";
 
-import TextField from "@mui/material/TextField";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 import { StudentData, UserListType } from "./CourseUsersList";
 import { useTypedSelector } from "../infrastructure/AppReducers";
 import { iconForType } from "../ActivityLib";
 
-import { DateTime, Settings } from "luxon";
 const CourseUsersList = React.lazy(() => import("./CourseUsersList"));
 import { useTranslation } from "react-i18next";
 import CourseAdminListToolbar from "./CourseAdminListToolbar";
@@ -35,6 +31,8 @@ import { Panel } from "primereact/panel";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Message } from "primereact/message";
+import { Calendar } from "primereact/calendar";
+import { set } from "mockdate";
 
 export default function CourseDataAdmin(props) {
   const category = "course";
@@ -72,11 +70,14 @@ export default function CourseDataAdmin(props) {
   const [courseDescription, setCourseDescription] = useState("");
   const [courseUsersList, setCourseUsersList] = useState(Array<StudentData>);
   const [courseActivities, setCourseActivities] = useState([]);
-  const [courseStartDate, setCourseStartDate] = useState(DateTime.local());
+  
+
+  const [courseStartDate, setCourseStartDate] = useState(new Date);
   //Using this Luxon function for later i18n
   const [courseEndDate, setCourseEndDate] = useState(
-    DateTime.local().plus({ month: 3 })
+    new Date( ( new Date ).setMonth ((new Date ).getMonth() + 3 ) )
   );
+
   const [courseSchoolId, setCourseSchoolId] = useState(0);
   const [courseTimezone, setCourseTimezone] = useState("");
   const [courseConsentFormId, setCourseConsentFormId] = useState(0);
@@ -115,25 +116,14 @@ export default function CourseDataAdmin(props) {
         setCourseNumber(course.number || "");
         setCourseDescription(course.description || "");
 
-        let receivedDate = DateTime.fromISO(course.start_date).setZone(
-          Settings.timezone
-        );
-        setCourseStartDate(receivedDate);
-        receivedDate = DateTime.fromISO(course.end_date).setZone(
-          Settings.timezone
-        );
+        setCourseStartDate(new Date( Date.parse(course.start_date) ));
+        setCourseEndDate(new Date( Date.parse(course.end_date) ));
 
-        setCourseEndDate(receivedDate);
         setCourseRegImage(course.reg_link);
         course.activities.forEach(activity => {
-          receivedDate = DateTime.fromISO(activity.end_date).setZone(
-            Settings.timezone
-          );
-          activity.end_date = receivedDate;
-          receivedDate = DateTime.fromISO(activity.start_date).setZone(
-            Settings.timezone
-          );
-          activity.start_date = receivedDate;
+
+          activity.end_date = new Date( Date.parse(activity.end_date) );
+          activity.start_date = new Date( Date.parse(activity.start_date) );
         });
         setCourseActivities(course.activities);
         setCourseTimezone(course.timezone || "UTC");
@@ -141,6 +131,7 @@ export default function CourseDataAdmin(props) {
         setCourseSchoolId(course.school_id || 0);
 
         dispatch(setClean(category));
+        
       })
       .catch(error => {
         console.log("error:", error);
@@ -185,16 +176,9 @@ export default function CourseDataAdmin(props) {
           setCourseConsentFormId(data.course.consent_form_id || 0);
           setCourseSchoolId(data.course.school_id);
 
-          var receivedDate = DateTime.fromISO(data.course.start_date).setZone(
-            tz_hash[courseTimezone]
-          );
+          setCourseStartDate(new Date( Date.parse(data.course.start_date) ));
 
-          setCourseStartDate(receivedDate);
-
-          receivedDate = DateTime.fromISO(data.course.end_date).setZone(
-            tz_hash[courseTimezone]
-          );
-          setCourseEndDate(receivedDate);
+          setCourseEndDate(new Date( Date.parse(data.course.end_date) ));
 
           dispatch(setClean(category));
         }
@@ -309,6 +293,7 @@ export default function CourseDataAdmin(props) {
               setCourseTimezone(schoolTzHash[changeTo]);
             }}
             optionLabel="name"
+            optionValue="id"
             placeholder="Select a School"
             showClear={true}
             />
@@ -325,6 +310,7 @@ export default function CourseDataAdmin(props) {
             options={timezones}
             onChange={event => setCourseTimezone(String(event.target.value))}
             optionLabel="name"
+            optionValue="name"
             placeholder="Select a Time Zone"
             showClear={true}
             />
@@ -340,57 +326,31 @@ export default function CourseDataAdmin(props) {
           value={courseConsentFormId}
           options={consentForms}
           onChange={event => setCourseConsentFormId(Number(event.target.value))}
+          optionValue="id"
           optionLabel="name"
           placeholder="Select a Consent Form"
           showClear={true}
           />
 
       <p>All dates shown in {courseTimezone} timezone.</p>
-      <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="en-us">
-        <DatePicker
-          autoOk={true}
-          inputFormat="MM/dd/yyyy"
-          margin="normal"
-          label="Course Start Date"
-          value={courseStartDate}
-          onChange={setCourseStartDate}
-          error={Boolean(messages["start_date"])}
-          helperText={messages["start_date"]}
-          slot={{
-            TextField: TextField
-          }}
-          slotProps={{
-            textField: {
-              id: "course_start_date"
-            }
-          }}
-        //renderInput={props => <TextField id="course_start_date" {...props} />}
+        <label htmlFor="course_dates" id="course_dates_lbl">
+          Course Dates
+        </label>
+      <Calendar
+        id="course_dates"
+        selectionMode={'range'}
+        value={[courseStartDate, courseEndDate]}
+        placeholder="Select a Date Range"
+        onChange={event => {
+          setCourseStartDate(event.value[0]);
+          setCourseEndDate(event.value[1]);
+        }}
+
         />
         {Boolean(messages["start_date"]) ? (
           <Message severity="error" text={messages["start_date"]} />
         ) : null}
 
-        <DatePicker
-          autoOk={true}
-          inputFormat="MM/dd/yyyy"
-          margin="normal"
-          label="Course End Date"
-          //value={courseEndDate}
-          onChange={setCourseEndDate}
-          error={Boolean(messages["end_date"])}
-          helperText={messages["end_date"]}
-          slot={{
-            TextField: TextField
-          }}
-          slotProps={{
-            textField: {
-              id: "course_end_date"
-            }
-          }}
-
-        //renderInput={props => <TextField id="course_end_date" {...props} />}
-        />
-      </LocalizationProvider>
       {Boolean(messages["end_date"]) ? (
         <Message severity="error" text={messages["end_date"]} />
       ) : null}
@@ -483,7 +443,7 @@ export default function CourseDataAdmin(props) {
               if (!rowData.active) {
                 return 'Not Activated'
               }
-              else if (rowData.end_date > DateTime.local()) {
+              else if (rowData.end_date > new Date( )) {
                 return "Active";
               } else {
                 return "Expired";
@@ -496,8 +456,8 @@ export default function CourseDataAdmin(props) {
             header={t('activities.open_col')}
             field="start_date"
             body={(rowData) => {
-              const dt = DateTime.fromISO(rowData.start_date);
-              return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+              const dt = Date.parse(rowData.start_date);
+              return <span>{dt.toLocaleString( )}</span>;
             }}
           />
               ):null }
@@ -506,8 +466,8 @@ export default function CourseDataAdmin(props) {
             header={t('activities.close_col')}
             field="end_date"
             body={(rowData) => {
-              const dt = DateTime.fromISO(rowData.end_date);
-              return <span>{dt.toLocaleString(DateTime.DATETIME_MED)}</span>;
+              const dt = Date.parse(rowData.end_date);
+              return <span>{dt.toLocaleString()}</span>;
 
             }}
           />
