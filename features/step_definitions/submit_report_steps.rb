@@ -122,9 +122,10 @@ Then(/^the assessment should show up as completed$/) do
   group_name = @project.group_for_user(@user).name
   step 'the user switches to the "Task View" tab'
 
-  page.should have_xpath("//div[@data-field='group_name']/div/div[contains(., '#{group_name}')]/.."),
+  page.should have_xpath("//tbody/tr/td[text()='#{group_name}']"),
               'No link to assessment'
-  page.should have_xpath("//div/div/div[contains(., 'Completed')]"), "No 'completed' message"
+  page.should have_xpath("//tbody/tr/td[text()='Completed']"),
+              "No 'completed' message"
 end
 
 Then(/^the user logs in and submits an installment$/) do
