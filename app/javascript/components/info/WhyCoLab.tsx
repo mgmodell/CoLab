@@ -63,7 +63,7 @@ export default function WhyCoLab(props) {
                 }}
             >
                 <Row>
-                    <Col sm={8}>
+                    <Col sm={12}>
                         <p>CoLab.online can help!</p>
                         <ul style={{
                             fontSize: '10px'
@@ -76,21 +76,6 @@ export default function WhyCoLab(props) {
                             <li>Simulated team experiences</li>
                             <li>Iterative assignments</li>
                         </ul>
-                    </Col>
-                    <Col sm={3}>
-                        <p>Are you a(n)&hellip;</p>
-                        <ul style={{
-                            fontSize: '10px',
-                        }}>
-                            <li
-                                onClick={() => {
-                                    navigate('welcome/student')
-                                }}
-                            >Student? =&gt;</li>
-                            <li
-                            >Instructor? =&gt;</li>
-                        </ul>
-
                     </Col>
                 </Row>
             </Container>
