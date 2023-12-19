@@ -10,17 +10,16 @@ import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import Switch from "@mui/material/Switch";
+import { TabView, TabPanel } from "primereact/tabview";
 
 import Skeleton from "@mui/material/Skeleton";
 
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { TabContext, TabList, TabPanel } from "@mui/lab/";
 
 import { DateTime } from "luxon";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
@@ -68,7 +67,7 @@ export default function AssignmentDataAdmin(props) {
   const { t, i18n } = useTranslation(`${category}s`);
 
   const [dirty, setDirty] = useState(false);
-  const [curTab, setCurTab] = useState("details");
+  const [curTab, setCurTab] = useState(0);
   const [messages, setMessages] = useState({});
   const [assignmentProjects, setAssignmentProjects] = useState([
     { id: -1, name: "None Selected" }
@@ -244,9 +243,6 @@ export default function AssignmentDataAdmin(props) {
       });
   };
 
-  const changeTab = (event, name) => {
-    setCurTab(name);
-  };
 
   const save_btn = dirty ? (
     <Suspense fallback={<Skeleton variant="text" />}>
@@ -299,17 +295,8 @@ export default function AssignmentDataAdmin(props) {
   return (
     <Suspense fallback={<Skeleton variant="text" />}>
       <Paper style={{ height: "95%", width: "100%" }}>
-        <TabContext value={curTab}>
-          <Box>
-            <TabList value={curTab} onChange={changeTab} centered>
-              <Tab value="details" label={t("edit.assignment_details_pnl")} />
-              <Tab
-                value="results"
-                label={t("edit.assignment_submissions_pnl")}
-              />
-            </TabList>
-          </Box>
-          <TabPanel value="details">
+        <TabView activeIndex={curTab} onTabChange={event => setCurTab(event.index)}>
+          <TabPanel header={t("edit.assignment_details_pnl")}>
             <React.Fragment>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
@@ -499,14 +486,14 @@ export default function AssignmentDataAdmin(props) {
               <Typography>{saveStatus}</Typography>
             </React.Fragment>
           </TabPanel>
-          <TabPanel value="results">
+          <TabPanel header={t("edit.assignment_submissions_pnl")}>
             <Grid container style={{ height: "100%" }}>
               <Grid item xs={5}>
                 Nothing here yet
               </Grid>
             </Grid>
           </TabPanel>
-        </TabContext>
+        </TabView>
       </Paper>
     </Suspense>
   );
