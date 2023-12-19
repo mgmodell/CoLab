@@ -8,7 +8,6 @@ import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import { MultiSelect } from "primereact/multiselect";
 
-import { ColumnMeta } from "./Types";
 import { Toolbar } from "primereact/toolbar";
 
 type Props = {
