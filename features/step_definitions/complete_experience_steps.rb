@@ -5,15 +5,7 @@ require 'faker'
 Then(/^the user clicks the link to the experience$/) do
   wait_for_render
   step 'the user switches to the "Task View" tab'
-  find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@experience.name}')]").hover
-  begin
-    # Try to click regularly
-    find(:xpath, "//div[@data-field='name']/div/div[contains(.,'#{@experience.name}')]").click
-  rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-    # If that gives an error, it's because of the readability popup
-    # We can click either of the items this finds because they are effectively the same
-    find_all(:xpath, "//div[contains(@class,'MuiBox') and contains(.,'#{@experience.name}')]")[0].click
-  end
+  find(:xpath, "//tbody/tr/td[text()='#{@experience.name}']").click
 end
 
 Then 'the {string} button will be disabled' do |button_name|
