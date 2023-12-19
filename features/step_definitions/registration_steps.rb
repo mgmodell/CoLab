@@ -80,7 +80,7 @@ When(/^the user "(.*?)" fill in demographics data$/) do |does_or_does_not|
 end
 
 When(/^the new user registers$/) do
-  click_link_or_button 'Sign up'
+  find(:xpath, "//ul[@role='tablist']/li/a[contains(.,'Sign up')]" ).click
   email = Faker::Internet.email
 
   fill_in 'email', with: email

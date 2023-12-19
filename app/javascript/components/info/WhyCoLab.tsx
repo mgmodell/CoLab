@@ -9,6 +9,7 @@ import LeaveItToGeorge from "../svgs/LeaveItToGeorge";
 import GroupDomination from "../svgs/GroupDomination";
 import DivisionOfLabor from "../svgs/DivisionOfLabor";
 import { Container, Row, Col } from "react-grid-system";
+import EmbeddedHTMLInSVG from "../infrastructure/EmbeddedHTMLInSVG";
 
 type Props = {
     height: number;
@@ -63,7 +64,7 @@ export default function WhyCoLab(props) {
                 }}
             >
                 <Row>
-                    <Col sm={12}>
+                    <Col sm={8}>
                         <p>CoLab.online can help!</p>
                         <ul style={{
                             fontSize: '10px'
@@ -75,6 +76,16 @@ export default function WhyCoLab(props) {
                             <li>Gamified collaborative reading</li>
                             <li>Simulated team experiences</li>
                             <li>Iterative assignments</li>
+                        </ul>
+                    </Col>
+                    <Col sm={4}>
+                        <ul>
+                            <li onClick={()=>{
+                                navigate('/welcome/student');
+
+                            }}>
+                                Student?
+                            </li>
                         </ul>
                     </Col>
                 </Row>
@@ -512,7 +523,8 @@ export default function WhyCoLab(props) {
             onClick={(event) => {
                 setScene(curScene + 1);
             }}
-            opacity={curScene < NavSpecs.navDots ? 1 : 0}
+            //Account for the off-by-one of 0-indexing
+            opacity={curScene < ( NavSpecs.navDots - 1 ) ? 1 : 0}
         >
 
             <circle
@@ -624,12 +636,13 @@ export default function WhyCoLab(props) {
                 <DivisionOfLabor bgColor={'aliceblue'} />
             </animated.svg>
 
-            <animated.foreignObject
-                style={{
-                    ...titleSpring
-                }} >
+            <EmbeddedHTMLInSVG
+                width={titleSpring.width}
+                height={titleSpring.height}
+                >
                 {titles[curScene]}
-            </animated.foreignObject>
+
+                </EmbeddedHTMLInSVG>
             {
                 curNav
             }

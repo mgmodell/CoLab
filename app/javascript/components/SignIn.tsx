@@ -210,8 +210,7 @@ export default function SignIn(props) {
       <Suspense fallback={<Skeleton variant={"rectangular"} height="300" />}>
         <GoogleOAuthProvider clientId={oauth_client_ids["google"]}>
           <Paper>
-            <TabView  activeIndex={curTab} onTabChange={(e) => {console.log(e.index)}}>
-
+            <TabView  activeIndex={curTab} >
               <TabPanel 
                 header={t("sessions.login")}  >
                 <Grid container>

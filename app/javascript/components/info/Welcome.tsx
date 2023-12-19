@@ -386,7 +386,10 @@ export default function Welcome(props: Props) {
 
 
     }
-    {login}
+    {
+      // Login module insertion point
+    login
+    }
     <animated.g
        id="circles"
        stroke="#000000"
