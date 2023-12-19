@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
+
 import Button from "@mui/material/Button";
-import PropTypes from "prop-types";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
@@ -19,10 +16,10 @@ import Alert from "@mui/material/Alert";
 import Tab from "@mui/material/Tab";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
+
 import UserEmailList from "./UserEmailList";
 
 import CloseIcon from "@mui/icons-material/Close";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TabList, TabContext, TabPanel } from "@mui/lab/";
@@ -46,8 +43,9 @@ import {
   persistProfile,
   setLocalLanguage
 } from "../infrastructure/ProfileSlice";
-import { Skeleton } from "@mui/material";
 import axios from "axios";
+import { Accordion, AccordionTab } from "primereact/accordion";
+import { Skeleton } from "primereact/skeleton";
 
 type Props = {
   // profileId: number;
@@ -95,7 +93,7 @@ export default function ProfileDataAdmin(props : Props) {
   const [dirty, setDirty] = useState(false);
   const [messages, setMessages] = useState({});
   const [showErrors, setShowErrors] = useState(false);
-  const [curPanel, setCurPanel] = useState("");
+  const [curPanel, setCurPanel] = useState([0]);
 
   const setProfileFirstName = first_name => {
     const temp = {};
@@ -218,9 +216,6 @@ export default function ProfileDataAdmin(props : Props) {
     dispatch(setProfile(temp));
   };
 
-  const handlePanelClick = newPanel => {
-    setCurPanel(newPanel != curPanel ? newPanel : "");
-  };
 
   const getStates = countryCode => {
     if (endpointStatus) {
@@ -289,9 +284,15 @@ export default function ProfileDataAdmin(props : Props) {
 
   const detailsComponent = lookupStatus ? (
     <Paper>
-      <Accordion expanded>
-        <AccordionSummary id="profile">{t("edit_profile")}</AccordionSummary>
-        <AccordionDetails>
+      <Accordion
+        multiple
+        activeIndex={curPanel}
+        >
+
+        <AccordionTab
+          header={t("edit_profile")}
+          >
+
           <Grid container spacing={3}>
             <Grid item sm={6} xs={12}>
               <TextField
@@ -316,16 +317,10 @@ export default function ProfileDataAdmin(props : Props) {
               />
             </Grid>
           </Grid>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        expanded={"email" === curPanel}
-        onChange={() => handlePanelClick("email")}
-      >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} id="email">
-          {t("email_settings")}
-        </AccordionSummary>
-        <AccordionDetails>
+          </AccordionTab>
+          <AccordionTab
+          header={t("email_settings")}>
+
           <Grid container spacing={3}>
             <Grid item xs={12}>
               {0 < user.emails.length ? (
@@ -345,16 +340,11 @@ export default function ProfileDataAdmin(props : Props) {
               </Link>
             </Grid>
           </Grid>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        expanded={"display" === curPanel}
-        onChange={() => handlePanelClick("display")}
-      >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} id="display">
-          {t("display_settings.prompt")}
-        </AccordionSummary>
-        <AccordionDetails>
+          </AccordionTab>
+          <AccordionTab
+          header={t("display_settings.prompt")}
+          >
+
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
               <FormControl fullWidth>
@@ -453,16 +443,11 @@ export default function ProfileDataAdmin(props : Props) {
               </FormControl>
             </Grid>
           </Grid>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        expanded={"demographics" === curPanel}
-        onChange={() => handlePanelClick("demographics")}
-      >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} id="demographics">
-          {t("demographics.prompt", { first_name: user.first_name })}
-        </AccordionSummary>
-        <AccordionDetails>
+          </AccordionTab>
+          <AccordionTab
+          header={t("demographics.prompt", { first_name: user.first_name })}
+          >
+
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
@@ -734,7 +719,7 @@ export default function ProfileDataAdmin(props : Props) {
               </ToggleButtonGroup>
             </Grid>
           </Grid>
-        </AccordionDetails>
+          </AccordionTab>
       </Accordion>
       &nbsp;
       <br />
@@ -789,7 +774,7 @@ export default function ProfileDataAdmin(props : Props) {
           {profileReady ? (
             detailsComponent
           ) : (
-            <Skeleton variant="rectangular" heght={300} />
+            <Skeleton className="mb-2" height="10rem" width="100%" />
           )}
         </TabPanel>
         <TabPanel value="courses">
