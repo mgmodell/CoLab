@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
 
 import { useDispatch } from "react-redux";
 import { startTask, endTask } from "../infrastructure/StatusSlice";
 
 import axios from "axios";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useTranslation } from "react-i18next";
-import { renderTextCellExpand } from "../infrastructure/GridCellExpand";
 import { DateTime } from "luxon";
-import StandardListToolbar from "../StandardListToolbar";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Panel } from "primereact/panel";
 
 interface IConsentForm {
   id: number;
@@ -55,73 +53,83 @@ export default function ResearchParticipationList(props: Props) {
     }
   }, []);
 
-  var consentColumns: GridColDef[] = [
-    {
-      headerName: t("consent.name"),
-      field: "name",
-      width: 300,
-      renderCell: renderTextCellExpand
-    },
-    {
-      headerName: t("consent.status"),
-      field: "id",
-      width: 150,
-      renderCell: params => {
-        var output;
-        if (params.row.active) {
-          if (Date.now() < Date.parse(params.row.end_date)) {
-            output = t("consent.accepted");
-          } else {
-            output = t("consent.expired");
-          }
-        } else {
-          output = t("consent.inactive");
-        }
-        return <span>{output}</span>;
-      }
-    },
-    {
-      headerName: t("consent.accept_status"),
-      field: "accepted",
-      renderCell: params => {
-        return (
-          <span>
-            {params.value ? t("consent.accepted") : t("consent.declined")}
-          </span>
-        );
-      }
-    },
-    {
-      headerName: t("consent.action"),
-      field: "link",
-      renderCell: params => {
-        return <Link href={params.value}>Review/Update</Link>;
-      }
-    }
-  ];
 
   const consentFormList =
     null != props.consentFormList ? (
-      <DataGrid
-        isCellEditable={() => false}
-        columns={consentColumns}
-        rows={props.consentFormList}
-        getRowId={row => {
-          return `consent-${row.id}`;
+      <>
+      <DataTable
+        value={props.consentFormList}
+        resizableColumns
+        tableStyle={{
+          minWidth: '50rem'
         }}
-        slots={{
-          toolbar: StandardListToolbar
-        }}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 }
-          }
-        }}
-        pageSizeOptions={[5, 10, 100]}
-      />
+        reorderableColumns
+        paginator
+        rows={5}
+        rowsPerPageOptions={
+          [5, 10, 20, props.consentFormList.length]
+        }
+        sortField="start_date"
+        sortOrder={-1}
+        paginatorDropdownAppendTo={'self'}
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="{first} to {last} of {totalRecords}"
+        //paginatorLeft={paginatorLeft}
+        //paginatorRight={paginatorRight}
+        dataKey="id"
+        >
+          <Column
+            header={t("consent.name")}
+            field="name"
+            sortable
+            filter
+            />
+          <Column
+            header={t("consent.status")}
+            field="id"
+            sortable
+            filter
+            body={(rowData) => {
+              var output;
+              if (rowData.active) {
+                if (Date.now() < Date.parse(rowData.end_date)) {
+                  output = t("consent.accepted");
+                } else {
+                  output = t("consent.expired");
+                }
+              } else {
+                output = t("consent.inactive");
+              }
+              return <span>{output}</span>;
+            }}
+            />
+          <Column
+            header={t("consent.accept_status")}
+            field="accepted"
+            body={(rowData) => {
+              return (
+                <span>
+                  {rowData.accepted ? t("consent.accepted") : t("consent.declined")}
+                </span>
+              );
+            }}
+            />
+          <Column
+            header={t("consent.action")}
+            field="link"
+            body={(rowData) => {
+              return (<a href={rowData.link}>Review/Update</a>);
+            }}
+            />
+
+        </DataTable>
+      </>
     ) : (
       "The course data is loading"
     );
 
-  return <Paper>{consentFormList}</Paper>;
+  return (
+  <Panel>
+    {consentFormList}
+  </Panel>) ;
 }
